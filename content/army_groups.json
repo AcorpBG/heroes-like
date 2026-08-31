@@ -3222,6 +3222,354 @@
       ],
       "content_status": "frontier_treasury_company_live",
       "content_batch_id": "content-six-frontier-treasury-commissions-10184"
+    },
+    {
+      "id": "army_cinderlock_border_oath_company",
+      "name": "Helva Tollbrand's Cinderlock Oath Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {
+          "unit_id": "unit_embercourt_fordhook_cadets",
+          "count": 30
+        },
+        {
+          "unit_id": "unit_embercourt_lantern_sappers",
+          "count": 18
+        },
+        {
+          "unit_id": "unit_embercourt_bargebow_crews",
+          "count": 11
+        },
+        {
+          "unit_id": "unit_embercourt_cinderseal_bombardiers",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_embercourt_charter_colossus",
+          "count": 3
+        }
+      ],
+      "content_status": "border_oath_player_company_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184"
+    },
+    {
+      "id": "army_nightglass_border_oath_company",
+      "name": "Edda Rotlamp's Nightglass Oath Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {
+          "unit_id": "unit_mireclaw_reedsnare_kin",
+          "count": 30
+        },
+        {
+          "unit_id": "unit_mireclaw_mudglass_slingers",
+          "count": 18
+        },
+        {
+          "unit_id": "unit_mireclaw_bogplate_maulers",
+          "count": 11
+        },
+        {
+          "unit_id": "unit_mireclaw_gorefen_rippers",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_mireclaw_drowned_antler_sovereign",
+          "count": 3
+        }
+      ],
+      "content_status": "border_oath_player_company_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184"
+    },
+    {
+      "id": "army_dawnmirror_border_oath_company",
+      "name": "Dovan Lens-Captain's Dawnmirror Oath Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {
+          "unit_id": "unit_sunvault_shard_wardens",
+          "count": 30
+        },
+        {
+          "unit_id": "unit_sunvault_prism_adepts",
+          "count": 18
+        },
+        {
+          "unit_id": "unit_sunvault_mirror_duelists",
+          "count": 11
+        },
+        {
+          "unit_id": "unit_sunvault_noonfacet_sentinels",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_sunvault_daybreak_colossus",
+          "count": 3
+        }
+      ],
+      "content_status": "border_oath_player_company_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184"
+    },
+    {
+      "id": "army_briarwheel_border_oath_company",
+      "name": "Bryn Boltroot's Briarwheel Oath Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {
+          "unit_id": "unit_thornwake_pollenhook_whistlers",
+          "count": 30
+        },
+        {
+          "unit_id": "unit_thornwake_bramblekite_needlers",
+          "count": 18
+        },
+        {
+          "unit_id": "unit_thornwake_seedshield_wardens",
+          "count": 11
+        },
+        {
+          "unit_id": "unit_thornwake_seedglass_cantors",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_thornwake_worldroot_bastion",
+          "count": 3
+        }
+      ],
+      "content_status": "border_oath_player_company_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184"
+    },
+    {
+      "id": "army_cindercoil_border_oath_company",
+      "name": "Selka Pitmarshal's Cindercoil Oath Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {
+          "unit_id": "unit_brasshollow_tallyspring_throwers",
+          "count": 30
+        },
+        {
+          "unit_id": "unit_brasshollow_quenchspool_slingers",
+          "count": 18
+        },
+        {
+          "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+          "count": 11
+        },
+        {
+          "unit_id": "unit_brasshollow_quenchbell_mortars",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_brasshollow_foundry_saint",
+          "count": 3
+        }
+      ],
+      "content_status": "border_oath_player_company_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184"
+    },
+    {
+      "id": "army_gloamwake_border_oath_company",
+      "name": "Damar Oriflag's Gloamwake Oath Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {
+          "unit_id": "unit_veilmourn_saltbell_casters",
+          "count": 30
+        },
+        {
+          "unit_id": "unit_veilmourn_tidehook_deckhands",
+          "count": 18
+        },
+        {
+          "unit_id": "unit_veilmourn_wakechain_boarders",
+          "count": 11
+        },
+        {
+          "unit_id": "unit_veilmourn_wakeglass_navigators",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_veilmourn_fogbound_leviathan",
+          "count": 3
+        }
+      ],
+      "content_status": "border_oath_player_company_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184"
+    },
+    {
+      "id": "army_moonhook_border_cordon",
+      "name": "Moonhook Border Cordon",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {
+          "unit_id": "unit_mireclaw_reedsnare_kin",
+          "count": 24
+        },
+        {
+          "unit_id": "unit_mireclaw_mudglass_slingers",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_mireclaw_gorefen_rippers",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+          "count": 4
+        },
+        {
+          "unit_id": "unit_mireclaw_drowned_antler_sovereign",
+          "count": 2
+        }
+      ],
+      "content_status": "border_oath_cordon_company_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184"
+    },
+    {
+      "id": "army_prismwrit_border_cordon",
+      "name": "Prismwrit Border Cordon",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {
+          "unit_id": "unit_sunvault_shard_wardens",
+          "count": 24
+        },
+        {
+          "unit_id": "unit_sunvault_prism_adepts",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_sunvault_mirror_duelists",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_sunvault_noonfacet_sentinels",
+          "count": 4
+        },
+        {
+          "unit_id": "unit_sunvault_daybreak_colossus",
+          "count": 2
+        }
+      ],
+      "content_status": "border_oath_cordon_company_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184"
+    },
+    {
+      "id": "army_rootglass_border_cordon",
+      "name": "Rootglass Border Cordon",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {
+          "unit_id": "unit_thornwake_pollenhook_whistlers",
+          "count": 24
+        },
+        {
+          "unit_id": "unit_thornwake_bramblekite_needlers",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_thornwake_seedshield_wardens",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_thornwake_seedglass_cantors",
+          "count": 4
+        },
+        {
+          "unit_id": "unit_thornwake_worldroot_bastion",
+          "count": 2
+        }
+      ],
+      "content_status": "border_oath_cordon_company_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184"
+    },
+    {
+      "id": "army_blackbell_border_cordon",
+      "name": "Blackbell Border Cordon",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {
+          "unit_id": "unit_brasshollow_tallyspring_throwers",
+          "count": 24
+        },
+        {
+          "unit_id": "unit_brasshollow_quenchspool_slingers",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_brasshollow_quenchbell_mortars",
+          "count": 4
+        },
+        {
+          "unit_id": "unit_brasshollow_foundry_saint",
+          "count": 2
+        }
+      ],
+      "content_status": "border_oath_cordon_company_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184"
+    },
+    {
+      "id": "army_wakechain_border_cordon",
+      "name": "Wakechain Border Cordon",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {
+          "unit_id": "unit_veilmourn_saltbell_casters",
+          "count": 24
+        },
+        {
+          "unit_id": "unit_veilmourn_tidehook_deckhands",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_veilmourn_wakechain_boarders",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_veilmourn_wakeglass_navigators",
+          "count": 4
+        },
+        {
+          "unit_id": "unit_veilmourn_fogbound_leviathan",
+          "count": 2
+        }
+      ],
+      "content_status": "border_oath_cordon_company_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184"
+    },
+    {
+      "id": "army_rainbrand_border_cordon",
+      "name": "Rainbrand Border Cordon",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {
+          "unit_id": "unit_embercourt_fordhook_cadets",
+          "count": 24
+        },
+        {
+          "unit_id": "unit_embercourt_lantern_sappers",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_embercourt_bargebow_crews",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_embercourt_cinderseal_bombardiers",
+          "count": 4
+        },
+        {
+          "unit_id": "unit_embercourt_charter_colossus",
+          "count": 2
+        }
+      ],
+      "content_status": "border_oath_cordon_company_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184"
     }
   ]
 }

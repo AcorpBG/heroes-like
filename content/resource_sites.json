@@ -15515,12 +15515,31 @@
       "vision_radius": 5,
       "action_label": "Set the Ashline Bearing",
       "summary": "A charred tripod turns a bronze charter quadrant between two hooded plumb lanterns.",
-      "scouting_contract": {"scouting_kind": "writ_compass", "planned_reveal_radius": 5, "live_effect": "A five-tile charter bearing that remains visible while player controlled.", "metadata_only": false, "runtime_scouting_execution_adopted": true},
-      "runtime_boundary": {"status": "fogbreak_survey_instrument_live", "live_reward_grants": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "route_effect_runtime_adopted": false, "rare_resource_activation": false, "scenario_placement_migration": true},
+      "scouting_contract": {
+        "scouting_kind": "writ_compass",
+        "planned_reveal_radius": 5,
+        "live_effect": "A five-tile charter bearing that remains visible while player controlled.",
+        "metadata_only": false,
+        "runtime_scouting_execution_adopted": true
+      },
+      "runtime_boundary": {
+        "status": "fogbreak_survey_instrument_live",
+        "live_reward_grants": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
       "content_status": "fogbreak_survey_instrument_live",
       "content_batch_id": "content-six-fogbreak-survey-expeditions-10184",
       "batch_role": "faction_fogbreak_survey_instrument",
-      "public_text": {"public_summary": "A charter quadrant and twin plumb lanterns fix the ash road against a measured horizon.", "non_color_silhouette_required": true, "large_text_panel_required": false}
+      "public_text": {
+        "public_summary": "A charter quadrant and twin plumb lanterns fix the ash road against a measured horizon.",
+        "non_color_silhouette_required": true,
+        "large_text_panel_required": false
+      }
     },
     {
       "id": "site_mireclaw_bogglass_listening_mast",
@@ -15532,12 +15551,31 @@
       "vision_radius": 5,
       "action_label": "Sound the Bogglass Line",
       "summary": "A reed tripod suspends a blackwater bowl beneath bone vanes and peatglass listening beads.",
-      "scouting_contract": {"scouting_kind": "bogglass_listener", "planned_reveal_radius": 5, "live_effect": "A five-tile mire sounding that remains visible while player controlled.", "metadata_only": false, "runtime_scouting_execution_adopted": true},
-      "runtime_boundary": {"status": "fogbreak_survey_instrument_live", "live_reward_grants": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "route_effect_runtime_adopted": false, "rare_resource_activation": false, "scenario_placement_migration": true},
+      "scouting_contract": {
+        "scouting_kind": "bogglass_listener",
+        "planned_reveal_radius": 5,
+        "live_effect": "A five-tile mire sounding that remains visible while player controlled.",
+        "metadata_only": false,
+        "runtime_scouting_execution_adopted": true
+      },
+      "runtime_boundary": {
+        "status": "fogbreak_survey_instrument_live",
+        "live_reward_grants": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
       "content_status": "fogbreak_survey_instrument_live",
       "content_batch_id": "content-six-fogbreak-survey-expeditions-10184",
       "batch_role": "faction_fogbreak_survey_instrument",
-      "public_text": {"public_summary": "Bone vanes and hanging peatglass beads read distant movement through a blackwater sounding bowl.", "non_color_silhouette_required": true, "large_text_panel_required": false}
+      "public_text": {
+        "public_summary": "Bone vanes and hanging peatglass beads read distant movement through a blackwater sounding bowl.",
+        "non_color_silhouette_required": true,
+        "large_text_panel_required": false
+      }
     },
     {
       "id": "site_sunvault_meridian_sunthread_heliograph",
@@ -15549,12 +15587,31 @@
       "vision_radius": 5,
       "action_label": "Align the Sunthread",
       "summary": "A rotating prism fixes three sight blades against a slotted disc on a stepped white-stone plinth.",
-      "scouting_contract": {"scouting_kind": "sunthread_heliograph", "planned_reveal_radius": 5, "live_effect": "A five-tile meridian sight that remains visible while player controlled.", "metadata_only": false, "runtime_scouting_execution_adopted": true},
-      "runtime_boundary": {"status": "fogbreak_survey_instrument_live", "live_reward_grants": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "route_effect_runtime_adopted": false, "rare_resource_activation": false, "scenario_placement_migration": true},
+      "scouting_contract": {
+        "scouting_kind": "sunthread_heliograph",
+        "planned_reveal_radius": 5,
+        "live_effect": "A five-tile meridian sight that remains visible while player controlled.",
+        "metadata_only": false,
+        "runtime_scouting_execution_adopted": true
+      },
+      "runtime_boundary": {
+        "status": "fogbreak_survey_instrument_live",
+        "live_reward_grants": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
       "content_status": "fogbreak_survey_instrument_live",
       "content_batch_id": "content-six-fogbreak-survey-expeditions-10184",
       "batch_role": "faction_fogbreak_survey_instrument",
-      "public_text": {"public_summary": "A slotted sun disc, rotating prism, and three unequal sight blades measure the bright frontier.", "non_color_silhouette_required": true, "large_text_panel_required": false}
+      "public_text": {
+        "public_summary": "A slotted sun disc, rotating prism, and three unequal sight blades measure the bright frontier.",
+        "non_color_silhouette_required": true,
+        "large_text_panel_required": false
+      }
     },
     {
       "id": "site_thornwake_rootstar_canopy_orrery",
@@ -15566,12 +15623,31 @@
       "vision_radius": 5,
       "action_label": "Turn the Rootstar Crown",
       "summary": "A living forked root carries a seed-sphere constellation between braided vine sight arms.",
-      "scouting_contract": {"scouting_kind": "rootstar_orrery", "planned_reveal_radius": 5, "live_effect": "A five-tile canopy triangulation that remains visible while player controlled.", "metadata_only": false, "runtime_scouting_execution_adopted": true},
-      "runtime_boundary": {"status": "fogbreak_survey_instrument_live", "live_reward_grants": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "route_effect_runtime_adopted": false, "rare_resource_activation": false, "scenario_placement_migration": true},
+      "scouting_contract": {
+        "scouting_kind": "rootstar_orrery",
+        "planned_reveal_radius": 5,
+        "live_effect": "A five-tile canopy triangulation that remains visible while player controlled.",
+        "metadata_only": false,
+        "runtime_scouting_execution_adopted": true
+      },
+      "runtime_boundary": {
+        "status": "fogbreak_survey_instrument_live",
+        "live_reward_grants": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
       "content_status": "fogbreak_survey_instrument_live",
       "content_batch_id": "content-six-fogbreak-survey-expeditions-10184",
       "batch_role": "faction_fogbreak_survey_instrument",
-      "public_text": {"public_summary": "A seed-sphere constellation turns between two living sight arms above a forked root base.", "non_color_silhouette_required": true, "large_text_panel_required": false}
+      "public_text": {
+        "public_summary": "A seed-sphere constellation turns between two living sight arms above a forked root base.",
+        "non_color_silhouette_required": true,
+        "large_text_panel_required": false
+      }
     },
     {
       "id": "site_brasshollow_redgauge_horizon_theodolite",
@@ -15583,12 +15659,31 @@
       "vision_radius": 5,
       "action_label": "Calibrate the Redgauge",
       "summary": "A squat iron tripod locks a brass sight tube between two unequal pressure gauges and a toothed azimuth ring.",
-      "scouting_contract": {"scouting_kind": "redgauge_theodolite", "planned_reveal_radius": 5, "live_effect": "A five-tile pressure survey that remains visible while player controlled.", "metadata_only": false, "runtime_scouting_execution_adopted": true},
-      "runtime_boundary": {"status": "fogbreak_survey_instrument_live", "live_reward_grants": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "route_effect_runtime_adopted": false, "rare_resource_activation": false, "scenario_placement_migration": true},
+      "scouting_contract": {
+        "scouting_kind": "redgauge_theodolite",
+        "planned_reveal_radius": 5,
+        "live_effect": "A five-tile pressure survey that remains visible while player controlled.",
+        "metadata_only": false,
+        "runtime_scouting_execution_adopted": true
+      },
+      "runtime_boundary": {
+        "status": "fogbreak_survey_instrument_live",
+        "live_reward_grants": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
       "content_status": "fogbreak_survey_instrument_live",
       "content_batch_id": "content-six-fogbreak-survey-expeditions-10184",
       "batch_role": "faction_fogbreak_survey_instrument",
-      "public_text": {"public_summary": "A brass sight tube, toothed azimuth ring, and offset pressure gauges fix the industrial horizon.", "non_color_silhouette_required": true, "large_text_panel_required": false}
+      "public_text": {
+        "public_summary": "A brass sight tube, toothed azimuth ring, and offset pressure gauges fix the industrial horizon.",
+        "non_color_silhouette_required": true,
+        "large_text_panel_required": false
+      }
     },
     {
       "id": "site_veilmourn_drowned_horizon_sextant",
@@ -15600,12 +15695,31 @@
       "vision_radius": 5,
       "action_label": "Take the Drowned Bearing",
       "summary": "A driftwood crescent frame holds a shell plumb, wakeglass beads, and a salt-dark sighting rope.",
-      "scouting_contract": {"scouting_kind": "drowned_horizon_sextant", "planned_reveal_radius": 5, "live_effect": "A five-tile drowned bearing that remains visible while player controlled.", "metadata_only": false, "runtime_scouting_execution_adopted": true},
-      "runtime_boundary": {"status": "fogbreak_survey_instrument_live", "live_reward_grants": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "route_effect_runtime_adopted": false, "rare_resource_activation": false, "scenario_placement_migration": true},
+      "scouting_contract": {
+        "scouting_kind": "drowned_horizon_sextant",
+        "planned_reveal_radius": 5,
+        "live_effect": "A five-tile drowned bearing that remains visible while player controlled.",
+        "metadata_only": false,
+        "runtime_scouting_execution_adopted": true
+      },
+      "runtime_boundary": {
+        "status": "fogbreak_survey_instrument_live",
+        "live_reward_grants": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
       "content_status": "fogbreak_survey_instrument_live",
       "content_batch_id": "content-six-fogbreak-survey-expeditions-10184",
       "batch_role": "faction_fogbreak_survey_instrument",
-      "public_text": {"public_summary": "A shell plumb and wakeglass beads hang inside a crescent driftwood frame aligned to a drowned horizon.", "non_color_silhouette_required": true, "large_text_panel_required": false}
+      "public_text": {
+        "public_summary": "A shell plumb and wakeglass beads hang inside a crescent driftwood frame aligned to a drowned horizon.",
+        "non_color_silhouette_required": true,
+        "large_text_panel_required": false
+      }
     },
     {
       "id": "site_embercourt_rainwrit_ledger_brazier",
@@ -15882,6 +15996,276 @@
       "content_status": "frontier_treasury_office_live",
       "content_batch_id": "content-six-frontier-treasury-commissions-10184",
       "treasury_commission_role": "persistent_frontier_income_office"
+    },
+    {
+      "id": "site_embercourt_three_writ_border_standard",
+      "name": "Three-Writ Border Standard",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 250,
+        "embergrain": 1
+      },
+      "control_income": {
+        "gold": 100
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_embercourt",
+      "response_profile": {
+        "action_label": "Rebind Three Writs",
+        "summary": "Raise Three-Writ Border Standard and bind its three frontier claims.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 120,
+          "wood": 1
+        },
+        "watch_days": 2,
+        "readiness_bonus": 2,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "Three-Writ Border Standard is a brass crossbar carrying three rain-charred charter plates; holding it secures one point of the three-site border oath.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "border_oath_standard_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "border_oath_standard_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184",
+      "border_oath_role": "exact_three_standard_control_point"
+    },
+    {
+      "id": "site_mireclaw_fenhook_border_standard",
+      "name": "Fenhook Border Standard",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 250,
+        "peatwax": 1
+      },
+      "control_income": {
+        "gold": 100
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_mireclaw",
+      "response_profile": {
+        "action_label": "Sound the Fenhook",
+        "summary": "Raise Fenhook Border Standard and bind its three frontier claims.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 120,
+          "wood": 1
+        },
+        "watch_days": 2,
+        "readiness_bonus": 2,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "Fenhook Border Standard is a hide drum standard ringed by three hooked reed posts; holding it secures one point of the three-site border oath.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "border_oath_standard_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "border_oath_standard_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184",
+      "border_oath_role": "exact_three_standard_control_point"
+    },
+    {
+      "id": "site_sunvault_trifold_prism_border_standard",
+      "name": "Trifold Prism Border Standard",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 250,
+        "aetherglass": 1
+      },
+      "control_income": {
+        "gold": 100
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_sunvault",
+      "response_profile": {
+        "action_label": "Align the Trifold",
+        "summary": "Raise Trifold Prism Border Standard and bind its three frontier claims.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 120,
+          "wood": 1
+        },
+        "watch_days": 2,
+        "readiness_bonus": 2,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "Trifold Prism Border Standard is a triangular mirror mast with three bright survey vanes; holding it secures one point of the three-site border oath.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "border_oath_standard_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "border_oath_standard_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184",
+      "border_oath_role": "exact_three_standard_control_point"
+    },
+    {
+      "id": "site_thornwake_three_seed_border_standard",
+      "name": "Three-Seed Border Standard",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 250,
+        "verdant_grafts": 1
+      },
+      "control_income": {
+        "gold": 100
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_thornwake",
+      "response_profile": {
+        "action_label": "Graft the Three Seeds",
+        "summary": "Raise Three-Seed Border Standard and bind its three frontier claims.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 120,
+          "wood": 1
+        },
+        "watch_days": 2,
+        "readiness_bonus": 2,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "Three-Seed Border Standard is a living forked standard grown around three luminous seed pods; holding it secures one point of the three-site border oath.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "border_oath_standard_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "border_oath_standard_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184",
+      "border_oath_role": "exact_three_standard_control_point"
+    },
+    {
+      "id": "site_brasshollow_tripgauge_border_standard",
+      "name": "Tripgauge Border Standard",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 250,
+        "brass_scrip": 1
+      },
+      "control_income": {
+        "gold": 100
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_brasshollow",
+      "response_profile": {
+        "action_label": "Set the Tripgauge",
+        "summary": "Raise Tripgauge Border Standard and bind its three frontier claims.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 120,
+          "wood": 1
+        },
+        "watch_days": 2,
+        "readiness_bonus": 2,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "Tripgauge Border Standard is a heavy gauge crossbar with three furnace dials and chain weights; holding it secures one point of the three-site border oath.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "border_oath_standard_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "border_oath_standard_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184",
+      "border_oath_role": "exact_three_standard_control_point"
+    },
+    {
+      "id": "site_veilmourn_three_wake_border_standard",
+      "name": "Three-Wake Border Standard",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 250,
+        "memory_salt": 1
+      },
+      "control_income": {
+        "gold": 100
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_veilmourn",
+      "response_profile": {
+        "action_label": "Toll the Three Wakes",
+        "summary": "Raise Three-Wake Border Standard and bind its three frontier claims.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 120,
+          "wood": 1
+        },
+        "watch_days": 2,
+        "readiness_bonus": 2,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "Three-Wake Border Standard is a crescent ship-rib mast bearing three pale tide bells; holding it secures one point of the three-site border oath.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "border_oath_standard_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "border_oath_standard_live",
+      "content_batch_id": "content-six-border-oath-standard-seizures-10184",
+      "border_oath_role": "exact_three_standard_control_point"
     }
   ]
 }

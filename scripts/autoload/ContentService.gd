@@ -1687,6 +1687,23 @@ func _validate_objective(
 						push_warning("Scenario %s objective %s references missing resource_id %s." % [scenario_id, String(objective.get("id", "")), String(resource_id)])
 					if int(stockpile_requirements.get(resource_id, 0)) <= 0:
 						push_warning("Scenario %s objective %s resource %s must define minimum_count > 0." % [scenario_id, String(objective.get("id", "")), String(resource_id)])
+		"resource_sites_controlled_at_least":
+			var controlled_site_ids = objective.get("placement_ids", [])
+			if not (controlled_site_ids is Array) or controlled_site_ids.is_empty():
+				push_warning("Scenario %s objective %s must define non-empty resource-site placement_ids." % [scenario_id, String(objective.get("id", ""))])
+			else:
+				var seen_controlled_site_ids: Array[String] = []
+				for placement_id in controlled_site_ids:
+					var controlled_site_id := String(placement_id)
+					if controlled_site_id == "" or controlled_site_id not in resource_placement_ids:
+						push_warning("Scenario %s objective %s references missing resource-site placement %s." % [scenario_id, String(objective.get("id", "")), controlled_site_id])
+					elif controlled_site_id in seen_controlled_site_ids:
+						push_warning("Scenario %s objective %s repeats resource-site placement %s." % [scenario_id, String(objective.get("id", "")), controlled_site_id])
+					else:
+						seen_controlled_site_ids.append(controlled_site_id)
+				var minimum_controlled_sites := int(objective.get("minimum_count", 0))
+				if minimum_controlled_sites <= 0 or minimum_controlled_sites > seen_controlled_site_ids.size():
+					push_warning("Scenario %s objective %s minimum_count must be within its unique placement count." % [scenario_id, String(objective.get("id", ""))])
 		"hero_army_meets_requirements":
 			var objective_hero_id := String(objective.get("hero_id", ""))
 			if objective_hero_id == "" or not hero_index.has(objective_hero_id):

@@ -1,0 +1,103 @@
+{
+  "source_model": "built_in_image_gen_original_border_oath_standards_atlas",
+  "generation_mode": "built_in_image_gen",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/border_oath_standards_atlas.png",
+  "runtime_atlas_size": [
+    288,
+    48
+  ],
+  "runtime_atlas_sha256": "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e",
+  "prompt_set_summary": "Six original transparent three-quarter isometric Border Oath landmark source masters, one for every playable faction. The set deliberately uses six different physical structures rather than recolors: charter hardware, hooked reed drums, prism geometry, living roots, pressure machinery, and ship-rib chains. Each silhouette remains identifiable in a compact 48-pixel cell. Prompts exclude scenery, ground tiles, frames, labels, logos, copied heraldry, copyrighted assets, and protected visual expression.",
+  "items": [
+    {
+      "site_id": "site_embercourt_three_writ_border_standard",
+      "asset_id": "resource_site_border_oath_embercourt_three_writ",
+      "assigned_faction_id": "faction_embercourt",
+      "source_file": "embercourt_three_writ_border_standard.png",
+      "source_sha256": "4120262d20f188b7e1fe052ef4581a6cebbec78d83b59f4f40e2c7590878fd72",
+      "generation_original": true,
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric fantasy strategy landmark: A blackened iron crossbar raises three separate rain-charred charter plates above a sealed ember bowl, with off-center chain tags making the Embercourt oath readable by silhouette. Generated as a high-resolution painterly source master for a compact 48-pixel runtime cell, with generous alpha padding and strong shape separation. No scenery, ground tile, frame, text, logo, copied heraldry, character, copyrighted asset, or protected visual expression."
+    },
+    {
+      "site_id": "site_mireclaw_fenhook_border_standard",
+      "asset_id": "resource_site_border_oath_mireclaw_fenhook",
+      "assigned_faction_id": "faction_mireclaw",
+      "source_file": "mireclaw_fenhook_border_standard.png",
+      "source_sha256": "70ddee5d84c3cc39af2c0aa1e2f5359362e5e550221ebbbc100c9bb60ba57ae7",
+      "generation_original": true,
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric fantasy strategy landmark: Three crooked reed hooks surround a stretched hide oath drum on root feet, with dangling peatwax tokens creating a broad low Mireclaw silhouette. Generated as a high-resolution painterly source master for a compact 48-pixel runtime cell, with generous alpha padding and strong shape separation. No scenery, ground tile, frame, text, logo, copied heraldry, character, copyrighted asset, or protected visual expression."
+    },
+    {
+      "site_id": "site_sunvault_trifold_prism_border_standard",
+      "asset_id": "resource_site_border_oath_sunvault_trifold",
+      "assigned_faction_id": "faction_sunvault",
+      "source_file": "sunvault_trifold_prism_border_standard.png",
+      "source_sha256": "cadcc73fdb1e395c167fb61f64f65441f41107e02a1b8faca7362146f96d06e8",
+      "generation_original": true,
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric fantasy strategy landmark: Three triangular mirror vanes climb a slim sunstone mast around a bright central prism, making a precise ascending Sunvault survey silhouette. Generated as a high-resolution painterly source master for a compact 48-pixel runtime cell, with generous alpha padding and strong shape separation. No scenery, ground tile, frame, text, logo, copied heraldry, character, copyrighted asset, or protected visual expression."
+    },
+    {
+      "site_id": "site_thornwake_three_seed_border_standard",
+      "asset_id": "resource_site_border_oath_thornwake_three_seed",
+      "assigned_faction_id": "faction_thornwake",
+      "source_file": "thornwake_three_seed_border_standard.png",
+      "source_sha256": "3c84e9d4141241d854d3c0727d423b3d45696dfd14f6c92af0015dc73a708002",
+      "generation_original": true,
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric fantasy strategy landmark: A living forked trunk cradles three luminous seed pods at unequal heights, with thorn ties and root feet forming an organic Thornwake border mark. Generated as a high-resolution painterly source master for a compact 48-pixel runtime cell, with generous alpha padding and strong shape separation. No scenery, ground tile, frame, text, logo, copied heraldry, character, copyrighted asset, or protected visual expression."
+    },
+    {
+      "site_id": "site_brasshollow_tripgauge_border_standard",
+      "asset_id": "resource_site_border_oath_brasshollow_tripgauge",
+      "assigned_faction_id": "faction_brasshollow",
+      "source_file": "brasshollow_tripgauge_border_standard.png",
+      "source_sha256": "9686566661b1e0ffd11112f4cb0bc8d8ff81fca0ff81a152f5118be554296fff",
+      "generation_original": true,
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric fantasy strategy landmark: A riveted pressure crossbar carries three unequal furnace gauges, hanging counterweights, and a compact black bell in a heavy Brasshollow silhouette. Generated as a high-resolution painterly source master for a compact 48-pixel runtime cell, with generous alpha padding and strong shape separation. No scenery, ground tile, frame, text, logo, copied heraldry, character, copyrighted asset, or protected visual expression."
+    },
+    {
+      "site_id": "site_veilmourn_three_wake_border_standard",
+      "asset_id": "resource_site_border_oath_veilmourn_three_wake",
+      "assigned_faction_id": "faction_veilmourn",
+      "source_file": "veilmourn_three_wake_border_standard.png",
+      "source_sha256": "b1e636bf49b29bd65704bd7d45f70d8a3278dc98b3dc072881fe17d11be6009b",
+      "generation_original": true,
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric fantasy strategy landmark: A pale crescent ship-rib mast suspends three tide bells above salt-dark chains and a narrow wakeglass marker in a haunting Veilmourn silhouette. Generated as a high-resolution painterly source master for a compact 48-pixel runtime cell, with generous alpha padding and strong shape separation. No scenery, ground tile, frame, text, logo, copied heraldry, character, copyrighted asset, or protected visual expression."
+    }
+  ]
+}
