@@ -1,0 +1,77 @@
+{
+  "schema_id": "charterless_compact_campaign_art_v1",
+  "content_batch_id": "content-charterless-compact-campaign-10184",
+  "generator_mode": "built_in_image_gen",
+  "generated_at": "2026-08-31",
+  "campaign_id": "campaign_charterless_compact",
+  "identity_sheet": "res://art/campaigns/source/generated/charterless_compact/charterless_compact_identity_sheet.png",
+  "identity_sheet_sha256": "fc15bb3196e56b655c50af8e7d7069a7cf0c2b0741ecabed271f95406a114d14",
+  "final_prompt": "Original seven-insignia identity sheet for The Charterless Compact: an open field ledger with six witness tabs, tide hook and blank slate, double assay and anvils, three-prism gate warrant, fenhound mask with regalia, rooted bolt standard, and powder quill crossing a Tollmoon hook; exact 3x3 layout with two empty cells, distinct non-color silhouettes, no text or franchise symbols, genuine transparency.",
+  "runtime_pipeline": "The exact 1275x1233 transparent sheet is divided into seven occupied 425x411 cells; the emblem is trimmed, Lanczos-downscaled, and centered on a 128px RGBA canvas, while six chapter seals are centered on 64px RGBA canvases. Source masters remain outside release packages.",
+  "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a4126a00-be5e-4bb5-9099-6dfa5d082957.png",
+  "assets": [
+    {
+      "id": "campaign_emblem_charterless_compact",
+      "role": "campaign_emblem",
+      "source_path": "res://art/campaigns/source/generated/emblems/charterless_compact_source.png",
+      "runtime_path": "res://art/campaigns/runtime/emblems/charterless_compact.png",
+      "source_sha256": "c38617a447980aa86c7a873722f68d90fc89667505018e254e79df6a4b94b89b",
+      "runtime_sha256": "fcb2455809aeb8cab6b9c0857b2502d3af4e050d139dc58fbc34d31aae29f990",
+      "non_color_identity": "An open weathered field ledger is encircled by six materially different witness tabs while its center remains deliberately unsigned."
+    },
+    {
+      "id": "campaign_chapter_seal_tidehook_reedwake_commission",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/reedwake_blank_slate_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/reedwake_blank_slate.png",
+      "source_sha256": "2b087f7e1f96cc1af082826b776e14bf0a9f08be2b8b259da37eb15c13da15c1",
+      "runtime_sha256": "88511dbc57f70f14ea1b121f9e4c33aea4f062d2eb8b0b0fdefb4231ada65339",
+      "non_color_identity": "A crescent tide hook carries a blank slate above one sharply curling dark wave."
+    },
+    {
+      "id": "campaign_chapter_seal_blackgauge_double_assay",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/double_assay_witness_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/double_assay_witness.png",
+      "source_sha256": "27b509ee4b9f1b1942e062734c6e80ad620d763527ddf47adc869c9cc8b9287f",
+      "runtime_sha256": "c7a83dca4efa9a25ddbaf3a10dc929e6fcca1c55d3c6ca26f3d2ea41e2d771c4",
+      "non_color_identity": "A double assay gauge balances between two unequal angular anvils on one central iron standard."
+    },
+    {
+      "id": "campaign_chapter_seal_sevenfold_meridian_three_prism_garrison_warrant",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/three_prism_warrant_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/three_prism_warrant.png",
+      "source_sha256": "959ad32acbb39c8bd725b508783bab9d86ea3cc6721a0ce3d8ee50c4abaded2a",
+      "runtime_sha256": "0a0696d4af158776dcfbc7a7f8d4b71d2af35038936d79117606c31d716e3eb7",
+      "non_color_identity": "Three differently sized pale prisms rise behind a compact iron-banded wooden gate bar."
+    },
+    {
+      "id": "campaign_chapter_seal_reedcaller_fenhound_pursuit_assembly",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/fenhound_regalia_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/fenhound_regalia.png",
+      "source_sha256": "ed83ba120683634595611bcbc0e32cbc3a735728d94d4c105f4b96eedcfaead2",
+      "runtime_sha256": "957445d4635b56cb095f026c9ec9174d9fbfa89e3c8cbbadc0bccf83900fc15b",
+      "non_color_identity": "A long-eared fenhound mask grips three materially different regalia tokens in an open jaw ring."
+    },
+    {
+      "id": "campaign_chapter_seal_boltroot_briarwheel_border_oath_seizure",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/rooted_standard_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/rooted_standard.png",
+      "source_sha256": "d7382a253ad3b1c0eceb4df113d65370788b11e4b0c185da4bc3f78e22bed8a2",
+      "runtime_sha256": "7e7c68856ffde3ad09e4afeede099647a4c603ea29dc9ec6045b60fa317e6587",
+      "non_color_identity": "A rooted crossbow bolt supports a forked cloth standard whose two unequal wings remain visibly separate."
+    },
+    {
+      "id": "campaign_chapter_seal_powderwrit_tollreaver_rival_banner_challenge",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/tollmoon_final_charter_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/tollmoon_final_charter.png",
+      "source_sha256": "9cf17688600d337d94b233bf5ceec75631a0a1eaeacdbdca30a56f26a3aa3e54",
+      "runtime_sha256": "fb2e4951b3bbd434f5c4d0b7d929c2c303f2c649ba4f0f3b961cc4033e438358",
+      "non_color_identity": "A dark powder quill crosses a crescent toll hook beneath one narrow two-tailed field pennant."
+    }
+  ]
+}

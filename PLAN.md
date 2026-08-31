@@ -24,9 +24,41 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; the next content batch should be selected from a fresh live-coverage audit.
-- Most recently completed implementation slice: `content-six-named-rival-banner-challenges-10184`, a six-map authored-rival, underused-hero, command-banner, strategic-pressure, battle-identity, and save-continuity batch.
-- Current package boundary: matching Linux and Windows release exports measure 231334232 bytes, 18665768 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none; the next substantial content batch remains to be selected under the continuing content-expansion goal.
+- Most recently completed implementation slice: `content-charterless-compact-campaign-10184`, a six-chapter, six-faction, six-mechanic campaign and original campaign-art batch for the final six roster heroes without a campaign lead role.
+- Current package boundary: matching Linux and Windows release exports measure 231413808 bytes, 18586192 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## The Charterless Compact Campaign
+
+id: `content-charterless-compact-campaign-10184`
+
+Status: completed on 2026-08-31.
+
+Current finding:
+- all 66 authored heroes lead live skirmishes, but Maela Powderwrit, Rhask Reedcaller, Aven Sevenfold, Bryn Boltroot, Kestra Blackgauge, and Olan Tidehook are the final six roster heroes with no campaign lead role, exactly one gap per faction;
+- those six commanders already own six production skirmishes spanning field commission, twin-hold defense, garrison logistics, artifact-set assembly, border-standard control, and named-rival command, so a curated campaign adds more player value and mechanical variety than another disconnected definition wave;
+- the campaign runtime already supports exact scenario ordering, victory-and-flag unlocks, bounded cross-commander common-resource handoff, isolated hero state, narrative surfaces, save-version-9 continuity, and compact generated campaign art.
+
+Implementation boundary:
+- promote Tidehook Reedwake Commission, Blackgauge Double Assay, Sevenfold Meridian Three-Prism Garrison Warrant, Reedcaller Fenhound Pursuit Assembly, Boltroot Briarwheel Border Oath Seizure, and Powderwrit-Tollreaver Rival Banner Challenge into one original six-chapter campaign while preserving their skirmish availability and live mechanics;
+- add exact chapter-witness flags, sequential victory-plus-witness unlocks, capped common-resource handoff, strict hero progression/spell/artifact/army/rare-resource isolation, complete briefing/intel/stakes/aftermath/journal copy, and a final campaign outcome;
+- generate one original transparent identity sheet, derive one 128px campaign emblem and six distinct 64px chapter seals, retain exact prompt/hash/accessibility provenance outside packages, and keep Linux/Windows exports symmetric below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all six chapters launch through campaign authority in exact order, exercise their six different production mechanics, export only the immediately preceding witness and capped common stores, preserve commander-bound isolation, satisfy each existing scenario victory, and complete the campaign after Maela defeats the named rival finale;
+- the six previously campaign-absent heroes become campaign leads, all seven art identities resolve in the campaign browser with byte-distinct non-color silhouettes, and generated source masters remain excluded from release packages;
+- run one consolidated six-chapter gameplay/mechanic/art/carryover/save smoke after the complete batch, followed once by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- shipped `The Charterless Compact` as a six-chapter anthology retaining all six maps as skirmishes, giving Maela Powderwrit, Rhask Reedcaller, Aven Sevenfold, Bryn Boltroot, Kestra Blackgauge, and Olan Tidehook their first campaign lead roles and raising campaign-lead coverage to all 66 production heroes;
+- preserved six distinct production mechanics across eighteen battles, with exact victory-plus-witness sequencing, 12-percent capped common-store handoff, and strict isolation of heroes, armies, progression, spellbooks, artifacts, and rare resources;
+- generated and inspected one original campaign emblem and six byte-distinct chapter seals from one retained transparent identity sheet, with exact prompt/hash/accessibility provenance and all source masters excluded from packages;
+- the single consolidated campaign smoke passed six exact campaign launches, six mechanic completions, eighteen production battles, six witness handoffs, six scenario victories, six save-version-9 round trips, seven exact art identities, six visual captures, and full campaign completion;
+- repository validation passed; matching Linux and Windows exports booted with the native extension, contained all 22 emblems and 96 chapter seals, and measured 231413808 bytes, leaving 18586192 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new map, faction, hero definition, unit definition, town definition, building, spell, artifact definition, encounter definition, combat formula, strategic-AI algorithm, native RMG behavior, save-version bump, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes campaign, map, commander, insignia, name, text, heraldry, or protected visual expression.
 
 ## Six Named Rival Banner Challenges
 

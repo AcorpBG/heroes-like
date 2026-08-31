@@ -16014,10 +16014,10 @@
   "currentNotes": "Completed six original named-rival skirmish challenges with twelve underused roster heroes, twelve five-stack companies, six fixed rival encounters, eighteen guarded banner positions, six town captures, one generated six-banner atlas, one consolidated six-case gameplay/art/save smoke, repository validation, and matching Linux/Windows package boots at 231334232 bytes.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-six-named-rival-banner-challenges-10184",
-  "currentSliceId": "content-six-named-rival-banner-challenges-10184",
-  "currentSliceNotes": "Completed six original named-rival skirmish challenges with twelve underused roster heroes, twelve five-stack companies, six fixed rival encounters, eighteen guarded banner positions, six town captures, one generated six-banner atlas, one consolidated six-case gameplay/art/save smoke, repository validation, and matching Linux/Windows package boots at 231334232 bytes.",
+  "currentSliceId": "content-charterless-compact-campaign-10184",
+  "currentSliceNotes": "Shipped 6-chapter Charterless Compact campaign for the final 6 campaign-absent heroes; 6 mechanics, 18 production battles, bounded witness/resource handoff, 7 original art identities, consolidated gameplay/save smoke green, repo validation green, Linux and Windows packaged boots green at 231413808 bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six named rival banner challenges 10184",
+  "currentSliceTitle": "content charterless compact campaign 10184",
   "currentSliceUpdatedAt": "2026-08-31T17:11:11Z",
   "deferredRiskRegister": [
     {
@@ -107215,6 +107215,16 @@
       "startedAt": "2026-08-31T17:17:30Z",
       "notes": "Completed six original named-rival skirmish challenges with twelve underused roster heroes, twelve five-stack companies, six fixed rival encounters, eighteen guarded banner positions, six town captures, one generated six-banner atlas, one consolidated six-case gameplay/art/save smoke, repository validation, and matching Linux/Windows package boots at 231334232 bytes.",
       "completedAt": "2026-08-31T17:56:02Z"
+    },
+    {
+      "id": "content-charterless-compact-campaign-10184",
+      "title": "content charterless compact campaign 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T18:23:00Z",
+      "startedAt": "2026-08-31T18:01:37Z",
+      "notes": "Shipped 6-chapter Charterless Compact campaign for the final 6 campaign-absent heroes; 6 mechanics, 18 production battles, bounded witness/resource handoff, 7 original art identities, consolidated gameplay/save smoke green, repo validation green, Linux and Windows packaged boots green at 231413808 bytes.",
+      "completedAt": "2026-08-31T18:23:00Z"
     }
   ],
   "project": "heroes-like",
@@ -107759,7 +107769,7 @@
   ],
   "summary": "Completed the coherent Seven-School Signature Battle VFX content, accessibility, live-presentation, and package-efficiency batch with one consolidated smoke.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T17:56:02Z",
+  "updatedAt": "2026-08-31T18:23:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
