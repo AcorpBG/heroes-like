@@ -13317,6 +13317,36 @@
       "assigned_resource_site_id": "site_veilmourn_twin_wake_field_council",
       "presentation_role": "twinwake_field_council",
       "accessible_description": "A leaning tideglass chart mast flies two distinct mourning pennants above shell signal bells, salt route stones, dark driftwood, and a sea-glass base."
+    },
+    "resource_site_relief_route_embercourt_relay": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [288, 48],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/embercourt_relief_route_relay_source.png", "source_generated": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/embercourt_relief_route_relay_source.png", "source_model": "built_in_image_gen_original_relief_route_convoy_relays_atlas",
+      "assigned_resource_site_id": "site_embercourt_locklantern_convoy_relay", "presentation_role": "locklantern_convoy_relay", "accessible_description": "A charred timber dispatch arch with an ember-bronze winch, twin route lanterns, sealed relief cargo, and a low crate sled."
+    },
+    "resource_site_relief_route_mireclaw_relay": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [288, 48],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/mireclaw_relief_route_relay_source.png", "source_generated": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/mireclaw_relief_route_relay_source.png", "source_model": "built_in_image_gen_original_relief_route_convoy_relays_atlas",
+      "assigned_resource_site_id": "site_mireclaw_antlerraft_convoy_relay", "presentation_role": "antlerraft_convoy_relay", "accessible_description": "A bundled-reed freight raft with an antler-and-bone hoist, signal bell, chained cargo baskets, and mud skids."
+    },
+    "resource_site_relief_route_sunvault_relay": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [288, 48],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/sunvault_relief_route_relay_source.png", "source_generated": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/sunvault_relief_route_relay_source.png", "source_model": "built_in_image_gen_original_relief_route_convoy_relays_atlas",
+      "assigned_resource_site_id": "site_sunvault_prismwheel_convoy_relay", "presentation_role": "prismwheel_convoy_relay", "accessible_description": "A faceted lens mast over a stepped white-stone cargo dais, crystal route marker, sun disc, and angular supply cases."
+    },
+    "resource_site_relief_route_thornwake_relay": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [288, 48],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/thornwake_relief_route_relay_source.png", "source_generated": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/thornwake_relief_route_relay_source.png", "source_model": "built_in_image_gen_original_relief_route_convoy_relays_atlas",
+      "assigned_resource_site_id": "site_thornwake_seedcart_convoy_relay", "presentation_role": "seedcart_convoy_relay", "accessible_description": "A living root-cart cradle with a braided vine hoist, three seed-pod signals, leaf-woven cargo, and an amber route stone."
+    },
+    "resource_site_relief_route_brasshollow_relay": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [288, 48],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/brasshollow_relief_route_relay_source.png", "source_generated": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/brasshollow_relief_route_relay_source.png", "source_model": "built_in_image_gen_original_relief_route_convoy_relays_atlas",
+      "assigned_resource_site_id": "site_brasshollow_quenchrail_convoy_relay", "presentation_role": "quenchrail_convoy_relay", "accessible_description": "A black-iron rail gantry with offset pressure gauges, a riveted cargo trolley, quench tank, chain hoist, and route shutter."
+    },
+    "resource_site_relief_route_veilmourn_relay": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [288, 48],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/veilmourn_relief_route_relay_source.png", "source_generated": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/veilmourn_relief_route_relay_source.png", "source_model": "built_in_image_gen_original_relief_route_convoy_relays_atlas",
+      "assigned_resource_site_id": "site_veilmourn_wakeglass_convoy_relay", "presentation_role": "wakeglass_convoy_relay", "accessible_description": "A leaning driftwood tide mooring with a shell-bell mast, wakeglass buoys, rope cargo cradle, salt-sealed cases, and skiff runner."
     }
   },
   "resource_site_sprites": {
@@ -14361,6 +14391,24 @@
       "asset_id": "resource_site_twin_command_veilmourn_council",
       "unclaimed_asset_id": "resource_site_twin_command_veilmourn_council",
       "fit": "Exact original Twin-Wake Chart Council remains visible before and after its one-time paired-command claim."
+    },
+    "site_embercourt_locklantern_convoy_relay": {
+      "asset_id": "resource_site_relief_route_embercourt_relay", "unclaimed_asset_id": "resource_site_relief_route_embercourt_relay", "fit": "Exact original Locklantern relay remains visible while it dispatches and records relief convoys."
+    },
+    "site_mireclaw_antlerraft_convoy_relay": {
+      "asset_id": "resource_site_relief_route_mireclaw_relay", "unclaimed_asset_id": "resource_site_relief_route_mireclaw_relay", "fit": "Exact original Antlerraft relay remains visible while it dispatches and records relief convoys."
+    },
+    "site_sunvault_prismwheel_convoy_relay": {
+      "asset_id": "resource_site_relief_route_sunvault_relay", "unclaimed_asset_id": "resource_site_relief_route_sunvault_relay", "fit": "Exact original Prismwheel relay remains visible while it dispatches and records relief convoys."
+    },
+    "site_thornwake_seedcart_convoy_relay": {
+      "asset_id": "resource_site_relief_route_thornwake_relay", "unclaimed_asset_id": "resource_site_relief_route_thornwake_relay", "fit": "Exact original Seedcart relay remains visible while it dispatches and records relief convoys."
+    },
+    "site_brasshollow_quenchrail_convoy_relay": {
+      "asset_id": "resource_site_relief_route_brasshollow_relay", "unclaimed_asset_id": "resource_site_relief_route_brasshollow_relay", "fit": "Exact original Quenchrail relay remains visible while it dispatches and records relief convoys."
+    },
+    "site_veilmourn_wakeglass_convoy_relay": {
+      "asset_id": "resource_site_relief_route_veilmourn_relay", "unclaimed_asset_id": "resource_site_relief_route_veilmourn_relay", "fit": "Exact original Wakeglass relay remains visible while it dispatches and records relief convoys."
     }
   },
   "artifact_default_sprite": {

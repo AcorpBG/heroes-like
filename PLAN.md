@@ -24,9 +24,34 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected; the broad original-content goal remains active and the next coherent slice should be selected from live catalog gaps before work begins.
-- Most recently completed implementation slice: `content-six-twin-command-field-councils-10184`, one coherent six-faction tavern-recruitment, army-transfer, paired-deployment, exact-art, and save-continuity batch.
-- Current package boundary: matching Linux and Windows release exports measure 248126824 bytes, 1873176 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none; select the next substantial production-content batch before further implementation.
+- Most recently completed implementation slice: `content-six-relief-route-convoy-runs-10184`, a coherent six-faction convoy-dispatch, interception, delivery, exact-art, and save-continuity batch.
+- Current package boundary: matching Linux and Windows release exports measure 248517260 bytes, 1482740 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Relief-Route Convoy Runs
+
+id: `content-six-relief-route-convoy-runs-10184`
+
+Status: completed.
+
+Current finding:
+- reserve convoys are production-authoritative across town recruit stock, route-response orders, travel time, hostile interception, battle outcomes, town or hero delivery, and save normalization, but none of the 147 authored scenarios makes completing a convoy route part of victory;
+- completed deliveries currently leave no durable per-route receipt after the active manifest is cleared, so authored objectives cannot distinguish a successful arrival from an idle or lost convoy;
+- one exact relay per faction can turn this underused system into a readable six-map escort family without changing the save version or adding another strategic-AI subsystem.
+
+Implementation boundary:
+- persist bounded per-resource-node successful-delivery receipts and add a first-class `reserve_delivery_completed` scenario objective scoped to one relay placement and exact town or hero target, with dependency metadata, progress labels, content validation, and old-save defaults;
+- author one original skirmish-only relief run per faction, each with an exact lead, new five-stack company, source and threatened forward towns, a faction convoy relay, three battle fronts including an active route interceptor, economy support, pressure, deterministic seeds, and a delayed replacement interception if the route remains incomplete;
+- generate six original transparent faction relay landmarks, derive one compact 288x48 runtime atlas, retain prompt/hash/accessibility provenance outside packages, and preserve Windows/Linux symmetry below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all six scenarios launch from the skirmish selector, claim and operate the exact relay through production overworld actions, load recruits from the source town, target the exact threatened forward town, expose and defeat the active interception, resolve eighteen production battles, deliver a non-empty manifest, satisfy scoped objective dependencies, and remain exact across save-version-9 round trips;
+- negative controls prove that an active-but-undelivered convoy, a delivery from the wrong relay, a delivery to the wrong target, and a failed/intercepted route cannot satisfy the objective;
+- run one consolidated six-case gameplay/art/save and visual-capture smoke only after the complete batch, followed once by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, unit definition, town definition, building, spell, artifact, campaign, combat formula, strategic-AI planning algorithm, RMG/native behavior, save-version bump, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes map, caravan, object, commander, name, text, heraldry, or protected visual expression.
 
 ## Six Twin-Command Field Councils
 

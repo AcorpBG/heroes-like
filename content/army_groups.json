@@ -2790,6 +2790,180 @@
       ],
       "content_status": "twin_command_opening_company_live",
       "content_batch_id": "content-six-twin-command-field-councils-10184"
+    },
+    {
+      "id": "army_locklantern_relief_company",
+      "name": "Helva Tollbrand's Locklantern Relief Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {
+          "unit_id": "unit_embercourt_fordhook_cadets",
+          "count": 32
+        },
+        {
+          "unit_id": "unit_ember_archer",
+          "count": 20
+        },
+        {
+          "unit_id": "unit_citadel_pikeward",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_embercourt_lockglass_writcasters",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_embercourt_beaconline_writguard",
+          "count": 3
+        }
+      ],
+      "content_status": "relief_route_opening_company_live",
+      "content_batch_id": "content-six-relief-route-convoy-runs-10184"
+    },
+    {
+      "id": "army_antlerraft_relief_company",
+      "name": "Brakka Mudkeel's Antlerraft Relief Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {
+          "unit_id": "unit_mireclaw_reedsnare_kin",
+          "count": 32
+        },
+        {
+          "unit_id": "unit_mireclaw_mudglass_slingers",
+          "count": 20
+        },
+        {
+          "unit_id": "unit_mireclaw_bogplate_maulers",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_mireclaw_ferrychain_lashers",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_mireclaw_sporewake_chanters",
+          "count": 3
+        }
+      ],
+      "content_status": "relief_route_opening_company_live",
+      "content_batch_id": "content-six-relief-route-convoy-runs-10184"
+    },
+    {
+      "id": "army_prismwheel_relief_company",
+      "name": "Thalen Choirward's Prismwheel Relief Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {
+          "unit_id": "unit_sunvault_shard_wardens",
+          "count": 32
+        },
+        {
+          "unit_id": "unit_sunvault_prism_adepts",
+          "count": 20
+        },
+        {
+          "unit_id": "unit_sunvault_mirror_duelists",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_sunvault_resonant_choristers",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_sunvault_solar_array_striders",
+          "count": 3
+        }
+      ],
+      "content_status": "relief_route_opening_company_live",
+      "content_batch_id": "content-six-relief-route-convoy-runs-10184"
+    },
+    {
+      "id": "army_seedcart_relief_company",
+      "name": "Ralka Mossvein's Seedcart Relief Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {
+          "unit_id": "unit_thornwake_seedcutters",
+          "count": 32
+        },
+        {
+          "unit_id": "unit_thornwake_bramblekite_needlers",
+          "count": 20
+        },
+        {
+          "unit_id": "unit_thornwake_seedshield_wardens",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_thornwake_dawnseed_bolters",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_thornwake_seedglass_cantors",
+          "count": 3
+        }
+      ],
+      "content_status": "relief_route_opening_company_live",
+      "content_batch_id": "content-six-relief-route-convoy-runs-10184"
+    },
+    {
+      "id": "army_quenchrail_relief_company",
+      "name": "Kuld Varn's Quenchrail Relief Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {
+          "unit_id": "unit_brasshollow_scrip_haulers",
+          "count": 32
+        },
+        {
+          "unit_id": "unit_brasshollow_quenchspool_slingers",
+          "count": 20
+        },
+        {
+          "unit_id": "unit_brasshollow_furnace_pavis_teams",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_brasshollow_boiler_rivetcasters",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_brasshollow_quenchbell_mortars",
+          "count": 3
+        }
+      ],
+      "content_status": "relief_route_opening_company_live",
+      "content_batch_id": "content-six-relief-route-convoy-runs-10184"
+    },
+    {
+      "id": "army_wakeglass_relief_company",
+      "name": "Jessa Keelwarden's Wakeglass Relief Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {
+          "unit_id": "unit_veilmourn_bellwake_oars",
+          "count": 32
+        },
+        {
+          "unit_id": "unit_veilmourn_mourning_lanterns",
+          "count": 20
+        },
+        {
+          "unit_id": "unit_veilmourn_wakechain_boarders",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_veilmourn_undertow_harpooners",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_veilmourn_obituary_scribes",
+          "count": 3
+        }
+      ],
+      "content_status": "relief_route_opening_company_live",
+      "content_batch_id": "content-six-relief-route-convoy-runs-10184"
     }
   ]
 }

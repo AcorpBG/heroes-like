@@ -15192,6 +15192,318 @@
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
+    },
+    {
+      "id": "site_embercourt_locklantern_convoy_relay",
+      "name": "Locklantern Dispatch Winch",
+      "family": "faction_outpost",
+      "faction_id": "faction_embercourt",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 240,
+        "embergrain": 1
+      },
+      "claim_flags": {
+        "locklantern_relay_claimed": true
+      },
+      "control_income": {
+        "gold": 55,
+        "embergrain": 1
+      },
+      "response_profile": {
+        "action_label": "Raise the Locklantern Train",
+        "summary": "A charred canal winch raises sealed relief loads beneath paired lock lanterns.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 280,
+          "embergrain": 1
+        },
+        "watch_days": 5,
+        "quality_bonus": 4,
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 2,
+        "pressure_guard_bonus": 2,
+        "growth_bonus_percent": 5
+      },
+      "runtime_boundary": {
+        "status": "relief_route_convoy_relay_live",
+        "resource_site_runtime_supported": true,
+        "reserve_delivery_dispatch_live": true,
+        "successful_delivery_receipt_live": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "scenario_placement_migration": true
+      },
+      "content_status": "relief_route_convoy_relay_live",
+      "content_batch_id": "content-six-relief-route-convoy-runs-10184",
+      "batch_role": "faction_relief_route_convoy_relay",
+      "public_text": {
+        "public_summary": "A charred canal winch raises sealed relief loads beneath paired lock lanterns.",
+        "non_color_silhouette_required": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_mireclaw_antlerraft_convoy_relay",
+      "name": "Antlerraft Peat Relay",
+      "family": "faction_outpost",
+      "faction_id": "faction_mireclaw",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 240,
+        "peatwax": 1
+      },
+      "claim_flags": {
+        "antlerraft_relay_claimed": true
+      },
+      "control_income": {
+        "gold": 55,
+        "peatwax": 1
+      },
+      "response_profile": {
+        "action_label": "Loose the Antlerraft Train",
+        "summary": "A broad reed raft carries peat-sealed baskets beneath an antler signal bell.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 280,
+          "peatwax": 1
+        },
+        "watch_days": 5,
+        "quality_bonus": 4,
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 2,
+        "pressure_guard_bonus": 2,
+        "growth_bonus_percent": 5
+      },
+      "runtime_boundary": {
+        "status": "relief_route_convoy_relay_live",
+        "resource_site_runtime_supported": true,
+        "reserve_delivery_dispatch_live": true,
+        "successful_delivery_receipt_live": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "scenario_placement_migration": true
+      },
+      "content_status": "relief_route_convoy_relay_live",
+      "content_batch_id": "content-six-relief-route-convoy-runs-10184",
+      "batch_role": "faction_relief_route_convoy_relay",
+      "public_text": {
+        "public_summary": "A broad reed raft carries peat-sealed baskets beneath an antler signal bell.",
+        "non_color_silhouette_required": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_sunvault_prismwheel_convoy_relay",
+      "name": "Prismwheel Relief Station",
+      "family": "faction_outpost",
+      "faction_id": "faction_sunvault",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 240,
+        "aetherglass": 1
+      },
+      "claim_flags": {
+        "prismwheel_relay_claimed": true
+      },
+      "control_income": {
+        "gold": 55,
+        "aetherglass": 1
+      },
+      "response_profile": {
+        "action_label": "Turn the Prismwheel Train",
+        "summary": "A turning prism measures the relief road and seals each case beneath an exact daylight bearing.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 280,
+          "aetherglass": 1
+        },
+        "watch_days": 5,
+        "quality_bonus": 4,
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 2,
+        "pressure_guard_bonus": 2,
+        "growth_bonus_percent": 5
+      },
+      "runtime_boundary": {
+        "status": "relief_route_convoy_relay_live",
+        "resource_site_runtime_supported": true,
+        "reserve_delivery_dispatch_live": true,
+        "successful_delivery_receipt_live": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "scenario_placement_migration": true
+      },
+      "content_status": "relief_route_convoy_relay_live",
+      "content_batch_id": "content-six-relief-route-convoy-runs-10184",
+      "batch_role": "faction_relief_route_convoy_relay",
+      "public_text": {
+        "public_summary": "A turning prism measures the relief road and seals each case beneath an exact daylight bearing.",
+        "non_color_silhouette_required": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_thornwake_seedcart_convoy_relay",
+      "name": "Seedcart Root Relay",
+      "family": "faction_outpost",
+      "faction_id": "faction_thornwake",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 240,
+        "verdant_grafts": 1
+      },
+      "claim_flags": {
+        "seedcart_relay_claimed": true
+      },
+      "control_income": {
+        "gold": 55,
+        "verdant_grafts": 1
+      },
+      "response_profile": {
+        "action_label": "Lower the Seedcart Train",
+        "summary": "A living root cradle lowers leaf-wrapped reserves onto a seedcart beneath three amber pod lamps.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 280,
+          "verdant_grafts": 1
+        },
+        "watch_days": 5,
+        "quality_bonus": 4,
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 2,
+        "pressure_guard_bonus": 2,
+        "growth_bonus_percent": 5
+      },
+      "runtime_boundary": {
+        "status": "relief_route_convoy_relay_live",
+        "resource_site_runtime_supported": true,
+        "reserve_delivery_dispatch_live": true,
+        "successful_delivery_receipt_live": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "scenario_placement_migration": true
+      },
+      "content_status": "relief_route_convoy_relay_live",
+      "content_batch_id": "content-six-relief-route-convoy-runs-10184",
+      "batch_role": "faction_relief_route_convoy_relay",
+      "public_text": {
+        "public_summary": "A living root cradle lowers leaf-wrapped reserves onto a seedcart beneath three amber pod lamps.",
+        "non_color_silhouette_required": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_brasshollow_quenchrail_convoy_relay",
+      "name": "Quenchrail Dispatch Gantry",
+      "family": "faction_outpost",
+      "faction_id": "faction_brasshollow",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 240,
+        "brass_scrip": 1
+      },
+      "claim_flags": {
+        "quenchrail_relay_claimed": true
+      },
+      "control_income": {
+        "gold": 55,
+        "brass_scrip": 1
+      },
+      "response_profile": {
+        "action_label": "Clear the Quenchrail Train",
+        "summary": "A double-gauge gantry clears a short iron trolley only after its cargo and quench pressure agree.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 280,
+          "brass_scrip": 1
+        },
+        "watch_days": 5,
+        "quality_bonus": 4,
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 2,
+        "pressure_guard_bonus": 2,
+        "growth_bonus_percent": 5
+      },
+      "runtime_boundary": {
+        "status": "relief_route_convoy_relay_live",
+        "resource_site_runtime_supported": true,
+        "reserve_delivery_dispatch_live": true,
+        "successful_delivery_receipt_live": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "scenario_placement_migration": true
+      },
+      "content_status": "relief_route_convoy_relay_live",
+      "content_batch_id": "content-six-relief-route-convoy-runs-10184",
+      "batch_role": "faction_relief_route_convoy_relay",
+      "public_text": {
+        "public_summary": "A double-gauge gantry clears a short iron trolley only after its cargo and quench pressure agree.",
+        "non_color_silhouette_required": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_veilmourn_wakeglass_convoy_relay",
+      "name": "Wakeglass Relief Mooring",
+      "family": "faction_outpost",
+      "faction_id": "faction_veilmourn",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 240,
+        "memory_salt": 1
+      },
+      "claim_flags": {
+        "wakeglass_relay_claimed": true
+      },
+      "control_income": {
+        "gold": 55,
+        "memory_salt": 1
+      },
+      "response_profile": {
+        "action_label": "Sound the Wakeglass Train",
+        "summary": "A leaning shell-bell mast sounds a remembered channel while wakeglass buoys lift salt-sealed relief cases.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 280,
+          "memory_salt": 1
+        },
+        "watch_days": 5,
+        "quality_bonus": 4,
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 2,
+        "pressure_guard_bonus": 2,
+        "growth_bonus_percent": 5
+      },
+      "runtime_boundary": {
+        "status": "relief_route_convoy_relay_live",
+        "resource_site_runtime_supported": true,
+        "reserve_delivery_dispatch_live": true,
+        "successful_delivery_receipt_live": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "scenario_placement_migration": true
+      },
+      "content_status": "relief_route_convoy_relay_live",
+      "content_batch_id": "content-six-relief-route-convoy-runs-10184",
+      "batch_role": "faction_relief_route_convoy_relay",
+      "public_text": {
+        "public_summary": "A leaning shell-bell mast sounds a remembered channel while wakeglass buoys lift salt-sealed relief cases.",
+        "non_color_silhouette_required": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }

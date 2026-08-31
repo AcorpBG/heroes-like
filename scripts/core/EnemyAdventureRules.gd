@@ -9959,8 +9959,13 @@ static func _target_candidate_descriptors(
 			if objective is Dictionary and String(objective.get("type", "")) in ["town_owned_by_player", "town_not_owned_by_player"]:
 				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("placement_id", "")), 260, config, faction_id, include_unscouted, objective_anchor_surface)
 		for objective in objectives.get("victory", []):
-			if objective is Dictionary and String(objective.get("type", "")) in ["town_owned_by_player", "town_not_owned_by_player", "building_built_in_player_town", "hero_stationed_at_player_town"]:
+			if not (objective is Dictionary):
+				continue
+			var objective_type := String(objective.get("type", ""))
+			if objective_type in ["town_owned_by_player", "town_not_owned_by_player", "building_built_in_player_town", "hero_stationed_at_player_town"]:
 				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("placement_id", "")), 220, config, faction_id, include_unscouted, objective_anchor_surface)
+			elif objective_type == "reserve_delivery_completed" and String(objective.get("target_kind", "town")) == "town":
+				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("target_id", "")), 240, config, faction_id, include_unscouted, objective_anchor_surface)
 
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary):
