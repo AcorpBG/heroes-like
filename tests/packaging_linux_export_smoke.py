@@ -384,7 +384,7 @@ REQUIRED_CAMPAIGN_EMBLEM_NAMES = (
     "mireglass_counterpoint", "rootbound_canticles", "fivefold_assay",
     "wakebound_atlas", "coalwater_ordinance", "siltbound_writ",
     "broken_meridian", "six_roads_relay", "six_unbound_oaths",
-    "charterless_compact",
+    "charterless_compact", "six_sealed_companies",
 )
 REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES = tuple(
     f"art/campaigns/runtime/emblems/{emblem_name}.png.import"
@@ -426,6 +426,8 @@ REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES = (
     "greenbranch_oath", "scarshield_oath", "flaremast_oath",
     "reedwake_blank_slate", "double_assay_witness", "three_prism_warrant",
     "fenhound_regalia", "rooted_standard", "tollmoon_final_charter",
+    "ashcharter_seal", "gorefen_ring_seal", "daybreak_prism_seal",
+    "five_bough_seal", "three_gauge_seal", "fogkeel_bell_seal",
 )
 REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES = tuple(
     f"art/campaigns/runtime/chapter_seals/{seal_name}.png.import"

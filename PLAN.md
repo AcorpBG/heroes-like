@@ -24,9 +24,41 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected after completing `content-six-veteran-company-musters-10184`; select and register the next content gap before starting another implementation wave.
-- Most recently completed implementation slice: `content-six-veteran-company-musters-10184`, six guarded faction recruitment operations that make all eighteen non-legacy production faction companies replaceable through live play.
-- Current package boundary: matching Linux and Windows release exports measure 231559132 bytes, 18440868 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none selected; the next coherent content-and-original-art batch requires a fresh catalog audit before implementation begins.
+- Most recently completed implementation slice: `content-six-sealed-companies-campaign-10184`, a sequential six-faction campaign built from the veteran-muster operations with bounded handoff, isolated commander state, full narrative, and original campaign art.
+- Current package boundary: matching Linux and Windows release exports measure 231646428 bytes, 18353572 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## The Six Sealed Companies Campaign
+
+id: `content-six-sealed-companies-campaign-10184`
+
+Status: completed on 2026-08-31.
+
+Current finding:
+- the six veteran-muster operations now provide eighteen live battles, six guarded faction recruitment grounds, immediate and weekly access to all eighteen previously start-only production companies, exact two-state art, and save-version-9 continuity, but they remain disconnected skirmish entries;
+- town study dynamically exposes faction-school and Old Measure spells through built academy tiers, so raw JSON reference counts do not identify dormant spell content and must not be used as a reachability claim;
+- the campaign runtime already supports exact chapter ordering, victory-and-flag unlocks, bounded cross-commander common-resource handoff, strict personal-state isolation, narrative surfaces, and compact campaign art without a new parallel subsystem.
+
+Implementation boundary:
+- promote Pikeward Ash-Charter Veteran Muster, Chainboom Gorefen Veteran Muster, Glassmarshal Daybreak Veteran Muster, Bramblehound Worldroot Veteran Muster, Pitmarshal Foundry Veteran Muster, and Keelwarden Fog-Keel Veteran Muster into one original six-chapter campaign while preserving all six as skirmishes;
+- add exact muster-seal witness flags, sequential victory-plus-witness unlocks, capped common-resource handoff, strict hero progression/spell/artifact/army/rare-resource isolation, complete briefing/intel/stakes/aftermath/journal copy, and a final campaign outcome;
+- generate one original transparent identity sheet, derive one 128px campaign emblem and six distinct 64px chapter seals, retain exact prompt/hash/accessibility provenance outside packages, and preserve symmetric Linux/Windows exports below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all six chapters launch through campaign authority in exact order, resolve their eighteen existing production battles, claim their guarded veteran grounds, recruit all eighteen target unit identities, satisfy the existing army-and-control objectives, export only the immediately preceding witness and capped common stores, preserve personal-state isolation, and complete the campaign after six exact victories;
+- all seven art identities resolve in the campaign browser with byte-distinct non-color silhouettes, exact hashes, and no generated source-master package leakage;
+- run one consolidated six-chapter gameplay/recruitment/art/carryover/save smoke only after the complete batch, followed once by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- shipped The Six Sealed Companies as a six-chapter cross-faction campaign while preserving every chapter as a standalone skirmish, with exact muster-seal witness unlocks, capped common-resource handoff, isolated hero/army/spell/artifact/rare-resource state, full briefing/intel/stakes/aftermath/journal text, and Edda Rotlamp as the roster-backed final rival;
+- reused the six production veteran-muster operations as one coherent arc spanning eighteen live battles and all eighteen target recruit identities without duplicating maps, encounter systems, or recruitment authority;
+- generated, inspected, and wired one original 128px campaign emblem and six silhouette-distinct 64px chapter seals from retained transparent source art with exact prompt, hash, and accessibility provenance;
+- the single consolidated smoke passed six exact launches and leads, eighteen production battles, six live muster claims, all eighteen target units, six witness handoffs, six resource-only carryovers, six victories, six save-version-9 round trips, seven art identities, and final campaign completion;
+- repository validation passed; Linux booted headlessly and Windows booted through Wine with the native extension, both exported all 23 campaign emblems and 102 chapter seals and measured 231646428 bytes, leaving 18353572 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, unit definition, town definition, building, spell, artifact, map, encounter, dwelling, recruitment rule, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes campaign, commander, company, seal, insignia, name, text, art, or protected visual expression.
 
 ## Six Veteran Company Musters
 
