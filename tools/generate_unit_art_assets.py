@@ -165,6 +165,12 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_veilmourn_undertow_harpooners",
     "unit_veilmourn_wakeglass_navigators",
     "unit_veilmourn_dreamwake_tideglass_oracles",
+    "unit_embercourt_amberweir_sluicebrand_mangonels",
+    "unit_mireclaw_moonbite_mirehorn_breakers",
+    "unit_sunvault_splitprism_heliograph_ballistae",
+    "unit_thornwake_woundroot_rootmaul_behemoths",
+    "unit_brasshollow_whitegauge_datum_breach_cannons",
+    "unit_veilmourn_dreamwake_foganchor_colossi",
 }
 PACKAGE_OPTIMIZED_CURATED_IDS = {
     "unit_embercourt_amberweir_lockpike_wardens",
@@ -198,6 +204,12 @@ PACKAGE_OPTIMIZED_CURATED_IDS = {
     "unit_thornwake_dawnseed_bolters",
     "unit_brasshollow_gaugeplate_bailiffs",
     "unit_veilmourn_tidehook_deckhands",
+    "unit_embercourt_amberweir_sluicebrand_mangonels",
+    "unit_mireclaw_moonbite_mirehorn_breakers",
+    "unit_sunvault_splitprism_heliograph_ballistae",
+    "unit_thornwake_woundroot_rootmaul_behemoths",
+    "unit_brasshollow_whitegauge_datum_breach_cannons",
+    "unit_veilmourn_dreamwake_foganchor_colossi",
 }
 PACKAGE_TIGHT_CURATED_IDS = {
     "unit_embercourt_cinderseal_bombardiers",

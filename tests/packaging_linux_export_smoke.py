@@ -346,6 +346,12 @@ REQUIRED_MARCHLAND_LOCAL_RETINUE_UNIT_IDS = (
     "unit_thornwake_woundroot_hearthseed_slingers",
     "unit_brasshollow_whitegauge_datum_lancers",
     "unit_veilmourn_dreamwake_tideglass_oracles",
+    "unit_embercourt_amberweir_sluicebrand_mangonels",
+    "unit_mireclaw_moonbite_mirehorn_breakers",
+    "unit_sunvault_splitprism_heliograph_ballistae",
+    "unit_thornwake_woundroot_rootmaul_behemoths",
+    "unit_brasshollow_whitegauge_datum_breach_cannons",
+    "unit_veilmourn_dreamwake_foganchor_colossi",
 )
 REQUIRED_MARCHLAND_LOCAL_RETINUE_BUILDING_IDS = (
     "building_embercourt_amberweir_sluiceguard_lock",
@@ -354,6 +360,12 @@ REQUIRED_MARCHLAND_LOCAL_RETINUE_BUILDING_IDS = (
     "building_thornwake_woundroot_hearthseed_nursery",
     "building_brasshollow_whitegauge_datum_railhouse",
     "building_veilmourn_dreamwake_tideglass_oratory",
+    "building_embercourt_amberweir_counterweight_foundry",
+    "building_mireclaw_moonbite_mirehorn_chain_pen",
+    "building_sunvault_splitprism_heliograph_battery",
+    "building_thornwake_woundroot_rootmaul_hollow",
+    "building_brasshollow_whitegauge_breach_pressure_foundry",
+    "building_veilmourn_dreamwake_foganchor_slip",
 )
 REQUIRED_MARCHLAND_LOCAL_RETINUE_ART_PCK_IMPORT_ENTRIES = tuple(
     entry

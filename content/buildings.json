@@ -2574,11 +2574,33 @@
       "faction_id": "faction_brasshollow",
       "family": "repeatable_service",
       "artifact_reward_contract": {
-        "contract_id": "artifact_reward_contract_blackbell_verdict_gauge", "building_id": "building_brasshollow_brassbound_directorate", "source_tag": "town",
-        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions", "reward_categories": ["town_support", "artifact"], "reward_tier": "standard", "one_time_reward": true,
-        "allowed_town_ids": ["town_blackbell_foundry"], "service_cost": {"gold": 1800, "ore": 2, "brass_scrip": 2}, "metadata_only": false
+        "contract_id": "artifact_reward_contract_blackbell_verdict_gauge",
+        "building_id": "building_brasshollow_brassbound_directorate",
+        "source_tag": "town",
+        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions",
+        "reward_categories": [
+          "town_support",
+          "artifact"
+        ],
+        "reward_tier": "standard",
+        "one_time_reward": true,
+        "allowed_town_ids": [
+          "town_blackbell_foundry"
+        ],
+        "service_cost": {
+          "gold": 1800,
+          "ore": 2,
+          "brass_scrip": 2
+        },
+        "metadata_only": false
       },
-      "runtime_boundary": {"status": "horizon_relic_commission_live", "artifact_reward_execution": true, "save_payload_required": false, "ai_valuation_behavior": true, "rare_resource_activation": true},
+      "runtime_boundary": {
+        "status": "horizon_relic_commission_live",
+        "artifact_reward_execution": true,
+        "save_payload_required": false,
+        "ai_valuation_behavior": true,
+        "rare_resource_activation": true
+      },
       "requires": [
         "building_brasshollow_titan_charter_hall",
         "building_brasshollow_redline_assembly_yard"
@@ -2785,11 +2807,33 @@
       "faction_id": "faction_thornwake",
       "family": "repeatable_service",
       "artifact_reward_contract": {
-        "contract_id": "artifact_reward_contract_crownroot_oathseed_censer", "building_id": "building_thornwake_rootlaw_moot", "source_tag": "town",
-        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions", "reward_categories": ["town_support", "artifact"], "reward_tier": "standard", "one_time_reward": true,
-        "allowed_town_ids": ["town_crownroot_refuge"], "service_cost": {"gold": 1800, "wood": 2, "verdant_grafts": 2}, "metadata_only": false
+        "contract_id": "artifact_reward_contract_crownroot_oathseed_censer",
+        "building_id": "building_thornwake_rootlaw_moot",
+        "source_tag": "town",
+        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions",
+        "reward_categories": [
+          "town_support",
+          "artifact"
+        ],
+        "reward_tier": "standard",
+        "one_time_reward": true,
+        "allowed_town_ids": [
+          "town_crownroot_refuge"
+        ],
+        "service_cost": {
+          "gold": 1800,
+          "wood": 2,
+          "verdant_grafts": 2
+        },
+        "metadata_only": false
       },
-      "runtime_boundary": {"status": "horizon_relic_commission_live", "artifact_reward_execution": true, "save_payload_required": false, "ai_valuation_behavior": true, "rare_resource_activation": true},
+      "runtime_boundary": {
+        "status": "horizon_relic_commission_live",
+        "artifact_reward_execution": true,
+        "save_payload_required": false,
+        "ai_valuation_behavior": true,
+        "rare_resource_activation": true
+      },
       "requires": [
         "building_thornwake_bastion_seed_conclave",
         "building_thornwake_mycorrhizal_store"
@@ -2909,11 +2953,34 @@
       "faction_id": "faction_veilmourn",
       "family": "repeatable_service",
       "artifact_reward_contract": {
-        "contract_id": "artifact_reward_contract_pale_sounding_memory_bell", "building_id": "building_veilmourn_drowned_admiralty", "source_tag": "town",
-        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions", "reward_categories": ["town_support", "artifact"], "reward_tier": "standard", "one_time_reward": true,
-        "allowed_town_ids": ["town_pale_sounding_harbor"], "service_cost": {"gold": 1800, "wood": 1, "ore": 1, "memory_salt": 2}, "metadata_only": false
+        "contract_id": "artifact_reward_contract_pale_sounding_memory_bell",
+        "building_id": "building_veilmourn_drowned_admiralty",
+        "source_tag": "town",
+        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions",
+        "reward_categories": [
+          "town_support",
+          "artifact"
+        ],
+        "reward_tier": "standard",
+        "one_time_reward": true,
+        "allowed_town_ids": [
+          "town_pale_sounding_harbor"
+        ],
+        "service_cost": {
+          "gold": 1800,
+          "wood": 1,
+          "ore": 1,
+          "memory_salt": 2
+        },
+        "metadata_only": false
       },
-      "runtime_boundary": {"status": "horizon_relic_commission_live", "artifact_reward_execution": true, "save_payload_required": false, "ai_valuation_behavior": true, "rare_resource_activation": true},
+      "runtime_boundary": {
+        "status": "horizon_relic_commission_live",
+        "artifact_reward_execution": true,
+        "save_payload_required": false,
+        "ai_valuation_behavior": true,
+        "rare_resource_activation": true
+      },
       "requires": [
         "building_veilmourn_memory_anchor",
         "building_veilmourn_tideglass_chapel"
@@ -3044,11 +3111,33 @@
       "faction_id": "faction_embercourt",
       "family": "repeatable_service",
       "artifact_reward_contract": {
-        "contract_id": "artifact_reward_contract_rainwrit_beacon_seal", "building_id": "building_embercourt_charter_flame", "source_tag": "town",
-        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions", "reward_categories": ["town_support", "artifact"], "reward_tier": "standard", "one_time_reward": true,
-        "allowed_town_ids": ["town_rainwrit_bastion"], "service_cost": {"gold": 1800, "wood": 2, "embergrain": 2}, "metadata_only": false
+        "contract_id": "artifact_reward_contract_rainwrit_beacon_seal",
+        "building_id": "building_embercourt_charter_flame",
+        "source_tag": "town",
+        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions",
+        "reward_categories": [
+          "town_support",
+          "artifact"
+        ],
+        "reward_tier": "standard",
+        "one_time_reward": true,
+        "allowed_town_ids": [
+          "town_rainwrit_bastion"
+        ],
+        "service_cost": {
+          "gold": 1800,
+          "wood": 2,
+          "embergrain": 2
+        },
+        "metadata_only": false
       },
-      "runtime_boundary": {"status": "horizon_relic_commission_live", "artifact_reward_execution": true, "save_payload_required": false, "ai_valuation_behavior": true, "rare_resource_activation": true},
+      "runtime_boundary": {
+        "status": "horizon_relic_commission_live",
+        "artifact_reward_execution": true,
+        "save_payload_required": false,
+        "ai_valuation_behavior": true,
+        "rare_resource_activation": true
+      },
       "requires": [
         "building_embercourt_charter_bastion",
         "building_embercourt_relief_quay"
@@ -3152,11 +3241,33 @@
       "faction_id": "faction_mireclaw",
       "family": "repeatable_service",
       "artifact_reward_contract": {
-        "contract_id": "artifact_reward_contract_hollowreed_moonfang_drum", "building_id": "building_mireclaw_oathmire_court", "source_tag": "town",
-        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions", "reward_categories": ["town_support", "artifact"], "reward_tier": "standard", "one_time_reward": true,
-        "allowed_town_ids": ["town_hollowreed_sanctuary"], "service_cost": {"gold": 1800, "wood": 2, "peatwax": 2}, "metadata_only": false
+        "contract_id": "artifact_reward_contract_hollowreed_moonfang_drum",
+        "building_id": "building_mireclaw_oathmire_court",
+        "source_tag": "town",
+        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions",
+        "reward_categories": [
+          "town_support",
+          "artifact"
+        ],
+        "reward_tier": "standard",
+        "one_time_reward": true,
+        "allowed_town_ids": [
+          "town_hollowreed_sanctuary"
+        ],
+        "service_cost": {
+          "gold": 1800,
+          "wood": 2,
+          "peatwax": 2
+        },
+        "metadata_only": false
       },
-      "runtime_boundary": {"status": "horizon_relic_commission_live", "artifact_reward_execution": true, "save_payload_required": false, "ai_valuation_behavior": true, "rare_resource_activation": true},
+      "runtime_boundary": {
+        "status": "horizon_relic_commission_live",
+        "artifact_reward_execution": true,
+        "save_payload_required": false,
+        "ai_valuation_behavior": true,
+        "rare_resource_activation": true
+      },
       "requires": [
         "building_mireclaw_nightglass_dominion",
         "building_mireclaw_boneboom_palisade"
@@ -3259,11 +3370,33 @@
       "faction_id": "faction_sunvault",
       "family": "repeatable_service",
       "artifact_reward_contract": {
-        "contract_id": "artifact_reward_contract_meridian_choir_prism", "building_id": "building_sunvault_zenith_court", "source_tag": "town",
-        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions", "reward_categories": ["town_support", "artifact"], "reward_tier": "standard", "one_time_reward": true,
-        "allowed_town_ids": ["town_meridian_choirhold"], "service_cost": {"gold": 1800, "ore": 2, "aetherglass": 2}, "metadata_only": false
+        "contract_id": "artifact_reward_contract_meridian_choir_prism",
+        "building_id": "building_sunvault_zenith_court",
+        "source_tag": "town",
+        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions",
+        "reward_categories": [
+          "town_support",
+          "artifact"
+        ],
+        "reward_tier": "standard",
+        "one_time_reward": true,
+        "allowed_town_ids": [
+          "town_meridian_choirhold"
+        ],
+        "service_cost": {
+          "gold": 1800,
+          "ore": 2,
+          "aetherglass": 2
+        },
+        "metadata_only": false
       },
-      "runtime_boundary": {"status": "horizon_relic_commission_live", "artifact_reward_execution": true, "save_payload_required": false, "ai_valuation_behavior": true, "rare_resource_activation": true},
+      "runtime_boundary": {
+        "status": "horizon_relic_commission_live",
+        "artifact_reward_execution": true,
+        "save_payload_required": false,
+        "ai_valuation_behavior": true,
+        "rare_resource_activation": true
+      },
       "requires": [
         "building_sunvault_daybreak_matrix",
         "building_sunvault_halo_battery_yard"
@@ -3422,12 +3555,20 @@
       "name": "Seedglass Cantory",
       "category": "dwelling",
       "description": "Pale root arches and tuned seedglass chimes train Crownroot Cantors for mending volleys and held-line refrains.",
-      "cost": {"gold": 1000, "wood": 2},
+      "cost": {
+        "gold": 1000,
+        "wood": 2
+      },
       "content_status": "horizon_specialist_company_live",
       "faction_id": "faction_thornwake",
-      "requires": ["building_thornwake_sporeglass_hothouse", "building_thornwake_pollen_litany"],
+      "requires": [
+        "building_thornwake_sporeglass_hothouse",
+        "building_thornwake_pollen_litany"
+      ],
       "unlock_unit_id": "unit_thornwake_seedglass_cantors",
-      "growth_bonus": {"unit_thornwake_seedglass_cantors": 2},
+      "growth_bonus": {
+        "unit_thornwake_seedglass_cantors": 2
+      },
       "readiness_bonus": 2,
       "pressure_bonus": 1
     },
@@ -3436,12 +3577,20 @@
       "name": "Quenchbell Mortar Bay",
       "category": "dwelling",
       "description": "Blackbell's suspended quench bell calibrates compact mortar engines for bounded pressure salvos.",
-      "cost": {"gold": 2000, "ore": 1},
+      "cost": {
+        "gold": 2000,
+        "ore": 1
+      },
       "content_status": "horizon_specialist_company_live",
       "faction_id": "faction_brasshollow",
-      "requires": ["building_brasshollow_boiler_cathedral", "building_brasshollow_pressure_rail"],
+      "requires": [
+        "building_brasshollow_boiler_cathedral",
+        "building_brasshollow_pressure_rail"
+      ],
       "unlock_unit_id": "unit_brasshollow_quenchbell_mortars",
-      "growth_bonus": {"unit_brasshollow_quenchbell_mortars": 2},
+      "growth_bonus": {
+        "unit_brasshollow_quenchbell_mortars": 2
+      },
       "readiness_bonus": 2,
       "pressure_bonus": 1
     },
@@ -3450,12 +3599,21 @@
       "name": "Saltwake Eulogy House",
       "category": "dwelling",
       "description": "Saltglass tablets and a mirror-tide basin commission Eulogists to record the harbor's last safe lines.",
-      "cost": {"gold": 1800, "wood": 1, "ore": 1},
+      "cost": {
+        "gold": 1800,
+        "wood": 1,
+        "ore": 1
+      },
       "content_status": "horizon_specialist_company_live",
       "faction_id": "faction_veilmourn",
-      "requires": ["building_veilmourn_obituary_vault", "building_veilmourn_wake_oratory"],
+      "requires": [
+        "building_veilmourn_obituary_vault",
+        "building_veilmourn_wake_oratory"
+      ],
       "unlock_unit_id": "unit_veilmourn_saltwake_eulogists",
-      "growth_bonus": {"unit_veilmourn_saltwake_eulogists": 2},
+      "growth_bonus": {
+        "unit_veilmourn_saltwake_eulogists": 2
+      },
       "readiness_bonus": 2,
       "pressure_bonus": 1
     },
@@ -3464,13 +3622,27 @@
       "name": "Rainwrit Stormseal Treasury",
       "category": "civic",
       "description": "Rainwrit's final bronze writ seals the floodgates, granaries, and beacon ledgers into one storm-proof reserve court.",
-      "cost": {"gold": 3600, "wood": 2, "ore": 3},
+      "cost": {
+        "gold": 3600,
+        "wood": 2,
+        "ore": 3
+      },
       "content_status": "horizon_capstone_monument_live",
       "faction_id": "faction_embercourt",
-      "requires": ["building_embercourt_charter_bastion", "building_embercourt_drake_sluice"],
-      "income": {"gold": 220, "embergrain": 1},
-      "growth_bonus": {"unit_embercourt_cinderseal_bombardiers": 1},
-      "recruitment_discount_percent": {"unit_embercourt_cinderseal_bombardiers": 5},
+      "requires": [
+        "building_embercourt_charter_bastion",
+        "building_embercourt_drake_sluice"
+      ],
+      "income": {
+        "gold": 220,
+        "embergrain": 1
+      },
+      "growth_bonus": {
+        "unit_embercourt_cinderseal_bombardiers": 1
+      },
+      "recruitment_discount_percent": {
+        "unit_embercourt_cinderseal_bombardiers": 5
+      },
       "readiness_bonus": 4,
       "pressure_bonus": 1
     },
@@ -3479,13 +3651,26 @@
       "name": "Hollowreed Moonwax Ossuary",
       "category": "civic",
       "description": "Antler bells toll over moonwax vaults where every paid oath becomes peat, poultice, and another reedcaster rotation.",
-      "cost": {"gold": 3400, "wood": 1, "ore": 1},
+      "cost": {
+        "gold": 3400,
+        "wood": 1,
+        "ore": 1
+      },
       "content_status": "horizon_capstone_monument_live",
       "faction_id": "faction_mireclaw",
-      "requires": ["building_mireclaw_boneboom_palisade", "building_mireclaw_chainboom_ferry"],
-      "income": {"peatwax": 1},
-      "growth_bonus": {"unit_mireclaw_mireglass_reedcasters": 1},
-      "recruitment_discount_percent": {"unit_mireclaw_mireglass_reedcasters": 5},
+      "requires": [
+        "building_mireclaw_boneboom_palisade",
+        "building_mireclaw_chainboom_ferry"
+      ],
+      "income": {
+        "peatwax": 1
+      },
+      "growth_bonus": {
+        "unit_mireclaw_mireglass_reedcasters": 1
+      },
+      "recruitment_discount_percent": {
+        "unit_mireclaw_mireglass_reedcasters": 5
+      },
       "readiness_bonus": 3,
       "recovery_relief": 1
     },
@@ -3494,13 +3679,27 @@
       "name": "Meridian Seven-Facet Orrery",
       "category": "civic",
       "description": "Seven tuned facets hold the noon line over Meridian, refining spare light into glass and exact sentinel musters.",
-      "cost": {"gold": 3700, "wood": 1, "ore": 3},
+      "cost": {
+        "gold": 3700,
+        "wood": 1,
+        "ore": 3
+      },
       "content_status": "horizon_capstone_monument_live",
       "faction_id": "faction_sunvault",
-      "requires": ["building_sunvault_zenith_relay_hall", "building_sunvault_harmonic_cloister"],
-      "income": {"gold": 100, "aetherglass": 1},
-      "growth_bonus": {"unit_sunvault_noonfacet_sentinels": 1},
-      "recruitment_discount_percent": {"unit_sunvault_noonfacet_sentinels": 5},
+      "requires": [
+        "building_sunvault_zenith_relay_hall",
+        "building_sunvault_harmonic_cloister"
+      ],
+      "income": {
+        "gold": 100,
+        "aetherglass": 1
+      },
+      "growth_bonus": {
+        "unit_sunvault_noonfacet_sentinels": 1
+      },
+      "recruitment_discount_percent": {
+        "unit_sunvault_noonfacet_sentinels": 5
+      },
       "readiness_bonus": 6
     },
     {
@@ -3508,13 +3707,27 @@
       "name": "Crownroot Heartseed Parliament",
       "category": "civic",
       "description": "The refuge's oldest roots close around a living heartseed, feeding graft stores and the bolter circles that guard every branch road.",
-      "cost": {"gold": 2900, "wood": 1, "ore": 1},
+      "cost": {
+        "gold": 2900,
+        "wood": 1,
+        "ore": 1
+      },
       "content_status": "horizon_capstone_monument_live",
       "faction_id": "faction_thornwake",
-      "requires": ["building_thornwake_rootlaw_moot", "building_thornwake_barkmantle_run"],
-      "income": {"wood": 1, "verdant_grafts": 1},
-      "growth_bonus": {"unit_thornwake_dawnseed_bolters": 2},
-      "recruitment_discount_percent": {"unit_thornwake_dawnseed_bolters": 4},
+      "requires": [
+        "building_thornwake_rootlaw_moot",
+        "building_thornwake_barkmantle_run"
+      ],
+      "income": {
+        "wood": 1,
+        "verdant_grafts": 1
+      },
+      "growth_bonus": {
+        "unit_thornwake_dawnseed_bolters": 2
+      },
+      "recruitment_discount_percent": {
+        "unit_thornwake_dawnseed_bolters": 4
+      },
       "recovery_relief": 1
     },
     {
@@ -3522,13 +3735,27 @@
       "name": "Blackbell Grand Assay Bell",
       "category": "civic",
       "description": "The final quench bell weighs ore, pressure, and contracts in one strike, issuing certified plate before the echo fades.",
-      "cost": {"gold": 3800, "wood": 1, "ore": 4},
+      "cost": {
+        "gold": 3800,
+        "wood": 1,
+        "ore": 4
+      },
       "content_status": "horizon_capstone_monument_live",
       "faction_id": "faction_brasshollow",
-      "requires": ["building_brasshollow_redline_charter_bay", "building_brasshollow_boiler_cathedral"],
-      "income": {"ore": 1, "brass_scrip": 1},
-      "growth_bonus": {"unit_brasshollow_gaugeplate_bailiffs": 1},
-      "recruitment_discount_percent": {"unit_brasshollow_gaugeplate_bailiffs": 8},
+      "requires": [
+        "building_brasshollow_redline_charter_bay",
+        "building_brasshollow_boiler_cathedral"
+      ],
+      "income": {
+        "ore": 1,
+        "brass_scrip": 1
+      },
+      "growth_bonus": {
+        "unit_brasshollow_gaugeplate_bailiffs": 1
+      },
+      "recruitment_discount_percent": {
+        "unit_brasshollow_gaugeplate_bailiffs": 8
+      },
       "readiness_bonus": 6,
       "pressure_bonus": 1
     },
@@ -3537,13 +3764,27 @@
       "name": "Pale Sounding Last-Memory Beacon",
       "category": "civic",
       "description": "A final bell and mirror basin preserve every safe return, distilling the harbor's lost routes into salt and deckhand relief.",
-      "cost": {"gold": 3500, "wood": 2, "ore": 2},
+      "cost": {
+        "gold": 3500,
+        "wood": 2,
+        "ore": 2
+      },
       "content_status": "horizon_capstone_monument_live",
       "faction_id": "faction_veilmourn",
-      "requires": ["building_veilmourn_wakeglass_chart_house", "building_veilmourn_saltwake_factor"],
-      "income": {"gold": 120, "memory_salt": 1},
-      "growth_bonus": {"unit_veilmourn_tidehook_deckhands": 1},
-      "recruitment_discount_percent": {"unit_veilmourn_tidehook_deckhands": 5},
+      "requires": [
+        "building_veilmourn_wakeglass_chart_house",
+        "building_veilmourn_saltwake_factor"
+      ],
+      "income": {
+        "gold": 120,
+        "memory_salt": 1
+      },
+      "growth_bonus": {
+        "unit_veilmourn_tidehook_deckhands": 1
+      },
+      "recruitment_discount_percent": {
+        "unit_veilmourn_tidehook_deckhands": 5
+      },
       "readiness_bonus": 4,
       "pressure_bonus": 1
     },
@@ -3696,6 +3937,162 @@
         "unit_veilmourn_dreamwake_tideglass_oracles": 4
       },
       "readiness_bonus": 2,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_embercourt_amberweir_counterweight_foundry",
+      "name": "Amberweir Counterweight Foundry",
+      "category": "dwelling",
+      "description": "A water-driven civic foundry casts counterweights, sealed emberglass cradles, and shield mantlets for Amberweir's Sluicebrand Mangonels.",
+      "cost": {
+        "gold": 800,
+        "wood": 1
+      },
+      "content_status": "marchland_warwork_live",
+      "content_batch_id": "content-six-marchland-warworks-10184",
+      "faction_id": "faction_embercourt",
+      "requires": [
+        "building_embercourt_drake_sluice",
+        "building_embercourt_amberweir_sluiceguard_lock"
+      ],
+      "unlock_unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+      "growth_bonus": {
+        "unit_embercourt_amberweir_sluicebrand_mangonels": 1
+      },
+      "recruitment_discount_percent": {
+        "unit_embercourt_amberweir_sluicebrand_mangonels": 4
+      },
+      "readiness_bonus": 3,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_mireclaw_moonbite_mirehorn_chain_pen",
+      "name": "Moonbite Mirehorn Chain-Pen",
+      "category": "dwelling",
+      "description": "A crescent antler stockade and chain-yard trains Moonbite's broad Mirehorn Breakers to follow votive cadence through a fortified line.",
+      "cost": {
+        "gold": 800,
+        "ore": 1
+      },
+      "content_status": "marchland_warwork_live",
+      "content_batch_id": "content-six-marchland-warworks-10184",
+      "faction_id": "faction_mireclaw",
+      "requires": [
+        "building_mireclaw_antler_pit",
+        "building_mireclaw_moonbite_votive_drum_court"
+      ],
+      "unlock_unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+      "growth_bonus": {
+        "unit_mireclaw_moonbite_mirehorn_breakers": 1
+      },
+      "recruitment_discount_percent": {
+        "unit_mireclaw_moonbite_mirehorn_breakers": 4
+      },
+      "readiness_bonus": 3,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_sunvault_splitprism_heliograph_battery",
+      "name": "Splitprism Heliograph Battery",
+      "category": "dwelling",
+      "description": "A twin-towered artillery court aligns mobile Heliograph Ballistae through Splitprism's blue and amber calibration facets.",
+      "cost": {
+        "gold": 800,
+        "wood": 1
+      },
+      "content_status": "marchland_warwork_live",
+      "content_batch_id": "content-six-marchland-warworks-10184",
+      "faction_id": "faction_sunvault",
+      "requires": [
+        "building_sunvault_aurora_spire",
+        "building_sunvault_splitprism_parallax_duel_hall"
+      ],
+      "unlock_unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+      "growth_bonus": {
+        "unit_sunvault_splitprism_heliograph_ballistae": 1
+      },
+      "recruitment_discount_percent": {
+        "unit_sunvault_splitprism_heliograph_ballistae": 4
+      },
+      "readiness_bonus": 3,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_thornwake_woundroot_rootmaul_hollow",
+      "name": "Woundroot Rootmaul Hollow",
+      "category": "dwelling",
+      "description": "A monumental living hollow grows Rootmaul Behemoths around stonewood shoulders and a shared amber seed-heart.",
+      "cost": {
+        "gold": 800,
+        "ore": 5
+      },
+      "content_status": "marchland_warwork_live",
+      "content_batch_id": "content-six-marchland-warworks-10184",
+      "faction_id": "faction_thornwake",
+      "requires": [
+        "building_thornwake_graftworks",
+        "building_thornwake_woundroot_hearthseed_nursery"
+      ],
+      "unlock_unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+      "growth_bonus": {
+        "unit_thornwake_woundroot_rootmaul_behemoths": 1
+      },
+      "recruitment_discount_percent": {
+        "unit_thornwake_woundroot_rootmaul_behemoths": 4
+      },
+      "readiness_bonus": 3,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_brasshollow_whitegauge_breach_pressure_foundry",
+      "name": "Whitegauge Breach-Pressure Foundry",
+      "category": "dwelling",
+      "description": "A white-ceramic pressure hall proofs the short rails, six-legged carriages, and calibrated boilers of Whitegauge's Datum Breach-Cannons.",
+      "cost": {
+        "gold": 800,
+        "ore": 3
+      },
+      "content_status": "marchland_warwork_live",
+      "content_batch_id": "content-six-marchland-warworks-10184",
+      "faction_id": "faction_brasshollow",
+      "requires": [
+        "building_brasshollow_crucible_dock",
+        "building_brasshollow_whitegauge_datum_railhouse"
+      ],
+      "unlock_unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+      "growth_bonus": {
+        "unit_brasshollow_whitegauge_datum_breach_cannons": 1
+      },
+      "recruitment_discount_percent": {
+        "unit_brasshollow_whitegauge_datum_breach_cannons": 4
+      },
+      "readiness_bonus": 3,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_veilmourn_dreamwake_foganchor_slip",
+      "name": "Dreamwake Foganchor Slip",
+      "category": "dwelling",
+      "description": "A pearl-lit drydock binds crescent anchors and fog-sail mantles to Dreamwake's towering Foganchor Colossi.",
+      "cost": {
+        "gold": 800,
+        "ore": 1
+      },
+      "content_status": "marchland_warwork_live",
+      "content_batch_id": "content-six-marchland-warworks-10184",
+      "faction_id": "faction_veilmourn",
+      "requires": [
+        "building_veilmourn_mistgate_slip",
+        "building_veilmourn_dreamwake_tideglass_oratory"
+      ],
+      "unlock_unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
+      "growth_bonus": {
+        "unit_veilmourn_dreamwake_foganchor_colossi": 1
+      },
+      "recruitment_discount_percent": {
+        "unit_veilmourn_dreamwake_foganchor_colossi": 4
+      },
+      "readiness_bonus": 3,
       "pressure_bonus": 1
     }
   ]

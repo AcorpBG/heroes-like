@@ -54,8 +54,8 @@ HORIZON_CAPSTONE_PRICE_BAND_OVERRIDES = {
     "target_buildings": {"max": 25},
 }
 MARCHLAND_LOCAL_RETINUE_PRICE_BAND_OVERRIDES = {
-    "gold": {"max": 46500},
-    "target_buildings": {"max": 25},
+    "gold": {"max": 47500},
+    "target_buildings": {"max": 26},
 }
 
 
