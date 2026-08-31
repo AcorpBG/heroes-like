@@ -127,19 +127,37 @@ SPELLS = (
     ("spell_root_graft_graft_18", "root"),
     ("spell_root_loam_bloom_26", "root"),
     ("spell_root_green_briar_28", "root"),
+    ("spell_beacon_lockfire_muster", "beacon"),
+    ("spell_mire_moonfen_dragnet", "mire"),
+    ("spell_lens_seven_facet_refrain", "lens"),
+    ("spell_root_heartwood_renewal", "root"),
+    ("spell_furnace_redline_overdrive", "furnace"),
+    ("spell_veil_drowned_bell_verdict", "veil"),
+    ("spell_old_measure_unbroken_meridian", "old_measure"),
 )
+PACKAGE_TIGHT_SIGNATURE_IDS = {
+    "spell_beacon_lockfire_muster",
+    "spell_mire_moonfen_dragnet",
+    "spell_lens_seven_facet_refrain",
+    "spell_root_heartwood_renewal",
+    "spell_furnace_redline_overdrive",
+    "spell_veil_drowned_bell_verdict",
+    "spell_old_measure_unbroken_meridian",
+}
 
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def render_icon(source_path: Path, runtime_path: Path) -> None:
+def render_icon(source_path: Path, runtime_path: Path, compact_palette: bool = False) -> None:
     with Image.open(source_path) as opened:
         source = opened.convert("RGBA")
     if source.size != SOURCE_SIZE:
         raise ValueError(f"{source_path} must be {SOURCE_SIZE}, got {source.size}")
     icon = source.resize(ICON_SIZE, Image.Resampling.LANCZOS)
+    if compact_palette:
+        icon = icon.quantize(colors=32, method=Image.Quantize.FASTOCTREE).convert("RGBA")
     runtime_path.parent.mkdir(parents=True, exist_ok=True)
     icon.save(runtime_path, format="PNG", optimize=False, compress_level=9)
 
@@ -151,7 +169,7 @@ def main() -> int:
         runtime_path = RUNTIME_ROOT / f"{spell_id}.png"
         if not source_path.is_file():
             raise FileNotFoundError(f"missing curated spell source: {source_path}")
-        render_icon(source_path, runtime_path)
+        render_icon(source_path, runtime_path, spell_id in PACKAGE_TIGHT_SIGNATURE_IDS)
         items.append({
             "id": spell_id,
             "spell_id": spell_id,

@@ -1,0 +1,95 @@
+{
+  "schema": "seven_school_signature_spellbook_source_manifest_v1",
+  "generation_mode": "built_in_image_gen",
+  "use_case": "stylized-concept",
+  "asset_type": "square fantasy strategy game spell icon master",
+  "shared_style": "Richly painted original fantasy game icon with crisp material detail, a bold readable silhouette, and painterly realism.",
+  "shared_composition": "Centered isolated emblem filling about 78 percent of a square canvas and readable at 128x128.",
+  "shared_constraints": "Genuinely transparent alpha background; no frame, border, text, letters, numbers, watermark, existing franchise symbols, or copied protected expression.",
+  "items": [
+    {
+      "spell_id": "spell_beacon_lockfire_muster",
+      "school_id": "beacon",
+      "prompt_subject": "Seven small bronze river-lock lanterns ignite in a rising diagonal cadence around one central amber command flame, with a subtle sluice-key silhouette.",
+      "palette_and_materials": "Amber, weathered bronze, river-blue accents, charcoal shadow; rain-polished bronze, glass flame housings, and dark iron.",
+      "accessible_description": "Seven bronze lock lanterns spiral around an amber command flame above a blue river wake.",
+      "built_in_output": "exec-b37891ff-db3c-447f-869c-c8563b170f9d.png",
+      "source_path": "res://art/magic/source/spells/curated/spell_beacon_lockfire_muster.png",
+      "source_sha256": "8b0b66c06122cffb76d80396934b1e6b6388a31be255174191273a93622e2e88",
+      "runtime_path": "res://art/magic/runtime/spells/spell_beacon_lockfire_muster.png",
+      "runtime_sha256": "61f209fe546d9392f7c8de560ce1370d117642fdbd3088be2dec9c863da0c6ca"
+    },
+    {
+      "spell_id": "spell_mire_moonfen_dragnet",
+      "school_id": "mire",
+      "prompt_subject": "Crescent-moon reed cords rise into a hooked dragnet over a blackwater ripple, with peatwax knots and one pale marsh eye glint.",
+      "palette_and_materials": "Bog green, wet black, bone white, muted violet moonlight; soaked reeds, knotted cord, peatglass beads, and dark water.",
+      "accessible_description": "A hooked reed dragnet rises from black water beneath a pale crescent moon and watching marsh eye.",
+      "built_in_output": "exec-d169f049-489c-4fd4-ad83-58c9703b5f3d.png",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_moonfen_dragnet.png",
+      "source_sha256": "0832fff1132dcc1caeb60920d0a0a16e58275f723185965923be4a22e30df74d",
+      "runtime_path": "res://art/magic/runtime/spells/spell_mire_moonfen_dragnet.png",
+      "runtime_sha256": "925dfbe2d17817971dd05f2d52e648f8050146f9df53d293dc2f2e344897d104"
+    },
+    {
+      "spell_id": "spell_lens_seven_facet_refrain",
+      "school_id": "lens",
+      "prompt_subject": "Seven asymmetrical crystal facets orbit a small white-gold tuning fork, each facet catching a different clean rainbow note.",
+      "palette_and_materials": "White gold, pale cyan, restrained rainbow refractions, deep indigo shadow; cut aetherglass, ivory metal, and luminous resonance.",
+      "accessible_description": "Seven colored crystal facets orbit a white-gold tuning fork in a clean ring of refracted light.",
+      "built_in_output": "exec-437f6307-ea6f-483b-86e3-13d8a3b6ca2f.png",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_seven_facet_refrain.png",
+      "source_sha256": "5010cb304014b144f3a3192a6b8b25f976279059a2be64599f96cb688f07460c",
+      "runtime_path": "res://art/magic/runtime/spells/spell_lens_seven_facet_refrain.png",
+      "runtime_sha256": "aef0437bd51eb7c35b89b2dca9f84c8d24c7fa846ab4d3d4464f9b3561aaec46"
+    },
+    {
+      "spell_id": "spell_root_heartwood_renewal",
+      "school_id": "root",
+      "prompt_subject": "A cracked wooden heart-shaped shield closes with fresh green growth, warm sap light, and two living root splints.",
+      "palette_and_materials": "Heartwood brown, moss green, sap gold, ivory blossom accents; layered bark, living roots, resin, and new leaves.",
+      "accessible_description": "Fresh roots and flowers close a glowing crack through a heart-shaped wooden shield.",
+      "built_in_output": "exec-aad7b284-acd5-49e4-9e5d-9f28009a65c7.png",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_heartwood_renewal.png",
+      "source_sha256": "011cd8b9e05c99163c98385c752371afd26dd63240421cc078d44dfce20766f1",
+      "runtime_path": "res://art/magic/runtime/spells/spell_root_heartwood_renewal.png",
+      "runtime_sha256": "ad955208dbfe0ed743e663eae2d5b6c85e666e55d030528f1087840e67e5a7dc"
+    },
+    {
+      "spell_id": "spell_furnace_redline_overdrive",
+      "school_id": "furnace",
+      "prompt_subject": "A heavy brass pressure gauge is driven exactly to a glowing red limit, flanked by compact blacksteel bellows and one controlled jet of furnace fire.",
+      "palette_and_materials": "Soot black, brass, furnace orange, hard red gauge glow; riveted brass, blacksteel, heat glass, and coal flame.",
+      "accessible_description": "Twin black bellows drive a brass pressure gauge to its red limit above a controlled furnace jet.",
+      "built_in_output": "exec-5a7de5ae-042d-41cc-b8a2-689bee0caa73.png",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_redline_overdrive.png",
+      "source_sha256": "76a1300e70b923f40ae14284830a3bf2f27319e3545b6b4f9ef397cdf9007cca",
+      "runtime_path": "res://art/magic/runtime/spells/spell_furnace_redline_overdrive.png",
+      "runtime_sha256": "a6ae8122516e1a3bc627a1fea1c54208d76b66b8667a082ef80e7de19d804782"
+    },
+    {
+      "spell_id": "spell_veil_drowned_bell_verdict",
+      "school_id": "veil",
+      "prompt_subject": "A pale cracked ship bell is submerged inside a curling ghost-tide wave, with one black saltglass clapper and a returning echo ring.",
+      "palette_and_materials": "Moonlit ivory, deep teal, salt black, faint spectral blue; salt-pitted bell metal, translucent water, fogglass, and frayed rope.",
+      "accessible_description": "A cracked pale ship bell rolls inside a spectral teal wave and a returning ring of cold light.",
+      "built_in_output": "exec-c80e6673-7883-4345-ad28-1d6c76ddef4a.png",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_drowned_bell_verdict.png",
+      "source_sha256": "ee2130adcf4ae8ec04cfddbff823e61a122c4cec08a2f9c4cb4d99ad3eb1e371",
+      "runtime_path": "res://art/magic/runtime/spells/spell_veil_drowned_bell_verdict.png",
+      "runtime_sha256": "6978a504a17a3a1e59f50f7494c7e34dbf583f0932c8c887c4ae905837a27c47"
+    },
+    {
+      "spell_id": "spell_old_measure_unbroken_meridian",
+      "school_id": "old_measure",
+      "prompt_subject": "One continuous bronze meridian ring crosses a square stone survey tablet, with an ivory compass needle fixed perfectly upright and small pale counting stars.",
+      "palette_and_materials": "Aged bronze, limestone, ivory, muted celestial blue; engraved stone, worn survey metal, and cool old light.",
+      "accessible_description": "A continuous bronze meridian ring fixes an ivory compass needle over an engraved celestial survey tablet.",
+      "built_in_output": "exec-71601fad-7c66-4e90-ae95-07ac2a893cfd.png",
+      "source_path": "res://art/magic/source/spells/curated/spell_old_measure_unbroken_meridian.png",
+      "source_sha256": "4c226aea1b4333e123ca21cbef7849cf827473489ae06c6784e0b7cf1c06b730",
+      "runtime_path": "res://art/magic/runtime/spells/spell_old_measure_unbroken_meridian.png",
+      "runtime_sha256": "fa2f8e4487d6156d1f6a5c29238035ff3b98d9148c5d1d0658743ba6dce7eee9"
+    }
+  ]
+}

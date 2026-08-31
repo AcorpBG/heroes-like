@@ -1241,6 +1241,83 @@
       "source_sha256": "c8ef802dd5f06ed5006a4799006f14b2e11d4d9ba639118c85b693d0702b50ab",
       "icon_path": "res://art/magic/runtime/spells/spell_root_green_briar_28.png",
       "icon_sha256": "93828e370cf5493e7f581a54cf6e2d8727d56e4f5e4ad9e463cfb2a8b407a0ca"
+    },
+    {
+      "id": "spell_beacon_lockfire_muster",
+      "spell_id": "spell_beacon_lockfire_muster",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_beacon_lockfire_muster",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_beacon_lockfire_muster.png",
+      "source_sha256": "8b0b66c06122cffb76d80396934b1e6b6388a31be255174191273a93622e2e88",
+      "icon_path": "res://art/magic/runtime/spells/spell_beacon_lockfire_muster.png",
+      "icon_sha256": "61f209fe546d9392f7c8de560ce1370d117642fdbd3088be2dec9c863da0c6ca"
+    },
+    {
+      "id": "spell_mire_moonfen_dragnet",
+      "spell_id": "spell_mire_moonfen_dragnet",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_mire_moonfen_dragnet",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_moonfen_dragnet.png",
+      "source_sha256": "0832fff1132dcc1caeb60920d0a0a16e58275f723185965923be4a22e30df74d",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_moonfen_dragnet.png",
+      "icon_sha256": "925dfbe2d17817971dd05f2d52e648f8050146f9df53d293dc2f2e344897d104"
+    },
+    {
+      "id": "spell_lens_seven_facet_refrain",
+      "spell_id": "spell_lens_seven_facet_refrain",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_lens_seven_facet_refrain",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_seven_facet_refrain.png",
+      "source_sha256": "5010cb304014b144f3a3192a6b8b25f976279059a2be64599f96cb688f07460c",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_seven_facet_refrain.png",
+      "icon_sha256": "aef0437bd51eb7c35b89b2dca9f84c8d24c7fa846ab4d3d4464f9b3561aaec46"
+    },
+    {
+      "id": "spell_root_heartwood_renewal",
+      "spell_id": "spell_root_heartwood_renewal",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_root_heartwood_renewal",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_heartwood_renewal.png",
+      "source_sha256": "011cd8b9e05c99163c98385c752371afd26dd63240421cc078d44dfce20766f1",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_heartwood_renewal.png",
+      "icon_sha256": "ad955208dbfe0ed743e663eae2d5b6c85e666e55d030528f1087840e67e5a7dc"
+    },
+    {
+      "id": "spell_furnace_redline_overdrive",
+      "spell_id": "spell_furnace_redline_overdrive",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_furnace_redline_overdrive",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_redline_overdrive.png",
+      "source_sha256": "76a1300e70b923f40ae14284830a3bf2f27319e3545b6b4f9ef397cdf9007cca",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_redline_overdrive.png",
+      "icon_sha256": "a6ae8122516e1a3bc627a1fea1c54208d76b66b8667a082ef80e7de19d804782"
+    },
+    {
+      "id": "spell_veil_drowned_bell_verdict",
+      "spell_id": "spell_veil_drowned_bell_verdict",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_veil_drowned_bell_verdict",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_drowned_bell_verdict.png",
+      "source_sha256": "ee2130adcf4ae8ec04cfddbff823e61a122c4cec08a2f9c4cb4d99ad3eb1e371",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_drowned_bell_verdict.png",
+      "icon_sha256": "6978a504a17a3a1e59f50f7494c7e34dbf583f0932c8c887c4ae905837a27c47"
+    },
+    {
+      "id": "spell_old_measure_unbroken_meridian",
+      "spell_id": "spell_old_measure_unbroken_meridian",
+      "school_id": "old_measure",
+      "icon_id": "spell_signature_icon_old_measure_unbroken_meridian",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_old_measure_unbroken_meridian.png",
+      "source_sha256": "4c226aea1b4333e123ca21cbef7849cf827473489ae06c6784e0b7cf1c06b730",
+      "icon_path": "res://art/magic/runtime/spells/spell_old_measure_unbroken_meridian.png",
+      "icon_sha256": "fa2f8e4487d6156d1f6a5c29238035ff3b98d9148c5d1d0658743ba6dce7eee9"
     }
   ]
 }

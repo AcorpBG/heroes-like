@@ -24,8 +24,42 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-six-faction-reserve-companies-10184` is completed as one coherent six-unit roster, recruitment, battle, art, and package-efficiency batch; the broad content goal continues beyond this slice.
-- Current package boundary: matching Linux and Windows release exports measure 249843760 bytes, 156240 bytes below the unchanged 250000000-byte ceiling; all thirty new runtime unit-art imports are present and generated masters remain excluded symmetrically.
+- Latest completed implementation slice: `content-seven-school-signature-spellbook-10184` delivered one coherent whole-catalog writing, seven-spell gameplay, icon-art, study, battle, save, and packaging batch.
+- Current package boundary after the slice: matching Linux and Windows release exports measure 249900248 bytes, 99752 bytes below the unchanged 250000000-byte ceiling; generated spell masters remain excluded symmetrically.
+
+## Seven-School Signature Spellbook
+
+id: `content-seven-school-signature-spellbook-10184`
+
+Status: completed.
+
+Current finding:
+- ninety-four of the 112 live spell records still expose the meta-placeholder sentence that a school working gives the commander another tactical choice, so most of the otherwise functional spellbook does not meet production-facing writing quality;
+- all seven schools currently own exactly sixteen spells and every live spell has an exact icon, giving this slice a stable compatibility boundary: preserve existing ids/effects while replacing placeholder copy, then add one balanced tier-three signature to each school;
+- fully developed towns already expose their faction school plus Old Measure through the shared data-driven study route, so seven new signatures can enter live town, AI, battle, and save flow without a save-schema or spell-system rewrite.
+
+Implementation boundary:
+- replace all ninety-four exact meta-placeholder descriptions with concise original world-facing descriptions that communicate the existing effect and school identity without changing ids, tiers, costs, targets, or effect payloads;
+- add Lockfire Muster, Moonfen Dragnet, Seven-Facet Refrain, Heartwood Renewal, Redline Overdrive, Drowned Bell Verdict, and Unbroken Meridian as one original tier-three signature spell per school using established supported battle effects;
+- place the six faction signatures in their exact Horizon citadel libraries and expose Unbroken Meridian through Rainwrit's common Old Measure study route, preserving the shared developed-town school-access contract;
+- generate seven original square spell masters, derive compact 128x128 runtime icons, retain prompt/hash/accessibility provenance outside release packages, and use the established spell-icon loading path in study and battle UI;
+- preserve deterministic combat, AI spell valuation compatibility, save version 9, existing spell ids and mechanics, accessibility descriptions, Windows/Linux paths, generated-source exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- no live spell contains the exact meta-placeholder wording and all pre-existing 112 spell ids retain unchanged mechanics while the seven schools each own exactly seventeen spells;
+- all seven signatures load exact icon art, appear through developed live town study authority, can be learned and cast through production rules, and survive save-version-9 round trips without cross-school leakage;
+- one consolidated seven-school gameplay/study/battle/art/save smoke runs only after the complete batch, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- all ninety-four meta-placeholder descriptions are replaced with distinct original world-facing copy, while a canonical mechanics hash proves the established 112 spell payloads are unchanged apart from description text;
+- Lockfire Muster, Moonfen Dragnet, Seven-Facet Refrain, Heartwood Renewal, Redline Overdrive, Drowned-Bell Verdict, and Unbroken Meridian bring every school to exactly seventeen spells and use the established tier-three balance bands and supported live effects;
+- all seven signatures are explicitly routed through their exact Horizon citadel tier-three study authority, with seven distinct generated 1254px transparent masters, compact 128px runtime icons, accessible descriptions, and exact prompt/source/runtime hash provenance;
+- the single consolidated smoke passes 7/7 exact Town UI icon routes, 7/7 live study actions, 7/7 production battle casts, and 7/7 save-version-9 round trips; repository validation passes;
+- Linux and Windows export/startup gates pass with matching 249900248-byte PCKs, all seven runtime spell icons present, generated source art excluded, and 99752 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero, unit, town, building, scenario, encounter, campaign, artifact, spell-system algorithm, strategic-AI rewrite, RMG behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes spell, name, icon, text, visual design, or protected expression.
 
 ## Six Faction Reserve Companies
 

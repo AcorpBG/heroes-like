@@ -333,6 +333,13 @@ const EXPECTED_SIGNATURE_ICONS := {
 	"spell_root_graft_graft_18": "res://art/magic/runtime/spells/spell_root_graft_graft_18.png",
 	"spell_root_loam_bloom_26": "res://art/magic/runtime/spells/spell_root_loam_bloom_26.png",
 	"spell_root_green_briar_28": "res://art/magic/runtime/spells/spell_root_green_briar_28.png",
+	"spell_beacon_lockfire_muster": "res://art/magic/runtime/spells/spell_beacon_lockfire_muster.png",
+	"spell_mire_moonfen_dragnet": "res://art/magic/runtime/spells/spell_mire_moonfen_dragnet.png",
+	"spell_lens_seven_facet_refrain": "res://art/magic/runtime/spells/spell_lens_seven_facet_refrain.png",
+	"spell_root_heartwood_renewal": "res://art/magic/runtime/spells/spell_root_heartwood_renewal.png",
+	"spell_furnace_redline_overdrive": "res://art/magic/runtime/spells/spell_furnace_redline_overdrive.png",
+	"spell_veil_drowned_bell_verdict": "res://art/magic/runtime/spells/spell_veil_drowned_bell_verdict.png",
+	"spell_old_measure_unbroken_meridian": "res://art/magic/runtime/spells/spell_old_measure_unbroken_meridian.png",
 }
 const EXPECTED_ICONS := {
 	"beacon": "res://art/magic/runtime/schools/beacon.png",
@@ -514,16 +521,16 @@ func _catalog_contract() -> Dictionary:
 		"ok": (
 			bool(fallback_contract.get("ok", false))
 			and bool(generated_reward_contract.get("ok", false))
-			and signature_contract.size() == 112
+			and signature_contract.size() == 119
 			and sorted_signature_ids == sorted_expected_signature_ids
 			and signature_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_signature_icon_%s" % String(row.get("spell_id", "")).trim_prefix("spell_") and String(row.get("icon_path", "")) == String(EXPECTED_SIGNATURE_ICONS.get(String(row.get("spell_id", "")), "")) and String(row.get("source_kind", "")) == "curated_original_spell" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and manifest_contract.size() == 7
 			and sorted_ids == sorted_expected_ids
 			and _all_unique(manifest_paths)
 			and manifest_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_school_sigil_%s" % String(row.get("school_id", "")) and String(row.get("icon_path", "")) == String(EXPECTED_ICONS.get(String(row.get("school_id", "")), "")) and String(row.get("material_language", "")) != "" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
-			and spell_rows.size() == 112
+			and spell_rows.size() == 119
 			and spell_rows.all(func(row): return String(row.get("resolved_path", "")) == String(row.get("expected_path", "")) and String(row.get("resolved_path", "")) != "")
-			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 112
+			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 119
 			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 0
 			and SpellRules.spell_id_for_action("cast_spell:spell_missing") == ""
 			and SpellRules.spell_id_for_action("learn_spell:spell_missing") == ""
