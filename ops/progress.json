@@ -1910,9 +1910,64 @@
     },
     "blockedReason": ""
   },
-  "active_slice": null,
+  "active_slice": "",
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "content-six-marchland-local-retinues-20260831",
+      "title": "Six Marchland Local Retinues",
+      "sliceId": "content-six-marchland-local-retinues-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-31T21:06:04Z",
+      "updatedAt": "2026-08-31T21:06:04Z",
+      "latestFinding": "Six original tier-four local retinues and six town-exclusive recruiting landmarks now use the live build, growth, recruit, battle, art, and save-version-9 paths. The single consolidated six-case smoke, repository validator, and matching Linux and Windows package smokes pass at 233530588 bytes.",
+      "artifacts": [
+        "content/units.json",
+        "content/buildings.json",
+        "content/towns.json",
+        "content/army_groups.json",
+        "content/scenarios.json",
+        "art/units/source/generated/marchland_local_retinues/manifest.json",
+        "art/towns/source/generated/buildings/marchland_local_retinues/manifest.json",
+        "tests/six_marchland_local_retinues_smoke.gd",
+        "tests/six_marchland_local_retinues_smoke.py",
+        "tests/six_marchland_local_retinues_smoke.tscn",
+        "tests/validate_repo.py",
+        ".artifacts/six_marchland_local_retinues_smoke/report.json",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "commands": [
+        "python3 tests/six_marchland_local_retinues_smoke.py",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/town_development_cost_curve_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py"
+      ],
+      "metrics": {
+        "unit_count": 148,
+        "building_count": 154,
+        "local_retinue_count": 6,
+        "exclusive_dwelling_count": 6,
+        "five_stack_company_count": 6,
+        "town_build_count": 6,
+        "town_recruit_count": 6,
+        "battle_victory_count": 6,
+        "battle_art_count": 6,
+        "save_round_trip_count": 6,
+        "save_version": 9,
+        "linux_packaged_startup_passed": true,
+        "windows_packaged_startup_passed": true,
+        "required_runtime_art_import_count": 36,
+        "pck_size_bytes": 233530588,
+        "pck_size_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 16469412,
+        "release_ready_claimed": false
+      }
+    },
     {
       "id": "content-six-marchland-seats-20260831",
       "title": "Six Marchland Seats",
@@ -16064,14 +16119,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Six Marchland Seats: six original 18x12 skirmishes, six developable towns, six exact scenic backdrops, one consolidated smoke, repository validation, and matching Linux/Windows packaged startup at 232657852 bytes.",
+  "currentNotes": "Completed the Six Marchland Local Retinues batch with six units, six exclusive dwellings, twelve original source masters, one consolidated gameplay smoke, repository validation, and matching Linux/Windows package smokes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-marchland-seats-10184",
-  "currentSliceId": "content-six-marchland-seats-10184",
-  "currentSliceNotes": "Completed six original 18x12 skirmishes, six complete faction towns, and six exact scenic backdrops for Belis Rainledger, Nix Votivejaw, Renn Facetlane, Merek Greenbarrow, Lina Gauge-Savant, and Morwen Wakeoracle with one consolidated smoke and symmetric package validation.",
+  "currentSlice": "content-six-marchland-local-retinues-10184",
+  "currentSliceId": "content-six-marchland-local-retinues-10184",
+  "currentSliceNotes": "Completed six original tier-four local retinues, six town-exclusive dwelling buildings, twelve curated generated sources, and live build, recruit, battle-art, and save routes with one consolidated smoke.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six marchland seats 10184",
-  "currentSliceUpdatedAt": "2026-08-31T20:13:15Z",
+  "currentSliceTitle": "content six marchland local retinues 10184",
+  "currentSliceUpdatedAt": "2026-08-31T21:06:04Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107308,6 +107363,16 @@
       "startedAt": "2026-08-31T19:37:54Z",
       "notes": "Completed six long-form 18x12 faction skirmishes, six developable towns, six original scenic backdrops, one consolidated gameplay/town/art/save smoke, repository validation, and matching Linux/Windows packaged startups at 232657852 bytes.",
       "completedAt": "2026-08-31T20:13:15Z"
+    },
+    {
+      "id": "content-six-marchland-local-retinues-10184",
+      "title": "content six marchland local retinues 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T21:06:04Z",
+      "startedAt": "2026-08-31T20:19:00Z",
+      "notes": "Completed six original tier-four local retinues and six town-exclusive recruiting landmarks with deterministic runtime art, one consolidated batch smoke, repository validation, and matching Linux/Windows packaged startups at 233530588 bytes.",
+      "completedAt": "2026-08-31T21:06:04Z"
     }
   ],
   "project": "heroes-like",
@@ -107317,8 +107382,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Only one of 201 authored scenarios currently uses an 18x12 long-form board, and six underused faction commanders lack towns authored around their command identities.",
-  "remainingWork": "Complete the six Marchland Seat towns, scenic backdrops, and long-form skirmishes, then run one consolidated six-case smoke and final cross-platform package validation.",
+  "remainingGap": "The six Marchland seats have exact scenic identities and live maps but each still inherits an existing faction recruitment ladder without a local company or town-exclusive recruiting landmark.",
+  "remainingWork": "Complete six original local retinues and six town-exclusive dwelling routes, derive their unit/building art, then run one consolidated six-case smoke and final cross-platform package validation.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -107749,8 +107814,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_six_marchland_seats_completed",
-  "status": "completed",
+  "result": "content_six_marchland_local_retinues_in_progress",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -107850,9 +107915,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed Six Marchland Seats as one coherent six-map, six-town, six-art production-content batch with one consolidated smoke.",
+  "summary": "Completed Six Marchland Local Retinues as one coherent six-unit, six-building, twelve-source production-content batch with one consolidated smoke and matching Linux/Windows package validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T20:13:15Z",
+  "updatedAt": "2026-08-31T21:06:04Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

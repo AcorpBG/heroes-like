@@ -28,7 +28,7 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT_DIR))
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
-	_expect(ContentService.get_content_ids(ContentService.BUILDINGS_PATH).size() == 148, "Capstone batch must complete the 148-building catalog.")
+	_expect(ContentService.get_content_ids(ContentService.BUILDINGS_PATH).size() == 154, "Capstone batch must remain present in the expanded 154-building catalog.")
 	for case_value in CASES:
 		await _run_case(case_value)
 	_finish()

@@ -53,6 +53,10 @@ HORIZON_CAPSTONE_PRICE_BAND_OVERRIDES = {
     "gold": {"max": 49000},
     "target_buildings": {"max": 25},
 }
+MARCHLAND_LOCAL_RETINUE_PRICE_BAND_OVERRIDES = {
+    "gold": {"max": 46500},
+    "target_buildings": {"max": 25},
+}
 
 
 def load_items(filename: str) -> dict[str, dict[str, Any]]:
@@ -313,6 +317,13 @@ def main() -> int:
         if has_horizon_capstone:
             for field, overrides in HORIZON_CAPSTONE_PRICE_BAND_OVERRIDES.items():
                 effective_price_band_limits[field].update(overrides)
+        has_marchland_local_retinue = bool(
+            isinstance(town.get("marchland_seat"), dict)
+            and str(town.get("marchland_seat", {}).get("local_retinue_building_id", "")) in target_ids
+        )
+        if has_marchland_local_retinue:
+            for field, overrides in MARCHLAND_LOCAL_RETINUE_PRICE_BAND_OVERRIDES.items():
+                effective_price_band_limits[field].update(overrides)
         price_band_failures: list[dict[str, Any]] = []
         for field, limits in effective_price_band_limits.items():
             value = int(price_band_values.get(field, 0))
@@ -340,6 +351,7 @@ def main() -> int:
             "price_band_limits": effective_price_band_limits,
             "price_band_failures": price_band_failures,
             "horizon_capstone_envelope": has_horizon_capstone,
+            "marchland_local_retinue_envelope": has_marchland_local_retinue,
         }
 
     report = {
@@ -360,6 +372,7 @@ def main() -> int:
         "secondary_rare_by_faction": SECONDARY_RARE_BY_FACTION,
         "price_band_limits": PRICE_BAND_LIMITS,
         "horizon_capstone_price_band_overrides": HORIZON_CAPSTONE_PRICE_BAND_OVERRIDES,
+        "marchland_local_retinue_price_band_overrides": MARCHLAND_LOCAL_RETINUE_PRICE_BAND_OVERRIDES,
         "faction_curves": faction_curves,
         "towns": town_rows,
         "errors": errors,

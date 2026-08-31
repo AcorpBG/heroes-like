@@ -3746,6 +3746,7 @@ def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
         "SIGNATURE_TIER_COUNT",
         "PRICE_BAND_LIMITS",
         "HORIZON_CAPSTONE_PRICE_BAND_OVERRIDES",
+        "MARCHLAND_LOCAL_RETINUE_PRICE_BAND_OVERRIDES",
         "prerequisite_closure",
         "common_only_to_rare_ratio",
         "price_band_values",
@@ -47404,7 +47405,7 @@ def validate_town_building_category_icon_runtime(errors: list[str]) -> None:
     ensure(atlas.is_file() and Path(f"{atlas}.import").is_file(), errors, "Building category source atlas and import must exist")
 
     buildings = load_json(CONTENT_DIR / "buildings.json").get("items", [])
-    ensure(isinstance(buildings, list) and len(buildings) == 148, errors, "Building category adoption must cover exactly 148 production buildings")
+    ensure(isinstance(buildings, list) and len(buildings) == 154, errors, "Building category adoption must cover exactly 154 production buildings")
     if isinstance(buildings, list):
         for building in buildings:
             if isinstance(building, dict):
@@ -47445,7 +47446,7 @@ def validate_town_building_category_icon_runtime(errors: list[str]) -> None:
     ensure_scene_nodes(scene_text, errors, "town_building_category_icon_runtime_report.tscn", [("TownBuildingCategoryIconRuntimeReport", "Node")])
     for token in (
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
-        "building_count == 148", "category_counts.size() == 5", "asset_paths.size() == 5",
+        "building_count == 154", "category_counts.size() == 5", "asset_paths.size() == 5",
         'shell.get_node_or_null("%BuildActions")', 'shell.validation_select_build_plan(action_id)',
         'shell._apply_build_action_icon(invalid_button, {"id": "build:missing_building"})',
         "confirm.emit_signal(\"pressed\")", "TownRules.build_active_town(control, building_id)",
@@ -47652,6 +47653,12 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
         "building_thornwake_crownroot_heartseed_parliament",
         "building_brasshollow_blackbell_grand_assay_bell",
         "building_veilmourn_pale_sounding_last_memory_beacon",
+        "building_embercourt_amberweir_sluiceguard_lock",
+        "building_mireclaw_moonbite_votive_drum_court",
+        "building_sunvault_splitprism_parallax_duel_hall",
+        "building_thornwake_woundroot_hearthseed_nursery",
+        "building_brasshollow_whitegauge_datum_railhouse",
+        "building_veilmourn_dreamwake_tideglass_oratory",
     ]
     manifest_root = load_json(BUILDING_ART_MANIFEST_PATH)
     rows = manifest_root.get("items", [])
@@ -47680,7 +47687,7 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
             ensure(row.get("icon_sha256") == icon_hash, errors, f"Building {building_id} icon hash must be exact")
             header = icon_path.read_bytes()[:26]
             ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Building {building_id} icon must retain alpha")
-    ensure(len(set(source_hashes)) == 148 and len(set(icon_hashes)) == 148, errors, "All 148 building sources and icons must be distinct")
+    ensure(len(set(source_hashes)) == 154 and len(set(icon_hashes)) == 154, errors, "All 154 building sources and icons must be distinct")
 
     generator_text = BUILDING_ICON_GENERATOR_PATH.read_text(encoding="utf-8")
     for token in ("BUILDING_IDS = (", "SOURCE_SIZE = (1254, 1254)", "ICON_SIZE = (256, 256)", "ImageOps.contain", "Image.Resampling.LANCZOS", 'compress_level=9', '"source_sha256": sha256(source_path)', '"icon_sha256": sha256(runtime_path)'):
@@ -47715,7 +47722,7 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
     report_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     scene_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure_scene_nodes(scene_text, errors, "town_embercourt_production_dwelling_icon_report.tscn", [("TownEmbercourtProductionDwellingIconReport", "Node")])
-    for token in ("target_count == _target_building_ids().size()", "specific_count == 148", "fallback_count == 0", "source_hashes.size() == _target_building_ids().size()", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "all_production_specific = all_production_specific and not art.is_empty()", 'TownRules.building_icon_path(building_id) != TownRules.building_category_icon_path(building_id)', "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
+    for token in ("target_count == _target_building_ids().size()", "specific_count == 154", "fallback_count == 0", "source_hashes.size() == _target_building_ids().size()", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "all_production_specific = all_production_specific and not art.is_empty()", 'TownRules.building_icon_path(building_id) != TownRules.building_category_icon_path(building_id)', "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
         ensure(token in report_text, errors, f"Focused building icon report is missing: {token}")
     ensure('var fallback_id := "building_embercourt_granary_lock_exchange"' not in report_text, errors, "Focused building icon report must not treat Embercourt's now-specific Granary Lock Exchange as a category fallback")
     ensure('var fallback_id := "building_brasshollow_clause_court"' not in report_text, errors, "Focused building icon report must not treat Brasshollow's now-specific Clause Court as a category fallback")
@@ -59655,6 +59662,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ]
     latest_neutral_curated_unit_ids = [tunnel_lanterns_unit_id, glimmercap_needlers_unit_id, glowcap_bulwarks_unit_id, sporelamp_tossers_unit_id, dustjack_blades_unit_id, scrapbow_teams_unit_id, frostbeacon_pikes_unit_id, snowglass_markers_unit_id, orchard_halberds_unit_id, millstone_slingers_unit_id, switchback_pikes_unit_id, cairnshield_porters_unit_id, saltpan_bucklers_unit_id, suncrack_throwers_unit_id, sumpstone_guards_unit_id, echodart_casts_unit_id, icehook_trappers_unit_id, whitepike_keepers_unit_id, harbor_polearms_unit_id, flaremast_crews_unit_id, milestone_bucklers_unit_id, cartbow_tenders_unit_id, frostwharf_cutters_unit_id, lanternskate_throwers_unit_id]
     latest_curated_unit_ids = latest_neutral_curated_unit_ids + [
+        "unit_embercourt_amberweir_lockpike_wardens",
+        "unit_mireclaw_moonbite_votive_drummers",
+        "unit_sunvault_splitprism_parallax_fencers",
+        "unit_thornwake_woundroot_hearthseed_slingers",
+        "unit_brasshollow_whitegauge_datum_lancers",
+        "unit_veilmourn_dreamwake_tideglass_oracles",
         "unit_embercourt_beaconline_writguard",
         "unit_mireclaw_fenbell_chainstalkers",
         "unit_sunvault_zenith_lensbearers",
@@ -59698,15 +59711,15 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ensure(
         sorted(str(record.get("unit_id", "")) for record in curated_art_records if str(record.get("unit_id", "")) not in latest_curated_unit_ids) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, tidepool_cutters_unit_id, reefbolt_crews_unit_id, hedgehook_watch_unit_id, thornbow_scouts_unit_id, basalt_wardens_unit_id, tunnelmark_bolters_unit_id, fenhound_runners_unit_id, mossglass_sentinels_unit_id, cliffhawk_wardens_unit_id, windglass_slingers_unit_id, greenbranch_cudgels_unit_id, sapwhistle_callers_unit_id, bogbell_mauls_unit_id, peatflare_jarriers_unit_id, cinderpot_hurlers_unit_id, kilnward_mallets_unit_id, kitehook_runners_unit_id, ridgeflare_shots_unit_id, ashdart_stalkers_unit_id, scarshield_veterans_unit_id, reedbarge_poles_unit_id, lanternet_throwers_unit_id, charcoal_mauls_unit_id, emberpack_lobbers_unit_id, roadwardens_unit_id, hearthbow_carriers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
         errors,
-        "Exactly the approved one hundred forty-two units, including the six-faction reserve companies, may use the curated character-source branch",
+        "Exactly the approved one hundred forty-eight units may use the curated character-source branch",
     )
-    ensure(len(curated_art_records) == 142 and sorted(str(record.get("unit_id", "")) for record in curated_art_records if str(record.get("unit_id", "")) in latest_curated_unit_ids) == sorted(latest_curated_unit_ids), errors, "All 142 live units must retain curated production art while the latest neutral and auxiliary batches remain covered")
+    ensure(len(curated_art_records) == 148 and sorted(str(record.get("unit_id", "")) for record in curated_art_records if str(record.get("unit_id", "")) in latest_curated_unit_ids) == sorted(latest_curated_unit_ids), errors, "All 148 live units must retain curated production art while the latest batches remain covered")
     ensure(
         sorted(str(record.get("unit_id", "")) for record in curated_animation_records if str(record.get("unit_id", "")) not in latest_curated_unit_ids) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, tidepool_cutters_unit_id, reefbolt_crews_unit_id, hedgehook_watch_unit_id, thornbow_scouts_unit_id, basalt_wardens_unit_id, tunnelmark_bolters_unit_id, fenhound_runners_unit_id, mossglass_sentinels_unit_id, cliffhawk_wardens_unit_id, windglass_slingers_unit_id, greenbranch_cudgels_unit_id, sapwhistle_callers_unit_id, bogbell_mauls_unit_id, peatflare_jarriers_unit_id, cinderpot_hurlers_unit_id, kilnward_mallets_unit_id, kitehook_runners_unit_id, ridgeflare_shots_unit_id, ashdart_stalkers_unit_id, scarshield_veterans_unit_id, reedbarge_poles_unit_id, lanternet_throwers_unit_id, charcoal_mauls_unit_id, emberpack_lobbers_unit_id, roadwardens_unit_id, hearthbow_carriers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
         errors,
-        "Exactly the approved one hundred forty-two units, including the six-faction reserve companies, may use the curated character-source animation branch",
+        "Exactly the approved one hundred forty-eight units may use the curated character-source animation branch",
     )
-    ensure(len(curated_animation_records) == 142 and sorted(str(record.get("unit_id", "")) for record in curated_animation_records if str(record.get("unit_id", "")) in latest_curated_unit_ids) == sorted(latest_curated_unit_ids), errors, "All 142 live units must retain curated production animation while the latest neutral and auxiliary batches remain covered")
+    ensure(len(curated_animation_records) == 148 and sorted(str(record.get("unit_id", "")) for record in curated_animation_records if str(record.get("unit_id", "")) in latest_curated_unit_ids) == sorted(latest_curated_unit_ids), errors, "All 148 live units must retain curated production animation while the latest batches remain covered")
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
         (animation_records_by_unit_id.get(fordhook_unit_id, {}), "animation"),
@@ -59895,6 +59908,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_brasshollow_rivet_hounds",
     "unit_brasshollow_scrip_haulers",
     "unit_brasshollow_tallyspring_throwers",
+    "unit_brasshollow_whitegauge_datum_lancers",
     "unit_citadel_pikeward",
     "unit_ember_archer",
     "unit_embercourt_ash_oath_bailiffs",
@@ -59907,6 +59921,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_embercourt_lantern_sappers",
     "unit_embercourt_lockglass_writcasters",
     "unit_embercourt_sluicefire_lindworms",
+    "unit_embercourt_amberweir_lockpike_wardens",
     "unit_gorefen_ripper",
     "unit_mire_slinger",
     "unit_mireclaw_bogplate_maulers",
@@ -59918,6 +59933,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_mireclaw_mudglass_slingers",
     "unit_mireclaw_reedsnare_kin",
     "unit_mireclaw_sporewake_chanters",
+    "unit_mireclaw_moonbite_votive_drummers",
     "unit_mirror_duelist",
     "unit_neutral_ashdart_stalkers",
     "unit_neutral_ashcrown_kilnelk",
@@ -59995,6 +60011,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_sunvault_shard_wardens",
     "unit_sunvault_solar_array_striders",
     "unit_sunvault_zenith_lensbearers",
+    "unit_sunvault_splitprism_parallax_fencers",
     "unit_thornwake_barkmantle_rams",
     "unit_thornwake_bramblekite_needlers",
     "unit_thornwake_dawnseed_bolters",
@@ -60008,6 +60025,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_thornwake_stagknot_runners",
     "unit_thornwake_thornwhip_carriers",
     "unit_thornwake_worldroot_bastion",
+    "unit_thornwake_woundroot_hearthseed_slingers",
     "unit_veilmourn_bellwake_oars",
     "unit_veilmourn_fogbound_leviathan",
     "unit_veilmourn_gloamkeel_bulwarks",
@@ -60021,8 +60039,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_veilmourn_wakechain_boarders",
     "unit_veilmourn_undertow_harpooners",
     "unit_veilmourn_wakeglass_navigators",
+    "unit_veilmourn_dreamwake_tideglass_oracles",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the one hundred forty-two approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the one hundred forty-eight approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -78564,7 +78583,7 @@ def validate_six_unbound_wild_concords(errors: list[str]) -> None:
     object_assets = art.get("object_assets", {})
     site_sprites = art.get("resource_site_sprites", {})
     encounter_sprites = art.get("encounter_identity_sprites", {})
-    ensure((len(units),len(groups),len(encounters),len(dwellings),len(sites),len(objects),len(scenarios)) == (142,345,197,43,309,416,207), errors, "Unbound-wild concord catalog counts changed")
+    ensure((len(units),len(groups),len(encounters),len(dwellings),len(sites),len(objects),len(scenarios)) == (148,345,197,43,309,416,207), errors, "Unbound-wild concord catalog counts changed")
     campaign = campaigns.get(campaign_id, {})
     campaign_chapters = campaign.get("scenarios", []) if isinstance(campaign.get("scenarios", []), list) else []
     expected_scenario_order = [row[2] for row in expected.values()]
@@ -78708,7 +78727,7 @@ def validate_six_marchland_seats(errors: list[str]) -> None:
         ensure(len(victory) == 6 and len(defeat) == 3 and any(row.get("placement_id") == f"{prefix}_counterstroke" for row in victory if isinstance(row, dict)), errors, f"{scenario_id} objective chain changed")
         final_front = next((placement for placement in scenario.get("encounters", []) if placement.get("placement_id") == f"{prefix}_front_4"), {})
         ensure(final_front.get("enemy_commander_state", {}).get("roster_hero_id") == rival_hero_id, errors, f"{scenario_id} roster-backed rival changed")
-        ensure(group.get("faction_id") == faction_id and group.get("content_batch_id") == batch_id and len(group.get("stacks", [])) == 4, errors, f"{scenario_id} opening company changed")
+        ensure(group.get("faction_id") == faction_id and group.get("content_batch_id") == batch_id and len(group.get("stacks", [])) == 5, errors, f"{scenario_id} expanded opening company changed")
         ensure(source_path.is_file() and png_size(source_path) == (1536, 1024) and hashlib.sha256(source_bytes).hexdigest() == row.get("source_sha256") and len(str(row.get("prompt", ""))) >= 160 and len(str(row.get("accessible_description", ""))) >= 80, errors, f"{town_id} generated source or provenance changed")
         ensure(runtime_path.is_file() and png_size(runtime_path) == (1600, 900) and hashlib.sha256(runtime_bytes).hexdigest() == runtime_sha == row.get("runtime_sha256") and Path(f"{runtime_path}.import").is_file(), errors, f"{town_id} runtime scenic art or import changed")
         source_payloads.append(source_bytes)
@@ -78727,6 +78746,94 @@ def validate_six_marchland_seats(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         text = packaging_path.read_text(encoding="utf-8")
         ensure(text.count("art/towns/runtime/backdrops/marchland_seats/") == 6 and all(town_id in text for town_id in expected), errors, f"{packaging_path.name} must audit all six packaged Marchland Seat backdrops")
+
+
+def validate_six_marchland_local_retinues(errors: list[str]) -> None:
+    batch_id = "content-six-marchland-local-retinues-10184"
+    units = items_index(load_json(CONTENT_DIR / "units.json"))
+    buildings = items_index(load_json(CONTENT_DIR / "buildings.json"))
+    towns = items_index(load_json(CONTENT_DIR / "towns.json"))
+    groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    unit_art = items_index(load_json(CONTENT_DIR / "unit_art_manifest.json"))
+    animations = items_index(load_json(CONTENT_DIR / "unit_animation_manifest.json"))
+    building_art = items_index(load_json(CONTENT_DIR / "building_art_manifest.json"))
+    unit_source_manifest_path = ROOT / "art" / "units" / "source" / "generated" / "marchland_local_retinues" / "manifest.json"
+    building_source_manifest_path = ROOT / "art" / "towns" / "source" / "generated" / "buildings" / "marchland_local_retinues" / "manifest.json"
+    smoke_script = ROOT / "tests" / "six_marchland_local_retinues_smoke.gd"
+    smoke_scene = ROOT / "tests" / "six_marchland_local_retinues_smoke.tscn"
+    smoke_wrapper = ROOT / "tests" / "six_marchland_local_retinues_smoke.py"
+    smoke_report = ROOT / ".artifacts" / "six_marchland_local_retinues_smoke" / "report.json"
+    author_script = ROOT / "tools" / "author_six_marchland_local_retinues.py"
+    expected = {
+        "unit_embercourt_amberweir_lockpike_wardens": ("faction_embercourt", "melee", ["reach", "brace"], "building_embercourt_amberweir_sluiceguard_lock", "town_amberweir_granary", "army_amberweir_long_march_company", "rainledger-amberweir-long-march"),
+        "unit_mireclaw_moonbite_votive_drummers": ("faction_mireclaw", "ranged", ["harry", "volley"], "building_mireclaw_moonbite_votive_drum_court", "town_moonbite_reedshrine", "army_moonbite_long_march_company", "votivejaw-moonbite-long-march"),
+        "unit_sunvault_splitprism_parallax_fencers": ("faction_sunvault", "melee", ["reach", "backstab"], "building_sunvault_splitprism_parallax_duel_hall", "town_splitprism_duelcourt", "army_splitprism_long_march_company", "facetlane-splitprism-long-march"),
+        "unit_thornwake_woundroot_hearthseed_slingers": ("faction_thornwake", "ranged", ["harry", "volley"], "building_thornwake_woundroot_hearthseed_nursery", "town_woundroot_hearthgrove", "army_woundroot_long_march_company", "greenbarrow-woundroot-long-march"),
+        "unit_brasshollow_whitegauge_datum_lancers": ("faction_brasshollow", "melee", ["reach", "brace"], "building_brasshollow_whitegauge_datum_railhouse", "town_whitegauge_calibration_yard", "army_whitegauge_long_march_company", "gaugesavant-whitegauge-long-march"),
+        "unit_veilmourn_dreamwake_tideglass_oracles": ("faction_veilmourn", "ranged", ["harry", "volley"], "building_veilmourn_dreamwake_tideglass_oratory", "town_dreamwake_oracle_harbor", "army_dreamwake_long_march_company", "wakeoracle-dreamwake-long-march"),
+    }
+    ensure(len(units) == 148 and len(buildings) == 154, errors, "Marchland Local Retinues must retain the expanded 148-unit and 154-building catalogs")
+    for path in (unit_source_manifest_path, building_source_manifest_path, smoke_script, smoke_scene, smoke_wrapper, author_script):
+        ensure(path.is_file(), errors, f"Missing Marchland Local Retinues owner: {path.relative_to(ROOT)}")
+    if not unit_source_manifest_path.is_file() or not building_source_manifest_path.is_file():
+        return
+    unit_source_manifest = load_json(unit_source_manifest_path)
+    building_source_manifest = load_json(building_source_manifest_path)
+    unit_source_rows = {str(row.get("unit_id", "")): row for row in unit_source_manifest.get("items", []) if isinstance(row, dict)}
+    building_source_rows = {str(row.get("building_id", "")): row for row in building_source_manifest.get("items", []) if isinstance(row, dict)}
+    ensure(unit_source_manifest.get("generator_mode") == "built_in_imagegen" and set(unit_source_rows) == set(expected), errors, "Marchland retinue generated unit provenance changed")
+    ensure(building_source_manifest.get("generator_mode") == "built_in_imagegen" and set(building_source_rows) == {row[3] for row in expected.values()}, errors, "Marchland retinue generated dwelling provenance changed")
+    curated_unit_payloads = []
+    curated_building_payloads = []
+    for unit_id, (faction_id, role, ability_ids, building_id, town_id, army_id, scenario_id) in expected.items():
+        unit = units.get(unit_id, {})
+        building = buildings.get(building_id, {})
+        town = towns.get(town_id, {})
+        group = groups.get(army_id, {})
+        scenario = scenarios.get(scenario_id, {})
+        ensure(unit.get("faction_id") == faction_id and unit.get("role") == role and unit.get("tier") == 4 and unit.get("growth") == 3 and unit.get("content_status") == "marchland_local_retinue_live" and unit.get("content_batch_id") == batch_id and [ability.get("id") for ability in unit.get("abilities", [])] == ability_ids, errors, f"{unit_id} gameplay contract changed")
+        ensure(building.get("faction_id") == faction_id and building.get("category") == "dwelling" and building.get("unlock_unit_id") == unit_id and building.get("growth_bonus", {}).get(unit_id) == 3 and building.get("content_status") == "marchland_local_retinue_live" and building.get("content_batch_id") == batch_id and len(building.get("requires", [])) == 2, errors, f"{building_id} production contract changed")
+        owners = [candidate_id for candidate_id, candidate in towns.items() if building_id in candidate.get("buildable_building_ids", [])]
+        ensure(owners == [town_id] and town.get("marchland_seat", {}).get("local_retinue_unit_id") == unit_id and town.get("marchland_seat", {}).get("local_retinue_building_id") == building_id, errors, f"{building_id} town-exclusive route changed")
+        stack = next((row for row in group.get("stacks", []) if row.get("unit_id") == unit_id), {})
+        ensure(len(group.get("stacks", [])) == 5 and stack.get("count") == 4 and group.get("local_retinue_batch_id") == batch_id, errors, f"{unit_id} five-stack Marchland company route changed")
+        ensure(scenario.get("marchland_local_retinue") == {"unit_id": unit_id, "building_id": building_id} and "five-stack" in str(scenario.get("selection", {}).get("player_summary", "")), errors, f"{scenario_id} retinue selection contract changed")
+        unit_source_row = unit_source_rows.get(unit_id, {})
+        building_source_row = building_source_rows.get(building_id, {})
+        for row, source_size, curated_size, label, payloads in ((unit_source_row, None, (512, 512), unit_id, curated_unit_payloads), (building_source_row, None, (1254, 1254), building_id, curated_building_payloads)):
+            source_path = res_path_to_disk(str(row.get("source_path", "")))
+            curated_path = res_path_to_disk(str(row.get("curated_path", "")))
+            source_bytes = source_path.read_bytes() if source_path.is_file() else b""
+            curated_bytes = curated_path.read_bytes() if curated_path.is_file() else b""
+            ensure(source_path.is_file() and hashlib.sha256(source_bytes).hexdigest() == row.get("source_sha256") and len(str(row.get("prompt", ""))) >= 120 and str(row.get("original_generated_path", "")).endswith(".png"), errors, f"{label} generated source provenance changed")
+            ensure(curated_path.is_file() and png_size(curated_path) == curated_size and hashlib.sha256(curated_bytes).hexdigest() == row.get("curated_sha256"), errors, f"{label} curated source changed")
+            payloads.append(curated_bytes)
+        expected_unit_paths = {
+            "portrait": f"res://art/units/portraits/{unit_id}.png",
+            "battle_icon": f"res://art/units/battle_icons/{unit_id}.png",
+            "battle_standee": f"res://art/units/battle_standees/{unit_id}.png",
+            "overworld_icon": f"res://art/units/overworld_icons/{unit_id}.png",
+        }
+        ensure(all(unit_art.get(unit_id, {}).get(key) == value and res_path_to_disk(value).is_file() and Path(f"{res_path_to_disk(value)}.import").is_file() for key, value in expected_unit_paths.items()), errors, f"{unit_id} runtime art routes or imports changed")
+        animation_path = f"res://art/animation/runtime/units/{unit_id}.png"
+        ensure(animations.get(unit_id, {}).get("sprite_sheet") == animation_path and res_path_to_disk(animation_path).is_file() and Path(f"{res_path_to_disk(animation_path)}.import").is_file(), errors, f"{unit_id} animation route or import changed")
+        building_icon_path = f"res://art/towns/runtime/buildings/{building_id}.png"
+        ensure(building_art.get(building_id, {}).get("icon_path") == building_icon_path and res_path_to_disk(building_icon_path).is_file() and Path(f"{res_path_to_disk(building_icon_path)}.import").is_file(), errors, f"{building_id} runtime icon route or import changed")
+    ensure(len(set(curated_unit_payloads)) == 6 and len(set(curated_building_payloads)) == 6, errors, "All six Marchland retinue and dwelling masters must remain byte-distinct")
+    if smoke_script.is_file():
+        smoke_text = smoke_script.read_text(encoding="utf-8")
+        for token in ("SIX_MARCHLAND_LOCAL_RETINUES_SMOKE", "TownRules.build_active_town", "TownRules.recruit_active_town", "BattleRulesScript.create_battle_payload", "validation_unit_art_summary", "local_retinues_contact_sheet.png", '"single_consolidated_smoke":true'):
+            ensure(token in smoke_text, errors, f"Marchland Local Retinues smoke is missing proof token: {token}")
+    if smoke_scene.is_file():
+        ensure("res://tests/six_marchland_local_retinues_smoke.gd" in smoke_scene.read_text(encoding="utf-8"), errors, "Marchland Local Retinues smoke scene lost its exact script")
+    ensure(smoke_report.is_file(), errors, "Marchland Local Retinues consolidated smoke report is missing")
+    if smoke_report.is_file():
+        report = load_json(smoke_report)
+        ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exclusive_route_count") == 6 and report.get("five_stack_company_count") == 6 and report.get("town_build_count") == 6 and report.get("town_recruit_count") == 6 and report.get("battle_victory_count") == 6 and report.get("battle_art_count") == 6 and report.get("save_round_trip_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(report.get("rows", [])) == 6, errors, "Marchland Local Retinues consolidated smoke report is not fully green")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        text = packaging_path.read_text(encoding="utf-8")
+        ensure("REQUIRED_MARCHLAND_LOCAL_RETINUE_UNIT_IDS" in text and all(unit_id in text for unit_id in expected) and all(row[3] in text for row in expected.values()), errors, f"{packaging_path.name} must audit all Marchland retinue and dwelling assets")
 
 
 def validate_six_horizon_citadels(errors: list[str]) -> None:
@@ -79407,7 +79514,7 @@ def validate_three_horizon_specialist_companies(errors: list[str]) -> None:
     overworld_art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     identity_sprites = overworld_art.get("encounter_identity_sprites", {})
     object_assets = overworld_art.get("object_assets", {})
-    ensure(len(units) >= 136 and len(buildings) == 148 and len(groups) >= 309 and len(encounters) >= 185 and len(scenarios) >= 183, errors, "Horizon specialist companies must remain present in the expanding unit catalog and retain the 148-building, 249-army, 179-encounter, 129-scenario catalogs")
+    ensure(len(units) >= 142 and len(buildings) == 154 and len(groups) >= 309 and len(encounters) >= 185 and len(scenarios) >= 183, errors, "Horizon specialist companies must remain present in the expanding unit and building catalogs")
     for unit_id, row in expected.items():
         unit = units.get(unit_id, {})
         building_id = row["building_id"]
@@ -79496,7 +79603,7 @@ def validate_three_horizon_reserve_companies(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     unit_art = items_index(load_json(CONTENT_DIR / "unit_art_manifest.json"))
     animations = items_index(load_json(CONTENT_DIR / "unit_animation_manifest.json"))
-    ensure(len(units) >= 136 and len(buildings) == 148 and len(groups) >= 309 and len(scenarios) >= 183, errors, "Horizon reserve companies must remain present in the expanding unit catalog and retain the 148-building, 249-army, 129-scenario catalogs")
+    ensure(len(units) >= 142 and len(buildings) == 154 and len(groups) >= 309 and len(scenarios) >= 183, errors, "Horizon reserve companies must remain present in the expanding unit and building catalogs")
     source_payloads: list[bytes] = []
     for unit_id, row in expected.items():
         unit = units.get(unit_id, {})
@@ -79580,7 +79687,7 @@ def validate_three_horizon_skirmish_companies(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     unit_art = items_index(load_json(CONTENT_DIR / "unit_art_manifest.json"))
     animations = items_index(load_json(CONTENT_DIR / "unit_animation_manifest.json"))
-    ensure(len(units) >= 136 and len(buildings) == 148 and len(groups) >= 309 and len(scenarios) >= 183, errors, "Horizon skirmish companies must remain present in the expanding unit catalog and retain the 148-building, 249-army, 129-scenario catalogs")
+    ensure(len(units) >= 142 and len(buildings) == 154 and len(groups) >= 309 and len(scenarios) >= 183, errors, "Horizon skirmish companies must remain present in the expanding unit and building catalogs")
     source_payloads: list[bytes] = []
     for unit_id, row in expected.items():
         unit = units.get(unit_id, {})
@@ -79659,7 +79766,7 @@ def validate_four_faction_roster_parity_companies(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     unit_art = items_index(load_json(CONTENT_DIR / "unit_art_manifest.json"))
     animations = items_index(load_json(CONTENT_DIR / "unit_animation_manifest.json"))
-    ensure(len(units) >= 136 and len(buildings) == 148 and len(scenarios) >= 183, errors, "Roster-parity companies must remain present in the expanding unit catalog and retain the 148-building, 99-scenario production catalogs")
+    ensure(len(units) >= 142 and len(buildings) == 154 and len(scenarios) >= 183, errors, "Roster-parity companies must remain present in the expanding unit and building catalogs")
     for faction_id in ("faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake", "faction_brasshollow", "faction_veilmourn"):
         faction_units = [unit for unit in units.values() if unit.get("faction_id") == faction_id]
         ensure(len(faction_units) >= 12, errors, f"{faction_id} must retain at least the established twelve-unit production roster parity")
@@ -79718,9 +79825,9 @@ def validate_six_faction_reserve_companies(errors: list[str]) -> None:
     armies = items_index(load_json(CONTENT_DIR / "army_groups.json"))
     unit_art = items_index(load_json(CONTENT_DIR / "unit_art_manifest.json"))
     animations = items_index(load_json(CONTENT_DIR / "unit_animation_manifest.json"))
-    ensure(len(units) == 142 and len(unit_art) == 142 and len(animations) == 142, errors, "Six-faction reserve companies must complete matching 142-unit gameplay and art catalogs")
+    ensure(len(units) == 148 and len(unit_art) == 148 and len(animations) == 148, errors, "Six-faction reserve companies must remain present in matching 148-unit gameplay and art catalogs")
     for faction_id in ("faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake", "faction_brasshollow", "faction_veilmourn"):
-        ensure(sum(1 for unit in units.values() if unit.get("faction_id") == faction_id) == 13, errors, f"{faction_id} must expose exactly thirteen production units")
+        ensure(sum(1 for unit in units.values() if unit.get("faction_id") == faction_id) == 14, errors, f"{faction_id} must expose exactly fourteen production units")
     source_payloads: list[bytes] = []
     for unit_id, row in expected.items():
         faction_id, tier, role, growth, ability_ids, building_id, building_growth, town_id, town_growth, town_discount, army_id, stack_count, source_sha = row
@@ -80200,7 +80307,7 @@ def validate_six_horizon_capstone_monuments(errors: list[str]) -> None:
     building_art = items_index(load_json(BUILDING_ART_MANIFEST_PATH))
     source_manifest = load_json(SIX_HORIZON_CAPSTONE_MONUMENTS_SOURCE_MANIFEST_PATH)
     source_rows = {str(item.get("building_id", "")): item for item in source_manifest.get("items", []) if isinstance(item, dict) and str(item.get("building_id", ""))}
-    ensure(len(buildings) == 148 and len(building_art) == 148, errors, "Six Horizon capstones must complete matching 148-building gameplay and exact-art catalogs")
+    ensure(len(buildings) == 154 and len(building_art) == 154, errors, "Six Horizon capstones must remain present in matching 154-building gameplay and exact-art catalogs")
     ensure(source_manifest.get("schema_id") == "horizon_capstone_monument_building_art_v1" and source_manifest.get("generator") == "OpenAI built-in image generation" and len(source_rows) == 6, errors, "Six Horizon capstone source-art manifest identity changed")
     ensure("art/towns/source is excluded from Linux and Windows release packages" in str(source_manifest.get("runtime_pipeline", "")), errors, "Six Horizon capstone source-art package exclusion changed")
     generator_text = BUILDING_ICON_GENERATOR_PATH.read_text(encoding="utf-8")
@@ -82253,6 +82360,7 @@ def main() -> int:
     validate_six_unbound_wild_concords(errors)
     validate_six_named_rival_banner_challenges(errors)
     validate_six_marchland_seats(errors)
+    validate_six_marchland_local_retinues(errors)
     validate_six_horizon_citadels(errors)
     validate_horizon_compact_six_citadels(errors)
     validate_five_horizon_court_skirmishes(errors)
