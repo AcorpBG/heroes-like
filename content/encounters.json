@@ -3078,6 +3078,150 @@
       "field_objectives": [{"id": "tollbrand_levy_wagon", "type": "supply_post", "label": "Sluice-Levy Wagon", "summary": "Helva's sealed toll wagon keeps the road levy supplied until both lantern locks are taken from the line.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
       "rewards": {"gold": 250, "memory_salt": 1, "experience": 225},
       "victory_flags": ["rival_commander_tollbrand_broken"]
+    },
+    {
+      "id": "encounter_fenwake_crown_drum_verdict", "name": "Fenwake Crown-Drum Verdict",
+      "enemy_group_id": "army_fen_crown_fenwake_nemesis", "affiliation": "faction_mireclaw", "terrain": "mire",
+      "battlefield_tags": ["bog_channels", "chokepoint"], "max_rounds": 14,
+      "enemy_commander": {"roster_hero_id": "hero_mireclaw_zhorra_fenwake", "faction_id": "faction_mireclaw", "name": "Zhorra Fenwake", "command": {"attack": 0, "defense": 0, "power": 2, "knowledge": 2}, "starting_spell_ids": ["spell_relay_drum", "spell_bloodwake_drum", "spell_coal_rain"], "battle_traits": ["bogwise", "linekeeper"]},
+      "field_objectives": [{"id": "fenwake_crown_drum", "type": "ritual_pylon", "label": "Crown-Drum Verdict", "summary": "Zhorra's five-hide crown drum keeps the fen host in one furious cadence until its reed-bound beaters are seized.", "starting_side": "enemy", "capture_threshold": 3, "urgency_round": 2, "pressure_tags": ["momentum", "commander", "urgency"]}],
+      "rewards": {"gold": 300, "peatwax": 1, "experience": 300}, "victory_flags": ["finale_nemesis_fenwake_broken"]
+    },
+    {
+      "id": "encounter_votivejaw_nightglass_bite", "name": "Votivejaw Nightglass Bite",
+      "enemy_group_id": "army_nightglass_votivejaw_nemesis", "affiliation": "faction_mireclaw", "terrain": "mire",
+      "battlefield_tags": ["ambush_cover", "wall_pressure"], "max_rounds": 14,
+      "enemy_commander": {"roster_hero_id": "hero_mireclaw_nix_votivejaw", "faction_id": "faction_mireclaw", "name": "Nix Votivejaw", "command": {"attack": 1, "defense": 0, "power": 2, "knowledge": 1}, "starting_spell_ids": ["spell_coal_rain", "spell_bloodwake_drum", "spell_relay_drum"], "battle_traits": ["linekeeper", "bogwise"]},
+      "field_objectives": [{"id": "votivejaw_nightglass_teeth", "type": "hazard_zone", "label": "Nightglass Votive Teeth", "summary": "Nix's black-glass jaw shrine marks every safe causeway tile as an offering until its four votive teeth are broken.", "starting_side": "enemy", "capture_threshold": 3, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 310, "peatwax": 1, "experience": 310}, "victory_flags": ["finale_nemesis_votivejaw_broken"]
+    },
+    {
+      "id": "encounter_lockmaster_archive_seal", "name": "Lockmaster Archive Seal",
+      "enemy_group_id": "army_lockmarsh_lockmaster_nemesis", "affiliation": "faction_embercourt", "terrain": "grass",
+      "battlefield_tags": ["fortified_line", "chokepoint"], "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_embercourt_saren_lockmaster", "faction_id": "faction_embercourt", "name": "Saren Lockmaster", "command": {"attack": 2, "defense": 2, "power": 0, "knowledge": 0}, "starting_spell_ids": ["spell_cinder_burst", "spell_lantern_phalanx", "spell_stone_veil"], "battle_traits": ["linekeeper", "vanguard"]},
+      "field_objectives": [{"id": "lockmaster_archive_gate", "type": "breach_point", "label": "Archive Lock-Seal", "summary": "Saren's double-key lockgate holds the archive relief line shut until the central seal pin is driven free.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["momentum", "cohesion", "urgency"]}],
+      "rewards": {"gold": 260, "embergrain": 1, "experience": 260}, "victory_flags": ["finale_nemesis_lockmaster_broken"]
+    },
+    {
+      "id": "encounter_chainboom_daybreak_snare", "name": "Chainboom Daybreak Snare",
+      "enemy_group_id": "army_daybreak_chainboom_nemesis", "affiliation": "faction_mireclaw", "terrain": "snow",
+      "battlefield_tags": ["ambush_cover", "chokepoint"], "max_rounds": 14,
+      "enemy_commander": {"roster_hero_id": "hero_mireclaw_kessa_chainboom", "faction_id": "faction_mireclaw", "name": "Kessa Chainboom", "command": {"attack": 2, "defense": 1, "power": 0, "knowledge": 1}, "starting_spell_ids": ["spell_relay_drum", "spell_bulwark_litany", "spell_coal_rain"], "battle_traits": ["vanguard", "bogwise"]},
+      "field_objectives": [{"id": "chainboom_daybreak_chain", "type": "obstruction_line", "label": "Daybreak Chain-Snare", "summary": "Kessa's frost-stiff ferry chain splits the prism approach until both hooked anchor drums are cut loose.", "starting_side": "enemy", "capture_threshold": 3, "urgency_round": 2, "pressure_tags": ["initiative", "momentum", "urgency"]}],
+      "rewards": {"gold": 310, "peatwax": 1, "experience": 310}, "victory_flags": ["finale_nemesis_chainboom_broken"]
+    },
+    {
+      "id": "encounter_ironclause_ninefold_assize", "name": "Ironclause Ninefold Assize",
+      "enemy_group_id": "army_ninefold_ironclause_nemesis", "affiliation": "faction_brasshollow", "terrain": "rough",
+      "battlefield_tags": ["fortress_lane", "reserve_wave"], "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_brasshollow_marka_ironclause", "faction_id": "faction_brasshollow", "name": "Marka Ironclause", "command": {"attack": 2, "defense": 2, "power": 0, "knowledge": 0}, "starting_spell_ids": ["spell_heat_rite", "spell_stone_veil", "spell_bulwark_litany"], "battle_traits": ["linekeeper", "vanguard"]},
+      "field_objectives": [{"id": "ironclause_nine_tallies", "type": "supply_post", "label": "Ninefold Tally Assize", "summary": "Marka's nine-rivet contract post keeps ore and orders moving until its stamped tally arms are claimed.", "starting_side": "enemy", "capture_threshold": 3, "urgency_round": 2, "pressure_tags": ["reinforcement", "cohesion", "urgency"]}],
+      "rewards": {"gold": 270, "brass_scrip": 1, "experience": 270}, "victory_flags": ["finale_nemesis_ironclause_broken"]
+    },
+    {
+      "id": "encounter_glassmarshal_counterseal_battery", "name": "Glassmarshal Counterseal Battery",
+      "enemy_group_id": "army_counterseal_glassmarshal_nemesis", "affiliation": "faction_sunvault", "terrain": "snow",
+      "battlefield_tags": ["elevated_fire", "battery_nest"], "max_rounds": 14,
+      "enemy_commander": {"roster_hero_id": "hero_sunvault_ilyr_glassmarshal", "faction_id": "faction_sunvault", "name": "Ilyr Glassmarshal", "command": {"attack": 2, "defense": 1, "power": 0, "knowledge": 0}, "starting_spell_ids": ["spell_prism_bastion", "spell_sunlance_arc", "spell_resonant_chorus"], "battle_traits": ["artillerist", "vanguard"]},
+      "field_objectives": [{"id": "glassmarshal_counterseal_sight", "type": "lane_battery", "label": "Counterseal Sight-Battery", "summary": "Ilyr's triple-lens command sight keeps the counterseal lane ranged until the outer mirrors are turned inward.", "starting_side": "enemy", "capture_threshold": 3, "urgency_round": 1, "pressure_tags": ["ranged", "initiative", "urgency"]}],
+      "rewards": {"gold": 320, "aetherglass": 1, "experience": 320}, "victory_flags": ["finale_nemesis_glassmarshal_broken"]
+    },
+    {
+      "id": "encounter_halometer_daylight_crown", "name": "Halometer Daylight Crown",
+      "enemy_group_id": "army_worldroot_halometer_nemesis", "affiliation": "faction_sunvault", "terrain": "forest",
+      "battlefield_tags": ["open_lane", "elevated_fire"], "max_rounds": 14,
+      "enemy_commander": {"roster_hero_id": "hero_sunvault_mirro_halometer", "faction_id": "faction_sunvault", "name": "Mirro Halometer", "command": {"attack": 0, "defense": 0, "power": 2, "knowledge": 3}, "starting_spell_ids": ["spell_sunlance_arc", "spell_resonant_chorus"], "battle_traits": ["artillerist", "packhunter"]},
+      "field_objectives": [{"id": "halometer_crown_calibration", "type": "signal_beacon", "label": "Daylight Crown Dial", "summary": "Mirro's calibrated halo dial keeps the crown arrays synchronized until its split noon needle is reversed.", "starting_side": "enemy", "capture_threshold": 3, "urgency_round": 1, "pressure_tags": ["ranged", "commander", "initiative"]}],
+      "rewards": {"gold": 340, "aetherglass": 1, "experience": 340}, "victory_flags": ["finale_nemesis_halometer_broken"]
+    },
+    {
+      "id": "encounter_vowless_drowned_requiem", "name": "Vowless Drowned Requiem",
+      "enemy_group_id": "army_furnace_vowless_nemesis", "affiliation": "faction_veilmourn", "terrain": "lava",
+      "battlefield_tags": ["fog_bank", "chokepoint"], "max_rounds": 14,
+      "enemy_commander": {"roster_hero_id": "hero_veilmourn_nacre_vowless", "faction_id": "faction_veilmourn", "name": "Nacre Vowless", "command": {"attack": 0, "defense": 0, "power": 3, "knowledge": 1}, "starting_spell_ids": ["spell_obituary_mark", "spell_stone_veil", "spell_briar_bind"], "battle_traits": ["ambusher", "bogwise"]},
+      "field_objectives": [{"id": "vowless_empty_oath_bell", "type": "ritual_pylon", "label": "Empty-Oath Bell", "summary": "Nacre's unstruck funeral bell drains the furnace line's answer until its empty oath ring is occupied.", "starting_side": "enemy", "capture_threshold": 3, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 340, "memory_salt": 1, "experience": 340}, "victory_flags": ["finale_nemesis_vowless_broken"]
+    },
+    {
+      "id": "encounter_debtrune_lastbell_audit", "name": "Debt-Rune Last-Bell Audit",
+      "enemy_group_id": "army_lastbell_debtrune_nemesis", "affiliation": "faction_brasshollow", "terrain": "coast",
+      "battlefield_tags": ["fortress_lane", "wall_pressure"], "max_rounds": 14,
+      "enemy_commander": {"roster_hero_id": "hero_brasshollow_harro_debtrune", "faction_id": "faction_brasshollow", "name": "Harro Debt-Rune", "command": {"attack": 0, "defense": 0, "power": 2, "knowledge": 2}, "starting_spell_ids": ["spell_pressure_clause", "spell_briar_bind", "spell_stone_veil"], "battle_traits": ["linekeeper", "bogwise"]},
+      "field_objectives": [{"id": "debtrune_lastbell_ledger", "type": "supply_post", "label": "Last-Bell Debt Ledger", "summary": "Harro's chained rune ledger feeds stamped orders into the harbor line until its red counterweight is seized.", "starting_side": "enemy", "capture_threshold": 3, "urgency_round": 2, "pressure_tags": ["reinforcement", "commander", "urgency"]}],
+      "rewards": {"gold": 340, "brass_scrip": 1, "experience": 340}, "victory_flags": ["finale_nemesis_debtrune_broken"]
+    },
+    {
+      "id": "encounter_mudkeel_fenbell_commission", "name": "Mudkeel Fenbell Commission",
+      "enemy_group_id": "army_three_banner_mudkeel_nemesis", "affiliation": "faction_mireclaw", "terrain": "mire",
+      "battlefield_tags": ["bog_channels", "fortified_line"], "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_mireclaw_brakka_mudkeel", "faction_id": "faction_mireclaw", "name": "Brakka Mudkeel", "command": {"attack": 1, "defense": 2, "power": 0, "knowledge": 0}, "starting_spell_ids": ["spell_stone_veil", "spell_relay_drum", "spell_bloodwake_drum"], "battle_traits": ["linekeeper", "bogwise"]},
+      "field_objectives": [{"id": "mudkeel_fenbell_plate", "type": "cover_line", "label": "Fenbell Keel-Plate", "summary": "Brakka's bell-faced bogplate standard shelters the commission line until its keel braces are overturned.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 270, "peatwax": 1, "experience": 270}, "victory_flags": ["finale_nemesis_mudkeel_broken"]
+    },
+    {
+      "id": "encounter_graftsibyl_wake_cordon", "name": "Graft-Sibyl Wake Cordon",
+      "enemy_group_id": "army_graftwake_graftsibyl_nemesis", "affiliation": "faction_thornwake", "terrain": "forest",
+      "battlefield_tags": ["ambush_cover", "chokepoint"], "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_thornwake_nara_graftsibyl", "faction_id": "faction_thornwake", "name": "Nara Graft-Sibyl", "command": {"attack": 0, "defense": 1, "power": 2, "knowledge": 2}, "starting_spell_ids": ["spell_graft_mend", "spell_briar_bind", "spell_prism_bastion"], "battle_traits": ["linekeeper", "bogwise"]},
+      "field_objectives": [{"id": "graftsibyl_wake_arch", "type": "cover_line", "label": "Prophet's Wake Arch", "summary": "Nara's living prophecy arch shelters the wake cordon until its three grafted witness eyes are closed.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 270, "verdant_grafts": 1, "experience": 270}, "victory_flags": ["finale_nemesis_graftsibyl_broken"]
+    },
+    {
+      "id": "encounter_seedseer_kite_root_omen", "name": "Seedseer Kite-Root Omen",
+      "enemy_group_id": "army_daynote_seedseer_nemesis", "affiliation": "faction_thornwake", "terrain": "forest",
+      "battlefield_tags": ["ambush_cover", "open_lane"], "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_thornwake_veyra_seedseer", "faction_id": "faction_thornwake", "name": "Veyra Seedseer", "command": {"attack": 0, "defense": 0, "power": 2, "knowledge": 2}, "starting_spell_ids": ["spell_briar_bind", "spell_graft_mend"], "battle_traits": ["bogwise", "ambusher"]},
+      "field_objectives": [{"id": "seedseer_kite_eye", "type": "hazard_zone", "label": "Kite-Root Omen Eye", "summary": "Veyra's seed-eye kite marks every exposed lane for grasping roots until its braided tail is grounded.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["initiative", "ranged", "urgency"]}],
+      "rewards": {"gold": 270, "verdant_grafts": 1, "experience": 270}, "victory_flags": ["finale_nemesis_seedseer_broken"]
+    },
+    {
+      "id": "encounter_gaugesavant_switchback_proof", "name": "Gauge-Savant Switchback Proof",
+      "enemy_group_id": "army_mossvein_gaugesavant_nemesis", "affiliation": "faction_brasshollow", "terrain": "rough",
+      "battlefield_tags": ["elevated_fire", "reserve_wave"], "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_brasshollow_lina_gaugesavant", "faction_id": "faction_brasshollow", "name": "Lina Gauge-Savant", "command": {"attack": 0, "defense": 0, "power": 2, "knowledge": 3}, "starting_spell_ids": ["spell_pressure_clause", "spell_heat_rite", "spell_resonant_chorus"], "battle_traits": ["artillerist", "linekeeper"]},
+      "field_objectives": [{"id": "gaugesavant_switchback_dial", "type": "signal_beacon", "label": "Switchback Proof-Dial", "summary": "Lina's three-needle proof dial keeps every mortar correction exact until its survey arms are misaligned.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 1, "pressure_tags": ["ranged", "initiative", "commander"]}],
+      "rewards": {"gold": 280, "brass_scrip": 1, "experience": 280}, "victory_flags": ["finale_nemesis_gaugesavant_broken"]
+    },
+    {
+      "id": "encounter_keelwarden_dustjack_screen", "name": "Keelwarden Dustjack Screen",
+      "enemy_group_id": "army_ashmeter_keelwarden_nemesis", "affiliation": "faction_veilmourn", "terrain": "rough",
+      "battlefield_tags": ["fog_bank", "fortified_line"], "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_veilmourn_jessa_keelwarden", "faction_id": "faction_veilmourn", "name": "Jessa Keelwarden", "command": {"attack": 1, "defense": 2, "power": 0, "knowledge": 1}, "starting_spell_ids": ["spell_stone_veil", "spell_fogwake_step", "spell_bulwark_litany"], "battle_traits": ["linekeeper", "ambusher"]},
+      "field_objectives": [{"id": "keelwarden_dustjack_keel", "type": "obstruction_line", "label": "Dustjack Keel-Screen", "summary": "Jessa's upright keel shield holds a false fog wall across the relay until both lantern chains are cut.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "initiative", "urgency"]}],
+      "rewards": {"gold": 280, "memory_salt": 1, "experience": 280}, "victory_flags": ["finale_nemesis_keelwarden_broken"]
+    },
+    {
+      "id": "encounter_beaconscribe_frostwharf_writ", "name": "Beaconscribe Frostwharf Writ",
+      "enemy_group_id": "army_frostwharf_beaconscribe_nemesis", "affiliation": "faction_embercourt", "terrain": "snow",
+      "battlefield_tags": ["elevated_fire", "fortified_line"], "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_embercourt_jorun_beaconscribe", "faction_id": "faction_embercourt", "name": "Jorun Beaconscribe", "command": {"attack": 0, "defense": 0, "power": 2, "knowledge": 2}, "starting_spell_ids": ["spell_quickmarch_hymn", "spell_lantern_phalanx"], "battle_traits": ["linekeeper", "artillerist"]},
+      "field_objectives": [{"id": "beaconscribe_frost_quill", "type": "signal_beacon", "label": "Frostwharf Beacon-Writ", "summary": "Jorun's iron quill beacon keeps the wharf screen in perfect cadence until its twin wax lanterns are claimed.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 1, "pressure_tags": ["ranged", "commander", "initiative"]}],
+      "rewards": {"gold": 270, "embergrain": 1, "experience": 270}, "victory_flags": ["finale_nemesis_beaconscribe_broken"]
+    },
+    {
+      "id": "encounter_reedscript_fenhound_lexicon", "name": "Reedscript Fenhound Lexicon",
+      "enemy_group_id": "army_fenhound_reedscript_nemesis", "affiliation": "faction_mireclaw", "terrain": "mire",
+      "battlefield_tags": ["bog_channels", "reserve_wave"], "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_mireclaw_pell_reedscript", "faction_id": "faction_mireclaw", "name": "Pell Reedscript", "command": {"attack": 0, "defense": 1, "power": 1, "knowledge": 3}, "starting_spell_ids": ["spell_relay_drum", "spell_bulwark_litany"], "battle_traits": ["linekeeper", "bogwise"]},
+      "field_objectives": [{"id": "reedscript_fenhound_codex", "type": "supply_post", "label": "Fenhound Reed-Codex", "summary": "Pell's antler-bound reed codex keeps den routes and reserve calls legible until its page weights are seized.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["reinforcement", "commander", "urgency"]}],
+      "rewards": {"gold": 270, "peatwax": 1, "experience": 270}, "victory_flags": ["finale_nemesis_reedscript_broken"]
+    },
+    {
+      "id": "encounter_lenscaptain_reedbarge_survey", "name": "Lens-Captain Reedbarge Survey",
+      "enemy_group_id": "army_reedbarge_lenscaptain_nemesis", "affiliation": "faction_sunvault", "terrain": "coast",
+      "battlefield_tags": ["open_lane", "elevated_fire"], "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_sunvault_dovan_lenscaptain", "faction_id": "faction_sunvault", "name": "Dovan Lens-Captain", "command": {"attack": 1, "defense": 1, "power": 0, "knowledge": 2}, "starting_spell_ids": ["spell_prism_bastion", "spell_sunlance_arc"], "battle_traits": ["artillerist", "ambusher"]},
+      "field_objectives": [{"id": "lenscaptain_reedbarge_mast", "type": "lane_battery", "label": "Reedbarge Survey Mast", "summary": "Dovan's split-lens mast ranges every barge channel until its low and high sight vanes are turned aside.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 1, "pressure_tags": ["ranged", "initiative", "urgency"]}],
+      "rewards": {"gold": 280, "aetherglass": 1, "experience": 280}, "victory_flags": ["finale_nemesis_lenscaptain_broken"]
+    },
+    {
+      "id": "encounter_loamchant_crystal_sump_binding", "name": "Loamchant Crystal-Sump Binding",
+      "enemy_group_id": "army_crystal_sump_loamchant_nemesis", "affiliation": "faction_thornwake", "terrain": "forest",
+      "battlefield_tags": ["chokepoint", "ambush_cover"], "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_thornwake_elian_loamchant", "faction_id": "faction_thornwake", "name": "Elian Loamchant", "command": {"attack": 0, "defense": 0, "power": 2, "knowledge": 3}, "starting_spell_ids": ["spell_briar_bind", "spell_coal_rain", "spell_graft_mend"], "battle_traits": ["bogwise", "linekeeper"]},
+      "field_objectives": [{"id": "loamchant_sump_harp", "type": "ritual_pylon", "label": "Crystal-Sump Loam Harp", "summary": "Elian's root-strung loam harp keeps the sump bound in one low chord until its crystal tuning stones are claimed.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 280, "verdant_grafts": 1, "experience": 280}, "victory_flags": ["finale_nemesis_loamchant_broken"]
     }
   ]
 }

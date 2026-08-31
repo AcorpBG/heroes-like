@@ -7633,6 +7633,132 @@
       "assigned_encounter_id": "encounter_tollbrand_sluice_levy", "assigned_faction_id": "faction_embercourt", "assigned_commander_hero_id": "hero_embercourt_helva_tollbrand", "presentation_role": "twin_lock_sluice_levy_standard",
       "accessible_description": "A copper sluice frame holds two lantern locks, a blank pale ceramic toll tablet, and a narrow forked red pennant."
     },
+    "encounter_finale_nemesis_fenwake_crown_drum": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/fenwake_crown_drum.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_fenwake_crown_drum_verdict", "assigned_faction_id": "faction_mireclaw", "assigned_commander_hero_id": "hero_mireclaw_zhorra_fenwake", "presentation_role": "crooked_reed_crown_five_hide_war_drum",
+      "accessible_description": "A five-hide war drum sits inside a crooked crown of bound marsh reeds and carved bogwood."
+    },
+    "encounter_finale_nemesis_votivejaw_nightglass_shrine": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/votivejaw_nightglass_shrine.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_votivejaw_nightglass_bite", "assigned_faction_id": "faction_mireclaw", "assigned_commander_hero_id": "hero_mireclaw_nix_votivejaw", "presentation_role": "blackglass_jaw_four_tooth_lantern_shrine",
+      "accessible_description": "A black-glass jaw opens around four tooth-shaped violet lanterns on short bronze chains."
+    },
+    "encounter_finale_nemesis_lockmaster_archive_gate": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/lockmaster_archive_gate.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_lockmaster_archive_seal", "assigned_faction_id": "faction_embercourt", "assigned_commander_hero_id": "hero_embercourt_saren_lockmaster", "presentation_role": "double_key_archive_lockgate",
+      "accessible_description": "Two oversized iron keys frame a sealed charter and compact ember brazier."
+    },
+    "encounter_finale_nemesis_chainboom_daybreak_prism": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/chainboom_daybreak_prism.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_chainboom_daybreak_snare", "assigned_faction_id": "faction_mireclaw", "assigned_commander_hero_id": "hero_mireclaw_kessa_chainboom", "presentation_role": "crossed_ferry_chain_fractured_sun_prism",
+      "accessible_description": "Heavy ferry chains cross over a fractured many-rayed sun prism with one broken link."
+    },
+    "encounter_finale_nemesis_ironclause_ninefold_pylon": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/ironclause_ninefold_pylon.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_ironclause_ninefold_assize", "assigned_faction_id": "faction_brasshollow", "assigned_commander_hero_id": "hero_brasshollow_marka_ironclause", "presentation_role": "nine_rivet_contract_assize_pylon",
+      "accessible_description": "A squat iron contract pylon bears nine large tally rivets, a clamp jaw, and brass seal."
+    },
+    "encounter_finale_nemesis_glassmarshal_counterseal_sight": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/glassmarshal_counterseal_sight.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_glassmarshal_counterseal_battery", "assigned_faction_id": "faction_sunvault", "assigned_commander_hero_id": "hero_sunvault_ilyr_glassmarshal", "presentation_role": "triple_lens_prism_battery_sight",
+      "accessible_description": "Three faceted cyan lenses stand on a brass artillery tripod with a calibration wheel."
+    },
+    "encounter_finale_nemesis_halometer_daylight_dial": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [288, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/halometer_daylight_dial.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_halometer_daylight_crown", "assigned_faction_id": "faction_sunvault", "assigned_commander_hero_id": "hero_sunvault_mirro_halometer", "presentation_role": "split_noon_needle_halo_dial",
+      "accessible_description": "A calibrated golden halo dial carries nested rings, a split noon needle, and balance weights."
+    },
+    "encounter_finale_nemesis_vowless_drowned_oath_bell": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [336, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/vowless_drowned_oath_bell.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_vowless_drowned_requiem", "assigned_faction_id": "faction_veilmourn", "assigned_commander_hero_id": "hero_veilmourn_nacre_vowless", "presentation_role": "broken_oath_ring_drowned_bell",
+      "accessible_description": "A broken empty oath ring hangs one drowned funeral bell from a crooked salt-dark mast."
+    },
+    "encounter_finale_nemesis_debtrune_lastbell_ledger": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [384, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/debtrune_lastbell_ledger.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_debtrune_lastbell_audit", "assigned_faction_id": "faction_brasshollow", "assigned_commander_hero_id": "hero_brasshollow_harro_debtrune", "presentation_role": "chained_rune_ledger_counterweight_gauge",
+      "accessible_description": "A chained rune ledger stands between a red counterweight gauge and brass counting wheel."
+    },
+    "encounter_finale_nemesis_mudkeel_fenbell_shield": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [432, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/mudkeel_fenbell_shield.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_mudkeel_fenbell_commission", "assigned_faction_id": "faction_mireclaw", "assigned_commander_hero_id": "hero_mireclaw_brakka_mudkeel", "presentation_role": "bogplate_keel_fenbell_shield",
+      "accessible_description": "A broad mossed bogplate keel shield carries a heavy central fen bell and reed braces."
+    },
+    "encounter_finale_nemesis_graftsibyl_prophecy_arch": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [480, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/graftsibyl_prophecy_arch.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_graftsibyl_wake_cordon", "assigned_faction_id": "faction_thornwake", "assigned_commander_hero_id": "hero_thornwake_nara_graftsibyl", "presentation_role": "three_eye_living_prophecy_arch",
+      "accessible_description": "A twisted living root arch holds three grafted glass eyes beneath a split seed pod."
+    },
+    "encounter_finale_nemesis_seedseer_root_kite": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [528, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/seedseer_root_kite.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_seedseer_kite_root_omen", "assigned_faction_id": "faction_thornwake", "assigned_commander_hero_id": "hero_thornwake_veyra_seedseer", "presentation_role": "seed_eye_kite_braided_root_tail",
+      "accessible_description": "A diamond seed-eye signal kite rises above a long braided root tail and leaf streamers."
+    },
+    "encounter_finale_nemesis_gaugesavant_precision_gauge": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [576, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/gaugesavant_precision_gauge.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_gaugesavant_switchback_proof", "assigned_faction_id": "faction_brasshollow", "assigned_commander_hero_id": "hero_brasshollow_lina_gaugesavant", "presentation_role": "three_needle_precision_field_gauge",
+      "accessible_description": "A brass precision field gauge points three long needles across an exposed toothed rim."
+    },
+    "encounter_finale_nemesis_keelwarden_fog_shield": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [624, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/keelwarden_fog_shield.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_keelwarden_dustjack_screen", "assigned_faction_id": "faction_veilmourn", "assigned_commander_hero_id": "hero_veilmourn_jessa_keelwarden", "presentation_role": "twin_lantern_dark_keel_shield",
+      "accessible_description": "A narrow dark ship-keel shield hangs two cold fog lanterns at unequal heights."
+    },
+    "encounter_finale_nemesis_beaconscribe_quill_beacon": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [672, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/beaconscribe_quill_beacon.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_beaconscribe_frostwharf_writ", "assigned_faction_id": "faction_embercourt", "assigned_commander_hero_id": "hero_embercourt_jorun_beaconscribe", "presentation_role": "iron_quill_twin_wax_beacon",
+      "accessible_description": "An enormous iron quill pierces a sealed wax tablet above twin warm wax lanterns."
+    },
+    "encounter_finale_nemesis_reedscript_antler_codex": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [720, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/reedscript_antler_codex.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_reedscript_fenhound_lexicon", "assigned_faction_id": "faction_mireclaw", "assigned_commander_hero_id": "hero_mireclaw_pell_reedscript", "presentation_role": "antler_bound_reed_codex_lectern",
+      "accessible_description": "An antler-bound reed codex lies open on a root-and-den-stake lectern."
+    },
+    "encounter_finale_nemesis_lenscaptain_survey_mast": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [768, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/lenscaptain_survey_mast.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_lenscaptain_reedbarge_survey", "assigned_faction_id": "faction_sunvault", "assigned_commander_hero_id": "hero_sunvault_dovan_lenscaptain", "presentation_role": "split_lens_opposed_vane_survey_mast",
+      "accessible_description": "A split-lens survey mast carries opposing high and low vanes on a compact tripod."
+    },
+    "encounter_finale_nemesis_loamchant_crystal_harp": {
+      "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png", "atlas_region": [816, 0, 48, 48], "atlas_size": [864, 48],
+      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6", "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/loamchant_crystal_harp.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
+      "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_loamchant_crystal_sump_binding", "assigned_faction_id": "faction_thornwake", "assigned_commander_hero_id": "hero_thornwake_elian_loamchant", "presentation_role": "root_strung_loam_crystal_harp",
+      "accessible_description": "A root-strung loam harp sprouts above angular violet crystal tuning stones."
+    },
     "mapobj_ore_crates": {
       "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ore_crates.png",
       "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_ore_crates-trimmed.png",
@@ -8766,7 +8892,25 @@
     "encounter_thorncart_pilgrim_cordon": "encounter_rival_commander_thorncart_pilgrim_cordon",
     "encounter_pitmarshal_red_chain_assize": "encounter_rival_commander_pitmarshal_red_chain_assize",
     "encounter_mistcorsair_foghook_boarding": "encounter_rival_commander_mistcorsair_foghook_boarding",
-    "encounter_tollbrand_sluice_levy": "encounter_rival_commander_tollbrand_sluice_levy"
+    "encounter_tollbrand_sluice_levy": "encounter_rival_commander_tollbrand_sluice_levy",
+    "encounter_fenwake_crown_drum_verdict": "encounter_finale_nemesis_fenwake_crown_drum",
+    "encounter_votivejaw_nightglass_bite": "encounter_finale_nemesis_votivejaw_nightglass_shrine",
+    "encounter_lockmaster_archive_seal": "encounter_finale_nemesis_lockmaster_archive_gate",
+    "encounter_chainboom_daybreak_snare": "encounter_finale_nemesis_chainboom_daybreak_prism",
+    "encounter_ironclause_ninefold_assize": "encounter_finale_nemesis_ironclause_ninefold_pylon",
+    "encounter_glassmarshal_counterseal_battery": "encounter_finale_nemesis_glassmarshal_counterseal_sight",
+    "encounter_halometer_daylight_crown": "encounter_finale_nemesis_halometer_daylight_dial",
+    "encounter_vowless_drowned_requiem": "encounter_finale_nemesis_vowless_drowned_oath_bell",
+    "encounter_debtrune_lastbell_audit": "encounter_finale_nemesis_debtrune_lastbell_ledger",
+    "encounter_mudkeel_fenbell_commission": "encounter_finale_nemesis_mudkeel_fenbell_shield",
+    "encounter_graftsibyl_wake_cordon": "encounter_finale_nemesis_graftsibyl_prophecy_arch",
+    "encounter_seedseer_kite_root_omen": "encounter_finale_nemesis_seedseer_root_kite",
+    "encounter_gaugesavant_switchback_proof": "encounter_finale_nemesis_gaugesavant_precision_gauge",
+    "encounter_keelwarden_dustjack_screen": "encounter_finale_nemesis_keelwarden_fog_shield",
+    "encounter_beaconscribe_frostwharf_writ": "encounter_finale_nemesis_beaconscribe_quill_beacon",
+    "encounter_reedscript_fenhound_lexicon": "encounter_finale_nemesis_reedscript_antler_codex",
+    "encounter_lenscaptain_reedbarge_survey": "encounter_finale_nemesis_lenscaptain_survey_mast",
+    "encounter_loamchant_crystal_sump_binding": "encounter_finale_nemesis_loamchant_crystal_harp"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

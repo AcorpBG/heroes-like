@@ -24,7 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-six-grand-convergence-rival-commanders-10184` is completed as one coherent six-faction named-rival battle batch replacing repeated anonymous fronts on the live grand-convergence maps; the broad content goal continues beyond this slice.
+- Current implementation slice: `content-eighteen-campaign-finale-nemeses-10184` is in progress as one coherent campaign-wide named-opposition batch covering every finale not already upgraded by the Sixfold rival slice; the broad content goal continues beyond this slice.
 - Current package boundary: matching-size Linux and Windows release exports measure 249461160 bytes, 538840 bytes below the unchanged 250000000-byte ceiling; the new rival-standard atlas is present while generated masters remain excluded symmetrically.
 
 ## Eight Foundation Map Object Identities
@@ -15754,6 +15754,35 @@ Completion criteria:
 - all six upgraded fronts construct their exact faction armies and named roster commanders with authored spellbooks, specialties, battle traits, hero portrait ids, and fixed overworld encounter identities;
 - each duel resolves through the existing battle/outcome path, grants its exact reward and victory flag, keeps the scenario objective resolvable, and survives an exact save-version-9 round trip;
 - one consolidated six-case gameplay/art/save smoke runs after the complete batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new hero definition, unit, town, building, spell, artifact, campaign, map, combat formula, strategic-AI planning rule, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes commander, portrait, standard, encounter, name, text, heraldry, or protected visual expression.
+
+## Eighteen Campaign-Finale Nemeses
+
+id: `content-eighteen-campaign-finale-nemeses-10184`
+
+Status: completed.
+
+Current finding:
+- all nineteen campaigns have authored finale scenarios, but only the Sixfold Testament finale currently contains a fixed roster-backed opposing hero; the other eighteen finales still resolve their decisive hostile fronts through anonymous encounter commander templates;
+- those eighteen maps expose one stable hostile placement each, seventeen of them with an existing `encounter_resolved` victory objective and Ninefold Confluence with a live optional faction front, so named opposition can be added without changing map density, coordinates, combat seeds, chapter unlocks, or save schema;
+- only 538840 bytes remain below the release PCK ceiling, so the batch must reuse the complete hero portrait/spellbook/specialty surfaces and ship one compact eighteen-frame command-landmark atlas while generated masters remain source-only.
+
+Implementation boundary:
+- replace one decisive hostile front on each non-Sixfold campaign finale with an original named nemesis encounter and exact production faction army, using eighteen distinct existing roster heroes and the shared roster-backed fixed-commander runtime path;
+- preserve target placement ids, positions, difficulty, combat seeds, chapter availability, carryover, town/object state, and every existing direct objective link while adding distinct field-objective identity, rewards, and victory flags;
+- generate eighteen original transparent hero-specific command landmarks, derive one 864x48 exact-identity atlas, retain prompt/hash/accessibility provenance outside release packages, and keep Linux/Windows exports symmetric below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all nineteen campaign finales expose named opposing heroes in live battle construction when the already-completed Sixfold finale is included, with canonical roster identity, scenario-progression command state, spellbook, specialties, traits, portrait, exact army, and exact overworld landmark;
+- the eighteen upgraded fronts resolve through existing battle/outcome authority, preserve all seventeen direct finale objectives, grant exact rewards and victory flags, and survive exact save-version-9 round trips; Ninefold's optional nemesis remains resolvable without becoming a new mandatory objective;
+- one consolidated eighteen-case gameplay/art/save smoke runs after the complete batch and includes visual captures across all six factions, followed once by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Delivered evidence:
+- the one consolidated eighteen-case live gameplay/art/save smoke passed with exact roster hydration, rewards, objective roles, and save-version-9 round trips; repository validation passed after adopting the 155-encounter, 213-army, 406-placement, 145-placed-identity catalog;
+- Linux headless boot and Windows Wine startup both passed with the shared 249578524-byte PCK, sixteen required encounter atlases, no packaged source-art payload, and 421476 bytes remaining below the unchanged ceiling.
 
 Non-goals:
 - no new hero definition, unit, town, building, spell, artifact, campaign, map, combat formula, strategic-AI planning rule, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
