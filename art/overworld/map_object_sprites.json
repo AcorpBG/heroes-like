@@ -6,8 +6,8 @@
     "prompt_summary": "One distinct original generated overworld sprite asset for each authored non-decoration map object that previously lacked a unique sprite assignment after the decorative/blocker foundation pass.",
     "source_model": "built_in_image_gen_chroma_key_split",
     "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
-    "new_generated_sprite_count": 198,
-    "generated_batch_count": 16,
+    "new_generated_sprite_count": 204,
+    "generated_batch_count": 17,
     "generated_batches": [
       {
         "batch_index": 1,
@@ -136,20 +136,28 @@
           193,
           198
         ]
+      },
+      {
+        "batch_index": 17,
+        "workspace_source_manifest": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/manifest.json",
+        "object_index_range": [
+          199,
+          204
+        ]
       }
     ]
   },
   "coverage": {
-    "authored_map_object_count": 398,
+    "authored_map_object_count": 404,
     "foundation_decorative_or_blocker_distinct_count": 200,
     "preexisting_unique_non_decorative_count": 0,
-    "new_distinct_non_decorative_asset_count": 198,
-    "total_distinct_authored_map_object_count_after_pass": 398,
+    "new_distinct_non_decorative_asset_count": 204,
+    "total_distinct_authored_map_object_count_after_pass": 404,
     "by_family": {
       "faction_landmark": 9,
       "guarded_reward_site": 32,
       "mine": 10,
-      "neutral_dwelling": 45,
+      "neutral_dwelling": 51,
       "neutral_encounter": 6,
       "pickup": 9,
       "repeatable_service": 7,
@@ -360,7 +368,13 @@
     "mapobj_noonshard_prism_aviary",
     "mapobj_rootvault_heartwood_hollow",
     "mapobj_quenchbell_pressure_den",
-    "mapobj_saltwake_belldeep"
+    "mapobj_saltwake_belldeep",
+    "mapobj_stormseal_powder_wharf",
+    "mapobj_moonwax_reed_circle",
+    "mapobj_facet_vigil",
+    "mapobj_heartseed_bolt_grove",
+    "mapobj_blackbell_assay_watch",
+    "mapobj_last_memory_mooring"
   ],
   "object_sprite_mappings": {
     "object_roadward_lodge": {
@@ -1748,6 +1762,48 @@
       "assignment_source": "sovereign_wild_habitat_completion",
       "family": "neutral_dwelling",
       "source_batch": 16
+    },
+    "object_stormseal_powder_wharf": {
+      "asset_id": "mapobj_stormseal_powder_wharf",
+      "fit": "Distinct original sealed bombard wharf assigned to the Embercourt faction-company field muster.",
+      "assignment_source": "horizon_company_field_muster_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 17
+    },
+    "object_moonwax_reed_circle": {
+      "asset_id": "mapobj_moonwax_reed_circle",
+      "fit": "Distinct original moon jar and bone-arched reed circle assigned to the Mireclaw faction-company field muster.",
+      "assignment_source": "horizon_company_field_muster_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 17
+    },
+    "object_facet_vigil": {
+      "asset_id": "mapobj_facet_vigil",
+      "fit": "Distinct original folded seven-face prism vigil assigned to the Sunvault faction-company field muster.",
+      "assignment_source": "horizon_company_field_muster_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 17
+    },
+    "object_heartseed_bolt_grove": {
+      "asset_id": "mapobj_heartseed_bolt_grove",
+      "fit": "Distinct original dormant heartseed and branch-ballista grove assigned to the Thornwake faction-company field muster.",
+      "assignment_source": "horizon_company_field_muster_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 17
+    },
+    "object_blackbell_assay_watch": {
+      "asset_id": "mapobj_blackbell_assay_watch",
+      "fit": "Distinct original broad assay bell and pressure-gauge watch assigned to the Brasshollow faction-company field muster.",
+      "assignment_source": "horizon_company_field_muster_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 17
+    },
+    "object_last_memory_mooring": {
+      "asset_id": "mapobj_last_memory_mooring",
+      "fit": "Distinct original furled pearl sail and saltglass bell mooring assigned to the Veilmourn faction-company field muster.",
+      "assignment_source": "horizon_company_field_muster_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 17
     }
   }
 }

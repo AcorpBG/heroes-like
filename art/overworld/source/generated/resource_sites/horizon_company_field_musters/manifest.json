@@ -1,0 +1,69 @@
+{
+  "source_model": "built_in_image_gen_original_horizon_company_field_musters",
+  "content_batch_id": "content-six-horizon-company-field-musters-10184",
+  "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+  "runtime_atlas_sha256": "68dc1e16591a44347abe2c2d2fbeb8b3808cdb3bd3073a6cc8a5863c9adc5f22",
+  "runtime_cell_size": [48, 48],
+  "shared_prompt_constraints": [
+    "Two clearly separated matching isometric landmark states on genuine transparency.",
+    "Readable at 48 pixels with a distinct non-color silhouette.",
+    "No people, creatures, text, logos, watermarks, UI frames, copied franchise art, or protected heraldry."
+  ],
+  "items": [
+    {
+      "site_id": "site_stormseal_powder_wharf",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-550ec418-52fe-4d3b-8fdc-4e3263373265.png",
+      "prompt_summary": "A rain-dark timber powder wharf, sealed bombard tube, wax storm seal, chain winch, and cold-to-lit brazier transition.",
+      "states": [
+        {"state":"unclaimed","source_path":"res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/stormseal_powder_wharf_unclaimed.png","source_sha256":"b17a516ca52178382df4c684f9b7daa7cc17d52ca00991f63d698d4c10c6974f","atlas_region":[0,0,48,48]},
+        {"state":"controlled","source_path":"res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/stormseal_powder_wharf_controlled.png","source_sha256":"55dfff6604090735f0086053ffd8db584a422f8ba525222cefdbb02abe45e2c9","atlas_region":[48,0,48,48]}
+      ]
+    },
+    {
+      "site_id": "site_moonwax_reed_circle",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0729f0f7-636e-4f9b-8eba-f7207804cac7.png",
+      "prompt_summary": "A wet standing-stone reed circle, bone arch, moon jar, and dark-to-waxlit marsh-lantern transition.",
+      "states": [
+        {"state":"unclaimed","source_path":"res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/moonwax_reed_circle_unclaimed.png","source_sha256":"fc74dfed5e426632c4fcee6ea15984b2a0a385a3c7244deb402592c2889fd22d","atlas_region":[96,0,48,48]},
+        {"state":"controlled","source_path":"res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/moonwax_reed_circle_controlled.png","source_sha256":"45bf62d902c3ffd9d6cf2d3e3e3b0ff17ba7568cf82f8aa03de1b3fab332b30f","atlas_region":[144,0,48,48]}
+      ]
+    },
+    {
+      "site_id": "site_facet_vigil",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-02ff0afc-8e6f-440e-8804-e2b8d3e3a8a2.png",
+      "prompt_summary": "An ivory watch dais with folded-to-deployed seven-faced prism, mirror fins, noon dial, and sentinel shields.",
+      "states": [
+        {"state":"unclaimed","source_path":"res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/facet_vigil_unclaimed.png","source_sha256":"0916c38f940572f0132917cdef6374a838773894e79b1c0f96534474c7e4cfcd","atlas_region":[192,0,48,48]},
+        {"state":"controlled","source_path":"res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/facet_vigil_controlled.png","source_sha256":"cbd9cc47bee1f06278703586cbc3015092616567ee4560b4970990438cdf8b05","atlas_region":[240,0,48,48]}
+      ]
+    },
+    {
+      "site_id": "site_heartseed_bolt_grove",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-8a8e5603-12a5-4773-8633-337d220ed4e2.png",
+      "prompt_summary": "A living-wood arch with dormant-to-glowing heartseed, folded branch ballistae, bolt racks, and leaf lamps.",
+      "states": [
+        {"state":"unclaimed","source_path":"res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/heartseed_bolt_grove_unclaimed.png","source_sha256":"fcf6c50b6a24862054999a672fd981eee8b3c012b63ad52dc4d6511a77600551","atlas_region":[288,0,48,48]},
+        {"state":"controlled","source_path":"res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/heartseed_bolt_grove_controlled.png","source_sha256":"8bd3a7a0d096dd2df7867a373ec30bda69b5f92c56ea6d2ab91d212d1269327a","atlas_region":[336,0,48,48]}
+      ]
+    },
+    {
+      "site_id": "site_blackbell_assay_watch",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7be21f64-42f2-4fb3-b913-4a273ad18715.png",
+      "prompt_summary": "A squat black-brick assay platform with broad brass bell, pressure gauge, quench trough, and supplied gaugeplate racks.",
+      "states": [
+        {"state":"unclaimed","source_path":"res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/blackbell_assay_watch_unclaimed.png","source_sha256":"090abc3b2772dd9b2d854b759e373357cbf93c1e866b37f6153741e0d43450b6","atlas_region":[384,0,48,48]},
+        {"state":"controlled","source_path":"res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/blackbell_assay_watch_controlled.png","source_sha256":"0ffd9a865b98e02f0ca168558c44496ca7657f926cea2ae6002d5f6e00ec97ac","atlas_region":[432,0,48,48]}
+      ]
+    },
+    {
+      "site_id": "site_last_memory_mooring",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7c994cfa-68d7-451c-978a-bcc37efe9ced.png",
+      "prompt_summary": "A pale driftwood bell-frame and tiny salt-stone pier with furled-to-raised pearl sail, hooks, lantern, and memory urns.",
+      "states": [
+        {"state":"unclaimed","source_path":"res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/last_memory_mooring_unclaimed.png","source_sha256":"c39e0fd8302a54dc74435a49de79fc9b01067653095a9d8530e29c01930b8d12","atlas_region":[480,0,48,48]},
+        {"state":"controlled","source_path":"res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/last_memory_mooring_controlled.png","source_sha256":"35b93f3f2a463292715148942baa4c55dd49114bad22a8e08fb40ae5275ea891","atlas_region":[528,0,48,48]}
+      ]
+    }
+  ]
+}
