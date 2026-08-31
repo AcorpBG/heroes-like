@@ -279,6 +279,25 @@ REQUIRED_ELDER_WILDS_UNIT_ART_PCK_IMPORT_ENTRIES = tuple(
         f"art/animation/runtime/units/{unit_id}.png.import",
     )
 )
+REQUIRED_RESERVE_COMPANY_UNIT_IDS = (
+    "unit_embercourt_cinderseal_bombardiers",
+    "unit_mireclaw_mireglass_reedcasters",
+    "unit_sunvault_noonfacet_sentinels",
+    "unit_thornwake_dawnseed_bolters",
+    "unit_brasshollow_gaugeplate_bailiffs",
+    "unit_veilmourn_tidehook_deckhands",
+)
+REQUIRED_RESERVE_COMPANY_UNIT_ART_PCK_IMPORT_ENTRIES = tuple(
+    entry
+    for unit_id in REQUIRED_RESERVE_COMPANY_UNIT_IDS
+    for entry in (
+        f"art/units/portraits/{unit_id}.png.import",
+        f"art/units/battle_icons/{unit_id}.png.import",
+        f"art/units/battle_standees/{unit_id}.png.import",
+        f"art/units/overworld_icons/{unit_id}.png.import",
+        f"art/animation/runtime/units/{unit_id}.png.import",
+    )
+)
 REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_PCK_IMPORT_ENTRIES = (
     "art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png.import",
     "art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png.import",
@@ -639,6 +658,7 @@ def pck_terrain_payload_summary() -> dict:
     required_faction_set_atlas_texture_entries = imported_payload_paths_for(REQUIRED_FACTION_SET_ATLAS_PCK_IMPORT_ENTRIES)
     required_town_scenic_backdrop_texture_entries = imported_payload_paths_for(REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES)
     required_elder_wilds_unit_art_texture_entries = imported_payload_paths_for(REQUIRED_ELDER_WILDS_UNIT_ART_PCK_IMPORT_ENTRIES)
+    required_reserve_company_unit_art_texture_entries = imported_payload_paths_for(REQUIRED_RESERVE_COMPANY_UNIT_ART_PCK_IMPORT_ENTRIES)
     summary = {
         "checked": False,
         "valid_directory": False,
@@ -754,6 +774,11 @@ def pck_terrain_payload_summary() -> dict:
         "elder_wilds_unit_art_import_entries": [],
         "elder_wilds_unit_art_texture_entries": [],
         "elder_wilds_unit_art_entries_present": False,
+        "required_reserve_company_unit_art_import_entries": list(REQUIRED_RESERVE_COMPANY_UNIT_ART_PCK_IMPORT_ENTRIES),
+        "required_reserve_company_unit_art_texture_entries": sorted(required_reserve_company_unit_art_texture_entries),
+        "reserve_company_unit_art_import_entries": [],
+        "reserve_company_unit_art_texture_entries": [],
+        "reserve_company_unit_art_entries_present": False,
         "repository_source_art_metadata_count": len(source_art_metadata_paths),
         "repository_source_art_imported_payload_count": len(source_art_imported_payload_paths),
         "source_art_metadata_entries": [],
@@ -877,6 +902,10 @@ def pck_terrain_payload_summary() -> dict:
                     summary["elder_wilds_unit_art_import_entries"].append(entry_path)
                 if entry_path in required_elder_wilds_unit_art_texture_entries:
                     summary["elder_wilds_unit_art_texture_entries"].append(entry_path)
+                if entry_path in REQUIRED_RESERVE_COMPANY_UNIT_ART_PCK_IMPORT_ENTRIES:
+                    summary["reserve_company_unit_art_import_entries"].append(entry_path)
+                if entry_path in required_reserve_company_unit_art_texture_entries:
+                    summary["reserve_company_unit_art_texture_entries"].append(entry_path)
                 if entry_path.startswith(".godot/imported/") and entry_path.endswith(".ctex"):
                     imported_name = Path(entry_path).name.split(".png-", 1)[0]
                     if imported_name in REQUIRED_ARTIFACT_FIELD_NAMES:
@@ -934,6 +963,7 @@ def pck_terrain_payload_summary() -> dict:
     summary["faction_set_atlas_entries_present"] = len(required_faction_set_atlas_texture_entries) == 1 and set(summary["faction_set_atlas_import_entries"]) == set(REQUIRED_FACTION_SET_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["faction_set_atlas_texture_entries"]) == required_faction_set_atlas_texture_entries and set(summary["faction_set_atlas_texture_names"]) == {REQUIRED_FACTION_SET_ATLAS_NAME}
     summary["town_scenic_backdrop_entries_present"] = len(required_town_scenic_backdrop_texture_entries) == len(REQUIRED_TOWN_SCENIC_BACKDROP_NAMES) and set(summary["town_scenic_backdrop_import_entries"]) == set(REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES) and set(summary["town_scenic_backdrop_texture_entries"]) == required_town_scenic_backdrop_texture_entries and set(summary["town_scenic_backdrop_texture_names"]) == set(REQUIRED_TOWN_SCENIC_BACKDROP_NAMES)
     summary["elder_wilds_unit_art_entries_present"] = len(required_elder_wilds_unit_art_texture_entries) == len(REQUIRED_ELDER_WILDS_UNIT_ART_PCK_IMPORT_ENTRIES) and set(summary["elder_wilds_unit_art_import_entries"]) == set(REQUIRED_ELDER_WILDS_UNIT_ART_PCK_IMPORT_ENTRIES) and set(summary["elder_wilds_unit_art_texture_entries"]) == required_elder_wilds_unit_art_texture_entries
+    summary["reserve_company_unit_art_entries_present"] = len(required_reserve_company_unit_art_texture_entries) == len(REQUIRED_RESERVE_COMPANY_UNIT_ART_PCK_IMPORT_ENTRIES) and set(summary["reserve_company_unit_art_import_entries"]) == set(REQUIRED_RESERVE_COMPANY_UNIT_ART_PCK_IMPORT_ENTRIES) and set(summary["reserve_company_unit_art_texture_entries"]) == required_reserve_company_unit_art_texture_entries
     summary["source_art_excluded"] = (
         len(source_art_metadata_paths) > 0
         and len(source_art_imported_payload_paths) > 0
@@ -1006,6 +1036,7 @@ def main() -> int:
         and bool(terrain_payload["faction_set_atlas_entries_present"])
         and bool(terrain_payload["town_scenic_backdrop_entries_present"])
         and bool(terrain_payload["elder_wilds_unit_art_entries_present"])
+        and bool(terrain_payload["reserve_company_unit_art_entries_present"])
         and bool(terrain_payload["source_art_excluded"])
     )
 

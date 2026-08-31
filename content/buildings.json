@@ -1029,7 +1029,7 @@
       "id": "building_embercourt_drake_sluice",
       "name": "Drake Sluice",
       "category": "dwelling",
-      "description": "Lock-gated breeding sluices hold the dangerous Sluicefire Lindworms.",
+      "description": "Lock-gated breeding sluices hold dangerous Sluicefire Lindworms and proof the sealed charges carried by Cinderseal Bombardiers.",
       "cost": {
         "gold": 2570,
         "wood": 2,
@@ -1048,10 +1048,12 @@
       ],
       "unlock_unit_id": "unit_embercourt_sluicefire_lindworms",
       "growth_bonus": {
-        "unit_embercourt_sluicefire_lindworms": 2
+        "unit_embercourt_sluicefire_lindworms": 2,
+        "unit_embercourt_cinderseal_bombardiers": 1
       },
       "recruitment_discount_percent": {
-        "unit_embercourt_sluicefire_lindworms": 4
+        "unit_embercourt_sluicefire_lindworms": 4,
+        "unit_embercourt_cinderseal_bombardiers": 4
       },
       "readiness_bonus": 2
     },
@@ -1110,7 +1112,7 @@
       "id": "building_mireclaw_chainboom_ferry",
       "name": "Chainboom Ferry",
       "category": "economy",
-      "description": "Chain ferries and toll booms train lashers to pull clean lines apart.",
+      "description": "Chain ferries and toll booms train lashers to pull clean lines apart and Reedcasters to sling mireglass across broken water.",
       "cost": {
         "gold": 1930,
         "wood": 1,
@@ -1123,10 +1125,12 @@
       ],
       "unlock_unit_id": "unit_mireclaw_ferrychain_lashers",
       "growth_bonus": {
-        "unit_mireclaw_ferrychain_lashers": 4
+        "unit_mireclaw_ferrychain_lashers": 4,
+        "unit_mireclaw_mireglass_reedcasters": 3
       },
       "recruitment_discount_percent": {
-        "unit_mireclaw_ferrychain_lashers": 6
+        "unit_mireclaw_ferrychain_lashers": 6,
+        "unit_mireclaw_mireglass_reedcasters": 4
       },
       "income": {
         "gold": 240,
@@ -1341,7 +1345,7 @@
       "id": "building_sunvault_harmonic_cloister",
       "name": "Chorister Harmonic Cloister",
       "category": "support",
-      "description": "Choir cloisters prepare resonant choristers for array timing.",
+      "description": "Choir cloisters prepare resonant choristers for array timing and Noonfacet Sentinels to hold the measured front.",
       "cost": {
         "gold": 1930,
         "wood": 1,
@@ -1355,10 +1359,12 @@
       ],
       "unlock_unit_id": "unit_sunvault_resonant_choristers",
       "growth_bonus": {
-        "unit_sunvault_resonant_choristers": 4
+        "unit_sunvault_resonant_choristers": 4,
+        "unit_sunvault_noonfacet_sentinels": 3
       },
       "recruitment_discount_percent": {
-        "unit_sunvault_resonant_choristers": 6
+        "unit_sunvault_resonant_choristers": 6,
+        "unit_sunvault_noonfacet_sentinels": 4
       },
       "readiness_bonus": 7,
       "pressure_bonus": 1
@@ -1535,7 +1541,7 @@
       "id": "building_thornwake_barkmantle_run",
       "name": "Barkmantle Run",
       "category": "dwelling",
-      "description": "Living siege runs train the slow Barkmantle Rams.",
+      "description": "Living siege runs train slow Barkmantle Rams and grow the branch-string frames used by Dawnseed Bolters.",
       "cost": {
         "gold": 1930,
         "wood": 1,
@@ -1548,10 +1554,12 @@
       ],
       "unlock_unit_id": "unit_thornwake_barkmantle_rams",
       "growth_bonus": {
-        "unit_thornwake_barkmantle_rams": 4
+        "unit_thornwake_barkmantle_rams": 4,
+        "unit_thornwake_dawnseed_bolters": 3
       },
       "recruitment_discount_percent": {
-        "unit_thornwake_barkmantle_rams": 6
+        "unit_thornwake_barkmantle_rams": 6,
+        "unit_thornwake_dawnseed_bolters": 4
       },
       "readiness_bonus": 2
     },
@@ -1832,7 +1840,7 @@
       "id": "building_brasshollow_boiler_cathedral",
       "name": "Boiler Cathedral",
       "category": "magic",
-      "description": "Furnace chapels consecrate Boiler Rivetcasters and heat rites. It opens tier 3 town spell study.",
+      "description": "Furnace chapels consecrate Boiler Rivetcasters, proof Gaugeplate Bailiffs, and teach heat rites. It opens tier 3 town spell study.",
       "cost": {
         "gold": 1930,
         "wood": 1,
@@ -1845,10 +1853,12 @@
       ],
       "unlock_unit_id": "unit_brasshollow_boiler_rivetcasters",
       "growth_bonus": {
-        "unit_brasshollow_boiler_rivetcasters": 4
+        "unit_brasshollow_boiler_rivetcasters": 4,
+        "unit_brasshollow_gaugeplate_bailiffs": 3
       },
       "recruitment_discount_percent": {
-        "unit_brasshollow_boiler_rivetcasters": 6
+        "unit_brasshollow_boiler_rivetcasters": 6,
+        "unit_brasshollow_gaugeplate_bailiffs": 4
       },
       "readiness_bonus": 7,
       "spell_tier": 3
@@ -2103,7 +2113,7 @@
       "id": "building_veilmourn_ransom_exchange",
       "name": "Ransom Exchange",
       "category": "economy",
-      "description": "Ransom desks fund Mourning Lantern crews and Saltbell Casters through salvage, scouting, and recovered iron.",
+      "description": "Ransom desks fund Mourning Lantern crews, Tidehook Deckhands, and Saltbell Casters through salvage, scouting, and recovered iron.",
       "cost": {
         "gold": 1290
       },
@@ -2114,10 +2124,12 @@
       "unlock_unit_id": "unit_veilmourn_mourning_lanterns",
       "growth_bonus": {
         "unit_veilmourn_mourning_lanterns": 6,
+        "unit_veilmourn_tidehook_deckhands": 5,
         "unit_veilmourn_saltbell_casters": 1
       },
       "recruitment_discount_percent": {
         "unit_veilmourn_mourning_lanterns": 6,
+        "unit_veilmourn_tidehook_deckhands": 4,
         "unit_veilmourn_saltbell_casters": 4
       },
       "income": {

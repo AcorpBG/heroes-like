@@ -1,0 +1,50 @@
+{
+  "schema": "six_faction_reserve_companies_source_manifest_v1",
+  "generation_mode": "built_in_image_gen",
+  "normalization": "six-panel generated sheet cropped into transparent subjects at established 512x512 curated source dimensions",
+  "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a0aed6bb-a2f4-4a24-a74c-d53e1e72ec7b.png",
+  "sources": [
+    {
+      "id": "unit_embercourt_cinderseal_bombardiers",
+      "path": "res://art/units/source/curated/unit_embercourt_cinderseal_bombardiers.png",
+      "sha256": "a9b10cbe0ba037147d2c5a565f0aed7804eb95c8b12264ebd3178083ed58c375",
+      "prompt_summary": "Embercourt artillery soldier with a sealed bronze shoulder mortar and compact blast tube; tall angular ranged silhouette.",
+      "accessible_silhouette": "Tall soldier carrying a broad shoulder mortar and a separate short blast tube."
+    },
+    {
+      "id": "unit_mireclaw_mireglass_reedcasters",
+      "path": "res://art/units/source/curated/unit_mireclaw_mireglass_reedcasters.png",
+      "sha256": "15ae4a8a0d45752a075ad449bafa265ec2cf7bcb86aa7dd9dd8dc8afed0801dc",
+      "prompt_summary": "Mireclaw ritual skirmisher with reed-frame slingstaff and suspended mireglass globes; crooked organic ranged silhouette.",
+      "accessible_silhouette": "Crooked reed-cloaked caster holding a long staff with three hanging glass globes."
+    },
+    {
+      "id": "unit_sunvault_noonfacet_sentinels",
+      "path": "res://art/units/source/curated/unit_sunvault_noonfacet_sentinels.png",
+      "sha256": "ffe6710668b1ecaea7aa352a68f334c7fc8246ff615cd9c00bc0565e419729af",
+      "prompt_summary": "Sunvault guardian with a broad faceted mirror shield and geometric polearm; wide stable melee silhouette.",
+      "accessible_silhouette": "Upright armored guardian behind a tall many-faceted shield and star-headed polearm."
+    },
+    {
+      "id": "unit_thornwake_dawnseed_bolters",
+      "path": "res://art/units/source/curated/unit_thornwake_dawnseed_bolters.png",
+      "sha256": "3f7819e1b7080056d1f9959b6685513b7bf92a8c8c17b992a611ddaaa10bf633",
+      "prompt_summary": "Thornwake living-wood arbalist with grown branch crossbow, seed pods, and leafy hood; branching ranged silhouette.",
+      "accessible_silhouette": "Leaf-hooded arbalist aiming a long branching crossbow with hanging seed pods."
+    },
+    {
+      "id": "unit_brasshollow_gaugeplate_bailiffs",
+      "path": "res://art/units/source/curated/unit_brasshollow_gaugeplate_bailiffs.png",
+      "sha256": "62f316cdeb069354e60df4e2380aa7711ce5f5ea9cfbd995489a3dc7788d67d1",
+      "prompt_summary": "Brasshollow industrial officer with pressure-gauge shield and clause hammer; compact defensive melee silhouette.",
+      "accessible_silhouette": "Squat armored officer carrying a round dial-faced shield and square-headed hammer."
+    },
+    {
+      "id": "unit_veilmourn_tidehook_deckhands",
+      "path": "res://art/units/source/curated/unit_veilmourn_tidehook_deckhands.png",
+      "sha256": "e48a0ec6607f7c20d9cf2b8e6803d78df2e6c8afd9bd4245f65b14e7c7ccffba",
+      "prompt_summary": "Veilmourn fog sailor with curved tidehook and short bell-chain; agile low-tier melee silhouette.",
+      "accessible_silhouette": "Low crouching deckhand with one large crescent hook and a bell hanging from the other hand."
+    }
+  ]
+}

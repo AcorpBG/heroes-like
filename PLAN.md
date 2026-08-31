@@ -24,8 +24,43 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-six-roads-relay-campaign-10184` is completed as one coherent six-chapter campaign conversion of the complete rival-road circuit; the broad content goal continues beyond this slice.
-- Current package boundary: matching Linux and Windows release exports measure 249740560 bytes, 259440 bytes below the unchanged 250000000-byte ceiling; all seven relay runtime identities are present and generated masters remain excluded symmetrically.
+- Current implementation slice: `content-six-faction-reserve-companies-10184` is completed as one coherent six-unit roster, recruitment, battle, art, and package-efficiency batch; the broad content goal continues beyond this slice.
+- Current package boundary: matching Linux and Windows release exports measure 249843760 bytes, 156240 bytes below the unchanged 250000000-byte ceiling; all thirty new runtime unit-art imports are present and generated masters remain excluded symmetrically.
+
+## Six Faction Reserve Companies
+
+id: `content-six-faction-reserve-companies-10184`
+
+Status: completed.
+
+Current finding:
+- every production faction owns exactly twelve live units, but each still has one clear tier-role hole: Embercourt lacks tier-six ranged, Mireclaw tier-four ranged, Sunvault tier-four melee, Thornwake tier-four ranged, Brasshollow tier-four melee, and Veilmourn tier-two melee;
+- Rainwrit Bastion, Hollowreed Sanctuary, Meridian Choirhold, Crownroot Refuge, Blackbell Foundry, and Pale Sounding Harbor already expose the matching tier recruitment authority, while the six relay-watch armies cover all six opposing factions and can field the new companies in live optional battles;
+- the matching release packages retain only 259440 bytes of headroom; the boot/menu crest can be losslessly recompressed in its Godot-required PNG format and the six new runtime sets require a dedicated compact sixteen-color battle-scale palette while their rich generated masters remain intact outside packages.
+
+Implementation boundary:
+- add Cinderseal Bombardiers, Mireglass Reedcasters, Noonfacet Sentinels, Dawnseed Bolters, Gaugeplate Bailiffs, and Tidehook Deckhands as original faction units filling the six exact tier-role gaps with existing supported battle mechanics;
+- add each company to the growth and recruitment-discount authority of its exact existing town route and deploy one bounded stack in the corresponding existing relay-watch army;
+- generate six original transparent unit masters, derive the established portrait, battle-icon, standee, animation, and overworld surfaces, retain prompt/hash/accessibility provenance outside release packages, and apply a dedicated compact sixteen-color palette only to the six new battle-scale runtime sets;
+- losslessly recompress the boot/menu frontier crest in its engine-required PNG format, preserving every pixel and the native Godot startup splash while recovering package space symmetrically on Windows and Linux;
+- compact the non-RMG runtime unit, encounter, scenario, campaign, and generated unit-art JSON payloads without changing their decoded data, preserving source-backed native RMG catalogs and behavior untouched;
+- preserve deterministic battle authority, all existing objectives and rewards, save version 9, data-driven content, Windows/Linux paths, generated-source exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- every production faction reaches exactly thirteen units; all six companies construct with their exact tier, role, supported abilities, and live battle art without cross-faction leakage;
+- all six exact towns expose weekly growth and recruitment discount for their company through live muster authority, and all six exact watch armies deploy the authored bounded stack through production battle construction;
+- one consolidated six-case gameplay/town/battle/art/save smoke runs only after the complete batch, followed once by repository validation and sequential matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- Cinderseal Bombardiers, Mireglass Reedcasters, Noonfacet Sentinels, Dawnseed Bolters, Gaugeplate Bailiffs, and Tidehook Deckhands now fill the six exact tier-role gaps, bringing every production faction to thirteen live units with supported existing battle mechanics;
+- the six exact existing dwellings and towns provide live growth, discounts, and muster authority, while all six existing relay-watch armies deploy their authored bounded reserve stack through production battle construction and victory resolution;
+- one original generated six-character sheet yields six transparent 512px masters and thirty complete runtime art surfaces with exact source hashes, accessible non-color silhouettes, inspected battle-scale identities, and source masters excluded from packages;
+- the single consolidated smoke passes 6/6 town musters, 6/6 watch deployments and victories, 36/36 exact art surfaces, six live-board art loads, thirteen-unit parity for all factions, and 6/6 save-version-9 round trips; repository validation passes;
+- the engine-required PNG crest remains pixel-identical after lossless recompression, non-RMG runtime JSON payloads are data-identically compacted, and Linux and Windows exports/startups pass with matching 249843760-byte PCKs, leaving 156240 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero, town, building, scenario, encounter, campaign, spell, artifact, combat formula, ability mechanic, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes unit, name, statistic line, ability, visual design, or protected expression.
 
 ## Eight Foundation Map Object Identities
 
