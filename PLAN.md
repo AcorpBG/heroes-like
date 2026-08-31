@@ -24,9 +24,41 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected; the next coherent content batch remains pending under the broader content-expansion goal.
-- Most recently completed implementation slice: `content-six-faction-field-muster-captains-10184`, one coherent six-faction tavern-hero and exact-portrait batch.
-- Current package boundary: matching Linux and Windows release exports measure 247544396 bytes, 2455604 bytes below the unchanged 250000000-byte ceiling; all generated portrait masters remain excluded from both packages.
+- Active implementation slice: none selected; the next production-content batch must be audited and registered before implementation.
+- Most recently completed implementation slice: `content-six-field-muster-commission-skirmishes-10184`, one coherent six-faction captain-led skirmish, battle-front, event, and encounter-landmark batch.
+- Current package boundary: matching Linux and Windows release exports measure 247628960 bytes, 2371040 bytes below the unchanged 250000000-byte ceiling; all generated encounter masters remain excluded from both packages.
+
+## Six Field-Muster Commission Skirmishes
+
+id: `content-six-field-muster-commission-skirmishes-10184`
+
+Status: completed.
+
+Current finding:
+- the six field-muster captains and their reserve companies are live in faction taverns, but they are the only six of sixty-six authored heroes without a dedicated playable scenario lead;
+- all six factions already own compatible Horizon citadels, field musters, reserve-company battle rules, compact map composition, exact encounter-art routing, and save-version-9 authority, so this gap can be closed through authored content rather than a new system;
+- adding another disconnected catalog layer would expose less player value than putting all six new captains directly under player control in faction-specific skirmish commissions.
+
+Implementation boundary:
+- author six original skirmish-only 12x8 field commissions led by Maela Powderwrit, Rhask Reedcaller, Aven Sevenfold, Bryn Boltroot, Kestra Blackgauge, and Olan Tidehook, each with its own four-stack player company, opposing faction, two towns, economy route, required field muster, deadline, scripted pressure, and scenario-resolution chain;
+- add one original named commission encounter to each map using an existing rival reserve-company army, an asymmetric battlefield objective, reward, victory flag, and exact 48x48 live landmark in one compact six-frame atlas;
+- cross-place two additional commission fronts on every map and author five live hooks per scenario, including relief, pressure, salvage, commission record, and a reactive Day-10 spawned counterstroke;
+- preserve campaign wiring, the sixty campaign-backed commanders, existing scenario order, deterministic battle authority, save version 9, Windows/Linux paths, generated-source exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all sixty-six heroes become direct authored scenario leads while the six new maps remain skirmish-only and do not alter campaign progression;
+- each scenario launches its exact captain and four-stack reserve company, exposes its own live field muster and commission encounter, resolves the production battle and authored objective chain, renders exact non-color-dependent encounter art, and survives a save-version-9 round trip;
+- run one consolidated six-case scenario/battle/art/save smoke only after the complete batch, followed once by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- six new skirmish-only 12x8 commissions now make all sixty-six authored heroes direct scenario leads; every map launches its exact new captain and four-stack reserve company, contains two towns, eight economy sites, its faction field muster, one placed artifact, three authored battle fronts, five live hooks, and a Day-10 scripted counterstroke;
+- six original generated encounter masters now derive one compact 288x48 runtime atlas with exact per-encounter regions, distinct non-color silhouettes, accessible descriptions, and source/hash/prompt provenance while generated masters remain outside release packages;
+- the single consolidated 6/6 gameplay smoke passes direct captain starts, field-muster claims, exact encounter art, deterministic production battles, full three-objective scenario victories, and save-version-9 round trips; repository validation passes with 105 scenarios, 167 encounters, 231 armies, 448 placed battle fronts, and 159 placed encounter identities;
+- Linux and Windows export/startup gates pass with matching 247628960-byte PCKs, all seventeen recurring encounter atlases present, generated source art excluded, and 2371040 bytes of headroom below the unchanged ceiling.
+
+Non-goals:
+- no new faction, unit definition, town, building, spell, artifact, campaign, combat mechanic, strategic-AI algorithm, RMG behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes scenario, commander, map, object, name, art, text, heraldry, or protected visual expression.
 
 ## Six Faction Field-Muster Captains
 

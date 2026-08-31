@@ -70,7 +70,7 @@ func _run() -> void:
 
 func _validate_catalog_breadth() -> void:
 	var scenario_ids := ContentService.get_content_ids(ContentService.SCENARIOS_PATH)
-	_expect(scenario_ids.size() == 99, "Authored scenario catalog must contain 99 player-facing maps.")
+	_expect(scenario_ids.size() == 105, "Authored scenario catalog must contain 105 player-facing maps.")
 	var placed_encounter_ids := {}
 	for scenario_id_value in scenario_ids:
 		var scenario := ContentService.get_scenario(String(scenario_id_value))

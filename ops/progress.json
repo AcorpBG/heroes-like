@@ -1910,9 +1910,56 @@
     },
     "blockedReason": ""
   },
-  "active_slice": "content-six-horizon-capstone-monuments-10184",
+  "active_slice": null,
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "content-six-field-muster-commission-skirmishes-20260831",
+      "title": "Six field-muster commission skirmishes",
+      "sliceId": "content-six-field-muster-commission-skirmishes-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-31T05:34:52Z",
+      "updatedAt": "2026-08-31T05:34:52Z",
+      "latestFinding": "Six original captain-led skirmish commissions now make all sixty-six heroes direct scenario leads. Each compact map owns three authored fronts, five live hooks including a scripted counterstroke, a faction field muster, exact encounter landmark art, and a full victory chain. One consolidated 6/6 gameplay smoke, repository validation, and matching Linux/Windows packaged startup pass at 247628960 bytes.",
+      "artifacts": [
+        "content/scenarios.json",
+        "content/encounters.json",
+        "content/army_groups.json",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/encounters/field_muster_commissions/field_muster_commissions_atlas.png",
+        "art/overworld/source/generated/encounters/field_muster_commissions/source_manifest.json",
+        "tests/field_muster_commission_skirmishes_smoke.gd",
+        "tests/field_muster_commission_skirmishes_smoke.py",
+        "tests/validate_repo.py",
+        ".artifacts/field_muster_commission_skirmishes_smoke/report.json",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "metrics": {
+        "new_skirmish_scenario_count": 6,
+        "new_army_group_count": 6,
+        "new_encounter_count": 6,
+        "new_authored_static_front_count": 18,
+        "new_script_hook_count": 30,
+        "new_scripted_counterstroke_count": 6,
+        "direct_scenario_lead_hero_count": 66,
+        "scenario_catalog_count": 105,
+        "encounter_catalog_count": 167,
+        "army_group_catalog_count": 231,
+        "authored_battle_placement_count": 448,
+        "placed_encounter_identity_count": 159,
+        "consolidated_smoke_case_count": 6,
+        "battle_victory_count": 6,
+        "scenario_victory_count": 6,
+        "save_version": 9,
+        "linux_pck_size_bytes": 247628960,
+        "windows_pck_size_bytes": 247628960,
+        "release_pck_headroom_bytes": 2371040,
+        "source_art_excluded": true
+      }
+    },
     {
       "id": "content-six-horizon-capstone-monuments-20260831",
       "title": "Six Horizon capstone monuments",
@@ -15855,14 +15902,14 @@
       }
     }
   ],
-  "currentNotes": "The Seven-School Signature Battle VFX batch is complete. The broader production-content goal remains active; select and register the next bounded content/art gap before implementation.",
+  "currentNotes": "The six field-muster commission skirmishes are complete. The broader production-content goal remains active; audit and register the next bounded content/art batch before implementation.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-seven-school-signature-battle-vfx-10184",
-  "currentSliceId": "content-six-faction-field-muster-captains-10184",
-  "currentSliceNotes": "Implemented six original faction-exclusive tavern captains and curated portraits; consolidated 6/6 live tavern, Muster Captain economy, town portrait, reserve-company battle, and save-v9 smoke passed; repository validation passed; Linux and Windows export/startup passed with matching 247544396-byte PCKs, six captain portrait imports/textures present, source art excluded, and 2455604 bytes headroom.",
+  "currentSlice": "content-six-field-muster-commission-skirmishes-10184",
+  "currentSliceId": "content-six-field-muster-commission-skirmishes-10184",
+  "currentSliceNotes": "Completed six captain-led skirmishes with eighteen authored fronts, thirty live hooks including six scripted counterstrokes, exact encounter landmarks, a consolidated 6/6 gameplay smoke, repository validation, and matching Linux/Windows package startup at 247628960 bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six faction field muster captains 10184",
-  "currentSliceUpdatedAt": "2026-08-31T03:02:48Z",
+  "currentSliceTitle": "content six field muster commission skirmishes 10184",
+  "currentSliceUpdatedAt": "2026-08-31T05:34:52Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21303,21 +21350,23 @@
     "remainingWork": "Implement real runtime package/session adoption from the owned H3M final payload: parse/convert the H3M payload into MapDocument and ScenarioDocument records, validate save/load and generated-session startup, and keep native map JSON/full .amap output blocked until that converter is source-backed and tested without reintroducing the archived proxy."
   },
   "latestEvidenceArtifacts": [
-    "content/buildings.json",
-    "content/towns.json",
-    "content/building_art_manifest.json",
-    "art/towns/runtime/buildings/",
-    "art/towns/source/buildings/generated/horizon_capstone_monuments/manifest.json",
-    "tests/six_horizon_capstone_monuments_smoke.gd",
-    "tests/town_development_cost_curve_report.py",
+    "content/scenarios.json",
+    "content/encounters.json",
+    "content/army_groups.json",
+    "art/overworld/manifest.json",
+    "art/overworld/runtime/objects/encounters/field_muster_commissions/field_muster_commissions_atlas.png",
+    "art/overworld/source/generated/encounters/field_muster_commissions/source_manifest.json",
+    "tests/field_muster_commission_skirmishes_smoke.gd",
+    "tests/field_muster_commission_skirmishes_smoke.py",
     "tests/validate_repo.py",
+    ".artifacts/field_muster_commission_skirmishes_smoke/report.json",
     ".artifacts/packaging_linux_export_smoke/report.json",
     ".artifacts/packaging_windows_export_smoke/report.json",
     "PLAN.md",
     "ops/progress.json"
   ],
-  "latestEvidenceId": "content-six-horizon-capstone-monuments-20260831",
-  "latestFinding": "Six Horizon citadels now own exclusive original capstone monuments with exact live art and asymmetric economy, reserve-company, readiness, pressure, and recovery payoffs. One consolidated rendered smoke passes all six production build, effect, popup, and save-v9 cases; repository validation and matching Linux/Windows packaged startup pass at 245878512 bytes.",
+  "latestEvidenceId": "content-six-field-muster-commission-skirmishes-20260831",
+  "latestFinding": "Six original captain-led skirmish commissions now make all sixty-six heroes direct scenario leads. Each compact map owns three authored fronts, five live hooks including a scripted counterstroke, a faction field muster, exact encounter landmark art, and a full victory chain. One consolidated 6/6 gameplay smoke, repository validation, and matching Linux/Windows packaged startup pass at 247628960 bytes.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -106907,6 +106956,16 @@
       "startedAt": "2026-08-31T04:25:04Z",
       "notes": "Implemented six original faction-exclusive tavern captains and curated portraits; consolidated 6/6 live tavern, Muster Captain economy, town portrait, reserve-company battle, and save-v9 smoke passed; repository validation passed; Linux and Windows export/startup passed with matching 247544396-byte PCKs, six captain portrait imports/textures present, source art excluded, and 2455604 bytes headroom.",
       "completedAt": "2026-08-31T04:50:06Z"
+    },
+    {
+      "id": "content-six-field-muster-commission-skirmishes-10184",
+      "title": "content six field muster commission skirmishes 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T05:34:52Z",
+      "startedAt": "2026-08-31T04:54:52Z",
+      "notes": "Implemented six original captain-led skirmishes with eighteen authored fronts, thirty live hooks including six scripted counterstrokes, exact encounter landmarks, and faction field musters. Consolidated 6/6 gameplay/art/save smoke passed; repository validation passed; Linux and Windows export/startup passed with matching 247628960-byte PCKs, seventeen recurring encounter atlases present, source art excluded, and 2371040 bytes headroom.",
+      "completedAt": "2026-08-31T05:34:52Z"
     }
   ],
   "project": "heroes-like",
@@ -106916,7 +106975,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "This bounded six-citadel capstone slice is complete. Broader production content and distinctive-art expansion remains open and requires a separately registered next slice; this result is not a whole-game or release-readiness claim.",
+  "remainingGap": "This bounded six-skirmish field-muster commission slice is complete. Broader production content and distinctive-art expansion remains open and requires a separately registered next slice; this result is not a whole-game or release-readiness claim.",
   "remainingWork": "Audit current live content/art coverage and register the next coherent production-content batch before implementation; keep one consolidated smoke after that complete batch rather than testing each small asset edit.",
   "reportOnlyEvidence": [
     {
@@ -107451,7 +107510,7 @@
   ],
   "summary": "Completed the coherent Seven-School Signature Battle VFX content, accessibility, live-presentation, and package-efficiency batch with one consolidated smoke.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T04:50:06Z",
+  "updatedAt": "2026-08-31T04:54:52Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
