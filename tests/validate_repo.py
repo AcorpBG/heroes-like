@@ -62,6 +62,9 @@ SPELL_SCHOOL_ICON_MANIFEST_PATH = CONTENT_DIR / "spell_school_icons.json"
 SPELL_ICON_MANIFEST_PATH = CONTENT_DIR / "spell_icons.json"
 SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "spell_school_icon_runtime_report.gd"
 SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "spell_school_icon_runtime_report.tscn"
+SEVEN_SCHOOL_SIGNATURE_SPELLBOOK_SMOKE_SCRIPT_PATH = ROOT / "tests" / "seven_school_signature_spellbook_smoke.gd"
+SEVEN_SCHOOL_SIGNATURE_SPELLBOOK_SMOKE_SCENE_PATH = ROOT / "tests" / "seven_school_signature_spellbook_smoke.tscn"
+SEVEN_SCHOOL_SIGNATURE_SPELLBOOK_SOURCE_MANIFEST_PATH = ROOT / "art" / "magic" / "source" / "spells" / "curated" / "seven_school_signature_spellbook_manifest.json"
 BUILDING_CATEGORY_ICON_MANIFEST_PATH = CONTENT_DIR / "building_category_icons.json"
 TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_building_category_icon_runtime_report.gd"
 TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "town_building_category_icon_runtime_report.tscn"
@@ -46343,6 +46346,9 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         BATTLE_SCRIPT_PATH,
         SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCRIPT_PATH,
         SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCENE_PATH,
+        SEVEN_SCHOOL_SIGNATURE_SPELLBOOK_SMOKE_SCRIPT_PATH,
+        SEVEN_SCHOOL_SIGNATURE_SPELLBOOK_SMOKE_SCENE_PATH,
+        SEVEN_SCHOOL_SIGNATURE_SPELLBOOK_SOURCE_MANIFEST_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing spell school icon runtime owner: {path.relative_to(ROOT)}")
@@ -46479,6 +46485,13 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         "spell_root_graft_graft_18": ("root", "res://art/magic/runtime/spells/spell_root_graft_graft_18.png"),
         "spell_root_loam_bloom_26": ("root", "res://art/magic/runtime/spells/spell_root_loam_bloom_26.png"),
         "spell_root_green_briar_28": ("root", "res://art/magic/runtime/spells/spell_root_green_briar_28.png"),
+        "spell_beacon_lockfire_muster": ("beacon", "res://art/magic/runtime/spells/spell_beacon_lockfire_muster.png"),
+        "spell_mire_moonfen_dragnet": ("mire", "res://art/magic/runtime/spells/spell_mire_moonfen_dragnet.png"),
+        "spell_lens_seven_facet_refrain": ("lens", "res://art/magic/runtime/spells/spell_lens_seven_facet_refrain.png"),
+        "spell_root_heartwood_renewal": ("root", "res://art/magic/runtime/spells/spell_root_heartwood_renewal.png"),
+        "spell_furnace_redline_overdrive": ("furnace", "res://art/magic/runtime/spells/spell_furnace_redline_overdrive.png"),
+        "spell_veil_drowned_bell_verdict": ("veil", "res://art/magic/runtime/spells/spell_veil_drowned_bell_verdict.png"),
+        "spell_old_measure_unbroken_meridian": ("old_measure", "res://art/magic/runtime/spells/spell_old_measure_unbroken_meridian.png"),
     }
     signature_raw = load_json(SPELL_ICON_MANIFEST_PATH)
     signature_items = signature_raw.get("items", []) if isinstance(signature_raw, dict) else []
@@ -46486,7 +46499,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     ensure(signature_raw.get("generator") == "deterministic_signature_spell_icon_assets_v1", errors, "Signature spell icon manifest must retain deterministic generator identity")
     ensure(signature_raw.get("source_size") == {"width": 1254, "height": 1254}, errors, "Signature spell icon manifest must retain exact source dimensions")
     ensure(signature_raw.get("icon_size") == {"width": 128, "height": 128}, errors, "Signature spell icon manifest must retain exact runtime dimensions")
-    ensure(isinstance(signature_items, list) and len(signature_items) == 112, errors, "Specific spell icon manifest must contain exactly one hundred twelve rows")
+    ensure(isinstance(signature_items, list) and len(signature_items) == 119, errors, "Specific spell icon manifest must contain exactly one hundred nineteen rows")
     signature_ids: list[str] = []
     signature_paths: list[str] = []
     if isinstance(signature_items, list):
@@ -46515,7 +46528,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
                 ensure(hashlib.sha256(disk_path.read_bytes()).hexdigest() == str(row.get("icon_sha256", "")), errors, f"Signature spell icon {spell_id} runtime hash drifted")
             ensure(Path(f"{disk_path}.import").is_file(), errors, f"Signature spell icon {spell_id} runtime import is missing")
     ensure(signature_ids == list(expected_signature_icons), errors, "Signature spell manifest must preserve exact one-per-school authored order")
-    ensure(len(set(signature_paths)) == 112, errors, "Specific spell runtime paths must remain distinct")
+    ensure(len(set(signature_paths)) == 119, errors, "Specific spell runtime paths must remain distinct")
     manifest_raw = load_json(SPELL_SCHOOL_ICON_MANIFEST_PATH)
     manifest_items = manifest_raw.get("items", []) if isinstance(manifest_raw, dict) else []
     ensure(isinstance(manifest_items, list) and len(manifest_items) == 7, errors, "Spell school icon manifest must contain exactly seven rows")
@@ -46546,13 +46559,61 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Spell school source sigil atlas import is missing")
 
     spells = load_json(CONTENT_DIR / "spells.json").get("items", [])
-    ensure(isinstance(spells, list) and len(spells) == 112, errors, "Spell school sigil adoption must cover the exact 112 production spells")
+    ensure(isinstance(spells, list) and len(spells) == 119, errors, "Spell school sigil adoption must cover the exact 119 production spells")
     if isinstance(spells, list):
         for spell in spells:
             if not isinstance(spell, dict):
                 continue
             ensure(str(spell.get("school_id", "")) in expected_icons, errors, f"Spell {spell.get('id', '')} must retain one supported school id")
             ensure("ui" not in spell and "icon_id" not in spell and "icon_path" not in spell, errors, f"Spell {spell.get('id', '')} must resolve shared school art without duplicated presentation metadata")
+        descriptions = [str(spell.get("description", "")).strip() for spell in spells if isinstance(spell, dict)]
+        ensure(all(descriptions), errors, "Every production spell must retain player-facing description copy")
+        ensure(len(set(descriptions)) == 119, errors, "All production spell descriptions must remain individually authored")
+        ensure(not any("another tactical choice without changing the army roster" in description for description in descriptions), errors, "Production spell descriptions must not retain the catalog placeholder sentence")
+        legacy_mechanics = [{key: value for key, value in spell.items() if key != "description"} for spell in spells[:112] if isinstance(spell, dict)]
+        legacy_mechanics_hash = hashlib.sha256(json.dumps(legacy_mechanics, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+        ensure(legacy_mechanics_hash == "7777f38f449bfc92465d95d1cbc554db9c331cb45d1bcd45e5b4dff69ed29182", errors, "The established 112-spell mechanics payload must remain unchanged while its copy is rewritten")
+
+    signature_spell_contract = {
+        "spell_beacon_lockfire_muster": ("beacon", "attack_buff", "town_rainwrit_bastion", "building_embercourt_beacon_court"),
+        "spell_mire_moonfen_dragnet": ("mire", "control_enemy", "town_hollowreed_sanctuary", "building_mireclaw_sporewake_shrine"),
+        "spell_lens_seven_facet_refrain": ("lens", "cleanse_ally", "town_meridian_choirhold", "building_sunvault_zenith_observatory"),
+        "spell_root_heartwood_renewal": ("root", "recover_ally", "town_crownroot_refuge", "building_thornwake_sporeglass_hothouse"),
+        "spell_furnace_redline_overdrive": ("furnace", "attack_buff", "town_blackbell_foundry", "building_brasshollow_boiler_cathedral"),
+        "spell_veil_drowned_bell_verdict": ("veil", "damage_enemy", "town_pale_sounding_harbor", "building_veilmourn_obituary_vault"),
+        "spell_old_measure_unbroken_meridian": ("old_measure", "defense_buff", "town_rainwrit_bastion", "building_embercourt_beacon_court"),
+    }
+    spell_index = {str(spell.get("id", "")): spell for spell in spells if isinstance(spell, dict)}
+    town_index = items_index(load_json(CONTENT_DIR / "towns.json"))
+    building_index = items_index(load_json(CONTENT_DIR / "buildings.json"))
+    for spell_id, (school_id, effect_type, town_id, building_id) in signature_spell_contract.items():
+        spell = spell_index.get(spell_id, {})
+        expected_mana = 8 if effect_type in {"control_enemy", "recover_ally", "cleanse_ally"} else 7
+        ensure(str(spell.get("school_id", "")) == school_id and int(spell.get("tier", 0)) == 3 and str(spell.get("context", "")) == "battle" and int(spell.get("mana_cost", 0)) == expected_mana, errors, f"{spell_id} must retain its exact tier-3 battle signature contract")
+        ensure(str(spell.get("effect", {}).get("type", "")) == effect_type, errors, f"{spell_id} must retain its authored battle effect family")
+        town = town_index.get(town_id, {})
+        tier_three_spell_ids = [str(value) for row in town.get("spell_library", []) if isinstance(row, dict) and int(row.get("tier", 0)) == 3 for value in row.get("spell_ids", [])]
+        ensure(spell_id in tier_three_spell_ids, errors, f"{spell_id} must remain explicitly catalogued at tier 3 in {town_id}")
+        ensure(building_id in town.get("starting_building_ids", []) + town.get("buildable_building_ids", []), errors, f"{town_id} must expose the tier-3 study building for {spell_id}")
+        ensure(int(building_index.get(building_id, {}).get("spell_tier", 0)) == 3, errors, f"{building_id} must retain tier-3 spell study authority")
+
+    source_manifest = load_json(SEVEN_SCHOOL_SIGNATURE_SPELLBOOK_SOURCE_MANIFEST_PATH)
+    source_rows = source_manifest.get("items", []) if isinstance(source_manifest, dict) else []
+    ensure(source_manifest.get("schema") == "seven_school_signature_spellbook_source_manifest_v1", errors, "Seven-school signature source manifest must retain its schema")
+    ensure(isinstance(source_rows, list) and [str(row.get("spell_id", "")) for row in source_rows if isinstance(row, dict)] == list(signature_spell_contract), errors, "Seven-school signature source manifest must retain exact authored spell order")
+    for row in source_rows if isinstance(source_rows, list) else []:
+        if not isinstance(row, dict):
+            continue
+        spell_id = str(row.get("spell_id", ""))
+        source_path = res_path_to_disk(str(row.get("source_path", "")))
+        runtime_path = res_path_to_disk(str(row.get("runtime_path", "")))
+        ensure(bool(str(row.get("accessible_description", "")).strip()), errors, f"{spell_id} must retain accessible icon description copy")
+        ensure(source_path.is_file() and png_size(source_path) == (1254, 1254), errors, f"{spell_id} must retain its exact transparent source master dimensions")
+        ensure(runtime_path.is_file() and png_size(runtime_path) == (128, 128), errors, f"{spell_id} must retain its exact runtime icon dimensions")
+        if source_path.is_file():
+            ensure(hashlib.sha256(source_path.read_bytes()).hexdigest() == str(row.get("source_sha256", "")), errors, f"{spell_id} source provenance hash drifted")
+        if runtime_path.is_file():
+            ensure(hashlib.sha256(runtime_path.read_bytes()).hexdigest() == str(row.get("runtime_sha256", "")), errors, f"{spell_id} runtime icon hash drifted")
     active_spell_ids: set[str] = set()
     for hero in load_json(CONTENT_DIR / "heroes.json").get("items", []):
         if isinstance(hero, dict):
@@ -46632,31 +46693,31 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     catalog_spell_ids = {str(spell.get("id", "")) for spell in spells if isinstance(spell, dict)}
     ensure(len(catalog_spell_ids - set(expected_signature_icons)) == 0, errors, "No catalog spell may retain school-sigil fallback")
     beacon_catalog_spell_ids = {str(spell.get("id", "")) for spell in spells if isinstance(spell, dict) and str(spell.get("school_id", "")) == "beacon"}
-    ensure(len(beacon_catalog_spell_ids) == 16 and beacon_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All sixteen Beacon catalog spells must own distinct specific icons")
+    ensure(len(beacon_catalog_spell_ids) == 17 and beacon_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All seventeen Beacon catalog spells must own distinct specific icons")
     ensure({int(spell.get("tier", 0)) for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_beacon_town_study_spell_ids} == {1, 2, 3, 4, 5}, errors, "Targeted Beacon town-study icons must retain exact tier 1-5 coverage")
     ensure(all(str(spell.get("school_id", "")) == "beacon" for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_beacon_town_study_spell_ids), errors, "Targeted town-study spells must remain Beacon content")
     lens_catalog_spell_ids = {str(spell.get("id", "")) for spell in spells if isinstance(spell, dict) and str(spell.get("school_id", "")) == "lens"}
-    ensure(len(lens_catalog_spell_ids) == 16 and lens_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All sixteen Lens catalog spells must own distinct specific icons")
+    ensure(len(lens_catalog_spell_ids) == 17 and lens_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All seventeen Lens catalog spells must own distinct specific icons")
     ensure({int(spell.get("tier", 0)) for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_lens_town_study_spell_ids} == {1, 2, 3, 4, 5}, errors, "Targeted Lens town-study icons must retain exact tier 1-5 coverage")
     ensure(all(str(spell.get("school_id", "")) == "lens" for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_lens_town_study_spell_ids), errors, "Targeted town-study spells must remain Lens content")
     furnace_catalog_spell_ids = {str(spell.get("id", "")) for spell in spells if isinstance(spell, dict) and str(spell.get("school_id", "")) == "furnace"}
-    ensure(len(furnace_catalog_spell_ids) == 16 and furnace_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All sixteen Furnace catalog spells must own distinct specific icons")
+    ensure(len(furnace_catalog_spell_ids) == 17 and furnace_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All seventeen Furnace catalog spells must own distinct specific icons")
     ensure({int(spell.get("tier", 0)) for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_furnace_town_study_spell_ids} == {1, 2, 3, 4, 5}, errors, "Targeted Furnace town-study icons must retain exact tier 1-5 coverage")
     ensure(all(str(spell.get("school_id", "")) == "furnace" for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_furnace_town_study_spell_ids), errors, "Targeted town-study spells must remain Furnace content")
     mire_catalog_spell_ids = {str(spell.get("id", "")) for spell in spells if isinstance(spell, dict) and str(spell.get("school_id", "")) == "mire"}
-    ensure(len(mire_catalog_spell_ids) == 16 and mire_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All sixteen Mire catalog spells must own distinct specific icons")
+    ensure(len(mire_catalog_spell_ids) == 17 and mire_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All seventeen Mire catalog spells must own distinct specific icons")
     ensure({int(spell.get("tier", 0)) for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_mire_town_study_spell_ids} == {1, 2, 3, 4, 5}, errors, "Targeted Mire town-study icons must retain exact tier 1-5 coverage")
     ensure(all(str(spell.get("school_id", "")) == "mire" for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_mire_town_study_spell_ids), errors, "Targeted town-study spells must remain Mire content")
     old_measure_catalog_spell_ids = {str(spell.get("id", "")) for spell in spells if isinstance(spell, dict) and str(spell.get("school_id", "")) == "old_measure"}
-    ensure(len(old_measure_catalog_spell_ids) == 16 and old_measure_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All sixteen Old Measure catalog spells must own distinct specific icons")
+    ensure(len(old_measure_catalog_spell_ids) == 17 and old_measure_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All seventeen Old Measure catalog spells must own distinct specific icons")
     ensure({int(spell.get("tier", 0)) for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_old_measure_town_study_spell_ids} == {1, 2, 3, 4, 5}, errors, "Targeted Old Measure town-study icons must retain exact tier 1-5 coverage")
     ensure(all(str(spell.get("school_id", "")) == "old_measure" for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_old_measure_town_study_spell_ids), errors, "Targeted town-study spells must remain Old Measure content")
     veil_catalog_spell_ids = {str(spell.get("id", "")) for spell in spells if isinstance(spell, dict) and str(spell.get("school_id", "")) == "veil"}
-    ensure(len(veil_catalog_spell_ids) == 16 and veil_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All sixteen Veil catalog spells must own distinct specific icons")
+    ensure(len(veil_catalog_spell_ids) == 17 and veil_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All seventeen Veil catalog spells must own distinct specific icons")
     ensure({int(spell.get("tier", 0)) for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_veil_town_study_spell_ids} == {1, 2, 3, 4, 5}, errors, "Targeted Veil town-study icons must retain exact tier 1-5 coverage")
     ensure(all(str(spell.get("school_id", "")) == "veil" for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_veil_town_study_spell_ids), errors, "Targeted town-study spells must remain Veil content")
     root_catalog_spell_ids = {str(spell.get("id", "")) for spell in spells if isinstance(spell, dict) and str(spell.get("school_id", "")) == "root"}
-    ensure(len(root_catalog_spell_ids) == 16 and root_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All sixteen Root catalog spells must own distinct specific icons")
+    ensure(len(root_catalog_spell_ids) == 17 and root_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All seventeen Root catalog spells must own distinct specific icons")
     ensure({int(spell.get("tier", 0)) for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_root_town_study_spell_ids} == {1, 2, 3, 4, 5}, errors, "Targeted Root town-study icons must retain exact tier 1-5 coverage")
     ensure(all(str(spell.get("school_id", "")) == "root" for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_root_town_study_spell_ids), errors, "Targeted town-study spells must remain Root content")
     lens_study_building_ids = [
@@ -46951,7 +47012,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         '"mireford-skirmish": "town_thornwake_graftroot_caravan"', '"rootgate-toll": "town_thornwake_rootgate_nursery"',
         'const TARGET_ROOT_TOWN_STUDY_BUILDING_IDS := [',
         '"building_thornwake_sporeglass_hothouse"', '"building_thornwake_pollen_litany"', '"building_thornwake_spore_oath_chantry"',
-        "signature_contract.size() == 112",
+        "signature_contract.size() == 119",
         '"school_fallback_count": 0',
         "var generated_reward_contract := _generated_reward_contract()",
         'reward_ids.size() == 38',
@@ -47017,7 +47078,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         "missing_fallback == expected_school_path",
         "ContentService.load_json(ContentService.SPELL_ICONS_PATH) == original_manifest",
         "manifest_contract.size() == 7",
-        "spell_rows.size() == 112",
+        "spell_rows.size() == 119",
         'row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0)',
         'SpellRules.spell_school_icon_path("spell_missing") == ""',
         "management_tabs.current_tab = 2",
@@ -47067,6 +47128,30 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         "scroll_vertical =",
     ):
         ensure(forbidden not in report_text, errors, f"Spell school icon runtime report must not bypass production or mutate presentation: {forbidden}")
+
+    signature_smoke_text = SEVEN_SCHOOL_SIGNATURE_SPELLBOOK_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+    signature_smoke_scene_text = SEVEN_SCHOOL_SIGNATURE_SPELLBOOK_SMOKE_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(signature_smoke_scene_text, errors, "seven_school_signature_spellbook_smoke.tscn", [("SevenSchoolSignatureSpellbookSmoke", "Node")])
+    for token in (
+        'const SCENARIO_ID := "horizon-compact-six-citadels"',
+        '"spell_beacon_lockfire_muster"',
+        '"spell_mire_moonfen_dragnet"',
+        '"spell_lens_seven_facet_refrain"',
+        '"spell_root_heartwood_renewal"',
+        '"spell_furnace_redline_overdrive"',
+        '"spell_veil_drowned_bell_verdict"',
+        '"spell_old_measure_unbroken_meridian"',
+        'SpellRules.spell_icon_path(spell_id)',
+        'load("res://scenes/town/TownShell.tscn").instantiate()',
+        'button.emit_signal("pressed")',
+        'BattleRules.create_town_assault_payload',
+        'BattleRules.cast_player_spell(live_session, spell_id)',
+        'restored.from_dict(payload.duplicate(true))',
+        'restored.save_version == SessionDataScript.SAVE_VERSION',
+        'SEVEN_SCHOOL_SIGNATURE_SPELLBOOK_SMOKE',
+    ):
+        ensure(token in signature_smoke_text, errors, f"Seven-school signature spellbook smoke is missing production proof token: {token}")
+    ensure(signature_smoke_text.count("BattleRules.cast_player_spell(live_session, spell_id)") == 1, errors, "Seven-school signature spellbook must use one shared production cast path across all seven cases")
 
 
 def validate_town_building_category_icon_runtime(errors: list[str]) -> None:

@@ -33,7 +33,7 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Cinder Burst discharges a sealed furnace clause into the chosen enemy ranks, cracking armor with heat and force.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 30,
@@ -90,7 +90,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Quickmarch Hymn passes from signal to signal, pulling the chosen company into a faster and steadier cadence.",
       "effect": {
         "type": "initiative_buff",
         "amount": 2,
@@ -115,7 +115,7 @@
       "context": "overworld",
       "mana_cost": 3,
       "target_mode": "self",
-      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Trailglyph fixes a bright waymark beyond the column and draws the march farther along the paid road.",
       "effect": {
         "type": "restore_movement",
         "amount": 3
@@ -134,7 +134,7 @@
       "context": "overworld",
       "mana_cost": 5,
       "target_mode": "self",
-      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Beacon Path fixes a bright waymark beyond the column and draws the march farther along the paid road.",
       "effect": {
         "type": "restore_movement",
         "amount": 5
@@ -172,7 +172,7 @@
       "context": "overworld",
       "mana_cost": 3,
       "target_mode": "self",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Fogline Drift opens a brief wake through the fog, guiding the column farther along a road only echoes can find.",
       "effect": {
         "type": "restore_movement",
         "amount": 3
@@ -211,7 +211,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "enemy_selected",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Coal Rain casts biting silt and fen rot through the chosen enemy ranks, wounding bodies and spoiling their cadence.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 14,
@@ -266,7 +266,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Relay Drum rolls across the fen like a hidden war drum, sending the chosen company forward before the ripples settle.",
       "effect": {
         "type": "initiative_buff",
         "amount": 2,
@@ -317,7 +317,7 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_active",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Bloodwake Drum wakes the blackwater pulse beneath the chosen company, turning hunger and drumbeat into a violent push.",
       "effect": {
         "type": "attack_buff",
         "amount": 2,
@@ -377,7 +377,7 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_active",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Resonant Chorus resolves into a rising harmonic, bringing the chosen company to action on the next bright beat.",
       "effect": {
         "type": "initiative_buff",
         "amount": 2,
@@ -404,7 +404,7 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Sunlance Arc focuses a cutting ray across the chosen enemy formation and fractures its protected angles.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 28,
@@ -490,7 +490,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Heat Rite drives regulated heat through weapon and harness, raising the chosen company to a controlled redline.",
       "effect": {
         "type": "attack_buff",
         "amount": 2,
@@ -548,7 +548,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Fogwake Step carries the chosen company on a silent undertow, returning it to action before the bell can answer.",
       "effect": {
         "type": "initiative_buff",
         "amount": 2,
@@ -604,7 +604,7 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_active",
-      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Roadward Signal passes from signal to signal, pulling the chosen company into a faster and steadier cadence.",
       "effect": {
         "type": "initiative_buff",
         "amount": 2,
@@ -629,7 +629,7 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "ally_active",
-      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Bell Ward locks hooded lanterns along the shield line, hardening the chosen company against the next exchange.",
       "effect": {
         "type": "defense_buff",
         "amount": 4,
@@ -653,7 +653,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Column Charge opens a lantern-marked lane through the melee, sharpening the chosen company for a disciplined advance.",
       "effect": {
         "type": "attack_buff",
         "amount": 2,
@@ -679,7 +679,7 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "enemy_selected",
-      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Writ Lance drives a charter-bright lance through the chosen enemy line and leaves its orders ringing out of step.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 42,
@@ -710,7 +710,7 @@
       "context": "overworld",
       "mana_cost": 12,
       "target_mode": "self",
-      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Waymark Road fixes a bright waymark beyond the column and draws the march farther along the paid road.",
       "effect": {
         "type": "restore_movement",
         "amount": 14
@@ -730,7 +730,7 @@
       "context": "battle",
       "mana_cost": 6,
       "target_mode": "ally_active",
-      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Lantern Oath reads the chosen company against a clean signal flame, burning hostile workings out of its formation.",
       "effect": {
         "type": "cleanse_ally",
         "amount": 2,
@@ -764,7 +764,7 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "ally_active",
-      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Crown Signal passes from signal to signal, pulling the chosen company into a faster and steadier cadence.",
       "effect": {
         "type": "initiative_buff",
         "amount": 4,
@@ -789,7 +789,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Dawn Ward locks hooded lanterns along the shield line, hardening the chosen company against the next exchange.",
       "effect": {
         "type": "defense_buff",
         "amount": 2,
@@ -813,7 +813,7 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_active",
-      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Roadward Charge opens a lantern-marked lane through the melee, sharpening the chosen company for a disciplined advance.",
       "effect": {
         "type": "attack_buff",
         "amount": 3,
@@ -871,7 +871,7 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "enemy_selected",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Silt Rot casts biting silt and fen rot through the chosen enemy ranks, wounding bodies and spoiling their cadence.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 51,
@@ -900,7 +900,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Dusk Drum rolls across the fen like a hidden war drum, sending the chosen company forward before the ripples settle.",
       "effect": {
         "type": "initiative_buff",
         "amount": 2,
@@ -925,7 +925,7 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_active",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Brine Frenzy wakes the blackwater pulse beneath the chosen company, turning hunger and drumbeat into a violent push.",
       "effect": {
         "type": "attack_buff",
         "amount": 3,
@@ -951,7 +951,7 @@
       "context": "battle",
       "mana_cost": 13,
       "target_mode": "enemy_selected",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Leech Snare knots wet reeds around the enemy formation, stealing its footing and breaking the rhythm of its orders.",
       "effect": {
         "type": "control_enemy",
         "status_effect": {
@@ -978,7 +978,7 @@
       "context": "overworld",
       "mana_cost": 5,
       "target_mode": "self",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Flood Fenlight floods low ground with cold fenlight, exposing tracks, crossings, and watchers around the marching host.",
       "effect": {
         "type": "reveal_radius",
         "amount": 6
@@ -998,7 +998,7 @@
       "context": "battle",
       "mana_cost": 10,
       "target_mode": "ally_active",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Sluice Poultice packs peatwax and bitter marsh herbs into fresh wounds, restoring the chosen company for another exchange.",
       "effect": {
         "type": "recover_ally",
         "base_restore": 56,
@@ -1025,7 +1025,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "enemy_selected",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Lowtide Rot casts biting silt and fen rot through the chosen enemy ranks, wounding bodies and spoiling their cadence.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 14,
@@ -1054,7 +1054,7 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_active",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Bog Drum rolls across the fen like a hidden war drum, sending the chosen company forward before the ripples settle.",
       "effect": {
         "type": "initiative_buff",
         "amount": 3,
@@ -1105,7 +1105,7 @@
       "context": "battle",
       "mana_cost": 6,
       "target_mode": "enemy_selected",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Dusk Snare knots wet reeds around the enemy formation, stealing its footing and breaking the rhythm of its orders.",
       "effect": {
         "type": "control_enemy",
         "status_effect": {
@@ -1132,7 +1132,7 @@
       "context": "overworld",
       "mana_cost": 9,
       "target_mode": "self",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Brine Fenlight floods low ground with cold fenlight, exposing tracks, crossings, and watchers around the marching host.",
       "effect": {
         "type": "reveal_radius",
         "amount": 11
@@ -1152,7 +1152,7 @@
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_active",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Leech Poultice packs peatwax and bitter marsh herbs into fresh wounds, restoring the chosen company for another exchange.",
       "effect": {
         "type": "recover_ally",
         "base_restore": 18,
@@ -1179,7 +1179,7 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "enemy_selected",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Flood Rot casts biting silt and fen rot through the chosen enemy ranks, wounding bodies and spoiling their cadence.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 36,
@@ -1209,7 +1209,7 @@
       "context": "battle",
       "mana_cost": 10,
       "target_mode": "ally_active",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Mirror Prism turns hostile magic through a clean facet, leaving the chosen company inside a stable chord of light.",
       "effect": {
         "type": "cleanse_ally",
         "amount": 4,
@@ -1244,7 +1244,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "enemy_selected",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Array Ray focuses a cutting ray across the chosen enemy formation and fractures its protected angles.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 14,
@@ -1274,7 +1274,7 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_active",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Glass Facet folds clear facets around the chosen company, catching force before it reaches the line within.",
       "effect": {
         "type": "defense_buff",
         "amount": 3,
@@ -1298,7 +1298,7 @@
       "context": "battle",
       "mana_cost": 12,
       "target_mode": "ally_active",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Aurora Chorus resolves into a rising harmonic, bringing the chosen company to action on the next bright beat.",
       "effect": {
         "type": "initiative_buff",
         "amount": 5,
@@ -1322,7 +1322,7 @@
       "context": "overworld",
       "mana_cost": 5,
       "target_mode": "self",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Starlens Survey lifts a survey star above the column, refracting hidden roads and distant threats into visible bearings.",
       "effect": {
         "type": "reveal_radius",
         "amount": 6
@@ -1341,7 +1341,7 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "ally_active",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Focus Array aligns the chosen company with a hard white angle, concentrating every strike along one measured line.",
       "effect": {
         "type": "attack_buff",
         "amount": 4,
@@ -1367,7 +1367,7 @@
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_active",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Crown Prism turns hostile magic through a clean facet, leaving the chosen company inside a stable chord of light.",
       "effect": {
         "type": "cleanse_ally",
         "amount": 2,
@@ -1402,7 +1402,7 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "enemy_selected",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Halo Ray focuses a cutting ray across the chosen enemy formation and fractures its protected angles.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 37,
@@ -1456,7 +1456,7 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_active",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Array Chorus resolves into a rising harmonic, bringing the chosen company to action on the next bright beat.",
       "effect": {
         "type": "initiative_buff",
         "amount": 2,
@@ -1480,7 +1480,7 @@
       "context": "overworld",
       "mana_cost": 9,
       "target_mode": "self",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Glass Survey lifts a survey star above the column, refracting hidden roads and distant threats into visible bearings.",
       "effect": {
         "type": "reveal_radius",
         "amount": 11
@@ -1499,7 +1499,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Aurora Array aligns the chosen company with a hard white angle, concentrating every strike along one measured line.",
       "effect": {
         "type": "attack_buff",
         "amount": 2,
@@ -1525,7 +1525,7 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "ally_active",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Starlens Prism turns hostile magic through a clean facet, leaving the chosen company inside a stable chord of light.",
       "effect": {
         "type": "cleanse_ally",
         "amount": 3,
@@ -1560,7 +1560,7 @@
       "context": "battle",
       "mana_cost": 10,
       "target_mode": "enemy_selected",
-      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Bloom Briar raises hooked briars beneath the enemy line, pinning its pace and pulling its formation apart.",
       "effect": {
         "type": "control_enemy",
         "status_effect": {
@@ -1588,7 +1588,7 @@
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_active",
-      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Canopy Graft seals wounds with warm sap and living splints, returning strength to the chosen company.",
       "effect": {
         "type": "recover_ally",
         "base_restore": 18,
@@ -1615,7 +1615,7 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_active",
-      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Bark Mantle grows layered bark around the chosen company, flexing under impact without surrendering the line.",
       "effect": {
         "type": "defense_buff",
         "amount": 3,
@@ -1640,7 +1640,7 @@
       "context": "battle",
       "mana_cost": 12,
       "target_mode": "enemy_selected",
-      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Loam Thorn thrusts a hardened thorn through the chosen enemy ranks and leaves their footing tangled in new growth.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 73,
@@ -1671,7 +1671,7 @@
       "context": "overworld",
       "mana_cost": 5,
       "target_mode": "self",
-      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Green Rootway uncovers an old root road beneath the column and carries the march over broken ground.",
       "effect": {
         "type": "restore_movement",
         "amount": 5
@@ -1690,7 +1690,7 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "ally_active",
-      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Branch Bloom drives living grain through haft and armor, lending the chosen company the force of a bending bough.",
       "effect": {
         "type": "attack_buff",
         "amount": 4,
@@ -1716,7 +1716,7 @@
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "enemy_selected",
-      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Wild Briar raises hooked briars beneath the enemy line, pinning its pace and pulling its formation apart.",
       "effect": {
         "type": "control_enemy",
         "status_effect": {
@@ -1744,7 +1744,7 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "ally_active",
-      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Graft Ward seals wounds with warm sap and living splints, returning strength to the chosen company.",
       "effect": {
         "type": "recover_ally",
         "base_restore": 40,
@@ -1796,7 +1796,7 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Canopy Thorn thrusts a hardened thorn through the chosen enemy ranks and leaves their footing tangled in new growth.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 25,
@@ -1825,7 +1825,7 @@
       "context": "overworld",
       "mana_cost": 9,
       "target_mode": "self",
-      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Bark Rootway uncovers an old root road beneath the column and carries the march over broken ground.",
       "effect": {
         "type": "restore_movement",
         "amount": 10
@@ -1844,7 +1844,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Loam Bloom drives living grain through haft and armor, lending the chosen company the force of a bending bough.",
       "effect": {
         "type": "attack_buff",
         "amount": 2,
@@ -1870,7 +1870,7 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "enemy_selected",
-      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Green Briar raises hooked briars beneath the enemy line, pinning its pace and pulling its formation apart.",
       "effect": {
         "type": "control_enemy",
         "status_effect": {
@@ -1898,7 +1898,7 @@
       "context": "battle",
       "mana_cost": 12,
       "target_mode": "enemy_selected",
-      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Rivet Clause discharges a sealed furnace clause into the chosen enemy ranks, cracking armor with heat and force.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 79,
@@ -1929,7 +1929,7 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_active",
-      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Brass Rite drives regulated heat through weapon and harness, raising the chosen company to a controlled redline.",
       "effect": {
         "type": "attack_buff",
         "amount": 2,
@@ -1954,7 +1954,7 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "ally_active",
-      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Ash Mantle lays quenched plates across the chosen company, turning the next impact into a measured load.",
       "effect": {
         "type": "defense_buff",
         "amount": 4,
@@ -1978,7 +1978,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Foundry Bellows feeds the bellows in exact sequence, bringing the chosen company to pressure before its rivals are ready.",
       "effect": {
         "type": "initiative_buff",
         "amount": 2,
@@ -2003,7 +2003,7 @@
       "context": "overworld",
       "mana_cost": 7,
       "target_mode": "self",
-      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Hammer Rail strikes a hot guide rail across the route, carrying the marching host toward the next foundry mark.",
       "effect": {
         "type": "restore_movement",
         "amount": 7
@@ -2051,7 +2051,7 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Coal Clause discharges a sealed furnace clause into the chosen enemy ranks, cracking armor with heat and force.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 30,
@@ -2082,7 +2082,7 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "ally_active",
-      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Kiln Rite drives regulated heat through weapon and harness, raising the chosen company to a controlled redline.",
       "effect": {
         "type": "attack_buff",
         "amount": 4,
@@ -2107,7 +2107,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Rivet Mantle lays quenched plates across the chosen company, turning the next impact into a measured load.",
       "effect": {
         "type": "defense_buff",
         "amount": 2,
@@ -2131,7 +2131,7 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_active",
-      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Brass Bellows feeds the bellows in exact sequence, bringing the chosen company to pressure before its rivals are ready.",
       "effect": {
         "type": "initiative_buff",
         "amount": 3,
@@ -2156,7 +2156,7 @@
       "context": "overworld",
       "mana_cost": 12,
       "target_mode": "self",
-      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Ash Rail strikes a hot guide rail across the route, carrying the marching host toward the next foundry mark.",
       "effect": {
         "type": "restore_movement",
         "amount": 14
@@ -2176,7 +2176,7 @@
       "context": "battle",
       "mana_cost": 6,
       "target_mode": "enemy_selected",
-      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Foundry Clamp closes a stamped pressure clamp around the enemy formation, slowing every order under the added weight.",
       "effect": {
         "type": "control_enemy",
         "status_effect": {
@@ -2204,7 +2204,7 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "enemy_selected",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Mourning Mark writes a pale mark across the chosen enemy ranks, and the returning tide tears through the named line.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 52,
@@ -2233,7 +2233,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Salt Step carries the chosen company on a silent undertow, returning it to action before the bell can answer.",
       "effect": {
         "type": "initiative_buff",
         "amount": 2,
@@ -2259,7 +2259,7 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "enemy_selected",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Tide Fogbind draws mourning fog around the enemy formation, smothering bearings and delaying every command.",
       "effect": {
         "type": "control_enemy",
         "status_effect": {
@@ -2287,7 +2287,7 @@
       "context": "battle",
       "mana_cost": 12,
       "target_mode": "ally_active",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Mist Shroud wraps the chosen company in layered mist and salt shadow, making each hostile blow lose its bearing.",
       "effect": {
         "type": "defense_buff",
         "amount": 5,
@@ -2312,7 +2312,7 @@
       "context": "overworld",
       "mana_cost": 5,
       "target_mode": "self",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Moon Drift opens a brief wake through the fog, guiding the column farther along a road only echoes can find.",
       "effect": {
         "type": "restore_movement",
         "amount": 5
@@ -2331,7 +2331,7 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "ally_active",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Wraith Duel hides the chosen company inside a false tide, letting its real strike arrive from the unanswered side.",
       "effect": {
         "type": "attack_buff",
         "amount": 4,
@@ -2357,7 +2357,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "enemy_selected",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Lantern Mark writes a pale mark across the chosen enemy ranks, and the returning tide tears through the named line.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 14,
@@ -2386,7 +2386,7 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_active",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Obituary Step carries the chosen company on a silent undertow, returning it to action before the bell can answer.",
       "effect": {
         "type": "initiative_buff",
         "amount": 3,
@@ -2440,7 +2440,7 @@
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_active",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Salt Shroud wraps the chosen company in layered mist and salt shadow, making each hostile blow lose its bearing.",
       "effect": {
         "type": "defense_buff",
         "amount": 2,
@@ -2465,7 +2465,7 @@
       "context": "overworld",
       "mana_cost": 9,
       "target_mode": "self",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Tide Drift opens a brief wake through the fog, guiding the column farther along a road only echoes can find.",
       "effect": {
         "type": "restore_movement",
         "amount": 10
@@ -2484,7 +2484,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Mist Duel hides the chosen company inside a false tide, letting its real strike arrive from the unanswered side.",
       "effect": {
         "type": "attack_buff",
         "amount": 2,
@@ -2510,7 +2510,7 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "enemy_selected",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Moon Mark writes a pale mark across the chosen enemy ranks, and the returning tide tears through the named line.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 37,
@@ -2539,7 +2539,7 @@
       "context": "overworld",
       "mana_cost": 5,
       "target_mode": "self",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Survey Ring lays a survey ring across the country, making hidden routes and nearby hazards answer to the count.",
       "effect": {
         "type": "reveal_radius",
         "amount": 6
@@ -2559,7 +2559,7 @@
       "context": "battle",
       "mana_cost": 9,
       "target_mode": "ally_active",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Tally Axiom fixes the chosen company on a proven axiom, making its line hold against crooked force and false count.",
       "effect": {
         "type": "defense_buff",
         "amount": 4,
@@ -2585,7 +2585,7 @@
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "enemy_selected",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Compass Boundary sets an inescapable boundary around the enemy formation and counts every step that crosses it.",
       "effect": {
         "type": "control_enemy",
         "status_effect": {
@@ -2613,7 +2613,7 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "enemy_selected",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Marker Tally enters the chosen enemy into a hard tally, exacting force for every broken interval in its line.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 39,
@@ -2643,7 +2643,7 @@
       "context": "battle",
       "mana_cost": 13,
       "target_mode": "ally_active",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Index Correction proves the chosen company against an older correction, cancelling hostile marks that fail the measure.",
       "effect": {
         "type": "cleanse_ally",
         "amount": 5,
@@ -2677,7 +2677,7 @@
       "context": "overworld",
       "mana_cost": 5,
       "target_mode": "self",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Proof Pace establishes a verified pace beneath the column, extending the march to the next lawful marker.",
       "effect": {
         "type": "restore_movement",
         "amount": 5
@@ -2696,7 +2696,7 @@
       "context": "overworld",
       "mana_cost": 9,
       "target_mode": "self",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Count Survey lays a survey ring across the country, making hidden routes and nearby hazards answer to the count.",
       "effect": {
         "type": "reveal_radius",
         "amount": 11
@@ -2716,7 +2716,7 @@
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Measure Axiom fixes the chosen company on a proven axiom, making its line hold against crooked force and false count.",
       "effect": {
         "type": "defense_buff",
         "amount": 2,
@@ -2742,7 +2742,7 @@
       "context": "battle",
       "mana_cost": 8,
       "target_mode": "enemy_selected",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Survey Boundary sets an inescapable boundary around the enemy formation and counts every step that crosses it.",
       "effect": {
         "type": "control_enemy",
         "status_effect": {
@@ -2802,7 +2802,7 @@
       "context": "battle",
       "mana_cost": 6,
       "target_mode": "ally_active",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Compass Correction proves the chosen company against an older correction, cancelling hostile marks that fail the measure.",
       "effect": {
         "type": "cleanse_ally",
         "amount": 2,
@@ -2836,7 +2836,7 @@
       "context": "overworld",
       "mana_cost": 9,
       "target_mode": "self",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Marker Pace establishes a verified pace beneath the column, extending the march to the next lawful marker.",
       "effect": {
         "type": "restore_movement",
         "amount": 10
@@ -2855,7 +2855,7 @@
       "context": "overworld",
       "mana_cost": 3,
       "target_mode": "self",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Index Survey lays a survey ring across the country, making hidden routes and nearby hazards answer to the count.",
       "effect": {
         "type": "reveal_radius",
         "amount": 4
@@ -2875,7 +2875,7 @@
       "context": "battle",
       "mana_cost": 7,
       "target_mode": "ally_active",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Proof Axiom fixes the chosen company on a proven axiom, making its line hold against crooked force and false count.",
       "effect": {
         "type": "defense_buff",
         "amount": 3,
@@ -2901,7 +2901,7 @@
       "context": "battle",
       "mana_cost": 13,
       "target_mode": "enemy_selected",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Count Boundary sets an inescapable boundary around the enemy formation and counts every step that crosses it.",
       "effect": {
         "type": "control_enemy",
         "status_effect": {
@@ -2912,6 +2912,204 @@
             "initiative": -3,
             "cohesion": -3
           }
+        }
+      }
+    },
+    {
+      "id": "spell_beacon_lockfire_muster",
+      "name": "Lockfire Muster",
+      "school_id": "beacon",
+      "tier": 3,
+      "accord_family": "beacon_lockfire",
+      "primary_role": "assault_buff",
+    "role_categories": [
+      "buff"
+      ],
+      "context": "battle",
+    "mana_cost": 7,
+      "target_mode": "ally_active",
+      "description": "Seven lock-lanterns answer in sequence, giving the chosen company a bright attack lane and the cadence to hold it.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 3,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 3,
+          "initiative": 2,
+          "cohesion": 2
+        }
+      }
+    },
+    {
+      "id": "spell_mire_moonfen_dragnet",
+      "name": "Moonfen Dragnet",
+      "school_id": "mire",
+      "tier": 3,
+      "accord_family": "mire_moonfen",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "enemy_selected",
+      "description": "Moonlit reed cords rise from the enemy's own footprints, dragging its formation out of pace and opening its weak side.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Moonfen Dragnet",
+          "duration_rounds": 2,
+        "modifiers": {
+          "defense": -2,
+          "initiative": -2,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_lens_seven_facet_refrain",
+      "name": "Seven-Facet Refrain",
+      "school_id": "lens",
+      "tier": 3,
+      "accord_family": "lens_seven_facet",
+      "primary_role": "countermagic_ward",
+      "role_categories": [
+        "buff",
+        "countermagic"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_active",
+      "description": "A seven-note prism turns hostile workings back through their false angles and leaves the chosen company inside a clean chord.",
+      "effect": {
+        "type": "cleanse_ally",
+        "amount": 3,
+        "duration_rounds": 2,
+        "cleanse_effect_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ],
+      "modifiers": {
+        "defense": 3,
+        "cohesion": 2
+        },
+        "status_immunity_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ]
+      }
+    },
+    {
+      "id": "spell_root_heartwood_renewal",
+      "name": "Heartwood Renewal",
+      "school_id": "root",
+      "tier": 3,
+      "accord_family": "root_heartwood",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_active",
+      "description": "Living grain closes around broken armor and tired limbs, restoring the chosen company beneath a fresh heartwood shell.",
+      "effect": {
+        "type": "recover_ally",
+      "base_restore": 40,
+      "power_scale": 8,
+        "amount": 3,
+        "duration_rounds": 2,
+      "modifiers": {
+        "defense": 3,
+          "cohesion": 2
+        }
+      }
+    },
+    {
+      "id": "spell_furnace_redline_overdrive",
+      "name": "Redline Overdrive",
+      "school_id": "furnace",
+      "tier": 3,
+      "accord_family": "furnace_redline",
+      "primary_role": "assault_buff",
+    "role_categories": [
+      "buff"
+      ],
+      "context": "battle",
+    "mana_cost": 7,
+      "target_mode": "ally_active",
+      "description": "The gauges climb to their signed limit as furnace breath drives the chosen company into one controlled, armor-ringing surge.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 3,
+        "duration_rounds": 2,
+      "modifiers": {
+        "attack": 3,
+        "defense": 2,
+          "cohesion": 2
+        }
+      }
+    },
+    {
+      "id": "spell_veil_drowned_bell_verdict",
+      "name": "Drowned-Bell Verdict",
+      "school_id": "veil",
+      "tier": 3,
+      "accord_family": "veil_drowned_bell",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+    "mana_cost": 7,
+      "target_mode": "enemy_selected",
+      "description": "A bell sounds beneath the enemy line; its returning wave strikes through armor and leaves every order half a beat late.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 40,
+        "power_scale": 9,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Drowned-Bell Verdict",
+          "duration_rounds": 2,
+        "modifiers": {
+          "defense": -2,
+            "initiative": -2,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_old_measure_unbroken_meridian",
+      "name": "Unbroken Meridian",
+      "school_id": "old_measure",
+      "tier": 3,
+      "accord_family": "old_measure_meridian",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+    "mana_cost": 7,
+      "target_mode": "ally_active",
+      "description": "An ancient meridian is proved beneath the chosen company, fixing its line where hostile counts and crooked bearings cannot move it.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 3,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 3,
+          "initiative": 2,
+          "cohesion": 2
         }
       }
     }
