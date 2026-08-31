@@ -6,8 +6,8 @@
     "prompt_summary": "One distinct original generated overworld sprite asset for each authored non-decoration map object that previously lacked a unique sprite assignment after the decorative/blocker foundation pass.",
     "source_model": "built_in_image_gen_chroma_key_split",
     "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
-    "new_generated_sprite_count": 204,
-    "generated_batch_count": 17,
+    "new_generated_sprite_count": 210,
+    "generated_batch_count": 18,
     "generated_batches": [
       {
         "batch_index": 1,
@@ -144,20 +144,28 @@
           199,
           204
         ]
+      },
+      {
+        "batch_index": 18,
+        "workspace_source_manifest": "res://art/overworld/source/generated/resource_sites/unbound_wild_concords_wave1/manifest.json",
+        "object_index_range": [
+          205,
+          210
+        ]
       }
     ]
   },
   "coverage": {
-    "authored_map_object_count": 404,
+    "authored_map_object_count": 410,
     "foundation_decorative_or_blocker_distinct_count": 200,
     "preexisting_unique_non_decorative_count": 0,
-    "new_distinct_non_decorative_asset_count": 204,
-    "total_distinct_authored_map_object_count_after_pass": 404,
+    "new_distinct_non_decorative_asset_count": 210,
+    "total_distinct_authored_map_object_count_after_pass": 410,
     "by_family": {
       "faction_landmark": 9,
       "guarded_reward_site": 32,
       "mine": 10,
-      "neutral_dwelling": 51,
+      "neutral_dwelling": 57,
       "neutral_encounter": 6,
       "pickup": 9,
       "repeatable_service": 7,
@@ -374,7 +382,13 @@
     "mapobj_facet_vigil",
     "mapobj_heartseed_bolt_grove",
     "mapobj_blackbell_assay_watch",
-    "mapobj_last_memory_mooring"
+    "mapobj_last_memory_mooring",
+    "mapobj_brambleback_hedgecourt",
+    "mapobj_mireglass_bellfen",
+    "mapobj_windcairn_wayhouse",
+    "mapobj_sapwhistle_greenward",
+    "mapobj_scarshield_breakyard",
+    "mapobj_flaremast_pilotage"
   ],
   "object_sprite_mappings": {
     "object_roadward_lodge": {
@@ -1804,6 +1818,48 @@
       "assignment_source": "horizon_company_field_muster_completion",
       "family": "neutral_dwelling",
       "source_batch": 17
+    },
+    "object_brambleback_hedgecourt": {
+      "asset_id": "mapobj_brambleback_hedgecourt",
+      "fit": "Distinct original thorn-ring bear court assigned to the authored unbound-wild neutral dwelling.",
+      "assignment_source": "unbound_wild_concord_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 18
+    },
+    "object_mireglass_bellfen": {
+      "asset_id": "mapobj_mireglass_bellfen",
+      "fit": "Distinct original suspended marsh bell assigned to the authored unbound-wild neutral dwelling.",
+      "assignment_source": "unbound_wild_concord_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 18
+    },
+    "object_windcairn_wayhouse": {
+      "asset_id": "mapobj_windcairn_wayhouse",
+      "fit": "Distinct original three-cairn caravan refuge assigned to the authored unbound-wild neutral dwelling.",
+      "assignment_source": "unbound_wild_concord_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 18
+    },
+    "object_sapwhistle_greenward": {
+      "asset_id": "mapobj_sapwhistle_greenward",
+      "fit": "Distinct original spiral trumpet-tree greenward assigned to the authored unbound-wild neutral dwelling.",
+      "assignment_source": "unbound_wild_concord_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 18
+    },
+    "object_scarshield_breakyard": {
+      "asset_id": "mapobj_scarshield_breakyard",
+      "fit": "Distinct original broken-shield mercenary yard assigned to the authored unbound-wild neutral dwelling.",
+      "assignment_source": "unbound_wild_concord_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 18
+    },
+    "object_flaremast_pilotage": {
+      "asset_id": "mapobj_flaremast_pilotage",
+      "fit": "Distinct original crescent-mast spectral pilotage assigned to the authored unbound-wild neutral dwelling.",
+      "assignment_source": "unbound_wild_concord_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 18
     }
   }
 }

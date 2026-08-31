@@ -141,7 +141,8 @@ func _validate_record(label: String, record: Dictionary, expected_changed: bool,
 		_expect(String(layer_record.get("cue_id", "")).begins_with("overworld_ambient_"), "%s layer has unexpected cue id: %s" % [label, layer_record])
 		_expect(float(layer_record.get("duration_sec", 0.0)) > 0.0, "%s layer must expose duration: %s" % [label, layer_record])
 		_expect(float(layer_record.get("frequency", 0.0)) > 0.0, "%s layer must expose frequency: %s" % [label, layer_record])
-		_expect(String(layer_record.get("playback_source", "")) == "imported_wav", "%s layer should prefer imported ambient WAV assets: %s" % [label, layer_record])
+		_expect(String(layer_record.get("playback_source", "")) == "imported_ogg", "%s layer should prefer imported ambient OGG assets: %s" % [label, layer_record])
+		_expect(String(layer_record.get("stream_codec", "")) == "vorbis", "%s layer must expose Vorbis playback: %s" % [label, layer_record])
 		_expect(String(layer_record.get("asset_path", "")).begins_with("res://art/audio/runtime/ambient/"), "%s layer must expose ambient asset path: %s" % [label, layer_record])
 		_expect(absf(float(layer_record.get("duration_sec", 0.0)) - EXPECTED_SEGMENT_DURATION_SEC) < 0.01, "%s layer must expose the exact production segment duration: %s" % [label, layer_record])
 		_expect(absf(float(layer_record.get("stream_length_sec", 0.0)) - EXPECTED_SEGMENT_DURATION_SEC) < 0.01, "%s layer stream length must match the production segment: %s" % [label, layer_record])
@@ -169,6 +170,9 @@ func _validate_manifest_asset_surface() -> void:
 	_expect(int(manifest.get("segment_duration_msec", 0)) == 12000, "Ambient production manifest must use twelve-second segments.")
 	_expect_equal("manifest loop mode", String(manifest.get("loop_mode", "")), "forward")
 	_expect_equal("manifest asset tier", String(manifest.get("asset_tier", "")), "production_ambient_loop_v1")
+	_expect_equal("manifest runtime codec", String(manifest.get("runtime_codec", "")), "vorbis")
+	_expect_equal("manifest runtime container", String(manifest.get("runtime_container", "")), "ogg")
+	_expect(int(manifest.get("encoder_quality", -1)) == 4, "Ambient production manifest must use Vorbis quality 4.")
 	var cues: Dictionary = manifest.get("cues", {}) if manifest.get("cues", {}) is Dictionary else {}
 	var actual_ids: Array = cues.keys()
 	var expected_ids: Array = EXPECTED_AMBIENT_CUES.duplicate()
@@ -182,12 +186,9 @@ func _validate_manifest_asset_surface() -> void:
 		_expect(int(cue.get("duration_msec", 0)) == 12000, "Ambient cue must use exact segment duration: %s" % cue)
 		_expect(ResourceLoader.exists(path), "Ambient cue resource must exist: %s" % path)
 		var stream = load(path) if ResourceLoader.exists(path) else null
-		_expect(stream is AudioStreamWAV, "Ambient cue resource must import as AudioStreamWAV for %s: %s" % [cue_id, stream])
-		if stream is AudioStreamWAV:
-			_expect(int(stream.mix_rate) == 44100, "Ambient cue import must retain 44.1 kHz: %s" % cue_id)
-			_expect(bool(stream.stereo), "Ambient cue import must retain stereo: %s" % cue_id)
+		_expect(stream is AudioStreamOggVorbis, "Ambient cue resource must import as AudioStreamOggVorbis for %s: %s" % [cue_id, stream])
+		if stream is AudioStreamOggVorbis:
 			_expect(absf(stream.get_length() - EXPECTED_SEGMENT_DURATION_SEC) < 0.01, "Ambient cue import must retain exact duration: %s" % cue_id)
-			_expect(int(stream.loop_mode) == int(AudioStreamWAV.LOOP_DISABLED), "Shared ambient import must remain unmodified before detached playback: %s" % cue_id)
 
 func _validate_continuous_playback(summary: Dictionary, record: Dictionary) -> void:
 	_expect(int(summary.get("active_player_count", 0)) == 3, "All imported ambient players must remain active after one complete segment: %s" % summary)

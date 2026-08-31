@@ -16011,14 +16011,14 @@
       }
     }
   ],
-  "currentNotes": "Completed six skirmish-only Setbound Regalia assemblies with first-class complete-equipped-set objectives, eighteen guarded recoveries, six exact-art reliquaries, production stow/equip actions, consolidated gameplay/art/save proof, repository validation, and matching Linux/Windows package boots.",
+  "currentNotes": "Completed six live Unbound Wild neutral dwellings and concord scenarios, twelve newly recruitable neutral-unit routes, eighteen battle fronts, exact generated landmark states, save-v9 continuity, and the streamed Vorbis migration for 75 music plus 11 ambient cues. One consolidated smoke, repository validation, and sequential Linux/Windows package boots passed at 231228748 bytes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-setbound-regalia-assemblies-10184",
-  "currentSliceId": "content-six-setbound-regalia-assemblies-10184",
-  "currentSliceNotes": "Shipped six skirmish-only Setbound Regalia assemblies, six opening companies, eighteen reused fronts, twelve exact pickups, six guarded final-piece reliquaries, relief/cordon hooks, first-class equipped-set objectives, and exact art. The consolidated smoke, repository validator, and sequential Linux/Windows package boots passed; packages measure 249042036 bytes.",
+  "currentSlice": "content-six-unbound-wild-concords-10184",
+  "currentSliceId": "content-six-unbound-wild-concords-10184",
+  "currentSliceNotes": "Shipped six Unbound Wild neutral dwellings and skirmish concords, twelve neutral recruitment routes, six new guard encounters plus twelve reused approach fronts, exact unclaimed/controlled art, and streamed Vorbis long-form audio. Consolidated smoke passed 6 scenarios, 18 battle payloads, dual-unit objectives, victories, captures, audio playback, and save-v9 continuity; repository validation and Linux/Windows package boot passed at 231228748 bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six setbound regalia assemblies 10184",
-  "currentSliceUpdatedAt": "2026-08-31T15:26:10Z",
+  "currentSliceTitle": "content six unbound wild concords 10184",
+  "currentSliceUpdatedAt": "2026-08-31T16:35:29Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107185,6 +107185,16 @@
       "startedAt": "2026-08-31T14:45:00Z",
       "notes": "Shipped six Setbound Regalia assemblies, six opening companies, eighteen reused opposing fronts, twelve exact pickups, six guarded deterministic final-piece reliquaries, town relief and late rival-cordon hooks, and first-class complete-equipped-set objectives. Consolidated smoke passed 6 cases, 18 battles, 18 recoveries, 18 stows, 18 equips, all negative controls, 6 active sets, victories, captures, and save-v9 continuity; repository validation and Linux/Windows package boot passed at 249042036 bytes.",
       "completedAt": "2026-08-31T15:26:10Z"
+    },
+    {
+      "id": "content-six-unbound-wild-concords-10184",
+      "title": "content six unbound wild concords 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T16:35:29Z",
+      "startedAt": "2026-08-31T15:33:37Z",
+      "notes": "Shipped six Unbound Wild neutral dwellings and skirmish concords, twelve neutral recruitment routes, six new guard encounters plus twelve reused approach fronts, exact unclaimed/controlled art, and streamed Vorbis long-form audio. Consolidated smoke passed 6 scenarios, 18 battle payloads, dual-unit objectives, victories, captures, audio playback, and save-v9 continuity; repository validation and Linux/Windows package boot passed at 231228748 bytes.",
+      "completedAt": "2026-08-31T16:35:29Z"
     }
   ],
   "project": "heroes-like",
@@ -107194,8 +107204,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The Setbound Regalia assembly slice is complete; broader production content, whole-game validation, signing, publication, and release readiness remain open. Package headroom is now only 957964 bytes under the current ceiling.",
-  "remainingWork": "Select the next coherent production-content gap while treating package-size reduction as a prerequisite for any materially larger packaged art batch.",
+  "remainingGap": "The Unbound Wild concord slice is complete and has no blocker. Broader production content, whole-game validation, signing, publication, and release readiness remain open; the next coherent content slice has not yet been selected.",
+  "remainingWork": "Select the next coherent production-content gap, register it before implementation, and preserve the single consolidated-smoke cadence for each substantial batch.",
   "reportOnlyEvidence": [
     {
       "entries": [

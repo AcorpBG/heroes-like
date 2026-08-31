@@ -796,6 +796,168 @@
       "army_group_ids": ["army_neutral_saltwake_belldeep_watch"],
       "encounter_ids": ["encounter_saltwake_belldeep_watch"],
       "content_status": "sovereign_wild_neutral_dwelling_live"
+    },
+    {
+      "id": "neutral_dwelling_brambleback_hedgecourt",
+      "name": "Brambleback Hedgecourt",
+      "summary": "Independent companies muster at the thorn-ring bear court for commanders who break its visible watch and maintain the concord.",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_grasslands"
+      ],
+      "unit_ids": [
+        "unit_neutral_brambleback_knucklebears",
+        "unit_neutral_orchard_halberds"
+      ],
+      "site_ids": [
+        "site_brambleback_hedgecourt"
+      ],
+      "map_object_ids": [
+        "object_brambleback_hedgecourt"
+      ],
+      "army_group_ids": [
+        "army_neutral_brambleback_hedgecourt_watch"
+      ],
+      "encounter_ids": [
+        "encounter_brambleback_hedgecourt_watch"
+      ],
+      "content_status": "unbound_wild_concord_neutral_dwelling_live",
+      "content_batch_id": "content-six-unbound-wild-concords-10184"
+    },
+    {
+      "id": "neutral_dwelling_mireglass_bellfen",
+      "name": "Mireglass Bellfen",
+      "summary": "Independent companies muster at the suspended marsh bell for commanders who break its visible watch and maintain the concord.",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago"
+      ],
+      "unit_ids": [
+        "unit_neutral_mireglass_belltoads",
+        "unit_neutral_reedbarge_poles"
+      ],
+      "site_ids": [
+        "site_mireglass_bellfen"
+      ],
+      "map_object_ids": [
+        "object_mireglass_bellfen"
+      ],
+      "army_group_ids": [
+        "army_neutral_mireglass_bellfen_watch"
+      ],
+      "encounter_ids": [
+        "encounter_mireglass_bellfen_watch"
+      ],
+      "content_status": "unbound_wild_concord_neutral_dwelling_live",
+      "content_batch_id": "content-six-unbound-wild-concords-10184"
+    },
+    {
+      "id": "neutral_dwelling_windcairn_wayhouse",
+      "name": "Windcairn Wayhouse",
+      "summary": "Independent companies muster at the three-cairn caravan refuge for commanders who break its visible watch and maintain the concord.",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_grasslands"
+      ],
+      "unit_ids": [
+        "unit_neutral_cairnshield_porters",
+        "unit_neutral_windglass_slingers"
+      ],
+      "site_ids": [
+        "site_windcairn_wayhouse"
+      ],
+      "map_object_ids": [
+        "object_windcairn_wayhouse"
+      ],
+      "army_group_ids": [
+        "army_neutral_windcairn_wayhouse_watch"
+      ],
+      "encounter_ids": [
+        "encounter_windcairn_wayhouse_watch"
+      ],
+      "content_status": "unbound_wild_concord_neutral_dwelling_live",
+      "content_batch_id": "content-six-unbound-wild-concords-10184"
+    },
+    {
+      "id": "neutral_dwelling_sapwhistle_greenward",
+      "name": "Sapwhistle Greenward",
+      "summary": "Independent companies muster at the spiral trumpet-tree greenward for commanders who break its visible watch and maintain the concord.",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_mire_fen"
+      ],
+      "unit_ids": [
+        "unit_neutral_greenbranch_cudgels",
+        "unit_neutral_sapwhistle_callers"
+      ],
+      "site_ids": [
+        "site_sapwhistle_greenward"
+      ],
+      "map_object_ids": [
+        "object_sapwhistle_greenward"
+      ],
+      "army_group_ids": [
+        "army_neutral_sapwhistle_greenward_watch"
+      ],
+      "encounter_ids": [
+        "encounter_sapwhistle_greenward_watch"
+      ],
+      "content_status": "unbound_wild_concord_neutral_dwelling_live",
+      "content_batch_id": "content-six-unbound-wild-concords-10184"
+    },
+    {
+      "id": "neutral_dwelling_scarshield_breakyard",
+      "name": "Scarshield Breakyard",
+      "summary": "Independent companies muster at the broken-shield mercenary yard for commanders who break its visible watch and maintain the concord.",
+      "biome_ids": [
+        "biome_rough_badlands",
+        "biome_ash_lava_wastes"
+      ],
+      "unit_ids": [
+        "unit_neutral_scarshield_veterans",
+        "unit_neutral_scrapbow_teams"
+      ],
+      "site_ids": [
+        "site_scarshield_breakyard"
+      ],
+      "map_object_ids": [
+        "object_scarshield_breakyard"
+      ],
+      "army_group_ids": [
+        "army_neutral_scarshield_breakyard_watch"
+      ],
+      "encounter_ids": [
+        "encounter_scarshield_breakyard_watch"
+      ],
+      "content_status": "unbound_wild_concord_neutral_dwelling_live",
+      "content_batch_id": "content-six-unbound-wild-concords-10184"
+    },
+    {
+      "id": "neutral_dwelling_flaremast_pilotage",
+      "name": "Flaremast Pilotage",
+      "summary": "Independent companies muster at the crescent-mast spectral pilotage for commanders who break its visible watch and maintain the concord.",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_mire_fen"
+      ],
+      "unit_ids": [
+        "unit_neutral_harbor_polearms",
+        "unit_neutral_flaremast_crews"
+      ],
+      "site_ids": [
+        "site_flaremast_pilotage"
+      ],
+      "map_object_ids": [
+        "object_flaremast_pilotage"
+      ],
+      "army_group_ids": [
+        "army_neutral_flaremast_pilotage_watch"
+      ],
+      "encounter_ids": [
+        "encounter_flaremast_pilotage_watch"
+      ],
+      "content_status": "unbound_wild_concord_neutral_dwelling_live",
+      "content_batch_id": "content-six-unbound-wild-concords-10184"
     }
   ]
 }

@@ -24,9 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- No new implementation slice is selected after completing the Setbound Regalia batch.
-- Most recently completed implementation slice: `content-six-setbound-regalia-assemblies-10184`, a coherent six-faction artifact-set, equipment-management, guarded-route, exact-art, battle, and save-continuity batch.
-- Current package boundary: matching Linux and Windows release exports measure 249042036 bytes, 957964 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none selected; choose the next coherent production-content batch before implementation begins.
+- Most recently completed implementation slice: `content-six-unbound-wild-concords-10184`, a coherent six-faction neutral-dwelling, underused-unit, encounter, exact-art, streamed-audio, package-headroom, battle, and save-continuity batch.
+- Current package boundary: matching Linux and Windows release exports measure 231228748 bytes, 18771252 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Unbound Wild Concords
+
+id: `content-six-unbound-wild-concords-10184`
+
+Status: completed 2026-08-31.
+
+Current finding:
+- two authored neutral units, Brambleback Knucklebears and Mireglass Belltoads, have no live neutral-dwelling recruitment route, while many other original neutral units appear in only one authored army and therefore contribute little to player-controlled roster variety;
+- the production neutral-dwelling, guarded-site, weekly-recruitment, hero-army composition, encounter, save-version-9, map-object, and exact-art boundaries already support a coherent live expansion without another parallel recruitment system;
+- raw long-form music and ambience consume most remaining package headroom, leaving only 957964 bytes below the current ceiling even though equivalent streamed Ogg assets can preserve the authored mix, duration, loop, and runtime-id contracts at a fraction of the payload.
+
+Implementation boundary:
+- author six original live neutral dwellings, each pairing two selected one-use neutral units, with exact guarded recruitment, weekly muster, map-object, strategic-AI, accessibility, save, and state-transition contracts; the batch must provide first dwelling access for Brambleback Knucklebears and Mireglass Belltoads;
+- author one skirmish-only Unbound Wild concord per faction with a low-use commander and town, a new player company, one new dwelling guard encounter, two reused low-placement fronts, a production `hero_army_meets_requirements` finish, reactive relief/counterstroke hooks, and deterministic battle seeds;
+- generate six original transparent dwelling landmarks and six controlled-state edits, derive one compact 576x48 runtime atlas, reuse exact original neutral-unit silhouettes for the associated guard identities, and retain prompt/hash/accessibility provenance outside packages;
+- replace the 75 long-form music and 11 ambience WAV files with streamed Ogg equivalents while preserving stable manifest ids, authored 8/12-second durations, faction/layer selection, loop behavior, volume roles, Linux/Windows parity, and short interaction SFX as WAV.
+
+Completion criteria:
+- all six scenarios launch below their exact two-unit army thresholds, reject wrong-hero, partial-roster, wrong-unit, and unclaimed controls, then resolve eighteen production battles, claim all six guarded dwellings, recruit all twelve selected neutral unit identities, satisfy the exact controlled-hero army objective, win before the deadline, and round-trip exactly through save version 9;
+- all six dwellings resolve distinct unclaimed and controlled art states, all six new guard encounters resolve exact live neutral-unit identity art, relevant hero/unit dependencies evaluate without reacting to unrelated events, and the two previously unreachable units become production-recruitable;
+- music and ambience retain their live runtime selection/playback contracts with no long-form WAV payload remaining, and package headroom increases materially before the new runtime atlas is counted;
+- one consolidated six-case gameplay/control/art/audio/save and visual-capture smoke runs only after the complete batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, unit definition, town definition, building, spell, artifact, campaign, resource id, economy rule, combat formula, strategic-AI planning algorithm, native RMG behavior, save-version bump, full-screen backdrop, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes dwelling, creature, map, commander, encounter, landmark, name, text, heraldry, sound, or protected visual expression.
 
 ## Six Setbound Regalia Assemblies
 

@@ -1,0 +1,120 @@
+{
+  "schema_id": "unbound_wild_concord_art_wave1",
+  "content_slice_id": "content-six-unbound-wild-concords-10184",
+  "generation_mode": "built_in_image_gen_original_unclaimed_and_independent_controlled_landmarks",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+  "atlas_size": [576, 48],
+  "asset_policy": "original_generated_runtime_art_no_homm_asset_import",
+  "alpha_validation": "All twelve accepted masters and the runtime atlas have genuine RGBA alpha and transparent corners. Flattened checkerboard edit attempts were rejected outside the repository.",
+  "assets": [
+    {
+      "site_id": "site_brambleback_hedgecourt",
+      "state": "unclaimed",
+      "source": "brambleback_hedgecourt_unclaimed_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-3e46a7ec-02ca-4fb2-bdc3-d89529ecdd6a.png",
+      "atlas_region": [0, 0, 48, 48],
+      "sha256": "da3b2f995e5bbca29b5c10cb7344cc66de9fea76e0ea26127bb112a1e59a202e",
+      "prompt_summary": "thorn-root bear court with split gate; isolated three-quarter isometric landmark with genuine transparent alpha and a 48-pixel-readable silhouette."
+    },
+    {
+      "site_id": "site_brambleback_hedgecourt",
+      "state": "controlled",
+      "source": "brambleback_hedgecourt_controlled_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-82d35d38-e7bf-469d-a16f-7ae5a6a86d78.png",
+      "atlas_region": [48, 0, 48, 48],
+      "sha256": "0b128fcaaf65b4c8d0071b2a7b59312296ab2fb616144f714d83b1676ce10054",
+      "prompt_summary": "open gate, chevron standards, bright braziers and supplied entry; independently generated controlled-state landmark with genuine transparent alpha."
+    },
+    {
+      "site_id": "site_mireglass_bellfen",
+      "state": "unclaimed",
+      "source": "mireglass_bellfen_unclaimed_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-45311808-651c-4e15-af93-e392db9860ca.png",
+      "atlas_region": [96, 0, 48, 48],
+      "sha256": "44be7b74f06a6405f71e5bf7e3d79d26259512295d02d3557fb6c1fc3a2cf9ab",
+      "prompt_summary": "suspended teal marsh bell between forked reed towers; isolated three-quarter isometric landmark with genuine transparent alpha and a 48-pixel-readable silhouette."
+    },
+    {
+      "site_id": "site_mireglass_bellfen",
+      "state": "controlled",
+      "source": "mireglass_bellfen_controlled_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7312e77e-e948-4dc3-b044-79c53307afc1.png",
+      "atlas_region": [144, 0, 48, 48],
+      "sha256": "aa3e6ebc4202dec0cc00fe18da7f7f97c8cd1fa277fd471ae8794ca2f09d6c7e",
+      "prompt_summary": "lit bell, open doors, wave-notch standards and supply baskets; independently generated controlled-state landmark with genuine transparent alpha."
+    },
+    {
+      "site_id": "site_windcairn_wayhouse",
+      "state": "unclaimed",
+      "source": "windcairn_wayhouse_unclaimed_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-71efe55d-5aa4-4af0-8640-44ac4576fbbe.png",
+      "atlas_region": [192, 0, 48, 48],
+      "sha256": "2aadf2a20c64317fec0b4e8c32c78c80b6260f52960a3151a01cd427f169fc9c",
+      "prompt_summary": "three stepped cairns linked by a canvas bridge; isolated three-quarter isometric landmark with genuine transparent alpha and a 48-pixel-readable silhouette."
+    },
+    {
+      "site_id": "site_windcairn_wayhouse",
+      "state": "controlled",
+      "source": "windcairn_wayhouse_controlled_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0b2e2d12-79a2-45c6-85fc-4cd1cd471709.png",
+      "atlas_region": [240, 0, 48, 48],
+      "sha256": "c30d1bfcd13d1d4e9af8eaab2d0e75b0286b2399f877314f1ee9dfa19209dad5",
+      "prompt_summary": "repaired bridge, burning braziers, forked standards and caravan chests; independently generated controlled-state landmark with genuine transparent alpha."
+    },
+    {
+      "site_id": "site_sapwhistle_greenward",
+      "state": "unclaimed",
+      "source": "sapwhistle_greenward_unclaimed_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d5eac173-6860-40a8-9ffa-5523f35b3bdd.png",
+      "atlas_region": [288, 0, 48, 48],
+      "sha256": "8643c2e6e390cd8e9515923dfe8f3a92728216cbc505636a3c8f5ce1474a1c4f",
+      "prompt_summary": "spiral living tree with three sapwood trumpets; isolated three-quarter isometric landmark with genuine transparent alpha and a 48-pixel-readable silhouette."
+    },
+    {
+      "site_id": "site_sapwhistle_greenward",
+      "state": "controlled",
+      "source": "sapwhistle_greenward_controlled_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b188d4d9-c41e-4152-8455-0318f55ce446.png",
+      "atlas_region": [336, 0, 48, 48],
+      "sha256": "181fee09ae8aa8c1c01a9037cedea4fa6046db7ba4aa6a14c7712b7ebc4c7264",
+      "prompt_summary": "warm open hollow, seed standards, hanging lanterns and provision hampers; independently generated controlled-state landmark with genuine transparent alpha."
+    },
+    {
+      "site_id": "site_scarshield_breakyard",
+      "state": "unclaimed",
+      "source": "scarshield_breakyard_unclaimed_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f731b71d-253a-4338-bf96-5fbaed630212.png",
+      "atlas_region": [384, 0, 48, 48],
+      "sha256": "6cbdd41d82bd16260fbf285bd6af9171b63335799e71fe4911114f1904d46f2d",
+      "prompt_summary": "broken bronze shield roof over a chained-ram yard; isolated three-quarter isometric landmark with genuine transparent alpha and a 48-pixel-readable silhouette."
+    },
+    {
+      "site_id": "site_scarshield_breakyard",
+      "state": "controlled",
+      "source": "scarshield_breakyard_controlled_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-878e3020-1e5b-4f16-adee-9edf95f566d9.png",
+      "atlas_region": [432, 0, 48, 48],
+      "sha256": "f64c63248bdcdc37e0a2c9f802abccc3a02d06dc47d208b7801e1ccc1b8ed184",
+      "prompt_summary": "open barricade, hammer standards, bright furnace and strapped crates; independently generated controlled-state landmark with genuine transparent alpha."
+    },
+    {
+      "site_id": "site_flaremast_pilotage",
+      "state": "unclaimed",
+      "source": "flaremast_pilotage_unclaimed_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f17631c1-36fb-4036-a3ff-75f27c5ef0c9.png",
+      "atlas_region": [480, 0, 48, 48],
+      "sha256": "87bf5dd2d63de7dfa51d780eae30d863d51901b3c7a425de4b3e57e49d0ad97a",
+      "prompt_summary": "curved signal mast with crescent sail roofs and navigation rings; isolated three-quarter isometric landmark with genuine transparent alpha and a 48-pixel-readable silhouette."
+    },
+    {
+      "site_id": "site_flaremast_pilotage",
+      "state": "controlled",
+      "source": "flaremast_pilotage_controlled_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ff771717-aec3-4b3d-affc-b788beb9d448.png",
+      "atlas_region": [528, 0, 48, 48],
+      "sha256": "24a9536185a0f57d1ea9c767d5938f5ad299016598176be1cabb3ef7977e86fd",
+      "prompt_summary": "gold-core signal, compass standards, lit quay, lowered ramp and cargo; independently generated controlled-state landmark with genuine transparent alpha."
+    }
+  ],
+  "runtime_sha256": "e49de9029d745230625b766be9cecc8300375100918640465295c9741ca914d4"
+}

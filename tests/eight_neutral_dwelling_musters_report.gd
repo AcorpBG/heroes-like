@@ -72,6 +72,9 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	var battle := BattleRulesScript.create_battle_payload(session, guard)
 	_expect(not battle.is_empty() and String(battle.get("encounter_id", "")) == String(case.get("encounter_id", "")), "%s did not construct its production guard battle." % guard_id)
 	_resolve_guard(session, guard_id)
+	# Flush any authored guard-clear hook before measuring the site's own claim delta.
+	# This keeps scenario-event rewards distinct from the dwelling reward under test.
+	ScenarioRules.evaluate_session(session)
 
 	var rewards: Dictionary = site.get("claim_rewards", {})
 	var claim_recruits: Dictionary = site.get("claim_recruits", {})

@@ -16926,6 +16926,594 @@
       },
       "content_batch_id": "content-six-setbound-regalia-assemblies-10184",
       "batch_role": "guarded_final_set_piece_reliquary"
+    },
+    {
+      "id": "site_brambleback_hedgecourt",
+      "name": "Brambleback Hedgecourt",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_brambleback_hedgecourt",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 520,
+        "embergrain": 1
+      },
+      "claim_flags": {
+        "brambleback_hedgecourt_claimed": true
+      },
+      "control_income": {
+        "gold": 145,
+        "embergrain": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_brambleback_knucklebears": 2,
+        "unit_neutral_orchard_halberds": 8
+      },
+      "weekly_recruits": {
+        "unit_neutral_brambleback_knucklebears": 1,
+        "unit_neutral_orchard_halberds": 4
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_brambleback_knucklebears": 2,
+          "unit_neutral_orchard_halberds": 8
+        },
+        "weekly_recruits": {
+          "unit_neutral_brambleback_knucklebears": 1,
+          "unit_neutral_orchard_halberds": 4
+        },
+        "guard_army_group_id": "army_neutral_brambleback_hedgecourt_watch",
+        "guard_encounter_id": "encounter_brambleback_hedgecourt_watch"
+      },
+      "response_profile": {
+        "action_label": "Open the Brambleback Hedgecourt",
+        "summary": "A guarded thorn-ring bear court that opens recurring access to two independent neutral companies.",
+        "movement_cost": 6,
+        "resource_cost": {
+          "gold": 700,
+          "embergrain": 1
+        },
+        "watch_days": 7,
+        "quality_bonus": 4,
+        "readiness_bonus": 4,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_brambleback_hedgecourt",
+        "neutral_dwelling_family_id": "neutral_dwelling_brambleback_hedgecourt",
+        "resource_site_id": "site_brambleback_hedgecourt",
+        "roster_unit_ids": [
+          "unit_neutral_brambleback_knucklebears",
+          "unit_neutral_orchard_halberds"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "the visible Brambleback Hedgecourt watch blocks recruitment",
+        "guard_army_group_id": "army_neutral_brambleback_hedgecourt_watch",
+        "guard_encounter_id": "encounter_brambleback_hedgecourt_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact authored watch must fall before the concord muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "heavy",
+        "guard_army_group_id": "army_neutral_brambleback_hedgecourt_watch",
+        "guard_encounter_id": "encounter_brambleback_hedgecourt_watch",
+        "visible_cue": "The hedgecourt watch braces its broad gate while two thorn standards feed the enclosure's defensive line.",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "batch_role": "guarded_unbound_wild_concord_dwelling"
+    },
+    {
+      "id": "site_mireglass_bellfen",
+      "name": "Mireglass Bellfen",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_mireglass_bellfen",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 520,
+        "peatwax": 1
+      },
+      "claim_flags": {
+        "mireglass_bellfen_claimed": true
+      },
+      "control_income": {
+        "gold": 145,
+        "peatwax": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_mireglass_belltoads": 2,
+        "unit_neutral_reedbarge_poles": 8
+      },
+      "weekly_recruits": {
+        "unit_neutral_mireglass_belltoads": 1,
+        "unit_neutral_reedbarge_poles": 4
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_mireglass_belltoads": 2,
+          "unit_neutral_reedbarge_poles": 8
+        },
+        "weekly_recruits": {
+          "unit_neutral_mireglass_belltoads": 1,
+          "unit_neutral_reedbarge_poles": 4
+        },
+        "guard_army_group_id": "army_neutral_mireglass_bellfen_watch",
+        "guard_encounter_id": "encounter_mireglass_bellfen_watch"
+      },
+      "response_profile": {
+        "action_label": "Open the Mireglass Bellfen",
+        "summary": "A guarded suspended marsh bell that opens recurring access to two independent neutral companies.",
+        "movement_cost": 6,
+        "resource_cost": {
+          "gold": 700,
+          "peatwax": 1
+        },
+        "watch_days": 7,
+        "quality_bonus": 4,
+        "readiness_bonus": 4,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_mireglass_bellfen",
+        "neutral_dwelling_family_id": "neutral_dwelling_mireglass_bellfen",
+        "resource_site_id": "site_mireglass_bellfen",
+        "roster_unit_ids": [
+          "unit_neutral_mireglass_belltoads",
+          "unit_neutral_reedbarge_poles"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "the visible Mireglass Bellfen watch blocks recruitment",
+        "guard_army_group_id": "army_neutral_mireglass_bellfen_watch",
+        "guard_encounter_id": "encounter_mireglass_bellfen_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact authored watch must fall before the concord muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "heavy",
+        "guard_army_group_id": "army_neutral_mireglass_bellfen_watch",
+        "guard_encounter_id": "encounter_mireglass_bellfen_watch",
+        "visible_cue": "The bellfen watch rings the great glass bell while two stilt lanes feed its guarded platform.",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "batch_role": "guarded_unbound_wild_concord_dwelling"
+    },
+    {
+      "id": "site_windcairn_wayhouse",
+      "name": "Windcairn Wayhouse",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_windcairn_wayhouse",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 520,
+        "aetherglass": 1
+      },
+      "claim_flags": {
+        "windcairn_wayhouse_claimed": true
+      },
+      "control_income": {
+        "gold": 145,
+        "aetherglass": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_cairnshield_porters": 5,
+        "unit_neutral_windglass_slingers": 8
+      },
+      "weekly_recruits": {
+        "unit_neutral_cairnshield_porters": 2,
+        "unit_neutral_windglass_slingers": 4
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_cairnshield_porters": 5,
+          "unit_neutral_windglass_slingers": 8
+        },
+        "weekly_recruits": {
+          "unit_neutral_cairnshield_porters": 2,
+          "unit_neutral_windglass_slingers": 4
+        },
+        "guard_army_group_id": "army_neutral_windcairn_wayhouse_watch",
+        "guard_encounter_id": "encounter_windcairn_wayhouse_watch"
+      },
+      "response_profile": {
+        "action_label": "Open the Windcairn Wayhouse",
+        "summary": "A guarded three-cairn caravan refuge that opens recurring access to two independent neutral companies.",
+        "movement_cost": 6,
+        "resource_cost": {
+          "gold": 700,
+          "aetherglass": 1
+        },
+        "watch_days": 7,
+        "quality_bonus": 4,
+        "readiness_bonus": 4,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_windcairn_wayhouse",
+        "neutral_dwelling_family_id": "neutral_dwelling_windcairn_wayhouse",
+        "resource_site_id": "site_windcairn_wayhouse",
+        "roster_unit_ids": [
+          "unit_neutral_cairnshield_porters",
+          "unit_neutral_windglass_slingers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "the visible Windcairn Wayhouse watch blocks recruitment",
+        "guard_army_group_id": "army_neutral_windcairn_wayhouse_watch",
+        "guard_encounter_id": "encounter_windcairn_wayhouse_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact authored watch must fall before the concord muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "heavy",
+        "guard_army_group_id": "army_neutral_windcairn_wayhouse_watch",
+        "guard_encounter_id": "encounter_windcairn_wayhouse_watch",
+        "visible_cue": "The wayhouse watch controls three stepped cairns and the only canvas bridge across their exposed crest.",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "batch_role": "guarded_unbound_wild_concord_dwelling"
+    },
+    {
+      "id": "site_sapwhistle_greenward",
+      "name": "Sapwhistle Greenward",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_sapwhistle_greenward",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 520,
+        "verdant_grafts": 1
+      },
+      "claim_flags": {
+        "sapwhistle_greenward_claimed": true
+      },
+      "control_income": {
+        "gold": 145,
+        "verdant_grafts": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_greenbranch_cudgels": 10,
+        "unit_neutral_sapwhistle_callers": 8
+      },
+      "weekly_recruits": {
+        "unit_neutral_greenbranch_cudgels": 5,
+        "unit_neutral_sapwhistle_callers": 4
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_greenbranch_cudgels": 10,
+          "unit_neutral_sapwhistle_callers": 8
+        },
+        "weekly_recruits": {
+          "unit_neutral_greenbranch_cudgels": 5,
+          "unit_neutral_sapwhistle_callers": 4
+        },
+        "guard_army_group_id": "army_neutral_sapwhistle_greenward_watch",
+        "guard_encounter_id": "encounter_sapwhistle_greenward_watch"
+      },
+      "response_profile": {
+        "action_label": "Open the Sapwhistle Greenward",
+        "summary": "A guarded spiral trumpet-tree greenward that opens recurring access to two independent neutral companies.",
+        "movement_cost": 6,
+        "resource_cost": {
+          "gold": 700,
+          "verdant_grafts": 1
+        },
+        "watch_days": 7,
+        "quality_bonus": 4,
+        "readiness_bonus": 4,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_sapwhistle_greenward",
+        "neutral_dwelling_family_id": "neutral_dwelling_sapwhistle_greenward",
+        "resource_site_id": "site_sapwhistle_greenward",
+        "roster_unit_ids": [
+          "unit_neutral_greenbranch_cudgels",
+          "unit_neutral_sapwhistle_callers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "the visible Sapwhistle Greenward watch blocks recruitment",
+        "guard_army_group_id": "army_neutral_sapwhistle_greenward_watch",
+        "guard_encounter_id": "encounter_sapwhistle_greenward_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact authored watch must fall before the concord muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "heavy",
+        "guard_army_group_id": "army_neutral_sapwhistle_greenward_watch",
+        "guard_encounter_id": "encounter_sapwhistle_greenward_watch",
+        "visible_cue": "The greenward watch sounds three living trumpets while cudgel posts close around the hollow-tree entry.",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "batch_role": "guarded_unbound_wild_concord_dwelling"
+    },
+    {
+      "id": "site_scarshield_breakyard",
+      "name": "Scarshield Breakyard",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_scarshield_breakyard",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 520,
+        "brass_scrip": 1
+      },
+      "claim_flags": {
+        "scarshield_breakyard_claimed": true
+      },
+      "control_income": {
+        "gold": 145,
+        "brass_scrip": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_scarshield_veterans": 5,
+        "unit_neutral_scrapbow_teams": 8
+      },
+      "weekly_recruits": {
+        "unit_neutral_scarshield_veterans": 2,
+        "unit_neutral_scrapbow_teams": 4
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_scarshield_veterans": 5,
+          "unit_neutral_scrapbow_teams": 8
+        },
+        "weekly_recruits": {
+          "unit_neutral_scarshield_veterans": 2,
+          "unit_neutral_scrapbow_teams": 4
+        },
+        "guard_army_group_id": "army_neutral_scarshield_breakyard_watch",
+        "guard_encounter_id": "encounter_scarshield_breakyard_watch"
+      },
+      "response_profile": {
+        "action_label": "Open the Scarshield Breakyard",
+        "summary": "A guarded broken-shield mercenary yard that opens recurring access to two independent neutral companies.",
+        "movement_cost": 6,
+        "resource_cost": {
+          "gold": 700,
+          "brass_scrip": 1
+        },
+        "watch_days": 7,
+        "quality_bonus": 4,
+        "readiness_bonus": 4,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_scarshield_breakyard",
+        "neutral_dwelling_family_id": "neutral_dwelling_scarshield_breakyard",
+        "resource_site_id": "site_scarshield_breakyard",
+        "roster_unit_ids": [
+          "unit_neutral_scarshield_veterans",
+          "unit_neutral_scrapbow_teams"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "the visible Scarshield Breakyard watch blocks recruitment",
+        "guard_army_group_id": "army_neutral_scarshield_breakyard_watch",
+        "guard_encounter_id": "encounter_scarshield_breakyard_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact authored watch must fall before the concord muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "heavy",
+        "guard_army_group_id": "army_neutral_scarshield_breakyard_watch",
+        "guard_encounter_id": "encounter_scarshield_breakyard_watch",
+        "visible_cue": "The breakyard watch holds beneath a split bronze shield while its chained ram commands the center lane.",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "batch_role": "guarded_unbound_wild_concord_dwelling"
+    },
+    {
+      "id": "site_flaremast_pilotage",
+      "name": "Flaremast Pilotage",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_flaremast_pilotage",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 520,
+        "memory_salt": 1
+      },
+      "claim_flags": {
+        "flaremast_pilotage_claimed": true
+      },
+      "control_income": {
+        "gold": 145,
+        "memory_salt": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_harbor_polearms": 10,
+        "unit_neutral_flaremast_crews": 8
+      },
+      "weekly_recruits": {
+        "unit_neutral_harbor_polearms": 5,
+        "unit_neutral_flaremast_crews": 4
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_harbor_polearms": 10,
+          "unit_neutral_flaremast_crews": 8
+        },
+        "weekly_recruits": {
+          "unit_neutral_harbor_polearms": 5,
+          "unit_neutral_flaremast_crews": 4
+        },
+        "guard_army_group_id": "army_neutral_flaremast_pilotage_watch",
+        "guard_encounter_id": "encounter_flaremast_pilotage_watch"
+      },
+      "response_profile": {
+        "action_label": "Open the Flaremast Pilotage",
+        "summary": "A guarded crescent-mast spectral pilotage that opens recurring access to two independent neutral companies.",
+        "movement_cost": 6,
+        "resource_cost": {
+          "gold": 700,
+          "memory_salt": 1
+        },
+        "watch_days": 7,
+        "quality_bonus": 4,
+        "readiness_bonus": 4,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_flaremast_pilotage",
+        "neutral_dwelling_family_id": "neutral_dwelling_flaremast_pilotage",
+        "resource_site_id": "site_flaremast_pilotage",
+        "roster_unit_ids": [
+          "unit_neutral_harbor_polearms",
+          "unit_neutral_flaremast_crews"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "the visible Flaremast Pilotage watch blocks recruitment",
+        "guard_army_group_id": "army_neutral_flaremast_pilotage_watch",
+        "guard_encounter_id": "encounter_flaremast_pilotage_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact authored watch must fall before the concord muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "heavy",
+        "guard_army_group_id": "army_neutral_flaremast_pilotage_watch",
+        "guard_encounter_id": "encounter_flaremast_pilotage_watch",
+        "visible_cue": "The pilotage watch keeps its signal caged while crescent roofs and navigation rings command the quay.",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "batch_role": "guarded_unbound_wild_concord_dwelling"
     }
   ]
 }
