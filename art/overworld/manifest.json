@@ -7563,6 +7563,48 @@
       "presentation_role": "canvas_awning_herb_rack_wayfarer_infirmary",
       "accessible_description": "A warm roadside lodge shelters a canvas treatment porch, herb racks, water basin, folded blankets, and a round four-leaf lantern."
     },
+    "encounter_frontier_watch_briarwheel_witness": {
+      "path": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [288, 48],
+      "runtime_sha256": "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac", "source_generated": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/briarwheel_witness_watch_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
+      "source_model": "built_in_image_gen_original_frontier_watch_contract_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_briarwheel_witness_watch", "assigned_faction_id": "faction_thornwake", "presentation_role": "living_thorn_witness_bell_arch",
+      "accessible_description": "A round living thornwood arch carries three differently sized seed bells above a low braided root rail and hooked witness stakes."
+    },
+    "encounter_frontier_watch_blackbell_quench": {
+      "path": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [288, 48],
+      "runtime_sha256": "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac", "source_generated": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/blackbell_quench_watch_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
+      "source_model": "built_in_image_gen_original_frontier_watch_contract_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_blackbell_quench_watch", "assigned_faction_id": "faction_brasshollow", "presentation_role": "red_gauge_quench_bell_gantry",
+      "accessible_description": "A soot-black furnace column supports a timber quench arm, red pressure dial, hanging brass bell, coal tray, and glowing lower firebox."
+    },
+    "encounter_frontier_watch_nightglass_drowned": {
+      "path": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [288, 48],
+      "runtime_sha256": "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac", "source_generated": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/nightglass_drowned_watch_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
+      "source_model": "built_in_image_gen_original_frontier_watch_contract_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_nightglass_drowned_watch", "assigned_faction_id": "faction_mireclaw", "presentation_role": "reed_antler_teal_lantern_watch",
+      "accessible_description": "A narrow reed watchtower rises between broad antlers, rope ladders, a side horn, and one low dark-teal cage lantern."
+    },
+    "encounter_frontier_watch_pale_memory": {
+      "path": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [288, 48],
+      "runtime_sha256": "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac", "source_generated": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/pale_sounding_memory_watch_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
+      "source_model": "built_in_image_gen_original_frontier_watch_contract_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_pale_sounding_memory_watch", "assigned_faction_id": "faction_veilmourn", "presentation_role": "whalebone_memory_bell_mooring",
+      "accessible_description": "A pale curved whalebone suspends a heavy memory bell between four salt-dark mooring posts bound with thick ghost rope."
+    },
+    "encounter_frontier_watch_halo_noon": {
+      "path": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [288, 48],
+      "runtime_sha256": "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac", "source_generated": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/halo_spire_noon_watch_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
+      "source_model": "built_in_image_gen_original_frontier_watch_contract_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_halo_spire_noon_watch", "assigned_faction_id": "faction_sunvault", "presentation_role": "six_facet_noon_prism_array",
+      "accessible_description": "A bright central prism hangs inside a spiked meridian ring above six white stone tripod legs and four smaller sight crystals."
+    },
+    "encounter_frontier_watch_rainwrit_charter": {
+      "path": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [288, 48],
+      "runtime_sha256": "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac", "source_generated": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/rainwrit_charter_watch_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
+      "source_model": "built_in_image_gen_original_frontier_watch_contract_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_rainwrit_charter_watch", "assigned_faction_id": "faction_embercourt", "presentation_role": "square_charter_beacon_gate",
+      "accessible_description": "Two squared stone-and-brass gate posts hold a central caged ember beacon between chain clasps and asymmetric fire bowls."
+    },
     "encounter_dormant_roster_lockglass_citation_field": {
       "path": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [192, 48],
       "runtime_sha256": "1427677a89e0a49cdbd1feb2fcd2778c52e1e233b34c3628885227a7a38dd683", "source_generated": "res://art/overworld/source/generated/encounters/dormant_roster_field_companies/lockglass_citation_field_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png",
@@ -8877,6 +8919,12 @@
     "encounter_crownroot_seedglass_trial": "encounter_horizon_specialist_seedglass_trial",
     "encounter_blackbell_quenchbell_proving": "encounter_horizon_specialist_quenchbell_proving",
     "encounter_pale_saltwake_recital": "encounter_horizon_specialist_saltwake_recital",
+    "encounter_briarwheel_witness_watch": "encounter_frontier_watch_briarwheel_witness",
+    "encounter_blackbell_quench_watch": "encounter_frontier_watch_blackbell_quench",
+    "encounter_nightglass_drowned_watch": "encounter_frontier_watch_nightglass_drowned",
+    "encounter_pale_sounding_memory_watch": "encounter_frontier_watch_pale_memory",
+    "encounter_halo_spire_noon_watch": "encounter_frontier_watch_halo_noon",
+    "encounter_rainwrit_charter_watch": "encounter_frontier_watch_rainwrit_charter",
     "encounter_lockglass_citation_field": "encounter_dormant_roster_lockglass_citation_field",
     "encounter_pollenhook_whistle_line": "encounter_dormant_roster_pollenhook_whistle_line",
     "encounter_tallyspring_proving_rack": "encounter_dormant_roster_tallyspring_proving_rack",

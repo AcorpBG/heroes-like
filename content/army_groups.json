@@ -2052,6 +2052,54 @@
         {"unit_id": "unit_thornwake_seedshield_wardens", "count": 3},
         {"unit_id": "unit_thornwake_seedglass_cantors", "count": 2}
       ]
+    },
+    {
+      "id": "army_briarwheel_witness_watch", "name": "Briarwheel Witness Watch", "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 9},
+        {"unit_id": "unit_thornwake_pollenhook_whistlers", "count": 6},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 2}
+      ]
+    },
+    {
+      "id": "army_blackbell_quench_watch", "name": "Blackbell Quench Watch", "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 9},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 5},
+        {"unit_id": "unit_brasshollow_debt_engine_exactors", "count": 2}
+      ]
+    },
+    {
+      "id": "army_nightglass_drowned_watch", "name": "Nightglass Drowned Watch", "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 10},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 6},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 2}
+      ]
+    },
+    {
+      "id": "army_pale_sounding_memory_watch", "name": "Pale Sounding Memory Watch", "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 9},
+        {"unit_id": "unit_veilmourn_obituary_scribes", "count": 5},
+        {"unit_id": "unit_veilmourn_mirrorkeel_reavers", "count": 2}
+      ]
+    },
+    {
+      "id": "army_halo_spire_noon_watch", "name": "Halo Spire Noon Watch", "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 9},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 6},
+        {"unit_id": "unit_sunvault_solar_array_striders", "count": 2}
+      ]
+    },
+    {
+      "id": "army_rainwrit_charter_watch", "name": "Rainwrit Charter Watch", "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 9},
+        {"unit_id": "unit_embercourt_lockglass_writcasters", "count": 5},
+        {"unit_id": "unit_embercourt_beacon_lectors", "count": 2}
+      ]
     }
   ]
 }
