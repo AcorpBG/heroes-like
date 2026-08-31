@@ -1910,9 +1910,45 @@
     },
     "blockedReason": ""
   },
-  "active_slice": "content-seven-school-signature-battle-vfx-10184",
+  "active_slice": "content-six-horizon-capstone-monuments-10184",
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "content-six-horizon-capstone-monuments-20260831",
+      "title": "Six Horizon capstone monuments",
+      "sliceId": "content-six-horizon-capstone-monuments-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-31T03:47:14Z",
+      "updatedAt": "2026-08-31T03:47:14Z",
+      "latestFinding": "Six Horizon citadels now own exclusive original capstone monuments with exact live art and asymmetric economy, reserve-company, readiness, pressure, and recovery payoffs. One consolidated rendered smoke passes all six production build, effect, popup, and save-v9 cases; repository validation and matching Linux/Windows packaged startup pass at 245878512 bytes.",
+      "artifacts": [
+        "content/buildings.json",
+        "content/towns.json",
+        "content/building_art_manifest.json",
+        "art/towns/runtime/buildings/",
+        "art/towns/source/buildings/generated/horizon_capstone_monuments/manifest.json",
+        "tests/six_horizon_capstone_monuments_smoke.gd",
+        "tests/town_development_cost_curve_report.py",
+        "tests/validate_repo.py",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "metrics": {
+        "new_horizon_capstone_count": 6,
+        "exact_building_art_count": 148,
+        "consolidated_smoke_case_count": 6,
+        "live_popup_capture_count": 6,
+        "production_build_count": 6,
+        "live_effect_count": 6,
+        "save_version": 9,
+        "linux_pck_size_bytes": 245878512,
+        "windows_pck_size_bytes": 245878512,
+        "release_pck_headroom_bytes": 4121488,
+        "source_art_excluded": true
+      }
+    },
     {
       "id": "content-seven-school-signature-battle-vfx-20260831",
       "title": "Seven-school signature battle VFX",
@@ -15822,10 +15858,10 @@
   "currentNotes": "The Seven-School Signature Battle VFX batch is complete. The broader production-content goal remains active; select and register the next bounded content/art gap before implementation.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-seven-school-signature-battle-vfx-10184",
-  "currentSliceId": "content-seven-school-signature-battle-vfx-10184",
-  "currentSliceNotes": "Completed seven exact original signature battle effects, accessible and reduced-motion presentation, compacted 54-texture spell-VFX runtime set, and one consolidated verification pass with matching Linux/Windows package gates.",
+  "currentSliceId": "content-six-horizon-capstone-monuments-10184",
+  "currentSliceNotes": "Completed six exclusive Horizon citadel capstone monuments with exact original art and live economy, growth, discount, readiness, pressure, and recovery payoffs. The single consolidated rendered smoke passed 6/6 content, art, production build, popup, live-effect, and save-v9 cases; repository validation and matching Linux/Windows packaged startup passed at 245878512-byte PCKs with 4121488 bytes of headroom.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content seven school signature battle vfx 10184",
+  "currentSliceTitle": "content six horizon capstone monuments 10184",
   "currentSliceUpdatedAt": "2026-08-31T03:02:48Z",
   "deferredRiskRegister": [
     {
@@ -21267,19 +21303,21 @@
     "remainingWork": "Implement real runtime package/session adoption from the owned H3M final payload: parse/convert the H3M payload into MapDocument and ScenarioDocument records, validate save/load and generated-session startup, and keep native map JSON/full .amap output blocked until that converter is source-backed and tested without reintroducing the archived proxy."
   },
   "latestEvidenceArtifacts": [
-    "content/battle_vfx_manifest.json",
-    "art/battle/vfx/",
-    "art/battle/source/generated/seven_school_signature_vfx/manifest.json",
-    "tests/seven_school_signature_spellbook_smoke.gd",
-    "tests/battle_event_animation_state_report.gd",
+    "content/buildings.json",
+    "content/towns.json",
+    "content/building_art_manifest.json",
+    "art/towns/runtime/buildings/",
+    "art/towns/source/buildings/generated/horizon_capstone_monuments/manifest.json",
+    "tests/six_horizon_capstone_monuments_smoke.gd",
+    "tests/town_development_cost_curve_report.py",
     "tests/validate_repo.py",
     ".artifacts/packaging_linux_export_smoke/report.json",
     ".artifacts/packaging_windows_export_smoke/report.json",
     "PLAN.md",
     "ops/progress.json"
   ],
-  "latestEvidenceId": "content-seven-school-signature-battle-vfx-20260831",
-  "latestFinding": "Seven original transparent signature effects now resolve as exact imported live battle cues with accessible copy and established secondary presentation. The complete 54-texture spell-VFX set is visually inspected and compacted to bounded 64-color RGBA runtime PNGs. One consolidated smoke passes all seven normal/reduced presentation, consequence parity, study, cast, save-v9, and fourteen-capture cases; repository validation and matching Linux/Windows packaged startup pass at 245428912 bytes.",
+  "latestEvidenceId": "content-six-horizon-capstone-monuments-20260831",
+  "latestFinding": "Six Horizon citadels now own exclusive original capstone monuments with exact live art and asymmetric economy, reserve-company, readiness, pressure, and recovery payoffs. One consolidated rendered smoke passes all six production build, effect, popup, and save-v9 cases; repository validation and matching Linux/Windows packaged startup pass at 245878512 bytes.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -106839,6 +106877,16 @@
       "startedAt": "2026-08-31T02:39:40Z",
       "completedAt": "2026-08-31T03:02:48Z",
       "notes": "Completed seven exact original signature battle effects, accessible and reduced-motion presentation, a visually inspected 64-color RGBA compaction pass across all 54 spell-VFX textures, and one consolidated seven-case smoke. Repository validation and matching Linux/Windows packaged startup pass at 245428912-byte PCKs with 4571088 bytes of headroom."
+    },
+    {
+      "id": "content-six-horizon-capstone-monuments-10184",
+      "title": "content six horizon capstone monuments 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T03:47:14Z",
+      "startedAt": "2026-08-31T03:10:27Z",
+      "notes": "Completed six exclusive Horizon citadel capstone monuments with exact original art and live economy, growth, discount, readiness, pressure, and recovery payoffs. The single consolidated rendered smoke passed 6/6 content, art, production build, popup, live-effect, and save-v9 cases; repository validation and matching Linux/Windows packaged startup passed at 245878512-byte PCKs with 4121488 bytes of headroom.",
+      "completedAt": "2026-08-31T03:47:14Z"
     }
   ],
   "project": "heroes-like",
@@ -106848,7 +106896,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "This bounded seven-school signature battle-VFX slice is complete. Broader production content and distinctive-art expansion remains open and requires a separately registered next slice.",
+  "remainingGap": "This bounded six-citadel capstone slice is complete. Broader production content and distinctive-art expansion remains open and requires a separately registered next slice; this result is not a whole-game or release-readiness claim.",
   "remainingWork": "Audit current live content/art coverage and register the next coherent production-content batch before implementation; keep one consolidated smoke after that complete batch rather than testing each small asset edit.",
   "reportOnlyEvidence": [
     {
@@ -107383,7 +107431,7 @@
   ],
   "summary": "Completed the coherent Seven-School Signature Battle VFX content, accessibility, live-presentation, and package-efficiency batch with one consolidated smoke.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T03:02:48Z",
+  "updatedAt": "2026-08-31T03:47:14Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

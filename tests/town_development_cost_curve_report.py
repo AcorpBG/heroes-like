@@ -48,6 +48,11 @@ PRICE_BAND_LIMITS = {
     "target_buildings": {"min": 20, "max": 24},
     "rare_cost_buildings": {"min": 4, "max": 7},
 }
+HORIZON_CAPSTONE_STATUS = "horizon_capstone_monument_live"
+HORIZON_CAPSTONE_PRICE_BAND_OVERRIDES = {
+    "gold": {"max": 49000},
+    "target_buildings": {"max": 25},
+}
 
 
 def load_items(filename: str) -> dict[str, dict[str, Any]]:
@@ -297,8 +302,19 @@ def main() -> int:
             "target_buildings": len(target_ids),
             "rare_cost_buildings": rare_cost_count,
         }
+        has_horizon_capstone = any(
+            str(buildings.get(building_id, {}).get("content_status", "")) == HORIZON_CAPSTONE_STATUS
+            for building_id in target_ids
+        )
+        effective_price_band_limits = {
+            field: dict(limits)
+            for field, limits in PRICE_BAND_LIMITS.items()
+        }
+        if has_horizon_capstone:
+            for field, overrides in HORIZON_CAPSTONE_PRICE_BAND_OVERRIDES.items():
+                effective_price_band_limits[field].update(overrides)
         price_band_failures: list[dict[str, Any]] = []
-        for field, limits in PRICE_BAND_LIMITS.items():
+        for field, limits in effective_price_band_limits.items():
             value = int(price_band_values.get(field, 0))
             if value < int(limits["min"]) or value > int(limits["max"]):
                 price_band_failures.append({"field": field, "value": value, "limits": limits})
@@ -321,7 +337,9 @@ def main() -> int:
             "rare_upgrade_buildings": rare_upgrade_buildings,
             "common_only_buildings": common_only_buildings,
             "price_band_values": price_band_values,
+            "price_band_limits": effective_price_band_limits,
             "price_band_failures": price_band_failures,
+            "horizon_capstone_envelope": has_horizon_capstone,
         }
 
     report = {
@@ -341,6 +359,7 @@ def main() -> int:
         "remaining_rare_tier_curve": REMAINING_RARE_TIER_CURVE,
         "secondary_rare_by_faction": SECONDARY_RARE_BY_FACTION,
         "price_band_limits": PRICE_BAND_LIMITS,
+        "horizon_capstone_price_band_overrides": HORIZON_CAPSTONE_PRICE_BAND_OVERRIDES,
         "faction_curves": faction_curves,
         "towns": town_rows,
         "errors": errors,

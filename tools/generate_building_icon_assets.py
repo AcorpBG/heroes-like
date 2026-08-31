@@ -157,6 +157,12 @@ BUILDING_IDS = (
     "building_thornwake_seedglass_cantory",
     "building_brasshollow_quenchbell_mortar_bay",
     "building_veilmourn_saltwake_eulogy_house",
+    "building_embercourt_rainwrit_stormseal_treasury",
+    "building_mireclaw_hollowreed_moonwax_ossuary",
+    "building_sunvault_meridian_seven_facet_orrery",
+    "building_thornwake_crownroot_heartseed_parliament",
+    "building_brasshollow_blackbell_grand_assay_bell",
+    "building_veilmourn_pale_sounding_last_memory_beacon",
 )
 
 

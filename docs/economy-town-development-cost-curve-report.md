@@ -25,7 +25,7 @@ The deterministic report `town_development_cost_curve_report_v1` parses authored
 - In short, every town still spends at least 24 faction rare resources, while the secondary and remaining rares add lighter pressure.
 - Every authored town spends all six rares across high-tier development. Current deterministic pressure is 28-30 signature rare, 14 secondary rare, and 9 for each remaining rare.
 - Every authored town includes at least one rare-cost high-tier upgrade building with explicit `upgrade_from` metadata behind tier 5+ development. Current deterministic coverage is 15/15 towns with 15 total rare-cost upgrade chains.
-- Every authored town must stay inside deterministic price-band sanity limits for total development cost: `gold` 34000-45000, `wood` 20-38, `ore` 20-38, faction signature rare 24-32, secondary rare 12-16, remaining rare min/max 8-11, 20-24 target buildings, and 4-7 rare-cost buildings. This rejects extreme price regressions before manual exact-price approval.
+- Every authored town must stay inside deterministic price-band sanity limits for total development cost: `gold` 34000-45000, `wood` 20-38, `ore` 20-38, faction signature rare 24-32, secondary rare 12-16, remaining rare min/max 8-11, 20-24 target buildings, and 4-7 rare-cost buildings. A town with one live Horizon capstone monument uses the narrow expanded envelope of at most `49000` gold and `25` targets; every other limit remains unchanged. This rejects extreme price regressions while admitting the explicitly validated capstone tier.
 
 ## Evidence Boundaries
 

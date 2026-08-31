@@ -70,6 +70,10 @@ TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_
 TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "town_building_category_icon_runtime_report.tscn"
 BUILDING_ART_MANIFEST_PATH = CONTENT_DIR / "building_art_manifest.json"
 BUILDING_ICON_GENERATOR_PATH = ROOT / "tools" / "generate_building_icon_assets.py"
+SIX_HORIZON_CAPSTONE_MONUMENTS_SMOKE_SCRIPT_PATH = ROOT / "tests" / "six_horizon_capstone_monuments_smoke.gd"
+SIX_HORIZON_CAPSTONE_MONUMENTS_SMOKE_SCENE_PATH = ROOT / "tests" / "six_horizon_capstone_monuments_smoke.tscn"
+SIX_HORIZON_CAPSTONE_MONUMENTS_SOURCE_MANIFEST_PATH = ROOT / "art" / "towns" / "source" / "buildings" / "generated" / "horizon_capstone_monuments" / "manifest.json"
+SIX_HORIZON_CAPSTONE_MONUMENTS_REPORT_PATH = ROOT / ".artifacts" / "content_six_horizon_capstone_monuments" / "report.json"
 TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_embercourt_production_dwelling_icon_report.gd"
 TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCENE_PATH = ROOT / "tests" / "town_embercourt_production_dwelling_icon_report.tscn"
 TOWN_MIRECLAW_DWELLING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_mireclaw_production_dwelling_icon_report.gd"
@@ -3741,6 +3745,7 @@ def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
         "HIGH_TIER_START",
         "SIGNATURE_TIER_COUNT",
         "PRICE_BAND_LIMITS",
+        "HORIZON_CAPSTONE_PRICE_BAND_OVERRIDES",
         "prerequisite_closure",
         "common_only_to_rare_ratio",
         "price_band_values",
@@ -3765,6 +3770,7 @@ def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
         "rare-cost high-tier upgrade",
         "price-band sanity",
         "34000-45000",
+        "49000",
         "No `SAVE_VERSION` bump",
         "`wood` remains canonical",
     ):
@@ -47219,7 +47225,7 @@ def validate_town_building_category_icon_runtime(errors: list[str]) -> None:
     ensure(atlas.is_file() and Path(f"{atlas}.import").is_file(), errors, "Building category source atlas and import must exist")
 
     buildings = load_json(CONTENT_DIR / "buildings.json").get("items", [])
-    ensure(isinstance(buildings, list) and len(buildings) == 142, errors, "Building category adoption must cover exactly 142 production buildings")
+    ensure(isinstance(buildings, list) and len(buildings) == 148, errors, "Building category adoption must cover exactly 148 production buildings")
     if isinstance(buildings, list):
         for building in buildings:
             if isinstance(building, dict):
@@ -47260,7 +47266,7 @@ def validate_town_building_category_icon_runtime(errors: list[str]) -> None:
     ensure_scene_nodes(scene_text, errors, "town_building_category_icon_runtime_report.tscn", [("TownBuildingCategoryIconRuntimeReport", "Node")])
     for token in (
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
-        "building_count == 142", "category_counts.size() == 5", "asset_paths.size() == 5",
+        "building_count == 148", "category_counts.size() == 5", "asset_paths.size() == 5",
         'shell.get_node_or_null("%BuildActions")', 'shell.validation_select_build_plan(action_id)',
         'shell._apply_build_action_icon(invalid_button, {"id": "build:missing_building"})',
         "confirm.emit_signal(\"pressed\")", "TownRules.build_active_town(control, building_id)",
@@ -47461,6 +47467,12 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
         "building_thornwake_seedglass_cantory",
         "building_brasshollow_quenchbell_mortar_bay",
         "building_veilmourn_saltwake_eulogy_house",
+        "building_embercourt_rainwrit_stormseal_treasury",
+        "building_mireclaw_hollowreed_moonwax_ossuary",
+        "building_sunvault_meridian_seven_facet_orrery",
+        "building_thornwake_crownroot_heartseed_parliament",
+        "building_brasshollow_blackbell_grand_assay_bell",
+        "building_veilmourn_pale_sounding_last_memory_beacon",
     ]
     manifest_root = load_json(BUILDING_ART_MANIFEST_PATH)
     rows = manifest_root.get("items", [])
@@ -47489,7 +47501,7 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
             ensure(row.get("icon_sha256") == icon_hash, errors, f"Building {building_id} icon hash must be exact")
             header = icon_path.read_bytes()[:26]
             ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Building {building_id} icon must retain alpha")
-    ensure(len(set(source_hashes)) == 142 and len(set(icon_hashes)) == 142, errors, "All 142 building sources and icons must be distinct")
+    ensure(len(set(source_hashes)) == 148 and len(set(icon_hashes)) == 148, errors, "All 148 building sources and icons must be distinct")
 
     generator_text = BUILDING_ICON_GENERATOR_PATH.read_text(encoding="utf-8")
     for token in ("BUILDING_IDS = (", "SOURCE_SIZE = (1254, 1254)", "ICON_SIZE = (256, 256)", "ImageOps.contain", "Image.Resampling.LANCZOS", 'compress_level=9', '"source_sha256": sha256(source_path)', '"icon_sha256": sha256(runtime_path)'):
@@ -47524,7 +47536,7 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
     report_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     scene_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure_scene_nodes(scene_text, errors, "town_embercourt_production_dwelling_icon_report.tscn", [("TownEmbercourtProductionDwellingIconReport", "Node")])
-    for token in ("target_count == _target_building_ids().size()", "specific_count == 142", "fallback_count == 0", "source_hashes.size() == _target_building_ids().size()", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "all_production_specific = all_production_specific and not art.is_empty()", 'TownRules.building_icon_path(building_id) != TownRules.building_category_icon_path(building_id)', "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
+    for token in ("target_count == _target_building_ids().size()", "specific_count == 148", "fallback_count == 0", "source_hashes.size() == _target_building_ids().size()", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "all_production_specific = all_production_specific and not art.is_empty()", 'TownRules.building_icon_path(building_id) != TownRules.building_category_icon_path(building_id)', "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
         ensure(token in report_text, errors, f"Focused building icon report is missing: {token}")
     ensure('var fallback_id := "building_embercourt_granary_lock_exchange"' not in report_text, errors, "Focused building icon report must not treat Embercourt's now-specific Granary Lock Exchange as a category fallback")
     ensure('var fallback_id := "building_brasshollow_clause_court"' not in report_text, errors, "Focused building icon report must not treat Brasshollow's now-specific Clause Court as a category fallback")
@@ -78911,7 +78923,7 @@ def validate_three_horizon_specialist_companies(errors: list[str]) -> None:
     overworld_art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     identity_sprites = overworld_art.get("encounter_identity_sprites", {})
     object_assets = overworld_art.get("object_assets", {})
-    ensure(len(units) >= 136 and len(buildings) == 142 and len(groups) == 225 and len(encounters) == 161 and len(scenarios) == 99, errors, "Horizon specialist companies must remain present in the expanding unit catalog and retain the 142-building, 225-army, 161-encounter, 99-scenario catalogs")
+    ensure(len(units) >= 136 and len(buildings) == 148 and len(groups) == 225 and len(encounters) == 161 and len(scenarios) == 99, errors, "Horizon specialist companies must remain present in the expanding unit catalog and retain the 148-building, 225-army, 161-encounter, 99-scenario catalogs")
     for unit_id, row in expected.items():
         unit = units.get(unit_id, {})
         building_id = row["building_id"]
@@ -79000,7 +79012,7 @@ def validate_three_horizon_reserve_companies(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     unit_art = items_index(load_json(CONTENT_DIR / "unit_art_manifest.json"))
     animations = items_index(load_json(CONTENT_DIR / "unit_animation_manifest.json"))
-    ensure(len(units) >= 136 and len(buildings) == 142 and len(groups) == 225 and len(scenarios) == 99, errors, "Horizon reserve companies must remain present in the expanding unit catalog and retain the 142-building, 225-army, 99-scenario catalogs")
+    ensure(len(units) >= 136 and len(buildings) == 148 and len(groups) == 225 and len(scenarios) == 99, errors, "Horizon reserve companies must remain present in the expanding unit catalog and retain the 148-building, 225-army, 99-scenario catalogs")
     source_payloads: list[bytes] = []
     for unit_id, row in expected.items():
         unit = units.get(unit_id, {})
@@ -79084,7 +79096,7 @@ def validate_three_horizon_skirmish_companies(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     unit_art = items_index(load_json(CONTENT_DIR / "unit_art_manifest.json"))
     animations = items_index(load_json(CONTENT_DIR / "unit_animation_manifest.json"))
-    ensure(len(units) >= 136 and len(buildings) == 142 and len(groups) == 225 and len(scenarios) == 99, errors, "Horizon skirmish companies must remain present in the expanding unit catalog and retain the 142-building, 225-army, 99-scenario catalogs")
+    ensure(len(units) >= 136 and len(buildings) == 148 and len(groups) == 225 and len(scenarios) == 99, errors, "Horizon skirmish companies must remain present in the expanding unit catalog and retain the 148-building, 225-army, 99-scenario catalogs")
     source_payloads: list[bytes] = []
     for unit_id, row in expected.items():
         unit = units.get(unit_id, {})
@@ -79163,7 +79175,7 @@ def validate_four_faction_roster_parity_companies(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     unit_art = items_index(load_json(CONTENT_DIR / "unit_art_manifest.json"))
     animations = items_index(load_json(CONTENT_DIR / "unit_animation_manifest.json"))
-    ensure(len(units) >= 136 and len(buildings) == 142 and len(scenarios) == 99, errors, "Roster-parity companies must remain present in the expanding unit catalog and retain the 142-building, 99-scenario production catalogs")
+    ensure(len(units) >= 136 and len(buildings) == 148 and len(scenarios) == 99, errors, "Roster-parity companies must remain present in the expanding unit catalog and retain the 148-building, 99-scenario production catalogs")
     for faction_id in ("faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake", "faction_brasshollow", "faction_veilmourn"):
         faction_units = [unit for unit in units.values() if unit.get("faction_id") == faction_id]
         ensure(len(faction_units) >= 12, errors, f"{faction_id} must retain at least the established twelve-unit production roster parity")
@@ -79676,6 +79688,78 @@ def validate_six_rival_road_skirmishes(errors: list[str]) -> None:
         ensure(report.get("ok") is True and report.get("scenario_count") == 6 and report.get("battle_victory_count") == 30 and report.get("exact_encounter_art_count") == 30 and report.get("scenario_victory_count") == 6 and report.get("campaign_complete") is True and report.get("cross_commander_resource_only_carryover") is True and report.get("campaign_art_identity_count") == 7 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(report.get("rows", [])) == 6 and all(row.get("battle_victory_count") == 5 and row.get("exact_encounter_art_count") == 5 and row.get("scenario_victory") and row.get("save_round_trip_exact") for row in report.get("rows", [])), errors, "Six Roads Relay consolidated smoke report is not fully green")
 
 
+def validate_six_horizon_capstone_monuments(errors: list[str]) -> None:
+    required_paths = (
+        SIX_HORIZON_CAPSTONE_MONUMENTS_SMOKE_SCRIPT_PATH,
+        SIX_HORIZON_CAPSTONE_MONUMENTS_SMOKE_SCENE_PATH,
+        SIX_HORIZON_CAPSTONE_MONUMENTS_SOURCE_MANIFEST_PATH,
+        CONTENT_DIR / "buildings.json",
+        CONTENT_DIR / "towns.json",
+        BUILDING_ART_MANIFEST_PATH,
+        BUILDING_ICON_GENERATOR_PATH,
+    )
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Six Horizon capstone monument slice is missing {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    cases = (
+        ("faction_embercourt", "town_rainwrit_bastion", "building_embercourt_rainwrit_stormseal_treasury", "unit_embercourt_cinderseal_bombardiers", "embergrain", 1, 5),
+        ("faction_mireclaw", "town_hollowreed_sanctuary", "building_mireclaw_hollowreed_moonwax_ossuary", "unit_mireclaw_mireglass_reedcasters", "peatwax", 1, 5),
+        ("faction_sunvault", "town_meridian_choirhold", "building_sunvault_meridian_seven_facet_orrery", "unit_sunvault_noonfacet_sentinels", "aetherglass", 1, 5),
+        ("faction_thornwake", "town_crownroot_refuge", "building_thornwake_crownroot_heartseed_parliament", "unit_thornwake_dawnseed_bolters", "verdant_grafts", 2, 4),
+        ("faction_brasshollow", "town_blackbell_foundry", "building_brasshollow_blackbell_grand_assay_bell", "unit_brasshollow_gaugeplate_bailiffs", "brass_scrip", 1, 8),
+        ("faction_veilmourn", "town_pale_sounding_harbor", "building_veilmourn_pale_sounding_last_memory_beacon", "unit_veilmourn_tidehook_deckhands", "memory_salt", 1, 5),
+    )
+    buildings = items_index(load_json(CONTENT_DIR / "buildings.json"))
+    towns = items_index(load_json(CONTENT_DIR / "towns.json"))
+    building_art = items_index(load_json(BUILDING_ART_MANIFEST_PATH))
+    source_manifest = load_json(SIX_HORIZON_CAPSTONE_MONUMENTS_SOURCE_MANIFEST_PATH)
+    source_rows = {str(item.get("building_id", "")): item for item in source_manifest.get("items", []) if isinstance(item, dict) and str(item.get("building_id", ""))}
+    ensure(len(buildings) == 148 and len(building_art) == 148, errors, "Six Horizon capstones must complete matching 148-building gameplay and exact-art catalogs")
+    ensure(source_manifest.get("schema_id") == "horizon_capstone_monument_building_art_v1" and source_manifest.get("generator") == "OpenAI built-in image generation" and len(source_rows) == 6, errors, "Six Horizon capstone source-art manifest identity changed")
+    ensure("art/towns/source is excluded from Linux and Windows release packages" in str(source_manifest.get("runtime_pipeline", "")), errors, "Six Horizon capstone source-art package exclusion changed")
+    generator_text = BUILDING_ICON_GENERATOR_PATH.read_text(encoding="utf-8")
+
+    capstone_ids = [case[2] for case in cases]
+    for faction_id, town_id, building_id, unit_id, rare_resource_id, growth, discount in cases:
+        building = buildings.get(building_id, {})
+        town = towns.get(town_id, {})
+        art = building_art.get(building_id, {})
+        source = source_rows.get(building_id, {})
+        ensure(building.get("content_status") == "horizon_capstone_monument_live" and building.get("faction_id") == faction_id and building.get("category") == "civic", errors, f"{building_id} capstone identity changed")
+        ensure(isinstance(building.get("requires"), list) and len(building.get("requires", [])) == 2 and all(str(value) in buildings for value in building.get("requires", [])), errors, f"{building_id} must retain two valid late-game prerequisites")
+        cost = building.get("cost", {})
+        ensure(int(cost.get("gold", 0)) >= 2900 and int(cost.get("wood", 0)) >= 1 and int(cost.get("ore", 0)) >= 1 and rare_resource_id not in cost, errors, f"{building_id} capstone conversion cost changed")
+        ensure(int(building.get("income", {}).get(rare_resource_id, 0)) == 1 and int(building.get("growth_bonus", {}).get(unit_id, 0)) == growth and int(building.get("recruitment_discount_percent", {}).get(unit_id, 0)) == discount, errors, f"{building_id} live rare-income or reserve-company payoff changed")
+        ensure(town.get("faction_id") == faction_id and building_id in town.get("buildable_building_ids", []), errors, f"{building_id} lost its exact Horizon citadel route")
+        route_owners = [candidate_id for candidate_id, candidate in towns.items() if building_id in candidate.get("starting_building_ids", []) or building_id in candidate.get("buildable_building_ids", [])]
+        ensure(route_owners == [town_id], errors, f"{building_id} leaked outside {town_id}: {route_owners}")
+        source_path = res_path_to_disk(str(art.get("source_path", "")))
+        icon_path = res_path_to_disk(str(art.get("icon_path", "")))
+        original_path = res_path_to_disk(str(source.get("generation_original", "")))
+        ensure(art.get("source_kind") == "curated_original_building" and source_path.is_file() and icon_path.is_file() and original_path.is_file(), errors, f"{building_id} exact building art files changed")
+        if source_path.is_file() and icon_path.is_file() and original_path.is_file():
+            ensure(png_size(source_path) == (1254, 1254) and png_size(icon_path) == (256, 256), errors, f"{building_id} source or runtime dimensions changed")
+            ensure(hashlib.sha256(source_path.read_bytes()).hexdigest() == str(art.get("source_sha256", "")) == str(source.get("curated_source_sha256", "")), errors, f"{building_id} curated source provenance changed")
+            ensure(hashlib.sha256(icon_path.read_bytes()).hexdigest() == str(art.get("icon_sha256", "")) == str(source.get("runtime_icon_sha256", "")), errors, f"{building_id} runtime icon provenance changed")
+            original_payload = original_path.read_bytes()
+            ensure(hashlib.sha256(original_payload).hexdigest() == str(source.get("generation_original_sha256", "")) and len(original_payload) >= 26 and original_payload[25] in {4, 6}, errors, f"{building_id} generated source bytes or alpha changed")
+        ensure(len(str(source.get("prompt", "")).strip()) >= 180 and len(str(source.get("non_color_identity", "")).strip()) >= 60, errors, f"{building_id} prompt or non-color identity provenance changed")
+        ensure(f'"{building_id}"' in generator_text, errors, f"Building icon generator is missing {building_id}")
+
+    smoke_text = SIX_HORIZON_CAPSTONE_MONUMENTS_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in ("SIX_HORIZON_CAPSTONE_MONUMENTS_SMOKE", 'const SCENARIO_ID := "horizon-compact-six-citadels"', "TownRules.build_active_town", "OverworldRules.town_income", "OverworldRules.town_weekly_growth", "OverworldRules.town_recruit_cost", "validation_open_town_catalog", "building_icon_path", "save_round_trip_exact", "single_consolidated_smoke"):
+        ensure(token in smoke_text, errors, f"Six Horizon capstone consolidated smoke is missing live proof: {token}")
+    for building_id in capstone_ids:
+        ensure(f'"building_id":"{building_id}"' in smoke_text, errors, f"Six Horizon capstone smoke is missing {building_id}")
+    ensure_scene_nodes(SIX_HORIZON_CAPSTONE_MONUMENTS_SMOKE_SCENE_PATH.read_text(encoding="utf-8"), errors, SIX_HORIZON_CAPSTONE_MONUMENTS_SMOKE_SCENE_PATH.name, [("SixHorizonCapstoneMonumentsSmoke", "Node")])
+    if SIX_HORIZON_CAPSTONE_MONUMENTS_REPORT_PATH.is_file():
+        report = load_json(SIX_HORIZON_CAPSTONE_MONUMENTS_REPORT_PATH)
+        rows = report.get("rows", [])
+        ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("catalog_building_count") == 148 and report.get("exact_art_count") == 6 and report.get("production_build_count") == 6 and report.get("live_effect_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("initially_locked") and row.get("built_exact") and row.get("effects_exact") and row.get("popup_exact") and row.get("save_round_trip_exact") for row in rows), errors, "Six Horizon capstone consolidated smoke report is not fully green")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -79930,6 +80014,7 @@ def main() -> int:
     validate_three_horizon_skirmish_companies(errors)
     validate_four_faction_roster_parity_companies(errors)
     validate_six_faction_reserve_companies(errors)
+    validate_six_horizon_capstone_monuments(errors)
     validate_eight_foundation_map_object_identities(errors)
     validate_recurring_encounter_landmarks(errors)
     validate_systemic_encounter_landmarks(errors)
