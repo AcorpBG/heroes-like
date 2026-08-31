@@ -167,6 +167,15 @@ REQUIRED_FINAL_ROSTER_HERO_PCK_IMPORT_ENTRIES = tuple(
     f"art/overworld/runtime/heroes/tavern_final_roster/{hero_id}.png.import"
     for hero_id in REQUIRED_FINAL_ROSTER_HERO_IDS
 )
+REQUIRED_FIELD_MUSTER_CAPTAIN_HERO_IDS = (
+    "hero_embercourt_maela_powderwrit", "hero_mireclaw_rhask_reedcaller",
+    "hero_sunvault_aven_sevenfold", "hero_thornwake_bryn_boltroot",
+    "hero_brasshollow_kestra_blackgauge", "hero_veilmourn_olan_tidehook",
+)
+REQUIRED_FIELD_MUSTER_CAPTAIN_HERO_PCK_IMPORT_ENTRIES = tuple(
+    f"art/heroes/portraits/{hero_id}.png.import"
+    for hero_id in REQUIRED_FIELD_MUSTER_CAPTAIN_HERO_IDS
+)
 REQUIRED_FACTION_ENCOUNTER_NAMES = (
     "embercourt", "mireclaw", "sunvault", "thornwake", "brasshollow", "veilmourn",
 )
@@ -754,6 +763,10 @@ def pck_terrain_payload_summary() -> dict:
         "final_roster_hero_import_entries": [],
         "final_roster_hero_texture_names": [],
         "final_roster_hero_entries_present": False,
+        "required_field_muster_captain_hero_import_entries": list(REQUIRED_FIELD_MUSTER_CAPTAIN_HERO_PCK_IMPORT_ENTRIES),
+        "field_muster_captain_hero_import_entries": [],
+        "field_muster_captain_hero_texture_names": [],
+        "field_muster_captain_hero_entries_present": False,
         "required_faction_encounter_import_entries": list(REQUIRED_FACTION_ENCOUNTER_PCK_IMPORT_ENTRIES),
         "required_faction_encounter_texture_entries": sorted(required_faction_encounter_texture_entries),
         "faction_encounter_import_entries": [],
@@ -899,6 +912,8 @@ def pck_terrain_payload_summary() -> dict:
                     summary["arcane_controller_hero_import_entries"].append(entry_path)
                 if entry_path in REQUIRED_FINAL_ROSTER_HERO_PCK_IMPORT_ENTRIES:
                     summary["final_roster_hero_import_entries"].append(entry_path)
+                if entry_path in REQUIRED_FIELD_MUSTER_CAPTAIN_HERO_PCK_IMPORT_ENTRIES:
+                    summary["field_muster_captain_hero_import_entries"].append(entry_path)
                 if entry_path in REQUIRED_FACTION_ENCOUNTER_PCK_IMPORT_ENTRIES:
                     summary["faction_encounter_import_entries"].append(entry_path)
                 if entry_path in required_faction_encounter_texture_entries:
@@ -971,6 +986,8 @@ def pck_terrain_payload_summary() -> dict:
                         summary["arcane_controller_hero_texture_names"].append(imported_name)
                     if imported_name in REQUIRED_FINAL_ROSTER_HERO_IDS:
                         summary["final_roster_hero_texture_names"].append(imported_name)
+                    if imported_name in REQUIRED_FIELD_MUSTER_CAPTAIN_HERO_IDS:
+                        summary["field_muster_captain_hero_texture_names"].append(imported_name)
                     if imported_name == REQUIRED_HERO_SPECIALTY_ATLAS_NAME:
                         summary["hero_specialty_atlas_texture_names"].append(imported_name)
                     if imported_name == REQUIRED_FACTION_SET_ATLAS_NAME:
@@ -996,6 +1013,7 @@ def pck_terrain_payload_summary() -> dict:
     summary["ritual_scholar_hero_entries_present"] = set(summary["ritual_scholar_hero_import_entries"]) == set(REQUIRED_RITUAL_SCHOLAR_HERO_PCK_IMPORT_ENTRIES) and set(summary["ritual_scholar_hero_texture_names"]) == set(REQUIRED_RITUAL_SCHOLAR_HERO_IDS)
     summary["arcane_controller_hero_entries_present"] = set(summary["arcane_controller_hero_import_entries"]) == set(REQUIRED_ARCANE_CONTROLLER_HERO_PCK_IMPORT_ENTRIES) and set(summary["arcane_controller_hero_texture_names"]) == set(REQUIRED_ARCANE_CONTROLLER_HERO_IDS)
     summary["final_roster_hero_entries_present"] = set(summary["final_roster_hero_import_entries"]) == set(REQUIRED_FINAL_ROSTER_HERO_PCK_IMPORT_ENTRIES) and set(summary["final_roster_hero_texture_names"]) == set(REQUIRED_FINAL_ROSTER_HERO_IDS)
+    summary["field_muster_captain_hero_entries_present"] = set(summary["field_muster_captain_hero_import_entries"]) == set(REQUIRED_FIELD_MUSTER_CAPTAIN_HERO_PCK_IMPORT_ENTRIES) and set(summary["field_muster_captain_hero_texture_names"]) == set(REQUIRED_FIELD_MUSTER_CAPTAIN_HERO_IDS)
     summary["faction_encounter_entries_present"] = len(required_faction_encounter_texture_entries) == len(REQUIRED_FACTION_ENCOUNTER_NAMES) and set(summary["faction_encounter_import_entries"]) == set(REQUIRED_FACTION_ENCOUNTER_PCK_IMPORT_ENTRIES) and set(summary["faction_encounter_texture_entries"]) == required_faction_encounter_texture_entries
     summary["signature_encounter_entries_present"] = len(required_signature_encounter_texture_entries) == len(REQUIRED_SIGNATURE_ENCOUNTER_NAMES) and set(summary["signature_encounter_import_entries"]) == set(REQUIRED_SIGNATURE_ENCOUNTER_PCK_IMPORT_ENTRIES) and set(summary["signature_encounter_texture_entries"]) == required_signature_encounter_texture_entries
     summary["recurring_encounter_atlas_entries_present"] = len(required_recurring_encounter_atlas_texture_entries) == 16 and set(summary["recurring_encounter_atlas_import_entries"]) == set(REQUIRED_RECURRING_ENCOUNTER_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["recurring_encounter_atlas_texture_entries"]) == required_recurring_encounter_atlas_texture_entries and set(summary["recurring_encounter_atlas_texture_names"]) == {REQUIRED_RECURRING_ENCOUNTER_ATLAS_NAME, REQUIRED_DISSIDENT_ENCOUNTER_ATLAS_NAME, REQUIRED_STANDALONE_CONTRACT_ATLAS_NAME, REQUIRED_OUTER_REACH_CONTRACT_ATLAS_NAME, REQUIRED_MIRE_SUN_CONTRACT_ATLAS_NAME, REQUIRED_ASCENDANT_COMPANY_ATLAS_NAME, REQUIRED_WAYWATCH_TRIAL_ATLAS_NAME, REQUIRED_SPELLWRIGHT_EXPEDITION_ATLAS_NAME, REQUIRED_RITUAL_RELAY_CIRCUIT_ATLAS_NAME, REQUIRED_GRAND_CONVERGENCE_MARCH_ATLAS_NAME, REQUIRED_SYSTEMIC_ENCOUNTER_ATLAS_NAME, REQUIRED_HORIZON_COMPACT_ATLAS_NAME, REQUIRED_HORIZON_COURTS_ATLAS_NAME, REQUIRED_DORMANT_ROSTER_FIELD_COMPANIES_ATLAS_NAME, REQUIRED_GRAND_CONVERGENCE_RIVAL_COMMANDERS_ATLAS_NAME, REQUIRED_CAMPAIGN_FINALE_NEMESES_ATLAS_NAME}
@@ -1070,6 +1088,7 @@ def main() -> int:
         and bool(terrain_payload["ritual_scholar_hero_entries_present"])
         and bool(terrain_payload["arcane_controller_hero_entries_present"])
         and bool(terrain_payload["final_roster_hero_entries_present"])
+        and bool(terrain_payload["field_muster_captain_hero_entries_present"])
         and bool(terrain_payload["faction_encounter_entries_present"])
         and bool(terrain_payload["signature_encounter_entries_present"])
         and bool(terrain_payload["recurring_encounter_atlas_entries_present"])
@@ -1235,6 +1254,9 @@ def main() -> int:
         "final_roster_hero_pck_import_entry_count": len(terrain_payload["final_roster_hero_import_entries"]),
         "final_roster_hero_pck_texture_count": len(set(terrain_payload["final_roster_hero_texture_names"])),
         "final_roster_hero_pck_entries_present": terrain_payload["final_roster_hero_entries_present"],
+        "field_muster_captain_hero_pck_import_entry_count": len(terrain_payload["field_muster_captain_hero_import_entries"]),
+        "field_muster_captain_hero_pck_texture_count": len(set(terrain_payload["field_muster_captain_hero_texture_names"])),
+        "field_muster_captain_hero_pck_entries_present": terrain_payload["field_muster_captain_hero_entries_present"],
         "faction_encounter_pck_import_entry_count": len(terrain_payload["faction_encounter_import_entries"]),
         "faction_encounter_pck_texture_count": len(terrain_payload["faction_encounter_texture_entries"]),
         "faction_encounter_pck_entries_present": terrain_payload["faction_encounter_entries_present"],

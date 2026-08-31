@@ -23,8 +23,8 @@ func _run() -> void:
 			_fail("Authored hero portrait size/path uniqueness failed for %s." % hero_id)
 			return
 		loaded_paths[path] = true
-	if hero_ids.size() != 60 or loaded_paths.size() != 60:
-		_fail("Hero portrait coverage must be exactly 60 unique authored heroes.")
+	if hero_ids.size() != 66 or loaded_paths.size() != 66:
+		_fail("Hero portrait coverage must be exactly 66 unique authored heroes.")
 		return
 
 	var shell = load("res://scenes/menus/MainMenu.tscn").instantiate()

@@ -24,9 +24,41 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; the broader production-content expansion goal remains open for the next selected coherent batch.
-- Most recently completed implementation slice: `content-six-horizon-company-field-musters-10184`, one coherent six-faction adventure-map recruitment and exact-art batch.
-- Current package boundary: matching Linux and Windows release exports measure 245963644 bytes, 4036356 bytes below the unchanged 250000000-byte ceiling; all generated field-muster masters remain excluded from both packages.
+- Active implementation slice: none selected; the next coherent content batch remains pending under the broader content-expansion goal.
+- Most recently completed implementation slice: `content-six-faction-field-muster-captains-10184`, one coherent six-faction tavern-hero and exact-portrait batch.
+- Current package boundary: matching Linux and Windows release exports measure 247544396 bytes, 2455604 bytes below the unchanged 250000000-byte ceiling; all generated portrait masters remain excluded from both packages.
+
+## Six Faction Field-Muster Captains
+
+id: `content-six-faction-field-muster-captains-10184`
+
+Status: completed.
+
+Current finding:
+- all six factions now own a reserve company, a late-town growth route, and a live Horizon field muster, but those connected layers have no dedicated commander identities in the hero roster;
+- only Embercourt, Mireclaw, and Sunvault currently offer any live tavern hero who begins with Muster Captain, while Thornwake, Brasshollow, and Veilmourn offer none, so the production recruit-growth and recruit-cost specialty is unevenly represented despite six-faction muster content;
+- tavern recruitment already draws every non-scaffold hero from the owning faction roster and preserves portrait, specialty, economy, army, active-hero, and save-version-9 state without a new hero system or save migration.
+
+Implementation boundary:
+- add one original live field-muster captain to each faction with a distinct name, archetype, identity, command profile, spells, traits, and specialty focus grounded in that faction's reserve company and field-muster visual language;
+- make every captain tavern-recruitable through the existing faction roster authority, begin each with Muster Captain, and prove the existing live specialty changes actual town recruit cost and growth before a production battle using the faction's reserve company;
+- generate and curate six original square character masters, derive the established 384x512 runtime portraits, retain prompt/hash/non-color identity provenance outside release packages, and surface the exact portraits through the live tavern and shared hero portrait view;
+- preserve every existing hero, faction roster order, specialty rule, scenario start, deterministic battle authority, save version 9, Windows/Linux paths, generated-source exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all six factions reach exactly eleven live heroes and each new captain is available only in its owning faction's tavern, recruits through production HeroCommandRules, starts with Muster Captain, and retains exact identity and specialty state through save-version-9 round trips;
+- each captain's exact portrait loads through the shared hero portrait authority on the live town surface beside its Tavern recruitment flow, the existing Muster Captain authority lowers recruit cost and raises growth, and a reserve-company stack enters and resolves a production battle under that captain;
+- run one consolidated six-case tavern/muster/battle/art/save smoke only after the complete batch, followed once by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- Maela Powderwrit, Rhask Reedcaller, Aven Sevenfold, Bryn Boltroot, Kestra Blackgauge, and Olan Tidehook now bring every faction to exactly eleven live authored heroes and give every faction a tavern-recruitable rank-one Muster Captain linked to its Horizon field muster and reserve company;
+- six original curated 1254x1254 character masters now derive six exact 384x512 runtime portraits with prompt, hash, source-path, and non-color identity provenance, while the release exports contain only runtime art;
+- the single consolidated 6/6 smoke passes owning-faction-only Tavern offers, production hire and command handoff, exact portrait loading and rendered town capture, 20% growth scaling, lower live recruit costs, linked reserve-company battles, victories, and save-version-9 round trips;
+- repository validation passes; Linux and Windows export/startup gates pass with matching 247544396-byte PCKs, all six captain portrait imports and textures present, generated source art excluded, and 2455604 bytes of headroom below the unchanged ceiling.
+
+Non-goals:
+- no new faction, unit, town, building, spell, artifact, encounter, campaign, scenario, specialty algorithm, strategic-AI rewrite, RMG behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes commander, portrait, name, costume, heraldry, text, or protected visual expression.
 
 ## Six Horizon Company Field Musters
 

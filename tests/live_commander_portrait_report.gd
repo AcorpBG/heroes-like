@@ -55,8 +55,8 @@ func _validate_shared_component() -> bool:
 			_fail("Shared portrait authority mismatch for %s: %s" % [hero_id, JSON.stringify(snapshot)])
 			return false
 		paths[expected_path] = true
-	if hero_ids.size() != 60 or paths.size() != 60:
-		_fail("Shared portrait coverage must remain 60 unique heroes.")
+	if hero_ids.size() != 66 or paths.size() != 66:
+		_fail("Shared portrait coverage must remain 66 unique heroes.")
 		return false
 	if portrait.set_hero_id("hero_not_authored") or portrait.visible or portrait.texture != null or portrait.tooltip_text != "":
 		_fail("Shared portrait did not fail closed for an unknown hero.")
