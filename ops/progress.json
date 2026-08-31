@@ -16011,13 +16011,13 @@
       }
     }
   ],
-  "currentNotes": "Completed The Six Unbound Oaths as one coherent six-chapter campaign over the six Wild Concord maps, with exact oath unlocks, bounded common-resource handoff, seven original campaign art identities, eighteen battle victories, twelve dwelling recruits, complete campaign resolution, and save-v9 continuity. One consolidated batch smoke, repository validation, and sequential Linux/Windows package boots passed at 231238736 bytes.",
+  "currentNotes": "Completed six original named-rival skirmish challenges with twelve underused roster heroes, twelve five-stack companies, six fixed rival encounters, eighteen guarded banner positions, six town captures, one generated six-banner atlas, one consolidated six-case gameplay/art/save smoke, repository validation, and matching Linux/Windows package boots at 231334232 bytes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-unbound-oaths-campaign-10184",
-  "currentSliceId": "content-six-unbound-oaths-campaign-10184",
-  "currentSliceNotes": "Shipped the complete six-chapter The Six Unbound Oaths campaign with exact sequential oath unlocks, bounded common-resource handoff, narrative, seven original campaign art identities, eighteen live battle victories, twelve dwelling recruits, six save-version-9 round trips, and one consolidated batch smoke. Repository validation passed; matching Linux and Windows packages booted with the native extension at 231238736 bytes, leaving 18761264 bytes below the 250000000-byte ceiling.",
+  "currentSlice": "content-six-named-rival-banner-challenges-10184",
+  "currentSliceId": "content-six-named-rival-banner-challenges-10184",
+  "currentSliceNotes": "Completed six original named-rival skirmish challenges with twelve underused roster heroes, twelve five-stack companies, six fixed rival encounters, eighteen guarded banner positions, six town captures, one generated six-banner atlas, one consolidated six-case gameplay/art/save smoke, repository validation, and matching Linux/Windows package boots at 231334232 bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six unbound oaths campaign 10184",
+  "currentSliceTitle": "content six named rival banner challenges 10184",
   "currentSliceUpdatedAt": "2026-08-31T17:11:11Z",
   "deferredRiskRegister": [
     {
@@ -107205,6 +107205,16 @@
       "startedAt": "2026-08-31T16:42:15Z",
       "notes": "Shipped the complete six-chapter The Six Unbound Oaths campaign with exact sequential oath unlocks, bounded common-resource handoff, narrative, seven original campaign art identities, eighteen live battle victories, twelve dwelling recruits, six save-version-9 round trips, and one consolidated batch smoke. Repository validation passed; matching Linux and Windows packages booted with the native extension at 231238736 bytes, leaving 18761264 bytes below the 250000000-byte ceiling.",
       "completedAt": "2026-08-31T17:11:11Z"
+    },
+    {
+      "id": "content-six-named-rival-banner-challenges-10184",
+      "title": "content six named rival banner challenges 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T17:56:02Z",
+      "startedAt": "2026-08-31T17:17:30Z",
+      "notes": "Completed six original named-rival skirmish challenges with twelve underused roster heroes, twelve five-stack companies, six fixed rival encounters, eighteen guarded banner positions, six town captures, one generated six-banner atlas, one consolidated six-case gameplay/art/save smoke, repository validation, and matching Linux/Windows package boots at 231334232 bytes.",
+      "completedAt": "2026-08-31T17:56:02Z"
     }
   ],
   "project": "heroes-like",
@@ -107749,7 +107759,7 @@
   ],
   "summary": "Completed the coherent Seven-School Signature Battle VFX content, accessibility, live-presentation, and package-efficiency batch with one consolidated smoke.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T17:11:11Z",
+  "updatedAt": "2026-08-31T17:56:02Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -1,0 +1,105 @@
+{
+  "schema_id": "named_rival_banner_source_manifest_v1",
+  "content_batch_id": "content-six-named-rival-banner-challenges-10184",
+  "generator_mode": "built_in_image_gen",
+  "generated_at": "2026-08-31",
+  "identity_sheet": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/named_rival_banners_identity_sheet.png",
+  "identity_sheet_sha256": "7e99d187879c7cd6b215f6fdf730e3907e2cf59566f850c538a66e4792162dfe",
+  "final_prompt": "Six original Aurelion Reach rival command-banner landmarks in an exact 3x2 sheet: crescent toll hook and tally ring, split-prism rapier and orbit, root barrow with medicine jars, black foundry bell and chained hammer, ship-rib harpoon vane and tideglass, and forked river pike with three charter plates; hand-painted map-object sprites, distinct non-color silhouettes, no text or franchise symbols, genuine transparency.",
+  "background_extraction_prompt": "Remove only the dark blurred background and replace it with genuine alpha transparency while preserving all six objects, materials, lighting, scale, grid positions, spacing, and fine edges without halos, additions, restyling, or text.",
+  "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-5c4735f2-5d20-41c4-a57c-2456f90f98bc.png",
+  "runtime_atlas": {
+    "path": "res://art/overworld/runtime/objects/resource_sites/named_rival_banners_atlas.png",
+    "size": [
+      288,
+      48
+    ],
+    "cell_size": [
+      48,
+      48
+    ],
+    "region_count": 6,
+    "sha256": "e43708681a0196da508b07ae7a4e7a48c38623f927603a8a8be253acf068615c",
+    "package_policy": "single_imported_atlas_only"
+  },
+  "sources": [
+    {
+      "site_id": "site_named_rival_tollmoon_claim_post",
+      "asset_id": "resource_site_named_rival_tollmoon_claim_post",
+      "path": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/tollmoon_claim_post.png",
+      "sha256": "786f117700d89132d4f12b4b3c8f28c7d3c32936ffe54601b9a8f94dfcac3a4e",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "accessible_description": "A low crescent toll hook carries a hide tally ring and three uneven marsh-reed weights, making the captured Mireclaw claim readable by its hooked silhouette."
+    },
+    {
+      "site_id": "site_named_rival_facetline_duel_standard",
+      "asset_id": "resource_site_named_rival_facetline_duel_standard",
+      "path": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/facetline_duel_standard.png",
+      "sha256": "fbf581a7f438128fcbc5bc76c3538ff612261d1736b50d6a2ae75b3a7590cf62",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "accessible_description": "A tall split-prism rapier is crossed by one off-center orbit ring, giving Renn's exact duel line a narrow asymmetric silhouette without relying on color."
+    },
+    {
+      "site_id": "site_named_rival_greenbarrow_recovery_mark",
+      "asset_id": "resource_site_named_rival_greenbarrow_recovery_mark",
+      "path": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/greenbarrow_recovery_mark.png",
+      "sha256": "ede0223d6d2d871be635995721caf6395075a17514c336c14c2b7ab993cd49ca",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "accessible_description": "A broad living-root barrow arches over three unequal medicine jars and a low stone cairn, identifying Merek's recovery line by mass and hanging shapes."
+    },
+    {
+      "site_id": "site_named_rival_bellfounder_siege_gauge",
+      "asset_id": "resource_site_named_rival_bellfounder_siege_gauge",
+      "path": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/bellfounder_siege_gauge.png",
+      "sha256": "20f84e94bc0ff644e6781db4db18ef1fc7aaf223440a4cbbbe4490b60e99db90",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "accessible_description": "An oversized black foundry bell hangs from an asymmetric pressure frame beside one chained square hammer, making Oren's siege gauge unmistakable in silhouette."
+    },
+    {
+      "site_id": "site_named_rival_vanehook_wake_pennant",
+      "asset_id": "resource_site_named_rival_vanehook_wake_pennant",
+      "path": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/vanehook_wake_pennant.png",
+      "sha256": "0234356933582ce11adb3ce2dd0103b19f4b5a37cfb88f69fc12b5c1e4683433",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "accessible_description": "A curved ship rib supports a long barbed harpoon vane and one hanging tideglass, giving Ruln's wake pennant a forward-leaning coastal silhouette."
+    },
+    {
+      "site_id": "site_named_rival_pikeward_charter_fork",
+      "asset_id": "resource_site_named_rival_pikeward_charter_fork",
+      "path": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/pikeward_charter_fork.png",
+      "sha256": "47e6c757a1f966cb32336c436da6f6da79c0065fb6ac25d312760d7108959c0a",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "accessible_description": "A forked river pike carries three separate rain-charred charter plates above a small beacon bowl, identifying Torren's line by its open double-prong crown."
+    }
+  ]
+}

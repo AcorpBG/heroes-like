@@ -24,9 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; the next production-content batch must be selected from a fresh live-catalog audit rather than inferred from tracker volume.
-- Most recently completed implementation slice: `content-six-unbound-oaths-campaign-10184`, a coherent six-chapter campaign, bounded handoff, narrative, campaign-art, gameplay, and save-continuity batch across the newly shipped Wild Concord maps.
-- Current package boundary: matching Linux and Windows release exports measure 231238736 bytes, 18761264 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none; the next content batch should be selected from a fresh live-coverage audit.
+- Most recently completed implementation slice: `content-six-named-rival-banner-challenges-10184`, a six-map authored-rival, underused-hero, command-banner, strategic-pressure, battle-identity, and save-continuity batch.
+- Current package boundary: matching Linux and Windows release exports measure 231334232 bytes, 18665768 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Named Rival Banner Challenges
+
+id: `content-six-named-rival-banner-challenges-10184`
+
+Status: completed on 2026-08-31.
+
+Current finding:
+- all 66 authored heroes have live player routes and exact portraits, but only 25 appear as fixed roster-backed enemy commanders in authored encounter placements; 41 hero identities therefore never confront the player directly outside dynamic strategic-AI selection;
+- several heroes remain at only two or three player-lead appearances, while the production overworld and battle presentation paths can already render an exact roster hero as a hostile map actor and hydrate that same identity, spellbook, traits, command profile, and portrait in battle;
+- the existing persistent-control, town-capture, strategic-pressure, encounter, save-version-9, and compact-atlas boundaries support a coherent named-rival map family without a new parallel duel system or another generic encounter-only batch.
+
+Implementation boundary:
+- author one original skirmish challenge per faction, pairing an underused player lead with a different-faction underused fixed rival commander, a player and enemy town, three guarded command-banner positions, strategic retaking pressure, deterministic seeds, and a final roster-backed rival front;
+- add six original five-stack rival companies and six encounter identities whose roster-backed finales render the exact authored enemy hero on the overworld and in battle, while two supporting fronts per map reuse low-placement live encounters;
+- add six persistent rival command-banner sites, each repeated across its map's three control positions with live rewards, income, AI priorities, save continuity, exact accessible art, and one compact 288x48 runtime atlas derived from retained generated source masters.
+
+Completion criteria:
+- all six scenarios launch from the skirmish selector with the exact player hero and company, expose the exact rival hero portrait on the final hostile map actor, hydrate the same hero identity in the battle payload, resolve eighteen production battles, claim all eighteen banner positions, capture the enemy town, satisfy scoped objectives, win before the deadline, and round-trip exactly through save version 9;
+- all twelve selected hero identities gain a live authored role, all six new rival companies and encounter definitions are reachable, and all six banner silhouettes remain byte-distinct, non-color-dependent, correctly mapped, and excluded from source-art package leakage;
+- run one consolidated six-case gameplay/rival-identity/banner-control/town-capture/art/save and visual-capture smoke only after the complete batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged 250000000-byte ceiling.
+
+Completion result:
+- shipped six original 15x9 skirmish challenges with twelve distinct underused roster heroes, twelve new five-stack companies, six fixed roster-backed rival encounters, eighteen persistent command-banner positions, six enemy towns, eighteen deterministic battle fronts, scoped pressure/deadline objectives, and save-version-9 continuity;
+- generated six transparent, byte-distinct command-banner source masters and one inspected 288x48 runtime atlas with exact site mappings, non-color accessible descriptions, prompt/hash provenance, and source masters excluded from release packages;
+- the single consolidated six-case smoke passed exact player/rival identity, overworld and battle commander hydration, eighteen production battles, eighteen banner claims, six enemy-town captures, six scenario victories, six visual captures, and six exact save-version-9 round trips;
+- repository validation passed at 195 active scenarios, 333 armies, 197 encounters, and 303 resource sites; matching Linux and Windows exports booted with the native extension at 231334232 bytes, leaving 18665768 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, unit definition, town definition, building, spell, artifact, campaign, neutral dwelling, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes commander, map, banner, company, name, text, heraldry, portrait, or protected visual expression.
 
 ## Six Unbound Oaths Campaign
 
