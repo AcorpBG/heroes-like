@@ -16014,10 +16014,10 @@
   "currentNotes": "Six original relief-route convoy runs now provide exact faction relays, stocked production dispatches, arrived interception battles, durable target-scoped delivery receipts, and first-class delivery victory authority. One consolidated six-case smoke passed claims, dispatches, blocking interceptors, eighteen battles, negative controls, exact art, victories, and save-v9 continuity; repository validation and matching Linux/Windows packaged startup pass at 248517260 bytes.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-six-relief-route-convoy-runs-10184",
-  "currentSliceId": "content-six-relief-route-convoy-runs-10184",
-  "currentSliceNotes": "Implemented six skirmish-only faction relief routes, six five-stack convoy companies, six live response relays, persistent exact-target delivery receipts, reserve_delivery_completed objectives and strategic targeting, six generated relay masters plus compact atlas, and one consolidated six-case production smoke proving six claims, dispatches, interceptions, receipts, victories, save-v9 round trips, and eighteen battles. Repository validation and matching Linux/Windows release exports passed at 248517260 bytes.",
+  "currentSliceId": "content-six-fogbreak-survey-expeditions-10184",
+  "currentSliceNotes": "Implemented six skirmish survey expeditions, map_explored_at_least runtime/content validation/scoped dependencies, six five-stack companies, six persistent radius-5 survey instruments, eighteen direct guarded fronts, five dormant encounter placements, and one original 288x48 atlas. Consolidated six-map smoke passed 18 battles and 18 claims with 86/135 after two instruments and 122/135 after three against a 108-tile threshold; malformed fog, exact art, scoped evaluation, victory, and save v9 passed. Repository validation and Linux/Windows packaging passed at 248610020 bytes, 1389980 below ceiling.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six relief route convoy runs 10184",
+  "currentSliceTitle": "content six fogbreak survey expeditions 10184",
   "currentSliceUpdatedAt": "2026-08-31T11:37:30Z",
   "deferredRiskRegister": [
     {
@@ -107135,6 +107135,16 @@
       "startedAt": "2026-08-31T10:58:23Z",
       "notes": "Implemented six skirmish-only faction relief routes, six five-stack convoy companies, six live response relays, persistent exact-target delivery receipts, reserve_delivery_completed objectives and strategic targeting, six generated relay masters plus compact atlas, and one consolidated six-case production smoke proving six claims, dispatches, interceptions, receipts, victories, save-v9 round trips, and eighteen battles. Repository validation and matching Linux/Windows release exports passed at 248517260 bytes.",
       "completedAt": "2026-08-31T11:37:30Z"
+    },
+    {
+      "id": "content-six-fogbreak-survey-expeditions-10184",
+      "title": "content six fogbreak survey expeditions 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T12:24:33Z",
+      "startedAt": "2026-08-31T11:44:40Z",
+      "notes": "Implemented six skirmish survey expeditions, map_explored_at_least runtime/content validation/scoped dependencies, six five-stack companies, six persistent radius-5 survey instruments, eighteen direct guarded fronts, five dormant encounter placements, and one original 288x48 atlas. Consolidated six-map smoke passed 18 battles and 18 claims with 86/135 after two instruments and 122/135 after three against a 108-tile threshold; malformed fog, exact art, scoped evaluation, victory, and save v9 passed. Repository validation and Linux/Windows packaging passed at 248610020 bytes, 1389980 below ceiling.",
+      "completedAt": "2026-08-31T12:24:33Z"
     }
   ],
   "project": "heroes-like",
@@ -107679,7 +107689,7 @@
   ],
   "summary": "Completed the coherent Seven-School Signature Battle VFX content, accessibility, live-presentation, and package-efficiency batch with one consolidated smoke.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T11:37:30Z",
+  "updatedAt": "2026-08-31T12:24:33Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

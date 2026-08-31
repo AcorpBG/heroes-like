@@ -322,6 +322,8 @@ static func _scenario_objective_dependency(objective: Dictionary, objective_inde
 					_add_dependency_value(dependency, "town_placement_ids", String(objective.get("target_id", "")))
 				"hero":
 					_add_dependency_value(dependency, "hero_ids", String(objective.get("target_id", "")))
+		"map_explored_at_least":
+			dependency["fog_exploration"] = true
 		"hero_army_meets_requirements":
 			_add_dependency_value(dependency, "hero_ids", String(objective.get("hero_id", "")))
 			var requirements = objective.get("requirements", [])
@@ -427,6 +429,7 @@ static func _empty_dependency() -> Dictionary:
 		"hero_ids": [],
 		"unit_ids": [],
 		"day": false,
+		"fog_exploration": false,
 	}
 
 static func _scenario_event_dependency(event_facts: Dictionary) -> Dictionary:
@@ -454,12 +457,15 @@ static func _scenario_event_dependency(event_facts: Dictionary) -> Dictionary:
 		for value in _string_array(event_facts.get(key, [])):
 			_add_dependency_value(dependency, key, value)
 	dependency["day"] = bool(event_facts.get("day_changed", false))
+	dependency["fog_exploration"] = bool(event_facts.get("fog_exploration_changed", false))
 	return dependency
 
 static func _scenario_event_affects_dependency(event_dependency: Dictionary, dependency: Dictionary) -> bool:
 	if not bool(dependency.get("known", false)):
 		return true
 	if bool(event_dependency.get("day", false)) and bool(dependency.get("day", false)):
+		return true
+	if bool(event_dependency.get("fog_exploration", false)) and bool(dependency.get("fog_exploration", false)):
 		return true
 	for key in [
 		"town_placement_ids",
@@ -505,6 +511,8 @@ static func _merge_dependency(target: Dictionary, source: Dictionary) -> void:
 			_add_dependency_value(target, key, value)
 	if bool(source.get("day", false)):
 		target["day"] = true
+	if bool(source.get("fog_exploration", false)):
+		target["fog_exploration"] = true
 
 static func _add_dependency_value(dependency: Dictionary, key: String, value: String) -> void:
 	var normalized := value.strip_edges()
@@ -1567,6 +1575,8 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 			return bool(_hero_stationing_progress(session, objective).get("complete", false))
 		"reserve_delivery_completed":
 			return bool(_reserve_delivery_progress(session, objective).get("complete", false))
+		"map_explored_at_least":
+			return bool(_map_exploration_progress(session, objective).get("complete", false))
 		"hero_army_meets_requirements":
 			return bool(_hero_army_requirement_progress(session, objective).get("complete", false))
 		"hero_progression_meets_requirements":
@@ -1631,6 +1641,13 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 				base_label,
 				int(delivery.get("completed_count", 0)),
 				int(delivery.get("minimum_count", 1)),
+			]
+		"map_explored_at_least":
+			var exploration := _map_exploration_progress(session, objective)
+			return "%s (%d%%/%d%% charted)" % [
+				base_label,
+				int(exploration.get("explored_percent", 0)),
+				int(exploration.get("minimum_percent", 1)),
 			]
 		"hero_army_meets_requirements":
 			var progress := _hero_army_requirement_progress(session, objective)
@@ -1747,6 +1764,29 @@ static func _reserve_delivery_progress(
 		"completed_count": completed_count,
 		"minimum_count": minimum_count,
 		"complete": not relay.is_empty() and completed_count >= minimum_count,
+	}
+
+static func _map_exploration_progress(
+	session: SessionStateStoreScript.SessionData,
+	objective: Dictionary
+) -> Dictionary:
+	var minimum_percent: int = clampi(int(objective.get("minimum_percent", 1)), 1, 100)
+	var fog: Dictionary = session.overworld.get("fog", {}) if session.overworld.get("fog", {}) is Dictionary else {}
+	var map_size: Vector2i = _overworld_rules().derive_map_size(session)
+	var expected_total_tiles: int = max(0, map_size.x) * max(0, map_size.y)
+	var total_tiles: int = max(0, int(fog.get("total_tiles", expected_total_tiles)))
+	if total_tiles != expected_total_tiles:
+		total_tiles = expected_total_tiles
+	var explored_count: int = clampi(int(fog.get("explored_count", 0)), 0, total_tiles)
+	var required_count: int = ceili(float(total_tiles * minimum_percent) / 100.0) if total_tiles > 0 else 1
+	var explored_percent: int = int(floor(float(explored_count * 100) / float(total_tiles))) if total_tiles > 0 else 0
+	return {
+		"explored_count": explored_count,
+		"total_tiles": total_tiles,
+		"required_count": required_count,
+		"explored_percent": explored_percent,
+		"minimum_percent": minimum_percent,
+		"complete": total_tiles > 0 and explored_count >= required_count,
 	}
 
 static func _hero_army_requirement_progress(

@@ -2964,6 +2964,90 @@
       ],
       "content_status": "relief_route_opening_company_live",
       "content_batch_id": "content-six-relief-route-convoy-runs-10184"
+    },
+    {
+      "id": "army_ashline_survey_company",
+      "name": "Orra Cinderquill's Ashline Survey Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 30},
+        {"unit_id": "unit_embercourt_lantern_sappers", "count": 18},
+        {"unit_id": "unit_embercourt_ash_oath_bailiffs", "count": 11},
+        {"unit_id": "unit_embercourt_beacon_lectors", "count": 6},
+        {"unit_id": "unit_embercourt_cinderseal_bombardiers", "count": 3}
+      ],
+      "content_status": "fogbreak_survey_company_live",
+      "content_batch_id": "content-six-fogbreak-survey-expeditions-10184"
+    },
+    {
+      "id": "army_bogglass_survey_company",
+      "name": "Nix Votivejaw's Bogglass Survey Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 30},
+        {"unit_id": "unit_mire_slinger", "count": 18},
+        {"unit_id": "unit_bog_brute", "count": 11},
+        {"unit_id": "unit_mireclaw_mireglass_reedcasters", "count": 6},
+        {"unit_id": "unit_mireclaw_fenbell_chainstalkers", "count": 3}
+      ],
+      "content_status": "fogbreak_survey_company_live",
+      "content_batch_id": "content-six-fogbreak-survey-expeditions-10184"
+    },
+    {
+      "id": "army_meridian_survey_company",
+      "name": "Calis Sunvein's Meridian Survey Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_shard_guard", "count": 30},
+        {"unit_id": "unit_prism_adept", "count": 18},
+        {"unit_id": "unit_mirror_duelist", "count": 11},
+        {"unit_id": "unit_sunvault_noonfacet_sentinels", "count": 6},
+        {"unit_id": "unit_sunvault_zenith_lensbearers", "count": 3}
+      ],
+      "content_status": "fogbreak_survey_company_live",
+      "content_batch_id": "content-six-fogbreak-survey-expeditions-10184"
+    },
+    {
+      "id": "army_rootstar_survey_company",
+      "name": "Veyra Seedseer's Rootstar Survey Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_pollenhook_whistlers", "count": 30},
+        {"unit_id": "unit_thornwake_sporeglass_menders", "count": 18},
+        {"unit_id": "unit_thornwake_seedshield_wardens", "count": 11},
+        {"unit_id": "unit_thornwake_canopy_rammers", "count": 6},
+        {"unit_id": "unit_thornwake_graft_matriarchs", "count": 3}
+      ],
+      "content_status": "fogbreak_survey_company_live",
+      "content_batch_id": "content-six-fogbreak-survey-expeditions-10184"
+    },
+    {
+      "id": "army_redgauge_survey_company",
+      "name": "Odrik Heatpriest's Redgauge Survey Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_tallyspring_throwers", "count": 30},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 18},
+        {"unit_id": "unit_brasshollow_gaugeplate_bailiffs", "count": 11},
+        {"unit_id": "unit_brasshollow_pressure_lancers", "count": 6},
+        {"unit_id": "unit_brasshollow_crucible_crawlers", "count": 3}
+      ],
+      "content_status": "fogbreak_survey_company_live",
+      "content_batch_id": "content-six-fogbreak-survey-expeditions-10184"
+    },
+    {
+      "id": "army_drowned_horizon_survey_company",
+      "name": "Nacre Vowless's Drowned-Horizon Survey Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_saltbell_casters", "count": 30},
+        {"unit_id": "unit_veilmourn_tidehook_deckhands", "count": 18},
+        {"unit_id": "unit_veilmourn_gloamkeel_bulwarks", "count": 11},
+        {"unit_id": "unit_veilmourn_wakeglass_navigators", "count": 6},
+        {"unit_id": "unit_veilmourn_saltwake_eulogists", "count": 3}
+      ],
+      "content_status": "fogbreak_survey_company_live",
+      "content_batch_id": "content-six-fogbreak-survey-expeditions-10184"
     }
   ]
 }
