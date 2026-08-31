@@ -15788,6 +15788,38 @@ Non-goals:
 - no new hero definition, unit, town, building, spell, artifact, campaign, map, combat formula, strategic-AI planning rule, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes commander, portrait, standard, encounter, name, text, heraldry, or protected visual expression.
 
+## Six Rival-Road Skirmishes
+
+id: `content-six-rival-road-skirmishes-10184`
+
+Status: completed.
+
+Current finding:
+- the fifteen skirmish-only authored maps are unevenly distributed: Embercourt owns six and Brasshollow and Veilmourn own three each, while Mireclaw, Sunvault, and Thornwake own only one apiece;
+- all three underrepresented factions already ship complete towns, hero identities, unit ladders, exact encounter landmarks, resource sites, artifacts, and battle presentation, so the missing value is additional composed playable maps rather than another disconnected definition or presentation pass;
+- Mistcorsair Graftwake Cordon and Fenbell Chainshadow Trial are the only non-systemic encounter definitions currently absent from every scenario, making them strong anchors for a package-safe map batch while the release PCK has only 421476 bytes of headroom.
+
+Implementation boundary:
+- add two original skirmish-only rival-road scenarios for each of Mireclaw, Sunvault, and Thornwake, with six distinct roster heroes, six exact player companies, eighteen direct encounter fronts plus six scripted counterstrokes, two towns per map, faction economies, artifacts, pressure lines, and deterministic seeds;
+- give every scenario a distinct three-front objective chain, capture goal, relief event, optional enemy counterstroke, escalating enemy pressure, completion flag, and post-claim reward, while reusing already-shipped exact encounter, town, hero, unit, resource-site, artifact, and terrain art;
+- place Mistcorsair Graftwake Cordon and Fenbell Chainshadow Trial into normal live scenario flow and preserve the two dynamic systemic encounter definitions for their runtime town/resource-defense roles;
+- preserve all existing scenarios and campaigns, save version 9, battle rules and balance, AI contracts, native RMG behavior, Windows/Linux parity, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all six scenarios appear in the skirmish selector, create valid live sessions with exact faction/hero/company identity, construct and resolve all eighteen direct battles plus six scripted counterstrokes, satisfy their authored victory chains, and round-trip through save version 9;
+- skirmish-only breadth rises from fifteen to twenty-one maps, with Mireclaw, Sunvault, and Thornwake rising from one to three maps apiece, and no non-systemic encounter definition remaining unplaced;
+- one consolidated six-case gameplay/save smoke runs only after the complete batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- Chainboom Graftwake Cordon, Reedscript Redline Reckoning, Glassmarshal Fenbell Refraction, Facetlane Last Sounding, Thorncart Daybreak Tangle, and Pollenglass Lockglass Appeal now ship as six original 12x8 skirmish maps with six roster heroes, six four-stack player companies, twelve towns, forty-eight resource placements, six artifact routes, eighteen mandatory battle fronts, and six scripted exact-art counterstrokes;
+- the skirmish-only catalog rises from fifteen to twenty-one maps, with Mireclaw, Sunvault, and Thornwake each rising from one to three, while the total authored catalog reaches 99 scenarios, 219 army groups, 424 direct encounter placements, and 147 directly placed encounter identities; Mistcorsair Graftwake Cordon and Fenbell Chainshadow Trial are no longer stranded;
+- the single consolidated six-case smoke passes 24/24 live battles, 24/24 exact encounter-art resolutions, 6/6 complete victory chains, and 6/6 save-version-9 round trips; repository validation passes;
+- sequential Linux and Windows release exports and packaged startups pass at 249627468-byte and 249625468-byte PCKs respectively, with source/development art excluded and 372532 to 374532 bytes remaining below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, unit definition, town definition, building, spell, artifact definition, encounter definition, campaign, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes map, scenario, name, text, heraldry, or protected visual expression.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
