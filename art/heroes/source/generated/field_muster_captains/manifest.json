@@ -1,0 +1,69 @@
+{
+  "schema": "field_muster_captain_generated_sources_v1",
+  "generator": "OpenAI built-in image generation",
+  "content_batch_id": "content-six-faction-field-muster-captains-10184",
+  "runtime_pipeline": "Generated originals are curated into exact 1254px square sources, then materialized as 384x512 runtime portraits; art/heroes/source is excluded from Linux and Windows release packages.",
+  "shared_prompt": "Original waist-up painterly realistic fantasy strategy commander portrait; one human character; faction-grounded practical equipment; distinct non-color silhouette; no text, logos, watermark, copied franchise costume, or known-character resemblance.",
+  "items": [
+    {
+      "hero_id": "hero_embercourt_maela_powderwrit",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-5c668b65-99ab-4f2a-b9d2-5c057dea9d79.png",
+      "prompt_subject": "Weathered Embercourt powder quartermaster with rain cloak, wax-sealed powder ledger, brass signal tube, and storm-dark river lockworks.",
+      "non_color_identity": "Broad rain-cloak collar, large strapped ledger, upright signal tube, fuse cords, and charter discs form an asymmetrical quartermaster silhouette.",
+      "source_path": "res://art/heroes/source/curated/hero_embercourt_maela_powderwrit.png",
+      "source_sha256": "78c19d7739439322027fb213099810f8b3454b12c2888e62de443d74f43813d9",
+      "portrait_path": "res://art/heroes/portraits/hero_embercourt_maela_powderwrit.png",
+      "portrait_sha256": "77113d076eade809d8a2e307e7a4d76ce8b28e6235b7803bc8e886c1180da132"
+    },
+    {
+      "hero_id": "hero_mireclaw_rhask_reedcaller",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-1940eff7-343e-412c-919f-9f3062997013.png",
+      "prompt_subject": "Lean Mireclaw reed-circle caller with gray reed braid, moonwax drum, forked calling staff, marsh beads, and blackwater standing stones.",
+      "non_color_identity": "Round side drum, forked bone-and-reed staff, one long braid, reed-fiber cloak, and narrow stance create a sharp marsh-caller outline.",
+      "source_path": "res://art/heroes/source/curated/hero_mireclaw_rhask_reedcaller.png",
+      "source_sha256": "702029913007564436a055693a9f7b2cb01c7a9b426624ec6783075b72f674bb",
+      "portrait_path": "res://art/heroes/portraits/hero_mireclaw_rhask_reedcaller.png",
+      "portrait_sha256": "409f71110d64031ab5f6f5384736e0deff9fcedc7954f36b6b829a52099e35dc"
+    },
+    {
+      "hero_id": "hero_sunvault_aven_sevenfold",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-6f435527-a04d-4886-a0b3-bbd74e489969.png",
+      "prompt_subject": "Androgynous Sunvault prism drill captain with cropped hair, single mirror-glass shoulder fan, folded seven-faced prism, and slim sentinel baton.",
+      "non_color_identity": "One high fan-shaped mirror shoulder, a faceted object held at the chest, and a narrow upright baton give the captain a precise angular silhouette.",
+      "source_path": "res://art/heroes/source/curated/hero_sunvault_aven_sevenfold.png",
+      "source_sha256": "cc22c746c521901218564732da800f3b185a318f34beb4f3f352551ff4eeb138",
+      "portrait_path": "res://art/heroes/portraits/hero_sunvault_aven_sevenfold.png",
+      "portrait_sha256": "fc13d7987f722d92630c487cb4574923551f136a1c7cff84d33e121ae08680c0"
+    },
+    {
+      "hero_id": "hero_thornwake_bryn_boltroot",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b841beff-d74c-4e38-b122-eddb855133b7.png",
+      "prompt_subject": "Freckled Thornwake grove quartermaster with seed-braided hair, leafing living-bolt bundle, woven branch shoulder, and root-grown rangefinder frame.",
+      "non_color_identity": "Tall leafing bolt bundle, diagonal root-grown frame, heavy braided hair, and woven branch shoulder make a readable living-arsenal silhouette.",
+      "source_path": "res://art/heroes/source/curated/hero_thornwake_bryn_boltroot.png",
+      "source_sha256": "8b69dbcfb41ce9fe27e245115c6580649401ca43d2cb89a1b8813050efb51254",
+      "portrait_path": "res://art/heroes/portraits/hero_thornwake_bryn_boltroot.png",
+      "portrait_sha256": "d0e611ccc161a99330612df6adfce8e386940a0547092196fe94b529492caf3e"
+    },
+    {
+      "hero_id": "hero_brasshollow_kestra_blackgauge",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-31ed21b3-241e-4b4d-90a7-16ba65be98b5.png",
+      "prompt_subject": "Broad Brasshollow assay foreman with soot-black coat, segmented gaugeplate, oversized shoulder pressure gauge, square assay hammer, and foundry bell.",
+      "non_color_identity": "Massive plated torso, round shoulder gauge, square-headed hammer, and hanging tally tags produce a compact industrial command silhouette.",
+      "source_path": "res://art/heroes/source/curated/hero_brasshollow_kestra_blackgauge.png",
+      "source_sha256": "a9a7285623f84c6ef07864b8fde53bad77d5d299f691f021fbcf15a0047132ca",
+      "portrait_path": "res://art/heroes/portraits/hero_brasshollow_kestra_blackgauge.png",
+      "portrait_sha256": "70dcaab14eeaf01d835a381d35ffb4130012a328c6716e9b2a1a38d3f2e749de"
+    },
+    {
+      "hero_id": "hero_veilmourn_olan_tidehook",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f3c4cb33-e415-48c4-bcde-cb0b47b455b3.png",
+      "prompt_subject": "Weathered Veilmourn memory deckmaster with wind-tangled silver-streaked hair, tall curved tidehook, furled pearl sail, urn tokens, and moonlit mooring.",
+      "non_color_identity": "Tall curved hook, bundled furled sail, driftwood shoulder frame, layered salt coat, and hanging memory urns define the deckmaster at a glance.",
+      "source_path": "res://art/heroes/source/curated/hero_veilmourn_olan_tidehook.png",
+      "source_sha256": "3a877521bf50892b0f23c1682787dda15c414eaeff4c51dc6227719026811fc6",
+      "portrait_path": "res://art/heroes/portraits/hero_veilmourn_olan_tidehook.png",
+      "portrait_sha256": "77cc69ccb7def401e012b9a988e64ddcfd363953b6696cf285c285cfef981c69"
+    }
+  ]
+}

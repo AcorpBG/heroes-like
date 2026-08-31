@@ -77,14 +77,14 @@ func _run() -> void:
 		"viewports": VIEWPORT_SIZES,
 		"surfaces": ["component", "campaign_menu", "overworld", "town", "battle_player", "battle_enemy_authored", "outcome"],
 		"enemy_unknown_hidden": true,
-		"non_target_portrait_count": 58,
+		"non_target_portrait_count": 64,
 	}))
 	get_tree().quit(0)
 
 
 func _validate_curated_provenance() -> bool:
-	if ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60:
-		_fail("Hero roster must remain exactly 60 live records.")
+	if ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66:
+		_fail("Hero roster must remain exactly 66 live records.")
 		return false
 	for case_value in CASES:
 		var case: Dictionary = case_value
@@ -178,8 +178,8 @@ func _validate_shared_component() -> bool:
 			_fail("Shared portrait authority mismatch for %s: %s" % [hero_id, JSON.stringify(snapshot)])
 			return false
 		paths[expected_path] = true
-	if hero_ids.size() != 60 or paths.size() != 60:
-		_fail("Shared portrait coverage must remain 60 unique heroes.")
+	if hero_ids.size() != 66 or paths.size() != 66:
+		_fail("Shared portrait coverage must remain 66 unique heroes.")
 		return false
 	if portrait.set_hero_id("hero_not_authored") or portrait.visible or portrait.texture != null or portrait.tooltip_text != "":
 		_fail("Shared portrait did not fail closed for an unknown hero.")

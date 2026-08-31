@@ -48286,13 +48286,13 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         "faction_thornwake", "faction_brasshollow", "faction_veilmourn",
     )
     heroes = items_index(load_json(CONTENT_DIR / "heroes.json"))
-    ensure(len(heroes) == 60, errors, "Faction hero sprite adoption must retain the exact 60 production heroes")
+    ensure(len(heroes) == 66, errors, "Faction hero sprite adoption must retain the exact 66 production heroes")
     hero_faction_counts = {faction_id: 0 for faction_id in faction_order}
     for hero in heroes.values():
         faction_id = str(hero.get("faction_id", "")) if isinstance(hero, dict) else ""
         if faction_id in hero_faction_counts:
             hero_faction_counts[faction_id] += 1
-    ensure(all(hero_faction_counts[faction_id] == 10 for faction_id in faction_order), errors, "All six factions must retain exactly ten production heroes for sprite resolution")
+    ensure(all(hero_faction_counts[faction_id] == 11 for faction_id in faction_order), errors, "All six factions must retain exactly eleven production heroes for sprite resolution")
 
     manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = manifest.get("object_assets", {})
@@ -50948,7 +50948,8 @@ def validate_six_faction_grand_convergence_marches(errors: list[str]) -> None:
 
     ensure(len(spell_union) == 15, errors, f"Grand-convergence hero union must retain fifteen distinct starting spells: {sorted(spell_union)}")
     ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6, errors, "All six grand-convergence generated sources must remain byte-distinct")
-    ensure({scenario.get("hero_id") for scenario in scenarios.values()} == set(heroes), errors, "All 60 production heroes must retain at least one authored command scenario")
+    scenario_hero_ids = {scenario.get("hero_id") for scenario in scenarios.values()}
+    ensure(len(scenario_hero_ids) == 60 and scenario_hero_ids.issubset(set(heroes)), errors, "The 60 scenario-backed commanders must remain authored while tavern-only captains stay optional starts")
     report_text = report_script_path.read_text(encoding="utf-8")
     ensure_scene_nodes(report_scene_path.read_text(encoding="utf-8"), errors, "six_faction_grand_convergence_marches_report.tscn", [("SixFactionGrandConvergenceMarchesReport", "Node")])
     for token in ('const GRAND_CONVERGENCE_PLAYER_UNIT_IDS := [', 'const GRAND_CONVERGENCE_PRIMARY_UNIT_IDS := [', 'const GRAND_CONVERGENCE_SPELL_IDS := [', 'ScenarioFactory.create_session(', 'validation_encounter_presentation_payload', 'player_commander_state', '_side_counts(battle, "player")', 'BattleAutoResolveRulesScript.resolve_active_battle', 'SessionStateStoreScript.SAVE_VERSION', 'GRAND_CONVERGENCE_CAPTURE_DIR', 'print("%s %s" % [REPORT_ID'):
@@ -57228,7 +57229,7 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         records[hero_id] = record
     ensure(not duplicates, errors, "Hero art manifest must not duplicate hero ids: " + ", ".join(sorted(set(duplicates))))
     ensure(set(records) == set(heroes), errors, "Hero art manifest must cover every authored hero exactly once")
-    ensure(len(records) == 60, errors, "Hero art manifest must cover all 60 authored heroes")
+    ensure(len(records) == 66, errors, "Hero art manifest must cover all 66 authored heroes")
 
     portrait_paths: set[str] = set()
     for hero_id, hero in heroes.items():
@@ -57567,13 +57568,19 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         "hero_brasshollow_pava_ashmeter": {"name": "Pava Ashmeter", "faction_id": "faction_brasshollow", "archetype": "slagalchemist", "source_path": "res://art/heroes/source/curated/hero_brasshollow_pava_ashmeter.png", "source_sha256": "9e3c1804a89042c74fd9f77c34a544cf2eaa89a57f0b1fffb289d77303c01bff", "portrait_sha256": "5b5bb7b9487e373477f72ed4cda827cc2fca4f40c0b9548f099d095ecea9d910"},
         "hero_veilmourn_nacre_vowless": {"name": "Nacre Vowless", "faction_id": "faction_veilmourn", "archetype": "funeralhexer", "source_path": "res://art/heroes/source/curated/hero_veilmourn_nacre_vowless.png", "source_sha256": "8b5518b76431926bcd6c37a7b53ef6255888056d4dcc7444f01c373ef794bee7", "portrait_sha256": "222df66b07e83e832b6a1f2e47e3a0b3145acdba3d63a765956ac7ce5f585a87"},
         "hero_veilmourn_orso_nightchart": {"name": "Orso Nightchart", "faction_id": "faction_veilmourn", "archetype": "routediviner", "source_path": "res://art/heroes/source/curated/hero_veilmourn_orso_nightchart.png", "source_sha256": "ead583409f8d92a8275ba7922dc029cffbc82c032265a84cbcb15f2f65a89034", "portrait_sha256": "4aa6dd74b9050997eaaa58c5907397bfe91624d81531446b6539ade712eb7e40"},
+        "hero_embercourt_maela_powderwrit": {"name": "Maela Powderwrit", "faction_id": "faction_embercourt", "archetype": "powderquartermaster", "source_path": "res://art/heroes/source/curated/hero_embercourt_maela_powderwrit.png", "source_sha256": "78c19d7739439322027fb213099810f8b3454b12c2888e62de443d74f43813d9", "portrait_sha256": "77113d076eade809d8a2e307e7a4d76ce8b28e6235b7803bc8e886c1180da132"},
+        "hero_mireclaw_rhask_reedcaller": {"name": "Rhask Reedcaller", "faction_id": "faction_mireclaw", "archetype": "reedcirclecaller", "source_path": "res://art/heroes/source/curated/hero_mireclaw_rhask_reedcaller.png", "source_sha256": "702029913007564436a055693a9f7b2cb01c7a9b426624ec6783075b72f674bb", "portrait_sha256": "409f71110d64031ab5f6f5384736e0deff9fcedc7954f36b6b829a52099e35dc"},
+        "hero_sunvault_aven_sevenfold": {"name": "Aven Sevenfold", "faction_id": "faction_sunvault", "archetype": "facetdrillcaptain", "source_path": "res://art/heroes/source/curated/hero_sunvault_aven_sevenfold.png", "source_sha256": "cc22c746c521901218564732da800f3b185a318f34beb4f3f352551ff4eeb138", "portrait_sha256": "fc13d7987f722d92630c487cb4574923551f136a1c7cff84d33e121ae08680c0"},
+        "hero_thornwake_bryn_boltroot": {"name": "Bryn Boltroot", "faction_id": "faction_thornwake", "archetype": "grovequartermaster", "source_path": "res://art/heroes/source/curated/hero_thornwake_bryn_boltroot.png", "source_sha256": "8b69dbcfb41ce9fe27e245115c6580649401ca43d2cb89a1b8813050efb51254", "portrait_sha256": "d0e611ccc161a99330612df6adfce8e386940a0547092196fe94b529492caf3e"},
+        "hero_brasshollow_kestra_blackgauge": {"name": "Kestra Blackgauge", "faction_id": "faction_brasshollow", "archetype": "assaymusterforeman", "source_path": "res://art/heroes/source/curated/hero_brasshollow_kestra_blackgauge.png", "source_sha256": "a9a7285623f84c6ef07864b8fde53bad77d5d299f691f021fbcf15a0047132ca", "portrait_sha256": "70dcaab14eeaf01d835a381d35ffb4130012a328c6716e9b2a1a38d3f2e749de"},
+        "hero_veilmourn_olan_tidehook": {"name": "Olan Tidehook", "faction_id": "faction_veilmourn", "archetype": "memorydeckmaster", "source_path": "res://art/heroes/source/curated/hero_veilmourn_olan_tidehook.png", "source_sha256": "3a877521bf50892b0f23c1682787dda15c414eaeff4c51dc6227719026811fc6", "portrait_sha256": "77cc69ccb7def401e012b9a988e64ddcfd363953b6696cf285c285cfef981c69"},
     }
     curated_record_ids = {
         hero_id
         for hero_id, record in records.items()
         if any(key in record for key in ("source_kind", "source_path", "source_sha256"))
     }
-    ensure(curated_record_ids == set(curated_cases), errors, "Hero art curated provenance must belong only to the exact 60 registered curated heroes")
+    ensure(curated_record_ids == set(curated_cases), errors, "Hero art curated provenance must belong only to the exact 66 registered curated heroes")
     for hero_id, expected in curated_cases.items():
         record = records.get(hero_id, {})
         source_path = str(expected["source_path"])
@@ -57601,7 +57608,7 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         "faction_id",
         "command_path",
         "384, 512",
-        'CURATED_PORTRAIT_SOURCE_IDS = {\n    "hero_brasshollow_daxis_chaincaptain",\n    "hero_brasshollow_harro_debtrune",\n    "hero_brasshollow_kuld_varn",\n    "hero_brasshollow_lina_gaugesavant",\n    "hero_brasshollow_marka_ironclause",\n    "hero_brasshollow_odrik_heatpriest",\n    "hero_brasshollow_oren_bellfounder",\n    "hero_brasshollow_pava_ashmeter",\n    "hero_brasshollow_selka_pitmarshal",\n    "hero_brasshollow_vellum_quench",\n    "hero_caelen",\n    "hero_embercourt_belis_rainledger",\n    "hero_embercourt_helva_tollbrand",\n    "hero_embercourt_jorun_beaconscribe",\n    "hero_embercourt_orra_cinderquill",\n    "hero_embercourt_saren_lockmaster",\n    "hero_lyra",\n    "hero_mira",\n    "hero_mireclaw_brakka_mudkeel",\n    "hero_mireclaw_edda_rotlamp",\n    "hero_mireclaw_kessa_chainboom",\n    "hero_mireclaw_nix_votivejaw",\n    "hero_mireclaw_pell_reedscript",\n    "hero_mireclaw_zhorra_fenwake",\n    "hero_neral",\n    "hero_orrik",\n    "hero_sable",\n    "hero_seren",\n    "hero_solera",\n    "hero_sunvault_calis_sunvein",\n    "hero_sunvault_dovan_lenscaptain",\n    "hero_sunvault_essa_daynote",\n    "hero_sunvault_ilyr_glassmarshal",\n    "hero_sunvault_mirro_halometer",\n    "hero_sunvault_renn_facetlane",\n    "hero_tarn",\n    "hero_thalen",\n    "hero_thornwake_ardren_briarmarshal",\n    "hero_thornwake_elian_loamchant",\n    "hero_thornwake_halen_thorncart",\n    "hero_thornwake_merek_greenbarrow",\n    "hero_thornwake_nara_graftsibyl",\n    "hero_thornwake_osmund_pollenglass",\n    "hero_thornwake_ralka_mossvein",\n    "hero_thornwake_silsa_bramblehound",\n    "hero_thornwake_tova_rootwright",\n    "hero_thornwake_veyra_seedseer",\n    "hero_torren",\n    "hero_varis",\n    "hero_vaska",\n    "hero_veilmourn_cela_mistcorsair",\n    "hero_veilmourn_damar_oriflag",\n    "hero_veilmourn_ivara_blacktide",\n    "hero_veilmourn_jessa_keelwarden",\n    "hero_veilmourn_morwen_wakeoracle",\n    "hero_veilmourn_nacre_vowless",\n    "hero_veilmourn_orso_nightchart",\n    "hero_veilmourn_ruln_vanehook",\n    "hero_veilmourn_sael_mirrorbell",\n    "hero_veilmourn_thir_obituaryink",\n}',
+        "CURATED_PORTRAIT_SOURCE_IDS = {",
         'CURATED_SOURCE_ROOT = ROOT / "art" / "heroes" / "source" / "curated"',
         "def draw_curated_hero_portrait(source_path: Path, path: Path) -> None:",
         "portrait = ImageOps.fit(",
@@ -57610,6 +57617,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         'raise FileNotFoundError(f"missing curated hero portrait source: {source_path}")',
     ):
         ensure(required_token in generator_text, errors, f"Hero portrait generator is missing token {required_token}")
+    for hero_id in curated_cases:
+        ensure(f'"{hero_id}"' in generator_text, errors, f"Hero portrait generator is missing curated source id {hero_id}")
     ensure(generator_text.count("draw_curated_hero_portrait(source_path, path)") == 1, errors, "Hero portrait generator must have one curated portrait materialization call")
     ensure("CURATED_PORTRAIT_SOURCE_IDS.add" not in generator_text and "CURATED_PORTRAIT_SOURCE_IDS.update" not in generator_text, errors, "Hero portrait curated source ownership must remain static")
 
@@ -57633,7 +57642,7 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
     for required_token in ("CampaignCommanderIdentity", "CampaignCommanderPortrait", "SkirmishCommanderIdentity", "SkirmishCommanderPortrait", "custom_minimum_size = Vector2(64, 86)", 'path="res://scenes/ui/HeroPortraitView.gd"', 'script = ExtResource("5_hero_portrait")'):
         ensure(required_token in scene_text, errors, f"MainMenu.tscn is missing hero portrait token {required_token}")
     report_text = HERO_PORTRAIT_MENU_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-    for required_token in ("HERO_PORTRAIT_MENU_REPORT", "hero_ids.size() != 60", "campaign_commander_portrait_path", "skirmish_commander_portrait_path", "texture.get_width() != 384", "texture.get_height() != 512"):
+    for required_token in ("HERO_PORTRAIT_MENU_REPORT", "hero_ids.size() != 66", "campaign_commander_portrait_path", "skirmish_commander_portrait_path", "texture.get_width() != 384", "texture.get_height() != 512"):
         ensure(required_token in report_text, errors, f"Hero portrait menu report is missing token {required_token}")
 
     portrait_view_text = HERO_PORTRAIT_VIEW_PATH.read_text(encoding="utf-8")
@@ -57685,7 +57694,7 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
     live_report_text = LIVE_COMMANDER_PORTRAIT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "LIVE_COMMANDER_PORTRAIT_REPORT",
-        "hero_ids.size() != 60",
+        "hero_ids.size() != 66",
         "VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
         'portrait.set_hero_id("hero_not_authored")',
         'session.battle["enemy_hero"] = enemy_hero',
@@ -57708,8 +57717,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"scenario_id": "bogbound-oath"',
         '"source_count": 2',
         '"portrait_count": 2',
-        '"non_target_portrait_count": 58',
-        "ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60",
+        '"non_target_portrait_count": 64',
+        "ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66",
         'String(art.get("source_kind", "")) != "curated_original_character"',
         "source_image.get_size() != Vector2i(1254, 1254)",
         "portrait_image.get_size() != Vector2i(384, 512)",
@@ -57768,8 +57777,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"generated_default_hero_id": "hero_thornwake_ardren_briarmarshal"',
         '"source_count": 2',
         '"portrait_count": 2',
-        '"non_target_portrait_count": 58',
-        "ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60",
+        '"non_target_portrait_count": 64',
+        "ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66",
         'String(art.get("source_kind", "")) != "curated_original_character"',
         "source_image.get_size() != Vector2i(1254, 1254)",
         "portrait_image.get_size() != Vector2i(384, 512)",
@@ -57821,8 +57830,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         'String(chapter.get("scenario_id", "")) == scenario_id',
         '"source_count": 2',
         '"portrait_count": 2',
-        '"non_target_portrait_count": 58',
-        "ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60",
+        '"non_target_portrait_count": 64',
+        "ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66",
         'String(art.get("source_kind", "")) != "curated_original_character"',
         "source_image.get_size() != Vector2i(1254, 1254)",
         "portrait_image.get_size() != Vector2i(384, 512)",
@@ -57886,8 +57895,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"portrait_sha256": "0849f0043fa68041f60090ef6c120f00c082f343380be5276fb91ee441d1aa76"',
         '"source_count": 2',
         '"portrait_count": 2',
-        '"non_target_portrait_count": 58',
-        "ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60",
+        '"non_target_portrait_count": 64',
+        "ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66",
         'String(art.get("source_kind", "")) != "curated_original_character"',
         "source_image.get_size() != Vector2i(1254, 1254)",
         "portrait_image.get_size() != Vector2i(384, 512)",
@@ -57945,7 +57954,7 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"portrait_sha256": "a00562af41fbf557a67538fd1e3aaa2f2ec228563178c8d5f2817e1f9d8e5ace"',
         '"source_count": 2',
         '"portrait_count": 2',
-        '"non_target_portrait_count": 58',
+        '"non_target_portrait_count": 64',
         '"generated_default_session"',
         'ScenarioSelectRules.build_random_map_player_config(',
         '"thornwake-commander-portrait-10184"',
@@ -57960,7 +57969,7 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         'ContentService.unregister_generated_scenario_draft(_generated_scenario_id)',
         'SessionStateStoreScript.SessionData.new()',
         'session.from_dict(_generated_session_payload.duplicate(true))',
-        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60',
+        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66',
         'String(art.get("source_kind", "")) != "curated_original_character"',
         'source_image.get_size() != Vector2i(1254, 1254)',
         'portrait_image.get_size() != Vector2i(384, 512)',
@@ -58014,8 +58023,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"portrait_sha256": "daecf892d3b8e47d9234af4a957196cc67b25959fbe1a13847df2aa4d2e95602"',
         '"source_count": 2',
         '"portrait_count": 2',
-        '"non_target_portrait_count": 58',
-        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60',
+        '"non_target_portrait_count": 64',
+        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66',
         'String(art.get("source_kind", "")) != "curated_original_character"',
         'source_image.get_size() != Vector2i(1254, 1254)',
         'portrait_image.get_size() != Vector2i(384, 512)',
@@ -58077,8 +58086,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"portrait_sha256": "6ef43a4c54f4a109c4150c36b9946ba7b9eecc137f00efeef1f98431a96d4ec6"',
         '"source_count": 2',
         '"portrait_count": 2',
-        '"non_target_portrait_count": 58',
-        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60',
+        '"non_target_portrait_count": 64',
+        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66',
         'String(art.get("source_kind", "")) != "curated_original_character"',
         'source_image.get_size() != Vector2i(1254, 1254)',
         'portrait_image.get_size() != Vector2i(384, 512)',
@@ -58136,8 +58145,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"portrait_sha256": "633330c6c0436f194d5498fe309dccd41f328716d0fec7397478cb40b222149e"',
         '"source_count": 1',
         '"portrait_count": 1',
-        '"non_target_portrait_count": 59',
-        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60',
+        '"non_target_portrait_count": 65',
+        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66',
         'String(art.get("source_kind", "")) != "curated_original_character"',
         'source_image.get_size() != Vector2i(1254, 1254)',
         'portrait_image.get_size() != Vector2i(384, 512)',
@@ -58214,8 +58223,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"portrait_sha256": "5b021432bfa38e80e468504109518d4cb956609154bac706ca7be0033481265c"',
         '"source_count": 6',
         '"portrait_count": 6',
-        '"non_target_portrait_count": 54',
-        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60',
+        '"non_target_portrait_count": 60',
+        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66',
         'String(art.get("source_kind", "")) != "curated_original_character"',
         'source_image.get_size() != Vector2i(1254, 1254)',
         'portrait_image.get_size() != Vector2i(384, 512)',
@@ -58287,8 +58296,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"portrait_sha256": "d6160346c0d40a709ef217f8248384a0fa034dec9791a6dc5e7a17d86be8ffc6"',
         '"source_count": 6',
         '"portrait_count": 6',
-        '"non_target_portrait_count": 54',
-        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60',
+        '"non_target_portrait_count": 60',
+        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66',
         'String(art.get("source_kind", "")) != "curated_original_character"',
         'source_image.get_size() != Vector2i(1254, 1254)',
         'portrait_image.get_size() != Vector2i(384, 512)',
@@ -58350,8 +58359,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"portrait_sha256": "322332163c27b3ad5cb0fac858d54dbe069de7c3ea7837282ffa6c23f16a595c"',
         '"source_count": 6',
         '"portrait_count": 6',
-        '"non_target_portrait_count": 54',
-        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60',
+        '"non_target_portrait_count": 60',
+        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66',
         'String(art.get("source_kind", "")) != "curated_original_character"',
         'source_image.get_size() != Vector2i(1254, 1254)',
         'portrait_image.get_size() != Vector2i(384, 512)',
@@ -58412,8 +58421,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"portrait_sha256": "827401f0d471c6010305e3858d858b74ce30c98cde5f84a82d83d465f515e406"',
         '"portrait_sha256": "04b7b7bfbdbfd96e700b44fb0b881eb7b268079b5fbd14d648a9fd3f34d3959d"',
         '"portrait_sha256": "1ec89232c4f1ad2a88182c99ee22a50423d31663f77d3994deae6d1ee914db80"',
-        '"source_count": 6', '"portrait_count": 6', '"non_target_portrait_count": 54',
-        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60',
+        '"source_count": 6', '"portrait_count": 6', '"non_target_portrait_count": 60',
+        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66',
         'String(art.get("source_kind", "")) != "curated_original_character"',
         'source_image.get_size() != Vector2i(1254, 1254)',
         'portrait_image.get_size() != Vector2i(384, 512)',
@@ -58453,8 +58462,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"portrait_sha256": "8800619b0e41effc5f9acf2b05a1814e4eab283bc58ebce52c64ada61e59e46a"',
         '"portrait_sha256": "ac6b988cf15a83e5ec916b0f8e8ab00ee0edd6e381002086367541f9a9a2c155"',
         '"portrait_sha256": "1dc1f9f082aa0ec0ec0794f13be3c2c9c38d24baea33e2f348eb6fcb0807f6a5"',
-        '"source_count": 6', '"portrait_count": 6', '"non_target_portrait_count": 54',
-        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60', 'String(art.get("source_kind", "")) != "curated_original_character"',
+        '"source_count": 6', '"portrait_count": 6', '"non_target_portrait_count": 60',
+        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66', 'String(art.get("source_kind", "")) != "curated_original_character"',
         'source_image.get_size() != Vector2i(1254, 1254)', 'portrait_image.get_size() != Vector2i(384, 512)',
         'roster.find(hero_id) != int(case.get("roster_index", -1))', 'HeroCommandRules.recruitable_hero_ids(session)', 'TownRules.get_tavern_actions(session)',
         'load("res://scenes/overworld/OverworldShell.tscn")', 'load("res://scenes/town/TownShell.tscn")',
@@ -58491,8 +58500,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"portrait_sha256": "50eb10c7476d5a862ca85f9c115a2e0e5337b43c78579f09912f824a35776d7a"',
         '"portrait_sha256": "1ae9e3b1d66fcd837211e5a707593ae99cd73cbd604be5c3c7a6944d6358d2aa"',
         '"portrait_sha256": "1e71b7ce6d3ab979e7615135f8fa068a6a01e200ce1a783f5981e44d5c0f8bdf"',
-        '"source_count": 6', '"portrait_count": 6', '"non_target_portrait_count": 54',
-        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60', 'String(art.get("source_kind", "")) != "curated_original_character"',
+        '"source_count": 6', '"portrait_count": 6', '"non_target_portrait_count": 60',
+        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66', 'String(art.get("source_kind", "")) != "curated_original_character"',
         'source_image.get_size() != Vector2i(1254, 1254)', 'portrait_image.get_size() != Vector2i(384, 512)',
         'roster.find(hero_id) != int(case.get("roster_index", -1))', 'HeroCommandRules.recruitable_hero_ids(session)', 'TownRules.get_tavern_actions(session)',
         'load("res://scenes/overworld/OverworldShell.tscn")', 'load("res://scenes/town/TownShell.tscn")',
@@ -58537,8 +58546,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"portrait_sha256": "5b5bb7b9487e373477f72ed4cda827cc2fca4f40c0b9548f099d095ecea9d910"',
         '"portrait_sha256": "222df66b07e83e832b6a1f2e47e3a0b3145acdba3d63a765956ac7ce5f585a87"',
         '"portrait_sha256": "4aa6dd74b9050997eaaa58c5907397bfe91624d81531446b6539ade712eb7e40"',
-        '"source_count": 9', '"portrait_count": 9', '"non_target_portrait_count": 51',
-        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60', 'String(art.get("source_kind", "")) != "curated_original_character"',
+        '"source_count": 9', '"portrait_count": 9', '"non_target_portrait_count": 57',
+        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 66', 'String(art.get("source_kind", "")) != "curated_original_character"',
         'source_image.get_size() != Vector2i(1254, 1254)', 'portrait_image.get_size() != Vector2i(384, 512)',
         'roster.find(hero_id) != int(case.get("roster_index", -1))', 'HeroCommandRules.recruitable_hero_ids(session)', 'TownRules.get_tavern_actions(session)',
         'load("res://scenes/overworld/OverworldShell.tscn")', 'load("res://scenes/town/TownShell.tscn")',
@@ -58581,6 +58590,42 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         'bool(stale_portrait.get("visible", true))',
     ):
         ensure(required_token in save_visual_text, errors, f"Save/load confidence visual smoke is missing portrait continuity token {required_token}")
+
+    captain_smoke_path = ROOT / "tests" / "six_faction_field_muster_captains_smoke.gd"
+    captain_scene_path = ROOT / "tests" / "six_faction_field_muster_captains_smoke.tscn"
+    captain_source_manifest_path = ROOT / "art" / "heroes" / "source" / "generated" / "field_muster_captains" / "manifest.json"
+    for path in (captain_smoke_path, captain_scene_path, captain_source_manifest_path):
+        ensure(path.is_file(), errors, f"Missing field-muster captain batch owner: {path.relative_to(ROOT)}")
+    if captain_smoke_path.is_file():
+        captain_smoke_text = captain_smoke_path.read_text(encoding="utf-8")
+        for token in (
+            'const REPORT_ID := "SIX_FACTION_FIELD_MUSTER_CAPTAINS_SMOKE"',
+            'const BATCH_ID := "content-six-faction-field-muster-captains-10184"',
+            'ContentService.get_content_ids(ContentService.HEROES_PATH).size() == 66',
+            'TownRules.hire_hero_at_active_town(session, hero_id)',
+            'HeroProgressionRulesScript.specialty_rank(hero, "mustercaptain") == 1',
+            'HeroProgressionRulesScript.scale_recruit_growth',
+            'OverworldRules.town_recruit_cost',
+            'BattleRulesScript.create_battle_payload',
+            'SessionStateStoreScript.SAVE_VERSION',
+            '"single_consolidated_smoke": true',
+        ):
+            ensure(token in captain_smoke_text, errors, f"Field-muster captain consolidated smoke is missing token {token}")
+        ensure(captain_smoke_text.count('"hero_id":"hero_') == 6, errors, "Field-muster captain consolidated smoke must own exactly six hero cases")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        for token in (
+            "REQUIRED_FIELD_MUSTER_CAPTAIN_HERO_IDS",
+            "REQUIRED_FIELD_MUSTER_CAPTAIN_HERO_PCK_IMPORT_ENTRIES",
+            'bool(terrain_payload["field_muster_captain_hero_entries_present"])',
+        ):
+            ensure(token in packaging_text, errors, f"{packaging_path.name} is missing field-muster captain portrait packaging authority {token}")
+        for hero_id in (
+            "hero_embercourt_maela_powderwrit", "hero_mireclaw_rhask_reedcaller",
+            "hero_sunvault_aven_sevenfold", "hero_thornwake_bryn_boltroot",
+            "hero_brasshollow_kestra_blackgauge", "hero_veilmourn_olan_tidehook",
+        ):
+            ensure(f'"{hero_id}"' in packaging_text, errors, f"{packaging_path.name} is missing field-muster captain portrait {hero_id}")
 
 
 def validate_unit_art_assets(errors: list[str]) -> None:
@@ -78716,7 +78761,7 @@ def validate_final_nine_faction_campaigns(errors: list[str]) -> None:
         for scenario in scenarios.values()
         if isinstance(scenario, dict) and scenario.get("selection", {}).get("availability", {}).get("campaign") is True
     }
-    ensure(set(heroes) == campaign_hero_ids and len(campaign_hero_ids) == 60, errors, "All sixty production heroes must now have campaign representation")
+    ensure(len(campaign_hero_ids) == 60 and campaign_hero_ids.issubset(set(heroes)), errors, "The sixty campaign-backed commanders must retain campaign representation")
 
     manifest = load_json(manifest_path)
     ensure(manifest.get("campaign_ids") == list(expected) and manifest.get("generation_mode") == "built_in_image_gen_original_faction_emblems_and_encounter_derived_chapter_seals", errors, "Final-nine art provenance changed")
@@ -79469,7 +79514,7 @@ def validate_six_grand_convergence_rival_commanders(errors: list[str]) -> None:
     art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     assets = art.get("object_assets", {})
     identities = art.get("encounter_identity_sprites", {})
-    ensure((len(groups), len(encounters), len(scenarios), len(heroes)) == (225,161,99,60), errors, "Grand-convergence rival-commander catalog totals changed")
+    ensure((len(groups), len(encounters), len(scenarios), len(heroes)) == (225,161,99,66), errors, "Grand-convergence rival-commander catalog totals changed")
     atlas_sha = "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b"
     atlas_bytes = atlas_path.read_bytes()
     ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_bytes).hexdigest() == atlas_sha and len(atlas_bytes) >= 26 and atlas_bytes[25] in {4,6}, errors, "Grand-convergence rival-command atlas bytes, size, or alpha changed")
@@ -80260,7 +80305,7 @@ def main() -> int:
     print("- town assaults now route into real defense battles with garrison sync, raid-survivor sync, and town-loss consequences")
     print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, required encounter objectives, hostile-town assault, resolved outcome routing, outcome save/load review semantics, and post-outcome menu return artifacts")
     print("- active-play shells now use router-driven save controls, latest-save context, and safe return-or-resume flow without a save-version bump")
-    print("- six-faction hero rosters now keep ten live, validated heroes per faction with retained scaffold opt-in support for older scenarios")
+    print("- six-faction hero rosters now keep eleven live, validated heroes per faction with retained scaffold opt-in support for older scenarios")
     print("- unit art manifests now cover every authored unit with portrait, battle-icon, grounded battle-standee, overworld-icon, and cue-aligned battle animation PNG assets plus live runtime loading hooks")
     print("- economy/resource policy keeps wood as the canonical live save id, rejects target aliases, and preserves old-save wood payloads without a save-version bump")
     print("- rare-resource registry/report gates now expose original rare resources as live stockpiles with sources and high-tier town costs, while normal market buying stays disabled")

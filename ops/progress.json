@@ -15858,10 +15858,10 @@
   "currentNotes": "The Seven-School Signature Battle VFX batch is complete. The broader production-content goal remains active; select and register the next bounded content/art gap before implementation.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-seven-school-signature-battle-vfx-10184",
-  "currentSliceId": "content-six-horizon-company-field-musters-10184",
-  "currentSliceNotes": "Implemented six live faction-linked field musters with exact two-state art, claim and weekly recruits, controlled income, Horizon placements, save-v9 continuity, one consolidated 6/6 smoke, repository validation, and matching Linux/Windows 245963644-byte package gates.",
+  "currentSliceId": "content-six-faction-field-muster-captains-10184",
+  "currentSliceNotes": "Implemented six original faction-exclusive tavern captains and curated portraits; consolidated 6/6 live tavern, Muster Captain economy, town portrait, reserve-company battle, and save-v9 smoke passed; repository validation passed; Linux and Windows export/startup passed with matching 247544396-byte PCKs, six captain portrait imports/textures present, source art excluded, and 2455604 bytes headroom.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six horizon company field musters 10184",
+  "currentSliceTitle": "content six faction field muster captains 10184",
   "currentSliceUpdatedAt": "2026-08-31T03:02:48Z",
   "deferredRiskRegister": [
     {
@@ -106897,6 +106897,16 @@
       "startedAt": "2026-08-31T03:52:59Z",
       "notes": "Implemented six live faction-linked field musters with exact two-state art, claim and weekly recruits, controlled income, Horizon placements, save-v9 continuity, one consolidated 6/6 smoke, repository validation, and matching Linux/Windows 245963644-byte package gates.",
       "completedAt": "2026-08-31T04:21:06Z"
+    },
+    {
+      "id": "content-six-faction-field-muster-captains-10184",
+      "title": "content six faction field muster captains 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T04:50:06Z",
+      "startedAt": "2026-08-31T04:25:04Z",
+      "notes": "Implemented six original faction-exclusive tavern captains and curated portraits; consolidated 6/6 live tavern, Muster Captain economy, town portrait, reserve-company battle, and save-v9 smoke passed; repository validation passed; Linux and Windows export/startup passed with matching 247544396-byte PCKs, six captain portrait imports/textures present, source art excluded, and 2455604 bytes headroom.",
+      "completedAt": "2026-08-31T04:50:06Z"
     }
   ],
   "project": "heroes-like",
@@ -107441,7 +107451,7 @@
   ],
   "summary": "Completed the coherent Seven-School Signature Battle VFX content, accessibility, live-presentation, and package-efficiency batch with one consolidated smoke.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T04:21:06Z",
+  "updatedAt": "2026-08-31T04:50:06Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

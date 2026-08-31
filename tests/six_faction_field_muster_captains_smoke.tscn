@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource path="res://tests/six_faction_field_muster_captains_smoke.gd" type="Script" id="1"]
+
+[node name="SixFactionFieldMusterCaptainsSmoke" type="Node"]
+script = ExtResource("1")
