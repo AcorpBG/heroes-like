@@ -16255,11 +16255,11 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Six Marchland Warworks is complete: six opposite-role tier-six units, six exclusive production buildings, six third-use skirmishes, twelve original transparent masters, and matching Linux/Windows packages.",
+  "currentNotes": "Twelve Command Relic Marches is complete: twelve cross-faction hero-led skirmishes, twelve original rare relics, thirty-six battle fronts, and matching Linux/Windows packages.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "",
   "currentSliceId": "",
-  "currentSliceNotes": "Completed six opposite-role tier-six Marchland warworks, six town-exclusive production buildings, six third-use skirmishes, twelve original transparent art masters, one consolidated 18-battle build/growth/recruit/art/save smoke, repository validation, and matching Linux/Windows packaged startup at 235019112 bytes.",
+  "currentSliceNotes": "Completed twelve cross-faction 15x10 hero-led relic marches, twelve original rare relics and five-stack companies, 36 live battle fronts, twelve transparent masters plus compact inventory/field derivatives; consolidated 12-case smoke, repository validation, and matching Linux/Windows packaged startup passed at 235445808 bytes.",
   "currentSliceStatus": "completed",
   "currentSliceTitle": "",
   "currentSliceUpdatedAt": "2026-08-31T22:14:10Z",
@@ -107562,6 +107562,16 @@
       "startedAt": "2026-08-31T22:18:31Z",
       "notes": "Completed six opposite-role tier-six Marchland warworks, six town-exclusive production buildings, six third-use skirmishes, twelve original transparent art masters, one consolidated 18-battle build/growth/recruit/art/save smoke, repository validation, and matching Linux/Windows packaged startup at 235019112 bytes.",
       "completedAt": "2026-08-31T22:59:53Z"
+    },
+    {
+      "id": "content-twelve-command-relic-marches-10184",
+      "title": "content twelve command relic marches 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T23:32:55Z",
+      "startedAt": "2026-08-31T23:05:29Z",
+      "notes": "Completed twelve cross-faction 15x10 hero-led relic marches, twelve original rare relics and five-stack companies, 36 live battle fronts, twelve transparent masters plus compact inventory/field derivatives; consolidated 12-case smoke, repository validation, and matching Linux/Windows packaged startup passed at 235445808 bytes.",
+      "completedAt": "2026-08-31T23:32:55Z"
     }
   ],
   "project": "heroes-like",
@@ -108106,7 +108116,7 @@
   ],
   "summary": "Completed Six Marchland Warworks as one coherent six-unit, six-building, six-map, twelve-master production-content batch with consolidated validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T22:59:54Z",
+  "updatedAt": "2026-08-31T23:32:55Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

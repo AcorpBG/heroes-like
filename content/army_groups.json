@@ -4096,6 +4096,174 @@
       ],
       "content_status": "marchland_warworks_company_live",
       "content_batch_id": "content-six-marchland-warworks-10184"
+    },
+    {
+      "id": "army_blackgauge_command_relic_company",
+      "name": "Blackgauge Muster Bell March Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 18},
+        {"unit_id": "unit_brasshollow_quenchspool_slingers", "count": 10},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 6},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 3},
+        {"unit_id": "unit_brasshollow_pressure_lancers", "count": 2}
+      ],
+      "content_status": "command_relic_march_company_live",
+      "content_batch_id": "content-twelve-command-relic-marches-10184"
+    },
+    {
+      "id": "army_switchrail_command_relic_company",
+      "name": "Varn Switchrail Compass March Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 18},
+        {"unit_id": "unit_brasshollow_quenchspool_slingers", "count": 10},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 6},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 3},
+        {"unit_id": "unit_brasshollow_pressure_lancers", "count": 2}
+      ],
+      "content_status": "command_relic_march_company_live",
+      "content_batch_id": "content-twelve-command-relic-marches-10184"
+    },
+    {
+      "id": "army_valechant_command_relic_company",
+      "name": "Valechant Star-Cadence Astrolabe March Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 18},
+        {"unit_id": "unit_embercourt_lantern_sappers", "count": 10},
+        {"unit_id": "unit_embercourt_bargebow_crews", "count": 6},
+        {"unit_id": "unit_embercourt_ash_oath_bailiffs", "count": 3},
+        {"unit_id": "unit_embercourt_lockglass_writcasters", "count": 2}
+      ],
+      "content_status": "command_relic_march_company_live",
+      "content_batch_id": "content-twelve-command-relic-marches-10184"
+    },
+    {
+      "id": "army_millward_command_relic_company",
+      "name": "Ashgrove Millward Lantern March Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 18},
+        {"unit_id": "unit_embercourt_lantern_sappers", "count": 10},
+        {"unit_id": "unit_embercourt_bargebow_crews", "count": 6},
+        {"unit_id": "unit_embercourt_ash_oath_bailiffs", "count": 3},
+        {"unit_id": "unit_embercourt_lockglass_writcasters", "count": 2}
+      ],
+      "content_status": "command_relic_march_company_live",
+      "content_batch_id": "content-twelve-command-relic-marches-10184"
+    },
+    {
+      "id": "army_reedcaller_command_relic_company",
+      "name": "Reedcaller Circle Horn March Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 24},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 14},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 9},
+        {"unit_id": "unit_mireclaw_ferrychain_lashers", "count": 5},
+        {"unit_id": "unit_mireclaw_mireglass_reedcasters", "count": 4}
+      ],
+      "content_status": "command_relic_march_company_live",
+      "content_batch_id": "content-twelve-command-relic-marches-10184"
+    },
+    {
+      "id": "army_muckscribe_command_relic_company",
+      "name": "Muckscribe Fen-Ink Reliquary March Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 24},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 14},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 9},
+        {"unit_id": "unit_mireclaw_ferrychain_lashers", "count": 5},
+        {"unit_id": "unit_mireclaw_mireglass_reedcasters", "count": 4}
+      ],
+      "content_status": "command_relic_march_company_live",
+      "content_batch_id": "content-twelve-command-relic-marches-10184"
+    },
+    {
+      "id": "army_sevenfold_command_relic_company",
+      "name": "Sevenfold Reserve Prism March Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 18},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 10},
+        {"unit_id": "unit_sunvault_mirror_duelists", "count": 6},
+        {"unit_id": "unit_sunvault_resonant_choristers", "count": 3},
+        {"unit_id": "unit_sunvault_noonfacet_sentinels", "count": 2}
+      ],
+      "content_status": "command_relic_march_company_live",
+      "content_batch_id": "content-twelve-command-relic-marches-10184"
+    },
+    {
+      "id": "army_glasswind_command_relic_company",
+      "name": "Glasswind Sightline Fan March Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 18},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 10},
+        {"unit_id": "unit_sunvault_mirror_duelists", "count": 6},
+        {"unit_id": "unit_sunvault_resonant_choristers", "count": 3},
+        {"unit_id": "unit_sunvault_noonfacet_sentinels", "count": 2}
+      ],
+      "content_status": "command_relic_march_company_live",
+      "content_batch_id": "content-twelve-command-relic-marches-10184"
+    },
+    {
+      "id": "army_boltroot_command_relic_company",
+      "name": "Boltroot Quiver Loom March Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 18},
+        {"unit_id": "unit_thornwake_bramblekite_needlers", "count": 10},
+        {"unit_id": "unit_thornwake_seedshield_wardens", "count": 6},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 3},
+        {"unit_id": "unit_thornwake_seedglass_cantors", "count": 2}
+      ],
+      "content_status": "command_relic_march_company_live",
+      "content_batch_id": "content-twelve-command-relic-marches-10184"
+    },
+    {
+      "id": "army_pollenglass_command_relic_company",
+      "name": "Pollenglass Spore Ampoule March Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 18},
+        {"unit_id": "unit_thornwake_bramblekite_needlers", "count": 10},
+        {"unit_id": "unit_thornwake_seedshield_wardens", "count": 6},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 3},
+        {"unit_id": "unit_thornwake_seedglass_cantors", "count": 2}
+      ],
+      "content_status": "command_relic_march_company_live",
+      "content_batch_id": "content-twelve-command-relic-marches-10184"
+    },
+    {
+      "id": "army_oriflag_command_relic_company",
+      "name": "Oriflag Stolen Signal Pennon March Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 18},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 10},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 6},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 3},
+        {"unit_id": "unit_veilmourn_wakeglass_navigators", "count": 2}
+      ],
+      "content_status": "command_relic_march_company_live",
+      "content_batch_id": "content-twelve-command-relic-marches-10184"
+    },
+    {
+      "id": "army_tidehook_command_relic_company",
+      "name": "Tidehook Memory Bosun Bell March Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 18},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 10},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 6},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 3},
+        {"unit_id": "unit_veilmourn_wakeglass_navigators", "count": 2}
+      ],
+      "content_status": "command_relic_march_company_live",
+      "content_batch_id": "content-twelve-command-relic-marches-10184"
     }
   ]
 }
