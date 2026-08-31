@@ -1351,7 +1351,7 @@ static func _apply_shrine_command_bonus(
 
 static func _resource_site_grants_command_lesson(site: Dictionary) -> bool:
 	return String(site.get("batch003_role", "")) == "shrine_progression" \
-		or String(site.get("runtime_boundary", {}).get("status", "")) in ["high_arcanum_live", "field_mastery_convocation_live", "commander_proving_road_live"]
+		or String(site.get("runtime_boundary", {}).get("status", "")) in ["high_arcanum_live", "field_mastery_convocation_live", "commander_proving_road_live", "commander_doctrine_expedition_live"]
 
 static func _open_resource_site_route_body(node: Dictionary, site: Dictionary) -> bool:
 	if not bool(site.get("opens_route_on_claim", false)):

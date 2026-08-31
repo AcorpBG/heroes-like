@@ -24,9 +24,39 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; select the next coherent content-and-original-art batch before further implementation.
-- Most recently completed implementation slice: `content-twelve-command-relic-marches-10184`, twelve cross-faction hero-led relic marches with twelve original command relics and live equipment routes.
-- Current package boundary: matching Linux and Windows release exports measure 235445808 bytes, 14554192 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none selected after completing `content-eight-commander-doctrine-expeditions-10184`.
+- Most recently completed implementation slice: `content-eight-commander-doctrine-expeditions-10184`, eight long-form hero-led doctrine expeditions with eight original guarded command landmarks.
+- Current package boundary: matching Linux and Windows release exports measure 235582988 bytes, 14417012 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Eight Commander Doctrine Expeditions
+
+id: `content-eight-commander-doctrine-expeditions-10184`
+
+Status: completed 2026-08-31.
+
+Current finding:
+- every authored spell is reachable through production town study, while every unit, hero, town, artifact, and non-systemic encounter definition has a live route;
+- thirty-seven heroes were still at the three-scenario lead floor after the prior slice; this batch advances Odrik Heatpriest, Tarn Fenhook, Thalen Choirward, Varis Mirrorstep, Ralka Mossvein, Silsa Bramble-Hound, Tova Rootwright, and Orso Nightchart as a faction-spanning eight-commander subset;
+- only seven of 239 authored scenarios use the 18x12 long-form board, so closing the hero floor through eight deeper expeditions improves both commander breadth and map-shape variety.
+
+Implementation boundary:
+- author one original skirmish-only 18x12 doctrine expedition for each selected commander, with an exact five-stack company, home and hostile towns, four authored low-exposure battle fronts, ten field sites, five reactive events, enemy pressure, a late reserve, and a Day-19 deadline;
+- add one original guarded command landmark per expedition using live one-time claim, XP, command-bonus, objective-flag, pathing, rendering, and save-version-9 authority;
+- generate eight transparent original landmark masters, derive one compact 384x48 field atlas with exact prompt/hash/accessibility provenance, exclude source masters from release packages, and preserve Windows/Linux symmetry.
+
+Completion criteria:
+- all eight scenarios launch through normal skirmish authority with their exact commander and five-stack company, construct and win thirty-two production battles, claim the exact guarded landmark once, grant the exact XP/command/flag payload without repeat mutation, satisfy all hero/site/front objectives, and round-trip through save version 9;
+- every landmark resolves its exact non-color silhouette and atlas region on only its authored live route, while the selected heroes all reach at least four authored lead scenarios and the reused encounter definitions retain valid production battle identities;
+- run one consolidated eight-case gameplay/battle/site/art/save smoke only after the complete batch, inspect its representative visual capture, then run repository validation and sequential Linux/Windows packaged startup below the unchanged 250000000-byte ceiling.
+
+Completion result:
+- shipped eight original skirmish-only 18x12 doctrine expeditions, advancing the selected commanders from three to four direct authored leads and expanding the catalog to 247 scenarios, 385 armies, and 325 resource sites;
+- shipped eight guarded one-time command landmarks with original transparent source masters, exact prompt/hash/accessibility provenance, a compact 384x48 runtime atlas, live XP/command/flag behavior, and source-master package exclusion;
+- the single consolidated smoke passed 8 launches, 32 production battles, 8 exact claims, 8 exact art routes, 8 objective victories, 8 visual captures, and 8 save-version-9 round trips; full repository validation and matching Linux/Windows packaged startup passed at 235582988 bytes.
+
+Non-goals:
+- no new faction, hero definition, town definition, unit definition, building, spell, artifact, encounter definition, progression rule, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes scenario, commander, landmark, map, name, text, art, heraldry, or protected visual expression.
 
 ## Twelve Command Relic Marches
 

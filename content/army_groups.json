@@ -4264,6 +4264,118 @@
       ],
       "content_status": "command_relic_march_company_live",
       "content_batch_id": "content-twelve-command-relic-marches-10184"
+    },
+    {
+      "id": "army_heatdoctrine_expedition_company",
+      "name": "Odrik Heatpriest Doctrine Expedition Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 36},
+        {"unit_id": "unit_brasshollow_quenchspool_slingers", "count": 24},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 14},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 8},
+        {"unit_id": "unit_brasshollow_pressure_lancers", "count": 4}
+      ],
+      "content_status": "commander_doctrine_expedition_company_live",
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184"
+    },
+    {
+      "id": "army_fenhookdoctrine_expedition_company",
+      "name": "Tarn Fenhook Doctrine Expedition Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 60},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 40},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 24},
+        {"unit_id": "unit_mireclaw_ferrychain_lashers", "count": 14},
+        {"unit_id": "unit_mireclaw_mireglass_reedcasters", "count": 8}
+      ],
+      "content_status": "commander_doctrine_expedition_company_live",
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184"
+    },
+    {
+      "id": "army_choirwarddoctrine_expedition_company",
+      "name": "Thalen Choirward Doctrine Expedition Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 60},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 40},
+        {"unit_id": "unit_sunvault_mirror_duelists", "count": 24},
+        {"unit_id": "unit_sunvault_resonant_choristers", "count": 14},
+        {"unit_id": "unit_sunvault_noonfacet_sentinels", "count": 8}
+      ],
+      "content_status": "commander_doctrine_expedition_company_live",
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184"
+    },
+    {
+      "id": "army_mirrorstepdoctrine_expedition_company",
+      "name": "Varis Mirrorstep Doctrine Expedition Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 60},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 40},
+        {"unit_id": "unit_sunvault_mirror_duelists", "count": 24},
+        {"unit_id": "unit_sunvault_resonant_choristers", "count": 14},
+        {"unit_id": "unit_sunvault_noonfacet_sentinels", "count": 8}
+      ],
+      "content_status": "commander_doctrine_expedition_company_live",
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184"
+    },
+    {
+      "id": "army_mossveindoctrine_expedition_company",
+      "name": "Ralka Mossvein Doctrine Expedition Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 40},
+        {"unit_id": "unit_thornwake_bramblekite_needlers", "count": 26},
+        {"unit_id": "unit_thornwake_seedshield_wardens", "count": 16},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 9},
+        {"unit_id": "unit_thornwake_seedglass_cantors", "count": 5}
+      ],
+      "content_status": "commander_doctrine_expedition_company_live",
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184"
+    },
+    {
+      "id": "army_bramblehounddoctrine_expedition_company",
+      "name": "Silsa Bramble-Hound Doctrine Expedition Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 40},
+        {"unit_id": "unit_thornwake_bramblekite_needlers", "count": 26},
+        {"unit_id": "unit_thornwake_seedshield_wardens", "count": 16},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 9},
+        {"unit_id": "unit_thornwake_seedglass_cantors", "count": 5}
+      ],
+      "content_status": "commander_doctrine_expedition_company_live",
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184"
+    },
+    {
+      "id": "army_rootwrightdoctrine_expedition_company",
+      "name": "Tova Rootwright Doctrine Expedition Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 40},
+        {"unit_id": "unit_thornwake_bramblekite_needlers", "count": 26},
+        {"unit_id": "unit_thornwake_seedshield_wardens", "count": 16},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 9},
+        {"unit_id": "unit_thornwake_seedglass_cantors", "count": 5}
+      ],
+      "content_status": "commander_doctrine_expedition_company_live",
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184"
+    },
+    {
+      "id": "army_nightchartdoctrine_expedition_company",
+      "name": "Orso Nightchart Doctrine Expedition Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 36},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 24},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 14},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 8},
+        {"unit_id": "unit_veilmourn_wakeglass_navigators", "count": 4}
+      ],
+      "content_status": "commander_doctrine_expedition_company_live",
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184"
     }
   ]
 }
