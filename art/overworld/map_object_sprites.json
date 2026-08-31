@@ -6,8 +6,8 @@
     "prompt_summary": "One distinct original generated overworld sprite asset for each authored non-decoration map object that previously lacked a unique sprite assignment after the decorative/blocker foundation pass.",
     "source_model": "built_in_image_gen_chroma_key_split",
     "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
-    "new_generated_sprite_count": 210,
-    "generated_batch_count": 18,
+    "new_generated_sprite_count": 216,
+    "generated_batch_count": 19,
     "generated_batches": [
       {
         "batch_index": 1,
@@ -152,20 +152,28 @@
           205,
           210
         ]
+      },
+      {
+        "batch_index": 19,
+        "workspace_source_manifest": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/manifest.json",
+        "object_index_range": [
+          211,
+          216
+        ]
       }
     ]
   },
   "coverage": {
-    "authored_map_object_count": 410,
+    "authored_map_object_count": 416,
     "foundation_decorative_or_blocker_distinct_count": 200,
     "preexisting_unique_non_decorative_count": 0,
-    "new_distinct_non_decorative_asset_count": 210,
-    "total_distinct_authored_map_object_count_after_pass": 410,
+    "new_distinct_non_decorative_asset_count": 216,
+    "total_distinct_authored_map_object_count_after_pass": 416,
     "by_family": {
       "faction_landmark": 9,
       "guarded_reward_site": 32,
       "mine": 10,
-      "neutral_dwelling": 57,
+      "neutral_dwelling": 63,
       "neutral_encounter": 6,
       "pickup": 9,
       "repeatable_service": 7,
@@ -388,7 +396,13 @@
     "mapobj_windcairn_wayhouse",
     "mapobj_sapwhistle_greenward",
     "mapobj_scarshield_breakyard",
-    "mapobj_flaremast_pilotage"
+    "mapobj_flaremast_pilotage",
+    "mapobj_ash_charter_rollhouse",
+    "mapobj_gorefen_chain_ring",
+    "mapobj_mirror_daybreak_drill_prism",
+    "mapobj_five_bough_veteran_grove",
+    "mapobj_three_gauge_chapter_foundry",
+    "mapobj_fog_keel_lastwatch_mooring"
   ],
   "object_sprite_mappings": {
     "object_roadward_lodge": {
@@ -1860,6 +1874,48 @@
       "assignment_source": "unbound_wild_concord_completion",
       "family": "neutral_dwelling",
       "source_batch": 18
+    },
+    "object_ash_charter_rollhouse": {
+      "asset_id": "mapobj_ash_charter_rollhouse",
+      "fit": "Distinct original Ash-Charter Rollhouse assigned to its guarded faction-veteran muster.",
+      "assignment_source": "veteran_company_muster_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 19
+    },
+    "object_gorefen_chain_ring": {
+      "asset_id": "mapobj_gorefen_chain_ring",
+      "fit": "Distinct original Gorefen Chain Ring assigned to its guarded faction-veteran muster.",
+      "assignment_source": "veteran_company_muster_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 19
+    },
+    "object_mirror_daybreak_drill_prism": {
+      "asset_id": "mapobj_mirror_daybreak_drill_prism",
+      "fit": "Distinct original Mirror-Daybreak Drill Prism assigned to its guarded faction-veteran muster.",
+      "assignment_source": "veteran_company_muster_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 19
+    },
+    "object_five_bough_veteran_grove": {
+      "asset_id": "mapobj_five_bough_veteran_grove",
+      "fit": "Distinct original Five-Bough Veteran Grove assigned to its guarded faction-veteran muster.",
+      "assignment_source": "veteran_company_muster_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 19
+    },
+    "object_three_gauge_chapter_foundry": {
+      "asset_id": "mapobj_three_gauge_chapter_foundry",
+      "fit": "Distinct original Three-Gauge Chapter Foundry assigned to its guarded faction-veteran muster.",
+      "assignment_source": "veteran_company_muster_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 19
+    },
+    "object_fog_keel_lastwatch_mooring": {
+      "asset_id": "mapobj_fog_keel_lastwatch_mooring",
+      "fit": "Distinct original Fog-Keel Lastwatch Mooring assigned to its guarded faction-veteran muster.",
+      "assignment_source": "veteran_company_muster_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 19
     }
   }
 }

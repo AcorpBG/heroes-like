@@ -43656,6 +43656,678 @@
       },
       "content_batch_id": "content-six-unbound-wild-concords-10184",
       "batch_role": "guarded_unbound_wild_concord_dwelling"
+    },
+    {
+      "id": "object_ash_charter_rollhouse",
+      "name": "Ash-Charter Rollhouse",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_ash_charter_rollhouse",
+      "faction_id": "faction_embercourt",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "ashcharter_veteran_muster",
+        "weekly_muster",
+        "persistent_control",
+        "guarded_reward"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west",
+          "east",
+          "north"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "faction_support_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true
+      },
+      "ai_hints": {
+        "strategic_value": 10,
+        "risk_tier": "veteran",
+        "placement_role": "embercourt_company_muster",
+        "guard_target_value_hint": 5,
+        "avoid_until_strength": "veteran"
+      },
+      "runtime_boundary": {
+        "status": "guarded_faction_linked_dwelling_live",
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_status": "veteran_company_muster_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184",
+      "batch_role": "guarded_faction_veteran_company_muster",
+      "veteran_company_contract": {
+        "company_unit_ids": [
+          "unit_embercourt_lantern_sappers",
+          "unit_embercourt_ash_oath_bailiffs",
+          "unit_embercourt_charter_colossus"
+        ],
+        "resource_site_id": "site_ash_charter_rollhouse",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "faction_linked": true,
+        "guarded_claim": true
+      },
+      "guard_expectation": {
+        "tier": "veteran",
+        "visible_cue": "authored encounter occupies the entrance before recruitment",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "scenario_placement_required": true
+      }
+    },
+    {
+      "id": "object_gorefen_chain_ring",
+      "name": "Gorefen Chain Ring",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_gorefen_chain_ring",
+      "faction_id": "faction_mireclaw",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "gorefenring_veteran_muster",
+        "weekly_muster",
+        "persistent_control",
+        "guarded_reward"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west",
+          "east",
+          "north"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "faction_support_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true
+      },
+      "ai_hints": {
+        "strategic_value": 10,
+        "risk_tier": "veteran",
+        "placement_role": "mireclaw_company_muster",
+        "guard_target_value_hint": 5,
+        "avoid_until_strength": "veteran"
+      },
+      "runtime_boundary": {
+        "status": "guarded_faction_linked_dwelling_live",
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_status": "veteran_company_muster_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184",
+      "batch_role": "guarded_faction_veteran_company_muster",
+      "veteran_company_contract": {
+        "company_unit_ids": [
+          "unit_mireclaw_ferrychain_lashers",
+          "unit_mireclaw_gorefen_rippers"
+        ],
+        "resource_site_id": "site_gorefen_chain_ring",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "faction_linked": true,
+        "guarded_claim": true
+      },
+      "guard_expectation": {
+        "tier": "veteran",
+        "visible_cue": "authored encounter occupies the entrance before recruitment",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "scenario_placement_required": true
+      }
+    },
+    {
+      "id": "object_mirror_daybreak_drill_prism",
+      "name": "Mirror-Daybreak Drill Prism",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_mirror_daybreak_drill_prism",
+      "faction_id": "faction_sunvault",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "daybreakprism_veteran_muster",
+        "weekly_muster",
+        "persistent_control",
+        "guarded_reward"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west",
+          "east",
+          "north"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "faction_support_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true
+      },
+      "ai_hints": {
+        "strategic_value": 10,
+        "risk_tier": "veteran",
+        "placement_role": "sunvault_company_muster",
+        "guard_target_value_hint": 5,
+        "avoid_until_strength": "veteran"
+      },
+      "runtime_boundary": {
+        "status": "guarded_faction_linked_dwelling_live",
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_status": "veteran_company_muster_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184",
+      "batch_role": "guarded_faction_veteran_company_muster",
+      "veteran_company_contract": {
+        "company_unit_ids": [
+          "unit_sunvault_mirror_duelists",
+          "unit_sunvault_daybreak_colossus"
+        ],
+        "resource_site_id": "site_mirror_daybreak_drill_prism",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "faction_linked": true,
+        "guarded_claim": true
+      },
+      "guard_expectation": {
+        "tier": "veteran",
+        "visible_cue": "authored encounter occupies the entrance before recruitment",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "scenario_placement_required": true
+      }
+    },
+    {
+      "id": "object_five_bough_veteran_grove",
+      "name": "Five-Bough Veteran Grove",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_five_bough_veteran_grove",
+      "faction_id": "faction_thornwake",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "fivebough_veteran_muster",
+        "weekly_muster",
+        "persistent_control",
+        "guarded_reward"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west",
+          "east",
+          "north"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "faction_support_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true
+      },
+      "ai_hints": {
+        "strategic_value": 10,
+        "risk_tier": "veteran",
+        "placement_role": "thornwake_company_muster",
+        "guard_target_value_hint": 5,
+        "avoid_until_strength": "veteran"
+      },
+      "runtime_boundary": {
+        "status": "guarded_faction_linked_dwelling_live",
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_status": "veteran_company_muster_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184",
+      "batch_role": "guarded_faction_veteran_company_muster",
+      "veteran_company_contract": {
+        "company_unit_ids": [
+          "unit_thornwake_pollenhook_whistlers",
+          "unit_thornwake_bramblekite_needlers",
+          "unit_thornwake_seedshield_wardens",
+          "unit_thornwake_graft_matriarchs",
+          "unit_thornwake_worldroot_bastion"
+        ],
+        "resource_site_id": "site_five_bough_veteran_grove",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "faction_linked": true,
+        "guarded_claim": true
+      },
+      "guard_expectation": {
+        "tier": "veteran",
+        "visible_cue": "authored encounter occupies the entrance before recruitment",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "scenario_placement_required": true
+      }
+    },
+    {
+      "id": "object_three_gauge_chapter_foundry",
+      "name": "Three-Gauge Chapter Foundry",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_three_gauge_chapter_foundry",
+      "faction_id": "faction_brasshollow",
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "threegauge_veteran_muster",
+        "weekly_muster",
+        "persistent_control",
+        "guarded_reward"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west",
+          "east",
+          "north"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "faction_support_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true
+      },
+      "ai_hints": {
+        "strategic_value": 10,
+        "risk_tier": "veteran",
+        "placement_role": "brasshollow_company_muster",
+        "guard_target_value_hint": 5,
+        "avoid_until_strength": "veteran"
+      },
+      "runtime_boundary": {
+        "status": "guarded_faction_linked_dwelling_live",
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_status": "veteran_company_muster_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184",
+      "batch_role": "guarded_faction_veteran_company_muster",
+      "veteran_company_contract": {
+        "company_unit_ids": [
+          "unit_brasshollow_quenchspool_slingers",
+          "unit_brasshollow_gaugefire_arbalists",
+          "unit_brasshollow_foundry_saint"
+        ],
+        "resource_site_id": "site_three_gauge_chapter_foundry",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "faction_linked": true,
+        "guarded_claim": true
+      },
+      "guard_expectation": {
+        "tier": "veteran",
+        "visible_cue": "authored encounter occupies the entrance before recruitment",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "scenario_placement_required": true
+      }
+    },
+    {
+      "id": "object_fog_keel_lastwatch_mooring",
+      "name": "Fog-Keel Lastwatch Mooring",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_fog_keel_lastwatch_mooring",
+      "faction_id": "faction_veilmourn",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "fogkeel_veteran_muster",
+        "weekly_muster",
+        "persistent_control",
+        "guarded_reward"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west",
+          "east",
+          "north"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "faction_support_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true
+      },
+      "ai_hints": {
+        "strategic_value": 10,
+        "risk_tier": "veteran",
+        "placement_role": "veilmourn_company_muster",
+        "guard_target_value_hint": 5,
+        "avoid_until_strength": "veteran"
+      },
+      "runtime_boundary": {
+        "status": "guarded_faction_linked_dwelling_live",
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_status": "veteran_company_muster_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184",
+      "batch_role": "guarded_faction_veteran_company_muster",
+      "veteran_company_contract": {
+        "company_unit_ids": [
+          "unit_veilmourn_wakechain_boarders",
+          "unit_veilmourn_mirrorkeel_reavers",
+          "unit_veilmourn_fogbound_leviathan"
+        ],
+        "resource_site_id": "site_fog_keel_lastwatch_mooring",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "faction_linked": true,
+        "guarded_claim": true
+      },
+      "guard_expectation": {
+        "tier": "veteran",
+        "visible_cue": "authored encounter occupies the entrance before recruitment",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "scenario_placement_required": true
+      }
     }
   ]
 }

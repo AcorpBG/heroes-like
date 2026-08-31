@@ -3660,6 +3660,72 @@
       ],
       "content_status": "named_rival_enemy_company_live",
       "content_batch_id": "content-six-named-rival-banner-challenges-10184"
+    },
+    {
+      "id": "army_ashcharter_veteran_muster_company",
+      "name": "Torren Pikeward's Veteran Muster Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 28},
+        {"unit_id": "unit_embercourt_bargebow_crews", "count": 14}
+      ],
+      "content_status": "veteran_company_muster_player_company_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184"
+    },
+    {
+      "id": "army_gorefenring_veteran_muster_company",
+      "name": "Kessa Chainboom's Veteran Muster Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 28},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 18}
+      ],
+      "content_status": "veteran_company_muster_player_company_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184"
+    },
+    {
+      "id": "army_daybreakprism_veteran_muster_company",
+      "name": "Ilyr Glassmarshal's Veteran Muster Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 28},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 18}
+      ],
+      "content_status": "veteran_company_muster_player_company_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184"
+    },
+    {
+      "id": "army_fivebough_veteran_muster_company",
+      "name": "Silsa Bramble-Hound's Veteran Muster Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 28},
+        {"unit_id": "unit_thornwake_thornwhip_carriers", "count": 18}
+      ],
+      "content_status": "veteran_company_muster_player_company_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184"
+    },
+    {
+      "id": "army_threegauge_veteran_muster_company",
+      "name": "Selka Pitmarshal's Veteran Muster Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 28},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 18}
+      ],
+      "content_status": "veteran_company_muster_player_company_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184"
+    },
+    {
+      "id": "army_fogkeel_veteran_muster_company",
+      "name": "Jessa Keelwarden's Veteran Muster Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 28},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 18}
+      ],
+      "content_status": "veteran_company_muster_player_company_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184"
     }
   ]
 }

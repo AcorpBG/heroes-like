@@ -1,0 +1,195 @@
+{
+  "source_model": "built_in_image_gen_original_veteran_company_musters_wave1",
+  "content_batch_id": "content-six-veteran-company-musters-10184",
+  "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+  "generation_original": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/veteran_company_musters_identity_sheet.png",
+  "generation_original_sha256": "ffd967019382bf44876f04187c23dbedd15f68bab3c97b104d9b0d7ff6c139b1",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png",
+  "runtime_atlas_sha256": "9f633e763fcb64741f3c863bef754ac3313802684245054a885449eec78fd33a",
+  "runtime_cell_size": [
+    48,
+    48
+  ],
+  "sheet_layout": "exact 4 columns by 3 rows; each faction pair is unclaimed then controlled",
+  "shared_prompt_constraints": [
+    "Six original paired-state fantasy strategy landmarks on genuine transparency.",
+    "Each controlled state preserves the same structure while raising a pennant, adding light, or opening working geometry.",
+    "Readable at 48 pixels; no people, creatures, text, logos, watermarks, UI frames, copied franchise art, or protected heraldry."
+  ],
+  "items": [
+    {
+      "site_id": "site_ash_charter_rollhouse",
+      "generation_original": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/veteran_company_musters_identity_sheet.png",
+      "prompt_summary": "Paired unclaimed and controlled states for Ash-Charter Rollhouse: A rain-black charter house trains the sapper, bailiff, and colossus companies that keep Embercourt's veteran writs enforceable.",
+      "states": [
+        {
+          "state": "unclaimed",
+          "source_path": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/ash_charter_rollhouse_unclaimed.png",
+          "source_sha256": "aa490da140535c41d92b6277b0718541d944698200c22a539f81351067ec1e6f",
+          "atlas_region": [
+            0,
+            0,
+            48,
+            48
+          ]
+        },
+        {
+          "state": "controlled",
+          "source_path": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/ash_charter_rollhouse_controlled.png",
+          "source_sha256": "926f0a5056c4abc3b83634a58d1a38eddb9f811dbd605f0f3d9297499a919a32",
+          "atlas_region": [
+            48,
+            0,
+            48,
+            48
+          ]
+        }
+      ]
+    },
+    {
+      "site_id": "site_gorefen_chain_ring",
+      "generation_original": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/veteran_company_musters_identity_sheet.png",
+      "prompt_summary": "Paired unclaimed and controlled states for Gorefen Chain Ring: A chained fen ring binds ferry crews and Gorefen shock companies into a repeatable veteran levy.",
+      "states": [
+        {
+          "state": "unclaimed",
+          "source_path": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/gorefen_chain_ring_unclaimed.png",
+          "source_sha256": "a9462e6c84c765e1d5a16f572b8a01c5fc9982f965879b21df4b15c7b5521d0d",
+          "atlas_region": [
+            96,
+            0,
+            48,
+            48
+          ]
+        },
+        {
+          "state": "controlled",
+          "source_path": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/gorefen_chain_ring_controlled.png",
+          "source_sha256": "5e77d4d991e97ded2027225f98a2a4aa28c6ced116cb90f700a942b1476ed999",
+          "atlas_region": [
+            144,
+            0,
+            48,
+            48
+          ]
+        }
+      ]
+    },
+    {
+      "site_id": "site_mirror_daybreak_drill_prism",
+      "generation_original": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/veteran_company_musters_identity_sheet.png",
+      "prompt_summary": "Paired unclaimed and controlled states for Mirror-Daybreak Drill Prism: A split drill prism aligns mirror duelists and Daybreak colossi under one precise Sunvault training cadence.",
+      "states": [
+        {
+          "state": "unclaimed",
+          "source_path": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/mirror_daybreak_drill_prism_unclaimed.png",
+          "source_sha256": "75af32ba688be62b75edf980ad1719c718fe4cd765df47c7670a13f0d519a958",
+          "atlas_region": [
+            192,
+            0,
+            48,
+            48
+          ]
+        },
+        {
+          "state": "controlled",
+          "source_path": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/mirror_daybreak_drill_prism_controlled.png",
+          "source_sha256": "010c77a31c428febd51f360b1542fdfc4e32773deb975cf99e848554006d3366",
+          "atlas_region": [
+            240,
+            0,
+            48,
+            48
+          ]
+        }
+      ]
+    },
+    {
+      "site_id": "site_five_bough_veteran_grove",
+      "generation_original": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/veteran_company_musters_identity_sheet.png",
+      "prompt_summary": "Paired unclaimed and controlled states for Five-Bough Veteran Grove: Five living boughs call every Thornwake company grade, from pollenhook scouts to the Worldroot Bastion.",
+      "states": [
+        {
+          "state": "unclaimed",
+          "source_path": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/five_bough_veteran_grove_unclaimed.png",
+          "source_sha256": "8dd8884e0fa9766b90ef65c0906930a35b32d0b7dba69e6bfa2a70db28f81e41",
+          "atlas_region": [
+            288,
+            0,
+            48,
+            48
+          ]
+        },
+        {
+          "state": "controlled",
+          "source_path": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/five_bough_veteran_grove_controlled.png",
+          "source_sha256": "b886c3c9a3d749a74a01e8545680fe361063cfd3f96d17823f0e2866dc1d98f0",
+          "atlas_region": [
+            336,
+            0,
+            48,
+            48
+          ]
+        }
+      ]
+    },
+    {
+      "site_id": "site_three_gauge_chapter_foundry",
+      "generation_original": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/veteran_company_musters_identity_sheet.png",
+      "prompt_summary": "Paired unclaimed and controlled states for Three-Gauge Chapter Foundry: Three independently read gauges certify quenchspool, gaugefire, and Foundry Saint chapters for field service.",
+      "states": [
+        {
+          "state": "unclaimed",
+          "source_path": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/three_gauge_chapter_foundry_unclaimed.png",
+          "source_sha256": "aa2cbe99379379d63a92f9e951dda91cd7f445f6b6e683c00f962c630e0341f2",
+          "atlas_region": [
+            384,
+            0,
+            48,
+            48
+          ]
+        },
+        {
+          "state": "controlled",
+          "source_path": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/three_gauge_chapter_foundry_controlled.png",
+          "source_sha256": "0b1ce49f4265c5d423fd8f15c6f10d21e21a7bb44c78bcf6cd31012d01ba7155",
+          "atlas_region": [
+            432,
+            0,
+            48,
+            48
+          ]
+        }
+      ]
+    },
+    {
+      "site_id": "site_fog_keel_lastwatch_mooring",
+      "generation_original": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/veteran_company_musters_identity_sheet.png",
+      "prompt_summary": "Paired unclaimed and controlled states for Fog-Keel Lastwatch Mooring: A fog-keel mooring restores Veilmourn's boarder, reaver, and leviathan companies to the weekly harbor rolls.",
+      "states": [
+        {
+          "state": "unclaimed",
+          "source_path": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/fog_keel_lastwatch_mooring_unclaimed.png",
+          "source_sha256": "e63d4e0bb101e920b3907a8cc4923d43a1081c7a7ec6fd9bec1e7554831017f9",
+          "atlas_region": [
+            480,
+            0,
+            48,
+            48
+          ]
+        },
+        {
+          "state": "controlled",
+          "source_path": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/fog_keel_lastwatch_mooring_controlled.png",
+          "source_sha256": "294ce04abbfd90f8b45c15d075000d1548e6e8b6ae639853aea33e46eae411f5",
+          "atlas_region": [
+            528,
+            0,
+            48,
+            48
+          ]
+        }
+      ]
+    }
+  ]
+}
