@@ -26,6 +26,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_brasshollow_foundry_saint",
     "unit_brasshollow_furnace_pavis_teams",
     "unit_brasshollow_gaugefire_arbalists",
+    "unit_brasshollow_gaugeplate_bailiffs",
     "unit_brasshollow_pressure_lancers",
     "unit_brasshollow_quenchbell_mortars",
     "unit_brasshollow_quenchspool_slingers",
@@ -39,6 +40,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_embercourt_beacon_lectors",
     "unit_embercourt_beaconline_writguard",
     "unit_embercourt_charter_colossus",
+    "unit_embercourt_cinderseal_bombardiers",
     "unit_embercourt_fordhook_cadets",
     "unit_embercourt_lantern_sappers",
     "unit_embercourt_lockglass_writcasters",
@@ -50,6 +52,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_mireclaw_fenbell_chainstalkers",
     "unit_mireclaw_ferrychain_lashers",
     "unit_mireclaw_gorefen_rippers",
+    "unit_mireclaw_mireglass_reedcasters",
     "unit_mireclaw_mudglass_slingers",
     "unit_mireclaw_reedsnare_kin",
     "unit_mireclaw_sporewake_chanters",
@@ -124,6 +127,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_sunvault_aurora_ballistae",
     "unit_sunvault_daybreak_colossus",
     "unit_sunvault_mirror_duelists",
+    "unit_sunvault_noonfacet_sentinels",
     "unit_sunvault_prism_adepts",
     "unit_sunvault_resonant_choristers",
     "unit_sunvault_shard_wardens",
@@ -131,6 +135,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_sunvault_zenith_lensbearers",
     "unit_thornwake_barkmantle_rams",
     "unit_thornwake_bramblekite_needlers",
+    "unit_thornwake_dawnseed_bolters",
     "unit_thornwake_canopy_rammers",
     "unit_thornwake_pollenhook_whistlers",
     "unit_thornwake_seedglass_cantors",
@@ -150,6 +155,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_veilmourn_obituary_scribes",
     "unit_veilmourn_saltbell_casters",
     "unit_veilmourn_saltwake_eulogists",
+    "unit_veilmourn_tidehook_deckhands",
     "unit_veilmourn_wakechain_boarders",
     "unit_veilmourn_undertow_harpooners",
     "unit_veilmourn_wakeglass_navigators",
@@ -174,6 +180,20 @@ PACKAGE_OPTIMIZED_CURATED_IDS = {
     "unit_thornwake_pollenhook_whistlers",
     "unit_brasshollow_tallyspring_throwers",
     "unit_veilmourn_gloamkeel_bulwarks",
+    "unit_embercourt_cinderseal_bombardiers",
+    "unit_mireclaw_mireglass_reedcasters",
+    "unit_sunvault_noonfacet_sentinels",
+    "unit_thornwake_dawnseed_bolters",
+    "unit_brasshollow_gaugeplate_bailiffs",
+    "unit_veilmourn_tidehook_deckhands",
+}
+PACKAGE_TIGHT_CURATED_IDS = {
+    "unit_embercourt_cinderseal_bombardiers",
+    "unit_mireclaw_mireglass_reedcasters",
+    "unit_sunvault_noonfacet_sentinels",
+    "unit_thornwake_dawnseed_bolters",
+    "unit_brasshollow_gaugeplate_bailiffs",
+    "unit_veilmourn_tidehook_deckhands",
 }
 PRESERVED_AUTHORED_ASSET_SHA256 = {}
 
@@ -322,7 +342,7 @@ def main() -> int:
 
         if unit_id in PACKAGE_OPTIMIZED_CURATED_IDS:
             for runtime_path in (portrait_path, battle_path, standee_path, overworld_path, animation_path):
-                optimize_runtime_palette(runtime_path)
+                optimize_runtime_palette(runtime_path, 16 if unit_id in PACKAGE_TIGHT_CURATED_IDS else 32)
 
         art_record = {
             "id": unit_id,
@@ -356,8 +376,8 @@ def main() -> int:
         manifest["items"].append(art_record)
         animation_manifest["items"].append(animation_record)
 
-    MANIFEST_PATH.write_text(json.dumps(manifest, indent=2, sort_keys=False) + "\n", encoding="utf-8")
-    ANIMATION_MANIFEST_PATH.write_text(json.dumps(animation_manifest, indent=2, sort_keys=False) + "\n", encoding="utf-8")
+    MANIFEST_PATH.write_text(json.dumps(manifest, separators=(",", ":"), sort_keys=False) + "\n", encoding="utf-8")
+    ANIMATION_MANIFEST_PATH.write_text(json.dumps(animation_manifest, separators=(",", ":"), sort_keys=False) + "\n", encoding="utf-8")
     print(f"generated {len(units)} unit art records into {ART_ROOT.relative_to(ROOT)}")
     print(f"generated {len(units)} unit animation records into {ANIMATION_ROOT.relative_to(ROOT)}")
     return 0
@@ -367,11 +387,11 @@ def to_res_path(path: Path) -> str:
     return "res://" + path.relative_to(ROOT).as_posix()
 
 
-def optimize_runtime_palette(path: Path) -> None:
+def optimize_runtime_palette(path: Path, colors: int = 32) -> None:
     """Keep new curated runtime surfaces compact without changing their canvas or alpha."""
     with Image.open(path) as source:
         rgba = source.convert("RGBA")
-        optimized = rgba.quantize(colors=32, method=Image.Quantize.FASTOCTREE).convert("RGBA")
+        optimized = rgba.quantize(colors=colors, method=Image.Quantize.FASTOCTREE).convert("RGBA")
         optimized.save(path, optimize=True)
 
 
