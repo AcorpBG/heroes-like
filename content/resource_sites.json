@@ -15606,6 +15606,282 @@
       "content_batch_id": "content-six-fogbreak-survey-expeditions-10184",
       "batch_role": "faction_fogbreak_survey_instrument",
       "public_text": {"public_summary": "A shell plumb and wakeglass beads hang inside a crescent driftwood frame aligned to a drowned horizon.", "non_color_silhouette_required": true, "large_text_panel_required": false}
+    },
+    {
+      "id": "site_embercourt_rainwrit_ledger_brazier",
+      "name": "Rainwrit Ledger Brazier",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 300,
+        "embergrain": 1
+      },
+      "control_income": {
+        "gold": 350,
+        "embergrain": 1
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_embercourt",
+      "response_profile": {
+        "action_label": "Reconcile Treasury",
+        "summary": "Reopen Rainwrit Ledger Brazier and reconcile its guarded frontier ledgers.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 180,
+          "wood": 1
+        },
+        "watch_days": 3,
+        "readiness_bonus": 3,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "A guarded Rainwrit Ledger Brazier that produces gold and embergrain while controlled.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "frontier_treasury_office_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "frontier_treasury_office_live",
+      "content_batch_id": "content-six-frontier-treasury-commissions-10184",
+      "treasury_commission_role": "persistent_frontier_income_office"
+    },
+    {
+      "id": "site_mireclaw_reedbarrow_tally_drum",
+      "name": "Reedbarrow Tally Drum",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 300,
+        "peatwax": 1
+      },
+      "control_income": {
+        "gold": 350,
+        "peatwax": 1
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_mireclaw",
+      "response_profile": {
+        "action_label": "Reconcile Treasury",
+        "summary": "Reopen Reedbarrow Tally Drum and reconcile its guarded frontier ledgers.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 180,
+          "wood": 1
+        },
+        "watch_days": 3,
+        "readiness_bonus": 3,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "A guarded Reedbarrow Tally Drum that produces gold and peatwax while controlled.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "frontier_treasury_office_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "frontier_treasury_office_live",
+      "content_batch_id": "content-six-frontier-treasury-commissions-10184",
+      "treasury_commission_role": "persistent_frontier_income_office"
+    },
+    {
+      "id": "site_sunvault_meridian_prism_ledger",
+      "name": "Meridian Prism Ledger",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 300,
+        "aetherglass": 1
+      },
+      "control_income": {
+        "gold": 350,
+        "aetherglass": 1
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_sunvault",
+      "response_profile": {
+        "action_label": "Reconcile Treasury",
+        "summary": "Reopen Meridian Prism Ledger and reconcile its guarded frontier ledgers.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 180,
+          "wood": 1
+        },
+        "watch_days": 3,
+        "readiness_bonus": 3,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "A guarded Meridian Prism Ledger that produces gold and aetherglass while controlled.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "frontier_treasury_office_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "frontier_treasury_office_live",
+      "content_batch_id": "content-six-frontier-treasury-commissions-10184",
+      "treasury_commission_role": "persistent_frontier_income_office"
+    },
+    {
+      "id": "site_thornwake_crownroot_seed_tithe_arbor",
+      "name": "Crownroot Seed-Tithe Arbor",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 300,
+        "verdant_grafts": 1
+      },
+      "control_income": {
+        "gold": 350,
+        "verdant_grafts": 1
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_thornwake",
+      "response_profile": {
+        "action_label": "Reconcile Treasury",
+        "summary": "Reopen Crownroot Seed-Tithe Arbor and reconcile its guarded frontier ledgers.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 180,
+          "wood": 1
+        },
+        "watch_days": 3,
+        "readiness_bonus": 3,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "A guarded Crownroot Seed-Tithe Arbor that produces gold and verdant grafts while controlled.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "frontier_treasury_office_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "frontier_treasury_office_live",
+      "content_batch_id": "content-six-frontier-treasury-commissions-10184",
+      "treasury_commission_role": "persistent_frontier_income_office"
+    },
+    {
+      "id": "site_brasshollow_blackbell_counterwheel",
+      "name": "Blackbell Counterwheel",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 300,
+        "brass_scrip": 1
+      },
+      "control_income": {
+        "gold": 350,
+        "brass_scrip": 1
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_brasshollow",
+      "response_profile": {
+        "action_label": "Reconcile Treasury",
+        "summary": "Reopen Blackbell Counterwheel and reconcile its guarded frontier ledgers.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 180,
+          "wood": 1
+        },
+        "watch_days": 3,
+        "readiness_bonus": 3,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "A guarded Blackbell Counterwheel that produces gold and brass scrip while controlled.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "frontier_treasury_office_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "frontier_treasury_office_live",
+      "content_batch_id": "content-six-frontier-treasury-commissions-10184",
+      "treasury_commission_role": "persistent_frontier_income_office"
+    },
+    {
+      "id": "site_veilmourn_pale_sounding_wake_ledger",
+      "name": "Pale Sounding Wake Ledger",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 300,
+        "memory_salt": 1
+      },
+      "control_income": {
+        "gold": 350,
+        "memory_salt": 1
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_veilmourn",
+      "response_profile": {
+        "action_label": "Reconcile Treasury",
+        "summary": "Reopen Pale Sounding Wake Ledger and reconcile its guarded frontier ledgers.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 180,
+          "wood": 1
+        },
+        "watch_days": 3,
+        "readiness_bonus": 3,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "A guarded Pale Sounding Wake Ledger that produces gold and memory salt while controlled.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "frontier_treasury_office_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "frontier_treasury_office_live",
+      "content_batch_id": "content-six-frontier-treasury-commissions-10184",
+      "treasury_commission_role": "persistent_frontier_income_office"
     }
   ]
 }

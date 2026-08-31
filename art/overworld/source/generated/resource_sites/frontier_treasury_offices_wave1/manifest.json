@@ -1,0 +1,97 @@
+{
+  "source_model": "built_in_image_gen_original_frontier_treasury_offices_atlas",
+  "generation_mode": "built_in_image_gen",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+  "runtime_atlas_size": [
+    288,
+    48
+  ],
+  "runtime_atlas_sha256": "6cbc67fac5e474d5ffaacb5794babe9166bceb4b55bd67b5a0921ebb995cea2c",
+  "prompt_set_summary": "Six original transparent three-quarter isometric frontier treasury offices, one for each playable faction, generated as high-resolution painterly source masters. Every office uses a different non-color-dependent accounting mechanism and silhouette readable in a compact 48-pixel runtime cell. Prompts excluded scenery, ground tiles, frames, characters, labels, logos, copied heraldry, copyrighted assets, and protected visual expression.",
+  "items": [
+    {
+      "site_id": "site_embercourt_rainwrit_ledger_brazier",
+      "asset_id": "resource_site_frontier_treasury_embercourt_brazier",
+      "source_file": "embercourt_rainwrit_ledger_brazier.png",
+      "source_sha256": "f25f9bbea66927b6fc061d2472c70b51222c20e044a6c14563b29dc3756f9b48",
+      "generation_original": true,
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric strategy landmark: A tall blackened-iron ledger lectern carries an uneven vertical abacus, a sealed glowing brazier, wax-tagged rain chains, copper tally plates, and a narrow parchment desk in a distinct Embercourt silhouette. Generated as a high-resolution source master with strong small-scale readability, generous alpha padding, no scenery, ground tile, frame, text, logo, heraldry, character, copied asset, or protected visual expression."
+    },
+    {
+      "site_id": "site_mireclaw_reedbarrow_tally_drum",
+      "asset_id": "resource_site_frontier_treasury_mireclaw_drum",
+      "source_file": "mireclaw_reedbarrow_tally_drum.png",
+      "source_sha256": "075982f6facf03334a1baa904a219fa5e43810a6eae1865de703d4e061b5b8b6",
+      "generation_original": true,
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric strategy landmark: A broad hide tally drum stands on crooked root legs beside fanned bone counting rods, woven reed baskets, peatwax cords, and dangling tokens in a low, unmistakably Mireclaw silhouette. Generated as a high-resolution source master with strong small-scale readability, generous alpha padding, no scenery, ground tile, frame, text, logo, heraldry, character, copied asset, or protected visual expression."
+    },
+    {
+      "site_id": "site_sunvault_meridian_prism_ledger",
+      "asset_id": "resource_site_frontier_treasury_sunvault_prism",
+      "source_file": "sunvault_meridian_prism_ledger.png",
+      "source_sha256": "b38ddd442ac6415c99b8239a88cd9f9f8cbb85ef9771c48e9f42b3b072c93e4e",
+      "generation_original": true,
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric strategy landmark: A tall faceted crystal balance rises from stepped sunstone with one great prism pan, stacked glass counterweights, a gold solar pivot, and an elegant asymmetric Sunvault profile. Generated as a high-resolution source master with strong small-scale readability, generous alpha padding, no scenery, ground tile, frame, text, logo, heraldry, character, copied asset, or protected visual expression."
+    },
+    {
+      "site_id": "site_thornwake_crownroot_seed_tithe_arbor",
+      "asset_id": "resource_site_frontier_treasury_thornwake_arbor",
+      "source_file": "thornwake_crownroot_seed_tithe_arbor.png",
+      "source_sha256": "63ab5dea6a2dfc68edddbef468ec6e5cdad943b5fdac74a11687f88da7194190",
+      "generation_original": true,
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric strategy landmark: A living bent-wood arch suspends three seedpod weights above a root-grown counting desk, thorn clasps, fruit markers, and a woven collection cradle in an organic Thornwake silhouette. Generated as a high-resolution source master with strong small-scale readability, generous alpha padding, no scenery, ground tile, frame, text, logo, heraldry, character, copied asset, or protected visual expression."
+    },
+    {
+      "site_id": "site_brasshollow_blackbell_counterwheel",
+      "asset_id": "resource_site_frontier_treasury_brasshollow_wheel",
+      "source_file": "brasshollow_blackbell_counterwheel.png",
+      "source_sha256": "0faf2b0246b05662025aa3f4a73ab35392ff004eafd1e06b1303dc92b851b85d",
+      "generation_original": true,
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric strategy landmark: A squat brass counting wheel rests on riveted feet beneath an off-center black bell, two unequal gauges, coin chutes, a winding handle, and furnace-red controls in a heavy Brasshollow silhouette. Generated as a high-resolution source master with strong small-scale readability, generous alpha padding, no scenery, ground tile, frame, text, logo, heraldry, character, copied asset, or protected visual expression."
+    },
+    {
+      "site_id": "site_veilmourn_pale_sounding_wake_ledger",
+      "asset_id": "resource_site_frontier_treasury_veilmourn_ledger",
+      "source_file": "veilmourn_pale_sounding_wake_ledger.png",
+      "source_sha256": "da2a829387d1f1cd9d911b3de5476fa2abcdd6f8abfee8cd873a04248ba2a617",
+      "generation_original": true,
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric strategy landmark: A crescent pale-shell frame suspends three wakeglass weights above a tide-chain abacus, salt-dark hooks, narrow counting posts, and a low ledger coffer in a haunting Veilmourn silhouette. Generated as a high-resolution source master with strong small-scale readability, generous alpha padding, no scenery, ground tile, frame, text, logo, heraldry, character, copied asset, or protected visual expression."
+    }
+  ]
+}

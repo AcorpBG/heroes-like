@@ -1677,6 +1677,16 @@ func _validate_objective(
 			var minimum_percent := int(objective.get("minimum_percent", 0))
 			if minimum_percent <= 0 or minimum_percent > 100:
 				push_warning("Scenario %s objective %s must define minimum_percent from 1 through 100." % [scenario_id, String(objective.get("id", ""))])
+		"resource_stockpile_at_least":
+			var stockpile_requirements = objective.get("requirements", {})
+			if not (stockpile_requirements is Dictionary) or stockpile_requirements.is_empty():
+				push_warning("Scenario %s objective %s must define non-empty resource requirements." % [scenario_id, String(objective.get("id", ""))])
+			else:
+				for resource_id in stockpile_requirements.keys():
+					if String(resource_id) == "" or get_resource(String(resource_id)).is_empty():
+						push_warning("Scenario %s objective %s references missing resource_id %s." % [scenario_id, String(objective.get("id", "")), String(resource_id)])
+					if int(stockpile_requirements.get(resource_id, 0)) <= 0:
+						push_warning("Scenario %s objective %s resource %s must define minimum_count > 0." % [scenario_id, String(objective.get("id", "")), String(resource_id)])
 		"hero_army_meets_requirements":
 			var objective_hero_id := String(objective.get("hero_id", ""))
 			if objective_hero_id == "" or not hero_index.has(objective_hero_id):

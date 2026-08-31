@@ -13545,6 +13545,120 @@
       "assigned_resource_site_id": "site_veilmourn_drowned_horizon_sextant",
       "presentation_role": "drowned_horizon_sextant",
       "accessible_description": "A crescent driftwood frame surrounds an open sextant with a shell plumb, wakeglass beads, and salt-dark rope in a mournful Veilmourn silhouette."
+    },
+    "resource_site_frontier_treasury_embercourt_brazier": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/embercourt_rainwrit_ledger_brazier.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/embercourt_rainwrit_ledger_brazier.png",
+      "source_model": "built_in_image_gen_original_frontier_treasury_offices_atlas",
+      "assigned_resource_site_id": "site_embercourt_rainwrit_ledger_brazier",
+      "presentation_role": "rainwrit_ledger_brazier",
+      "accessible_description": "A tall blackened-iron ledger lectern carries an uneven vertical abacus, a sealed glowing brazier, wax-tagged rain chains, copper tally plates, and a narrow parchment desk in a distinct Embercourt silhouette."
+    },
+    "resource_site_frontier_treasury_mireclaw_drum": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/mireclaw_reedbarrow_tally_drum.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/mireclaw_reedbarrow_tally_drum.png",
+      "source_model": "built_in_image_gen_original_frontier_treasury_offices_atlas",
+      "assigned_resource_site_id": "site_mireclaw_reedbarrow_tally_drum",
+      "presentation_role": "reedbarrow_tally_drum",
+      "accessible_description": "A broad hide tally drum stands on crooked root legs beside fanned bone counting rods, woven reed baskets, peatwax cords, and dangling tokens in a low, unmistakably Mireclaw silhouette."
+    },
+    "resource_site_frontier_treasury_sunvault_prism": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/sunvault_meridian_prism_ledger.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/sunvault_meridian_prism_ledger.png",
+      "source_model": "built_in_image_gen_original_frontier_treasury_offices_atlas",
+      "assigned_resource_site_id": "site_sunvault_meridian_prism_ledger",
+      "presentation_role": "meridian_prism_ledger",
+      "accessible_description": "A tall faceted crystal balance rises from stepped sunstone with one great prism pan, stacked glass counterweights, a gold solar pivot, and an elegant asymmetric Sunvault profile."
+    },
+    "resource_site_frontier_treasury_thornwake_arbor": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/thornwake_crownroot_seed_tithe_arbor.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/thornwake_crownroot_seed_tithe_arbor.png",
+      "source_model": "built_in_image_gen_original_frontier_treasury_offices_atlas",
+      "assigned_resource_site_id": "site_thornwake_crownroot_seed_tithe_arbor",
+      "presentation_role": "crownroot_seed_tithe_arbor",
+      "accessible_description": "A living bent-wood arch suspends three seedpod weights above a root-grown counting desk, thorn clasps, fruit markers, and a woven collection cradle in an organic Thornwake silhouette."
+    },
+    "resource_site_frontier_treasury_brasshollow_wheel": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/brasshollow_blackbell_counterwheel.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/brasshollow_blackbell_counterwheel.png",
+      "source_model": "built_in_image_gen_original_frontier_treasury_offices_atlas",
+      "assigned_resource_site_id": "site_brasshollow_blackbell_counterwheel",
+      "presentation_role": "blackbell_counterwheel",
+      "accessible_description": "A squat brass counting wheel rests on riveted feet beneath an off-center black bell, two unequal gauges, coin chutes, a winding handle, and furnace-red controls in a heavy Brasshollow silhouette."
+    },
+    "resource_site_frontier_treasury_veilmourn_ledger": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/veilmourn_pale_sounding_wake_ledger.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/veilmourn_pale_sounding_wake_ledger.png",
+      "source_model": "built_in_image_gen_original_frontier_treasury_offices_atlas",
+      "assigned_resource_site_id": "site_veilmourn_pale_sounding_wake_ledger",
+      "presentation_role": "pale_sounding_wake_ledger",
+      "accessible_description": "A crescent pale-shell frame suspends three wakeglass weights above a tide-chain abacus, salt-dark hooks, narrow counting posts, and a low ledger coffer in a haunting Veilmourn silhouette."
     }
   },
   "resource_site_sprites": {
@@ -14649,6 +14763,36 @@
       "asset_id": "resource_site_fogbreak_veilmourn_sextant",
       "unclaimed_asset_id": "resource_site_fogbreak_veilmourn_sextant",
       "fit": "Exact original Drowned Horizon Sextant remains visible before and after its persistent scouting claim."
+    },
+    "site_embercourt_rainwrit_ledger_brazier": {
+      "asset_id": "resource_site_frontier_treasury_embercourt_brazier",
+      "unclaimed_asset_id": "resource_site_frontier_treasury_embercourt_brazier",
+      "fit": "Exact original Rainwrit Ledger Brazier remains visible before and after persistent treasury control."
+    },
+    "site_mireclaw_reedbarrow_tally_drum": {
+      "asset_id": "resource_site_frontier_treasury_mireclaw_drum",
+      "unclaimed_asset_id": "resource_site_frontier_treasury_mireclaw_drum",
+      "fit": "Exact original Reedbarrow Tally Drum remains visible before and after persistent treasury control."
+    },
+    "site_sunvault_meridian_prism_ledger": {
+      "asset_id": "resource_site_frontier_treasury_sunvault_prism",
+      "unclaimed_asset_id": "resource_site_frontier_treasury_sunvault_prism",
+      "fit": "Exact original Meridian Prism Ledger remains visible before and after persistent treasury control."
+    },
+    "site_thornwake_crownroot_seed_tithe_arbor": {
+      "asset_id": "resource_site_frontier_treasury_thornwake_arbor",
+      "unclaimed_asset_id": "resource_site_frontier_treasury_thornwake_arbor",
+      "fit": "Exact original Crownroot Seed Tithe Arbor remains visible before and after persistent treasury control."
+    },
+    "site_brasshollow_blackbell_counterwheel": {
+      "asset_id": "resource_site_frontier_treasury_brasshollow_wheel",
+      "unclaimed_asset_id": "resource_site_frontier_treasury_brasshollow_wheel",
+      "fit": "Exact original Blackbell Counterwheel remains visible before and after persistent treasury control."
+    },
+    "site_veilmourn_pale_sounding_wake_ledger": {
+      "asset_id": "resource_site_frontier_treasury_veilmourn_ledger",
+      "unclaimed_asset_id": "resource_site_frontier_treasury_veilmourn_ledger",
+      "fit": "Exact original Pale Sounding Wake Ledger remains visible before and after persistent treasury control."
     }
   },
   "artifact_default_sprite": {

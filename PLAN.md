@@ -25,8 +25,39 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Active implementation slice: none selected.
-- Most recently completed implementation slice: `content-six-fogbreak-survey-expeditions-10184`, a coherent six-faction exploration, scouting-control, dormant-encounter activation, exact-art, and save-continuity batch.
-- Current package boundary: matching Linux and Windows release exports measure 248610020 bytes, 1389980 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Most recently completed implementation slice: `content-six-frontier-treasury-commissions-10184`, a coherent six-faction controlled-income, resource-stockpile, battle, exact-art, and save-continuity batch.
+- Current package boundary: matching Linux and Windows release exports measure 248706392 bytes, 1293608 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Frontier Treasury Commissions
+
+id: `content-six-frontier-treasury-commissions-10184`
+
+Status: completed.
+
+Current finding:
+- all 159 authored scenarios seed and mutate the nine-resource stockpile through towns, controlled sites, markets, artifacts, specialties, rewards, and daily income, but none makes accumulating an exact live treasury part of victory;
+- controlled resource-site income is already production-authoritative for player and enemy turns, save-version-9 continuity, forecasts, and public summaries, so a scenario family can make economic control strategically decisive without introducing another economy subsystem;
+- Orrik, Silsa Bramblehound, Pava Ashmeter, and Cela Mist-Corsair still have only one authored lead appearance, while comparatively underused towns and one-placement opposing encounters provide a coherent breadth target.
+
+Implementation boundary:
+- add a first-class `resource_stockpile_at_least` scenario objective with exact positive live-resource requirements, scoped resource dependencies, per-resource progress labels, content validation, and existing save-version-9 continuity;
+- author one original skirmish-only treasury commission per faction, each with a selected low-use commander and town, a new five-stack field company, three guarded persistent faction treasury offices, daily gold and faction-rare income, economy support, escalating rival pressure, deterministic seeds, and three low-use opposing encounter placements;
+- generate six original transparent faction treasury offices with distinct non-color silhouettes, derive one compact 288x48 runtime atlas, retain prompt/hash/accessibility provenance outside packages, and keep Linux/Windows exports below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all six scenarios launch below their exact gold and faction-rare thresholds, resolve and claim all eighteen offices through production battle/resource authority, remain below the objective immediately after claims, then cross both thresholds through production end-turn income before the deadline and win with exact scoped resource dependency behavior;
+- negative controls prove initial, gold-only, faction-rare-only, wrong-rare, unrelated-resource-event, and partial-income states cannot satisfy the treasury objective;
+- one consolidated six-case gameplay/income/art/save and visual-capture smoke runs only after the complete batch, followed once by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, unit definition, town definition, building, spell, artifact, campaign, market rule, resource id, combat formula, strategic-AI planning algorithm, native RMG behavior, save-version bump, full-screen backdrop, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes map, treasury, trading post, commander, encounter, landmark, name, text, heraldry, or protected visual expression.
+
+Result:
+- shipped six skirmish-only faction treasury commissions, six original five-stack companies, six persistent gold-and-faction-rare offices placed across eighteen guarded fronts, and the first production `resource_stockpile_at_least` objective with scoped resource dependencies and compact live progress labels;
+- generated six byte-distinct transparent source masters and derived one 288x48, 23374-byte runtime atlas with exact site mappings, accessibility descriptions, prompt/hash provenance, and source-art package exclusion;
+- the single consolidated batch smoke passed all six launches, exact-art routes, initial/gold-only/rare-only/wrong-rare/unrelated-event controls, eighteen production battles, eighteen production claims, post-claim pending states, six production-income crossings, six pre-Day-12 victories, six visual captures, and six exact save-version-9 round trips;
+- repository validation passed, and matching Linux/Windows exports booted with the native extension and measured 248706392 bytes, leaving 1293608 bytes below the unchanged ceiling.
 
 ## Six Fogbreak Survey Expeditions
 
