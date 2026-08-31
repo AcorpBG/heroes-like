@@ -24,9 +24,41 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; audit the expanded live catalog before selecting the next coherent production-content batch.
-- Most recently completed implementation slice: `content-six-triune-arcanum-trials-10184`, one coherent six-faction spell-learning scenario, objective, multi-lesson landmark, academy-company, and exact-art batch.
-- Current package boundary: matching Linux and Windows release exports measure 247983132 bytes, 2016868 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none; the next substantial content batch has not yet been selected.
+- Most recently completed implementation slice: `content-six-great-work-charter-races-10184`, one coherent six-faction town-development scenario, construction-objective, survey-landmark, exact-art, and save-continuity batch.
+- Current package boundary: matching Linux and Windows release exports measure 248113004 bytes, 1886996 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Great-Work Charter Races
+
+id: `content-six-great-work-charter-races-10184`
+
+Status: completed.
+
+Current finding:
+- all six Horizon citadels own original faction capstone monuments with live construction, economy, growth, presentation, and save behavior, but no scenario can currently make completing a building chain the victory authority;
+- the live scenario catalog consequently concentrates on encounter clears and town capture while leaving town development as support play rather than a primary strategic route;
+- one substantial six-map batch can expose the mature citadel build trees as distinct playable races while adding only one compact runtime art atlas below the current package ceiling.
+
+Implementation boundary:
+- add a first-class `building_built_in_player_town` objective with exact town/building validation, dependency reporting, live labels, and existing save-version-9 continuity;
+- author six original skirmish-only Great-Work races, one per faction, each centered on its Horizon citadel, exact capstone monument, viable development economy, guarded survey route, escalating rival pressure, and generous construction deadline;
+- add six original faction survey landmarks with exact transparent map art in one compact runtime atlas, asymmetric build-resource rewards, accessible silhouettes, and generated-source provenance;
+- preserve one-build-per-day TownRules authority, existing building costs/effects, combat formulas, campaign state, strategic AI, Windows/Linux paths, generated-source exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- each scenario remains unwinnable while its exact capstone is absent or belongs to a non-player town and wins immediately when the player completes that monument through production TownRules;
+- all six maps support a viable survey, economy, defense, and prerequisite-building route, while each landmark is one-time, repeat-safe, visibly faction-specific, and preserved through save version 9;
+- one consolidated six-case scenario/construction/art/save smoke runs only after the complete batch, followed once by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- shipped six skirmish-only Great-Work races, increasing the live catalogs to 129 scenarios and 237 resource sites; every map carries three authored hostile fronts, nine resource nodes, five timed/reactive hooks, an exact capstone-building victory, and a guarded faction survey route;
+- implemented exact player-town building objectives across content validation, dependency reporting, live objective labels, AI target selection, production TownRules construction, and save-version-9 continuity;
+- added six original transparent survey landmarks and one compact 288x48 runtime atlas with generated-source provenance and non-color-dependent silhouettes;
+- the one post-batch six-case smoke proved all exact-art, absent-building, wrong-owner, guarded-claim, repeat-safety, dependency, production-construction, victory, and save cases; repository validation and matching Linux/Windows packaged startup passed at 248113004 bytes.
+
+Non-goals:
+- no new faction, hero, unit definition, town definition, building definition, artifact, spell, campaign chapter, combat formula, strategic-AI algorithm, RMG/native behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes scenario, monument, map object, name, art, text, heraldry, or protected visual expression.
 
 ## Six Triune Arcanum Trials
 

@@ -12567,10 +12567,16 @@
       "family": "shrine",
       "action_label": "Sound the Lastroad Bell",
       "summary": "A roadward bell answers a commander who can carry its final clear note into battle.",
-      "claim_rewards": {"experience": 140},
-      "hero_command_bonus": {"attack": 1},
+      "claim_rewards": {
+        "experience": 140
+      },
+      "hero_command_bonus": {
+        "attack": 1
+      },
       "learn_spell_id": "spell_beacon_bell_lance_25",
-      "claim_flags": {"high_arcanum_lastroad_bell_sounded": true},
+      "claim_flags": {
+        "high_arcanum_lastroad_bell_sounded": true
+      },
       "runtime_boundary": {
         "status": "high_arcanum_live",
         "live_reward_grants": true,
@@ -12582,7 +12588,11 @@
         "scenario_placement_migration": true
       },
       "content_batch_id": "content-sevenfold-high-arcanum-10184",
-      "public_text": {"public_summary": "An ivory road spire bears a bronze signal bell, three lamps, and deeply cut oath grooves.", "no_internal_debug_score_fields": true, "large_text_panel_required": false}
+      "public_text": {
+        "public_summary": "An ivory road spire bears a bronze signal bell, three lamps, and deeply cut oath grooves.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     },
     {
       "id": "site_siltheart_drum_cairn",
@@ -12590,10 +12600,16 @@
       "family": "shrine",
       "action_label": "Strike the Siltheart Drum",
       "summary": "The hide drum wakes a disciplined mire-fury without surrendering the company to it.",
-      "claim_rewards": {"experience": 140},
-      "hero_command_bonus": {"defense": 1},
+      "claim_rewards": {
+        "experience": 140
+      },
+      "hero_command_bonus": {
+        "defense": 1
+      },
       "learn_spell_id": "spell_mire_silt_frenzy_20",
-      "claim_flags": {"high_arcanum_siltheart_drum_struck": true},
+      "claim_flags": {
+        "high_arcanum_siltheart_drum_struck": true
+      },
       "runtime_boundary": {
         "status": "high_arcanum_live",
         "live_reward_grants": true,
@@ -12605,7 +12621,11 @@
         "scenario_placement_migration": true
       },
       "content_batch_id": "content-sevenfold-high-arcanum-10184",
-      "public_text": {"public_summary": "A broad ritual drum rests on wet bogstone beside reed pipes and a sealed silt jar.", "no_internal_debug_score_fields": true, "large_text_panel_required": false}
+      "public_text": {
+        "public_summary": "A broad ritual drum rests on wet bogstone beside reed pipes and a sealed silt jar.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     },
     {
       "id": "site_aurora_facet_orrery",
@@ -12613,10 +12633,16 @@
       "family": "shrine",
       "action_label": "Align the Aurora Facets",
       "summary": "Three wandering lenses settle around a mirror shard and reveal the defensive angle between blows.",
-      "claim_rewards": {"experience": 140},
-      "hero_command_bonus": {"knowledge": 1},
+      "claim_rewards": {
+        "experience": 140
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
       "learn_spell_id": "spell_lens_mirror_facet_20",
-      "claim_flags": {"high_arcanum_aurora_facets_aligned": true},
+      "claim_flags": {
+        "high_arcanum_aurora_facets_aligned": true
+      },
       "runtime_boundary": {
         "status": "high_arcanum_live",
         "live_reward_grants": true,
@@ -12628,7 +12654,11 @@
         "scenario_placement_migration": true
       },
       "content_batch_id": "content-sevenfold-high-arcanum-10184",
-      "public_text": {"public_summary": "Three asymmetric crystal lenses circle a suspended mirror shard above a white-gold plinth.", "no_internal_debug_score_fields": true, "large_text_panel_required": false}
+      "public_text": {
+        "public_summary": "Three asymmetric crystal lenses circle a suspended mirror shard above a white-gold plinth.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     },
     {
       "id": "site_bloombark_covenant_tree",
@@ -12636,10 +12666,16 @@
       "family": "shrine",
       "action_label": "Bind the Bloombark Covenant",
       "summary": "Living roots close around an old greenstone promise and teach bark to bloom beneath a weapon's edge.",
-      "claim_rewards": {"experience": 140},
-      "hero_command_bonus": {"defense": 1},
+      "claim_rewards": {
+        "experience": 140
+      },
+      "hero_command_bonus": {
+        "defense": 1
+      },
       "learn_spell_id": "spell_root_bloom_bark_20",
-      "claim_flags": {"high_arcanum_bloombark_covenant_bound": true},
+      "claim_flags": {
+        "high_arcanum_bloombark_covenant_bound": true
+      },
       "runtime_boundary": {
         "status": "high_arcanum_live",
         "live_reward_grants": true,
@@ -12651,7 +12687,11 @@
         "scenario_placement_migration": true
       },
       "content_batch_id": "content-sevenfold-high-arcanum-10184",
-      "public_text": {"public_summary": "A gnarled living stump embraces a greenstone tablet beneath one arch of copper-red blossoms.", "no_internal_debug_score_fields": true, "large_text_panel_required": false}
+      "public_text": {
+        "public_summary": "A gnarled living stump embraces a greenstone tablet beneath one arch of copper-red blossoms.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     },
     {
       "id": "site_slagbound_clamp_forge",
@@ -12659,10 +12699,16 @@
       "family": "shrine",
       "action_label": "Set the Slagbound Clamp",
       "summary": "A severe brass clamp closes on heated basalt and fixes the rhythm of an enemy line in place.",
-      "claim_rewards": {"experience": 140},
-      "hero_command_bonus": {"power": 1},
+      "claim_rewards": {
+        "experience": 140
+      },
+      "hero_command_bonus": {
+        "power": 1
+      },
       "learn_spell_id": "spell_furnace_slag_clamp_15",
-      "claim_flags": {"high_arcanum_slagbound_clamp_set": true},
+      "claim_flags": {
+        "high_arcanum_slagbound_clamp_set": true
+      },
       "runtime_boundary": {
         "status": "high_arcanum_live",
         "live_reward_grants": true,
@@ -12674,7 +12720,11 @@
         "scenario_placement_migration": true
       },
       "content_batch_id": "content-sevenfold-high-arcanum-10184",
-      "public_text": {"public_summary": "A massive asymmetric brass clamp locks around a basalt anvil beside a banked coal furnace.", "no_internal_debug_score_fields": true, "large_text_panel_required": false}
+      "public_text": {
+        "public_summary": "A massive asymmetric brass clamp locks around a basalt anvil beside a banked coal furnace.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     },
     {
       "id": "site_mourning_tide_obelisk",
@@ -12682,10 +12732,16 @@
       "family": "shrine",
       "action_label": "Ring the Mourning Tide",
       "summary": "The black glass bell draws a narrow funeral fog that binds hostile feet without obscuring friendly purpose.",
-      "claim_rewards": {"experience": 140},
-      "hero_command_bonus": {"knowledge": 1},
+      "claim_rewards": {
+        "experience": 140
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
       "learn_spell_id": "spell_veil_mourning_fogbind_20",
-      "claim_flags": {"high_arcanum_mourning_tide_rung": true},
+      "claim_flags": {
+        "high_arcanum_mourning_tide_rung": true
+      },
       "runtime_boundary": {
         "status": "high_arcanum_live",
         "live_reward_grants": true,
@@ -12697,7 +12753,11 @@
         "scenario_placement_migration": true
       },
       "content_batch_id": "content-sevenfold-high-arcanum-10184",
-      "public_text": {"public_summary": "A salt-dark memorial stone stands inside a whale-bone arch hung with one black glass bell.", "no_internal_debug_score_fields": true, "large_text_panel_required": false}
+      "public_text": {
+        "public_summary": "A salt-dark memorial stone stands inside a whale-bone arch hung with one black glass bell.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     },
     {
       "id": "site_sevencount_verdict_table",
@@ -12705,10 +12765,16 @@
       "family": "shrine",
       "action_label": "Render the Seven-Count Verdict",
       "summary": "Seven unequal tallies and one plumb weight resolve a battlefield debt into a final measured sentence.",
-      "claim_rewards": {"experience": 140},
-      "hero_command_bonus": {"power": 1},
+      "claim_rewards": {
+        "experience": 140
+      },
+      "hero_command_bonus": {
+        "power": 1
+      },
       "learn_spell_id": "spell_old_measure_tally_tally_20",
-      "claim_flags": {"high_arcanum_sevencount_verdict_rendered": true},
+      "claim_flags": {
+        "high_arcanum_sevencount_verdict_rendered": true
+      },
       "runtime_boundary": {
         "status": "high_arcanum_live",
         "live_reward_grants": true,
@@ -12720,7 +12786,11 @@
         "scenario_placement_migration": true
       },
       "content_batch_id": "content-sevenfold-high-arcanum-10184",
-      "public_text": {"public_summary": "A low octagonal counting table carries seven unequal ivory pegs, a brass plumb, and a slate disk.", "no_internal_debug_score_fields": true, "large_text_panel_required": false}
+      "public_text": {
+        "public_summary": "A low octagonal counting table carries seven unequal ivory pegs, a brass plumb, and a slate disk.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     },
     {
       "id": "site_galehorn_windfold",
@@ -12729,14 +12799,34 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_galehorn_windfold",
       "persistent_control": true,
-      "claim_rewards": {"gold": 360, "ore": 2},
-      "claim_flags": {"galehorn_windfold_claimed": true},
-      "control_income": {"gold": 100, "ore": 1},
-      "claim_recruits": {"unit_neutral_galehorn_striders": 1, "unit_neutral_ridgeflare_shots": 3},
-      "weekly_recruits": {"unit_neutral_galehorn_striders": 1, "unit_neutral_ridgeflare_shots": 1},
+      "claim_rewards": {
+        "gold": 360,
+        "ore": 2
+      },
+      "claim_flags": {
+        "galehorn_windfold_claimed": true
+      },
+      "control_income": {
+        "gold": 100,
+        "ore": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_galehorn_striders": 1,
+        "unit_neutral_ridgeflare_shots": 3
+      },
+      "weekly_recruits": {
+        "unit_neutral_galehorn_striders": 1,
+        "unit_neutral_ridgeflare_shots": 1
+      },
       "neutral_roster": {
-        "claim_recruits": {"unit_neutral_galehorn_striders": 1, "unit_neutral_ridgeflare_shots": 3},
-        "weekly_recruits": {"unit_neutral_galehorn_striders": 1, "unit_neutral_ridgeflare_shots": 1},
+        "claim_recruits": {
+          "unit_neutral_galehorn_striders": 1,
+          "unit_neutral_ridgeflare_shots": 3
+        },
+        "weekly_recruits": {
+          "unit_neutral_galehorn_striders": 1,
+          "unit_neutral_ridgeflare_shots": 1
+        },
         "guard_army_group_id": "army_neutral_galehorn_breakline_watch",
         "guard_encounter_id": "encounter_galehorn_breakline_watch"
       },
@@ -12744,7 +12834,10 @@
         "action_label": "Sound the Windfold",
         "summary": "A wind-carved horn fold that offers one galehorn strider after its breakline is cleared and its weather ropes are sounded.",
         "movement_cost": 7,
-        "resource_cost": {"gold": 520, "ore": 2},
+        "resource_cost": {
+          "gold": 520,
+          "ore": 2
+        },
         "watch_days": 6,
         "quality_bonus": 4,
         "readiness_bonus": 4,
@@ -12754,7 +12847,10 @@
         "contract_id": "dwelling_contract_galehorn_windfold",
         "neutral_dwelling_family_id": "neutral_dwelling_galehorn_windfold",
         "resource_site_id": "site_galehorn_windfold",
-        "roster_unit_ids": ["unit_neutral_galehorn_striders", "unit_neutral_ridgeflare_shots"],
+        "roster_unit_ids": [
+          "unit_neutral_galehorn_striders",
+          "unit_neutral_ridgeflare_shots"
+        ],
         "recruit_policy": "weekly_muster",
         "recurring_recruit_access": true,
         "guarded_variant": true,
@@ -12770,9 +12866,27 @@
         "blocks_approach": true,
         "event_expectation": "the exact placed breakline watch must fall before the windfold muster opens"
       },
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
       "guarded": true,
-      "guard_profile": {"tier": "elite", "guard_army_group_id": "army_neutral_galehorn_breakline_watch", "guard_encounter_id": "encounter_galehorn_breakline_watch", "visible_cue": "wind vanes and the galehorn watch remain visible before the fold is claimed", "metadata_only": false, "runtime_guard_resolution_adopted": true},
+      "guard_profile": {
+        "tier": "elite",
+        "guard_army_group_id": "army_neutral_galehorn_breakline_watch",
+        "guard_encounter_id": "encounter_galehorn_breakline_watch",
+        "visible_cue": "wind vanes and the galehorn watch remain visible before the fold is claimed",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
       "content_batch_id": "content-four-elder-wild-recruitment-sanctuaries-10184",
       "batch_role": "guarded_elder_wild_dwelling"
     },
@@ -12783,14 +12897,34 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_sunscale_lantern_conservatory",
       "persistent_control": true,
-      "claim_rewards": {"gold": 390, "ore": 2},
-      "claim_flags": {"sunscale_lantern_conservatory_claimed": true},
-      "control_income": {"gold": 115, "ore": 1},
-      "claim_recruits": {"unit_neutral_sunscale_lanternmoths": 1, "unit_neutral_suncrack_throwers": 3},
-      "weekly_recruits": {"unit_neutral_sunscale_lanternmoths": 1, "unit_neutral_suncrack_throwers": 1},
+      "claim_rewards": {
+        "gold": 390,
+        "ore": 2
+      },
+      "claim_flags": {
+        "sunscale_lantern_conservatory_claimed": true
+      },
+      "control_income": {
+        "gold": 115,
+        "ore": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_sunscale_lanternmoths": 1,
+        "unit_neutral_suncrack_throwers": 3
+      },
+      "weekly_recruits": {
+        "unit_neutral_sunscale_lanternmoths": 1,
+        "unit_neutral_suncrack_throwers": 1
+      },
       "neutral_roster": {
-        "claim_recruits": {"unit_neutral_sunscale_lanternmoths": 1, "unit_neutral_suncrack_throwers": 3},
-        "weekly_recruits": {"unit_neutral_sunscale_lanternmoths": 1, "unit_neutral_suncrack_throwers": 1},
+        "claim_recruits": {
+          "unit_neutral_sunscale_lanternmoths": 1,
+          "unit_neutral_suncrack_throwers": 3
+        },
+        "weekly_recruits": {
+          "unit_neutral_sunscale_lanternmoths": 1,
+          "unit_neutral_suncrack_throwers": 1
+        },
         "guard_army_group_id": "army_neutral_sunscale_lantern_drift_watch",
         "guard_encounter_id": "encounter_sunscale_lantern_drift_watch"
       },
@@ -12798,7 +12932,10 @@
         "action_label": "Light the Conservatory",
         "summary": "A brass-hooped mineral garden that offers one sunscale lanternmoth after its drift lane is cleared and its feeding lamps are aligned.",
         "movement_cost": 7,
-        "resource_cost": {"gold": 560, "ore": 3},
+        "resource_cost": {
+          "gold": 560,
+          "ore": 3
+        },
         "watch_days": 6,
         "quality_bonus": 4,
         "readiness_bonus": 4,
@@ -12808,17 +12945,46 @@
         "contract_id": "dwelling_contract_sunscale_lantern_conservatory",
         "neutral_dwelling_family_id": "neutral_dwelling_sunscale_lantern_conservatory",
         "resource_site_id": "site_sunscale_lantern_conservatory",
-        "roster_unit_ids": ["unit_neutral_sunscale_lanternmoths", "unit_neutral_suncrack_throwers"],
+        "roster_unit_ids": [
+          "unit_neutral_sunscale_lanternmoths",
+          "unit_neutral_suncrack_throwers"
+        ],
         "recruit_policy": "weekly_muster",
         "recurring_recruit_access": true,
         "guarded_variant": true,
         "metadata_only_guard_contract": false,
         "requires_visible_guard_cue": true
       },
-      "guard_expectation": {"tier": "elite", "visible_cue": "the visible sunscale lantern drift blocks the conservatory before recruitment", "guard_army_group_id": "army_neutral_sunscale_lantern_drift_watch", "guard_encounter_id": "encounter_sunscale_lantern_drift_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact placed lantern drift must fall before the conservatory muster opens"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
+      "guard_expectation": {
+        "tier": "elite",
+        "visible_cue": "the visible sunscale lantern drift blocks the conservatory before recruitment",
+        "guard_army_group_id": "army_neutral_sunscale_lantern_drift_watch",
+        "guard_encounter_id": "encounter_sunscale_lantern_drift_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact placed lantern drift must fall before the conservatory muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
       "guarded": true,
-      "guard_profile": {"tier": "elite", "guard_army_group_id": "army_neutral_sunscale_lantern_drift_watch", "guard_encounter_id": "encounter_sunscale_lantern_drift_watch", "visible_cue": "amber hoops and the lanternmoth watch remain visible before the conservatory is claimed", "metadata_only": false, "runtime_guard_resolution_adopted": true},
+      "guard_profile": {
+        "tier": "elite",
+        "guard_army_group_id": "army_neutral_sunscale_lantern_drift_watch",
+        "guard_encounter_id": "encounter_sunscale_lantern_drift_watch",
+        "visible_cue": "amber hoops and the lanternmoth watch remain visible before the conservatory is claimed",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
       "content_batch_id": "content-four-elder-wild-recruitment-sanctuaries-10184",
       "batch_role": "guarded_elder_wild_dwelling"
     },
@@ -12829,14 +12995,34 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_rimebell_whitewake_eyrie",
       "persistent_control": true,
-      "claim_rewards": {"gold": 430, "wood": 2},
-      "claim_flags": {"rimebell_whitewake_eyrie_claimed": true},
-      "control_income": {"gold": 125, "wood": 1},
-      "claim_recruits": {"unit_neutral_rimebell_skyrakers": 1, "unit_neutral_whitepike_keepers": 3},
-      "weekly_recruits": {"unit_neutral_rimebell_skyrakers": 1, "unit_neutral_whitepike_keepers": 1},
+      "claim_rewards": {
+        "gold": 430,
+        "wood": 2
+      },
+      "claim_flags": {
+        "rimebell_whitewake_eyrie_claimed": true
+      },
+      "control_income": {
+        "gold": 125,
+        "wood": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_rimebell_skyrakers": 1,
+        "unit_neutral_whitepike_keepers": 3
+      },
+      "weekly_recruits": {
+        "unit_neutral_rimebell_skyrakers": 1,
+        "unit_neutral_whitepike_keepers": 1
+      },
       "neutral_roster": {
-        "claim_recruits": {"unit_neutral_rimebell_skyrakers": 1, "unit_neutral_whitepike_keepers": 3},
-        "weekly_recruits": {"unit_neutral_rimebell_skyrakers": 1, "unit_neutral_whitepike_keepers": 1},
+        "claim_recruits": {
+          "unit_neutral_rimebell_skyrakers": 1,
+          "unit_neutral_whitepike_keepers": 3
+        },
+        "weekly_recruits": {
+          "unit_neutral_rimebell_skyrakers": 1,
+          "unit_neutral_whitepike_keepers": 1
+        },
         "guard_army_group_id": "army_neutral_rimebell_whitewake_watch",
         "guard_encounter_id": "encounter_rimebell_whitewake_watch"
       },
@@ -12844,7 +13030,10 @@
         "action_label": "Ring the Whitewake",
         "summary": "A four-pronged froststone eyrie that offers one rimebell skyraker after its whitewake signal is taken and the roost is supplied.",
         "movement_cost": 7,
-        "resource_cost": {"gold": 620, "wood": 3},
+        "resource_cost": {
+          "gold": 620,
+          "wood": 3
+        },
         "watch_days": 6,
         "quality_bonus": 5,
         "readiness_bonus": 4,
@@ -12854,17 +13043,46 @@
         "contract_id": "dwelling_contract_rimebell_whitewake_eyrie",
         "neutral_dwelling_family_id": "neutral_dwelling_rimebell_whitewake_eyrie",
         "resource_site_id": "site_rimebell_whitewake_eyrie",
-        "roster_unit_ids": ["unit_neutral_rimebell_skyrakers", "unit_neutral_whitepike_keepers"],
+        "roster_unit_ids": [
+          "unit_neutral_rimebell_skyrakers",
+          "unit_neutral_whitepike_keepers"
+        ],
         "recruit_policy": "weekly_muster",
         "recurring_recruit_access": true,
         "guarded_variant": true,
         "metadata_only_guard_contract": false,
         "requires_visible_guard_cue": true
       },
-      "guard_expectation": {"tier": "elite", "visible_cue": "the visible rimebell whitewake blocks the eyrie before recruitment", "guard_army_group_id": "army_neutral_rimebell_whitewake_watch", "guard_encounter_id": "encounter_rimebell_whitewake_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact placed whitewake watch must fall before the eyrie muster opens"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
+      "guard_expectation": {
+        "tier": "elite",
+        "visible_cue": "the visible rimebell whitewake blocks the eyrie before recruitment",
+        "guard_army_group_id": "army_neutral_rimebell_whitewake_watch",
+        "guard_encounter_id": "encounter_rimebell_whitewake_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact placed whitewake watch must fall before the eyrie muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
       "guarded": true,
-      "guard_profile": {"tier": "elite", "guard_army_group_id": "army_neutral_rimebell_whitewake_watch", "guard_encounter_id": "encounter_rimebell_whitewake_watch", "visible_cue": "four ice fins and the skyraker watch remain visible before the eyrie is claimed", "metadata_only": false, "runtime_guard_resolution_adopted": true},
+      "guard_profile": {
+        "tier": "elite",
+        "guard_army_group_id": "army_neutral_rimebell_whitewake_watch",
+        "guard_encounter_id": "encounter_rimebell_whitewake_watch",
+        "visible_cue": "four ice fins and the skyraker watch remain visible before the eyrie is claimed",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
       "content_batch_id": "content-four-elder-wild-recruitment-sanctuaries-10184",
       "batch_role": "guarded_elder_wild_dwelling"
     },
@@ -12875,14 +13093,34 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_deepforge_seventh_vault",
       "persistent_control": true,
-      "claim_rewards": {"gold": 520, "ore": 3},
-      "claim_flags": {"deepforge_seventh_vault_claimed": true},
-      "control_income": {"gold": 145, "ore": 1},
-      "claim_recruits": {"unit_neutral_deepforge_vaultwyrms": 1, "unit_neutral_basalt_wardens": 2},
-      "weekly_recruits": {"unit_neutral_deepforge_vaultwyrms": 1, "unit_neutral_basalt_wardens": 1},
+      "claim_rewards": {
+        "gold": 520,
+        "ore": 3
+      },
+      "claim_flags": {
+        "deepforge_seventh_vault_claimed": true
+      },
+      "control_income": {
+        "gold": 145,
+        "ore": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_deepforge_vaultwyrms": 1,
+        "unit_neutral_basalt_wardens": 2
+      },
+      "weekly_recruits": {
+        "unit_neutral_deepforge_vaultwyrms": 1,
+        "unit_neutral_basalt_wardens": 1
+      },
       "neutral_roster": {
-        "claim_recruits": {"unit_neutral_deepforge_vaultwyrms": 1, "unit_neutral_basalt_wardens": 2},
-        "weekly_recruits": {"unit_neutral_deepforge_vaultwyrms": 1, "unit_neutral_basalt_wardens": 1},
+        "claim_recruits": {
+          "unit_neutral_deepforge_vaultwyrms": 1,
+          "unit_neutral_basalt_wardens": 2
+        },
+        "weekly_recruits": {
+          "unit_neutral_deepforge_vaultwyrms": 1,
+          "unit_neutral_basalt_wardens": 1
+        },
         "guard_army_group_id": "army_neutral_deepforge_seventh_seal_watch",
         "guard_encounter_id": "encounter_deepforge_seventh_seal_watch"
       },
@@ -12890,7 +13128,10 @@
         "action_label": "Open the Seventh Vault",
         "summary": "A seven-plate deepforge refuge that offers one vaultwyrm after its seal watch is broken and the armored pens are provisioned.",
         "movement_cost": 8,
-        "resource_cost": {"gold": 760, "ore": 4},
+        "resource_cost": {
+          "gold": 760,
+          "ore": 4
+        },
         "watch_days": 7,
         "quality_bonus": 6,
         "readiness_bonus": 5,
@@ -12900,169 +13141,1037 @@
         "contract_id": "dwelling_contract_deepforge_seventh_vault",
         "neutral_dwelling_family_id": "neutral_dwelling_deepforge_seventh_vault",
         "resource_site_id": "site_deepforge_seventh_vault",
-        "roster_unit_ids": ["unit_neutral_deepforge_vaultwyrms", "unit_neutral_basalt_wardens"],
+        "roster_unit_ids": [
+          "unit_neutral_deepforge_vaultwyrms",
+          "unit_neutral_basalt_wardens"
+        ],
         "recruit_policy": "weekly_muster",
         "recurring_recruit_access": true,
         "guarded_variant": true,
         "metadata_only_guard_contract": false,
         "requires_visible_guard_cue": true
       },
-      "guard_expectation": {"tier": "apex", "visible_cue": "the visible deepforge seventh seal blocks the vault before recruitment", "guard_army_group_id": "army_neutral_deepforge_seventh_seal_watch", "guard_encounter_id": "encounter_deepforge_seventh_seal_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact placed seventh-seal watch must fall before the vault muster opens"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
+      "guard_expectation": {
+        "tier": "apex",
+        "visible_cue": "the visible deepforge seventh seal blocks the vault before recruitment",
+        "guard_army_group_id": "army_neutral_deepforge_seventh_seal_watch",
+        "guard_encounter_id": "encounter_deepforge_seventh_seal_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact placed seventh-seal watch must fall before the vault muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
       "guarded": true,
-      "guard_profile": {"tier": "apex", "guard_army_group_id": "army_neutral_deepforge_seventh_seal_watch", "guard_encounter_id": "encounter_deepforge_seventh_seal_watch", "visible_cue": "seven interlocking plates and the vaultwyrm watch remain visible before the vault is claimed", "metadata_only": false, "runtime_guard_resolution_adopted": true},
+      "guard_profile": {
+        "tier": "apex",
+        "guard_army_group_id": "army_neutral_deepforge_seventh_seal_watch",
+        "guard_encounter_id": "encounter_deepforge_seventh_seal_watch",
+        "visible_cue": "seven interlocking plates and the vaultwyrm watch remain visible before the vault is claimed",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
       "content_batch_id": "content-four-elder-wild-recruitment-sanctuaries-10184",
       "batch_role": "guarded_elder_wild_dwelling"
     },
     {
-      "id": "site_ashcrown_cinderfold", "name": "Ashcrown Cinderfold", "family": "neutral_dwelling", "dwelling_scope": "neutral",
-      "neutral_dwelling_family_id": "neutral_dwelling_ashcrown_cinderfold", "persistent_control": true,
-      "claim_rewards": {"gold": 440, "embergrain": 1}, "claim_flags": {"ashcrown_cinderfold_claimed": true},
-      "control_income": {"gold": 120, "embergrain": 1},
-      "claim_recruits": {"unit_neutral_ashcrown_kilnelk": 1, "unit_neutral_cinderpot_hurlers": 3},
-      "weekly_recruits": {"unit_neutral_ashcrown_kilnelk": 1, "unit_neutral_cinderpot_hurlers": 1},
-      "neutral_roster": {"claim_recruits": {"unit_neutral_ashcrown_kilnelk": 1, "unit_neutral_cinderpot_hurlers": 3}, "weekly_recruits": {"unit_neutral_ashcrown_kilnelk": 1, "unit_neutral_cinderpot_hurlers": 1}, "guard_army_group_id": "army_neutral_ashcrown_cinderfold_watch", "guard_encounter_id": "encounter_ashcrown_cinderfold_watch"},
-      "response_profile": {"action_label": "Bank the Cinderfold", "summary": "A ceramic-antler fold that offers one ashcrown kilnelk after its crown ring is broken and its clinker troughs are banked.", "movement_cost": 7, "resource_cost": {"gold": 680, "embergrain": 1}, "watch_days": 6, "quality_bonus": 5, "readiness_bonus": 4, "recovery_relief": 1},
-      "dwelling_contract": {"contract_id": "dwelling_contract_ashcrown_cinderfold", "neutral_dwelling_family_id": "neutral_dwelling_ashcrown_cinderfold", "resource_site_id": "site_ashcrown_cinderfold", "roster_unit_ids": ["unit_neutral_ashcrown_kilnelk", "unit_neutral_cinderpot_hurlers"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "artifact_reward_contract": {"contract_id": "artifact_reward_contract_ashcrown_cinderfold", "source_tag": "dwelling", "artifact_reward_table_id": "artifact_source_sovereign_wild_trophies", "reward_categories": ["recruit", "artifact"], "reward_tier": "sovereign"},
-      "guard_expectation": {"tier": "sovereign", "visible_cue": "the visible ashcrown watch blocks the cinderfold before recruitment", "guard_army_group_id": "army_neutral_ashcrown_cinderfold_watch", "guard_encounter_id": "encounter_ashcrown_cinderfold_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact cinderfold watch must fall before the sovereign muster opens"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "artifact_reward_execution": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
-      "guarded": true, "guard_profile": {"tier": "sovereign", "guard_army_group_id": "army_neutral_ashcrown_cinderfold_watch", "guard_encounter_id": "encounter_ashcrown_cinderfold_watch", "visible_cue": "ceramic antlers and the heated crown ring remain visible before the fold is claimed", "metadata_only": false, "runtime_guard_resolution_adopted": true},
-      "content_batch_id": "content-six-sovereign-wild-habitats-10184", "batch_role": "guarded_sovereign_wild_dwelling"
+      "id": "site_ashcrown_cinderfold",
+      "name": "Ashcrown Cinderfold",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_ashcrown_cinderfold",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 440,
+        "embergrain": 1
+      },
+      "claim_flags": {
+        "ashcrown_cinderfold_claimed": true
+      },
+      "control_income": {
+        "gold": 120,
+        "embergrain": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_ashcrown_kilnelk": 1,
+        "unit_neutral_cinderpot_hurlers": 3
+      },
+      "weekly_recruits": {
+        "unit_neutral_ashcrown_kilnelk": 1,
+        "unit_neutral_cinderpot_hurlers": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_ashcrown_kilnelk": 1,
+          "unit_neutral_cinderpot_hurlers": 3
+        },
+        "weekly_recruits": {
+          "unit_neutral_ashcrown_kilnelk": 1,
+          "unit_neutral_cinderpot_hurlers": 1
+        },
+        "guard_army_group_id": "army_neutral_ashcrown_cinderfold_watch",
+        "guard_encounter_id": "encounter_ashcrown_cinderfold_watch"
+      },
+      "response_profile": {
+        "action_label": "Bank the Cinderfold",
+        "summary": "A ceramic-antler fold that offers one ashcrown kilnelk after its crown ring is broken and its clinker troughs are banked.",
+        "movement_cost": 7,
+        "resource_cost": {
+          "gold": 680,
+          "embergrain": 1
+        },
+        "watch_days": 6,
+        "quality_bonus": 5,
+        "readiness_bonus": 4,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_ashcrown_cinderfold",
+        "neutral_dwelling_family_id": "neutral_dwelling_ashcrown_cinderfold",
+        "resource_site_id": "site_ashcrown_cinderfold",
+        "roster_unit_ids": [
+          "unit_neutral_ashcrown_kilnelk",
+          "unit_neutral_cinderpot_hurlers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_ashcrown_cinderfold",
+        "source_tag": "dwelling",
+        "artifact_reward_table_id": "artifact_source_sovereign_wild_trophies",
+        "reward_categories": [
+          "recruit",
+          "artifact"
+        ],
+        "reward_tier": "sovereign"
+      },
+      "guard_expectation": {
+        "tier": "sovereign",
+        "visible_cue": "the visible ashcrown watch blocks the cinderfold before recruitment",
+        "guard_army_group_id": "army_neutral_ashcrown_cinderfold_watch",
+        "guard_encounter_id": "encounter_ashcrown_cinderfold_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact cinderfold watch must fall before the sovereign muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "artifact_reward_execution": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "sovereign",
+        "guard_army_group_id": "army_neutral_ashcrown_cinderfold_watch",
+        "guard_encounter_id": "encounter_ashcrown_cinderfold_watch",
+        "visible_cue": "ceramic antlers and the heated crown ring remain visible before the fold is claimed",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-sovereign-wild-habitats-10184",
+      "batch_role": "guarded_sovereign_wild_dwelling"
     },
     {
-      "id": "site_miremoon_crownmere", "name": "Miremoon Crownmere", "family": "neutral_dwelling", "dwelling_scope": "neutral",
-      "neutral_dwelling_family_id": "neutral_dwelling_miremoon_crownmere", "persistent_control": true,
-      "claim_rewards": {"gold": 460, "peatwax": 1}, "claim_flags": {"miremoon_crownmere_claimed": true},
-      "control_income": {"gold": 125, "peatwax": 1},
-      "claim_recruits": {"unit_neutral_miremoon_crownmaws": 1, "unit_neutral_peatflare_jarriers": 3},
-      "weekly_recruits": {"unit_neutral_miremoon_crownmaws": 1, "unit_neutral_peatflare_jarriers": 1},
-      "neutral_roster": {"claim_recruits": {"unit_neutral_miremoon_crownmaws": 1, "unit_neutral_peatflare_jarriers": 3}, "weekly_recruits": {"unit_neutral_miremoon_crownmaws": 1, "unit_neutral_peatflare_jarriers": 1}, "guard_army_group_id": "army_neutral_miremoon_crownmere_watch", "guard_encounter_id": "encounter_miremoon_crownmere_watch"},
-      "response_profile": {"action_label": "Still the Crownmere", "summary": "A moon-peat mere that offers one crownmaws after its submerged root watch is broken and its feeding posts are reset.", "movement_cost": 7, "resource_cost": {"gold": 700, "peatwax": 1}, "watch_days": 6, "quality_bonus": 5, "readiness_bonus": 5, "recovery_relief": 1},
-      "dwelling_contract": {"contract_id": "dwelling_contract_miremoon_crownmere", "neutral_dwelling_family_id": "neutral_dwelling_miremoon_crownmere", "resource_site_id": "site_miremoon_crownmere", "roster_unit_ids": ["unit_neutral_miremoon_crownmaws", "unit_neutral_peatflare_jarriers"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "artifact_reward_contract": {"contract_id": "artifact_reward_contract_miremoon_crownmere", "source_tag": "dwelling", "artifact_reward_table_id": "artifact_source_sovereign_wild_trophies", "reward_categories": ["recruit", "artifact"], "reward_tier": "sovereign"},
-      "guard_expectation": {"tier": "sovereign", "visible_cue": "the visible miremoon watch blocks the crownmere before recruitment", "guard_army_group_id": "army_neutral_miremoon_crownmere_watch", "guard_encounter_id": "encounter_miremoon_crownmere_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact crownmere watch must fall before the sovereign muster opens"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "artifact_reward_execution": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
-      "guarded": true, "guard_profile": {"tier": "sovereign", "guard_army_group_id": "army_neutral_miremoon_crownmere_watch", "guard_encounter_id": "encounter_miremoon_crownmere_watch", "visible_cue": "moonlit peatglass and four root posts remain visible before the mere is claimed", "metadata_only": false, "runtime_guard_resolution_adopted": true},
-      "content_batch_id": "content-six-sovereign-wild-habitats-10184", "batch_role": "guarded_sovereign_wild_dwelling"
+      "id": "site_miremoon_crownmere",
+      "name": "Miremoon Crownmere",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_miremoon_crownmere",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 460,
+        "peatwax": 1
+      },
+      "claim_flags": {
+        "miremoon_crownmere_claimed": true
+      },
+      "control_income": {
+        "gold": 125,
+        "peatwax": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_miremoon_crownmaws": 1,
+        "unit_neutral_peatflare_jarriers": 3
+      },
+      "weekly_recruits": {
+        "unit_neutral_miremoon_crownmaws": 1,
+        "unit_neutral_peatflare_jarriers": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_miremoon_crownmaws": 1,
+          "unit_neutral_peatflare_jarriers": 3
+        },
+        "weekly_recruits": {
+          "unit_neutral_miremoon_crownmaws": 1,
+          "unit_neutral_peatflare_jarriers": 1
+        },
+        "guard_army_group_id": "army_neutral_miremoon_crownmere_watch",
+        "guard_encounter_id": "encounter_miremoon_crownmere_watch"
+      },
+      "response_profile": {
+        "action_label": "Still the Crownmere",
+        "summary": "A moon-peat mere that offers one crownmaws after its submerged root watch is broken and its feeding posts are reset.",
+        "movement_cost": 7,
+        "resource_cost": {
+          "gold": 700,
+          "peatwax": 1
+        },
+        "watch_days": 6,
+        "quality_bonus": 5,
+        "readiness_bonus": 5,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_miremoon_crownmere",
+        "neutral_dwelling_family_id": "neutral_dwelling_miremoon_crownmere",
+        "resource_site_id": "site_miremoon_crownmere",
+        "roster_unit_ids": [
+          "unit_neutral_miremoon_crownmaws",
+          "unit_neutral_peatflare_jarriers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_miremoon_crownmere",
+        "source_tag": "dwelling",
+        "artifact_reward_table_id": "artifact_source_sovereign_wild_trophies",
+        "reward_categories": [
+          "recruit",
+          "artifact"
+        ],
+        "reward_tier": "sovereign"
+      },
+      "guard_expectation": {
+        "tier": "sovereign",
+        "visible_cue": "the visible miremoon watch blocks the crownmere before recruitment",
+        "guard_army_group_id": "army_neutral_miremoon_crownmere_watch",
+        "guard_encounter_id": "encounter_miremoon_crownmere_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact crownmere watch must fall before the sovereign muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "artifact_reward_execution": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "sovereign",
+        "guard_army_group_id": "army_neutral_miremoon_crownmere_watch",
+        "guard_encounter_id": "encounter_miremoon_crownmere_watch",
+        "visible_cue": "moonlit peatglass and four root posts remain visible before the mere is claimed",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-sovereign-wild-habitats-10184",
+      "batch_role": "guarded_sovereign_wild_dwelling"
     },
     {
-      "id": "site_noonshard_prism_aviary", "name": "Noonshard Prism Aviary", "family": "neutral_dwelling", "dwelling_scope": "neutral",
-      "neutral_dwelling_family_id": "neutral_dwelling_noonshard_prism_aviary", "persistent_control": true,
-      "claim_rewards": {"gold": 470, "aetherglass": 1}, "claim_flags": {"noonshard_prism_aviary_claimed": true},
-      "control_income": {"gold": 130, "aetherglass": 1},
-      "claim_recruits": {"unit_neutral_noonshard_prism_kites": 1, "unit_neutral_snowglass_markers": 3},
-      "weekly_recruits": {"unit_neutral_noonshard_prism_kites": 1, "unit_neutral_snowglass_markers": 1},
-      "neutral_roster": {"claim_recruits": {"unit_neutral_noonshard_prism_kites": 1, "unit_neutral_snowglass_markers": 3}, "weekly_recruits": {"unit_neutral_noonshard_prism_kites": 1, "unit_neutral_snowglass_markers": 1}, "guard_army_group_id": "army_neutral_noonshard_prism_aviary_watch", "guard_encounter_id": "encounter_noonshard_prism_aviary_watch"},
-      "response_profile": {"action_label": "Align the Prism Aviary", "summary": "An icebound sight-vane aviary that offers one prism kite after its focused lane is taken and its glass perches aligned.", "movement_cost": 7, "resource_cost": {"gold": 720, "aetherglass": 1}, "watch_days": 6, "quality_bonus": 5, "readiness_bonus": 5, "recovery_relief": 1},
-      "dwelling_contract": {"contract_id": "dwelling_contract_noonshard_prism_aviary", "neutral_dwelling_family_id": "neutral_dwelling_noonshard_prism_aviary", "resource_site_id": "site_noonshard_prism_aviary", "roster_unit_ids": ["unit_neutral_noonshard_prism_kites", "unit_neutral_snowglass_markers"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "artifact_reward_contract": {"contract_id": "artifact_reward_contract_noonshard_prism_aviary", "source_tag": "dwelling", "artifact_reward_table_id": "artifact_source_sovereign_wild_trophies", "reward_categories": ["recruit", "artifact"], "reward_tier": "sovereign"},
-      "guard_expectation": {"tier": "sovereign", "visible_cue": "the visible noonshard watch blocks the aviary before recruitment", "guard_army_group_id": "army_neutral_noonshard_prism_aviary_watch", "guard_encounter_id": "encounter_noonshard_prism_aviary_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact aviary watch must fall before the sovereign muster opens"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "artifact_reward_execution": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
-      "guarded": true, "guard_profile": {"tier": "sovereign", "guard_army_group_id": "army_neutral_noonshard_prism_aviary_watch", "guard_encounter_id": "encounter_noonshard_prism_aviary_watch", "visible_cue": "three glass vanes and focused noonlight remain visible before the aviary is claimed", "metadata_only": false, "runtime_guard_resolution_adopted": true},
-      "content_batch_id": "content-six-sovereign-wild-habitats-10184", "batch_role": "guarded_sovereign_wild_dwelling"
+      "id": "site_noonshard_prism_aviary",
+      "name": "Noonshard Prism Aviary",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_noonshard_prism_aviary",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 470,
+        "aetherglass": 1
+      },
+      "claim_flags": {
+        "noonshard_prism_aviary_claimed": true
+      },
+      "control_income": {
+        "gold": 130,
+        "aetherglass": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_noonshard_prism_kites": 1,
+        "unit_neutral_snowglass_markers": 3
+      },
+      "weekly_recruits": {
+        "unit_neutral_noonshard_prism_kites": 1,
+        "unit_neutral_snowglass_markers": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_noonshard_prism_kites": 1,
+          "unit_neutral_snowglass_markers": 3
+        },
+        "weekly_recruits": {
+          "unit_neutral_noonshard_prism_kites": 1,
+          "unit_neutral_snowglass_markers": 1
+        },
+        "guard_army_group_id": "army_neutral_noonshard_prism_aviary_watch",
+        "guard_encounter_id": "encounter_noonshard_prism_aviary_watch"
+      },
+      "response_profile": {
+        "action_label": "Align the Prism Aviary",
+        "summary": "An icebound sight-vane aviary that offers one prism kite after its focused lane is taken and its glass perches aligned.",
+        "movement_cost": 7,
+        "resource_cost": {
+          "gold": 720,
+          "aetherglass": 1
+        },
+        "watch_days": 6,
+        "quality_bonus": 5,
+        "readiness_bonus": 5,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_noonshard_prism_aviary",
+        "neutral_dwelling_family_id": "neutral_dwelling_noonshard_prism_aviary",
+        "resource_site_id": "site_noonshard_prism_aviary",
+        "roster_unit_ids": [
+          "unit_neutral_noonshard_prism_kites",
+          "unit_neutral_snowglass_markers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_noonshard_prism_aviary",
+        "source_tag": "dwelling",
+        "artifact_reward_table_id": "artifact_source_sovereign_wild_trophies",
+        "reward_categories": [
+          "recruit",
+          "artifact"
+        ],
+        "reward_tier": "sovereign"
+      },
+      "guard_expectation": {
+        "tier": "sovereign",
+        "visible_cue": "the visible noonshard watch blocks the aviary before recruitment",
+        "guard_army_group_id": "army_neutral_noonshard_prism_aviary_watch",
+        "guard_encounter_id": "encounter_noonshard_prism_aviary_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact aviary watch must fall before the sovereign muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "artifact_reward_execution": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "sovereign",
+        "guard_army_group_id": "army_neutral_noonshard_prism_aviary_watch",
+        "guard_encounter_id": "encounter_noonshard_prism_aviary_watch",
+        "visible_cue": "three glass vanes and focused noonlight remain visible before the aviary is claimed",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-sovereign-wild-habitats-10184",
+      "batch_role": "guarded_sovereign_wild_dwelling"
     },
     {
-      "id": "site_rootvault_heartwood_hollow", "name": "Rootvault Heartwood Hollow", "family": "neutral_dwelling", "dwelling_scope": "neutral",
-      "neutral_dwelling_family_id": "neutral_dwelling_rootvault_heartwood_hollow", "persistent_control": true,
-      "claim_rewards": {"gold": 600, "verdant_grafts": 2}, "claim_flags": {"rootvault_heartwood_hollow_claimed": true},
-      "control_income": {"gold": 160, "verdant_grafts": 1},
-      "claim_recruits": {"unit_neutral_rootvault_barkhulks": 1, "unit_neutral_thornbow_scouts": 2},
-      "weekly_recruits": {"unit_neutral_rootvault_barkhulks": 1, "unit_neutral_thornbow_scouts": 1},
-      "neutral_roster": {"claim_recruits": {"unit_neutral_rootvault_barkhulks": 1, "unit_neutral_thornbow_scouts": 2}, "weekly_recruits": {"unit_neutral_rootvault_barkhulks": 1, "unit_neutral_thornbow_scouts": 1}, "guard_army_group_id": "army_neutral_rootvault_heartwood_watch", "guard_encounter_id": "encounter_rootvault_heartwood_watch"},
-      "response_profile": {"action_label": "Open the Heartwood Hollow", "summary": "A concentric living rootvault that offers one barkhulk after its witness line is broken and its deep grain stores renewed.", "movement_cost": 8, "resource_cost": {"gold": 900, "verdant_grafts": 2}, "watch_days": 7, "quality_bonus": 6, "readiness_bonus": 6, "recovery_relief": 2},
-      "dwelling_contract": {"contract_id": "dwelling_contract_rootvault_heartwood_hollow", "neutral_dwelling_family_id": "neutral_dwelling_rootvault_heartwood_hollow", "resource_site_id": "site_rootvault_heartwood_hollow", "roster_unit_ids": ["unit_neutral_rootvault_barkhulks", "unit_neutral_thornbow_scouts"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "artifact_reward_contract": {"contract_id": "artifact_reward_contract_rootvault_heartwood_hollow", "source_tag": "dwelling", "artifact_reward_table_id": "artifact_source_sovereign_wild_trophies", "reward_categories": ["recruit", "artifact"], "reward_tier": "apex"},
-      "guard_expectation": {"tier": "apex", "visible_cue": "the visible rootvault watch blocks the hollow before recruitment", "guard_army_group_id": "army_neutral_rootvault_heartwood_watch", "guard_encounter_id": "encounter_rootvault_heartwood_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact heartwood watch must fall before the apex muster opens"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "artifact_reward_execution": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
-      "guarded": true, "guard_profile": {"tier": "apex", "guard_army_group_id": "army_neutral_rootvault_heartwood_watch", "guard_encounter_id": "encounter_rootvault_heartwood_watch", "visible_cue": "concentric root arches and the sealed heartwood remain visible before the hollow is claimed", "metadata_only": false, "runtime_guard_resolution_adopted": true},
-      "content_batch_id": "content-six-sovereign-wild-habitats-10184", "batch_role": "guarded_sovereign_wild_dwelling"
+      "id": "site_rootvault_heartwood_hollow",
+      "name": "Rootvault Heartwood Hollow",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_rootvault_heartwood_hollow",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 600,
+        "verdant_grafts": 2
+      },
+      "claim_flags": {
+        "rootvault_heartwood_hollow_claimed": true
+      },
+      "control_income": {
+        "gold": 160,
+        "verdant_grafts": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_rootvault_barkhulks": 1,
+        "unit_neutral_thornbow_scouts": 2
+      },
+      "weekly_recruits": {
+        "unit_neutral_rootvault_barkhulks": 1,
+        "unit_neutral_thornbow_scouts": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_rootvault_barkhulks": 1,
+          "unit_neutral_thornbow_scouts": 2
+        },
+        "weekly_recruits": {
+          "unit_neutral_rootvault_barkhulks": 1,
+          "unit_neutral_thornbow_scouts": 1
+        },
+        "guard_army_group_id": "army_neutral_rootvault_heartwood_watch",
+        "guard_encounter_id": "encounter_rootvault_heartwood_watch"
+      },
+      "response_profile": {
+        "action_label": "Open the Heartwood Hollow",
+        "summary": "A concentric living rootvault that offers one barkhulk after its witness line is broken and its deep grain stores renewed.",
+        "movement_cost": 8,
+        "resource_cost": {
+          "gold": 900,
+          "verdant_grafts": 2
+        },
+        "watch_days": 7,
+        "quality_bonus": 6,
+        "readiness_bonus": 6,
+        "recovery_relief": 2
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_rootvault_heartwood_hollow",
+        "neutral_dwelling_family_id": "neutral_dwelling_rootvault_heartwood_hollow",
+        "resource_site_id": "site_rootvault_heartwood_hollow",
+        "roster_unit_ids": [
+          "unit_neutral_rootvault_barkhulks",
+          "unit_neutral_thornbow_scouts"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_rootvault_heartwood_hollow",
+        "source_tag": "dwelling",
+        "artifact_reward_table_id": "artifact_source_sovereign_wild_trophies",
+        "reward_categories": [
+          "recruit",
+          "artifact"
+        ],
+        "reward_tier": "apex"
+      },
+      "guard_expectation": {
+        "tier": "apex",
+        "visible_cue": "the visible rootvault watch blocks the hollow before recruitment",
+        "guard_army_group_id": "army_neutral_rootvault_heartwood_watch",
+        "guard_encounter_id": "encounter_rootvault_heartwood_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact heartwood watch must fall before the apex muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "artifact_reward_execution": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "apex",
+        "guard_army_group_id": "army_neutral_rootvault_heartwood_watch",
+        "guard_encounter_id": "encounter_rootvault_heartwood_watch",
+        "visible_cue": "concentric root arches and the sealed heartwood remain visible before the hollow is claimed",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-sovereign-wild-habitats-10184",
+      "batch_role": "guarded_sovereign_wild_dwelling"
     },
     {
-      "id": "site_quenchbell_pressure_den", "name": "Quenchbell Pressure Den", "family": "neutral_dwelling", "dwelling_scope": "neutral",
-      "neutral_dwelling_family_id": "neutral_dwelling_quenchbell_pressure_den", "persistent_control": true,
-      "claim_rewards": {"gold": 620, "brass_scrip": 2}, "claim_flags": {"quenchbell_pressure_den_claimed": true},
-      "control_income": {"gold": 165, "brass_scrip": 1},
-      "claim_recruits": {"unit_neutral_quenchbell_ironbacks": 1, "unit_neutral_tunnelmark_bolters": 2},
-      "weekly_recruits": {"unit_neutral_quenchbell_ironbacks": 1, "unit_neutral_tunnelmark_bolters": 1},
-      "neutral_roster": {"claim_recruits": {"unit_neutral_quenchbell_ironbacks": 1, "unit_neutral_tunnelmark_bolters": 2}, "weekly_recruits": {"unit_neutral_quenchbell_ironbacks": 1, "unit_neutral_tunnelmark_bolters": 1}, "guard_army_group_id": "army_neutral_quenchbell_pressure_den_watch", "guard_encounter_id": "encounter_quenchbell_pressure_den_watch"},
-      "response_profile": {"action_label": "Balance the Pressure Den", "summary": "A red-gauge ironback den that offers one quenchbell sovereign after its pressure gate is taken and its coolant troughs balanced.", "movement_cost": 8, "resource_cost": {"gold": 940, "brass_scrip": 2}, "watch_days": 7, "quality_bonus": 6, "readiness_bonus": 6, "recovery_relief": 1},
-      "dwelling_contract": {"contract_id": "dwelling_contract_quenchbell_pressure_den", "neutral_dwelling_family_id": "neutral_dwelling_quenchbell_pressure_den", "resource_site_id": "site_quenchbell_pressure_den", "roster_unit_ids": ["unit_neutral_quenchbell_ironbacks", "unit_neutral_tunnelmark_bolters"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "artifact_reward_contract": {"contract_id": "artifact_reward_contract_quenchbell_pressure_den", "source_tag": "dwelling", "artifact_reward_table_id": "artifact_source_sovereign_wild_trophies", "reward_categories": ["recruit", "artifact"], "reward_tier": "apex"},
-      "guard_expectation": {"tier": "apex", "visible_cue": "the visible quenchbell watch blocks the den before recruitment", "guard_army_group_id": "army_neutral_quenchbell_pressure_den_watch", "guard_encounter_id": "encounter_quenchbell_pressure_den_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact pressure-den watch must fall before the apex muster opens"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "artifact_reward_execution": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
-      "guarded": true, "guard_profile": {"tier": "apex", "guard_army_group_id": "army_neutral_quenchbell_pressure_den_watch", "guard_encounter_id": "encounter_quenchbell_pressure_den_watch", "visible_cue": "three red gauges and the bellhorn gate remain visible before the den is claimed", "metadata_only": false, "runtime_guard_resolution_adopted": true},
-      "content_batch_id": "content-six-sovereign-wild-habitats-10184", "batch_role": "guarded_sovereign_wild_dwelling"
+      "id": "site_quenchbell_pressure_den",
+      "name": "Quenchbell Pressure Den",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_quenchbell_pressure_den",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 620,
+        "brass_scrip": 2
+      },
+      "claim_flags": {
+        "quenchbell_pressure_den_claimed": true
+      },
+      "control_income": {
+        "gold": 165,
+        "brass_scrip": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_quenchbell_ironbacks": 1,
+        "unit_neutral_tunnelmark_bolters": 2
+      },
+      "weekly_recruits": {
+        "unit_neutral_quenchbell_ironbacks": 1,
+        "unit_neutral_tunnelmark_bolters": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_quenchbell_ironbacks": 1,
+          "unit_neutral_tunnelmark_bolters": 2
+        },
+        "weekly_recruits": {
+          "unit_neutral_quenchbell_ironbacks": 1,
+          "unit_neutral_tunnelmark_bolters": 1
+        },
+        "guard_army_group_id": "army_neutral_quenchbell_pressure_den_watch",
+        "guard_encounter_id": "encounter_quenchbell_pressure_den_watch"
+      },
+      "response_profile": {
+        "action_label": "Balance the Pressure Den",
+        "summary": "A red-gauge ironback den that offers one quenchbell sovereign after its pressure gate is taken and its coolant troughs balanced.",
+        "movement_cost": 8,
+        "resource_cost": {
+          "gold": 940,
+          "brass_scrip": 2
+        },
+        "watch_days": 7,
+        "quality_bonus": 6,
+        "readiness_bonus": 6,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_quenchbell_pressure_den",
+        "neutral_dwelling_family_id": "neutral_dwelling_quenchbell_pressure_den",
+        "resource_site_id": "site_quenchbell_pressure_den",
+        "roster_unit_ids": [
+          "unit_neutral_quenchbell_ironbacks",
+          "unit_neutral_tunnelmark_bolters"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_quenchbell_pressure_den",
+        "source_tag": "dwelling",
+        "artifact_reward_table_id": "artifact_source_sovereign_wild_trophies",
+        "reward_categories": [
+          "recruit",
+          "artifact"
+        ],
+        "reward_tier": "apex"
+      },
+      "guard_expectation": {
+        "tier": "apex",
+        "visible_cue": "the visible quenchbell watch blocks the den before recruitment",
+        "guard_army_group_id": "army_neutral_quenchbell_pressure_den_watch",
+        "guard_encounter_id": "encounter_quenchbell_pressure_den_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact pressure-den watch must fall before the apex muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "artifact_reward_execution": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "apex",
+        "guard_army_group_id": "army_neutral_quenchbell_pressure_den_watch",
+        "guard_encounter_id": "encounter_quenchbell_pressure_den_watch",
+        "visible_cue": "three red gauges and the bellhorn gate remain visible before the den is claimed",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-sovereign-wild-habitats-10184",
+      "batch_role": "guarded_sovereign_wild_dwelling"
     },
     {
-      "id": "site_saltwake_belldeep", "name": "Saltwake Belldeep", "family": "neutral_dwelling", "dwelling_scope": "neutral",
-      "neutral_dwelling_family_id": "neutral_dwelling_saltwake_belldeep", "persistent_control": true,
-      "claim_rewards": {"gold": 610, "memory_salt": 2}, "claim_flags": {"saltwake_belldeep_claimed": true},
-      "control_income": {"gold": 160, "memory_salt": 1},
-      "claim_recruits": {"unit_neutral_saltwake_bellwhales": 1, "unit_neutral_lanternskate_throwers": 2},
-      "weekly_recruits": {"unit_neutral_saltwake_bellwhales": 1, "unit_neutral_lanternskate_throwers": 1},
-      "neutral_roster": {"claim_recruits": {"unit_neutral_saltwake_bellwhales": 1, "unit_neutral_lanternskate_throwers": 2}, "weekly_recruits": {"unit_neutral_saltwake_bellwhales": 1, "unit_neutral_lanternskate_throwers": 1}, "guard_army_group_id": "army_neutral_saltwake_belldeep_watch", "guard_encounter_id": "encounter_saltwake_belldeep_watch"},
-      "response_profile": {"action_label": "Sound the Belldeep", "summary": "A submerged chime sanctuary that offers one saltwake bellwhale after its false bearing is broken and its pale quay supplied.", "movement_cost": 8, "resource_cost": {"gold": 920, "memory_salt": 2}, "watch_days": 7, "quality_bonus": 6, "readiness_bonus": 5, "recovery_relief": 2},
-      "dwelling_contract": {"contract_id": "dwelling_contract_saltwake_belldeep", "neutral_dwelling_family_id": "neutral_dwelling_saltwake_belldeep", "resource_site_id": "site_saltwake_belldeep", "roster_unit_ids": ["unit_neutral_saltwake_bellwhales", "unit_neutral_lanternskate_throwers"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "artifact_reward_contract": {"contract_id": "artifact_reward_contract_saltwake_belldeep", "source_tag": "dwelling", "artifact_reward_table_id": "artifact_source_sovereign_wild_trophies", "reward_categories": ["recruit", "artifact"], "reward_tier": "apex"},
-      "guard_expectation": {"tier": "apex", "visible_cue": "the visible saltwake watch blocks the belldeep before recruitment", "guard_army_group_id": "army_neutral_saltwake_belldeep_watch", "guard_encounter_id": "encounter_saltwake_belldeep_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact belldeep watch must fall before the apex muster opens"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "artifact_reward_execution": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
-      "guarded": true, "guard_profile": {"tier": "apex", "guard_army_group_id": "army_neutral_saltwake_belldeep_watch", "guard_encounter_id": "encounter_saltwake_belldeep_watch", "visible_cue": "six submerged chimes and the pale quay remain visible before the belldeep is claimed", "metadata_only": false, "runtime_guard_resolution_adopted": true},
-      "content_batch_id": "content-six-sovereign-wild-habitats-10184", "batch_role": "guarded_sovereign_wild_dwelling"
+      "id": "site_saltwake_belldeep",
+      "name": "Saltwake Belldeep",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_saltwake_belldeep",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 610,
+        "memory_salt": 2
+      },
+      "claim_flags": {
+        "saltwake_belldeep_claimed": true
+      },
+      "control_income": {
+        "gold": 160,
+        "memory_salt": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_saltwake_bellwhales": 1,
+        "unit_neutral_lanternskate_throwers": 2
+      },
+      "weekly_recruits": {
+        "unit_neutral_saltwake_bellwhales": 1,
+        "unit_neutral_lanternskate_throwers": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_saltwake_bellwhales": 1,
+          "unit_neutral_lanternskate_throwers": 2
+        },
+        "weekly_recruits": {
+          "unit_neutral_saltwake_bellwhales": 1,
+          "unit_neutral_lanternskate_throwers": 1
+        },
+        "guard_army_group_id": "army_neutral_saltwake_belldeep_watch",
+        "guard_encounter_id": "encounter_saltwake_belldeep_watch"
+      },
+      "response_profile": {
+        "action_label": "Sound the Belldeep",
+        "summary": "A submerged chime sanctuary that offers one saltwake bellwhale after its false bearing is broken and its pale quay supplied.",
+        "movement_cost": 8,
+        "resource_cost": {
+          "gold": 920,
+          "memory_salt": 2
+        },
+        "watch_days": 7,
+        "quality_bonus": 6,
+        "readiness_bonus": 5,
+        "recovery_relief": 2
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_saltwake_belldeep",
+        "neutral_dwelling_family_id": "neutral_dwelling_saltwake_belldeep",
+        "resource_site_id": "site_saltwake_belldeep",
+        "roster_unit_ids": [
+          "unit_neutral_saltwake_bellwhales",
+          "unit_neutral_lanternskate_throwers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_saltwake_belldeep",
+        "source_tag": "dwelling",
+        "artifact_reward_table_id": "artifact_source_sovereign_wild_trophies",
+        "reward_categories": [
+          "recruit",
+          "artifact"
+        ],
+        "reward_tier": "apex"
+      },
+      "guard_expectation": {
+        "tier": "apex",
+        "visible_cue": "the visible saltwake watch blocks the belldeep before recruitment",
+        "guard_army_group_id": "army_neutral_saltwake_belldeep_watch",
+        "guard_encounter_id": "encounter_saltwake_belldeep_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact belldeep watch must fall before the apex muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "artifact_reward_execution": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "apex",
+        "guard_army_group_id": "army_neutral_saltwake_belldeep_watch",
+        "guard_encounter_id": "encounter_saltwake_belldeep_watch",
+        "visible_cue": "six submerged chimes and the pale quay remain visible before the belldeep is claimed",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-sovereign-wild-habitats-10184",
+      "batch_role": "guarded_sovereign_wild_dwelling"
     },
     {
-      "id": "site_stormseal_powder_wharf", "name": "Stormseal Powder Wharf", "family": "neutral_dwelling", "dwelling_scope": "faction_linked", "faction_id": "faction_embercourt", "persistent_control": true,
-      "claim_rewards": {"gold": 120, "ore": 1}, "claim_flags": {"stormseal_powder_wharf_claimed": true}, "control_income": {"gold": 45, "ore": 1},
-      "claim_recruits": {"unit_embercourt_cinderseal_bombardiers": 1}, "weekly_recruits": {"unit_embercourt_cinderseal_bombardiers": 1},
-      "response_profile": {"action_label": "Send the Powder Train", "summary": "The opened wharf rolls sealed charges, spare wheels, and one bombard crew toward the nearest held citadel.", "movement_cost": 5, "resource_cost": {"gold": 240, "ore": 1}, "watch_days": 4, "quality_bonus": 5, "readiness_bonus": 3, "pressure_bonus": 1, "recovery_relief": 1},
-      "company_contract": {"company_unit_id": "unit_embercourt_cinderseal_bombardiers", "recruit_policy": "immediate_and_weekly_muster", "recurring_recruit_access": true, "faction_linked": true},
-      "runtime_boundary": {"status": "faction_linked_dwelling_live", "resource_site_runtime_supported": true, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "weekly_town_delivery_live": true},
-      "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+      "id": "site_stormseal_powder_wharf",
+      "name": "Stormseal Powder Wharf",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "faction_linked",
+      "faction_id": "faction_embercourt",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 120,
+        "ore": 1
+      },
+      "claim_flags": {
+        "stormseal_powder_wharf_claimed": true
+      },
+      "control_income": {
+        "gold": 45,
+        "ore": 1
+      },
+      "claim_recruits": {
+        "unit_embercourt_cinderseal_bombardiers": 1
+      },
+      "weekly_recruits": {
+        "unit_embercourt_cinderseal_bombardiers": 1
+      },
+      "response_profile": {
+        "action_label": "Send the Powder Train",
+        "summary": "The opened wharf rolls sealed charges, spare wheels, and one bombard crew toward the nearest held citadel.",
+        "movement_cost": 5,
+        "resource_cost": {
+          "gold": 240,
+          "ore": 1
+        },
+        "watch_days": 4,
+        "quality_bonus": 5,
+        "readiness_bonus": 3,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "company_contract": {
+        "company_unit_id": "unit_embercourt_cinderseal_bombardiers",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "recurring_recruit_access": true,
+        "faction_linked": true
+      },
+      "runtime_boundary": {
+        "status": "faction_linked_dwelling_live",
+        "resource_site_runtime_supported": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "weekly_town_delivery_live": true
+      },
+      "content_status": "horizon_company_field_muster_live",
+      "content_batch_id": "content-six-horizon-company-field-musters-10184",
+      "batch_role": "faction_company_field_muster"
     },
     {
-      "id": "site_moonwax_reed_circle", "name": "Moonwax Reed Circle", "family": "neutral_dwelling", "dwelling_scope": "faction_linked", "faction_id": "faction_mireclaw", "persistent_control": true,
-      "claim_rewards": {"gold": 90, "peatwax": 1}, "claim_flags": {"moonwax_reed_circle_claimed": true}, "control_income": {"gold": 30, "peatwax": 1},
-      "claim_recruits": {"unit_mireclaw_mireglass_reedcasters": 2}, "weekly_recruits": {"unit_mireclaw_mireglass_reedcasters": 1},
-      "response_profile": {"action_label": "Loose the Reed Circle", "summary": "Moonwax tenders unbind a reedcaster file and send it by the wet roads with fresh peatglass jars.", "movement_cost": 4, "resource_cost": {"gold": 190, "peatwax": 1}, "watch_days": 4, "quality_bonus": 4, "readiness_bonus": 2, "recovery_relief": 2},
-      "company_contract": {"company_unit_id": "unit_mireclaw_mireglass_reedcasters", "recruit_policy": "immediate_and_weekly_muster", "recurring_recruit_access": true, "faction_linked": true},
-      "runtime_boundary": {"status": "faction_linked_dwelling_live", "resource_site_runtime_supported": true, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "weekly_town_delivery_live": true},
-      "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+      "id": "site_moonwax_reed_circle",
+      "name": "Moonwax Reed Circle",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "faction_linked",
+      "faction_id": "faction_mireclaw",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 90,
+        "peatwax": 1
+      },
+      "claim_flags": {
+        "moonwax_reed_circle_claimed": true
+      },
+      "control_income": {
+        "gold": 30,
+        "peatwax": 1
+      },
+      "claim_recruits": {
+        "unit_mireclaw_mireglass_reedcasters": 2
+      },
+      "weekly_recruits": {
+        "unit_mireclaw_mireglass_reedcasters": 1
+      },
+      "response_profile": {
+        "action_label": "Loose the Reed Circle",
+        "summary": "Moonwax tenders unbind a reedcaster file and send it by the wet roads with fresh peatglass jars.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 190,
+          "peatwax": 1
+        },
+        "watch_days": 4,
+        "quality_bonus": 4,
+        "readiness_bonus": 2,
+        "recovery_relief": 2
+      },
+      "company_contract": {
+        "company_unit_id": "unit_mireclaw_mireglass_reedcasters",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "recurring_recruit_access": true,
+        "faction_linked": true
+      },
+      "runtime_boundary": {
+        "status": "faction_linked_dwelling_live",
+        "resource_site_runtime_supported": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "weekly_town_delivery_live": true
+      },
+      "content_status": "horizon_company_field_muster_live",
+      "content_batch_id": "content-six-horizon-company-field-musters-10184",
+      "batch_role": "faction_company_field_muster"
     },
     {
-      "id": "site_facet_vigil", "name": "Facet Vigil", "family": "neutral_dwelling", "dwelling_scope": "faction_linked", "faction_id": "faction_sunvault", "persistent_control": true,
-      "claim_rewards": {"gold": 110, "aetherglass": 1}, "claim_flags": {"facet_vigil_claimed": true}, "control_income": {"gold": 40, "aetherglass": 1},
-      "claim_recruits": {"unit_sunvault_noonfacet_sentinels": 2}, "weekly_recruits": {"unit_sunvault_noonfacet_sentinels": 1},
-      "response_profile": {"action_label": "Turn the Vigil", "summary": "The deployed prism measures a clear road and dispatches a shield file beneath its exact noon bearing.", "movement_cost": 4, "resource_cost": {"gold": 210, "aetherglass": 1}, "watch_days": 4, "quality_bonus": 4, "readiness_bonus": 4, "pressure_bonus": 1, "recovery_relief": 1},
-      "company_contract": {"company_unit_id": "unit_sunvault_noonfacet_sentinels", "recruit_policy": "immediate_and_weekly_muster", "recurring_recruit_access": true, "faction_linked": true},
-      "runtime_boundary": {"status": "faction_linked_dwelling_live", "resource_site_runtime_supported": true, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "weekly_town_delivery_live": true},
-      "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+      "id": "site_facet_vigil",
+      "name": "Facet Vigil",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "faction_linked",
+      "faction_id": "faction_sunvault",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 110,
+        "aetherglass": 1
+      },
+      "claim_flags": {
+        "facet_vigil_claimed": true
+      },
+      "control_income": {
+        "gold": 40,
+        "aetherglass": 1
+      },
+      "claim_recruits": {
+        "unit_sunvault_noonfacet_sentinels": 2
+      },
+      "weekly_recruits": {
+        "unit_sunvault_noonfacet_sentinels": 1
+      },
+      "response_profile": {
+        "action_label": "Turn the Vigil",
+        "summary": "The deployed prism measures a clear road and dispatches a shield file beneath its exact noon bearing.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 210,
+          "aetherglass": 1
+        },
+        "watch_days": 4,
+        "quality_bonus": 4,
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "company_contract": {
+        "company_unit_id": "unit_sunvault_noonfacet_sentinels",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "recurring_recruit_access": true,
+        "faction_linked": true
+      },
+      "runtime_boundary": {
+        "status": "faction_linked_dwelling_live",
+        "resource_site_runtime_supported": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "weekly_town_delivery_live": true
+      },
+      "content_status": "horizon_company_field_muster_live",
+      "content_batch_id": "content-six-horizon-company-field-musters-10184",
+      "batch_role": "faction_company_field_muster"
     },
     {
-      "id": "site_heartseed_bolt_grove", "name": "Heartseed Bolt Grove", "family": "neutral_dwelling", "dwelling_scope": "faction_linked", "faction_id": "faction_thornwake", "persistent_control": true,
-      "claim_rewards": {"gold": 80, "wood": 2}, "claim_flags": {"heartseed_bolt_grove_claimed": true}, "control_income": {"gold": 25, "wood": 1},
-      "claim_recruits": {"unit_thornwake_dawnseed_bolters": 2}, "weekly_recruits": {"unit_thornwake_dawnseed_bolters": 1},
-      "response_profile": {"action_label": "String the Dawnseed Bows", "summary": "The awakened grove grows a measured bolt bundle and sends a bolter file down the nearest root road.", "movement_cost": 4, "resource_cost": {"gold": 180, "wood": 2}, "watch_days": 4, "quality_bonus": 4, "readiness_bonus": 2, "recovery_relief": 2},
-      "company_contract": {"company_unit_id": "unit_thornwake_dawnseed_bolters", "recruit_policy": "immediate_and_weekly_muster", "recurring_recruit_access": true, "faction_linked": true},
-      "runtime_boundary": {"status": "faction_linked_dwelling_live", "resource_site_runtime_supported": true, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "weekly_town_delivery_live": true},
-      "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+      "id": "site_heartseed_bolt_grove",
+      "name": "Heartseed Bolt Grove",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "faction_linked",
+      "faction_id": "faction_thornwake",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 80,
+        "wood": 2
+      },
+      "claim_flags": {
+        "heartseed_bolt_grove_claimed": true
+      },
+      "control_income": {
+        "gold": 25,
+        "wood": 1
+      },
+      "claim_recruits": {
+        "unit_thornwake_dawnseed_bolters": 2
+      },
+      "weekly_recruits": {
+        "unit_thornwake_dawnseed_bolters": 1
+      },
+      "response_profile": {
+        "action_label": "String the Dawnseed Bows",
+        "summary": "The awakened grove grows a measured bolt bundle and sends a bolter file down the nearest root road.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 180,
+          "wood": 2
+        },
+        "watch_days": 4,
+        "quality_bonus": 4,
+        "readiness_bonus": 2,
+        "recovery_relief": 2
+      },
+      "company_contract": {
+        "company_unit_id": "unit_thornwake_dawnseed_bolters",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "recurring_recruit_access": true,
+        "faction_linked": true
+      },
+      "runtime_boundary": {
+        "status": "faction_linked_dwelling_live",
+        "resource_site_runtime_supported": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "weekly_town_delivery_live": true
+      },
+      "content_status": "horizon_company_field_muster_live",
+      "content_batch_id": "content-six-horizon-company-field-musters-10184",
+      "batch_role": "faction_company_field_muster"
     },
     {
-      "id": "site_blackbell_assay_watch", "name": "Blackbell Assay Watch", "family": "neutral_dwelling", "dwelling_scope": "faction_linked", "faction_id": "faction_brasshollow", "persistent_control": true,
-      "claim_rewards": {"gold": 130, "ore": 2}, "claim_flags": {"blackbell_assay_watch_claimed": true}, "control_income": {"gold": 35, "ore": 1},
-      "claim_recruits": {"unit_brasshollow_gaugeplate_bailiffs": 2}, "weekly_recruits": {"unit_brasshollow_gaugeplate_bailiffs": 1},
-      "response_profile": {"action_label": "Ring the Safe Interval", "summary": "The assay bell releases a proven gaugeplate file with a stamped road tally and cooled fittings.", "movement_cost": 4, "resource_cost": {"gold": 220, "ore": 2}, "watch_days": 4, "quality_bonus": 4, "readiness_bonus": 4, "pressure_bonus": 1, "recovery_relief": 1},
-      "company_contract": {"company_unit_id": "unit_brasshollow_gaugeplate_bailiffs", "recruit_policy": "immediate_and_weekly_muster", "recurring_recruit_access": true, "faction_linked": true},
-      "runtime_boundary": {"status": "faction_linked_dwelling_live", "resource_site_runtime_supported": true, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "weekly_town_delivery_live": true},
-      "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+      "id": "site_blackbell_assay_watch",
+      "name": "Blackbell Assay Watch",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "faction_linked",
+      "faction_id": "faction_brasshollow",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 130,
+        "ore": 2
+      },
+      "claim_flags": {
+        "blackbell_assay_watch_claimed": true
+      },
+      "control_income": {
+        "gold": 35,
+        "ore": 1
+      },
+      "claim_recruits": {
+        "unit_brasshollow_gaugeplate_bailiffs": 2
+      },
+      "weekly_recruits": {
+        "unit_brasshollow_gaugeplate_bailiffs": 1
+      },
+      "response_profile": {
+        "action_label": "Ring the Safe Interval",
+        "summary": "The assay bell releases a proven gaugeplate file with a stamped road tally and cooled fittings.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 220,
+          "ore": 2
+        },
+        "watch_days": 4,
+        "quality_bonus": 4,
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "company_contract": {
+        "company_unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "recurring_recruit_access": true,
+        "faction_linked": true
+      },
+      "runtime_boundary": {
+        "status": "faction_linked_dwelling_live",
+        "resource_site_runtime_supported": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "weekly_town_delivery_live": true
+      },
+      "content_status": "horizon_company_field_muster_live",
+      "content_batch_id": "content-six-horizon-company-field-musters-10184",
+      "batch_role": "faction_company_field_muster"
     },
     {
-      "id": "site_last_memory_mooring", "name": "Last-Memory Mooring", "family": "neutral_dwelling", "dwelling_scope": "faction_linked", "faction_id": "faction_veilmourn", "persistent_control": true,
-      "claim_rewards": {"gold": 100, "memory_salt": 1}, "claim_flags": {"last_memory_mooring_claimed": true}, "control_income": {"gold": 35, "memory_salt": 1},
-      "claim_recruits": {"unit_veilmourn_tidehook_deckhands": 5}, "weekly_recruits": {"unit_veilmourn_tidehook_deckhands": 2},
-      "response_profile": {"action_label": "Cast the Last Mooring", "summary": "The pearl sail finds a remembered shore and carries a tidehook crew with salt-sealed boarding stores.", "movement_cost": 4, "resource_cost": {"gold": 170, "wood": 1, "memory_salt": 1}, "watch_days": 3, "quality_bonus": 3, "readiness_bonus": 3, "pressure_bonus": 1, "recovery_relief": 1},
-      "company_contract": {"company_unit_id": "unit_veilmourn_tidehook_deckhands", "recruit_policy": "immediate_and_weekly_muster", "recurring_recruit_access": true, "faction_linked": true},
-      "runtime_boundary": {"status": "faction_linked_dwelling_live", "resource_site_runtime_supported": true, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "weekly_town_delivery_live": true},
-      "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+      "id": "site_last_memory_mooring",
+      "name": "Last-Memory Mooring",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "faction_linked",
+      "faction_id": "faction_veilmourn",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 100,
+        "memory_salt": 1
+      },
+      "claim_flags": {
+        "last_memory_mooring_claimed": true
+      },
+      "control_income": {
+        "gold": 35,
+        "memory_salt": 1
+      },
+      "claim_recruits": {
+        "unit_veilmourn_tidehook_deckhands": 5
+      },
+      "weekly_recruits": {
+        "unit_veilmourn_tidehook_deckhands": 2
+      },
+      "response_profile": {
+        "action_label": "Cast the Last Mooring",
+        "summary": "The pearl sail finds a remembered shore and carries a tidehook crew with salt-sealed boarding stores.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 170,
+          "wood": 1,
+          "memory_salt": 1
+        },
+        "watch_days": 3,
+        "quality_bonus": 3,
+        "readiness_bonus": 3,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "company_contract": {
+        "company_unit_id": "unit_veilmourn_tidehook_deckhands",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "recurring_recruit_access": true,
+        "faction_linked": true
+      },
+      "runtime_boundary": {
+        "status": "faction_linked_dwelling_live",
+        "resource_site_runtime_supported": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "weekly_town_delivery_live": true
+      },
+      "content_status": "horizon_company_field_muster_live",
+      "content_batch_id": "content-six-horizon-company-field-musters-10184",
+      "batch_role": "faction_company_field_muster"
     },
     {
       "id": "site_lockfire_triune_rostrum",
@@ -13288,6 +14397,204 @@
       "content_batch_id": "content-six-triune-arcanum-trials-10184",
       "public_text": {
         "public_summary": "A salt-dark whale-bone archive holds a black glass mourning bell, a pale duel mask, and a tide-carved compass.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_rainwrit_stormseal_survey_cairn",
+      "name": "Rainwrit Stormseal Survey Cairn",
+      "family": "scenario_objective",
+      "action_label": "Recover the Stormseal Survey",
+      "summary": "A rain-dark floodgate cairn preserves the sealed measurements and levy stores needed to raise Rainwrit's final treasury.",
+      "claim_rewards": {
+        "gold": 4200,
+        "wood": 5,
+        "ore": 3,
+        "embergrain": 8,
+        "brass_scrip": 4
+      },
+      "claim_flags": {
+        "rainwritworks_survey_recovered": true
+      },
+      "runtime_boundary": {
+        "status": "great_work_survey_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-great-work-charter-races-10184",
+      "public_text": {
+        "public_summary": "A stepped wet-bronze floodgate cairn carries a forked measuring staff, sealed coffer, and long wind-bent pennant.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_hollowreed_moonwax_foundation_totem",
+      "name": "Hollowreed Moonwax Foundation Totem",
+      "family": "scenario_objective",
+      "action_label": "Read the Moonwax Foundations",
+      "summary": "An antlered bogstone totem records the load lines and wax stores required for Hollowreed's final ossuary.",
+      "claim_rewards": {
+        "gold": 4000,
+        "wood": 6,
+        "ore": 3,
+        "peatwax": 8,
+        "memory_salt": 3
+      },
+      "claim_flags": {
+        "hollowreedworks_survey_recovered": true
+      },
+      "runtime_boundary": {
+        "status": "great_work_survey_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-great-work-charter-races-10184",
+      "public_text": {
+        "public_summary": "An antlered bogstone slab, crescent hide drum, reed stakes, and low moonwax basin form an uneven vertical totem.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_meridian_seven_line_plumb_prism",
+      "name": "Meridian Seven-Line Plumb Prism",
+      "family": "scenario_objective",
+      "action_label": "Align the Seven Survey Lines",
+      "summary": "A white-stone plumb prism fixes seven daylight bearings and releases the glass reserve for Meridian's final orrery.",
+      "claim_rewards": {
+        "gold": 4300,
+        "wood": 3,
+        "ore": 6,
+        "aetherglass": 9,
+        "memory_salt": 3
+      },
+      "claim_flags": {
+        "meridianworks_survey_recovered": true
+      },
+      "runtime_boundary": {
+        "status": "great_work_survey_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-great-work-charter-races-10184",
+      "public_text": {
+        "public_summary": "Three white-stone legs hold a high faceted sun prism over a seven-line brass sighting circle.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_crownroot_heartseed_boundary_arbor",
+      "name": "Crownroot Heartseed Boundary Arbor",
+      "family": "scenario_objective",
+      "action_label": "Wake the Heartseed Boundary",
+      "summary": "A living survey arbor keeps the root lines, timber marks, and graft reserve for Crownroot's final parliament.",
+      "claim_rewards": {
+        "gold": 5500,
+        "wood": 9,
+        "ore": 6,
+        "verdant_grafts": 10,
+        "peatwax": 4
+      },
+      "claim_flags": {
+        "crownrootworks_survey_recovered": true
+      },
+      "runtime_boundary": {
+        "status": "great_work_survey_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-great-work-charter-races-10184",
+      "public_text": {
+        "public_summary": "A bent living-root arch encloses a bright heartseed bowl, hanging leaf plumb, and two uneven boundary stakes.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_blackbell_grand_assay_tripod",
+      "name": "Blackbell Grand Assay Tripod",
+      "family": "scenario_objective",
+      "action_label": "Calibrate the Grand Assay",
+      "summary": "A basalt tripod weighs ore, pressure, and sealed scrip for Blackbell's final assay bell.",
+      "claim_rewards": {
+        "gold": 4400,
+        "wood": 3,
+        "ore": 7,
+        "brass_scrip": 9,
+        "aetherglass": 3
+      },
+      "claim_flags": {
+        "blackbellworks_survey_recovered": true
+      },
+      "runtime_boundary": {
+        "status": "great_work_survey_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-great-work-charter-races-10184",
+      "public_text": {
+        "public_summary": "A squat black tripod holds a heavy brass plumb bell beside a redline gauge, ore tray, and smoking calibration chimney.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_pale_sounding_last_memory_marker",
+      "name": "Pale Sounding Last-Memory Marker",
+      "family": "scenario_objective",
+      "action_label": "Recover the Last Sounding",
+      "summary": "A whale-bone sounding frame remembers the lost harbor depths and releases the stores for Pale Sounding's final beacon.",
+      "claim_rewards": {
+        "gold": 4200,
+        "wood": 6,
+        "ore": 4,
+        "memory_salt": 9,
+        "embergrain": 3
+      },
+      "claim_flags": {
+        "palesoundingworks_survey_recovered": true
+      },
+      "runtime_boundary": {
+        "status": "great_work_survey_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-great-work-charter-races-10184",
+      "public_text": {
+        "public_summary": "A slender whale-bone frame suspends an off-center pale bell above a black mirror-water bowl and three depth cords.",
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
