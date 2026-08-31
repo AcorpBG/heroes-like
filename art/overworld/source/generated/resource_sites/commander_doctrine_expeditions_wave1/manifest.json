@@ -1,0 +1,144 @@
+{
+  "schema_id": "eight_commander_doctrine_expeditions_art_v1",
+  "content_batch_id": "content-eight-commander-doctrine-expeditions-10184",
+  "generation_mode": "built_in_imagegen",
+  "source_model": "built_in_imagegen_original_commander_doctrine_expeditions_atlas",
+  "prompt_set_summary": "Eight original transparent command landmarks for eight underused live heroes, with non-color silhouettes readable at 48px and no packaged source-master dependency.",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/commander_doctrine_expeditions_atlas.png",
+  "runtime_atlas_size": [
+    384,
+    48
+  ],
+  "runtime_atlas_sha256": "702a3be7bd912de2c929cc00a9d7af7e2f9607c8f0afd9b096df321f78b5f70b",
+  "source_package_policy": "retained_for_provenance_excluded_from_linux_and_windows_exports",
+  "items": [
+    {
+      "site_id": "site_heatpriest_quench_censer",
+      "hero_id": "hero_brasshollow_odrik_heatpriest",
+      "asset_id": "resource_site_doctrine_heatpriest_quench_censer",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_doctrine_expeditions_wave1/heatpriest_quench_censer_source.png",
+      "source_sha256": "66bc8875c0d288448f74d7f794f399d70a5a96f6c5cc53919cd23ba99a4ce7bd",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-65b6cfd9-32aa-4c06-a951-c16e218f741f.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Heatpriest Quench-Censer for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: one squat armored furnace censer on three broad iron feet, broken circular heat halo, two offset pressure pipes, hanging coal bowl, narrow chimney capped by hammer-shaped vent; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "Three broad feet brace a squat furnace beneath a broken heat halo, offset pipes, a hanging coal bowl, and a hammer-capped vent."
+    },
+    {
+      "site_id": "site_fenhook_blind_levee_snare",
+      "hero_id": "hero_tarn",
+      "asset_id": "resource_site_doctrine_fenhook_blind_levee_snare",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_doctrine_expeditions_wave1/fenhook_blind_levee_snare_source.png",
+      "source_sha256": "df6b948a4a302b3a8197192112afa02495bdf0837d29fb626e5b0540849bb492",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ff799d58-e90c-4b29-a953-60bff220a4b6.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Fenhook Blind-Levee Snare for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: one low crescent levee marker built from dark wet timbers, wrapped by a large hooked rope snare, three uneven reed fins, two hanging bone floats, narrow concealed stepping gate; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A low crescent of wet timbers hides a narrow gate inside one huge hooked snare, three reed fins, and two unequal bone floats."
+    },
+    {
+      "site_id": "site_choirward_resonance_bastion",
+      "hero_id": "hero_thalen",
+      "asset_id": "resource_site_doctrine_choirward_resonance_bastion",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_doctrine_expeditions_wave1/choirward_resonance_bastion_source.png",
+      "source_sha256": "939a6a6f55ef03b8c110b0e5394c1bb33819c54a356db4cb992b62c2d6e89e12",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-8653d6ac-c351-4bd4-84ee-ed35401e736a.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Choirward Resonance Bastion for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: one compact pale-stone bastion with three open singing arches, asymmetrical prism roof, two suspended tuning bells, broad stepped base, tall resonance fork; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "Three open singing arches rise from a broad stepped base beneath an uneven prism roof, two bells, and one tall tuning fork."
+    },
+    {
+      "site_id": "site_mirrorstep_parallax_gate",
+      "hero_id": "hero_varis",
+      "asset_id": "resource_site_doctrine_mirrorstep_parallax_gate",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_doctrine_expeditions_wave1/mirrorstep_parallax_gate_source.png",
+      "source_sha256": "fa0f34fac43feb263534a86b6a792a137d42b18bf4a3928fcfbe5b9e4787ccdf",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-1277d061-0aee-470f-87e3-263e40ec270d.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Mirrorstep Parallax Gate for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: two tall offset mirrored arches overlap without touching, narrow zigzag brass walkway, floating diamond lens, three calibration needles, broken side stair; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "Two tall mirrored arches overlap without touching above a zigzag walkway, floating diamond lens, three needles, and a broken stair."
+    },
+    {
+      "site_id": "site_mossvein_memory_cairn",
+      "hero_id": "hero_thornwake_ralka_mossvein",
+      "asset_id": "resource_site_doctrine_mossvein_memory_cairn",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_doctrine_expeditions_wave1/mossvein_memory_cairn_source.png",
+      "source_sha256": "d6f1f23a3a0d296dda5441f520d5b0fed17b05f63da58bccadb5c00c1d894367",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-beba183e-29b3-4554-81e4-79a1ecc6f635.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Mossvein Memory Cairn for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: one leaning spiral cairn of seven uneven dark stones bound by living moss veins, three shallow memory bowls, forked root crown, hanging seedglass drop; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "Seven uneven stones spiral upward in living moss beneath a forked root crown, with three shallow bowls and one hanging seedglass drop."
+    },
+    {
+      "site_id": "site_bramble_hound_pursuit_kennel",
+      "hero_id": "hero_thornwake_silsa_bramblehound",
+      "asset_id": "resource_site_doctrine_bramble_hound_pursuit_kennel",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_doctrine_expeditions_wave1/bramble_hound_pursuit_kennel_source.png",
+      "source_sha256": "6f4d120af660ebb433904ef5b8cdc300cc2761c24ef56363a5d879fba017eeae",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-bce35ea1-fecf-44cc-9dfa-efda8595d06d.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Bramble-Hound Pursuit Kennel for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: one low arched field kennel woven from thorny living branches, crowned by two mismatched antlers, large hooked hunt whistle, three paw-shaped track plaques, open dark passage; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A low open kennel of thorn branches carries two mismatched antlers, one hooked whistle, and three paw-shaped trail plaques."
+    },
+    {
+      "site_id": "site_rootwright_living_span",
+      "hero_id": "hero_thornwake_tova_rootwright",
+      "asset_id": "resource_site_doctrine_rootwright_living_span",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_doctrine_expeditions_wave1/rootwright_living_span_source.png",
+      "source_sha256": "a481b9b14a5cf0264752ef49b151f31a949bdcb2fb7d58488663bb56a137275e",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-6ec54d26-9041-42ef-821a-43200bcad09b.png",
+      "atlas_region": [
+        288,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Rootwright Living Span for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: one compact arched bridge scaffold grown from three braided living roots, two asymmetrical bark piers, leaf tension braces, hanging seed counterweight, narrow woven crossing deck; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "Three braided living roots form a compact bridge between unequal bark piers, leaf braces, a woven deck, and one hanging seed weight."
+    },
+    {
+      "site_id": "site_nightchart_false_star_orrery",
+      "hero_id": "hero_veilmourn_orso_nightchart",
+      "asset_id": "resource_site_doctrine_nightchart_false_star_orrery",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_doctrine_expeditions_wave1/nightchart_false_star_orrery_source.png",
+      "source_sha256": "46b570e09252c412259d89bdd693dc8accf2a994468c4106ce3796621deab0b6",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-20070e7b-3729-4a3c-880b-d4a150907ea8.png",
+      "atlas_region": [
+        336,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Nightchart False-Star Orrery for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: one crooked nautical orrery on a tripod sounding pole, with three mismatched orbit rings, a false eight-point star lens, a crescent tide dial, two hanging memory bells, and one long direction hook; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A crooked tripod orrery carries three mismatched orbit rings, an eight-point false star, crescent dial, two bells, and a long hook."
+    }
+  ]
+}

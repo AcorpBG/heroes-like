@@ -16255,12 +16255,12 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Twelve Command Relic Marches is complete: twelve cross-faction hero-led skirmishes, twelve original rare relics, thirty-six battle fronts, and matching Linux/Windows packages.",
+  "currentNotes": "Eight Commander Doctrine Expeditions is complete: eight original 18x12 hero-led skirmishes, eight guarded command landmarks, thirty-two battle fronts, and matching Linux/Windows packages.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "",
   "currentSliceId": "",
-  "currentSliceNotes": "Completed twelve cross-faction 15x10 hero-led relic marches, twelve original rare relics and five-stack companies, 36 live battle fronts, twelve transparent masters plus compact inventory/field derivatives; consolidated 12-case smoke, repository validation, and matching Linux/Windows packaged startup passed at 235445808 bytes.",
-  "currentSliceStatus": "completed",
+  "currentSliceNotes": "",
+  "currentSliceStatus": "",
   "currentSliceTitle": "",
   "currentSliceUpdatedAt": "2026-08-31T22:14:10Z",
   "deferredRiskRegister": [
@@ -107572,6 +107572,16 @@
       "startedAt": "2026-08-31T23:05:29Z",
       "notes": "Completed twelve cross-faction 15x10 hero-led relic marches, twelve original rare relics and five-stack companies, 36 live battle fronts, twelve transparent masters plus compact inventory/field derivatives; consolidated 12-case smoke, repository validation, and matching Linux/Windows packaged startup passed at 235445808 bytes.",
       "completedAt": "2026-08-31T23:32:55Z"
+    },
+    {
+      "id": "content-eight-commander-doctrine-expeditions-10184",
+      "title": "content eight commander doctrine expeditions 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T23:57:37Z",
+      "startedAt": "2026-08-31T23:35:55Z",
+      "notes": "Shipped eight original 18x12 commander doctrine expeditions, eight five-stack companies, eight guarded live command landmarks, and one 384x48 original runtime atlas. Consolidated smoke passed 8 launches, 32 production battles, 8 one-time XP/command/flag claims, 8 exact art routes, 8 victories, 8 captures, and 8 save-v9 round trips. Full repository validation and sequential Linux/Windows package startup passed at matching 235582988-byte PCKs with source masters excluded.",
+      "completedAt": "2026-08-31T23:57:37Z"
     }
   ],
   "project": "heroes-like",
@@ -107581,8 +107591,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "No blocker remains for Six Marchland Warworks. The broader game still needs another scoped content-and-original-art batch selected before implementation continues.",
-  "remainingWork": "Audit the expanded live catalog and select the next coherent content-and-original-art batch; do not run a smoke until that batch is complete.",
+  "remainingGap": "No blocker remains for Eight Commander Doctrine Expeditions. The broader game still needs another scoped content-and-original-art batch selected before implementation continues.",
+  "remainingWork": "Audit the expanded 247-scenario live catalog and select the next coherent content-and-original-art batch; do not run a smoke until that batch is complete.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -108116,7 +108126,7 @@
   ],
   "summary": "Completed Six Marchland Warworks as one coherent six-unit, six-building, six-map, twelve-master production-content batch with consolidated validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T23:32:55Z",
+  "updatedAt": "2026-08-31T23:57:37Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

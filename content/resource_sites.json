@@ -18448,6 +18448,262 @@
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
+    },
+    {
+      "id": "site_heatpriest_quench_censer",
+      "name": "Heatpriest Quench-Censer",
+      "family": "scenario_objective",
+      "action_label": "Set the Quench Doctrine",
+      "summary": "Heatpriest Quench-Censer teaches Odrik Heatpriest one durable command doctrine after its four-front route is opened.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "power": 1
+      },
+      "claim_flags": {
+        "heatdoctrine_doctrine_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_doctrine_expedition_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184",
+      "public_text": {
+        "public_summary": "Three broad feet brace a squat furnace beneath a broken heat halo, offset pipes, a hanging coal bowl, and a hammer-capped vent.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_fenhook_blind_levee_snare",
+      "name": "Fenhook Blind-Levee Snare",
+      "family": "scenario_objective",
+      "action_label": "Close the Blind Levee",
+      "summary": "Fenhook Blind-Levee Snare teaches Tarn Fenhook one durable command doctrine after its four-front route is opened.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "attack": 1
+      },
+      "claim_flags": {
+        "fenhookdoctrine_doctrine_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_doctrine_expedition_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184",
+      "public_text": {
+        "public_summary": "A low crescent of wet timbers hides a narrow gate inside one huge hooked snare, three reed fins, and two unequal bone floats.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_choirward_resonance_bastion",
+      "name": "Choirward Resonance Bastion",
+      "family": "scenario_objective",
+      "action_label": "Tune the Bastion",
+      "summary": "Choirward Resonance Bastion teaches Thalen Choirward one durable command doctrine after its four-front route is opened.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "defense": 1
+      },
+      "claim_flags": {
+        "choirwarddoctrine_doctrine_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_doctrine_expedition_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184",
+      "public_text": {
+        "public_summary": "Three open singing arches rise from a broad stepped base beneath an uneven prism roof, two bells, and one tall tuning fork.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_mirrorstep_parallax_gate",
+      "name": "Mirrorstep Parallax Gate",
+      "family": "scenario_objective",
+      "action_label": "Align the Parallax Gate",
+      "summary": "Mirrorstep Parallax Gate teaches Varis Mirrorstep one durable command doctrine after its four-front route is opened.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "attack": 1
+      },
+      "claim_flags": {
+        "mirrorstepdoctrine_doctrine_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_doctrine_expedition_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184",
+      "public_text": {
+        "public_summary": "Two tall mirrored arches overlap without touching above a zigzag walkway, floating diamond lens, three needles, and a broken stair.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_mossvein_memory_cairn",
+      "name": "Mossvein Memory Cairn",
+      "family": "scenario_objective",
+      "action_label": "Read the Moss Memory",
+      "summary": "Mossvein Memory Cairn teaches Ralka Mossvein one durable command doctrine after its four-front route is opened.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
+      "claim_flags": {
+        "mossveindoctrine_doctrine_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_doctrine_expedition_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184",
+      "public_text": {
+        "public_summary": "Seven uneven stones spiral upward in living moss beneath a forked root crown, with three shallow bowls and one hanging seedglass drop.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_bramble_hound_pursuit_kennel",
+      "name": "Bramble-Hound Pursuit Kennel",
+      "family": "scenario_objective",
+      "action_label": "Loose the Pursuit Trail",
+      "summary": "Bramble-Hound Pursuit Kennel teaches Silsa Bramble-Hound one durable command doctrine after its four-front route is opened.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "attack": 1
+      },
+      "claim_flags": {
+        "bramblehounddoctrine_doctrine_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_doctrine_expedition_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184",
+      "public_text": {
+        "public_summary": "A low open kennel of thorn branches carries two mismatched antlers, one hooked whistle, and three paw-shaped trail plaques.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_rootwright_living_span",
+      "name": "Rootwright Living Span",
+      "family": "scenario_objective",
+      "action_label": "Set the Living Span",
+      "summary": "Rootwright Living Span teaches Tova Rootwright one durable command doctrine after its four-front route is opened.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "defense": 1
+      },
+      "claim_flags": {
+        "rootwrightdoctrine_doctrine_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_doctrine_expedition_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184",
+      "public_text": {
+        "public_summary": "Three braided living roots form a compact bridge between unequal bark piers, leaf braces, a woven deck, and one hanging seed weight.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_nightchart_false_star_orrery",
+      "name": "Nightchart False-Star Orrery",
+      "family": "scenario_objective",
+      "action_label": "Chart the False Star",
+      "summary": "Nightchart False-Star Orrery teaches Orso Nightchart one durable command doctrine after its four-front route is opened.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
+      "claim_flags": {
+        "nightchartdoctrine_doctrine_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_doctrine_expedition_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commander-doctrine-expeditions-10184",
+      "public_text": {
+        "public_summary": "A crooked tripod orrery carries three mismatched orbit rings, an eight-point false star, crescent dial, two bells, and a long hook.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }
