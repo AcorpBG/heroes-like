@@ -3900,6 +3900,118 @@
       ],
       "content_status": "marchland_retinue_heirloom_company_live",
       "content_batch_id": "content-six-marchland-retinue-heirloom-trials-10184"
+    },
+    {
+      "id": "army_orenproof_field_company",
+      "name": "Oren Bellfounder Proving-Road Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 36},
+        {"unit_id": "unit_brasshollow_quenchspool_slingers", "count": 24},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 14},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 8},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 4}
+      ],
+      "content_status": "commander_proving_opening_company_live",
+      "content_batch_id": "content-eight-commanders-proving-roads-10184"
+    },
+    {
+      "id": "army_pavaproof_field_company",
+      "name": "Pava Ashmeter Proving-Road Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 36},
+        {"unit_id": "unit_brasshollow_quenchspool_slingers", "count": 24},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 14},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 8},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 4}
+      ],
+      "content_status": "commander_proving_opening_company_live",
+      "content_batch_id": "content-eight-commanders-proving-roads-10184"
+    },
+    {
+      "id": "army_vellumproof_field_company",
+      "name": "Vellum Quench Proving-Road Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 36},
+        {"unit_id": "unit_brasshollow_quenchspool_slingers", "count": 24},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 14},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 8},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 4}
+      ],
+      "content_status": "commander_proving_opening_company_live",
+      "content_batch_id": "content-eight-commanders-proving-roads-10184"
+    },
+    {
+      "id": "army_orrikproof_field_company",
+      "name": "Orrik Tollreaver Proving-Road Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 36},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 24},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 14},
+        {"unit_id": "unit_mireclaw_ferrychain_lashers", "count": 8},
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 4}
+      ],
+      "content_status": "commander_proving_opening_company_live",
+      "content_batch_id": "content-eight-commanders-proving-roads-10184"
+    },
+    {
+      "id": "army_veyraproof_field_company",
+      "name": "Veyra Seedseer Proving-Road Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 36},
+        {"unit_id": "unit_thornwake_bramblekite_needlers", "count": 24},
+        {"unit_id": "unit_thornwake_sporeglass_menders", "count": 14},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 8},
+        {"unit_id": "unit_thornwake_thornwhip_carriers", "count": 4}
+      ],
+      "content_status": "commander_proving_opening_company_live",
+      "content_batch_id": "content-eight-commanders-proving-roads-10184"
+    },
+    {
+      "id": "army_nacreproof_field_company",
+      "name": "Nacre Vowless Proving-Road Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 36},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 24},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 14},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 8},
+        {"unit_id": "unit_veilmourn_tidehook_deckhands", "count": 4}
+      ],
+      "content_status": "commander_proving_opening_company_live",
+      "content_batch_id": "content-eight-commanders-proving-roads-10184"
+    },
+    {
+      "id": "army_rulnproof_field_company",
+      "name": "Ruln Vanehook Proving-Road Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 36},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 24},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 14},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 8},
+        {"unit_id": "unit_veilmourn_tidehook_deckhands", "count": 4}
+      ],
+      "content_status": "commander_proving_opening_company_live",
+      "content_batch_id": "content-eight-commanders-proving-roads-10184"
+    },
+    {
+      "id": "army_thirproof_field_company",
+      "name": "Thir Obituary-Ink Proving-Road Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 36},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 24},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 14},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 8},
+        {"unit_id": "unit_veilmourn_tidehook_deckhands", "count": 4}
+      ],
+      "content_status": "commander_proving_opening_company_live",
+      "content_batch_id": "content-eight-commanders-proving-roads-10184"
     }
   ]
 }

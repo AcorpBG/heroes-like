@@ -18192,6 +18192,262 @@
       },
       "public_summary": "A fog-keel mooring restores Veilmourn's boarder, reaver, and leviathan companies to the weekly harbor rolls.",
       "accessibility_text": "Guarded faction muster for Wakechain Boarders, Mirror-Keel Reavers, Fogbound Leviathan; the controlled state raises its standard and lights its company stations."
+    },
+    {
+      "id": "site_bellfounder_three_hammer_rostrum",
+      "name": "Bellfounder Three-Hammer Rostrum",
+      "family": "scenario_objective",
+      "action_label": "Ring the Three-Hammer Measure",
+      "summary": "Bellfounder Three-Hammer Rostrum asks Oren Bellfounder to reconcile three earned field lessons before the road closes.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "attack": 1
+      },
+      "claim_flags": {
+        "orenproof_proving_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_proving_road_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commanders-proving-roads-10184",
+      "public_text": {
+        "public_summary": "A squat pressure gantry carries one oversized bell, three unequal square hammers, a broken base cog, and a narrow vent, readable by its broad stepped silhouette.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_ashmeter_cinder_measure_crucible",
+      "name": "Ashmeter Cinder-Measure Crucible",
+      "family": "scenario_objective",
+      "action_label": "Take the Cinder Measure",
+      "summary": "Ashmeter Cinder-Measure Crucible asks Pava Ashmeter to reconcile three earned field lessons before the road closes.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "power": 1
+      },
+      "claim_flags": {
+        "pavaproof_proving_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_proving_road_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commanders-proving-roads-10184",
+      "public_text": {
+        "public_summary": "A tilted broad crucible rises beside one spiral condenser, three unequal measuring scoops, and a crooked slag channel, forming a tall hooked silhouette.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_quench_three_cycle_calibrator",
+      "name": "Quench Three-Cycle Calibrator",
+      "family": "scenario_objective",
+      "action_label": "Resolve the Three Cooling Cycles",
+      "summary": "Quench Three-Cycle Calibrator asks Vellum Quench to reconcile three earned field lessons before the road closes.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
+      "claim_flags": {
+        "vellumproof_proving_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_proving_road_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commanders-proving-roads-10184",
+      "public_text": {
+        "public_summary": "Three nested cooling coils wrap a blank upright ledger plate between offset radiator fins, a long drip valve, and one hanging quench bowl.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_tollreaver_deep_muster_toll",
+      "name": "Tollreaver Deep-Muster Toll",
+      "family": "scenario_objective",
+      "action_label": "Sound the Deep Muster",
+      "summary": "Tollreaver Deep-Muster Toll asks Orrik Tollreaver to reconcile three earned field lessons before the road closes.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "defense": 1
+      },
+      "claim_flags": {
+        "orrikproof_proving_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_proving_road_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commanders-proving-roads-10184",
+      "public_text": {
+        "public_summary": "A low crescent toll arch bears two side drums, three hanging tally cages, a forked reed crown, and a heavy hooked counterweight.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_seedseer_root_future_oracle",
+      "name": "Seedseer Root-Future Oracle",
+      "family": "scenario_objective",
+      "action_label": "Read the Three Seed Futures",
+      "summary": "Seedseer Root-Future Oracle asks Veyra Seedseer to reconcile three earned field lessons before the road closes.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "power": 1
+      },
+      "claim_flags": {
+        "veyraproof_proving_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_proving_road_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commanders-proving-roads-10184",
+      "public_text": {
+        "public_summary": "A forked living root lifts three differently shaped seed lenses above one hanging pendulum and a carved grafting stone, with an open budding crown.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_vowless_broken_retort_mirror",
+      "name": "Vowless Broken-Retort Mirror",
+      "family": "scenario_objective",
+      "action_label": "Face the Broken Retort",
+      "summary": "Vowless Broken-Retort Mirror asks Nacre Vowless to reconcile three earned field lessons before the road closes.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
+      "claim_flags": {
+        "nacreproof_proving_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_proving_road_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commanders-proving-roads-10184",
+      "public_text": {
+        "public_summary": "A tall cracked oval mirror with one missing wedge stands between two unequal bone uprights above a shallow bowl and three visibly snapped cords.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_vanehook_three_line_harpoon",
+      "name": "Vanehook Three-Line Harpoon Frame",
+      "family": "scenario_objective",
+      "action_label": "Break the Three Practice Lines",
+      "summary": "Vanehook Three-Line Harpoon Frame asks Ruln Vanehook to reconcile three earned field lessons before the road closes.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "attack": 1
+      },
+      "claim_flags": {
+        "rulnproof_proving_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_proving_road_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commanders-proving-roads-10184",
+      "public_text": {
+        "public_summary": "A curved ship rib leans into one three-pronged harpoon above three unequal hanging rings, a heavy rope coil, and a small plumb weight.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_obituaryink_last_name_lectern",
+      "name": "Obituary-Ink Last-Name Lectern",
+      "family": "scenario_objective",
+      "action_label": "Enter the Last Name",
+      "summary": "Obituary-Ink Last-Name Lectern asks Thir Obituary-Ink to reconcile three earned field lessons before the road closes.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "power": 1
+      },
+      "claim_flags": {
+        "thirproof_proving_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_proving_road_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-eight-commanders-proving-roads-10184",
+      "public_text": {
+        "public_summary": "A leaning shell lectern carries one enormous hooked quill above three blank hanging tablets, a faceted inkwell, and one offset cracked bell.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }
