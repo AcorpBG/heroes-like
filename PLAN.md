@@ -25,8 +25,40 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Active implementation slice: none; audit the expanded live catalog before selecting the next coherent production-content and original-art batch.
-- Most recently completed implementation slice: `content-six-marchland-retinue-heirloom-trials-10184`, six second-use skirmishes and six exact equippable heirlooms integrated through live battle, build, recruit, objective, art, and save paths.
-- Current package boundary: matching Linux and Windows release exports measure 233737068 bytes, 16262932 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Most recently completed implementation slice: `content-eight-commanders-proving-roads-10184`, eight progression-led skirmishes and eight exact field landmarks that raise every live hero to at least three authored lead routes.
+- Current package boundary: matching Linux and Windows release exports measure 233867208 bytes, 16132792 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Eight Commanders' Proving Roads
+
+id: `content-eight-commanders-proving-roads-10184`
+
+Status: completed 2026-08-31.
+
+Current finding:
+- Oren Bellfounder, Pava Ashmeter, Vellum Quench, Orrik Tollreaver, Veyra Seedseer, Nacre Vowless, Ruln Vanehook, and Thir Obituary-Ink are the only live heroes with two authored lead scenarios; every other hero has at least three;
+- production already owns exact controlled-hero progression objectives, earned specialty decisions, XP-bearing guarded sites, command lessons, three-front battle routes, save-version-9 continuity, and strict field-art resolution without another gameplay subsystem;
+- one eight-map batch can close the remaining hero-lead floor while giving all eight commanders a gameplay-specific proving landmark instead of adding disconnected definitions.
+
+Implementation boundary:
+- author one original skirmish-only 15x10 proving road for each selected commander, with a five-stack faction company, live home town, three authored examination fronts, guarded XP-bearing landmark, recovery support, rival pressure, a late reserve, and a Day-16 deadline;
+- require the exact controlled hero to reach level four, resolve three earned specialty choices, leave no choice pending, claim the exact proving landmark, and clear all three battle fronts through production authority;
+- generate eight original transparent proving-landmark source masters, derive one compact 384x48 field atlas, retain exact prompt/hash/accessibility provenance, and exclude source masters from Linux and Windows packages.
+
+Completion criteria:
+- all eight scenarios launch at level one with one authored identity specialty, remain unwinnable for the wrong hero, at level three, or with a pending choice, then provide enough production battle/site XP for three live specialty decisions, resolve twenty-four battles, satisfy the exact objective chain, win, and round-trip through save version 9;
+- every landmark grants its exact one-time XP and command lesson, rejects repeat mutation, resolves its exact non-color silhouette and atlas region, and appears only on its authored live map route;
+- run one consolidated eight-case gameplay/progression/battle/art/save smoke only after the complete batch, followed once by repository validation and sequential Linux/Windows packaged startup below the unchanged 250000000-byte ceiling.
+
+Completion result:
+- shipped eight original skirmish-only 15x10 proving roads for Oren Bellfounder, Pava Ashmeter, Vellum Quench, Orrik Tollreaver, Veyra Seedseer, Nacre Vowless, Ruln Vanehook, and Thir Obituary-Ink, raising all sixty-six live heroes to at least three authored lead scenarios;
+- added eight five-stack field companies, twenty-four examination fronts, eight guarded one-time XP and command-lesson landmarks, complete economy routes, reactive relief, late reserves, pressure, deadlines, and exact level-four/no-pending-choice victory chains;
+- generated and inspected eight original transparent landmark masters, derived one 384x48 runtime atlas, retained exact prompt/hash/accessibility provenance, and excluded every source master from release packages;
+- the single consolidated eight-case smoke passed twenty-four production battle constructions and victories, twenty-four live specialty choices, eight wrong-hero/level-three/pending-choice controls, eight exact claims and command lessons, eight exact art identities, eight victories, and eight save-version-9 round trips;
+- repository validation passed at 221 scenarios, 197 encounters, 359 army groups, 66 heroes, 57 artifacts, and 317 resource sites; matching Linux and Windows exports booted with the native extension, contained all 43 required resource-site atlases, and measured 233867208 bytes, leaving 16132792 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, town definition, unit definition, building, spell, artifact, encounter definition, specialty rule, XP threshold, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes scenario, commander, university, learning stone, landmark, name, text, art, heraldry, or protected visual expression.
 
 ## Six Marchland Retinue Heirloom Trials
 

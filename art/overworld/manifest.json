@@ -15051,6 +15051,190 @@
       "presentation_role": "marchland_retinue_heirloom_field_pickup",
       "accessible_description": "A tall crescent frame holds one large hanging droplet, one offset bell, a forked side cord, and a narrow lower hook.",
       "background": "transparent"
+    },
+    "resource_site_proving_road_bellfounder_rostrum": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eight_commanders_proving_roads_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        384,
+        48
+      ],
+      "runtime_sha256": "b9f0c90afba0908e8b3738d19efa035cfedbf0e5282020b02aa608cf6d6ecddd",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/bellfounder_three_hammer_rostrum_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/bellfounder_three_hammer_rostrum_source.png",
+      "source_model": "built_in_image_gen_original_eight_commanders_proving_roads_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_bellfounder_three_hammer_rostrum",
+      "assigned_hero_id": "hero_brasshollow_oren_bellfounder",
+      "presentation_role": "bellfounder_three_hammer_rostrum",
+      "accessible_description": "A squat pressure gantry carries one oversized bell, three unequal square hammers, a broken base cog, and a narrow vent, readable by its broad stepped silhouette."
+    },
+    "resource_site_proving_road_ashmeter_crucible": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eight_commanders_proving_roads_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        384,
+        48
+      ],
+      "runtime_sha256": "b9f0c90afba0908e8b3738d19efa035cfedbf0e5282020b02aa608cf6d6ecddd",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/ashmeter_cinder_measure_crucible_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/ashmeter_cinder_measure_crucible_source.png",
+      "source_model": "built_in_image_gen_original_eight_commanders_proving_roads_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_ashmeter_cinder_measure_crucible",
+      "assigned_hero_id": "hero_brasshollow_pava_ashmeter",
+      "presentation_role": "ashmeter_cinder_measure_crucible",
+      "accessible_description": "A tilted broad crucible rises beside one spiral condenser, three unequal measuring scoops, and a crooked slag channel, forming a tall hooked silhouette."
+    },
+    "resource_site_proving_road_quench_calibrator": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eight_commanders_proving_roads_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        384,
+        48
+      ],
+      "runtime_sha256": "b9f0c90afba0908e8b3738d19efa035cfedbf0e5282020b02aa608cf6d6ecddd",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/quench_three_cycle_calibrator_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/quench_three_cycle_calibrator_source.png",
+      "source_model": "built_in_image_gen_original_eight_commanders_proving_roads_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_quench_three_cycle_calibrator",
+      "assigned_hero_id": "hero_brasshollow_vellum_quench",
+      "presentation_role": "quench_three_cycle_calibrator",
+      "accessible_description": "Three nested cooling coils wrap a blank upright ledger plate between offset radiator fins, a long drip valve, and one hanging quench bowl."
+    },
+    "resource_site_proving_road_tollreaver_toll": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eight_commanders_proving_roads_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        384,
+        48
+      ],
+      "runtime_sha256": "b9f0c90afba0908e8b3738d19efa035cfedbf0e5282020b02aa608cf6d6ecddd",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/tollreaver_deep_muster_toll_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/tollreaver_deep_muster_toll_source.png",
+      "source_model": "built_in_image_gen_original_eight_commanders_proving_roads_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_tollreaver_deep_muster_toll",
+      "assigned_hero_id": "hero_orrik",
+      "presentation_role": "tollreaver_deep_muster_toll",
+      "accessible_description": "A low crescent toll arch bears two side drums, three hanging tally cages, a forked reed crown, and a heavy hooked counterweight."
+    },
+    "resource_site_proving_road_seedseer_oracle": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eight_commanders_proving_roads_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        384,
+        48
+      ],
+      "runtime_sha256": "b9f0c90afba0908e8b3738d19efa035cfedbf0e5282020b02aa608cf6d6ecddd",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/seedseer_root_future_oracle_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/seedseer_root_future_oracle_source.png",
+      "source_model": "built_in_image_gen_original_eight_commanders_proving_roads_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_seedseer_root_future_oracle",
+      "assigned_hero_id": "hero_thornwake_veyra_seedseer",
+      "presentation_role": "seedseer_root_future_oracle",
+      "accessible_description": "A forked living root lifts three differently shaped seed lenses above one hanging pendulum and a carved grafting stone, with an open budding crown."
+    },
+    "resource_site_proving_road_vowless_mirror": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eight_commanders_proving_roads_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        384,
+        48
+      ],
+      "runtime_sha256": "b9f0c90afba0908e8b3738d19efa035cfedbf0e5282020b02aa608cf6d6ecddd",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/vowless_broken_retort_mirror_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/vowless_broken_retort_mirror_source.png",
+      "source_model": "built_in_image_gen_original_eight_commanders_proving_roads_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_vowless_broken_retort_mirror",
+      "assigned_hero_id": "hero_veilmourn_nacre_vowless",
+      "presentation_role": "vowless_broken_retort_mirror",
+      "accessible_description": "A tall cracked oval mirror with one missing wedge stands between two unequal bone uprights above a shallow bowl and three visibly snapped cords."
+    },
+    "resource_site_proving_road_vanehook_harpoon": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eight_commanders_proving_roads_atlas.png",
+      "atlas_region": [
+        288,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        384,
+        48
+      ],
+      "runtime_sha256": "b9f0c90afba0908e8b3738d19efa035cfedbf0e5282020b02aa608cf6d6ecddd",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/vanehook_three_line_harpoon_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/vanehook_three_line_harpoon_source.png",
+      "source_model": "built_in_image_gen_original_eight_commanders_proving_roads_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_vanehook_three_line_harpoon",
+      "assigned_hero_id": "hero_veilmourn_ruln_vanehook",
+      "presentation_role": "vanehook_three_line_harpoon",
+      "accessible_description": "A curved ship rib leans into one three-pronged harpoon above three unequal hanging rings, a heavy rope coil, and a small plumb weight."
+    },
+    "resource_site_proving_road_obituaryink_lectern": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eight_commanders_proving_roads_atlas.png",
+      "atlas_region": [
+        336,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        384,
+        48
+      ],
+      "runtime_sha256": "b9f0c90afba0908e8b3738d19efa035cfedbf0e5282020b02aa608cf6d6ecddd",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/obituaryink_last_name_lectern_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/obituaryink_last_name_lectern_source.png",
+      "source_model": "built_in_image_gen_original_eight_commanders_proving_roads_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_obituaryink_last_name_lectern",
+      "assigned_hero_id": "hero_veilmourn_thir_obituaryink",
+      "presentation_role": "obituaryink_last_name_lectern",
+      "accessible_description": "A leaning shell lectern carries one enormous hooked quill above three blank hanging tablets, a faceted inkwell, and one offset cracked bell."
     }
   },
   "resource_site_sprites": {
@@ -16365,6 +16549,46 @@
       "asset_id": "resource_site_veteran_fog_keel_lastwatch_mooring_controlled",
       "unclaimed_asset_id": "mapobj_fog_keel_lastwatch_mooring",
       "fit": "Exact original Fog-Keel Lastwatch Mooring paired with its raised-standard, supplied veteran muster state."
+    },
+    "site_bellfounder_three_hammer_rostrum": {
+      "asset_id": "resource_site_proving_road_bellfounder_rostrum",
+      "unclaimed_asset_id": "resource_site_proving_road_bellfounder_rostrum",
+      "fit": "Exact original Bellfounder Three-Hammer Rostrum remains visible before and after its one-time proving-road claim."
+    },
+    "site_ashmeter_cinder_measure_crucible": {
+      "asset_id": "resource_site_proving_road_ashmeter_crucible",
+      "unclaimed_asset_id": "resource_site_proving_road_ashmeter_crucible",
+      "fit": "Exact original Ashmeter Cinder-Measure Crucible remains visible before and after its one-time proving-road claim."
+    },
+    "site_quench_three_cycle_calibrator": {
+      "asset_id": "resource_site_proving_road_quench_calibrator",
+      "unclaimed_asset_id": "resource_site_proving_road_quench_calibrator",
+      "fit": "Exact original Quench Three-Cycle Calibrator remains visible before and after its one-time proving-road claim."
+    },
+    "site_tollreaver_deep_muster_toll": {
+      "asset_id": "resource_site_proving_road_tollreaver_toll",
+      "unclaimed_asset_id": "resource_site_proving_road_tollreaver_toll",
+      "fit": "Exact original Tollreaver Deep-Muster Toll remains visible before and after its one-time proving-road claim."
+    },
+    "site_seedseer_root_future_oracle": {
+      "asset_id": "resource_site_proving_road_seedseer_oracle",
+      "unclaimed_asset_id": "resource_site_proving_road_seedseer_oracle",
+      "fit": "Exact original Seedseer Root-Future Oracle remains visible before and after its one-time proving-road claim."
+    },
+    "site_vowless_broken_retort_mirror": {
+      "asset_id": "resource_site_proving_road_vowless_mirror",
+      "unclaimed_asset_id": "resource_site_proving_road_vowless_mirror",
+      "fit": "Exact original Vowless Broken-Retort Mirror remains visible before and after its one-time proving-road claim."
+    },
+    "site_vanehook_three_line_harpoon": {
+      "asset_id": "resource_site_proving_road_vanehook_harpoon",
+      "unclaimed_asset_id": "resource_site_proving_road_vanehook_harpoon",
+      "fit": "Exact original Vanehook Three-Line Harpoon Frame remains visible before and after its one-time proving-road claim."
+    },
+    "site_obituaryink_last_name_lectern": {
+      "asset_id": "resource_site_proving_road_obituaryink_lectern",
+      "unclaimed_asset_id": "resource_site_proving_road_obituaryink_lectern",
+      "fit": "Exact original Obituary-Ink Last-Name Lectern remains visible before and after its one-time proving-road claim."
     }
   },
   "artifact_default_sprite": {
