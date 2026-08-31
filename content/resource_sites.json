@@ -14598,6 +14598,204 @@
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
+    },
+    {
+      "id": "site_rainwrit_five_writ_muster_standard",
+      "name": "Rainwrit Five-Writ Muster Standard",
+      "family": "scenario_objective",
+      "action_label": "Raise the Five-Writ Standard",
+      "summary": "A storm-fork muster mast records which five companies have answered Rainwrit's floodgate call.",
+      "claim_rewards": {
+        "gold": 900,
+        "embergrain": 2
+      },
+      "claim_recruits": {
+        "unit_embercourt_beaconline_writguard": 2
+      },
+      "claim_flags": {
+        "rainwritmuster_standard_raised": true
+      },
+      "runtime_boundary": {
+        "status": "grand_muster_rally_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-grand-muster-assemblies-10184",
+      "public_text": {
+        "public_summary": "A bronze storm-fork mast rises from a floodgate plinth beside a long split pennant and five hanging tally tabs.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_hollowreed_moonhide_drum_standard",
+      "name": "Hollowreed Moonhide Drum Standard",
+      "family": "scenario_objective",
+      "action_label": "Sound the Moonhide Muster",
+      "summary": "An antler-framed moonhide drum calls five marsh companies into one hunting cadence.",
+      "claim_rewards": {
+        "gold": 900,
+        "peatwax": 2
+      },
+      "claim_recruits": {
+        "unit_mireclaw_fenbell_chainstalkers": 2
+      },
+      "claim_flags": {
+        "hollowreedmuster_standard_raised": true
+      },
+      "runtime_boundary": {
+        "status": "grand_muster_rally_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-grand-muster-assemblies-10184",
+      "public_text": {
+        "public_summary": "A broad hide drum sits inside a crescent antler frame hung with chain reeds, bone clappers, and five fang tokens.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_meridian_five_facet_muster_prism",
+      "name": "Meridian Five-Facet Muster Prism",
+      "family": "scenario_objective",
+      "action_label": "Align the Five-Facet Muster",
+      "summary": "Five offset vanes make each company visible in the same calibrated dawn line.",
+      "claim_rewards": {
+        "gold": 900,
+        "aetherglass": 2
+      },
+      "claim_recruits": {
+        "unit_sunvault_zenith_lensbearers": 2
+      },
+      "claim_flags": {
+        "meridianmuster_standard_raised": true
+      },
+      "runtime_boundary": {
+        "status": "grand_muster_rally_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-grand-muster-assemblies-10184",
+      "public_text": {
+        "public_summary": "A mirrored mast carries five offset crystal vanes around an open sun ring, with unequal glass feet and one blue ribbon.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_crownroot_five_seed_muster_bough",
+      "name": "Crownroot Five-Seed Muster Bough",
+      "family": "scenario_objective",
+      "action_label": "Bind the Five-Seed Muster",
+      "summary": "A living muster bough binds five seed companies beneath one graft oath.",
+      "claim_rewards": {
+        "gold": 900,
+        "verdant_grafts": 2
+      },
+      "claim_recruits": {
+        "unit_thornwake_canopy_rammers": 2
+      },
+      "claim_flags": {
+        "crownrootmuster_standard_raised": true
+      },
+      "runtime_boundary": {
+        "status": "grand_muster_rally_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-grand-muster-assemblies-10184",
+      "public_text": {
+        "public_summary": "A forked living root arches around five amber seed counters beside a woven thorncloth pennant and grafting stone.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_blackbell_five_clause_muster_gantry",
+      "name": "Blackbell Five-Clause Muster Gantry",
+      "family": "scenario_objective",
+      "action_label": "Ratify the Five-Clause Muster",
+      "summary": "Five clapper plates turn a field company into one measured and enforceable contract.",
+      "claim_rewards": {
+        "gold": 900,
+        "brass_scrip": 2
+      },
+      "claim_recruits": {
+        "unit_brasshollow_pressure_lancers": 2
+      },
+      "claim_flags": {
+        "blackbellmuster_standard_raised": true
+      },
+      "runtime_boundary": {
+        "status": "grand_muster_rally_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-grand-muster-assemblies-10184",
+      "public_text": {
+        "public_summary": "A squat black-iron gantry carries an off-center blank gauge, chain winch, five clapper plates, and a short red-black pennant.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_pale_sounding_five_wake_muster_mast",
+      "name": "Pale Sounding Five-Wake Muster Mast",
+      "family": "scenario_objective",
+      "action_label": "Ring the Five-Wake Muster",
+      "summary": "Five shell bells remember separate crews until the memorial mast sounds them as one wake.",
+      "claim_rewards": {
+        "gold": 900,
+        "memory_salt": 2
+      },
+      "claim_recruits": {
+        "unit_veilmourn_wakeglass_navigators": 2
+      },
+      "claim_flags": {
+        "palesoundingmuster_standard_raised": true
+      },
+      "runtime_boundary": {
+        "status": "grand_muster_rally_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-grand-muster-assemblies-10184",
+      "public_text": {
+        "public_summary": "A leaning memorial ship mast bears five shell bells, a hooked crossbar, crescent mourning sail, memory lamp, and saltglass keel base.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }

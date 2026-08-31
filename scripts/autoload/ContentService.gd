@@ -1575,11 +1575,11 @@ func _validate_scenario(
 		for objective in objectives.get("victory", []):
 			if objective is Dictionary:
 				_append_unique_string(objective_ids, String(objective.get("id", "")))
-				_validate_objective(scenario_id, objective, faction_index, building_index, artifact_index, town_placement_ids, encounter_placement_ids)
+				_validate_objective(scenario_id, objective, faction_index, hero_index, unit_index, building_index, artifact_index, hero_starts, town_placement_ids, encounter_placement_ids)
 		for objective in objectives.get("defeat", []):
 			if objective is Dictionary:
 				_append_unique_string(objective_ids, String(objective.get("id", "")))
-				_validate_objective(scenario_id, objective, faction_index, building_index, artifact_index, town_placement_ids, encounter_placement_ids)
+				_validate_objective(scenario_id, objective, faction_index, hero_index, unit_index, building_index, artifact_index, hero_starts, town_placement_ids, encounter_placement_ids)
 
 	if scenario.has("script_hooks") and not (script_hooks is Array):
 		push_warning("Scenario %s script_hooks must be an array." % scenario_id)
@@ -1620,8 +1620,11 @@ func _validate_objective(
 	scenario_id: String,
 	objective: Dictionary,
 	faction_index: Dictionary,
+	hero_index: Dictionary,
+	unit_index: Dictionary,
 	building_index: Dictionary,
 	artifact_index: Dictionary,
+	hero_starts: Variant,
 	town_placement_ids: Array[String],
 	encounter_placement_ids: Array[String]
 ) -> void:
@@ -1642,6 +1645,30 @@ func _validate_objective(
 				push_warning("Scenario %s objective %s references missing town placement %s." % [scenario_id, String(objective.get("id", "")), building_placement_id])
 			if objective_building_id == "" or not building_index.has(objective_building_id):
 				push_warning("Scenario %s objective %s references missing building_id %s." % [scenario_id, String(objective.get("id", "")), objective_building_id])
+		"hero_army_meets_requirements":
+			var objective_hero_id := String(objective.get("hero_id", ""))
+			if objective_hero_id == "" or not hero_index.has(objective_hero_id):
+				push_warning("Scenario %s objective %s references missing hero_id %s." % [scenario_id, String(objective.get("id", "")), objective_hero_id])
+			elif not (hero_starts is Array) or objective_hero_id not in hero_starts:
+				push_warning("Scenario %s objective %s hero_id %s must be a controlled starting hero." % [scenario_id, String(objective.get("id", "")), objective_hero_id])
+			var requirements = objective.get("requirements", [])
+			if not (requirements is Array) or requirements.is_empty():
+				push_warning("Scenario %s objective %s must define non-empty army requirements." % [scenario_id, String(objective.get("id", ""))])
+			else:
+				var seen_requirement_unit_ids: Array[String] = []
+				for requirement in requirements:
+					if not (requirement is Dictionary):
+						push_warning("Scenario %s objective %s contains a non-dictionary army requirement." % [scenario_id, String(objective.get("id", ""))])
+						continue
+					var requirement_unit_id := String(requirement.get("unit_id", ""))
+					if requirement_unit_id == "" or not unit_index.has(requirement_unit_id):
+						push_warning("Scenario %s objective %s references missing unit_id %s." % [scenario_id, String(objective.get("id", "")), requirement_unit_id])
+					elif requirement_unit_id in seen_requirement_unit_ids:
+						push_warning("Scenario %s objective %s repeats unit_id %s." % [scenario_id, String(objective.get("id", "")), requirement_unit_id])
+					else:
+						seen_requirement_unit_ids.append(requirement_unit_id)
+					if int(requirement.get("minimum_count", 0)) <= 0:
+						push_warning("Scenario %s objective %s unit %s must define minimum_count > 0." % [scenario_id, String(objective.get("id", "")), requirement_unit_id])
 		"town_owned_by_player", "town_not_owned_by_player":
 			var placement_id := String(objective.get("placement_id", ""))
 			if placement_id == "" or placement_id not in town_placement_ids:

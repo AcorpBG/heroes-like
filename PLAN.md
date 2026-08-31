@@ -24,9 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; the next substantial content batch has not yet been selected.
-- Most recently completed implementation slice: `content-six-great-work-charter-races-10184`, one coherent six-faction town-development scenario, construction-objective, survey-landmark, exact-art, and save-continuity batch.
-- Current package boundary: matching Linux and Windows release exports measure 248113004 bytes, 1886996 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none selected; the next substantial content batch must be chosen from a fresh live-content audit before implementation starts.
+- Most recently completed implementation slice: `content-six-grand-muster-assemblies-10184`, one coherent six-faction army-composition objective, recruitment-route, rally-standard, stack-management, exact-art, and save-continuity batch.
+- Current package boundary: matching Linux and Windows release exports measure 248207100 bytes, 1792900 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Grand-Muster Assemblies
+
+id: `content-six-grand-muster-assemblies-10184`
+
+Status: completed.
+
+Current finding:
+- the seven-slot hero/town army bar, faction recruitment ladders, field transfers, town reserves, and sixty-six live heroes are production-authoritative, but none of the 129 scenarios makes assembling an exact field company the victory authority;
+- the live victory catalog therefore proves capture, encounter, flag, relic, spell, and construction routes while army composition and stack management remain support behavior rather than a scenario-defining strategic route;
+- all six factions already own complete thirteen-unit rosters, Horizon citadels, recruit/economy systems, exact unit art, and suitable opposing encounters, so one six-map batch can add meaningful roster play with only one compact map-object atlas.
+
+Implementation boundary:
+- add a first-class `hero_army_meets_requirements` objective with an exact controlled hero id, exact unit/minimum-count requirements, dependency reporting, content validation, live per-unit progress labels, and save-version-9 continuity;
+- author six original skirmish-only Grand-Muster assemblies, one per faction, each with a two-stack opening company, Horizon citadel, five-unit target formation, three guarded fronts, faction recruitment relief, escalating rival pressure, and a Day-18 deadline;
+- add six original one-time rally standards with exact transparent map art, faction-specific field recruits and resources, repeat-safe claim flags, and non-color-dependent silhouettes;
+- prove production town recruitment and seven-slot split/merge/reorder authority contribute to the exact hero company while preserving existing unit stats, growth, combat formulas, campaign state, strategic AI, Windows/Linux paths, generated-source exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- every scenario remains unwinnable with a missing unit, a below-threshold stack, or the complete roster on the wrong controlled hero, and wins only when its exact lead carries the full five-unit company after the three authored fronts are resolved;
+- all six rally standards grant their exact faction recruits once, render exact original art, reject repeat claims without mutation, and preserve roster, slot, claim, and objective state through save version 9;
+- one consolidated six-case scenario/recruitment/stack-management/battle/art/save smoke runs only after the complete batch, followed once by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, unit definition, town definition, building, spell, artifact, campaign chapter, combat formula, strategic-AI algorithm, RMG/native behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes scenario, army composition, rally object, name, art, text, heraldry, or protected visual expression.
 
 ## Six Great-Work Charter Races
 
