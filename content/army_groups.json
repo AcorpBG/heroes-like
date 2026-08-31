@@ -3816,6 +3816,90 @@
       "content_status": "marchland_seat_player_company_live",
       "content_batch_id": "content-six-marchland-seats-10184",
       "local_retinue_batch_id": "content-six-marchland-local-retinues-10184"
+    },
+    {
+      "id": "army_amberweirtrial_retinue_company",
+      "name": "Amberweir Granary Heirloom Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 14},
+        {"unit_id": "unit_embercourt_bargebow_crews", "count": 8},
+        {"unit_id": "unit_embercourt_ash_oath_bailiffs", "count": 4},
+        {"unit_id": "unit_embercourt_sluicefire_lindworms", "count": 1},
+        {"unit_id": "unit_embercourt_amberweir_lockpike_wardens", "count": 2}
+      ],
+      "content_status": "marchland_retinue_heirloom_company_live",
+      "content_batch_id": "content-six-marchland-retinue-heirloom-trials-10184"
+    },
+    {
+      "id": "army_moonbitetrial_retinue_company",
+      "name": "Moonbite Reedshrine Heirloom Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 14},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 8},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 4},
+        {"unit_id": "unit_mireclaw_ferrychain_lashers", "count": 2},
+        {"unit_id": "unit_mireclaw_moonbite_votive_drummers", "count": 2}
+      ],
+      "content_status": "marchland_retinue_heirloom_company_live",
+      "content_batch_id": "content-six-marchland-retinue-heirloom-trials-10184"
+    },
+    {
+      "id": "army_splitprismtrial_retinue_company",
+      "name": "Splitprism Duelcourt Heirloom Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 14},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 8},
+        {"unit_id": "unit_sunvault_mirror_duelists", "count": 4},
+        {"unit_id": "unit_sunvault_solar_array_striders", "count": 2},
+        {"unit_id": "unit_sunvault_splitprism_parallax_fencers", "count": 2}
+      ],
+      "content_status": "marchland_retinue_heirloom_company_live",
+      "content_batch_id": "content-six-marchland-retinue-heirloom-trials-10184"
+    },
+    {
+      "id": "army_woundroottrial_retinue_company",
+      "name": "Woundroot Hearthgrove Heirloom Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 22},
+        {"unit_id": "unit_thornwake_bramblekite_needlers", "count": 12},
+        {"unit_id": "unit_thornwake_seedshield_wardens", "count": 7},
+        {"unit_id": "unit_thornwake_sporeglass_menders", "count": 4},
+        {"unit_id": "unit_thornwake_woundroot_hearthseed_slingers", "count": 2}
+      ],
+      "content_status": "marchland_retinue_heirloom_company_live",
+      "content_batch_id": "content-six-marchland-retinue-heirloom-trials-10184"
+    },
+    {
+      "id": "army_whitegaugetrial_retinue_company",
+      "name": "Whitegauge Calibration Yard Heirloom Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 15},
+        {"unit_id": "unit_brasshollow_quenchspool_slingers", "count": 8},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 4},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 2},
+        {"unit_id": "unit_brasshollow_whitegauge_datum_lancers", "count": 2}
+      ],
+      "content_status": "marchland_retinue_heirloom_company_live",
+      "content_batch_id": "content-six-marchland-retinue-heirloom-trials-10184"
+    },
+    {
+      "id": "army_dreamwaketrial_retinue_company",
+      "name": "Dreamwake Oracle Harbor Heirloom Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 14},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 8},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 4},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 2},
+        {"unit_id": "unit_veilmourn_dreamwake_tideglass_oracles", "count": 2}
+      ],
+      "content_status": "marchland_retinue_heirloom_company_live",
+      "content_batch_id": "content-six-marchland-retinue-heirloom-trials-10184"
     }
   ]
 }

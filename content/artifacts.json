@@ -886,6 +886,77 @@
       "ai_valuation_behavior": false,
       "rare_resource_activation": true
       }
+    },
+    {
+      "id": "artifact_source_marchland_retinue_heirlooms",
+      "schema": "artifact_source_reward_v1",
+      "source_tag": "pickup",
+      "reward_context": "authored_scenario_placement",
+      "eligible_object_families": [
+        "pickup"
+      ],
+      "eligible_site_families": [
+        "one_shot_pickup"
+      ],
+      "required_object_tags": [
+        "small_reward"
+      ],
+      "required_reward_categories": [],
+      "guard_tiers": [
+        "unguarded",
+        "light"
+      ],
+      "rarity_bands": [
+        "rare"
+      ],
+      "artifact_ids": [
+        "artifact_amberweir_lockpike_tallychain",
+        "artifact_moonbite_votive_drumkey",
+        "artifact_splitprism_parallax_duelglass",
+        "artifact_woundroot_hearthseed_slingknot",
+        "artifact_whitegauge_datum_spur",
+        "artifact_dreamwake_tideglass_sounding"
+      ],
+      "artifact_ids_by_faction": {
+        "faction_embercourt": [
+          "artifact_amberweir_lockpike_tallychain"
+        ],
+        "faction_mireclaw": [
+          "artifact_moonbite_votive_drumkey"
+        ],
+        "faction_sunvault": [
+          "artifact_splitprism_parallax_duelglass"
+        ],
+        "faction_thornwake": [
+          "artifact_woundroot_hearthseed_slingknot"
+        ],
+        "faction_brasshollow": [
+          "artifact_whitegauge_datum_spur"
+        ],
+        "faction_veilmourn": [
+          "artifact_dreamwake_tideglass_sounding"
+        ]
+      },
+      "faction_constraints": [
+        "faction_embercourt",
+        "faction_mireclaw",
+        "faction_sunvault",
+        "faction_thornwake",
+        "faction_brasshollow",
+        "faction_veilmourn"
+      ],
+      "set_constraints": {
+        "allowed_set_ids": [],
+        "piece_limit_per_table": 0
+      },
+      "runtime_policy": {
+        "metadata_only": true,
+        "live_drop_execution": false,
+        "save_version_bump": false,
+        "equipment_runtime_effects": false,
+        "ai_valuation_behavior": false,
+        "rare_resource_activation": false
+      }
     }
   ],
   "items": [
@@ -4005,6 +4076,552 @@
       "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
       "description": "A pale whalebone bell hangs inside five saltglass chimes. Its lowest note returns from safe passages no eye can yet see.",
       "bonuses": {"scouting_radius": 2, "overworld_movement": 1}
+    },
+    {
+      "id": "artifact_amberweir_lockpike_tallychain",
+      "name": "Amberweir Lockpike Tallychain",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "rare",
+      "family": "marchland_retinue_heirlooms",
+      "roles": [
+        "defense",
+        "movement"
+      ],
+      "accord_affinity": "beacon",
+      "faction_affinity": [
+        "faction_embercourt"
+      ],
+      "source_tags": [
+        "pickup"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_defense",
+          "public_summary": "Hardens the equipped commander's formation."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "overworld_movement",
+          "public_summary": "Keeps the equipped commander's road column moving."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "A lockpike tallychain that braces the field line and keeps Amberweir companies moving between measured sluice marks.",
+        "icon_id": "artifact_icon_amberweir_lockpike_tallychain",
+        "icon_path": "res://art/artifacts/runtime/amberweir_lockpike_tallychain.png",
+        "effect_tags": [
+          "battle_defense",
+          "overworld_movement",
+          "embercourt"
+        ],
+        "comparison_priority": [
+          "battle_defense",
+          "overworld_movement",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "frontline_survival",
+          "route_tempo"
+        ],
+        "preferred_hero_roles": [
+          "defender",
+          "scout"
+        ],
+        "preferred_faction_ids": [
+          "faction_embercourt"
+        ],
+        "combo_tags": [
+          "beacon",
+          "amberweirtrial",
+          "retinue"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A rain-dark tally chain closes around a forked lockpike head, a sluice key, and three amber counting seals worn smooth by working river hands.",
+      "bonuses": {
+        "battle_defense": 1,
+        "overworld_movement": 1
+      },
+      "content_status": "marchland_retinue_heirloom_live",
+      "content_batch_id": "content-six-marchland-retinue-heirloom-trials-10184"
+    },
+    {
+      "id": "artifact_moonbite_votive_drumkey",
+      "name": "Moonbite Votive Drum-Key",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "rare",
+      "family": "marchland_retinue_heirlooms",
+      "roles": [
+        "combat",
+        "morale"
+      ],
+      "accord_affinity": "mire",
+      "faction_affinity": [
+        "faction_mireclaw"
+      ],
+      "source_tags": [
+        "pickup"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_attack",
+          "public_summary": "Raises the equipped commander's battle pressure."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_initiative",
+          "public_summary": "Advances the equipped commander's opening beat."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "A crescent drum-key that sharpens Moonbite's opening cadence and drives the answering strike.",
+        "icon_id": "artifact_icon_moonbite_votive_drumkey",
+        "icon_path": "res://art/artifacts/runtime/moonbite_votive_drumkey.png",
+        "effect_tags": [
+          "battle_attack",
+          "battle_initiative",
+          "mireclaw"
+        ],
+        "comparison_priority": [
+          "battle_attack",
+          "battle_initiative",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "battle_pressure",
+          "initiative_tempo"
+        ],
+        "preferred_hero_roles": [
+          "might",
+          "raider"
+        ],
+        "preferred_faction_ids": [
+          "faction_mireclaw"
+        ],
+        "combo_tags": [
+          "mire",
+          "moonbitetrial",
+          "retinue"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "An off-center antler drum hangs across a long bone tuning key, bound with reed tassels, peatwax beads, and one hooked field mallet.",
+      "bonuses": {
+        "battle_attack": 1,
+        "battle_initiative": 1
+      },
+      "content_status": "marchland_retinue_heirloom_live",
+      "content_batch_id": "content-six-marchland-retinue-heirloom-trials-10184"
+    },
+    {
+      "id": "artifact_splitprism_parallax_duelglass",
+      "name": "Splitprism Parallax Duelglass",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "rare",
+      "family": "marchland_retinue_heirlooms",
+      "roles": [
+        "combat",
+        "resistance"
+      ],
+      "accord_affinity": "lens",
+      "faction_affinity": [
+        "faction_sunvault"
+      ],
+      "source_tags": [
+        "pickup"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_initiative",
+          "public_summary": "Advances the equipped commander's opening beat."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_spell_resistance_pct",
+          "public_summary": "Divides hostile spell pressure across the heirloom's warding surface."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "An offset duelglass that fixes Splitprism's first command angle and divides hostile magic across two measured facets.",
+        "icon_id": "artifact_icon_splitprism_parallax_duelglass",
+        "icon_path": "res://art/artifacts/runtime/splitprism_parallax_duelglass.png",
+        "effect_tags": [
+          "battle_initiative",
+          "battle_spell_resistance_pct",
+          "sunvault"
+        ],
+        "comparison_priority": [
+          "battle_initiative",
+          "battle_spell_resistance_pct",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "initiative_tempo",
+          "spell_resistance"
+        ],
+        "preferred_hero_roles": [
+          "might",
+          "raider"
+        ],
+        "preferred_faction_ids": [
+          "faction_sunvault"
+        ],
+        "combo_tags": [
+          "lens",
+          "splitprismtrial",
+          "retinue"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "Two overlapping prism panes turn on a broken brass oval while a single calibration needle passes through both impossible sightlines.",
+      "bonuses": {
+        "battle_initiative": 1,
+        "battle_spell_resistance_pct": 8
+      },
+      "content_status": "marchland_retinue_heirloom_live",
+      "content_batch_id": "content-six-marchland-retinue-heirloom-trials-10184"
+    },
+    {
+      "id": "artifact_woundroot_hearthseed_slingknot",
+      "name": "Woundroot Hearthseed Slingknot",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "rare",
+      "family": "marchland_retinue_heirlooms",
+      "roles": [
+        "defense",
+        "scouting"
+      ],
+      "accord_affinity": "root",
+      "faction_affinity": [
+        "faction_thornwake"
+      ],
+      "source_tags": [
+        "pickup"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_defense",
+          "public_summary": "Hardens the equipped commander's formation."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "scouting_radius",
+          "public_summary": "Reveals one additional ring of nearby terrain."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "A living slingknot that shelters Woundroot's line and reads the root roads ahead.",
+        "icon_id": "artifact_icon_woundroot_hearthseed_slingknot",
+        "icon_path": "res://art/artifacts/runtime/woundroot_hearthseed_slingknot.png",
+        "effect_tags": [
+          "battle_defense",
+          "scouting_radius",
+          "thornwake"
+        ],
+        "comparison_priority": [
+          "battle_defense",
+          "scouting_radius",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "frontline_survival",
+          "fog_route_scouting"
+        ],
+        "preferred_hero_roles": [
+          "defender",
+          "scout"
+        ],
+        "preferred_faction_ids": [
+          "faction_thornwake"
+        ],
+        "combo_tags": [
+          "root",
+          "woundroottrial",
+          "retinue"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A triangular cradle of braided living root holds three hearth-warm seed stones, one long sling tail, and a leaf counterweight split by amber growth seams.",
+      "bonuses": {
+        "battle_defense": 1,
+        "scouting_radius": 1
+      },
+      "content_status": "marchland_retinue_heirloom_live",
+      "content_batch_id": "content-six-marchland-retinue-heirloom-trials-10184"
+    },
+    {
+      "id": "artifact_whitegauge_datum_spur",
+      "name": "Whitegauge Datum Spur",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "rare",
+      "family": "marchland_retinue_heirlooms",
+      "roles": [
+        "combat",
+        "movement"
+      ],
+      "accord_affinity": "furnace",
+      "faction_affinity": [
+        "faction_brasshollow"
+      ],
+      "source_tags": [
+        "pickup"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_attack",
+          "public_summary": "Raises the equipped commander's battle pressure."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "overworld_movement",
+          "public_summary": "Keeps the equipped commander's road column moving."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "A calibrated datum spur that converts Whitegauge's measured stride into field pressure.",
+        "icon_id": "artifact_icon_whitegauge_datum_spur",
+        "icon_path": "res://art/artifacts/runtime/whitegauge_datum_spur.png",
+        "effect_tags": [
+          "battle_attack",
+          "overworld_movement",
+          "brasshollow"
+        ],
+        "comparison_priority": [
+          "battle_attack",
+          "overworld_movement",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "battle_pressure",
+          "route_tempo"
+        ],
+        "preferred_hero_roles": [
+          "might",
+          "raider"
+        ],
+        "preferred_faction_ids": [
+          "faction_brasshollow"
+        ],
+        "combo_tags": [
+          "furnace",
+          "whitegaugetrial",
+          "retinue"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A white-ceramic spur carries a square notched rowel, a red pressure dial, two unequal measuring pins, and a black leather calibration strap.",
+      "bonuses": {
+        "battle_attack": 1,
+        "overworld_movement": 1
+      },
+      "content_status": "marchland_retinue_heirloom_live",
+      "content_batch_id": "content-six-marchland-retinue-heirloom-trials-10184"
+    },
+    {
+      "id": "artifact_dreamwake_tideglass_sounding",
+      "name": "Dreamwake Tideglass Sounding",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "rare",
+      "family": "marchland_retinue_heirlooms",
+      "roles": [
+        "magic",
+        "scouting"
+      ],
+      "accord_affinity": "veil",
+      "faction_affinity": [
+        "faction_veilmourn"
+      ],
+      "source_tags": [
+        "pickup"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_initiative",
+          "public_summary": "Advances the equipped commander's opening beat."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "scouting_radius",
+          "public_summary": "Reveals one additional ring of nearby terrain."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "A tideglass sounding that reads hidden routes and fixes Dreamwake's first safe command beat.",
+        "icon_id": "artifact_icon_dreamwake_tideglass_sounding",
+        "icon_path": "res://art/artifacts/runtime/dreamwake_tideglass_sounding.png",
+        "effect_tags": [
+          "battle_initiative",
+          "scouting_radius",
+          "veilmourn"
+        ],
+        "comparison_priority": [
+          "battle_initiative",
+          "scouting_radius",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "initiative_tempo",
+          "fog_route_scouting"
+        ],
+        "preferred_hero_roles": [
+          "might",
+          "raider"
+        ],
+        "preferred_faction_ids": [
+          "faction_veilmourn"
+        ],
+        "combo_tags": [
+          "veil",
+          "dreamwaketrial",
+          "retinue"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A crescent whalebone frame holds one pale tideglass drop beside a cracked bell, three depth cords, a wave fork, and a narrow sounding hook.",
+      "bonuses": {
+        "battle_initiative": 1,
+        "scouting_radius": 1
+      },
+      "content_status": "marchland_retinue_heirloom_live",
+      "content_batch_id": "content-six-marchland-retinue-heirloom-trials-10184"
     }
   ]
 }

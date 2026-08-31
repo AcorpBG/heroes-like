@@ -1,0 +1,114 @@
+{
+  "schema_id": "marchland_retinue_heirloom_art_v1",
+  "content_batch_id": "content-six-marchland-retinue-heirloom-trials-10184",
+  "generator_mode": "built_in_imagegen",
+  "prompt_set_summary": "Six original transparent Marchland retinue heirlooms with silhouette-first inventory and field identities; no text, logos, characters, scenery, copied franchise art, or source-master package inclusion.",
+  "runtime_icon_size": [
+    128,
+    128
+  ],
+  "field_atlas_path": "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png",
+  "field_atlas_size": [
+    288,
+    48
+  ],
+  "items": [
+    {
+      "artifact_id": "artifact_amberweir_lockpike_tallychain",
+      "source_path": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/amberweir_lockpike_tallychain_source.png",
+      "source_sha256": "da68770e6c00025db4872a8c52e21cb2e9938c68d3b71a259756139e9de87d2e",
+      "runtime_path": "res://art/artifacts/runtime/amberweir_lockpike_tallychain.png",
+      "runtime_sha256": "528a963fde310bddfd11778f17717e5652f87cde2a62d92abe811eae4dc66885",
+      "field_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7af734eb-fbc1-41d9-863d-9a55645548e3.png",
+      "prompt": "Use case: stylized-concept; Asset type: production fantasy strategy-game artifact inventory icon and overworld pickup source; Primary request: Create the original Amberweir Lockpike Tallychain; Subject: One heavy brass tally chain forming an open angular loop around a short blackened lockpike head, with a small sluice-gate key, three amber ceramic counting seals, and a rain-dark iron clasp. Style: polished painterly 2D fantasy game object art in original Aurelion Reach visual language; Composition: one centered high-three-quarter object with generous transparent padding and a silhouette readable at 48x48; Constraints: genuinely transparent background, preserved alpha, object only, no floor, scenery, characters, hands, border, frame, text, letters, numbers, logo, watermark, cast shadow, or copied franchise design.",
+      "accessible_description": "A broad chain loop is crossed by one vertical spear point and one offset long key, with three round seals hanging below."
+    },
+    {
+      "artifact_id": "artifact_moonbite_votive_drumkey",
+      "source_path": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/moonbite_votive_drumkey_source.png",
+      "source_sha256": "7a6e4aed99982d70ac4d49f8c8d6ff979a35d4a457d650a26c61f4029fbc4cfc",
+      "runtime_path": "res://art/artifacts/runtime/moonbite_votive_drumkey.png",
+      "runtime_sha256": "42bbcbbfe11073736ba26e7cf79e0388669ad6301137278c9503c90918adbce7",
+      "field_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-2a862e52-17f2-4b91-8d3c-d349d040db2c.png",
+      "prompt": "Use case: stylized-concept; Asset type: production fantasy strategy-game artifact inventory icon and overworld pickup source; Primary request: Create the original Moonbite Votive Drum-Key; Subject: One small crescent-shaped wet-hide hand drum with an off-center antler rim, a long bone tuning key crossing behind it, three uneven reed tassels, peatwax beads, and a single hooked drumstick. Style: polished painterly 2D fantasy game object art in original Aurelion Reach visual language; Composition: one centered high-three-quarter object with generous transparent padding and a silhouette readable at 48x48; Constraints: genuinely transparent background, preserved alpha, object only, no floor, scenery, characters, hands, border, frame, text, letters, numbers, logo, watermark, cast shadow, or copied franchise design.",
+      "accessible_description": "A broad crescent drum is crossed by one long diagonal bone key and ends in three unequal hanging tassels."
+    },
+    {
+      "artifact_id": "artifact_splitprism_parallax_duelglass",
+      "source_path": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/splitprism_parallax_duelglass_source.png",
+      "source_sha256": "9891b330c04b7cb85f3dc0899688a8972c2d6fcde17caa4b8ffba463a30084d1",
+      "runtime_path": "res://art/artifacts/runtime/splitprism_parallax_duelglass.png",
+      "runtime_sha256": "d18fb6d6a0e911a5f7c04359ada0fd657a9d8c38b95add4a6ad57a268533c5d6",
+      "field_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ed8dd3aa-079d-4d87-93a3-a03011ede197.png",
+      "prompt": "Use case: stylized-concept; Asset type: production fantasy strategy-game artifact inventory icon and overworld pickup source; Primary request: Create the original Splitprism Parallax Duelglass; Subject: One asymmetrical hand-sized duel lens built from two offset faceted glass panes in a broken oval brass frame, with a narrow ivory grip, a hinged mirror vane, and one fine calibration needle passing through both panes. Style: polished painterly 2D fantasy game object art in original Aurelion Reach visual language; Composition: one centered high-three-quarter object with generous transparent padding and a silhouette readable at 48x48; Constraints: genuinely transparent background, preserved alpha, object only, no floor, scenery, characters, hands, border, frame, text, letters, numbers, logo, watermark, cast shadow, or copied franchise design.",
+      "accessible_description": "Two overlapping tilted diamond panes rise above a short handle, with one narrow side vane and one crossing needle."
+    },
+    {
+      "artifact_id": "artifact_woundroot_hearthseed_slingknot",
+      "source_path": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/woundroot_hearthseed_slingknot_source.png",
+      "source_sha256": "a8bfd7ea844d64db275ae8c5b898af8d38619f17202a4af4e71e1c76c2cb213a",
+      "runtime_path": "res://art/artifacts/runtime/woundroot_hearthseed_slingknot.png",
+      "runtime_sha256": "38ff0a4ed5d16c5169e4087062647cded1a59e9a03784056b7b1785402b62731",
+      "field_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-42acf4f6-c1c1-4cf1-9052-3b50c39bd744.png",
+      "prompt": "Use case: stylized-concept; Asset type: production fantasy strategy-game artifact inventory icon and overworld pickup source; Primary request: Create the original Woundroot Hearthseed Slingknot; Subject: One thick braided living-root knot forming a low triangular sling cradle, holding three warm seed-stones, with one long bark-fiber sling tail, a small leaf-shaped counterweight, and tiny sprouting heartgrain seams. Style: polished painterly 2D fantasy game object art in original Aurelion Reach visual language; Composition: one centered high-three-quarter object with generous transparent padding and a silhouette readable at 48x48; Constraints: genuinely transparent background, preserved alpha, object only, no floor, scenery, characters, hands, border, frame, text, letters, numbers, logo, watermark, cast shadow, or copied franchise design.",
+      "accessible_description": "A triangular braided cradle holds three round stones and trails into one long curved cord with a leaf-shaped weight."
+    },
+    {
+      "artifact_id": "artifact_whitegauge_datum_spur",
+      "source_path": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/whitegauge_datum_spur_source.png",
+      "source_sha256": "7d58bdb462cd79df58e1a1c123fa75b84163bad0b7f62fe2bbb2224510963b7e",
+      "runtime_path": "res://art/artifacts/runtime/whitegauge_datum_spur.png",
+      "runtime_sha256": "230e975b2ba6bb1b402f554fb610e8de5965effb59c8cff192b4f97ab3f41ed7",
+      "field_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e04bc864-4710-4ca1-88d3-387259bbac44.png",
+      "prompt": "Use case: stylized-concept; Asset type: production fantasy strategy-game artifact inventory icon and overworld pickup source; Primary request: Create the original Whitegauge Datum Spur; Subject: One oversized white-ceramic riding spur shaped around a broad brass calibration arc, with a square notched rowel, a small red pressure dial, two offset measuring pins, and a black leather buckle strap. Style: polished painterly 2D fantasy game object art in original Aurelion Reach visual language; Composition: one centered high-three-quarter object with generous transparent padding and a silhouette readable at 48x48; Constraints: genuinely transparent background, preserved alpha, object only, no floor, scenery, characters, hands, border, frame, text, letters, numbers, logo, watermark, cast shadow, or copied franchise design.",
+      "accessible_description": "A wide U-shaped spur carries one square wheel, one round gauge, two unequal pointed pins, and a broad buckle strap."
+    },
+    {
+      "artifact_id": "artifact_dreamwake_tideglass_sounding",
+      "source_path": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/dreamwake_tideglass_sounding_source.png",
+      "source_sha256": "e575919e142c1b46cfc49d592fb5b15ce30d49a307855078de610d02aececd4c",
+      "runtime_path": "res://art/artifacts/runtime/dreamwake_tideglass_sounding.png",
+      "runtime_sha256": "5305bd51b857c4ab40a5317abcf322cce0f609d966c828bc8e21c81156e68b7c",
+      "field_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-186536c1-6c92-42a4-80e1-5a9cb8d4d705.png",
+      "prompt": "Use case: stylized-concept; Asset type: production fantasy strategy-game artifact inventory icon and overworld pickup source; Primary request: Create the original Dreamwake Tideglass Sounding; Subject: One crescent whalebone sounding frame holding a suspended teardrop of pale tideglass, with an offset cracked hand bell, three knotted depth cords, a small wave-shaped tuning fork, and one long hook below. Style: polished painterly 2D fantasy game object art in original Aurelion Reach visual language; Composition: one centered high-three-quarter object with generous transparent padding and a silhouette readable at 48x48; Constraints: genuinely transparent background, preserved alpha, object only, no floor, scenery, characters, hands, border, frame, text, letters, numbers, logo, watermark, cast shadow, or copied franchise design.",
+      "accessible_description": "A tall crescent frame holds one large hanging droplet, one offset bell, a forked side cord, and a narrow lower hook."
+    }
+  ],
+  "field_atlas_sha256": "de25f096bbb5965996184a9bdd4787039cb3db5037904751d7ca2c292571ef6b"
+}
