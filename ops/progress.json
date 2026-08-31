@@ -16011,14 +16011,14 @@
       }
     }
   ],
-  "currentNotes": "Completed six original named-rival skirmish challenges with twelve underused roster heroes, twelve five-stack companies, six fixed rival encounters, eighteen guarded banner positions, six town captures, one generated six-banner atlas, one consolidated six-case gameplay/art/save smoke, repository validation, and matching Linux/Windows package boots at 231334232 bytes.",
+  "currentNotes": "Completed The Six Sealed Companies as a six-chapter cross-faction campaign with exact witness unlocks, bounded common-resource handoff, isolated commander state, full narrative, seven original art identities, one consolidated gameplay/art/save smoke, repository validation, and matching Linux/Windows package boots at 231646428 bytes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-named-rival-banner-challenges-10184",
-  "currentSliceId": "content-six-veteran-company-musters-10184",
-  "currentSliceNotes": "Completed six original guarded veteran-muster operations with six two-state landmarks and live immediate/weekly recruitment for all 18 previously start-only non-legacy faction units. One consolidated six-case smoke passed 18 production battles, 6 blocked claims, 6 live claims, 18 unit identities, 6 weekly deliveries, 6 victories, and 6 exact save-v9 round trips; repository validation and sequential Linux/Windows package boots passed at 231559132 bytes.",
+  "currentSlice": "content-six-sealed-companies-campaign-10184",
+  "currentSliceId": "content-six-sealed-companies-campaign-10184",
+  "currentSliceNotes": "Completed all six chapters with 18 production battles, 18 target recruits, exact witness unlocks, capped common-resource carryover, isolated personal state, full narrative, one emblem, six chapter seals, six save-v9 round trips, and matching Linux/Windows package boots at 231646428 bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six veteran company musters 10184",
-  "currentSliceUpdatedAt": "2026-08-31T17:11:11Z",
+  "currentSliceTitle": "content six sealed companies campaign 10184",
+  "currentSliceUpdatedAt": "2026-08-31T19:09:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107235,6 +107235,16 @@
       "startedAt": "2026-08-31T18:28:20Z",
       "notes": "Completed six original guarded veteran-muster operations with six two-state landmarks and live immediate/weekly recruitment for all 18 previously start-only non-legacy faction units. One consolidated six-case smoke passed 18 production battles, 6 blocked claims, 6 live claims, 18 unit identities, 6 weekly deliveries, 6 victories, and 6 exact save-v9 round trips; repository validation and sequential Linux/Windows package boots passed at 231559132 bytes.",
       "completedAt": "2026-08-31T19:02:23Z"
+    },
+    {
+      "id": "content-six-sealed-companies-campaign-10184",
+      "title": "content six sealed companies campaign 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T19:29:33Z",
+      "startedAt": "2026-08-31T19:09:08Z",
+      "notes": "Completed one original six-chapter campaign across the veteran-muster operations with exact witness unlocks, capped common-resource handoff, isolated personal state, complete narrative, seven original art identities, one consolidated smoke, and matching Linux/Windows package boots at 231646428 bytes.",
+      "completedAt": "2026-08-31T19:29:33Z"
     }
   ],
   "project": "heroes-like",
@@ -107244,8 +107254,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The Unbound Wild concord slice is complete and has no blocker. Broader production content, whole-game validation, signing, publication, and release readiness remain open; the next coherent content slice has not yet been selected.",
-  "remainingWork": "Select the next coherent production-content gap, register it before implementation, and preserve the single consolidated-smoke cadence for each substantial batch.",
+  "remainingGap": "The Six Sealed Companies campaign is complete and has no blocker. Broader production content, whole-game validation, signing, publication, and release readiness remain open; the next coherent content slice has not yet been selected.",
+  "remainingWork": "Audit the expanded live catalog, select and register the next substantial production-content and original-art batch, then preserve the single consolidated-smoke cadence.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -107779,7 +107789,7 @@
   ],
   "summary": "Completed the coherent Seven-School Signature Battle VFX content, accessibility, live-presentation, and package-efficiency batch with one consolidated smoke.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T19:02:23Z",
+  "updatedAt": "2026-08-31T19:29:33Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

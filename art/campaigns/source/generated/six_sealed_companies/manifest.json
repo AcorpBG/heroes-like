@@ -1,0 +1,77 @@
+{
+  "schema_id": "six_sealed_companies_campaign_art_v1",
+  "content_batch_id": "content-six-sealed-companies-campaign-10184",
+  "generator_mode": "built_in_image_gen",
+  "generated_at": "2026-08-31",
+  "campaign_id": "campaign_six_sealed_companies",
+  "identity_sheet": "res://art/campaigns/source/generated/six_sealed_companies/six_sealed_companies_identity_sheet.png",
+  "identity_sheet_sha256": "ca31cffa0a92c2054881e4aaf84150ec3b17ecb06684ea85dc913d9dbed8c2c8",
+  "final_prompt": "Original transparent identity sheet for The Six Sealed Companies: an open iron-bound muster ledger encircled by six materially distinct seals, plus isolated ash-charter, fen-chain, daybreak-prism, five-bough, three-gauge, and fog-keel chapter motifs; strong non-color silhouettes, no text, logos, franchise symbols, or scenery.",
+  "runtime_pipeline": "The transparent 1536x1024 source sheet is cropped into one 512px emblem master and six 384px chapter masters, then Lanczos-downscaled to one 128px emblem and six 64px seals. Generated source masters remain outside release packages.",
+  "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c8d7979e-fde1-4f2b-8300-8d2c2ec171e7.png",
+  "assets": [
+    {
+      "id": "campaign_emblem_six_sealed_companies",
+      "role": "campaign_emblem",
+      "source_path": "res://art/campaigns/source/generated/emblems/six_sealed_companies_source.png",
+      "runtime_path": "res://art/campaigns/runtime/emblems/six_sealed_companies.png",
+      "source_sha256": "54ce4cfd6350aede0a3158ce51d6d063a4de2ef527863136b6b0d4a22cf15022",
+      "runtime_sha256": "105f68e5af1511d0e0e00ef51a99846f21c3f96a681bb1bcac23aa14fed8607f",
+      "non_color_identity": "An open iron-bound muster ledger carries six materially distinct frontier seals around a deliberately empty central clasp."
+    },
+    {
+      "id": "campaign_chapter_seal_pikeward_ashcharter_veteran_muster",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/ashcharter_seal_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/ashcharter_seal.png",
+      "source_sha256": "b0f7bfd4643c27fe007c3bccc4e19b09ba7af7bcab482f35c06dedfce649fcdb",
+      "runtime_sha256": "8ad2e4b3bd749a076581726d76c241f476448663c692062f5ccf946e8960746a",
+      "non_color_identity": "A forked ember charter pennant rises above a compact iron rollhouse brazier."
+    },
+    {
+      "id": "campaign_chapter_seal_chainboom_gorefen_veteran_muster",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/gorefen_ring_seal_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/gorefen_ring_seal.png",
+      "source_sha256": "aa892e66a8c4cec924183ab03d09e1167bf8856ee1d7c8f3d36751be4c705a9c",
+      "runtime_sha256": "627b3fa673fbbf9cfc450d5d14626aabb61bf72b79cebf46aca357b2cdcdcf1e",
+      "non_color_identity": "A taut fen chain ring encloses one hide drum and a small marsh lantern."
+    },
+    {
+      "id": "campaign_chapter_seal_glassmarshal_daybreak_veteran_muster",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/daybreak_prism_seal_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/daybreak_prism_seal.png",
+      "source_sha256": "e59d23dd8ed025a7c7691b6fa02f45b5374769e06ea9b772413e189ecffa9852",
+      "runtime_sha256": "225997f8943d3ea4b88cf6b9509cfdef4278f91b6e97bca792be2ae98c9312f9",
+      "non_color_identity": "A split ivory drill prism stands between asymmetric mirror fins above a small sun dial."
+    },
+    {
+      "id": "campaign_chapter_seal_bramblehound_worldroot_veteran_muster",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/five_bough_seal_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/five_bough_seal.png",
+      "source_sha256": "a28b82c6275909f30b46127a8cfcb0c3535569829561539a25b618c10ac79eb9",
+      "runtime_sha256": "d998f31ff3a904e2cba8b2093a36ed254860987cc2bcbff639b2dd52d9e474c3",
+      "non_color_identity": "Five living boughs curl around a seed shield and a glowing root heart."
+    },
+    {
+      "id": "campaign_chapter_seal_pitmarshal_foundry_veteran_muster",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/three_gauge_seal_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/three_gauge_seal.png",
+      "source_sha256": "fea1be2314710fe7404e37de9c9a5e62e03d93d55a196561b7ba755c02310a1c",
+      "runtime_sha256": "77e33c3bb35ce50b38347b728b7c861ea49df8d91ba7ce5743a634c9c8027ffe",
+      "non_color_identity": "Three unequal brass pressure gauges rise above a black foundry bell hammer."
+    },
+    {
+      "id": "campaign_chapter_seal_keelwarden_fogkeel_veteran_muster",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/fogkeel_bell_seal_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/fogkeel_bell_seal.png",
+      "source_sha256": "3c406a0dd224492bcce088a15ab93089b4c5d3e46345f9c8245122f54c48af90",
+      "runtime_sha256": "335a761e11d0565bdbf4d200e490f90965bb0a36cca418e73ea70f861c14bde7",
+      "non_color_identity": "A pale sounding bell hangs above a hooked fog keel and torn white-blue sailcloth."
+    }
+  ]
+}

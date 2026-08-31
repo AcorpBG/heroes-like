@@ -52923,10 +52923,11 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
         "campaign_six_roads_relay": ("campaign_emblem_six_roads_relay", "six_roads_relay", "a3bcb46055bfe9f91bdef479309b0ea22972f9ed67669c59d262d8ceda888dbf", "fb0d672baf18774cc725ebb68b90912fc7ddb82fa62af7c24bc86bdebf213802"),
         "campaign_six_unbound_oaths": ("campaign_emblem_six_unbound_oaths", "six_unbound_oaths", "eaa836f4c0d9907b0cfd948646c76812fadb3770831084ed107fb62829d229e9", "66ba971a8d31ad43cd6267b4afb161f1df86e54a941b61ecf252a026b5ceda9c"),
         "campaign_charterless_compact": ("campaign_emblem_charterless_compact", "charterless_compact", "c38617a447980aa86c7a873722f68d90fc89667505018e254e79df6a4b94b89b", "fcb2455809aeb8cab6b9c0857b2502d3af4e050d139dc58fbc34d31aae29f990"),
+        "campaign_six_sealed_companies": ("campaign_emblem_six_sealed_companies", "six_sealed_companies", "54ce4cfd6350aede0a3158ce51d6d063a4de2ef527863136b6b0d4a22cf15022", "105f68e5af1511d0e0e00ef51a99846f21c3f96a681bb1bcac23aa14fed8607f"),
     }
     campaigns_value = load_json(campaign_path).get("items", [])
     campaigns = {str(row.get("id", "")): row for row in campaigns_value if isinstance(row, dict)} if isinstance(campaigns_value, list) else {}
-    ensure(set(campaigns) == set(expected), errors, "Campaign arc emblem coverage must retain exactly the twenty-two live campaign arcs")
+    ensure(set(campaigns) == set(expected), errors, "Campaign arc emblem coverage must retain exactly the twenty-three live campaign arcs")
     source_payloads: list[bytes] = []
     runtime_payloads: list[bytes] = []
     for campaign_id, (emblem_id, stem, source_sha, runtime_sha) in expected.items():
@@ -52941,7 +52942,7 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
         ensure(bool(str(campaign.get("emblem_alt_text", "")).strip()), errors, f"Campaign {campaign_id} must retain non-color emblem alt text")
         source_path = res_path_to_disk(source_res)
         runtime_path = res_path_to_disk(runtime_res)
-        expected_source_size = (425, 411) if campaign_id == "campaign_charterless_compact" else (1254, 1254)
+        expected_source_size = (512, 512) if campaign_id == "campaign_six_sealed_companies" else (425, 411) if campaign_id == "campaign_charterless_compact" else (1254, 1254)
         ensure(source_path.is_file() and png_size(source_path) == expected_source_size, errors, f"Campaign {campaign_id} must retain its exact generated source dimensions")
         ensure(runtime_path.is_file() and png_size(runtime_path) == (128, 128), errors, f"Campaign {campaign_id} must retain its compact 128x128 runtime emblem")
         ensure(Path(f"{source_path}.import").is_file(), errors, f"Campaign {campaign_id} generated source is missing Godot import metadata")
@@ -52956,8 +52957,8 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
             ensure(hashlib.sha256(payload).hexdigest() == runtime_sha, errors, f"Campaign {campaign_id} runtime-emblem bytes changed")
             ensure(len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id} runtime emblem must retain real alpha")
             runtime_payloads.append(payload)
-    ensure(len(source_payloads) == 22 and len(set(source_payloads)) == 22, errors, "All twenty-two campaign emblem sources must remain byte-distinct")
-    ensure(len(runtime_payloads) == 22 and len(set(runtime_payloads)) == 22, errors, "All twenty-two campaign runtime emblems must remain byte-distinct")
+    ensure(len(source_payloads) == 23 and len(set(source_payloads)) == 23, errors, "All twenty-three campaign emblem sources must remain byte-distinct")
+    ensure(len(runtime_payloads) == 23 and len(set(runtime_payloads)) == 23, errors, "All twenty-three campaign runtime emblems must remain byte-distinct")
 
     content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     rules_text = campaign_rules_path.read_text(encoding="utf-8")
@@ -53133,6 +53134,14 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
             "boltroot-briarwheel-border-oath-seizure": ("rooted_standard", "d7382a253ad3b1c0eceb4df113d65370788b11e4b0c185da4bc3f78e22bed8a2", "7e7c68856ffde3ad09e4afeede099647a4c603ea29dc9ec6045b60fa317e6587"),
             "powderwrit-tollreaver-rival-banner-challenge": ("tollmoon_final_charter", "9cf17688600d337d94b233bf5ceec75631a0a1eaeacdbdca30a56f26a3aa3e54", "fb2e4951b3bbd434f5c4d0b7d929c2c303f2c649ba4f0f3b961cc4033e438358"),
         },
+        "campaign_six_sealed_companies": {
+            "pikeward-ashcharter-veteran-muster": ("ashcharter_seal", "b0f7bfd4643c27fe007c3bccc4e19b09ba7af7bcab482f35c06dedfce649fcdb", "8ad2e4b3bd749a076581726d76c241f476448663c692062f5ccf946e8960746a"),
+            "chainboom-gorefen-veteran-muster": ("gorefen_ring_seal", "aa892e66a8c4cec924183ab03d09e1167bf8856ee1d7c8f3d36751be4c705a9c", "627b3fa673fbbf9cfc450d5d14626aabb61bf72b79cebf46aca357b2cdcdcf1e"),
+            "glassmarshal-daybreak-veteran-muster": ("daybreak_prism_seal", "e59d23dd8ed025a7c7691b6fa02f45b5374769e06ea9b772413e189ecffa9852", "225997f8943d3ea4b88cf6b9509cfdef4278f91b6e97bca792be2ae98c9312f9"),
+            "bramblehound-worldroot-veteran-muster": ("five_bough_seal", "a28b82c6275909f30b46127a8cfcb0c3535569829561539a25b618c10ac79eb9", "d998f31ff3a904e2cba8b2093a36ed254860987cc2bcbff639b2dd52d9e474c3"),
+            "pitmarshal-foundry-veteran-muster": ("three_gauge_seal", "fea1be2314710fe7404e37de9c9a5e62e03d93d55a196561b7ba755c02310a1c", "77e33c3bb35ce50b38347b728b7c861ea49df8d91ba7ce5743a634c9c8027ffe"),
+            "keelwarden-fogkeel-veteran-muster": ("fogkeel_bell_seal", "3c406a0dd224492bcce088a15ab93089b4c5d3e46345f9c8245122f54c48af90", "335a761e11d0565bdbf4d200e490f90965bb0a36cca418e73ea70f861c14bde7"),
+        },
     }
     campaigns_value = load_json(CONTENT_DIR / "campaigns.json").get("items", [])
     campaigns = {str(row.get("id", "")): row for row in campaigns_value if isinstance(row, dict)} if isinstance(campaigns_value, list) else {}
@@ -53167,7 +53176,7 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
             ensure(bool(str(scenario.get("seal_alt_text", "")).strip()), errors, f"Campaign {campaign_id}/{scenario_id} seal needs non-color alt text")
             source_path = res_path_to_disk(source_res)
             runtime_path = res_path_to_disk(runtime_res)
-            expected_source_size = (425, 411) if campaign_id == "campaign_charterless_compact" else (1254, 1254)
+            expected_source_size = (384, 384) if campaign_id == "campaign_six_sealed_companies" else (425, 411) if campaign_id == "campaign_charterless_compact" else (1254, 1254)
             ensure(source_path.is_file() and png_size(source_path) == expected_source_size, errors, f"Campaign {campaign_id}/{scenario_id} seal source must retain exact generated dimensions")
             ensure(runtime_path.is_file() and png_size(runtime_path) == (64, 64), errors, f"Campaign {campaign_id}/{scenario_id} seal runtime texture must remain 64x64")
             ensure(Path(f"{source_path}.import").is_file() and Path(f"{runtime_path}.import").is_file(), errors, f"Campaign {campaign_id}/{scenario_id} seal import metadata is missing")
@@ -53179,8 +53188,8 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
                 payload = runtime_path.read_bytes()
                 ensure(hashlib.sha256(payload).hexdigest() == runtime_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id}/{scenario_id} seal runtime bytes or alpha changed")
                 runtime_payloads.append(payload)
-    ensure(chapter_count == 96 and sealed_count == 96 and opening_count == 22 and later_count == 74, errors, "Campaign chapter-seal scope must remain exact for all 96 chapters")
-    ensure(len(source_payloads) == 96 and len(set(source_payloads)) == 96 and len(runtime_payloads) == 96 and len(set(runtime_payloads)) == 96, errors, "All campaign chapter seals must remain byte-distinct")
+    ensure(chapter_count == 102 and sealed_count == 102 and opening_count == 23 and later_count == 79, errors, "Campaign chapter-seal scope must remain exact for all 102 chapters")
+    ensure(len(source_payloads) == 102 and len(set(source_payloads)) == 102 and len(runtime_payloads) == 102 and len(set(runtime_payloads)) == 102, errors, "All campaign chapter seals must remain byte-distinct")
 
     content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     rules_text = (ROOT / "scripts/core/CampaignRules.gd").read_text(encoding="utf-8")
@@ -53192,13 +53201,13 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
         ensure(token in rules_text, errors, f"Campaign rules are missing chapter-seal authority: {token}")
     for token in ("_campaign_chapter_seal_texture_cache", "_chapter_list.set_item_icon(index, seal_texture)", "func _load_campaign_chapter_seal_texture", '"seal_path": _chapter_list.get_item_icon(index).resource_path', '"seal_alt_text": String(_campaign_chapter_entries[index].get("seal_alt_text", ""))'):
         ensure(token in menu_text, errors, f"Campaign menu is missing live chapter-seal presentation: {token}")
-    ensure("_campaign_chapter_seal_texture_cache.size() >= 96" in menu_text, errors, "Campaign chapter-seal cache must cover all 96 authored identities")
+    ensure("_campaign_chapter_seal_texture_cache.size() >= 102" in menu_text, errors, "Campaign chapter-seal cache must cover all 102 authored identities")
     chapter_scene_start = scene_text.find('[node name="ChapterList" type="ItemList"')
     chapter_scene_end = scene_text.find("\n[node ", chapter_scene_start + 1)
     ensure("fixed_icon_size = Vector2i(24, 24)" in scene_text[chapter_scene_start:chapter_scene_end], errors, "Campaign chapter list must retain compact 24x24 seals")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all 90 chapter seals")
+        ensure("REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all 102 chapter seals")
         ensure('bool(terrain_payload["campaign_chapter_seal_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when chapter seals are absent")
         ensure('"campaign_chapter_seal_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged chapter-seal coverage")
         for expected_scenarios in expected.values():
@@ -78825,7 +78834,7 @@ def validate_rootbound_canticles_campaign(errors: list[str]) -> None:
     chapters = campaign.get("scenarios", []) if isinstance(campaign.get("scenarios", []), list) else []
     ensure([str(row.get("scenario_id", "")) for row in chapters if isinstance(row, dict)] == list(expected), errors, "Rootbound Canticles must retain its exact six-hero order")
     ensure(campaign.get("starting_scenario_id") == next(iter(expected)) and campaign.get("emblem_id") == "campaign_emblem_rootbound_canticles", errors, "Rootbound Canticles lost its opening or emblem authority")
-    ensure(int(load_json(CONTENT_DIR / "campaigns.json").get("player_facing_active_campaign_count", 0)) == 22, errors, "Rootbound Canticles must remain represented in the twenty-two-campaign catalog")
+    ensure(int(load_json(CONTENT_DIR / "campaigns.json").get("player_facing_active_campaign_count", 0)) == 23, errors, "Rootbound Canticles must remain represented in the twenty-three-campaign catalog")
     hero_ids: set[str] = set()
     battle_total = 0
     for index, (scenario_id, contract) in enumerate(expected.items()):
@@ -78884,7 +78893,7 @@ def validate_fivefold_assay_campaign(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     campaign = items_index(campaign_payload).get("campaign_fivefold_assay", {})
     chapters = campaign.get("scenarios", []) if isinstance(campaign.get("scenarios", []), list) else []
-    ensure(int(campaign_payload.get("player_facing_active_campaign_count", 0)) == 22, errors, "The Fivefold Assay must remain represented in the twenty-two-campaign catalog")
+    ensure(int(campaign_payload.get("player_facing_active_campaign_count", 0)) == 23, errors, "The Fivefold Assay must remain represented in the twenty-three-campaign catalog")
     ensure([str(row.get("scenario_id", "")) for row in chapters if isinstance(row, dict)] == list(expected), errors, "The Fivefold Assay must retain its exact five-hero order")
     ensure(campaign.get("starting_scenario_id") == next(iter(expected)) and campaign.get("emblem_id") == "campaign_emblem_fivefold_assay", errors, "The Fivefold Assay lost its opening or emblem authority")
     ensure(all(bool(str(campaign.get(key, "")).strip()) for key in ("name", "summary", "description", "arc_goal", "completion_title", "completion_summary")), errors, "The Fivefold Assay must retain complete player-facing narrative copy")
@@ -78956,7 +78965,7 @@ def validate_wakebound_atlas_campaign(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     campaign = items_index(campaign_payload).get("campaign_wakebound_atlas", {})
     chapters = campaign.get("scenarios", []) if isinstance(campaign.get("scenarios", []), list) else []
-    ensure(int(campaign_payload.get("player_facing_active_campaign_count", 0)) == 22, errors, "The Wakebound Atlas must remain represented in the twenty-two-campaign catalog")
+    ensure(int(campaign_payload.get("player_facing_active_campaign_count", 0)) == 23, errors, "The Wakebound Atlas must remain represented in the twenty-three-campaign catalog")
     ensure([str(row.get("scenario_id", "")) for row in chapters if isinstance(row, dict)] == list(expected), errors, "The Wakebound Atlas must retain its exact four-hero order")
     ensure(campaign.get("starting_scenario_id") == next(iter(expected)) and campaign.get("emblem_id") == "campaign_emblem_wakebound_atlas", errors, "The Wakebound Atlas lost its opening or emblem authority")
     ensure(all(bool(str(campaign.get(key, "")).strip()) for key in ("name", "summary", "description", "arc_goal", "completion_title", "completion_summary")), errors, "The Wakebound Atlas must retain complete player-facing narrative copy")
@@ -79040,7 +79049,7 @@ def validate_final_nine_faction_campaigns(errors: list[str]) -> None:
     campaigns = items_index(campaign_payload)
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     heroes = items_index(load_json(CONTENT_DIR / "heroes.json"))
-    ensure(int(campaign_payload.get("player_facing_active_campaign_count", 0)) == 22 and len(campaigns) == 22, errors, "The prior campaign catalog and Charterless Compact must retain twenty-two player-facing campaigns")
+    ensure(int(campaign_payload.get("player_facing_active_campaign_count", 0)) == 23 and len(campaigns) == 23, errors, "The prior campaign catalog, Charterless Compact, and Six Sealed Companies must retain twenty-three player-facing campaigns")
     selected_hero_ids: set[str] = set()
     selected_scenario_ids: set[str] = set()
     battle_total = 0
@@ -79971,7 +79980,7 @@ def validate_eighteen_campaign_finale_nemeses(errors: list[str]) -> None:
 
     finale_ids = {str(campaign.get("scenarios", [])[-1].get("scenario_id", "")) for campaign in campaigns.values() if isinstance(campaign.get("scenarios", []), list) and campaign.get("scenarios", [])}
     named_finales = {scenario_id for scenario_id in finale_ids if any(isinstance(placement, dict) and isinstance(placement.get("enemy_commander_state"), dict) and bool(placement.get("enemy_commander_state", {}).get("roster_hero_id")) for placement in scenarios.get(scenario_id, {}).get("encounters", []))}
-    ensure(len(finale_ids) == 22 and named_finales == finale_ids, errors, "All twenty-two campaign finales must expose a fixed roster-backed opposing hero")
+    ensure(len(finale_ids) == 23 and named_finales == finale_ids, errors, "All twenty-three campaign finales must expose a fixed roster-backed opposing hero")
 
     smoke_text = smoke_path.read_text(encoding="utf-8")
     for token in ("EIGHTEEN_CAMPAIGN_FINALE_NEMESES_SMOKE", "const CASES := [", "BattleRulesScript.create_battle_payload", "BattleRulesScript.resolve_if_battle_ready", "placement_exact", "named_commander_exact", "optional_expected", "save_round_trip_exact", "CAMPAIGN_NEMESIS_CAPTURE_DIR"):
@@ -80023,7 +80032,7 @@ def validate_six_rival_road_skirmishes(errors: list[str]) -> None:
 
     skirmish_only = [scenario for scenario in scenarios.values() if scenario.get("selection", {}).get("availability", {}).get("skirmish") is True and scenario.get("selection", {}).get("availability", {}).get("campaign") is False]
     faction_counts = Counter(str(scenario.get("player_faction_id", "")) for scenario in skirmish_only)
-    ensure(len(skirmish_only) == 105 and faction_counts == {"faction_embercourt":21,"faction_mireclaw":16,"faction_sunvault":16,"faction_thornwake":16,"faction_brasshollow":18,"faction_veilmourn":18}, errors, "The skirmish-only catalog must reflect the six veteran-muster operations joining live play")
+    ensure(len(skirmish_only) == 99 and faction_counts == {"faction_embercourt":20,"faction_mireclaw":15,"faction_sunvault":15,"faction_thornwake":15,"faction_brasshollow":17,"faction_veilmourn":17}, errors, "The skirmish-only catalog must reflect the six veteran-muster operations joining campaign play while retaining skirmish access")
 
     direct_placements = [placement for scenario in scenarios.values() for placement in scenario.get("encounters", []) if isinstance(placement, dict)]
     direct_counts = Counter(str(placement.get("encounter_id", "")) for placement in direct_placements)
@@ -80265,8 +80274,8 @@ def validate_six_veteran_company_musters(errors: list[str]) -> None:
         victory = scenario.get("objectives", {}).get("victory", [])
         requirements = victory[0].get("requirements", []) if victory else []
         encounter_rows = scenario.get("encounters", [])
-        ensure(scenario.get("content_status") == "veteran_company_muster_operation_live" and scenario.get("content_batch_id") == slice_id and scenario.get("scenario_family") == "veteran_company_muster_operation" and scenario.get("selection", {}).get("availability") == {"campaign":False,"skirmish":True}, errors, f"{scenario_id} live selection identity changed")
-        ensure(scenario.get("map_size") == {"width":15,"height":9} and len(scenario.get("map", [])) == 9 and all(len(map_row) == 15 for map_row in scenario.get("map", [])) and len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == 7 and len(encounter_rows) == 3 and len(scenario.get("script_hooks", [])) == 5, errors, f"{scenario_id} authored operation composition changed")
+        ensure(scenario.get("content_status") == "veteran_company_muster_operation_live" and scenario.get("content_batch_id") == slice_id and scenario.get("scenario_family") == "veteran_company_muster_operation" and scenario.get("selection", {}).get("availability") == {"campaign":True,"skirmish":True}, errors, f"{scenario_id} live selection identity changed")
+        ensure(scenario.get("map_size") == {"width":15,"height":9} and len(scenario.get("map", [])) == 9 and all(len(map_row) == 15 for map_row in scenario.get("map", [])) and len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == 7 and len(encounter_rows) == 3 and len(scenario.get("script_hooks", [])) == 6, errors, f"{scenario_id} authored operation composition changed")
         ensure(scenario.get("hero_id") == hero_id and scenario.get("hero_starts") == [hero_id] and scenario.get("player_army_id") == group_id and scenario.get("player_faction_id") == faction_id and group.get("faction_id") == faction_id and len(group.get("stacks", [])) == 2 and not set(unit_ids).intersection({str(stack.get("unit_id", "")) for stack in group.get("stacks", [])}), errors, f"{scenario_id} exact hero or lean starting company changed")
         ensure(len(victory) == 5 and victory[0].get("type") == "hero_army_meets_requirements" and victory[0].get("hero_id") == hero_id and [item.get("unit_id") for item in requirements] == unit_ids and [int(item.get("minimum_count", 0)) for item in requirements] == [claim_recruits[unit_id] for unit_id in unit_ids] and victory[1].get("type") == "resource_sites_controlled_at_least", errors, f"{scenario_id} exact multi-company victory contract changed")
         ensure(node.get("site_id") == site_id and node.get("guard_front_id") == f"{prefix}_muster_guard" and (node.get("x"),node.get("y")) == (12,1) and {str(item.get("placement_id", "")) for item in encounter_rows} == {f"{prefix}_west_company",f"{prefix}_south_company",f"{prefix}_muster_guard"} and all(str(item.get("encounter_id", "")) in encounters for item in encounter_rows), errors, f"{scenario_id} exact guarded live placement changed")
@@ -81706,14 +81715,14 @@ def validate_charterless_compact_campaign(errors: list[str]) -> None:
     if not all(path.is_file() for path in (manifest_path, author_path, smoke_path, launcher_path, scene_path)):
         return
 
-    ensure(int(campaign_payload.get("player_facing_active_campaign_count", 0)) == 22 and len(campaigns) == 22, errors, "The Charterless Compact must be the twenty-second player-facing campaign")
+    ensure(int(campaign_payload.get("player_facing_active_campaign_count", 0)) == 23 and len(campaigns) == 23, errors, "The Charterless Compact must remain present after the twenty-third player-facing campaign is added")
     ensure(campaign.get("content_batch_id") == slice_id and campaign.get("content_status") == "charterless_compact_campaign_live", errors, "The Charterless Compact lost content-batch ownership")
     ensure(campaign.get("starting_scenario_id") == expected[0][0] and campaign.get("emblem_id") == "campaign_emblem_charterless_compact", errors, "The Charterless Compact lost its opening or emblem identity")
     ensure(all(bool(str(campaign.get(key, "")).strip()) for key in ("name", "description", "summary", "region", "arc_goal", "completion_title", "completion_summary", "emblem_alt_text")), errors, "The Charterless Compact must retain complete player-facing campaign copy")
     ensure([str(row.get("scenario_id", "")) for row in chapters if isinstance(row, dict)] == [row[0] for row in expected], errors, "The Charterless Compact chapter order changed")
     campaign_enabled = {scenario_id for scenario_id, scenario in scenarios.items() if scenario.get("selection", {}).get("availability", {}).get("campaign") is True}
     campaign_leads = {str(scenarios.get(scenario_id, {}).get("hero_id", "")) for scenario_id in campaign_enabled}
-    ensure(len(campaign_enabled) == 96, errors, "Campaign scenario coverage must include all 96 authored chapters")
+    ensure(len(campaign_enabled) == 102, errors, "Campaign scenario coverage must include all 102 authored chapters")
     ensure(campaign_leads == set(heroes) and len(campaign_leads) == 66, errors, "All 66 production heroes must now lead at least one campaign chapter")
 
     battle_total = 0
@@ -81784,6 +81793,118 @@ def validate_charterless_compact_campaign(errors: list[str]) -> None:
         packaging_text = packaging_path.read_text(encoding="utf-8")
         for token in ('"charterless_compact"', '"reedwake_blank_slate"', '"double_assay_witness"', '"three_prism_warrant"', '"fenhound_regalia"', '"rooted_standard"', '"tollmoon_final_charter"'):
             ensure(token in packaging_text, errors, f"{packaging_path.name} is missing Charterless Compact release art: {token}")
+
+
+def validate_six_sealed_companies_campaign(errors: list[str]) -> None:
+    campaign_id = "campaign_six_sealed_companies"
+    slice_id = "content-six-sealed-companies-campaign-10184"
+    expected = [
+        ("pikeward-ashcharter-veteran-muster", "hero_torren", "faction_embercourt", "ashcharter", "sealed_companies_ashcharter_roll_entered", "ashcharter_seal"),
+        ("chainboom-gorefen-veteran-muster", "hero_mireclaw_kessa_chainboom", "faction_mireclaw", "gorefenring", "sealed_companies_gorefen_chain_bound", "gorefen_ring_seal"),
+        ("glassmarshal-daybreak-veteran-muster", "hero_sunvault_ilyr_glassmarshal", "faction_sunvault", "daybreakprism", "sealed_companies_daybreak_prism_aligned", "daybreak_prism_seal"),
+        ("bramblehound-worldroot-veteran-muster", "hero_thornwake_silsa_bramblehound", "faction_thornwake", "fivebough", "sealed_companies_five_bough_rooted", "five_bough_seal"),
+        ("pitmarshal-foundry-veteran-muster", "hero_brasshollow_selka_pitmarshal", "faction_brasshollow", "threegauge", "sealed_companies_three_gauges_certified", "three_gauge_seal"),
+        ("keelwarden-fogkeel-veteran-muster", "hero_veilmourn_jessa_keelwarden", "faction_veilmourn", "fogkeel", "sealed_companies_lastwatch_sounded", "fogkeel_bell_seal"),
+    ]
+    campaign_payload = load_json(CONTENT_DIR / "campaigns.json")
+    campaigns = items_index(campaign_payload)
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    campaign = campaigns.get(campaign_id, {})
+    chapters = campaign.get("scenarios", []) if isinstance(campaign.get("scenarios", []), list) else []
+    manifest_path = ROOT / "art/campaigns/source/generated/six_sealed_companies/manifest.json"
+    author_path = ROOT / "tools/author_six_sealed_companies_campaign.py"
+    smoke_path = ROOT / "tests/six_sealed_companies_campaign_smoke.gd"
+    launcher_path = ROOT / "tests/six_sealed_companies_campaign_smoke.py"
+    scene_path = ROOT / "tests/six_sealed_companies_campaign_smoke.tscn"
+    report_path = ROOT / ".artifacts/six_sealed_companies_campaign_smoke/report.json"
+    identity_sheet = ROOT / "art/campaigns/source/generated/six_sealed_companies/six_sealed_companies_identity_sheet.png"
+    for path in (manifest_path, author_path, smoke_path, launcher_path, scene_path, identity_sheet):
+        ensure(path.is_file(), errors, f"Missing Six Sealed Companies owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in (manifest_path, author_path, smoke_path, launcher_path, scene_path, identity_sheet)):
+        return
+
+    ensure(int(campaign_payload.get("player_facing_active_campaign_count", 0)) == 23 and len(campaigns) == 23, errors, "The Six Sealed Companies must be the twenty-third player-facing campaign")
+    ensure(campaign.get("content_batch_id") == slice_id and campaign.get("content_status") == "six_sealed_companies_campaign_live", errors, "The Six Sealed Companies lost content-batch ownership")
+    ensure(campaign.get("starting_scenario_id") == expected[0][0] and campaign.get("emblem_id") == "campaign_emblem_six_sealed_companies", errors, "The Six Sealed Companies lost its opening or emblem identity")
+    ensure(all(bool(str(campaign.get(key, "")).strip()) for key in ("name", "description", "summary", "region", "arc_goal", "completion_title", "completion_summary", "emblem_alt_text")), errors, "The Six Sealed Companies must retain complete player-facing campaign copy")
+    ensure([str(row.get("scenario_id", "")) for row in chapters if isinstance(row, dict)] == [row[0] for row in expected], errors, "The Six Sealed Companies chapter order changed")
+    ensure(png_size(identity_sheet) == (1536, 1024) and identity_sheet.read_bytes()[25] == 6, errors, "The transparent Six Sealed Companies identity sheet changed")
+
+    battle_total = 0
+    target_unit_ids: set[str] = set()
+    for index, (scenario_id, hero_id, faction_id, prefix, witness_flag, seal_stem) in enumerate(expected):
+        scenario = scenarios.get(scenario_id, {})
+        chapter = chapters[index] if index < len(chapters) and isinstance(chapters[index], dict) else {}
+        objective_id = f"{prefix}_assemble_veterans"
+        hook_id = f"sealed_companies_{'three_gauge' if prefix == 'threegauge' else 'five_bough' if prefix == 'fivebough' else 'daybreak' if prefix == 'daybreakprism' else 'gorefen' if prefix == 'gorefenring' else 'fogkeel' if prefix == 'fogkeel' else 'ashcharter'}_witness"
+        ensure(scenario.get("hero_id") == hero_id and scenario.get("player_faction_id") == faction_id, errors, f"{scenario_id} lost its exact campaign lead")
+        ensure(scenario.get("selection", {}).get("availability", {}) == {"campaign": True, "skirmish": True}, errors, f"{scenario_id} must remain available in campaign and skirmish selectors")
+        ensure(len(scenario.get("encounters", [])) == 3 and len(scenario.get("towns", [])) == 2, errors, f"{scenario_id} lost its three-front veteran-operation composition")
+        hooks = [row for row in scenario.get("script_hooks", []) if isinstance(row, dict) and row.get("id") == hook_id]
+        ensure(len(hooks) == 1 and hooks[0].get("conditions") == [{"type": "objective_met", "objective_id": objective_id}] and {effect.get("flag") for effect in hooks[0].get("effects", []) if isinstance(effect, dict) and effect.get("type") == "set_flag"} == {witness_flag}, errors, f"{scenario_id} lost its exact muster witness hook")
+        metadata = scenario.get("six_sealed_companies", {})
+        ensure(metadata == {"campaign_id": campaign_id, "chapter_index": index + 1, "witness_flag": witness_flag, "mechanic_objective_id": objective_id}, errors, f"{scenario_id} lost campaign chapter metadata")
+        battle_total += len(scenario.get("encounters", []))
+        objectives = [row for row in scenario.get("objectives", {}).get("victory", []) if isinstance(row, dict) and row.get("id") == objective_id]
+        if objectives:
+            target_unit_ids.update(str(row.get("unit_id", "")) for row in objectives[0].get("requirements", []) if isinstance(row, dict))
+        ensure(chapter.get("scenario_id") == scenario_id and int(chapter.get("chapter_index", 0)) == index + 1, errors, f"{scenario_id} lost its chapter position")
+        ensure(chapter.get("seal_id") == f"campaign_chapter_seal_{scenario_id.replace('-', '_')}" and chapter.get("seal_path") == f"res://art/campaigns/runtime/chapter_seals/{seal_stem}.png", errors, f"{scenario_id} lost its exact chapter seal")
+        ensure(all(bool(str(chapter.get(key, "")).strip()) for key in ("label", "description", "chapter_title", "status_hint", "carryover_summary", "briefing", "intel", "stakes", "aftermath_victory", "aftermath_defeat", "journal_victory", "journal_defeat", "seal_alt_text")), errors, f"{scenario_id} lost complete campaign narrative")
+        if index == 0:
+            ensure(chapter.get("starts_unlocked") is True and "unlock_requirements" not in chapter and "carryover_import" not in chapter, errors, "The Six Sealed Companies opening must remain independently unlocked")
+        else:
+            prior_id, _hero, _faction, _prefix, prior_flag, _seal = expected[index - 1]
+            ensure(chapter.get("unlock_requirements") == [{"type": "scenario_status", "scenario_id": prior_id, "status": "victory"}, {"type": "scenario_flag_true", "scenario_id": prior_id, "flag": prior_flag}], errors, f"{scenario_id} lost exact prior-victory and witness gating")
+            ensure(chapter.get("carryover_import") == {"from_scenario_id": prior_id, "resources": True, "hero_progression": False, "spells": False, "artifacts": False, "flags_prefix": "carryover_"}, errors, f"{scenario_id} imported personal commander state")
+        if index < len(expected) - 1:
+            ensure(chapter.get("carryover_export") == {"retain_hero_progression": False, "retain_spells": False, "retain_artifacts": False, "resource_fraction": 0.12, "resource_caps": {"gold": 500, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0}, "flag_ids": [witness_flag]}, errors, f"{scenario_id} lost bounded common-resource-only export")
+        else:
+            ensure("carryover_export" not in chapter, errors, "The Six Sealed Companies finale must not export to an unauthored continuation")
+    ensure(battle_total == 18 and len(target_unit_ids) == 18, errors, "The Six Sealed Companies must retain eighteen battles and eighteen target unit identities")
+
+    manifest = load_json(manifest_path)
+    assets = manifest.get("assets", []) if isinstance(manifest.get("assets", []), list) else []
+    ensure(manifest.get("schema_id") == "six_sealed_companies_campaign_art_v1" and manifest.get("campaign_id") == campaign_id and manifest.get("content_batch_id") == slice_id and manifest.get("generator_mode") == "built_in_image_gen", errors, "Six Sealed Companies generated-art provenance changed")
+    ensure(str(manifest.get("generated_original", "")).startswith("/root/.codex/generated_images/") and len(str(manifest.get("final_prompt", ""))) >= 180 and len(assets) == 7, errors, "Six Sealed Companies must retain one generated original, final prompt, and seven exact identities")
+    source_payloads: list[bytes] = []
+    runtime_payloads: list[bytes] = []
+    for asset in assets:
+        if not isinstance(asset, dict):
+            continue
+        source_path = res_path_to_disk(str(asset.get("source_path", "")))
+        runtime_path = res_path_to_disk(str(asset.get("runtime_path", "")))
+        source_size = (512, 512) if asset.get("role") == "campaign_emblem" else (384, 384)
+        runtime_size = (128, 128) if asset.get("role") == "campaign_emblem" else (64, 64)
+        ensure(source_path.is_file() and png_size(source_path) == source_size and Path(f"{source_path}.import").is_file(), errors, f"{asset.get('id')} lost its exact generated source")
+        ensure(runtime_path.is_file() and png_size(runtime_path) == runtime_size and Path(f"{runtime_path}.import").is_file(), errors, f"{asset.get('id')} lost its exact runtime texture")
+        if source_path.is_file():
+            payload = source_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == asset.get("source_sha256") and payload[25] in {4, 6}, errors, f"{asset.get('id')} source digest or alpha changed")
+            source_payloads.append(payload)
+        if runtime_path.is_file():
+            payload = runtime_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == asset.get("runtime_sha256") and payload[25] in {4, 6}, errors, f"{asset.get('id')} runtime digest or alpha changed")
+            runtime_payloads.append(payload)
+    ensure(len(source_payloads) == 7 and len(set(source_payloads)) == 7 and len(runtime_payloads) == 7 and len(set(runtime_payloads)) == 7, errors, "All seven Six Sealed Companies identities must remain byte-distinct")
+
+    ensure_scene_nodes(scene_path.read_text(encoding="utf-8"), errors, scene_path.name, [("SixSealedCompaniesCampaignSmoke", "Node")])
+    smoke_text = smoke_path.read_text(encoding="utf-8")
+    launcher_text = launcher_path.read_text(encoding="utf-8")
+    for token in ("SIX_SEALED_COMPANIES_CAMPAIGN_SMOKE", "CampaignRulesScript.build_session", "BattleRulesScript.create_battle_payload", "ScenarioScriptRulesScript.process_hooks", "CampaignRulesScript.record_session_completion", "live_muster_claim", "single_consolidated_smoke"):
+        ensure(token in smoke_text, errors, f"Six Sealed Companies consolidated smoke is missing exact proof: {token}")
+    for token in ('"case_count": 6', '"production_battle_count": 18', '"target_unit_count": 18', '"campaign_art_identity_count": 7', '"single_consolidated_smoke": True'):
+        ensure(token in launcher_text, errors, f"Six Sealed Companies launcher is missing exact expectation: {token}")
+    if report_path.is_file():
+        report = load_json(report_path)
+        ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exact_campaign_launch_count") == 6 and report.get("exact_lead_count") == 6 and report.get("resource_only_carryover_count") == 6 and report.get("production_battle_count") == 18 and report.get("live_muster_claim_count") == 6 and report.get("target_unit_count") == 18 and report.get("witness_handoff_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_round_trip_count") == 6 and report.get("campaign_art_identity_count") == 7 and report.get("campaign_complete") is True and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True, errors, "Six Sealed Companies consolidated campaign/gameplay/art/save smoke report is not fully green")
+    author_text = author_path.read_text(encoding="utf-8")
+    for token in ("CHAPTERS = [", "COMMON_CAPS", "six_sealed_companies_campaign_live", "built_in_image_gen"):
+        ensure(token in author_text, errors, f"Six Sealed Companies authoring tool is missing ownership token: {token}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        for token in ('"six_sealed_companies"', '"ashcharter_seal"', '"gorefen_ring_seal"', '"daybreak_prism_seal"', '"five_bough_seal"', '"three_gauge_seal"', '"fogkeel_bell_seal"'):
+            ensure(token in packaging_text, errors, f"{packaging_path.name} is missing Six Sealed Companies release art: {token}")
 
 
 def main() -> int:
@@ -82005,6 +82126,7 @@ def main() -> int:
     validate_wakebound_atlas_campaign(errors)
     validate_final_nine_faction_campaigns(errors)
     validate_charterless_compact_campaign(errors)
+    validate_six_sealed_companies_campaign(errors)
     validate_three_faction_outer_reach_contracts(errors)
     validate_mireclaw_sunvault_frontier_contracts(errors)
     validate_six_faction_ascendant_companies(errors)
