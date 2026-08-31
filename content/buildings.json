@@ -3546,6 +3546,157 @@
       "recruitment_discount_percent": {"unit_veilmourn_tidehook_deckhands": 5},
       "readiness_bonus": 4,
       "pressure_bonus": 1
+    },
+    {
+      "id": "building_embercourt_amberweir_sluiceguard_lock",
+      "name": "Amberweir Sluiceguard Lock",
+      "category": "dwelling",
+      "description": "A fortified river lock drills local pike wardens to defend Amberweir's working sluices without halting the grain road.",
+      "cost": {
+        "gold": 1300
+      },
+      "content_status": "marchland_local_retinue_live",
+      "content_batch_id": "content-six-marchland-local-retinues-10184",
+      "faction_id": "faction_embercourt",
+      "requires": [
+        "building_embercourt_bargebow_slip",
+        "building_embercourt_oath_pikehall"
+      ],
+      "unlock_unit_id": "unit_embercourt_amberweir_lockpike_wardens",
+      "growth_bonus": {
+        "unit_embercourt_amberweir_lockpike_wardens": 3
+      },
+      "recruitment_discount_percent": {
+        "unit_embercourt_amberweir_lockpike_wardens": 4
+      },
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_mireclaw_moonbite_votive_drum_court",
+      "name": "Moonbite Votive Drum-Court",
+      "category": "dwelling",
+      "description": "A crescent reed amphitheater trains votive drummers to carry Moonbite's binding cadence beyond the shrine pools.",
+      "cost": {
+        "gold": 1280
+      },
+      "content_status": "marchland_local_retinue_live",
+      "content_batch_id": "content-six-marchland-local-retinues-10184",
+      "faction_id": "faction_mireclaw",
+      "requires": [
+        "building_mireclaw_war_drum_circle",
+        "building_mireclaw_chainboom_ferry"
+      ],
+      "unlock_unit_id": "unit_mireclaw_moonbite_votive_drummers",
+      "growth_bonus": {
+        "unit_mireclaw_moonbite_votive_drummers": 3
+      },
+      "recruitment_discount_percent": {
+        "unit_mireclaw_moonbite_votive_drummers": 4
+      },
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_sunvault_splitprism_parallax_duel_hall",
+      "name": "Splitprism Parallax Duel Hall",
+      "category": "dwelling",
+      "description": "A bifurcated mirror court trains local fencers to attack one line from two measured angles.",
+      "cost": {
+        "gold": 1320
+      },
+      "content_status": "marchland_local_retinue_live",
+      "content_batch_id": "content-six-marchland-local-retinues-10184",
+      "faction_id": "faction_sunvault",
+      "requires": [
+        "building_sunvault_mirror_forge",
+        "building_sunvault_harmonic_cloister"
+      ],
+      "unlock_unit_id": "unit_sunvault_splitprism_parallax_fencers",
+      "growth_bonus": {
+        "unit_sunvault_splitprism_parallax_fencers": 3
+      },
+      "recruitment_discount_percent": {
+        "unit_sunvault_splitprism_parallax_fencers": 4
+      },
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_thornwake_woundroot_hearthseed_nursery",
+      "name": "Woundroot Hearthseed Nursery",
+      "category": "dwelling",
+      "description": "A rootwoven greenhouse and communal hearth cultivates living sling staves and warm seed-stones for Woundroot's local defenders.",
+      "cost": {
+        "gold": 1260
+      },
+      "content_status": "marchland_local_retinue_live",
+      "content_batch_id": "content-six-marchland-local-retinues-10184",
+      "faction_id": "faction_thornwake",
+      "requires": [
+        "building_thornwake_barkmantle_run",
+        "building_thornwake_pilgrim_orchard"
+      ],
+      "unlock_unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+      "growth_bonus": {
+        "unit_thornwake_woundroot_hearthseed_slingers": 3
+      },
+      "recruitment_discount_percent": {
+        "unit_thornwake_woundroot_hearthseed_slingers": 4
+      },
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_brasshollow_whitegauge_datum_railhouse",
+      "name": "Whitegauge Datum Railhouse",
+      "category": "dwelling",
+      "description": "A white-ceramic calibration rail aligns local lances, bucklers, and pressure gauges to a single field datum.",
+      "cost": {
+        "gold": 1420
+      },
+      "content_status": "marchland_local_retinue_live",
+      "content_batch_id": "content-six-marchland-local-retinues-10184",
+      "faction_id": "faction_brasshollow",
+      "requires": [
+        "building_brasshollow_pressure_rail",
+        "building_brasshollow_boiler_cathedral"
+      ],
+      "unlock_unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+      "growth_bonus": {
+        "unit_brasshollow_whitegauge_datum_lancers": 3
+      },
+      "recruitment_discount_percent": {
+        "unit_brasshollow_whitegauge_datum_lancers": 4
+      },
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_veilmourn_dreamwake_tideglass_oratory",
+      "name": "Dreamwake Tideglass Oratory",
+      "category": "dwelling",
+      "description": "A crescent tideglass pavilion trains harbor oracles to read hostile motion in bell-basins and memory chimes.",
+      "cost": {
+        "gold": 1340,
+        "wood": 2
+      },
+      "content_status": "marchland_local_retinue_live",
+      "content_batch_id": "content-six-marchland-local-retinues-10184",
+      "faction_id": "faction_veilmourn",
+      "requires": [
+        "building_veilmourn_wake_oratory",
+        "building_veilmourn_harpoon_gantry"
+      ],
+      "unlock_unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
+      "growth_bonus": {
+        "unit_veilmourn_dreamwake_tideglass_oracles": 3
+      },
+      "recruitment_discount_percent": {
+        "unit_veilmourn_dreamwake_tideglass_oracles": 4
+      },
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
     }
   ]
 }

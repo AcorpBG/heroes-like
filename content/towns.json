@@ -3591,7 +3591,8 @@
         "building_embercourt_charter_flame",
         "building_embercourt_beaconline_charter_house",
         "building_lantern_archive",
-        "building_starseer_annex"
+        "building_starseer_annex",
+        "building_embercourt_amberweir_sluiceguard_lock"
       ],
       "spell_library": [
         {
@@ -3667,7 +3668,9 @@
         "long_form_board_size": [
           18,
           12
-        ]
+        ],
+        "local_retinue_unit_id": "unit_embercourt_amberweir_lockpike_wardens",
+        "local_retinue_building_id": "building_embercourt_amberweir_sluiceguard_lock"
       }
     },
     {
@@ -3741,7 +3744,8 @@
         "building_mireclaw_boneboom_palisade",
         "building_mireclaw_oathmire_court",
         "building_mireclaw_fenbell_hunt_lodge",
-        "building_starseer_annex"
+        "building_starseer_annex",
+        "building_mireclaw_moonbite_votive_drum_court"
       ],
       "spell_library": [
         {
@@ -3817,7 +3821,9 @@
         "long_form_board_size": [
           18,
           12
-        ]
+        ],
+        "local_retinue_unit_id": "unit_mireclaw_moonbite_votive_drummers",
+        "local_retinue_building_id": "building_mireclaw_moonbite_votive_drum_court"
       }
     },
     {
@@ -3889,7 +3895,8 @@
         "building_sunvault_prism_oratory",
         "building_sunvault_halo_battery_yard",
         "building_sunvault_zenith_court",
-        "building_sunvault_zenith_relay_hall"
+        "building_sunvault_zenith_relay_hall",
+        "building_sunvault_splitprism_parallax_duel_hall"
       ],
       "spell_library": [
         {
@@ -3965,7 +3972,9 @@
         "long_form_board_size": [
           18,
           12
-        ]
+        ],
+        "local_retinue_unit_id": "unit_sunvault_splitprism_parallax_fencers",
+        "local_retinue_building_id": "building_sunvault_splitprism_parallax_duel_hall"
       }
     },
     {
@@ -4038,7 +4047,8 @@
         "building_thornwake_pilgrim_orchard",
         "building_thornwake_canopy_breach_grove",
         "building_thornwake_graftworks",
-        "building_thornwake_worldroot_gate"
+        "building_thornwake_worldroot_gate",
+        "building_thornwake_woundroot_hearthseed_nursery"
       ],
       "spell_library": [
         {
@@ -4114,7 +4124,9 @@
         "long_form_board_size": [
           18,
           12
-        ]
+        ],
+        "local_retinue_unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+        "local_retinue_building_id": "building_thornwake_woundroot_hearthseed_nursery"
       }
     },
     {
@@ -4185,7 +4197,8 @@
         "building_brasshollow_quenchbell_mortar_bay",
         "building_brasshollow_redline_charter_bay",
         "building_brasshollow_crucible_dock",
-        "building_brasshollow_titan_charter_hall"
+        "building_brasshollow_titan_charter_hall",
+        "building_brasshollow_whitegauge_datum_railhouse"
       ],
       "spell_library": [
         {
@@ -4260,7 +4273,9 @@
         "long_form_board_size": [
           18,
           12
-        ]
+        ],
+        "local_retinue_unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+        "local_retinue_building_id": "building_brasshollow_whitegauge_datum_railhouse"
       }
     },
     {
@@ -4331,7 +4346,8 @@
         "building_veilmourn_saltwake_eulogy_house",
         "building_veilmourn_wakeglass_chart_house",
         "building_veilmourn_mistgate_slip",
-        "building_veilmourn_leviathan_sounding"
+        "building_veilmourn_leviathan_sounding",
+        "building_veilmourn_dreamwake_tideglass_oratory"
       ],
       "spell_library": [
         {
@@ -4407,7 +4423,9 @@
         "long_form_board_size": [
           18,
           12
-        ]
+        ],
+        "local_retinue_unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
+        "local_retinue_building_id": "building_veilmourn_dreamwake_tideglass_oratory"
       }
     }
   ]

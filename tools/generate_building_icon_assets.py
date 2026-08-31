@@ -163,6 +163,12 @@ BUILDING_IDS = (
     "building_thornwake_crownroot_heartseed_parliament",
     "building_brasshollow_blackbell_grand_assay_bell",
     "building_veilmourn_pale_sounding_last_memory_beacon",
+    "building_embercourt_amberweir_sluiceguard_lock",
+    "building_mireclaw_moonbite_votive_drum_court",
+    "building_sunvault_splitprism_parallax_duel_hall",
+    "building_thornwake_woundroot_hearthseed_nursery",
+    "building_brasshollow_whitegauge_datum_railhouse",
+    "building_veilmourn_dreamwake_tideglass_oratory",
 )
 
 

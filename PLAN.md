@@ -24,9 +24,34 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; the next production content slice remains unselected.
-- Most recently completed implementation slice: `content-six-marchland-seats-10184`, six long-form faction skirmishes anchored by six new playable towns and exact scenic identities for underused commanders.
-- Current package boundary: matching Linux and Windows release exports measure 232657852 bytes, 17342148 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none selected after completing the Marchland local-retinue batch.
+- Most recently completed implementation slice: `content-six-marchland-local-retinues-10184`, six original town-exclusive recruits and six recruiting landmarks integrated through live build, growth, recruit, battle, art, and save paths.
+- Current package boundary: matching Linux and Windows release exports measure 233530588 bytes, 16469412 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Marchland Local Retinues
+
+id: `content-six-marchland-local-retinues-10184`
+
+Status: completed 2026-08-31.
+
+Current finding:
+- the authored catalog now contains 148 units and 154 buildings, including one exact tier-four local retinue and exclusive recruiting landmark for each of the six Marchland seats;
+- all six opening companies now launch with five stacks, and the local retinues use the normal town build, weekly growth, recruit, battle, battle-art, and save-version-9 paths without leaking into the other 31 towns;
+- one consolidated six-case smoke, repository validation, and matching Linux/Windows packaged startups pass; all 36 required runtime art imports are present while the twelve generated source masters remain excluded from packages.
+
+Implementation boundary:
+- add one original tier-four local retinue per faction for Amberweir, Moonbite, Splitprism, Woundroot, Whitegauge, and Dreamwake, using existing production ability grammar with distinct stats, costs, names, descriptions, battlefield roles, accessibility identity, and no copied fantasy unit expression;
+- add one town-exclusive dwelling building per new unit, route it only through the matching Marchland town, place the retinue in that map's opening company, and prove the same unit becomes recruitable through the live build/growth/recruit path;
+- generate six transparent original character sources and six transparent original recruiting-landmark sources with exact prompt/hash/accessibility provenance, derive every production runtime surface through the existing deterministic pipelines, and keep source masters excluded from Linux and Windows packages.
+
+Completion criteria:
+- all six existing Marchland skirmishes launch with the exact new retinue in the player's five-stack company, resolve representative production battles with its exact standee/animation identity, and preserve existing objectives, counterstrokes, victories, and save-version-9 continuity;
+- each new dwelling can be built only in its matching Marchland town, unlocks and grows only its exact retinue, surfaces exact unit/building art in the production town catalog, and permits a live recruit without leaking into the other 31 towns;
+- run one consolidated six-case gameplay/build/growth/recruit/battle-art/save and visual-capture smoke only after the complete batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged 250000000-byte ceiling.
+
+Non-goals:
+- no new faction, hero, town, map, spell, artifact, encounter, objective type, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes creature, dwelling, town architecture, name, text, art, silhouette, or protected visual expression.
 
 ## Six Marchland Seats
 
