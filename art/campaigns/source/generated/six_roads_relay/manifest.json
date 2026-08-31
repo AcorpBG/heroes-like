@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "batch_id": "content-six-roads-relay-campaign-10184",
+  "generator_mode": "built_in_image_gen",
+  "generated_source": "res://art/campaigns/source/generated/six_roads_relay/six_roads_relay_identity_sheet.png",
+  "generated_source_sha256": "028b588214bb75c3bf34c17680de60e326c72947983b86a85214483e3c01e0a7",
+  "prompt": "Original seven-panel fantasy strategy campaign identity sheet for The Six Roads Relay: six distinct roads converge through a bronze relay ring around a pale compass flame, above six separate heraldic seals for a bog chain drum and hook, wax road ledger and quill, faceted sun lens and bell, pale cliff bell and mirror shard, living thorn cartwheel and dawn spark, and pollen-glass lock with petition leaf. Deep midnight-blue fields, readable non-color silhouettes, engraved bronze and enamel, no text, characters, logos, watermark, or protected visual motifs.",
+  "source_derivation": {
+    "mode": "deterministic_crop_resize",
+    "emblem_source_size": [1254, 1254],
+    "seal_source_size": [1254, 1254],
+    "runtime_emblem_size": [128, 128],
+    "runtime_seal_size": [64, 64],
+    "alpha_policy": "rgba8"
+  },
+  "items": [
+    {
+      "id": "campaign_emblem_six_roads_relay",
+      "source_path": "res://art/campaigns/source/generated/emblems/six_roads_relay_source.png",
+      "source_sha256": "a3bcb46055bfe9f91bdef479309b0ea22972f9ed67669c59d262d8ceda888dbf",
+      "runtime_path": "res://art/campaigns/runtime/emblems/six_roads_relay.png",
+      "runtime_sha256": "fb0d672baf18774cc725ebb68b90912fc7ddb82fa62af7c24bc86bdebf213802",
+      "crop": [197, 28, 860, 860],
+      "alt_text": "Six materially different roads converge on a bronze relay ring around one pale compass flame."
+    },
+    {
+      "id": "campaign_chapter_seal_chainboom_graftwake_cordon",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/chainboom_relay_source.png",
+      "source_sha256": "6079e04bed055216ebd4237c8c8531299c0cfcb3392678d555ac4671227d20c7",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/chainboom_relay.png",
+      "runtime_sha256": "2604008107a4d12c310c61fefa72a4a582903a6c46cdb94b4bfc5c84ccbe3148",
+      "crop": [30, 916, 184, 296],
+      "alt_text": "A heavy reedwood relay drum is bound by chain beside a long hooked road key."
+    },
+    {
+      "id": "campaign_chapter_seal_reedscript_redline_reckoning",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/reedscript_relay_source.png",
+      "source_sha256": "3996d33bc0931569e1ba626d0ec9072458fb6996c2ec9636d6928a31196d24f2",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/reedscript_relay.png",
+      "runtime_sha256": "94b5a0fc6021625f5df15417b433ba0c7422c994ef89de6239dc7bf30d7914d4",
+      "crop": [227, 916, 187, 296],
+      "alt_text": "A red sealed road ledger and pale river quill stand above one blue current."
+    },
+    {
+      "id": "campaign_chapter_seal_glassmarshal_fenbell_refraction",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/glassmarshal_relay_source.png",
+      "source_sha256": "743e04f671462c532945074c5d7aaa528e03d957f14bedb5b960ac14b6f4dfeb",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/glassmarshal_relay.png",
+      "runtime_sha256": "cd157372a9373a4cbf953312109a9dec95f2021adbe48b1f41c8fb393360137a",
+      "crop": [427, 916, 186, 296],
+      "alt_text": "A many-faceted sun lens rests directly above a small bronze relay bell."
+    },
+    {
+      "id": "campaign_chapter_seal_facetlane_last_sounding",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/facetlane_relay_source.png",
+      "source_sha256": "bc72ccb1d4babf56058eb3afa7a208efd125e111a73efeba6f9ebdc3463b7567",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/facetlane_relay.png",
+      "runtime_sha256": "a7f91ac84ebabf9a9001fa913513cc98fbbbc53b6f350e05c08acdc4a5811e83",
+      "crop": [625, 916, 198, 296],
+      "alt_text": "A pale hanging cliff bell sounds beside a tall asymmetrical mirror shard."
+    },
+    {
+      "id": "campaign_chapter_seal_thorncart_daybreak_tangle",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/thorncart_relay_source.png",
+      "source_sha256": "66b52d2e6b88bf3a165e6445d56ab7398fc644e38e3c9d81ed562047b872a0a8",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/thorncart_relay.png",
+      "runtime_sha256": "230e01379884a5f82d73ac7ab128ed78fb75ae9737f02ccc3b91189b1f61a982",
+      "crop": [835, 916, 188, 296],
+      "alt_text": "A living thorn cartwheel closes around a bright eight-rayed dawn spark."
+    },
+    {
+      "id": "campaign_chapter_seal_pollenglass_lockglass_appeal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/pollenglass_relay_source.png",
+      "source_sha256": "bde8304fa320c73559d025cd963cbcf793be85b256d77cd232091c4adea76a90",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/pollenglass_relay.png",
+      "runtime_sha256": "0e4e565651d042019fdc0e51ec8da76c750e44022b94f1fb04e16cd210e28b44",
+      "crop": [1037, 916, 186, 296],
+      "alt_text": "A pollen-filled glass petition vial is locked beside one long green witness leaf."
+    }
+  ]
+}
