@@ -1,0 +1,103 @@
+{
+  "source_model": "built_in_image_gen_original_border_oath_cordons_atlas",
+  "generation_mode": "built_in_image_gen",
+  "runtime_atlas": "res://art/overworld/runtime/objects/encounters/border_oath_cordons/border_oath_cordons_atlas.png",
+  "runtime_atlas_size": [
+    288,
+    48
+  ],
+  "runtime_atlas_sha256": "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c",
+  "prompt_set_summary": "Six original transparent three-quarter isometric Border Oath encounter cordon source masters, one for every playable faction. The set deliberately uses six different physical structures rather than recolors: charter hardware, hooked reed drums, prism geometry, living roots, pressure machinery, and ship-rib chains. Each silhouette remains identifiable in a compact 48-pixel cell. Prompts exclude scenery, ground tiles, frames, labels, logos, copied heraldry, copyrighted assets, and protected visual expression.",
+  "items": [
+    {
+      "encounter_id": "encounter_moonhook_border_cordon",
+      "asset_id": "encounter_border_oath_mireclaw_moonhook",
+      "assigned_faction_id": "faction_mireclaw",
+      "source_file": "mireclaw_moonhook_border_cordon.png",
+      "source_sha256": "69e106e5baaf49f77d4b834654ca9b0e1653d27a5676ed04865229f294b34a03",
+      "generation_original": true,
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric fantasy strategy encounter cordon: Three hooked reed spars lean across a hide war drum and woven flood barrier, forming a low irregular Mireclaw cordon with obvious blocked passage. Generated as a high-resolution painterly source master for a compact 48-pixel runtime cell, with generous alpha padding and strong shape separation. No scenery, ground tile, frame, text, logo, copied heraldry, character, copyrighted asset, or protected visual expression."
+    },
+    {
+      "encounter_id": "encounter_prismwrit_border_cordon",
+      "asset_id": "encounter_border_oath_sunvault_prismwrit",
+      "assigned_faction_id": "faction_sunvault",
+      "source_file": "sunvault_prismwrit_border_cordon.png",
+      "source_sha256": "8057950826e6abb2f3c5d755d4ecc7edd750da30a277b42220aac7abe9df7a86",
+      "generation_original": true,
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric fantasy strategy encounter cordon: Three angular mirror shields and a triangular signal prism form a clean Sunvault checkpoint whose open center remains readable at map scale. Generated as a high-resolution painterly source master for a compact 48-pixel runtime cell, with generous alpha padding and strong shape separation. No scenery, ground tile, frame, text, logo, copied heraldry, character, copyrighted asset, or protected visual expression."
+    },
+    {
+      "encounter_id": "encounter_rootglass_border_cordon",
+      "asset_id": "encounter_border_oath_thornwake_rootglass",
+      "assigned_faction_id": "faction_thornwake",
+      "source_file": "thornwake_rootglass_border_cordon.png",
+      "source_sha256": "f2b6668cb1d9bee16fb9df8bc8fc11c1c0d745938b9144e0c915453d1543fe45",
+      "generation_original": true,
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric fantasy strategy encounter cordon: Braided living roots rise into a thorn wall around three glassy seed knots, giving the Thornwake cordon a wide organic obstruction silhouette. Generated as a high-resolution painterly source master for a compact 48-pixel runtime cell, with generous alpha padding and strong shape separation. No scenery, ground tile, frame, text, logo, copied heraldry, character, copyrighted asset, or protected visual expression."
+    },
+    {
+      "encounter_id": "encounter_blackbell_border_cordon",
+      "asset_id": "encounter_border_oath_brasshollow_blackbell",
+      "assigned_faction_id": "faction_brasshollow",
+      "source_file": "brasshollow_blackbell_border_cordon.png",
+      "source_sha256": "73b2f70fb8fff1dcacd8b6d43826de515ed53abc9765293bf3b3a5e766cf1dd5",
+      "generation_original": true,
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric fantasy strategy encounter cordon: A squat riveted piston gate, pressure wheels, and an oversized black warning bell form a dense Brasshollow roadblock with a mechanical breach point. Generated as a high-resolution painterly source master for a compact 48-pixel runtime cell, with generous alpha padding and strong shape separation. No scenery, ground tile, frame, text, logo, copied heraldry, character, copyrighted asset, or protected visual expression."
+    },
+    {
+      "encounter_id": "encounter_wakechain_border_cordon",
+      "asset_id": "encounter_border_oath_veilmourn_wakechain",
+      "assigned_faction_id": "faction_veilmourn",
+      "source_file": "veilmourn_wakechain_border_cordon.png",
+      "source_sha256": "8c17320c785259cf2d25ed94a731a5fce0751fcc9e9749593ef50f738f1b1360",
+      "generation_original": true,
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric fantasy strategy encounter cordon: Curved pale ship ribs support a long dark chain, tide hooks, and a suspended bell, creating a wide Veilmourn mooring barrier through the fog. Generated as a high-resolution painterly source master for a compact 48-pixel runtime cell, with generous alpha padding and strong shape separation. No scenery, ground tile, frame, text, logo, copied heraldry, character, copyrighted asset, or protected visual expression."
+    },
+    {
+      "encounter_id": "encounter_rainbrand_border_cordon",
+      "asset_id": "encounter_border_oath_embercourt_rainbrand",
+      "assigned_faction_id": "faction_embercourt",
+      "source_file": "embercourt_rainbrand_border_cordon.png",
+      "source_sha256": "09858a181348ab04d87cdb836a84c374be81479a5e461cef0f3673f305006d1f",
+      "generation_original": true,
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "prompt_summary": "Original isolated transparent three-quarter isometric fantasy strategy encounter cordon: Charred charter plates, angled iron stakes, and a sealed ember brazier create an asymmetrical Embercourt writ gate with a clear defended lane. Generated as a high-resolution painterly source master for a compact 48-pixel runtime cell, with generous alpha padding and strong shape separation. No scenery, ground tile, frame, text, logo, copied heraldry, character, copyrighted asset, or protected visual expression."
+    }
+  ]
+}

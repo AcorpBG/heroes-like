@@ -329,6 +329,11 @@ static func _scenario_objective_dependency(objective: Dictionary, objective_inde
 			if stockpile_requirements is Dictionary:
 				for resource_id in stockpile_requirements.keys():
 					_add_dependency_value(dependency, "resources", String(resource_id))
+		"resource_sites_controlled_at_least":
+			var controlled_site_placement_ids = objective.get("placement_ids", [])
+			if controlled_site_placement_ids is Array:
+				for placement_id in controlled_site_placement_ids:
+					_add_dependency_value(dependency, "resource_site_placement_ids", String(placement_id))
 		"hero_army_meets_requirements":
 			_add_dependency_value(dependency, "hero_ids", String(objective.get("hero_id", "")))
 			var requirements = objective.get("requirements", [])
@@ -1584,6 +1589,8 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 			return bool(_map_exploration_progress(session, objective).get("complete", false))
 		"resource_stockpile_at_least":
 			return bool(_resource_stockpile_progress(session, objective).get("complete", false))
+		"resource_sites_controlled_at_least":
+			return bool(_resource_site_control_progress(session, objective).get("complete", false))
 		"hero_army_meets_requirements":
 			return bool(_hero_army_requirement_progress(session, objective).get("complete", false))
 		"hero_progression_meets_requirements":
@@ -1667,6 +1674,13 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 						int(row.get("minimum_count", 0)),
 					])
 			return "%s (%s)" % [base_label, ", ".join(stockpile_parts)]
+		"resource_sites_controlled_at_least":
+			var site_control := _resource_site_control_progress(session, objective)
+			return "%s (%d/%d controlled)" % [
+				base_label,
+				int(site_control.get("controlled_count", 0)),
+				int(site_control.get("minimum_count", 1)),
+			]
 		"hero_army_meets_requirements":
 			var progress := _hero_army_requirement_progress(session, objective)
 			if not bool(progress.get("hero_found", false)):
@@ -1835,6 +1849,34 @@ static func _resource_stockpile_progress(
 		})
 		complete = complete and met
 	return {"requirements": rows, "complete": complete}
+
+static func _resource_site_control_progress(
+	session: SessionStateStoreScript.SessionData,
+	objective: Dictionary
+) -> Dictionary:
+	var authored_placement_ids = objective.get("placement_ids", [])
+	if not (authored_placement_ids is Array) or authored_placement_ids.is_empty():
+		return {"placement_ids": [], "controlled_count": 0, "minimum_count": 1, "complete": false}
+	var placement_ids: Array[String] = []
+	for placement_id in authored_placement_ids:
+		var normalized_id := String(placement_id).strip_edges()
+		if normalized_id != "" and normalized_id not in placement_ids:
+			placement_ids.append(normalized_id)
+	var minimum_count: int = clampi(int(objective.get("minimum_count", placement_ids.size())), 1, max(1, placement_ids.size()))
+	var controlled_ids: Array[String] = []
+	for node in session.overworld.get("resource_nodes", []):
+		if not (node is Dictionary):
+			continue
+		var placement_id := String(node.get("placement_id", ""))
+		if placement_id in placement_ids and String(node.get("collected_by_faction_id", "")) == "player":
+			controlled_ids.append(placement_id)
+	return {
+		"placement_ids": placement_ids,
+		"controlled_placement_ids": controlled_ids,
+		"controlled_count": controlled_ids.size(),
+		"minimum_count": minimum_count,
+		"complete": controlled_ids.size() >= minimum_count,
+	}
 
 static func _hero_army_requirement_progress(
 	session: SessionStateStoreScript.SessionData,

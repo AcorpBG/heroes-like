@@ -13659,6 +13659,276 @@
       "assigned_resource_site_id": "site_veilmourn_pale_sounding_wake_ledger",
       "presentation_role": "pale_sounding_wake_ledger",
       "accessible_description": "A crescent pale-shell frame suspends three wakeglass weights above a tide-chain abacus, salt-dark hooks, narrow counting posts, and a low ledger coffer in a haunting Veilmourn silhouette."
+    },
+    "resource_site_border_oath_embercourt_three_writ": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/border_oath_standards_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/embercourt_three_writ_border_standard.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/embercourt_three_writ_border_standard.png",
+      "source_model": "built_in_image_gen_original_border_oath_standards_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_embercourt_three_writ_border_standard",
+      "assigned_faction_id": "faction_embercourt",
+      "presentation_role": "three_writ_charter_crossbar",
+      "accessible_description": "A blackened iron crossbar raises three separate rain-charred charter plates above a sealed ember bowl, with off-center chain tags making the Embercourt oath readable by silhouette."
+    },
+    "resource_site_border_oath_mireclaw_fenhook": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/border_oath_standards_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/mireclaw_fenhook_border_standard.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/mireclaw_fenhook_border_standard.png",
+      "source_model": "built_in_image_gen_original_border_oath_standards_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_mireclaw_fenhook_border_standard",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "fenhook_drum_ring",
+      "accessible_description": "Three crooked reed hooks surround a stretched hide oath drum on root feet, with dangling peatwax tokens creating a broad low Mireclaw silhouette."
+    },
+    "resource_site_border_oath_sunvault_trifold": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/border_oath_standards_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/sunvault_trifold_prism_border_standard.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/sunvault_trifold_prism_border_standard.png",
+      "source_model": "built_in_image_gen_original_border_oath_standards_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_sunvault_trifold_prism_border_standard",
+      "assigned_faction_id": "faction_sunvault",
+      "presentation_role": "trifold_prism_mast",
+      "accessible_description": "Three triangular mirror vanes climb a slim sunstone mast around a bright central prism, making a precise ascending Sunvault survey silhouette."
+    },
+    "resource_site_border_oath_thornwake_three_seed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/border_oath_standards_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/thornwake_three_seed_border_standard.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/thornwake_three_seed_border_standard.png",
+      "source_model": "built_in_image_gen_original_border_oath_standards_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_thornwake_three_seed_border_standard",
+      "assigned_faction_id": "faction_thornwake",
+      "presentation_role": "three_seed_living_fork",
+      "accessible_description": "A living forked trunk cradles three luminous seed pods at unequal heights, with thorn ties and root feet forming an organic Thornwake border mark."
+    },
+    "resource_site_border_oath_brasshollow_tripgauge": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/border_oath_standards_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/brasshollow_tripgauge_border_standard.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/brasshollow_tripgauge_border_standard.png",
+      "source_model": "built_in_image_gen_original_border_oath_standards_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_brasshollow_tripgauge_border_standard",
+      "assigned_faction_id": "faction_brasshollow",
+      "presentation_role": "tripgauge_pressure_crossbar",
+      "accessible_description": "A riveted pressure crossbar carries three unequal furnace gauges, hanging counterweights, and a compact black bell in a heavy Brasshollow silhouette."
+    },
+    "resource_site_border_oath_veilmourn_three_wake": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/border_oath_standards_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/veilmourn_three_wake_border_standard.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/veilmourn_three_wake_border_standard.png",
+      "source_model": "built_in_image_gen_original_border_oath_standards_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_veilmourn_three_wake_border_standard",
+      "assigned_faction_id": "faction_veilmourn",
+      "presentation_role": "three_wake_crescent_mast",
+      "accessible_description": "A pale crescent ship-rib mast suspends three tide bells above salt-dark chains and a narrow wakeglass marker in a haunting Veilmourn silhouette."
+    },
+    "encounter_border_oath_mireclaw_moonhook": {
+      "path": "res://art/overworld/runtime/objects/encounters/border_oath_cordons/border_oath_cordons_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c",
+      "source_generated": "res://art/overworld/source/generated/encounters/border_oath_cordons_wave1/mireclaw_moonhook_border_cordon.png",
+      "source_model": "built_in_image_gen_original_border_oath_cordons_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_moonhook_border_cordon",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "moonhook_drum_barricade",
+      "accessible_description": "Three hooked reed spars lean across a hide war drum and woven flood barrier, forming a low irregular Mireclaw cordon with obvious blocked passage."
+    },
+    "encounter_border_oath_sunvault_prismwrit": {
+      "path": "res://art/overworld/runtime/objects/encounters/border_oath_cordons/border_oath_cordons_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c",
+      "source_generated": "res://art/overworld/source/generated/encounters/border_oath_cordons_wave1/sunvault_prismwrit_border_cordon.png",
+      "source_model": "built_in_image_gen_original_border_oath_cordons_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_prismwrit_border_cordon",
+      "assigned_faction_id": "faction_sunvault",
+      "presentation_role": "prismwrit_mirror_gate",
+      "accessible_description": "Three angular mirror shields and a triangular signal prism form a clean Sunvault checkpoint whose open center remains readable at map scale."
+    },
+    "encounter_border_oath_thornwake_rootglass": {
+      "path": "res://art/overworld/runtime/objects/encounters/border_oath_cordons/border_oath_cordons_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c",
+      "source_generated": "res://art/overworld/source/generated/encounters/border_oath_cordons_wave1/thornwake_rootglass_border_cordon.png",
+      "source_model": "built_in_image_gen_original_border_oath_cordons_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_rootglass_border_cordon",
+      "assigned_faction_id": "faction_thornwake",
+      "presentation_role": "rootglass_braided_wall",
+      "accessible_description": "Braided living roots rise into a thorn wall around three glassy seed knots, giving the Thornwake cordon a wide organic obstruction silhouette."
+    },
+    "encounter_border_oath_brasshollow_blackbell": {
+      "path": "res://art/overworld/runtime/objects/encounters/border_oath_cordons/border_oath_cordons_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c",
+      "source_generated": "res://art/overworld/source/generated/encounters/border_oath_cordons_wave1/brasshollow_blackbell_border_cordon.png",
+      "source_model": "built_in_image_gen_original_border_oath_cordons_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_blackbell_border_cordon",
+      "assigned_faction_id": "faction_brasshollow",
+      "presentation_role": "blackbell_piston_gate",
+      "accessible_description": "A squat riveted piston gate, pressure wheels, and an oversized black warning bell form a dense Brasshollow roadblock with a mechanical breach point."
+    },
+    "encounter_border_oath_veilmourn_wakechain": {
+      "path": "res://art/overworld/runtime/objects/encounters/border_oath_cordons/border_oath_cordons_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c",
+      "source_generated": "res://art/overworld/source/generated/encounters/border_oath_cordons_wave1/veilmourn_wakechain_border_cordon.png",
+      "source_model": "built_in_image_gen_original_border_oath_cordons_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_wakechain_border_cordon",
+      "assigned_faction_id": "faction_veilmourn",
+      "presentation_role": "wakechain_shiprib_line",
+      "accessible_description": "Curved pale ship ribs support a long dark chain, tide hooks, and a suspended bell, creating a wide Veilmourn mooring barrier through the fog."
+    },
+    "encounter_border_oath_embercourt_rainbrand": {
+      "path": "res://art/overworld/runtime/objects/encounters/border_oath_cordons/border_oath_cordons_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c",
+      "source_generated": "res://art/overworld/source/generated/encounters/border_oath_cordons_wave1/embercourt_rainbrand_border_cordon.png",
+      "source_model": "built_in_image_gen_original_border_oath_cordons_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_rainbrand_border_cordon",
+      "assigned_faction_id": "faction_embercourt",
+      "presentation_role": "rainbrand_writ_gate",
+      "accessible_description": "Charred charter plates, angled iron stakes, and a sealed ember brazier create an asymmetrical Embercourt writ gate with a clear defended lane."
     }
   },
   "resource_site_sprites": {
@@ -14793,6 +15063,36 @@
       "asset_id": "resource_site_frontier_treasury_veilmourn_ledger",
       "unclaimed_asset_id": "resource_site_frontier_treasury_veilmourn_ledger",
       "fit": "Exact original Pale Sounding Wake Ledger remains visible before and after persistent treasury control."
+    },
+    "site_embercourt_three_writ_border_standard": {
+      "asset_id": "resource_site_border_oath_embercourt_three_writ",
+      "unclaimed_asset_id": "resource_site_border_oath_embercourt_three_writ",
+      "fit": "Exact original three writ charter crossbar remains visible before and after persistent Border Oath control."
+    },
+    "site_mireclaw_fenhook_border_standard": {
+      "asset_id": "resource_site_border_oath_mireclaw_fenhook",
+      "unclaimed_asset_id": "resource_site_border_oath_mireclaw_fenhook",
+      "fit": "Exact original fenhook drum ring remains visible before and after persistent Border Oath control."
+    },
+    "site_sunvault_trifold_prism_border_standard": {
+      "asset_id": "resource_site_border_oath_sunvault_trifold",
+      "unclaimed_asset_id": "resource_site_border_oath_sunvault_trifold",
+      "fit": "Exact original trifold prism mast remains visible before and after persistent Border Oath control."
+    },
+    "site_thornwake_three_seed_border_standard": {
+      "asset_id": "resource_site_border_oath_thornwake_three_seed",
+      "unclaimed_asset_id": "resource_site_border_oath_thornwake_three_seed",
+      "fit": "Exact original three seed living fork remains visible before and after persistent Border Oath control."
+    },
+    "site_brasshollow_tripgauge_border_standard": {
+      "asset_id": "resource_site_border_oath_brasshollow_tripgauge",
+      "unclaimed_asset_id": "resource_site_border_oath_brasshollow_tripgauge",
+      "fit": "Exact original tripgauge pressure crossbar remains visible before and after persistent Border Oath control."
+    },
+    "site_veilmourn_three_wake_border_standard": {
+      "asset_id": "resource_site_border_oath_veilmourn_three_wake",
+      "unclaimed_asset_id": "resource_site_border_oath_veilmourn_three_wake",
+      "fit": "Exact original three wake crescent mast remains visible before and after persistent Border Oath control."
     }
   },
   "artifact_default_sprite": {
@@ -15158,7 +15458,13 @@
     "encounter_noonglass_orrery_reliquary": "encounter_relic_noonglass_orrery_reliquary",
     "encounter_worldroot_covenant_reliquary": "encounter_relic_worldroot_covenant_reliquary",
     "encounter_seventh_clause_reliquary": "encounter_relic_seventh_clause_reliquary",
-    "encounter_last_bell_tideglass_reliquary": "encounter_relic_last_bell_tideglass_reliquary"
+    "encounter_last_bell_tideglass_reliquary": "encounter_relic_last_bell_tideglass_reliquary",
+    "encounter_moonhook_border_cordon": "encounter_border_oath_mireclaw_moonhook",
+    "encounter_prismwrit_border_cordon": "encounter_border_oath_sunvault_prismwrit",
+    "encounter_rootglass_border_cordon": "encounter_border_oath_thornwake_rootglass",
+    "encounter_blackbell_border_cordon": "encounter_border_oath_brasshollow_blackbell",
+    "encounter_wakechain_border_cordon": "encounter_border_oath_veilmourn_wakechain",
+    "encounter_rainbrand_border_cordon": "encounter_border_oath_embercourt_rainbrand"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

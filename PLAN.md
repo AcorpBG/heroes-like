@@ -24,9 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected.
-- Most recently completed implementation slice: `content-six-frontier-treasury-commissions-10184`, a coherent six-faction controlled-income, resource-stockpile, battle, exact-art, and save-continuity batch.
-- Current package boundary: matching Linux and Windows release exports measure 248706392 bytes, 1293608 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none selected after completing the latest content batch; the broader release-bound content goal remains active.
+- Most recently completed implementation slice: `content-six-border-oath-standard-seizures-10184`, a coherent six-faction exact-site-control, new-encounter, exact-art, battle, and save-continuity batch.
+- Current package boundary: matching Linux and Windows release exports measure 248929356 bytes, 1070644 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Border Oath Standard Seizures
+
+id: `content-six-border-oath-standard-seizures-10184`
+
+Status: completed.
+
+Current finding:
+- all 165 authored scenarios use persistent control sites and hostile site-retaking pressure, but none exposes an exact victory objective for simultaneously controlling a selected set of resource-site placements;
+- the content catalog has four heroes with only one authored lead appearance, while several towns, faction units, and encounter combinations remain underrepresented in skirmish play;
+- all 179 encounter definitions already own exact live art, so adding new opposing identities requires their battle armies, tactical objectives, map placements, accessible landmarks, source provenance, and package adoption in the same slice rather than anonymous reuse.
+
+Implementation boundary:
+- add a first-class `resource_sites_controlled_at_least` scenario objective with exact placement ids, a positive bounded minimum, scoped resource-site dependencies, compact progress labels, content validation, and save-version-9 continuity;
+- author one original skirmish-only Border Oath seizure per faction, each with a selected low-use commander and town, a new five-stack player company, three guarded persistent standards, enemy retaking priorities, reactive pressure, deterministic seeds, and a new opposing encounter identity backed by its own five-stack army and tactical field objective;
+- generate twelve original transparent landmarks with non-color-dependent silhouettes, derive one compact six-standard atlas and one compact six-cordon atlas, retain prompt/hash/accessibility provenance outside packages, and keep Linux/Windows exports below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all six scenarios launch with zero of three standards controlled, reject two-of-three, wrong-site, and enemy-recapture controls, then resolve eighteen production battles, claim all eighteen standards, satisfy the exact control objective, win before their deadline, and round-trip exactly through save version 9;
+- each scenario resolves its exact new opposing encounter art and exact faction standard art, while relevant site events use scoped objective evaluation and unrelated site events are skipped;
+- one consolidated six-case gameplay/control/art/save and visual-capture smoke runs after the entire batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, unit definition, town definition, building, spell, artifact, campaign, resource id, market rule, combat formula, strategic-AI planning algorithm, native RMG behavior, save-version bump, full-screen backdrop, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes map, border guard, garrison, commander, standard, encounter, landmark, name, text, heraldry, or protected visual expression.
+
+Result:
+- shipped six skirmish-only Border Oath seizures, twelve original five-stack armies, six new tactical cordon encounters placed across eighteen battle fronts, six persistent faction standards, and the first production `resource_sites_controlled_at_least` objective with exact scoped site dependencies and compact progress labels;
+- generated twelve byte-distinct transparent source masters and derived separate 288x48 standard and cordon atlases totaling 39442 bytes, with exact identity mappings, accessibility descriptions, prompt/hash provenance, and source-art package exclusion;
+- the single consolidated batch smoke passed all six launches, exact standard and cordon art routes, wrong-site, two-of-three, enemy-recapture, scoped/unrelated-event controls, eighteen production battles, eighteen claims, six victories, six visual captures, and six exact save-version-9 round trips;
+- repository validation passed at 171 scenarios, 297 armies, 185 encounters, and 279 resource sites; matching Linux and Windows exports booted with the native extension and measured 248929356 bytes, leaving 1070644 bytes below the unchanged ceiling.
 
 ## Six Frontier Treasury Commissions
 
