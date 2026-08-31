@@ -1575,11 +1575,11 @@ func _validate_scenario(
 		for objective in objectives.get("victory", []):
 			if objective is Dictionary:
 				_append_unique_string(objective_ids, String(objective.get("id", "")))
-				_validate_objective(scenario_id, objective, faction_index, artifact_index, town_placement_ids, encounter_placement_ids)
+				_validate_objective(scenario_id, objective, faction_index, building_index, artifact_index, town_placement_ids, encounter_placement_ids)
 		for objective in objectives.get("defeat", []):
 			if objective is Dictionary:
 				_append_unique_string(objective_ids, String(objective.get("id", "")))
-				_validate_objective(scenario_id, objective, faction_index, artifact_index, town_placement_ids, encounter_placement_ids)
+				_validate_objective(scenario_id, objective, faction_index, building_index, artifact_index, town_placement_ids, encounter_placement_ids)
 
 	if scenario.has("script_hooks") and not (script_hooks is Array):
 		push_warning("Scenario %s script_hooks must be an array." % scenario_id)
@@ -1620,6 +1620,7 @@ func _validate_objective(
 	scenario_id: String,
 	objective: Dictionary,
 	faction_index: Dictionary,
+	building_index: Dictionary,
 	artifact_index: Dictionary,
 	town_placement_ids: Array[String],
 	encounter_placement_ids: Array[String]
@@ -1634,6 +1635,13 @@ func _validate_objective(
 			var spell_id := String(objective.get("spell_id", ""))
 			if spell_id == "" or get_spell(spell_id).is_empty():
 				push_warning("Scenario %s objective %s references missing spell_id %s." % [scenario_id, String(objective.get("id", "")), spell_id])
+		"building_built_in_player_town":
+			var building_placement_id := String(objective.get("placement_id", ""))
+			var objective_building_id := String(objective.get("building_id", ""))
+			if building_placement_id == "" or building_placement_id not in town_placement_ids:
+				push_warning("Scenario %s objective %s references missing town placement %s." % [scenario_id, String(objective.get("id", "")), building_placement_id])
+			if objective_building_id == "" or not building_index.has(objective_building_id):
+				push_warning("Scenario %s objective %s references missing building_id %s." % [scenario_id, String(objective.get("id", "")), objective_building_id])
 		"town_owned_by_player", "town_not_owned_by_player":
 			var placement_id := String(objective.get("placement_id", ""))
 			if placement_id == "" or placement_id not in town_placement_ids:

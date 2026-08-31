@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "source_model": "built_in_image_gen_original_great_work_charter_races_atlas",
+  "generation_mode": "built_in_image_gen",
+  "source_date_utc": "2026-08-31",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_region_size": [48, 48],
+  "runtime_atlas_sha256": "8a68029b5ec518abfdb2da7ed1aa6192cac9c6507a275172feca1b793e017533",
+  "processing": "preserve generated alpha, alpha-trim, aspect-fit within 42x42, and center on transparent 48x48 cells",
+  "prompt_set_summary": "Six original isolated transparent faction survey landmarks, each with a structurally distinct measuring silhouette and painterly classic fantasy-strategy readability at 48 pixels. No copied names, heraldry, art, text, or protected visual expression.",
+  "items": [
+    {
+      "site_id": "site_rainwrit_stormseal_survey_cairn",
+      "asset_id": "resource_site_great_work_rainwrit_survey_cairn",
+      "source_path": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/rainwrit_stormseal_survey_cairn_source.png",
+      "source_sha256": "fea1e88bbcbbf75f3dd801844893df2733d97abd6776ddd2cb8d4056dedeac4b",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a147bec1-196f-48ad-9825-c427b3f32981.png",
+      "atlas_region": [0, 0, 48, 48],
+      "prompt_summary": "Rain-dark stepped floodgate survey cairn with forked measuring staff, sealed coffer, and wind-bent amber pennant."
+    },
+    {
+      "site_id": "site_hollowreed_moonwax_foundation_totem",
+      "asset_id": "resource_site_great_work_hollowreed_foundation_totem",
+      "source_path": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/hollowreed_moonwax_foundation_totem_source.png",
+      "source_sha256": "70f9c5e9d2a6401b1864aa9fafb438e9f63b6761777331d4b00847688aa24880",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-83efc23a-6672-47ee-8bcf-d14ee4be8a20.png",
+      "atlas_region": [48, 0, 48, 48],
+      "prompt_summary": "Antlered bogstone foundation totem with crescent hide drum, reed stakes, moonwax basin, and bone plumb charms."
+    },
+    {
+      "site_id": "site_meridian_seven_line_plumb_prism",
+      "asset_id": "resource_site_great_work_meridian_plumb_prism",
+      "source_path": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/meridian_seven_line_plumb_prism_source.png",
+      "source_sha256": "b083e779783cfe38fa99c6b3c4f45b93a1481fae8106b87245b408602d40af6b",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d447b85d-2ff9-4ef2-95e0-fcf99b54602f.png",
+      "atlas_region": [96, 0, 48, 48],
+      "prompt_summary": "White-stone triangular survey tripod with faceted sun prism, seven radial sighting pins, and blue-glass meridian plate."
+    },
+    {
+      "site_id": "site_crownroot_heartseed_boundary_arbor",
+      "asset_id": "resource_site_great_work_crownroot_boundary_arbor",
+      "source_path": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/crownroot_heartseed_boundary_arbor_source.png",
+      "source_sha256": "81c416e53281086e649b2b6a802e7fca23168fbca731be09bff39918c2ba65c9",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-9a7cb1a2-2321-47ec-9d54-c3b1239ad9d0.png",
+      "atlas_region": [144, 0, 48, 48],
+      "prompt_summary": "Living bent-root boundary arch around a luminous heartseed bowl with leaf plumb weight and uneven timber stakes."
+    },
+    {
+      "site_id": "site_blackbell_grand_assay_tripod",
+      "asset_id": "resource_site_great_work_blackbell_assay_tripod",
+      "source_path": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/blackbell_grand_assay_tripod_source.png",
+      "source_sha256": "602392a236e337bcd4a3555a167032865c50532f63109a140a86e905a24c0586",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7af1fd25-25f7-4c23-b8cf-f17822ff1ca4.png",
+      "atlas_region": [192, 0, 48, 48],
+      "prompt_summary": "Black basalt industrial survey tripod with heavy brass plumb bell, redline gauge, ore tray, and smoking chimney."
+    },
+    {
+      "site_id": "site_pale_sounding_last_memory_marker",
+      "asset_id": "resource_site_great_work_pale_sounding_marker",
+      "source_path": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/pale_sounding_last_memory_marker_source.png",
+      "source_sha256": "05f91ca41114544cd21a68bbc7ab379baa942ce01e30aeefe0d44e5d840a1200",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-98e5fce4-57ff-4208-ab10-1773c988b7af.png",
+      "atlas_region": [240, 0, 48, 48],
+      "prompt_summary": "Slender whale-bone sounding frame with off-center pale bell, black mirror-water bowl, shell-marked cords, and torn route ribbon."
+    }
+  ]
+}

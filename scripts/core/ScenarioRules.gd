@@ -307,6 +307,10 @@ static func _scenario_objective_dependency(objective: Dictionary, objective_inde
 			_add_dependency_value(dependency, "artifact_ids", String(objective.get("artifact_id", "")))
 		"spell_known_by_player":
 			_add_dependency_value(dependency, "spell_ids", String(objective.get("spell_id", "")))
+		"building_built_in_player_town":
+			_add_dependency_value(dependency, "town_placement_ids", String(objective.get("placement_id", "")))
+			_add_dependency_value(dependency, "town_ids", String(objective.get("town_id", "")))
+			_add_dependency_value(dependency, "building_ids", String(objective.get("building_id", "")))
 		"town_owned_by_player", "town_not_owned_by_player":
 			_add_dependency_value(dependency, "town_placement_ids", String(objective.get("placement_id", "")))
 			_add_dependency_value(dependency, "town_ids", String(objective.get("town_id", "")))
@@ -398,6 +402,7 @@ static func _empty_dependency() -> Dictionary:
 		"resources": [],
 		"artifact_ids": [],
 		"spell_ids": [],
+		"building_ids": [],
 		"day": false,
 	}
 
@@ -418,6 +423,7 @@ static func _scenario_event_dependency(event_facts: Dictionary) -> Dictionary:
 		"resources",
 		"artifact_ids",
 		"spell_ids",
+		"building_ids",
 	]:
 		for value in _string_array(event_facts.get(key, [])):
 			_add_dependency_value(dependency, key, value)
@@ -440,6 +446,7 @@ static func _scenario_event_affects_dependency(event_dependency: Dictionary, dep
 		"resources",
 		"artifact_ids",
 		"spell_ids",
+		"building_ids",
 	]:
 		if _arrays_intersect(event_dependency.get(key, []), dependency.get(key, [])):
 			return true
@@ -460,6 +467,7 @@ static func _merge_dependency(target: Dictionary, source: Dictionary) -> void:
 		"resources",
 		"artifact_ids",
 		"spell_ids",
+		"building_ids",
 	]:
 		for value in _string_array(source.get(key, [])):
 			_add_dependency_value(target, key, value)
@@ -1516,6 +1524,13 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 			return _player_owns_artifact(session, String(objective.get("artifact_id", "")))
 		"spell_known_by_player":
 			return _player_knows_spell(session, String(objective.get("spell_id", "")))
+		"building_built_in_player_town":
+			var building_town := _find_town(session, objective)
+			return (
+				not building_town.is_empty()
+				and String(building_town.get("owner", "neutral")) == "player"
+				and String(objective.get("building_id", "")) in building_town.get("built_buildings", [])
+			)
 		"town_owned_by_player":
 			var town := _find_town(session, objective)
 			return not town.is_empty() and String(town.get("owner", "neutral")) == "player"
@@ -1550,6 +1565,15 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 				base_label,
 				"Learned" if _player_knows_spell(session, String(objective.get("spell_id", ""))) else "Unknown",
 			]
+		"building_built_in_player_town":
+			var building_town := _find_town(session, objective)
+			var building_id := String(objective.get("building_id", ""))
+			var completed: bool = (
+				not building_town.is_empty()
+				and String(building_town.get("owner", "neutral")) == "player"
+				and building_id in building_town.get("built_buildings", [])
+			)
+			return "%s (%s)" % [base_label, "Built" if completed else "Unbuilt"]
 		"enemy_pressure_at_least":
 			return "%s (%d/%d)" % [
 				base_label,
