@@ -681,6 +681,7 @@ BATTLE_VFX_ROOT = ROOT / "art" / "battle" / "vfx"
 BATTLE_SPELL_VFX_SCHOOL_BATCH_SOURCE_MANIFEST_PATH = ROOT / "art" / "battle" / "source" / "generated" / "spell_vfx_school_batch" / "manifest.json"
 BATTLE_GENERIC_SPELL_VFX_BATCH_SOURCE_MANIFEST_PATH = ROOT / "art" / "battle" / "source" / "generated" / "generic_spell_vfx_batch" / "manifest.json"
 BATTLE_FINAL_GENERIC_SPELL_VFX_BATCH_SOURCE_MANIFEST_PATH = ROOT / "art" / "battle" / "source" / "generated" / "final_generic_spell_vfx_batch" / "manifest.json"
+BATTLE_SEVEN_SCHOOL_SIGNATURE_VFX_SOURCE_MANIFEST_PATH = ROOT / "art" / "battle" / "source" / "generated" / "seven_school_signature_vfx" / "manifest.json"
 BATTLE_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_battle_sfx_assets.py"
 BATTLE_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "battle"
 BATTLE_RUNTIME_SFX_ASSET_LAYER_DOC_PATH = ROOT / "docs" / "battle-runtime-sfx-asset-layer-report.md"
@@ -47146,12 +47147,24 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         'button.emit_signal("pressed")',
         'BattleRules.create_town_assault_payload',
         'BattleRules.cast_player_spell(live_session, spell_id)',
+        'BattleBoardViewScript.new()',
+        'view.validation_unit_art_summary()',
+        '"vfx_%s" % spell_id',
+        'normal_vfx.get("asset_loaded", false)',
+        'generic_secondary',
+        'SettingsService.settings["accessibility"]["reduce_motion"] = true',
+        'not _summary_has_selected_vfx(reduced_summary, cue_id)',
+        'reduced_selected_vfx.has("cast_icon_anchor")',
+        'consequence_parity',
+        'cue_spec.get("alt_text", "")',
+        'image.save_png(capture_path)',
         'restored.from_dict(payload.duplicate(true))',
         'restored.save_version == SessionDataScript.SAVE_VERSION',
         'SEVEN_SCHOOL_SIGNATURE_SPELLBOOK_SMOKE',
     ):
         ensure(token in signature_smoke_text, errors, f"Seven-school signature spellbook smoke is missing production proof token: {token}")
     ensure(signature_smoke_text.count("BattleRules.cast_player_spell(live_session, spell_id)") == 1, errors, "Seven-school signature spellbook must use one shared production cast path across all seven cases")
+    ensure(signature_smoke_text.count("BattleRules.cast_player_spell(reduced_session, spell_id)") == 1, errors, "Seven-school signature battle VFX smoke must use one shared reduced-motion cast path across all seven cases")
 
 
 def validate_town_building_category_icon_runtime(errors: list[str]) -> None:
@@ -62661,6 +62674,13 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "vfx_spell_root_graft_graft_18": ("spell_root_graft_graft_18.png", "spell_target"),
         "vfx_spell_veil_mourning_mark_04": ("spell_veil_mourning_mark_04.png", "spell_target"),
         "vfx_spell_old_measure_index_correction_10": ("spell_old_measure_index_correction_10.png", "spell_target"),
+        "vfx_spell_beacon_lockfire_muster": ("spell_beacon_lockfire_muster.png", "spell_target"),
+        "vfx_spell_mire_moonfen_dragnet": ("spell_mire_moonfen_dragnet.png", "spell_target"),
+        "vfx_spell_lens_seven_facet_refrain": ("spell_lens_seven_facet_refrain.png", "spell_target"),
+        "vfx_spell_root_heartwood_renewal": ("spell_root_heartwood_renewal.png", "spell_target"),
+        "vfx_spell_furnace_redline_overdrive": ("spell_furnace_redline_overdrive.png", "spell_target"),
+        "vfx_spell_veil_drowned_bell_verdict": ("spell_veil_drowned_bell_verdict.png", "spell_target"),
+        "vfx_spell_old_measure_unbroken_meridian": ("spell_old_measure_unbroken_meridian.png", "spell_target"),
         "vfx_placeholder_idle_shadow": ("state_idle_shadow.png", "state_center"),
         "vfx_placeholder_active_ring": ("state_active_ring.png", "state_center"),
         "vfx_placeholder_stack_fade": ("state_stack_fade.png", "state_center"),
@@ -62715,7 +62735,15 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "spell_root_graft_graft_18": "vfx_spell_root_graft_graft_18",
         "spell_veil_mourning_mark_04": "vfx_spell_veil_mourning_mark_04",
         "spell_old_measure_index_correction_10": "vfx_spell_old_measure_index_correction_10",
+        "spell_beacon_lockfire_muster": "vfx_spell_beacon_lockfire_muster",
+        "spell_mire_moonfen_dragnet": "vfx_spell_mire_moonfen_dragnet",
+        "spell_lens_seven_facet_refrain": "vfx_spell_lens_seven_facet_refrain",
+        "spell_root_heartwood_renewal": "vfx_spell_root_heartwood_renewal",
+        "spell_furnace_redline_overdrive": "vfx_spell_furnace_redline_overdrive",
+        "spell_veil_drowned_bell_verdict": "vfx_spell_veil_drowned_bell_verdict",
+        "spell_old_measure_unbroken_meridian": "vfx_spell_old_measure_unbroken_meridian",
     }
+    battle_vfx_cues = {}
     if BATTLE_VFX_MANIFEST_PATH.exists():
         battle_vfx_manifest = json.loads(BATTLE_VFX_MANIFEST_PATH.read_text(encoding="utf-8"))
         ensure(battle_vfx_manifest.get("schema_id") == "battle_vfx_manifest_v1", errors, "battle_vfx_manifest.json has the wrong schema")
@@ -62723,8 +62751,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(isinstance(battle_vfx_cues, dict), errors, "battle_vfx_manifest.json cues must be an object")
         spell_vfx_cues = battle_vfx_manifest.get("spell_cues", {})
         ensure(isinstance(spell_vfx_cues, dict), errors, "battle_vfx_manifest.json spell_cues must be an object")
-        ensure(spell_vfx_cues == expected_spell_vfx_cues, errors, "battle_vfx_manifest.json must map exactly forty-six Battle spells to exact VFX cues")
-        ensure(set(battle_vfx_cues) == set(required_battle_vfx_cues), errors, "battle_vfx_manifest.json must map exactly the selected eight core, forty-seven spell, and six state/path Battle cues")
+        ensure(spell_vfx_cues == expected_spell_vfx_cues, errors, "battle_vfx_manifest.json must map exactly fifty-three Battle spells to exact VFX cues")
+        ensure(set(battle_vfx_cues) == set(required_battle_vfx_cues), errors, "battle_vfx_manifest.json must map exactly the selected eight core, fifty-four spell, and six state/path Battle cues")
         observed_vfx_paths = set()
         observed_vfx_hashes = set()
         for cue_id, (filename, render_mode) in required_battle_vfx_cues.items():
@@ -62735,7 +62763,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             ensure(cue.get("render_mode") == render_mode, errors, f"battle VFX cue {cue_id} must use render mode {render_mode}")
             ensure(float(cue.get("scale", 0.0)) > 0.0, errors, f"battle VFX cue {cue_id} needs a positive scale")
             observed_vfx_paths.add(expected_path)
-        ensure(len(observed_vfx_paths) == 61, errors, "battle VFX asset layer must use exactly eight core, forty-seven spell, and six distinct state/path textures")
+        ensure(len(observed_vfx_paths) == 68, errors, "battle VFX asset layer must use exactly eight core, fifty-four spell, and six distinct state/path textures")
         for texture_path in sorted(observed_vfx_paths):
             disk_path = ROOT / texture_path.removeprefix("res://")
             ensure(disk_path.exists(), errors, f"battle VFX texture is missing: {texture_path}")
@@ -62746,7 +62774,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
                 observed_vfx_hashes.add(hashlib.sha256(disk_path.read_bytes()).hexdigest())
                 import_path = Path(str(disk_path) + ".import")
                 ensure(import_path.exists(), errors, f"battle VFX texture import metadata is missing: {texture_path}")
-        ensure(len(observed_vfx_hashes) == 61, errors, "all 61 Battle VFX textures must remain byte-distinct")
+        ensure(len(observed_vfx_hashes) == 68, errors, "all 68 Battle VFX textures must remain byte-distinct")
         for spell_id, cue_id in expected_spell_vfx_cues.items():
             cue = battle_vfx_cues.get(cue_id, {}) if isinstance(battle_vfx_cues, dict) else {}
             ensure(cue.get("spell_id") == spell_id, errors, f"battle spell VFX cue {cue_id} must retain exact owner {spell_id}")
@@ -62920,6 +62948,63 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(final_generic_source_spell_ids == set(selected_final_generic_batch_effect_types), errors, "final generic Battle spell VFX source manifest must cover the exact selected spell ids")
         ensure(len(final_generic_source_hashes) == 11, errors, "final generic Battle spell VFX generated sources must remain byte-distinct")
         ensure(len(final_generic_runtime_hashes) == 11, errors, "final generic Battle spell VFX runtime assets must remain byte-distinct")
+
+    selected_signature_vfx_effect_types = {
+        "spell_beacon_lockfire_muster": "attack_buff",
+        "spell_mire_moonfen_dragnet": "control_enemy",
+        "spell_lens_seven_facet_refrain": "cleanse_ally",
+        "spell_root_heartwood_renewal": "recover_ally",
+        "spell_furnace_redline_overdrive": "attack_buff",
+        "spell_veil_drowned_bell_verdict": "damage_enemy",
+        "spell_old_measure_unbroken_meridian": "defense_buff",
+    }
+    ensure(BATTLE_SEVEN_SCHOOL_SIGNATURE_VFX_SOURCE_MANIFEST_PATH.exists(), errors, "seven-school signature Battle VFX source manifest is missing")
+    if BATTLE_SEVEN_SCHOOL_SIGNATURE_VFX_SOURCE_MANIFEST_PATH.exists():
+        signature_vfx_source_manifest = json.loads(BATTLE_SEVEN_SCHOOL_SIGNATURE_VFX_SOURCE_MANIFEST_PATH.read_text(encoding="utf-8"))
+        ensure(signature_vfx_source_manifest.get("schema") == "battle_seven_school_signature_vfx_source_manifest_v1", errors, "seven-school signature Battle VFX source manifest has the wrong schema")
+        ensure(signature_vfx_source_manifest.get("content_slice_id") == "content-seven-school-signature-battle-vfx-10184", errors, "seven-school signature Battle VFX source manifest must retain slice ownership")
+        ensure(signature_vfx_source_manifest.get("generation_mode") == "built_in_image_gen", errors, "seven-school signature Battle VFX source manifest must retain built-in generation provenance")
+        ensure("64-color" in str(signature_vfx_source_manifest.get("runtime_derivation", "")), errors, "seven-school signature Battle VFX source manifest must retain compact RGBA runtime derivation")
+        signature_vfx_source_items = signature_vfx_source_manifest.get("items", [])
+        ensure(isinstance(signature_vfx_source_items, list) and len(signature_vfx_source_items) == 7, errors, "seven-school signature Battle VFX source manifest must contain exactly seven items")
+        signature_vfx_source_spell_ids = set()
+        signature_vfx_source_hashes = set()
+        signature_vfx_runtime_hashes = set()
+        for item in signature_vfx_source_items if isinstance(signature_vfx_source_items, list) else []:
+            ensure(isinstance(item, dict), errors, "seven-school signature Battle VFX source manifest items must be objects")
+            if not isinstance(item, dict):
+                continue
+            spell_id = str(item.get("spell_id", ""))
+            cue_id = expected_spell_vfx_cues.get(spell_id)
+            signature_vfx_source_spell_ids.add(spell_id)
+            ensure(item.get("cue_id") == cue_id, errors, f"seven-school signature Battle VFX source item {spell_id} has the wrong cue")
+            ensure(item.get("effect_type") == selected_signature_vfx_effect_types.get(spell_id), errors, f"seven-school signature Battle VFX source item {spell_id} has the wrong effect type")
+            ensure(bool(str(item.get("prompt_subject", "")).strip()), errors, f"seven-school signature Battle VFX source item {spell_id} needs a prompt subject")
+            ensure(bool(str(item.get("accessible_description", "")).strip()), errors, f"seven-school signature Battle VFX source item {spell_id} needs accessible description")
+            source_path = ROOT / str(item.get("source_path", "")).removeprefix("res://")
+            runtime_path = ROOT / str(item.get("runtime_path", "")).removeprefix("res://")
+            ensure(source_path.exists(), errors, f"seven-school signature Battle VFX source is missing for {spell_id}")
+            ensure(runtime_path.exists(), errors, f"seven-school signature Battle VFX runtime asset is missing for {spell_id}")
+            if source_path.exists():
+                source_hash = hashlib.sha256(source_path.read_bytes()).hexdigest()
+                signature_vfx_source_hashes.add(source_hash)
+                ensure(source_hash == item.get("source_sha256"), errors, f"seven-school signature Battle VFX source hash drifted for {spell_id}")
+                ensure(png_size(source_path) == (1254, 1254), errors, f"seven-school signature Battle VFX source must remain 1254x1254 for {spell_id}")
+                source_header = source_path.read_bytes()[:26]
+                ensure(len(source_header) >= 26 and source_header[25] in {4, 6}, errors, f"seven-school signature Battle VFX source must retain alpha for {spell_id}")
+            if runtime_path.exists():
+                runtime_hash = hashlib.sha256(runtime_path.read_bytes()).hexdigest()
+                signature_vfx_runtime_hashes.add(runtime_hash)
+                ensure(runtime_hash == item.get("runtime_sha256"), errors, f"seven-school signature Battle VFX runtime hash drifted for {spell_id}")
+                ensure(png_size(runtime_path) == (384, 384), errors, f"seven-school signature Battle VFX runtime asset must remain 384x384 for {spell_id}")
+                runtime_header = runtime_path.read_bytes()[:26]
+                ensure(len(runtime_header) >= 26 and runtime_header[25] in {4, 6}, errors, f"seven-school signature Battle VFX runtime asset must retain alpha for {spell_id}")
+            cue = battle_vfx_cues.get(cue_id, {}) if isinstance(battle_vfx_cues, dict) else {}
+            ensure(cue.get("source_path") == item.get("source_path"), errors, f"seven-school signature Battle VFX source ownership drifted for {spell_id}")
+            ensure(cue.get("alt_text") == item.get("accessible_description"), errors, f"seven-school signature Battle VFX accessible copy drifted for {spell_id}")
+        ensure(signature_vfx_source_spell_ids == set(selected_signature_vfx_effect_types), errors, "seven-school signature Battle VFX source manifest must cover the exact selected spell ids")
+        ensure(len(signature_vfx_source_hashes) == 7, errors, "seven-school signature Battle VFX generated sources must remain byte-distinct")
+        ensure(len(signature_vfx_runtime_hashes) == 7, errors, "seven-school signature Battle VFX runtime assets must remain byte-distinct")
 
     ensure(BATTLE_SFX_MANIFEST_PATH.exists(), errors, "battle_sfx_manifest.json is missing")
     ensure(BATTLE_SFX_GENERATOR_PATH.exists(), errors, "generate_battle_sfx_assets.py is missing")
@@ -63867,7 +63952,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             "`vfx_spell_cinder_burst`",
             "`audio_spell_cinder_burst`",
             "presentation-battle-spell-vfx-asset-adoption-10184",
-            "all forty-six exact spell mappings and the shared Command Ward asset load as distinct live draw entries",
+            "all fifty-three exact spell mappings and the shared Command Ward asset load as distinct live draw entries",
             "No final sound design.",
             "No particles, shaders, or broad non-spell VFX migration.",
             "No combat balance tuning.",

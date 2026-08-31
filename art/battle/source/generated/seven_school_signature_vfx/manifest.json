@@ -1,0 +1,94 @@
+{
+  "schema": "battle_seven_school_signature_vfx_source_manifest_v1",
+  "content_slice_id": "content-seven-school-signature-battle-vfx-10184",
+  "generation_mode": "built_in_image_gen",
+  "asset_policy": "original_generated_transparent_battle_vfx_no_homm_art_import",
+  "shared_final_prompt": "Transparent 2D battle spell VFX master for a production fantasy strategy game; rich hand-painted magical energy, crisp non-color silhouette and strong directional motion, centered on a square canvas with genuine transparent alpha; effect only; no character, frame, floor, scenery, text, logo, franchise symbol, copied game imagery, checkerboard, watermark, or opaque full-canvas haze.",
+  "runtime_derivation": "Trim transparent source bounds, proportionally fit within 336x336, center on a 384x384 transparent canvas, then quantize to a visually inspected 64-color palette while forcing RGBA PNG output.",
+  "items": [
+    {
+      "spell_id": "spell_beacon_lockfire_muster",
+      "cue_id": "vfx_spell_beacon_lockfire_muster",
+      "effect_type": "attack_buff",
+      "prompt_subject": "Seven amber lock-lantern flames rising diagonally along a broken bronze lockbar, crossed by one blue sluice current and a sharp release arc.",
+      "accessible_description": "Seven lock lanterns surge along a broken bronze bar above a crossing blue sluice current.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-44fdcd83-7653-440e-a520-cae1da1bf12e.png",
+      "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_beacon_lockfire_muster_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_beacon_lockfire_muster.png",
+      "source_sha256": "ac64feb1d5398b65cc527590de8c3bf1a16f534f3cfc78dd6fc58b4b191dcc9f",
+      "runtime_sha256": "28625768f740e809227b1a872451a1195bd2cf14b8b68f750819ecc85f76579d"
+    },
+    {
+      "spell_id": "spell_mire_moonfen_dragnet",
+      "cue_id": "vfx_spell_mire_moonfen_dragnet",
+      "effect_type": "control_enemy",
+      "prompt_subject": "Moonlit hooked reeds and thorn-dark blackwater drawing a heavy knotted dragnet closed around an empty basin.",
+      "accessible_description": "Hooked reeds pull a knotted dragnet closed around a moonlit blackwater basin.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-636567a2-90a6-4569-bb33-72a40a65e58c.png",
+      "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_mire_moonfen_dragnet_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_mire_moonfen_dragnet.png",
+      "source_sha256": "50d3a4e2bcb1dfa49bf69cb7834f8080a7406d01f857a56dcde8a2b38751c482",
+      "runtime_sha256": "2a2c77e3a0eaf2530e67f8293e09975b7480f0c5ac3f3f6c0135ccb0ff8566a3"
+    },
+    {
+      "spell_id": "spell_lens_seven_facet_refrain",
+      "cue_id": "vfx_spell_lens_seven_facet_refrain",
+      "effect_type": "cleanse_ally",
+      "prompt_subject": "Seven separate prismatic sound petals spiraling from a white-gold pulse while three hostile dark shards dissolve at the perimeter.",
+      "accessible_description": "Seven glasslike sound petals spiral from a bright central pulse while dark shards break apart.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-6175ae4f-6f5a-42e2-8ee6-7ebdcc646bde.png",
+      "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_lens_seven_facet_refrain_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_lens_seven_facet_refrain.png",
+      "source_sha256": "672bb9d337d8ace7f92a1fb992674173f0e8d2dc3e9672e20d0529d194d4f140",
+      "runtime_sha256": "ba15ea539e0cb627c365ebce75b6e7b471236a11ed6cffb3345985914bb80319"
+    },
+    {
+      "spell_id": "spell_root_heartwood_renewal",
+      "cue_id": "vfx_spell_root_heartwood_renewal",
+      "effect_type": "recover_ally",
+      "prompt_subject": "A rising heartwood sap light sheltered by interlocking living roots, flowering boughs, leaves, and an open renewal halo.",
+      "accessible_description": "Living roots and flowering boughs close into a shelter around a rising heartwood light.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ba59ba95-94e7-4213-9b6a-66f4743e0af0.png",
+      "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_root_heartwood_renewal_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_root_heartwood_renewal.png",
+      "source_sha256": "7803937c5252dafc3fcfaf26aea7c8e33a7d0658e795bf9186bb973d2359573d",
+      "runtime_sha256": "b0f468eda1f22f0649f65890ee105db7e9bc0be387c604f2707bd08267a1ba72"
+    },
+    {
+      "spell_id": "spell_furnace_redline_overdrive",
+      "cue_id": "vfx_spell_furnace_redline_overdrive",
+      "effect_type": "attack_buff",
+      "prompt_subject": "Two horizontal brass pressure cylinders forcing controlled furnace jets through a red limit ring with piston sparks and compact steam.",
+      "accessible_description": "Twin brass pressure cylinders drive two horizontal furnace jets through a red-hot limit ring.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0d7f9289-065f-4a15-b509-a3bc32efbb49.png",
+      "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_furnace_redline_overdrive_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_furnace_redline_overdrive.png",
+      "source_sha256": "b09f23bdd1b5da3200206b5972d9836e9107db2a0f4bc37d16fef578cab6c459",
+      "runtime_sha256": "22c6f83b5c487dc5ac066f2a64cbe947c4fade7c8e49cac19493bbfa2272981f"
+    },
+    {
+      "spell_id": "spell_veil_drowned_bell_verdict",
+      "cue_id": "vfx_spell_veil_drowned_bell_verdict",
+      "effect_type": "damage_enemy",
+      "prompt_subject": "A submerged spectral bell striking inside a pale circular shockwave, throwing teal ghost tide, black stones, and a second echo ring.",
+      "accessible_description": "A drowned bell tolls inside a pale echo ring as spectral tidewater and dark stones burst outward.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-99f1fc36-4928-4cff-aa79-779c7e2373b5.png",
+      "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_veil_drowned_bell_verdict_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_veil_drowned_bell_verdict.png",
+      "source_sha256": "118ff846800da578d98c9f9d0c738009019f7a11ed38977cf20526a63d849525",
+      "runtime_sha256": "5c47160242e9c53da6208916ac07a4a3b6b640c60f688c36e66127a4647a8d42"
+    },
+    {
+      "spell_id": "spell_old_measure_unbroken_meridian",
+      "cue_id": "vfx_spell_old_measure_unbroken_meridian",
+      "effect_type": "defense_buff",
+      "prompt_subject": "One unbroken ivory-gold survey meridian holding a transparent globe inside crossed brass shield lines, plumb marks, and stable orbital arcs.",
+      "accessible_description": "A straight survey meridian locks an ivory globe inside crossing brass shield lines and plumb marks.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-1db2511b-84ee-428e-9b85-4c7e07d19d06.png",
+      "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_old_measure_unbroken_meridian_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_old_measure_unbroken_meridian.png",
+      "source_sha256": "4160cef58cdf85d83332e496a6f7c3f4dc6eff828daea130ee63bb86a42705dc",
+      "runtime_sha256": "2eba7e968054b2c16548f71053a6784589c70177e3c3214c4f6f45f1525a3db2"
+    }
+  ]
+}

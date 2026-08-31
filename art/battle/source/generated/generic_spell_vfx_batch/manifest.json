@@ -4,7 +4,7 @@
   "generation_mode": "built_in_image_gen",
   "asset_policy": "original_generated_transparent_battle_vfx_no_homm_art_import",
   "shared_final_prompt": "Transparent 2D battle spell VFX sprite for a production fantasy strategy game; hand-painted, crisp material edges, strong non-color silhouette, centered on a square canvas with generous transparent padding and readable at 96 pixels; magical effect only; genuinely transparent clean alpha; no character, ground plane, background scene, text, letters, numerals, readable runes, logos, border, checkerboard, watermark, copied game imagery, or opaque full-canvas haze.",
-  "runtime_derivation": "Trim transparent source bounds, proportionally fit within 336x336, center on a 384x384 transparent canvas, and preserve RGBA alpha.",
+  "runtime_derivation": "Trim transparent source bounds, proportionally fit within 336x336, center on a 384x384 transparent canvas, then quantize to a visually inspected 64-color palette while forcing RGBA PNG output.",
   "items": [
     {
       "spell_id": "spell_beacon_lantern_oath_17",
@@ -16,7 +16,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_beacon_lantern_oath_17_source.png",
       "runtime_path": "res://art/battle/vfx/spell_beacon_lantern_oath_17.png",
       "source_sha256": "3e7d296c2d5a45061f43813114ce18ce55f9c719d915bd3278612f8a0ac0c727",
-      "runtime_sha256": "7cf3526016e037b4803efe9ec9c0fb0abfb3f7c2657c869c5468057aff52381c"
+      "runtime_sha256": "bef2a985b94d6b46bde592c68270769927be84f0954192dcf2710e86fdd86424"
     },
     {
       "spell_id": "spell_beacon_writ_lance_13",
@@ -28,7 +28,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_beacon_writ_lance_13_source.png",
       "runtime_path": "res://art/battle/vfx/spell_beacon_writ_lance_13.png",
       "source_sha256": "92d4e9e84cd3f9b440101bb0d517becf813917dae36bb305ba39eba68964d99f",
-      "runtime_sha256": "51c5d884a26a2c5ee2e5b56084ae594a87717e6cca98c3cc16667b7b19df2302"
+      "runtime_sha256": "07a12d1409ad508acbaee53cd2973fda0dd46a9e1cf80d7ee70a6cc873f8924f"
     },
     {
       "spell_id": "spell_mire_lowtide_rot_16",
@@ -40,7 +40,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_mire_lowtide_rot_16_source.png",
       "runtime_path": "res://art/battle/vfx/spell_mire_lowtide_rot_16.png",
       "source_sha256": "71663792b2c402ba5ca429bf64ab7fc26486771979ea0f8a08ccc85951b48dcc",
-      "runtime_sha256": "67959b2dd002f30098a076abecd4a1a5955c0c849177f1cf7c3aace9cb8581e5"
+      "runtime_sha256": "6fa5ba70a62fe028d453f31efcf0144ab7496fc144fc1c1c6313abaf8259eb4f"
     },
     {
       "spell_id": "spell_mire_leech_poultice_26",
@@ -52,7 +52,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_mire_leech_poultice_26_source.png",
       "runtime_path": "res://art/battle/vfx/spell_mire_leech_poultice_26.png",
       "source_sha256": "e48a7087ae285fd1741a6c8db1662caa0c91ab719758b565776d5cdfc720c4e3",
-      "runtime_sha256": "d847c7cc0003bd69398da97a84c1bde50241569e7da4abf3400aa41ef1f74277"
+      "runtime_sha256": "b92cb14718a5bd79901d3e56a63bf4fbe467185cdbb18decbb387d6f23d215b9"
     },
     {
       "spell_id": "spell_lens_array_ray_06",
@@ -64,7 +64,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_lens_array_ray_06_source.png",
       "runtime_path": "res://art/battle/vfx/spell_lens_array_ray_06.png",
       "source_sha256": "225d130d4fcae7aa22b529aa7e67302bae7e4594cc79b74397ab21d4b02539e4",
-      "runtime_sha256": "c315014db5074f2f904b51af2cb03b7830ca1698c2c2fe25347f345a7e74fb4e"
+      "runtime_sha256": "af863f142e37465c63f4293ba965cc62c3cf6d2a0dede73ea53965ffe5eca504"
     },
     {
       "spell_id": "spell_lens_crown_prism_16",
@@ -76,7 +76,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_lens_crown_prism_16_source.png",
       "runtime_path": "res://art/battle/vfx/spell_lens_crown_prism_16.png",
       "source_sha256": "5ef9cbdbe047c9c2a09b1d4fbdc556bee00c638c524c8a2147f09dc93f5c94b1",
-      "runtime_sha256": "cd0399a36498da7df1b64042c049e1b475b64bfaa62d01350ebc4a123126268e"
+      "runtime_sha256": "f776b781540b28d4e1547d16c6c046c202d4691baaffda9abe3a89becabd63a5"
     },
     {
       "spell_id": "spell_root_canopy_graft_06",
@@ -88,7 +88,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_root_canopy_graft_06_source.png",
       "runtime_path": "res://art/battle/vfx/spell_root_canopy_graft_06.png",
       "source_sha256": "3ea1d3f78c1c09c6b4cb7ea82db2991811f0996a671fa188d0cdd44745f8e649",
-      "runtime_sha256": "e7ea2d719beb93b579afe09b705b2948f6fd0ba256e2be1f001e010fa5bf6e77"
+      "runtime_sha256": "f2fdd5f6e00f68c1c560e5d2f6877450f0bfc6209e876e4946b95ea695fb71e7"
     },
     {
       "spell_id": "spell_root_canopy_thorn_22",
@@ -100,7 +100,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_root_canopy_thorn_22_source.png",
       "runtime_path": "res://art/battle/vfx/spell_root_canopy_thorn_22.png",
       "source_sha256": "6565a5b193034a68aee8b6022473227a4a07ce2e168da784ce5912645ab4d94d",
-      "runtime_sha256": "8966f10f1174e036f72e666ef85149d60e5109cceaa7e25cd315a2bd0e6963cf"
+      "runtime_sha256": "b1b74d13ee048115d99d523c5106d01af662a6995c196abb5596ec17b591d4dd"
     },
     {
       "spell_id": "spell_furnace_coal_clause_17",
@@ -112,7 +112,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_furnace_coal_clause_17_source.png",
       "runtime_path": "res://art/battle/vfx/spell_furnace_coal_clause_17.png",
       "source_sha256": "aea1167a10cf42d2df8784bf92797068d2ba105880b23fb552c2d406856423cb",
-      "runtime_sha256": "d508aa949973e49bb27a17ab1205a7392eb92436e06452ea4950b7a9963f5ea2"
+      "runtime_sha256": "5b5a5842b990a0639e92e7f18a7fdcde44b769abcd9a965947ac74d33e40ebb8"
     },
     {
       "spell_id": "spell_furnace_rivet_clause_05",
@@ -124,7 +124,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_furnace_rivet_clause_05_source.png",
       "runtime_path": "res://art/battle/vfx/spell_furnace_rivet_clause_05.png",
       "source_sha256": "a098e08fb29b27fc7ed06b5cc0620eb34899b1831cf1e1c5520f050cef176515",
-      "runtime_sha256": "e9e38a70ed73a8c6b8aa0842943cc1f566aac3ed4f94f9f15083162797880efd"
+      "runtime_sha256": "e9184a11fe09036a6a181b8801f409fc74627a9dfaee0170cfb4c257d2d38af4"
     },
     {
       "spell_id": "spell_veil_lantern_mark_16",
@@ -136,7 +136,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_veil_lantern_mark_16_source.png",
       "runtime_path": "res://art/battle/vfx/spell_veil_lantern_mark_16.png",
       "source_sha256": "8360783e5b1448757570e700a9454b35585100c57614fcf495202bf3fa58c952",
-      "runtime_sha256": "69ff563fa4a4ca780ab4b982f4b9705400e946dbfc6d9f24676ec80889bbd6bb"
+      "runtime_sha256": "2e7e2a4d9123e6ea8875ca604e2c77423424730ae86341c505db1a6220cde711"
     },
     {
       "spell_id": "spell_veil_moon_mark_28",
@@ -148,7 +148,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_veil_moon_mark_28_source.png",
       "runtime_path": "res://art/battle/vfx/spell_veil_moon_mark_28.png",
       "source_sha256": "d23572d796ba144f818b57510b02d77f55e409717f1576f435d4ea24cb19775b",
-      "runtime_sha256": "ef74042f59fafb759e8f90c7e0b67b3bf277a917d337e4045417c64a3897227f"
+      "runtime_sha256": "dfb45d41ef337b82ea7c21fc04015ecf34bddbfcb56e6bf32b4dd8b68ea196b6"
     },
     {
       "spell_id": "spell_old_measure_compass_correction_22",
@@ -160,7 +160,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_old_measure_compass_correction_22_source.png",
       "runtime_path": "res://art/battle/vfx/spell_old_measure_compass_correction_22.png",
       "source_sha256": "cb958c36ddc01169ca8e944370257fbe9924163578cf7fb47a138b5ab0bee3e1",
-      "runtime_sha256": "df3d0b60a0e55a2ef5742f53de01a910d4b93557a542ed77efc179112a65d313"
+      "runtime_sha256": "e4dda1fcc0d3c3e533fbc45a55ab90022df6d36bc428bb172fa6cb768013def5"
     },
     {
       "spell_id": "spell_old_measure_marker_tally_08",
@@ -172,7 +172,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_old_measure_marker_tally_08_source.png",
       "runtime_path": "res://art/battle/vfx/spell_old_measure_marker_tally_08.png",
       "source_sha256": "ee446d26cf92dc89a2a1e1752df4a7e3a41d583735b0597cbf699771698a1db4",
-      "runtime_sha256": "125c4ddeee586ffb1773868b9e966f2aa5d0efa853e88e74a5de4d06c911080f"
+      "runtime_sha256": "b7022c4b19d6cb95739258090b7bbea87d210dc53835c35c573a16a922c89a6e"
     }
   ]
 }

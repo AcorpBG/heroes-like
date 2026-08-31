@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Implement the complete Seven-School Signature Spellbook batch before running one consolidated gameplay smoke, repository validation, and Linux/Windows package gates."
+    "Audit current live content and art coverage, then register the next bounded production-content slice before implementation; retain one consolidated smoke after the complete batch."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1910,9 +1910,45 @@
     },
     "blockedReason": ""
   },
-  "active_slice": "content-seven-school-signature-spellbook-10184",
+  "active_slice": "content-seven-school-signature-battle-vfx-10184",
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "content-seven-school-signature-battle-vfx-20260831",
+      "title": "Seven-school signature battle VFX",
+      "sliceId": "content-seven-school-signature-battle-vfx-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-31T03:02:48Z",
+      "updatedAt": "2026-08-31T03:02:48Z",
+      "latestFinding": "Seven original transparent signature effects now resolve as exact imported live battle cues with accessible copy and established secondary presentation. The complete 54-texture spell-VFX set is visually inspected and compacted to bounded 64-color RGBA runtime PNGs. One consolidated smoke passes all seven normal/reduced presentation, consequence parity, study, cast, save-v9, and fourteen-capture cases; repository validation and matching Linux/Windows packaged startup pass at 245428912 bytes.",
+      "artifacts": [
+        "content/battle_vfx_manifest.json",
+        "art/battle/vfx/",
+        "art/battle/source/generated/seven_school_signature_vfx/manifest.json",
+        "tests/seven_school_signature_spellbook_smoke.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "metrics": {
+        "new_exact_signature_vfx_count": 7,
+        "exact_spell_vfx_count": 53,
+        "total_spell_vfx_texture_count": 54,
+        "runtime_vfx_palette_color_count": 64,
+        "runtime_vfx_bytes_recovered_from_uncompacted_set": 1982029,
+        "consolidated_smoke_case_count": 7,
+        "normal_capture_count": 7,
+        "reduced_motion_capture_count": 7,
+        "save_version": 9,
+        "linux_pck_size_bytes": 245428912,
+        "windows_pck_size_bytes": 245428912,
+        "release_pck_headroom_bytes": 4571088,
+        "source_art_excluded": true
+      }
+    },
     {
       "id": "content-six-frontier-watch-contracts-20260831",
       "title": "Six frontier-watch contracts",
@@ -15783,14 +15819,14 @@
       }
     }
   ],
-  "currentNotes": "The Seven-School Signature Spellbook batch is complete: all 94 placeholder descriptions were replaced, seven balanced tier-three signatures and exact icons were wired through town study and battle, and the consolidated smoke plus repository and cross-platform packaging gates passed.",
+  "currentNotes": "The Seven-School Signature Battle VFX batch is complete. The broader production-content goal remains active; select and register the next bounded content/art gap before implementation.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-seven-school-signature-spellbook-10184",
-  "currentSliceId": "content-seven-school-signature-spellbook-10184",
-  "currentSliceNotes": "Completed: replaced all 94 placeholder-heavy descriptions; added seven balanced tier-three school signatures with original exact icons, developed-town study, production battle casting, and save-v9 continuity; one consolidated smoke and final repository/Linux/Windows gates passed.",
+  "currentSlice": "content-seven-school-signature-battle-vfx-10184",
+  "currentSliceId": "content-seven-school-signature-battle-vfx-10184",
+  "currentSliceNotes": "Completed seven exact original signature battle effects, accessible and reduced-motion presentation, compacted 54-texture spell-VFX runtime set, and one consolidated verification pass with matching Linux/Windows package gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content seven school signature spellbook 10184",
-  "currentSliceUpdatedAt": "2026-08-31T02:35:02Z",
+  "currentSliceTitle": "content seven school signature battle vfx 10184",
+  "currentSliceUpdatedAt": "2026-08-31T03:02:48Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21231,22 +21267,19 @@
     "remainingWork": "Implement real runtime package/session adoption from the owned H3M final payload: parse/convert the H3M payload into MapDocument and ScenarioDocument records, validate save/load and generated-session startup, and keep native map JSON/full .amap output blocked until that converter is source-backed and tested without reintroducing the archived proxy."
   },
   "latestEvidenceArtifacts": [
-    "content/army_groups.json",
-    "content/encounters.json",
-    "content/scenarios.json",
-    "art/overworld/manifest.json",
-    "art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
-    "art/overworld/source/generated/encounters/frontier_watch_contracts/source_manifest.json",
-    "tests/six_rival_road_skirmishes_smoke.gd",
+    "content/battle_vfx_manifest.json",
+    "art/battle/vfx/",
+    "art/battle/source/generated/seven_school_signature_vfx/manifest.json",
+    "tests/seven_school_signature_spellbook_smoke.gd",
+    "tests/battle_event_animation_state_report.gd",
     "tests/validate_repo.py",
-    ".artifacts/six_rival_road_skirmishes_smoke/report.json",
     ".artifacts/packaging_linux_export_smoke/report.json",
     ".artifacts/packaging_windows_export_smoke/report.json",
     "PLAN.md",
     "ops/progress.json"
   ],
-  "latestEvidenceId": "content-six-frontier-watch-contracts-20260831",
-  "latestFinding": "Six optional faction watch contracts now extend the complete rival-road circuit with exact armies, field objectives, rewards, flags, and one original compact six-frame landmark atlas. The single consolidated smoke passes 30 battles, exact art, six unchanged victory chains, and save-v9 round trips; repository validation and matching Linux/Windows packaged startups pass at 249670512 bytes.",
+  "latestEvidenceId": "content-seven-school-signature-battle-vfx-20260831",
+  "latestFinding": "Seven original transparent signature effects now resolve as exact imported live battle cues with accessible copy and established secondary presentation. The complete 54-texture spell-VFX set is visually inspected and compacted to bounded 64-color RGBA runtime PNGs. One consolidated smoke passes all seven normal/reduced presentation, consequence parity, study, cast, save-v9, and fourteen-capture cases; repository validation and matching Linux/Windows packaged startup pass at 245428912 bytes.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -21309,7 +21342,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice with direct current behavior evidence; do not reopen completed Battle or Large RMG optimizations without a new measured red.",
-  "notes": "The six-faction artifact-set and original-insignia slice is complete. The broader user goal to expand production content and distinctive art remains active for future selected slices.",
+  "notes": "The seven-school signature battle-VFX slice is complete. The broader user goal to expand production content and distinctive art remains active for future selected slices.",
   "plannedSlices": [
     {
       "id": "content-six-faction-artifact-sets-10184",
@@ -106796,6 +106829,16 @@
       "startedAt": "2026-08-31T02:09:33Z",
       "notes": "Replaced all 94 meta-placeholder descriptions with distinct original copy while preserving the established 112 spell mechanics hash; added one balanced tier-three signature and original exact icon per school through Horizon town study, battle casting, UI, and save v9. One consolidated smoke passed 7/7 UI icons, studies, battle casts, and save round trips; repository validation and Linux/Windows export/startup passed with matching 249900248-byte PCKs and 99752-byte headroom.",
       "completedAt": "2026-08-31T02:35:02Z"
+    },
+    {
+      "id": "content-seven-school-signature-battle-vfx-10184",
+      "title": "content seven school signature battle vfx 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T03:02:48Z",
+      "startedAt": "2026-08-31T02:39:40Z",
+      "completedAt": "2026-08-31T03:02:48Z",
+      "notes": "Completed seven exact original signature battle effects, accessible and reduced-motion presentation, a visually inspected 64-color RGBA compaction pass across all 54 spell-VFX textures, and one consolidated seven-case smoke. Repository validation and matching Linux/Windows packaged startup pass at 245428912-byte PCKs with 4571088 bytes of headroom."
     }
   ],
   "project": "heroes-like",
@@ -106805,8 +106848,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The live spellbook contains 94 player-facing meta-placeholder descriptions and has not yet adopted the seven new school-balanced signature spells or their exact icons; the current release PCK has 156240 bytes of headroom under the unchanged ceiling.",
-  "remainingWork": "Complete all spell data, town-study wiring, exact icon art, and one consolidated seven-school live smoke, then run repository and matching Linux/Windows package gates.",
+  "remainingGap": "This bounded seven-school signature battle-VFX slice is complete. Broader production content and distinctive-art expansion remains open and requires a separately registered next slice.",
+  "remainingWork": "Audit current live content/art coverage and register the next coherent production-content batch before implementation; keep one consolidated smoke after that complete batch rather than testing each small asset edit.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -107237,7 +107280,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_seven_school_signature_spellbook_in_progress",
+  "result": "content_seven_school_signature_battle_vfx_completed",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -107338,9 +107381,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Implementing one coherent Seven-School Signature Spellbook content and exact-art batch with one consolidated smoke after implementation.",
+  "summary": "Completed the coherent Seven-School Signature Battle VFX content, accessibility, live-presentation, and package-efficiency batch with one consolidated smoke.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T02:09:33Z",
+  "updatedAt": "2026-08-31T03:02:48Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
