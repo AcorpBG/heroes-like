@@ -1,0 +1,97 @@
+{
+  "source_model": "built_in_image_gen_original_field_mastery_convocations_atlas",
+  "generation_mode": "built_in_image_gen",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/field_mastery_convocations_atlas.png",
+  "runtime_atlas_size": [
+    288,
+    48
+  ],
+  "runtime_atlas_sha256": "0af3c4e0de1553cb835d0f0ca78a85cf82aad237299ee84795f7379e54597afa",
+  "prompt_set_summary": "Six original isolated three-quarter isometric field-mastery convocation landmarks, one per faction, generated as transparent high-resolution painterly source masters with no text, logos, copied heraldry, copied assets, scene backdrops, or protected visual expression; each uses a distinct silhouette that remains readable in a 48x48 runtime atlas cell.",
+  "items": [
+    {
+      "site_id": "site_beaconscribe_first_light_lectern",
+      "asset_id": "resource_site_field_mastery_beaconscribe_lectern",
+      "source_file": "beaconscribe_first_light_lectern_source.png",
+      "source_sha256": "79a2045873248dfb505f34c355fbe39363eba9395cebbcc66f8281eff2174f58",
+      "generation_original": true,
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "prompt_subject_summary": "An asymmetrical charred-bronze reading stand carries a hinged amber beacon, three blank wax tablets, blue cord, and a forked route-pointer finial."
+    },
+    {
+      "site_id": "site_rotlamp_shedskin_censer",
+      "asset_id": "resource_site_field_mastery_rotlamp_censer",
+      "source_file": "rotlamp_shedskin_censer_source.png",
+      "source_sha256": "34e99d50bceddd113e60be6f00539bd7fb39cd3664352033fbf8ada36f039d5c",
+      "generation_original": true,
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "prompt_subject_summary": "A crooked reed cage under a mushroom hood holds a peat brazier, three empty bark masks on bone hooks, moss, and a muted violet glow."
+    },
+    {
+      "site_id": "site_daynote_true_angle_dais",
+      "asset_id": "resource_site_field_mastery_daynote_dais",
+      "source_file": "daynote_true_angle_dais_source.png",
+      "source_sha256": "26e3480281e334d4c9d783e9fa39e11565691f02e66fc35fd78a1b4f10fe215c",
+      "generation_original": true,
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "prompt_subject_summary": "A narrow crystalline seat stands on unequal glass feet beneath three angled mirror vanes, an open solar ring, and a cobalt calibration ribbon."
+    },
+    {
+      "site_id": "site_loamchant_deep_root_seat",
+      "asset_id": "resource_site_field_mastery_loamchant_seat",
+      "source_file": "loamchant_deep_root_seat_source.png",
+      "source_sha256": "ed566d0df5c501c4520773e898161c64393dff60e506e5749d9e784153aca7e9",
+      "generation_original": true,
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "prompt_subject_summary": "A living forked-root chair curls around a carved grafting stone with three bark seed bowls, a woven russet sash, moss, and a budding arch."
+    },
+    {
+      "site_id": "site_gaugesavant_fifth_measure_rig",
+      "asset_id": "resource_site_field_mastery_gaugesavant_rig",
+      "source_file": "gaugesavant_fifth_measure_rig_source.png",
+      "source_sha256": "2f060cd246a469e59de586b0a5f9cb4e55748bb59e4b898ee2e17015771097fd",
+      "generation_original": true,
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "prompt_subject_summary": "A squat black-iron examiner chair sits inside an asymmetric pressure frame with three unequal counterweight levers, a chain pedal, and red-black pennant."
+    },
+    {
+      "site_id": "site_wakeoracle_last_echo_choir",
+      "asset_id": "resource_site_field_mastery_wakeoracle_choir",
+      "source_file": "wakeoracle_last_echo_choir_source.png",
+      "source_sha256": "89fbdd438c6bf8a88a5d99feaab8db53c517ce3fa4d4406db6fd8b4db8b9e5ea",
+      "generation_original": true,
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "prompt_subject_summary": "A leaning memorial mast bears three distinct shell bells above three sea-glass memory bowls, a hooked crossbar, dark ribbons, and a crescent mourning sail."
+    }
+  ]
+}

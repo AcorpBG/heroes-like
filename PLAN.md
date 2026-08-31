@@ -24,9 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected; the next substantial content batch must be chosen from a fresh live-content audit before implementation starts.
-- Most recently completed implementation slice: `content-six-grand-muster-assemblies-10184`, one coherent six-faction army-composition objective, recruitment-route, rally-standard, stack-management, exact-art, and save-continuity batch.
-- Current package boundary: matching Linux and Windows release exports measure 248207100 bytes, 1792900 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none selected; the broad original-content goal remains active and the next coherent slice should be selected from live catalog gaps before work begins.
+- Most recently completed implementation slice: `content-six-field-mastery-convocations-10184`, one coherent six-faction hero-progression, specialty-choice, guarded-convocation, exact-art, and save-continuity batch.
+- Current package boundary: matching Linux and Windows release exports measure 248304800 bytes, 1695200 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Field-Mastery Convocations
+
+id: `content-six-field-mastery-convocations-10184`
+
+Status: completed.
+
+Current finding:
+- all sixty-six live heroes have authored scenario starts and hero leveling, command growth, seven specialty paths, queued three-option level-up decisions, Overworld/Town choice actions, campaign carryover, and save-version-9 persistence are production-authoritative;
+- before this slice, none of the 135 scenarios made advancing an exact controlled hero or resolving that hero's specialty decisions the victory authority, so progression remained incidental support while relic, spell, construction, and army-composition systems each owned dedicated scenario routes;
+- Jorun Beaconscribe, Edda Rotlamp, Essa Daynote, Elian Loamchant, Lina Gauge-Savant, and Morwen Wakeoracle each have only one authored lead appearance and form a coherent six-faction progression batch without adding new hero definitions.
+
+Implementation boundary:
+- add a first-class `hero_progression_meets_requirements` objective with an exact controlled hero id, minimum level, minimum resolved specialty-choice count, optional no-pending-choice requirement, scoped hero dependencies, live progress labels, content validation, and save-version-9 continuity;
+- author six original skirmish-only Field-Mastery convocations, one per faction, each with a new five-stack training company, one existing faction town, three authored examination fronts, a guarded XP-bearing convocation landmark, viable recovery/recruitment support, escalating rival pressure, and a Day-16 deadline;
+- add six original one-time faction convocation landmarks with exact transparent map art, 250 experience, one command lesson, repeat-safe claim flags, accessible non-color-dependent silhouettes, and one compact runtime atlas;
+- preserve existing progression thresholds, specialty option generation and effects, combat formulas, campaign state, strategic AI, Windows/Linux paths, generated-source exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- every scenario starts at level 1 with its one authored identity specialty but no earned level-up choices, remains unwinnable at level 3, with fewer than three earned choices, with a pending choice, with the completed progression on the wrong controlled hero, or without the exact convocation claim/front clears, and wins only when its exact lead reaches level 4 and resolves all three earned decisions;
+- each authored route grants enough production encounter/site experience to reach level 4 without direct test-state XP injection, every landmark renders exact original art and rejects repeat claims without mutation, and progression, specialties, claim state, objective state, and victory round-trip exactly through save version 9;
+- run one consolidated six-case scenario/progression/specialty/battle/art/save smoke only after the complete batch, followed once by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, unit definition, town definition, building, spell, artifact, campaign chapter, specialty definition/effect, XP threshold, combat formula, strategic-AI algorithm, RMG/native behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes scenario, university, learning stone, name, art, text, heraldry, or protected visual expression.
 
 ## Six Grand-Muster Assemblies
 

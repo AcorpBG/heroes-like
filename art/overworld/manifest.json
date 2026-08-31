@@ -13089,6 +13089,120 @@
       "assigned_resource_site_id": "site_pale_sounding_five_wake_muster_mast",
       "presentation_role": "pale_sounding_five_wake_muster_mast",
       "accessible_description": "A leaning memorial ship mast bears five shell bells, a hooked crossbar, crescent mourning sail, memory lamp, and saltglass keel base."
+    },
+    "resource_site_field_mastery_beaconscribe_lectern": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/field_mastery_convocations_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/field_mastery_convocations_wave1/beaconscribe_first_light_lectern_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/field_mastery_convocations_wave1/beaconscribe_first_light_lectern_source.png",
+      "source_model": "built_in_image_gen_original_field_mastery_convocations_atlas",
+      "assigned_resource_site_id": "site_beaconscribe_first_light_lectern",
+      "presentation_role": "beaconscribe_first_light_lectern",
+      "accessible_description": "An asymmetrical charred-bronze reading stand carries a hinged amber beacon, three blank wax tablets, blue cord, and a forked route-pointer finial."
+    },
+    "resource_site_field_mastery_rotlamp_censer": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/field_mastery_convocations_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/field_mastery_convocations_wave1/rotlamp_shedskin_censer_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/field_mastery_convocations_wave1/rotlamp_shedskin_censer_source.png",
+      "source_model": "built_in_image_gen_original_field_mastery_convocations_atlas",
+      "assigned_resource_site_id": "site_rotlamp_shedskin_censer",
+      "presentation_role": "rotlamp_shedskin_censer",
+      "accessible_description": "A crooked reed cage under a mushroom hood holds a peat brazier, three empty bark masks on bone hooks, moss, and a muted violet glow."
+    },
+    "resource_site_field_mastery_daynote_dais": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/field_mastery_convocations_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/field_mastery_convocations_wave1/daynote_true_angle_dais_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/field_mastery_convocations_wave1/daynote_true_angle_dais_source.png",
+      "source_model": "built_in_image_gen_original_field_mastery_convocations_atlas",
+      "assigned_resource_site_id": "site_daynote_true_angle_dais",
+      "presentation_role": "daynote_true_angle_dais",
+      "accessible_description": "A narrow crystalline seat stands on unequal glass feet beneath three angled mirror vanes, an open solar ring, and a cobalt calibration ribbon."
+    },
+    "resource_site_field_mastery_loamchant_seat": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/field_mastery_convocations_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/field_mastery_convocations_wave1/loamchant_deep_root_seat_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/field_mastery_convocations_wave1/loamchant_deep_root_seat_source.png",
+      "source_model": "built_in_image_gen_original_field_mastery_convocations_atlas",
+      "assigned_resource_site_id": "site_loamchant_deep_root_seat",
+      "presentation_role": "loamchant_deep_root_seat",
+      "accessible_description": "A living forked-root chair curls around a carved grafting stone with three bark seed bowls, a woven russet sash, moss, and a budding arch."
+    },
+    "resource_site_field_mastery_gaugesavant_rig": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/field_mastery_convocations_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/field_mastery_convocations_wave1/gaugesavant_fifth_measure_rig_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/field_mastery_convocations_wave1/gaugesavant_fifth_measure_rig_source.png",
+      "source_model": "built_in_image_gen_original_field_mastery_convocations_atlas",
+      "assigned_resource_site_id": "site_gaugesavant_fifth_measure_rig",
+      "presentation_role": "gaugesavant_fifth_measure_rig",
+      "accessible_description": "A squat black-iron examiner chair sits inside an asymmetric pressure frame with three unequal counterweight levers, a chain pedal, and red-black pennant."
+    },
+    "resource_site_field_mastery_wakeoracle_choir": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/field_mastery_convocations_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/field_mastery_convocations_wave1/wakeoracle_last_echo_choir_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/field_mastery_convocations_wave1/wakeoracle_last_echo_choir_source.png",
+      "source_model": "built_in_image_gen_original_field_mastery_convocations_atlas",
+      "assigned_resource_site_id": "site_wakeoracle_last_echo_choir",
+      "presentation_role": "wakeoracle_last_echo_choir",
+      "accessible_description": "A leaning memorial mast bears three distinct shell bells above three sea-glass memory bowls, a hooked crossbar, dark ribbons, and a crescent mourning sail."
     }
   },
   "resource_site_sprites": {
@@ -14073,6 +14187,36 @@
       "asset_id": "resource_site_grand_muster_pale_sounding_mast",
       "unclaimed_asset_id": "resource_site_grand_muster_pale_sounding_mast",
       "fit": "Exact original Pale Sounding Five-Wake Muster Mast remains visible before and after its one-time muster claim."
+    },
+    "site_beaconscribe_first_light_lectern": {
+      "asset_id": "resource_site_field_mastery_beaconscribe_lectern",
+      "unclaimed_asset_id": "resource_site_field_mastery_beaconscribe_lectern",
+      "fit": "Exact original Beaconscribe First-Light Lectern remains visible before and after its one-time convocation claim."
+    },
+    "site_rotlamp_shedskin_censer": {
+      "asset_id": "resource_site_field_mastery_rotlamp_censer",
+      "unclaimed_asset_id": "resource_site_field_mastery_rotlamp_censer",
+      "fit": "Exact original Rotlamp Shedskin Censer remains visible before and after its one-time convocation claim."
+    },
+    "site_daynote_true_angle_dais": {
+      "asset_id": "resource_site_field_mastery_daynote_dais",
+      "unclaimed_asset_id": "resource_site_field_mastery_daynote_dais",
+      "fit": "Exact original Daynote True-Angle Dais remains visible before and after its one-time convocation claim."
+    },
+    "site_loamchant_deep_root_seat": {
+      "asset_id": "resource_site_field_mastery_loamchant_seat",
+      "unclaimed_asset_id": "resource_site_field_mastery_loamchant_seat",
+      "fit": "Exact original Loamchant Deep-Root Seat remains visible before and after its one-time convocation claim."
+    },
+    "site_gaugesavant_fifth_measure_rig": {
+      "asset_id": "resource_site_field_mastery_gaugesavant_rig",
+      "unclaimed_asset_id": "resource_site_field_mastery_gaugesavant_rig",
+      "fit": "Exact original Gauge-Savant Fifth-Measure Rig remains visible before and after its one-time convocation claim."
+    },
+    "site_wakeoracle_last_echo_choir": {
+      "asset_id": "resource_site_field_mastery_wakeoracle_choir",
+      "unclaimed_asset_id": "resource_site_field_mastery_wakeoracle_choir",
+      "fit": "Exact original Wakeoracle Last-Echo Choir remains visible before and after its one-time convocation claim."
     }
   },
   "artifact_default_sprite": {

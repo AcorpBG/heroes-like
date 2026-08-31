@@ -2532,6 +2532,90 @@
         }
       ],
       "content_status": "grand_muster_opening_company_live"
+    },
+    {
+      "id": "army_jorunmastery_field_company",
+      "name": "Jorun Beaconscribe Field-Mastery Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 36},
+        {"unit_id": "unit_embercourt_lantern_sappers", "count": 24},
+        {"unit_id": "unit_embercourt_bargebow_crews", "count": 14},
+        {"unit_id": "unit_embercourt_lockglass_writcasters", "count": 8},
+        {"unit_id": "unit_river_guard", "count": 4}
+      ],
+      "content_status": "field_mastery_opening_company_live",
+      "content_batch_id": "content-six-field-mastery-convocations-10184"
+    },
+    {
+      "id": "army_eddamastery_field_company",
+      "name": "Edda Rotlamp Field-Mastery Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 36},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 24},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 14},
+        {"unit_id": "unit_mireclaw_ferrychain_lashers", "count": 8},
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 4}
+      ],
+      "content_status": "field_mastery_opening_company_live",
+      "content_batch_id": "content-six-field-mastery-convocations-10184"
+    },
+    {
+      "id": "army_essamastery_field_company",
+      "name": "Essa Daynote Field-Mastery Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 36},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 24},
+        {"unit_id": "unit_sunvault_mirror_duelists", "count": 14},
+        {"unit_id": "unit_sunvault_resonant_choristers", "count": 8},
+        {"unit_id": "unit_shard_guard", "count": 4}
+      ],
+      "content_status": "field_mastery_opening_company_live",
+      "content_batch_id": "content-six-field-mastery-convocations-10184"
+    },
+    {
+      "id": "army_elianmastery_field_company",
+      "name": "Elian Loamchant Field-Mastery Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 36},
+        {"unit_id": "unit_thornwake_bramblekite_needlers", "count": 24},
+        {"unit_id": "unit_thornwake_sporeglass_menders", "count": 14},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 8},
+        {"unit_id": "unit_thornwake_thornwhip_carriers", "count": 4}
+      ],
+      "content_status": "field_mastery_opening_company_live",
+      "content_batch_id": "content-six-field-mastery-convocations-10184"
+    },
+    {
+      "id": "army_linamastery_field_company",
+      "name": "Lina Gauge-Savant Field-Mastery Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 36},
+        {"unit_id": "unit_brasshollow_quenchspool_slingers", "count": 24},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 14},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 8},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 4}
+      ],
+      "content_status": "field_mastery_opening_company_live",
+      "content_batch_id": "content-six-field-mastery-convocations-10184"
+    },
+    {
+      "id": "army_morwenmastery_field_company",
+      "name": "Morwen Wakeoracle Field-Mastery Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 36},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 24},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 14},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 8},
+        {"unit_id": "unit_veilmourn_tidehook_deckhands", "count": 4}
+      ],
+      "content_status": "field_mastery_opening_company_live",
+      "content_batch_id": "content-six-field-mastery-convocations-10184"
     }
   ]
 }
