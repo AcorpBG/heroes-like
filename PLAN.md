@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-eighteen-campaign-finale-nemeses-10184` is in progress as one coherent campaign-wide named-opposition batch covering every finale not already upgraded by the Sixfold rival slice; the broad content goal continues beyond this slice.
-- Current package boundary: matching-size Linux and Windows release exports measure 249461160 bytes, 538840 bytes below the unchanged 250000000-byte ceiling; the new rival-standard atlas is present while generated masters remain excluded symmetrically.
+- Current implementation slice: `content-six-roads-relay-campaign-10184` is completed as one coherent six-chapter campaign conversion of the complete rival-road circuit; the broad content goal continues beyond this slice.
+- Current package boundary: matching Linux and Windows release exports measure 249740560 bytes, 259440 bytes below the unchanged 250000000-byte ceiling; all seven relay runtime identities are present and generated masters remain excluded symmetrically.
 
 ## Eight Foundation Map Object Identities
 
@@ -15850,6 +15850,38 @@ Completion result:
 Non-goals:
 - no new faction, hero, unit definition, town, building, spell, artifact, campaign, map, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes encounter, landmark, name, text, heraldry, or protected visual expression.
+
+## Six Roads Relay Campaign
+
+id: `content-six-roads-relay-campaign-10184`
+
+Status: completed.
+
+Current finding:
+- the six rival-road skirmishes already form a complete escalating circuit with six roster commanders, thirty live battle fronts, exact town/economy routes, and distinct victory records, but they currently end as six disconnected selector entries;
+- their three two-commander faction pairs naturally support a relay story in which common expedition stores and exact road testimony pass forward while each commander retains personal progression, spells, and artifacts;
+- the release package has only 329488 bytes of headroom, so the campaign must reuse the live maps and ship one compact emblem plus six 64px chapter seals while generated source masters remain excluded.
+
+Implementation boundary:
+- promote Chainboom Graftwake Cordon, Reedscript Redline Reckoning, Glassmarshal Fenbell Refraction, Facetlane Last Sounding, Thorncart Daybreak Tangle, and Pollenglass Lockglass Appeal into one original six-chapter campaign without removing their skirmish availability;
+- add sequential victory-plus-testimony unlocks, bounded common-resource carryover, explicit cross-commander isolation, chapter briefings, aftermaths, journal entries, and a complete campaign outcome while preserving every map, battle, objective, seed, and save-version-9 rule;
+- generate one original seven-panel relay identity sheet, derive one 128px campaign emblem and six distinct 64px chapter seals, retain prompt/hash/accessibility provenance outside packages, and keep Linux/Windows exports below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all six chapters launch through live campaign authority in exact order, import only the preceding bounded common stores and testimony, construct all thirty existing battle fronts, preserve their five-objective victory chains, and complete the campaign after six exact victories;
+- all seven new art identities resolve in the campaign browser with distinct non-color descriptions, exact hashes, and no source-art package leakage;
+- run one consolidated six-chapter gameplay/art/save smoke after the complete batch, followed once by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- The Six Roads Relay now ships as a twentieth player-facing campaign, promoting all six rival-road maps into a sequential campaign while preserving their skirmish availability, exact maps, thirty live battle fronts, five-objective victory chains, and save-version-9 authority;
+- six roster commanders pass only capped common stores and exact testimony between chapters, personal progression/spells/artifacts/armies/rare stores stay isolated, and Belis Rainledger provides fixed roster-backed opposition at the new Rainwrit finale;
+- one original generated identity sheet yields a distinct 128px campaign emblem and six 64px chapter seals with exact hashes, complete non-color descriptions, inspected runtime silhouettes, and source masters excluded from release packages;
+- the single consolidated campaign smoke passes 30/30 battles, 30/30 encounter-art resolutions, 6/6 chapter victories, seven campaign-art identities, exact carryover isolation, campaign completion, and save version 9; repository validation passes;
+- Linux and Windows release exports and packaged startups both pass with the matching 249740560-byte PCK, leaving 259440 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new map, encounter, army, hero, unit, town, building, spell, artifact, combat rule, AI rule, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes campaign, map, name, text, insignia, or protected visual expression.
 
 ## Progress Reconciliation
 

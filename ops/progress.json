@@ -15786,10 +15786,10 @@
   "currentNotes": "Six original frontier-watch contracts completed as one batch with one consolidated 30-battle smoke, repository validation, and matching-size Linux/Windows packaged boots.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-eight-foundation-map-object-identities-10184",
-  "currentSliceId": "content-six-frontier-watch-contracts-10184",
-  "currentSliceNotes": "Completed six optional exact-art faction contracts across the rival-road circuit with 30 consolidated live battles, exact save-v9 continuity, and matching Linux/Windows packaged startup.",
+  "currentSliceId": "content-six-roads-relay-campaign-10184",
+  "currentSliceNotes": "Implemented twentieth player-facing campaign across six existing rival-road maps; one consolidated smoke passed 30/30 battles, 30/30 exact encounter art, 6/6 chapter victories, seven campaign art identities, cross-commander carryover isolation, campaign completion, and save v9. Repository validation and matching Linux/Windows packaged startup passed at 249740560-byte PCK with 259440-byte headroom.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six frontier watch contracts 10184",
+  "currentSliceTitle": "content six roads relay campaign 10184",
   "currentSliceUpdatedAt": "2026-08-31T01:15:20Z",
   "deferredRiskRegister": [
     {
@@ -106766,6 +106766,16 @@
       "startedAt": "2026-08-31T01:03:56Z",
       "completedAt": "2026-08-31T01:15:20Z",
       "notes": "Completed six faction-specific optional watch battles with exact original landmarks across the complete rival-road circuit; the one consolidated 30-battle gameplay/art/save smoke, repository validation, and sequential Linux/Windows package boots all pass."
+    },
+    {
+      "id": "content-six-roads-relay-campaign-10184",
+      "title": "content six roads relay campaign 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T01:33:23Z",
+      "startedAt": "2026-08-31T01:22:52Z",
+      "notes": "Implemented twentieth player-facing campaign across six existing rival-road maps; one consolidated smoke passed 30/30 battles, 30/30 exact encounter art, 6/6 chapter victories, seven campaign art identities, cross-commander carryover isolation, campaign completion, and save v9. Repository validation and matching Linux/Windows packaged startup passed at 249740560-byte PCK with 259440-byte headroom.",
+      "completedAt": "2026-08-31T01:33:23Z"
     }
   ],
   "project": "heroes-like",
@@ -107310,7 +107320,7 @@
   ],
   "summary": "Completed Six Frontier-Watch Contracts as one coherent six-faction gameplay and exact-art batch with one consolidated smoke after implementation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T01:15:20Z",
+  "updatedAt": "2026-08-31T01:33:23Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
