@@ -25,8 +25,33 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Active implementation slice: none selected; the broad original-content goal remains active and the next coherent slice should be selected from live catalog gaps before work begins.
-- Most recently completed implementation slice: `content-six-field-mastery-convocations-10184`, one coherent six-faction hero-progression, specialty-choice, guarded-convocation, exact-art, and save-continuity batch.
-- Current package boundary: matching Linux and Windows release exports measure 248304800 bytes, 1695200 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Most recently completed implementation slice: `content-six-twin-command-field-councils-10184`, one coherent six-faction tavern-recruitment, army-transfer, paired-deployment, exact-art, and save-continuity batch.
+- Current package boundary: matching Linux and Windows release exports measure 248126824 bytes, 1873176 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Twin-Command Field Councils
+
+id: `content-six-twin-command-field-councils-10184`
+
+Status: completed.
+
+Current finding:
+- all 141 authored scenarios currently begin and finish as single-commander structures even though production tavern recruitment, hero switching, stationed army transfer, roster persistence, and per-hero map positions are already live;
+- the missing player-facing value is a composed scenario family that requires hiring, outfitting, and independently deploying a second exact commander rather than another single-hero encounter-clear variation;
+- a first-class exact-hero/exact-town stationing objective can expose those existing production systems without a save-version bump, while one compact six-frame atlas keeps the new faction landmarks package-safe.
+
+Implementation boundary:
+- add one original skirmish-only twin-command scenario per faction, each with one exact starting commander, one exact recruitable partner, two controlled deployment towns, three battle fronts, faction economy routes, pressure, deterministic seeds, and a victory chain that requires both named commanders stationed at different exact towns;
+- add only the narrowly scoped `hero_stationed_at_player_town` scenario objective across dependency extraction, live evaluation/labels, and content validation, backed by the existing persistent controlled-hero positions and town ownership authority;
+- generate six original transparent faction field-council landmarks, derive one compact 288x48 runtime atlas, retain prompt/hash/accessibility provenance outside packages, and preserve Linux/Windows symmetry below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all six scenarios launch from the skirmish selector, hire the exact second commander through the production tavern path, switch active command, transfer an authored company, resolve eighteen live battle fronts, station both named commanders at their exact controlled towns, satisfy scoped dependencies, and remain exact across save-version-9 round trips;
+- negative controls prove that a missing commander, wrong hero, wrong town, or enemy-owned town cannot satisfy either deployment objective;
+- run one consolidated six-case gameplay/art/save smoke only after the complete batch, followed once by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, unit definition, town definition, building, spell, artifact, campaign, combat formula, strategic-AI planning rule, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes map, town, commander, landmark, name, text, heraldry, or protected visual expression.
 
 ## Six Field-Mastery Convocations
 

@@ -311,6 +311,10 @@ static func _scenario_objective_dependency(objective: Dictionary, objective_inde
 			_add_dependency_value(dependency, "town_placement_ids", String(objective.get("placement_id", "")))
 			_add_dependency_value(dependency, "town_ids", String(objective.get("town_id", "")))
 			_add_dependency_value(dependency, "building_ids", String(objective.get("building_id", "")))
+		"hero_stationed_at_player_town":
+			_add_dependency_value(dependency, "hero_ids", String(objective.get("hero_id", "")))
+			_add_dependency_value(dependency, "town_placement_ids", String(objective.get("placement_id", "")))
+			_add_dependency_value(dependency, "town_ids", String(objective.get("town_id", "")))
 		"hero_army_meets_requirements":
 			_add_dependency_value(dependency, "hero_ids", String(objective.get("hero_id", "")))
 			var requirements = objective.get("requirements", [])
@@ -1548,6 +1552,8 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 				and String(building_town.get("owner", "neutral")) == "player"
 				and String(objective.get("building_id", "")) in building_town.get("built_buildings", [])
 			)
+		"hero_stationed_at_player_town":
+			return bool(_hero_stationing_progress(session, objective).get("complete", false))
 		"hero_army_meets_requirements":
 			return bool(_hero_army_requirement_progress(session, objective).get("complete", false))
 		"hero_progression_meets_requirements":
@@ -1595,6 +1601,15 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 				and building_id in building_town.get("built_buildings", [])
 			)
 			return "%s (%s)" % [base_label, "Built" if completed else "Unbuilt"]
+		"hero_stationed_at_player_town":
+			var stationing := _hero_stationing_progress(session, objective)
+			if not bool(stationing.get("hero_found", false)):
+				return "%s (Commander unavailable)" % base_label
+			if not bool(stationing.get("town_found", false)):
+				return "%s (Town unavailable)" % base_label
+			if not bool(stationing.get("town_controlled", false)):
+				return "%s (Town uncontrolled)" % base_label
+			return "%s (%s)" % [base_label, "Stationed" if bool(stationing.get("position_matches", false)) else "En route"]
 		"hero_army_meets_requirements":
 			var progress := _hero_army_requirement_progress(session, objective)
 			if not bool(progress.get("hero_found", false)):
@@ -1659,6 +1674,32 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 		"session_flag_equals":
 			return "%s (%s)" % [base_label, String(session.flags.get(String(objective.get("flag", "")), "unset"))]
 	return base_label
+
+static func _hero_stationing_progress(
+	session: SessionStateStoreScript.SessionData,
+	objective: Dictionary
+) -> Dictionary:
+	var hero_id := String(objective.get("hero_id", ""))
+	var hero := _controlled_hero_state(session, hero_id)
+	var town := _find_town(session, objective)
+	var hero_found := not hero.is_empty()
+	var town_found := not town.is_empty()
+	var town_controlled := town_found and String(town.get("owner", "neutral")) == "player"
+	var hero_position = hero.get("position", {}) if hero_found else {}
+	var position_matches := (
+		hero_position is Dictionary
+		and town_found
+		and int(hero_position.get("x", -1)) == int(town.get("x", -2))
+		and int(hero_position.get("y", -1)) == int(town.get("y", -2))
+	)
+	return {
+		"hero_id": hero_id,
+		"hero_found": hero_found,
+		"town_found": town_found,
+		"town_controlled": town_controlled,
+		"position_matches": position_matches,
+		"complete": hero_found and town_controlled and position_matches,
+	}
 
 static func _hero_army_requirement_progress(
 	session: SessionStateStoreScript.SessionData,

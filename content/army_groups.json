@@ -2616,6 +2616,180 @@
       ],
       "content_status": "field_mastery_opening_company_live",
       "content_batch_id": "content-six-field-mastery-convocations-10184"
+    },
+    {
+      "id": "army_twinbeacon_twin_command_company",
+      "name": "Torren Pikeward's Twin-Command Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {
+          "unit_id": "unit_embercourt_fordhook_cadets",
+          "count": 34
+        },
+        {
+          "unit_id": "unit_ember_archer",
+          "count": 22
+        },
+        {
+          "unit_id": "unit_citadel_pikeward",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_embercourt_lockglass_writcasters",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_embercourt_beaconline_writguard",
+          "count": 4
+        }
+      ],
+      "content_status": "twin_command_opening_company_live",
+      "content_batch_id": "content-six-twin-command-field-councils-10184"
+    },
+    {
+      "id": "army_twomask_twin_command_company",
+      "name": "Tarn Fenhook's Twin-Command Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {
+          "unit_id": "unit_mireclaw_reedsnare_kin",
+          "count": 34
+        },
+        {
+          "unit_id": "unit_mireclaw_mudglass_slingers",
+          "count": 22
+        },
+        {
+          "unit_id": "unit_mireclaw_bogplate_maulers",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_mireclaw_mireglass_reedcasters",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_mireclaw_sporewake_chanters",
+          "count": 4
+        }
+      ],
+      "content_status": "twin_command_opening_company_live",
+      "content_batch_id": "content-six-twin-command-field-councils-10184"
+    },
+    {
+      "id": "army_splitray_twin_command_company",
+      "name": "Dovan Lens-Captain's Twin-Command Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {
+          "unit_id": "unit_sunvault_shard_wardens",
+          "count": 34
+        },
+        {
+          "unit_id": "unit_sunvault_prism_adepts",
+          "count": 22
+        },
+        {
+          "unit_id": "unit_sunvault_mirror_duelists",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_sunvault_resonant_choristers",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_sunvault_solar_array_striders",
+          "count": 4
+        }
+      ],
+      "content_status": "twin_command_opening_company_live",
+      "content_batch_id": "content-six-twin-command-field-councils-10184"
+    },
+    {
+      "id": "army_forkroot_twin_command_company",
+      "name": "Merek Greenbarrow's Twin-Command Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {
+          "unit_id": "unit_thornwake_seedcutters",
+          "count": 34
+        },
+        {
+          "unit_id": "unit_thornwake_bramblekite_needlers",
+          "count": 22
+        },
+        {
+          "unit_id": "unit_thornwake_seedshield_wardens",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_thornwake_dawnseed_bolters",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_thornwake_seedglass_cantors",
+          "count": 4
+        }
+      ],
+      "content_status": "twin_command_opening_company_live",
+      "content_batch_id": "content-six-twin-command-field-councils-10184"
+    },
+    {
+      "id": "army_doublegauge_twin_command_company",
+      "name": "Oren Bellfounder's Twin-Command Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {
+          "unit_id": "unit_brasshollow_scrip_haulers",
+          "count": 34
+        },
+        {
+          "unit_id": "unit_brasshollow_quenchspool_slingers",
+          "count": 22
+        },
+        {
+          "unit_id": "unit_brasshollow_furnace_pavis_teams",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_brasshollow_boiler_rivetcasters",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_brasshollow_quenchbell_mortars",
+          "count": 4
+        }
+      ],
+      "content_status": "twin_command_opening_company_live",
+      "content_batch_id": "content-six-twin-command-field-councils-10184"
+    },
+    {
+      "id": "army_twinwake_twin_command_company",
+      "name": "Ruln Vanehook's Twin-Command Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {
+          "unit_id": "unit_veilmourn_bellwake_oars",
+          "count": 34
+        },
+        {
+          "unit_id": "unit_veilmourn_mourning_lanterns",
+          "count": 22
+        },
+        {
+          "unit_id": "unit_veilmourn_wakechain_boarders",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_veilmourn_undertow_harpooners",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_veilmourn_obituary_scribes",
+          "count": 4
+        }
+      ],
+      "content_status": "twin_command_opening_company_live",
+      "content_batch_id": "content-six-twin-command-field-councils-10184"
     }
   ]
 }

@@ -14988,6 +14988,210 @@
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
+    },
+    {
+      "id": "site_embercourt_twin_beacon_field_council",
+      "name": "Twin-Beacon Sluice Council",
+      "family": "scenario_objective",
+      "action_label": "Raise Both Beacon Writs",
+      "summary": "Torren must hold the home sluice while Orra carries a second field command through the rival cordon to Highwater Keep.",
+      "claim_rewards": {
+        "gold": 700,
+        "embergrain": 2
+      },
+      "claim_recruits": {
+        "unit_embercourt_lockglass_writcasters": 3,
+        "unit_embercourt_beaconline_writguard": 1
+      },
+      "claim_flags": {
+        "twinbeacon_both_writs_raised": true
+      },
+      "runtime_boundary": {
+        "status": "twin_command_field_council_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "multi_hero_command_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-twin-command-field-councils-10184",
+      "public_text": {
+        "public_summary": "A compact charred-bronze campaign table stands between two unequal forked blue beacon standards, with an amber signal cage, wax route tablets, and a floodgate-stone base.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_mireclaw_two_mask_field_council",
+      "name": "Two-Mask Peat Council",
+      "family": "scenario_objective",
+      "action_label": "Beat the Paired Route Drums",
+      "summary": "Tarn must anchor Duskfen while Nix takes a second hide standard through the zenith cordon to Murkward Ford.",
+      "claim_rewards": {
+        "gold": 700,
+        "peatwax": 2
+      },
+      "claim_recruits": {
+        "unit_mireclaw_mireglass_reedcasters": 3,
+        "unit_mireclaw_sporewake_chanters": 1
+      },
+      "claim_flags": {
+        "twomask_route_drums_answered": true
+      },
+      "runtime_boundary": {
+        "status": "twin_command_field_council_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "multi_hero_command_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-twin-command-field-councils-10184",
+      "public_text": {
+        "public_summary": "A crooked reed-and-bone command dais bears two distinct ragged hide standards above a peat brazier, chained route tokens, tusk hooks, and a low mudstone footing.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_sunvault_split_ray_field_council",
+      "name": "Split-Ray Meridian Council",
+      "family": "scenario_objective",
+      "action_label": "Align the Paired Rays",
+      "summary": "Dovan must keep Prismhearth's line while Calis carries a second refraction command to Halo Spire.",
+      "claim_rewards": {
+        "gold": 700,
+        "aetherglass": 2
+      },
+      "claim_recruits": {
+        "unit_sunvault_resonant_choristers": 3,
+        "unit_sunvault_solar_array_striders": 1
+      },
+      "claim_flags": {
+        "splitray_paired_rays_aligned": true
+      },
+      "runtime_boundary": {
+        "status": "twin_command_field_council_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "multi_hero_command_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-twin-command-field-councils-10184",
+      "public_text": {
+        "public_summary": "A faceted crystal planning plinth glows beneath two asymmetrical blue-and-ivory mirror pennants, a small solar ring, prism route markers, and stepped white stone.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_thornwake_forkroot_field_council",
+      "name": "Forkroot Seed Council",
+      "family": "scenario_objective",
+      "action_label": "Plant the Paired Route Seeds",
+      "summary": "Merek must keep the caravan root while Veyra carries a second living standard to Rootgate Nursery.",
+      "claim_rewards": {
+        "gold": 700,
+        "verdant_grafts": 2
+      },
+      "claim_recruits": {
+        "unit_thornwake_dawnseed_bolters": 3,
+        "unit_thornwake_seedglass_cantors": 1
+      },
+      "claim_flags": {
+        "forkroot_paired_seeds_planted": true
+      },
+      "runtime_boundary": {
+        "status": "twin_command_field_council_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "multi_hero_command_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-twin-command-field-councils-10184",
+      "public_text": {
+        "public_summary": "A living forked-root strategy seat supports two unequal woven leaf standards, two seed route bowls, a carved grafting stone, moss, and a compact root base.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_brasshollow_double_gauge_field_council",
+      "name": "Double-Gauge Dispatch Council",
+      "family": "scenario_objective",
+      "action_label": "Set Both Dispatch Gauges",
+      "summary": "Oren must hold Orevein's ledger while Vellum carries a second dispatch standard to Clauseworks Depot.",
+      "claim_rewards": {
+        "gold": 700,
+        "brass_scrip": 2
+      },
+      "claim_recruits": {
+        "unit_brasshollow_boiler_rivetcasters": 3,
+        "unit_brasshollow_quenchbell_mortars": 1
+      },
+      "claim_flags": {
+        "doublegauge_dispatch_gauges_set": true
+      },
+      "runtime_boundary": {
+        "status": "twin_command_field_council_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "multi_hero_command_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-twin-command-field-councils-10184",
+      "public_text": {
+        "public_summary": "A squat black-iron dispatch rig carries two offset riveted red standards above a pressure-gauge planning plate, chain route weights, and a furnace-brick base.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_veilmourn_twin_wake_field_council",
+      "name": "Twin-Wake Chart Council",
+      "family": "scenario_objective",
+      "action_label": "Sound Both Wake Bells",
+      "summary": "Ruln must hold Bellwake while Thir carries a second mourning command through the ash cordon to Fogchart Mooring.",
+      "claim_rewards": {
+        "gold": 700,
+        "memory_salt": 2
+      },
+      "claim_recruits": {
+        "unit_veilmourn_undertow_harpooners": 3,
+        "unit_veilmourn_obituary_scribes": 1
+      },
+      "claim_flags": {
+        "twinwake_both_wake_bells_sounded": true
+      },
+      "runtime_boundary": {
+        "status": "twin_command_field_council_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "multi_hero_command_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-twin-command-field-councils-10184",
+      "public_text": {
+        "public_summary": "A leaning tideglass chart mast flies two distinct mourning pennants above shell signal bells, salt route stones, dark driftwood, and a sea-glass base.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }
