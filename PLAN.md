@@ -24,8 +24,39 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-seven-school-signature-battle-vfx-10184`, one coherent seven-spell battle-presentation and package-efficiency batch.
-- Current package boundary after the slice: matching Linux and Windows release exports measure 245428912 bytes, 4571088 bytes below the unchanged 250000000-byte ceiling; all generated VFX masters remain excluded from both packages.
+- Most recently completed implementation slice: `content-six-horizon-capstone-monuments-10184`, one coherent six-citadel town-content and exact-art batch.
+- Current package boundary after the slice: matching Linux and Windows release exports measure 245878512 bytes, 4121488 bytes below the unchanged 250000000-byte ceiling; all generated building masters remain excluded from both packages.
+
+## Six Horizon Capstone Monuments
+
+id: `content-six-horizon-capstone-monuments-10184`
+
+Status: completed.
+
+Current finding:
+- the live catalog already contains twenty player-facing campaigns, ninety-nine scenarios, 142 exact-art units, 142 exact-art buildings, and 119 exact-icon spells, so another disconnected breadth increment would add less player value than a visible town-development choice;
+- Rainwrit Bastion, Hollowreed Sanctuary, Meridian Choirhold, Crownroot Refuge, Blackbell Foundry, and Pale Sounding Harbor are the six production Horizon citadels, but none owns a final faction monument that converts its mature build chain into a distinct rare-resource and reserve-company payoff;
+- the live town build, economy, weekly-growth, icon, save-version-9, and development-balance paths already support this bounded capstone layer without a new rules system or save migration.
+
+Implementation boundary:
+- add one original faction-specific civic capstone to each Horizon citadel, with a high-tier prerequisite chain and asymmetric supported effects across rare-resource income, reserve-company growth or discount, recovery, readiness, and road pressure;
+- generate six original square building masters, derive compact runtime icons, retain prompt/hash/accessibility provenance outside release packages, and wire every icon through the exact building-art manifest and live Build popup;
+- keep each monument exclusive to its exact citadel and faction, preserve one-build-per-day development, deterministic economy and growth, save version 9, Windows/Linux paths, generated-source exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all six monuments build through production TownRules only after their exact prerequisite chain, apply their authored next-day or next-week effects, and never leak into another town or faction;
+- all six exact icons load in the live Build popup with distinct non-color silhouettes, and completed monuments survive save-version-9 round trips;
+- one consolidated six-case town/economy/growth/art/save smoke runs only after the complete batch, followed once by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- Rainwrit, Hollowreed, Meridian, Crownroot, Blackbell, and Pale Sounding now each own one exclusive original civic monument, exact transparent building art, and an asymmetric live rare-income, reserve-company, readiness, pressure, or recovery payoff;
+- the monuments use two exact mature-chain prerequisites and common-resource conversion costs so all six expanded citadels still complete their full one-build-per-day development within thirty turns, while the cost-curve gate applies a narrow 25-target/49000-gold capstone envelope and leaves ordinary-town limits unchanged;
+- the single consolidated rendered smoke passes 6/6 exact content/art, locked prerequisites, production-authority builds and spending, live effects, visible Build-popup icons, save-version-9 round trips, and six 1280x720 captures;
+- repository validation passes; Linux and Windows export/startup gates pass with matching 245878512-byte PCKs, source art excluded, and 4121488 bytes of headroom below the unchanged ceiling.
+
+Non-goals:
+- no new unit, hero, town, scenario, encounter, campaign, artifact, spell, combat mechanic, strategic-AI algorithm, RMG behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes building, name, icon, text, visual design, or protected expression.
 
 ## Seven-School Signature Battle VFX
 

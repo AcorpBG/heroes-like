@@ -1,0 +1,71 @@
+{
+  "schema_id": "horizon_capstone_monument_building_art_v1",
+  "generator": "OpenAI built-in image generation",
+  "generated_at": "2026-08-31",
+  "use_case": "stylized-concept",
+  "asset_type": "fantasy strategy game town building master",
+  "curation": "Accepted outputs were alpha-checked, trimmed, contained within 1170x1170, centered on the established transparent 1254x1254 curated-building canvas, and visually inspected together at source and runtime scale. The initial Veilmourn output retained genuine alpha despite its dark preview; a later checkerboard-baked extraction attempt was rejected and is not retained.",
+  "runtime_pipeline": "tools/generate_building_icon_assets.py derives the shipped 256x256 icons; art/towns/source is excluded from Linux and Windows release packages.",
+  "items": [
+    {
+      "building_id": "building_embercourt_rainwrit_stormseal_treasury",
+      "prompt": "Rainwrit Stormseal Treasury: a compact rain-dark stone floodgate treasury with one tall bronze charter arch, a blazing amber beacon brazier, and a locked grain-seal wheel; polished hand-painted 2D strategy-game building icon, centered three-quarter isometric view, complete silhouette, genuinely transparent background; one building only, no people, text, frame, landscape, logo, watermark, or copied game design.",
+      "generation_original": "res://art/towns/source/buildings/generated/horizon_capstone_monuments/building_embercourt_rainwrit_stormseal_treasury_generation_original.png",
+      "generation_original_sha256": "7a75255cad8777504ee1439bdab5cc2d67251d4a6331134b4157b8c54329c01f",
+      "curated_source": "res://art/towns/source/buildings/curated/building_embercourt_rainwrit_stormseal_treasury.png",
+      "curated_source_sha256": "f9ed22a1f01c0f799ce5f0780145734285e449055317c0cceb9840fb92065aa0",
+      "runtime_icon_sha256": "e23a4d6a344e9b36067bb9e06bd488799113cfe2820979f22191f918e5b30bff",
+      "non_color_identity": "Tall charter arch, double floodgates, round grain-seal vault, and oversized beacon brazier."
+    },
+    {
+      "building_id": "building_mireclaw_hollowreed_moonwax_ossuary",
+      "prompt": "Hollowreed Moonwax Ossuary: a low tiered reedstone ossuary over a black peat pool, crowned by a huge crescent antler bell and pale fungus lamps with chained drum posts; polished hand-painted 2D strategy-game building icon, centered three-quarter isometric view, complete silhouette, genuinely transparent background; no people, gore, text, frame, logo, watermark, or copied game design.",
+      "generation_original": "res://art/towns/source/buildings/generated/horizon_capstone_monuments/building_mireclaw_hollowreed_moonwax_ossuary_generation_original.png",
+      "generation_original_sha256": "00f53d4ba591d0fdc470ec04c5b6658934fcfcfba641d25f9ff6ffb33f03def8",
+      "curated_source": "res://art/towns/source/buildings/curated/building_mireclaw_hollowreed_moonwax_ossuary.png",
+      "curated_source_sha256": "561eb353633c2eec4b3b4669cf65e87aa8c4c19c7d8669e7d2b2c8af0384adc6",
+      "runtime_icon_sha256": "aaca6fa6dec529a725931bc9cc3cfc8fe36f7b13fca0b829a8f7abc485484387",
+      "non_color_identity": "Low flooded steps under a towering crescent antler bell, paired drums, chains, and fungus lamps."
+    },
+    {
+      "building_id": "building_sunvault_meridian_seven_facet_orrery",
+      "prompt": "Meridian Seven-Facet Orrery: a white-stone stepped observatory supporting a large seven-sided floating prism ring, slender tuned chime pillars, and one concentrated noonlight beam; polished hand-painted 2D strategy-game building icon, centered three-quarter isometric view, complete silhouette, genuinely transparent background; no people, text, frame, logo, watermark, or copied game design.",
+      "generation_original": "res://art/towns/source/buildings/generated/horizon_capstone_monuments/building_sunvault_meridian_seven_facet_orrery_generation_original.png",
+      "generation_original_sha256": "8282c48bbcaadf2e8c188b4b9387a115431ee93c8ab9660c0876c1615a320ac4",
+      "curated_source": "res://art/towns/source/buildings/curated/building_sunvault_meridian_seven_facet_orrery.png",
+      "curated_source_sha256": "0397c47818c71ee0ee4714de61b14bfb6a1467de6fd9644719571b4965062274",
+      "runtime_icon_sha256": "977088d9bd572ac74456dd3edf83e89291dc2a22c661d7ea87b0e47a11d448ee",
+      "non_color_identity": "Seven-segment prism ring floating above broad concentric stairs and four thin chime towers."
+    },
+    {
+      "building_id": "building_thornwake_crownroot_heartseed_parliament",
+      "prompt": "Crownroot Heartseed Parliament: an immense hollow living root folded into a circular council grove, crowned by one luminous seedglass heart and crossed by woven branch bridges; polished hand-painted 2D strategy-game building icon, centered three-quarter isometric view, complete silhouette, genuinely transparent background; no people, faces in bark, text, frame, logo, watermark, or copied game design.",
+      "generation_original": "res://art/towns/source/buildings/generated/horizon_capstone_monuments/building_thornwake_crownroot_heartseed_parliament_generation_original.png",
+      "generation_original_sha256": "3a9cc55f44e895874d14a7109503c2faf0039f7355afa267f7fc49b68ada4a30",
+      "curated_source": "res://art/towns/source/buildings/curated/building_thornwake_crownroot_heartseed_parliament.png",
+      "curated_source_sha256": "322c93b66027af8124e211d129c8ae4ae4b050fe353c3c9758f7e496a6dad734",
+      "runtime_icon_sha256": "7ac048d60c26e948e5aee2f0e7d5550dfa032b35fa83e731c8fec03665843fea",
+      "non_color_identity": "Broad woven root crown surrounding a circular council hollow beneath one enormous faceted heartseed."
+    },
+    {
+      "building_id": "building_brasshollow_blackbell_grand_assay_bell",
+      "prompt": "Blackbell Grand Assay Bell: a squat basalt foundry court dominated by one enormous black quench bell suspended in a riveted pressure frame, flanked by red gauge pipes and a certified ore scale; polished hand-painted 2D strategy-game building icon, centered three-quarter isometric view, complete silhouette, genuinely transparent background; no people, text, frame, logo, watermark, or copied game design.",
+      "generation_original": "res://art/towns/source/buildings/generated/horizon_capstone_monuments/building_brasshollow_blackbell_grand_assay_bell_generation_original.png",
+      "generation_original_sha256": "b0f99b36c50b2858f568ec1b458c0b3e1315a423dcd51636924d9f6b1bcb3c86",
+      "curated_source": "res://art/towns/source/buildings/curated/building_brasshollow_blackbell_grand_assay_bell.png",
+      "curated_source_sha256": "8433baa4f45e0c807687da7e3f0fb9b23aaf08850dd161231efe45e56bca79f9",
+      "runtime_icon_sha256": "24c1e3301006d133381650c0da7029f89f0915e8167866710d85c7614592569d",
+      "non_color_identity": "Massive hanging black bell inside a squared pressure gantry, with red pipes and an ore balance."
+    },
+    {
+      "building_id": "building_veilmourn_pale_sounding_last_memory_beacon",
+      "prompt": "Pale Sounding Last-Memory Beacon: a low ivory-rib harbor shrine with a wide mirror-tide basin, one leaning bell mast, pale hooded lanterns, and suspended wakeglass charts; polished hand-painted 2D strategy-game building icon, centered three-quarter isometric view, complete silhouette, genuinely transparent background; no people, ships, skulls, text, frame, logo, watermark, or copied game design.",
+      "generation_original": "res://art/towns/source/buildings/generated/horizon_capstone_monuments/building_veilmourn_pale_sounding_last_memory_beacon_generation_original.png",
+      "generation_original_sha256": "2ce431c1424ced3275592a3c3f6e83184a525df2cd60bf3cb607cd94948410f3",
+      "curated_source": "res://art/towns/source/buildings/curated/building_veilmourn_pale_sounding_last_memory_beacon.png",
+      "curated_source_sha256": "964e48096769671c66b09026d14fa347ea7bd748d010e6c8c30ba15df5007aab",
+      "runtime_icon_sha256": "60da6a1381bcbd78e2d3652e4d282e99622fc2ef4181c8a986aed51bd59f0a17",
+      "non_color_identity": "Wide mirror basin ringed by ivory ribs and a single leaning mast carrying a bell and hanging charts."
+    }
+  ]
+}
