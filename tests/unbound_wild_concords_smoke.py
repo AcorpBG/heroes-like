@@ -48,6 +48,10 @@ def main() -> int:
         and row.get("scenario_victory") is True
         and row.get("exact_identity_art") is True
         and row.get("save_round_trip_exact") is True
+        and row.get("campaign_launch_exact") is True
+        and row.get("campaign_battle_victory_count") == 3
+        and row.get("oath_flag_exact") is True
+        and row.get("campaign_save_round_trip_exact") is True
         and len(row.get("unit_ids", [])) == 2
         and Path(row.get("capture_path", "")).is_file()
         for row in rows
@@ -56,6 +60,13 @@ def main() -> int:
         "ok": True,
         "case_count": 6,
         "save_version": 9,
+        "campaign_id": "campaign_six_unbound_oaths",
+        "campaign_complete": True,
+        "campaign_chapter_count": 6,
+        "campaign_battle_victory_count": 18,
+        "campaign_art_identity_count": 7,
+        "cross_commander_resource_only_carryover": True,
+        "single_consolidated_smoke": True,
     }
     failures = [
         f"{key}={report.get(key)!r}, expected {value!r}"
@@ -76,6 +87,10 @@ def main() -> int:
         "dual_unit_route_count": 6,
         "exact_identity_art_count": 6,
         "save_round_trip_count": 6,
+        "campaign_chapter_count": 6,
+        "campaign_battle_victory_count": 18,
+        "campaign_art_identity_count": 7,
+        "campaign_complete": True,
         "audio_runtime": "vorbis_44100_stereo",
         "single_consolidated_smoke": True,
     }

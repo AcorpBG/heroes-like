@@ -24,9 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected; choose the next coherent production-content batch before implementation begins.
-- Most recently completed implementation slice: `content-six-unbound-wild-concords-10184`, a coherent six-faction neutral-dwelling, underused-unit, encounter, exact-art, streamed-audio, package-headroom, battle, and save-continuity batch.
-- Current package boundary: matching Linux and Windows release exports measure 231228748 bytes, 18771252 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none; the next production-content batch must be selected from a fresh live-catalog audit rather than inferred from tracker volume.
+- Most recently completed implementation slice: `content-six-unbound-oaths-campaign-10184`, a coherent six-chapter campaign, bounded handoff, narrative, campaign-art, gameplay, and save-continuity batch across the newly shipped Wild Concord maps.
+- Current package boundary: matching Linux and Windows release exports measure 231238736 bytes, 18761264 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Unbound Oaths Campaign
+
+id: `content-six-unbound-oaths-campaign-10184`
+
+Status: completed on 2026-08-31.
+
+Current finding:
+- the six newest Wild Concord maps already provide one complete original neutral-dwelling expedition per faction, eighteen live battles, twelve player-recruitable neutral-unit identities, exact dwelling/encounter art, and save-version-9 continuity, but currently end as disconnected skirmish entries;
+- all authored heroes, towns, neutral units, encounters, and normal resource sites already have live placement or recruitment routes, so another isolated record batch would add less player value than a coherent campaign progression through the newest content;
+- the production campaign system already supports sequential victory-and-flag unlocks, bounded cross-commander resource handoff, chapter narrative, exact campaign art, skirmish/campaign dual availability, and cross-platform packaging without a new parallel runtime.
+
+Implementation boundary:
+- promote Pikeward Brambleback Concord, Mudkeel Mireglass Concord, Daynote Windcairn Concord, Thorncart Greenbranch Concord, Varn Scarshield Concord, and Mistcorsair Flaremast Concord into one original six-chapter campaign while preserving their skirmish availability and complete live map behavior;
+- add sequential victory-plus-dwelling-oath unlocks, capped common-resource handoff, strict commander progression/spell/artifact/army/rare-resource isolation, chapter briefings, intelligence, stakes, aftermaths, journals, and a complete campaign outcome;
+- generate one original campaign identity sheet, derive one 128px emblem and six distinct 64px chapter seals, retain exact hash/accessibility/prompt provenance outside packages, and keep Linux/Windows exports symmetric below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all six chapters launch through production campaign authority in exact order, import only the immediately preceding capped common stores and exact dwelling oath, preserve each map's three battle fronts, dwelling claim/recruitment route, dual-neutral-unit army objective, victory result, and save-version-9 continuity, then complete the campaign after six exact victories;
+- all seven campaign art identities resolve in the live campaign browser with byte-distinct silhouettes, exact hashes, non-color descriptions, and no source-art package leakage;
+- run one consolidated six-chapter gameplay/recruitment/art/carryover/save smoke only after the full batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- shipped the six-chapter `The Six Unbound Oaths` campaign while retaining all six maps as skirmishes, with exact sequential victory-and-oath unlocks, capped common-resource handoff, isolated armies/progression/spells/artifacts/rare resources, complete narrative surfaces, eighteen existing battle fronts, all twelve dwelling recruits, and a named final challenger;
+- generated one original emblem and six byte-distinct oath seals from a retained identity sheet, with exact hash/prompt/accessibility provenance, live campaign-browser resolution, and all high-resolution source masters excluded from packages;
+- the single consolidated batch smoke passed six production campaign launches, eighteen battle victories, twelve recruited unit identities, six chapter victories, exact chapter ordering and handoff controls, complete campaign resolution, seven exact art identities, and six save-version-9 round trips;
+- repository validation passed, and matching Linux and Windows exports booted with the native extension and measured 231238736 bytes, leaving 18761264 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, unit definition, town definition, building, spell, artifact, map, encounter, dwelling, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes campaign, creature, dwelling, map, name, text, insignia, or protected visual expression.
 
 ## Six Unbound Wild Concords
 

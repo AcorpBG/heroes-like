@@ -37,6 +37,9 @@ func _run() -> void:
 		await _validate_case(view, case_value)
 		print("%s CASE_DONE %s" % [_report_id(), String(case_value.get("site_id", ""))])
 	var report := {"ok":_errors.is_empty(),"case_count":_cases().size(),"atlas_path":_atlas_path(),"save_version":SessionStateStoreScript.SAVE_VERSION,"rows":_rows,"errors":_errors}
+	_finalize_batch_report(report)
+	report["ok"] = _errors.is_empty()
+	report["errors"] = _errors
 	_write_json("%s/report.json" % _output_dir(), report)
 	if _errors.is_empty():
 		print("%s %s" % [_report_id(), JSON.stringify({"ok":true,"case_count":_cases().size(),"save_version":SessionStateStoreScript.SAVE_VERSION})])
@@ -246,6 +249,10 @@ func _capture_environment_name() -> String:
 
 func _cases() -> Array:
 	return CASES
+
+
+func _finalize_batch_report(_report: Dictionary) -> void:
+	pass
 
 
 func _expect(condition: bool, message: String) -> void:
