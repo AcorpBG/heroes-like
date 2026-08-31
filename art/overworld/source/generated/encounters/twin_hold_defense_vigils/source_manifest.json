@@ -1,0 +1,68 @@
+{
+  "source_model": "built_in_image_gen_original_twin_hold_defense_vigil_atlas",
+  "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+  "generated_at": "2026-08-31T05:50:00Z",
+  "runtime_atlas": {
+    "path": "res://art/overworld/runtime/objects/encounters/twin_hold_defense_vigils/twin_hold_defense_vigils_atlas.png",
+    "dimensions": [288, 48],
+    "sha256": "9fa7863f90c798180d12ce7c5b25212b01ed5f58c89012285f69e1f645018cf1",
+    "frame_size": [48, 48]
+  },
+  "shared_prompt_contract": "Stylized original fantasy strategy overworld siege landmark, high three-quarter top-down view, transparent alpha, isolated object, strong non-color silhouette at 48x48, no people, text, logo, watermark, scenery, or copied game design.",
+  "items": [
+    {
+      "id": "gloamchain_sluice_ram",
+      "source_path": "res://art/overworld/source/generated/encounters/twin_hold_defense_vigils/gloamchain_sluice_ram_source.png",
+      "source_dimensions": [1536, 1024],
+      "source_sha256": "f8545dfc035a5e12dbfdb8a6575be7bb5f9bd95491961485f55e25fd840ba355",
+      "atlas_region": [0, 0, 48, 48],
+      "prompt_subject": "A low black ship-rib sluice ram with two gate jaws, crescent prow, hanging chain, and one torn mourning sail.",
+      "non_color_identity": "low ship-rib body, forked gate jaws, crescent prow, dangling chain"
+    },
+    {
+      "id": "red_ledger_pile_driver",
+      "source_path": "res://art/overworld/source/generated/encounters/twin_hold_defense_vigils/red_ledger_pile_driver_source.png",
+      "source_dimensions": [1024, 1536],
+      "source_sha256": "e011e68052036153bdc6fd74009dd7660a571dd3e00a7901b76c1e5ef2d3d50b",
+      "atlas_region": [48, 0, 48, 48],
+      "prompt_subject": "A tall forked brass piston tripod with an oversized driving hammer, unequal counterweights, gauge wheel, and reed stakes.",
+      "non_color_identity": "tall forked tripod, central hammer, unequal hanging weights"
+    },
+    {
+      "id": "rootshade_facet_breaker",
+      "source_path": "res://art/overworld/source/generated/encounters/twin_hold_defense_vigils/rootshade_facet_breaker_source.png",
+      "source_dimensions": [1536, 1024],
+      "source_sha256": "6ecd2116dc474b7951764077664fcf660612acafaa5686f5cd832e24e608eeaa",
+      "atlas_region": [96, 0, 48, 48],
+      "prompt_subject": "An asymmetric living-root claw gripping a shattered seven-sided lens beside a long horizontal breaker beam.",
+      "non_color_identity": "root claw, faceted broken lens, long lateral beam"
+    },
+    {
+      "id": "ashwrit_sapfire_tower",
+      "source_path": "res://art/overworld/source/generated/encounters/twin_hold_defense_vigils/ashwrit_sapfire_tower_source.png",
+      "source_dimensions": [1392, 1130],
+      "source_sha256": "0ba3029aa6351bb337728103d03fe90fadcb0512a390435de401856b62240a92",
+      "atlas_region": [144, 0, 48, 48],
+      "prompt_subject": "A squat broad sapfire tower with a wide ember cauldron crown, hooked branch shield, and three projecting nozzles.",
+      "non_color_identity": "broad wheeled tower, round cauldron crown, three nozzles"
+    },
+    {
+      "id": "zenith_wire_crucible",
+      "source_path": "res://art/overworld/source/generated/encounters/twin_hold_defense_vigils/zenith_wire_crucible_source.png",
+      "source_dimensions": [1312, 1199],
+      "source_sha256": "01f1a353bc2957d3ac72899ca4958e69212d652927c66524148bf499158ed4be",
+      "atlas_region": [192, 0, 48, 48],
+      "prompt_subject": "An open triangular ivory prism frame with a bowed wire, hanging round crucible, and three directional vanes.",
+      "non_color_identity": "open triangle, suspended sphere, bowed top wire, three vanes"
+    },
+    {
+      "id": "fenwake_bell_dredger",
+      "source_path": "res://art/overworld/source/generated/encounters/twin_hold_defense_vigils/fenwake_bell_dredger_source.png",
+      "source_dimensions": [1536, 1024],
+      "source_sha256": "f9f7d9f314e1b569dcb0a989b981592b1666578d2e56c6e4e62f881bfccd6c85",
+      "atlas_region": [240, 0, 48, 48],
+      "prompt_subject": "A long low reed barge carrying a huge crescent crane, giant bell dredging bucket, twin oars, and three floats.",
+      "non_color_identity": "long reed hull, crescent crane, hanging bell, twin oars"
+    }
+  ]
+}

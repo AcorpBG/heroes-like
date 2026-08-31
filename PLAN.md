@@ -25,8 +25,34 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Active implementation slice: none selected; the next production-content batch must be audited and registered before implementation.
-- Most recently completed implementation slice: `content-six-field-muster-commission-skirmishes-10184`, one coherent six-faction captain-led skirmish, battle-front, event, and encounter-landmark batch.
-- Current package boundary: matching Linux and Windows release exports measure 247628960 bytes, 2371040 bytes below the unchanged 250000000-byte ceiling; all generated encounter masters remain excluded from both packages.
+- Most recently completed implementation slice: `content-six-twin-hold-defense-vigils-10184`, one coherent six-faction defensive skirmish, siege-front, event, and landmark batch.
+- Current package boundary: matching Linux and Windows release exports measure 247622292 bytes, 2377708 bytes below the unchanged 250000000-byte ceiling; all generated encounter masters remain excluded from both packages.
+
+## Six Twin-Hold Defense Vigils
+
+id: `content-six-twin-hold-defense-vigils-10184`
+
+Status: completed.
+
+Current finding:
+- all 105 live scenarios are structurally offensive: their 517 victory objectives comprise 296 encounter clearances, 123 town captures, and 98 flags, while none uses the already-supported `day_at_least` victory condition;
+- the six field-muster captains, reserve companies, Horizon citadels, field musters, hostile raid pressure, scripted encounter spawning, and save-version-9 authority can support a genuinely defensive scenario family without a new save schema or strategic-AI subsystem;
+- a bounded six-faction holdout family adds more playable variety than another capture-road batch and gives the newest captains a second linked commission with a different command problem.
+
+Implementation boundary:
+- author six original skirmish-only 13x8 twin-hold vigils led by Maela Powderwrit, Rhask Reedcaller, Aven Sevenfold, Bryn Boltroot, Kestra Blackgauge, and Olan Tidehook, each starting with two player-owned towns, its four-stack reserve company, eight economy sites, one field muster, three static siege fronts, and a primary hostile faction;
+- make each victory require both holds to remain under the player's banner, all three siege fronts to be broken, and Day 12 to be reached, with a Day 18 loss deadline, hostile pressure, relief, salvage, and scripted counterstroke hooks;
+- add one original named siege encounter and army per faction matchup with an asymmetric battlefield objective, reward, victory flag, and exact non-color-dependent 48x48 landmark in one compact six-frame atlas;
+- preserve campaign wiring and order, existing towns/units/heroes/buildings/spells/artifacts, deterministic battle authority, save version 9, Windows/Linux paths, generated-source exclusion, performance/accessibility contracts, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- the six maps become the first authored Day-12 hold victories and remain skirmish-only, with no enemy-town capture requirement or campaign progression change;
+- every case launches its exact captain/company, renders both friendly holds and the exact primary siege landmark, resolves all three production battles, survives the scripted pressure chain through Day 12, declares victory only while both towns remain player-owned, and round-trips exactly through save version 9;
+- run one consolidated six-case defense/scenario/battle/art/save smoke only after the complete batch, followed once by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, unit definition, hero, town definition, building, spell, artifact, campaign, combat mechanic, strategic-AI algorithm, RMG/native behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes scenario, siege, commander, map, object, name, art, text, heraldry, or protected visual expression.
 
 ## Six Field-Muster Commission Skirmishes
 

@@ -2160,6 +2160,60 @@
         {"unit_id": "unit_veilmourn_mirrorkeel_reavers", "count": 3},
         {"unit_id": "unit_veilmourn_tidehook_deckhands", "count": 5}
       ]
+    },
+    {
+      "id": "army_gloamchain_sluice_ram", "name": "Gloamchain Sluice Crew", "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 9},
+        {"unit_id": "unit_veilmourn_obituary_scribes", "count": 5},
+        {"unit_id": "unit_veilmourn_mirrorkeel_reavers", "count": 2},
+        {"unit_id": "unit_veilmourn_tidehook_deckhands", "count": 4}
+      ]
+    },
+    {
+      "id": "army_red_ledger_pile_driver", "name": "Red Ledger Pile Crew", "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 9},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 5},
+        {"unit_id": "unit_brasshollow_debt_engine_exactors", "count": 2},
+        {"unit_id": "unit_brasshollow_gaugeplate_bailiffs", "count": 2}
+      ]
+    },
+    {
+      "id": "army_rootshade_facet_breaker", "name": "Rootshade Facet Crew", "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 9},
+        {"unit_id": "unit_thornwake_pollenhook_whistlers", "count": 6},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 2},
+        {"unit_id": "unit_thornwake_dawnseed_bolters", "count": 2}
+      ]
+    },
+    {
+      "id": "army_ashwrit_sapfire_tower", "name": "Ashwrit Sapfire Crew", "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 9},
+        {"unit_id": "unit_embercourt_lockglass_writcasters", "count": 5},
+        {"unit_id": "unit_embercourt_beacon_lectors", "count": 2},
+        {"unit_id": "unit_embercourt_cinderseal_bombardiers", "count": 1}
+      ]
+    },
+    {
+      "id": "army_zenith_wire_crucible", "name": "Zenith Crucible Guard", "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 9},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 6},
+        {"unit_id": "unit_sunvault_solar_array_striders", "count": 2},
+        {"unit_id": "unit_sunvault_noonfacet_sentinels", "count": 2}
+      ]
+    },
+    {
+      "id": "army_fenwake_bell_dredger", "name": "Fenwake Bell Crew", "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 10},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 6},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 2},
+        {"unit_id": "unit_mireclaw_mireglass_reedcasters", "count": 2}
+      ]
     }
   ]
 }
