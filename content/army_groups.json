@@ -2268,6 +2268,174 @@
         {"unit_id": "unit_veilmourn_mirrorkeel_reavers", "count": 1},
         {"unit_id": "unit_veilmourn_tidehook_deckhands", "count": 2}
       ]
+    },
+    {
+      "id": "army_lockfire_triune_academy_company",
+      "name": "Lockfire Triune Academy Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {
+          "unit_id": "unit_embercourt_fordhook_cadets",
+          "count": 48
+        },
+        {
+          "unit_id": "unit_embercourt_lantern_sappers",
+          "count": 32
+        },
+        {
+          "unit_id": "unit_embercourt_bargebow_crews",
+          "count": 20
+        },
+        {
+          "unit_id": "unit_embercourt_lockglass_writcasters",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_river_guard",
+          "count": 6
+        }
+      ],
+      "content_batch_id": "content-six-triune-arcanum-trials-10184"
+    },
+    {
+      "id": "army_moonfen_triune_academy_company",
+      "name": "Moonfen Triune Academy Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {
+          "unit_id": "unit_mireclaw_reedsnare_kin",
+          "count": 48
+        },
+        {
+          "unit_id": "unit_mireclaw_mudglass_slingers",
+          "count": 32
+        },
+        {
+          "unit_id": "unit_mireclaw_bogplate_maulers",
+          "count": 20
+        },
+        {
+          "unit_id": "unit_mireclaw_ferrychain_lashers",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_blackbranch_cutthroat",
+          "count": 6
+        }
+      ],
+      "content_batch_id": "content-six-triune-arcanum-trials-10184"
+    },
+    {
+      "id": "army_three_facet_triune_academy_company",
+      "name": "Three-Facet Triune Academy Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {
+          "unit_id": "unit_sunvault_shard_wardens",
+          "count": 48
+        },
+        {
+          "unit_id": "unit_sunvault_prism_adepts",
+          "count": 32
+        },
+        {
+          "unit_id": "unit_sunvault_mirror_duelists",
+          "count": 20
+        },
+        {
+          "unit_id": "unit_sunvault_resonant_choristers",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_shard_guard",
+          "count": 6
+        }
+      ],
+      "content_batch_id": "content-six-triune-arcanum-trials-10184"
+    },
+    {
+      "id": "army_heartwood_triune_academy_company",
+      "name": "Heartwood Triune Academy Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {
+          "unit_id": "unit_thornwake_seedcutters",
+          "count": 48
+        },
+        {
+          "unit_id": "unit_thornwake_bramblekite_needlers",
+          "count": 32
+        },
+        {
+          "unit_id": "unit_thornwake_sporeglass_menders",
+          "count": 20
+        },
+        {
+          "unit_id": "unit_thornwake_barkmantle_rams",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_thornwake_thornwhip_carriers",
+          "count": 6
+        }
+      ],
+      "content_batch_id": "content-six-triune-arcanum-trials-10184"
+    },
+    {
+      "id": "army_redline_triune_academy_company",
+      "name": "Redline Triune Academy Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {
+          "unit_id": "unit_brasshollow_scrip_haulers",
+          "count": 48
+        },
+        {
+          "unit_id": "unit_brasshollow_quenchspool_slingers",
+          "count": 32
+        },
+        {
+          "unit_id": "unit_brasshollow_gaugefire_arbalists",
+          "count": 20
+        },
+        {
+          "unit_id": "unit_brasshollow_boiler_rivetcasters",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_brasshollow_rivet_hounds",
+          "count": 6
+        }
+      ],
+      "content_batch_id": "content-six-triune-arcanum-trials-10184"
+    },
+    {
+      "id": "army_drowned_bell_triune_academy_company",
+      "name": "Drowned-Bell Triune Academy Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {
+          "unit_id": "unit_veilmourn_bellwake_oars",
+          "count": 48
+        },
+        {
+          "unit_id": "unit_veilmourn_mourning_lanterns",
+          "count": 32
+        },
+        {
+          "unit_id": "unit_veilmourn_maskglass_corsairs",
+          "count": 20
+        },
+        {
+          "unit_id": "unit_veilmourn_undertow_harpooners",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_veilmourn_tidehook_deckhands",
+          "count": 6
+        }
+      ],
+      "content_batch_id": "content-six-triune-arcanum-trials-10184"
     }
   ]
 }

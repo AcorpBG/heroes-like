@@ -5,6 +5,7 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
+const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 
 static var _scenario_dependency_metadata_cache: Dictionary = {}
 
@@ -304,6 +305,8 @@ static func _scenario_objective_dependency(objective: Dictionary, objective_inde
 	match String(objective.get("type", "")):
 		"artifact_owned_by_player":
 			_add_dependency_value(dependency, "artifact_ids", String(objective.get("artifact_id", "")))
+		"spell_known_by_player":
+			_add_dependency_value(dependency, "spell_ids", String(objective.get("spell_id", "")))
 		"town_owned_by_player", "town_not_owned_by_player":
 			_add_dependency_value(dependency, "town_placement_ids", String(objective.get("placement_id", "")))
 			_add_dependency_value(dependency, "town_ids", String(objective.get("town_id", "")))
@@ -394,6 +397,7 @@ static func _empty_dependency() -> Dictionary:
 		"hook_ids": [],
 		"resources": [],
 		"artifact_ids": [],
+		"spell_ids": [],
 		"day": false,
 	}
 
@@ -413,6 +417,7 @@ static func _scenario_event_dependency(event_facts: Dictionary) -> Dictionary:
 		"hook_ids",
 		"resources",
 		"artifact_ids",
+		"spell_ids",
 	]:
 		for value in _string_array(event_facts.get(key, [])):
 			_add_dependency_value(dependency, key, value)
@@ -434,6 +439,7 @@ static func _scenario_event_affects_dependency(event_dependency: Dictionary, dep
 		"hook_ids",
 		"resources",
 		"artifact_ids",
+		"spell_ids",
 	]:
 		if _arrays_intersect(event_dependency.get(key, []), dependency.get(key, [])):
 			return true
@@ -453,6 +459,7 @@ static func _merge_dependency(target: Dictionary, source: Dictionary) -> void:
 		"hook_ids",
 		"resources",
 		"artifact_ids",
+		"spell_ids",
 	]:
 		for value in _string_array(source.get(key, [])):
 			_add_dependency_value(target, key, value)
@@ -1507,6 +1514,8 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 	match String(objective.get("type", "")):
 		"artifact_owned_by_player":
 			return _player_owns_artifact(session, String(objective.get("artifact_id", "")))
+		"spell_known_by_player":
+			return _player_knows_spell(session, String(objective.get("spell_id", "")))
 		"town_owned_by_player":
 			var town := _find_town(session, objective)
 			return not town.is_empty() and String(town.get("owner", "neutral")) == "player"
@@ -1535,6 +1544,11 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 			return "%s (%s)" % [
 				base_label,
 				"Recovered" if _player_owns_artifact(session, String(objective.get("artifact_id", ""))) else "Missing",
+			]
+		"spell_known_by_player":
+			return "%s (%s)" % [
+				base_label,
+				"Learned" if _player_knows_spell(session, String(objective.get("spell_id", ""))) else "Unknown",
 			]
 		"enemy_pressure_at_least":
 			return "%s (%d/%d)" % [
@@ -1576,6 +1590,23 @@ static func _player_owns_artifact(session: SessionStateStoreScript.SessionData, 
 		if String(hero.get("id", "")) == active_hero_id:
 			continue
 		if ArtifactRulesScript.has_artifact(hero, artifact_id):
+			return true
+	return false
+
+static func _player_knows_spell(session: SessionStateStoreScript.SessionData, spell_id: String) -> bool:
+	if session == null or spell_id == "":
+		return false
+	var active_hero = session.overworld.get("hero", {})
+	if active_hero is Dictionary and SpellRulesScript.knows_spell(active_hero, spell_id):
+		return true
+	var active_hero_id := String(session.overworld.get("active_hero_id", active_hero.get("id", "") if active_hero is Dictionary else ""))
+	var heroes = session.overworld.get("player_heroes", [])
+	if not (heroes is Array):
+		return false
+	for hero in heroes:
+		if not (hero is Dictionary) or String(hero.get("id", "")) == active_hero_id:
+			continue
+		if SpellRulesScript.knows_spell(hero, spell_id):
 			return true
 	return false
 

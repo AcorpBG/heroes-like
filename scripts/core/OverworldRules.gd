@@ -1169,9 +1169,8 @@ static func _collect_resource_node_result(
 	var claim_flags := _resource_site_claim_flags(site)
 	for flag_key in claim_flags.keys():
 		session.flags[String(flag_key)] = claim_flags[flag_key]
-	var spell_message := _learn_site_spell(session, String(site.get("learn_spell_id", "")))
-	if spell_message != "":
-		messages.append(spell_message)
+	for spell_message in _learn_site_spells(session, _resource_site_spell_ids(site)):
+		messages.append(String(spell_message))
 	var site_vision_radius: int = max(0, int(site.get("vision_radius", 0)))
 	var site_reveal_tiles: int = _reveal_resource_site_claim_fog(session, node, site_vision_radius)
 	if site_reveal_tiles > 0:
@@ -2507,9 +2506,9 @@ static func _resource_interaction_event_facts(
 	if String(site.get("family", "")) == "scenario_objective" or bool(site.get("requires_full_scenario_eval", false)):
 		facts["requires_full_scenario_eval"] = true
 		facts["fallback_reason"] = "resource_site_explicit_objective"
-	var learned_spell_id := String(site.get("learn_spell_id", ""))
-	if learned_spell_id != "":
-		facts["spell_ids"] = [learned_spell_id]
+	var learned_spell_ids := _resource_site_spell_ids(site)
+	if not learned_spell_ids.is_empty():
+		facts["spell_ids"] = learned_spell_ids
 	return facts
 
 static func _artifact_interaction_event_facts(node: Dictionary) -> Dictionary:
@@ -6676,9 +6675,9 @@ static func _resource_site_yield_line(
 			parts.append("service ready")
 		elif bool(node.get("collected", false)):
 			parts.append("next service day %d" % _resource_site_next_visit_day(node, site))
-	var spell_id := String(site.get("learn_spell_id", ""))
-	if spell_id != "":
-		parts.append("teaches %s" % String(ContentService.get_spell(spell_id).get("name", spell_id)))
+	var lesson_names := _resource_site_spell_names(site)
+	if not lesson_names.is_empty():
+		parts.append("teaches %s" % ", ".join(lesson_names))
 	return ", ".join(_non_empty_strings(parts))
 
 static func _resource_site_route_line(
@@ -8253,9 +8252,9 @@ static func _resource_site_context_summary(session: SessionStateStoreScript.Sess
 		support_parts.append("recovery +%d" % int(town_support.get("recovery_relief", 0)))
 	if not support_parts.is_empty():
 		parts.append("Town support %s" % ", ".join(support_parts))
-	var spell_id := String(site.get("learn_spell_id", ""))
-	if spell_id != "":
-		parts.append("Teaches %s" % String(ContentService.get_spell(spell_id).get("name", spell_id)))
+	var lesson_names := _resource_site_spell_names(site)
+	if not lesson_names.is_empty():
+		parts.append("Teaches %s" % ", ".join(lesson_names))
 	if _resource_site_is_repeatable(site):
 		var service_summary := String(site.get("service_summary", ""))
 		if service_summary != "":
@@ -8348,6 +8347,35 @@ static func _learn_site_spell(session: SessionStateStoreScript.SessionData, spel
 		return ""
 	session.overworld["hero"] = result.get("hero", session.overworld.get("hero", {}))
 	return String(result.get("message", ""))
+
+static func _learn_site_spells(session: SessionStateStoreScript.SessionData, spell_ids: Variant) -> Array:
+	var messages := []
+	var normalized_spell_ids: Array = spell_ids if spell_ids is Array else []
+	for spell_id_value in normalized_spell_ids:
+		var message := _learn_site_spell(session, String(spell_id_value))
+		if message != "":
+			messages.append(message)
+	return messages
+
+static func _resource_site_spell_ids(site: Dictionary) -> Array:
+	var result := []
+	var legacy_spell_id := String(site.get("learn_spell_id", "")).strip_edges()
+	if legacy_spell_id != "":
+		result.append(legacy_spell_id)
+	var authored_spell_ids = site.get("learn_spell_ids", [])
+	if authored_spell_ids is Array:
+		for spell_id_value in authored_spell_ids:
+			var spell_id := String(spell_id_value).strip_edges()
+			if spell_id != "" and spell_id not in result:
+				result.append(spell_id)
+	return result
+
+static func _resource_site_spell_names(site: Dictionary) -> Array:
+	var result := []
+	for spell_id_value in _resource_site_spell_ids(site):
+		var spell_id := String(spell_id_value)
+		result.append(String(ContentService.get_spell(spell_id).get("name", spell_id)))
+	return result
 
 static func _issue_active_site_response(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var node_result := _find_context_resource_node(session)

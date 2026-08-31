@@ -8484,6 +8484,120 @@
       "presentation_role": "three_relic_pilgrimage_field_relic",
       "accessible_description": "The exact Saltwake Resonance Bell relic appears as a compact transparent field landmark.",
       "background": "transparent"
+    },
+    "resource_site_triune_arcanum_lockfire_rostrum": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/lockfire_triune_rostrum_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/lockfire_triune_rostrum_source.png",
+      "source_model": "built_in_image_gen_original_triune_arcanum_trials_atlas",
+      "assigned_resource_site_id": "site_lockfire_triune_rostrum",
+      "presentation_role": "bell_lantern_wax_tablet",
+      "accessible_description": "An ivory oath-stone rostrum carries a tall bronze bell, a forked lantern standard, and a red wax lance tablet."
+    },
+    "resource_site_triune_arcanum_moonfen_drumcourt": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/moonfen_triune_drumcourt_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/moonfen_triune_drumcourt_source.png",
+      "source_model": "built_in_image_gen_original_triune_arcanum_trials_atlas",
+      "assigned_resource_site_id": "site_moonfen_triune_drumcourt",
+      "presentation_role": "drum_retort_reed_basin",
+      "accessible_description": "A broad hide drum crowns a wet bogstone court beside a crooked silt-glass retort and reed-bound healing basin."
+    },
+    "resource_site_triune_arcanum_three_facet_orrery": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/three_facet_meridian_orrery_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/three_facet_meridian_orrery_source.png",
+      "source_model": "built_in_image_gen_original_triune_arcanum_trials_atlas",
+      "assigned_resource_site_id": "site_three_facet_meridian_orrery",
+      "presentation_role": "mirror_prism_focus_lens_star_compass",
+      "accessible_description": "A white-gold observatory plinth supports a suspended mirror prism, a long focus lens, and a seven-point star compass."
+    },
+    "resource_site_triune_arcanum_heartwood_arbor": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/heartwood_three_vow_arbor_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/heartwood_three_vow_arbor_source.png",
+      "source_model": "built_in_image_gen_original_triune_arcanum_trials_atlas",
+      "assigned_resource_site_id": "site_heartwood_three_vow_arbor",
+      "presentation_role": "thorn_seed_branch_loom_rootway_stone",
+      "accessible_description": "A living-root arch holds a thorn-crowned seed bowl, a flowering branch loom, and a bark-carved rootway stone."
+    },
+    "resource_site_triune_arcanum_redline_forge": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/redline_triune_assay_forge_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/redline_triune_assay_forge_source.png",
+      "source_model": "built_in_image_gen_original_triune_arcanum_trials_atlas",
+      "assigned_resource_site_id": "site_redline_triune_assay_forge",
+      "presentation_role": "ash_mantle_kiln_gauge_pressure_console",
+      "accessible_description": "A brass-and-basalt field forge joins a riveted ash mantle, a vertical kiln flame gauge, and a three-lever console."
+    },
+    "resource_site_triune_arcanum_drowned_bell_archive": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/drowned_bell_three_wake_archive_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/drowned_bell_three_wake_archive_source.png",
+      "source_model": "built_in_image_gen_original_triune_arcanum_trials_atlas",
+      "assigned_resource_site_id": "site_drowned_bell_three_wake_archive",
+      "presentation_role": "mourning_bell_duel_mask_tide_compass",
+      "accessible_description": "A salt-dark whale-bone archive holds a black glass mourning bell, a pale duel mask, and a tide-carved compass."
     }
   },
   "resource_site_sprites": {
@@ -9103,6 +9217,36 @@
     },
     "site_last_memory_mooring": {
       "asset_id": "resource_site_company_last_memory_mooring_controlled", "unclaimed_asset_id": "mapobj_last_memory_mooring", "fit": "Exact furled saltglass mooring paired with its raised-sail tidehook muster state."
+    },
+    "site_lockfire_triune_rostrum": {
+      "asset_id": "resource_site_triune_arcanum_lockfire_rostrum",
+      "unclaimed_asset_id": "resource_site_triune_arcanum_lockfire_rostrum",
+      "fit": "Exact original Lockfire Triune Rostrum remains visible before and after its one-time three-spell lesson."
+    },
+    "site_moonfen_triune_drumcourt": {
+      "asset_id": "resource_site_triune_arcanum_moonfen_drumcourt",
+      "unclaimed_asset_id": "resource_site_triune_arcanum_moonfen_drumcourt",
+      "fit": "Exact original Moonfen Triune Drumcourt remains visible before and after its one-time three-spell lesson."
+    },
+    "site_three_facet_meridian_orrery": {
+      "asset_id": "resource_site_triune_arcanum_three_facet_orrery",
+      "unclaimed_asset_id": "resource_site_triune_arcanum_three_facet_orrery",
+      "fit": "Exact original Three-Facet Meridian Orrery remains visible before and after its one-time three-spell lesson."
+    },
+    "site_heartwood_three_vow_arbor": {
+      "asset_id": "resource_site_triune_arcanum_heartwood_arbor",
+      "unclaimed_asset_id": "resource_site_triune_arcanum_heartwood_arbor",
+      "fit": "Exact original Heartwood Three-Vow Arbor remains visible before and after its one-time three-spell lesson."
+    },
+    "site_redline_triune_assay_forge": {
+      "asset_id": "resource_site_triune_arcanum_redline_forge",
+      "unclaimed_asset_id": "resource_site_triune_arcanum_redline_forge",
+      "fit": "Exact original Redline Triune Assay Forge remains visible before and after its one-time three-spell lesson."
+    },
+    "site_drowned_bell_three_wake_archive": {
+      "asset_id": "resource_site_triune_arcanum_drowned_bell_archive",
+      "unclaimed_asset_id": "resource_site_triune_arcanum_drowned_bell_archive",
+      "fit": "Exact original Drowned-Bell Three-Wake Archive remains visible before and after its one-time three-spell lesson."
     }
   },
   "artifact_default_sprite": {
