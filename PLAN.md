@@ -24,9 +24,42 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; the next substantial content batch remains to be selected under the continuing content-expansion goal.
-- Most recently completed implementation slice: `content-charterless-compact-campaign-10184`, a six-chapter, six-faction, six-mechanic campaign and original campaign-art batch for the final six roster heroes without a campaign lead role.
-- Current package boundary: matching Linux and Windows release exports measure 231413808 bytes, 18586192 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none selected after completing `content-six-veteran-company-musters-10184`; select and register the next content gap before starting another implementation wave.
+- Most recently completed implementation slice: `content-six-veteran-company-musters-10184`, six guarded faction recruitment operations that make all eighteen non-legacy production faction companies replaceable through live play.
+- Current package boundary: matching Linux and Windows release exports measure 231559132 bytes, 18440868 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Veteran Company Musters
+
+id: `content-six-veteran-company-musters-10184`
+
+Status: completed on 2026-08-31.
+
+Current finding:
+- all 142 authored units own exact runtime art and enter at least one army group, but eighteen non-legacy faction units can be fielded only when a scenario grants them in its starting company; none has a production claim or weekly recruitment source, so losses to those companies cannot be replaced through live play;
+- the gap spans every faction: three Embercourt, two Mireclaw, two Sunvault, five Thornwake, three Brasshollow, and three Veilmourn companies, including each faction's advanced signature unit; the separate legacy `unit_mirror_duelist` remains intentionally outside production recruitment claims;
+- production persistent-site authority already supports guarded claims, immediate recruits, weekly town delivery, asymmetric income, strategic-AI value, controlled-state art, save-version-9 continuity, and faction-linked rosters without a new recruitment subsystem.
+
+Implementation boundary:
+- add one original guarded veteran muster ground per faction, each granting and replenishing exactly its faction's currently non-recruitable production companies through existing claim and weekly-delivery authority;
+- author one original 15x9 skirmish operation per faction with an underused commander, a two-stack conventional opening company, player and enemy towns, three authored battle fronts, one guarded veteran ground, scoped recruit-and-control objectives, pressure, relief, counterstroke, and deadline behavior;
+- add six resource sites, six map objects, six player companies, twelve paired unclaimed/controlled map identities in one compact runtime atlas, and exact accessible prompt/hash provenance while reusing existing underused opposing encounters;
+- preserve unit definitions and balance, town recruitment ladders, combat rules, strategic-AI algorithms, save version 9, source-art package exclusion, Windows/Linux symmetry, and the unchanged 250000000-byte PCK ceiling.
+
+Completion criteria:
+- all six operations launch without any target veteran unit, resolve eighteen production battles, reject blocked claims, capture the exact faction ground, grant all eighteen intended identities through production authority, satisfy exact hero-army requirements, and complete as scenario victories;
+- controlled grounds deliver all eighteen unit identities to the nearest held town on the next weekly boundary, retain faction-exclusive rosters and distinct controlled art, reject repeat-claim mutation, and round-trip exactly through save version 9;
+- run one consolidated six-case gameplay/recruitment/art/weekly-delivery/save smoke only after the complete batch, followed once by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- shipped six original 15x9 skirmish-only veteran-muster operations, one per faction, each with an exact underused roster hero, lean two-stack opening company, player and enemy towns, three live battle fronts, five reactive hooks, a guarded faction muster, and exact recruit-and-control victory conditions;
+- added six persistent faction-linked resource sites, six first-class guarded map objects, six opening army groups, and immediate plus weekly recruitment for all eighteen non-legacy production units that previously existed only in starting armies; legacy `unit_mirror_duelist` remains outside production routes;
+- generated and inspected twelve paired unclaimed/controlled landmark identities from one retained transparent source sheet, packed them into one 576x48 runtime atlas, and wired exact accessible descriptions, prompt summaries, hashes, mappings, and package imports;
+- the single consolidated smoke passed six launches, eighteen production battle victories, six denied pre-guard claims, six live claims, all eighteen target recruits, six weekly town deliveries, six controlled-art transitions, six scenario victories, six save-version-9 round trips, six captures, and one reviewed contact sheet;
+- repository validation passed; Linux booted headlessly and Windows booted through Wine with the native extension, both exported all 42 required resource-site atlases and measured 231559132 bytes, leaving 18440868 bytes below the unchanged ceiling.
+
+Non-goals:
+- no legacy Mirror Duelist activation; no new faction, unit definition, hero, town, building, spell, artifact, campaign, combat formula, strategic-AI algorithm, native RMG behavior, save-version bump, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes dwelling, map, company, landmark, name, heraldry, text, art, or protected visual expression.
 
 ## The Charterless Compact Campaign
 

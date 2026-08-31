@@ -16014,10 +16014,10 @@
   "currentNotes": "Completed six original named-rival skirmish challenges with twelve underused roster heroes, twelve five-stack companies, six fixed rival encounters, eighteen guarded banner positions, six town captures, one generated six-banner atlas, one consolidated six-case gameplay/art/save smoke, repository validation, and matching Linux/Windows package boots at 231334232 bytes.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-six-named-rival-banner-challenges-10184",
-  "currentSliceId": "content-charterless-compact-campaign-10184",
-  "currentSliceNotes": "Shipped 6-chapter Charterless Compact campaign for the final 6 campaign-absent heroes; 6 mechanics, 18 production battles, bounded witness/resource handoff, 7 original art identities, consolidated gameplay/save smoke green, repo validation green, Linux and Windows packaged boots green at 231413808 bytes.",
+  "currentSliceId": "content-six-veteran-company-musters-10184",
+  "currentSliceNotes": "Completed six original guarded veteran-muster operations with six two-state landmarks and live immediate/weekly recruitment for all 18 previously start-only non-legacy faction units. One consolidated six-case smoke passed 18 production battles, 6 blocked claims, 6 live claims, 18 unit identities, 6 weekly deliveries, 6 victories, and 6 exact save-v9 round trips; repository validation and sequential Linux/Windows package boots passed at 231559132 bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content charterless compact campaign 10184",
+  "currentSliceTitle": "content six veteran company musters 10184",
   "currentSliceUpdatedAt": "2026-08-31T17:11:11Z",
   "deferredRiskRegister": [
     {
@@ -107225,6 +107225,16 @@
       "startedAt": "2026-08-31T18:01:37Z",
       "notes": "Shipped 6-chapter Charterless Compact campaign for the final 6 campaign-absent heroes; 6 mechanics, 18 production battles, bounded witness/resource handoff, 7 original art identities, consolidated gameplay/save smoke green, repo validation green, Linux and Windows packaged boots green at 231413808 bytes.",
       "completedAt": "2026-08-31T18:23:00Z"
+    },
+    {
+      "id": "content-six-veteran-company-musters-10184",
+      "title": "content six veteran company musters 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T19:02:23Z",
+      "startedAt": "2026-08-31T18:28:20Z",
+      "notes": "Completed six original guarded veteran-muster operations with six two-state landmarks and live immediate/weekly recruitment for all 18 previously start-only non-legacy faction units. One consolidated six-case smoke passed 18 production battles, 6 blocked claims, 6 live claims, 18 unit identities, 6 weekly deliveries, 6 victories, and 6 exact save-v9 round trips; repository validation and sequential Linux/Windows package boots passed at 231559132 bytes.",
+      "completedAt": "2026-08-31T19:02:23Z"
     }
   ],
   "project": "heroes-like",
@@ -107769,7 +107779,7 @@
   ],
   "summary": "Completed the coherent Seven-School Signature Battle VFX content, accessibility, live-presentation, and package-efficiency batch with one consolidated smoke.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T18:23:00Z",
+  "updatedAt": "2026-08-31T19:02:23Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

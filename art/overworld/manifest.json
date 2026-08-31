@@ -14601,6 +14601,252 @@
       "assigned_faction_id": "faction_embercourt",
       "presentation_role": "forked_river_pike_three_charter_plates",
       "accessible_description": "A forked river pike carries three separate rain-charred charter plates above a small beacon bowl, identifying Torren's line by its open double-prong crown."
+    },
+    "mapobj_ash_charter_rollhouse": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/ash_charter_rollhouse_unclaimed.png",
+      "source_model": "built_in_image_gen_original_veteran_company_musters_wave1",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_ash_charter_rollhouse",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "unclaimed ash-charter rollhouse",
+      "accessible_description": "A shuttered rain-black rollhouse stands behind a cold charter brazier and lowered forked pennant."
+    },
+    "resource_site_veteran_ash_charter_rollhouse_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/ash_charter_rollhouse_controlled.png",
+      "source_model": "built_in_image_gen_original_veteran_company_musters_wave1",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_ash_charter_rollhouse",
+      "presentation_role": "controlled_veteran_company_muster_state",
+      "accessible_description": "The same rollhouse opens beneath a raised ember pennant, lit brazier, and ready veteran-company muster racks."
+    },
+    "mapobj_gorefen_chain_ring": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/gorefen_chain_ring_unclaimed.png",
+      "source_model": "built_in_image_gen_original_veteran_company_musters_wave1",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_gorefen_chain_ring",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "unclaimed gorefen chain ring",
+      "accessible_description": "A dark iron chain ring lies slack among drowned posts, sealed drums, and an unlit fen lantern."
+    },
+    "resource_site_veteran_gorefen_chain_ring_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/gorefen_chain_ring_controlled.png",
+      "source_model": "built_in_image_gen_original_veteran_company_musters_wave1",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_gorefen_chain_ring",
+      "presentation_role": "controlled_veteran_company_muster_state",
+      "accessible_description": "The same ring stands taut beneath raised chain pennants, lit drums, and occupied veteran muster posts."
+    },
+    "mapobj_mirror_daybreak_drill_prism": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/mirror_daybreak_drill_prism_unclaimed.png",
+      "source_model": "built_in_image_gen_original_veteran_company_musters_wave1",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_mirror_daybreak_drill_prism",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "unclaimed mirror-daybreak drill prism",
+      "accessible_description": "A folded ivory drill prism rests between dark mirror fins and an empty sun-dial court."
+    },
+    "resource_site_veteran_mirror_daybreak_drill_prism_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/mirror_daybreak_drill_prism_controlled.png",
+      "source_model": "built_in_image_gen_original_veteran_company_musters_wave1",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_mirror_daybreak_drill_prism",
+      "presentation_role": "controlled_veteran_company_muster_state",
+      "accessible_description": "The same prism opens into a bright daybreak array with raised mirror fins and supplied drill stations."
+    },
+    "mapobj_five_bough_veteran_grove": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png",
+      "atlas_region": [
+        288,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/five_bough_veteran_grove_unclaimed.png",
+      "source_model": "built_in_image_gen_original_veteran_company_musters_wave1",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_five_bough_veteran_grove",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "unclaimed five-bough veteran grove",
+      "accessible_description": "Five dormant boughs curl around sealed seed shields, folded kite racks, and a sleeping root altar."
+    },
+    "resource_site_veteran_five_bough_veteran_grove_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png",
+      "atlas_region": [
+        336,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/five_bough_veteran_grove_controlled.png",
+      "source_model": "built_in_image_gen_original_veteran_company_musters_wave1",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_five_bough_veteran_grove",
+      "presentation_role": "controlled_veteran_company_muster_state",
+      "accessible_description": "The same five boughs flower around raised pennants, opened racks, and a luminous worldroot muster heart."
+    },
+    "mapobj_three_gauge_chapter_foundry": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png",
+      "atlas_region": [
+        384,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/three_gauge_chapter_foundry_unclaimed.png",
+      "source_model": "built_in_image_gen_original_veteran_company_musters_wave1",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_three_gauge_chapter_foundry",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "unclaimed three-gauge chapter foundry",
+      "accessible_description": "A cold black-brick foundry holds three dark gauges, a lowered bell hammer, and empty chapter racks."
+    },
+    "resource_site_veteran_three_gauge_chapter_foundry_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png",
+      "atlas_region": [
+        432,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/three_gauge_chapter_foundry_controlled.png",
+      "source_model": "built_in_image_gen_original_veteran_company_musters_wave1",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_three_gauge_chapter_foundry",
+      "presentation_role": "controlled_veteran_company_muster_state",
+      "accessible_description": "The same foundry burns beneath three live gauges, a raised chapter pennant, and supplied veteran weapon racks."
+    },
+    "mapobj_fog_keel_lastwatch_mooring": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png",
+      "atlas_region": [
+        480,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/fog_keel_lastwatch_mooring_unclaimed.png",
+      "source_model": "built_in_image_gen_original_veteran_company_musters_wave1",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_fog_keel_lastwatch_mooring",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "unclaimed fog-keel lastwatch mooring",
+      "accessible_description": "A pale ribbed mooring stands under a furled fog sail, dark lantern, and sealed lastwatch bell."
+    },
+    "resource_site_veteran_fog_keel_lastwatch_mooring_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png",
+      "atlas_region": [
+        528,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/fog_keel_lastwatch_mooring_controlled.png",
+      "source_model": "built_in_image_gen_original_veteran_company_musters_wave1",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_fog_keel_lastwatch_mooring",
+      "presentation_role": "controlled_veteran_company_muster_state",
+      "accessible_description": "The same mooring carries a raised pearl sail, lit bell-lanterns, and occupied veteran boarding racks."
     }
   },
   "resource_site_sprites": {
@@ -15885,6 +16131,36 @@
       "asset_id": "resource_site_named_rival_pikeward_charter_fork",
       "unclaimed_asset_id": "resource_site_named_rival_pikeward_charter_fork",
       "fit": "Exact original Pikeward Charter Fork remains visible before and after persistent command-banner control."
+    },
+    "site_ash_charter_rollhouse": {
+      "asset_id": "resource_site_veteran_ash_charter_rollhouse_controlled",
+      "unclaimed_asset_id": "mapobj_ash_charter_rollhouse",
+      "fit": "Exact original Ash-Charter Rollhouse paired with its raised-standard, supplied veteran muster state."
+    },
+    "site_gorefen_chain_ring": {
+      "asset_id": "resource_site_veteran_gorefen_chain_ring_controlled",
+      "unclaimed_asset_id": "mapobj_gorefen_chain_ring",
+      "fit": "Exact original Gorefen Chain Ring paired with its raised-standard, supplied veteran muster state."
+    },
+    "site_mirror_daybreak_drill_prism": {
+      "asset_id": "resource_site_veteran_mirror_daybreak_drill_prism_controlled",
+      "unclaimed_asset_id": "mapobj_mirror_daybreak_drill_prism",
+      "fit": "Exact original Mirror-Daybreak Drill Prism paired with its raised-standard, supplied veteran muster state."
+    },
+    "site_five_bough_veteran_grove": {
+      "asset_id": "resource_site_veteran_five_bough_veteran_grove_controlled",
+      "unclaimed_asset_id": "mapobj_five_bough_veteran_grove",
+      "fit": "Exact original Five-Bough Veteran Grove paired with its raised-standard, supplied veteran muster state."
+    },
+    "site_three_gauge_chapter_foundry": {
+      "asset_id": "resource_site_veteran_three_gauge_chapter_foundry_controlled",
+      "unclaimed_asset_id": "mapobj_three_gauge_chapter_foundry",
+      "fit": "Exact original Three-Gauge Chapter Foundry paired with its raised-standard, supplied veteran muster state."
+    },
+    "site_fog_keel_lastwatch_mooring": {
+      "asset_id": "resource_site_veteran_fog_keel_lastwatch_mooring_controlled",
+      "unclaimed_asset_id": "mapobj_fog_keel_lastwatch_mooring",
+      "fit": "Exact original Fog-Keel Lastwatch Mooring paired with its raised-standard, supplied veteran muster state."
     }
   },
   "artifact_default_sprite": {

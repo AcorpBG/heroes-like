@@ -17784,6 +17784,414 @@
       "content_status": "named_rival_banner_live",
       "content_batch_id": "content-six-named-rival-banner-challenges-10184",
       "named_rival_banner_role": "exact_three_position_command_mark"
+    },
+    {
+      "id": "site_ash_charter_rollhouse",
+      "name": "Ash-Charter Rollhouse",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "faction_linked",
+      "faction_id": "faction_embercourt",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 180,
+        "embergrain": 1
+      },
+      "claim_flags": {
+        "ashcharter_veteran_muster_claimed": true
+      },
+      "control_income": {
+        "gold": 40,
+        "embergrain": 1
+      },
+      "claim_recruits": {
+        "unit_embercourt_lantern_sappers": 4,
+        "unit_embercourt_ash_oath_bailiffs": 2,
+        "unit_embercourt_charter_colossus": 1
+      },
+      "weekly_recruits": {
+        "unit_embercourt_lantern_sappers": 1,
+        "unit_embercourt_ash_oath_bailiffs": 1,
+        "unit_embercourt_charter_colossus": 1
+      },
+      "response_profile": {
+        "action_label": "Send the Veteran Roll",
+        "summary": "Ash-Charter Rollhouse dispatches its certified companies to the nearest held town.",
+        "movement_cost": 6,
+        "resource_cost": {
+          "gold": 300,
+          "embergrain": 1
+        },
+        "watch_days": 5,
+        "quality_bonus": 6,
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "runtime_boundary": {
+        "status": "guarded_faction_linked_dwelling_live",
+        "resource_site_runtime_supported": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "weekly_town_delivery_live": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_status": "veteran_company_muster_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184",
+      "batch_role": "guarded_faction_veteran_company_muster",
+      "veteran_company_contract": {
+        "company_unit_ids": [
+          "unit_embercourt_lantern_sappers",
+          "unit_embercourt_ash_oath_bailiffs",
+          "unit_embercourt_charter_colossus"
+        ],
+        "recruit_policy": "immediate_and_weekly_muster",
+        "recurring_recruit_access": true,
+        "faction_linked": true,
+        "guarded_claim": true
+      },
+      "public_summary": "A rain-black charter house trains the sapper, bailiff, and colossus companies that keep Embercourt's veteran writs enforceable.",
+      "accessibility_text": "Guarded faction muster for Lantern Sappers, Ash-Oath Bailiffs, Charter Colossus; the controlled state raises its standard and lights its company stations."
+    },
+    {
+      "id": "site_gorefen_chain_ring",
+      "name": "Gorefen Chain Ring",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "faction_linked",
+      "faction_id": "faction_mireclaw",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 180,
+        "peatwax": 1
+      },
+      "claim_flags": {
+        "gorefenring_veteran_muster_claimed": true
+      },
+      "control_income": {
+        "gold": 40,
+        "peatwax": 1
+      },
+      "claim_recruits": {
+        "unit_mireclaw_ferrychain_lashers": 2,
+        "unit_mireclaw_gorefen_rippers": 1
+      },
+      "weekly_recruits": {
+        "unit_mireclaw_ferrychain_lashers": 1,
+        "unit_mireclaw_gorefen_rippers": 1
+      },
+      "response_profile": {
+        "action_label": "Send the Veteran Roll",
+        "summary": "Gorefen Chain Ring dispatches its certified companies to the nearest held town.",
+        "movement_cost": 6,
+        "resource_cost": {
+          "gold": 300,
+          "peatwax": 1
+        },
+        "watch_days": 5,
+        "quality_bonus": 6,
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "runtime_boundary": {
+        "status": "guarded_faction_linked_dwelling_live",
+        "resource_site_runtime_supported": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "weekly_town_delivery_live": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_status": "veteran_company_muster_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184",
+      "batch_role": "guarded_faction_veteran_company_muster",
+      "veteran_company_contract": {
+        "company_unit_ids": [
+          "unit_mireclaw_ferrychain_lashers",
+          "unit_mireclaw_gorefen_rippers"
+        ],
+        "recruit_policy": "immediate_and_weekly_muster",
+        "recurring_recruit_access": true,
+        "faction_linked": true,
+        "guarded_claim": true
+      },
+      "public_summary": "A chained fen ring binds ferry crews and Gorefen shock companies into a repeatable veteran levy.",
+      "accessibility_text": "Guarded faction muster for Ferrychain Lashers, Gorefen Rippers; the controlled state raises its standard and lights its company stations."
+    },
+    {
+      "id": "site_mirror_daybreak_drill_prism",
+      "name": "Mirror-Daybreak Drill Prism",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "faction_linked",
+      "faction_id": "faction_sunvault",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 180,
+        "aetherglass": 1
+      },
+      "claim_flags": {
+        "daybreakprism_veteran_muster_claimed": true
+      },
+      "control_income": {
+        "gold": 40,
+        "aetherglass": 1
+      },
+      "claim_recruits": {
+        "unit_sunvault_mirror_duelists": 3,
+        "unit_sunvault_daybreak_colossus": 1
+      },
+      "weekly_recruits": {
+        "unit_sunvault_mirror_duelists": 1,
+        "unit_sunvault_daybreak_colossus": 1
+      },
+      "response_profile": {
+        "action_label": "Send the Veteran Roll",
+        "summary": "Mirror-Daybreak Drill Prism dispatches its certified companies to the nearest held town.",
+        "movement_cost": 6,
+        "resource_cost": {
+          "gold": 300,
+          "aetherglass": 1
+        },
+        "watch_days": 5,
+        "quality_bonus": 6,
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "runtime_boundary": {
+        "status": "guarded_faction_linked_dwelling_live",
+        "resource_site_runtime_supported": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "weekly_town_delivery_live": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_status": "veteran_company_muster_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184",
+      "batch_role": "guarded_faction_veteran_company_muster",
+      "veteran_company_contract": {
+        "company_unit_ids": [
+          "unit_sunvault_mirror_duelists",
+          "unit_sunvault_daybreak_colossus"
+        ],
+        "recruit_policy": "immediate_and_weekly_muster",
+        "recurring_recruit_access": true,
+        "faction_linked": true,
+        "guarded_claim": true
+      },
+      "public_summary": "A split drill prism aligns mirror duelists and Daybreak colossi under one precise Sunvault training cadence.",
+      "accessibility_text": "Guarded faction muster for Mirror Duelists, Daybreak Colossus; the controlled state raises its standard and lights its company stations."
+    },
+    {
+      "id": "site_five_bough_veteran_grove",
+      "name": "Five-Bough Veteran Grove",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "faction_linked",
+      "faction_id": "faction_thornwake",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 180,
+        "verdant_grafts": 1
+      },
+      "claim_flags": {
+        "fivebough_veteran_muster_claimed": true
+      },
+      "control_income": {
+        "gold": 40,
+        "verdant_grafts": 1
+      },
+      "claim_recruits": {
+        "unit_thornwake_pollenhook_whistlers": 6,
+        "unit_thornwake_bramblekite_needlers": 4,
+        "unit_thornwake_seedshield_wardens": 3,
+        "unit_thornwake_graft_matriarchs": 1,
+        "unit_thornwake_worldroot_bastion": 1
+      },
+      "weekly_recruits": {
+        "unit_thornwake_pollenhook_whistlers": 1,
+        "unit_thornwake_bramblekite_needlers": 1,
+        "unit_thornwake_seedshield_wardens": 1,
+        "unit_thornwake_graft_matriarchs": 1,
+        "unit_thornwake_worldroot_bastion": 1
+      },
+      "response_profile": {
+        "action_label": "Send the Veteran Roll",
+        "summary": "Five-Bough Veteran Grove dispatches its certified companies to the nearest held town.",
+        "movement_cost": 6,
+        "resource_cost": {
+          "gold": 300,
+          "verdant_grafts": 1
+        },
+        "watch_days": 5,
+        "quality_bonus": 6,
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "runtime_boundary": {
+        "status": "guarded_faction_linked_dwelling_live",
+        "resource_site_runtime_supported": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "weekly_town_delivery_live": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_status": "veteran_company_muster_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184",
+      "batch_role": "guarded_faction_veteran_company_muster",
+      "veteran_company_contract": {
+        "company_unit_ids": [
+          "unit_thornwake_pollenhook_whistlers",
+          "unit_thornwake_bramblekite_needlers",
+          "unit_thornwake_seedshield_wardens",
+          "unit_thornwake_graft_matriarchs",
+          "unit_thornwake_worldroot_bastion"
+        ],
+        "recruit_policy": "immediate_and_weekly_muster",
+        "recurring_recruit_access": true,
+        "faction_linked": true,
+        "guarded_claim": true
+      },
+      "public_summary": "Five living boughs call every Thornwake company grade, from pollenhook scouts to the Worldroot Bastion.",
+      "accessibility_text": "Guarded faction muster for Pollenhook Whistlers, Bramblekite Needlers, Seedshield Wardens, Graft Matriarchs, Worldroot Bastion; the controlled state raises its standard and lights its company stations."
+    },
+    {
+      "id": "site_three_gauge_chapter_foundry",
+      "name": "Three-Gauge Chapter Foundry",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "faction_linked",
+      "faction_id": "faction_brasshollow",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 180,
+        "brass_scrip": 1
+      },
+      "claim_flags": {
+        "threegauge_veteran_muster_claimed": true
+      },
+      "control_income": {
+        "gold": 40,
+        "brass_scrip": 1
+      },
+      "claim_recruits": {
+        "unit_brasshollow_quenchspool_slingers": 4,
+        "unit_brasshollow_gaugefire_arbalists": 3,
+        "unit_brasshollow_foundry_saint": 1
+      },
+      "weekly_recruits": {
+        "unit_brasshollow_quenchspool_slingers": 1,
+        "unit_brasshollow_gaugefire_arbalists": 1,
+        "unit_brasshollow_foundry_saint": 1
+      },
+      "response_profile": {
+        "action_label": "Send the Veteran Roll",
+        "summary": "Three-Gauge Chapter Foundry dispatches its certified companies to the nearest held town.",
+        "movement_cost": 6,
+        "resource_cost": {
+          "gold": 300,
+          "brass_scrip": 1
+        },
+        "watch_days": 5,
+        "quality_bonus": 6,
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "runtime_boundary": {
+        "status": "guarded_faction_linked_dwelling_live",
+        "resource_site_runtime_supported": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "weekly_town_delivery_live": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_status": "veteran_company_muster_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184",
+      "batch_role": "guarded_faction_veteran_company_muster",
+      "veteran_company_contract": {
+        "company_unit_ids": [
+          "unit_brasshollow_quenchspool_slingers",
+          "unit_brasshollow_gaugefire_arbalists",
+          "unit_brasshollow_foundry_saint"
+        ],
+        "recruit_policy": "immediate_and_weekly_muster",
+        "recurring_recruit_access": true,
+        "faction_linked": true,
+        "guarded_claim": true
+      },
+      "public_summary": "Three independently read gauges certify quenchspool, gaugefire, and Foundry Saint chapters for field service.",
+      "accessibility_text": "Guarded faction muster for Quenchspool Slingers, Gaugefire Arbalists, Foundry Saint; the controlled state raises its standard and lights its company stations."
+    },
+    {
+      "id": "site_fog_keel_lastwatch_mooring",
+      "name": "Fog-Keel Lastwatch Mooring",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "faction_linked",
+      "faction_id": "faction_veilmourn",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 180,
+        "memory_salt": 1
+      },
+      "claim_flags": {
+        "fogkeel_veteran_muster_claimed": true
+      },
+      "control_income": {
+        "gold": 40,
+        "memory_salt": 1
+      },
+      "claim_recruits": {
+        "unit_veilmourn_wakechain_boarders": 3,
+        "unit_veilmourn_mirrorkeel_reavers": 1,
+        "unit_veilmourn_fogbound_leviathan": 1
+      },
+      "weekly_recruits": {
+        "unit_veilmourn_wakechain_boarders": 1,
+        "unit_veilmourn_mirrorkeel_reavers": 1,
+        "unit_veilmourn_fogbound_leviathan": 1
+      },
+      "response_profile": {
+        "action_label": "Send the Veteran Roll",
+        "summary": "Fog-Keel Lastwatch Mooring dispatches its certified companies to the nearest held town.",
+        "movement_cost": 6,
+        "resource_cost": {
+          "gold": 300,
+          "memory_salt": 1
+        },
+        "watch_days": 5,
+        "quality_bonus": 6,
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "runtime_boundary": {
+        "status": "guarded_faction_linked_dwelling_live",
+        "resource_site_runtime_supported": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "weekly_town_delivery_live": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_status": "veteran_company_muster_live",
+      "content_batch_id": "content-six-veteran-company-musters-10184",
+      "batch_role": "guarded_faction_veteran_company_muster",
+      "veteran_company_contract": {
+        "company_unit_ids": [
+          "unit_veilmourn_wakechain_boarders",
+          "unit_veilmourn_mirrorkeel_reavers",
+          "unit_veilmourn_fogbound_leviathan"
+        ],
+        "recruit_policy": "immediate_and_weekly_muster",
+        "recurring_recruit_access": true,
+        "faction_linked": true,
+        "guarded_claim": true
+      },
+      "public_summary": "A fog-keel mooring restores Veilmourn's boarder, reaver, and leviathan companies to the weekly harbor rolls.",
+      "accessibility_text": "Guarded faction muster for Wakechain Boarders, Mirror-Keel Reavers, Fogbound Leviathan; the controlled state raises its standard and lights its company stations."
     }
   ]
 }
