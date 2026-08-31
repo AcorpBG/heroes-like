@@ -12975,6 +12975,120 @@
       "assigned_resource_site_id": "site_pale_sounding_last_memory_marker",
       "presentation_role": "pale_sounding_last_memory_marker",
       "accessible_description": "A slender whale-bone frame suspends an off-center pale bell above a black mirror-water bowl and three depth cords."
+    },
+    "resource_site_grand_muster_rainwrit_standard": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/rainwrit_five_writ_muster_standard_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/rainwrit_five_writ_muster_standard_source.png",
+      "source_model": "built_in_image_gen_original_grand_muster_assemblies_atlas",
+      "assigned_resource_site_id": "site_rainwrit_five_writ_muster_standard",
+      "presentation_role": "rainwrit_five_writ_muster_standard",
+      "accessible_description": "A bronze storm-fork mast rises from a floodgate plinth beside a long split pennant and five hanging tally tabs."
+    },
+    "resource_site_grand_muster_hollowreed_standard": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/hollowreed_moonhide_drum_standard_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/hollowreed_moonhide_drum_standard_source.png",
+      "source_model": "built_in_image_gen_original_grand_muster_assemblies_atlas",
+      "assigned_resource_site_id": "site_hollowreed_moonhide_drum_standard",
+      "presentation_role": "hollowreed_moonhide_drum_standard",
+      "accessible_description": "A broad hide drum sits inside a crescent antler frame hung with chain reeds, bone clappers, and five fang tokens."
+    },
+    "resource_site_grand_muster_meridian_prism": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/meridian_five_facet_muster_prism_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/meridian_five_facet_muster_prism_source.png",
+      "source_model": "built_in_image_gen_original_grand_muster_assemblies_atlas",
+      "assigned_resource_site_id": "site_meridian_five_facet_muster_prism",
+      "presentation_role": "meridian_five_facet_muster_prism",
+      "accessible_description": "A mirrored mast carries five offset crystal vanes around an open sun ring, with unequal glass feet and one blue ribbon."
+    },
+    "resource_site_grand_muster_crownroot_bough": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/crownroot_five_seed_muster_bough_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/crownroot_five_seed_muster_bough_source.png",
+      "source_model": "built_in_image_gen_original_grand_muster_assemblies_atlas",
+      "assigned_resource_site_id": "site_crownroot_five_seed_muster_bough",
+      "presentation_role": "crownroot_five_seed_muster_bough",
+      "accessible_description": "A forked living root arches around five amber seed counters beside a woven thorncloth pennant and grafting stone."
+    },
+    "resource_site_grand_muster_blackbell_gantry": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/blackbell_five_clause_muster_gantry_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/blackbell_five_clause_muster_gantry_source.png",
+      "source_model": "built_in_image_gen_original_grand_muster_assemblies_atlas",
+      "assigned_resource_site_id": "site_blackbell_five_clause_muster_gantry",
+      "presentation_role": "blackbell_five_clause_muster_gantry",
+      "accessible_description": "A squat black-iron gantry carries an off-center blank gauge, chain winch, five clapper plates, and a short red-black pennant."
+    },
+    "resource_site_grand_muster_pale_sounding_mast": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/pale_sounding_five_wake_muster_mast_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/pale_sounding_five_wake_muster_mast_source.png",
+      "source_model": "built_in_image_gen_original_grand_muster_assemblies_atlas",
+      "assigned_resource_site_id": "site_pale_sounding_five_wake_muster_mast",
+      "presentation_role": "pale_sounding_five_wake_muster_mast",
+      "accessible_description": "A leaning memorial ship mast bears five shell bells, a hooked crossbar, crescent mourning sail, memory lamp, and saltglass keel base."
     }
   },
   "resource_site_sprites": {
@@ -13929,6 +14043,36 @@
       "asset_id": "resource_site_great_work_pale_sounding_marker",
       "unclaimed_asset_id": "resource_site_great_work_pale_sounding_marker",
       "fit": "Exact original Pale Sounding Last-Memory Marker remains visible before and after its one-time survey claim."
+    },
+    "site_rainwrit_five_writ_muster_standard": {
+      "asset_id": "resource_site_grand_muster_rainwrit_standard",
+      "unclaimed_asset_id": "resource_site_grand_muster_rainwrit_standard",
+      "fit": "Exact original Rainwrit Five-Writ Muster Standard remains visible before and after its one-time muster claim."
+    },
+    "site_hollowreed_moonhide_drum_standard": {
+      "asset_id": "resource_site_grand_muster_hollowreed_standard",
+      "unclaimed_asset_id": "resource_site_grand_muster_hollowreed_standard",
+      "fit": "Exact original Hollowreed Moonhide Drum Standard remains visible before and after its one-time muster claim."
+    },
+    "site_meridian_five_facet_muster_prism": {
+      "asset_id": "resource_site_grand_muster_meridian_prism",
+      "unclaimed_asset_id": "resource_site_grand_muster_meridian_prism",
+      "fit": "Exact original Meridian Five-Facet Muster Prism remains visible before and after its one-time muster claim."
+    },
+    "site_crownroot_five_seed_muster_bough": {
+      "asset_id": "resource_site_grand_muster_crownroot_bough",
+      "unclaimed_asset_id": "resource_site_grand_muster_crownroot_bough",
+      "fit": "Exact original Crownroot Five-Seed Muster Bough remains visible before and after its one-time muster claim."
+    },
+    "site_blackbell_five_clause_muster_gantry": {
+      "asset_id": "resource_site_grand_muster_blackbell_gantry",
+      "unclaimed_asset_id": "resource_site_grand_muster_blackbell_gantry",
+      "fit": "Exact original Blackbell Five-Clause Muster Gantry remains visible before and after its one-time muster claim."
+    },
+    "site_pale_sounding_five_wake_muster_mast": {
+      "asset_id": "resource_site_grand_muster_pale_sounding_mast",
+      "unclaimed_asset_id": "resource_site_grand_muster_pale_sounding_mast",
+      "fit": "Exact original Pale Sounding Five-Wake Muster Mast remains visible before and after its one-time muster claim."
     }
   },
   "artifact_default_sprite": {

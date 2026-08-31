@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "source_model": "built_in_image_gen_original_grand_muster_assemblies_atlas",
+  "generation_mode": "built_in_image_gen",
+  "source_date_utc": "2026-08-31",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_region_size": [48, 48],
+  "runtime_atlas_sha256": "175f2028ef2517dc9f482eb03020ab2aceb13b3369dfe4be31d28da7511e22a2",
+  "processing": "preserve generated alpha, alpha-trim, aspect-fit within 42x42, and center on transparent 48x48 cells",
+  "prompt_set_summary": "Six original isolated transparent faction rally standards with structurally distinct floodgate, antler-drum, prism, living-root, pressure-gantry, and memorial-mast silhouettes. Painterly fantasy-strategy readability at 48 pixels; no copied names, heraldry, art, text, or protected visual expression.",
+  "items": [
+    {
+      "site_id": "site_rainwrit_five_writ_muster_standard",
+      "asset_id": "resource_site_grand_muster_rainwrit_standard",
+      "source_path": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/rainwrit_five_writ_muster_standard_source.png",
+      "source_sha256": "8cbcba86ee59c27d74ebb5ccff6fcea8df6e07f8402a6f3ffff7ebf2faa9c5ac",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-2ed459cc-18eb-4999-a89d-da425f95906d.png",
+      "atlas_region": [0, 0, 48, 48],
+      "prompt_summary": "Bronze storm-fork muster mast on a floodgate plinth with split pennant, tally seals, shield hook, and five hanging tabs."
+    },
+    {
+      "site_id": "site_hollowreed_moonhide_drum_standard",
+      "asset_id": "resource_site_grand_muster_hollowreed_standard",
+      "source_path": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/hollowreed_moonhide_drum_standard_source.png",
+      "source_sha256": "61dd3485746430bf5e01ffb7e7bf1124d06494cf942485a1eaa945d4eadfe737",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-474468dd-bf26-4331-868a-ba73c83dc446.png",
+      "atlas_region": [48, 0, 48, 48],
+      "prompt_summary": "Broad hide drum within a crescent antler frame, with chain reeds, bone clappers, and five fang-shaped muster tokens."
+    },
+    {
+      "site_id": "site_meridian_five_facet_muster_prism",
+      "asset_id": "resource_site_grand_muster_meridian_prism",
+      "source_path": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/meridian_five_facet_muster_prism_source.png",
+      "source_sha256": "c8716d41c33e48fff518bb53eb8048760938be6371397d7e4450e3396d5bf5dd",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ec46d041-55f5-4a0d-bab8-041f70d3e5b0.png",
+      "atlas_region": [96, 0, 48, 48],
+      "prompt_summary": "Slender mirrored mast with five offset crystal vanes around an open sun ring, unequal glass feet, and one calibration ribbon."
+    },
+    {
+      "site_id": "site_crownroot_five_seed_muster_bough",
+      "asset_id": "resource_site_grand_muster_crownroot_bough",
+      "source_path": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/crownroot_five_seed_muster_bough_source.png",
+      "source_sha256": "99c0ae00848ab3841833268cf51a7c44340df8e81bdf5c0abbdf6027fa51e124",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-713e26b4-a2b2-4908-bebe-589b5e969bc7.png",
+      "atlas_region": [144, 0, 48, 48],
+      "prompt_summary": "Living forked root arch with five seed-pod counters, a woven thorncloth pennant, blossoms, and a grafting-stone base."
+    },
+    {
+      "site_id": "site_blackbell_five_clause_muster_gantry",
+      "asset_id": "resource_site_grand_muster_blackbell_gantry",
+      "source_path": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/blackbell_five_clause_muster_gantry_source.png",
+      "source_sha256": "346b87589c594110b79a96b5be9811017d8258b1a067123a0ca1569dc692ced1",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-da1eedde-e55c-4df0-9e3e-7945a4a0f145.png",
+      "atlas_region": [192, 0, 48, 48],
+      "prompt_summary": "Black-iron pressure gantry with blank off-center gauge, chain winch, five hanging clapper plates, and a short contract pennant."
+    },
+    {
+      "site_id": "site_pale_sounding_five_wake_muster_mast",
+      "asset_id": "resource_site_grand_muster_pale_sounding_mast",
+      "source_path": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/pale_sounding_five_wake_muster_mast_source.png",
+      "source_sha256": "ced23ad62967d16d7d4eb8458b41b192f6c0047be5cdb5783cb275f9926bd5d2",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-4b7e86cc-dcbe-4626-ba7e-4accc3d9c90d.png",
+      "atlas_region": [240, 0, 48, 48],
+      "prompt_summary": "Leaning memorial ship mast with five shell bells, crescent mourning sail, hooked crossbar, memory lamp, and saltglass keel base."
+    }
+  ]
+}

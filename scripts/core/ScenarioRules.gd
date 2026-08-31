@@ -311,6 +311,13 @@ static func _scenario_objective_dependency(objective: Dictionary, objective_inde
 			_add_dependency_value(dependency, "town_placement_ids", String(objective.get("placement_id", "")))
 			_add_dependency_value(dependency, "town_ids", String(objective.get("town_id", "")))
 			_add_dependency_value(dependency, "building_ids", String(objective.get("building_id", "")))
+		"hero_army_meets_requirements":
+			_add_dependency_value(dependency, "hero_ids", String(objective.get("hero_id", "")))
+			var requirements = objective.get("requirements", [])
+			if requirements is Array:
+				for requirement in requirements:
+					if requirement is Dictionary:
+						_add_dependency_value(dependency, "unit_ids", String(requirement.get("unit_id", "")))
 		"town_owned_by_player", "town_not_owned_by_player":
 			_add_dependency_value(dependency, "town_placement_ids", String(objective.get("placement_id", "")))
 			_add_dependency_value(dependency, "town_ids", String(objective.get("town_id", "")))
@@ -403,6 +410,8 @@ static func _empty_dependency() -> Dictionary:
 		"artifact_ids": [],
 		"spell_ids": [],
 		"building_ids": [],
+		"hero_ids": [],
+		"unit_ids": [],
 		"day": false,
 	}
 
@@ -424,6 +433,8 @@ static func _scenario_event_dependency(event_facts: Dictionary) -> Dictionary:
 		"artifact_ids",
 		"spell_ids",
 		"building_ids",
+		"hero_ids",
+		"unit_ids",
 	]:
 		for value in _string_array(event_facts.get(key, [])):
 			_add_dependency_value(dependency, key, value)
@@ -447,6 +458,8 @@ static func _scenario_event_affects_dependency(event_dependency: Dictionary, dep
 		"artifact_ids",
 		"spell_ids",
 		"building_ids",
+		"hero_ids",
+		"unit_ids",
 	]:
 		if _arrays_intersect(event_dependency.get(key, []), dependency.get(key, [])):
 			return true
@@ -468,6 +481,8 @@ static func _merge_dependency(target: Dictionary, source: Dictionary) -> void:
 		"artifact_ids",
 		"spell_ids",
 		"building_ids",
+		"hero_ids",
+		"unit_ids",
 	]:
 		for value in _string_array(source.get(key, [])):
 			_add_dependency_value(target, key, value)
@@ -1531,6 +1546,8 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 				and String(building_town.get("owner", "neutral")) == "player"
 				and String(objective.get("building_id", "")) in building_town.get("built_buildings", [])
 			)
+		"hero_army_meets_requirements":
+			return bool(_hero_army_requirement_progress(session, objective).get("complete", false))
 		"town_owned_by_player":
 			var town := _find_town(session, objective)
 			return not town.is_empty() and String(town.get("owner", "neutral")) == "player"
@@ -1574,6 +1591,35 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 				and building_id in building_town.get("built_buildings", [])
 			)
 			return "%s (%s)" % [base_label, "Built" if completed else "Unbuilt"]
+		"hero_army_meets_requirements":
+			var progress := _hero_army_requirement_progress(session, objective)
+			if not bool(progress.get("hero_found", false)):
+				return "%s (Commander unavailable)" % base_label
+			var ready_count := int(progress.get("ready_count", 0))
+			var requirement_count := int(progress.get("requirement_count", 0))
+			if bool(progress.get("complete", false)):
+				return "%s (%d/%d companies ready)" % [base_label, ready_count, requirement_count]
+			var missing_parts := []
+			var missing_count := 0
+			for row in progress.get("requirements", []):
+				if not (row is Dictionary) or bool(row.get("met", false)):
+					continue
+				missing_count += 1
+				if missing_parts.size() < 2:
+					missing_parts.append("%s %d/%d" % [
+						String(row.get("unit_name", row.get("unit_id", "Unit"))),
+						int(row.get("current_count", 0)),
+						int(row.get("minimum_count", 0)),
+					])
+			var missing_summary := ", ".join(missing_parts)
+			if missing_count > missing_parts.size():
+				missing_summary += " +%d more" % (missing_count - missing_parts.size())
+			return "%s (%d/%d ready%s)" % [
+				base_label,
+				ready_count,
+				requirement_count,
+				"; need %s" % missing_summary if missing_summary != "" else "",
+			]
 		"enemy_pressure_at_least":
 			return "%s (%d/%d)" % [
 				base_label,
@@ -1597,6 +1643,71 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 		"session_flag_equals":
 			return "%s (%s)" % [base_label, String(session.flags.get(String(objective.get("flag", "")), "unset"))]
 	return base_label
+
+static func _hero_army_requirement_progress(
+	session: SessionStateStoreScript.SessionData,
+	objective: Dictionary
+) -> Dictionary:
+	var hero_id := String(objective.get("hero_id", ""))
+	var army := _controlled_hero_army(session, hero_id)
+	var requirements = objective.get("requirements", [])
+	var rows := []
+	var ready_count := 0
+	if requirements is Array:
+		for requirement in requirements:
+			if not (requirement is Dictionary):
+				continue
+			var unit_id := String(requirement.get("unit_id", ""))
+			var minimum_count: int = max(1, int(requirement.get("minimum_count", 0)))
+			var current_count: int = _army_unit_count(army, unit_id)
+			var met: bool = current_count >= minimum_count
+			if met:
+				ready_count += 1
+			var unit := ContentService.get_unit(unit_id)
+			rows.append({
+				"unit_id": unit_id,
+				"unit_name": String(unit.get("name", unit_id)),
+				"minimum_count": minimum_count,
+				"current_count": current_count,
+				"met": met,
+			})
+	return {
+		"hero_id": hero_id,
+		"hero_found": not army.is_empty(),
+		"requirement_count": rows.size(),
+		"ready_count": ready_count,
+		"requirements": rows,
+		"complete": not rows.is_empty() and not army.is_empty() and ready_count == rows.size(),
+	}
+
+static func _controlled_hero_army(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	if session == null or hero_id == "":
+		return {}
+	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
+	if active_hero_id == hero_id:
+		var active_army = session.overworld.get("army", {})
+		if active_army is Dictionary:
+			return active_army
+	var heroes = session.overworld.get("player_heroes", [])
+	if not (heroes is Array):
+		return {}
+	for hero in heroes:
+		if hero is Dictionary and String(hero.get("id", "")) == hero_id:
+			var hero_army = hero.get("army", {})
+			return hero_army if hero_army is Dictionary else {}
+	return {}
+
+static func _army_unit_count(army: Dictionary, unit_id: String) -> int:
+	if army.is_empty() or unit_id == "":
+		return 0
+	var total := 0
+	var stacks = army.get("stacks", [])
+	if not (stacks is Array):
+		return 0
+	for stack in stacks:
+		if stack is Dictionary and String(stack.get("unit_id", "")) == unit_id:
+			total += max(0, int(stack.get("count", 0)))
+	return total
 
 static func _player_owns_artifact(session: SessionStateStoreScript.SessionData, artifact_id: String) -> bool:
 	if session == null or artifact_id == "":

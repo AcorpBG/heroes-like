@@ -2436,6 +2436,102 @@
         }
       ],
       "content_batch_id": "content-six-triune-arcanum-trials-10184"
+    },
+    {
+      "id": "army_rainwritmuster_opening_company",
+      "name": "Lyra's Five-Writ Assembly",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {
+          "unit_id": "unit_embercourt_fordhook_cadets",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_embercourt_lantern_sappers",
+          "count": 8
+        }
+      ],
+      "content_status": "grand_muster_opening_company_live"
+    },
+    {
+      "id": "army_hollowreedmuster_opening_company",
+      "name": "Vaska's Moonhide Assembly",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {
+          "unit_id": "unit_mireclaw_reedsnare_kin",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_mireclaw_mudglass_slingers",
+          "count": 8
+        }
+      ],
+      "content_status": "grand_muster_opening_company_live"
+    },
+    {
+      "id": "army_meridianmuster_opening_company",
+      "name": "Solera's Five-Facet Assembly",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {
+          "unit_id": "unit_sunvault_shard_wardens",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_sunvault_prism_adepts",
+          "count": 8
+        }
+      ],
+      "content_status": "grand_muster_opening_company_live"
+    },
+    {
+      "id": "army_crownrootmuster_opening_company",
+      "name": "Ardren's Five-Seed Assembly",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {
+          "unit_id": "unit_thornwake_seedcutters",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_thornwake_bramblekite_needlers",
+          "count": 8
+        }
+      ],
+      "content_status": "grand_muster_opening_company_live"
+    },
+    {
+      "id": "army_blackbellmuster_opening_company",
+      "name": "Marka's Five-Clause Assembly",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {
+          "unit_id": "unit_brasshollow_scrip_haulers",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_brasshollow_quenchspool_slingers",
+          "count": 8
+        }
+      ],
+      "content_status": "grand_muster_opening_company_live"
+    },
+    {
+      "id": "army_palesoundingmuster_opening_company",
+      "name": "Ivara's Five-Wake Assembly",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {
+          "unit_id": "unit_veilmourn_bellwake_oars",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_veilmourn_mourning_lanterns",
+          "count": 8
+        }
+      ],
+      "content_status": "grand_muster_opening_company_live"
     }
   ]
 }
