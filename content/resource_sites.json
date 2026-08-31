@@ -13063,6 +13063,234 @@
       "company_contract": {"company_unit_id": "unit_veilmourn_tidehook_deckhands", "recruit_policy": "immediate_and_weekly_muster", "recurring_recruit_access": true, "faction_linked": true},
       "runtime_boundary": {"status": "faction_linked_dwelling_live", "resource_site_runtime_supported": true, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "weekly_town_delivery_live": true},
       "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+    },
+    {
+      "id": "site_lockfire_triune_rostrum",
+      "name": "Lockfire Triune Rostrum",
+      "family": "shrine",
+      "action_label": "Recite the Three Lockfire Writs",
+      "summary": "A bell, crown signal, and sealed muster writ bind three upper-circle beacon disciplines into one field examination.",
+      "claim_rewards": {
+        "experience": 180
+      },
+      "hero_command_bonus": {
+        "attack": 1
+      },
+      "learn_spell_id": "spell_beacon_bell_ward_09",
+      "learn_spell_ids": [
+        "spell_beacon_bell_ward_09",
+        "spell_beacon_crown_signal_19",
+        "spell_beacon_lockfire_muster"
+      ],
+      "claim_flags": {
+        "lockfiretrial_triune_lesson_completed": true
+      },
+      "runtime_boundary": {
+        "status": "triune_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-triune-arcanum-trials-10184",
+      "public_text": {
+        "public_summary": "An ivory oath-stone rostrum carries a tall bronze bell, a forked lantern standard, and a red wax lance tablet.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_moonfen_triune_drumcourt",
+      "name": "Moonfen Triune Drumcourt",
+      "family": "shrine",
+      "action_label": "Keep the Three Moonfen Measures",
+      "summary": "A war drum, rot retort, and reed basin teach ruin, recovery, and fen-sight as one disciplined mire cadence.",
+      "claim_rewards": {
+        "experience": 180
+      },
+      "hero_command_bonus": {
+        "defense": 1
+      },
+      "learn_spell_id": "spell_mire_silt_rot_04",
+      "learn_spell_ids": [
+        "spell_mire_silt_rot_04",
+        "spell_mire_sluice_poultice_14",
+        "spell_mire_brine_fenlight_24"
+      ],
+      "claim_flags": {
+        "moonfentrial_triune_lesson_completed": true
+      },
+      "runtime_boundary": {
+        "status": "triune_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-triune-arcanum-trials-10184",
+      "public_text": {
+        "public_summary": "A broad hide drum crowns a wet bogstone court beside a crooked silt-glass retort and reed-bound healing basin.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_three_facet_meridian_orrery",
+      "name": "Three-Facet Meridian Orrery",
+      "family": "shrine",
+      "action_label": "Align the Three Meridian Facets",
+      "summary": "A mirror prism, focus lens, and star compass align three advanced lens calculations for the field commander.",
+      "claim_rewards": {
+        "experience": 180
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
+      "learn_spell_id": "spell_lens_mirror_prism_04",
+      "learn_spell_ids": [
+        "spell_lens_mirror_prism_04",
+        "spell_lens_focus_array_14",
+        "spell_lens_starlens_prism_28"
+      ],
+      "claim_flags": {
+        "facettrial_triune_lesson_completed": true
+      },
+      "runtime_boundary": {
+        "status": "triune_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-triune-arcanum-trials-10184",
+      "public_text": {
+        "public_summary": "A white-gold observatory plinth supports a suspended mirror prism, a long focus lens, and a seven-point star compass.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_heartwood_three_vow_arbor",
+      "name": "Heartwood Three-Vow Arbor",
+      "family": "shrine",
+      "action_label": "Bind the Three Heartwood Vows",
+      "summary": "A thorn seed, flowering branch loom, and rootway stone bind control, vigor, and passage into three living vows.",
+      "claim_rewards": {
+        "experience": 180
+      },
+      "hero_command_bonus": {
+        "defense": 1
+      },
+      "learn_spell_id": "spell_root_bloom_briar_04",
+      "learn_spell_ids": [
+        "spell_root_bloom_briar_04",
+        "spell_root_branch_bloom_14",
+        "spell_root_bark_rootway_24"
+      ],
+      "claim_flags": {
+        "heartwoodtrial_triune_lesson_completed": true
+      },
+      "runtime_boundary": {
+        "status": "triune_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-triune-arcanum-trials-10184",
+      "public_text": {
+        "public_summary": "A living-root arch holds a thorn-crowned seed bowl, a flowering branch loom, and a bark-carved rootway stone.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_redline_triune_assay_forge",
+      "name": "Redline Triune Assay Forge",
+      "family": "shrine",
+      "action_label": "Set the Three Redline Gauges",
+      "summary": "An ash mantle, kiln gauge, and three pressure levers prove protection, output, and controlled overdrive in one assay.",
+      "claim_rewards": {
+        "experience": 180
+      },
+      "hero_command_bonus": {
+        "power": 1
+      },
+      "learn_spell_id": "spell_furnace_ash_mantle_09",
+      "learn_spell_ids": [
+        "spell_furnace_ash_mantle_09",
+        "spell_furnace_kiln_rite_19",
+        "spell_furnace_redline_overdrive"
+      ],
+      "claim_flags": {
+        "redlinetrial_triune_lesson_completed": true
+      },
+      "runtime_boundary": {
+        "status": "triune_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-triune-arcanum-trials-10184",
+      "public_text": {
+        "public_summary": "A brass-and-basalt field forge joins a riveted ash mantle, a vertical kiln flame gauge, and a three-lever console.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_drowned_bell_three_wake_archive",
+      "name": "Drowned-Bell Three-Wake Archive",
+      "family": "shrine",
+      "action_label": "Sound the Three Drowned Wakes",
+      "summary": "A mourning bell, pale duel mask, and tide compass teach judgment, challenge, and passage across the last wake.",
+      "claim_rewards": {
+        "experience": 180
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
+      "learn_spell_id": "spell_veil_mourning_mark_04",
+      "learn_spell_ids": [
+        "spell_veil_mourning_mark_04",
+        "spell_veil_wraith_duel_14",
+        "spell_veil_tide_drift_24"
+      ],
+      "claim_flags": {
+        "drownedbelltrial_triune_lesson_completed": true
+      },
+      "runtime_boundary": {
+        "status": "triune_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-triune-arcanum-trials-10184",
+      "public_text": {
+        "public_summary": "A salt-dark whale-bone archive holds a black glass mourning bell, a pale duel mask, and a tide-carved compass.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }

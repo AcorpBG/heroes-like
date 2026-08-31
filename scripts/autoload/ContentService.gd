@@ -878,13 +878,25 @@ func _validate_resource_site(
 			if guard_encounter_id != "" and not encounter_index.has(guard_encounter_id):
 				push_warning("Resource site %s neutral_roster references missing guard encounter %s." % [site_id, guard_encounter_id])
 
-	var spell_id := String(site.get("learn_spell_id", ""))
-	if spell_id != "":
+	var lesson_spell_ids := []
+	var legacy_spell_id := String(site.get("learn_spell_id", ""))
+	if legacy_spell_id != "":
+		lesson_spell_ids.append(legacy_spell_id)
+	var authored_spell_ids = site.get("learn_spell_ids", [])
+	if site.has("learn_spell_ids") and not (authored_spell_ids is Array):
+		push_warning("Resource site %s learn_spell_ids must be an array." % site_id)
+	elif authored_spell_ids is Array:
+		for spell_id_value in authored_spell_ids:
+			var authored_spell_id := String(spell_id_value)
+			if authored_spell_id != "" and authored_spell_id not in lesson_spell_ids:
+				lesson_spell_ids.append(authored_spell_id)
+	var lesson_status := String(site.get("runtime_boundary", {}).get("status", ""))
+	for spell_id in lesson_spell_ids:
 		if not spell_index.has(spell_id):
-			push_warning("Resource site %s references missing learn_spell_id %s." % [site_id, spell_id])
+			push_warning("Resource site %s references missing lesson spell %s." % [site_id, spell_id])
 		elif String(spell_index.get(spell_id, {}).get("context", "")) != "overworld" \
-				and String(site.get("runtime_boundary", {}).get("status", "")) != "high_arcanum_live":
-			push_warning("Resource site %s learn_spell_id %s must be an overworld spell." % [site_id, spell_id])
+				and lesson_status not in ["high_arcanum_live", "triune_arcanum_live"]:
+			push_warning("Resource site %s lesson spell %s must be an overworld spell." % [site_id, spell_id])
 
 	match family:
 		"mine":
@@ -1618,6 +1630,10 @@ func _validate_objective(
 			var artifact_id := String(objective.get("artifact_id", ""))
 			if artifact_id == "" or not artifact_index.has(artifact_id):
 				push_warning("Scenario %s objective %s references missing artifact_id %s." % [scenario_id, String(objective.get("id", "")), artifact_id])
+		"spell_known_by_player":
+			var spell_id := String(objective.get("spell_id", ""))
+			if spell_id == "" or get_spell(spell_id).is_empty():
+				push_warning("Scenario %s objective %s references missing spell_id %s." % [scenario_id, String(objective.get("id", "")), spell_id])
 		"town_owned_by_player", "town_not_owned_by_player":
 			var placement_id := String(objective.get("placement_id", ""))
 			if placement_id == "" or placement_id not in town_placement_ids:

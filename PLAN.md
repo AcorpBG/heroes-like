@@ -24,9 +24,42 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected; the next content batch should be chosen from a fresh live-catalog audit.
-- Most recently completed implementation slice: `content-six-three-relic-pilgrimages-10184`, one coherent six-faction artifact-recovery scenario, objective, guardian-art, and field-relic batch.
-- Current package boundary: matching Linux and Windows release exports measure 248963088 bytes, 1036912 bytes below the unchanged 250000000-byte ceiling; all generated encounter masters remain excluded from both packages.
+- Active implementation slice: none; audit the expanded live catalog before selecting the next coherent production-content batch.
+- Most recently completed implementation slice: `content-six-triune-arcanum-trials-10184`, one coherent six-faction spell-learning scenario, objective, multi-lesson landmark, academy-company, and exact-art batch.
+- Current package boundary: matching Linux and Windows release exports measure 247983132 bytes, 2016868 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Triune Arcanum Trials
+
+id: `content-six-triune-arcanum-trials-10184`
+
+Status: completed.
+
+Current finding:
+- all 119 production spells are technically reachable through upgraded town schools, but most upper-circle faction spells never define an authored map route, reward identity, or victory condition;
+- scenario authority has no spell-knowledge objective, and resource landmarks can teach only one spell, so a coherent three-lesson trial currently requires duplicate landmarks or a non-gameplay flag substitute;
+- the six faction schools each have a strong three-spell upper-circle set that can support one substantial six-map batch without adding new spell definitions or inflating the near-ceiling packages.
+
+Implementation boundary:
+- add backward-compatible multi-spell resource-site lessons and a first-class `spell_known_by_player` scenario objective across the active hero and player-controlled field heroes, with exact spell-event dependencies and save-version-9 continuity;
+- author six original skirmish-only triune trials, one per faction, each with a distinct lead and five-stack academy company, one home town, economy support, one exact three-lesson landmark, three guarded examinations, six reactive relief/reinforcement/pressure hooks, and a Day-16 loss deadline;
+- add six original faction-specific triune academy landmarks in one compact 288x48 runtime atlas with accessible non-color-dependent silhouettes and generated-source provenance;
+- preserve existing single-spell landmarks, town study, combat formulas, campaign state, strategic AI, accessibility, Windows/Linux paths, generated-source exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all six landmarks teach their exact three spells in one production claim, remain one-time and repeat-safe, expose all learned spell ids in the interaction event, and round-trip exactly through save version 9;
+- each scenario starts without its three trial spells, remains unwinnable with any one spell missing or any examination unresolved, and wins only after the exact triad is known and all three guarded examinations are cleared;
+- one consolidated six-case scenario/lesson/spell-resolution/art/save smoke runs only after the complete batch, followed once by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- six new skirmish-only 13x8 trials raise the production catalog to 123 scenarios, 231 resource sites, and 249 army groups; each map owns a five-stack academy company, one home hold, nine economy/lesson sites, three guarded examination fronts, six relief/reinforcement/mastery/pressure hooks, a Day-10 counterstroke, and a Day-16 loss boundary;
+- `spell_known_by_player` is now first-class scenario authority across the active hero and all player-controlled field heroes, while backward-compatible multi-spell landmark claims teach an exact triad, publish exact spell-event dependencies, remain repeat-safe, and preserve save version 9;
+- six original generated academy masters derive one compact 288x48 runtime atlas with exact mappings, accessible descriptions, and generated-source provenance;
+- the single consolidated 6/6 smoke passes eighteen live lessons, eighteen spell behavior resolutions, eighteen consecutive production battle victories, six missing-spell controls, six secondary-hero transfers, six scenario victories, six exact art cases/captures, and exact save-version-9 round trips;
+- repository validation passes; Linux and Windows export/startup gates pass with matching 247983132-byte PCKs, all twenty-nine resource-site atlas textures present, generated source art excluded, and 2016868 bytes of headroom below the unchanged ceiling.
+
+Non-goals:
+- no new faction, spell definition, hero, unit definition, town definition, building, artifact, campaign chapter, combat formula, strategic-AI algorithm, RMG/native behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes scenario, academy, spell, map, name, art, text, heraldry, or protected visual expression.
 
 ## Six Three-Relic Pilgrimages
 

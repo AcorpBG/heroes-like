@@ -361,7 +361,7 @@ func _validate_medium_metadata_only_proxy_projection(service: Variant, generated
 		"ok": String(generated.get("final_payload_fnv1a32", "")) == "e76c8967" \
 				and int(generated.get("final_payload_byte_count", -1)) == 79333 \
 				and int(map_document.get_object_count()) == 1326 \
-				and live_catalog_row_count == 243 \
+				and live_catalog_row_count == 249 \
 				and raw_rows_exact \
 				and source_rows_exact \
 				and live_type_107_nodes.is_empty(),
