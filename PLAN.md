@@ -15820,6 +15820,37 @@ Non-goals:
 - no new faction, hero definition, unit definition, town definition, building, spell, artifact definition, encounter definition, campaign, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes map, scenario, name, text, heraldry, or protected visual expression.
 
+## Six Frontier-Watch Contracts
+
+id: `content-six-frontier-watch-contracts-10184`
+
+Status: completed.
+
+Current finding:
+- the six rival-road skirmishes form a balanced six-faction opposition circuit, but each currently ends after three fixed fronts and one recurring counterstroke, leaving no optional high-value field contract for players who want a longer route;
+- all required faction units, battle rules, reward currencies, save authority, and compact encounter-landmark rendering are already live, so one additional distinct contract per map adds playable tactical variety without another map-definition wave;
+- the release PCK has only 372532 to 374532 bytes of headroom, requiring one compact six-frame atlas with generated masters excluded from packages.
+
+Implementation boundary:
+- add six original faction-specific frontier-watch armies and encounters, one for each opposing faction represented across the rival-road circuit, with different stack compositions, commander spellbooks, battlefield objectives, rewards, and victory flags;
+- place one optional exact-art contract on each of the six existing 12x8 rival-road maps without changing its mandatory five-objective victory chain, towns, economy, scripted counterstroke, selector availability, or save schema;
+- generate six original transparent watch landmarks, derive one compact 288x48 identity atlas, preserve prompt/hash/accessibility provenance outside packages, and keep Linux/Windows exports symmetric below the unchanged ceiling.
+
+Completion criteria:
+- all six new contracts construct and resolve through live battle authority, grant their exact rewards and flags, resolve distinct non-color encounter landmarks, and remain exact across save-version-9 round trips;
+- the rival-road circuit rises from twenty-four to thirty live battle fronts while all six original scenario victory chains remain completable;
+- run one updated consolidated six-scenario gameplay/art/save smoke only after the complete batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- Briarwheel Witness Watch, Blackbell Quench Watch, Nightglass Drowned Watch, Pale Sounding Memory Watch, Halo Spire Noon Watch, and Rainwrit Charter Watch now ship as six optional faction contracts across the complete rival-road circuit, with six new three-stack armies, distinct commander tactics, field objectives, rewards, flags, and deterministic placements;
+- six original transparent generated landmarks form one inspected 288x48 exact-identity atlas with distinct non-color silhouettes, accessible descriptions, complete prompt/hash provenance, and source masters excluded from release packages;
+- the single updated six-scenario smoke passes 30/30 live battles, 30/30 exact encounter-art resolutions, 6/6 unchanged mandatory victory chains, and 6/6 save-version-9 round trips; repository validation passes;
+- Linux and Windows release exports and packaged startups both pass with the matching 249670512-byte PCK, leaving 329488 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero, unit definition, town, building, spell, artifact, campaign, map, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes encounter, landmark, name, text, heraldry, or protected visual expression.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

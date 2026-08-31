@@ -1,0 +1,20 @@
+{
+  "schema_id": "frontier_watch_contracts_art_provenance_v1",
+  "generator_mode": "built_in_image_gen",
+  "generated_at": "2026-08-31T01:06:00Z",
+  "source_sheet_path": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/frontier_watch_contracts_source_sheet.png",
+  "source_sheet_sha256": "0e22ff4b4bb28a99511cddf4e12664dc9ec11ea6a1f4e9356b4c5ef14f8b64b3",
+  "runtime_atlas_path": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_atlas_sha256": "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac",
+  "prompt": "Create one clean 3 columns by 2 rows transparent sprite sheet containing six separate original fantasy frontier-watch landmarks: living thornwood witness arch, black brass quench gantry, reed-antler nightglass watch, whalebone memory bell, sun-prism noon array, and ember charter-beacon gate. Use crisp non-color silhouettes, consistent scale, generous gutters, no characters, text, logos, borders, or copied Heroes designs.",
+  "normalization": "The 1536x1024 source sheet was split into six 512x512 cells, each resized to 48x48, then joined left-to-right into one 288x48 RGBA runtime atlas.",
+  "assets": [
+    {"encounter_id": "encounter_briarwheel_witness_watch", "source_path": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/briarwheel_witness_watch_source.png", "source_sha256": "33bbc66c2200e38ef51b6a5fe1a0a0c04632ec7fd460711275d8472739a11c23", "atlas_region": [0, 0, 48, 48]},
+    {"encounter_id": "encounter_blackbell_quench_watch", "source_path": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/blackbell_quench_watch_source.png", "source_sha256": "cebb3e3887a9393baa341ae280356f76d876f0b0f7a59c0327e0ba2a9ff0d970", "atlas_region": [48, 0, 48, 48]},
+    {"encounter_id": "encounter_nightglass_drowned_watch", "source_path": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/nightglass_drowned_watch_source.png", "source_sha256": "920d43453d0edbc70a2b1e397adacac7f8818dae01d4d1e99514aef9e9c16c83", "atlas_region": [96, 0, 48, 48]},
+    {"encounter_id": "encounter_pale_sounding_memory_watch", "source_path": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/pale_sounding_memory_watch_source.png", "source_sha256": "8125cc879efe6d062942e496371105b99d2476d0733f76b2eb2c415f5eadb313", "atlas_region": [144, 0, 48, 48]},
+    {"encounter_id": "encounter_halo_spire_noon_watch", "source_path": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/halo_spire_noon_watch_source.png", "source_sha256": "dec91ed2c945bc4bb92fd225d8d6a5ed01ea05e4d4e4b6ece3ed588351768c73", "atlas_region": [192, 0, 48, 48]},
+    {"encounter_id": "encounter_rainwrit_charter_watch", "source_path": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/rainwrit_charter_watch_source.png", "source_sha256": "fe0fe82c53bdf2463c90d93d34834f46fde6e5161f02d50fcb9c80c58bde04f9", "atlas_region": [240, 0, 48, 48]}
+  ]
+}

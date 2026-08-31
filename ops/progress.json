@@ -1914,6 +1914,47 @@
   "blocker": "",
   "completedImplementationEvidence": [
     {
+      "id": "content-six-frontier-watch-contracts-20260831",
+      "title": "Six frontier-watch contracts",
+      "sliceId": "content-six-frontier-watch-contracts-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-31T01:15:20Z",
+      "updatedAt": "2026-08-31T01:15:20Z",
+      "latestFinding": "Six optional faction watch contracts now extend the complete rival-road circuit with exact armies, field objectives, rewards, flags, and one original compact six-frame landmark atlas. The single consolidated smoke passes 30 battles, exact art, six unchanged victory chains, and save-v9 round trips; repository validation and matching Linux/Windows packaged startups pass at 249670512 bytes.",
+      "artifacts": [
+        "content/army_groups.json",
+        "content/encounters.json",
+        "content/scenarios.json",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
+        "art/overworld/source/generated/encounters/frontier_watch_contracts/source_manifest.json",
+        "tests/six_rival_road_skirmishes_smoke.gd",
+        "tests/validate_repo.py",
+        ".artifacts/six_rival_road_skirmishes_smoke/report.json",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "metrics": {
+        "new_army_group_count": 6,
+        "new_encounter_count": 6,
+        "new_direct_placement_count": 6,
+        "new_exact_landmark_count": 6,
+        "total_army_group_count": 225,
+        "total_encounter_count": 161,
+        "total_direct_placement_count": 430,
+        "total_placed_encounter_identity_count": 153,
+        "consolidated_battle_victory_count": 30,
+        "consolidated_exact_art_count": 30,
+        "scenario_victory_count": 6,
+        "save_version": 9,
+        "linux_pck_size_bytes": 249670512,
+        "windows_pck_size_bytes": 249670512,
+        "release_pck_headroom_bytes": 329488
+      }
+    },
+    {
       "id": "content-six-faction-artifact-sets-20260829",
       "title": "Six-faction artifact sets and insignia",
       "sliceId": "content-six-faction-artifact-sets-10184",
@@ -15742,14 +15783,14 @@
       }
     }
   ],
-  "currentNotes": "Eight original foundation map-object identities completed as one batch with one consolidated live smoke, repository validation, and matching-size Linux/Windows packaged boots.",
+  "currentNotes": "Six original frontier-watch contracts completed as one batch with one consolidated 30-battle smoke, repository validation, and matching-size Linux/Windows packaged boots.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-eight-foundation-map-object-identities-10184",
-  "currentSliceId": "content-six-rival-road-skirmishes-10184",
-  "currentSliceNotes": "",
+  "currentSliceId": "content-six-frontier-watch-contracts-10184",
+  "currentSliceNotes": "Completed six optional exact-art faction contracts across the rival-road circuit with 30 consolidated live battles, exact save-v9 continuity, and matching Linux/Windows packaged startup.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six rival road skirmishes 10184",
-  "currentSliceUpdatedAt": "2026-08-30T19:37:38Z",
+  "currentSliceTitle": "content six frontier watch contracts 10184",
+  "currentSliceUpdatedAt": "2026-08-31T01:15:20Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21190,24 +21231,22 @@
     "remainingWork": "Implement real runtime package/session adoption from the owned H3M final payload: parse/convert the H3M payload into MapDocument and ScenarioDocument records, validate save/load and generated-session startup, and keep native map JSON/full .amap output blocked until that converter is source-backed and tested without reintroducing the archived proxy."
   },
   "latestEvidenceArtifacts": [
-    "content/resource_sites.json",
+    "content/army_groups.json",
+    "content/encounters.json",
     "content/scenarios.json",
-    "content/spells.json",
-    "scripts/autoload/ContentService.gd",
-    "scripts/core/OverworldRules.gd",
-    "art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
-    "art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/manifest.json",
-    "tests/sevenfold_high_arcanum_smoke.py",
-    "tests/sevenfold_high_arcanum_smoke.gd",
-    "tests/sevenfold_high_arcanum_smoke.tscn",
+    "art/overworld/manifest.json",
+    "art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
+    "art/overworld/source/generated/encounters/frontier_watch_contracts/source_manifest.json",
+    "tests/six_rival_road_skirmishes_smoke.gd",
     "tests/validate_repo.py",
-    "tests/packaging_linux_export_smoke.py",
-    "tests/packaging_windows_export_smoke.py",
+    ".artifacts/six_rival_road_skirmishes_smoke/report.json",
+    ".artifacts/packaging_linux_export_smoke/report.json",
+    ".artifacts/packaging_windows_export_smoke/report.json",
     "PLAN.md",
     "ops/progress.json"
   ],
-  "latestEvidenceId": "content-sevenfold-high-arcanum-20260830",
-  "latestFinding": "Seven original High Arcanum landmarks now teach seven distinct tier-five battle spells through live one-time Third Hearths interactions with exact rewards, flags, save continuity, specific spell descriptions, and one compact original atlas. The consolidated seven-case smoke, repository gate, and matching 246069684-byte Linux/Windows package boots pass with 3930316 bytes of headroom.",
+  "latestEvidenceId": "content-six-frontier-watch-contracts-20260831",
+  "latestFinding": "Six optional faction watch contracts now extend the complete rival-road circuit with exact armies, field objectives, rewards, flags, and one original compact six-frame landmark atlas. The single consolidated smoke passes 30 battles, exact art, six unchanged victory chains, and save-v9 round trips; repository validation and matching Linux/Windows packaged startups pass at 249670512 bytes.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -106717,6 +106756,16 @@
       "updatedAt": "2026-08-31T00:57:17Z",
       "startedAt": "2026-08-31T00:40:35Z",
       "completedAt": "2026-08-31T00:57:17Z"
+    },
+    {
+      "id": "content-six-frontier-watch-contracts-10184",
+      "title": "content six frontier watch contracts 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T01:15:20Z",
+      "startedAt": "2026-08-31T01:03:56Z",
+      "completedAt": "2026-08-31T01:15:20Z",
+      "notes": "Completed six faction-specific optional watch battles with exact original landmarks across the complete rival-road circuit; the one consolidated 30-battle gameplay/art/save smoke, repository validation, and sequential Linux/Windows package boots all pass."
     }
   ],
   "project": "heroes-like",
@@ -106726,7 +106775,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "No next production-content family is selected; the current release package has 6872280 bytes of headroom under the unchanged ceiling.",
+  "remainingGap": "No next production-content family is selected; the current release PCK has 329488 bytes of headroom under the unchanged ceiling.",
   "remainingWork": "Select and register the next coherent multi-content family, then continue using one consolidated smoke after the complete batch plus final repository and package gates.",
   "reportOnlyEvidence": [
     {
@@ -107158,7 +107207,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_six_horizon_citadels_completed",
+  "result": "content_six_frontier_watch_contracts_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -107259,9 +107308,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Implementing Six Horizon Citadels: one new live strategic town per faction with complete original scenic and overworld art and batched validation.",
+  "summary": "Completed Six Frontier-Watch Contracts as one coherent six-faction gameplay and exact-art batch with one consolidated smoke after implementation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T00:57:17Z",
+  "updatedAt": "2026-08-31T01:15:20Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

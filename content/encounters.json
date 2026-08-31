@@ -3222,6 +3222,54 @@
       "enemy_commander": {"roster_hero_id": "hero_thornwake_elian_loamchant", "faction_id": "faction_thornwake", "name": "Elian Loamchant", "command": {"attack": 0, "defense": 0, "power": 2, "knowledge": 3}, "starting_spell_ids": ["spell_briar_bind", "spell_coal_rain", "spell_graft_mend"], "battle_traits": ["bogwise", "linekeeper"]},
       "field_objectives": [{"id": "loamchant_sump_harp", "type": "ritual_pylon", "label": "Crystal-Sump Loam Harp", "summary": "Elian's root-strung loam harp keeps the sump bound in one low chord until its crystal tuning stones are claimed.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
       "rewards": {"gold": 280, "verdant_grafts": 1, "experience": 280}, "victory_flags": ["finale_nemesis_loamchant_broken"]
+    },
+    {
+      "id": "encounter_briarwheel_witness_watch", "name": "Briarwheel Witness Watch",
+      "enemy_group_id": "army_briarwheel_witness_watch", "affiliation": "faction_thornwake", "terrain": "forest",
+      "battlefield_tags": ["ambush_cover", "chokepoint"], "max_rounds": 13,
+      "enemy_commander": {"name": "Witness Keeper Olan", "command": {"attack": 0, "defense": 2, "power": 1, "knowledge": 1}, "starting_spell_ids": ["spell_briar_bind", "spell_graft_mend"], "battle_traits": ["linekeeper", "ambusher"]},
+      "field_objectives": [{"id": "briarwheel_witness_arch", "type": "obstruction_line", "label": "Witness-Bell Arch", "summary": "A braided thorn arch rings every advance into the root record until both seed-bell braces are seized.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "momentum", "urgency"]}],
+      "rewards": {"gold": 290, "verdant_grafts": 1, "experience": 290}, "victory_flags": ["briarwheel_witness_watch_broken"]
+    },
+    {
+      "id": "encounter_blackbell_quench_watch", "name": "Blackbell Quench Watch",
+      "enemy_group_id": "army_blackbell_quench_watch", "affiliation": "faction_brasshollow", "terrain": "rough",
+      "battlefield_tags": ["fortress_lane", "elevated_fire"], "max_rounds": 13,
+      "enemy_commander": {"name": "Quench Auditor Vark", "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 1}, "starting_spell_ids": ["spell_pressure_clause", "spell_heat_rite"], "battle_traits": ["artillerist", "linekeeper"]},
+      "field_objectives": [{"id": "blackbell_quench_gantry", "type": "supply_post", "label": "Red-Gauge Gantry", "summary": "The quench gantry stamps reserve orders while its red needle remains inside the signed pressure band.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["reinforcement", "commander", "urgency"]}],
+      "rewards": {"gold": 300, "brass_scrip": 1, "experience": 300}, "victory_flags": ["blackbell_quench_watch_broken"]
+    },
+    {
+      "id": "encounter_nightglass_drowned_watch", "name": "Nightglass Drowned Watch",
+      "enemy_group_id": "army_nightglass_drowned_watch", "affiliation": "faction_mireclaw", "terrain": "mire",
+      "battlefield_tags": ["bog_channels", "fog_bank"], "max_rounds": 13,
+      "enemy_commander": {"name": "Antler Watcher Sava", "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 1}, "starting_spell_ids": ["spell_relay_drum", "spell_bloodwake_drum"], "battle_traits": ["bogwise", "packhunter"]},
+      "field_objectives": [{"id": "nightglass_drowned_lantern", "type": "signal_beacon", "label": "Drowned Antler Lantern", "summary": "A teal fen lantern marks the only firm reed lanes until its antler shutters are turned toward open water.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 1, "pressure_tags": ["initiative", "commander", "urgency"]}],
+      "rewards": {"gold": 290, "peatwax": 1, "experience": 290}, "victory_flags": ["nightglass_drowned_watch_broken"]
+    },
+    {
+      "id": "encounter_pale_sounding_memory_watch", "name": "Pale Sounding Memory Watch",
+      "enemy_group_id": "army_pale_sounding_memory_watch", "affiliation": "faction_veilmourn", "terrain": "coast",
+      "battlefield_tags": ["fog_bank", "chokepoint"], "max_rounds": 13,
+      "enemy_commander": {"name": "Memory Bellwarden Ione", "command": {"attack": 0, "defense": 1, "power": 2, "knowledge": 1}, "starting_spell_ids": ["spell_obituary_mark", "spell_fogwake_step"], "battle_traits": ["ambusher", "linekeeper"]},
+      "field_objectives": [{"id": "pale_memory_bell", "type": "ritual_pylon", "label": "Whalebone Memory Bell", "summary": "The pale bell repeats every failed approach until its salt-dark mooring posts are occupied together.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 300, "memory_salt": 1, "experience": 300}, "victory_flags": ["pale_sounding_memory_watch_broken"]
+    },
+    {
+      "id": "encounter_halo_spire_noon_watch", "name": "Halo Spire Noon Watch",
+      "enemy_group_id": "army_halo_spire_noon_watch", "affiliation": "faction_sunvault", "terrain": "sand",
+      "battlefield_tags": ["open_lane", "elevated_fire"], "max_rounds": 13,
+      "enemy_commander": {"name": "Noon Surveyor Aven", "command": {"attack": 1, "defense": 0, "power": 2, "knowledge": 1}, "starting_spell_ids": ["spell_prism_bastion", "spell_sunlance_arc"], "battle_traits": ["artillerist", "vanguard"]},
+      "field_objectives": [{"id": "halo_noon_array", "type": "lane_battery", "label": "Noon-Prism Array", "summary": "A six-facet survey array ranges the exposed canopy until its orbiting sight crystals are turned inward.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 1, "pressure_tags": ["ranged", "initiative", "urgency"]}],
+      "rewards": {"gold": 300, "aetherglass": 1, "experience": 300}, "victory_flags": ["halo_spire_noon_watch_broken"]
+    },
+    {
+      "id": "encounter_rainwrit_charter_watch", "name": "Rainwrit Charter Watch",
+      "enemy_group_id": "army_rainwrit_charter_watch", "affiliation": "faction_embercourt", "terrain": "grass",
+      "battlefield_tags": ["fortified_line", "chokepoint"], "max_rounds": 13,
+      "enemy_commander": {"name": "Charter Warden Elra", "command": {"attack": 1, "defense": 2, "power": 0, "knowledge": 1}, "starting_spell_ids": ["spell_lantern_phalanx", "spell_quickmarch_hymn"], "battle_traits": ["linekeeper", "vanguard"]},
+      "field_objectives": [{"id": "rainwrit_charter_beacon", "type": "breach_point", "label": "Charter-Beacon Gate", "summary": "The square beacon gate seals the greenroad under a live writ until both furnace-lit charter clasps are opened.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["momentum", "cohesion", "urgency"]}],
+      "rewards": {"gold": 290, "embergrain": 1, "experience": 290}, "victory_flags": ["rainwrit_charter_watch_broken"]
     }
   ]
 }
