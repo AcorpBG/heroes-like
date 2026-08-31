@@ -24,9 +24,41 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected; the next coherent content-and-original-art batch requires a fresh catalog audit before implementation begins.
-- Most recently completed implementation slice: `content-six-sealed-companies-campaign-10184`, a sequential six-faction campaign built from the veteran-muster operations with bounded handoff, isolated commander state, full narrative, and original campaign art.
-- Current package boundary: matching Linux and Windows release exports measure 231646428 bytes, 18353572 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none; the next production content slice remains unselected.
+- Most recently completed implementation slice: `content-six-marchland-seats-10184`, six long-form faction skirmishes anchored by six new playable towns and exact scenic identities for underused commanders.
+- Current package boundary: matching Linux and Windows release exports measure 232657852 bytes, 17342148 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Marchland Seats
+
+id: `content-six-marchland-seats-10184`
+
+Status: completed 2026-08-31.
+
+Current finding:
+- all 142 units, 66 heroes, 26 towns, 51 artifacts, 197 encounters, and 43 neutral dwellings have live gameplay routes, so another disconnected definition wave would add less player value than composed maps and developable places;
+- only one of 201 authored scenarios currently uses the 18x12 long-form board shape, leaving most standalone faction play concentrated in compact contracts despite the production overworld, town, encounter, AI-pressure, objective, and save systems supporting broader routes;
+- Nix Votivejaw, Renn Facetlane, Merek Greenbarrow, Lina Gauge-Savant, and Morwen Wakeoracle lead only two authored scenarios each, while Belis Rainledger leads three, and none has a town whose strategic identity is authored around that command role.
+
+Implementation boundary:
+- add one original 18x12 skirmish per faction led by Belis Rainledger, Nix Votivejaw, Renn Facetlane, Merek Greenbarrow, Lina Gauge-Savant, and Morwen Wakeoracle, with a new player town, an enemy town, four direct battle fronts, a scripted counterstroke, complete common/rare development routes, artifacts, pressure, relief, deterministic seeds, and scoped victory/deadline conditions;
+- add Amberweir Granary, Moonbite Reedshrine, Splitprism Duelcourt, Woundroot Hearthgrove, Whitegauge Calibration Yard, and Dreamwake Oracle Harbor as complete faction towns using existing production building ladders while authoring distinct economy, recruitment, spell-study, garrison, logistics, and strategic identities;
+- generate one original 1600x900 scenic backdrop per new town, retain exact prompt/hash/accessibility provenance and high-resolution source masters outside packages, preserve faction overworld sprites and all existing town/gameplay authority, and keep Linux/Windows packages below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all six maps launch through normal skirmish authority with the exact hero, company, new player town, enemy town, development resources, four direct battles, one counterstroke, pressure line, relief event, artifact route, complete objective chain, and save-version-9 continuity;
+- all six towns build and recruit through their faction's live production ladder, expose their authored economy/spell/garrison/logistics identity, and render six visually distinct scenery-first backdrops at supported viewports without changing town actions or save authority;
+- run one consolidated six-map gameplay/town-development/art/save smoke only after the full batch, followed once by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- shipped six original skirmish-only 18x12 long marches, one per faction, with six underused production heroes, six new four-stack companies, six new developable player towns, six enemy towns, twenty-four direct battle fronts, six triggered counterstrokes, deterministic pressure/relief routes, artifact paths, and complete six-part victory chains;
+- added Amberweir Granary, Moonbite Reedshrine, Splitprism Duelcourt, Woundroot Hearthgrove, Whitegauge Calibration Yard, and Dreamwake Oracle Harbor as live town identities with distinct economy, recruitment, garrison, logistics, strategic copy, exact faction-overworld silhouette routes, and no leakage of the six Horizon-exclusive capstones;
+- generated and inspected six original 1600x900 scenery-first town backdrops from retained 1536x1024 built-in image-generation sources, with exact final prompts, hashes, accessibility descriptions, and source masters excluded from release packages;
+- the single consolidated smoke passed twenty-four direct battles, six counterstrokes, six roster-backed rivals, six town builds, six recruits, six exact scenic identities, six full scenario victories, six save-version-9 round trips, six map captures, and one reviewed art contact sheet;
+- repository validation passed at 207 active scenarios, 345 armies, 197 encounter definitions, and 32 towns; matching Linux and Windows exports booted with the native extension, contained all 38 town scenic backdrops, and measured 232657852 bytes, leaving 17342148 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, unit definition, building, spell, artifact definition, encounter definition, neutral dwelling, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes town, map, commander, architecture, name, text, art, or protected visual expression.
 
 ## The Six Sealed Companies Campaign
 
