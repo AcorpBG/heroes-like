@@ -15902,14 +15902,14 @@
       }
     }
   ],
-  "currentNotes": "The six field-muster commission skirmishes are complete. The broader production-content goal remains active; audit and register the next bounded content/art batch before implementation.",
+  "currentNotes": "The six twin-hold defense vigils are complete. The broader production-content goal remains active; audit and register the next bounded content/art batch before implementation.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-field-muster-commission-skirmishes-10184",
-  "currentSliceId": "content-six-field-muster-commission-skirmishes-10184",
-  "currentSliceNotes": "Completed six captain-led skirmishes with eighteen authored fronts, thirty live hooks including six scripted counterstrokes, exact encounter landmarks, a consolidated 6/6 gameplay smoke, repository validation, and matching Linux/Windows package startup at 247628960 bytes.",
+  "currentSlice": "content-six-twin-hold-defense-vigils-10184",
+  "currentSliceId": "content-six-twin-hold-defense-vigils-10184",
+  "currentSliceNotes": "Completed six skirmish-only Day-12 twin-hold defenses with eighteen viable siege fronts, thirty-six live hooks, six exact original landmarks, a consolidated 6/6 gameplay smoke, repository validation, and matching Linux/Windows package startup at 247622292 bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six field muster commission skirmishes 10184",
-  "currentSliceUpdatedAt": "2026-08-31T05:34:52Z",
+  "currentSliceTitle": "content six twin hold defense vigils 10184",
+  "currentSliceUpdatedAt": "2026-08-31T06:21:10Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106966,6 +106966,16 @@
       "startedAt": "2026-08-31T04:54:52Z",
       "notes": "Implemented six original captain-led skirmishes with eighteen authored fronts, thirty live hooks including six scripted counterstrokes, exact encounter landmarks, and faction field musters. Consolidated 6/6 gameplay/art/save smoke passed; repository validation passed; Linux and Windows export/startup passed with matching 247628960-byte PCKs, seventeen recurring encounter atlases present, source art excluded, and 2371040 bytes headroom.",
       "completedAt": "2026-08-31T05:34:52Z"
+    },
+    {
+      "id": "content-six-twin-hold-defense-vigils-10184",
+      "title": "content six twin hold defense vigils 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T06:21:10Z",
+      "startedAt": "2026-08-31T05:42:58Z",
+      "notes": "Implemented six skirmish-only Day-12 twin-hold defense scenarios with eighteen viable siege fronts, thirty-six live hooks, exact generated assault landmarks, and six lost-hold controls. Consolidated 6/6 gameplay/art/save smoke passed; repository validation passed; Linux and Windows export/startup passed with matching 247622292-byte PCKs, eighteen recurring encounter atlases present, source art excluded, and 2377708 bytes headroom.",
+      "completedAt": "2026-08-31T06:21:10Z"
     }
   ],
   "project": "heroes-like",
@@ -106975,7 +106985,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "This bounded six-skirmish field-muster commission slice is complete. Broader production content and distinctive-art expansion remains open and requires a separately registered next slice; this result is not a whole-game or release-readiness claim.",
+  "remainingGap": "This bounded six-map twin-hold defense slice is complete. Broader production content and distinctive-art expansion remains open and requires a separately registered next slice; this result is not a whole-game or release-readiness claim.",
   "remainingWork": "Audit current live content/art coverage and register the next coherent production-content batch before implementation; keep one consolidated smoke after that complete batch rather than testing each small asset edit.",
   "reportOnlyEvidence": [
     {
