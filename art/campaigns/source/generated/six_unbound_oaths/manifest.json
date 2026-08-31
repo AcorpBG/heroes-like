@@ -1,0 +1,76 @@
+{
+  "schema_id": "six_unbound_oaths_campaign_art_v1",
+  "generator_mode": "built_in_image_gen",
+  "generated_at": "2026-08-31",
+  "campaign_id": "campaign_six_unbound_oaths",
+  "identity_sheet": "res://art/campaigns/source/generated/six_unbound_oaths/six_unbound_oaths_identity_sheet.png",
+  "identity_sheet_sha256": "a91efd5b0a70877b6556721921fd217ba3dae4ab202e3d5767405751c8d45fd7",
+  "final_prompt": "Original seven-icon fantasy strategy campaign identity sheet for The Six Unbound Oaths: six materially distinct oath tokens around an open bronze concord ring, followed by bear-paw hedge gate, marsh bell and ripples, wind cairn vane, living branch cartwheel, scarred iron shield and yard hammer, and harbor flare mast over mist; hand-painted readable relief icons, exact 4x2 layout with empty final cell, no text, no franchise symbols, genuine transparent background.",
+  "background_extraction_prompt": "Remove only the entire dark gradient background and replace it with genuine alpha transparency; preserve all seven icons, grid positions, scale, colors, materials, lighting, shapes, spacing, and fine edges; no halos, additions, restyling, rearrangement, text, or watermark.",
+  "runtime_pipeline": "Each equal sheet cell is deterministically cropped to a transparent 512px square; the campaign emblem is Lanczos-downscaled to 128px and six chapter seals to 64px with 64-color RGBA quantization. Generated source masters remain excluded from Linux and Windows release packages.",
+  "assets": [
+    {
+      "id": "campaign_emblem_six_unbound_oaths",
+      "role": "campaign_emblem",
+      "source_path": "res://art/campaigns/source/generated/emblems/six_unbound_oaths_source.png",
+      "runtime_path": "res://art/campaigns/runtime/emblems/six_unbound_oaths.png",
+      "source_sha256": "eaa836f4c0d9907b0cfd948646c76812fadb3770831084ed107fb62829d229e9",
+      "runtime_sha256": "66ba971a8d31ad43cd6267b4afb161f1df86e54a941b61ecf252a026b5ceda9c",
+      "non_color_identity": "Six materially different oath tokens remain separate around one deliberately open bronze concord ring."
+    },
+    {
+      "id": "campaign_chapter_seal_pikeward_brambleback_concord",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/brambleback_oath_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/brambleback_oath.png",
+      "source_sha256": "40354175f16e083b6195f91564c459a385a02b4ad105bac877174ffe2a044992",
+      "runtime_sha256": "cc9595a23539896677cf2be20832811f11fd68b9653d68c9b6f4358094429d44",
+      "non_color_identity": "A broad bear paw holds an iron-banded hedge gate inside a round field of leaves."
+    },
+    {
+      "id": "campaign_chapter_seal_mudkeel_mireglass_concord",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/mireglass_oath_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/mireglass_oath.png",
+      "source_sha256": "7569485812c58228c63025873701f186fcc016c0bd333bf72b97051de6eef001",
+      "runtime_sha256": "c7519b37085a0ebae47abad8228ff4c77fd1d33c52cd0751f2caa7d62f84043b",
+      "non_color_identity": "A squat bronze marsh bell hangs over concentric ripples between two reed clumps."
+    },
+    {
+      "id": "campaign_chapter_seal_daynote_windcairn_concord",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/windcairn_oath_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/windcairn_oath.png",
+      "source_sha256": "cb00e6e29f111d77ce2b93f8018543b75d792cc43e7e7bce03bbde6bbbc9fbab",
+      "runtime_sha256": "4eb0b098dfb74fbc84a8cd52306b7bebd57908441fe3d0eec14023c90af764f0",
+      "non_color_identity": "A tall uneven stone cairn supports a crosswind vane beneath a small rayed sun disk."
+    },
+    {
+      "id": "campaign_chapter_seal_thorncart_greenbranch_concord",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/greenbranch_oath_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/greenbranch_oath.png",
+      "source_sha256": "c3db2a1e7ee6eb15b3fcc6118f330d7b37faa33543499226643f6e046017c0af",
+      "runtime_sha256": "d4ccccd5a30233af166bcd400071e40adc86e0a9e9a17032bd37d22b78908d89",
+      "non_color_identity": "Two forked living branches cross over a six-spoked wooden cartwheel with leaf clusters at their tips."
+    },
+    {
+      "id": "campaign_chapter_seal_varn_scarshield_concord",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/scarshield_oath_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/scarshield_oath.png",
+      "source_sha256": "1b32c46259f18dd9dfce8d45ab4d4e6ea13be173c2106053aec39553835073d1",
+      "runtime_sha256": "32b2c5749c39406af27e5e35c489c2ad11b6275cfc87841da0fd34d31e8c928b",
+      "non_color_identity": "A tall asymmetrical iron shield carries three deep diagonal scars beside a square-headed broken-yard hammer."
+    },
+    {
+      "id": "campaign_chapter_seal_mistcorsair_flaremast_concord",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/flaremast_oath_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/flaremast_oath.png",
+      "source_sha256": "cc6aaff988a24ebefda8fab3c9bd74e7d508bf10e4a7cf48d74cd2d454b70210",
+      "runtime_sha256": "3cca6151a3b5aa8be6858976287388f47c4c68963894b2364f9b96c77fdd17b3",
+      "non_color_identity": "A tall timber harbor mast bears a caged flame above a curling pale mist wake and dark foundation rocks."
+    }
+  ]
+}

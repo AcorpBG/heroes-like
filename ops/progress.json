@@ -16011,14 +16011,14 @@
       }
     }
   ],
-  "currentNotes": "Completed six live Unbound Wild neutral dwellings and concord scenarios, twelve newly recruitable neutral-unit routes, eighteen battle fronts, exact generated landmark states, save-v9 continuity, and the streamed Vorbis migration for 75 music plus 11 ambient cues. One consolidated smoke, repository validation, and sequential Linux/Windows package boots passed at 231228748 bytes.",
+  "currentNotes": "Completed The Six Unbound Oaths as one coherent six-chapter campaign over the six Wild Concord maps, with exact oath unlocks, bounded common-resource handoff, seven original campaign art identities, eighteen battle victories, twelve dwelling recruits, complete campaign resolution, and save-v9 continuity. One consolidated batch smoke, repository validation, and sequential Linux/Windows package boots passed at 231238736 bytes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-unbound-wild-concords-10184",
-  "currentSliceId": "content-six-unbound-wild-concords-10184",
-  "currentSliceNotes": "Shipped six Unbound Wild neutral dwellings and skirmish concords, twelve neutral recruitment routes, six new guard encounters plus twelve reused approach fronts, exact unclaimed/controlled art, and streamed Vorbis long-form audio. Consolidated smoke passed 6 scenarios, 18 battle payloads, dual-unit objectives, victories, captures, audio playback, and save-v9 continuity; repository validation and Linux/Windows package boot passed at 231228748 bytes.",
+  "currentSlice": "content-six-unbound-oaths-campaign-10184",
+  "currentSliceId": "content-six-unbound-oaths-campaign-10184",
+  "currentSliceNotes": "Shipped the complete six-chapter The Six Unbound Oaths campaign with exact sequential oath unlocks, bounded common-resource handoff, narrative, seven original campaign art identities, eighteen live battle victories, twelve dwelling recruits, six save-version-9 round trips, and one consolidated batch smoke. Repository validation passed; matching Linux and Windows packages booted with the native extension at 231238736 bytes, leaving 18761264 bytes below the 250000000-byte ceiling.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six unbound wild concords 10184",
-  "currentSliceUpdatedAt": "2026-08-31T16:35:29Z",
+  "currentSliceTitle": "content six unbound oaths campaign 10184",
+  "currentSliceUpdatedAt": "2026-08-31T17:11:11Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107195,6 +107195,16 @@
       "startedAt": "2026-08-31T15:33:37Z",
       "notes": "Shipped six Unbound Wild neutral dwellings and skirmish concords, twelve neutral recruitment routes, six new guard encounters plus twelve reused approach fronts, exact unclaimed/controlled art, and streamed Vorbis long-form audio. Consolidated smoke passed 6 scenarios, 18 battle payloads, dual-unit objectives, victories, captures, audio playback, and save-v9 continuity; repository validation and Linux/Windows package boot passed at 231228748 bytes.",
       "completedAt": "2026-08-31T16:35:29Z"
+    },
+    {
+      "id": "content-six-unbound-oaths-campaign-10184",
+      "title": "content six unbound oaths campaign 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T17:11:11Z",
+      "startedAt": "2026-08-31T16:42:15Z",
+      "notes": "Shipped the complete six-chapter The Six Unbound Oaths campaign with exact sequential oath unlocks, bounded common-resource handoff, narrative, seven original campaign art identities, eighteen live battle victories, twelve dwelling recruits, six save-version-9 round trips, and one consolidated batch smoke. Repository validation passed; matching Linux and Windows packages booted with the native extension at 231238736 bytes, leaving 18761264 bytes below the 250000000-byte ceiling.",
+      "completedAt": "2026-08-31T17:11:11Z"
     }
   ],
   "project": "heroes-like",
@@ -107739,7 +107749,7 @@
   ],
   "summary": "Completed the coherent Seven-School Signature Battle VFX content, accessibility, live-presentation, and package-efficiency batch with one consolidated smoke.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T13:37:19Z",
+  "updatedAt": "2026-08-31T17:11:11Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
