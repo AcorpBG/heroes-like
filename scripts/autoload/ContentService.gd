@@ -379,7 +379,9 @@ func _validate_content() -> void:
 	var terrain_layer_index := _index_items(_items_from_raw(load_json(TERRAIN_LAYERS_PATH)))
 	var map_object_index := _index_items(_items_from_raw(load_json(MAP_OBJECTS_PATH)))
 	var neutral_dwelling_index := _index_items(_items_from_raw(load_json(NEUTRAL_DWELLINGS_PATH)))
-	var artifact_index := _index_items(_items_from_raw(load_json(ARTIFACTS_PATH)))
+	var artifact_raw := load_json(ARTIFACTS_PATH)
+	var artifact_index := _index_items(_items_from_raw(artifact_raw))
+	var artifact_set_index := _index_items(artifact_raw.get("sets", []) if artifact_raw is Dictionary else [])
 	var spell_index := _index_items(_items_from_raw(load_json(SPELLS_PATH)))
 	var spell_icon_index := _index_items(_items_from_raw(load_json(SPELL_ICONS_PATH)))
 	var spell_school_icon_index := _index_items(_items_from_raw(load_json(SPELL_SCHOOL_ICONS_PATH)))
@@ -445,6 +447,7 @@ func _validate_content() -> void:
 			unit_index,
 			resource_site_index,
 			artifact_index,
+			artifact_set_index,
 			encounter_index
 		)
 	for campaign in campaign_index.values():
@@ -1424,6 +1427,7 @@ func _validate_scenario(
 	unit_index: Dictionary,
 	resource_site_index: Dictionary,
 	artifact_index: Dictionary,
+	artifact_set_index: Dictionary,
 	encounter_index: Dictionary
 ) -> void:
 	var scenario_id := String(scenario.get("id", ""))
@@ -1579,11 +1583,11 @@ func _validate_scenario(
 		for objective in objectives.get("victory", []):
 			if objective is Dictionary:
 				_append_unique_string(objective_ids, String(objective.get("id", "")))
-				_validate_objective(scenario_id, objective, faction_index, hero_index, unit_index, building_index, artifact_index, hero_starts, town_placement_ids, resource_placement_ids, encounter_placement_ids)
+				_validate_objective(scenario_id, objective, faction_index, hero_index, unit_index, building_index, artifact_index, artifact_set_index, hero_starts, town_placement_ids, resource_placement_ids, encounter_placement_ids)
 		for objective in objectives.get("defeat", []):
 			if objective is Dictionary:
 				_append_unique_string(objective_ids, String(objective.get("id", "")))
-				_validate_objective(scenario_id, objective, faction_index, hero_index, unit_index, building_index, artifact_index, hero_starts, town_placement_ids, resource_placement_ids, encounter_placement_ids)
+				_validate_objective(scenario_id, objective, faction_index, hero_index, unit_index, building_index, artifact_index, artifact_set_index, hero_starts, town_placement_ids, resource_placement_ids, encounter_placement_ids)
 
 	if scenario.has("script_hooks") and not (script_hooks is Array):
 		push_warning("Scenario %s script_hooks must be an array." % scenario_id)
@@ -1628,6 +1632,7 @@ func _validate_objective(
 	unit_index: Dictionary,
 	building_index: Dictionary,
 	artifact_index: Dictionary,
+	artifact_set_index: Dictionary,
 	hero_starts: Variant,
 	town_placement_ids: Array[String],
 	resource_placement_ids: Array[String],
@@ -1639,6 +1644,30 @@ func _validate_objective(
 			var artifact_id := String(objective.get("artifact_id", ""))
 			if artifact_id == "" or not artifact_index.has(artifact_id):
 				push_warning("Scenario %s objective %s references missing artifact_id %s." % [scenario_id, String(objective.get("id", "")), artifact_id])
+		"hero_artifact_set_equipped":
+			var set_hero_id := String(objective.get("hero_id", ""))
+			var set_id := String(objective.get("set_id", ""))
+			if set_hero_id == "" or not hero_index.has(set_hero_id):
+				push_warning("Scenario %s objective %s references missing hero_id %s." % [scenario_id, String(objective.get("id", "")), set_hero_id])
+			elif not (hero_starts is Array) or set_hero_id not in hero_starts:
+				push_warning("Scenario %s objective %s hero_id %s must be a controlled starting hero." % [scenario_id, String(objective.get("id", "")), set_hero_id])
+			if set_id == "" or not artifact_set_index.has(set_id):
+				push_warning("Scenario %s objective %s references missing artifact set %s." % [scenario_id, String(objective.get("id", "")), set_id])
+			else:
+				var artifact_set: Dictionary = artifact_set_index.get(set_id, {})
+				var set_piece_ids = artifact_set.get("piece_ids", [])
+				if not (set_piece_ids is Array) or set_piece_ids.is_empty():
+					push_warning("Scenario %s objective %s artifact set %s must define non-empty piece_ids." % [scenario_id, String(objective.get("id", "")), set_id])
+				else:
+					var seen_piece_ids: Array[String] = []
+					for set_piece_id_value in set_piece_ids:
+						var set_piece_id := String(set_piece_id_value)
+						if set_piece_id == "" or not artifact_index.has(set_piece_id):
+							push_warning("Scenario %s objective %s set %s references missing artifact %s." % [scenario_id, String(objective.get("id", "")), set_id, set_piece_id])
+						elif set_piece_id in seen_piece_ids:
+							push_warning("Scenario %s objective %s set %s repeats artifact %s." % [scenario_id, String(objective.get("id", "")), set_id, set_piece_id])
+						else:
+							seen_piece_ids.append(set_piece_id)
 		"spell_known_by_player":
 			var spell_id := String(objective.get("spell_id", ""))
 			if spell_id == "" or get_spell(spell_id).is_empty():

@@ -16476,6 +16476,456 @@
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
+    },
+    {
+      "id": "site_lockward_charter_reliquary",
+      "name": "Lockward Charter Reliquary",
+      "family": "guarded_reward_site",
+      "guarded": true,
+      "persistent_control": false,
+      "rewards": {
+        "gold": 700,
+        "embergrain": 1,
+        "experience": 160
+      },
+      "claim_flags": {
+        "lockward_reliquary_opened": true
+      },
+      "guard_profile": {
+        "tier": "heavy",
+        "risk_tier": "heavy",
+        "guard_army_group_id": "army_blackbranch_reavers",
+        "guard_encounter_id": "encounter_blackbranch_reavers",
+        "visible_cue": "the visible rival regalia guard blocks the sealed faction reliquary before its final set piece can be claimed",
+        "clear_required_for_reward": true,
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "guarded_reward_contract": {
+        "contract_id": "guarded_reward_contract_lockward_regalia_reliquary",
+        "resource_site_id": "site_lockward_charter_reliquary",
+        "source_tag": "guarded_site",
+        "artifact_reward_table_id": "artifact_source_setbound_regalia_reliquaries",
+        "reward_site_role": "setbound_regalia_reliquary",
+        "reward_categories": [
+          "resource",
+          "artifact"
+        ],
+        "reward_tier": "heavy",
+        "guard_army_group_id": "army_blackbranch_reavers",
+        "guard_encounter_id": "encounter_blackbranch_reavers",
+        "clear_required_for_reward": true,
+        "visible_guard_cue_required": true,
+        "one_time_reward": true,
+        "route_hybrid": false,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
+        "broad_reward_runtime_migration": false
+      },
+      "reward_preview": {
+        "reward_categories": [
+          "resource",
+          "artifact"
+        ],
+        "live_resource_reward_keys": [
+          "experience",
+          "gold",
+          "embergrain"
+        ],
+        "artifact_reward_execution": true,
+        "artifact_id": "artifact_lockward_beacon_key",
+        "set_id": "set_lockward_charter"
+      },
+      "runtime_boundary": {
+        "status": "set_piece_and_resource_rewards_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
+        "guarded_reward_site_runtime_supported": true,
+        "guard_resolution_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "scenario_placement_migration": true,
+        "equipment_runtime_effects": true
+      },
+      "content_batch_id": "content-six-setbound-regalia-assemblies-10184",
+      "batch_role": "guarded_final_set_piece_reliquary"
+    },
+    {
+      "id": "site_fenhound_pursuit_reliquary",
+      "name": "Fenhound Pursuit Reliquary",
+      "family": "guarded_reward_site",
+      "guarded": true,
+      "persistent_control": false,
+      "rewards": {
+        "gold": 700,
+        "peatwax": 1,
+        "experience": 160
+      },
+      "claim_flags": {
+        "fenhound_reliquary_opened": true
+      },
+      "guard_profile": {
+        "tier": "heavy",
+        "risk_tier": "heavy",
+        "guard_army_group_id": "army_daxis_meridian_impound",
+        "guard_encounter_id": "encounter_daxis_meridian_impound",
+        "visible_cue": "the visible rival regalia guard blocks the sealed faction reliquary before its final set piece can be claimed",
+        "clear_required_for_reward": true,
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "guarded_reward_contract": {
+        "contract_id": "guarded_reward_contract_fenhound_regalia_reliquary",
+        "resource_site_id": "site_fenhound_pursuit_reliquary",
+        "source_tag": "guarded_site",
+        "artifact_reward_table_id": "artifact_source_setbound_regalia_reliquaries",
+        "reward_site_role": "setbound_regalia_reliquary",
+        "reward_categories": [
+          "resource",
+          "artifact"
+        ],
+        "reward_tier": "heavy",
+        "guard_army_group_id": "army_daxis_meridian_impound",
+        "guard_encounter_id": "encounter_daxis_meridian_impound",
+        "clear_required_for_reward": true,
+        "visible_guard_cue_required": true,
+        "one_time_reward": true,
+        "route_hybrid": false,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
+        "broad_reward_runtime_migration": false
+      },
+      "reward_preview": {
+        "reward_categories": [
+          "resource",
+          "artifact"
+        ],
+        "live_resource_reward_keys": [
+          "experience",
+          "gold",
+          "peatwax"
+        ],
+        "artifact_reward_execution": true,
+        "artifact_id": "artifact_fenhound_scent_bell",
+        "set_id": "set_fenhound_pursuit"
+      },
+      "runtime_boundary": {
+        "status": "set_piece_and_resource_rewards_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
+        "guarded_reward_site_runtime_supported": true,
+        "guard_resolution_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "scenario_placement_migration": true,
+        "equipment_runtime_effects": true
+      },
+      "content_batch_id": "content-six-setbound-regalia-assemblies-10184",
+      "batch_role": "guarded_final_set_piece_reliquary"
+    },
+    {
+      "id": "site_meridian_relay_reliquary",
+      "name": "Meridian Relay Reliquary",
+      "family": "guarded_reward_site",
+      "guarded": true,
+      "persistent_control": false,
+      "rewards": {
+        "gold": 700,
+        "aetherglass": 1,
+        "experience": 160
+      },
+      "claim_flags": {
+        "meridian_reliquary_opened": true
+      },
+      "guard_profile": {
+        "tier": "heavy",
+        "risk_tier": "heavy",
+        "guard_army_group_id": "army_pollenhook_whistle_line",
+        "guard_encounter_id": "encounter_pollenhook_whistle_line",
+        "visible_cue": "the visible rival regalia guard blocks the sealed faction reliquary before its final set piece can be claimed",
+        "clear_required_for_reward": true,
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "guarded_reward_contract": {
+        "contract_id": "guarded_reward_contract_meridian_regalia_reliquary",
+        "resource_site_id": "site_meridian_relay_reliquary",
+        "source_tag": "guarded_site",
+        "artifact_reward_table_id": "artifact_source_setbound_regalia_reliquaries",
+        "reward_site_role": "setbound_regalia_reliquary",
+        "reward_categories": [
+          "resource",
+          "artifact"
+        ],
+        "reward_tier": "heavy",
+        "guard_army_group_id": "army_pollenhook_whistle_line",
+        "guard_encounter_id": "encounter_pollenhook_whistle_line",
+        "clear_required_for_reward": true,
+        "visible_guard_cue_required": true,
+        "one_time_reward": true,
+        "route_hybrid": false,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
+        "broad_reward_runtime_migration": false
+      },
+      "reward_preview": {
+        "reward_categories": [
+          "resource",
+          "artifact"
+        ],
+        "live_resource_reward_keys": [
+          "experience",
+          "gold",
+          "aetherglass"
+        ],
+        "artifact_reward_execution": true,
+        "artifact_id": "artifact_meridian_relay_lens",
+        "set_id": "set_meridian_relay"
+      },
+      "runtime_boundary": {
+        "status": "set_piece_and_resource_rewards_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
+        "guarded_reward_site_runtime_supported": true,
+        "guard_resolution_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "scenario_placement_migration": true,
+        "equipment_runtime_effects": true
+      },
+      "content_batch_id": "content-six-setbound-regalia-assemblies-10184",
+      "batch_role": "guarded_final_set_piece_reliquary"
+    },
+    {
+      "id": "site_rootpath_covenant_reliquary",
+      "name": "Rootpath Covenant Reliquary",
+      "family": "guarded_reward_site",
+      "guarded": true,
+      "persistent_control": false,
+      "rewards": {
+        "gold": 700,
+        "verdant_grafts": 1,
+        "experience": 160
+      },
+      "claim_flags": {
+        "rootpath_reliquary_opened": true
+      },
+      "guard_profile": {
+        "tier": "heavy",
+        "risk_tier": "heavy",
+        "guard_army_group_id": "army_debtrune_default_collectors",
+        "guard_encounter_id": "encounter_debtrune_default_collectors",
+        "visible_cue": "the visible rival regalia guard blocks the sealed faction reliquary before its final set piece can be claimed",
+        "clear_required_for_reward": true,
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "guarded_reward_contract": {
+        "contract_id": "guarded_reward_contract_rootpath_regalia_reliquary",
+        "resource_site_id": "site_rootpath_covenant_reliquary",
+        "source_tag": "guarded_site",
+        "artifact_reward_table_id": "artifact_source_setbound_regalia_reliquaries",
+        "reward_site_role": "setbound_regalia_reliquary",
+        "reward_categories": [
+          "resource",
+          "artifact"
+        ],
+        "reward_tier": "heavy",
+        "guard_army_group_id": "army_debtrune_default_collectors",
+        "guard_encounter_id": "encounter_debtrune_default_collectors",
+        "clear_required_for_reward": true,
+        "visible_guard_cue_required": true,
+        "one_time_reward": true,
+        "route_hybrid": false,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
+        "broad_reward_runtime_migration": false
+      },
+      "reward_preview": {
+        "reward_categories": [
+          "resource",
+          "artifact"
+        ],
+        "live_resource_reward_keys": [
+          "experience",
+          "gold",
+          "verdant_grafts"
+        ],
+        "artifact_reward_execution": true,
+        "artifact_id": "artifact_rootpath_seed_compass",
+        "set_id": "set_rootpath_covenant"
+      },
+      "runtime_boundary": {
+        "status": "set_piece_and_resource_rewards_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
+        "guarded_reward_site_runtime_supported": true,
+        "guard_resolution_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "scenario_placement_migration": true,
+        "equipment_runtime_effects": true
+      },
+      "content_batch_id": "content-six-setbound-regalia-assemblies-10184",
+      "batch_role": "guarded_final_set_piece_reliquary"
+    },
+    {
+      "id": "site_redline_survey_reliquary",
+      "name": "Redline Survey Warrant Reliquary",
+      "family": "guarded_reward_site",
+      "guarded": true,
+      "persistent_control": false,
+      "rewards": {
+        "gold": 700,
+        "brass_scrip": 1,
+        "experience": 160
+      },
+      "claim_flags": {
+        "redline_reliquary_opened": true
+      },
+      "guard_profile": {
+        "tier": "heavy",
+        "risk_tier": "heavy",
+        "guard_army_group_id": "army_nightchart_false_meridian_pilots",
+        "guard_encounter_id": "encounter_nightchart_false_meridian",
+        "visible_cue": "the visible rival regalia guard blocks the sealed faction reliquary before its final set piece can be claimed",
+        "clear_required_for_reward": true,
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "guarded_reward_contract": {
+        "contract_id": "guarded_reward_contract_redline_regalia_reliquary",
+        "resource_site_id": "site_redline_survey_reliquary",
+        "source_tag": "guarded_site",
+        "artifact_reward_table_id": "artifact_source_setbound_regalia_reliquaries",
+        "reward_site_role": "setbound_regalia_reliquary",
+        "reward_categories": [
+          "resource",
+          "artifact"
+        ],
+        "reward_tier": "heavy",
+        "guard_army_group_id": "army_nightchart_false_meridian_pilots",
+        "guard_encounter_id": "encounter_nightchart_false_meridian",
+        "clear_required_for_reward": true,
+        "visible_guard_cue_required": true,
+        "one_time_reward": true,
+        "route_hybrid": false,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
+        "broad_reward_runtime_migration": false
+      },
+      "reward_preview": {
+        "reward_categories": [
+          "resource",
+          "artifact"
+        ],
+        "live_resource_reward_keys": [
+          "experience",
+          "gold",
+          "brass_scrip"
+        ],
+        "artifact_reward_execution": true,
+        "artifact_id": "artifact_redline_survey_dial",
+        "set_id": "set_redline_survey_warrant"
+      },
+      "runtime_boundary": {
+        "status": "set_piece_and_resource_rewards_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
+        "guarded_reward_site_runtime_supported": true,
+        "guard_resolution_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "scenario_placement_migration": true,
+        "equipment_runtime_effects": true
+      },
+      "content_batch_id": "content-six-setbound-regalia-assemblies-10184",
+      "batch_role": "guarded_final_set_piece_reliquary"
+    },
+    {
+      "id": "site_drowned_wake_reliquary",
+      "name": "Drowned Wake Chart Reliquary",
+      "family": "guarded_reward_site",
+      "guarded": true,
+      "persistent_control": false,
+      "rewards": {
+        "gold": 700,
+        "memory_salt": 1,
+        "experience": 160
+      },
+      "claim_flags": {
+        "drownedwake_reliquary_opened": true
+      },
+      "guard_profile": {
+        "tier": "heavy",
+        "risk_tier": "heavy",
+        "guard_army_group_id": "army_horizon_court_rainwrit_tidewrit_assize",
+        "guard_encounter_id": "encounter_horizon_court_rainwrit_tidewrit_assize",
+        "visible_cue": "the visible rival regalia guard blocks the sealed faction reliquary before its final set piece can be claimed",
+        "clear_required_for_reward": true,
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "guarded_reward_contract": {
+        "contract_id": "guarded_reward_contract_drownedwake_regalia_reliquary",
+        "resource_site_id": "site_drowned_wake_reliquary",
+        "source_tag": "guarded_site",
+        "artifact_reward_table_id": "artifact_source_setbound_regalia_reliquaries",
+        "reward_site_role": "setbound_regalia_reliquary",
+        "reward_categories": [
+          "resource",
+          "artifact"
+        ],
+        "reward_tier": "heavy",
+        "guard_army_group_id": "army_horizon_court_rainwrit_tidewrit_assize",
+        "guard_encounter_id": "encounter_horizon_court_rainwrit_tidewrit_assize",
+        "clear_required_for_reward": true,
+        "visible_guard_cue_required": true,
+        "one_time_reward": true,
+        "route_hybrid": false,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
+        "broad_reward_runtime_migration": false
+      },
+      "reward_preview": {
+        "reward_categories": [
+          "resource",
+          "artifact"
+        ],
+        "live_resource_reward_keys": [
+          "experience",
+          "gold",
+          "memory_salt"
+        ],
+        "artifact_reward_execution": true,
+        "artifact_id": "artifact_black_sail_compass",
+        "set_id": "set_drowned_wake_chart"
+      },
+      "runtime_boundary": {
+        "status": "set_piece_and_resource_rewards_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
+        "guarded_reward_site_runtime_supported": true,
+        "guard_resolution_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "scenario_placement_migration": true,
+        "equipment_runtime_effects": true
+      },
+      "content_batch_id": "content-six-setbound-regalia-assemblies-10184",
+      "batch_role": "guarded_final_set_piece_reliquary"
     }
   ]
 }

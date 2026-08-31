@@ -24,9 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected after completing the latest content batch; the broader release-bound content goal remains active.
-- Most recently completed implementation slice: `content-six-garrison-warrant-musters-10184`, a coherent six-faction town-garrison, stack-transfer, underused-content, exact-art, battle, and save-continuity batch.
-- Current package boundary: matching Linux and Windows release exports measure 248937900 bytes, 1062100 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- No new implementation slice is selected after completing the Setbound Regalia batch.
+- Most recently completed implementation slice: `content-six-setbound-regalia-assemblies-10184`, a coherent six-faction artifact-set, equipment-management, guarded-route, exact-art, battle, and save-continuity batch.
+- Current package boundary: matching Linux and Windows release exports measure 249042036 bytes, 957964 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Setbound Regalia Assemblies
+
+id: `content-six-setbound-regalia-assemblies-10184`
+
+Status: completed.
+
+Current finding:
+- all six faction artifact sets already ship three compatible equipment pieces, active two-piece and three-piece bonuses, production equip/unequip actions, AI valuation, and save-version-9 state, but no authored scenario requires a player to assemble and equip a complete set;
+- the set pieces exist in the live artifact catalog and exact artifact pickups can award them, while guarded resource-site reward tables can deterministically award a faction-specific final piece;
+- six comparatively underused commanders and towns provide a coherent skirmish breadth target without adding redundant hero, town, artifact, or encounter definitions.
+
+Implementation boundary:
+- add a first-class `hero_artifact_set_equipped` objective with an exact controlled hero and live set id, full equipped-piece evaluation through artifact-set runtime authority, scoped hero/artifact dependencies, compact progress labels, content validation, and save-version-9 continuity;
+- author one original skirmish-only Setbound Regalia assembly per faction, each using a selected low-use commander and town, a three-front guarded route, two exact artifact pickups, one deterministic faction reliquary reward, pressure/deadline boundaries, and production equipment management to activate the complete three-piece set;
+- generate six original transparent reliquary landmarks with distinct non-color silhouettes, derive one compact 288x48 runtime atlas, retain prompt/hash/accessibility provenance outside packages, and keep Linux/Windows exports below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all six scenarios launch with no set pieces, reject wrong-hero, inventory-only, partial-set, and wrong-set controls, then resolve eighteen production battles, recover all eighteen exact pieces through live pickup/site authority, equip all pieces through production artifact actions, activate all six three-piece bonuses, satisfy the objective, win before the deadline, and round-trip exactly through save version 9;
+- each scenario resolves its exact reliquary art, reuses three selected low-placement opposing encounters, and evaluates hero/artifact dependencies without reacting to unrelated events;
+- one consolidated six-case gameplay/control/art/save and visual-capture smoke runs only after the complete batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, unit definition, town definition, building, spell, artifact definition, campaign, encounter definition, resource id, economy rule, combat formula, strategic-AI planning algorithm, native RMG behavior, save-version bump, full-screen backdrop, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes map, artifact, regalia, commander, encounter, landmark, name, text, heraldry, or protected visual expression.
+
+Result:
+- shipped six skirmish-only Setbound Regalia assemblies, six production opening companies, eighteen reused opposing fronts, twelve exact artifact pickups, six guarded deterministic final-piece reliquaries, town relief and late rival-cordon hooks, and the first production `hero_artifact_set_equipped` objective with exact hero/set/piece dependencies and live equipped-state evaluation;
+- generated six byte-distinct transparent source masters and derived one 288x48, 22374-byte runtime atlas with exact site mappings, accessible descriptions, prompt/hash provenance, and source-art package exclusion;
+- the consolidated six-case smoke passed exact art, wrong-hero, inventory-only, wrong-set, partial-set, scoped and unrelated-event controls, eighteen production battles, twelve pickup claims, six reliquary claims, eighteen stows, eighteen production equips, six active three-piece sets, six victories, six visual captures, and six exact save-version-9 round trips;
+- repository validation passed at 183 scenarios, 309 armies, 185 encounters, and 291 resource sites; matching Linux and Windows exports booted with the native extension and measured 249042036 bytes, leaving 957964 bytes below the unchanged ceiling.
 
 ## Six Garrison Warrant Musters
 
