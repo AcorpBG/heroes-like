@@ -341,6 +341,13 @@ static func _scenario_objective_dependency(objective: Dictionary, objective_inde
 				for requirement in requirements:
 					if requirement is Dictionary:
 						_add_dependency_value(dependency, "unit_ids", String(requirement.get("unit_id", "")))
+		"town_garrison_meets_requirements":
+			_add_dependency_value(dependency, "town_placement_ids", String(objective.get("placement_id", "")))
+			var requirements = objective.get("requirements", [])
+			if requirements is Array:
+				for requirement in requirements:
+					if requirement is Dictionary:
+						_add_dependency_value(dependency, "unit_ids", String(requirement.get("unit_id", "")))
 		"hero_progression_meets_requirements":
 			_add_dependency_value(dependency, "hero_ids", String(objective.get("hero_id", "")))
 		"town_owned_by_player", "town_not_owned_by_player":
@@ -1593,6 +1600,8 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 			return bool(_resource_site_control_progress(session, objective).get("complete", false))
 		"hero_army_meets_requirements":
 			return bool(_hero_army_requirement_progress(session, objective).get("complete", false))
+		"town_garrison_meets_requirements":
+			return bool(_town_garrison_requirement_progress(session, objective).get("complete", false))
 		"hero_progression_meets_requirements":
 			return bool(_hero_progression_requirement_progress(session, objective).get("complete", false))
 		"town_owned_by_player":
@@ -1689,6 +1698,37 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 			var requirement_count := int(progress.get("requirement_count", 0))
 			if bool(progress.get("complete", false)):
 				return "%s (%d/%d companies ready)" % [base_label, ready_count, requirement_count]
+			var missing_parts := []
+			var missing_count := 0
+			for row in progress.get("requirements", []):
+				if not (row is Dictionary) or bool(row.get("met", false)):
+					continue
+				missing_count += 1
+				if missing_parts.size() < 2:
+					missing_parts.append("%s %d/%d" % [
+						String(row.get("unit_name", row.get("unit_id", "Unit"))),
+						int(row.get("current_count", 0)),
+						int(row.get("minimum_count", 0)),
+					])
+			var missing_summary := ", ".join(missing_parts)
+			if missing_count > missing_parts.size():
+				missing_summary += " +%d more" % (missing_count - missing_parts.size())
+			return "%s (%d/%d ready%s)" % [
+				base_label,
+				ready_count,
+				requirement_count,
+				"; need %s" % missing_summary if missing_summary != "" else "",
+			]
+		"town_garrison_meets_requirements":
+			var progress := _town_garrison_requirement_progress(session, objective)
+			if not bool(progress.get("town_found", false)):
+				return "%s (Garrison unavailable)" % base_label
+			if not bool(progress.get("town_controlled", false)):
+				return "%s (Town uncontrolled)" % base_label
+			var ready_count := int(progress.get("ready_count", 0))
+			var requirement_count := int(progress.get("requirement_count", 0))
+			if bool(progress.get("complete", false)):
+				return "%s (%d/%d garrison companies ready)" % [base_label, ready_count, requirement_count]
 			var missing_parts := []
 			var missing_count := 0
 			for row in progress.get("requirements", []):
@@ -1912,6 +1952,46 @@ static func _hero_army_requirement_progress(
 		"ready_count": ready_count,
 		"requirements": rows,
 		"complete": not rows.is_empty() and not army.is_empty() and ready_count == rows.size(),
+	}
+
+static func _town_garrison_requirement_progress(
+	session: SessionStateStoreScript.SessionData,
+	objective: Dictionary
+) -> Dictionary:
+	var town := _find_town(session, objective)
+	var requirements = objective.get("requirements", [])
+	var rows := []
+	var ready_count := 0
+	var garrison_army := {
+		"stacks": town.get("garrison", []) if not town.is_empty() and town.get("garrison", []) is Array else [],
+	}
+	if requirements is Array:
+		for requirement in requirements:
+			if not (requirement is Dictionary):
+				continue
+			var unit_id := String(requirement.get("unit_id", ""))
+			var minimum_count: int = max(1, int(requirement.get("minimum_count", 0)))
+			var current_count: int = _army_unit_count(garrison_army, unit_id)
+			var met: bool = current_count >= minimum_count
+			if met:
+				ready_count += 1
+			var unit := ContentService.get_unit(unit_id)
+			rows.append({
+				"unit_id": unit_id,
+				"unit_name": String(unit.get("name", unit_id)),
+				"minimum_count": minimum_count,
+				"current_count": current_count,
+				"met": met,
+			})
+	var town_controlled := not town.is_empty() and String(town.get("owner", "neutral")) == "player"
+	return {
+		"placement_id": String(objective.get("placement_id", "")),
+		"town_found": not town.is_empty(),
+		"town_controlled": town_controlled,
+		"requirement_count": rows.size(),
+		"ready_count": ready_count,
+		"requirements": rows,
+		"complete": not rows.is_empty() and town_controlled and ready_count == rows.size(),
 	}
 
 static func _hero_progression_requirement_progress(

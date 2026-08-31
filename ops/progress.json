@@ -16011,14 +16011,14 @@
       }
     }
   ],
-  "currentNotes": "Six original relief-route convoy runs now provide exact faction relays, stocked production dispatches, arrived interception battles, durable target-scoped delivery receipts, and first-class delivery victory authority. One consolidated six-case smoke passed claims, dispatches, blocking interceptors, eighteen battles, negative controls, exact art, victories, and save-v9 continuity; repository validation and matching Linux/Windows packaged startup pass at 248517260 bytes.",
+  "currentNotes": "Shipped six Garrison Warrant musters, six opening companies, eighteen underused faction stacks, six exact-art recruit warrants, eighteen reused low-placement opposing fronts, five-hook relief/counterstroke chains, and first-class town-garrison composition objectives. Consolidated smoke passed 6 cases, 18 battles, 6 claims, 18 town transfers, negative controls, victories, captures, and save-v9 continuity; repository validation and Linux/Windows package boot passed at 248937900 bytes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-relief-route-convoy-runs-10184",
-  "currentSliceId": "content-six-border-oath-standard-seizures-10184",
-  "currentSliceNotes": "Shipped six Border Oath standard seizures, twelve five-stack armies, six exact-art tactical cordons, six exact-art persistent standards, and first-class exact resource-site control objectives. One consolidated smoke passed 6 cases, 18 production battles/claims, negative controls, victory, captures, and save v9 continuity; repository validation and Linux/Windows package boot passed at 248929356 bytes.",
+  "currentSlice": "content-six-garrison-warrant-musters-10184",
+  "currentSliceId": "content-six-garrison-warrant-musters-10184",
+  "currentSliceNotes": "Shipped six Garrison Warrant musters, six opening companies, eighteen underused faction stacks, six exact-art recruit warrants, eighteen reused low-placement opposing fronts, five-hook relief/counterstroke chains, and first-class town-garrison composition objectives. Consolidated smoke passed 6 cases, 18 battles, 6 claims, 18 town transfers, negative controls, victories, captures, and save-v9 continuity; repository validation and Linux/Windows package boot passed at 248937900 bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six border oath standard seizures 10184",
-  "currentSliceUpdatedAt": "2026-08-31T11:37:30Z",
+  "currentSliceTitle": "content six garrison warrant musters 10184",
+  "currentSliceUpdatedAt": "2026-08-31T14:28:01Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107165,6 +107165,16 @@
       "startedAt": "2026-08-31T13:01:09Z",
       "notes": "Shipped six Border Oath standard seizures, twelve five-stack armies, six exact-art tactical cordons, six exact-art persistent standards, and first-class exact resource-site control objectives. One consolidated smoke passed 6 cases, 18 production battles/claims, negative controls, victory, captures, and save v9 continuity; repository validation and Linux/Windows package boot passed at 248929356 bytes.",
       "completedAt": "2026-08-31T13:37:19Z"
+    },
+    {
+      "id": "content-six-garrison-warrant-musters-10184",
+      "title": "content six garrison warrant musters 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T14:28:01Z",
+      "startedAt": "2026-08-31T13:46:31Z",
+      "notes": "Shipped six Garrison Warrant musters, six opening companies, eighteen underused faction stacks, six exact-art recruit warrants, eighteen reused low-placement opposing fronts, five-hook relief/counterstroke chains, and first-class town-garrison composition objectives. Consolidated smoke passed 6 cases, 18 battles, 6 claims, 18 town transfers, negative controls, victories, captures, and save-v9 continuity; repository validation and Linux/Windows package boot passed at 248937900 bytes.",
+      "completedAt": "2026-08-31T14:28:01Z"
     }
   ],
   "project": "heroes-like",
@@ -107174,7 +107184,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The relief-route convoy content slice is complete; broader production content, whole-game validation, signing, publication, and release readiness remain open.",
+  "remainingGap": "The Garrison Warrant content slice is complete; broader production content, whole-game validation, signing, publication, and release readiness remain open.",
   "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open.",
   "reportOnlyEvidence": [
     {

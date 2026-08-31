@@ -1728,6 +1728,28 @@ func _validate_objective(
 						seen_requirement_unit_ids.append(requirement_unit_id)
 					if int(requirement.get("minimum_count", 0)) <= 0:
 						push_warning("Scenario %s objective %s unit %s must define minimum_count > 0." % [scenario_id, String(objective.get("id", "")), requirement_unit_id])
+		"town_garrison_meets_requirements":
+			var garrison_placement_id := String(objective.get("placement_id", ""))
+			if garrison_placement_id == "" or garrison_placement_id not in town_placement_ids:
+				push_warning("Scenario %s objective %s references missing town placement %s." % [scenario_id, String(objective.get("id", "")), garrison_placement_id])
+			var requirements = objective.get("requirements", [])
+			if not (requirements is Array) or requirements.is_empty():
+				push_warning("Scenario %s objective %s must define non-empty garrison requirements." % [scenario_id, String(objective.get("id", ""))])
+			else:
+				var seen_requirement_unit_ids: Array[String] = []
+				for requirement in requirements:
+					if not (requirement is Dictionary):
+						push_warning("Scenario %s objective %s contains a non-dictionary garrison requirement." % [scenario_id, String(objective.get("id", ""))])
+						continue
+					var requirement_unit_id := String(requirement.get("unit_id", ""))
+					if requirement_unit_id == "" or not unit_index.has(requirement_unit_id):
+						push_warning("Scenario %s objective %s references missing unit_id %s." % [scenario_id, String(objective.get("id", "")), requirement_unit_id])
+					elif requirement_unit_id in seen_requirement_unit_ids:
+						push_warning("Scenario %s objective %s repeats unit_id %s." % [scenario_id, String(objective.get("id", "")), requirement_unit_id])
+					else:
+						seen_requirement_unit_ids.append(requirement_unit_id)
+					if int(requirement.get("minimum_count", 0)) <= 0:
+						push_warning("Scenario %s objective %s unit %s must define minimum_count > 0." % [scenario_id, String(objective.get("id", "")), requirement_unit_id])
 		"hero_progression_meets_requirements":
 			var progression_hero_id := String(objective.get("hero_id", ""))
 			if progression_hero_id == "" or not hero_index.has(progression_hero_id):

@@ -3570,6 +3570,108 @@
       ],
       "content_status": "border_oath_cordon_company_live",
       "content_batch_id": "content-six-border-oath-standard-seizures-10184"
+    },
+    {
+      "id": "army_cinderlockwarrant_opening_company",
+      "name": "Jorun Beaconscribe Garrison Warrant Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {
+          "unit_id": "unit_embercourt_fordhook_cadets",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_embercourt_lantern_sappers",
+          "count": 8
+        }
+      ],
+      "content_status": "garrison_warrant_opening_company_live",
+      "content_batch_id": "content-six-garrison-warrant-musters-10184"
+    },
+    {
+      "id": "army_murkwardwarrant_opening_company",
+      "name": "Pell Reedscript Garrison Warrant Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {
+          "unit_id": "unit_mireclaw_reedsnare_kin",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_mireclaw_mudglass_slingers",
+          "count": 8
+        }
+      ],
+      "content_status": "garrison_warrant_opening_company_live",
+      "content_batch_id": "content-six-garrison-warrant-musters-10184"
+    },
+    {
+      "id": "army_meridianwarrant_opening_company",
+      "name": "Aven Sevenfold Garrison Warrant Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {
+          "unit_id": "unit_sunvault_shard_wardens",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_sunvault_prism_adepts",
+          "count": 8
+        }
+      ],
+      "content_status": "garrison_warrant_opening_company_live",
+      "content_batch_id": "content-six-garrison-warrant-musters-10184"
+    },
+    {
+      "id": "army_graftrootwarrant_opening_company",
+      "name": "Elian Loamchant Garrison Warrant Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {
+          "unit_id": "unit_thornwake_seedcutters",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_thornwake_bramblekite_needlers",
+          "count": 8
+        }
+      ],
+      "content_status": "garrison_warrant_opening_company_live",
+      "content_batch_id": "content-six-garrison-warrant-musters-10184"
+    },
+    {
+      "id": "army_oreveinwarrant_opening_company",
+      "name": "Vellum Quench Garrison Warrant Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {
+          "unit_id": "unit_brasshollow_scrip_haulers",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_brasshollow_rivet_hounds",
+          "count": 8
+        }
+      ],
+      "content_status": "garrison_warrant_opening_company_live",
+      "content_batch_id": "content-six-garrison-warrant-musters-10184"
+    },
+    {
+      "id": "army_bellwakewarrant_opening_company",
+      "name": "Thir Obituary-Ink Garrison Warrant Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {
+          "unit_id": "unit_veilmourn_bellwake_oars",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_veilmourn_mourning_lanterns",
+          "count": 8
+        }
+      ],
+      "content_status": "garrison_warrant_opening_company_live",
+      "content_batch_id": "content-six-garrison-warrant-musters-10184"
     }
   ]
 }

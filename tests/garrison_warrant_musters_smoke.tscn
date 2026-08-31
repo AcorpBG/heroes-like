@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource path="res://tests/garrison_warrant_musters_smoke.gd" type="Script" id="1"]
+
+[node name="GarrisonWarrantMustersSmoke" type="Node"]
+script = ExtResource("1")
