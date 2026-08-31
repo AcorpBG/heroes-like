@@ -1,0 +1,68 @@
+{
+  "schema_id": "field_muster_commission_encounter_art_v1",
+  "content_batch_id": "content-six-field-muster-commission-skirmishes-10184",
+  "generator": "OpenAI built-in image generation",
+  "source_model": "built_in_image_gen_original_field_muster_commission_atlas",
+  "generated_session_directory": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16",
+  "prompt_style": "Original painterly high-fantasy strategy-game overworld landmark, isometric three-quarter view from slightly above, compact non-color-dependent silhouette for 48x48 readability, transparent background, centered isolated object, no people, text, logos, border, UI, or reference to protected game art.",
+  "runtime_pipeline": "Each transparent 1254x1254 generated master is trimmed, proportionally reduced inside a 44x44 box, centered on a transparent 48x48 cell, and appended left-to-right into one 288x48 runtime atlas. Generated masters remain source-only and art/overworld/source is excluded from Linux and Windows release packages.",
+  "runtime_atlas": "res://art/overworld/runtime/objects/encounters/field_muster_commissions/field_muster_commissions_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_atlas_sha256": "571d07944ca299915c7d87a414243efb071088dd912f6004ff262b9994a15634",
+  "assets": [
+    {
+      "encounter_id": "encounter_powderwrit_fogchain_commission",
+      "asset_id": "encounter_commission_powderwrit_fogchain_gate",
+      "source_path": "res://art/overworld/source/generated/encounters/field_muster_commissions/powderwrit_fogchain_gate_source.png",
+      "source_sha256": "794178e8724d31d642267567149523de9efec9c7ce5645d2c271b9d52c5293d0",
+      "runtime_region": [0, 0, 48, 48],
+      "prompt_subject": "Squat riveted river powder gate, diagonal broken chain boom, tall wrapped mourning sail, two capped powder kegs, and square hooded signal lantern.",
+      "non_color_identity": "The diagonal chain boom crosses a low fortified base while a single tall wrapped sail produces an uneven vertical peak."
+    },
+    {
+      "encounter_id": "encounter_reedcaller_redgauge_commission",
+      "asset_id": "encounter_commission_reedcaller_redgauge_tower",
+      "source_path": "res://art/overworld/source/generated/encounters/field_muster_commissions/reedcaller_redgauge_tower_source.png",
+      "source_sha256": "bf8ed9ae218b551727d5c42dbbd1c59cd13467e952af8c661ff5098b6553452c",
+      "runtime_region": [48, 0, 48, 48],
+      "prompt_subject": "Broad brass levy gauge tower in a woven marsh-reed drum ring, oversized projecting pressure needle, forked reed-caller horn, and chained contract plates.",
+      "non_color_identity": "An oversized diagonal gauge needle projects from a broad round tower beneath a wide fork of paired reed horns."
+    },
+    {
+      "encounter_id": "encounter_sevenfold_rootmirror_commission",
+      "asset_id": "encounter_commission_sevenfold_rootmirror_arch",
+      "source_path": "res://art/overworld/source/generated/encounters/field_muster_commissions/sevenfold_rootmirror_arch_source.png",
+      "source_sha256": "05581e9a746fc307da851b31f0db7babbcfeefa34eb384d3bc367dc22c781a9b",
+      "runtime_region": [96, 0, 48, 48],
+      "prompt_subject": "Seven narrow mirror-glass facets in an asymmetric fan inside a living root arch, suspended split prism, and low root-grown witness bench.",
+      "non_color_identity": "Seven separate pointed facets fan around one suspended center shard inside a branching circular root frame."
+    },
+    {
+      "encounter_id": "encounter_boltroot_lockfire_commission",
+      "asset_id": "encounter_commission_boltroot_lockfire_beacon",
+      "source_path": "res://art/overworld/source/generated/encounters/field_muster_commissions/boltroot_lockfire_beacon_source.png",
+      "source_sha256": "0f93ddc4bdbb01e35dd13e4100e54d2a728d85c6c8ec7a61a770f790910a6cf9",
+      "runtime_region": [144, 0, 48, 48],
+      "prompt_subject": "Hooked living bolt-tree bent around a square masonry beacon lock, three aimed seed-bolt pods, narrow fire slot, and root-woven crank.",
+      "non_color_identity": "A bent hooked trunk grows from a square lock and divides into three widely aimed pointed seed-pod arms."
+    },
+    {
+      "encounter_id": "encounter_blackgauge_noonwire_commission",
+      "asset_id": "encounter_commission_blackgauge_noonwire_impound",
+      "source_path": "res://art/overworld/source/generated/encounters/field_muster_commissions/blackgauge_noonwire_impound_source.png",
+      "source_sha256": "6dd19ebb1fe86555ef768687027dd108429aff2a58e4d141c9c667612ffb59be",
+      "runtime_region": [192, 0, 48, 48],
+      "prompt_subject": "Heavy black-brass assay gauge over a triangular sun-prism impound, long counterweight arm, three taut noonwires, and shallow quench tray.",
+      "non_color_identity": "A long horizontal counterweight beam overhangs a large trapped triangular prism inside a rigid three-post assay frame."
+    },
+    {
+      "encounter_id": "encounter_tidehook_reedwake_commission",
+      "asset_id": "encounter_commission_tidehook_reedwake_bell",
+      "source_path": "res://art/overworld/source/generated/encounters/field_muster_commissions/tidehook_reedwake_bell_source.png",
+      "source_sha256": "27964c84e8388318804f1c8a8aae688b181fd35aeed0326ac4f3f8e8d40db6c6",
+      "runtime_region": [240, 0, 48, 48],
+      "prompt_subject": "Tall curved tidehook crane lifting a half-submerged reed bell from a broken skiff cradle, forked dragnet, three memory-salt floats, and funeral lamp.",
+      "non_color_identity": "A single crescent crane curves over one suspended bell while a ragged side net and three round floats pull the silhouette left."
+    }
+  ]
+}
