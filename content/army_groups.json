@@ -4012,6 +4012,90 @@
       ],
       "content_status": "commander_proving_opening_company_live",
       "content_batch_id": "content-eight-commanders-proving-roads-10184"
+    },
+    {
+      "id": "army_amberweirworks_warworks_company",
+      "name": "Amberweir Granary Warworks Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 16},
+        {"unit_id": "unit_embercourt_bargebow_crews", "count": 9},
+        {"unit_id": "unit_embercourt_ash_oath_bailiffs", "count": 5},
+        {"unit_id": "unit_embercourt_lockglass_writcasters", "count": 3},
+        {"unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels", "count": 1}
+      ],
+      "content_status": "marchland_warworks_company_live",
+      "content_batch_id": "content-six-marchland-warworks-10184"
+    },
+    {
+      "id": "army_moonbiteworks_warworks_company",
+      "name": "Moonbite Reedshrine Warworks Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 16},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 9},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 5},
+        {"unit_id": "unit_mireclaw_mireglass_reedcasters", "count": 3},
+        {"unit_id": "unit_mireclaw_moonbite_mirehorn_breakers", "count": 1}
+      ],
+      "content_status": "marchland_warworks_company_live",
+      "content_batch_id": "content-six-marchland-warworks-10184"
+    },
+    {
+      "id": "army_splitprismworks_warworks_company",
+      "name": "Splitprism Duelcourt Warworks Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 16},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 9},
+        {"unit_id": "unit_sunvault_mirror_duelists", "count": 5},
+        {"unit_id": "unit_sunvault_resonant_choristers", "count": 3},
+        {"unit_id": "unit_sunvault_splitprism_heliograph_ballistae", "count": 1}
+      ],
+      "content_status": "marchland_warworks_company_live",
+      "content_batch_id": "content-six-marchland-warworks-10184"
+    },
+    {
+      "id": "army_woundrootworks_warworks_company",
+      "name": "Woundroot Hearthgrove Warworks Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 22},
+        {"unit_id": "unit_thornwake_bramblekite_needlers", "count": 12},
+        {"unit_id": "unit_thornwake_seedshield_wardens", "count": 7},
+        {"unit_id": "unit_thornwake_sporeglass_menders", "count": 4},
+        {"unit_id": "unit_thornwake_woundroot_rootmaul_behemoths", "count": 1}
+      ],
+      "content_status": "marchland_warworks_company_live",
+      "content_batch_id": "content-six-marchland-warworks-10184"
+    },
+    {
+      "id": "army_whitegaugeworks_warworks_company",
+      "name": "Whitegauge Calibration Yard Warworks Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 16},
+        {"unit_id": "unit_brasshollow_quenchspool_slingers", "count": 9},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 5},
+        {"unit_id": "unit_brasshollow_gaugeplate_bailiffs", "count": 3},
+        {"unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons", "count": 1}
+      ],
+      "content_status": "marchland_warworks_company_live",
+      "content_batch_id": "content-six-marchland-warworks-10184"
+    },
+    {
+      "id": "army_dreamwakeworks_warworks_company",
+      "name": "Dreamwake Oracle Harbor Warworks Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 16},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 9},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 5},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 3},
+        {"unit_id": "unit_veilmourn_dreamwake_foganchor_colossi", "count": 1}
+      ],
+      "content_status": "marchland_warworks_company_live",
+      "content_batch_id": "content-six-marchland-warworks-10184"
     }
   ]
 }

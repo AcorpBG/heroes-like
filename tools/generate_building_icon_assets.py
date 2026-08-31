@@ -169,6 +169,12 @@ BUILDING_IDS = (
     "building_thornwake_woundroot_hearthseed_nursery",
     "building_brasshollow_whitegauge_datum_railhouse",
     "building_veilmourn_dreamwake_tideglass_oratory",
+    "building_embercourt_amberweir_counterweight_foundry",
+    "building_mireclaw_moonbite_mirehorn_chain_pen",
+    "building_sunvault_splitprism_heliograph_battery",
+    "building_thornwake_woundroot_rootmaul_hollow",
+    "building_brasshollow_whitegauge_breach_pressure_foundry",
+    "building_veilmourn_dreamwake_foganchor_slip",
 )
 
 

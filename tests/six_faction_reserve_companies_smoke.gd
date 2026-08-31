@@ -57,7 +57,7 @@ func _ready() -> void:
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT_DIR))
 	ContentService.clear_cache()
-	_expect(ContentService.get_content_ids(ContentService.UNITS_PATH).size() == 148, "Reserve-company batch must remain present in the expanded 148-unit catalog.")
+	_expect(ContentService.get_content_ids(ContentService.UNITS_PATH).size() == 154, "Reserve-company batch must remain present in the expanded 154-unit catalog.")
 	for faction_id in ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake", "faction_brasshollow", "faction_veilmourn"]:
 		_expect(_faction_unit_count(faction_id) == 13, "%s must expose exactly thirteen live units." % faction_id)
 	for case_value in CASES:

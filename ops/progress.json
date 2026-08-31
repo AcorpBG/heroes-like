@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit the expanded live catalog and select the next coherent content-and-original-art batch before running any new smoke."
+    "Audit the expanded live catalog and select the next coherent content-and-original-art batch before running another smoke."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -16255,11 +16255,11 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Completed Eight Commanders Proving Roads. The broader content goal remains active; audit the expanded catalog before the next coherent batch.",
+  "currentNotes": "Six Marchland Warworks is complete: six opposite-role tier-six units, six exclusive production buildings, six third-use skirmishes, twelve original transparent masters, and matching Linux/Windows packages.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "",
   "currentSliceId": "",
-  "currentSliceNotes": "Completed eight progression-led skirmishes, eight live command-lesson landmarks, and one consolidated eight-case validation batch.",
+  "currentSliceNotes": "Completed six opposite-role tier-six Marchland warworks, six town-exclusive production buildings, six third-use skirmishes, twelve original transparent art masters, one consolidated 18-battle build/growth/recruit/art/save smoke, repository validation, and matching Linux/Windows packaged startup at 235019112 bytes.",
   "currentSliceStatus": "completed",
   "currentSliceTitle": "",
   "currentSliceUpdatedAt": "2026-08-31T22:14:10Z",
@@ -21722,7 +21722,7 @@
     "ops/progress.json"
   ],
   "latestEvidenceId": "content-eight-commanders-proving-roads-20260831",
-  "latestFinding": "Eight original Commander Proving Roads now raise every one of the 66 live heroes to at least three authored lead scenarios through 24 battle fronts, eight guarded command-lesson landmarks, and exact level-four specialty progression. One consolidated 8/8 smoke passed 24 battles, 24 specialty choices, eight control sets, claims, victories, art identities, and save-v9 round trips; repository validation and matching Linux/Windows packaged startup pass at 233867208 bytes.",
+  "latestFinding": "All six Marchland seats now have three authored scenario placements and two town-exclusive production choices. The consolidated batch passed eighteen live battles, six build/growth/recruit/art/scenario/save routes, repository validation, and Linux/Windows packaged startup at 235019112 bytes.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -107552,6 +107552,16 @@
       "startedAt": "2026-08-31T21:50:58Z",
       "notes": "Completed eight progression-led proving roads, eight exact one-time command landmarks, and one consolidated gameplay/progression/battle/art/save smoke.",
       "completedAt": "2026-08-31T22:14:10Z"
+    },
+    {
+      "id": "content-six-marchland-warworks-10184",
+      "title": "content six marchland warworks 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T22:59:53Z",
+      "startedAt": "2026-08-31T22:18:31Z",
+      "notes": "Completed six opposite-role tier-six Marchland warworks, six town-exclusive production buildings, six third-use skirmishes, twelve original transparent art masters, one consolidated 18-battle build/growth/recruit/art/save smoke, repository validation, and matching Linux/Windows packaged startup at 235019112 bytes.",
+      "completedAt": "2026-08-31T22:59:53Z"
     }
   ],
   "project": "heroes-like",
@@ -107561,7 +107571,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "No blocker in this slice. Broader production-content and release-readiness work remains open.",
+  "remainingGap": "No blocker remains for Six Marchland Warworks. The broader game still needs another scoped content-and-original-art batch selected before implementation continues.",
   "remainingWork": "Audit the expanded live catalog and select the next coherent content-and-original-art batch; do not run a smoke until that batch is complete.",
   "reportOnlyEvidence": [
     {
@@ -107993,7 +108003,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_eight_commanders_proving_roads_completed",
+  "result": "content_six_marchland_warworks_completed",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -108094,9 +108104,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed Eight Commanders Proving Roads as one coherent eight-map, eight-landmark production-content batch with consolidated validation.",
+  "summary": "Completed Six Marchland Warworks as one coherent six-unit, six-building, six-map, twelve-master production-content batch with consolidated validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T21:12:58Z",
+  "updatedAt": "2026-08-31T22:59:54Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

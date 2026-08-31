@@ -24,9 +24,39 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; audit the expanded live catalog before selecting the next coherent production-content and original-art batch.
-- Most recently completed implementation slice: `content-eight-commanders-proving-roads-10184`, eight progression-led skirmishes and eight exact field landmarks that raise every live hero to at least three authored lead routes.
-- Current package boundary: matching Linux and Windows release exports measure 233867208 bytes, 16132792 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none; select the next coherent content-and-original-art batch before further implementation.
+- Most recently completed implementation slice: `content-six-marchland-warworks-10184`, six opposite-role tier-six warwork units, six town-exclusive production buildings, and six third-use Marchland skirmishes with twelve original art masters.
+- Current package boundary: matching Linux and Windows release exports measure 235019112 bytes, 14980888 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Marchland Warworks
+
+id: `content-six-marchland-warworks-10184`
+
+Status: completed.
+
+Current finding:
+- Amberweir, Moonbite, Splitprism, Woundroot, Whitegauge, and Dreamwake now each have three authored scenario placements and two town-exclusive production choices;
+- the new tier-six warworks alternate melee and ranged roles opposite each seat's local retinue while staying inside existing faction-specific combat grammar;
+- all six production routes use live build, growth, recruitment, battle, art, pressure-event, and save-version-9 authority without adding a parallel gameplay subsystem.
+
+Implementation boundary:
+- add one original tier-six warwork per Marchland seat, alternating ranged and melee opposite its local retinue, with faction-specific production ability grammar, stats, costs, growth, names, descriptions, and accessible visual identity;
+- add one town-exclusive warworks building per unit and one original third-use skirmish per Marchland seat, with the exact commander, home town, warwork company, three live battle fronts, development resources, enemy pressure, and a victory chain requiring the exact warworks build and recruit;
+- generate six transparent original warwork sources and six transparent original production-building sources, derive all existing runtime unit and town surfaces with exact prompt/hash provenance, exclude source masters from release packages, and preserve Windows/Linux symmetry.
+
+Completion criteria:
+- all six scenarios launch through normal skirmish authority with their exact town and new warwork, resolve eighteen production battles, build only the matching warworks, establish weekly growth, recruit the exact unit, satisfy the authored victory chain, and round-trip through save version 9;
+- each unit loads its exact portrait, icon, standee, overworld icon, and animation while each building loads its exact town icon, with no cross-town build leakage or missing art route;
+- run one consolidated six-case gameplay/build/growth/recruit/battle/art/save smoke only after the complete batch, followed once by repository validation and sequential Linux/Windows packaged startup below the unchanged 250000000-byte ceiling.
+
+Completion result:
+- shipped six original tier-six warworks, six exclusive dwellings, six five-stack companies, and six 14x9 skirmishes with five-event pressure scripts and exact build/recruit/three-front victory chains;
+- generated twelve transparent original masters and derived every unit portrait, battle icon, standee, overworld icon, animation sheet, and building icon with exact provenance;
+- the consolidated smoke passed all six cases, eighteen live battle victories, six build/growth/recruit/art routes, six scenario victories, and six save-version-9 round trips; repository validation and Linux/Windows packaged startup passed at 235019112 bytes.
+
+Non-goals:
+- no new faction, hero definition, town definition, spell, artifact, campaign, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes creature, siege engine, dwelling, map, name, text, art, silhouette, or protected visual expression.
 
 ## Eight Commanders' Proving Roads
 

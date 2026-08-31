@@ -3592,7 +3592,8 @@
         "building_embercourt_beaconline_charter_house",
         "building_lantern_archive",
         "building_starseer_annex",
-        "building_embercourt_amberweir_sluiceguard_lock"
+        "building_embercourt_amberweir_sluiceguard_lock",
+        "building_embercourt_amberweir_counterweight_foundry"
       ],
       "spell_library": [
         {
@@ -3670,7 +3671,9 @@
           12
         ],
         "local_retinue_unit_id": "unit_embercourt_amberweir_lockpike_wardens",
-        "local_retinue_building_id": "building_embercourt_amberweir_sluiceguard_lock"
+        "local_retinue_building_id": "building_embercourt_amberweir_sluiceguard_lock",
+        "warwork_unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+        "warworks_building_id": "building_embercourt_amberweir_counterweight_foundry"
       }
     },
     {
@@ -3745,7 +3748,8 @@
         "building_mireclaw_oathmire_court",
         "building_mireclaw_fenbell_hunt_lodge",
         "building_starseer_annex",
-        "building_mireclaw_moonbite_votive_drum_court"
+        "building_mireclaw_moonbite_votive_drum_court",
+        "building_mireclaw_moonbite_mirehorn_chain_pen"
       ],
       "spell_library": [
         {
@@ -3823,7 +3827,9 @@
           12
         ],
         "local_retinue_unit_id": "unit_mireclaw_moonbite_votive_drummers",
-        "local_retinue_building_id": "building_mireclaw_moonbite_votive_drum_court"
+        "local_retinue_building_id": "building_mireclaw_moonbite_votive_drum_court",
+        "warwork_unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+        "warworks_building_id": "building_mireclaw_moonbite_mirehorn_chain_pen"
       }
     },
     {
@@ -3896,7 +3902,8 @@
         "building_sunvault_halo_battery_yard",
         "building_sunvault_zenith_court",
         "building_sunvault_zenith_relay_hall",
-        "building_sunvault_splitprism_parallax_duel_hall"
+        "building_sunvault_splitprism_parallax_duel_hall",
+        "building_sunvault_splitprism_heliograph_battery"
       ],
       "spell_library": [
         {
@@ -3974,7 +3981,9 @@
           12
         ],
         "local_retinue_unit_id": "unit_sunvault_splitprism_parallax_fencers",
-        "local_retinue_building_id": "building_sunvault_splitprism_parallax_duel_hall"
+        "local_retinue_building_id": "building_sunvault_splitprism_parallax_duel_hall",
+        "warwork_unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+        "warworks_building_id": "building_sunvault_splitprism_heliograph_battery"
       }
     },
     {
@@ -4040,6 +4049,7 @@
         "building_thornwake_root_cairn_watch",
         "building_thornwake_sap_chandler_grove",
         "building_thornwake_bastion_seed_conclave",
+        "building_thornwake_woundroot_rootmaul_hollow",
         "building_thornwake_mycorrhizal_store",
         "building_thornwake_rootlaw_moot",
         "building_thornwake_bramble_toll",
@@ -4126,7 +4136,9 @@
           12
         ],
         "local_retinue_unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
-        "local_retinue_building_id": "building_thornwake_woundroot_hearthseed_nursery"
+        "local_retinue_building_id": "building_thornwake_woundroot_hearthseed_nursery",
+        "warwork_unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+        "warworks_building_id": "building_thornwake_woundroot_rootmaul_hollow"
       }
     },
     {
@@ -4198,7 +4210,8 @@
         "building_brasshollow_redline_charter_bay",
         "building_brasshollow_crucible_dock",
         "building_brasshollow_titan_charter_hall",
-        "building_brasshollow_whitegauge_datum_railhouse"
+        "building_brasshollow_whitegauge_datum_railhouse",
+        "building_brasshollow_whitegauge_breach_pressure_foundry"
       ],
       "spell_library": [
         {
@@ -4275,7 +4288,9 @@
           12
         ],
         "local_retinue_unit_id": "unit_brasshollow_whitegauge_datum_lancers",
-        "local_retinue_building_id": "building_brasshollow_whitegauge_datum_railhouse"
+        "local_retinue_building_id": "building_brasshollow_whitegauge_datum_railhouse",
+        "warwork_unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+        "warworks_building_id": "building_brasshollow_whitegauge_breach_pressure_foundry"
       }
     },
     {
@@ -4347,7 +4362,8 @@
         "building_veilmourn_wakeglass_chart_house",
         "building_veilmourn_mistgate_slip",
         "building_veilmourn_leviathan_sounding",
-        "building_veilmourn_dreamwake_tideglass_oratory"
+        "building_veilmourn_dreamwake_tideglass_oratory",
+        "building_veilmourn_dreamwake_foganchor_slip"
       ],
       "spell_library": [
         {
@@ -4425,7 +4441,9 @@
           12
         ],
         "local_retinue_unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
-        "local_retinue_building_id": "building_veilmourn_dreamwake_tideglass_oratory"
+        "local_retinue_building_id": "building_veilmourn_dreamwake_tideglass_oratory",
+        "warwork_unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
+        "warworks_building_id": "building_veilmourn_dreamwake_foganchor_slip"
       }
     }
   ]
