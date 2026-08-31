@@ -14463,6 +14463,144 @@
       "assigned_faction_id": "neutral",
       "presentation_role": "flaremast_pilotage_unbound_wild_watch",
       "accessible_description": "The exact unit_neutral_harbor_polearms creature silhouette marks this unbound-wild guard front."
+    },
+    "resource_site_named_rival_tollmoon_claim_post": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/named_rival_banners_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "e43708681a0196da508b07ae7a4e7a48c38623f927603a8a8be253acf068615c",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/tollmoon_claim_post.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/tollmoon_claim_post.png",
+      "source_model": "built_in_image_gen_original_named_rival_banner_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_named_rival_tollmoon_claim_post",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "crescent_toll_hook_tally_post",
+      "accessible_description": "A low crescent toll hook carries a hide tally ring and three uneven marsh-reed weights, making the captured Mireclaw claim readable by its hooked silhouette."
+    },
+    "resource_site_named_rival_facetline_duel_standard": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/named_rival_banners_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "e43708681a0196da508b07ae7a4e7a48c38623f927603a8a8be253acf068615c",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/facetline_duel_standard.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/facetline_duel_standard.png",
+      "source_model": "built_in_image_gen_original_named_rival_banner_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_named_rival_facetline_duel_standard",
+      "assigned_faction_id": "faction_sunvault",
+      "presentation_role": "split_prism_rapier_orbit_standard",
+      "accessible_description": "A tall split-prism rapier is crossed by one off-center orbit ring, giving Renn's exact duel line a narrow asymmetric silhouette without relying on color."
+    },
+    "resource_site_named_rival_greenbarrow_recovery_mark": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/named_rival_banners_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "e43708681a0196da508b07ae7a4e7a48c38623f927603a8a8be253acf068615c",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/greenbarrow_recovery_mark.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/greenbarrow_recovery_mark.png",
+      "source_model": "built_in_image_gen_original_named_rival_banner_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_named_rival_greenbarrow_recovery_mark",
+      "assigned_faction_id": "faction_thornwake",
+      "presentation_role": "root_barrows_and_three_recovery_jars",
+      "accessible_description": "A broad living-root barrow arches over three unequal medicine jars and a low stone cairn, identifying Merek's recovery line by mass and hanging shapes."
+    },
+    "resource_site_named_rival_bellfounder_siege_gauge": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/named_rival_banners_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "e43708681a0196da508b07ae7a4e7a48c38623f927603a8a8be253acf068615c",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/bellfounder_siege_gauge.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/bellfounder_siege_gauge.png",
+      "source_model": "built_in_image_gen_original_named_rival_banner_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_named_rival_bellfounder_siege_gauge",
+      "assigned_faction_id": "faction_brasshollow",
+      "presentation_role": "asymmetric_foundry_bell_and_chained_hammer",
+      "accessible_description": "An oversized black foundry bell hangs from an asymmetric pressure frame beside one chained square hammer, making Oren's siege gauge unmistakable in silhouette."
+    },
+    "resource_site_named_rival_vanehook_wake_pennant": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/named_rival_banners_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "e43708681a0196da508b07ae7a4e7a48c38623f927603a8a8be253acf068615c",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/vanehook_wake_pennant.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/vanehook_wake_pennant.png",
+      "source_model": "built_in_image_gen_original_named_rival_banner_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_named_rival_vanehook_wake_pennant",
+      "assigned_faction_id": "faction_veilmourn",
+      "presentation_role": "ship_rib_harpoon_vane_and_tideglass",
+      "accessible_description": "A curved ship rib supports a long barbed harpoon vane and one hanging tideglass, giving Ruln's wake pennant a forward-leaning coastal silhouette."
+    },
+    "resource_site_named_rival_pikeward_charter_fork": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/named_rival_banners_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "runtime_sha256": "e43708681a0196da508b07ae7a4e7a48c38623f927603a8a8be253acf068615c",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/pikeward_charter_fork.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/named_rival_banners_wave1/pikeward_charter_fork.png",
+      "source_model": "built_in_image_gen_original_named_rival_banner_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_named_rival_pikeward_charter_fork",
+      "assigned_faction_id": "faction_embercourt",
+      "presentation_role": "forked_river_pike_three_charter_plates",
+      "accessible_description": "A forked river pike carries three separate rain-charred charter plates above a small beacon bowl, identifying Torren's line by its open double-prong crown."
     }
   },
   "resource_site_sprites": {
@@ -15717,6 +15855,36 @@
       "asset_id": "resource_site_neutral_flaremast_pilotage_controlled",
       "unclaimed_asset_id": "mapobj_flaremast_pilotage",
       "fit": "Exact original crescent-mast spectral pilotage paired with its supplied controlled muster state."
+    },
+    "site_named_rival_tollmoon_claim_post": {
+      "asset_id": "resource_site_named_rival_tollmoon_claim_post",
+      "unclaimed_asset_id": "resource_site_named_rival_tollmoon_claim_post",
+      "fit": "Exact original Tollmoon Claim Post remains visible before and after persistent command-banner control."
+    },
+    "site_named_rival_facetline_duel_standard": {
+      "asset_id": "resource_site_named_rival_facetline_duel_standard",
+      "unclaimed_asset_id": "resource_site_named_rival_facetline_duel_standard",
+      "fit": "Exact original Facetline Duel Standard remains visible before and after persistent command-banner control."
+    },
+    "site_named_rival_greenbarrow_recovery_mark": {
+      "asset_id": "resource_site_named_rival_greenbarrow_recovery_mark",
+      "unclaimed_asset_id": "resource_site_named_rival_greenbarrow_recovery_mark",
+      "fit": "Exact original Greenbarrow Recovery Mark remains visible before and after persistent command-banner control."
+    },
+    "site_named_rival_bellfounder_siege_gauge": {
+      "asset_id": "resource_site_named_rival_bellfounder_siege_gauge",
+      "unclaimed_asset_id": "resource_site_named_rival_bellfounder_siege_gauge",
+      "fit": "Exact original Bellfounder Siege Gauge remains visible before and after persistent command-banner control."
+    },
+    "site_named_rival_vanehook_wake_pennant": {
+      "asset_id": "resource_site_named_rival_vanehook_wake_pennant",
+      "unclaimed_asset_id": "resource_site_named_rival_vanehook_wake_pennant",
+      "fit": "Exact original Vanehook Wake Pennant remains visible before and after persistent command-banner control."
+    },
+    "site_named_rival_pikeward_charter_fork": {
+      "asset_id": "resource_site_named_rival_pikeward_charter_fork",
+      "unclaimed_asset_id": "resource_site_named_rival_pikeward_charter_fork",
+      "fit": "Exact original Pikeward Charter Fork remains visible before and after persistent command-banner control."
     }
   },
   "artifact_default_sprite": {
@@ -16094,7 +16262,13 @@
     "encounter_windcairn_wayhouse_watch": "encounter_unbound_wild_windcairn_wayhouse_watch",
     "encounter_sapwhistle_greenward_watch": "encounter_unbound_wild_sapwhistle_greenward_watch",
     "encounter_scarshield_breakyard_watch": "encounter_unbound_wild_scarshield_breakyard_watch",
-    "encounter_flaremast_pilotage_watch": "encounter_unbound_wild_flaremast_pilotage_watch"
+    "encounter_flaremast_pilotage_watch": "encounter_unbound_wild_flaremast_pilotage_watch",
+    "encounter_tollmoon_named_rival_company": "hero_strategic_orrik",
+    "encounter_facetline_named_rival_company": "hero_roster_sunvault_renn_facetlane",
+    "encounter_greenbarrow_named_rival_company": "hero_roster_thornwake_merek_greenbarrow",
+    "encounter_bellfounder_named_rival_company": "hero_lead_brasshollow_oren_bellfounder",
+    "encounter_vanehook_named_rival_company": "hero_lead_veilmourn_ruln_vanehook",
+    "encounter_pikeward_named_rival_company": "hero_specialist_torren"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

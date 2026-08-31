@@ -17514,6 +17514,276 @@
       },
       "content_batch_id": "content-six-unbound-wild-concords-10184",
       "batch_role": "guarded_unbound_wild_concord_dwelling"
+    },
+    {
+      "id": "site_named_rival_tollmoon_claim_post",
+      "name": "Tollmoon Claim Post",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 300,
+        "embergrain": 1
+      },
+      "control_income": {
+        "gold": 110
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_mireclaw",
+      "response_profile": {
+        "action_label": "Turn Tollmoon Claim Post",
+        "summary": "Seize Orrik Tollreaver's command mark and turn its signal against the rival company.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 120,
+          "wood": 1
+        },
+        "watch_days": 2,
+        "readiness_bonus": 2,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "A low crescent toll hook carries a hide tally ring and three uneven marsh-reed weights, making the captured Mireclaw claim readable by its hooked silhouette.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "named_rival_banner_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "named_rival_banner_live",
+      "content_batch_id": "content-six-named-rival-banner-challenges-10184",
+      "named_rival_banner_role": "exact_three_position_command_mark"
+    },
+    {
+      "id": "site_named_rival_facetline_duel_standard",
+      "name": "Facetline Duel Standard",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 300,
+        "peatwax": 1
+      },
+      "control_income": {
+        "gold": 110
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_sunvault",
+      "response_profile": {
+        "action_label": "Turn Facetline Duel Standard",
+        "summary": "Seize Renn Facetlane's command mark and turn its signal against the rival company.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 120,
+          "wood": 1
+        },
+        "watch_days": 2,
+        "readiness_bonus": 2,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "A tall split-prism rapier is crossed by one off-center orbit ring, giving Renn's exact duel line a narrow asymmetric silhouette without relying on color.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "named_rival_banner_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "named_rival_banner_live",
+      "content_batch_id": "content-six-named-rival-banner-challenges-10184",
+      "named_rival_banner_role": "exact_three_position_command_mark"
+    },
+    {
+      "id": "site_named_rival_greenbarrow_recovery_mark",
+      "name": "Greenbarrow Recovery Mark",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 300,
+        "aetherglass": 1
+      },
+      "control_income": {
+        "gold": 110
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_thornwake",
+      "response_profile": {
+        "action_label": "Turn Greenbarrow Recovery Mark",
+        "summary": "Seize Merek Greenbarrow's command mark and turn its signal against the rival company.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 120,
+          "wood": 1
+        },
+        "watch_days": 2,
+        "readiness_bonus": 2,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "A broad living-root barrow arches over three unequal medicine jars and a low stone cairn, identifying Merek's recovery line by mass and hanging shapes.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "named_rival_banner_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "named_rival_banner_live",
+      "content_batch_id": "content-six-named-rival-banner-challenges-10184",
+      "named_rival_banner_role": "exact_three_position_command_mark"
+    },
+    {
+      "id": "site_named_rival_bellfounder_siege_gauge",
+      "name": "Bellfounder Siege Gauge",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 300,
+        "verdant_grafts": 1
+      },
+      "control_income": {
+        "gold": 110
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_brasshollow",
+      "response_profile": {
+        "action_label": "Turn Bellfounder Siege Gauge",
+        "summary": "Seize Oren Bellfounder's command mark and turn its signal against the rival company.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 120,
+          "wood": 1
+        },
+        "watch_days": 2,
+        "readiness_bonus": 2,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "An oversized black foundry bell hangs from an asymmetric pressure frame beside one chained square hammer, making Oren's siege gauge unmistakable in silhouette.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "named_rival_banner_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "named_rival_banner_live",
+      "content_batch_id": "content-six-named-rival-banner-challenges-10184",
+      "named_rival_banner_role": "exact_three_position_command_mark"
+    },
+    {
+      "id": "site_named_rival_vanehook_wake_pennant",
+      "name": "Vanehook Wake Pennant",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 300,
+        "brass_scrip": 1
+      },
+      "control_income": {
+        "gold": 110
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_veilmourn",
+      "response_profile": {
+        "action_label": "Turn Vanehook Wake Pennant",
+        "summary": "Seize Ruln Vanehook's command mark and turn its signal against the rival company.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 120,
+          "wood": 1
+        },
+        "watch_days": 2,
+        "readiness_bonus": 2,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "A curved ship rib supports a long barbed harpoon vane and one hanging tideglass, giving Ruln's wake pennant a forward-leaning coastal silhouette.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "named_rival_banner_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "named_rival_banner_live",
+      "content_batch_id": "content-six-named-rival-banner-challenges-10184",
+      "named_rival_banner_role": "exact_three_position_command_mark"
+    },
+    {
+      "id": "site_named_rival_pikeward_charter_fork",
+      "name": "Pikeward Charter Fork",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 300,
+        "memory_salt": 1
+      },
+      "control_income": {
+        "gold": 110
+      },
+      "vision_radius": 3,
+      "pressure_guard": 2,
+      "faction_id": "faction_embercourt",
+      "response_profile": {
+        "action_label": "Turn Pikeward Charter Fork",
+        "summary": "Seize Torren Pikeward's command mark and turn its signal against the rival company.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 120,
+          "wood": 1
+        },
+        "watch_days": 2,
+        "readiness_bonus": 2,
+        "pressure_guard_bonus": 2
+      },
+      "public_text": {
+        "public_summary": "A forked river pike carries three separate rain-charred charter plates above a small beacon bowl, identifying Torren's line by its open double-prong crown.",
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "named_rival_banner_live",
+        "live_reward_grants": true,
+        "ownership_capture_runtime_adopted": true,
+        "controlled_income_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "rare_resource_activation": true,
+        "market_changes": false
+      },
+      "content_status": "named_rival_banner_live",
+      "content_batch_id": "content-six-named-rival-banner-challenges-10184",
+      "named_rival_banner_role": "exact_three_position_command_mark"
     }
   ]
 }
