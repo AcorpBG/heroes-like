@@ -16266,6 +16266,216 @@
       "content_status": "border_oath_standard_live",
       "content_batch_id": "content-six-border-oath-standard-seizures-10184",
       "border_oath_role": "exact_three_standard_control_point"
+    },
+    {
+      "id": "site_cinderlock_three_seal_garrison_warrant",
+      "name": "Cinderlock Three-Seal Garrison Warrant",
+      "family": "scenario_objective",
+      "action_label": "Recover Garrison Warrants",
+      "summary": "Three sealed company warrants call the missing defenders of Cinderlock Bastion back into service.",
+      "claim_rewards": {
+        "gold": 700,
+        "embergrain": 1
+      },
+      "claim_recruits": {
+        "unit_embercourt_beaconline_writguard": 6,
+        "unit_embercourt_cinderseal_bombardiers": 4,
+        "unit_embercourt_sluicefire_lindworms": 2
+      },
+      "claim_flags": {
+        "cinderlockwarrant_companies_recovered": true
+      },
+      "runtime_boundary": {
+        "status": "garrison_warrant_recruits_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "exact_company_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-garrison-warrant-musters-10184",
+      "public_text": {
+        "public_summary": "A squat floodgate plinth carries three separate copper warrant canisters beneath a forked beacon cage and two broad locking bars.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_murkward_three_hook_garrison_warrant",
+      "name": "Murkward Three-Hook Garrison Warrant",
+      "family": "scenario_objective",
+      "action_label": "Recover Garrison Warrants",
+      "summary": "Three sealed company warrants call the missing defenders of Murkward Ford back into service.",
+      "claim_rewards": {
+        "gold": 700,
+        "peatwax": 1
+      },
+      "claim_recruits": {
+        "unit_mireclaw_fenbell_chainstalkers": 6,
+        "unit_mireclaw_mireglass_reedcasters": 4,
+        "unit_mireclaw_drowned_antler_sovereign": 2
+      },
+      "claim_flags": {
+        "murkwardwarrant_companies_recovered": true
+      },
+      "runtime_boundary": {
+        "status": "garrison_warrant_recruits_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "exact_company_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-garrison-warrant-musters-10184",
+      "public_text": {
+        "public_summary": "A crescent bogwood muster drum bears three dangling bone-and-bronze hook tokens beside a crooked levy post and marsh lantern.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_meridian_three_prism_garrison_warrant",
+      "name": "Meridian Three-Prism Garrison Warrant",
+      "family": "scenario_objective",
+      "action_label": "Recover Garrison Warrants",
+      "summary": "Three sealed company warrants call the missing defenders of Meridian Choirhold back into service.",
+      "claim_rewards": {
+        "gold": 700,
+        "aetherglass": 1
+      },
+      "claim_recruits": {
+        "unit_sunvault_noonfacet_sentinels": 6,
+        "unit_sunvault_zenith_lensbearers": 4,
+        "unit_sunvault_aurora_ballistae": 2
+      },
+      "claim_flags": {
+        "meridianwarrant_companies_recovered": true
+      },
+      "runtime_boundary": {
+        "status": "garrison_warrant_recruits_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "exact_company_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-garrison-warrant-musters-10184",
+      "public_text": {
+        "public_summary": "A white-stone solar plinth presents three unequal crystal warrant prisms within a broad golden measuring yoke and split sun vane.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_graftroot_three_seed_garrison_warrant",
+      "name": "Graftroot Three-Seed Garrison Warrant",
+      "family": "scenario_objective",
+      "action_label": "Recover Garrison Warrants",
+      "summary": "Three sealed company warrants call the missing defenders of Graftroot Caravan back into service.",
+      "claim_rewards": {
+        "gold": 700,
+        "verdant_grafts": 1
+      },
+      "claim_recruits": {
+        "unit_thornwake_dawnseed_bolters": 6,
+        "unit_thornwake_canopy_rammers": 4,
+        "unit_thornwake_stagknot_runners": 2
+      },
+      "claim_flags": {
+        "graftrootwarrant_companies_recovered": true
+      },
+      "runtime_boundary": {
+        "status": "garrison_warrant_recruits_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "exact_company_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-garrison-warrant-musters-10184",
+      "public_text": {
+        "public_summary": "A living root arch suspends three distinct seed-pod warrant capsules below an antler-like tally branch and blank bark tablet.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_orevein_three_gauge_garrison_warrant",
+      "name": "Orevein Three-Gauge Garrison Warrant",
+      "family": "scenario_objective",
+      "action_label": "Recover Garrison Warrants",
+      "summary": "Three sealed company warrants call the missing defenders of Orevein Gantry back into service.",
+      "claim_rewards": {
+        "gold": 700,
+        "brass_scrip": 1
+      },
+      "claim_recruits": {
+        "unit_brasshollow_tallyspring_throwers": 6,
+        "unit_brasshollow_pressure_lancers": 4,
+        "unit_brasshollow_crucible_crawlers": 2
+      },
+      "claim_flags": {
+        "oreveinwarrant_companies_recovered": true
+      },
+      "runtime_boundary": {
+        "status": "garrison_warrant_recruits_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "exact_company_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-garrison-warrant-musters-10184",
+      "public_text": {
+        "public_summary": "A riveted foundry pedestal mounts three pressure-gauge warrant cylinders before a toothed half-wheel, piston, and blank assay plate.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_bellwake_three_bell_garrison_warrant",
+      "name": "Bellwake Three-Bell Garrison Warrant",
+      "family": "scenario_objective",
+      "action_label": "Recover Garrison Warrants",
+      "summary": "Three sealed company warrants call the missing defenders of Bellwake Harbor back into service.",
+      "claim_rewards": {
+        "gold": 700,
+        "memory_salt": 1
+      },
+      "claim_recruits": {
+        "unit_veilmourn_saltbell_casters": 6,
+        "unit_veilmourn_gloamkeel_bulwarks": 4,
+        "unit_veilmourn_saltwake_eulogists": 2
+      },
+      "claim_flags": {
+        "bellwakewarrant_companies_recovered": true
+      },
+      "runtime_boundary": {
+        "status": "garrison_warrant_recruits_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "exact_company_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-garrison-warrant-musters-10184",
+      "public_text": {
+        "public_summary": "A salt-dark ship-rib callboard holds three separate funeral bells and pale glass warrants above a crescent anchor hook and slate plaque.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }

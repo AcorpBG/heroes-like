@@ -13929,6 +13929,120 @@
       "assigned_faction_id": "faction_embercourt",
       "presentation_role": "rainbrand_writ_gate",
       "accessible_description": "Charred charter plates, angled iron stakes, and a sealed ember brazier create an asymmetrical Embercourt writ gate with a clear defended lane."
+    },
+    "resource_site_garrison_warrant_cinderlock_seals": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/garrison_warrant_musters_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/cinderlock_three_seal_warrant_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/cinderlock_three_seal_warrant_source.png",
+      "source_model": "built_in_image_gen_original_garrison_warrant_musters_atlas",
+      "assigned_resource_site_id": "site_cinderlock_three_seal_garrison_warrant",
+      "presentation_role": "cinderlock_three_seal_garrison_warrant",
+      "accessible_description": "A squat floodgate plinth carries three separate copper warrant canisters beneath a forked beacon cage and two broad locking bars."
+    },
+    "resource_site_garrison_warrant_murkward_hooks": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/garrison_warrant_musters_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/murkward_three_hook_warrant_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/murkward_three_hook_warrant_source.png",
+      "source_model": "built_in_image_gen_original_garrison_warrant_musters_atlas",
+      "assigned_resource_site_id": "site_murkward_three_hook_garrison_warrant",
+      "presentation_role": "murkward_three_hook_garrison_warrant",
+      "accessible_description": "A crescent bogwood muster drum bears three dangling bone-and-bronze hook tokens beside a crooked levy post and marsh lantern."
+    },
+    "resource_site_garrison_warrant_meridian_prisms": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/garrison_warrant_musters_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/meridian_three_prism_warrant_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/meridian_three_prism_warrant_source.png",
+      "source_model": "built_in_image_gen_original_garrison_warrant_musters_atlas",
+      "assigned_resource_site_id": "site_meridian_three_prism_garrison_warrant",
+      "presentation_role": "meridian_three_prism_garrison_warrant",
+      "accessible_description": "A white-stone solar plinth presents three unequal crystal warrant prisms within a broad golden measuring yoke and split sun vane."
+    },
+    "resource_site_garrison_warrant_graftroot_seeds": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/garrison_warrant_musters_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/graftroot_three_seed_warrant_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/graftroot_three_seed_warrant_source.png",
+      "source_model": "built_in_image_gen_original_garrison_warrant_musters_atlas",
+      "assigned_resource_site_id": "site_graftroot_three_seed_garrison_warrant",
+      "presentation_role": "graftroot_three_seed_garrison_warrant",
+      "accessible_description": "A living root arch suspends three distinct seed-pod warrant capsules below an antler-like tally branch and blank bark tablet."
+    },
+    "resource_site_garrison_warrant_orevein_gauges": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/garrison_warrant_musters_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/orevein_three_gauge_warrant_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/orevein_three_gauge_warrant_source.png",
+      "source_model": "built_in_image_gen_original_garrison_warrant_musters_atlas",
+      "assigned_resource_site_id": "site_orevein_three_gauge_garrison_warrant",
+      "presentation_role": "orevein_three_gauge_garrison_warrant",
+      "accessible_description": "A riveted foundry pedestal mounts three pressure-gauge warrant cylinders before a toothed half-wheel, piston, and blank assay plate."
+    },
+    "resource_site_garrison_warrant_bellwake_bells": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/garrison_warrant_musters_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/bellwake_three_bell_warrant_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/bellwake_three_bell_warrant_source.png",
+      "source_model": "built_in_image_gen_original_garrison_warrant_musters_atlas",
+      "assigned_resource_site_id": "site_bellwake_three_bell_garrison_warrant",
+      "presentation_role": "bellwake_three_bell_garrison_warrant",
+      "accessible_description": "A salt-dark ship-rib callboard holds three separate funeral bells and pale glass warrants above a crescent anchor hook and slate plaque."
     }
   },
   "resource_site_sprites": {
@@ -15093,6 +15207,36 @@
       "asset_id": "resource_site_border_oath_veilmourn_three_wake",
       "unclaimed_asset_id": "resource_site_border_oath_veilmourn_three_wake",
       "fit": "Exact original three wake crescent mast remains visible before and after persistent Border Oath control."
+    },
+    "site_cinderlock_three_seal_garrison_warrant": {
+      "asset_id": "resource_site_garrison_warrant_cinderlock_seals",
+      "unclaimed_asset_id": "resource_site_garrison_warrant_cinderlock_seals",
+      "fit": "Exact original Cinderlock Three-Seal Garrison Warrant remains visible before and after its one-time recruit-warrant claim."
+    },
+    "site_murkward_three_hook_garrison_warrant": {
+      "asset_id": "resource_site_garrison_warrant_murkward_hooks",
+      "unclaimed_asset_id": "resource_site_garrison_warrant_murkward_hooks",
+      "fit": "Exact original Murkward Three-Hook Garrison Warrant remains visible before and after its one-time recruit-warrant claim."
+    },
+    "site_meridian_three_prism_garrison_warrant": {
+      "asset_id": "resource_site_garrison_warrant_meridian_prisms",
+      "unclaimed_asset_id": "resource_site_garrison_warrant_meridian_prisms",
+      "fit": "Exact original Meridian Three-Prism Garrison Warrant remains visible before and after its one-time recruit-warrant claim."
+    },
+    "site_graftroot_three_seed_garrison_warrant": {
+      "asset_id": "resource_site_garrison_warrant_graftroot_seeds",
+      "unclaimed_asset_id": "resource_site_garrison_warrant_graftroot_seeds",
+      "fit": "Exact original Graftroot Three-Seed Garrison Warrant remains visible before and after its one-time recruit-warrant claim."
+    },
+    "site_orevein_three_gauge_garrison_warrant": {
+      "asset_id": "resource_site_garrison_warrant_orevein_gauges",
+      "unclaimed_asset_id": "resource_site_garrison_warrant_orevein_gauges",
+      "fit": "Exact original Orevein Three-Gauge Garrison Warrant remains visible before and after its one-time recruit-warrant claim."
+    },
+    "site_bellwake_three_bell_garrison_warrant": {
+      "asset_id": "resource_site_garrison_warrant_bellwake_bells",
+      "unclaimed_asset_id": "resource_site_garrison_warrant_bellwake_bells",
+      "fit": "Exact original Bellwake Three-Bell Garrison Warrant remains visible before and after its one-time recruit-warrant claim."
     }
   },
   "artifact_default_sprite": {

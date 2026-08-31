@@ -25,8 +25,39 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Active implementation slice: none selected after completing the latest content batch; the broader release-bound content goal remains active.
-- Most recently completed implementation slice: `content-six-border-oath-standard-seizures-10184`, a coherent six-faction exact-site-control, new-encounter, exact-art, battle, and save-continuity batch.
-- Current package boundary: matching Linux and Windows release exports measure 248929356 bytes, 1070644 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Most recently completed implementation slice: `content-six-garrison-warrant-musters-10184`, a coherent six-faction town-garrison, stack-transfer, underused-content, exact-art, battle, and save-continuity batch.
+- Current package boundary: matching Linux and Windows release exports measure 248937900 bytes, 1062100 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Garrison Warrant Musters
+
+id: `content-six-garrison-warrant-musters-10184`
+
+Status: completed.
+
+Current finding:
+- all 171 authored scenarios can expose and mutate town garrisons through the production town army-transfer interface, but none makes an exact home-garrison composition part of victory;
+- six comparatively underused commanders, home towns, and eighteen faction unit identities provide a coherent breadth target, while one-placement opposing encounters can gain live reuse without adding redundant encounter definitions or art;
+- guarded resource sites already grant exact recruit stacks to the active hero, so a new objective can require the player to recover three warrant companies, return home, and deliberately transfer them into the town garrison.
+
+Implementation boundary:
+- add a first-class `town_garrison_meets_requirements` objective with an exact player-owned town placement, non-empty unique positive unit requirements, scoped town/unit dependencies, compact progress labels, content validation, and save-version-9 continuity;
+- author one original skirmish-only Garrison Warrant muster per faction, each using a selected low-use commander and town, a new two-stack field company, three exact underused faction companies delivered by one guarded warrant site, three reused one-placement opposing encounters, pressure/deadline boundaries, deterministic battle seeds, and a return-to-town stack-transfer finish;
+- generate six original transparent warrant landmarks with distinct non-color silhouettes, derive one compact 288x48 runtime atlas, retain prompt/hash/accessibility provenance outside packages, and keep Linux/Windows exports below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all six scenarios launch with an incomplete garrison, reject wrong-town, enemy-owned-town, partial-company, hero-carried-company, and under-threshold controls, then resolve eighteen production battles, claim all six recruit warrants, transfer all eighteen exact companies through production town-stack authority, satisfy the objective, win before the deadline, and round-trip exactly through save version 9;
+- each scenario resolves its exact warrant art, reuses three selected low-use encounter identities, and evaluates town/unit dependencies without reacting to unrelated events;
+- one consolidated six-case gameplay/control/art/save and visual-capture smoke runs only after the complete batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, unit definition, town definition, building, spell, artifact, campaign, encounter definition, resource id, economy rule, combat formula, strategic-AI planning algorithm, native RMG behavior, save-version bump, full-screen backdrop, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes map, garrison, barracks, warrant, commander, encounter, landmark, name, text, heraldry, or protected visual expression.
+
+Result:
+- shipped six skirmish-only Garrison Warrant musters, six two-stack opening companies, eighteen exact underused faction companies, six guarded one-time recruit warrants, eighteen reused low-placement opposing fronts, five-hook relief/counterstroke chains, and the first production `town_garrison_meets_requirements` objective with exact town/unit dependencies and compact progress labels;
+- generated six byte-distinct transparent source masters and derived one 288x48, 22593-byte runtime atlas with exact site mappings, accessible descriptions, prompt/hash provenance, and source-art package exclusion;
+- the consolidated six-case smoke passed exact art, wrong-town, enemy-owned-town, hero-carried, partial-garrison, scoped and unrelated-event controls, eighteen production battles, six claims, eighteen production town transfers, six victories, six visual captures, and six exact save-version-9 round trips;
+- repository validation passed at 177 scenarios, 303 armies, 185 encounters, and 285 resource sites; matching Linux and Windows exports booted with the native extension and measured 248937900 bytes, leaving 1062100 bytes below the unchanged ceiling.
 
 ## Six Border Oath Standard Seizures
 

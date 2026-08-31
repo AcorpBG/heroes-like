@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "source_model": "built_in_image_gen_original_garrison_warrant_musters_atlas",
+  "generation_mode": "built_in_image_gen",
+  "source_date_utc": "2026-08-31",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/garrison_warrant_musters_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_region_size": [48, 48],
+  "runtime_atlas_sha256": "29b2d37dea33ae0d919d7d98496279fc41fbd37459150be4062d2c96bf138056",
+  "processing": "preserve generated alpha, alpha-trim, aspect-fit within 42x42, and center on transparent 48x48 cells",
+  "prompt_set_summary": "Six original isolated transparent faction garrison-warrant landmarks with structurally distinct three-seal floodgate, three-hook marsh drum, three-prism solar yoke, three-seed living arch, three-gauge piston station, and three-bell ship-rib silhouettes. Painterly fantasy-strategy readability at 48 pixels; no copied names, heraldry, art, text, or protected visual expression.",
+  "items": [
+    {
+      "site_id": "site_cinderlock_three_seal_garrison_warrant",
+      "asset_id": "resource_site_garrison_warrant_cinderlock_seals",
+      "source_path": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/cinderlock_three_seal_warrant_source.png",
+      "source_sha256": "16650f4ab5c9c9668205b0cbf900f4d8a93c158c5c45777fb05c715054b9aff9",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0548eeb3-7ef8-4856-9f63-8f786c8826ff.png",
+      "atlas_region": [0, 0, 48, 48],
+      "prompt_summary": "Floodgate plinth with three separate wax-sealed copper warrant canisters, a forked beacon cage, locking bars, and blank tally plate."
+    },
+    {
+      "site_id": "site_murkward_three_hook_garrison_warrant",
+      "asset_id": "resource_site_garrison_warrant_murkward_hooks",
+      "source_path": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/murkward_three_hook_warrant_source.png",
+      "source_sha256": "7c9ff1846d4215fd9669b403c295cba5ecf8478c227565528a12bb07a2c73c97",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f3fe4993-06db-45a1-b3b0-bf183eb2e4ab.png",
+      "atlas_region": [48, 0, 48, 48],
+      "prompt_summary": "Crescent bogwood muster drum with three separate bone-and-bronze hook tokens, a crooked levy post, marsh lantern, and paddle feet."
+    },
+    {
+      "site_id": "site_meridian_three_prism_garrison_warrant",
+      "asset_id": "resource_site_garrison_warrant_meridian_prisms",
+      "source_path": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/meridian_three_prism_warrant_source.png",
+      "source_sha256": "f4015e6255f1e8c586bad41a26f863a0d2a83465a27ceb23dff7cbaae1561b52",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7e319ff8-7263-4a58-86c8-03d3d9f16481.png",
+      "atlas_region": [96, 0, 48, 48],
+      "prompt_summary": "White-stone solar plinth with three separate faceted crystal warrants locked by a golden measuring yoke and split sundial vane."
+    },
+    {
+      "site_id": "site_graftroot_three_seed_garrison_warrant",
+      "asset_id": "resource_site_garrison_warrant_graftroot_seeds",
+      "source_path": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/graftroot_three_seed_warrant_source.png",
+      "source_sha256": "5fff59dc588225286e848deafc856b37aa1b9c03794691bf2370ad4a26b50e65",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-fb6c1994-2f81-4d9b-a3d8-61ee92b9c912.png",
+      "atlas_region": [144, 0, 48, 48],
+      "prompt_summary": "Living root arch with three separate seed-pod warrant capsules, braided vines, an antler-like tally branch, and blank bark tablet."
+    },
+    {
+      "site_id": "site_orevein_three_gauge_garrison_warrant",
+      "asset_id": "resource_site_garrison_warrant_orevein_gauges",
+      "source_path": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/orevein_three_gauge_warrant_source.png",
+      "source_sha256": "3765043eed73e1885072b25ae6bef9f94840896df66acf4d3fbccdf8da5054d3",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-234350e0-f968-4082-ac1b-7d2562bb9c4f.png",
+      "atlas_region": [192, 0, 48, 48],
+      "prompt_summary": "Riveted foundry pedestal with three separate pressure-gauge warrant cylinders, thick pipes, a toothed half-wheel, and vertical piston."
+    },
+    {
+      "site_id": "site_bellwake_three_bell_garrison_warrant",
+      "asset_id": "resource_site_garrison_warrant_bellwake_bells",
+      "source_path": "res://art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/bellwake_three_bell_warrant_source.png",
+      "source_sha256": "dcf8ded2a8ee98be1a3758a8df7da808029eb2ffc281ea2481fbf1f57a7cf94a",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e6f6bae8-eb35-42d9-9209-c656a8a7a680.png",
+      "atlas_region": [240, 0, 48, 48],
+      "prompt_summary": "Salt-dark ship-rib callboard with three separate funeral bells and glass warrant vials, a crescent anchor hook, and blank slate plaque."
+    }
+  ]
+}
