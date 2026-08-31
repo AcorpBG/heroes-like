@@ -1,0 +1,235 @@
+{
+  "schema_id": "command_relic_marches_art_v1",
+  "content_batch_id": "content-twelve-command-relic-marches-10184",
+  "generator_mode": "built_in_imagegen",
+  "prompt_set_summary": "Twelve original transparent command relics, two per faction, with silhouette-first inventory and field identities tied to twelve live hero-led marches; no text, logos, characters, scenery, copied franchise art, or packaged source-master dependency.",
+  "runtime_icon_size": [
+    128,
+    128
+  ],
+  "field_atlas_path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+  "field_atlas_size": [
+    576,
+    48
+  ],
+  "source_package_policy": "retained_for_provenance_excluded_from_linux_and_windows_exports",
+  "items": [
+    {
+      "artifact_id": "artifact_blackgauge_muster_bell",
+      "hero_id": "hero_brasshollow_kestra_blackgauge",
+      "faction_id": "faction_brasshollow",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/blackgauge_muster_bell_source.png",
+      "source_sha256": "e2ed42e649af005f44bfc3e48559a828dcfb54c2406ad80b8d5cc3623b89479f",
+      "runtime_path": "res://art/artifacts/runtime/blackgauge_muster_bell.png",
+      "runtime_sha256": "14cbe7322c7a9142a5c35aab03ebfd87e78b11a785e37a0ea6cda70d2b801760",
+      "field_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-8a93510c-372e-49f1-83e3-226c8f32c1a1.png",
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game artifact source; Primary request: Create Blackgauge Muster Bell for the original Aurelion Reach setting; Subject: one squat asymmetrical black-iron assay bell crossed by a long brass tally rod, with three unequal chain tags, a square clapper, and a narrow red gauge needle; Style: polished hand-painted 2D original fantasy game item art with crisp material separation; Composition: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48 and 128x128; Constraints: genuinely transparent background with preserved alpha, one object only, no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A broad bell is crossed by one long horizontal rod and carries three unequal hanging tags beside a square clapper."
+    },
+    {
+      "artifact_id": "artifact_varn_switchrail_compass",
+      "hero_id": "hero_brasshollow_kuld_varn",
+      "faction_id": "faction_brasshollow",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/varn_switchrail_compass_source.png",
+      "source_sha256": "a7bb95b31ecd5a7fa7bd1a64da20c0bbbafac9a0c3d9fd46ca208e2eefe54d4b",
+      "runtime_path": "res://art/artifacts/runtime/varn_switchrail_compass.png",
+      "runtime_sha256": "5e6efa70b2613c2dc72ac9652edc2f8c1195696fcc2dcb78392cdeb970477b5c",
+      "field_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-9c651f5b-f2a2-4a9c-a441-e4be9461cf99.png",
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game artifact source; Primary request: Create Varn Switchrail Compass for the original Aurelion Reach setting; Subject: one triangular brass rail compass built around a short black switch lever, an offset toothed wheel, two split iron rails, and a single white ceramic direction bead; Style: polished hand-painted 2D original fantasy game item art with crisp material separation; Composition: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48 and 128x128; Constraints: genuinely transparent background with preserved alpha, one object only, no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "Two split rails form a wide triangle around one lever, one toothed wheel, and a single round direction bead."
+    },
+    {
+      "artifact_id": "artifact_valechant_star_cadence_astrolabe",
+      "hero_id": "hero_seren",
+      "faction_id": "faction_embercourt",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/valechant_star_cadence_astrolabe_source.png",
+      "source_sha256": "a7d44ecc8786e6246aede482daf0f5afe12c222799685585d66a8be8d4e4989d",
+      "runtime_path": "res://art/artifacts/runtime/valechant_star_cadence_astrolabe.png",
+      "runtime_sha256": "033acb9c14cf761efbecdda77927e0c0c4ef40ce31941b3c1c3660e4e0ff5155",
+      "field_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7ec09ea5-2d17-4867-85f6-d655e997bf13.png",
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game artifact source; Primary request: Create Valechant Star-Cadence Astrolabe for the original Aurelion Reach setting; Subject: one open crescent astrolabe of pale silver and emberglass, with three unequal tuning forks around a seven-point star lens, a short chain, and one dark archive bead; Style: polished hand-painted 2D original fantasy game item art with crisp material separation; Composition: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48 and 128x128; Constraints: genuinely transparent background with preserved alpha, one object only, no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A large open crescent encloses a pointed star lens while three uneven forks and one long chain break its circular outline."
+    },
+    {
+      "artifact_id": "artifact_ashgrove_millward_lantern",
+      "hero_id": "hero_caelen",
+      "faction_id": "faction_embercourt",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/ashgrove_millward_lantern_source.png",
+      "source_sha256": "33d3378f1f8334c324140add2b0d0150996330f104d0b70082fcf735fd9c88e4",
+      "runtime_path": "res://art/artifacts/runtime/ashgrove_millward_lantern.png",
+      "runtime_sha256": "74041be444a7161a863cdce0efbe812f2f3414c626e9482f739a4c2dd23126f1",
+      "field_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-cb43e756-8543-44ca-81aa-a4f0d9448b49.png",
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game artifact source; Primary request: Create Ashgrove Millward Lantern for the original Aurelion Reach setting; Subject: one broad shield-shaped river lantern whose iron face is crossed by a small wooden millwheel, with a hooded amber flame, two layered guard plates, and a short green cord; Style: polished hand-painted 2D original fantasy game item art with crisp material separation; Composition: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48 and 128x128; Constraints: genuinely transparent background with preserved alpha, one object only, no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A tall shield lantern is crossed by one round millwheel and closes to a pointed base beneath a hooded flame."
+    },
+    {
+      "artifact_id": "artifact_reedcaller_circle_horn",
+      "hero_id": "hero_mireclaw_rhask_reedcaller",
+      "faction_id": "faction_mireclaw",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/reedcaller_circle_horn_source.png",
+      "source_sha256": "08258ef6e40aa92d5076c2e8e6e9f86e3e904576b4fea9009da56950abb4b877",
+      "runtime_path": "res://art/artifacts/runtime/reedcaller_circle_horn.png",
+      "runtime_sha256": "6a9566fcb6f13ee75bea07ae24a77f359833b440b25f311eb7838ed32e939fac",
+      "field_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-80403ae6-e708-49ac-8534-0a658c968e25.png",
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game artifact source; Primary request: Create Reedcaller Circle Horn for the original Aurelion Reach setting; Subject: one coiled marsh-reed muster horn forming an open spiral, bound by three broad hide rings, with a forked antler mouthpiece, two dangling tally teeth, and a hooked carrying loop; Style: polished hand-painted 2D original fantasy game item art with crisp material separation; Composition: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48 and 128x128; Constraints: genuinely transparent background with preserved alpha, one object only, no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A thick open spiral ends in a wide horn mouth and a forked handle, with two small teeth hanging from the inner coil."
+    },
+    {
+      "artifact_id": "artifact_muckscribe_fen_ink_reliquary",
+      "hero_id": "hero_sable",
+      "faction_id": "faction_mireclaw",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/muckscribe_fen_ink_reliquary_source.png",
+      "source_sha256": "78d59f94273267ffb9b1a1bb97f945073d66c2437e807502178637cd09a16d11",
+      "runtime_path": "res://art/artifacts/runtime/muckscribe_fen_ink_reliquary.png",
+      "runtime_sha256": "02f368fc1302e8aed36447d24118ca5e53364c77262d5f9cdd6ff093c615a088",
+      "field_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-5e42d107-5e68-43b6-94d0-0d5ba064f666.png",
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game artifact source; Primary request: Create Muckscribe Fen-Ink Reliquary for the original Aurelion Reach setting; Subject: one crooked black-glass ink flask in a ribbed bone cage, crossed by a long hooked quill, with a peatwax stopper, three dangling seal chips, and a small spout shaped like a fen beak; Style: polished hand-painted 2D original fantasy game item art with crisp material separation; Composition: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48 and 128x128; Constraints: genuinely transparent background with preserved alpha, one object only, no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A bulbous caged flask is crossed by one enormous hooked quill and carries three small seals below its stopper."
+    },
+    {
+      "artifact_id": "artifact_sevenfold_reserve_prism",
+      "hero_id": "hero_sunvault_aven_sevenfold",
+      "faction_id": "faction_sunvault",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/sevenfold_reserve_prism_source.png",
+      "source_sha256": "8935e0fe52b4c7b7647a98db5827dd755fceaa91f1f336a6d2fbd88f497f2580",
+      "runtime_path": "res://art/artifacts/runtime/sevenfold_reserve_prism.png",
+      "runtime_sha256": "84d3f3152d308f9906b7fdc2b6594f9be7c69abb2921eeae6d595a5e2532245f",
+      "field_region": [
+        288,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ce7551a7-1c87-43e7-866d-d1a4b7e57bfc.png",
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game artifact source; Primary request: Create Sevenfold Reserve Prism for the original Aurelion Reach setting; Subject: one compact folding shield made from seven visibly unequal translucent prism plates around a brass central boss, with two offset hinges, a short white grip, and a narrow light-catching fin; Style: polished hand-painted 2D original fantasy game item art with crisp material separation; Composition: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48 and 128x128; Constraints: genuinely transparent background with preserved alpha, one object only, no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "Seven unequal plates radiate from one round boss, creating a broken flower-like shield with two offset hinges."
+    },
+    {
+      "artifact_id": "artifact_glasswind_sightline_fan",
+      "hero_id": "hero_neral",
+      "faction_id": "faction_sunvault",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/glasswind_sightline_fan_source.png",
+      "source_sha256": "b43a38f73cb6cfedfd63da7512b7d37d73158c41965a4fac8e7543e5d420e48f",
+      "runtime_path": "res://art/artifacts/runtime/glasswind_sightline_fan.png",
+      "runtime_sha256": "66708935213afda6f8bbff36b6a8ab0d6c68789b6e893c84a99ca407a8f208bc",
+      "field_region": [
+        336,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-537e114e-5fe6-4d60-829f-9d23ec8a3df3.png",
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game artifact source; Primary request: Create Glasswind Sightline Fan for the original Aurelion Reach setting; Subject: one half-open asymmetrical fan of five mirrored glass vanes, pierced by a long brass sighting needle, with a small arrow-shaped wind vane, an ivory pivot, and one hanging aetherglass bead; Style: polished hand-painted 2D original fantasy game item art with crisp material separation; Composition: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48 and 128x128; Constraints: genuinely transparent background with preserved alpha, one object only, no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "Five broad fan vanes spread beneath one long piercing needle and a tiny arrow vane, with a single bead below."
+    },
+    {
+      "artifact_id": "artifact_boltroot_quiver_loom",
+      "hero_id": "hero_thornwake_bryn_boltroot",
+      "faction_id": "faction_thornwake",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/boltroot_quiver_loom_source.png",
+      "source_sha256": "7a3d89b84357f3b6c694af8949334b974952bea1301aabd933e457c6d519a16d",
+      "runtime_path": "res://art/artifacts/runtime/boltroot_quiver_loom.png",
+      "runtime_sha256": "cc4db34b9fe42007000cfd8f21ad625f0a5734476146e068aa648180510339b5",
+      "field_region": [
+        384,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a924dd6a-8322-48d5-988a-940e8d5a6be4.png",
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game artifact source; Primary request: Create Boltroot Quiver Loom for the original Aurelion Reach setting; Subject: one tall rootwoven quiver shaped like a narrow loom, holding three oversized unequal bolts, with a crosswise shuttle, two leaf-shaped tension weights, and a hooked bark shoulder strap; Style: polished hand-painted 2D original fantasy game item art with crisp material separation; Composition: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48 and 128x128; Constraints: genuinely transparent background with preserved alpha, one object only, no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A tall woven case holds three unequal bolt heads and is crossed by one narrow shuttle beside a strongly curved strap."
+    },
+    {
+      "artifact_id": "artifact_pollenglass_spore_ampoule",
+      "hero_id": "hero_thornwake_osmund_pollenglass",
+      "faction_id": "faction_thornwake",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/pollenglass_spore_ampoule_source.png",
+      "source_sha256": "b99383f681472fb89d7355099d428d8335bb851c986977eb020e04de021d6251",
+      "runtime_path": "res://art/artifacts/runtime/pollenglass_spore_ampoule.png",
+      "runtime_sha256": "3ef92b6e0a34937b8af940c58969962f33d1c609f50ae59390246e63291ead9a",
+      "field_region": [
+        432,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-380ce140-c1f9-4572-ac77-6d1bc9ba112f.png",
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game artifact source; Primary request: Create Pollenglass Spore Ampoule for the original Aurelion Reach setting; Subject: one tall faceted glass ampoule filled with layered luminous spores, clasped by two living leaf jaws, with a bent copper dose tube, three round pollen chambers, and a rootwood stopper; Style: polished hand-painted 2D original fantasy game item art with crisp material separation; Composition: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48 and 128x128; Constraints: genuinely transparent background with preserved alpha, one object only, no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A long pointed ampoule is clasped by two leaf jaws and carries three round side chambers beneath a bent tube."
+    },
+    {
+      "artifact_id": "artifact_oriflag_stolen_signal_pennon",
+      "hero_id": "hero_veilmourn_damar_oriflag",
+      "faction_id": "faction_veilmourn",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/oriflag_stolen_signal_pennon_source.png",
+      "source_sha256": "11db40f708aa541e1779b93807bedddf9bf7890a03dc6ccf2f42a3b3fd8e5e0a",
+      "runtime_path": "res://art/artifacts/runtime/oriflag_stolen_signal_pennon.png",
+      "runtime_sha256": "f8489793c8ffa5a8ffcf607db5de8792c2a9c8960f5c7e988c31891799fa64ef",
+      "field_region": [
+        480,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f23a415d-091d-4a9f-809a-2d3e88411a14.png",
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game artifact source; Primary request: Create Oriflag Stolen Signal Pennon for the original Aurelion Reach setting; Subject: one tightly folded swallowtail pennon of dark sailcloth wrapped around a crooked silver signal pole, with three mismatched brass signal discs, a hooked clasp, and a short mistglass lens at the tip; Style: polished hand-painted 2D original fantasy game item art with crisp material separation; Composition: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48 and 128x128; Constraints: genuinely transparent background with preserved alpha, one object only, no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A long crooked pole carries one tightly folded triangular pennon, three round discs, and a narrow hooked lower tip."
+    },
+    {
+      "artifact_id": "artifact_tidehook_memory_bosun_bell",
+      "hero_id": "hero_veilmourn_olan_tidehook",
+      "faction_id": "faction_veilmourn",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/tidehook_memory_bosun_bell_source.png",
+      "source_sha256": "7e28295892d70aa0bf71276f53893e60e8c05a87fee7748d5496385edc179557",
+      "runtime_path": "res://art/artifacts/runtime/tidehook_memory_bosun_bell.png",
+      "runtime_sha256": "a6fe46ba3c4e05ee34027222e4e96c5fcc95a2933b69b8d6cc42dfbc5b8bc9ce",
+      "field_region": [
+        528,
+        0,
+        48,
+        48
+      ],
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c0784b9b-1f62-45e7-8ee5-9c0fafd0b559.png",
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game artifact source; Primary request: Create Tidehook Memory Bosun Bell for the original Aurelion Reach setting; Subject: one elongated cracked ship's bell ending in a large crescent boarding hook, wrapped by two uneven rope loops, with three small memory chimes and a bone handle shaped like a wave crest; Style: polished hand-painted 2D original fantasy game item art with crisp material separation; Composition: isolated high three-quarter view, centered with generous padding, strong silhouette readable at 48x48 and 128x128; Constraints: genuinely transparent background with preserved alpha, one object only, no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A narrow cracked bell extends into one enormous lower hook and carries three small side chimes beneath a wave-shaped handle."
+    }
+  ],
+  "field_atlas_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c"
+}

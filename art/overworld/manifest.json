@@ -15235,6 +15235,282 @@
       "assigned_hero_id": "hero_veilmourn_thir_obituaryink",
       "presentation_role": "obituaryink_last_name_lectern",
       "accessible_description": "A leaning shell lectern carries one enormous hooked quill above three blank hanging tablets, a faceted inkwell, and one offset cracked bell."
+    },
+    "artifact_field_blackgauge_muster_bell": {
+      "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+      "source_icon": "res://art/artifacts/runtime/blackgauge_muster_bell.png",
+      "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+      "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+      "assigned_artifact_id": "artifact_blackgauge_muster_bell",
+      "assigned_hero_id": "hero_brasshollow_kestra_blackgauge",
+      "assigned_faction_id": "faction_brasshollow",
+      "presentation_role": "command_relic_march_field_pickup",
+      "accessible_description": "A broad bell is crossed by one long horizontal rod and carries three unequal hanging tags beside a square clapper.",
+      "background": "transparent"
+    },
+    "artifact_field_varn_switchrail_compass": {
+      "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+      "source_icon": "res://art/artifacts/runtime/varn_switchrail_compass.png",
+      "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+      "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+      "assigned_artifact_id": "artifact_varn_switchrail_compass",
+      "assigned_hero_id": "hero_brasshollow_kuld_varn",
+      "assigned_faction_id": "faction_brasshollow",
+      "presentation_role": "command_relic_march_field_pickup",
+      "accessible_description": "Two split rails form a wide triangle around one lever, one toothed wheel, and a single round direction bead.",
+      "background": "transparent"
+    },
+    "artifact_field_valechant_star_cadence_astrolabe": {
+      "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+      "source_icon": "res://art/artifacts/runtime/valechant_star_cadence_astrolabe.png",
+      "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+      "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+      "assigned_artifact_id": "artifact_valechant_star_cadence_astrolabe",
+      "assigned_hero_id": "hero_seren",
+      "assigned_faction_id": "faction_embercourt",
+      "presentation_role": "command_relic_march_field_pickup",
+      "accessible_description": "A large open crescent encloses a pointed star lens while three uneven forks and one long chain break its circular outline.",
+      "background": "transparent"
+    },
+    "artifact_field_ashgrove_millward_lantern": {
+      "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+      "source_icon": "res://art/artifacts/runtime/ashgrove_millward_lantern.png",
+      "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+      "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+      "assigned_artifact_id": "artifact_ashgrove_millward_lantern",
+      "assigned_hero_id": "hero_caelen",
+      "assigned_faction_id": "faction_embercourt",
+      "presentation_role": "command_relic_march_field_pickup",
+      "accessible_description": "A tall shield lantern is crossed by one round millwheel and closes to a pointed base beneath a hooded flame.",
+      "background": "transparent"
+    },
+    "artifact_field_reedcaller_circle_horn": {
+      "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+      "source_icon": "res://art/artifacts/runtime/reedcaller_circle_horn.png",
+      "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+      "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+      "assigned_artifact_id": "artifact_reedcaller_circle_horn",
+      "assigned_hero_id": "hero_mireclaw_rhask_reedcaller",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "command_relic_march_field_pickup",
+      "accessible_description": "A thick open spiral ends in a wide horn mouth and a forked handle, with two small teeth hanging from the inner coil.",
+      "background": "transparent"
+    },
+    "artifact_field_muckscribe_fen_ink_reliquary": {
+      "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+      "source_icon": "res://art/artifacts/runtime/muckscribe_fen_ink_reliquary.png",
+      "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+      "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+      "assigned_artifact_id": "artifact_muckscribe_fen_ink_reliquary",
+      "assigned_hero_id": "hero_sable",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "command_relic_march_field_pickup",
+      "accessible_description": "A bulbous caged flask is crossed by one enormous hooked quill and carries three small seals below its stopper.",
+      "background": "transparent"
+    },
+    "artifact_field_sevenfold_reserve_prism": {
+      "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "atlas_region": [
+        288,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+      "source_icon": "res://art/artifacts/runtime/sevenfold_reserve_prism.png",
+      "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+      "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+      "assigned_artifact_id": "artifact_sevenfold_reserve_prism",
+      "assigned_hero_id": "hero_sunvault_aven_sevenfold",
+      "assigned_faction_id": "faction_sunvault",
+      "presentation_role": "command_relic_march_field_pickup",
+      "accessible_description": "Seven unequal plates radiate from one round boss, creating a broken flower-like shield with two offset hinges.",
+      "background": "transparent"
+    },
+    "artifact_field_glasswind_sightline_fan": {
+      "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "atlas_region": [
+        336,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+      "source_icon": "res://art/artifacts/runtime/glasswind_sightline_fan.png",
+      "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+      "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+      "assigned_artifact_id": "artifact_glasswind_sightline_fan",
+      "assigned_hero_id": "hero_neral",
+      "assigned_faction_id": "faction_sunvault",
+      "presentation_role": "command_relic_march_field_pickup",
+      "accessible_description": "Five broad fan vanes spread beneath one long piercing needle and a tiny arrow vane, with a single bead below.",
+      "background": "transparent"
+    },
+    "artifact_field_boltroot_quiver_loom": {
+      "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "atlas_region": [
+        384,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+      "source_icon": "res://art/artifacts/runtime/boltroot_quiver_loom.png",
+      "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+      "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+      "assigned_artifact_id": "artifact_boltroot_quiver_loom",
+      "assigned_hero_id": "hero_thornwake_bryn_boltroot",
+      "assigned_faction_id": "faction_thornwake",
+      "presentation_role": "command_relic_march_field_pickup",
+      "accessible_description": "A tall woven case holds three unequal bolt heads and is crossed by one narrow shuttle beside a strongly curved strap.",
+      "background": "transparent"
+    },
+    "artifact_field_pollenglass_spore_ampoule": {
+      "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "atlas_region": [
+        432,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+      "source_icon": "res://art/artifacts/runtime/pollenglass_spore_ampoule.png",
+      "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+      "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+      "assigned_artifact_id": "artifact_pollenglass_spore_ampoule",
+      "assigned_hero_id": "hero_thornwake_osmund_pollenglass",
+      "assigned_faction_id": "faction_thornwake",
+      "presentation_role": "command_relic_march_field_pickup",
+      "accessible_description": "A long pointed ampoule is clasped by two leaf jaws and carries three round side chambers beneath a bent tube.",
+      "background": "transparent"
+    },
+    "artifact_field_oriflag_stolen_signal_pennon": {
+      "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "atlas_region": [
+        480,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+      "source_icon": "res://art/artifacts/runtime/oriflag_stolen_signal_pennon.png",
+      "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+      "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+      "assigned_artifact_id": "artifact_oriflag_stolen_signal_pennon",
+      "assigned_hero_id": "hero_veilmourn_damar_oriflag",
+      "assigned_faction_id": "faction_veilmourn",
+      "presentation_role": "command_relic_march_field_pickup",
+      "accessible_description": "A long crooked pole carries one tightly folded triangular pennon, three round discs, and a narrow hooked lower tip.",
+      "background": "transparent"
+    },
+    "artifact_field_tidehook_memory_bosun_bell": {
+      "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "atlas_region": [
+        528,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+      "source_icon": "res://art/artifacts/runtime/tidehook_memory_bosun_bell.png",
+      "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+      "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+      "assigned_artifact_id": "artifact_tidehook_memory_bosun_bell",
+      "assigned_hero_id": "hero_veilmourn_olan_tidehook",
+      "assigned_faction_id": "faction_veilmourn",
+      "presentation_role": "command_relic_march_field_pickup",
+      "accessible_description": "A narrow cracked bell extends into one enormous lower hook and carries three small side chimes beneath a wave-shaped handle.",
+      "background": "transparent"
     }
   },
   "resource_site_sprites": {
@@ -16657,7 +16933,19 @@
     "artifact_splitprism_parallax_duelglass": "artifact_field_splitprism_parallax_duelglass",
     "artifact_woundroot_hearthseed_slingknot": "artifact_field_woundroot_hearthseed_slingknot",
     "artifact_whitegauge_datum_spur": "artifact_field_whitegauge_datum_spur",
-    "artifact_dreamwake_tideglass_sounding": "artifact_field_dreamwake_tideglass_sounding"
+    "artifact_dreamwake_tideglass_sounding": "artifact_field_dreamwake_tideglass_sounding",
+    "artifact_blackgauge_muster_bell": "artifact_field_blackgauge_muster_bell",
+    "artifact_varn_switchrail_compass": "artifact_field_varn_switchrail_compass",
+    "artifact_valechant_star_cadence_astrolabe": "artifact_field_valechant_star_cadence_astrolabe",
+    "artifact_ashgrove_millward_lantern": "artifact_field_ashgrove_millward_lantern",
+    "artifact_reedcaller_circle_horn": "artifact_field_reedcaller_circle_horn",
+    "artifact_muckscribe_fen_ink_reliquary": "artifact_field_muckscribe_fen_ink_reliquary",
+    "artifact_sevenfold_reserve_prism": "artifact_field_sevenfold_reserve_prism",
+    "artifact_glasswind_sightline_fan": "artifact_field_glasswind_sightline_fan",
+    "artifact_boltroot_quiver_loom": "artifact_field_boltroot_quiver_loom",
+    "artifact_pollenglass_spore_ampoule": "artifact_field_pollenglass_spore_ampoule",
+    "artifact_oriflag_stolen_signal_pennon": "artifact_field_oriflag_stolen_signal_pennon",
+    "artifact_tidehook_memory_bosun_bell": "artifact_field_tidehook_memory_bosun_bell"
   },
   "town_default_sprite": {
     "asset_id": "frontier_town",

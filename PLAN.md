@@ -25,8 +25,40 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Active implementation slice: none; select the next coherent content-and-original-art batch before further implementation.
-- Most recently completed implementation slice: `content-six-marchland-warworks-10184`, six opposite-role tier-six warwork units, six town-exclusive production buildings, and six third-use Marchland skirmishes with twelve original art masters.
-- Current package boundary: matching Linux and Windows release exports measure 235019112 bytes, 14980888 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Most recently completed implementation slice: `content-twelve-command-relic-marches-10184`, twelve cross-faction hero-led relic marches with twelve original command relics and live equipment routes.
+- Current package boundary: matching Linux and Windows release exports measure 235445808 bytes, 14554192 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Twelve Command Relic Marches
+
+id: `content-twelve-command-relic-marches-10184`
+
+Status: completed 2026-08-31.
+
+Current finding:
+- every live hero leads at least three authored scenarios, but nineteen commanders remain at that minimum while all other major catalog domains have no unused definitions;
+- a two-commanders-per-faction batch gives the roster a broad replayability increase without concentrating another increment in the recently expanded Marchland seats;
+- production already owns hero-specific scenario starts, artifact pickup and auto-equip, artifact objectives and bonuses, three-front battles, pressure events, save-version-9 continuity, and exact field-art routing without a new subsystem.
+
+Implementation boundary:
+- author twelve original skirmish-only command relic marches, two per faction, each led by the exact selected commander with a five-stack company, live home town, three authored battle fronts, a guarded original relic, economy routes, rival pressure, a late reserve, and an exact hero/relic/front victory chain;
+- add twelve original rare command relics with supported production bonuses, individual inventory identities, compact field identities, faction affinity, and actual pickup/equip use on their authored routes;
+- generate twelve transparent original relic source masters, derive twelve compact inventory icons and one twelve-frame field atlas with exact prompt/hash/accessibility provenance, exclude source masters from release packages, and preserve Windows/Linux symmetry.
+
+Completion criteria:
+- all twelve scenarios launch through normal skirmish authority with their exact hero and company, resolve thirty-six production battles, recover and auto-equip the exact relic, apply its exact supported bonus payload, satisfy the authored victory chain, and round-trip through save version 9;
+- every relic resolves its exact inventory and field identity with no missing or cross-faction art/content route and appears only on its authored live march;
+- run one consolidated twelve-case gameplay/battle/artifact/art/save smoke only after the complete batch, followed once by repository validation and sequential Linux/Windows packaged startup below the unchanged 250000000-byte ceiling.
+
+Completion result:
+- shipped twelve original 15x10 skirmish-only command relic marches, two per faction, for Kestra Blackgauge, Kuld Varn, Seren Valechant, Caelen Ashgrove, Rhask Reedcaller, Sable Muckscribe, Aven Sevenfold, Neral Glasswind, Bryn Boltroot, Osmund Pollenglass, Damar Oriflag, and Olan Tidehook;
+- added twelve rare faction-affine command relics with supported live bonuses, twelve five-stack companies, thirty-six direct battle fronts, guarded pickups, five reactive events per route, rival pressure, late reserves, and exact hero/relic/front victory chains;
+- generated and inspected twelve original transparent source masters, derived twelve 128px inventory icons and one 576x48 field atlas with exact prompt/hash/accessibility provenance, and excluded all source masters from Linux and Windows packages;
+- the consolidated smoke passed twelve exact launches, thirty-six battle victories, twelve pickups and auto-equips, twelve exact bonus payloads, twelve exact inventory and field identities, twelve scenario victories, and twelve save-version-9 round trips; repository validation passed;
+- matching Linux and Windows exports booted with the native extension, audited all sixty-nine relic identities, excluded source art, and measured 235445808 bytes, leaving 14554192 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, town definition, unit definition, building, spell, encounter definition, artifact subsystem, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes scenario, commander, relic, map, name, text, art, heraldry, or protected visual expression.
 
 ## Six Marchland Warworks
 

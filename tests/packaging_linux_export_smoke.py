@@ -67,14 +67,16 @@ REQUIRED_ARTIFACT_FIELD_NAMES = (
     "rootpath_seed_compass", "redline_survey_dial", "drowned_star_astrolabe",
 	"three_relic_pilgrimages_artifacts_atlas",
 	"marchland_retinue_heirlooms_atlas",
+	"command_relic_marches_atlas",
 )
 REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES = tuple(
     f"art/overworld/runtime/objects/artifacts/{artifact_name}.png.import"
     for artifact_name in REQUIRED_ARTIFACT_FIELD_NAMES
-    if artifact_name not in {"three_relic_pilgrimages_artifacts_atlas", "marchland_retinue_heirlooms_atlas"}
+    if artifact_name not in {"three_relic_pilgrimages_artifacts_atlas", "marchland_retinue_heirlooms_atlas", "command_relic_marches_atlas"}
 ) + (
     "art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png.import",
     "art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png.import",
+    "art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png.import",
 )
 REQUIRED_GUARDED_RELIC_ICON_NAMES = (
     "lockfire_assize_seal", "miremoon_hunt_drum", "noonglass_orrery",
@@ -85,6 +87,10 @@ REQUIRED_GUARDED_RELIC_ICON_NAMES = (
     "rootvault_heartgrain_mantle", "quenchbell_red_gauge_plate", "saltwake_resonance_bell",
     "amberweir_lockpike_tallychain", "moonbite_votive_drumkey", "splitprism_parallax_duelglass",
     "woundroot_hearthseed_slingknot", "whitegauge_datum_spur", "dreamwake_tideglass_sounding",
+    "blackgauge_muster_bell", "varn_switchrail_compass", "valechant_star_cadence_astrolabe",
+    "ashgrove_millward_lantern", "reedcaller_circle_horn", "muckscribe_fen_ink_reliquary",
+    "sevenfold_reserve_prism", "glasswind_sightline_fan", "boltroot_quiver_loom",
+    "pollenglass_spore_ampoule", "oriflag_stolen_signal_pennon", "tidehook_memory_bosun_bell",
 )
 REQUIRED_GUARDED_RELIC_ICON_PCK_IMPORT_ENTRIES = tuple(
     f"art/artifacts/runtime/{artifact_name}.png.import"
