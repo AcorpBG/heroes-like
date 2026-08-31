@@ -1998,6 +1998,60 @@
         {"unit_id": "unit_thornwake_sporeglass_menders", "count": 5},
         {"unit_id": "unit_thornwake_barkmantle_rams", "count": 2}
       ]
+    },
+    {
+      "id": "army_kessa_rival_road_company", "name": "Chainboom Rival-Road Company", "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 12},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 8},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 4},
+        {"unit_id": "unit_mireclaw_ferrychain_lashers", "count": 2}
+      ]
+    },
+    {
+      "id": "army_pell_rival_road_company", "name": "Reedscript Rival-Road Company", "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 10},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 7},
+        {"unit_id": "unit_mireclaw_fenbell_chainstalkers", "count": 2},
+        {"unit_id": "unit_mireclaw_sporewake_chanters", "count": 1}
+      ]
+    },
+    {
+      "id": "army_ilyr_rival_road_company", "name": "Glassmarshal Rival-Road Company", "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 12},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 8},
+        {"unit_id": "unit_sunvault_mirror_duelists", "count": 4},
+        {"unit_id": "unit_sunvault_resonant_choristers", "count": 2}
+      ]
+    },
+    {
+      "id": "army_renn_rival_road_company", "name": "Facetlane Rival-Road Company", "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 10},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 7},
+        {"unit_id": "unit_sunvault_solar_array_striders", "count": 2},
+        {"unit_id": "unit_sunvault_zenith_lensbearers", "count": 2}
+      ]
+    },
+    {
+      "id": "army_halen_rival_road_company", "name": "Thorncart Rival-Road Company", "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 12},
+        {"unit_id": "unit_thornwake_thornwhip_carriers", "count": 8},
+        {"unit_id": "unit_thornwake_sporeglass_menders", "count": 4},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 2}
+      ]
+    },
+    {
+      "id": "army_osmund_rival_road_company", "name": "Pollenglass Rival-Road Company", "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 10},
+        {"unit_id": "unit_thornwake_pollenhook_whistlers", "count": 8},
+        {"unit_id": "unit_thornwake_seedshield_wardens", "count": 3},
+        {"unit_id": "unit_thornwake_seedglass_cantors", "count": 2}
+      ]
     }
   ]
 }
