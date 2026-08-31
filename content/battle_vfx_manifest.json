@@ -46,7 +46,14 @@
     "spell_root_loam_thorn_10": "vfx_spell_root_loam_thorn_10",
     "spell_root_graft_graft_18": "vfx_spell_root_graft_graft_18",
     "spell_veil_mourning_mark_04": "vfx_spell_veil_mourning_mark_04",
-    "spell_old_measure_index_correction_10": "vfx_spell_old_measure_index_correction_10"
+    "spell_old_measure_index_correction_10": "vfx_spell_old_measure_index_correction_10",
+    "spell_beacon_lockfire_muster": "vfx_spell_beacon_lockfire_muster",
+    "spell_mire_moonfen_dragnet": "vfx_spell_mire_moonfen_dragnet",
+    "spell_lens_seven_facet_refrain": "vfx_spell_lens_seven_facet_refrain",
+    "spell_root_heartwood_renewal": "vfx_spell_root_heartwood_renewal",
+    "spell_furnace_redline_overdrive": "vfx_spell_furnace_redline_overdrive",
+    "spell_veil_drowned_bell_verdict": "vfx_spell_veil_drowned_bell_verdict",
+    "spell_old_measure_unbroken_meridian": "vfx_spell_old_measure_unbroken_meridian"
   },
   "cues": {
     "vfx_placeholder_projectile_path": {
@@ -501,6 +508,69 @@
       "alt_text": "A brass survey arm aligns blank stone markers and sweeps dark chalk away.",
       "render_mode": "spell_target",
       "scale": 2.16,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_beacon_lockfire_muster": {
+      "spell_id": "spell_beacon_lockfire_muster",
+      "texture_path": "res://art/battle/vfx/spell_beacon_lockfire_muster.png",
+      "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_beacon_lockfire_muster_source.png",
+      "alt_text": "Seven lock lanterns surge along a broken bronze bar above a crossing blue sluice current.",
+      "render_mode": "spell_target",
+      "scale": 2.28,
+      "base_rotation_degrees": -10.0
+    },
+    "vfx_spell_mire_moonfen_dragnet": {
+      "spell_id": "spell_mire_moonfen_dragnet",
+      "texture_path": "res://art/battle/vfx/spell_mire_moonfen_dragnet.png",
+      "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_mire_moonfen_dragnet_source.png",
+      "alt_text": "Hooked reeds pull a knotted dragnet closed around a moonlit blackwater basin.",
+      "render_mode": "spell_target",
+      "scale": 2.24,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_lens_seven_facet_refrain": {
+      "spell_id": "spell_lens_seven_facet_refrain",
+      "texture_path": "res://art/battle/vfx/spell_lens_seven_facet_refrain.png",
+      "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_lens_seven_facet_refrain_source.png",
+      "alt_text": "Seven glasslike sound petals spiral from a bright central pulse while dark shards break apart.",
+      "render_mode": "spell_target",
+      "scale": 2.22,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_root_heartwood_renewal": {
+      "spell_id": "spell_root_heartwood_renewal",
+      "texture_path": "res://art/battle/vfx/spell_root_heartwood_renewal.png",
+      "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_root_heartwood_renewal_source.png",
+      "alt_text": "Living roots and flowering boughs close into a shelter around a rising heartwood light.",
+      "render_mode": "spell_target",
+      "scale": 2.22,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_furnace_redline_overdrive": {
+      "spell_id": "spell_furnace_redline_overdrive",
+      "texture_path": "res://art/battle/vfx/spell_furnace_redline_overdrive.png",
+      "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_furnace_redline_overdrive_source.png",
+      "alt_text": "Twin brass pressure cylinders drive two horizontal furnace jets through a red-hot limit ring.",
+      "render_mode": "spell_target",
+      "scale": 2.30,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_veil_drowned_bell_verdict": {
+      "spell_id": "spell_veil_drowned_bell_verdict",
+      "texture_path": "res://art/battle/vfx/spell_veil_drowned_bell_verdict.png",
+      "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_veil_drowned_bell_verdict_source.png",
+      "alt_text": "A drowned bell tolls inside a pale echo ring as spectral tidewater and dark stones burst outward.",
+      "render_mode": "spell_target",
+      "scale": 2.26,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_old_measure_unbroken_meridian": {
+      "spell_id": "spell_old_measure_unbroken_meridian",
+      "texture_path": "res://art/battle/vfx/spell_old_measure_unbroken_meridian.png",
+      "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_old_measure_unbroken_meridian_source.png",
+      "alt_text": "A straight survey meridian locks an ivory globe inside crossing brass shield lines and plumb marks.",
+      "render_mode": "spell_target",
+      "scale": 2.24,
       "base_rotation_degrees": 0.0
     },
     "vfx_placeholder_idle_shadow": {

@@ -1,7 +1,10 @@
 extends Node
 
 const SessionDataScript = preload("res://scripts/core/SessionStateStore.gd")
+const BattleBoardViewScript = preload("res://scenes/battle/BattleBoardView.gd")
 const SCENARIO_ID := "horizon-compact-six-citadels"
+const BATTLE_VFX_MANIFEST_PATH := "res://content/battle_vfx_manifest.json"
+const CAPTURE_DIR := "user://seven_school_signature_battle_vfx"
 const CASES := [
 	{
 		"spell_id": "spell_beacon_lockfire_muster",
@@ -53,6 +56,11 @@ func _ready() -> void:
 
 
 func _run() -> void:
+	var capture_dir_error := DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(CAPTURE_DIR))
+	if capture_dir_error != OK:
+		push_error("Seven-school signature spellbook smoke could not create capture directory: %s" % capture_dir_error)
+		get_tree().quit(1)
+		return
 	var rows := []
 	for case_value in CASES:
 		var row := await _run_case(case_value)
@@ -69,6 +77,11 @@ func _run() -> void:
 		"town_ui_icon_rows": rows.filter(func(row): return bool(row.get("town_ui_icon_exact", false))).size(),
 		"town_study_rows": rows.filter(func(row): return bool(row.get("learned", false))).size(),
 		"battle_cast_rows": rows.filter(func(row): return bool(row.get("cast_ok", false))).size(),
+		"exact_battle_vfx_rows": rows.filter(func(row): return bool(row.get("exact_battle_vfx", false))).size(),
+		"reduced_motion_rows": rows.filter(func(row): return bool(row.get("reduced_motion_fallback", false))).size(),
+		"consequence_parity_rows": rows.filter(func(row): return bool(row.get("consequence_parity", false))).size(),
+		"accessible_vfx_rows": rows.filter(func(row): return bool(row.get("accessible_vfx", false))).size(),
+		"capture_count": rows.reduce(func(count, row): return count + int(row.get("capture_count", 0)), 0),
 		"save_round_trip_rows": rows.filter(func(row): return bool(row.get("save_round_trip_exact", false))).size(),
 		"save_version": SessionDataScript.SAVE_VERSION,
 		"rows": rows,
@@ -164,6 +177,14 @@ func _run_case(case: Dictionary) -> Dictionary:
 		return {"ok": false, "failure": "enemy_town_missing", "spell_id": spell_id}
 	live_session.battle = BattleRules.create_town_assault_payload(live_session, String(enemy_town.get("placement_id", "")))
 	_stage_player_turn(live_session.battle, String(spell.get("effect", {}).get("type", "")))
+	var pre_cast_payload: Dictionary = live_session.to_dict()
+	var reduced_session = SessionDataScript.SessionData.new()
+	reduced_session.from_dict(pre_cast_payload.duplicate(true))
+	SettingsService.ensure_settings()
+	var original_reduce_motion := SettingsService.reduced_motion_enabled()
+	var original_reduce_flashes := SettingsService.reduced_flashes_enabled()
+	SettingsService.settings["accessibility"]["reduce_motion"] = false
+	SettingsService.settings["accessibility"]["reduce_flashes"] = false
 	var commander_before: Dictionary = live_session.battle.get("player_commander_state", {}) if live_session.battle.get("player_commander_state", {}) is Dictionary else {}
 	var mana_before: int = int(SpellRules.mana_state(commander_before).get("current", 0))
 	var cast_result := BattleRules.cast_player_spell(live_session, spell_id)
@@ -174,13 +195,56 @@ func _run_case(case: Dictionary) -> Dictionary:
 		if event_value is Dictionary and String(event_value.get("spell_id", "")) == spell_id:
 			spell_event_exact = true
 			break
+	var cue_id := "vfx_%s" % spell_id
+	var expected_vfx_path := "res://art/battle/vfx/%s.png" % spell_id
+	var cue_spec := _battle_vfx_cue(cue_id)
+	var normal_presentation := await _battle_presentation(live_session, "%s_normal.png" % spell_id)
+	var normal_summary: Dictionary = normal_presentation.get("summary", {}) if normal_presentation.get("summary", {}) is Dictionary else {}
+	var normal_cue := _cue_record_with_vfx(normal_summary, cue_id)
+	var normal_vfx := _vfx_entry_for_cue(normal_summary, cue_id)
+	var selected_normal_vfx: Array = normal_cue.get("selected_vfx_cue_ids", []) if normal_cue.get("selected_vfx_cue_ids", []) is Array else []
+	var generic_secondary := selected_normal_vfx.any(func(value): return String(value).begins_with("vfx_placeholder_"))
+	var exact_battle_vfx := (
+		selected_normal_vfx.has(cue_id)
+		and bool(normal_vfx.get("asset_loaded", false))
+		and String(normal_vfx.get("asset_path", "")) == expected_vfx_path
+		and String(normal_vfx.get("asset_render_mode", "")) == "spell_target"
+		and String(normal_vfx.get("kind", "")) == spell_id
+		and generic_secondary
+	)
+	var accessible_vfx := (
+		String(cue_spec.get("spell_id", "")) == spell_id
+		and String(cue_spec.get("texture_path", "")) == expected_vfx_path
+		and String(cue_spec.get("source_path", "")).begins_with("res://art/battle/source/generated/seven_school_signature_vfx/")
+		and not String(cue_spec.get("alt_text", "")).strip_edges().is_empty()
+	)
+	var normal_authority: Dictionary = live_session.to_dict()
+	SettingsService.settings["accessibility"]["reduce_motion"] = true
+	SettingsService.settings["accessibility"]["reduce_flashes"] = true
+	var reduced_result := BattleRules.cast_player_spell(reduced_session, spell_id)
+	var reduced_authority: Dictionary = reduced_session.to_dict()
+	var reduced_presentation := await _battle_presentation(reduced_session, "%s_reduced.png" % spell_id, true)
+	var reduced_summary: Dictionary = reduced_presentation.get("summary", {}) if reduced_presentation.get("summary", {}) is Dictionary else {}
+	var reduced_cast_cue := _cue_record_for_event(reduced_summary, "battle_unit_cast")
+	var reduced_selected_vfx: Array = reduced_cast_cue.get("selected_vfx_cue_ids", []) if reduced_cast_cue.get("selected_vfx_cue_ids", []) is Array else []
+	var reduced_motion_fallback := (
+		not _summary_has_selected_vfx(reduced_summary, cue_id)
+		and (
+			reduced_cast_cue.is_empty()
+			or reduced_selected_vfx.has("cast_icon_anchor")
+		)
+	)
+	var consequence_parity := JSON.stringify(reduced_result) == JSON.stringify(cast_result) and reduced_authority == normal_authority
+	SettingsService.settings["accessibility"]["reduce_motion"] = original_reduce_motion
+	SettingsService.settings["accessibility"]["reduce_flashes"] = original_reduce_flashes
 	var payload := live_session.to_dict()
 	var restored = SessionDataScript.SessionData.new()
 	restored.from_dict(payload.duplicate(true))
 	var save_round_trip_exact: bool = restored.to_dict() == payload and restored.save_version == SessionDataScript.SAVE_VERSION
 	var cast_ok: bool = bool(cast_result.get("ok", false)) and mana_before - mana_after == int(spell.get("mana_cost", 0)) and spell_event_exact
+	var capture_count := int(bool(normal_presentation.get("capture_ok", false))) + int(bool(reduced_presentation.get("capture_ok", false)))
 	return {
-		"ok": town_ui_icon_exact and learned and cast_ok and save_round_trip_exact,
+		"ok": town_ui_icon_exact and learned and cast_ok and exact_battle_vfx and reduced_motion_fallback and consequence_parity and accessible_vfx and capture_count == 2 and save_round_trip_exact,
 		"spell_id": spell_id,
 		"school_id": school_id,
 		"town_placement_id": placement_id,
@@ -189,10 +253,80 @@ func _run_case(case: Dictionary) -> Dictionary:
 		"learned": learned,
 		"cast_ok": cast_ok,
 		"spell_event_exact": spell_event_exact,
+		"cue_id": cue_id,
+		"vfx_path": expected_vfx_path,
+		"exact_battle_vfx": exact_battle_vfx,
+		"generic_secondary": generic_secondary,
+		"accessible_vfx": accessible_vfx,
+		"reduced_motion_fallback": reduced_motion_fallback,
+		"consequence_parity": consequence_parity,
+		"normal_selected_vfx": selected_normal_vfx,
+		"reduced_selected_vfx": reduced_selected_vfx,
+		"capture_count": capture_count,
+		"normal_capture": String(normal_presentation.get("capture_path", "")),
+		"reduced_capture": String(reduced_presentation.get("capture_path", "")),
 		"mana_before": mana_before,
 		"mana_after": mana_after,
 		"save_round_trip_exact": save_round_trip_exact,
 	}
+
+
+func _battle_vfx_cue(cue_id: String) -> Dictionary:
+	var text := FileAccess.get_file_as_string(BATTLE_VFX_MANIFEST_PATH)
+	var parsed = JSON.parse_string(text)
+	if not (parsed is Dictionary):
+		return {}
+	var cues: Dictionary = parsed.get("cues", {}) if parsed.get("cues", {}) is Dictionary else {}
+	return cues.get(cue_id, {}) if cues.get(cue_id, {}) is Dictionary else {}
+
+
+func _battle_presentation(session, filename: String, immediate_summary: bool = false) -> Dictionary:
+	var view := BattleBoardViewScript.new()
+	view.size = Vector2(960.0, 540.0)
+	add_child(view)
+	view.set_battle_state(session)
+	var summary: Dictionary = view.validation_unit_art_summary() if immediate_summary else {}
+	await get_tree().process_frame
+	if not immediate_summary:
+		await get_tree().create_timer(0.04).timeout
+		summary = view.validation_unit_art_summary()
+	var capture_path := ProjectSettings.globalize_path("%s/%s" % [CAPTURE_DIR, filename])
+	var image := get_viewport().get_texture().get_image()
+	var capture_ok := image != null and not image.is_empty() and image.save_png(capture_path) == OK
+	view.queue_free()
+	await get_tree().process_frame
+	return {"summary": summary, "capture_ok": capture_ok, "capture_path": capture_path}
+
+
+func _cue_record_with_vfx(summary: Dictionary, cue_id: String) -> Dictionary:
+	var cue_playback: Dictionary = summary.get("cue_playback", {}) if summary.get("cue_playback", {}) is Dictionary else {}
+	var records: Dictionary = cue_playback.get("active_records", {}) if cue_playback.get("active_records", {}) is Dictionary else {}
+	for record_value in records.values():
+		if record_value is Dictionary and record_value.get("selected_vfx_cue_ids", []).has(cue_id):
+			return record_value
+	return {}
+
+
+func _cue_record_for_event(summary: Dictionary, event_id: String) -> Dictionary:
+	var cue_playback: Dictionary = summary.get("cue_playback", {}) if summary.get("cue_playback", {}) is Dictionary else {}
+	var records: Dictionary = cue_playback.get("active_records", {}) if cue_playback.get("active_records", {}) is Dictionary else {}
+	for record_value in records.values():
+		if record_value is Dictionary and String(record_value.get("event_id", "")) == event_id:
+			return record_value
+	return {}
+
+
+func _vfx_entry_for_cue(summary: Dictionary, cue_id: String) -> Dictionary:
+	var vfx_playback: Dictionary = summary.get("vfx_playback", {}) if summary.get("vfx_playback", {}) is Dictionary else {}
+	var entries: Array = vfx_playback.get("active_draw_entries", []) if vfx_playback.get("active_draw_entries", []) is Array else []
+	for entry_value in entries:
+		if entry_value is Dictionary and String(entry_value.get("cue_id", "")) == cue_id:
+			return entry_value
+	return {}
+
+
+func _summary_has_selected_vfx(summary: Dictionary, cue_id: String) -> bool:
+	return not _cue_record_with_vfx(summary, cue_id).is_empty()
 
 
 func _town_by_placement(session, placement_id: String) -> Dictionary:

@@ -24,8 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Latest completed implementation slice: `content-seven-school-signature-spellbook-10184` delivered one coherent whole-catalog writing, seven-spell gameplay, icon-art, study, battle, save, and packaging batch.
-- Current package boundary after the slice: matching Linux and Windows release exports measure 249900248 bytes, 99752 bytes below the unchanged 250000000-byte ceiling; generated spell masters remain excluded symmetrically.
+- Most recently completed implementation slice: `content-seven-school-signature-battle-vfx-10184`, one coherent seven-spell battle-presentation and package-efficiency batch.
+- Current package boundary after the slice: matching Linux and Windows release exports measure 245428912 bytes, 4571088 bytes below the unchanged 250000000-byte ceiling; all generated VFX masters remain excluded from both packages.
+
+## Seven-School Signature Battle VFX
+
+id: `content-seven-school-signature-battle-vfx-10184`
+
+Status: completed.
+
+Current finding:
+- all 119 spells now own exact icons, but only forty-six battle spells own spell-specific VFX cues; the seven new school signatures therefore cast through production rules while still presenting only the generic cast/status effect stack;
+- the battle presentation path already resolves exact spell cue ids, imported textures, render modes, reduced-motion fallbacks, and accessible alternative text without changing deterministic combat or save state;
+- the matching release packages retain only 99752 bytes of headroom, while the forty-six existing 384px spell-VFX PNGs use much richer palettes than battle-scale presentation requires and can be palette-compacted with visual inspection before adding seven more exact effects.
+
+Implementation boundary:
+- generate one original transparent 384px battle effect for Lockfire Muster, Moonfen Dragnet, Seven-Facet Refrain, Heartwood Renewal, Redline Overdrive, Drowned-Bell Verdict, and Unbroken Meridian, using materially distinct silhouettes and motion language rather than recolored copies;
+- wire all seven through the existing battle spell-cue manifest with exact render modes, scale, source provenance, and non-color alternative descriptions so live cast events select the authored effect while reduced-motion policy remains unchanged;
+- palette-compact the existing and new spell-VFX runtime PNGs as one inspected battle-scale set, preserving 384px dimensions, transparency, manifest ownership, and readable silhouettes while recovering enough package space for both platforms;
+- preserve spell mechanics, deterministic combat, AI valuation, save version 9, accessibility, Windows/Linux paths, generated-source exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all seven signatures resolve exact imported spell VFX through real battle animation events and retain generic cast/status fallbacks only as the established secondary presentation layer;
+- one consolidated seven-case live battle presentation smoke proves exact cue selection, imported texture playback, accessibility copy, reduced-motion fallback, combat consequence parity, and save-version-9 continuity after the complete batch;
+- an inspected normal/reduced-motion capture set remains legible at battle scale, repository validation passes, and matching Linux/Windows packaged startup remains below the unchanged ceiling with generated masters excluded.
+
+Completion result:
+- seven distinct original transparent effects now give Lockfire Muster, Moonfen Dragnet, Seven-Facet Refrain, Heartwood Renewal, Redline Overdrive, Drowned-Bell Verdict, and Unbroken Meridian exact live battle cue identities with non-color alternative descriptions and retained generic secondary presentation;
+- the complete 54-texture spell-VFX runtime set was visually inspected and compacted to bounded 64-color RGBA PNGs while its rich generated masters and exact provenance remain intact outside release packages;
+- the single consolidated seven-case smoke passes 7/7 live town-study routes, production casts, exact imported normal-mode effects, reduced-motion fallbacks, consequence-parity comparisons, accessibility contracts, save-version-9 round trips, and fourteen 1280x720 captures;
+- repository validation passes; Linux and Windows export/startup gates pass with matching 245428912-byte PCKs, source art excluded, and 4571088 bytes of headroom below the unchanged ceiling.
+
+Non-goals:
+- no spell, faction, hero, unit, town, building, scenario, encounter, campaign, artifact, combat formula, strategic-AI algorithm, RMG behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes effect, symbol, animation, icon, text, visual design, or protected expression.
 
 ## Seven-School Signature Spellbook
 

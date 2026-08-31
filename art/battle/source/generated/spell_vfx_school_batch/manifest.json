@@ -4,7 +4,7 @@
   "generation_mode": "built_in_image_gen",
   "asset_policy": "original_generated_transparent_battle_vfx_no_homm_art_import",
   "shared_final_prompt": "Transparent 2D battle spell VFX sprite for a production fantasy strategy game; hand-painted, crisp non-color silhouette, centered on a square canvas with transparent padding and readable at 96 pixels; magical effect only; genuinely transparent clean alpha; no text, letters, numerals, readable runes, logos, border, ground plane, checkerboard, watermark, characters, buildings, copied game imagery, or opaque full-canvas haze.",
-  "runtime_derivation": "Trim transparent source bounds, proportionally fit within 336x336, center on a 384x384 transparent canvas, and preserve RGBA alpha.",
+  "runtime_derivation": "Trim transparent source bounds, proportionally fit within 336x336, center on a 384x384 transparent canvas, then quantize to a visually inspected 64-color palette while forcing RGBA PNG output.",
   "items": [
     {
       "spell_id": "spell_bulwark_litany",
@@ -15,7 +15,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_bulwark_litany_source.png",
       "runtime_path": "res://art/battle/vfx/spell_bulwark_litany.png",
       "source_sha256": "9de6522a2301d53a81ab77077fe34bb364f57b7b7296761bb37d72f9c69f9b23",
-      "runtime_sha256": "ed071054d2f61626414e2135b52288348912ac21e68d860cea84bd3b41a8085f"
+      "runtime_sha256": "f766de5bd77f218572ef7f77abbd0f138b91ac39a591f116e5de89e3cf395a6a"
     },
     {
       "spell_id": "spell_quickmarch_hymn",
@@ -26,7 +26,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_quickmarch_hymn_source.png",
       "runtime_path": "res://art/battle/vfx/spell_quickmarch_hymn.png",
       "source_sha256": "22872be77cf10f45d1a120170f3c7a543a9cd6ad6e7353657101115e64cf989a",
-      "runtime_sha256": "2f031c8ddbee6a233c282b000c249ec2df39a8fa45aebd131842ed63c8d09031"
+      "runtime_sha256": "d28dae854fee70b1723c6787f2bee0be1809c8e552fc4dbc928e2a33d947036e"
     },
     {
       "spell_id": "spell_bloodwake_drum",
@@ -37,7 +37,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_bloodwake_drum_source.png",
       "runtime_path": "res://art/battle/vfx/spell_bloodwake_drum.png",
       "source_sha256": "eafc8132cf529b3cf56f848784ba4860266958debabe7290c7680113c5bbebd3",
-      "runtime_sha256": "bc50b7ea6ef694325431ca12a8d231e4a10aa944c226dbf0b19816dd5e399bbe"
+      "runtime_sha256": "2d68131ecf881b7e4cd1128a1905e065e615b5ace5b8bb60c6f7ecdf39a059cc"
     },
     {
       "spell_id": "spell_relay_drum",
@@ -48,7 +48,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_relay_drum_source.png",
       "runtime_path": "res://art/battle/vfx/spell_relay_drum.png",
       "source_sha256": "09aad03aaf4670ee1b50c56fc0b793ca90daca7ad5fa32a8174d00dad794cf81",
-      "runtime_sha256": "e86d5803cd5274b6688d2adf9d614a55f29312ae8af99a2d2e00bc8f55524865"
+      "runtime_sha256": "b3b16bb53978a5b2e17a2a34eb5656d832be9d99a9f3d657e883f58a9ced419c"
     },
     {
       "spell_id": "spell_lens_aurora_chorus_10",
@@ -59,7 +59,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_lens_aurora_chorus_10_source.png",
       "runtime_path": "res://art/battle/vfx/spell_lens_aurora_chorus_10.png",
       "source_sha256": "1b946fbff5c9b7ccb4f49c5bd60a65ef020fc4bd742ac9134ce583e4abc00f0a",
-      "runtime_sha256": "bca7b3eedc2f898e2cc09b83a2da91a5fb85a5e45224f6e12dd2e7ddbe013feb"
+      "runtime_sha256": "2ba3470a36a8fcb80d6cc1d57cb52497e8b9b26a5aaad6a03b936ae149e69d97"
     },
     {
       "spell_id": "spell_lens_mirror_facet_20",
@@ -70,7 +70,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_lens_mirror_facet_20_source.png",
       "runtime_path": "res://art/battle/vfx/spell_lens_mirror_facet_20.png",
       "source_sha256": "0cbd434f95f88902a2998e31ca59cbb62746c90fca2fb3638f78eadc054e2246",
-      "runtime_sha256": "df1f0c36c9fc59ce1bfe2b3d37343500cbeced7bb52dbeb54c64320f33599c73"
+      "runtime_sha256": "67cdf522124cccf97b2f68ae2d6dd004ae6ae5c5d4ef792f69286d65c47bdd8b"
     },
     {
       "spell_id": "spell_root_bloom_bark_20",
@@ -81,7 +81,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_root_bloom_bark_20_source.png",
       "runtime_path": "res://art/battle/vfx/spell_root_bloom_bark_20.png",
       "source_sha256": "495482084cb613253acbf8de3e4f3b814603fbcc9fbad9ce88a51ee0d0aeb5a7",
-      "runtime_sha256": "e7f2099fa3243f1a2cb4a378b40b4f85ee36cf1d349d5822937d2224ef825039"
+      "runtime_sha256": "5a723e0135a11e2bac41af1a37af0810a1a10e17e280b6280dea8eaaa8535cf8"
     },
     {
       "spell_id": "spell_root_bark_bark_08",
@@ -92,7 +92,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_root_bark_bark_08_source.png",
       "runtime_path": "res://art/battle/vfx/spell_root_bark_bark_08.png",
       "source_sha256": "031b5133fcb87e8c9b191405167f7117c76e17d0a400f7602709c883c1b03522",
-      "runtime_sha256": "30bc702b8d6446afde3fd36a413ce250ff918b65877954b80d01f328baa56bba"
+      "runtime_sha256": "ac6d620f5a135fd9284abe00e771d6a4aaad434e2382cee0e900470aa341b470"
     },
     {
       "spell_id": "spell_stone_veil",
@@ -103,7 +103,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_stone_veil_source.png",
       "runtime_path": "res://art/battle/vfx/spell_stone_veil.png",
       "source_sha256": "28d075f1f40b35df888073f62df062336a02858f38020ee87982be7b00e23eec",
-      "runtime_sha256": "0187ee19f5a7626a9da7bab4723d79fd74211bdc6404d6acf1c36067f9d5d7a9"
+      "runtime_sha256": "0a80b46d3ce1ee508f62c55f9391d3a123f31b55685505d58523e4ce7d7a4ed6"
     },
     {
       "spell_id": "spell_pressure_clause",
@@ -114,7 +114,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_pressure_clause_source.png",
       "runtime_path": "res://art/battle/vfx/spell_pressure_clause.png",
       "source_sha256": "56f079a8e9f07d8a68323e401cf1d1ae6499a4caa3ad9ed176def77ea946bf7e",
-      "runtime_sha256": "d2f5e82be59d93f795c54753fc72ae11ef8ca6cc6c44f61d07947352e277f107"
+      "runtime_sha256": "e2fbc2aa30f61368be7476a36ff2578170534ae88b039404515bb35a11081c6b"
     },
     {
       "spell_id": "spell_obituary_mark",
@@ -125,7 +125,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_obituary_mark_source.png",
       "runtime_path": "res://art/battle/vfx/spell_obituary_mark.png",
       "source_sha256": "f908fc0386f069ef8a557b6b7809b315143e3aea0dc07987624bd868ad1c52c9",
-      "runtime_sha256": "37ca59d20d5719a0965635c3ea3e386dd73c05f129957ebe20f6bfdc0e832f54"
+      "runtime_sha256": "548c6d1c3bc5135b69f7698efdf339628cf625dbc0974b0088f53a2842ec4302"
     },
     {
       "spell_id": "spell_fogwake_step",
@@ -136,7 +136,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_fogwake_step_source.png",
       "runtime_path": "res://art/battle/vfx/spell_fogwake_step.png",
       "source_sha256": "4ae717e51564307e4d9e47ecf251fc994b3e6c8a863656bf567776e8f5088caa",
-      "runtime_sha256": "8376c4fe129862baa88feb33901f6ea0302970270fac83f3d79977b35382b578"
+      "runtime_sha256": "6445e4d50012e94c249694d69ac54bf83ab68ad596fd7b8f366be32b660119f1"
     },
     {
       "spell_id": "spell_old_measure_tally_tally_20",
@@ -147,7 +147,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_old_measure_tally_tally_20_source.png",
       "runtime_path": "res://art/battle/vfx/spell_old_measure_tally_tally_20.png",
       "source_sha256": "cbd5241c9e465ea2d4fcc8e5ee29e13c4da6b37fa8a982e80dcd9bcc590048b7",
-      "runtime_sha256": "5d0f7ac0127f26367be7d0fd4bb4a7c15fc2e32f387b0c51a9327079ccae62f9"
+      "runtime_sha256": "99902f3e94346236259e48bc57fe8205bb674f1537130726ed5022542b21feb5"
     },
     {
       "spell_id": "spell_old_measure_count_boundary_30",
@@ -158,7 +158,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_old_measure_count_boundary_30_source.png",
       "runtime_path": "res://art/battle/vfx/spell_old_measure_count_boundary_30.png",
       "source_sha256": "7ba142ad7f791044daa8593f97fb5a269126b5b48159daa05291cc2557a28986",
-      "runtime_sha256": "d49e45e2fdbfcf818b9521e9a5d2856f8fc00c4b42ca0d5cb75e673127d04a2f"
+      "runtime_sha256": "cdbcbd5f49669588418b822e0854496ff64df40289a37c7eda3c3b6f8dc64d3e"
     }
   ]
 }

@@ -22,10 +22,10 @@ Spell-to-VFX ownership lives in the manifest's exact `spell_cues` table instead 
 Focused validation:
 
 - `tests/battle_event_animation_state_report.tscn` casts Cinder Burst and now proves the caster/target events retain `spell_id`, the caster cue selects `vfx_spell_cinder_burst` and `audio_spell_cinder_burst`, the generic cast fallback remains present, and the runtime audio path resolves to the imported `spell_cinder_burst.wav` asset.
-- The same focused report proves all forty-six exact spell mappings and the shared Command Ward asset load as distinct live draw entries, retains procedural and unknown-id fail-closed controls, and publicly casts all twenty-five damage/recovery/cleanse identity additions under normal and reduced presentation settings without changing authoritative outcomes.
+- The same focused report now proves all fifty-three exact spell mappings and the shared Command Ward asset load as distinct live draw entries, retains procedural and unknown-id fail-closed controls, and publicly casts all selected identity additions under normal and reduced presentation settings without changing authoritative outcomes.
 - The combined resolution-family batch proves fifteen damage results reduce enemy authority, four recovery results restore ally authority, and six cleanse results remove Harried before presentation is evaluated; the final eleven account for six damage, two recovery, and three cleanse casts.
 - Current representative live captures use Bell Lance damage at 1280x720, Sluice Poultice recovery at 1600x900, and Index Correction cleansing at 1920x1080; generated-source contact review covers all eleven final silhouettes before the consolidated runtime smoke.
-- `tests/validate_repo.py` gates the exact data-driven ownership table, all sixty-one Battle VFX textures, alpha dimensions, all three batches' source/runtime hashes and prompt provenance, runtime hooks, focused report tokens, and this document.
+- `tests/validate_repo.py` gates the exact data-driven ownership table, all sixty-eight Battle VFX textures, alpha dimensions, all four generated batches' source/runtime hashes and prompt provenance, runtime hooks, focused report tokens, and this document.
 
 Boundaries:
 

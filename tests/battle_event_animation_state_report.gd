@@ -90,9 +90,9 @@ func _validate_core_vfx_asset_manifest() -> void:
 	var summary: Dictionary = view.validation_vfx_asset_summary()
 	_expect_equal("battle vfx manifest schema", String(summary.get("schema_id", "")), "battle_vfx_manifest_v1")
 	_expect_equal("battle vfx manifest path", String(summary.get("manifest_path", "")), "res://content/battle_vfx_manifest.json")
-	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 61)
-	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 61)
-	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 61)
+	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 68)
+	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 68)
+	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 68)
 	_expect_equal("battle vfx missing texture paths", JSON.stringify(summary.get("missing_texture_paths", [])), "[]")
 	var core_cue_paths := {
 		"vfx_placeholder_projectile_path": "res://art/battle/vfx/core_projectile_path.png",
@@ -288,6 +288,13 @@ func _validate_spell_vfx_asset_surface() -> void:
 		"vfx_spell_root_graft_graft_18": "res://art/battle/vfx/spell_root_graft_graft_18.png",
 		"vfx_spell_veil_mourning_mark_04": "res://art/battle/vfx/spell_veil_mourning_mark_04.png",
 		"vfx_spell_old_measure_index_correction_10": "res://art/battle/vfx/spell_old_measure_index_correction_10.png",
+		"vfx_spell_beacon_lockfire_muster": "res://art/battle/vfx/spell_beacon_lockfire_muster.png",
+		"vfx_spell_mire_moonfen_dragnet": "res://art/battle/vfx/spell_mire_moonfen_dragnet.png",
+		"vfx_spell_lens_seven_facet_refrain": "res://art/battle/vfx/spell_lens_seven_facet_refrain.png",
+		"vfx_spell_root_heartwood_renewal": "res://art/battle/vfx/spell_root_heartwood_renewal.png",
+		"vfx_spell_furnace_redline_overdrive": "res://art/battle/vfx/spell_furnace_redline_overdrive.png",
+		"vfx_spell_veil_drowned_bell_verdict": "res://art/battle/vfx/spell_veil_drowned_bell_verdict.png",
+		"vfx_spell_old_measure_unbroken_meridian": "res://art/battle/vfx/spell_old_measure_unbroken_meridian.png",
 	}
 	var cue_ids: Array = cue_paths.keys()
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 3, 3, 7, 3)
@@ -834,6 +841,13 @@ func _validate_spell_specific_cue_identity_fail_closed() -> void:
 		"spell_root_graft_graft_18": "vfx_spell_root_graft_graft_18",
 		"spell_veil_mourning_mark_04": "vfx_spell_veil_mourning_mark_04",
 		"spell_old_measure_index_correction_10": "vfx_spell_old_measure_index_correction_10",
+		"spell_beacon_lockfire_muster": "vfx_spell_beacon_lockfire_muster",
+		"spell_mire_moonfen_dragnet": "vfx_spell_mire_moonfen_dragnet",
+		"spell_lens_seven_facet_refrain": "vfx_spell_lens_seven_facet_refrain",
+		"spell_root_heartwood_renewal": "vfx_spell_root_heartwood_renewal",
+		"spell_furnace_redline_overdrive": "vfx_spell_furnace_redline_overdrive",
+		"spell_veil_drowned_bell_verdict": "vfx_spell_veil_drowned_bell_verdict",
+		"spell_old_measure_unbroken_meridian": "vfx_spell_old_measure_unbroken_meridian",
 	}
 	var explicit_audio := {
 		"spell_cinder_burst": "audio_spell_cinder_burst",
@@ -890,8 +904,8 @@ func _validate_spell_specific_cue_identity_fail_closed() -> void:
 		else:
 			generic_only_audio_count += 1
 			_expect_equal("generic-only spell audio identity %s" % spell_id, actual_audio, "")
-	_expect_int("battle spell identity catalog count", battle_spell_ids.size(), 90)
-	_expect_int("battle spell explicit vfx identity count", explicit_vfx_count, 46)
+	_expect_int("battle spell identity catalog count", battle_spell_ids.size(), 97)
+	_expect_int("battle spell explicit vfx identity count", explicit_vfx_count, 53)
 	_expect_int("battle spell shared effect vfx identity count", shared_effect_vfx_count, 44)
 	_expect_int("battle spell generic-only vfx identity count", generic_only_vfx_count, 0)
 	_expect_int("battle spell explicit audio identity count", explicit_audio_count, 7)
