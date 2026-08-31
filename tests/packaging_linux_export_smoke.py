@@ -66,12 +66,16 @@ REQUIRED_ARTIFACT_FIELD_NAMES = (
     "lockward_beacon_key", "fenhound_scent_bell", "meridian_relay_lens",
     "rootpath_seed_compass", "redline_survey_dial", "drowned_star_astrolabe",
 	"three_relic_pilgrimages_artifacts_atlas",
+	"marchland_retinue_heirlooms_atlas",
 )
 REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES = tuple(
     f"art/overworld/runtime/objects/artifacts/{artifact_name}.png.import"
     for artifact_name in REQUIRED_ARTIFACT_FIELD_NAMES
-    if artifact_name != "three_relic_pilgrimages_artifacts_atlas"
-) + ("art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png.import",)
+    if artifact_name not in {"three_relic_pilgrimages_artifacts_atlas", "marchland_retinue_heirlooms_atlas"}
+) + (
+    "art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png.import",
+    "art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png.import",
+)
 REQUIRED_GUARDED_RELIC_ICON_NAMES = (
     "lockfire_assize_seal", "miremoon_hunt_drum", "noonglass_orrery",
     "worldroot_covenant_heartwood", "seventh_clause_pressure_key", "last_bell_tideglass",
@@ -79,6 +83,8 @@ REQUIRED_GUARDED_RELIC_ICON_NAMES = (
     "crownroot_oathseed_censer", "blackbell_verdict_gauge", "pale_sounding_memory_bell",
     "ashcrown_crownring", "miremoon_crown_tooth", "noonshard_facet_pinion",
     "rootvault_heartgrain_mantle", "quenchbell_red_gauge_plate", "saltwake_resonance_bell",
+    "amberweir_lockpike_tallychain", "moonbite_votive_drumkey", "splitprism_parallax_duelglass",
+    "woundroot_hearthseed_slingknot", "whitegauge_datum_spur", "dreamwake_tideglass_sounding",
 )
 REQUIRED_GUARDED_RELIC_ICON_PCK_IMPORT_ENTRIES = tuple(
     f"art/artifacts/runtime/{artifact_name}.png.import"

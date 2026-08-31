@@ -229,6 +229,12 @@ static func _build_town_states(placements: Variant) -> Array:
 			continue
 		var town_template := ContentService.get_town(String(placement.get("town_id", "")))
 		var built_buildings := _duplicate_array(town_template.get("starting_building_ids", []))
+		var authored_buildings = placement.get("built_buildings", [])
+		if authored_buildings is Array:
+			for building_id_value in authored_buildings:
+				var building_id := String(building_id_value)
+				if building_id != "" and building_id not in built_buildings:
+					built_buildings.append(building_id)
 		var town_state := {
 			"placement_id": String(placement.get("placement_id", "")),
 			"town_id": String(placement.get("town_id", "")),

@@ -24,9 +24,41 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected after completing the Marchland local-retinue batch.
-- Most recently completed implementation slice: `content-six-marchland-local-retinues-10184`, six original town-exclusive recruits and six recruiting landmarks integrated through live build, growth, recruit, battle, art, and save paths.
-- Current package boundary: matching Linux and Windows release exports measure 233530588 bytes, 16469412 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none; audit the expanded live catalog before selecting the next coherent production-content and original-art batch.
+- Most recently completed implementation slice: `content-six-marchland-retinue-heirloom-trials-10184`, six second-use skirmishes and six exact equippable heirlooms integrated through live battle, build, recruit, objective, art, and save paths.
+- Current package boundary: matching Linux and Windows release exports measure 233737068 bytes, 16262932 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Marchland Retinue Heirloom Trials
+
+id: `content-six-marchland-retinue-heirloom-trials-10184`
+
+Status: completed 2026-08-31.
+
+Current finding:
+- the six Marchland towns are the only authored towns with one scenario placement, and their six new local retinues are the only faction units with one army-group placement, making them the clearest live breadth gap after the first local-retinue batch;
+- production already supports exact artifact pickups, auto-equip, battle and adventure bonuses, artifact-owned objectives, exact field identities, town build chains, weekly growth, recruitment, army-composition objectives, and save-version-9 continuity without a new subsystem;
+- a compact six-map second-use family can exercise those systems together while six original heirlooms add actual equipment choice and distinctive art rather than unused definitions.
+
+Implementation boundary:
+- author one original skirmish-only retinue trial per Marchland seat, each with its exact commander, home town, local retinue, three production battle fronts, enemy pressure, economy routes, and a victory chain requiring the exact dwelling, a reinforced local stack, and the town's recovered heirloom;
+- add Amberweir Lockpike Tallychain, Moonbite Votive Drum-Key, Splitprism Parallax Duelglass, Woundroot Hearthseed Slingknot, Whitegauge Datum Spur, and Dreamwake Tideglass Sounding as six faction-affine rare artifacts using existing equipment bonuses and live artifact authority;
+- generate six original transparent heirloom sources, derive six 128px inventory icons and one compact six-frame field atlas with exact prompt/hash/accessibility provenance, and keep source masters excluded from Linux and Windows packages.
+
+Completion criteria:
+- all six trials launch through normal skirmish authority with the exact town and local retinue, resolve eighteen production battles, build only the matching local dwelling, cross the authored local-unit count through live growth/recruitment, recover and auto-equip the exact heirloom, satisfy scoped objectives, win, and round-trip through save version 9;
+- every heirloom applies its exact production bonus payload, owns a silhouette-distinct inventory and field identity, appears on its authored map, and has no missing or cross-faction art/content route;
+- run one consolidated six-case gameplay/build/recruit/battle/artifact/art/save and visual-capture smoke only after the complete batch, followed once by repository validation and sequential Linux/Windows packaged startup below the unchanged 250000000-byte ceiling.
+
+Completion result:
+- shipped six original 13x8 skirmish-only retinue trials with exact Marchland commanders, towns, local retinues, eighteen direct battle fronts, six late day-10 counterstrokes, resource routes, pressure, and complete build/recruit/heirloom victory chains;
+- added six rare faction-affine heirlooms with live adventure or battle bonuses, exact guarded field placements, automatic equipment, six silhouette-distinct 128px inventory icons, and one compact six-frame field atlas with retained prompt/hash/accessibility provenance;
+- fixed scenario town placement authority so authored `built_buildings` prerequisites now reach live session state, enabling exact scenario-specific development chains instead of silently dropping prebuilt structures;
+- the single consolidated six-case smoke passed eighteen battles, six exact dwelling builds, six local recruits, six artifact pickups and auto-equips, six exact bonus payloads, six scenario victories, six exact inventory and field identities, and six save-version-9 round trips;
+- repository validation passed at 213 scenarios, 197 encounters, 351 army groups, 66 heroes, 57 artifacts, and 309 resource sites; matching Linux and Windows exports booted with the native extension and measured 233737068 bytes, leaving 16262932 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, town definition, unit definition, building, spell, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes artifact, map, encounter, unit, town, name, text, art, heraldry, or protected visual expression.
 
 ## Six Marchland Local Retinues
 
