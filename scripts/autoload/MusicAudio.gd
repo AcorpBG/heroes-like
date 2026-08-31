@@ -1,7 +1,7 @@
 class_name HeroesMusicAudio
 extends Node
 
-const SAMPLE_RATE := 22050
+const SAMPLE_RATE := 44100
 const MAX_ACTIVE_PLAYERS := 3
 const MAX_TRANSITION_PLAYERS := MAX_ACTIVE_PLAYERS * 2
 const MAX_RECORDS := 24
@@ -323,9 +323,14 @@ func _play_imported_layer(layer: Dictionary, start_silent: bool = false) -> bool
 		if resource is AudioStream:
 			stream = resource
 	if stream == null and FileAccess.file_exists(path):
-		var wav_stream := AudioStreamWAV.load_from_file(path)
-		if wav_stream is AudioStream:
-			stream = wav_stream
+		if path.get_extension().to_lower() == "ogg":
+			var ogg_stream := AudioStreamOggVorbis.load_from_file(path)
+			if ogg_stream is AudioStream:
+				stream = ogg_stream
+		else:
+			var wav_stream := AudioStreamWAV.load_from_file(path)
+			if wav_stream is AudioStream:
+				stream = wav_stream
 	if stream == null:
 		return false
 	var playback_stream: AudioStream = stream
@@ -348,6 +353,17 @@ func _play_imported_layer(layer: Dictionary, start_silent: bool = false) -> bool
 			loop_end_sample = int(wav_stream.loop_end)
 			source_mix_rate = int(wav_stream.mix_rate)
 			source_stereo = bool(wav_stream.stereo)
+	elif stream is AudioStreamOggVorbis:
+		var ogg_stream := (stream as AudioStreamOggVorbis).duplicate(true) as AudioStreamOggVorbis
+		if ogg_stream != null:
+			ogg_stream.loop = true
+			ogg_stream.loop_offset = 0.0
+			playback_stream = ogg_stream
+			looped = true
+			loop_mode = int(AudioStreamWAV.LOOP_FORWARD)
+			loop_end_sample = maxi(1, int(round(ogg_stream.get_length() * float(SAMPLE_RATE))))
+			source_mix_rate = SAMPLE_RATE
+			source_stereo = true
 	var player := AudioStreamPlayer.new()
 	player.bus = _music_bus()
 	player.stream = playback_stream
@@ -357,7 +373,8 @@ func _play_imported_layer(layer: Dictionary, start_silent: bool = false) -> bool
 	add_child(player)
 	_active_players.append(player)
 	player.play()
-	layer["playback_source"] = "imported_wav"
+	layer["playback_source"] = "imported_ogg" if playback_stream is AudioStreamOggVorbis else "imported_wav"
+	layer["stream_codec"] = "vorbis" if playback_stream is AudioStreamOggVorbis else "pcm_s16le"
 	layer["asset_path"] = path
 	layer["role"] = String(cue.get("role", ""))
 	layer["duration_sec"] = maxf(0.01, float(cue.get("duration_msec", 1350)) / 1000.0)

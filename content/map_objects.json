@@ -40613,17 +40613,42 @@
         "guarded_reward"
       ],
       "body_tiles": [
-        {"x": 0, "y": 0, "role": "body"},
-        {"x": 1, "y": 0, "role": "body"},
-        {"x": 0, "y": 1, "role": "body"},
-        {"x": 1, "y": 1, "role": "body"}
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
       ],
       "approach": {
         "mode": "adjacent",
-        "primary_sides": ["south", "west"],
+        "primary_sides": [
+          "south",
+          "west"
+        ],
         "visit_offsets": [
-          {"x": 1, "y": 1},
-          {"x": 0, "y": 1}
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
         ],
         "stop_before_interaction": true,
         "requires_clear_tile": true,
@@ -40644,7 +40669,10 @@
         "contract_id": "dwelling_contract_cinderwake_fold",
         "neutral_dwelling_family_id": "neutral_dwelling_cinderwake_fold",
         "resource_site_id": "site_cinderwake_fold",
-        "roster_unit_ids": ["unit_neutral_cinderwake_aurochs", "unit_neutral_emberpack_lobbers"],
+        "roster_unit_ids": [
+          "unit_neutral_cinderwake_aurochs",
+          "unit_neutral_emberpack_lobbers"
+        ],
         "recruit_policy": "weekly_muster",
         "recurring_recruit_access": true,
         "guarded_variant": true,
@@ -40723,17 +40751,42 @@
         "guarded_reward"
       ],
       "body_tiles": [
-        {"x": 0, "y": 0, "role": "body"},
-        {"x": 1, "y": 0, "role": "body"},
-        {"x": 0, "y": 1, "role": "body"},
-        {"x": 1, "y": 1, "role": "body"}
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
       ],
       "approach": {
         "mode": "adjacent",
-        "primary_sides": ["south", "west"],
+        "primary_sides": [
+          "south",
+          "west"
+        ],
         "visit_offsets": [
-          {"x": 1, "y": 1},
-          {"x": 0, "y": 1}
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
         ],
         "stop_before_interaction": true,
         "requires_clear_tile": true,
@@ -40754,7 +40807,10 @@
         "contract_id": "dwelling_contract_tideglass_roost",
         "neutral_dwelling_family_id": "neutral_dwelling_tideglass_roost",
         "resource_site_id": "site_tideglass_roost",
-        "roster_unit_ids": ["unit_neutral_tideglass_skyrays", "unit_neutral_reefbolt_crews"],
+        "roster_unit_ids": [
+          "unit_neutral_tideglass_skyrays",
+          "unit_neutral_reefbolt_crews"
+        ],
         "recruit_policy": "weekly_muster",
         "recurring_recruit_access": true,
         "guarded_variant": true,
@@ -40806,23 +40862,136 @@
       "name": "Galehorn Windfold",
       "family": "neutral_dwelling",
       "resource_site_id": "site_galehorn_windfold",
-      "biome_ids": ["biome_highland_ridge", "biome_rough_badlands"],
-      "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
       "passable": false,
       "visitable": true,
-      "map_roles": ["neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"],
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
       "schema_version": 1,
       "primary_class": "neutral_dwelling",
-      "secondary_tags": ["elder_wild_neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"],
-      "body_tiles": [{"x": 0, "y": 0, "role": "body"}, {"x": 1, "y": 0, "role": "body"}, {"x": 0, "y": 1, "role": "body"}, {"x": 1, "y": 1, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west"], "visit_offsets": [{"x": 1, "y": 1}, {"x": 0, "y": 1}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": true},
+      "secondary_tags": [
+        "elder_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
       "passability_class": "blocking_visitable",
-      "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": true, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "dwelling_contract": {"contract_id": "dwelling_contract_galehorn_windfold", "neutral_dwelling_family_id": "neutral_dwelling_galehorn_windfold", "resource_site_id": "site_galehorn_windfold", "roster_unit_ids": ["unit_neutral_galehorn_striders", "unit_neutral_ridgeflare_shots"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "guard_expectation": {"tier": "elite", "visible_cue": "the visible galehorn breakline blocks the windfold before recruitment", "guard_army_group_id": "army_neutral_galehorn_breakline_watch", "guard_encounter_id": "encounter_galehorn_breakline_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact placed breakline watch must fall before the windfold muster opens"},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "ruin_reward_pocket", "minimum_lane_clearance": 3, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": true, "warn_if_hiding_target": true},
-      "ai_hints": {"strategic_value": 10, "risk_tier": "elite", "placement_role": "elder_highland_recruit_source", "guard_target_value_hint": 6, "avoid_until_strength": "elite"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_galehorn_windfold",
+        "neutral_dwelling_family_id": "neutral_dwelling_galehorn_windfold",
+        "resource_site_id": "site_galehorn_windfold",
+        "roster_unit_ids": [
+          "unit_neutral_galehorn_striders",
+          "unit_neutral_ridgeflare_shots"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "elite",
+        "visible_cue": "the visible galehorn breakline blocks the windfold before recruitment",
+        "guard_army_group_id": "army_neutral_galehorn_breakline_watch",
+        "guard_encounter_id": "encounter_galehorn_breakline_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact placed breakline watch must fall before the windfold muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 10,
+        "risk_tier": "elite",
+        "placement_role": "elder_highland_recruit_source",
+        "guard_target_value_hint": 6,
+        "avoid_until_strength": "elite"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
       "content_batch_id": "content-four-elder-wild-recruitment-sanctuaries-10184",
       "batch_role": "guarded_elder_wild_dwelling"
     },
@@ -40831,23 +41000,136 @@
       "name": "Sunscale Lantern Conservatory",
       "family": "neutral_dwelling",
       "resource_site_id": "site_sunscale_lantern_conservatory",
-      "biome_ids": ["biome_rough_badlands", "biome_coast_archipelago"],
-      "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
+      "biome_ids": [
+        "biome_rough_badlands",
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
       "passable": false,
       "visitable": true,
-      "map_roles": ["neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"],
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
       "schema_version": 1,
       "primary_class": "neutral_dwelling",
-      "secondary_tags": ["elder_wild_neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"],
-      "body_tiles": [{"x": 0, "y": 0, "role": "body"}, {"x": 1, "y": 0, "role": "body"}, {"x": 0, "y": 1, "role": "body"}, {"x": 1, "y": 1, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west"], "visit_offsets": [{"x": 1, "y": 1}, {"x": 0, "y": 1}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": true},
+      "secondary_tags": [
+        "elder_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
       "passability_class": "blocking_visitable",
-      "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": true, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "dwelling_contract": {"contract_id": "dwelling_contract_sunscale_lantern_conservatory", "neutral_dwelling_family_id": "neutral_dwelling_sunscale_lantern_conservatory", "resource_site_id": "site_sunscale_lantern_conservatory", "roster_unit_ids": ["unit_neutral_sunscale_lanternmoths", "unit_neutral_suncrack_throwers"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "guard_expectation": {"tier": "elite", "visible_cue": "the visible sunscale lantern drift blocks the conservatory before recruitment", "guard_army_group_id": "army_neutral_sunscale_lantern_drift_watch", "guard_encounter_id": "encounter_sunscale_lantern_drift_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact placed lantern drift must fall before the conservatory muster opens"},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "ruin_reward_pocket", "minimum_lane_clearance": 3, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": true, "warn_if_hiding_target": true},
-      "ai_hints": {"strategic_value": 10, "risk_tier": "elite", "placement_role": "elder_desert_recruit_source", "guard_target_value_hint": 6, "avoid_until_strength": "elite"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_sunscale_lantern_conservatory",
+        "neutral_dwelling_family_id": "neutral_dwelling_sunscale_lantern_conservatory",
+        "resource_site_id": "site_sunscale_lantern_conservatory",
+        "roster_unit_ids": [
+          "unit_neutral_sunscale_lanternmoths",
+          "unit_neutral_suncrack_throwers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "elite",
+        "visible_cue": "the visible sunscale lantern drift blocks the conservatory before recruitment",
+        "guard_army_group_id": "army_neutral_sunscale_lantern_drift_watch",
+        "guard_encounter_id": "encounter_sunscale_lantern_drift_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact placed lantern drift must fall before the conservatory muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 10,
+        "risk_tier": "elite",
+        "placement_role": "elder_desert_recruit_source",
+        "guard_target_value_hint": 6,
+        "avoid_until_strength": "elite"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
       "content_batch_id": "content-four-elder-wild-recruitment-sanctuaries-10184",
       "batch_role": "guarded_elder_wild_dwelling"
     },
@@ -40856,23 +41138,136 @@
       "name": "Rimebell Whitewake Eyrie",
       "family": "neutral_dwelling",
       "resource_site_id": "site_rimebell_whitewake_eyrie",
-      "biome_ids": ["biome_snow_frost_marches", "biome_highland_ridge"],
-      "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
+      "biome_ids": [
+        "biome_snow_frost_marches",
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
       "passable": false,
       "visitable": true,
-      "map_roles": ["neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"],
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
       "schema_version": 1,
       "primary_class": "neutral_dwelling",
-      "secondary_tags": ["elder_wild_neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"],
-      "body_tiles": [{"x": 0, "y": 0, "role": "body"}, {"x": 1, "y": 0, "role": "body"}, {"x": 0, "y": 1, "role": "body"}, {"x": 1, "y": 1, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west"], "visit_offsets": [{"x": 1, "y": 1}, {"x": 0, "y": 1}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": true},
+      "secondary_tags": [
+        "elder_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
       "passability_class": "blocking_visitable",
-      "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": true, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "dwelling_contract": {"contract_id": "dwelling_contract_rimebell_whitewake_eyrie", "neutral_dwelling_family_id": "neutral_dwelling_rimebell_whitewake_eyrie", "resource_site_id": "site_rimebell_whitewake_eyrie", "roster_unit_ids": ["unit_neutral_rimebell_skyrakers", "unit_neutral_whitepike_keepers"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "guard_expectation": {"tier": "elite", "visible_cue": "the visible rimebell whitewake blocks the eyrie before recruitment", "guard_army_group_id": "army_neutral_rimebell_whitewake_watch", "guard_encounter_id": "encounter_rimebell_whitewake_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact placed whitewake watch must fall before the eyrie muster opens"},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "ruin_reward_pocket", "minimum_lane_clearance": 3, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": true, "warn_if_hiding_target": true},
-      "ai_hints": {"strategic_value": 11, "risk_tier": "elite", "placement_role": "elder_frozen_recruit_source", "guard_target_value_hint": 7, "avoid_until_strength": "elite"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_rimebell_whitewake_eyrie",
+        "neutral_dwelling_family_id": "neutral_dwelling_rimebell_whitewake_eyrie",
+        "resource_site_id": "site_rimebell_whitewake_eyrie",
+        "roster_unit_ids": [
+          "unit_neutral_rimebell_skyrakers",
+          "unit_neutral_whitepike_keepers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "elite",
+        "visible_cue": "the visible rimebell whitewake blocks the eyrie before recruitment",
+        "guard_army_group_id": "army_neutral_rimebell_whitewake_watch",
+        "guard_encounter_id": "encounter_rimebell_whitewake_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact placed whitewake watch must fall before the eyrie muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 11,
+        "risk_tier": "elite",
+        "placement_role": "elder_frozen_recruit_source",
+        "guard_target_value_hint": 7,
+        "avoid_until_strength": "elite"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
       "content_batch_id": "content-four-elder-wild-recruitment-sanctuaries-10184",
       "batch_role": "guarded_elder_wild_dwelling"
     },
@@ -40881,181 +41276,2386 @@
       "name": "Deepforge Seventh Vault",
       "family": "neutral_dwelling",
       "resource_site_id": "site_deepforge_seventh_vault",
-      "biome_ids": ["biome_subterranean_underways", "biome_ash_lava_wastes"],
-      "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_ash_lava_wastes"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
       "passable": false,
       "visitable": true,
-      "map_roles": ["neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"],
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
       "schema_version": 1,
       "primary_class": "neutral_dwelling",
-      "secondary_tags": ["elder_wild_neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward", "apex_guard"],
-      "body_tiles": [{"x": 0, "y": 0, "role": "body"}, {"x": 1, "y": 0, "role": "body"}, {"x": 0, "y": 1, "role": "body"}, {"x": 1, "y": 1, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west"], "visit_offsets": [{"x": 1, "y": 1}, {"x": 0, "y": 1}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": true},
+      "secondary_tags": [
+        "elder_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward",
+        "apex_guard"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
       "passability_class": "blocking_visitable",
-      "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": true, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "dwelling_contract": {"contract_id": "dwelling_contract_deepforge_seventh_vault", "neutral_dwelling_family_id": "neutral_dwelling_deepforge_seventh_vault", "resource_site_id": "site_deepforge_seventh_vault", "roster_unit_ids": ["unit_neutral_deepforge_vaultwyrms", "unit_neutral_basalt_wardens"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "guard_expectation": {"tier": "apex", "visible_cue": "the visible deepforge seventh seal blocks the vault before recruitment", "guard_army_group_id": "army_neutral_deepforge_seventh_seal_watch", "guard_encounter_id": "encounter_deepforge_seventh_seal_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact placed seventh-seal watch must fall before the vault muster opens"},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "ruin_reward_pocket", "minimum_lane_clearance": 3, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": true, "warn_if_hiding_target": true},
-      "ai_hints": {"strategic_value": 13, "risk_tier": "apex", "placement_role": "elder_subterranean_recruit_source", "guard_target_value_hint": 8, "avoid_until_strength": "elite"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_deepforge_seventh_vault",
+        "neutral_dwelling_family_id": "neutral_dwelling_deepforge_seventh_vault",
+        "resource_site_id": "site_deepforge_seventh_vault",
+        "roster_unit_ids": [
+          "unit_neutral_deepforge_vaultwyrms",
+          "unit_neutral_basalt_wardens"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "apex",
+        "visible_cue": "the visible deepforge seventh seal blocks the vault before recruitment",
+        "guard_army_group_id": "army_neutral_deepforge_seventh_seal_watch",
+        "guard_encounter_id": "encounter_deepforge_seventh_seal_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact placed seventh-seal watch must fall before the vault muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 13,
+        "risk_tier": "apex",
+        "placement_role": "elder_subterranean_recruit_source",
+        "guard_target_value_hint": 8,
+        "avoid_until_strength": "elite"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
       "content_batch_id": "content-four-elder-wild-recruitment-sanctuaries-10184",
       "batch_role": "guarded_elder_wild_dwelling"
     },
     {
-      "id": "object_ashcrown_cinderfold", "name": "Ashcrown Cinderfold", "family": "neutral_dwelling", "resource_site_id": "site_ashcrown_cinderfold",
-      "biome_ids": ["biome_ash_lava_wastes", "biome_grasslands"], "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
-      "passable": false, "visitable": true, "map_roles": ["neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"], "schema_version": 1,
-      "primary_class": "neutral_dwelling", "secondary_tags": ["sovereign_wild_neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"],
-      "body_tiles": [{"x": 0, "y": 0, "role": "body"}, {"x": 1, "y": 0, "role": "body"}, {"x": 0, "y": 1, "role": "body"}, {"x": 1, "y": 1, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west"], "visit_offsets": [{"x": 1, "y": 1}, {"x": 0, "y": 1}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": true},
-      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": true, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "dwelling_contract": {"contract_id": "dwelling_contract_ashcrown_cinderfold", "neutral_dwelling_family_id": "neutral_dwelling_ashcrown_cinderfold", "resource_site_id": "site_ashcrown_cinderfold", "roster_unit_ids": ["unit_neutral_ashcrown_kilnelk", "unit_neutral_cinderpot_hurlers"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "guard_expectation": {"tier": "sovereign", "visible_cue": "the visible ashcrown watch blocks the cinderfold before recruitment", "guard_army_group_id": "army_neutral_ashcrown_cinderfold_watch", "guard_encounter_id": "encounter_ashcrown_cinderfold_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact cinderfold watch must fall before the sovereign muster opens"},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "ruin_reward_pocket", "minimum_lane_clearance": 3, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": true, "warn_if_hiding_target": true},
-      "ai_hints": {"strategic_value": 12, "risk_tier": "sovereign", "placement_role": "sovereign_ash_recruit_source", "guard_target_value_hint": 8, "avoid_until_strength": "elite"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
-      "content_batch_id": "content-six-sovereign-wild-habitats-10184", "batch_role": "guarded_sovereign_wild_dwelling"
+      "id": "object_ashcrown_cinderfold",
+      "name": "Ashcrown Cinderfold",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_ashcrown_cinderfold",
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "sovereign_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_ashcrown_cinderfold",
+        "neutral_dwelling_family_id": "neutral_dwelling_ashcrown_cinderfold",
+        "resource_site_id": "site_ashcrown_cinderfold",
+        "roster_unit_ids": [
+          "unit_neutral_ashcrown_kilnelk",
+          "unit_neutral_cinderpot_hurlers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "sovereign",
+        "visible_cue": "the visible ashcrown watch blocks the cinderfold before recruitment",
+        "guard_army_group_id": "army_neutral_ashcrown_cinderfold_watch",
+        "guard_encounter_id": "encounter_ashcrown_cinderfold_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact cinderfold watch must fall before the sovereign muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 12,
+        "risk_tier": "sovereign",
+        "placement_role": "sovereign_ash_recruit_source",
+        "guard_target_value_hint": 8,
+        "avoid_until_strength": "elite"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-six-sovereign-wild-habitats-10184",
+      "batch_role": "guarded_sovereign_wild_dwelling"
     },
     {
-      "id": "object_miremoon_crownmere", "name": "Miremoon Crownmere", "family": "neutral_dwelling", "resource_site_id": "site_miremoon_crownmere",
-      "biome_ids": ["biome_mire_fen", "biome_grasslands"], "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
-      "passable": false, "visitable": true, "map_roles": ["neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"], "schema_version": 1,
-      "primary_class": "neutral_dwelling", "secondary_tags": ["sovereign_wild_neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"],
-      "body_tiles": [{"x": 0, "y": 0, "role": "body"}, {"x": 1, "y": 0, "role": "body"}, {"x": 0, "y": 1, "role": "body"}, {"x": 1, "y": 1, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west"], "visit_offsets": [{"x": 1, "y": 1}, {"x": 0, "y": 1}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": true},
-      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": true, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "dwelling_contract": {"contract_id": "dwelling_contract_miremoon_crownmere", "neutral_dwelling_family_id": "neutral_dwelling_miremoon_crownmere", "resource_site_id": "site_miremoon_crownmere", "roster_unit_ids": ["unit_neutral_miremoon_crownmaws", "unit_neutral_peatflare_jarriers"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "guard_expectation": {"tier": "sovereign", "visible_cue": "the visible miremoon watch blocks the crownmere before recruitment", "guard_army_group_id": "army_neutral_miremoon_crownmere_watch", "guard_encounter_id": "encounter_miremoon_crownmere_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact crownmere watch must fall before the sovereign muster opens"},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "ruin_reward_pocket", "minimum_lane_clearance": 3, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": true, "warn_if_hiding_target": true},
-      "ai_hints": {"strategic_value": 12, "risk_tier": "sovereign", "placement_role": "sovereign_mire_recruit_source", "guard_target_value_hint": 8, "avoid_until_strength": "elite"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
-      "content_batch_id": "content-six-sovereign-wild-habitats-10184", "batch_role": "guarded_sovereign_wild_dwelling"
+      "id": "object_miremoon_crownmere",
+      "name": "Miremoon Crownmere",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_miremoon_crownmere",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "sovereign_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_miremoon_crownmere",
+        "neutral_dwelling_family_id": "neutral_dwelling_miremoon_crownmere",
+        "resource_site_id": "site_miremoon_crownmere",
+        "roster_unit_ids": [
+          "unit_neutral_miremoon_crownmaws",
+          "unit_neutral_peatflare_jarriers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "sovereign",
+        "visible_cue": "the visible miremoon watch blocks the crownmere before recruitment",
+        "guard_army_group_id": "army_neutral_miremoon_crownmere_watch",
+        "guard_encounter_id": "encounter_miremoon_crownmere_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact crownmere watch must fall before the sovereign muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 12,
+        "risk_tier": "sovereign",
+        "placement_role": "sovereign_mire_recruit_source",
+        "guard_target_value_hint": 8,
+        "avoid_until_strength": "elite"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-six-sovereign-wild-habitats-10184",
+      "batch_role": "guarded_sovereign_wild_dwelling"
     },
     {
-      "id": "object_noonshard_prism_aviary", "name": "Noonshard Prism Aviary", "family": "neutral_dwelling", "resource_site_id": "site_noonshard_prism_aviary",
-      "biome_ids": ["biome_snow_frost_marches", "biome_highland_ridge"], "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
-      "passable": false, "visitable": true, "map_roles": ["neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"], "schema_version": 1,
-      "primary_class": "neutral_dwelling", "secondary_tags": ["sovereign_wild_neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"],
-      "body_tiles": [{"x": 0, "y": 0, "role": "body"}, {"x": 1, "y": 0, "role": "body"}, {"x": 0, "y": 1, "role": "body"}, {"x": 1, "y": 1, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west"], "visit_offsets": [{"x": 1, "y": 1}, {"x": 0, "y": 1}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": true},
-      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": true, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "dwelling_contract": {"contract_id": "dwelling_contract_noonshard_prism_aviary", "neutral_dwelling_family_id": "neutral_dwelling_noonshard_prism_aviary", "resource_site_id": "site_noonshard_prism_aviary", "roster_unit_ids": ["unit_neutral_noonshard_prism_kites", "unit_neutral_snowglass_markers"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "guard_expectation": {"tier": "sovereign", "visible_cue": "the visible noonshard watch blocks the aviary before recruitment", "guard_army_group_id": "army_neutral_noonshard_prism_aviary_watch", "guard_encounter_id": "encounter_noonshard_prism_aviary_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact aviary watch must fall before the sovereign muster opens"},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "ruin_reward_pocket", "minimum_lane_clearance": 3, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": true, "warn_if_hiding_target": true},
-      "ai_hints": {"strategic_value": 12, "risk_tier": "sovereign", "placement_role": "sovereign_snow_recruit_source", "guard_target_value_hint": 8, "avoid_until_strength": "elite"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
-      "content_batch_id": "content-six-sovereign-wild-habitats-10184", "batch_role": "guarded_sovereign_wild_dwelling"
+      "id": "object_noonshard_prism_aviary",
+      "name": "Noonshard Prism Aviary",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_noonshard_prism_aviary",
+      "biome_ids": [
+        "biome_snow_frost_marches",
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "sovereign_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_noonshard_prism_aviary",
+        "neutral_dwelling_family_id": "neutral_dwelling_noonshard_prism_aviary",
+        "resource_site_id": "site_noonshard_prism_aviary",
+        "roster_unit_ids": [
+          "unit_neutral_noonshard_prism_kites",
+          "unit_neutral_snowglass_markers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "sovereign",
+        "visible_cue": "the visible noonshard watch blocks the aviary before recruitment",
+        "guard_army_group_id": "army_neutral_noonshard_prism_aviary_watch",
+        "guard_encounter_id": "encounter_noonshard_prism_aviary_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact aviary watch must fall before the sovereign muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 12,
+        "risk_tier": "sovereign",
+        "placement_role": "sovereign_snow_recruit_source",
+        "guard_target_value_hint": 8,
+        "avoid_until_strength": "elite"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-six-sovereign-wild-habitats-10184",
+      "batch_role": "guarded_sovereign_wild_dwelling"
     },
     {
-      "id": "object_rootvault_heartwood_hollow", "name": "Rootvault Heartwood Hollow", "family": "neutral_dwelling", "resource_site_id": "site_rootvault_heartwood_hollow",
-      "biome_ids": ["biome_deep_forest", "biome_grasslands"], "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
-      "passable": false, "visitable": true, "map_roles": ["neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"], "schema_version": 1,
-      "primary_class": "neutral_dwelling", "secondary_tags": ["sovereign_wild_neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward", "apex_guard"],
-      "body_tiles": [{"x": 0, "y": 0, "role": "body"}, {"x": 1, "y": 0, "role": "body"}, {"x": 0, "y": 1, "role": "body"}, {"x": 1, "y": 1, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west"], "visit_offsets": [{"x": 1, "y": 1}, {"x": 0, "y": 1}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": true},
-      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": true, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "dwelling_contract": {"contract_id": "dwelling_contract_rootvault_heartwood_hollow", "neutral_dwelling_family_id": "neutral_dwelling_rootvault_heartwood_hollow", "resource_site_id": "site_rootvault_heartwood_hollow", "roster_unit_ids": ["unit_neutral_rootvault_barkhulks", "unit_neutral_thornbow_scouts"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "guard_expectation": {"tier": "apex", "visible_cue": "the visible rootvault watch blocks the hollow before recruitment", "guard_army_group_id": "army_neutral_rootvault_heartwood_watch", "guard_encounter_id": "encounter_rootvault_heartwood_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact heartwood watch must fall before the apex muster opens"},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "ruin_reward_pocket", "minimum_lane_clearance": 3, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": true, "warn_if_hiding_target": true},
-      "ai_hints": {"strategic_value": 14, "risk_tier": "apex", "placement_role": "sovereign_forest_recruit_source", "guard_target_value_hint": 9, "avoid_until_strength": "elite"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
-      "content_batch_id": "content-six-sovereign-wild-habitats-10184", "batch_role": "guarded_sovereign_wild_dwelling"
+      "id": "object_rootvault_heartwood_hollow",
+      "name": "Rootvault Heartwood Hollow",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_rootvault_heartwood_hollow",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "sovereign_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward",
+        "apex_guard"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_rootvault_heartwood_hollow",
+        "neutral_dwelling_family_id": "neutral_dwelling_rootvault_heartwood_hollow",
+        "resource_site_id": "site_rootvault_heartwood_hollow",
+        "roster_unit_ids": [
+          "unit_neutral_rootvault_barkhulks",
+          "unit_neutral_thornbow_scouts"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "apex",
+        "visible_cue": "the visible rootvault watch blocks the hollow before recruitment",
+        "guard_army_group_id": "army_neutral_rootvault_heartwood_watch",
+        "guard_encounter_id": "encounter_rootvault_heartwood_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact heartwood watch must fall before the apex muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 14,
+        "risk_tier": "apex",
+        "placement_role": "sovereign_forest_recruit_source",
+        "guard_target_value_hint": 9,
+        "avoid_until_strength": "elite"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-six-sovereign-wild-habitats-10184",
+      "batch_role": "guarded_sovereign_wild_dwelling"
     },
     {
-      "id": "object_quenchbell_pressure_den", "name": "Quenchbell Pressure Den", "family": "neutral_dwelling", "resource_site_id": "site_quenchbell_pressure_den",
-      "biome_ids": ["biome_ash_lava_wastes", "biome_subterranean_underways"], "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
-      "passable": false, "visitable": true, "map_roles": ["neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"], "schema_version": 1,
-      "primary_class": "neutral_dwelling", "secondary_tags": ["sovereign_wild_neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward", "apex_guard"],
-      "body_tiles": [{"x": 0, "y": 0, "role": "body"}, {"x": 1, "y": 0, "role": "body"}, {"x": 0, "y": 1, "role": "body"}, {"x": 1, "y": 1, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west"], "visit_offsets": [{"x": 1, "y": 1}, {"x": 0, "y": 1}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": true},
-      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": true, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "dwelling_contract": {"contract_id": "dwelling_contract_quenchbell_pressure_den", "neutral_dwelling_family_id": "neutral_dwelling_quenchbell_pressure_den", "resource_site_id": "site_quenchbell_pressure_den", "roster_unit_ids": ["unit_neutral_quenchbell_ironbacks", "unit_neutral_tunnelmark_bolters"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "guard_expectation": {"tier": "apex", "visible_cue": "the visible quenchbell watch blocks the den before recruitment", "guard_army_group_id": "army_neutral_quenchbell_pressure_den_watch", "guard_encounter_id": "encounter_quenchbell_pressure_den_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact pressure-den watch must fall before the apex muster opens"},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "ruin_reward_pocket", "minimum_lane_clearance": 3, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": true, "warn_if_hiding_target": true},
-      "ai_hints": {"strategic_value": 14, "risk_tier": "apex", "placement_role": "sovereign_lava_recruit_source", "guard_target_value_hint": 9, "avoid_until_strength": "elite"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
-      "content_batch_id": "content-six-sovereign-wild-habitats-10184", "batch_role": "guarded_sovereign_wild_dwelling"
+      "id": "object_quenchbell_pressure_den",
+      "name": "Quenchbell Pressure Den",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_quenchbell_pressure_den",
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "sovereign_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward",
+        "apex_guard"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_quenchbell_pressure_den",
+        "neutral_dwelling_family_id": "neutral_dwelling_quenchbell_pressure_den",
+        "resource_site_id": "site_quenchbell_pressure_den",
+        "roster_unit_ids": [
+          "unit_neutral_quenchbell_ironbacks",
+          "unit_neutral_tunnelmark_bolters"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "apex",
+        "visible_cue": "the visible quenchbell watch blocks the den before recruitment",
+        "guard_army_group_id": "army_neutral_quenchbell_pressure_den_watch",
+        "guard_encounter_id": "encounter_quenchbell_pressure_den_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact pressure-den watch must fall before the apex muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 14,
+        "risk_tier": "apex",
+        "placement_role": "sovereign_lava_recruit_source",
+        "guard_target_value_hint": 9,
+        "avoid_until_strength": "elite"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-six-sovereign-wild-habitats-10184",
+      "batch_role": "guarded_sovereign_wild_dwelling"
     },
     {
-      "id": "object_saltwake_belldeep", "name": "Saltwake Belldeep", "family": "neutral_dwelling", "resource_site_id": "site_saltwake_belldeep",
-      "biome_ids": ["biome_coast_archipelago", "biome_snow_frost_marches"], "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
-      "passable": false, "visitable": true, "map_roles": ["neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward"], "schema_version": 1,
-      "primary_class": "neutral_dwelling", "secondary_tags": ["sovereign_wild_neutral_recruit_source", "weekly_muster", "counter_capture_target", "guarded_reward", "apex_guard"],
-      "body_tiles": [{"x": 0, "y": 0, "role": "body"}, {"x": 1, "y": 0, "role": "body"}, {"x": 0, "y": 1, "role": "body"}, {"x": 1, "y": 1, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west"], "visit_offsets": [{"x": 1, "y": 1}, {"x": 0, "y": 1}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": true},
-      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": true, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "dwelling_contract": {"contract_id": "dwelling_contract_saltwake_belldeep", "neutral_dwelling_family_id": "neutral_dwelling_saltwake_belldeep", "resource_site_id": "site_saltwake_belldeep", "roster_unit_ids": ["unit_neutral_saltwake_bellwhales", "unit_neutral_lanternskate_throwers"], "recruit_policy": "weekly_muster", "recurring_recruit_access": true, "guarded_variant": true, "metadata_only_guard_contract": false, "requires_visible_guard_cue": true},
-      "guard_expectation": {"tier": "apex", "visible_cue": "the visible saltwake watch blocks the belldeep before recruitment", "guard_army_group_id": "army_neutral_saltwake_belldeep_watch", "guard_encounter_id": "encounter_saltwake_belldeep_watch", "clear_required_for_recruitment": true, "blocks_approach": true, "event_expectation": "the exact belldeep watch must fall before the apex muster opens"},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "ruin_reward_pocket", "minimum_lane_clearance": 3, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": true, "warn_if_hiding_target": true},
-      "ai_hints": {"strategic_value": 14, "risk_tier": "apex", "placement_role": "sovereign_coast_recruit_source", "guard_target_value_hint": 9, "avoid_until_strength": "elite"},
-      "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
-      "content_batch_id": "content-six-sovereign-wild-habitats-10184", "batch_role": "guarded_sovereign_wild_dwelling"
+      "id": "object_saltwake_belldeep",
+      "name": "Saltwake Belldeep",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_saltwake_belldeep",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "sovereign_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward",
+        "apex_guard"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_saltwake_belldeep",
+        "neutral_dwelling_family_id": "neutral_dwelling_saltwake_belldeep",
+        "resource_site_id": "site_saltwake_belldeep",
+        "roster_unit_ids": [
+          "unit_neutral_saltwake_bellwhales",
+          "unit_neutral_lanternskate_throwers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "apex",
+        "visible_cue": "the visible saltwake watch blocks the belldeep before recruitment",
+        "guard_army_group_id": "army_neutral_saltwake_belldeep_watch",
+        "guard_encounter_id": "encounter_saltwake_belldeep_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact belldeep watch must fall before the apex muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 14,
+        "risk_tier": "apex",
+        "placement_role": "sovereign_coast_recruit_source",
+        "guard_target_value_hint": 9,
+        "avoid_until_strength": "elite"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-six-sovereign-wild-habitats-10184",
+      "batch_role": "guarded_sovereign_wild_dwelling"
     },
     {
-      "id": "object_stormseal_powder_wharf", "name": "Stormseal Powder Wharf", "family": "neutral_dwelling", "resource_site_id": "site_stormseal_powder_wharf", "faction_id": "faction_embercourt", "biome_ids": ["biome_grasslands", "biome_coast_archipelago"],
-      "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "small"}, "passable": false, "visitable": true, "map_roles": ["faction_recruit_source", "weekly_muster", "counter_capture_target"],
-      "schema_version": 1, "primary_class": "neutral_dwelling", "secondary_tags": ["embercourt_company_muster", "weekly_muster", "persistent_control"], "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west", "east", "north"], "visit_offsets": [{"x": 0, "y": 0}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": false},
-      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "company_contract": {"company_unit_id": "unit_embercourt_cinderseal_bombardiers", "resource_site_id": "site_stormseal_powder_wharf", "recruit_policy": "immediate_and_weekly_muster", "faction_linked": true},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "faction_support_pocket", "minimum_lane_clearance": 1, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": false},
-      "ai_hints": {"strategic_value": 8, "risk_tier": "none", "placement_role": "embercourt_company_muster", "guard_target_value_hint": 0, "avoid_until_strength": "none"},
-      "runtime_boundary": {"status": "faction_linked_dwelling_live", "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true}, "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+      "id": "object_stormseal_powder_wharf",
+      "name": "Stormseal Powder Wharf",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_stormseal_powder_wharf",
+      "faction_id": "faction_embercourt",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_recruit_source",
+        "weekly_muster",
+        "counter_capture_target"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "embercourt_company_muster",
+        "weekly_muster",
+        "persistent_control"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west",
+          "east",
+          "north"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": false
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "company_contract": {
+        "company_unit_id": "unit_embercourt_cinderseal_bombardiers",
+        "resource_site_id": "site_stormseal_powder_wharf",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "faction_linked": true
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "faction_support_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false
+      },
+      "ai_hints": {
+        "strategic_value": 8,
+        "risk_tier": "none",
+        "placement_role": "embercourt_company_muster",
+        "guard_target_value_hint": 0,
+        "avoid_until_strength": "none"
+      },
+      "runtime_boundary": {
+        "status": "faction_linked_dwelling_live",
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true
+      },
+      "content_status": "horizon_company_field_muster_live",
+      "content_batch_id": "content-six-horizon-company-field-musters-10184",
+      "batch_role": "faction_company_field_muster"
     },
     {
-      "id": "object_moonwax_reed_circle", "name": "Moonwax Reed Circle", "family": "neutral_dwelling", "resource_site_id": "site_moonwax_reed_circle", "faction_id": "faction_mireclaw", "biome_ids": ["biome_mire_fen", "biome_grasslands"],
-      "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "small"}, "passable": false, "visitable": true, "map_roles": ["faction_recruit_source", "weekly_muster", "counter_capture_target"],
-      "schema_version": 1, "primary_class": "neutral_dwelling", "secondary_tags": ["mireclaw_company_muster", "weekly_muster", "persistent_control"], "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west", "east", "north"], "visit_offsets": [{"x": 0, "y": 0}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": false},
-      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "company_contract": {"company_unit_id": "unit_mireclaw_mireglass_reedcasters", "resource_site_id": "site_moonwax_reed_circle", "recruit_policy": "immediate_and_weekly_muster", "faction_linked": true},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "faction_support_pocket", "minimum_lane_clearance": 1, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": false},
-      "ai_hints": {"strategic_value": 7, "risk_tier": "none", "placement_role": "mireclaw_company_muster", "guard_target_value_hint": 0, "avoid_until_strength": "none"},
-      "runtime_boundary": {"status": "faction_linked_dwelling_live", "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true}, "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+      "id": "object_moonwax_reed_circle",
+      "name": "Moonwax Reed Circle",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_moonwax_reed_circle",
+      "faction_id": "faction_mireclaw",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_recruit_source",
+        "weekly_muster",
+        "counter_capture_target"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "mireclaw_company_muster",
+        "weekly_muster",
+        "persistent_control"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west",
+          "east",
+          "north"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": false
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "company_contract": {
+        "company_unit_id": "unit_mireclaw_mireglass_reedcasters",
+        "resource_site_id": "site_moonwax_reed_circle",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "faction_linked": true
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "faction_support_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false
+      },
+      "ai_hints": {
+        "strategic_value": 7,
+        "risk_tier": "none",
+        "placement_role": "mireclaw_company_muster",
+        "guard_target_value_hint": 0,
+        "avoid_until_strength": "none"
+      },
+      "runtime_boundary": {
+        "status": "faction_linked_dwelling_live",
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true
+      },
+      "content_status": "horizon_company_field_muster_live",
+      "content_batch_id": "content-six-horizon-company-field-musters-10184",
+      "batch_role": "faction_company_field_muster"
     },
     {
-      "id": "object_facet_vigil", "name": "Facet Vigil", "family": "neutral_dwelling", "resource_site_id": "site_facet_vigil", "faction_id": "faction_sunvault", "biome_ids": ["biome_highland_ridge", "biome_snow_frost_marches"],
-      "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "small"}, "passable": false, "visitable": true, "map_roles": ["faction_recruit_source", "weekly_muster", "counter_capture_target"],
-      "schema_version": 1, "primary_class": "neutral_dwelling", "secondary_tags": ["sunvault_company_muster", "weekly_muster", "persistent_control"], "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west", "east", "north"], "visit_offsets": [{"x": 0, "y": 0}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": false},
-      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "company_contract": {"company_unit_id": "unit_sunvault_noonfacet_sentinels", "resource_site_id": "site_facet_vigil", "recruit_policy": "immediate_and_weekly_muster", "faction_linked": true},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "faction_support_pocket", "minimum_lane_clearance": 1, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": false},
-      "ai_hints": {"strategic_value": 7, "risk_tier": "none", "placement_role": "sunvault_company_muster", "guard_target_value_hint": 0, "avoid_until_strength": "none"},
-      "runtime_boundary": {"status": "faction_linked_dwelling_live", "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true}, "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+      "id": "object_facet_vigil",
+      "name": "Facet Vigil",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_facet_vigil",
+      "faction_id": "faction_sunvault",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_recruit_source",
+        "weekly_muster",
+        "counter_capture_target"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "sunvault_company_muster",
+        "weekly_muster",
+        "persistent_control"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west",
+          "east",
+          "north"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": false
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "company_contract": {
+        "company_unit_id": "unit_sunvault_noonfacet_sentinels",
+        "resource_site_id": "site_facet_vigil",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "faction_linked": true
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "faction_support_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false
+      },
+      "ai_hints": {
+        "strategic_value": 7,
+        "risk_tier": "none",
+        "placement_role": "sunvault_company_muster",
+        "guard_target_value_hint": 0,
+        "avoid_until_strength": "none"
+      },
+      "runtime_boundary": {
+        "status": "faction_linked_dwelling_live",
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true
+      },
+      "content_status": "horizon_company_field_muster_live",
+      "content_batch_id": "content-six-horizon-company-field-musters-10184",
+      "batch_role": "faction_company_field_muster"
     },
     {
-      "id": "object_heartseed_bolt_grove", "name": "Heartseed Bolt Grove", "family": "neutral_dwelling", "resource_site_id": "site_heartseed_bolt_grove", "faction_id": "faction_thornwake", "biome_ids": ["biome_deep_forest", "biome_grasslands"],
-      "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "small"}, "passable": false, "visitable": true, "map_roles": ["faction_recruit_source", "weekly_muster", "counter_capture_target"],
-      "schema_version": 1, "primary_class": "neutral_dwelling", "secondary_tags": ["thornwake_company_muster", "weekly_muster", "persistent_control"], "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west", "east", "north"], "visit_offsets": [{"x": 0, "y": 0}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": false},
-      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "company_contract": {"company_unit_id": "unit_thornwake_dawnseed_bolters", "resource_site_id": "site_heartseed_bolt_grove", "recruit_policy": "immediate_and_weekly_muster", "faction_linked": true},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "faction_support_pocket", "minimum_lane_clearance": 1, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": false},
-      "ai_hints": {"strategic_value": 7, "risk_tier": "none", "placement_role": "thornwake_company_muster", "guard_target_value_hint": 0, "avoid_until_strength": "none"},
-      "runtime_boundary": {"status": "faction_linked_dwelling_live", "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true}, "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+      "id": "object_heartseed_bolt_grove",
+      "name": "Heartseed Bolt Grove",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_heartseed_bolt_grove",
+      "faction_id": "faction_thornwake",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_recruit_source",
+        "weekly_muster",
+        "counter_capture_target"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "thornwake_company_muster",
+        "weekly_muster",
+        "persistent_control"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west",
+          "east",
+          "north"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": false
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "company_contract": {
+        "company_unit_id": "unit_thornwake_dawnseed_bolters",
+        "resource_site_id": "site_heartseed_bolt_grove",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "faction_linked": true
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "faction_support_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false
+      },
+      "ai_hints": {
+        "strategic_value": 7,
+        "risk_tier": "none",
+        "placement_role": "thornwake_company_muster",
+        "guard_target_value_hint": 0,
+        "avoid_until_strength": "none"
+      },
+      "runtime_boundary": {
+        "status": "faction_linked_dwelling_live",
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true
+      },
+      "content_status": "horizon_company_field_muster_live",
+      "content_batch_id": "content-six-horizon-company-field-musters-10184",
+      "batch_role": "faction_company_field_muster"
     },
     {
-      "id": "object_blackbell_assay_watch", "name": "Blackbell Assay Watch", "family": "neutral_dwelling", "resource_site_id": "site_blackbell_assay_watch", "faction_id": "faction_brasshollow", "biome_ids": ["biome_ash_lava_wastes", "biome_subterranean_underways"],
-      "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "small"}, "passable": false, "visitable": true, "map_roles": ["faction_recruit_source", "weekly_muster", "counter_capture_target"],
-      "schema_version": 1, "primary_class": "neutral_dwelling", "secondary_tags": ["brasshollow_company_muster", "weekly_muster", "persistent_control"], "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west", "east", "north"], "visit_offsets": [{"x": 0, "y": 0}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": false},
-      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "company_contract": {"company_unit_id": "unit_brasshollow_gaugeplate_bailiffs", "resource_site_id": "site_blackbell_assay_watch", "recruit_policy": "immediate_and_weekly_muster", "faction_linked": true},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "faction_support_pocket", "minimum_lane_clearance": 1, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": false},
-      "ai_hints": {"strategic_value": 7, "risk_tier": "none", "placement_role": "brasshollow_company_muster", "guard_target_value_hint": 0, "avoid_until_strength": "none"},
-      "runtime_boundary": {"status": "faction_linked_dwelling_live", "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true}, "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+      "id": "object_blackbell_assay_watch",
+      "name": "Blackbell Assay Watch",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_blackbell_assay_watch",
+      "faction_id": "faction_brasshollow",
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_recruit_source",
+        "weekly_muster",
+        "counter_capture_target"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "brasshollow_company_muster",
+        "weekly_muster",
+        "persistent_control"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west",
+          "east",
+          "north"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": false
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "company_contract": {
+        "company_unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+        "resource_site_id": "site_blackbell_assay_watch",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "faction_linked": true
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "faction_support_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false
+      },
+      "ai_hints": {
+        "strategic_value": 7,
+        "risk_tier": "none",
+        "placement_role": "brasshollow_company_muster",
+        "guard_target_value_hint": 0,
+        "avoid_until_strength": "none"
+      },
+      "runtime_boundary": {
+        "status": "faction_linked_dwelling_live",
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true
+      },
+      "content_status": "horizon_company_field_muster_live",
+      "content_batch_id": "content-six-horizon-company-field-musters-10184",
+      "batch_role": "faction_company_field_muster"
     },
     {
-      "id": "object_last_memory_mooring", "name": "Last-Memory Mooring", "family": "neutral_dwelling", "resource_site_id": "site_last_memory_mooring", "faction_id": "faction_veilmourn", "biome_ids": ["biome_coast_archipelago", "biome_rough_badlands"],
-      "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "small"}, "passable": false, "visitable": true, "map_roles": ["faction_recruit_source", "weekly_muster", "counter_capture_target"],
-      "schema_version": 1, "primary_class": "neutral_dwelling", "secondary_tags": ["veilmourn_company_muster", "weekly_muster", "persistent_control"], "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
-      "approach": {"mode": "adjacent", "primary_sides": ["south", "west", "east", "north"], "visit_offsets": [{"x": 0, "y": 0}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": false},
-      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
-      "company_contract": {"company_unit_id": "unit_veilmourn_tidehook_deckhands", "resource_site_id": "site_last_memory_mooring", "recruit_policy": "immediate_and_weekly_muster", "faction_linked": true},
-      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "faction_support_pocket", "minimum_lane_clearance": 1, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": false},
-      "ai_hints": {"strategic_value": 6, "risk_tier": "none", "placement_role": "veilmourn_company_muster", "guard_target_value_hint": 0, "avoid_until_strength": "none"},
-      "runtime_boundary": {"status": "faction_linked_dwelling_live", "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true}, "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+      "id": "object_last_memory_mooring",
+      "name": "Last-Memory Mooring",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_last_memory_mooring",
+      "faction_id": "faction_veilmourn",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_recruit_source",
+        "weekly_muster",
+        "counter_capture_target"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "veilmourn_company_muster",
+        "weekly_muster",
+        "persistent_control"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west",
+          "east",
+          "north"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": false
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "company_contract": {
+        "company_unit_id": "unit_veilmourn_tidehook_deckhands",
+        "resource_site_id": "site_last_memory_mooring",
+        "recruit_policy": "immediate_and_weekly_muster",
+        "faction_linked": true
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "faction_support_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false
+      },
+      "ai_hints": {
+        "strategic_value": 6,
+        "risk_tier": "none",
+        "placement_role": "veilmourn_company_muster",
+        "guard_target_value_hint": 0,
+        "avoid_until_strength": "none"
+      },
+      "runtime_boundary": {
+        "status": "faction_linked_dwelling_live",
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true
+      },
+      "content_status": "horizon_company_field_muster_live",
+      "content_batch_id": "content-six-horizon-company-field-musters-10184",
+      "batch_role": "faction_company_field_muster"
+    },
+    {
+      "id": "object_brambleback_hedgecourt",
+      "name": "Brambleback Hedgecourt",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_brambleback_hedgecourt",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "unbound_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward",
+        "heavy_guard"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_brambleback_hedgecourt",
+        "neutral_dwelling_family_id": "neutral_dwelling_brambleback_hedgecourt",
+        "resource_site_id": "site_brambleback_hedgecourt",
+        "roster_unit_ids": [
+          "unit_neutral_brambleback_knucklebears",
+          "unit_neutral_orchard_halberds"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "the visible Brambleback Hedgecourt watch blocks recruitment",
+        "guard_army_group_id": "army_neutral_brambleback_hedgecourt_watch",
+        "guard_encounter_id": "encounter_brambleback_hedgecourt_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact authored watch must fall before the concord muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 11,
+        "risk_tier": "heavy",
+        "placement_role": "brambleback_neutral_recruit_source",
+        "guard_target_value_hint": 7,
+        "avoid_until_strength": "strong"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "batch_role": "guarded_unbound_wild_concord_dwelling"
+    },
+    {
+      "id": "object_mireglass_bellfen",
+      "name": "Mireglass Bellfen",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_mireglass_bellfen",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "unbound_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward",
+        "heavy_guard"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_mireglass_bellfen",
+        "neutral_dwelling_family_id": "neutral_dwelling_mireglass_bellfen",
+        "resource_site_id": "site_mireglass_bellfen",
+        "roster_unit_ids": [
+          "unit_neutral_mireglass_belltoads",
+          "unit_neutral_reedbarge_poles"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "the visible Mireglass Bellfen watch blocks recruitment",
+        "guard_army_group_id": "army_neutral_mireglass_bellfen_watch",
+        "guard_encounter_id": "encounter_mireglass_bellfen_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact authored watch must fall before the concord muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 11,
+        "risk_tier": "heavy",
+        "placement_role": "mireglass_neutral_recruit_source",
+        "guard_target_value_hint": 7,
+        "avoid_until_strength": "strong"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "batch_role": "guarded_unbound_wild_concord_dwelling"
+    },
+    {
+      "id": "object_windcairn_wayhouse",
+      "name": "Windcairn Wayhouse",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_windcairn_wayhouse",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "unbound_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward",
+        "heavy_guard"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_windcairn_wayhouse",
+        "neutral_dwelling_family_id": "neutral_dwelling_windcairn_wayhouse",
+        "resource_site_id": "site_windcairn_wayhouse",
+        "roster_unit_ids": [
+          "unit_neutral_cairnshield_porters",
+          "unit_neutral_windglass_slingers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "the visible Windcairn Wayhouse watch blocks recruitment",
+        "guard_army_group_id": "army_neutral_windcairn_wayhouse_watch",
+        "guard_encounter_id": "encounter_windcairn_wayhouse_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact authored watch must fall before the concord muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 11,
+        "risk_tier": "heavy",
+        "placement_role": "windcairn_neutral_recruit_source",
+        "guard_target_value_hint": 7,
+        "avoid_until_strength": "strong"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "batch_role": "guarded_unbound_wild_concord_dwelling"
+    },
+    {
+      "id": "object_sapwhistle_greenward",
+      "name": "Sapwhistle Greenward",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_sapwhistle_greenward",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "unbound_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward",
+        "heavy_guard"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_sapwhistle_greenward",
+        "neutral_dwelling_family_id": "neutral_dwelling_sapwhistle_greenward",
+        "resource_site_id": "site_sapwhistle_greenward",
+        "roster_unit_ids": [
+          "unit_neutral_greenbranch_cudgels",
+          "unit_neutral_sapwhistle_callers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "the visible Sapwhistle Greenward watch blocks recruitment",
+        "guard_army_group_id": "army_neutral_sapwhistle_greenward_watch",
+        "guard_encounter_id": "encounter_sapwhistle_greenward_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact authored watch must fall before the concord muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 11,
+        "risk_tier": "heavy",
+        "placement_role": "sapwhistle_neutral_recruit_source",
+        "guard_target_value_hint": 7,
+        "avoid_until_strength": "strong"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "batch_role": "guarded_unbound_wild_concord_dwelling"
+    },
+    {
+      "id": "object_scarshield_breakyard",
+      "name": "Scarshield Breakyard",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_scarshield_breakyard",
+      "biome_ids": [
+        "biome_rough_badlands",
+        "biome_ash_lava_wastes"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "unbound_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward",
+        "heavy_guard"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_scarshield_breakyard",
+        "neutral_dwelling_family_id": "neutral_dwelling_scarshield_breakyard",
+        "resource_site_id": "site_scarshield_breakyard",
+        "roster_unit_ids": [
+          "unit_neutral_scarshield_veterans",
+          "unit_neutral_scrapbow_teams"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "the visible Scarshield Breakyard watch blocks recruitment",
+        "guard_army_group_id": "army_neutral_scarshield_breakyard_watch",
+        "guard_encounter_id": "encounter_scarshield_breakyard_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact authored watch must fall before the concord muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 11,
+        "risk_tier": "heavy",
+        "placement_role": "scarshield_neutral_recruit_source",
+        "guard_target_value_hint": 7,
+        "avoid_until_strength": "strong"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "batch_role": "guarded_unbound_wild_concord_dwelling"
+    },
+    {
+      "id": "object_flaremast_pilotage",
+      "name": "Flaremast Pilotage",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_flaremast_pilotage",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward"
+      ],
+      "schema_version": 1,
+      "primary_class": "neutral_dwelling",
+      "secondary_tags": [
+        "unbound_wild_neutral_recruit_source",
+        "weekly_muster",
+        "counter_capture_target",
+        "guarded_reward",
+        "heavy_guard"
+      ],
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "guard_clearance_required": true
+      },
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "weekly_muster"
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_flaremast_pilotage",
+        "neutral_dwelling_family_id": "neutral_dwelling_flaremast_pilotage",
+        "resource_site_id": "site_flaremast_pilotage",
+        "roster_unit_ids": [
+          "unit_neutral_harbor_polearms",
+          "unit_neutral_flaremast_crews"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "the visible Flaremast Pilotage watch blocks recruitment",
+        "guard_army_group_id": "army_neutral_flaremast_pilotage_watch",
+        "guard_encounter_id": "encounter_flaremast_pilotage_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact authored watch must fall before the concord muster opens"
+      },
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 3,
+        "allows_adjacent_visitable": true,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 11,
+        "risk_tier": "heavy",
+        "placement_role": "flaremast_neutral_recruit_source",
+        "guard_target_value_hint": 7,
+        "avoid_until_strength": "strong"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "batch_role": "guarded_unbound_wild_concord_dwelling"
     }
   ]
 }

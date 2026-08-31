@@ -9,17 +9,20 @@
   "segment_duration_msec": 12000,
   "loop_mode": "forward",
   "asset_tier": "production_ambient_loop_v1",
+  "runtime_codec": "vorbis",
+  "runtime_container": "ogg",
+  "encoder_quality": 4,
   "cues": {
-    "overworld_ambient_grass": {"path": "res://art/audio/runtime/ambient/grass.wav", "duration_msec": 12000, "volume_db": -27.0, "role": "terrain_grass"},
-    "overworld_ambient_water": {"path": "res://art/audio/runtime/ambient/water.wav", "duration_msec": 12000, "volume_db": -27.0, "role": "terrain_water"},
-    "overworld_ambient_mire": {"path": "res://art/audio/runtime/ambient/mire.wav", "duration_msec": 12000, "volume_db": -26.5, "role": "terrain_mire"},
-    "overworld_ambient_dirt": {"path": "res://art/audio/runtime/ambient/dirt.wav", "duration_msec": 12000, "volume_db": -28.0, "role": "terrain_dirt"},
-    "overworld_ambient_rough": {"path": "res://art/audio/runtime/ambient/rough.wav", "duration_msec": 12000, "volume_db": -27.5, "role": "terrain_rough"},
-    "overworld_ambient_sand": {"path": "res://art/audio/runtime/ambient/sand.wav", "duration_msec": 12000, "volume_db": -29.0, "role": "terrain_sand"},
-    "overworld_ambient_snow": {"path": "res://art/audio/runtime/ambient/snow.wav", "duration_msec": 12000, "volume_db": -29.5, "role": "terrain_snow"},
-    "overworld_ambient_lava": {"path": "res://art/audio/runtime/ambient/lava.wav", "duration_msec": 12000, "volume_db": -26.0, "role": "terrain_lava"},
-    "overworld_ambient_underground": {"path": "res://art/audio/runtime/ambient/underground.wav", "duration_msec": 12000, "volume_db": -27.0, "role": "terrain_underground"},
-    "overworld_ambient_pressure": {"path": "res://art/audio/runtime/ambient/pressure.wav", "duration_msec": 12000, "volume_db": -24.5, "role": "enemy_pressure"},
-    "overworld_ambient_day_pulse": {"path": "res://art/audio/runtime/ambient/day_pulse.wav", "duration_msec": 12000, "volume_db": -30.0, "role": "day_pulse"}
+    "overworld_ambient_grass": {"path": "res://art/audio/runtime/ambient/grass.ogg", "duration_msec": 12000, "volume_db": -27.0, "role": "terrain_grass"},
+    "overworld_ambient_water": {"path": "res://art/audio/runtime/ambient/water.ogg", "duration_msec": 12000, "volume_db": -27.0, "role": "terrain_water"},
+    "overworld_ambient_mire": {"path": "res://art/audio/runtime/ambient/mire.ogg", "duration_msec": 12000, "volume_db": -26.5, "role": "terrain_mire"},
+    "overworld_ambient_dirt": {"path": "res://art/audio/runtime/ambient/dirt.ogg", "duration_msec": 12000, "volume_db": -28.0, "role": "terrain_dirt"},
+    "overworld_ambient_rough": {"path": "res://art/audio/runtime/ambient/rough.ogg", "duration_msec": 12000, "volume_db": -27.5, "role": "terrain_rough"},
+    "overworld_ambient_sand": {"path": "res://art/audio/runtime/ambient/sand.ogg", "duration_msec": 12000, "volume_db": -29.0, "role": "terrain_sand"},
+    "overworld_ambient_snow": {"path": "res://art/audio/runtime/ambient/snow.ogg", "duration_msec": 12000, "volume_db": -29.5, "role": "terrain_snow"},
+    "overworld_ambient_lava": {"path": "res://art/audio/runtime/ambient/lava.ogg", "duration_msec": 12000, "volume_db": -26.0, "role": "terrain_lava"},
+    "overworld_ambient_underground": {"path": "res://art/audio/runtime/ambient/underground.ogg", "duration_msec": 12000, "volume_db": -27.0, "role": "terrain_underground"},
+    "overworld_ambient_pressure": {"path": "res://art/audio/runtime/ambient/pressure.ogg", "duration_msec": 12000, "volume_db": -24.5, "role": "enemy_pressure"},
+    "overworld_ambient_day_pulse": {"path": "res://art/audio/runtime/ambient/day_pulse.ogg", "duration_msec": 12000, "volume_db": -30.0, "role": "day_pulse"}
   }
 }

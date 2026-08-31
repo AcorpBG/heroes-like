@@ -5,7 +5,10 @@ import hashlib
 import json
 import math
 import random
+import shutil
 import struct
+import subprocess
+import tempfile
 import wave
 from pathlib import Path
 
@@ -17,6 +20,7 @@ CHANNEL_COUNT = 2
 SAMPLE_WIDTH_BYTES = 2
 SEGMENT_DURATION_MSEC = 8000
 SEGMENT_DURATION_SEC = SEGMENT_DURATION_MSEC / 1000.0
+OGG_QUALITY = 4
 
 # Each context owns one four-chord phrase. The three cue stems share the exact
 # phrase boundary so runtime can layer them without drift. Frequencies are
@@ -394,6 +398,25 @@ def write_wav(path: Path, cue_id: str, duration_msec: int) -> None:
         handle.writeframes(bytes(payload))
 
 
+def write_ogg(path: Path, cue_id: str, duration_msec: int) -> None:
+    encoder = shutil.which("ffmpeg")
+    if encoder is None:
+        raise SystemExit("ffmpeg with libvorbis support is required to build streamed music assets")
+    if path.suffix.lower() != ".ogg":
+        raise ValueError(f"Streamed music output must use .ogg: {path}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(prefix="aurelion-music-", suffix=".wav", delete=False) as handle:
+        source_path = Path(handle.name)
+    try:
+        write_wav(source_path, cue_id, duration_msec)
+        subprocess.run(
+            [encoder, "-hide_banner", "-loglevel", "error", "-y", "-i", str(source_path), "-c:a", "libvorbis", "-q:a", str(OGG_QUALITY), str(path)],
+            check=True,
+        )
+    finally:
+        source_path.unlink(missing_ok=True)
+
+
 def main() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     cues = manifest.get("cues", {})
@@ -408,6 +431,9 @@ def main() -> None:
         "segment_duration_msec": SEGMENT_DURATION_MSEC,
         "loop_mode": "forward",
         "asset_tier": "production_layered_loop_v1",
+        "runtime_codec": "vorbis",
+        "runtime_container": "ogg",
+        "encoder_quality": OGG_QUALITY,
     }
     for key, expected in required_manifest.items():
         if manifest.get(key) != expected:
@@ -416,7 +442,7 @@ def main() -> None:
     for cue_id, cue in sorted(cues.items()):
         rel_path = str(cue["path"]).removeprefix("res://")
         output_path = ROOT / rel_path
-        write_wav(output_path, cue_id, int(cue["duration_msec"]))
+        write_ogg(output_path, cue_id, int(cue["duration_msec"]))
         hashes[cue_id] = hashlib.sha256(output_path.read_bytes()).hexdigest()
     pack_signature = hashlib.sha256(
         "\n".join(f"{cue_id}:{hashes[cue_id]}" for cue_id in sorted(hashes)).encode("utf-8")
@@ -431,6 +457,9 @@ def main() -> None:
                 "pack_signature": pack_signature,
                 "sample_rate_hz": SAMPLE_RATE,
                 "sample_width_bits": SAMPLE_WIDTH_BYTES * 8,
+                "runtime_codec": "vorbis",
+                "runtime_container": "ogg",
+                "encoder_quality": OGG_QUALITY,
                 "unique_hash_count": len(set(hashes.values())),
             },
             sort_keys=True,

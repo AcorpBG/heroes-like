@@ -14157,6 +14157,312 @@
       "assigned_resource_site_id": "site_drowned_wake_reliquary",
       "presentation_role": "drownedwake_setbound_regalia_reliquary",
       "accessible_description": "A crescent ship-rib chart casket carries a broken mourning mast, an oversized prow compass, and deckboots hanging from an anchor crossbar."
+    },
+    "mapobj_brambleback_hedgecourt": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/unbound_wild_concords_wave1/brambleback_hedgecourt_unclaimed_source.png",
+      "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "source_model": "built_in_image_gen_original_unbound_wild_concord_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_brambleback_hedgecourt",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "thorn-ring bear court",
+      "accessible_description": "A broad thorn-root hedgecourt encloses timber training sheds behind a split claw-marked gate."
+    },
+    "resource_site_neutral_brambleback_hedgecourt_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/unbound_wild_concords_wave1/brambleback_hedgecourt_controlled_source.png",
+      "source_model": "built_in_image_gen_original_controlled_unbound_wild_concord_atlas",
+      "assigned_resource_site_id": "site_brambleback_hedgecourt",
+      "presentation_role": "controlled_muster_state",
+      "accessible_description": "The controlled brambleback_hedgecourt stands open, supplied, lit, and marked for weekly neutral recruitment."
+    },
+    "encounter_unbound_wild_brambleback_hedgecourt_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_brambleback_knucklebears.png",
+      "source_generated": "res://art/units/source/curated/unit_neutral_brambleback_knucklebears.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_brambleback_hedgecourt_watch",
+      "assigned_faction_id": "neutral",
+      "presentation_role": "brambleback_hedgecourt_unbound_wild_watch",
+      "accessible_description": "The exact unit_neutral_brambleback_knucklebears creature silhouette marks this unbound-wild guard front."
+    },
+    "mapobj_mireglass_bellfen": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/unbound_wild_concords_wave1/mireglass_bellfen_unclaimed_source.png",
+      "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "source_model": "built_in_image_gen_original_unbound_wild_concord_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_mireglass_bellfen",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "suspended marsh bell",
+      "accessible_description": "A translucent mireglass bell hangs between forked reedwood towers above a stilt platform."
+    },
+    "resource_site_neutral_mireglass_bellfen_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/unbound_wild_concords_wave1/mireglass_bellfen_controlled_source.png",
+      "source_model": "built_in_image_gen_original_controlled_unbound_wild_concord_atlas",
+      "assigned_resource_site_id": "site_mireglass_bellfen",
+      "presentation_role": "controlled_muster_state",
+      "accessible_description": "The controlled mireglass_bellfen stands open, supplied, lit, and marked for weekly neutral recruitment."
+    },
+    "encounter_unbound_wild_mireglass_bellfen_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_mireglass_belltoads.png",
+      "source_generated": "res://art/units/source/curated/unit_neutral_mireglass_belltoads.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_mireglass_bellfen_watch",
+      "assigned_faction_id": "neutral",
+      "presentation_role": "mireglass_bellfen_unbound_wild_watch",
+      "accessible_description": "The exact unit_neutral_mireglass_belltoads creature silhouette marks this unbound-wild guard front."
+    },
+    "mapobj_windcairn_wayhouse": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/unbound_wild_concords_wave1/windcairn_wayhouse_unclaimed_source.png",
+      "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "source_model": "built_in_image_gen_original_unbound_wild_concord_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_windcairn_wayhouse",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "three-cairn caravan refuge",
+      "accessible_description": "Three pale cairn towers and a canvas bridge rise above a compact caravan yard."
+    },
+    "resource_site_neutral_windcairn_wayhouse_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/unbound_wild_concords_wave1/windcairn_wayhouse_controlled_source.png",
+      "source_model": "built_in_image_gen_original_controlled_unbound_wild_concord_atlas",
+      "assigned_resource_site_id": "site_windcairn_wayhouse",
+      "presentation_role": "controlled_muster_state",
+      "accessible_description": "The controlled windcairn_wayhouse stands open, supplied, lit, and marked for weekly neutral recruitment."
+    },
+    "encounter_unbound_wild_windcairn_wayhouse_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_cairnshield_porters.png",
+      "source_generated": "res://art/units/source/curated/unit_neutral_cairnshield_porters.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_windcairn_wayhouse_watch",
+      "assigned_faction_id": "neutral",
+      "presentation_role": "windcairn_wayhouse_unbound_wild_watch",
+      "accessible_description": "The exact unit_neutral_cairnshield_porters creature silhouette marks this unbound-wild guard front."
+    },
+    "mapobj_sapwhistle_greenward": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "atlas_region": [
+        288,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/unbound_wild_concords_wave1/sapwhistle_greenward_unclaimed_source.png",
+      "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "source_model": "built_in_image_gen_original_unbound_wild_concord_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_sapwhistle_greenward",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "spiral trumpet-tree greenward",
+      "accessible_description": "A spiral living tree opens into a dwelling beneath three great sapwood trumpets."
+    },
+    "resource_site_neutral_sapwhistle_greenward_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "atlas_region": [
+        336,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/unbound_wild_concords_wave1/sapwhistle_greenward_controlled_source.png",
+      "source_model": "built_in_image_gen_original_controlled_unbound_wild_concord_atlas",
+      "assigned_resource_site_id": "site_sapwhistle_greenward",
+      "presentation_role": "controlled_muster_state",
+      "accessible_description": "The controlled sapwhistle_greenward stands open, supplied, lit, and marked for weekly neutral recruitment."
+    },
+    "encounter_unbound_wild_sapwhistle_greenward_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_greenbranch_cudgels.png",
+      "source_generated": "res://art/units/source/curated/unit_neutral_greenbranch_cudgels.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_sapwhistle_greenward_watch",
+      "assigned_faction_id": "neutral",
+      "presentation_role": "sapwhistle_greenward_unbound_wild_watch",
+      "accessible_description": "The exact unit_neutral_greenbranch_cudgels creature silhouette marks this unbound-wild guard front."
+    },
+    "mapobj_scarshield_breakyard": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "atlas_region": [
+        384,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/unbound_wild_concords_wave1/scarshield_breakyard_unclaimed_source.png",
+      "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "source_model": "built_in_image_gen_original_unbound_wild_concord_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_scarshield_breakyard",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "broken-shield mercenary yard",
+      "accessible_description": "A massive split bronze shield roofs a red-stone yard with jagged towers and a chained ram."
+    },
+    "resource_site_neutral_scarshield_breakyard_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "atlas_region": [
+        432,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/unbound_wild_concords_wave1/scarshield_breakyard_controlled_source.png",
+      "source_model": "built_in_image_gen_original_controlled_unbound_wild_concord_atlas",
+      "assigned_resource_site_id": "site_scarshield_breakyard",
+      "presentation_role": "controlled_muster_state",
+      "accessible_description": "The controlled scarshield_breakyard stands open, supplied, lit, and marked for weekly neutral recruitment."
+    },
+    "encounter_unbound_wild_scarshield_breakyard_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_scarshield_veterans.png",
+      "source_generated": "res://art/units/source/curated/unit_neutral_scarshield_veterans.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_scarshield_breakyard_watch",
+      "assigned_faction_id": "neutral",
+      "presentation_role": "scarshield_breakyard_unbound_wild_watch",
+      "accessible_description": "The exact unit_neutral_scarshield_veterans creature silhouette marks this unbound-wild guard front."
+    },
+    "mapobj_flaremast_pilotage": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "atlas_region": [
+        480,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/unbound_wild_concords_wave1/flaremast_pilotage_unclaimed_source.png",
+      "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "source_model": "built_in_image_gen_original_unbound_wild_concord_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_flaremast_pilotage",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "crescent-mast spectral pilotage",
+      "accessible_description": "A curved signal mast, crescent sail roofs, and brass navigation rings rise from a narrow timber quay."
+    },
+    "resource_site_neutral_flaremast_pilotage_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
+      "atlas_region": [
+        528,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/unbound_wild_concords_wave1/flaremast_pilotage_controlled_source.png",
+      "source_model": "built_in_image_gen_original_controlled_unbound_wild_concord_atlas",
+      "assigned_resource_site_id": "site_flaremast_pilotage",
+      "presentation_role": "controlled_muster_state",
+      "accessible_description": "The controlled flaremast_pilotage stands open, supplied, lit, and marked for weekly neutral recruitment."
+    },
+    "encounter_unbound_wild_flaremast_pilotage_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_harbor_polearms.png",
+      "source_generated": "res://art/units/source/curated/unit_neutral_harbor_polearms.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_flaremast_pilotage_watch",
+      "assigned_faction_id": "neutral",
+      "presentation_role": "flaremast_pilotage_unbound_wild_watch",
+      "accessible_description": "The exact unit_neutral_harbor_polearms creature silhouette marks this unbound-wild guard front."
     }
   },
   "resource_site_sprites": {
@@ -15381,6 +15687,36 @@
       "asset_id": "resource_site_regalia_drowned_wake_reliquary",
       "unclaimed_asset_id": "resource_site_regalia_drowned_wake_reliquary",
       "fit": "Exact original Drowned Wake Chart Reliquary remains visible before and after its one-time final-set-piece claim."
+    },
+    "site_brambleback_hedgecourt": {
+      "asset_id": "resource_site_neutral_brambleback_hedgecourt_controlled",
+      "unclaimed_asset_id": "mapobj_brambleback_hedgecourt",
+      "fit": "Exact original thorn-ring bear court paired with its supplied controlled muster state."
+    },
+    "site_mireglass_bellfen": {
+      "asset_id": "resource_site_neutral_mireglass_bellfen_controlled",
+      "unclaimed_asset_id": "mapobj_mireglass_bellfen",
+      "fit": "Exact original suspended marsh bell paired with its supplied controlled muster state."
+    },
+    "site_windcairn_wayhouse": {
+      "asset_id": "resource_site_neutral_windcairn_wayhouse_controlled",
+      "unclaimed_asset_id": "mapobj_windcairn_wayhouse",
+      "fit": "Exact original three-cairn caravan refuge paired with its supplied controlled muster state."
+    },
+    "site_sapwhistle_greenward": {
+      "asset_id": "resource_site_neutral_sapwhistle_greenward_controlled",
+      "unclaimed_asset_id": "mapobj_sapwhistle_greenward",
+      "fit": "Exact original spiral trumpet-tree greenward paired with its supplied controlled muster state."
+    },
+    "site_scarshield_breakyard": {
+      "asset_id": "resource_site_neutral_scarshield_breakyard_controlled",
+      "unclaimed_asset_id": "mapobj_scarshield_breakyard",
+      "fit": "Exact original broken-shield mercenary yard paired with its supplied controlled muster state."
+    },
+    "site_flaremast_pilotage": {
+      "asset_id": "resource_site_neutral_flaremast_pilotage_controlled",
+      "unclaimed_asset_id": "mapobj_flaremast_pilotage",
+      "fit": "Exact original crescent-mast spectral pilotage paired with its supplied controlled muster state."
     }
   },
   "artifact_default_sprite": {
@@ -15752,7 +16088,13 @@
     "encounter_rootglass_border_cordon": "encounter_border_oath_thornwake_rootglass",
     "encounter_blackbell_border_cordon": "encounter_border_oath_brasshollow_blackbell",
     "encounter_wakechain_border_cordon": "encounter_border_oath_veilmourn_wakechain",
-    "encounter_rainbrand_border_cordon": "encounter_border_oath_embercourt_rainbrand"
+    "encounter_rainbrand_border_cordon": "encounter_border_oath_embercourt_rainbrand",
+    "encounter_brambleback_hedgecourt_watch": "encounter_unbound_wild_brambleback_hedgecourt_watch",
+    "encounter_mireglass_bellfen_watch": "encounter_unbound_wild_mireglass_bellfen_watch",
+    "encounter_windcairn_wayhouse_watch": "encounter_unbound_wild_windcairn_wayhouse_watch",
+    "encounter_sapwhistle_greenward_watch": "encounter_unbound_wild_sapwhistle_greenward_watch",
+    "encounter_scarshield_breakyard_watch": "encounter_unbound_wild_scarshield_breakyard_watch",
+    "encounter_flaremast_pilotage_watch": "encounter_unbound_wild_flaremast_pilotage_watch"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

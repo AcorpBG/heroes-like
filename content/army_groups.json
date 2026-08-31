@@ -3818,6 +3818,278 @@
       ],
       "content_batch_id": "content-six-setbound-regalia-assemblies-10184",
       "content_status": "setbound_regalia_company_live"
+    },
+    {
+      "id": "army_neutral_brambleback_hedgecourt_watch",
+      "name": "Brambleback Hedgecourt Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_brambleback_knucklebears",
+          "count": 2
+        },
+        {
+          "unit_id": "unit_neutral_orchard_halberds",
+          "count": 8
+        }
+      ],
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "content_status": "unbound_wild_concord_guard_live"
+    },
+    {
+      "id": "army_torren_unbound_concord_company",
+      "name": "Pikeward Brambleback Concord Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {
+          "unit_id": "unit_embercourt_fordhook_cadets",
+          "count": 34
+        },
+        {
+          "unit_id": "unit_ember_archer",
+          "count": 22
+        },
+        {
+          "unit_id": "unit_citadel_pikeward",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_embercourt_lockglass_writcasters",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_embercourt_beaconline_writguard",
+          "count": 4
+        }
+      ],
+      "content_status": "unbound_wild_concord_company_live",
+      "content_batch_id": "content-six-unbound-wild-concords-10184"
+    },
+    {
+      "id": "army_neutral_mireglass_bellfen_watch",
+      "name": "Mireglass Bellfen Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_mireglass_belltoads",
+          "count": 2
+        },
+        {
+          "unit_id": "unit_neutral_reedbarge_poles",
+          "count": 8
+        }
+      ],
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "content_status": "unbound_wild_concord_guard_live"
+    },
+    {
+      "id": "army_brakka_unbound_concord_company",
+      "name": "Mudkeel Mireglass Concord Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {
+          "unit_id": "unit_mireclaw_reedsnare_kin",
+          "count": 32
+        },
+        {
+          "unit_id": "unit_mireclaw_mudglass_slingers",
+          "count": 20
+        },
+        {
+          "unit_id": "unit_mireclaw_bogplate_maulers",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_mireclaw_ferrychain_lashers",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_mireclaw_sporewake_chanters",
+          "count": 3
+        }
+      ],
+      "content_status": "unbound_wild_concord_company_live",
+      "content_batch_id": "content-six-unbound-wild-concords-10184"
+    },
+    {
+      "id": "army_neutral_windcairn_wayhouse_watch",
+      "name": "Windcairn Wayhouse Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_cairnshield_porters",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_neutral_windglass_slingers",
+          "count": 8
+        }
+      ],
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "content_status": "unbound_wild_concord_guard_live"
+    },
+    {
+      "id": "army_essa_unbound_concord_company",
+      "name": "Daynote Windcairn Concord Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {
+          "unit_id": "unit_sunvault_shard_wardens",
+          "count": 36
+        },
+        {
+          "unit_id": "unit_sunvault_prism_adepts",
+          "count": 24
+        },
+        {
+          "unit_id": "unit_sunvault_mirror_duelists",
+          "count": 14
+        },
+        {
+          "unit_id": "unit_sunvault_resonant_choristers",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_shard_guard",
+          "count": 4
+        }
+      ],
+      "content_status": "unbound_wild_concord_company_live",
+      "content_batch_id": "content-six-unbound-wild-concords-10184"
+    },
+    {
+      "id": "army_neutral_sapwhistle_greenward_watch",
+      "name": "Sapwhistle Greenward Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_greenbranch_cudgels",
+          "count": 10
+        },
+        {
+          "unit_id": "unit_neutral_sapwhistle_callers",
+          "count": 8
+        }
+      ],
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "content_status": "unbound_wild_concord_guard_live"
+    },
+    {
+      "id": "army_halen_unbound_concord_company",
+      "name": "Thorncart Greenbranch Concord Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {
+          "unit_id": "unit_thornwake_seedcutters",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_thornwake_thornwhip_carriers",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_thornwake_sporeglass_menders",
+          "count": 4
+        },
+        {
+          "unit_id": "unit_thornwake_barkmantle_rams",
+          "count": 2
+        }
+      ],
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "content_status": "unbound_wild_concord_company_live"
+    },
+    {
+      "id": "army_neutral_scarshield_breakyard_watch",
+      "name": "Scarshield Breakyard Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_scarshield_veterans",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_neutral_scrapbow_teams",
+          "count": 8
+        }
+      ],
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "content_status": "unbound_wild_concord_guard_live"
+    },
+    {
+      "id": "army_varn_unbound_concord_company",
+      "name": "Varn Scarshield Concord Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {
+          "unit_id": "unit_brasshollow_scrip_haulers",
+          "count": 32
+        },
+        {
+          "unit_id": "unit_brasshollow_quenchspool_slingers",
+          "count": 20
+        },
+        {
+          "unit_id": "unit_brasshollow_furnace_pavis_teams",
+          "count": 12
+        },
+        {
+          "unit_id": "unit_brasshollow_boiler_rivetcasters",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_brasshollow_quenchbell_mortars",
+          "count": 3
+        }
+      ],
+      "content_status": "unbound_wild_concord_company_live",
+      "content_batch_id": "content-six-unbound-wild-concords-10184"
+    },
+    {
+      "id": "army_neutral_flaremast_pilotage_watch",
+      "name": "Flaremast Pilotage Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_harbor_polearms",
+          "count": 10
+        },
+        {
+          "unit_id": "unit_neutral_flaremast_crews",
+          "count": 8
+        }
+      ],
+      "content_batch_id": "content-six-unbound-wild-concords-10184",
+      "content_status": "unbound_wild_concord_guard_live"
+    },
+    {
+      "id": "army_cela_unbound_concord_company",
+      "name": "Mistcorsair Flaremast Concord Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {
+          "unit_id": "unit_veilmourn_saltbell_casters",
+          "count": 30
+        },
+        {
+          "unit_id": "unit_veilmourn_tidehook_deckhands",
+          "count": 18
+        },
+        {
+          "unit_id": "unit_veilmourn_wakechain_boarders",
+          "count": 11
+        },
+        {
+          "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_veilmourn_saltwake_eulogists",
+          "count": 3
+        }
+      ],
+      "content_status": "unbound_wild_concord_company_live",
+      "content_batch_id": "content-six-unbound-wild-concords-10184"
     }
   ]
 }
