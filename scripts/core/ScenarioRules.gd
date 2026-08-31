@@ -324,6 +324,11 @@ static func _scenario_objective_dependency(objective: Dictionary, objective_inde
 					_add_dependency_value(dependency, "hero_ids", String(objective.get("target_id", "")))
 		"map_explored_at_least":
 			dependency["fog_exploration"] = true
+		"resource_stockpile_at_least":
+			var stockpile_requirements = objective.get("requirements", {})
+			if stockpile_requirements is Dictionary:
+				for resource_id in stockpile_requirements.keys():
+					_add_dependency_value(dependency, "resources", String(resource_id))
 		"hero_army_meets_requirements":
 			_add_dependency_value(dependency, "hero_ids", String(objective.get("hero_id", "")))
 			var requirements = objective.get("requirements", [])
@@ -1577,6 +1582,8 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 			return bool(_reserve_delivery_progress(session, objective).get("complete", false))
 		"map_explored_at_least":
 			return bool(_map_exploration_progress(session, objective).get("complete", false))
+		"resource_stockpile_at_least":
+			return bool(_resource_stockpile_progress(session, objective).get("complete", false))
 		"hero_army_meets_requirements":
 			return bool(_hero_army_requirement_progress(session, objective).get("complete", false))
 		"hero_progression_meets_requirements":
@@ -1649,6 +1656,17 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 				int(exploration.get("explored_percent", 0)),
 				int(exploration.get("minimum_percent", 1)),
 			]
+		"resource_stockpile_at_least":
+			var stockpile := _resource_stockpile_progress(session, objective)
+			var stockpile_parts: Array[String] = []
+			for row in stockpile.get("requirements", []):
+				if row is Dictionary:
+					stockpile_parts.append("%s %d/%d" % [
+						String(row.get("resource_name", row.get("resource_id", "Resource"))),
+						int(row.get("current_count", 0)),
+						int(row.get("minimum_count", 0)),
+					])
+			return "%s (%s)" % [base_label, ", ".join(stockpile_parts)]
 		"hero_army_meets_requirements":
 			var progress := _hero_army_requirement_progress(session, objective)
 			if not bool(progress.get("hero_found", false)):
@@ -1788,6 +1806,35 @@ static func _map_exploration_progress(
 		"minimum_percent": minimum_percent,
 		"complete": total_tiles > 0 and explored_count >= required_count,
 	}
+
+static func _resource_stockpile_progress(
+	session: SessionStateStoreScript.SessionData,
+	objective: Dictionary
+) -> Dictionary:
+	var authored_requirements = objective.get("requirements", {})
+	if not (authored_requirements is Dictionary) or authored_requirements.is_empty():
+		return {"requirements": [], "complete": false}
+	var resource_ids: Array[String] = []
+	for resource_id in authored_requirements.keys():
+		resource_ids.append(String(resource_id))
+	resource_ids.sort()
+	var rows: Array[Dictionary] = []
+	var complete := true
+	var resources: Dictionary = session.overworld.get("resources", {}) if session.overworld.get("resources", {}) is Dictionary else {}
+	for resource_id in resource_ids:
+		var minimum_count: int = max(1, int(authored_requirements.get(resource_id, 1)))
+		var current_count: int = max(0, int(resources.get(resource_id, 0)))
+		var resource := ContentService.get_resource(resource_id)
+		var met := current_count >= minimum_count
+		rows.append({
+			"resource_id": resource_id,
+			"resource_name": String(resource.get("display_name", resource.get("name", _titleize_token(resource_id)))),
+			"current_count": current_count,
+			"minimum_count": minimum_count,
+			"met": met,
+		})
+		complete = complete and met
+	return {"requirements": rows, "complete": complete}
 
 static func _hero_army_requirement_progress(
 	session: SessionStateStoreScript.SessionData,
