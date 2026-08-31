@@ -1645,6 +1645,13 @@ func _validate_objective(
 				push_warning("Scenario %s objective %s references missing town placement %s." % [scenario_id, String(objective.get("id", "")), building_placement_id])
 			if objective_building_id == "" or not building_index.has(objective_building_id):
 				push_warning("Scenario %s objective %s references missing building_id %s." % [scenario_id, String(objective.get("id", "")), objective_building_id])
+		"hero_stationed_at_player_town":
+			var stationed_hero_id := String(objective.get("hero_id", ""))
+			var stationed_placement_id := String(objective.get("placement_id", ""))
+			if stationed_hero_id == "" or not hero_index.has(stationed_hero_id):
+				push_warning("Scenario %s objective %s references missing hero_id %s." % [scenario_id, String(objective.get("id", "")), stationed_hero_id])
+			if stationed_placement_id == "" or stationed_placement_id not in town_placement_ids:
+				push_warning("Scenario %s objective %s references missing town placement %s." % [scenario_id, String(objective.get("id", "")), stationed_placement_id])
 		"hero_army_meets_requirements":
 			var objective_hero_id := String(objective.get("hero_id", ""))
 			if objective_hero_id == "" or not hero_index.has(objective_hero_id):
