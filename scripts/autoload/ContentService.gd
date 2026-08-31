@@ -1673,6 +1673,10 @@ func _validate_objective(
 				push_warning("Scenario %s objective %s has unsupported delivery target_kind %s." % [scenario_id, String(objective.get("id", "")), delivery_target_kind])
 			if int(objective.get("minimum_count", 1)) <= 0:
 				push_warning("Scenario %s objective %s must define minimum_count > 0." % [scenario_id, String(objective.get("id", ""))])
+		"map_explored_at_least":
+			var minimum_percent := int(objective.get("minimum_percent", 0))
+			if minimum_percent <= 0 or minimum_percent > 100:
+				push_warning("Scenario %s objective %s must define minimum_percent from 1 through 100." % [scenario_id, String(objective.get("id", ""))])
 		"hero_army_meets_requirements":
 			var objective_hero_id := String(objective.get("hero_id", ""))
 			if objective_hero_id == "" or not hero_index.has(objective_hero_id):

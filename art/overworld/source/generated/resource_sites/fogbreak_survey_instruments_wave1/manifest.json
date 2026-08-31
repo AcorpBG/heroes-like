@@ -1,0 +1,59 @@
+{
+  "source_model": "built_in_image_gen_original_fogbreak_survey_instruments_atlas",
+  "generation_mode": "built_in_image_gen",
+  "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+  "prompt_set_summary": "Six original faction-specific cartographic instruments were generated as transparent painterly source masters for 48-pixel overworld use. Each instrument uses a different non-color silhouette and construction language: an Embercourt charter quadrant, Mireclaw listening bowl, Sunvault prism heliograph, Thornwake living orrery, Brasshollow pressure theodolite, and Veilmourn driftwood sextant. No names, artwork, heraldry, or recognizable designs were imported from Heroes of Might and Magic or another commercial game.",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_atlas_sha256": "4a084c26ae82b38476bd3f0a27aab615d4c7b5db6c7eb91a8860060e962767b2",
+  "items": [
+    {
+      "site_id": "site_embercourt_ashline_writ_compass",
+      "asset_id": "resource_site_fogbreak_embercourt_compass",
+      "source_file": "ember_ashline_writ_compass.png",
+      "source_sha256": "343ee5519f93cb27944e842436fb44fef731a76f1e7e4ba9f3227bd933510019",
+      "atlas_region": [0, 0, 48, 48],
+      "prompt_summary": "An isolated Embercourt ashline writ compass built as a charred tripod, heavy bronze charter quadrant, and twin hooded plumb lanterns at unequal heights; generated in a painterly three-quarter isometric strategy-game style with a strong asymmetrical silhouette, transparent alpha, clean edges, no scenery, text, logo, heraldry, characters, or copied commercial-game design."
+    },
+    {
+      "site_id": "site_mireclaw_bogglass_listening_mast",
+      "asset_id": "resource_site_fogbreak_mireclaw_mast",
+      "source_file": "mire_bogglass_listening_mast.png",
+      "source_sha256": "2f450342a7b3813bfab93b21f6c6d001f8c8af7f3ea9fc9b1360c19261e4b891",
+      "atlas_region": [48, 0, 48, 48],
+      "prompt_summary": "An isolated Mireclaw bogglass listening mast built from a crooked reed-and-bone tripod, shallow blackwater bowl, ragged bone vanes, and hanging peatglass beads; generated in painterly three-quarter isometric strategy-game style with an irregular low-wide silhouette, transparent alpha, no scenery, text, logo, heraldry, characters, or copied commercial-game design."
+    },
+    {
+      "site_id": "site_sunvault_meridian_sunthread_heliograph",
+      "asset_id": "resource_site_fogbreak_sunvault_heliograph",
+      "source_file": "sun_meridian_sunthread_heliograph.png",
+      "source_sha256": "901cf0c4f5a6ad343d3d3062676a4ea7c00ee53807f89eb6506af8d143328c6e",
+      "atlas_region": [96, 0, 48, 48],
+      "prompt_summary": "An isolated Sunvault meridian sunthread heliograph built on a white-stone plinth with a rotating clear prism, slotted golden sun disc, and three unequal sight blades; generated in painterly three-quarter isometric strategy-game style with a radiant geometric silhouette, transparent alpha, no scenery, text, logo, heraldry, characters, or copied commercial-game design."
+    },
+    {
+      "site_id": "site_thornwake_rootstar_canopy_orrery",
+      "asset_id": "resource_site_fogbreak_thornwake_orrery",
+      "source_file": "thorn_rootstar_canopy_orrery.png",
+      "source_sha256": "dc3634a45bc01e855a26a4591a44849d0cf9d459950eb5a73dcbac6840700f83",
+      "atlas_region": [144, 0, 48, 48],
+      "prompt_summary": "An isolated Thornwake rootstar canopy orrery grown from a living forked root around a constellation seed-sphere, three curling braided-vine sight arms, and pale seed moons; generated in painterly three-quarter isometric strategy-game style with an organic branching silhouette, transparent alpha, no scenery, text, logo, heraldry, characters, or copied commercial-game design."
+    },
+    {
+      "site_id": "site_brasshollow_redgauge_horizon_theodolite",
+      "asset_id": "resource_site_fogbreak_brasshollow_theodolite",
+      "source_file": "brass_redgauge_horizon_theodolite.png",
+      "source_sha256": "44b21a0b6d32ae9ef908b3c8328f139571984f51905f57612665d33b0679e5fe",
+      "atlas_region": [192, 0, 48, 48],
+      "prompt_summary": "An isolated Brasshollow redgauge horizon theodolite built as a squat riveted iron tripod with a thick brass sight tube, unequal pressure gauges, and broad toothed azimuth ring; generated in painterly three-quarter isometric strategy-game style with an industrial low-heavy silhouette, transparent alpha, no scenery, text, logo, heraldry, characters, or copied commercial-game design."
+    },
+    {
+      "site_id": "site_veilmourn_drowned_horizon_sextant",
+      "asset_id": "resource_site_fogbreak_veilmourn_sextant",
+      "source_file": "veil_drowned_horizon_sextant.png",
+      "source_sha256": "ed472a9edf3484047dc28bc57cce7d778a6fed01aabf04d6b3116fc75208d93b",
+      "atlas_region": [240, 0, 48, 48],
+      "prompt_summary": "An isolated Veilmourn drowned-horizon sextant built into a crescent driftwood frame with a shell plumb, wakeglass beads, salt-dark rope, and a deliberately open center; generated in painterly three-quarter isometric strategy-game style with a mournful crescent silhouette, transparent alpha, no scenery, text, logo, heraldry, characters, or copied commercial-game design."
+    }
+  ]
+}

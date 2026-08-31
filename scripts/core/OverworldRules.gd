@@ -1196,6 +1196,8 @@ static func _collect_resource_node_result(
 		session.overworld["resource_nodes"] = nodes
 	_rules_profile_add_ms("resource_recruits_spells_xp_ms", recruits_spells_xp_started_usec)
 	var mutation_facts := _resource_interaction_event_facts(node, site, previous_controller, rewards, visit_cost, topology_facts)
+	if site_reveal_tiles > 0:
+		mutation_facts["fog_exploration_changed"] = true
 	if bool(artifact_reward.get("applied", false)):
 		mutation_facts["artifact_ids"] = [String(artifact_reward.get("artifact_id", ""))]
 		mutation_facts["artifact_reward_table_id"] = String(artifact_reward.get("table_id", ""))

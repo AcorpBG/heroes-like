@@ -24,9 +24,39 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; select the next substantial production-content batch before further implementation.
-- Most recently completed implementation slice: `content-six-relief-route-convoy-runs-10184`, a coherent six-faction convoy-dispatch, interception, delivery, exact-art, and save-continuity batch.
-- Current package boundary: matching Linux and Windows release exports measure 248517260 bytes, 1482740 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none selected.
+- Most recently completed implementation slice: `content-six-fogbreak-survey-expeditions-10184`, a coherent six-faction exploration, scouting-control, dormant-encounter activation, exact-art, and save-continuity batch.
+- Current package boundary: matching Linux and Windows release exports measure 248610020 bytes, 1389980 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Fogbreak Survey Expeditions
+
+id: `content-six-fogbreak-survey-expeditions-10184`
+
+Status: completed.
+
+Current finding:
+- all 153 authored scenarios persist and render fog-of-war, but none makes the production explored-tile state part of victory, leaving scouting radius, reveal spells, route travel, and controlled watch structures as incidental support rather than a complete scenario strategy;
+- five authored non-systemic encounter identities still have no direct scenario placement, while one-use heroes and the least-used faction towns provide a clear breadth target for a new family;
+- the package has only 1482740 bytes of headroom, so the slice must add compact runtime art, exclude generated source masters, and avoid new full-screen backdrops or unit animation surfaces.
+
+Implementation boundary:
+- add a first-class `map_explored_at_least` scenario objective backed by the existing save-version-9 fog payload, with exact integer progress, labels, content validation, and scoped fog-exploration dependency metadata;
+- author one original skirmish-only survey expedition per faction, each led by a one-use hero from a comparatively underused town, with a new five-stack company, three controllable faction survey instruments, three guarded fronts, economy support, pressure, deterministic seeds, and direct placement of the five currently dormant non-systemic encounters plus one low-use Embercourt survey guard;
+- generate six original transparent faction survey instruments, derive one compact 288x48 runtime atlas, retain prompt/hash/accessibility provenance outside packages, and keep Linux/Windows exports below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all six scenarios launch from the skirmish selector, begin below the authored exploration threshold, clear and claim all eighteen survey positions through production battle and resource-site authority, cross the exact threshold only after sufficient controlled reveals, satisfy scoped fog dependencies, win before the deadline, and remain exact across save-version-9 round trips;
+- negative controls prove malformed fog payloads, insufficient explored coverage, and a partial two-instrument survey cannot satisfy the exploration objective;
+- run one consolidated six-case gameplay/art/fog/save and visual-capture smoke only after the complete batch, followed once by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- six original skirmish expeditions now bring the active catalog to 159 scenarios, place eighteen guarded survey claims, activate five previously unplaced authored encounter identities, and add six distinct faction companies and persistent five-tile scouting instruments;
+- the consolidated production smoke passed all six cases and eighteen battles/claims: two instruments expose 86 of 135 tiles, three expose 122, and the exact 80 percent objective requires 108, with malformed-fog, scoped-dependency, exact-art, victory, and save-version-9 proofs green;
+- repository validation and matching Linux/Windows release exports passed at 248610020 bytes, 1389980 bytes below the unchanged ceiling, with all six high-resolution generated source masters excluded from both packages.
+
+Non-goals:
+- no new faction, hero definition, unit definition, town definition, building, spell, artifact, campaign, combat formula, strategic-AI planning algorithm, native RMG behavior, save-version bump, full-screen backdrop, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes map, observatory, hero, encounter, landmark, name, text, heraldry, or protected visual expression.
 
 ## Six Relief-Route Convoy Runs
 
