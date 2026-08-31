@@ -14847,6 +14847,78 @@
       "assigned_resource_site_id": "site_fog_keel_lastwatch_mooring",
       "presentation_role": "controlled_veteran_company_muster_state",
       "accessible_description": "The same mooring carries a raised pearl sail, lit bell-lanterns, and occupied veteran boarding racks."
+    },
+    "town_identity_amberweir_granary": {
+      "path": "res://art/overworld/runtime/objects/towns/factions/embercourt.png",
+      "runtime_sha256": "e9d8998b42f7f22f42bd1330550ee524f79bc81341998128795a0492eca77ee9",
+      "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png",
+      "scenic_source": "res://art/towns/source/generated/marchland_seats/town_amberweir_granary_source.png",
+      "scenic_source_sha256": "3d36fe899b3b908b79dbc55f1c5e9a9895bbb5c62ebf70fa2f5fa7574abc1fa7",
+      "source_model": "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette",
+      "assigned_town_id": "town_amberweir_granary",
+      "assigned_faction_id": "faction_embercourt",
+      "presentation_role": "river_granary_stronghold",
+      "accessible_description": "A rain-fed river fortress where civic ledgers, sluice power, and protected grain rotations turn recovery into sustained road pressure."
+    },
+    "town_identity_moonbite_reedshrine": {
+      "path": "res://art/overworld/runtime/objects/towns/factions/mireclaw.png",
+      "runtime_sha256": "52c34e0fba7f6275627b30058e00cf486311d8042a6dcaee18903004d6ea5dde",
+      "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png",
+      "scenic_source": "res://art/towns/source/generated/marchland_seats/town_moonbite_reedshrine_source.png",
+      "scenic_source_sha256": "1062c97cb1acaf86cc66ab3ebb559f355ef7191b54ea08e71469cd79e521fecc",
+      "source_model": "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette",
+      "assigned_town_id": "town_moonbite_reedshrine",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "votive_marsh_sanctuary",
+      "accessible_description": "A crescent shrine-town where moon pools, votive jars, and reed tolls turn battlefield tribute into spell and pressure tempo."
+    },
+    "town_identity_splitprism_duelcourt": {
+      "path": "res://art/overworld/runtime/objects/towns/factions/sunvault.png",
+      "runtime_sha256": "cf2bf29fedc3531144e3dee3a0ab561e363eb7af52139f15702a7a682b5f48dd",
+      "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png",
+      "scenic_source": "res://art/towns/source/generated/marchland_seats/town_splitprism_duelcourt_source.png",
+      "scenic_source_sha256": "097da8c58dd0356f7223ae5c30c08db3bb623d375f83d9e5bcaf3cafda44c2bd",
+      "source_model": "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette",
+      "assigned_town_id": "town_splitprism_duelcourt",
+      "assigned_faction_id": "faction_sunvault",
+      "presentation_role": "duel-line_observatory",
+      "accessible_description": "A divided prism observatory whose mirrored courts train timing, focus, and exact response along exposed desert lanes."
+    },
+    "town_identity_woundroot_hearthgrove": {
+      "path": "res://art/overworld/runtime/objects/towns/factions/thornwake.png",
+      "runtime_sha256": "875881aab052eb018f12c4af23e8bff80c08d4ff775d72ee33af178b315d4138",
+      "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png",
+      "scenic_source": "res://art/towns/source/generated/marchland_seats/town_woundroot_hearthgrove_source.png",
+      "scenic_source_sha256": "0f4377ebefebcf821d006232892a5247b2fb399fdd691e2258c7fc5c2984f27a",
+      "source_model": "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette",
+      "assigned_town_id": "town_woundroot_hearthgrove",
+      "assigned_faction_id": "faction_thornwake",
+      "presentation_role": "recovery_hearthgrove",
+      "accessible_description": "A living hollow settlement where root-hearths and graft gardens return wounded companies to the road without severing the old canopy."
+    },
+    "town_identity_whitegauge_calibration_yard": {
+      "path": "res://art/overworld/runtime/objects/towns/factions/brasshollow.png",
+      "runtime_sha256": "70088f1c59fa371e0b7c2187a50583fd7bc83c95270fc526e408d3cda4e031b3",
+      "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png",
+      "scenic_source": "res://art/towns/source/generated/marchland_seats/town_whitegauge_calibration_yard_source.png",
+      "scenic_source_sha256": "abe7024f17c7f23e362d95be90c869affc23ba4c3118fc086d105adc0a985b92",
+      "source_model": "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette",
+      "assigned_town_id": "town_whitegauge_calibration_yard",
+      "assigned_faction_id": "faction_brasshollow",
+      "presentation_role": "calibration_works",
+      "accessible_description": "A white-ceramic pressure yard where brass gauges, datum rails, and controlled furnace trials turn machine companies into exact field instruments."
+    },
+    "town_identity_dreamwake_oracle_harbor": {
+      "path": "res://art/overworld/runtime/objects/towns/factions/veilmourn.png",
+      "runtime_sha256": "e89e68f9ab030b22a397caa0019439ff1dc623dae8254f4bcd249e105db8db44",
+      "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png",
+      "scenic_source": "res://art/towns/source/generated/marchland_seats/town_dreamwake_oracle_harbor_source.png",
+      "scenic_source_sha256": "877a05769accb6e043fc2114adae74e495c8c9482f32f87405d1a13ce946c2e1",
+      "source_model": "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette",
+      "assigned_town_id": "town_dreamwake_oracle_harbor",
+      "assigned_faction_id": "faction_veilmourn",
+      "presentation_role": "oracle_harbor",
+      "accessible_description": "A fogbound bell harbor whose tide pools and memory chimes reveal hidden sea lanes before hostile sails enter the inner wake."
     }
   },
   "resource_site_sprites": {
@@ -16263,7 +16335,13 @@
     "town_meridian_choirhold": "town_identity_meridian_choirhold",
     "town_crownroot_refuge": "town_identity_crownroot_refuge",
     "town_blackbell_foundry": "town_identity_blackbell_foundry",
-    "town_pale_sounding_harbor": "town_identity_pale_sounding_harbor"
+    "town_pale_sounding_harbor": "town_identity_pale_sounding_harbor",
+    "town_amberweir_granary": "town_identity_amberweir_granary",
+    "town_moonbite_reedshrine": "town_identity_moonbite_reedshrine",
+    "town_splitprism_duelcourt": "town_identity_splitprism_duelcourt",
+    "town_woundroot_hearthgrove": "town_identity_woundroot_hearthgrove",
+    "town_whitegauge_calibration_yard": "town_identity_whitegauge_calibration_yard",
+    "town_dreamwake_oracle_harbor": "town_identity_dreamwake_oracle_harbor"
   },
   "hero_faction_sprites": {
     "faction_embercourt": "hero_faction_embercourt",

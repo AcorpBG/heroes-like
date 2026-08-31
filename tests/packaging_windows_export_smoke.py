@@ -474,6 +474,8 @@ REQUIRED_TOWN_SCENIC_BACKDROP_NAMES = (
     "town_cindercoil_foundry", "town_gloamwake_anchorage",
     "town_rainwrit_bastion", "town_hollowreed_sanctuary", "town_meridian_choirhold",
     "town_crownroot_refuge", "town_blackbell_foundry", "town_pale_sounding_harbor",
+    "town_amberweir_granary", "town_moonbite_reedshrine", "town_splitprism_duelcourt",
+    "town_woundroot_hearthgrove", "town_whitegauge_calibration_yard", "town_dreamwake_oracle_harbor",
 )
 REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES = (
     "art/towns/runtime/backdrops/town_embercourt.png.import",
@@ -508,6 +510,12 @@ REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES = (
     "art/towns/runtime/backdrops/horizon_citadels/town_crownroot_refuge.png.import",
     "art/towns/runtime/backdrops/horizon_citadels/town_blackbell_foundry.png.import",
     "art/towns/runtime/backdrops/horizon_citadels/town_pale_sounding_harbor.png.import",
+    "art/towns/runtime/backdrops/marchland_seats/town_amberweir_granary.png.import",
+    "art/towns/runtime/backdrops/marchland_seats/town_moonbite_reedshrine.png.import",
+    "art/towns/runtime/backdrops/marchland_seats/town_splitprism_duelcourt.png.import",
+    "art/towns/runtime/backdrops/marchland_seats/town_woundroot_hearthgrove.png.import",
+    "art/towns/runtime/backdrops/marchland_seats/town_whitegauge_calibration_yard.png.import",
+    "art/towns/runtime/backdrops/marchland_seats/town_dreamwake_oracle_harbor.png.import",
 )
 FATAL_EXPORT_PATTERNS = (
     "SCRIPT ERROR",

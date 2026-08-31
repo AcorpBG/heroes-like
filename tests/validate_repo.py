@@ -32482,6 +32482,12 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         "town_crownroot_refuge": "art/towns/runtime/backdrops/horizon_citadels/town_crownroot_refuge.png",
         "town_blackbell_foundry": "art/towns/runtime/backdrops/horizon_citadels/town_blackbell_foundry.png",
         "town_pale_sounding_harbor": "art/towns/runtime/backdrops/horizon_citadels/town_pale_sounding_harbor.png",
+        "town_amberweir_granary": "art/towns/runtime/backdrops/marchland_seats/town_amberweir_granary.png",
+        "town_moonbite_reedshrine": "art/towns/runtime/backdrops/marchland_seats/town_moonbite_reedshrine.png",
+        "town_splitprism_duelcourt": "art/towns/runtime/backdrops/marchland_seats/town_splitprism_duelcourt.png",
+        "town_woundroot_hearthgrove": "art/towns/runtime/backdrops/marchland_seats/town_woundroot_hearthgrove.png",
+        "town_whitegauge_calibration_yard": "art/towns/runtime/backdrops/marchland_seats/town_whitegauge_calibration_yard.png",
+        "town_dreamwake_oracle_harbor": "art/towns/runtime/backdrops/marchland_seats/town_dreamwake_oracle_harbor.png",
     }
     town_items = load_json(CONTENT_DIR / "towns.json").get("items", [])
     town_by_id = {str(item.get("id", "")): item for item in town_items if isinstance(item, dict)} if isinstance(town_items, list) else {}
@@ -32491,22 +32497,23 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         resource_path = f"res://{relative_path}"
         town = town_by_id.get(town_id, {})
         asset_path = ROOT / relative_path
-        source_family = "third_hearths_backdrops" if "/third_hearths/" in relative_path else "horizon_citadels" if "/horizon_citadels/" in relative_path else "complete_town_backdrops"
-        expected_quality = "0.62" if source_family == "third_hearths_backdrops" else "0.52" if source_family == "horizon_citadels" else "0.58"
+        source_family = "third_hearths_backdrops" if "/third_hearths/" in relative_path else "horizon_citadels" if "/horizon_citadels/" in relative_path else "marchland_seats" if "/marchland_seats/" in relative_path else "complete_town_backdrops"
+        expected_quality = "0.62" if source_family == "third_hearths_backdrops" else "0.52" if source_family == "horizon_citadels" else "0.55" if source_family == "marchland_seats" else "0.58"
         source_path = ROOT / "art" / "towns" / "source" / "generated" / source_family / f"{town_id}_source.png"
         import_path = Path(f"{asset_path}.import")
         import_text = import_path.read_text(encoding="utf-8") if import_path.is_file() else ""
         ensure(str(town.get("scenic_backdrop_path", "")) == resource_path, errors, f"Production town {town_id} must own its exact scenic backdrop path")
         ensure(asset_path.is_file() and png_size(asset_path) == (1600, 900), errors, f"Production town {town_id} must ship an exact 1600x900 runtime backdrop")
-        ensure(source_path.is_file() and png_size(source_path) == (1672, 941), errors, f"Production town {town_id} must retain its high-resolution generated source")
+        expected_source_size = (1536, 1024) if source_family == "marchland_seats" else (1672, 941)
+        ensure(source_path.is_file() and png_size(source_path) == expected_source_size, errors, f"Production town {town_id} must retain its high-resolution generated source")
         ensure(import_path.is_file(), errors, f"Production town {town_id} must retain tracked import settings")
         ensure("compress/mode=1" in import_text and f"compress/lossy_quality={expected_quality}" in import_text, errors, f"Production town {town_id} must use its bounded lossy runtime compression")
         if asset_path.is_file():
             exact_runtime_bytes.append(asset_path.read_bytes())
         if source_path.is_file():
             exact_source_bytes.append(source_path.read_bytes())
-    ensure(len(exact_runtime_bytes) == 26 and len(set(exact_runtime_bytes)) == 26, errors, "All twenty-six production runtime scenic backdrops must be distinct")
-    ensure(len(exact_source_bytes) == 26 and len(set(exact_source_bytes)) == 26, errors, "All twenty-six production generated scenic sources must be distinct")
+    ensure(len(exact_runtime_bytes) == 32 and len(set(exact_runtime_bytes)) == 32, errors, "All thirty-two production runtime scenic backdrops must be distinct")
+    ensure(len(exact_source_bytes) == 32 and len(set(exact_source_bytes)) == 32, errors, "All thirty-two production generated scenic sources must be distinct")
     ensure(
         {town_id for town_id, town in town_by_id.items() if str(town.get("scenic_backdrop_path", "")) != ""} == set(exact_town_backdrops),
         errors,
@@ -48044,7 +48051,18 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
         "town_rainwrit_bastion", "town_hollowreed_sanctuary",
         "town_meridian_choirhold", "town_crownroot_refuge",
         "town_blackbell_foundry", "town_pale_sounding_harbor",
+        "town_amberweir_granary", "town_moonbite_reedshrine",
+        "town_splitprism_duelcourt", "town_woundroot_hearthgrove",
+        "town_whitegauge_calibration_yard", "town_dreamwake_oracle_harbor",
     )
+    marchland_factions = {
+        "town_amberweir_granary": "faction_embercourt",
+        "town_moonbite_reedshrine": "faction_mireclaw",
+        "town_splitprism_duelcourt": "faction_sunvault",
+        "town_woundroot_hearthgrove": "faction_thornwake",
+        "town_whitegauge_calibration_yard": "faction_brasshollow",
+        "town_dreamwake_oracle_harbor": "faction_veilmourn",
+    }
     expected_identity_assets = {town_id: f"town_identity_{town_id.removeprefix('town_')}" for town_id in town_order}
     manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = manifest.get("object_assets", {})
@@ -48070,7 +48088,7 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
             if disk_path.is_file():
                 sprite_bytes.append(disk_path.read_bytes())
     ensure(len(sprite_bytes) == 6 and len(set(sprite_bytes)) == 6, errors, "All six Overworld faction town PNG payloads must be distinct")
-    ensure(isinstance(identity_sprites, dict) and list(identity_sprites.keys()) == list(town_order), errors, "Overworld town identity mapping must preserve the exact 26-town content order")
+    ensure(isinstance(identity_sprites, dict) and list(identity_sprites.keys()) == list(town_order), errors, "Overworld town identity mapping must preserve the exact 32-town content order")
     identity_bytes: list[bytes] = []
     if isinstance(identity_sprites, dict) and isinstance(object_assets, dict):
         for town_id in town_order:
@@ -48090,11 +48108,17 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
                 "town_rainwrit_bastion", "town_hollowreed_sanctuary", "town_meridian_choirhold",
                 "town_crownroot_refuge", "town_blackbell_foundry", "town_pale_sounding_harbor",
             }
-            expected_runtime = "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png" if horizon_citadel else "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png" if third_hearth else f"res://art/overworld/runtime/objects/towns/identity/{town_id}.png"
-            expected_source = f"res://art/overworld/source/generated/towns/horizon_citadels/{town_id}_source.png" if horizon_citadel else f"res://art/overworld/source/generated/towns/third_hearths/{town_id}_source.png" if third_hearth else f"res://art/overworld/source/generated/towns/identity/{town_id}_source.png"
+            marchland_seat = town_id in marchland_factions
+            faction_stem = marchland_factions.get(town_id, "").removeprefix("faction_")
+            expected_runtime = f"res://art/overworld/runtime/objects/towns/factions/{faction_stem}.png" if marchland_seat else "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png" if horizon_citadel else "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png" if third_hearth else f"res://art/overworld/runtime/objects/towns/identity/{town_id}.png"
+            expected_source = f"res://art/towns/source/generated/marchland_seats/{town_id}_source.png" if marchland_seat else f"res://art/overworld/source/generated/towns/horizon_citadels/{town_id}_source.png" if horizon_citadel else f"res://art/overworld/source/generated/towns/third_hearths/{town_id}_source.png" if third_hearth else f"res://art/overworld/source/generated/towns/identity/{town_id}_source.png"
             ensure(runtime_path == expected_runtime, errors, f"Overworld town identity asset {asset_id} must own its exact runtime path")
-            ensure(source_path == expected_source, errors, f"Overworld town identity asset {asset_id} must retain generated-source provenance")
-            expected_model = "built_in_image_gen_original_horizon_citadel_atlas" if horizon_citadel else "built_in_image_gen_original_third_hearth_town_atlas" if third_hearth else "built_in_image_gen_original_landmark"
+            if marchland_seat:
+                source_path = str(entry.get("scenic_source", ""))
+                ensure(source_path == expected_source and str(entry.get("source_atlas", "")) == "res://art/overworld/source/faction_town_sprite_atlas.png", errors, f"Overworld town identity asset {asset_id} must retain scenic and faction-silhouette provenance")
+            else:
+                ensure(source_path == expected_source, errors, f"Overworld town identity asset {asset_id} must retain generated-source provenance")
+            expected_model = "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette" if marchland_seat else "built_in_image_gen_original_horizon_citadel_atlas" if horizon_citadel else "built_in_image_gen_original_third_hearth_town_atlas" if third_hearth else "built_in_image_gen_original_landmark"
             ensure(str(entry.get("source_model", "")) == expected_model, errors, f"Overworld town identity asset {asset_id} must name its original generation source")
             ensure(str(entry.get("assigned_town_id", "")) == town_id, errors, f"Overworld town identity asset {asset_id} must retain exact town assignment")
             runtime_disk = res_path_to_disk(runtime_path)
@@ -48111,14 +48135,18 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
                 expected_index = town_order.index(town_id) - 20
                 ensure(entry.get("atlas_region") == [expected_index * 128, 0, 128, 128] and entry.get("atlas_size") == [768, 128], errors, f"Overworld town identity asset {asset_id} has the wrong Horizon Citadels atlas crop")
                 ensure(min(png_size(source_disk)) >= 1024 and Path(f"{source_disk}.import").is_file(), errors, f"Overworld town identity asset {asset_id} must retain imported high-resolution source art")
+            if marchland_seat:
+                ensure(entry.get("assigned_faction_id") == marchland_factions[town_id] and hashlib.sha256(source_disk.read_bytes()).hexdigest() == entry.get("scenic_source_sha256") and png_size(source_disk) == (1536, 1024), errors, f"Overworld town identity asset {asset_id} lost its exact Marchland scenic provenance")
             identity_disk = source_disk if third_hearth or horizon_citadel else runtime_disk
+            if marchland_seat:
+                identity_disk = source_disk
             if identity_disk.is_file():
                 identity_bytes.append(identity_disk.read_bytes())
-    ensure(len(identity_bytes) == 26 and len(set(identity_bytes)) == 26, errors, "All 26 Overworld town identity source payloads must be distinct")
+    ensure(len(identity_bytes) == 32 and len(set(identity_bytes)) == 32, errors, "All 32 Overworld town identity source payloads must be distinct")
     scenarios = load_json(ROOT / "content/scenarios.json").get("items", [])
     live_town_placements = [town for scenario in scenarios if isinstance(scenario, dict) for town in scenario.get("towns", []) if isinstance(town, dict)] if isinstance(scenarios, list) else []
-    ensure(len(live_town_placements) >= 353, errors, "All 353 live authored scenario town placements must remain covered by the town identity slice")
-    ensure({str(town.get("town_id", "")) for town in live_town_placements} == set(town_order), errors, "Every live authored scenario town id must resolve through the exact 26-town identity mapping")
+    ensure(len(live_town_placements) >= 395, errors, "All 395 live authored scenario town placements must remain covered by the town identity slice")
+    ensure({str(town.get("town_id", "")) for town in live_town_placements} == set(town_order), errors, "Every live authored scenario town id must resolve through the exact 32-town identity mapping")
     ensure(png_size(FACTION_TOWN_SPRITE_ATLAS_PATH) == (1536, 1024), errors, "Faction town source atlas must remain the exact 3x2 1536x1024 source")
     ensure(Path(f"{FACTION_TOWN_SPRITE_ATLAS_PATH}.import").is_file(), errors, "Faction town source atlas import metadata is missing")
     town_default = manifest.get("town_default_sprite", {})
@@ -50471,9 +50499,9 @@ def validate_six_faction_ascendant_companies(errors: list[str]) -> None:
     ensure(len(ascendant_unit_ids) == 18, errors, "Ascendant-company roster must own exactly eighteen production units")
     unit_group_counts = {unit_id: sum(1 for group in groups.values() if any(str(stack.get("unit_id", "")) == unit_id for stack in group.get("stacks", []) if isinstance(stack, dict))) for unit_id in ascendant_unit_ids}
     expected_unit_group_counts = {
-        "unit_embercourt_beacon_lectors": 13, "unit_embercourt_sluicefire_lindworms": 5, "unit_embercourt_charter_colossus": 8,
+        "unit_embercourt_beacon_lectors": 13, "unit_embercourt_sluicefire_lindworms": 6, "unit_embercourt_charter_colossus": 8,
         "unit_mireclaw_sporewake_chanters": 14, "unit_mireclaw_gorefen_rippers": 7, "unit_mireclaw_drowned_antler_sovereign": 8,
-        "unit_sunvault_solar_array_striders": 15, "unit_sunvault_aurora_ballistae": 6, "unit_sunvault_daybreak_colossus": 8,
+        "unit_sunvault_solar_array_striders": 16, "unit_sunvault_aurora_ballistae": 6, "unit_sunvault_daybreak_colossus": 8,
         "unit_thornwake_stagknot_runners": 8, "unit_thornwake_graft_matriarchs": 6, "unit_thornwake_worldroot_bastion": 9,
         "unit_brasshollow_debt_engine_exactors": 14, "unit_brasshollow_crucible_crawlers": 5, "unit_brasshollow_foundry_saint": 8,
         "unit_veilmourn_obituary_scribes": 16, "unit_veilmourn_mirrorkeel_reavers": 9, "unit_veilmourn_fogbound_leviathan": 8,
@@ -52603,7 +52631,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     placements = [node for scenario in scenarios if isinstance(scenario, dict) for node in scenario.get("resource_nodes", []) if isinstance(node, dict)] if isinstance(scenarios, list) else []
     placed_site_ids = {str(node.get("site_id", "")) for node in placements}
     placement_counts = {site_id: sum(1 for node in placements if str(node.get("site_id", "")) == site_id) for site_id in expected}
-    ensure(len(scenarios) >= 201 and len(placements) == 2092 and len(placed_site_ids) == 308, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
+    ensure(len(scenarios) >= 207 and len(placements) == 2152 and len(placed_site_ids) == 308, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
     ensure(placement_counts == {site_id: row[5] for site_id, row in expected.items()}, errors, "Recurring resource-site selected placement counts changed")
 
     resolver_paths: dict[str, str] = {}
@@ -75679,7 +75707,7 @@ def validate_eightfold_guarded_reliquary_march(errors: list[str]) -> None:
         ensure('REQUIRED_EIGHTFOLD_GUARDED_RELIQUARY_ATLAS_NAME = "eightfold_guarded_reliquary_atlas"' in text and "eightfold_guarded_reliquary_atlas.png.import" in text, errors, f"{packaging_path.name} must audit the Eightfold Reliquary atlas")
         ensure('REQUIRED_THIRD_HEARTHS_ATLAS_NAME = "third_hearths_atlas"' in text and "third_hearths_atlas.png.import" in text, errors, f"{packaging_path.name} must audit the Five-Faction Third Hearths atlas")
         ensure('REQUIRED_HORIZON_CITADELS_ATLAS_NAME = "horizon_citadels_atlas"' in text and "horizon_citadels_atlas.png.import" in text, errors, f"{packaging_path.name} must audit the Six Horizon Citadels atlas")
-        ensure("REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES" in text and "town_scenic_backdrop_entries_present" in text and text.count("art/towns/runtime/backdrops/third_hearths/") == 5 and text.count("art/towns/runtime/backdrops/complete_identities/") == 15 and text.count("art/towns/runtime/backdrops/horizon_citadels/") == 6, errors, f"{packaging_path.name} must audit all twenty-six exact Town backdrops plus six faction fallbacks")
+        ensure("REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES" in text and "town_scenic_backdrop_entries_present" in text and text.count("art/towns/runtime/backdrops/third_hearths/") == 5 and text.count("art/towns/runtime/backdrops/complete_identities/") == 15 and text.count("art/towns/runtime/backdrops/horizon_citadels/") == 6 and text.count("art/towns/runtime/backdrops/marchland_seats/") == 6, errors, f"{packaging_path.name} must audit all thirty-two exact Town backdrops plus six faction fallbacks")
 
 
 def validate_overworld_ten_land_transit_network(errors: list[str]) -> None:
@@ -78404,7 +78432,7 @@ def validate_six_sovereign_wild_habitats(errors: list[str]) -> None:
     encounter_sprites = art.get("encounter_identity_sprites", {})
     unit_art = {str(row.get("unit_id", "")): row for row in load_json(CONTENT_DIR / "unit_art_manifest.json").get("items", []) if isinstance(row, dict)}
     unit_animation = {str(row.get("unit_id", "")): row for row in load_json(CONTENT_DIR / "unit_animation_manifest.json").get("items", []) if isinstance(row, dict)}
-    ensure(len(units) >= 136 and (len(groups),len(encounters),len(dwellings),len(sites),len(objects)) == (339,197,43,309,416), errors, "Sovereign-wild batch catalogs changed")
+    ensure(len(units) >= 136 and (len(groups),len(encounters),len(dwellings),len(sites),len(objects)) == (345,197,43,309,416), errors, "Sovereign-wild batch catalogs changed")
     atlas_payload = atlas_path.read_bytes()
     atlas_sha = "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32"
     ensure(png_size(atlas_path) == (576,48) and hashlib.sha256(atlas_payload).hexdigest() == atlas_sha and len(atlas_payload) >= 26 and atlas_payload[25] in {4,6}, errors, "Sovereign-wild habitat atlas bytes, size, or alpha changed")
@@ -78536,7 +78564,7 @@ def validate_six_unbound_wild_concords(errors: list[str]) -> None:
     object_assets = art.get("object_assets", {})
     site_sprites = art.get("resource_site_sprites", {})
     encounter_sprites = art.get("encounter_identity_sprites", {})
-    ensure((len(units),len(groups),len(encounters),len(dwellings),len(sites),len(objects),len(scenarios)) == (142,339,197,43,309,416,201), errors, "Unbound-wild concord catalog counts changed")
+    ensure((len(units),len(groups),len(encounters),len(dwellings),len(sites),len(objects),len(scenarios)) == (142,345,197,43,309,416,207), errors, "Unbound-wild concord catalog counts changed")
     campaign = campaigns.get(campaign_id, {})
     campaign_chapters = campaign.get("scenarios", []) if isinstance(campaign.get("scenarios", []), list) else []
     expected_scenario_order = [row[2] for row in expected.values()]
@@ -78630,6 +78658,77 @@ def validate_six_unbound_wild_concords(errors: list[str]) -> None:
         ensure("REQUIRED_UNBOUND_WILD_CONCORDS_ATLAS_NAME" in packaging_text and "unbound_wild_concords_atlas.png.import" in packaging_text and "== 42" in packaging_text, errors, f"{packaging_path.name} must audit the packaged unbound-wild atlas")
 
 
+def validate_six_marchland_seats(errors: list[str]) -> None:
+    batch_id = "content-six-marchland-seats-10184"
+    towns = items_index(load_json(CONTENT_DIR / "towns.json"))
+    factions = items_index(load_json(CONTENT_DIR / "factions.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
+    heroes = items_index(load_json(CONTENT_DIR / "heroes.json"))
+    manifest_path = ROOT / "art" / "towns" / "source" / "generated" / "marchland_seats" / "manifest.json"
+    smoke_script = ROOT / "tests" / "six_marchland_seats_smoke.gd"
+    smoke_scene = ROOT / "tests" / "six_marchland_seats_smoke.tscn"
+    smoke_wrapper = ROOT / "tests" / "six_marchland_seats_smoke.py"
+    smoke_report = ROOT / ".artifacts" / "six_marchland_seats_smoke" / "report.json"
+    author_script = ROOT / "tools" / "author_six_marchland_seats.py"
+    expected = {
+        "town_amberweir_granary": ("faction_embercourt", "hero_embercourt_belis_rainledger", "rainledger-amberweir-long-march", "amberweir", "hero_orrik", "946f20a3b201e627beca0e7d154e881624dc6afcf7b6c28a96948eade38c8a07"),
+        "town_moonbite_reedshrine": ("faction_mireclaw", "hero_mireclaw_nix_votivejaw", "votivejaw-moonbite-long-march", "moonbite", "hero_sunvault_essa_daynote", "f05ccdc207acf0f777fefde7ee78f4852129af8e24206c3ff4f9d6ee9ff8bedd"),
+        "town_splitprism_duelcourt": ("faction_sunvault", "hero_sunvault_renn_facetlane", "facetlane-splitprism-long-march", "splitprism", "hero_thornwake_veyra_seedseer", "3fe076a9a0d9f2e381d70685c1ca9bda784cec4d3474499ec3772ea1ac1cab6a"),
+        "town_woundroot_hearthgrove": ("faction_thornwake", "hero_thornwake_merek_greenbarrow", "greenbarrow-woundroot-long-march", "woundroot", "hero_brasshollow_pava_ashmeter", "f0938b6de12e626479a0d8671d6bff3acdd93e30b594b67c7944adab483074d5"),
+        "town_whitegauge_calibration_yard": ("faction_brasshollow", "hero_brasshollow_lina_gaugesavant", "gaugesavant-whitegauge-long-march", "whitegauge", "hero_veilmourn_thir_obituaryink", "cd9f56ba0eac275caa136ba2b8787775f105c7e376b55d01d664afdfebdf0967"),
+        "town_dreamwake_oracle_harbor": ("faction_veilmourn", "hero_veilmourn_morwen_wakeoracle", "wakeoracle-dreamwake-long-march", "dreamwake", "hero_embercourt_helva_tollbrand", "8b894403b88e6bee8fc1ddfb902f548b56078fe09c95b3bb780860bc541ffeef"),
+    }
+    for path in (manifest_path, smoke_script, smoke_scene, smoke_wrapper, author_script):
+        ensure(path.is_file(), errors, f"Missing Six Marchland Seats owner: {path.relative_to(ROOT)}")
+    if not manifest_path.is_file():
+        return
+    manifest = load_json(manifest_path)
+    rows = {str(row.get("town_id", "")): row for row in manifest.get("items", []) if isinstance(row, dict)}
+    ensure(manifest.get("source_model") == "built_in_image_gen" and manifest.get("content_batch_id") == batch_id and manifest.get("runtime_size") == [1600, 900] and manifest.get("source_size") == [1536, 1024] and set(rows) == set(expected), errors, "Six Marchland Seats source manifest contract changed")
+    runtime_payloads = []
+    source_payloads = []
+    for town_id, (faction_id, hero_id, scenario_id, prefix, rival_hero_id, runtime_sha) in expected.items():
+        town = towns.get(town_id, {})
+        scenario = scenarios.get(scenario_id, {})
+        group = groups.get(f"army_{prefix}_long_march_company", {})
+        row = rows.get(town_id, {})
+        source_path = res_path_to_disk(str(row.get("source_path", "")))
+        runtime_path = res_path_to_disk(str(row.get("runtime_path", "")))
+        source_bytes = source_path.read_bytes() if source_path.is_file() else b""
+        runtime_bytes = runtime_path.read_bytes() if runtime_path.is_file() else b""
+        ensure(town.get("faction_id") == faction_id and town.get("content_status") == "marchland_seat_live" and town.get("content_batch_id") == batch_id and town.get("marchland_seat", {}).get("lead_hero_id") == hero_id and town.get("marchland_seat", {}).get("scenario_id") == scenario_id, errors, f"{town_id} Marchland Seat identity changed")
+        ensure(town_id in factions.get(faction_id, {}).get("town_ids", []) and len(town.get("buildable_building_ids", [])) >= 20 and len(town.get("garrison", [])) == 3 and len(town.get("spell_library", [])) >= 2, errors, f"{town_id} is not a complete faction town")
+        ensure(heroes.get(hero_id, {}).get("faction_id") == faction_id, errors, f"{town_id} lead hero faction changed")
+        ensure(scenario.get("content_status") == "marchland_seat_long_form_skirmish_live" and scenario.get("content_batch_id") == batch_id and scenario.get("map_size") == {"width": 18, "height": 12} and len(scenario.get("map", [])) == 12 and all(len(map_row) == 18 for map_row in scenario.get("map", [])), errors, f"{scenario_id} long-form map contract changed")
+        ensure(scenario.get("hero_id") == hero_id and scenario.get("player_faction_id") == faction_id and scenario.get("selection", {}).get("availability") == {"campaign": False, "skirmish": True} and scenario.get("player_army_id") == f"army_{prefix}_long_march_company", errors, f"{scenario_id} exact skirmish launch identity changed")
+        ensure(len(scenario.get("towns", [])) == 2 and len(scenario.get("encounters", [])) == 4 and len(scenario.get("resource_nodes", [])) == 10 and len(scenario.get("artifact_nodes", [])) == 2 and len(scenario.get("script_hooks", [])) == 5, errors, f"{scenario_id} composed content count changed")
+        victory = scenario.get("objectives", {}).get("victory", [])
+        defeat = scenario.get("objectives", {}).get("defeat", [])
+        ensure(len(victory) == 6 and len(defeat) == 3 and any(row.get("placement_id") == f"{prefix}_counterstroke" for row in victory if isinstance(row, dict)), errors, f"{scenario_id} objective chain changed")
+        final_front = next((placement for placement in scenario.get("encounters", []) if placement.get("placement_id") == f"{prefix}_front_4"), {})
+        ensure(final_front.get("enemy_commander_state", {}).get("roster_hero_id") == rival_hero_id, errors, f"{scenario_id} roster-backed rival changed")
+        ensure(group.get("faction_id") == faction_id and group.get("content_batch_id") == batch_id and len(group.get("stacks", [])) == 4, errors, f"{scenario_id} opening company changed")
+        ensure(source_path.is_file() and png_size(source_path) == (1536, 1024) and hashlib.sha256(source_bytes).hexdigest() == row.get("source_sha256") and len(str(row.get("prompt", ""))) >= 160 and len(str(row.get("accessible_description", ""))) >= 80, errors, f"{town_id} generated source or provenance changed")
+        ensure(runtime_path.is_file() and png_size(runtime_path) == (1600, 900) and hashlib.sha256(runtime_bytes).hexdigest() == runtime_sha == row.get("runtime_sha256") and Path(f"{runtime_path}.import").is_file(), errors, f"{town_id} runtime scenic art or import changed")
+        source_payloads.append(source_bytes)
+        runtime_payloads.append(runtime_bytes)
+    ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6 and len(runtime_payloads) == 6 and len(set(runtime_payloads)) == 6, errors, "All six Marchland Seat source/runtime panoramas must remain byte-distinct")
+    if smoke_script.is_file():
+        text = smoke_script.read_text(encoding="utf-8")
+        for token in ("SIX_MARCHLAND_SEATS_SMOKE", "BattleRulesScript.create_battle_payload", "ScenarioScriptRulesScript.process_hooks", "TownRules.build_active_town", "TownRules.recruit_active_town", "OverworldRules.capture_town_by_placement", "ScenarioRulesScript.evaluate_session", "marchland_seats_contact_sheet.png", '"single_consolidated_smoke": true'):
+            ensure(token in text, errors, f"Six Marchland Seats consolidated smoke is missing proof token: {token}")
+    if smoke_scene.is_file():
+        ensure("res://tests/six_marchland_seats_smoke.gd" in smoke_scene.read_text(encoding="utf-8"), errors, "Six Marchland Seats smoke scene lost its exact script")
+    ensure(smoke_report.is_file(), errors, "Six Marchland Seats consolidated smoke report is missing")
+    if smoke_report.is_file():
+        report = load_json(smoke_report)
+        ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("direct_battle_victory_count") == 24 and report.get("counterstroke_battle_victory_count") == 6 and report.get("named_rival_count") == 6 and report.get("town_build_count") == 6 and report.get("town_recruit_count") == 6 and report.get("exact_scenic_art_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_round_trip_count") == 6 and report.get("map_capture_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(report.get("rows", [])) == 6, errors, "Six Marchland Seats consolidated smoke report is not fully green")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        text = packaging_path.read_text(encoding="utf-8")
+        ensure(text.count("art/towns/runtime/backdrops/marchland_seats/") == 6 and all(town_id in text for town_id in expected), errors, f"{packaging_path.name} must audit all six packaged Marchland Seat backdrops")
+
+
 def validate_six_horizon_citadels(errors: list[str]) -> None:
     towns = items_index(load_json(CONTENT_DIR / "towns.json"))
     factions = items_index(load_json(CONTENT_DIR / "factions.json"))
@@ -78648,11 +78747,11 @@ def validate_six_horizon_citadels(errors: list[str]) -> None:
         "town_blackbell_foundry": ("faction_brasshollow", "ninefold_blackbell_foundry", (46, 38), "enemy", "quenchbell_fortress", "claim_blackbell_foundry", 4),
         "town_pale_sounding_harbor": ("faction_veilmourn", "ninefold_pale_sounding_harbor", (55, 49), "enemy", "echo_chart_harbor", "claim_pale_sounding_harbor", 5),
     }
-    ensure(len(towns) == 26, errors, "Horizon Citadels must retain the expanded 26-town production catalog")
+    ensure(len(towns) == 32, errors, "Horizon Citadels plus Marchland Seats must retain the expanded 32-town production catalog")
     ensure({faction_id: len(faction.get("town_ids", [])) for faction_id, faction in factions.items()} == {
-        "faction_embercourt": 4, "faction_mireclaw": 6, "faction_sunvault": 4,
-        "faction_thornwake": 4, "faction_brasshollow": 4, "faction_veilmourn": 4,
-    }, errors, "Horizon Citadels must retain exact expanded faction town breadth")
+        "faction_embercourt": 5, "faction_mireclaw": 7, "faction_sunvault": 5,
+        "faction_thornwake": 5, "faction_brasshollow": 5, "faction_veilmourn": 5,
+    }, errors, "Horizon Citadels plus Marchland Seats must retain exact expanded faction town breadth")
     ensure(len(scenario.get("towns", [])) == 12 and len(scenario.get("objectives", {}).get("victory", [])) == 11 and len(scenario.get("objectives", {}).get("defeat", [])) == 5, errors, "Ninefold must retain its twelve-town, eleven-victory, five-defeat Horizon Citadels scope")
     placements = {str(row.get("placement_id", "")): row for row in scenario.get("towns", []) if isinstance(row, dict)}
     objectives = {str(row.get("id", "")) for kind in ("victory", "defeat") for row in scenario.get("objectives", {}).get(kind, []) if isinstance(row, dict)}
@@ -79852,7 +79951,7 @@ def validate_six_grand_convergence_rival_commanders(errors: list[str]) -> None:
     art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     assets = art.get("object_assets", {})
     identities = art.get("encounter_identity_sprites", {})
-    ensure((len(groups), len(encounters), len(scenarios), len(heroes)) == (339,197,201,66), errors, "Grand-convergence rival-commander catalog totals changed")
+    ensure((len(groups), len(encounters), len(scenarios), len(heroes)) == (345,197,207,66), errors, "Grand-convergence rival-commander catalog totals changed")
     atlas_sha = "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b"
     atlas_bytes = atlas_path.read_bytes()
     ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_bytes).hexdigest() == atlas_sha and len(atlas_bytes) >= 26 and atlas_bytes[25] in {4,6}, errors, "Grand-convergence rival-command atlas bytes, size, or alpha changed")
@@ -80032,7 +80131,7 @@ def validate_six_rival_road_skirmishes(errors: list[str]) -> None:
 
     skirmish_only = [scenario for scenario in scenarios.values() if scenario.get("selection", {}).get("availability", {}).get("skirmish") is True and scenario.get("selection", {}).get("availability", {}).get("campaign") is False]
     faction_counts = Counter(str(scenario.get("player_faction_id", "")) for scenario in skirmish_only)
-    ensure(len(skirmish_only) == 99 and faction_counts == {"faction_embercourt":20,"faction_mireclaw":15,"faction_sunvault":15,"faction_thornwake":15,"faction_brasshollow":17,"faction_veilmourn":17}, errors, "The skirmish-only catalog must reflect the six veteran-muster operations joining campaign play while retaining skirmish access")
+    ensure(len(skirmish_only) == 105 and faction_counts == {"faction_embercourt":21,"faction_mireclaw":16,"faction_sunvault":16,"faction_thornwake":16,"faction_brasshollow":18,"faction_veilmourn":18}, errors, "The skirmish-only catalog must include the six Marchland long marches while retaining prior campaign-access operations")
 
     direct_placements = [placement for scenario in scenarios.values() for placement in scenario.get("encounters", []) if isinstance(placement, dict)]
     direct_counts = Counter(str(placement.get("encounter_id", "")) for placement in direct_placements)
@@ -80253,8 +80352,8 @@ def validate_six_veteran_company_musters(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     atlas_path = res_path_to_disk(atlas_res)
-    ensure((len(scenarios), len(groups), len(sites), len(objects), len(encounters)) == (201,339,309,416,197), errors, "Veteran musters must remain present in the 201-scenario, 339-army, 309-site, 416-object, 197-encounter production catalogs")
-    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 201, errors, "Veteran muster scenarios are missing from the active player-facing scenario count")
+    ensure((len(scenarios), len(groups), len(sites), len(objects), len(encounters)) == (207,345,309,416,197), errors, "Veteran musters must remain present in the 207-scenario, 345-army, 309-site, 416-object, 197-encounter production catalogs")
+    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 207, errors, "Veteran muster scenarios are missing from the active player-facing scenario count")
     ensure(atlas_path.is_file() and png_size(atlas_path) == (576,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha, errors, "Veteran company muster runtime atlas bytes or size changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Veteran company muster runtime atlas import sidecar is missing")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_veteran_company_musters_wave1" and source_manifest.get("content_batch_id") == slice_id and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6, errors, "Veteran company muster source provenance changed")
@@ -80353,7 +80452,7 @@ def validate_six_field_muster_commission_skirmishes(errors: list[str]) -> None:
     source_rows = {str(row.get("encounter_id", "")): row for row in source_manifest.get("assets", []) if isinstance(row, dict)}
     atlas_path = res_path_to_disk(atlas_res)
 
-    ensure((len(scenarios), len(encounters), len(groups), len(heroes)) == (201,197,339,66) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 201, errors, "Field-muster commissions must remain present in the expanded production roster")
+    ensure((len(scenarios), len(encounters), len(groups), len(heroes)) == (207,197,345,66) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 207, errors, "Field-muster commissions must remain present in the expanded production roster")
     ensure({str(scenario.get("hero_id", "")) for scenario in scenarios.values()} == set(heroes), errors, "Every one of the 66 authored heroes must now lead at least one live scenario")
     ensure(source_manifest.get("schema_id") == "field_muster_commission_encounter_art_v1" and source_manifest.get("content_batch_id") == slice_id and source_manifest.get("generator") == "OpenAI built-in image generation" and set(source_rows) == {row[7] for row in expected.values()}, errors, "Field-muster commission generated-source provenance changed")
     ensure(atlas_path.is_file() and png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "571d07944ca299915c7d87a414243efb071088dd912f6004ff262b9994a15634", errors, "Field-muster commission runtime atlas bytes or size changed")
@@ -80432,7 +80531,7 @@ def validate_six_twin_hold_defense_vigils(errors: list[str]) -> None:
     source_rows = {str(row.get("id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     atlas_path = res_path_to_disk(atlas_res)
 
-    ensure((len(scenarios), len(encounters), len(groups), len(heroes)) == (201,197,339,66) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 201, errors, "Twin-hold vigils must remain present inside the expanded production roster")
+    ensure((len(scenarios), len(encounters), len(groups), len(heroes)) == (207,197,345,66) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 207, errors, "Twin-hold vigils must remain present inside the expanded production roster")
     ensure({str(scenario.get("hero_id", "")) for scenario in scenarios.values()} == set(heroes), errors, "All 66 authored heroes must remain direct live scenario leads")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_twin_hold_defense_vigil_atlas" and source_manifest.get("asset_policy") == "original_generated_runtime_sprite_no_homm3_art_import" and set(source_rows) == {row[11] for row in expected.values()}, errors, "Twin-hold generated-source provenance changed")
     runtime_manifest = source_manifest.get("runtime_atlas", {})
@@ -80530,7 +80629,7 @@ def validate_six_three_relic_pilgrimages(errors: list[str]) -> None:
     guardian_atlas_path = res_path_to_disk(guardian_atlas_res)
     artifact_atlas_path = res_path_to_disk(artifact_atlas_res)
 
-    ensure((len(scenarios), len(encounters), len(groups), len(heroes), len(artifacts)) == (201,197,339,66,51) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 201, errors, "Three-relic pilgrimages must remain present inside the expanded production roster")
+    ensure((len(scenarios), len(encounters), len(groups), len(heroes), len(artifacts)) == (207,197,345,66,51) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 207, errors, "Three-relic pilgrimages must remain present inside the expanded production roster")
     all_artifact_placements = [placement for scenario in scenarios.values() for placement in scenario.get("artifact_nodes", []) if isinstance(placement, dict)]
     ensure({str(placement.get("artifact_id", "")) for placement in all_artifact_placements} == set(artifacts), errors, "Every one of the 51 artifact definitions must now own an authored field placement")
     ensure(source_manifest.get("schema_id") == "three_relic_pilgrimage_encounter_art_v1" and source_manifest.get("content_batch_id") == slice_id and len(source_rows) == 6, errors, "Three-relic generated-source provenance changed")
@@ -80830,7 +80929,7 @@ def validate_six_grand_muster_assemblies(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
 
-    ensure((len(scenarios), len(sites), len(groups)) == (201,309,339) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 201, errors, "Grand Musters must remain present inside the expanded production catalogs")
+    ensure((len(scenarios), len(sites), len(groups)) == (207,309,345) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 207, errors, "Grand Musters must remain present inside the expanded production catalogs")
     atlas_sha = "175f2028ef2517dc9f482eb03020ab2aceb13b3369dfe4be31d28da7511e22a2"
     ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6, errors, "Grand Muster runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_grand_muster_assemblies_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 120, errors, "Grand Muster generated-source provenance or prompt set changed")
@@ -80924,7 +81023,7 @@ def validate_six_field_mastery_convocations(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
 
-    ensure((len(scenarios), len(sites), len(groups)) == (201,309,339) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 201, errors, "Field Mastery must remain present inside the expanded production catalogs")
+    ensure((len(scenarios), len(sites), len(groups)) == (207,309,345) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 207, errors, "Field Mastery must remain present inside the expanded production catalogs")
     atlas_sha = "0af3c4e0de1553cb835d0f0ca78a85cf82aad237299ee84795f7379e54597afa"
     ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6, errors, "Field Mastery runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_field_mastery_convocations_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 180, errors, "Field Mastery generated-source provenance or prompt set changed")
@@ -81021,7 +81120,7 @@ def validate_six_twin_command_field_councils(errors: list[str]) -> None:
     site_sprites = art.get("resource_site_sprites", {})
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
-    ensure((len(scenarios), len(sites), len(groups)) == (201,309,339) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 201, errors, "Twin Command must remain present inside the expanded production catalogs")
+    ensure((len(scenarios), len(sites), len(groups)) == (207,309,345) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 207, errors, "Twin Command must remain present inside the expanded production catalogs")
     atlas_sha = "bee234907c874f816bc057f64bf3e3de0bac1b5d7add5a99edda3688132a7a1a"
     ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6, errors, "Twin Command runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_twin_command_field_councils_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 220, errors, "Twin Command generated-source provenance or prompt set changed")
@@ -81111,7 +81210,7 @@ def validate_six_relief_route_convoy_runs(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     atlas_sha = "d13071e3816cca9567205b7010933418e874b22057602d89ed4c6646f50086ee"
-    ensure((len(scenarios), len(sites), len(groups)) == (201,309,339) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 201, errors, "Relief routes must remain present inside the expanded production catalogs")
+    ensure((len(scenarios), len(sites), len(groups)) == (207,309,345) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 207, errors, "Relief routes must remain present inside the expanded production catalogs")
     ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6, errors, "Relief-route runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_relief_route_convoy_relays_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 220, errors, "Relief-route generated-source provenance or prompt set changed")
     source_payloads: list[bytes] = []
@@ -81200,7 +81299,7 @@ def validate_six_fogbreak_survey_expeditions(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     atlas_sha = "4a084c26ae82b38476bd3f0a27aab615d4c7b5db6c7eb91a8860060e962767b2"
-    ensure((len(scenarios), len(sites), len(groups)) == (201,309,339) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 201, errors, "Fogbreak surveys must remain present inside the expanded production catalogs")
+    ensure((len(scenarios), len(sites), len(groups)) == (207,309,345) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 207, errors, "Fogbreak surveys must remain present inside the expanded production catalogs")
     ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6, errors, "Fogbreak survey runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_fogbreak_survey_instruments_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 220, errors, "Fogbreak survey generated-source provenance or prompt set changed")
     source_payloads: list[bytes] = []
@@ -81291,7 +81390,7 @@ def validate_six_frontier_treasury_commissions(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     atlas_sha = "6cbc67fac5e474d5ffaacb5794babe9166bceb4b55bd67b5a0921ebb995cea2c"
-    ensure((len(scenarios), len(sites), len(groups)) == (201,309,339) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 201, errors, "Frontier treasury commissions must remain present inside the expanded production catalogs")
+    ensure((len(scenarios), len(sites), len(groups)) == (207,309,345) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 207, errors, "Frontier treasury commissions must remain present inside the expanded production catalogs")
     ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6, errors, "Frontier treasury runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_frontier_treasury_offices_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 220, errors, "Frontier treasury generated-source provenance or prompt set changed")
     source_payloads: list[bytes] = []
@@ -81375,7 +81474,7 @@ def validate_six_border_oath_standard_seizures(errors: list[str]) -> None:
     assets = art.get("object_assets", {})
     standard_sources = {row.get("site_id"):row for row in load_json(standard_manifest_path).get("items", [])}
     cordon_sources = {row.get("encounter_id"):row for row in load_json(cordon_manifest_path).get("items", [])}
-    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (201,339,197,309,201), errors, "Current content catalogs must retain 201 scenarios, 339 armies, 197 encounters, and 309 resource sites")
+    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (207,345,197,309,207), errors, "Current content catalogs must retain 207 scenarios, 345 armies, 197 encounters, and 309 resource sites")
     ensure(png_size(required[0]) == (288,48) and hashlib.sha256(required[0].read_bytes()).hexdigest() == "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e", errors, "Border Oath standards atlas changed")
     ensure(png_size(required[1]) == (288,48) and hashlib.sha256(required[1].read_bytes()).hexdigest() == "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c", errors, "Border Oath cordons atlas changed")
     for scenario_id, contract in expected.items():
@@ -81457,7 +81556,7 @@ def validate_six_garrison_warrant_musters(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     encounter_uses = Counter(str(front.get("encounter_id", "")) for scenario in scenarios.values() for front in scenario.get("encounters", []) if isinstance(front, dict))
-    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (201,339,197,309,201), errors, "Current content catalogs must retain 201 scenarios, 339 armies, 197 encounters, and 309 resource sites")
+    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (207,345,197,309,207), errors, "Current content catalogs must retain 207 scenarios, 345 armies, 197 encounters, and 309 resource sites")
     ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "29b2d37dea33ae0d919d7d98496279fc41fbd37459150be4062d2c96bf138056" and atlas_path.read_bytes()[25] == 6, errors, "Garrison Warrant runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_garrison_warrant_musters_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 180, errors, "Garrison Warrant source provenance changed")
     for scenario_id, contract in expected.items():
@@ -81539,7 +81638,7 @@ def validate_six_setbound_regalia_assemblies(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     encounter_uses = Counter(str(front.get("encounter_id", "")) for scenario in scenarios.values() for front in scenario.get("encounters", []) if isinstance(front, dict))
-    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (201,339,197,309,201), errors, "Current content catalogs must retain 201 scenarios, 339 armies, 197 encounters, and 309 resource sites")
+    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (207,345,197,309,207), errors, "Current content catalogs must retain 207 scenarios, 345 armies, 197 encounters, and 309 resource sites")
     ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "2188bf5c9713e07728b1e5a9a79feee2737a255fd9546c7b1f664c2747e6e949" and atlas_path.read_bytes()[25] == 6, errors, "Setbound Regalia runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_setbound_regalia_reliquaries_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 240, errors, "Setbound Regalia source provenance changed")
     table = reward_tables.get("artifact_source_setbound_regalia_reliquaries", {})
@@ -81630,7 +81729,7 @@ def validate_six_named_rival_banner_challenges(errors: list[str]) -> None:
     site_sprites = art.get("resource_site_sprites", {})
     encounter_sprites = art.get("encounter_identity_sprites", {})
     hero_sprites = art.get("hero_identity_sprites", {})
-    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (201,339,197,309,201), errors, "Named-rival batch must own the exact current content catalog counts")
+    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (207,345,197,309,207), errors, "Named-rival batch must own the exact current content catalog counts")
     ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "e43708681a0196da508b07ae7a4e7a48c38623f927603a8a8be253acf068615c", errors, "Named-rival banner atlas dimensions or bytes changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Named-rival banner atlas import metadata is missing")
 
@@ -82153,6 +82252,7 @@ def main() -> int:
     validate_six_sovereign_wild_habitats(errors)
     validate_six_unbound_wild_concords(errors)
     validate_six_named_rival_banner_challenges(errors)
+    validate_six_marchland_seats(errors)
     validate_six_horizon_citadels(errors)
     validate_horizon_compact_six_citadels(errors)
     validate_five_horizon_court_skirmishes(errors)

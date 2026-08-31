@@ -3726,6 +3726,84 @@
       ],
       "content_status": "veteran_company_muster_player_company_live",
       "content_batch_id": "content-six-veteran-company-musters-10184"
+    },
+    {
+      "id": "army_amberweir_long_march_company",
+      "name": "Amberweir Granary Long-March Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 18},
+        {"unit_id": "unit_embercourt_bargebow_crews", "count": 12},
+        {"unit_id": "unit_embercourt_ash_oath_bailiffs", "count": 6},
+        {"unit_id": "unit_embercourt_sluicefire_lindworms", "count": 2}
+      ],
+      "content_status": "marchland_seat_player_company_live",
+      "content_batch_id": "content-six-marchland-seats-10184"
+    },
+    {
+      "id": "army_moonbite_long_march_company",
+      "name": "Moonbite Reedshrine Long-March Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 18},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 12},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 6},
+        {"unit_id": "unit_mireclaw_ferrychain_lashers", "count": 3}
+      ],
+      "content_status": "marchland_seat_player_company_live",
+      "content_batch_id": "content-six-marchland-seats-10184"
+    },
+    {
+      "id": "army_splitprism_long_march_company",
+      "name": "Splitprism Duelcourt Long-March Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 18},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 12},
+        {"unit_id": "unit_sunvault_mirror_duelists", "count": 6},
+        {"unit_id": "unit_sunvault_solar_array_striders", "count": 3}
+      ],
+      "content_status": "marchland_seat_player_company_live",
+      "content_batch_id": "content-six-marchland-seats-10184"
+    },
+    {
+      "id": "army_woundroot_long_march_company",
+      "name": "Woundroot Hearthgrove Long-March Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 20},
+        {"unit_id": "unit_thornwake_bramblekite_needlers", "count": 12},
+        {"unit_id": "unit_thornwake_seedshield_wardens", "count": 7},
+        {"unit_id": "unit_thornwake_sporeglass_menders", "count": 3}
+      ],
+      "content_status": "marchland_seat_player_company_live",
+      "content_batch_id": "content-six-marchland-seats-10184"
+    },
+    {
+      "id": "army_whitegauge_long_march_company",
+      "name": "Whitegauge Calibration Yard Long-March Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 20},
+        {"unit_id": "unit_brasshollow_quenchspool_slingers", "count": 12},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 7},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 3}
+      ],
+      "content_status": "marchland_seat_player_company_live",
+      "content_batch_id": "content-six-marchland-seats-10184"
+    },
+    {
+      "id": "army_dreamwake_long_march_company",
+      "name": "Dreamwake Oracle Harbor Long-March Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 18},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 12},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 6},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 3}
+      ],
+      "content_status": "marchland_seat_player_company_live",
+      "content_batch_id": "content-six-marchland-seats-10184"
     }
   ]
 }

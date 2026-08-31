@@ -1,0 +1,76 @@
+{
+  "source_model": "built_in_image_gen",
+  "content_batch_id": "content-six-marchland-seats-10184",
+  "asset_policy": "original_generated_scenic_town_backdrops_no_franchise_art",
+  "generation_date": "2026-08-31",
+  "runtime_size": [1600, 900],
+  "source_size": [1536, 1024],
+  "derivation": "center cover-crop and resize to 1600x900 with metadata stripped",
+  "shared_constraints": [
+    "Richly painted original 2D fantasy strategy environment with readable architecture and tactile brushwork.",
+    "Scenery-first wide composition with clear lower and side edges for the existing compact Town controls.",
+    "No focal characters, text, letters, logos, UI, borders, watermarks, modern machinery, copied franchise architecture, or photorealism."
+  ],
+  "items": [
+    {
+      "town_id": "town_amberweir_granary",
+      "name": "Amberweir Granary",
+      "source_path": "res://art/towns/source/generated/marchland_seats/town_amberweir_granary_source.png",
+      "runtime_path": "res://art/towns/runtime/backdrops/marchland_seats/town_amberweir_granary.png",
+      "source_sha256": "3d36fe899b3b908b79dbc55f1c5e9a9895bbb5c62ebf70fa2f5fa7574abc1fa7",
+      "runtime_sha256": "946f20a3b201e627beca0e7d154e881624dc6afcf7b6c28a96948eade38c8a07",
+      "accessible_description": "A rain-wet sandstone river fortress surrounds copper grain towers, waterwheels, counting arcades, and warm storehouse courts beneath clearing harvest clouds.",
+      "prompt": "Use case: stylized-concept. Asset type: production fantasy strategy game town-screen scenic backdrop. Amberweir Granary, an original Embercourt river-granary fortress for a civic economist commander: broad river weir at harvest dusk, terraced sandstone walls, copper-roofed grain towers, waterwheels, rain chains, counting arcades, storehouse windows, distant fields and wet hills; scenery-first panorama with edge space; amber lamps after rain; wet stone, copper, grain awnings, timber sluice gates; no focal people, text, logos, UI, border, watermark, copied architecture, modern machinery, or photorealism."
+    },
+    {
+      "town_id": "town_moonbite_reedshrine",
+      "name": "Moonbite Reedshrine",
+      "source_path": "res://art/towns/source/generated/marchland_seats/town_moonbite_reedshrine_source.png",
+      "runtime_path": "res://art/towns/runtime/backdrops/marchland_seats/town_moonbite_reedshrine.png",
+      "source_sha256": "1062c97cb1acaf86cc66ab3ebb559f355ef7191b54ea08e71469cd79e521fecc",
+      "runtime_sha256": "f05ccdc207acf0f777fefde7ee78f4852129af8e24206c3ff4f9d6ee9ff8bedd",
+      "accessible_description": "A crescent reed settlement rises over black peatwater around ivory clay shrine arches, moon pools, votive jars, and narrow lantern-lit causeways.",
+      "prompt": "Use case: stylized-concept. Asset type: production fantasy strategy game town-screen scenic backdrop. Moonbite Reedshrine, an original Mireclaw marsh town: crescent settlement over black peatwater, layered reed palisades, dark timber shrines, ivory clay jaw-shaped arch stones, moon pools, hanging votive jars, narrow plank causeways and fog reeds; scenery-first panorama with edge space; indigo twilight and green-gold shrine lights; no gore, skulls, focal people, text, logos, UI, border, watermark, copied architecture, or photorealism."
+    },
+    {
+      "town_id": "town_splitprism_duelcourt",
+      "name": "Splitprism Duelcourt",
+      "source_path": "res://art/towns/source/generated/marchland_seats/town_splitprism_duelcourt_source.png",
+      "runtime_path": "res://art/towns/runtime/backdrops/marchland_seats/town_splitprism_duelcourt.png",
+      "source_sha256": "097da8c58dd0356f7223ae5c30c08db3bb623d375f83d9e5bcaf3cafda44c2bd",
+      "runtime_sha256": "3fe076a9a0d9f2e381d70685c1ca9bda784cec4d3474499ec3772ea1ac1cab6a",
+      "accessible_description": "Two asymmetrical crystal observatory towers frame an open ivory dueling court, reflecting channels, prism bridges, and distant red desert mesas.",
+      "prompt": "Use case: stylized-concept. Asset type: production fantasy strategy game town-screen scenic backdrop. Splitprism Duelcourt, an original Sunvault desert observatory town: two asymmetrical crystalline observatory towers, stepped ivory terraces, split-prism bridges, mirrored dueling rings, shallow reflecting channels and distant red mesas; scenery-first panorama with edge space; hard clear noon and spectral refractions; no focal people, text, logos, UI, border, watermark, copied architecture, or photorealism."
+    },
+    {
+      "town_id": "town_woundroot_hearthgrove",
+      "name": "Woundroot Hearthgrove",
+      "source_path": "res://art/towns/source/generated/marchland_seats/town_woundroot_hearthgrove_source.png",
+      "runtime_path": "res://art/towns/runtime/backdrops/marchland_seats/town_woundroot_hearthgrove.png",
+      "source_sha256": "0f4377ebefebcf821d006232892a5247b2fb399fdd691e2258c7fc5c2984f27a",
+      "runtime_sha256": "f0938b6de12e626479a0d8671d6bff3acdd93e30b594b67c7944adab483074d5",
+      "accessible_description": "A living hollow-tree settlement surrounds a warm root-hearth courtyard, recovery gardens, sap-glass lanterns, and woven bridges beneath an immense green canopy.",
+      "prompt": "Use case: stylized-concept. Asset type: production fantasy strategy game town-screen scenic backdrop. Woundroot Hearthgrove, an original Thornwake recovery town: immense living trees, layered root terraces, bark halls around communal hearths, recovery gardens, sap-glass lanterns, woven branch bridges and green mist; scenery-first panorama with edge space; filtered afternoon and warm hearth glow; no focal people, text, logos, UI, border, watermark, copied tree-town architecture, or photorealism."
+    },
+    {
+      "town_id": "town_whitegauge_calibration_yard",
+      "name": "Whitegauge Calibration Yard",
+      "source_path": "res://art/towns/source/generated/marchland_seats/town_whitegauge_calibration_yard_source.png",
+      "runtime_path": "res://art/towns/runtime/backdrops/marchland_seats/town_whitegauge_calibration_yard.png",
+      "source_sha256": "abe7024f17c7f23e362d95be90c869affc23ba4c3118fc086d105adc0a985b92",
+      "runtime_sha256": "cd9f56ba0eac275caa136ba2b8787775f105c7e376b55d01d664afdfebdf0967",
+      "accessible_description": "White ceramic gauge towers and brass pressure works ring a black basalt calibration yard scored by restrained red datum lines beneath cold mountain light.",
+      "prompt": "Use case: stylized-concept. Asset type: production fantasy strategy game town-screen scenic backdrop. Whitegauge Calibration Yard, an original Brasshollow industrial town: fortified basalt shelf, white ceramic gauge towers, brass pressure pipes, counterweighted test cranes, rail-marked courtyards, measured steam, red datum lines and furnace hills; scenery-first panorama with edge space; crisp cold morning and warm furnace windows; fantasy technology only, no focal people, text, numbers, logos, UI, border, watermark, modern machinery, copied architecture, or photorealism."
+    },
+    {
+      "town_id": "town_dreamwake_oracle_harbor",
+      "name": "Dreamwake Oracle Harbor",
+      "source_path": "res://art/towns/source/generated/marchland_seats/town_dreamwake_oracle_harbor_source.png",
+      "runtime_path": "res://art/towns/runtime/backdrops/marchland_seats/town_dreamwake_oracle_harbor.png",
+      "source_sha256": "877a05769accb6e043fc2114adae74e495c8c9482f32f87405d1a13ce946c2e1",
+      "runtime_sha256": "8b894403b88e6bee8fc1ddfb902f548b56078fe09c95b3bb780860bc541ffeef",
+      "accessible_description": "Crescent stone piers branch around luminous tide-reading pools beneath pale bell towers, black timber halls, memory chimes, and layered blue-violet sea fog.",
+      "prompt": "Use case: stylized-concept. Asset type: production fantasy strategy game town-screen scenic backdrop. Dreamwake Oracle Harbor, an original Veilmourn fog-port: sheltered night harbor, crescent piers, pale bell towers, tide-reading pools, black timber halls, memory chimes, lantern skiffs, layered sea fog and distant cliffs; scenery-first panorama with edge space; blue-violet predawn and silver fog; no focal people, text, logos, UI, border, watermark, copied harbor architecture, or photorealism."
+    }
+  ]
+}

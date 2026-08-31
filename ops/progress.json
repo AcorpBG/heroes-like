@@ -1914,6 +1914,59 @@
   "blocker": "",
   "completedImplementationEvidence": [
     {
+      "id": "content-six-marchland-seats-20260831",
+      "title": "Six Marchland Seats",
+      "sliceId": "content-six-marchland-seats-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-31T20:13:15Z",
+      "updatedAt": "2026-08-31T20:13:15Z",
+      "latestFinding": "Six original 18x12 skirmishes and six new developable towns now provide twenty-four direct battles, six counterstrokes, exact scenic identities, live town development, and save-version-9 continuity. The one consolidated six-case smoke, repository validator, and matching Linux and Windows packaged startups pass at 232657852 bytes.",
+      "artifacts": [
+        "content/scenarios.json",
+        "content/towns.json",
+        "content/army_groups.json",
+        "content/factions.json",
+        "art/towns/runtime/backdrops/marchland_seats",
+        "art/towns/source/generated/marchland_seats/manifest.json",
+        "art/overworld/manifest.json",
+        "tests/six_marchland_seats_smoke.gd",
+        "tests/six_marchland_seats_smoke.py",
+        "tests/six_marchland_seats_smoke.tscn",
+        "tests/validate_repo.py",
+        ".artifacts/six_marchland_seats_smoke/report.json",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "commands": [
+        "python3 tests/six_marchland_seats_smoke.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py"
+      ],
+      "metrics": {
+        "scenario_count": 207,
+        "army_group_count": 345,
+        "town_count": 32,
+        "marchland_case_count": 6,
+        "direct_battle_victory_count": 24,
+        "counterstroke_battle_victory_count": 6,
+        "town_build_count": 6,
+        "town_recruit_count": 6,
+        "scenario_victory_count": 6,
+        "exact_scenic_art_count": 6,
+        "save_version": 9,
+        "linux_packaged_startup_passed": true,
+        "windows_packaged_startup_passed": true,
+        "pck_size_bytes": 232657852,
+        "pck_size_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 17342148,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "Select the next coherent production-content slice; broader production completion and release readiness remain open."
+    },
+    {
       "id": "content-six-triune-arcanum-trials-20260831",
       "title": "Six Triune Arcanum trials",
       "sliceId": "content-six-triune-arcanum-trials-10184",
@@ -16011,14 +16064,14 @@
       }
     }
   ],
-  "currentNotes": "Completed The Six Sealed Companies as a six-chapter cross-faction campaign with exact witness unlocks, bounded common-resource handoff, isolated commander state, full narrative, seven original art identities, one consolidated gameplay/art/save smoke, repository validation, and matching Linux/Windows package boots at 231646428 bytes.",
+  "currentNotes": "Completed Six Marchland Seats: six original 18x12 skirmishes, six developable towns, six exact scenic backdrops, one consolidated smoke, repository validation, and matching Linux/Windows packaged startup at 232657852 bytes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-sealed-companies-campaign-10184",
-  "currentSliceId": "content-six-sealed-companies-campaign-10184",
-  "currentSliceNotes": "Completed all six chapters with 18 production battles, 18 target recruits, exact witness unlocks, capped common-resource carryover, isolated personal state, full narrative, one emblem, six chapter seals, six save-v9 round trips, and matching Linux/Windows package boots at 231646428 bytes.",
+  "currentSlice": "content-six-marchland-seats-10184",
+  "currentSliceId": "content-six-marchland-seats-10184",
+  "currentSliceNotes": "Completed six original 18x12 skirmishes, six complete faction towns, and six exact scenic backdrops for Belis Rainledger, Nix Votivejaw, Renn Facetlane, Merek Greenbarrow, Lina Gauge-Savant, and Morwen Wakeoracle with one consolidated smoke and symmetric package validation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six sealed companies campaign 10184",
-  "currentSliceUpdatedAt": "2026-08-31T19:09:08Z",
+  "currentSliceTitle": "content six marchland seats 10184",
+  "currentSliceUpdatedAt": "2026-08-31T20:13:15Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107245,6 +107298,16 @@
       "startedAt": "2026-08-31T19:09:08Z",
       "notes": "Completed one original six-chapter campaign across the veteran-muster operations with exact witness unlocks, capped common-resource handoff, isolated personal state, complete narrative, seven original art identities, one consolidated smoke, and matching Linux/Windows package boots at 231646428 bytes.",
       "completedAt": "2026-08-31T19:29:33Z"
+    },
+    {
+      "id": "content-six-marchland-seats-10184",
+      "title": "content six marchland seats 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T20:13:15Z",
+      "startedAt": "2026-08-31T19:37:54Z",
+      "notes": "Completed six long-form 18x12 faction skirmishes, six developable towns, six original scenic backdrops, one consolidated gameplay/town/art/save smoke, repository validation, and matching Linux/Windows packaged startups at 232657852 bytes.",
+      "completedAt": "2026-08-31T20:13:15Z"
     }
   ],
   "project": "heroes-like",
@@ -107254,8 +107317,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The Six Sealed Companies campaign is complete and has no blocker. Broader production content, whole-game validation, signing, publication, and release readiness remain open; the next coherent content slice has not yet been selected.",
-  "remainingWork": "Audit the expanded live catalog, select and register the next substantial production-content and original-art batch, then preserve the single consolidated-smoke cadence.",
+  "remainingGap": "Only one of 201 authored scenarios currently uses an 18x12 long-form board, and six underused faction commanders lack towns authored around their command identities.",
+  "remainingWork": "Complete the six Marchland Seat towns, scenic backdrops, and long-form skirmishes, then run one consolidated six-case smoke and final cross-platform package validation.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -107686,8 +107749,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_seven_school_signature_battle_vfx_completed",
-  "status": "in_progress",
+  "result": "content_six_marchland_seats_completed",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -107787,9 +107850,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed the coherent Seven-School Signature Battle VFX content, accessibility, live-presentation, and package-efficiency batch with one consolidated smoke.",
+  "summary": "Completed Six Marchland Seats as one coherent six-map, six-town, six-art production-content batch with one consolidated smoke.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T19:29:33Z",
+  "updatedAt": "2026-08-31T20:13:15Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
