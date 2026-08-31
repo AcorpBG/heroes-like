@@ -16014,10 +16014,10 @@
   "currentNotes": "Six original Triune Arcanum trials now provide eighteen upper-circle spell lessons, six five-stack academy companies, eighteen guarded fronts, and first-class spell-knowledge victory authority. One consolidated 6/6 smoke passed eighteen lessons, eighteen spell resolutions, eighteen consecutive battles, six negative controls, six secondary-hero transfers, six victories, exact art, captures, and save-v9 round trips; repository validation and matching Linux/Windows packaged startup pass at 247983132 bytes.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-six-triune-arcanum-trials-10184",
-  "currentSliceId": "content-six-grand-muster-assemblies-10184",
-  "currentSliceNotes": "Implemented six skirmish-only Grand Muster assemblies, six opening companies, hero_army_meets_requirements runtime/content dependency authority, six one-time faction rally sites, six generated transparent source masters and one compact runtime atlas. Consolidated smoke passed 6 scenarios, 6 recruits, 18 battles, 6 claims, 6 stack split/merge invariance controls, 6 victories, and six save-v9 round trips; repository validation and matching Linux/Windows 248207100-byte exports passed with 31 resource-site atlases and source art excluded.",
+  "currentSliceId": "content-six-field-mastery-convocations-10184",
+  "currentSliceNotes": "Implemented six 15x10 faction convocation scenarios, six five-stack companies, first-class exact-hero level-4/three-earned-choice/no-pending victory authority, six original transparent landmark masters and a 288x48 runtime atlas. Consolidated smoke passed 6 cases, 18 battles, 18 specialty choices, 6 claims, 6 scoped dependencies, 6 save-v9 victories; repository validation and Linux/Windows export startup gates passed at 248304800-byte PCK.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six grand muster assemblies 10184",
+  "currentSliceTitle": "content six field mastery convocations 10184",
   "currentSliceUpdatedAt": "2026-08-31T07:49:20Z",
   "deferredRiskRegister": [
     {
@@ -107105,6 +107105,16 @@
       "startedAt": "2026-08-31T08:41:01Z",
       "notes": "Implemented six skirmish-only Grand Muster assemblies, six opening companies, hero_army_meets_requirements runtime/content dependency authority, six one-time faction rally sites, six generated transparent source masters and one compact runtime atlas. Consolidated smoke passed 6 scenarios, 6 recruits, 18 battles, 6 claims, 6 stack split/merge invariance controls, 6 victories, and six save-v9 round trips; repository validation and matching Linux/Windows 248207100-byte exports passed with 31 resource-site atlases and source art excluded.",
       "completedAt": "2026-08-31T09:20:02Z"
+    },
+    {
+      "id": "content-six-field-mastery-convocations-10184",
+      "title": "content six field mastery convocations 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T10:06:34Z",
+      "startedAt": "2026-08-31T09:26:25Z",
+      "notes": "Implemented six 15x10 faction convocation scenarios, six five-stack companies, first-class exact-hero level-4/three-earned-choice/no-pending victory authority, six original transparent landmark masters and a 288x48 runtime atlas. Consolidated smoke passed 6 cases, 18 battles, 18 specialty choices, 6 claims, 6 scoped dependencies, 6 save-v9 victories; repository validation and Linux/Windows export startup gates passed at 248304800-byte PCK.",
+      "completedAt": "2026-08-31T10:06:34Z"
     }
   ],
   "project": "heroes-like",
@@ -107649,7 +107659,7 @@
   ],
   "summary": "Completed the coherent Seven-School Signature Battle VFX content, accessibility, live-presentation, and package-efficiency batch with one consolidated smoke.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T09:20:02Z",
+  "updatedAt": "2026-08-31T10:06:34Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

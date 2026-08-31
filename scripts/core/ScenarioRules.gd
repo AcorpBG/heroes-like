@@ -318,6 +318,8 @@ static func _scenario_objective_dependency(objective: Dictionary, objective_inde
 				for requirement in requirements:
 					if requirement is Dictionary:
 						_add_dependency_value(dependency, "unit_ids", String(requirement.get("unit_id", "")))
+		"hero_progression_meets_requirements":
+			_add_dependency_value(dependency, "hero_ids", String(objective.get("hero_id", "")))
 		"town_owned_by_player", "town_not_owned_by_player":
 			_add_dependency_value(dependency, "town_placement_ids", String(objective.get("placement_id", "")))
 			_add_dependency_value(dependency, "town_ids", String(objective.get("town_id", "")))
@@ -1548,6 +1550,8 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 			)
 		"hero_army_meets_requirements":
 			return bool(_hero_army_requirement_progress(session, objective).get("complete", false))
+		"hero_progression_meets_requirements":
+			return bool(_hero_progression_requirement_progress(session, objective).get("complete", false))
 		"town_owned_by_player":
 			var town := _find_town(session, objective)
 			return not town.is_empty() and String(town.get("owner", "neutral")) == "player"
@@ -1620,6 +1624,18 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 				requirement_count,
 				"; need %s" % missing_summary if missing_summary != "" else "",
 			]
+		"hero_progression_meets_requirements":
+			var progress := _hero_progression_requirement_progress(session, objective)
+			if not bool(progress.get("hero_found", false)):
+				return "%s (Commander unavailable)" % base_label
+			var level_text := "Lv%d/%d" % [int(progress.get("current_level", 1)), int(progress.get("minimum_level", 1))]
+			var choice_text := "%d/%d choices" % [int(progress.get("resolved_choice_count", 0)), int(progress.get("minimum_resolved_choice_count", 0))]
+			var pending_count := int(progress.get("pending_choice_count", 0))
+			if bool(progress.get("complete", false)):
+				return "%s (%s; %s resolved)" % [base_label, level_text, choice_text]
+			if bool(progress.get("require_no_pending_choices", false)) and pending_count > 0:
+				return "%s (%s; %s; %d pending)" % [base_label, level_text, choice_text, pending_count]
+			return "%s (%s; %s)" % [base_label, level_text, choice_text]
 		"enemy_pressure_at_least":
 			return "%s (%d/%d)" % [
 				base_label,
@@ -1680,6 +1696,56 @@ static func _hero_army_requirement_progress(
 		"complete": not rows.is_empty() and not army.is_empty() and ready_count == rows.size(),
 	}
 
+static func _hero_progression_requirement_progress(
+	session: SessionStateStoreScript.SessionData,
+	objective: Dictionary
+) -> Dictionary:
+	var hero_id := String(objective.get("hero_id", ""))
+	var hero := _controlled_hero_state(session, hero_id)
+	var minimum_level: int = max(1, int(objective.get("minimum_level", 1)))
+	var minimum_resolved_choice_count: int = max(0, int(objective.get("minimum_resolved_specialty_choices", 0)))
+	var current_level: int = max(1, int(hero.get("level", 1))) if not hero.is_empty() else 0
+	var specialties = hero.get("specialties", [])
+	var starting_specialties = ContentService.get_hero(hero_id).get("starting_specialties", [])
+	var starting_specialty_count: int = starting_specialties.size() if starting_specialties is Array else 0
+	var resolved_choice_count: int = max(0, (specialties.size() if specialties is Array else 0) - starting_specialty_count)
+	var pending_choices = hero.get("pending_specialty_choices", [])
+	var pending_choice_count: int = pending_choices.size() if pending_choices is Array else 0
+	var require_no_pending_choices := bool(objective.get("require_no_pending_specialty_choices", false))
+	return {
+		"hero_id": hero_id,
+		"hero_found": not hero.is_empty(),
+		"minimum_level": minimum_level,
+		"current_level": current_level,
+		"minimum_resolved_choice_count": minimum_resolved_choice_count,
+		"resolved_choice_count": resolved_choice_count,
+		"starting_specialty_count": starting_specialty_count,
+		"require_no_pending_choices": require_no_pending_choices,
+		"pending_choice_count": pending_choice_count,
+		"complete": (
+			not hero.is_empty()
+			and current_level >= minimum_level
+			and resolved_choice_count >= minimum_resolved_choice_count
+			and (not require_no_pending_choices or pending_choice_count == 0)
+		),
+	}
+
+static func _controlled_hero_state(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	if session == null or hero_id == "":
+		return {}
+	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
+	if active_hero_id == hero_id:
+		var active_hero = session.overworld.get("hero", {})
+		if active_hero is Dictionary and String(active_hero.get("id", active_hero_id)) == hero_id:
+			return active_hero
+	var heroes = session.overworld.get("player_heroes", [])
+	if not (heroes is Array):
+		return {}
+	for hero in heroes:
+		if hero is Dictionary and String(hero.get("id", "")) == hero_id:
+			return hero
+	return {}
+
 static func _controlled_hero_army(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	if session == null or hero_id == "":
 		return {}
@@ -1688,14 +1754,9 @@ static func _controlled_hero_army(session: SessionStateStoreScript.SessionData, 
 		var active_army = session.overworld.get("army", {})
 		if active_army is Dictionary:
 			return active_army
-	var heroes = session.overworld.get("player_heroes", [])
-	if not (heroes is Array):
-		return {}
-	for hero in heroes:
-		if hero is Dictionary and String(hero.get("id", "")) == hero_id:
-			var hero_army = hero.get("army", {})
-			return hero_army if hero_army is Dictionary else {}
-	return {}
+	var hero := _controlled_hero_state(session, hero_id)
+	var hero_army = hero.get("army", {})
+	return hero_army if hero_army is Dictionary else {}
 
 static func _army_unit_count(army: Dictionary, unit_id: String) -> int:
 	if army.is_empty() or unit_id == "":

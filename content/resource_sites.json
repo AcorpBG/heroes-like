@@ -14796,6 +14796,198 @@
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
+    },
+    {
+      "id": "site_beaconscribe_first_light_lectern",
+      "name": "Beaconscribe First-Light Lectern",
+      "family": "scenario_objective",
+      "action_label": "Read the First-Light Writ",
+      "summary": "A floodgate lectern asks a commander to reconcile three field lessons before the beacon opens.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
+      "claim_flags": {
+        "jorunmastery_first_light_read": true
+      },
+      "runtime_boundary": {
+        "status": "field_mastery_convocation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-field-mastery-convocations-10184",
+      "public_text": {
+        "public_summary": "An asymmetrical charred-bronze reading stand carries a hinged amber beacon, three blank wax tablets, blue cord, and a forked route-pointer finial.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_rotlamp_shedskin_censer",
+      "name": "Rotlamp Shedskin Censer",
+      "family": "scenario_objective",
+      "action_label": "Name the Three Shed Skins",
+      "summary": "A peat-lit reed censer preserves three discarded masks until a proven commander can name what each lesson changed.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "defense": 1
+      },
+      "claim_flags": {
+        "eddamastery_shedskins_named": true
+      },
+      "runtime_boundary": {
+        "status": "field_mastery_convocation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-field-mastery-convocations-10184",
+      "public_text": {
+        "public_summary": "A crooked reed cage under a mushroom hood holds a peat brazier, three empty bark masks on bone hooks, moss, and a muted violet glow.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_daynote_true_angle_dais",
+      "name": "Daynote True-Angle Dais",
+      "family": "scenario_objective",
+      "action_label": "Set the True Angle",
+      "summary": "Three unequal mirrors reveal one true solar angle only after their reader has survived three contradictory proofs.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "power": 1
+      },
+      "claim_flags": {
+        "essamastery_true_angle_set": true
+      },
+      "runtime_boundary": {
+        "status": "field_mastery_convocation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-field-mastery-convocations-10184",
+      "public_text": {
+        "public_summary": "A narrow crystalline seat stands on unequal glass feet beneath three angled mirror vanes, an open solar ring, and a cobalt calibration ribbon.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_loamchant_deep_root_seat",
+      "name": "Loamchant Deep-Root Seat",
+      "family": "scenario_objective",
+      "action_label": "Seat the Three Seeds",
+      "summary": "Three seed bowls test whether a commander can carry separate field lessons into one patient root-song.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "defense": 1
+      },
+      "claim_flags": {
+        "elianmastery_three_seeds_seated": true
+      },
+      "runtime_boundary": {
+        "status": "field_mastery_convocation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-field-mastery-convocations-10184",
+      "public_text": {
+        "public_summary": "A living forked-root chair curls around a carved grafting stone with three bark seed bowls, a woven russet sash, moss, and a budding arch.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_gaugesavant_fifth_measure_rig",
+      "name": "Gauge-Savant Fifth-Measure Rig",
+      "family": "scenario_objective",
+      "action_label": "Balance the Fifth Measure",
+      "summary": "An uneven pressure rig refuses a copied solution and rewards only a commander who balances three earned measures.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "attack": 1
+      },
+      "claim_flags": {
+        "linamastery_fifth_measure_balanced": true
+      },
+      "runtime_boundary": {
+        "status": "field_mastery_convocation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-field-mastery-convocations-10184",
+      "public_text": {
+        "public_summary": "A squat black-iron examiner chair sits inside an asymmetric pressure frame with three unequal counterweight levers, a chain pedal, and red-black pennant.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_wakeoracle_last_echo_choir",
+      "name": "Wakeoracle Last-Echo Choir",
+      "family": "scenario_objective",
+      "action_label": "Sound the Last Echo",
+      "summary": "Three shell bells and three memory bowls will sound together only for a commander who has resolved every waiting lesson.",
+      "claim_rewards": {
+        "experience": 250
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
+      "claim_flags": {
+        "morwenmastery_last_echo_sounded": true
+      },
+      "runtime_boundary": {
+        "status": "field_mastery_convocation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-field-mastery-convocations-10184",
+      "public_text": {
+        "public_summary": "A leaning memorial mast bears three distinct shell bells above three sea-glass memory bowls, a hooked crossbar, dark ribbons, and a crescent mourning sail.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }

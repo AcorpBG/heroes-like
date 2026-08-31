@@ -1669,6 +1669,20 @@ func _validate_objective(
 						seen_requirement_unit_ids.append(requirement_unit_id)
 					if int(requirement.get("minimum_count", 0)) <= 0:
 						push_warning("Scenario %s objective %s unit %s must define minimum_count > 0." % [scenario_id, String(objective.get("id", "")), requirement_unit_id])
+		"hero_progression_meets_requirements":
+			var progression_hero_id := String(objective.get("hero_id", ""))
+			if progression_hero_id == "" or not hero_index.has(progression_hero_id):
+				push_warning("Scenario %s objective %s references missing hero_id %s." % [scenario_id, String(objective.get("id", "")), progression_hero_id])
+			elif not (hero_starts is Array) or progression_hero_id not in hero_starts:
+				push_warning("Scenario %s objective %s hero_id %s must be a controlled starting hero." % [scenario_id, String(objective.get("id", "")), progression_hero_id])
+			var minimum_level := int(objective.get("minimum_level", 0))
+			var minimum_choices := int(objective.get("minimum_resolved_specialty_choices", -1))
+			if minimum_level < 2:
+				push_warning("Scenario %s objective %s must define minimum_level >= 2." % [scenario_id, String(objective.get("id", ""))])
+			if minimum_choices < 1 or minimum_choices > max(0, minimum_level - 1):
+				push_warning("Scenario %s objective %s must define resolved specialty choices between 1 and minimum_level - 1." % [scenario_id, String(objective.get("id", ""))])
+			if not (objective.get("require_no_pending_specialty_choices", false) is bool):
+				push_warning("Scenario %s objective %s pending-specialty requirement must be boolean." % [scenario_id, String(objective.get("id", ""))])
 		"town_owned_by_player", "town_not_owned_by_player":
 			var placement_id := String(objective.get("placement_id", ""))
 			if placement_id == "" or placement_id not in town_placement_ids:
