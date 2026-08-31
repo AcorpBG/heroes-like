@@ -1,0 +1,72 @@
+{
+  "schema_id": "three_relic_pilgrimage_encounter_art_v1",
+  "content_batch_id": "content-six-three-relic-pilgrimages-10184",
+  "generator": "OpenAI built-in image generation",
+  "source_model": "built_in_image_gen_original_three_relic_pilgrimage_atlas",
+  "generated_session_directory": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16",
+  "prompt_style": "Original painterly high-fantasy strategy-game overworld reliquary landmark, high three-quarter view, isolated transparent object, strong non-color silhouette for 48x48 readability, no people, text, logos, border, scenery, watermark, or copied game design.",
+  "runtime_pipeline": "Each transparent 1254x1254 generated master is trimmed, proportionally reduced inside a 44x44 box, centered on a transparent 48x48 cell, and appended left-to-right into one 288x48 runtime atlas. Generated masters remain source-only and art/overworld/source is excluded from Linux and Windows release packages.",
+  "runtime_atlas": "res://art/overworld/runtime/objects/encounters/three_relic_pilgrimages/three_relic_pilgrimages_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_atlas_sha256": "bee203188559bd1ed0224b0e51ab929c3045ddc732087a18bee89ed6c118ed6c",
+  "artifact_field_atlas": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+  "artifact_field_atlas_size": [864, 48],
+  "artifact_field_atlas_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+  "artifact_field_pipeline": "The eighteen already-original transparent inventory identities are trimmed, proportionally reduced inside a 42x42 box, centered on transparent 48x48 cells, and appended in scenario/faction order. This adds a compact exact field representation without duplicating high-resolution generated masters in release packages.",
+  "assets": [
+    {
+      "encounter_id": "encounter_lockfire_assize_reliquary",
+      "asset_id": "encounter_relic_lockfire_assize_reliquary",
+      "source_path": "res://art/overworld/source/generated/encounters/three_relic_pilgrimages/lockfire_assize_reliquary_source.png",
+      "source_sha256": "e7ef60518f4d856ace31397133ed3850217376d33daddff7a9b13d08ce171cd4",
+      "runtime_region": [0, 0, 48, 48],
+      "prompt_subject": "A tall legal-fire shrine built around a black iron lock gate, hanging wax seals, an asymmetric hooded beacon, and a broad brass balance arm.",
+      "non_color_identity": "A narrow lock-gate tower rises between a long balance arm and several offset hanging fire baskets."
+    },
+    {
+      "encounter_id": "encounter_miremoon_hunt_reliquary",
+      "asset_id": "encounter_relic_miremoon_hunt_reliquary",
+      "source_path": "res://art/overworld/source/generated/encounters/three_relic_pilgrimages/miremoon_hunt_reliquary_source.png",
+      "source_sha256": "ab8083367cad054092404601f98b039555de90e0f2a97e39837170cd0e12260d",
+      "runtime_region": [48, 0, 48, 48],
+      "prompt_subject": "A crooked reedwood hunting altar with unequal bog-antler arches, a suspended hide drum, bone clappers, hooked chains, and a crescent jaw trophy.",
+      "non_color_identity": "Two unequal antler towers surround a broad hanging drum above a low irregular root platform."
+    },
+    {
+      "encounter_id": "encounter_noonglass_orrery_reliquary",
+      "asset_id": "encounter_relic_noonglass_orrery_reliquary",
+      "source_path": "res://art/overworld/source/generated/encounters/three_relic_pilgrimages/noonglass_orrery_reliquary_source.png",
+      "source_sha256": "c8df0a61e7f8d785fbfd4d1d6dc10472a57f8104846d0332c1401eb6b8f46655",
+      "runtime_region": [96, 0, 48, 48],
+      "prompt_subject": "An ivory-and-gold astronomical frame with three tilted orbital rings, a large faceted prism, paired mirror vanes, and a needle sun crown.",
+      "non_color_identity": "Three crossing orbital rings and a tall needle crown sit between two wide mirrored crescent vanes."
+    },
+    {
+      "encounter_id": "encounter_worldroot_covenant_reliquary",
+      "asset_id": "encounter_relic_worldroot_covenant_reliquary",
+      "source_path": "res://art/overworld/source/generated/encounters/three_relic_pilgrimages/worldroot_covenant_reliquary_source.png",
+      "source_sha256": "0e68ddd3badb71875093e2c3283b215447bb5d306cf207b5f5e9cb29af727576",
+      "runtime_region": [144, 0, 48, 48],
+      "prompt_subject": "A living shrine of three twisting root columns, thorn halo, suspended heartwood seed, leafcloth knots, and rooted buttresses.",
+      "non_color_identity": "Three braided root columns form a triangular arch around a hanging seed beneath a wide thorn halo."
+    },
+    {
+      "encounter_id": "encounter_seventh_clause_reliquary",
+      "asset_id": "encounter_relic_seventh_clause_reliquary",
+      "source_path": "res://art/overworld/source/generated/encounters/three_relic_pilgrimages/seventh_clause_reliquary_source.png",
+      "source_sha256": "ba4b0c3b9dff23a7afae56b18e7a5af38af3e5f3d1e3a6b415c7e1bb1726e635",
+      "runtime_region": [192, 0, 48, 48],
+      "prompt_subject": "A squat industrial contract shrine with oversized pressure gauge, redline needle, warrant plates, twin furnace vents, caliper feet, and a chained key.",
+      "non_color_identity": "A huge round gauge dominates a broad four-footed machine between two unequal furnace stacks."
+    },
+    {
+      "encounter_id": "encounter_last_bell_tideglass_reliquary",
+      "asset_id": "encounter_relic_last_bell_tideglass_reliquary",
+      "source_path": "res://art/overworld/source/generated/encounters/three_relic_pilgrimages/last_bell_tideglass_reliquary_source.png",
+      "source_sha256": "970fc10518856544d1a8d96f6c1161f4d083605b7c4a0507638b813c50b2be0c",
+      "runtime_region": [240, 0, 48, 48],
+      "prompt_subject": "A maritime mourning shrine of curved ship ribs, a cracked bell, pale tideglass, torn sail strips, side lantern, and chain keel.",
+      "non_color_identity": "Two tall curved ship ribs cradle an oversized hanging bell above a long chain-keel platform."
+    }
+  ]
+}

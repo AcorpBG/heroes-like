@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit current live content and art coverage, then register the next bounded production-content slice before implementation; retain one consolidated smoke after the complete batch."
+    "Audit the expanded live catalog and select the next coherent content-and-original-art batch before running any new smoke."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1913,6 +1913,60 @@
   "active_slice": null,
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "content-six-three-relic-pilgrimages-20260831",
+      "title": "Six three-relic pilgrimages",
+      "sliceId": "content-six-three-relic-pilgrimages-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-31T07:02:56Z",
+      "updatedAt": "2026-08-31T07:02:56Z",
+      "latestFinding": "Six original three-relic pilgrimages now place all eighteen formerly dormant faction relics and add transfer-safe artifact-ownership victory authority. One consolidated 6/6 smoke passed eighteen pickups, eighteen battles, six missing-relic controls, six secondary-hero transfers, six scenario victories, exact art, captures, and save-v9 round trips; repository validation and matching Linux/Windows packaged startup pass at 248963088 bytes.",
+      "artifacts": [
+        "content/scenarios.json",
+        "content/encounters.json",
+        "content/army_groups.json",
+        "scripts/core/ScenarioRules.gd",
+        "scripts/autoload/ContentService.gd",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/encounters/three_relic_pilgrimages/three_relic_pilgrimages_atlas.png",
+        "art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "art/overworld/source/generated/encounters/three_relic_pilgrimages/source_manifest.json",
+        "tests/three_relic_pilgrimages_smoke.gd",
+        "tests/three_relic_pilgrimages_smoke.py",
+        "tests/validate_repo.py",
+        ".artifacts/three_relic_pilgrimages_smoke/report.json",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "metrics": {
+        "new_skirmish_scenario_count": 6,
+        "new_army_group_count": 6,
+        "new_encounter_count": 6,
+        "new_artifact_placement_count": 18,
+        "new_authored_static_front_count": 18,
+        "new_script_hook_count": 36,
+        "new_scripted_counterstroke_count": 6,
+        "artifact_catalog_count": 51,
+        "artifact_field_identity_count": 51,
+        "scenario_catalog_count": 117,
+        "encounter_catalog_count": 179,
+        "army_group_catalog_count": 243,
+        "consolidated_smoke_case_count": 6,
+        "artifact_collection_count": 18,
+        "battle_victory_count": 18,
+        "missing_relic_control_count": 6,
+        "transferred_relic_count": 6,
+        "scenario_victory_count": 6,
+        "visual_capture_count": 6,
+        "save_version": 9,
+        "linux_pck_size_bytes": 248963088,
+        "windows_pck_size_bytes": 248963088,
+        "release_pck_headroom_bytes": 1036912,
+        "source_art_excluded": true
+      }
+    },
     {
       "id": "content-six-field-muster-commission-skirmishes-20260831",
       "title": "Six field-muster commission skirmishes",
@@ -15902,14 +15956,14 @@
       }
     }
   ],
-  "currentNotes": "The six twin-hold defense vigils are complete. The broader production-content goal remains active; audit and register the next bounded content/art batch before implementation.",
+  "currentNotes": "Six original three-relic pilgrimages now place all eighteen formerly dormant faction relics and add transfer-safe artifact-ownership victory authority. One consolidated 6/6 smoke passed eighteen pickups, eighteen battles, six missing-relic controls, six secondary-hero transfers, six scenario victories, exact art, captures, and save-v9 round trips; repository validation and matching Linux/Windows packaged startup pass at 248963088 bytes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-twin-hold-defense-vigils-10184",
-  "currentSliceId": "content-six-twin-hold-defense-vigils-10184",
-  "currentSliceNotes": "Completed six skirmish-only Day-12 twin-hold defenses with eighteen viable siege fronts, thirty-six live hooks, six exact original landmarks, a consolidated 6/6 gameplay smoke, repository validation, and matching Linux/Windows package startup at 247622292 bytes.",
+  "currentSlice": "content-six-three-relic-pilgrimages-10184",
+  "currentSliceId": "content-six-three-relic-pilgrimages-10184",
+  "currentSliceNotes": "Completed the six-map relic-recovery batch, first-class artifact ownership objectives, eighteen live relic placements, six guardian encounters, and exact compact art.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six twin hold defense vigils 10184",
-  "currentSliceUpdatedAt": "2026-08-31T06:21:10Z",
+  "currentSliceTitle": "content six three relic pilgrimages 10184",
+  "currentSliceUpdatedAt": "2026-08-31T07:02:56Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21366,7 +21420,7 @@
     "ops/progress.json"
   ],
   "latestEvidenceId": "content-six-field-muster-commission-skirmishes-20260831",
-  "latestFinding": "Six original captain-led skirmish commissions now make all sixty-six heroes direct scenario leads. Each compact map owns three authored fronts, five live hooks including a scripted counterstroke, a faction field muster, exact encounter landmark art, and a full victory chain. One consolidated 6/6 gameplay smoke, repository validation, and matching Linux/Windows packaged startup pass at 247628960 bytes.",
+  "latestFinding": "Six original three-relic pilgrimages now place all eighteen formerly dormant faction relics and add transfer-safe artifact-ownership victory authority. One consolidated 6/6 smoke passed eighteen pickups, eighteen battles, six missing-relic controls, six secondary-hero transfers, six scenario victories, exact art, captures, and save-v9 round trips; repository validation and matching Linux/Windows packaged startup pass at 248963088 bytes.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -31920,17 +31974,17 @@
         "artifact": ".artifacts/ui_runtime_skin_visual_report/battle_1280x720.png",
         "artifactSha256": "7860c25c10b6cedf4da280b38d6e2b7f42f9a189a30ef808e92fd89f936e2fc4",
         "observedLabels": [
-          "River G… x10",
-          "Blackbra… x8",
-          "Mudglas… x1",
-          "Ember A… x5"
+          "River G\u2026 x10",
+          "Blackbra\u2026 x8",
+          "Mudglas\u2026 x1",
+          "Ember A\u2026 x5"
         ]
       },
       "createdAt": "2026-08-20T09:24:19Z",
       "startedAt": "2026-08-20T09:24:19Z",
       "updatedAt": "2026-08-20T09:40:25Z",
       "completedAt": "2026-08-20T09:40:25Z",
-      "notes": "Completed the chip-only fitting policy. The focused Board owner passes at 1280 and 1920 with an independent themed-font control requiring full, complete-word, and unbreakable-word paths plus exact tooltip/count/geometry/order/session-save-settings authority. Fresh Xvfb pixels show `River… x10`, full `Bog Brute x2`, and bounded single-word fallbacks. Town/Battle visual, accessibility, animation, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These platform results do not claim packaged Battle interaction or broader release readiness.",
+      "notes": "Completed the chip-only fitting policy. The focused Board owner passes at 1280 and 1920 with an independent themed-font control requiring full, complete-word, and unbreakable-word paths plus exact tooltip/count/geometry/order/session-save-settings authority. Fresh Xvfb pixels show `River\u2026 x10`, full `Bog Brute x2`, and bounded single-word fallbacks. Town/Battle visual, accessibility, animation, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These platform results do not claim packaged Battle interaction or broader release readiness.",
       "remainingWork": "None for this chip-label-only slice. Select the next tracker-approved source-backed release-readiness implementation slice.",
       "blockedReason": null
     },
@@ -102254,7 +102308,7 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "purpose": "Keep the shipped full-text Battle Status overflow at a complete word instead of Bramble Scre… without changing its tooltip, geometry, or semantics.",
+      "purpose": "Keep the shipped full-text Battle Status overflow at a complete word instead of Bramble Scre\u2026 without changing its tooltip, geometry, or semantics.",
       "implementationTargets": [
         "scenes/battle/BattleShell.gd",
         "tests/battle_controller_board_navigation_smoke.gd",
@@ -102285,7 +102339,7 @@
       "baseline": {
         "head": "c8f29051",
         "capture": ".artifacts/battle_controller_board_navigation_smoke/current_head_event_word_final.png",
-        "visibleCut": "Bramble Scre…",
+        "visibleCut": "Bramble Scre\u2026",
         "priorOwner": "ux-battle-status-native-pixel-ellipsis-10184"
       },
       "createdAt": "2026-08-18T05:12:29Z",
@@ -102820,7 +102874,7 @@
       "startedAt": "2026-08-18T10:57:00Z",
       "updatedAt": "2026-08-18T11:29:57Z",
       "completedAt": "2026-08-18T11:29:57Z",
-      "notes": "Completed with live UI behavior, not documentation alone. BattleShell now refits each exact ActionGuide source line through the established Battle-local whole-word Unicode-ellipsis helper, retaining two compact lines and three wide. A fresh 1280x720/130% painted capture ends the Position check after the complete `(1 step)…` phrase while the board, spells, actions, and complete system-command row remain contained. The focused owner independently compares visible lines to the unabridged source and rejects ASCII ellipses and mid-token cuts while preserving enriched tooltip/system semantics and battle authority. Board navigation, shared focus, accessibility, core, authoritative 1280/1920 routed layout, static/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Battle interaction or broader release claim is made.",
+      "notes": "Completed with live UI behavior, not documentation alone. BattleShell now refits each exact ActionGuide source line through the established Battle-local whole-word Unicode-ellipsis helper, retaining two compact lines and three wide. A fresh 1280x720/130% painted capture ends the Position check after the complete `(1 step)\u2026` phrase while the board, spells, actions, and complete system-command row remain contained. The focused owner independently compares visible lines to the unabridged source and rejects ASCII ellipses and mid-token cuts while preserving enriched tooltip/system semantics and battle authority. Board navigation, shared focus, accessibility, core, authoritative 1280/1920 routed layout, static/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Battle interaction or broader release claim is made.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
       "blockedReason": null
     },
@@ -104464,7 +104518,7 @@
         "tests/random_map_live_overworld_render_move_report.gd",
         "tests/validate_repo.py"
       ],
-      "notes": "Completed from direct generated-map evidence. Existing terrain-biome blocker art is selected in deterministic 16x16 spatial clusters with bounded per-cell scale, offset, and grounding inside each exact body tile. Small and Medium 1280x720 and 1920x1080 captures pass with 15–22 distinct assets, repeated-definition variation, exact rebuild/movement/save authority, and the unchanged Medium 1920 performance floor. Authored-map scale/assets, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Native generation, placement, density, body/visit masks, passability/pathfinding, content, packaged generated-map interaction, certification, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
+      "notes": "Completed from direct generated-map evidence. Existing terrain-biome blocker art is selected in deterministic 16x16 spatial clusters with bounded per-cell scale, offset, and grounding inside each exact body tile. Small and Medium 1280x720 and 1920x1080 captures pass with 15\u201322 distinct assets, repeated-definition variation, exact rebuild/movement/save authority, and the unchanged Medium 1920 performance floor. Authored-map scale/assets, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Native generation, placement, density, body/visit masks, passability/pathfinding, content, packaged generated-map interaction, certification, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-25T02:31:16Z"
     },
     {
@@ -104483,7 +104537,7 @@
         "tests/random_map_live_overworld_render_move_report.gd",
         "tests/validate_repo.py"
       ],
-      "notes": "Completed from direct Small/Medium generated-map captures and source inspection. The original quiet-tile renderer now suppresses generic edge/corner overlays only for an enabled and loaded HoMM3 tile; disabled metadata renders the fast generic fallback. Four 1280/1920 captures render 119–291 exact boundary tiles, a controlled Small capture changes 7,934 pixels, and the Medium 1920 performance floor remains 9.57/9.45 FPS. Authored enabled/disabled ownership, generated redraw/movement/save authority, terrain assets, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Terrain topology/ids/priorities, native generation, passability/pathfinding, roads/fog, content, Native-RMG parity, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
+      "notes": "Completed from direct Small/Medium generated-map captures and source inspection. The original quiet-tile renderer now suppresses generic edge/corner overlays only for an enabled and loaded HoMM3 tile; disabled metadata renders the fast generic fallback. Four 1280/1920 captures render 119\u2013291 exact boundary tiles, a controlled Small capture changes 7,934 pixels, and the Medium 1920 performance floor remains 9.57/9.45 FPS. Authored enabled/disabled ownership, generated redraw/movement/save authority, terrain assets, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Terrain topology/ids/priorities, native generation, passability/pathfinding, roads/fog, content, Native-RMG parity, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
       "completedAt": "2026-08-25T03:04:34Z"
     },
     {
@@ -106976,6 +107030,16 @@
       "startedAt": "2026-08-31T05:42:58Z",
       "notes": "Implemented six skirmish-only Day-12 twin-hold defense scenarios with eighteen viable siege fronts, thirty-six live hooks, exact generated assault landmarks, and six lost-hold controls. Consolidated 6/6 gameplay/art/save smoke passed; repository validation passed; Linux and Windows export/startup passed with matching 247622292-byte PCKs, eighteen recurring encounter atlases present, source art excluded, and 2377708 bytes headroom.",
       "completedAt": "2026-08-31T06:21:10Z"
+    },
+    {
+      "id": "content-six-three-relic-pilgrimages-10184",
+      "title": "content six three relic pilgrimages 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T07:02:56Z",
+      "startedAt": "2026-08-31T06:28:57Z",
+      "notes": "Implemented six skirmish-only three-relic pilgrimages with eighteen live artifact placements, first-class transfer-safe artifact ownership objectives, eighteen guardian fronts, thirty-six live hooks plus six scripted counterstrokes, six original guardian masters, and compact guardian/relic atlases. Consolidated 6/6 gameplay/art/save smoke passed; repository validation passed; Linux and Windows export/startup passed with matching 248963088-byte PCKs, nineteen encounter atlases and thirty-four artifact field payloads present, source art excluded, and 1036912 bytes headroom.",
+      "completedAt": "2026-08-31T07:02:56Z"
     }
   ],
   "project": "heroes-like",
@@ -106985,8 +107049,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "This bounded six-map twin-hold defense slice is complete. Broader production content and distinctive-art expansion remains open and requires a separately registered next slice; this result is not a whole-game or release-readiness claim.",
-  "remainingWork": "Audit current live content/art coverage and register the next coherent production-content batch before implementation; keep one consolidated smoke after that complete batch rather than testing each small asset edit.",
+  "remainingGap": "The broader production-content and unique-art goal remains open; this bounded six-map batch is complete but does not establish whole-game or release readiness.",
+  "remainingWork": "Run a fresh live-catalog audit, select the next coherent high-value content gap, implement the full batch, then use one consolidated smoke and the final repository/platform gates.",
   "reportOnlyEvidence": [
     {
       "entries": [

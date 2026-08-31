@@ -1563,11 +1563,11 @@ func _validate_scenario(
 		for objective in objectives.get("victory", []):
 			if objective is Dictionary:
 				_append_unique_string(objective_ids, String(objective.get("id", "")))
-				_validate_objective(scenario_id, objective, faction_index, town_placement_ids, encounter_placement_ids)
+				_validate_objective(scenario_id, objective, faction_index, artifact_index, town_placement_ids, encounter_placement_ids)
 		for objective in objectives.get("defeat", []):
 			if objective is Dictionary:
 				_append_unique_string(objective_ids, String(objective.get("id", "")))
-				_validate_objective(scenario_id, objective, faction_index, town_placement_ids, encounter_placement_ids)
+				_validate_objective(scenario_id, objective, faction_index, artifact_index, town_placement_ids, encounter_placement_ids)
 
 	if scenario.has("script_hooks") and not (script_hooks is Array):
 		push_warning("Scenario %s script_hooks must be an array." % scenario_id)
@@ -1608,11 +1608,16 @@ func _validate_objective(
 	scenario_id: String,
 	objective: Dictionary,
 	faction_index: Dictionary,
+	artifact_index: Dictionary,
 	town_placement_ids: Array[String],
 	encounter_placement_ids: Array[String]
 ) -> void:
 	var objective_type := String(objective.get("type", ""))
 	match objective_type:
+		"artifact_owned_by_player":
+			var artifact_id := String(objective.get("artifact_id", ""))
+			if artifact_id == "" or not artifact_index.has(artifact_id):
+				push_warning("Scenario %s objective %s references missing artifact_id %s." % [scenario_id, String(objective.get("id", "")), artifact_id])
 		"town_owned_by_player", "town_not_owned_by_player":
 			var placement_id := String(objective.get("placement_id", ""))
 			if placement_id == "" or placement_id not in town_placement_ids:

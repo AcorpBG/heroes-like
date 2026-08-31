@@ -24,9 +24,42 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected; the next production-content batch must be audited and registered before implementation.
-- Most recently completed implementation slice: `content-six-twin-hold-defense-vigils-10184`, one coherent six-faction defensive skirmish, siege-front, event, and landmark batch.
-- Current package boundary: matching Linux and Windows release exports measure 247622292 bytes, 2377708 bytes below the unchanged 250000000-byte ceiling; all generated encounter masters remain excluded from both packages.
+- Active implementation slice: none selected; the next content batch should be chosen from a fresh live-catalog audit.
+- Most recently completed implementation slice: `content-six-three-relic-pilgrimages-10184`, one coherent six-faction artifact-recovery scenario, objective, guardian-art, and field-relic batch.
+- Current package boundary: matching Linux and Windows release exports measure 248963088 bytes, 1036912 bytes below the unchanged 250000000-byte ceiling; all generated encounter masters remain excluded from both packages.
+
+## Six Three-Relic Pilgrimages
+
+id: `content-six-three-relic-pilgrimages-10184`
+
+Status: completed.
+
+Current finding:
+- the production catalog defines fifty-one artifacts, but eighteen faction relics have no authored map placement and therefore never enter live play despite already having complete inventory identities and supported effects;
+- authored scenarios expose no artifact-ownership objective, so relic collection cannot currently form a first-class victory condition even though pickup, equipment, transfer, AI valuation, and save-version-9 persistence are already authoritative;
+- the eighteen dormant relics form an exact three-piece family for each of the six factions, making one coherent six-map recovery batch more valuable than another encounter-clear or town-capture family.
+
+Implementation boundary:
+- add a production `artifact_owned_by_player` scenario objective that recognizes the active hero and every player-controlled field hero, exposes exact dependency metadata and progress labels, and requires no save migration;
+- author six original skirmish-only three-relic pilgrimages, one per faction, each with a distinct lead hero and company, one home town, economy support, the faction's exact three dormant relics, three guarding encounter fronts, reactive recovery/pressure hooks, and a Day-18 loss deadline;
+- add one original named guardian encounter and army per faction pilgrimage with an asymmetric battlefield objective, reward, and exact non-color-dependent 48x48 landmark in one compact six-frame atlas;
+- derive exact transparent field sprites for all eighteen relics from their existing original inventory masters, wire them through the live manifest, and preserve deterministic pickup/equip/transfer, save version 9, campaign order, accessibility, Windows/Linux paths, generated-source exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all fifty-one artifact definitions gain at least one authored placement, every pilgrimage starts with none of its three target relics, and victory remains impossible until all three exact relics are owned and all three exact guardian fronts are resolved;
+- each case launches its exact hero/company, renders all three exact relic sprites and its exact guardian landmark, collects through production overworld authority, evaluates artifact event dependencies without a broad fallback, resolves production battles, rejects a one-relic-missing control, and round-trips exactly through save version 9;
+- run one consolidated six-case artifact/scenario/battle/art/save smoke only after the complete batch, followed once by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- six new skirmish-only 13x8 pilgrimages now place all eighteen formerly dormant faction relics and raise the catalog to 117 scenarios, 179 encounters, and 243 armies; each map owns one home hold, eight economy sites, three static guardian fronts, six recovery/relief/pressure hooks, a Day-10 hostile counterstroke, and a Day-18 loss boundary;
+- `artifact_owned_by_player` is now first-class scenario authority across the active hero and all player-controlled field heroes, with exact artifact-event dependency scoping, transfer-safe ownership, validation, player-facing labels, and save-version-9 continuity;
+- six original generated guardian masters derive one compact 288x48 runtime atlas, while all eighteen relic inventory identities derive one compact 864x48 field atlas; every encounter and artifact maps to an exact region with accessible descriptions and generated-source provenance;
+- the single consolidated 6/6 smoke passes eighteen live pickups, eighteen exact relic-art checks, six exact guardian-art checks, eighteen production battle victories, six missing-relic negative controls, six secondary-hero transfer cases, six full scenario victories, six captures, and exact save-version-9 round trips;
+- repository validation passes; Linux and Windows export/startup gates pass with matching 248963088-byte PCKs, all nineteen recurring encounter atlases and thirty-four artifact-field texture payloads present, generated source art excluded, and 1036912 bytes of headroom below the unchanged ceiling.
+
+Non-goals:
+- no new faction, artifact definition, hero, unit definition, town definition, building, spell, campaign chapter, combat formula, strategic-AI algorithm, RMG/native behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes scenario, relic, guardian, map, name, art, text, heraldry, or protected visual expression.
 
 ## Six Twin-Hold Defense Vigils
 

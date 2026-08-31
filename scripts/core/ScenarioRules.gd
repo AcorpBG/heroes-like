@@ -4,6 +4,7 @@ extends RefCounted
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
+const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 
 static var _scenario_dependency_metadata_cache: Dictionary = {}
 
@@ -301,6 +302,8 @@ static func _scenario_objective_dependency(objective: Dictionary, objective_inde
 	var dependency := _empty_dependency()
 	dependency["id"] = String(objective.get("id", ""))
 	match String(objective.get("type", "")):
+		"artifact_owned_by_player":
+			_add_dependency_value(dependency, "artifact_ids", String(objective.get("artifact_id", "")))
 		"town_owned_by_player", "town_not_owned_by_player":
 			_add_dependency_value(dependency, "town_placement_ids", String(objective.get("placement_id", "")))
 			_add_dependency_value(dependency, "town_ids", String(objective.get("town_id", "")))
@@ -1502,6 +1505,8 @@ static func _titleize_token(value: String) -> String:
 
 static func _objective_met(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> bool:
 	match String(objective.get("type", "")):
+		"artifact_owned_by_player":
+			return _player_owns_artifact(session, String(objective.get("artifact_id", "")))
 		"town_owned_by_player":
 			var town := _find_town(session, objective)
 			return not town.is_empty() and String(town.get("owner", "neutral")) == "player"
@@ -1526,6 +1531,11 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 static func _objective_label(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> String:
 	var base_label := String(objective.get("label", objective.get("id", "Objective")))
 	match String(objective.get("type", "")):
+		"artifact_owned_by_player":
+			return "%s (%s)" % [
+				base_label,
+				"Recovered" if _player_owns_artifact(session, String(objective.get("artifact_id", ""))) else "Missing",
+			]
 		"enemy_pressure_at_least":
 			return "%s (%d/%d)" % [
 				base_label,
@@ -1549,6 +1559,25 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 		"session_flag_equals":
 			return "%s (%s)" % [base_label, String(session.flags.get(String(objective.get("flag", "")), "unset"))]
 	return base_label
+
+static func _player_owns_artifact(session: SessionStateStoreScript.SessionData, artifact_id: String) -> bool:
+	if session == null or artifact_id == "":
+		return false
+	var active_hero = session.overworld.get("hero", {})
+	if active_hero is Dictionary and ArtifactRulesScript.has_artifact(active_hero, artifact_id):
+		return true
+	var active_hero_id := String(session.overworld.get("active_hero_id", active_hero.get("id", "") if active_hero is Dictionary else ""))
+	var heroes = session.overworld.get("player_heroes", [])
+	if not (heroes is Array):
+		return false
+	for hero in heroes:
+		if not (hero is Dictionary):
+			continue
+		if String(hero.get("id", "")) == active_hero_id:
+			continue
+		if ArtifactRulesScript.has_artifact(hero, artifact_id):
+			return true
+	return false
 
 static func _objective_marker(is_victory: bool, met: bool) -> String:
 	if is_victory:

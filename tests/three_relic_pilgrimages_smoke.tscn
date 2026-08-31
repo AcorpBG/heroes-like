@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/three_relic_pilgrimages_smoke.gd" id="1"]
+
+[node name="ThreeRelicPilgrimagesSmoke" type="Node"]
+script = ExtResource("1")
