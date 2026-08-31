@@ -315,6 +315,13 @@ static func _scenario_objective_dependency(objective: Dictionary, objective_inde
 			_add_dependency_value(dependency, "hero_ids", String(objective.get("hero_id", "")))
 			_add_dependency_value(dependency, "town_placement_ids", String(objective.get("placement_id", "")))
 			_add_dependency_value(dependency, "town_ids", String(objective.get("town_id", "")))
+		"reserve_delivery_completed":
+			_add_dependency_value(dependency, "resource_site_placement_ids", String(objective.get("site_placement_id", "")))
+			match String(objective.get("target_kind", "town")):
+				"town":
+					_add_dependency_value(dependency, "town_placement_ids", String(objective.get("target_id", "")))
+				"hero":
+					_add_dependency_value(dependency, "hero_ids", String(objective.get("target_id", "")))
 		"hero_army_meets_requirements":
 			_add_dependency_value(dependency, "hero_ids", String(objective.get("hero_id", "")))
 			var requirements = objective.get("requirements", [])
@@ -407,6 +414,7 @@ static func _empty_dependency() -> Dictionary:
 		"unknown_reason": "",
 		"town_placement_ids": [],
 		"town_ids": [],
+		"resource_site_placement_ids": [],
 		"flags": [],
 		"enemy_pressure_faction_ids": [],
 		"active_raid_faction_ids": [],
@@ -430,6 +438,7 @@ static func _scenario_event_dependency(event_facts: Dictionary) -> Dictionary:
 	for key in [
 		"town_placement_ids",
 		"town_ids",
+		"resource_site_placement_ids",
 		"flags",
 		"enemy_pressure_faction_ids",
 		"active_raid_faction_ids",
@@ -455,6 +464,7 @@ static func _scenario_event_affects_dependency(event_dependency: Dictionary, dep
 	for key in [
 		"town_placement_ids",
 		"town_ids",
+		"resource_site_placement_ids",
 		"flags",
 		"enemy_pressure_faction_ids",
 		"active_raid_faction_ids",
@@ -478,6 +488,7 @@ static func _merge_dependency(target: Dictionary, source: Dictionary) -> void:
 	for key in [
 		"town_placement_ids",
 		"town_ids",
+		"resource_site_placement_ids",
 		"flags",
 		"enemy_pressure_faction_ids",
 		"active_raid_faction_ids",
@@ -1554,6 +1565,8 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 			)
 		"hero_stationed_at_player_town":
 			return bool(_hero_stationing_progress(session, objective).get("complete", false))
+		"reserve_delivery_completed":
+			return bool(_reserve_delivery_progress(session, objective).get("complete", false))
 		"hero_army_meets_requirements":
 			return bool(_hero_army_requirement_progress(session, objective).get("complete", false))
 		"hero_progression_meets_requirements":
@@ -1610,6 +1623,15 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 			if not bool(stationing.get("town_controlled", false)):
 				return "%s (Town uncontrolled)" % base_label
 			return "%s (%s)" % [base_label, "Stationed" if bool(stationing.get("position_matches", false)) else "En route"]
+		"reserve_delivery_completed":
+			var delivery := _reserve_delivery_progress(session, objective)
+			if not bool(delivery.get("relay_found", false)):
+				return "%s (Relay unavailable)" % base_label
+			return "%s (%d/%d delivered)" % [
+				base_label,
+				int(delivery.get("completed_count", 0)),
+				int(delivery.get("minimum_count", 1)),
+			]
 		"hero_army_meets_requirements":
 			var progress := _hero_army_requirement_progress(session, objective)
 			if not bool(progress.get("hero_found", false)):
@@ -1699,6 +1721,32 @@ static func _hero_stationing_progress(
 		"town_controlled": town_controlled,
 		"position_matches": position_matches,
 		"complete": hero_found and town_controlled and position_matches,
+	}
+
+static func _reserve_delivery_progress(
+	session: SessionStateStoreScript.SessionData,
+	objective: Dictionary
+) -> Dictionary:
+	var site_placement_id := String(objective.get("site_placement_id", "")).strip_edges()
+	var target_kind := String(objective.get("target_kind", "town")).strip_edges()
+	var target_id := String(objective.get("target_id", "")).strip_edges()
+	var minimum_count: int = max(1, int(objective.get("minimum_count", 1)))
+	var relay: Dictionary = {}
+	for node in session.overworld.get("resource_nodes", []):
+		if node is Dictionary and String(node.get("placement_id", "")) == site_placement_id:
+			relay = node
+			break
+	var receipt_key := "%s:%s" % [target_kind, target_id]
+	var completion_counts: Variant = relay.get("delivery_completion_counts", {}) if not relay.is_empty() else {}
+	var completed_count: int = max(0, int(completion_counts.get(receipt_key, 0))) if completion_counts is Dictionary else 0
+	return {
+		"site_placement_id": site_placement_id,
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"relay_found": not relay.is_empty(),
+		"completed_count": completed_count,
+		"minimum_count": minimum_count,
+		"complete": not relay.is_empty() and completed_count >= minimum_count,
 	}
 
 static func _hero_army_requirement_progress(

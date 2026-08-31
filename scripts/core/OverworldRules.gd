@@ -5841,6 +5841,11 @@ static func _normalize_resource_nodes(nodes: Array) -> Array:
 			"delivery_target_label": String(node.get("delivery_target_label", "")),
 			"delivery_arrival_day": max(0, int(node.get("delivery_arrival_day", 0))),
 			"delivery_manifest": _normalize_recruit_payload(node.get("delivery_manifest", {})),
+			"delivery_completion_counts": _normalize_delivery_completion_counts(node.get("delivery_completion_counts", {})),
+			"last_delivery_target_kind": String(node.get("last_delivery_target_kind", "")),
+			"last_delivery_target_id": String(node.get("last_delivery_target_id", "")),
+			"last_delivery_day": max(0, int(node.get("last_delivery_day", 0))),
+			"last_delivery_manifest": _normalize_recruit_payload(node.get("last_delivery_manifest", {})),
 		}
 		_copy_resource_runtime_metadata(normalized_node, node)
 		normalized.append(normalized_node)
@@ -8556,7 +8561,7 @@ static func _advance_player_reserve_deliveries(session: SessionStateStoreScript.
 		var interception_state: Dictionary = _resource_site_delivery_interception(session, node, site)
 		if bool(interception_state.get("blocks_delivery", false)):
 			continue
-		var message = _resolve_player_reserve_delivery(session, site, delivery_state)
+		var message = _resolve_player_reserve_delivery(session, site, delivery_state, node)
 		node = _clear_resource_site_delivery(node)
 		var followup_result := _queue_followup_reserve_delivery(session, node, site)
 		node = followup_result.get("node", node)
@@ -8621,7 +8626,8 @@ static func _queue_followup_reserve_delivery(
 static func _resolve_player_reserve_delivery(
 	session: SessionStateStoreScript.SessionData,
 	site: Dictionary,
-	delivery_state: Dictionary
+	delivery_state: Dictionary,
+	node: Dictionary = {}
 ) -> String:
 	var manifest = _normalize_recruit_payload(delivery_state.get("manifest", {}))
 	if manifest.is_empty():
@@ -8638,6 +8644,7 @@ static func _resolve_player_reserve_delivery(
 		"town":
 			delivered = _deliver_reinforcements_to_town(session, target_id, manifest)
 	if delivered:
+		_record_successful_reserve_delivery(node, delivery_state, session.day)
 		return "%s convoy reaches %s (%s)." % [site_name, target_label, recruit_summary]
 	var returned_to = _return_reinforcements_to_source(session, String(delivery_state.get("origin_town_id", "")), manifest)
 	if returned_to != "":
@@ -8648,6 +8655,22 @@ static func _resolve_player_reserve_delivery(
 			recruit_summary,
 		]
 	return "%s convoy for %s is lost on the frontier (%s)." % [site_name, target_label, recruit_summary]
+
+static func _record_successful_reserve_delivery(node: Dictionary, delivery_state: Dictionary, delivery_day: int) -> void:
+	if node.is_empty() or delivery_state.is_empty():
+		return
+	var target_kind := String(delivery_state.get("target_kind", "")).strip_edges()
+	var target_id := String(delivery_state.get("target_id", "")).strip_edges()
+	if target_kind == "" or target_id == "":
+		return
+	var receipt_key := "%s:%s" % [target_kind, target_id]
+	var completion_counts := _normalize_delivery_completion_counts(node.get("delivery_completion_counts", {}))
+	completion_counts[receipt_key] = max(0, int(completion_counts.get(receipt_key, 0))) + 1
+	node["delivery_completion_counts"] = completion_counts
+	node["last_delivery_target_kind"] = target_kind
+	node["last_delivery_target_id"] = target_id
+	node["last_delivery_day"] = max(0, delivery_day)
+	node["last_delivery_manifest"] = _normalize_recruit_payload(delivery_state.get("manifest", {}))
 
 static func apply_delivery_interception_outcome(
 	session: SessionStateStoreScript.SessionData,
@@ -8675,7 +8698,7 @@ static func apply_delivery_interception_outcome(
 					String(delivery_state.get("target_label", "the front")),
 				]
 				return result
-			var delivery_message := _resolve_player_reserve_delivery(session, site, delivery_state)
+			var delivery_message := _resolve_player_reserve_delivery(session, site, delivery_state, node)
 			node = _clear_resource_site_delivery(node)
 			nodes[int(node_result.get("index", -1))] = node
 			session.overworld["resource_nodes"] = nodes
@@ -11634,6 +11657,17 @@ static func _normalize_recruit_payload(value: Variant) -> Dictionary:
 			if unit_id == "" or count <= 0:
 				continue
 			normalized[unit_id] = count
+	return normalized
+
+static func _normalize_delivery_completion_counts(value: Variant) -> Dictionary:
+	var normalized := {}
+	if value is Dictionary:
+		for receipt_key_value in value.keys():
+			var receipt_key := String(receipt_key_value).strip_edges()
+			var count: int = max(0, int(value.get(receipt_key_value, 0)))
+			if receipt_key == "" or count <= 0:
+				continue
+			normalized[receipt_key] = count
 	return normalized
 
 static func _recruit_payload_total(value: Variant) -> int:

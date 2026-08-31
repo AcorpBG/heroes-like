@@ -1560,6 +1560,10 @@ func _validate_scenario(
 	for placement in scenario.get("towns", []):
 		if placement is Dictionary:
 			town_placement_ids.append(String(placement.get("placement_id", "")))
+	var resource_placement_ids: Array[String] = []
+	for placement in scenario.get("resource_nodes", []):
+		if placement is Dictionary:
+			resource_placement_ids.append(String(placement.get("placement_id", "")))
 
 	var encounter_placement_ids: Array[String] = []
 	for placement in scenario.get("encounters", []):
@@ -1575,11 +1579,11 @@ func _validate_scenario(
 		for objective in objectives.get("victory", []):
 			if objective is Dictionary:
 				_append_unique_string(objective_ids, String(objective.get("id", "")))
-				_validate_objective(scenario_id, objective, faction_index, hero_index, unit_index, building_index, artifact_index, hero_starts, town_placement_ids, encounter_placement_ids)
+				_validate_objective(scenario_id, objective, faction_index, hero_index, unit_index, building_index, artifact_index, hero_starts, town_placement_ids, resource_placement_ids, encounter_placement_ids)
 		for objective in objectives.get("defeat", []):
 			if objective is Dictionary:
 				_append_unique_string(objective_ids, String(objective.get("id", "")))
-				_validate_objective(scenario_id, objective, faction_index, hero_index, unit_index, building_index, artifact_index, hero_starts, town_placement_ids, encounter_placement_ids)
+				_validate_objective(scenario_id, objective, faction_index, hero_index, unit_index, building_index, artifact_index, hero_starts, town_placement_ids, resource_placement_ids, encounter_placement_ids)
 
 	if scenario.has("script_hooks") and not (script_hooks is Array):
 		push_warning("Scenario %s script_hooks must be an array." % scenario_id)
@@ -1626,6 +1630,7 @@ func _validate_objective(
 	artifact_index: Dictionary,
 	hero_starts: Variant,
 	town_placement_ids: Array[String],
+	resource_placement_ids: Array[String],
 	encounter_placement_ids: Array[String]
 ) -> void:
 	var objective_type := String(objective.get("type", ""))
@@ -1652,6 +1657,22 @@ func _validate_objective(
 				push_warning("Scenario %s objective %s references missing hero_id %s." % [scenario_id, String(objective.get("id", "")), stationed_hero_id])
 			if stationed_placement_id == "" or stationed_placement_id not in town_placement_ids:
 				push_warning("Scenario %s objective %s references missing town placement %s." % [scenario_id, String(objective.get("id", "")), stationed_placement_id])
+		"reserve_delivery_completed":
+			var delivery_site_placement_id := String(objective.get("site_placement_id", ""))
+			var delivery_target_kind := String(objective.get("target_kind", "town"))
+			var delivery_target_id := String(objective.get("target_id", ""))
+			if delivery_site_placement_id == "" or delivery_site_placement_id not in resource_placement_ids:
+				push_warning("Scenario %s objective %s references missing relay placement %s." % [scenario_id, String(objective.get("id", "")), delivery_site_placement_id])
+			if delivery_target_kind == "town":
+				if delivery_target_id == "" or delivery_target_id not in town_placement_ids:
+					push_warning("Scenario %s objective %s references missing delivery town %s." % [scenario_id, String(objective.get("id", "")), delivery_target_id])
+			elif delivery_target_kind == "hero":
+				if delivery_target_id == "" or not hero_index.has(delivery_target_id):
+					push_warning("Scenario %s objective %s references missing delivery hero %s." % [scenario_id, String(objective.get("id", "")), delivery_target_id])
+			else:
+				push_warning("Scenario %s objective %s has unsupported delivery target_kind %s." % [scenario_id, String(objective.get("id", "")), delivery_target_kind])
+			if int(objective.get("minimum_count", 1)) <= 0:
+				push_warning("Scenario %s objective %s must define minimum_count > 0." % [scenario_id, String(objective.get("id", ""))])
 		"hero_army_meets_requirements":
 			var objective_hero_id := String(objective.get("hero_id", ""))
 			if objective_hero_id == "" or not hero_index.has(objective_hero_id):

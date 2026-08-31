@@ -16011,14 +16011,14 @@
       }
     }
   ],
-  "currentNotes": "Six original Twin-Command Field Councils now provide exact tavern partners, stationed army transfers, paired hero deployment, eighteen battle fronts, guarded council landmarks, and exact hero-at-controlled-town victory authority. One consolidated six-case smoke passed the full production route, negative controls, exact art, and save-v9 continuity; repository validation and matching Linux/Windows packaged startup pass at 248126824 bytes.",
+  "currentNotes": "Six original relief-route convoy runs now provide exact faction relays, stocked production dispatches, arrived interception battles, durable target-scoped delivery receipts, and first-class delivery victory authority. One consolidated six-case smoke passed claims, dispatches, blocking interceptors, eighteen battles, negative controls, exact art, victories, and save-v9 continuity; repository validation and matching Linux/Windows packaged startup pass at 248517260 bytes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-twin-command-field-councils-10184",
-  "currentSliceId": "content-six-twin-command-field-councils-10184",
-  "currentSliceNotes": "Implemented six skirmish-only Twin-Command Field Councils, six five-stack opening companies, exact hero-at-controlled-town victory authority, five event hooks per map including delayed rival reinforcement, six original transparent landmark masters, and one 288x48 runtime atlas. One consolidated smoke passed 6 scenarios, 6 hires, 12 production transfers, 18 battles, 6 claims, 6 forward-town captures, 6 paired deployments, negative controls, 6 victories, and save-v9 continuity; repository validation and Linux/Windows export startup gates passed at 248126824-byte PCK with 33 resource-site atlases and source art excluded.",
+  "currentSlice": "content-six-relief-route-convoy-runs-10184",
+  "currentSliceId": "content-six-relief-route-convoy-runs-10184",
+  "currentSliceNotes": "Implemented six skirmish-only faction relief routes, six five-stack convoy companies, six live response relays, persistent exact-target delivery receipts, reserve_delivery_completed objectives and strategic targeting, six generated relay masters plus compact atlas, and one consolidated six-case production smoke proving six claims, dispatches, interceptions, receipts, victories, save-v9 round trips, and eighteen battles. Repository validation and matching Linux/Windows release exports passed at 248517260 bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six twin command field councils 10184",
-  "currentSliceUpdatedAt": "2026-08-31T10:52:47Z",
+  "currentSliceTitle": "content six relief route convoy runs 10184",
+  "currentSliceUpdatedAt": "2026-08-31T11:37:30Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107125,6 +107125,16 @@
       "startedAt": "2026-08-31T10:12:36Z",
       "notes": "Implemented six skirmish-only Twin-Command Field Councils, six five-stack opening companies, exact hero-at-controlled-town victory authority, five event hooks per map including delayed rival reinforcement, six original transparent landmark masters, and one 288x48 runtime atlas. One consolidated smoke passed 6 scenarios, 6 hires, 12 production transfers, 18 battles, 6 claims, 6 forward-town captures, 6 paired deployments, negative controls, 6 victories, and save-v9 continuity; repository validation and Linux/Windows export startup gates passed at 248126824-byte PCK with 33 resource-site atlases and source art excluded.",
       "completedAt": "2026-08-31T10:52:47Z"
+    },
+    {
+      "id": "content-six-relief-route-convoy-runs-10184",
+      "title": "content six relief route convoy runs 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-31T11:37:30Z",
+      "startedAt": "2026-08-31T10:58:23Z",
+      "notes": "Implemented six skirmish-only faction relief routes, six five-stack convoy companies, six live response relays, persistent exact-target delivery receipts, reserve_delivery_completed objectives and strategic targeting, six generated relay masters plus compact atlas, and one consolidated six-case production smoke proving six claims, dispatches, interceptions, receipts, victories, save-v9 round trips, and eighteen battles. Repository validation and matching Linux/Windows release exports passed at 248517260 bytes.",
+      "completedAt": "2026-08-31T11:37:30Z"
     }
   ],
   "project": "heroes-like",
@@ -107134,7 +107144,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The Twin-Command content slice is complete; broader production content, whole-game validation, signing, publication, and release readiness remain open.",
+  "remainingGap": "The relief-route convoy content slice is complete; broader production content, whole-game validation, signing, publication, and release readiness remain open.",
   "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open.",
   "reportOnlyEvidence": [
     {
@@ -107669,7 +107679,7 @@
   ],
   "summary": "Completed the coherent Seven-School Signature Battle VFX content, accessibility, live-presentation, and package-efficiency batch with one consolidated smoke.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T10:52:47Z",
+  "updatedAt": "2026-08-31T11:37:30Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
