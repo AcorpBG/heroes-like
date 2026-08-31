@@ -806,6 +806,86 @@
         "ai_valuation_behavior": false,
         "rare_resource_activation": false
       }
+    },
+    {
+      "id": "artifact_source_setbound_regalia_reliquaries",
+      "schema": "artifact_source_reward_v1",
+      "source_tag": "guarded_site",
+      "reward_context": "setbound_regalia_reliquary_claim",
+      "eligible_object_families": [
+        "guarded_reward_site"
+      ],
+      "eligible_site_families": [
+        "guarded_reward_site"
+      ],
+      "required_object_tags": [
+        "guarded_reward"
+      ],
+      "required_reward_categories": [
+        "artifact"
+      ],
+      "guard_tiers": [
+        "heavy"
+      ],
+    "rarity_bands": [
+      "uncommon",
+      "rare"
+      ],
+      "artifact_ids": [
+        "artifact_lockward_beacon_key",
+        "artifact_fenhound_scent_bell",
+        "artifact_meridian_relay_lens",
+        "artifact_rootpath_seed_compass",
+        "artifact_redline_survey_dial",
+        "artifact_black_sail_compass"
+      ],
+      "artifact_ids_by_faction": {
+        "faction_embercourt": [
+          "artifact_lockward_beacon_key"
+        ],
+        "faction_mireclaw": [
+          "artifact_fenhound_scent_bell"
+        ],
+        "faction_sunvault": [
+          "artifact_meridian_relay_lens"
+        ],
+        "faction_thornwake": [
+          "artifact_rootpath_seed_compass"
+        ],
+        "faction_brasshollow": [
+          "artifact_redline_survey_dial"
+        ],
+        "faction_veilmourn": [
+          "artifact_black_sail_compass"
+        ]
+      },
+      "faction_constraints": [
+        "faction_embercourt",
+        "faction_mireclaw",
+        "faction_sunvault",
+        "faction_thornwake",
+        "faction_brasshollow",
+        "faction_veilmourn"
+      ],
+      "set_constraints": {
+        "allowed_set_ids": [
+          "set_lockward_charter",
+          "set_fenhound_pursuit",
+          "set_meridian_relay",
+          "set_rootpath_covenant",
+          "set_redline_survey_warrant",
+          "set_drowned_wake_chart"
+        ],
+        "piece_limit_per_table": 1
+      },
+      "runtime_policy": {
+        "metadata_only": false,
+        "live_drop_execution": true,
+        "save_version_bump": false,
+      "equipment_runtime_effects": false,
+      "ai_valuation_behavior": false,
+      "rare_resource_activation": true
+      }
     }
   ],
   "items": [

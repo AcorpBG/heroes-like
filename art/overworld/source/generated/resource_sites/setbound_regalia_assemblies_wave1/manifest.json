@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "source_model": "built_in_image_gen_original_setbound_regalia_reliquaries_atlas",
+  "generation_mode": "built_in_image_gen",
+  "source_date_utc": "2026-08-31",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_region_size": [48, 48],
+  "runtime_atlas_sha256": "2188bf5c9713e07728b1e5a9a79feee2737a255fd9546c7b1f664c2747e6e949",
+  "processing": "preserve generated alpha, alpha-trim, aspect-fit within 42x42, and center on transparent 48x48 cells",
+  "prompt_set_summary": "Six original isolated transparent faction artifact-set reliquaries with structurally distinct beacon-and-writ vault, antler hunt coffer, prism relay tripod, walking-root seed vault, gauge drafting table, and ship-rib chart casket silhouettes. Painterly fantasy-strategy readability at 48 pixels; no copied names, heraldry, art, text, logos, or protected visual expression.",
+  "items": [
+    {
+      "site_id": "site_lockward_charter_reliquary",
+      "asset_id": "resource_site_regalia_lockward_charter_reliquary",
+      "source_path": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/lockward_charter_reliquary_source.png",
+      "source_sha256": "33b93928440f4f64a50a5ef6a6423cbb53e166702e48499c7e3833ddf1e11818",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e7053d93-6ae6-4eb2-901a-269d946b742a.png",
+      "atlas_region": [0, 0, 48, 48],
+      "prompt_summary": "A basalt charter vault with a tall beacon-key socket, broad rolled-writ clasp, and two hanging tollstone seal rings."
+    },
+    {
+      "site_id": "site_fenhound_pursuit_reliquary",
+      "asset_id": "resource_site_regalia_fenhound_pursuit_reliquary",
+      "source_path": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/fenhound_pursuit_reliquary_source.png",
+      "source_sha256": "7f446d192ec19a00f196cf6435e3ea4db0a7abc52cbccf13648338d88a60d63c",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d593aed5-c579-4b03-91ce-1987a875a445.png",
+      "atlas_region": [48, 0, 48, 48],
+      "prompt_summary": "A crescent bogwood hunt coffer under a giant antler arch with a hanging scent bell, folded reed totem, and paired waders."
+    },
+    {
+      "site_id": "site_meridian_relay_reliquary",
+      "asset_id": "resource_site_regalia_meridian_relay_reliquary",
+      "source_path": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/meridian_relay_reliquary_source.png",
+      "source_sha256": "f9f02f19b25df42e0fab8892e1935ce1d348476a3c6077271a5990623440449e",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-1366a399-24f9-41e7-a699-968a4fdc8e64.png",
+      "atlas_region": [96, 0, 48, 48],
+      "prompt_summary": "A three-sided white-stone crystal relay with a suspended circular lens, mantle-draped facet, and forked pennon vane."
+    },
+    {
+      "site_id": "site_rootpath_covenant_reliquary",
+      "asset_id": "resource_site_regalia_rootpath_covenant_reliquary",
+      "source_path": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/rootpath_covenant_reliquary_source.png",
+      "source_sha256": "cc81b2ed977ade8b7123217b5ed74b050c8b7116fd273937178381d8c592db54",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b96374ff-397e-4cec-9cf9-feb705bcf662.png",
+      "atlas_region": [144, 0, 48, 48],
+      "prompt_summary": "A round living heartwood vault enclosed by three walking-root arches with a bark plate, flowering standard, and seed compass cradle."
+    },
+    {
+      "site_id": "site_redline_survey_reliquary",
+      "asset_id": "resource_site_regalia_redline_survey_reliquary",
+      "source_path": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/redline_survey_reliquary_source.png",
+      "source_sha256": "1eb044272e0b90195da76fcd3d043a1dcc926988a506ce411356f1177b626426",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-64741b6c-7c16-4596-8a83-c6e15d320906.png",
+      "atlas_region": [192, 0, 48, 48],
+      "prompt_summary": "A broad riveted survey drafting vault with a giant redline gauge, upright plated-vambrace clamp, and rigid split gonfalon."
+    },
+    {
+      "site_id": "site_drowned_wake_reliquary",
+      "asset_id": "resource_site_regalia_drowned_wake_reliquary",
+      "source_path": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/drowned_wake_reliquary_source.png",
+      "source_sha256": "230b9fa74561d880a09265ddde98c870d5259e837c0185d76f3568b3dad56e2f",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f30f7483-68ea-40a8-941b-ab3be95ccb95.png",
+      "atlas_region": [240, 0, 48, 48],
+      "prompt_summary": "A crescent ship-rib chart casket with a broken mourning mast, huge prow compass, and fogwake deckboots on an anchor crossbar."
+    }
+  ]
+}

@@ -305,6 +305,11 @@ static func _scenario_objective_dependency(objective: Dictionary, objective_inde
 	match String(objective.get("type", "")):
 		"artifact_owned_by_player":
 			_add_dependency_value(dependency, "artifact_ids", String(objective.get("artifact_id", "")))
+		"hero_artifact_set_equipped":
+			_add_dependency_value(dependency, "hero_ids", String(objective.get("hero_id", "")))
+			var artifact_set := ArtifactRulesScript.artifact_set_record(String(objective.get("set_id", "")))
+			for artifact_id in artifact_set.get("piece_ids", []):
+				_add_dependency_value(dependency, "artifact_ids", String(artifact_id))
 		"spell_known_by_player":
 			_add_dependency_value(dependency, "spell_ids", String(objective.get("spell_id", "")))
 		"building_built_in_player_town":
@@ -1579,6 +1584,8 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 	match String(objective.get("type", "")):
 		"artifact_owned_by_player":
 			return _player_owns_artifact(session, String(objective.get("artifact_id", "")))
+		"hero_artifact_set_equipped":
+			return bool(_artifact_set_equipment_progress(session, objective).get("complete", false))
 		"spell_known_by_player":
 			return _player_knows_spell(session, String(objective.get("spell_id", "")))
 		"building_built_in_player_town":
@@ -1632,6 +1639,16 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 			return "%s (%s)" % [
 				base_label,
 				"Recovered" if _player_owns_artifact(session, String(objective.get("artifact_id", ""))) else "Missing",
+			]
+		"hero_artifact_set_equipped":
+			var set_progress := _artifact_set_equipment_progress(session, objective)
+			if not bool(set_progress.get("hero_found", false)):
+				return "%s (Commander unavailable)" % base_label
+			return "%s (%d/%d regalia pieces equipped%s)" % [
+				base_label,
+				int(set_progress.get("equipped_piece_count", 0)),
+				int(set_progress.get("piece_count", 0)),
+				"; set active" if bool(set_progress.get("complete", false)) else "",
 			]
 		"spell_known_by_player":
 			return "%s (%s)" % [
@@ -1993,6 +2010,39 @@ static func _town_garrison_requirement_progress(
 		"requirements": rows,
 		"complete": not rows.is_empty() and town_controlled and ready_count == rows.size(),
 	}
+
+static func _artifact_set_equipment_progress(
+	session: SessionStateStoreScript.SessionData,
+	objective: Dictionary
+) -> Dictionary:
+	var hero_id := String(objective.get("hero_id", ""))
+	var set_id := String(objective.get("set_id", ""))
+	var hero := _controlled_hero_state(session, hero_id)
+	var artifact_set := ArtifactRulesScript.artifact_set_record(set_id)
+	var piece_ids = artifact_set.get("piece_ids", [])
+	var result := {
+		"hero_id": hero_id,
+		"set_id": set_id,
+		"set_name": String(artifact_set.get("name", set_id)),
+		"hero_found": not hero.is_empty(),
+		"piece_count": piece_ids.size() if piece_ids is Array else 0,
+		"equipped_piece_count": 0,
+		"equipped_piece_ids": [],
+		"complete": false,
+	}
+	if hero.is_empty() or artifact_set.is_empty():
+		return result
+	for set_state_value in ArtifactRulesScript.artifact_set_runtime_state(hero):
+		if not (set_state_value is Dictionary):
+			continue
+		var set_state: Dictionary = set_state_value
+		if String(set_state.get("set_id", "")) != set_id:
+			continue
+		result["equipped_piece_count"] = int(set_state.get("equipped_piece_count", 0))
+		result["equipped_piece_ids"] = set_state.get("equipped_piece_ids", []).duplicate()
+		result["complete"] = bool(set_state.get("complete", false))
+		break
+	return result
 
 static func _hero_progression_requirement_progress(
 	session: SessionStateStoreScript.SessionData,

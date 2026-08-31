@@ -14043,6 +14043,120 @@
       "assigned_resource_site_id": "site_bellwake_three_bell_garrison_warrant",
       "presentation_role": "bellwake_three_bell_garrison_warrant",
       "accessible_description": "A salt-dark ship-rib callboard holds three separate funeral bells and pale glass warrants above a crescent anchor hook and slate plaque."
+    },
+    "resource_site_regalia_lockward_charter_reliquary": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/lockward_charter_reliquary_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/lockward_charter_reliquary_source.png",
+      "source_model": "built_in_image_gen_original_setbound_regalia_reliquaries_atlas",
+      "assigned_resource_site_id": "site_lockward_charter_reliquary",
+      "presentation_role": "lockward_setbound_regalia_reliquary",
+      "accessible_description": "A squat basalt treaty vault carries a tall amber beacon-key socket, a broad rolled-writ clasp, and paired tollstone seal rings."
+    },
+    "resource_site_regalia_fenhound_pursuit_reliquary": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/fenhound_pursuit_reliquary_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/fenhound_pursuit_reliquary_source.png",
+      "source_model": "built_in_image_gen_original_setbound_regalia_reliquaries_atlas",
+      "assigned_resource_site_id": "site_fenhound_pursuit_reliquary",
+      "presentation_role": "fenhound_setbound_regalia_reliquary",
+      "accessible_description": "A low crescent bogwood hunt coffer sits beneath a giant antler arch with a hanging scent bell, reed totem, and paired tall waders."
+    },
+    "resource_site_regalia_meridian_relay_reliquary": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/meridian_relay_reliquary_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/meridian_relay_reliquary_source.png",
+      "source_model": "built_in_image_gen_original_setbound_regalia_reliquaries_atlas",
+      "assigned_resource_site_id": "site_meridian_relay_reliquary",
+      "presentation_role": "meridian_setbound_regalia_reliquary",
+      "accessible_description": "A three-sided crystal relay suspends a circular survey lens between white-stone legs beneath a mantle-draped facet and forked pennon vane."
+    },
+    "resource_site_regalia_rootpath_covenant_reliquary": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/rootpath_covenant_reliquary_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/rootpath_covenant_reliquary_source.png",
+      "source_model": "built_in_image_gen_original_setbound_regalia_reliquaries_atlas",
+      "assigned_resource_site_id": "site_rootpath_covenant_reliquary",
+      "presentation_role": "rootpath_setbound_regalia_reliquary",
+      "accessible_description": "A round living heartwood seed-vault stands inside three walking-root arches with a bark cuirass plate, flowering standard, and compass cradle."
+    },
+    "resource_site_regalia_redline_survey_reliquary": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/redline_survey_reliquary_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/redline_survey_reliquary_source.png",
+      "source_model": "built_in_image_gen_original_setbound_regalia_reliquaries_atlas",
+      "assigned_resource_site_id": "site_redline_survey_reliquary",
+      "presentation_role": "redline_setbound_regalia_reliquary",
+      "accessible_description": "A broad riveted drafting vault presents an enormous redline gauge beside an upright plated-vambrace clamp and rigid split gonfalon."
+    },
+    "resource_site_regalia_drowned_wake_reliquary": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/drowned_wake_reliquary_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/drowned_wake_reliquary_source.png",
+      "source_model": "built_in_image_gen_original_setbound_regalia_reliquaries_atlas",
+      "assigned_resource_site_id": "site_drowned_wake_reliquary",
+      "presentation_role": "drownedwake_setbound_regalia_reliquary",
+      "accessible_description": "A crescent ship-rib chart casket carries a broken mourning mast, an oversized prow compass, and deckboots hanging from an anchor crossbar."
     }
   },
   "resource_site_sprites": {
@@ -15237,6 +15351,36 @@
       "asset_id": "resource_site_garrison_warrant_bellwake_bells",
       "unclaimed_asset_id": "resource_site_garrison_warrant_bellwake_bells",
       "fit": "Exact original Bellwake Three-Bell Garrison Warrant remains visible before and after its one-time recruit-warrant claim."
+    },
+    "site_lockward_charter_reliquary": {
+      "asset_id": "resource_site_regalia_lockward_charter_reliquary",
+      "unclaimed_asset_id": "resource_site_regalia_lockward_charter_reliquary",
+      "fit": "Exact original Lockward Charter Reliquary remains visible before and after its one-time final-set-piece claim."
+    },
+    "site_fenhound_pursuit_reliquary": {
+      "asset_id": "resource_site_regalia_fenhound_pursuit_reliquary",
+      "unclaimed_asset_id": "resource_site_regalia_fenhound_pursuit_reliquary",
+      "fit": "Exact original Fenhound Pursuit Reliquary remains visible before and after its one-time final-set-piece claim."
+    },
+    "site_meridian_relay_reliquary": {
+      "asset_id": "resource_site_regalia_meridian_relay_reliquary",
+      "unclaimed_asset_id": "resource_site_regalia_meridian_relay_reliquary",
+      "fit": "Exact original Meridian Relay Reliquary remains visible before and after its one-time final-set-piece claim."
+    },
+    "site_rootpath_covenant_reliquary": {
+      "asset_id": "resource_site_regalia_rootpath_covenant_reliquary",
+      "unclaimed_asset_id": "resource_site_regalia_rootpath_covenant_reliquary",
+      "fit": "Exact original Rootpath Covenant Reliquary remains visible before and after its one-time final-set-piece claim."
+    },
+    "site_redline_survey_reliquary": {
+      "asset_id": "resource_site_regalia_redline_survey_reliquary",
+      "unclaimed_asset_id": "resource_site_regalia_redline_survey_reliquary",
+      "fit": "Exact original Redline Survey Warrant Reliquary remains visible before and after its one-time final-set-piece claim."
+    },
+    "site_drowned_wake_reliquary": {
+      "asset_id": "resource_site_regalia_drowned_wake_reliquary",
+      "unclaimed_asset_id": "resource_site_regalia_drowned_wake_reliquary",
+      "fit": "Exact original Drowned Wake Chart Reliquary remains visible before and after its one-time final-set-piece claim."
     }
   },
   "artifact_default_sprite": {
