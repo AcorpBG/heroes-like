@@ -8028,6 +8028,60 @@
       "assigned_faction_id": "neutral",
       "presentation_role": "saltwake_belldeep_sovereign_watch",
       "accessible_description": "The exact saltwake bellwhales creature silhouette marks this sovereign-wild guard front."
+    },
+    "mapobj_stormseal_powder_wharf": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/stormseal_powder_wharf_unclaimed.png", "source_model": "built_in_image_gen_original_horizon_company_field_musters", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_stormseal_powder_wharf", "assigned_map_object_family": "neutral_dwelling", "presentation_role": "sealed powder wharf and stormseal winch", "accessible_description": "A rain-dark timber wharf holds a sealed bronze bombard tube, cold brazier, red wax storm seal, and chain winch."
+    },
+    "resource_site_company_stormseal_powder_wharf_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/stormseal_powder_wharf_controlled.png", "source_model": "built_in_image_gen_original_horizon_company_field_musters", "assigned_resource_site_id": "site_stormseal_powder_wharf", "presentation_role": "controlled_company_muster_state", "accessible_description": "The wharf's tube stands open beside a warm brazier, raised ember pennant, powder casks, and a ready winch."
+    },
+    "mapobj_moonwax_reed_circle": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/moonwax_reed_circle_unclaimed.png", "source_model": "built_in_image_gen_original_horizon_company_field_musters", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_moonwax_reed_circle", "assigned_map_object_family": "neutral_dwelling", "presentation_role": "moon jar and bone-arched reed circle", "accessible_description": "Crooked wetland stones and pale reeds surround a sealed peatglass moon jar beneath a bone-chain arch and cold lanterns."
+    },
+    "resource_site_company_moonwax_reed_circle_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/moonwax_reed_circle_controlled.png", "source_model": "built_in_image_gen_original_horizon_company_field_musters", "assigned_resource_site_id": "site_moonwax_reed_circle", "presentation_role": "controlled_company_muster_state", "accessible_description": "Moonwax lanterns glow around the opened jar, supplied peatwax vessels, racked reedcaster staffs, and a ragged crescent pennant."
+    },
+    "mapobj_facet_vigil": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/facet_vigil_unclaimed.png", "source_model": "built_in_image_gen_original_horizon_company_field_musters", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_facet_vigil", "assigned_map_object_family": "neutral_dwelling", "presentation_role": "folded seven-face prism and noon dial", "accessible_description": "An ivory watch dais supports a folded brass prism, shuttered mirror fins, and an unlit circular noon dial."
+    },
+    "resource_site_company_facet_vigil_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/facet_vigil_controlled.png", "source_model": "built_in_image_gen_original_horizon_company_field_musters", "assigned_resource_site_id": "site_facet_vigil", "presentation_role": "controlled_company_muster_state", "accessible_description": "The seven-faced prism opens into a star silhouette above bright mirror fins, sentinel shields, and a raised saffron pennant."
+    },
+    "mapobj_heartseed_bolt_grove": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png", "atlas_region": [288, 0, 48, 48], "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/heartseed_bolt_grove_unclaimed.png", "source_model": "built_in_image_gen_original_horizon_company_field_musters", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_heartseed_bolt_grove", "assigned_map_object_family": "neutral_dwelling", "presentation_role": "dormant heartseed and folded branch ballistae", "accessible_description": "A living-wood arch curls around a dormant amber heartseed with folded branch-ballista arms, empty racks, and closed leaf lamps."
+    },
+    "resource_site_company_heartseed_bolt_grove_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png", "atlas_region": [336, 0, 48, 48], "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/heartseed_bolt_grove_controlled.png", "source_model": "built_in_image_gen_original_horizon_company_field_musters", "assigned_resource_site_id": "site_heartseed_bolt_grove", "presentation_role": "controlled_company_muster_state", "accessible_description": "The heartseed glows between tensioned branch ballistae, dawnseed bolt bundles, open leaf lamps, and a grown green-gold pennant."
+    },
+    "mapobj_blackbell_assay_watch": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png", "atlas_region": [384, 0, 48, 48], "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/blackbell_assay_watch_unclaimed.png", "source_model": "built_in_image_gen_original_horizon_company_field_musters", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_blackbell_assay_watch", "assigned_map_object_family": "neutral_dwelling", "presentation_role": "silent assay bell and cold gauge", "accessible_description": "A broad brass bell hangs over black brick beside a zeroed pressure gauge, locked gaugeplate locker, and cold quench trough."
+    },
+    "resource_site_company_blackbell_assay_watch_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png", "atlas_region": [432, 0, 48, 48], "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/blackbell_assay_watch_controlled.png", "source_model": "built_in_image_gen_original_horizon_company_field_musters", "assigned_resource_site_id": "site_blackbell_assay_watch", "presentation_role": "controlled_company_muster_state", "accessible_description": "The bell striker rises above a safe green gauge, steaming quench trough, stacked gaugeplate shields, and heavy crossbows."
+    },
+    "mapobj_last_memory_mooring": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png", "atlas_region": [480, 0, 48, 48], "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/last_memory_mooring_unclaimed.png", "source_model": "built_in_image_gen_original_horizon_company_field_musters", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_last_memory_mooring", "assigned_map_object_family": "neutral_dwelling", "presentation_role": "furled pearl sail and saltglass bell", "accessible_description": "A pale driftwood bell-frame stands on a tiny salt-stone pier with a dark lantern, coiled tidehooks, and a furled pearl sail."
+    },
+    "resource_site_company_last_memory_mooring_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png", "atlas_region": [528, 0, 48, 48], "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/last_memory_mooring_controlled.png", "source_model": "built_in_image_gen_original_horizon_company_field_musters", "assigned_resource_site_id": "site_last_memory_mooring", "presentation_role": "controlled_company_muster_state", "accessible_description": "A raised pearl sail towers over the softly lit bell, bright lantern, racked tidehooks, and three memory-salt urns."
     }
   },
   "resource_site_sprites": {
@@ -8629,6 +8683,24 @@
       "asset_id": "resource_site_neutral_saltwake_belldeep_controlled",
       "unclaimed_asset_id": "mapobj_saltwake_belldeep",
       "fit": "Exact original whalerib saltglass quay and six chimes paired with its supplied controlled muster state."
+    },
+    "site_stormseal_powder_wharf": {
+      "asset_id": "resource_site_company_stormseal_powder_wharf_controlled", "unclaimed_asset_id": "mapobj_stormseal_powder_wharf", "fit": "Exact sealed powder wharf paired with its lit, supplied bombard-company state."
+    },
+    "site_moonwax_reed_circle": {
+      "asset_id": "resource_site_company_moonwax_reed_circle_controlled", "unclaimed_asset_id": "mapobj_moonwax_reed_circle", "fit": "Exact moon jar and bone-arched reed circle paired with its waxlit reedcaster muster state."
+    },
+    "site_facet_vigil": {
+      "asset_id": "resource_site_company_facet_vigil_controlled", "unclaimed_asset_id": "mapobj_facet_vigil", "fit": "Exact folded prism vigil paired with its deployed seven-face sentinel state."
+    },
+    "site_heartseed_bolt_grove": {
+      "asset_id": "resource_site_company_heartseed_bolt_grove_controlled", "unclaimed_asset_id": "mapobj_heartseed_bolt_grove", "fit": "Exact dormant heartseed grove paired with its tensioned dawnseed-bolter state."
+    },
+    "site_blackbell_assay_watch": {
+      "asset_id": "resource_site_company_blackbell_assay_watch_controlled", "unclaimed_asset_id": "mapobj_blackbell_assay_watch", "fit": "Exact silent assay bell paired with its safe-gauge, supplied bailiff-watch state."
+    },
+    "site_last_memory_mooring": {
+      "asset_id": "resource_site_company_last_memory_mooring_controlled", "unclaimed_asset_id": "mapobj_last_memory_mooring", "fit": "Exact furled saltglass mooring paired with its raised-sail tidehook muster state."
     }
   },
   "artifact_default_sprite": {

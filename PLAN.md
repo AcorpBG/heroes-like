@@ -24,8 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-six-horizon-capstone-monuments-10184`, one coherent six-citadel town-content and exact-art batch.
-- Current package boundary after the slice: matching Linux and Windows release exports measure 245878512 bytes, 4121488 bytes below the unchanged 250000000-byte ceiling; all generated building masters remain excluded from both packages.
+- Active implementation slice: none; the broader production-content expansion goal remains open for the next selected coherent batch.
+- Most recently completed implementation slice: `content-six-horizon-company-field-musters-10184`, one coherent six-faction adventure-map recruitment and exact-art batch.
+- Current package boundary: matching Linux and Windows release exports measure 245963644 bytes, 4036356 bytes below the unchanged 250000000-byte ceiling; all generated field-muster masters remain excluded from both packages.
+
+## Six Horizon Company Field Musters
+
+id: `content-six-horizon-company-field-musters-10184`
+
+Status: completed.
+
+Current finding:
+- the six Horizon reserve companies and their town capstone growth routes are live, but none can be recruited from a faction-specific adventure-map location, leaving the two latest content layers concentrated inside town development;
+- production resource-site authority already supports faction-linked persistent dwellings, immediate claim recruits, weekly town delivery, controlled-state rendering, pathing, and save-version-9 continuity without treating their units as neutral;
+- the live 24x16 six-citadel skirmish has room for one readable field muster near each citadel, and current release packages retain 4121488 bytes of headroom for one compact twelve-frame atlas while generated masters remain source-only.
+
+Implementation boundary:
+- add one original faction-linked field muster for Cinderseal Bombardiers, Mireglass Reedcasters, Noonfacet Sentinels, Dawnseed Bolters, Gaugeplate Bailiffs, and Tidehook Deckhands, with exact immediate and weekly recruit payloads plus asymmetric resource income and response flavor;
+- create six first-class map objects and six paired unclaimed/controlled landmarks, wire them through the exact overworld manifest, and place one on the live Horizon compact map without changing its towns, encounters, objectives, start, or existing objects;
+- preserve deterministic movement and capture, weekly delivery to the nearest controlled town, save version 9, Windows/Linux paths, generated-source exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all six sites render their exact unclaimed and controlled identities, capture through production OverworldRules, grant only their exact faction company, deliver exact weekly recruits and income while controlled, and never leak a roster to another site;
+- all six placements are reachable in the live six-citadel scenario and their controlled state survives an exact save-version-9 round trip;
+- run one consolidated six-case gameplay/art/save smoke only after the complete batch, followed once by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- Stormseal Powder Wharf, Moonwax Reed Circle, Facet Vigil, Heartseed Bolt Grove, Blackbell Assay Watch, and Last-Memory Mooring now provide six faction-exclusive reserve-company recruitment locations on the live Horizon compact map;
+- each site has distinct original unclaimed and controlled art in one compact twelve-frame runtime atlas, grants its exact company through production capture authority, supplies asymmetric controlled income, and delivers its authored weekly muster to the nearest controlled town;
+- the single final consolidated smoke passes all 6/6 live placement, reachability, capture, recruit, income, weekly-delivery, controlled-art, repeat-safety, rendered-capture, and save-version-9 cases; repository validation passes;
+- Linux and Windows export/startup gates pass with matching 245963644-byte PCKs, all twenty-eight required resource-site atlases present, generated source art excluded, and 4036356 bytes of headroom below the unchanged ceiling.
+
+Non-goals:
+- no new faction, unit definition, hero, town, building, spell, artifact, encounter, campaign, map, combat mechanic, strategic-AI algorithm, RMG behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes dwelling, name, art, text, heraldry, or protected visual expression.
 
 ## Six Horizon Capstone Monuments
 

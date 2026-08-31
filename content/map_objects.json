@@ -40990,6 +40990,72 @@
       "ai_hints": {"strategic_value": 14, "risk_tier": "apex", "placement_role": "sovereign_coast_recruit_source", "guard_target_value_hint": 9, "avoid_until_strength": "elite"},
       "runtime_boundary": {"status": "neutral_dwelling_live", "neutral_dwelling_site_runtime_supported": true, "guarded_variant_runtime_migration": true, "recruitment_ui_overhaul": false, "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true, "rare_resource_activation": false, "scenario_placement_migration": true, "guard_resolution_runtime_adopted": true},
       "content_batch_id": "content-six-sovereign-wild-habitats-10184", "batch_role": "guarded_sovereign_wild_dwelling"
+    },
+    {
+      "id": "object_stormseal_powder_wharf", "name": "Stormseal Powder Wharf", "family": "neutral_dwelling", "resource_site_id": "site_stormseal_powder_wharf", "faction_id": "faction_embercourt", "biome_ids": ["biome_grasslands", "biome_coast_archipelago"],
+      "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "small"}, "passable": false, "visitable": true, "map_roles": ["faction_recruit_source", "weekly_muster", "counter_capture_target"],
+      "schema_version": 1, "primary_class": "neutral_dwelling", "secondary_tags": ["embercourt_company_muster", "weekly_muster", "persistent_control"], "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
+      "approach": {"mode": "adjacent", "primary_sides": ["south", "west", "east", "north"], "visit_offsets": [{"x": 0, "y": 0}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": false},
+      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
+      "company_contract": {"company_unit_id": "unit_embercourt_cinderseal_bombardiers", "resource_site_id": "site_stormseal_powder_wharf", "recruit_policy": "immediate_and_weekly_muster", "faction_linked": true},
+      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "faction_support_pocket", "minimum_lane_clearance": 1, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": false},
+      "ai_hints": {"strategic_value": 8, "risk_tier": "none", "placement_role": "embercourt_company_muster", "guard_target_value_hint": 0, "avoid_until_strength": "none"},
+      "runtime_boundary": {"status": "faction_linked_dwelling_live", "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true}, "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+    },
+    {
+      "id": "object_moonwax_reed_circle", "name": "Moonwax Reed Circle", "family": "neutral_dwelling", "resource_site_id": "site_moonwax_reed_circle", "faction_id": "faction_mireclaw", "biome_ids": ["biome_mire_fen", "biome_grasslands"],
+      "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "small"}, "passable": false, "visitable": true, "map_roles": ["faction_recruit_source", "weekly_muster", "counter_capture_target"],
+      "schema_version": 1, "primary_class": "neutral_dwelling", "secondary_tags": ["mireclaw_company_muster", "weekly_muster", "persistent_control"], "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
+      "approach": {"mode": "adjacent", "primary_sides": ["south", "west", "east", "north"], "visit_offsets": [{"x": 0, "y": 0}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": false},
+      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
+      "company_contract": {"company_unit_id": "unit_mireclaw_mireglass_reedcasters", "resource_site_id": "site_moonwax_reed_circle", "recruit_policy": "immediate_and_weekly_muster", "faction_linked": true},
+      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "faction_support_pocket", "minimum_lane_clearance": 1, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": false},
+      "ai_hints": {"strategic_value": 7, "risk_tier": "none", "placement_role": "mireclaw_company_muster", "guard_target_value_hint": 0, "avoid_until_strength": "none"},
+      "runtime_boundary": {"status": "faction_linked_dwelling_live", "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true}, "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+    },
+    {
+      "id": "object_facet_vigil", "name": "Facet Vigil", "family": "neutral_dwelling", "resource_site_id": "site_facet_vigil", "faction_id": "faction_sunvault", "biome_ids": ["biome_highland_ridge", "biome_snow_frost_marches"],
+      "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "small"}, "passable": false, "visitable": true, "map_roles": ["faction_recruit_source", "weekly_muster", "counter_capture_target"],
+      "schema_version": 1, "primary_class": "neutral_dwelling", "secondary_tags": ["sunvault_company_muster", "weekly_muster", "persistent_control"], "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
+      "approach": {"mode": "adjacent", "primary_sides": ["south", "west", "east", "north"], "visit_offsets": [{"x": 0, "y": 0}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": false},
+      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
+      "company_contract": {"company_unit_id": "unit_sunvault_noonfacet_sentinels", "resource_site_id": "site_facet_vigil", "recruit_policy": "immediate_and_weekly_muster", "faction_linked": true},
+      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "faction_support_pocket", "minimum_lane_clearance": 1, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": false},
+      "ai_hints": {"strategic_value": 7, "risk_tier": "none", "placement_role": "sunvault_company_muster", "guard_target_value_hint": 0, "avoid_until_strength": "none"},
+      "runtime_boundary": {"status": "faction_linked_dwelling_live", "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true}, "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+    },
+    {
+      "id": "object_heartseed_bolt_grove", "name": "Heartseed Bolt Grove", "family": "neutral_dwelling", "resource_site_id": "site_heartseed_bolt_grove", "faction_id": "faction_thornwake", "biome_ids": ["biome_deep_forest", "biome_grasslands"],
+      "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "small"}, "passable": false, "visitable": true, "map_roles": ["faction_recruit_source", "weekly_muster", "counter_capture_target"],
+      "schema_version": 1, "primary_class": "neutral_dwelling", "secondary_tags": ["thornwake_company_muster", "weekly_muster", "persistent_control"], "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
+      "approach": {"mode": "adjacent", "primary_sides": ["south", "west", "east", "north"], "visit_offsets": [{"x": 0, "y": 0}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": false},
+      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
+      "company_contract": {"company_unit_id": "unit_thornwake_dawnseed_bolters", "resource_site_id": "site_heartseed_bolt_grove", "recruit_policy": "immediate_and_weekly_muster", "faction_linked": true},
+      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "faction_support_pocket", "minimum_lane_clearance": 1, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": false},
+      "ai_hints": {"strategic_value": 7, "risk_tier": "none", "placement_role": "thornwake_company_muster", "guard_target_value_hint": 0, "avoid_until_strength": "none"},
+      "runtime_boundary": {"status": "faction_linked_dwelling_live", "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true}, "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+    },
+    {
+      "id": "object_blackbell_assay_watch", "name": "Blackbell Assay Watch", "family": "neutral_dwelling", "resource_site_id": "site_blackbell_assay_watch", "faction_id": "faction_brasshollow", "biome_ids": ["biome_ash_lava_wastes", "biome_subterranean_underways"],
+      "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "small"}, "passable": false, "visitable": true, "map_roles": ["faction_recruit_source", "weekly_muster", "counter_capture_target"],
+      "schema_version": 1, "primary_class": "neutral_dwelling", "secondary_tags": ["brasshollow_company_muster", "weekly_muster", "persistent_control"], "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
+      "approach": {"mode": "adjacent", "primary_sides": ["south", "west", "east", "north"], "visit_offsets": [{"x": 0, "y": 0}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": false},
+      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
+      "company_contract": {"company_unit_id": "unit_brasshollow_gaugeplate_bailiffs", "resource_site_id": "site_blackbell_assay_watch", "recruit_policy": "immediate_and_weekly_muster", "faction_linked": true},
+      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "faction_support_pocket", "minimum_lane_clearance": 1, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": false},
+      "ai_hints": {"strategic_value": 7, "risk_tier": "none", "placement_role": "brasshollow_company_muster", "guard_target_value_hint": 0, "avoid_until_strength": "none"},
+      "runtime_boundary": {"status": "faction_linked_dwelling_live", "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true}, "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
+    },
+    {
+      "id": "object_last_memory_mooring", "name": "Last-Memory Mooring", "family": "neutral_dwelling", "resource_site_id": "site_last_memory_mooring", "faction_id": "faction_veilmourn", "biome_ids": ["biome_coast_archipelago", "biome_rough_badlands"],
+      "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "small"}, "passable": false, "visitable": true, "map_roles": ["faction_recruit_source", "weekly_muster", "counter_capture_target"],
+      "schema_version": 1, "primary_class": "neutral_dwelling", "secondary_tags": ["veilmourn_company_muster", "weekly_muster", "persistent_control"], "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
+      "approach": {"mode": "adjacent", "primary_sides": ["south", "west", "east", "north"], "visit_offsets": [{"x": 0, "y": 0}], "stop_before_interaction": true, "requires_clear_tile": true, "guard_clearance_required": false},
+      "passability_class": "blocking_visitable", "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "controlled", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "weekly_muster"},
+      "company_contract": {"company_unit_id": "unit_veilmourn_tidehook_deckhands", "resource_site_id": "site_last_memory_mooring", "recruit_policy": "immediate_and_weekly_muster", "faction_linked": true},
+      "editor_placement": {"placement_mode": "resource_site_object", "density_band": "faction_support_pocket", "minimum_lane_clearance": 1, "allows_adjacent_visitable": true, "requires_approach_clearance": true, "requires_guard_space": false},
+      "ai_hints": {"strategic_value": 6, "risk_tier": "none", "placement_role": "veilmourn_company_muster", "guard_target_value_hint": 0, "avoid_until_strength": "none"},
+      "runtime_boundary": {"status": "faction_linked_dwelling_live", "save_payload_required": true, "renderer_sprite_required": true, "pathing_runtime_adopted": true}, "content_status": "horizon_company_field_muster_live", "content_batch_id": "content-six-horizon-company-field-musters-10184", "batch_role": "faction_company_field_muster"
     }
   ]
 }
