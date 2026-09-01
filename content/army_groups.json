@@ -4712,6 +4712,146 @@
       ],
       "content_status": "marchland_grand_route_host_live",
       "content_batch_id": "content-twelve-marchland-grand-route-operations-10184"
+    },
+    {
+      "id": "army_quenchline_dominion_siege_host",
+      "name": "Vellum Quench Dominion Siege Host",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_tallyspring_throwers", "count": 100},
+        {"unit_id": "unit_brasshollow_quenchspool_slingers", "count": 70},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 45},
+        {"unit_id": "unit_brasshollow_quenchbell_mortars", "count": 28},
+        {"unit_id": "unit_brasshollow_crucible_crawlers", "count": 18}
+      ],
+      "content_status": "commander_dominion_siege_host_live",
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184"
+    },
+    {
+      "id": "army_counterweight_dominion_siege_host",
+      "name": "Vellum Quench Dominion Siege Host",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_tallyspring_throwers", "count": 100},
+        {"unit_id": "unit_brasshollow_quenchspool_slingers", "count": 70},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 45},
+        {"unit_id": "unit_brasshollow_quenchbell_mortars", "count": 28},
+        {"unit_id": "unit_brasshollow_crucible_crawlers", "count": 18}
+      ],
+      "content_status": "commander_dominion_siege_host_live",
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184"
+    },
+    {
+      "id": "army_blackwake_dominion_siege_host",
+      "name": "Orrik Tollreaver Dominion Siege Host",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_moonbite_votive_drummers", "count": 80},
+        {"unit_id": "unit_mireclaw_fenbell_chainstalkers", "count": 50},
+        {"unit_id": "unit_mireclaw_gorefen_rippers", "count": 30},
+        {"unit_id": "unit_mireclaw_moonbite_mirehorn_breakers", "count": 20},
+        {"unit_id": "unit_mireclaw_drowned_antler_sovereign", "count": 10}
+      ],
+      "content_status": "commander_dominion_siege_host_live",
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184"
+    },
+    {
+      "id": "army_moonchain_dominion_siege_host",
+      "name": "Orrik Tollreaver Dominion Siege Host",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_moonbite_votive_drummers", "count": 80},
+        {"unit_id": "unit_mireclaw_fenbell_chainstalkers", "count": 50},
+        {"unit_id": "unit_mireclaw_gorefen_rippers", "count": 30},
+        {"unit_id": "unit_mireclaw_moonbite_mirehorn_breakers", "count": 20},
+        {"unit_id": "unit_mireclaw_drowned_antler_sovereign", "count": 10}
+      ],
+      "content_status": "commander_dominion_siege_host_live",
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184"
+    },
+    {
+      "id": "army_lastmargin_dominion_siege_host",
+      "name": "Thir Obituary-Ink Dominion Siege Host",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_saltbell_casters", "count": 100},
+        {"unit_id": "unit_veilmourn_gloamkeel_bulwarks", "count": 55},
+        {"unit_id": "unit_veilmourn_saltwake_eulogists", "count": 32},
+        {"unit_id": "unit_veilmourn_dreamwake_foganchor_colossi", "count": 18},
+        {"unit_id": "unit_veilmourn_fogbound_leviathan", "count": 8}
+      ],
+      "content_status": "commander_dominion_siege_host_live",
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184"
+    },
+    {
+      "id": "army_drownedname_dominion_siege_host",
+      "name": "Thir Obituary-Ink Dominion Siege Host",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_saltbell_casters", "count": 100},
+        {"unit_id": "unit_veilmourn_gloamkeel_bulwarks", "count": 55},
+        {"unit_id": "unit_veilmourn_saltwake_eulogists", "count": 32},
+        {"unit_id": "unit_veilmourn_dreamwake_foganchor_colossi", "count": 18},
+        {"unit_id": "unit_veilmourn_fogbound_leviathan", "count": 8}
+      ],
+      "content_status": "commander_dominion_siege_host_live",
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184"
+    },
+    {
+      "id": "army_crowndrum_dominion_siege_host",
+      "name": "Zhorra Fenwake Dominion Siege Host",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_moonbite_votive_drummers", "count": 80},
+        {"unit_id": "unit_mireclaw_fenbell_chainstalkers", "count": 50},
+        {"unit_id": "unit_mireclaw_gorefen_rippers", "count": 30},
+        {"unit_id": "unit_mireclaw_moonbite_mirehorn_breakers", "count": 20},
+        {"unit_id": "unit_mireclaw_drowned_antler_sovereign", "count": 10}
+      ],
+      "content_status": "commander_dominion_siege_host_live",
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184"
+    },
+    {
+      "id": "army_undertow_dominion_siege_host",
+      "name": "Zhorra Fenwake Dominion Siege Host",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_moonbite_votive_drummers", "count": 80},
+        {"unit_id": "unit_mireclaw_fenbell_chainstalkers", "count": 50},
+        {"unit_id": "unit_mireclaw_gorefen_rippers", "count": 30},
+        {"unit_id": "unit_mireclaw_moonbite_mirehorn_breakers", "count": 20},
+        {"unit_id": "unit_mireclaw_drowned_antler_sovereign", "count": 10}
+      ],
+      "content_status": "commander_dominion_siege_host_live",
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184"
+    },
+    {
+      "id": "army_nineray_dominion_siege_host",
+      "name": "Mirro Halometer Dominion Siege Host",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_aurora_ballista", "count": 70},
+        {"unit_id": "unit_sunvault_splitprism_parallax_fencers", "count": 45},
+        {"unit_id": "unit_sunvault_zenith_lensbearers", "count": 30},
+        {"unit_id": "unit_sunvault_splitprism_heliograph_ballistae", "count": 18},
+        {"unit_id": "unit_sunvault_aurora_ballistae", "count": 12}
+      ],
+      "content_status": "commander_dominion_siege_host_live",
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184"
+    },
+    {
+      "id": "army_shadowdial_dominion_siege_host",
+      "name": "Mirro Halometer Dominion Siege Host",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_aurora_ballista", "count": 70},
+        {"unit_id": "unit_sunvault_splitprism_parallax_fencers", "count": 45},
+        {"unit_id": "unit_sunvault_zenith_lensbearers", "count": 30},
+        {"unit_id": "unit_sunvault_splitprism_heliograph_ballistae", "count": 18},
+        {"unit_id": "unit_sunvault_aurora_ballistae", "count": 12}
+      ],
+      "content_status": "commander_dominion_siege_host_live",
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184"
     }
   ]
 }

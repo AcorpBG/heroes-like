@@ -19544,6 +19544,356 @@
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
+    },
+    {
+      "id": "site_quench_cantilever_breach_gauge",
+      "name": "Quench-Cantilever Breach Gauge",
+      "family": "scenario_objective",
+      "action_label": "Set the Breach Gauge",
+      "summary": "Quench-Cantilever Breach Gauge establishes Vellum Quench's command over the dominion siege.",
+      "claim_rewards": {
+        "gold": 900,
+        "brass_scrip": 2,
+        "experience": 300
+      },
+      "claim_recruits": {
+        "unit_brasshollow_quenchbell_mortars": 3,
+        "unit_brasshollow_crucible_crawlers": 1
+      },
+      "claim_flags": {
+        "quenchline_dominion_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_dominion_siege_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184",
+      "public_text": {
+        "public_summary": "A squat black-iron cantilever spans a molten quench basin beneath nested gauges, a cracked bell, hooked counterweight, and four riveted feet.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_counterweight_verdict_press",
+      "name": "Counterweight Verdict Press",
+      "family": "scenario_objective",
+      "action_label": "Stamp the Counterweight Verdict",
+      "summary": "Counterweight Verdict Press establishes Vellum Quench's command over the dominion siege.",
+      "claim_rewards": {
+        "gold": 900,
+        "brass_scrip": 2,
+        "experience": 300
+      },
+      "claim_recruits": {
+        "unit_brasshollow_quenchbell_mortars": 3,
+        "unit_brasshollow_crucible_crawlers": 1
+      },
+      "claim_flags": {
+        "counterweight_dominion_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_dominion_siege_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184",
+      "public_text": {
+        "public_summary": "A tall asymmetric stamp press carries a broad blank brass plate, three unequal counterweights, steam vent, toothed flywheel, and split iron base.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_blackwake_toll_tusk_standard",
+      "name": "Blackwake Toll-Tusk Standard",
+      "family": "scenario_objective",
+      "action_label": "Ring the Toll-Tusk",
+      "summary": "Blackwake Toll-Tusk Standard establishes Orrik Tollreaver's command over the dominion siege.",
+      "claim_rewards": {
+        "gold": 900,
+        "peatwax": 2,
+        "experience": 300
+      },
+      "claim_recruits": {
+        "unit_mireclaw_fenbell_chainstalkers": 3,
+        "unit_mireclaw_moonbite_mirehorn_breakers": 1
+      },
+      "claim_flags": {
+        "blackwake_dominion_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_dominion_siege_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184",
+      "public_text": {
+        "public_summary": "A curved antler-and-reed toll arch carries a huge ivory tusk bell, heavy chain, blackwater lantern, three tally hooks, and muddy stone feet.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_moonchain_raid_ledger",
+      "name": "Moonchain Raid Ledger",
+      "family": "scenario_objective",
+      "action_label": "Close the Raid Ledger",
+      "summary": "Moonchain Raid Ledger establishes Orrik Tollreaver's command over the dominion siege.",
+      "claim_rewards": {
+        "gold": 900,
+        "peatwax": 2,
+        "experience": 300
+      },
+      "claim_recruits": {
+        "unit_mireclaw_fenbell_chainstalkers": 3,
+        "unit_mireclaw_moonbite_mirehorn_breakers": 1
+      },
+      "claim_flags": {
+        "moonchain_dominion_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_dominion_siege_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184",
+      "public_text": {
+        "public_summary": "A low hide-drum command desk carries a chain-bead abacus, three blank wax tally leaves, crescent reed pennant, ferry weight, and root tripod.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_last_margin_eulogy_mast",
+      "name": "Last-Margin Eulogy Mast",
+      "family": "scenario_objective",
+      "action_label": "Raise the Last Margin",
+      "summary": "Last-Margin Eulogy Mast establishes Thir Obituary-Ink's command over the dominion siege.",
+      "claim_rewards": {
+        "gold": 900,
+        "memory_salt": 2,
+        "experience": 300
+      },
+      "claim_recruits": {
+        "unit_veilmourn_saltwake_eulogists": 3,
+        "unit_veilmourn_dreamwake_foganchor_colossi": 1
+      },
+      "claim_flags": {
+        "lastmargin_dominion_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_dominion_siege_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184",
+      "public_text": {
+        "public_summary": "An ink-black sail mast carries a broad blank hanging scroll, clapperless salt bell, three white quill vanes, anchor hook, and bone feet.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_drowned_name_archive",
+      "name": "Drowned Name Archive",
+      "family": "scenario_objective",
+      "action_label": "Open the Drowned Archive",
+      "summary": "Drowned Name Archive establishes Thir Obituary-Ink's command over the dominion siege.",
+      "claim_rewards": {
+        "gold": 900,
+        "memory_salt": 2,
+        "experience": 300
+      },
+      "claim_recruits": {
+        "unit_veilmourn_saltwake_eulogists": 3,
+        "unit_veilmourn_dreamwake_foganchor_colossi": 1
+      },
+      "claim_flags": {
+        "drownedname_dominion_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_dominion_siege_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184",
+      "public_text": {
+        "public_summary": "A ribbed ship-cabinet reliquary holds blank tideglass tablets, a half-submerged sounding bell, rope drawers, pale lantern, and keel base.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_crown_drum_verdict_dais",
+      "name": "Crown-Drum Verdict Dais",
+      "family": "scenario_objective",
+      "action_label": "Beat the Crown Verdict",
+      "summary": "Crown-Drum Verdict Dais establishes Zhorra Fenwake's command over the dominion siege.",
+      "claim_rewards": {
+        "gold": 900,
+        "peatwax": 2,
+        "experience": 300
+      },
+      "claim_recruits": {
+        "unit_mireclaw_fenbell_chainstalkers": 3,
+        "unit_mireclaw_moonbite_mirehorn_breakers": 1
+      },
+      "claim_flags": {
+        "crowndrum_dominion_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_dominion_siege_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184",
+      "public_text": {
+        "public_summary": "A gnarled root-and-antler dais supports a huge hide verdict drum, reed-tooth crown, three bone beaters, hanging moon seals, and clawed feet.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_fenwake_undertow_beacon",
+      "name": "Fenwake Undertow Beacon",
+      "family": "scenario_objective",
+      "action_label": "Light the Undertow Beacon",
+      "summary": "Fenwake Undertow Beacon establishes Zhorra Fenwake's command over the dominion siege.",
+      "claim_rewards": {
+        "gold": 900,
+        "peatwax": 2,
+        "experience": 300
+      },
+      "claim_recruits": {
+        "unit_mireclaw_fenbell_chainstalkers": 3,
+        "unit_mireclaw_moonbite_mirehorn_breakers": 1
+      },
+      "claim_flags": {
+        "undertow_dominion_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_dominion_siege_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184",
+      "public_text": {
+        "public_summary": "A crooked reed beacon carries a spiral wake fan, drowned-blue flame cage, hanging bone plumbs, crescent hook, and root-and-mud base.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_nine_ray_halo_range",
+      "name": "Nine-Ray Halo Range",
+      "family": "scenario_objective",
+      "action_label": "Sight the Nine Rays",
+      "summary": "Nine-Ray Halo Range establishes Mirro Halometer's command over the dominion siege.",
+      "claim_rewards": {
+        "gold": 900,
+        "aetherglass": 2,
+        "experience": 300
+      },
+      "claim_recruits": {
+        "unit_sunvault_splitprism_parallax_fencers": 3,
+        "unit_sunvault_splitprism_heliograph_ballistae": 1
+      },
+      "claim_flags": {
+        "nineray_dominion_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_dominion_siege_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184",
+      "public_text": {
+        "public_summary": "An asymmetric ivory survey instrument carries nine unequal prism rays, a huge oval lens, diagonal sighting rod, crystal plumbs, and forked tripod.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_meridian_shadow_dial",
+      "name": "Meridian Shadow Dial",
+      "family": "scenario_objective",
+      "action_label": "Set the Meridian Shadow",
+      "summary": "Meridian Shadow Dial establishes Mirro Halometer's command over the dominion siege.",
+      "claim_rewards": {
+        "gold": 900,
+        "aetherglass": 2,
+        "experience": 300
+      },
+      "claim_recruits": {
+        "unit_sunvault_splitprism_parallax_fencers": 3,
+        "unit_sunvault_splitprism_heliograph_ballistae": 1
+      },
+      "claim_flags": {
+        "shadowdial_dominion_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "commander_dominion_siege_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-ten-commander-dominion-sieges-10184",
+      "public_text": {
+        "public_summary": "A tall faceted sundial carries two offset floating rings, a black prism shadow blade, diamond lens, calibrated arc, and stepped ivory base.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }
