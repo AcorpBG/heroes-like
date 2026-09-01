@@ -631,6 +631,50 @@ String runtime_town_id(const aurelion::h3maped_rmg_core::FinalHeaderPlayerSlot4a
 	return (slot->color % 2 == 0) ? "town_prismhearth" : "town_duskfen";
 }
 
+String configured_runtime_faction_id(
+		const aurelion::h3maped_rmg_core::FinalHeaderPlayerSlot4ac857 *slot,
+		const Dictionary &normalized_config) {
+	if (slot != nullptr) {
+		const Dictionary player_setup = normalized_config.get("player_setup", Dictionary());
+		if (slot->human) {
+			const String selected_faction_id = String(player_setup.get("faction_id", "")).strip_edges();
+			if (!selected_faction_id.is_empty()) {
+				return selected_faction_id;
+			}
+		}
+		const Array faction_ids = normalized_config.get("faction_ids", Array());
+		if (slot->color >= 0 && slot->color < faction_ids.size()) {
+			const String faction_id = String(faction_ids[slot->color]).strip_edges();
+			if (!faction_id.is_empty()) {
+				return faction_id;
+			}
+		}
+	}
+	return runtime_faction_id(slot);
+}
+
+String configured_runtime_town_id(
+		const aurelion::h3maped_rmg_core::FinalHeaderPlayerSlot4ac857 *slot,
+		const Dictionary &normalized_config) {
+	if (slot != nullptr) {
+		const Dictionary player_setup = normalized_config.get("player_setup", Dictionary());
+		if (slot->human) {
+			const String selected_faction_id = String(player_setup.get("faction_id", "")).strip_edges();
+			if (!selected_faction_id.is_empty()) {
+				return town_for_faction(selected_faction_id);
+			}
+		}
+		const Array town_ids = normalized_config.get("town_ids", Array());
+		if (slot->color >= 0 && slot->color < town_ids.size()) {
+			const String town_id = String(town_ids[slot->color]).strip_edges();
+			if (!town_id.is_empty()) {
+				return town_id;
+			}
+		}
+	}
+	return runtime_town_id(slot);
+}
+
 Dictionary runtime_tile_point(const aurelion::h3maped_rmg_core::RuntimeMapTilePoint &point) {
 	Dictionary result;
 	result["x"] = point.x;
@@ -954,7 +998,8 @@ Dictionary runtime_terrain_layers(const aurelion::h3maped_rmg_core::RuntimeMapPa
 
 Array runtime_objects(
 		const String &map_id,
-		const aurelion::h3maped_rmg_core::RuntimeMapPayloadProjection &projection) {
+		const aurelion::h3maped_rmg_core::RuntimeMapPayloadProjection &projection,
+		const Dictionary &normalized_config) {
 	Array result;
 	const Array live_proxy_catalog = runtime_live_proxy_catalog_entries();
 	for (const auto &source : projection.objects) {
@@ -1019,8 +1064,8 @@ Array runtime_objects(
 			object["player_type"] = slot == nullptr ? "neutral" : (slot->human ? "human" : "computer");
 			object["is_start_town"] = slot != nullptr;
 			object["start_anchor"] = slot != nullptr;
-			object["town_id"] = runtime_town_id(slot);
-			object["faction_id"] = runtime_faction_id(slot);
+			object["town_id"] = configured_runtime_town_id(slot, normalized_config);
+			object["faction_id"] = configured_runtime_faction_id(slot, normalized_config);
 		} else if (kind == "guard") {
 			object["encounter_id"] = "encounter_mire_raid";
 			object["object_id"] = "encounter_mire_raid";
@@ -1094,12 +1139,17 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 
 	const String feature_gate = options.get("feature_gate", "native_rmg_runtime");
 	const int32_t save_version = int32_t(options.get("session_save_version", 0));
+	const Dictionary normalized_config = generated_map.get("normalized_config", Dictionary());
+	const Dictionary player_setup = normalized_config.get("player_setup", Dictionary());
+	const String player_hero_id = String(player_setup.get("hero_id", "hero_lyra")).strip_edges();
 	Dictionary boundary;
 	boundary["schema_id"] = "aurelion_native_rmg_package_session_boundary_v1";
 	boundary["session_id"] = "native_rmg_session_" + map_id;
 	boundary["scenario_id"] = scenario_id;
 	boundary["map_id"] = map_id;
-	boundary["hero_id"] = "hero_lyra";
+	boundary["hero_id"] = player_hero_id.is_empty() ? String("hero_lyra") : player_hero_id;
+	boundary["player_faction_id"] = String(player_setup.get("faction_id", ""));
+	boundary["player_setup"] = player_setup.duplicate(true);
 	boundary["feature_gate"] = feature_gate;
 	boundary["save_version"] = save_version;
 	boundary["save_version_bump"] = false;
@@ -2470,6 +2520,8 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 	Dictionary size = size_value.get_type() == Variant::DICTIONARY ? Dictionary(size_value) : Dictionary();
 	Variant profile_value = config.get("profile", Variant());
 	Dictionary profile = profile_value.get_type() == Variant::DICTIONARY ? Dictionary(profile_value) : Dictionary();
+	Variant player_setup_value = config.get("player_setup", Variant());
+	Dictionary player_setup = player_setup_value.get_type() == Variant::DICTIONARY ? Dictionary(player_setup_value) : Dictionary();
 
 	const String size_class_id = normalized_size_class_id(config, size);
 	const int32_t default_dimension = dimension_for_size_class(size_class_id, 36);
@@ -2499,6 +2551,13 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 	result["terrain_ids"] = terrain_ids;
 	result["faction_ids"] = faction_ids;
 	result["town_ids"] = town_ids;
+	if (!player_setup.is_empty()) {
+		Dictionary normalized_player_setup;
+		normalized_player_setup["faction_id"] = String(player_setup.get("faction_id", "")).strip_edges();
+		normalized_player_setup["hero_id"] = String(player_setup.get("hero_id", "")).strip_edges();
+		normalized_player_setup["selection_mode"] = String(player_setup.get("selection_mode", "player_selected")).strip_edges();
+		result["player_setup"] = normalized_player_setup;
+	}
 	result["template_selection_mode"] = "recovered_h3maped_exe_rng_exact_state_chain";
 	result["template_selection_authority"] = "recovered_h3maped_exe_source_order";
 	result["template_selection_runtime_generation_allowed"] = true;
@@ -2621,8 +2680,14 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	}
 
 	const String payload_token = hash32_hex_bytes(workflow.final_payload_writeout_0x4ad1e3.payload_bytes);
-	const String map_id = "native_h3maped_" + payload_token;
-	const String map_hash = "fnv1a32:" + payload_token;
+	const Dictionary player_setup = normalized.get("player_setup", Dictionary());
+	const String player_faction_id = String(player_setup.get("faction_id", "")).strip_edges();
+	const String player_hero_id = String(player_setup.get("hero_id", "")).strip_edges();
+	const String runtime_identity_token = player_setup.is_empty()
+			? payload_token
+			: hash32_hex(payload_token + String(":") + player_faction_id + String(":") + player_hero_id);
+	const String map_id = "native_h3maped_" + runtime_identity_token;
+	const String map_hash = "fnv1a32:" + runtime_identity_token;
 	const String scenario_id = map_id + String("_skirmish");
 	const String scenario_hash = String("fnv1a32:") + hash32_hex(map_hash + String(":scenario"));
 
@@ -2656,6 +2721,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["normalized_config"] = package_normalized_config;
 	metadata["final_payload_byte_count"] = workflow.final_payload_writeout_0x4ad1e3.total_payload_byte_count;
 	metadata["final_payload_fnv1a32"] = payload_token;
+	metadata["runtime_player_setup"] = player_setup.duplicate(true);
 	Dictionary component_counts;
 	component_counts["tile_count"] = projection.tile_count;
 	component_counts["object_count"] = projection.object_count;
@@ -2677,7 +2743,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	route_graph["nodes"] = Array();
 	route_graph["edges"] = Array();
 	map_state["route_graph"] = route_graph;
-	map_state["objects"] = runtime_objects(map_id, projection);
+	map_state["objects"] = runtime_objects(map_id, projection, normalized);
 	Ref<MapDocument> map_document;
 	map_document.instantiate();
 	map_document->configure(map_state);
@@ -2696,10 +2762,10 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 		player_slot["human"] = slot.human;
 		player_slot["computer"] = slot.computer;
 		player_slot["owner"] = slot.human ? "player" : "enemy";
-		player_slot["faction_id"] = runtime_faction_id(&slot);
+		player_slot["faction_id"] = configured_runtime_faction_id(&slot, normalized);
 		player_slots.append(player_slot);
 		if (slot.computer) {
-			enemy_factions.append(runtime_faction_id(&slot));
+			enemy_factions.append(configured_runtime_faction_id(&slot, normalized));
 		}
 		if (slot.has_main_town) {
 			Dictionary start;
@@ -2708,8 +2774,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 			start["owner_slot"] = slot.color + 1;
 			start["player_slot"] = slot.color + 1;
 			start["player_type"] = slot.human ? "human" : "computer";
-			start["faction_id"] = runtime_faction_id(&slot);
-			start["town_id"] = runtime_town_id(&slot);
+			start["faction_id"] = configured_runtime_faction_id(&slot, normalized);
+			start["town_id"] = configured_runtime_town_id(&slot, normalized);
 			start["town_placement_id"] = runtime_town_placement_id(map_id, slot, projection);
 			start["x"] = slot.town_x;
 			start["y"] = slot.town_y;
@@ -2748,6 +2814,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	selection["template_id"] = normalized.get("template_id", "");
 	selection["seed"] = seed_text;
 	selection["water_mode"] = water_mode;
+	selection["player_faction_id"] = player_faction_id;
+	selection["player_hero_id"] = player_hero_id;
 	scenario_state["selection"] = selection;
 	scenario_state["player_slots"] = player_slots;
 	Dictionary objectives;
@@ -2758,7 +2826,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	scenario_state["enemy_factions"] = enemy_factions;
 	Dictionary start_contract;
 	start_contract["schema_id"] = "aurelion_native_rmg_start_contract_v1";
-	start_contract["primary_hero_id"] = "hero_lyra";
+	start_contract["primary_hero_id"] = player_hero_id.is_empty() ? String("hero_lyra") : player_hero_id;
+	start_contract["player_faction_id"] = player_faction_id;
 	start_contract["player_starts"] = player_starts;
 	start_contract["player_start_towns"] = player_start_towns;
 	start_contract["start_count"] = player_starts.size();

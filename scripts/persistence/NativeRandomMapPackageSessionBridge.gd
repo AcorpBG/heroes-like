@@ -29,6 +29,14 @@ const H3M_TOWN_TYPE_PROJECT_IDENTITY := {
 	"fortress": {"faction_id": "faction_mireclaw", "town_id": "town_blackfen_gate"},
 	"elemental": {"faction_id": "faction_sunvault", "town_id": "town_prismhearth"},
 }
+const GENERATED_START_ARMY_BY_FACTION := {
+	"faction_embercourt": "army_emberwell_vanguard",
+	"faction_mireclaw": "army_blackbranch_raiders",
+	"faction_sunvault": "army_prismarch_vanguard",
+	"faction_thornwake": "army_graftroot_wardens",
+	"faction_brasshollow": "army_orevein_exactors",
+	"faction_veilmourn": "army_bellwake_privateers",
+}
 
 static func build_session_from_adoption(
 	adoption: Dictionary,
@@ -223,7 +231,9 @@ static func _primary_hero_id(scenario_document: Variant, fallback: String) -> St
 
 static func _hero_state(hero_id: String, start: Dictionary, difficulty: String) -> Dictionary:
 	var hero_template := ContentService.get_hero(hero_id)
-	var army_state := _army_state(ContentService.get_army_group("army_emberwell_vanguard"))
+	var faction_id := String(hero_template.get("faction_id", "faction_embercourt"))
+	var army_id := String(GENERATED_START_ARMY_BY_FACTION.get(faction_id, "army_emberwell_vanguard"))
+	var army_state := _army_state(ContentService.get_army_group(army_id))
 	var hero := HeroCommandRulesScript.build_hero_from_template(hero_template, start, army_state, difficulty)
 	if not hero.is_empty():
 		hero["is_primary"] = true

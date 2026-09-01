@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Live town-building skyline progression is complete across all thirty-two towns, with stable unbuilt plots, exact persistent structures, upgrade replacement, version-9 restore proof, reviewed dual-size captures, and matching Linux/Windows packages.",
+  "currentNotes": "Generated skirmish faction and hero selection is complete: all six factions and faction-filtered live heroes flow through preview, package projection, session startup, player town, opening army, and replay provenance without changing recovered H3MapEd generation phases.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-live-town-building-skyline-progression-10184",
-  "currentSliceId": "ux-live-town-building-skyline-progression-10184",
-  "currentSliceNotes": "Completed stable scenic plots, understated unbuilt foundations, persistent exact building paintings, upgrade replacement, a bounded completion reveal, and live build/save validation across every town.",
+  "currentSlice": "ux-generated-map-faction-hero-selection-10184",
+  "currentSliceId": "ux-generated-map-faction-hero-selection-10184",
+  "currentSliceNotes": "Completed six-faction and faction-filtered hero selection through Map Forge, normalized config, native package projection, generated session startup, player town, opening army, and replay provenance.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Live Town Building Skyline Progression",
-  "currentSliceUpdatedAt": "2026-09-01T21:09:47Z",
+  "currentSliceTitle": "Generated Map Faction And Hero Selection",
+  "currentSliceUpdatedAt": "2026-09-01T22:29:11Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107794,6 +107794,60 @@
         "release_ready_claimed": false
       },
       "remainingWork": "Broader town interaction polish, whole-game validation, native Windows certification, signing, publication, and release readiness remain outside this completed slice."
+    },
+    {
+      "id": "ux-generated-map-faction-hero-selection-10184",
+      "title": "Generated Map Faction And Hero Selection",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Let players choose their generated-skirmish faction and faction-valid starting hero, then preserve that identity through package generation and live session startup.",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "scripts/core/ScenarioSelectRules.gd",
+        "scripts/persistence/MapPackageService.gd",
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/random_map_faction_hero_selection_report.gd",
+        "tests/random_map_faction_hero_selection_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Map Forge exposes all six factions and only live heroes belonging to the selected faction",
+        "Selected faction and hero persist through normalized config, native package projection, starting town, active hero, faction army, replay provenance, and generated session startup",
+        "Focused runtime, repository validation, and Linux/Windows native build checks pass without changing recovered H3MapEd phase or final-payload behavior"
+      ],
+      "nonGoals": [
+        "Recovered H3MapEd phase, template, placement, terrain, road, guard, reward, or final-payload behavior changes",
+        "New content, save-version bump, copied Heroes content, signing, publication, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-01T22:16:18Z",
+      "startedAt": "2026-09-01T22:16:18Z",
+      "updatedAt": "2026-09-01T22:29:11Z",
+      "completedAt": "2026-09-01T22:29:11Z",
+      "notes": "Completed compact six-faction and faction-filtered live-hero dropdowns in Map Forge. Selected identity now survives normalized config, public launch rebuilding, native package projection, player town, active hero, faction opening army, session startup, and replay provenance. The focused Veilmourn/Orso case passed with Bellwake Harbor and Bellwake Privateers; the existing generated setup/retry and 1280x720 visual smokes passed; repository validation and fresh Linux/Windows native Debug builds passed. Recovered H3MapEd phase inputs and final-payload behavior were not changed.",
+      "metrics": {
+        "selectable_faction_count": 6,
+        "live_heroes_per_faction": 11,
+        "focused_generated_launch_passed": true,
+        "generated_setup_retry_regression_passed": true,
+        "generated_setup_visual_smoke_passed": true,
+        "repository_validation_passed": true,
+        "linux_native_debug_build_passed": true,
+        "windows_native_debug_cross_build_passed": true,
+        "native_final_payload_behavior_changed": false,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "Broader generated-map configuration, whole-game validation, Windows-on-device certification, signing, publication, and release readiness remain outside this completed slice."
     }
   ],
   "project": "heroes-like",
@@ -107803,8 +107857,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The requested live town-building skyline progression is complete. Broader production completion and release readiness remain open outside this slice.",
-  "remainingWork": "Select the next coherent release-bound implementation slice; broader town interaction polish, whole-game validation, native Windows certification, signing, publication, and release readiness remain open.",
+  "remainingGap": "The requested generated-map faction and hero selection is complete. Broader production completion and release readiness remain open outside this slice.",
+  "remainingWork": "Select the next coherent release-bound implementation slice; broader generated-map configuration, whole-game validation, Windows-on-device certification, signing, publication, and release readiness remain open.",
   "reportOnlyEvidence": [
     {
       "entries": [

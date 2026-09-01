@@ -470,6 +470,9 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 static func random_map_player_setup_options() -> Dictionary:
 	var template_options := _random_map_player_facing_template_options_with_player_counts()
 	var profile_options := _random_map_player_facing_profile_options()
+	var faction_options := random_map_faction_options()
+	var default_faction_id := "faction_embercourt"
+	var default_hero_id := random_map_default_hero_id_for_faction(default_faction_id)
 	return {
 		"templates": template_options,
 		"profiles": profile_options,
@@ -479,6 +482,9 @@ static func random_map_player_setup_options() -> Dictionary:
 		"profile_options_by_template": _random_map_profile_options_by_template(profile_options),
 		"water_modes": _random_map_public_water_options(),
 		"level_options": _random_map_public_level_options(),
+		"factions": faction_options,
+		"default_faction_id": default_faction_id,
+		"default_hero_id": default_hero_id,
 		"retry_policy": RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
 		"default_seed": RANDOM_MAP_DEFAULT_SEED,
 		"default_size_class_id": "homm3_small",
@@ -503,6 +509,41 @@ static func random_map_player_setup_options() -> Dictionary:
 			"launch_filter": "public generated skirmish startup is validator-gated to the parity-owned 24-workflow native matrix; unsupported sizes, water modes, level counts, and native configurations remain fail-closed",
 		},
 	}
+
+static func random_map_faction_options() -> Array:
+	var options := []
+	for faction_id in ContentService.get_content_ids(ContentService.FACTIONS_PATH):
+		var faction := ContentService.get_faction(faction_id)
+		if faction.is_empty():
+			continue
+		options.append({
+			"id": String(faction_id),
+			"label": String(faction.get("name", faction_id)),
+		})
+	return options
+
+static func random_map_hero_options_for_faction(faction_id: String) -> Array:
+	var options := []
+	for hero_id in ContentService.get_content_ids(ContentService.HEROES_PATH):
+		var hero := ContentService.get_hero(hero_id)
+		if hero.is_empty() \
+				or String(hero.get("faction_id", "")) != faction_id \
+				or String(hero.get("roster_state", "live")) == "scaffold":
+			continue
+		options.append({
+			"id": String(hero_id),
+			"label": String(hero.get("name", hero_id)),
+			"faction_id": faction_id,
+		})
+	return options
+
+static func random_map_default_hero_id_for_faction(faction_id: String) -> String:
+	var preferred := String(RandomMapGeneratorRulesScript.DEFAULT_HERO_BY_FACTION.get(faction_id, ""))
+	var preferred_hero := ContentService.get_hero(preferred)
+	if not preferred_hero.is_empty() and String(preferred_hero.get("faction_id", "")) == faction_id:
+		return preferred
+	var options := random_map_hero_options_for_faction(faction_id)
+	return String(options[0].get("id", "")) if not options.is_empty() else ""
 
 static func _random_map_player_facing_water_options() -> Array:
 	var options := []
@@ -811,7 +852,9 @@ static func build_random_map_player_config(
 	water_mode: String,
 	underground_enabled: bool,
 	size_class_id: String = "homm3_small",
-	template_selection_mode: String = RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT
+	template_selection_mode: String = RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
+	player_faction_id: String = "",
+	player_hero_id: String = ""
 ) -> Dictionary:
 	var seed_record := random_map_h3maped_seed_record(seed)
 	var normalized_seed := String(seed_record.get("normalized_seed", seed))
@@ -846,7 +889,10 @@ static func build_random_map_player_config(
 	var runtime_policy_status := String(size_option.get("runtime_policy", "blocked_source_size_exceeds_current_144x144x2_cap"))
 	if materialization_available and level_count <= int(RANDOM_MAP_RUNTIME_SIZE_CAP.get("level_count", 2)):
 		runtime_policy_status = "materialize_at_source_size_within_current_144x144x2_cap"
-	return {
+	var normalized_player_faction_id := _valid_random_map_player_faction_id(player_faction_id)
+	var normalized_player_hero_id := _valid_random_map_player_hero_id(player_hero_id, normalized_player_faction_id)
+	var faction_seed_order := _random_map_faction_seed_order(normalized_player_faction_id)
+	var result := {
 		"generator_version": RandomMapGeneratorRulesScript.GENERATOR_VERSION,
 		"seed": normalized_seed,
 		"seed_identity": seed_record,
@@ -881,7 +927,7 @@ static func build_random_map_player_config(
 			"id": "" if auto_catalog_selection else String(profile_option.get("id", normalized_profile_id)),
 			"template_id": normalized_template_id,
 			"guard_strength_profile": "normal" if auto_catalog_selection else String(profile_option.get("guard_strength_profile", "core_low")),
-			"faction_ids": [] if auto_catalog_selection else profile_option.get("faction_ids", []),
+			"faction_ids": faction_seed_order if normalized_player_faction_id != "" else ([] if auto_catalog_selection else profile_option.get("faction_ids", [])),
 		},
 		"template_selection": {
 			"mode": RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO if auto_catalog_selection else RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
@@ -890,6 +936,38 @@ static func build_random_map_player_config(
 			"fallback_profile_id": String(size_defaults.get("profile_id", "")),
 		},
 	}
+	if normalized_player_faction_id != "" and normalized_player_hero_id != "":
+		result["player_setup"] = {
+			"faction_id": normalized_player_faction_id,
+			"hero_id": normalized_player_hero_id,
+			"selection_mode": "player_selected",
+		}
+	return result
+
+static func _valid_random_map_player_faction_id(faction_id: String) -> String:
+	var normalized := faction_id.strip_edges()
+	return normalized if normalized != "" and not ContentService.get_faction(normalized).is_empty() else ""
+
+static func _valid_random_map_player_hero_id(hero_id: String, faction_id: String) -> String:
+	if faction_id == "":
+		return ""
+	var normalized := hero_id.strip_edges()
+	var hero := ContentService.get_hero(normalized)
+	if not hero.is_empty() \
+			and String(hero.get("faction_id", "")) == faction_id \
+			and String(hero.get("roster_state", "live")) != "scaffold":
+		return normalized
+	return random_map_default_hero_id_for_faction(faction_id)
+
+static func _random_map_faction_seed_order(player_faction_id: String) -> Array:
+	if player_faction_id == "":
+		return []
+	var ordered := [player_faction_id]
+	for option in random_map_faction_options():
+		var faction_id := String(option.get("id", ""))
+		if faction_id != "" and faction_id not in ordered:
+			ordered.append(faction_id)
+	return ordered
 
 static func start_skirmish_session(scenario_id: String, difficulty_id: String) -> SessionStateStoreScript.SessionData:
 	if maps_folder_package_id_is_valid(scenario_id):
@@ -1034,6 +1112,7 @@ static func _build_random_map_skirmish_setup_single_attempt(input_config: Dictio
 			unsupported_report
 		)
 	var normalized_config: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}
+	var player_setup: Dictionary = normalized_config.get("player_setup", {}) if normalized_config.get("player_setup", {}) is Dictionary else {}
 	if _is_legacy_compact_rmg_config(normalized_config):
 		var legacy_report := _random_map_legacy_compact_launch_report(generated, report)
 		return _native_package_setup_failure(
@@ -1090,6 +1169,9 @@ static func _build_random_map_skirmish_setup_single_attempt(input_config: Dictio
 		"normalized_seed": String(identity.get("normalized_seed", "")),
 		"seed_source": String(input_config.get("seed_source", "explicit")),
 		"seed_input": String(input_config.get("seed_input", String(input_config.get("seed", "")))),
+		"player_faction_id": String(player_setup.get("faction_id", "")),
+		"player_hero_id": String(player_setup.get("hero_id", "")),
+		"player_setup": player_setup.duplicate(true),
 		"content_manifest_fingerprint": String(identity.get("content_manifest_fingerprint", "")),
 		"generated_identity": identity,
 		"validation": report,
@@ -1140,7 +1222,7 @@ static func _start_random_map_skirmish_session_from_setup(setup: Dictionary) -> 
 			scenario_load,
 			package_startup.get("session_boundary_record", {}),
 			String(setup.get("difficulty", default_difficulty_id())),
-			{"hero_id": "hero_lyra"}
+			{"hero_id": String(setup.get("player_hero_id", "hero_lyra"))}
 		)
 	else:
 		session = ScenarioFactoryScript.create_generated_skirmish_session(
@@ -2428,6 +2510,7 @@ static func _random_map_public_h3maped_launch_config(input_config: Dictionary) -
 		return input_config.duplicate(true)
 	var seed_source := String(input_config.get("seed_source", "explicit"))
 	var seed_identity: Dictionary = input_config.get("seed_identity", {}) if input_config.get("seed_identity", {}) is Dictionary else {}
+	var player_setup: Dictionary = input_config.get("player_setup", {}) if input_config.get("player_setup", {}) is Dictionary else {}
 	var source_seed := String(input_config.get("seed", ""))
 	if seed_source != "auto_on_launch":
 		source_seed = String(input_config.get("seed_input", seed_identity.get("input_seed", source_seed)))
@@ -2439,7 +2522,9 @@ static func _random_map_public_h3maped_launch_config(input_config: Dictionary) -
 		water_mode,
 		level_count > 1,
 		size_class_id,
-		RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
+		RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
+		String(player_setup.get("faction_id", "")),
+		String(player_setup.get("hero_id", ""))
 	)
 	config["seed_source"] = seed_source
 	config["seed_input"] = String(input_config.get("seed_input", seed_identity.get("input_seed", source_seed)))

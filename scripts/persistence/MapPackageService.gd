@@ -107,6 +107,7 @@ func inspect_package(path: String, options: Dictionary = {}) -> Dictionary:
 func normalize_random_map_config(config: Dictionary) -> Dictionary:
 	var size: Dictionary = config.get("size", {}) if config.get("size", {}) is Dictionary else {}
 	var profile: Dictionary = config.get("profile", {}) if config.get("profile", {}) is Dictionary else {}
+	var player_setup: Dictionary = config.get("player_setup", {}) if config.get("player_setup", {}) is Dictionary else {}
 	var player_constraints := _normalize_player_constraints(config.get("player_constraints", config.get("players", {})))
 	var player_count := int(player_constraints.get("player_count", 2))
 	var seed := String(config.get("seed", "0")).strip_edges()
@@ -139,6 +140,11 @@ func normalize_random_map_config(config: Dictionary) -> Dictionary:
 		"terrain_ids": terrain_ids,
 		"faction_ids": faction_ids,
 		"town_ids": town_ids,
+		"player_setup": {
+			"faction_id": String(player_setup.get("faction_id", "")),
+			"hero_id": String(player_setup.get("hero_id", "")),
+			"selection_mode": String(player_setup.get("selection_mode", "")),
+		} if not player_setup.is_empty() else {},
 		"full_generation_status": "not_implemented",
 		"normalization_scope": "config_identity_only_runtime_generation_blocked_until_exact_h3maped_state_chain",
 	}
