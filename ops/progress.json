@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Scenery-first core UI composition is complete across the main menu, overworld, town, battle, and outcome first views, with concise visible copy, detail-on-demand, dual-size review, and matching Linux/Windows package proof.",
+  "currentNotes": "Live town-building skyline progression is complete across all thirty-two towns, with stable unbuilt plots, exact persistent structures, upgrade replacement, version-9 restore proof, reviewed dual-size captures, and matching Linux/Windows packages.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-scenery-first-core-ui-composition-10184",
-  "currentSliceId": "ux-scenery-first-core-ui-composition-10184",
-  "currentSliceNotes": "Completed concise first-view copy, borderless shallow overlays, one original shared tall-rail frame, an on-demand outcome recap, responsive/accessibility runtime coverage, dual-size visual review, and matching Linux/Windows package gates.",
+  "currentSlice": "ux-live-town-building-skyline-progression-10184",
+  "currentSliceId": "ux-live-town-building-skyline-progression-10184",
+  "currentSliceNotes": "Completed stable scenic plots, understated unbuilt foundations, persistent exact building paintings, upgrade replacement, a bounded completion reveal, and live build/save validation across every town.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Scenery-First Core UI Composition",
-  "currentSliceUpdatedAt": "2026-09-01T17:10:58Z",
+  "currentSliceTitle": "Live Town Building Skyline Progression",
+  "currentSliceUpdatedAt": "2026-09-01T21:09:47Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107743,6 +107743,57 @@
       "completedAt": "2026-09-01T17:10:58Z",
       "notes": "Completed scenery-first composition across all five core screens with compact visible copy, full tooltip/detail paths, borderless shallow surfaces, one original shared tall-rail frame, and a collapsed outcome recap. Repository validation, clean parse, focused army/player-comprehension/menu-outcome/active-play runtime coverage, normalized 1280x720 and 1920x1080 visual review, and sequential Linux/Windows export/startup gates passed with matching 237722656-byte PCKs containing the new frame import.",
       "remainingWork": "Broader UI polish, clean native Windows certification, signing, publication, whole-game validation, and release readiness remain outside this slice."
+    },
+    {
+      "id": "ux-live-town-building-skyline-progression-10184",
+      "title": "Live Town Building Skyline Progression",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Make every town's scenic view visibly progress from unbuilt plots to its exact completed buildings through authoritative construction and save state.",
+      "implementationTargets": [
+        "scenes/town/TownStageView.gd",
+        "tests/town_building_skyline_progression_report.gd",
+        "tests/town_building_skyline_progression_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "All thirty-two towns resolve stable contained plots and loadable exact textures for every authored starting/buildable building",
+        "Live construction replaces an understated unbuilt plot with the exact completed structure, upgrade chains replace predecessors, and save-version-9 round trips preserve the skyline",
+        "Focused dual-resolution runtime captures, repository validation, clean parse, Linux package, and Windows package gates pass"
+      ],
+      "nonGoals": [
+        "New buildings, construction timing, economy, balance, AI, save-schema, backdrop, or native RMG changes",
+        "Copied Heroes assets or protected visual expression, signing, publication, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-01T20:54:05Z",
+      "startedAt": "2026-09-01T20:54:05Z",
+      "updatedAt": "2026-09-01T21:09:47Z",
+      "completedAt": "2026-09-01T21:09:47Z",
+      "notes": "Completed a cached, stable, depth-sorted plot field across all thirty-two towns. Unbuilt plots remain subtle; authoritative completed buildings use the exact existing transparent texture; upgrade chains replace their predecessor; the existing bounded completion cue reveals the new structure. The focused report passed 836 individual town/building routes, a real Market Square build, save-version-9 restoration, and six reviewed dual-resolution captures. Repository validation, clean parsing, exact-town backdrop and completion-cue regressions, plus sequential Linux/Windows export/startup passed with matching 237744192-byte PCKs containing all 160 building PNGs and 160 import records.",
+      "metrics": {
+        "authored_town_count": 32,
+        "town_building_visibility_route_count": 836,
+        "unique_runtime_building_texture_count": 160,
+        "minimum_complete_plot_count": 21,
+        "maximum_complete_plot_count": 28,
+        "live_build_case_count": 1,
+        "save_round_trip_count": 1,
+        "save_version": 9,
+        "reviewed_capture_count": 6,
+        "linux_packaged_startup_passed": true,
+        "windows_packaged_startup_passed": true,
+        "pck_size_bytes": 237744192,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "Broader town interaction polish, whole-game validation, native Windows certification, signing, publication, and release readiness remain outside this completed slice."
     }
   ],
   "project": "heroes-like",
@@ -107752,8 +107803,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The Windows first-run cache-independence correction is complete. Broader production completion and release readiness remain open outside this slice.",
-  "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open.",
+  "remainingGap": "The requested live town-building skyline progression is complete. Broader production completion and release readiness remain open outside this slice.",
+  "remainingWork": "Select the next coherent release-bound implementation slice; broader town interaction polish, whole-game validation, native Windows certification, signing, publication, and release readiness remain open.",
   "reportOnlyEvidence": [
     {
       "entries": [
