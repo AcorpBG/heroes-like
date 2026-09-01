@@ -16247,6 +16247,236 @@
       "assigned_hero_id": "hero_veilmourn_ruln_vanehook",
       "presentation_role": "vanehook_crosswind_mooring",
       "accessible_description": "A crooked harbor mooring bears opposing wind fins, a rope drum, direction discs, storm lantern, and split anchor base."
+    },
+    "resource_site_dominion_quench_cantilever_gauge": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/commander_dominion_sieges_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        480,
+        48
+      ],
+      "runtime_sha256": "c494c021ff746de7a38d06e0e2f93f7a79f000ea4b071f2e874cba2ad8d08d06",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/quench_cantilever_breach_gauge_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/quench_cantilever_breach_gauge_source.png",
+      "source_model": "built_in_imagegen_original_commander_dominion_sieges_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_quench_cantilever_breach_gauge",
+      "assigned_hero_id": "hero_brasshollow_vellum_quench",
+      "presentation_role": "quench_cantilever_breach_gauge",
+      "accessible_description": "A squat black-iron cantilever spans a molten quench basin beneath nested gauges, a cracked bell, hooked counterweight, and four riveted feet."
+    },
+    "resource_site_dominion_counterweight_verdict_press": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/commander_dominion_sieges_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        480,
+        48
+      ],
+      "runtime_sha256": "c494c021ff746de7a38d06e0e2f93f7a79f000ea4b071f2e874cba2ad8d08d06",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/counterweight_verdict_press_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/counterweight_verdict_press_source.png",
+      "source_model": "built_in_imagegen_original_commander_dominion_sieges_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_counterweight_verdict_press",
+      "assigned_hero_id": "hero_brasshollow_vellum_quench",
+      "presentation_role": "counterweight_verdict_press",
+      "accessible_description": "A tall asymmetric stamp press carries a broad blank brass plate, three unequal counterweights, steam vent, toothed flywheel, and split iron base."
+    },
+    "resource_site_dominion_blackwake_toll_tusk": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/commander_dominion_sieges_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        480,
+        48
+      ],
+      "runtime_sha256": "c494c021ff746de7a38d06e0e2f93f7a79f000ea4b071f2e874cba2ad8d08d06",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/blackwake_toll_tusk_standard_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/blackwake_toll_tusk_standard_source.png",
+      "source_model": "built_in_imagegen_original_commander_dominion_sieges_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_blackwake_toll_tusk_standard",
+      "assigned_hero_id": "hero_orrik",
+      "presentation_role": "blackwake_toll_tusk_standard",
+      "accessible_description": "A curved antler-and-reed toll arch carries a huge ivory tusk bell, heavy chain, blackwater lantern, three tally hooks, and muddy stone feet."
+    },
+    "resource_site_dominion_moonchain_raid_ledger": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/commander_dominion_sieges_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        480,
+        48
+      ],
+      "runtime_sha256": "c494c021ff746de7a38d06e0e2f93f7a79f000ea4b071f2e874cba2ad8d08d06",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/moonchain_raid_ledger_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/moonchain_raid_ledger_source.png",
+      "source_model": "built_in_imagegen_original_commander_dominion_sieges_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_moonchain_raid_ledger",
+      "assigned_hero_id": "hero_orrik",
+      "presentation_role": "moonchain_raid_ledger",
+      "accessible_description": "A low hide-drum command desk carries a chain-bead abacus, three blank wax tally leaves, crescent reed pennant, ferry weight, and root tripod."
+    },
+    "resource_site_dominion_last_margin_mast": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/commander_dominion_sieges_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        480,
+        48
+      ],
+      "runtime_sha256": "c494c021ff746de7a38d06e0e2f93f7a79f000ea4b071f2e874cba2ad8d08d06",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/last_margin_eulogy_mast_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/last_margin_eulogy_mast_source.png",
+      "source_model": "built_in_imagegen_original_commander_dominion_sieges_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_last_margin_eulogy_mast",
+      "assigned_hero_id": "hero_veilmourn_thir_obituaryink",
+      "presentation_role": "last_margin_eulogy_mast",
+      "accessible_description": "An ink-black sail mast carries a broad blank hanging scroll, clapperless salt bell, three white quill vanes, anchor hook, and bone feet."
+    },
+    "resource_site_dominion_drowned_name_archive": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/commander_dominion_sieges_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        480,
+        48
+      ],
+      "runtime_sha256": "c494c021ff746de7a38d06e0e2f93f7a79f000ea4b071f2e874cba2ad8d08d06",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/drowned_name_archive_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/drowned_name_archive_source.png",
+      "source_model": "built_in_imagegen_original_commander_dominion_sieges_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_drowned_name_archive",
+      "assigned_hero_id": "hero_veilmourn_thir_obituaryink",
+      "presentation_role": "drowned_name_archive",
+      "accessible_description": "A ribbed ship-cabinet reliquary holds blank tideglass tablets, a half-submerged sounding bell, rope drawers, pale lantern, and keel base."
+    },
+    "resource_site_dominion_crown_drum_dais": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/commander_dominion_sieges_atlas.png",
+      "atlas_region": [
+        288,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        480,
+        48
+      ],
+      "runtime_sha256": "c494c021ff746de7a38d06e0e2f93f7a79f000ea4b071f2e874cba2ad8d08d06",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/crown_drum_verdict_dais_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/crown_drum_verdict_dais_source.png",
+      "source_model": "built_in_imagegen_original_commander_dominion_sieges_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_crown_drum_verdict_dais",
+      "assigned_hero_id": "hero_mireclaw_zhorra_fenwake",
+      "presentation_role": "crown_drum_verdict_dais",
+      "accessible_description": "A gnarled root-and-antler dais supports a huge hide verdict drum, reed-tooth crown, three bone beaters, hanging moon seals, and clawed feet."
+    },
+    "resource_site_dominion_fenwake_undertow_beacon": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/commander_dominion_sieges_atlas.png",
+      "atlas_region": [
+        336,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        480,
+        48
+      ],
+      "runtime_sha256": "c494c021ff746de7a38d06e0e2f93f7a79f000ea4b071f2e874cba2ad8d08d06",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/fenwake_undertow_beacon_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/fenwake_undertow_beacon_source.png",
+      "source_model": "built_in_imagegen_original_commander_dominion_sieges_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_fenwake_undertow_beacon",
+      "assigned_hero_id": "hero_mireclaw_zhorra_fenwake",
+      "presentation_role": "fenwake_undertow_beacon",
+      "accessible_description": "A crooked reed beacon carries a spiral wake fan, drowned-blue flame cage, hanging bone plumbs, crescent hook, and root-and-mud base."
+    },
+    "resource_site_dominion_nine_ray_halo_range": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/commander_dominion_sieges_atlas.png",
+      "atlas_region": [
+        384,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        480,
+        48
+      ],
+      "runtime_sha256": "c494c021ff746de7a38d06e0e2f93f7a79f000ea4b071f2e874cba2ad8d08d06",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/nine_ray_halo_range_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/nine_ray_halo_range_source.png",
+      "source_model": "built_in_imagegen_original_commander_dominion_sieges_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_nine_ray_halo_range",
+      "assigned_hero_id": "hero_sunvault_mirro_halometer",
+      "presentation_role": "nine_ray_halo_range",
+      "accessible_description": "An asymmetric ivory survey instrument carries nine unequal prism rays, a huge oval lens, diagonal sighting rod, crystal plumbs, and forked tripod."
+    },
+    "resource_site_dominion_meridian_shadow_dial": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/commander_dominion_sieges_atlas.png",
+      "atlas_region": [
+        432,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        480,
+        48
+      ],
+      "runtime_sha256": "c494c021ff746de7a38d06e0e2f93f7a79f000ea4b071f2e874cba2ad8d08d06",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/meridian_shadow_dial_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/meridian_shadow_dial_source.png",
+      "source_model": "built_in_imagegen_original_commander_dominion_sieges_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_meridian_shadow_dial",
+      "assigned_hero_id": "hero_sunvault_mirro_halometer",
+      "presentation_role": "meridian_shadow_dial",
+      "accessible_description": "A tall faceted sundial carries two offset floating rings, a black prism shadow blade, diamond lens, calibrated arc, and stepped ivory base."
     }
   },
   "resource_site_sprites": {
@@ -17761,6 +17991,56 @@
       "asset_id": "resource_site_route_vanehook_crosswind_mooring",
       "unclaimed_asset_id": "resource_site_route_vanehook_crosswind_mooring",
       "fit": "Exact original Vanehook Crosswind Mooring remains visible before and after its one-time route-command claim."
+    },
+    "site_quench_cantilever_breach_gauge": {
+      "asset_id": "resource_site_dominion_quench_cantilever_gauge",
+      "unclaimed_asset_id": "resource_site_dominion_quench_cantilever_gauge",
+      "fit": "Exact original Quench-Cantilever Breach Gauge remains visible before and after its one-time dominion-command claim."
+    },
+    "site_counterweight_verdict_press": {
+      "asset_id": "resource_site_dominion_counterweight_verdict_press",
+      "unclaimed_asset_id": "resource_site_dominion_counterweight_verdict_press",
+      "fit": "Exact original Counterweight Verdict Press remains visible before and after its one-time dominion-command claim."
+    },
+    "site_blackwake_toll_tusk_standard": {
+      "asset_id": "resource_site_dominion_blackwake_toll_tusk",
+      "unclaimed_asset_id": "resource_site_dominion_blackwake_toll_tusk",
+      "fit": "Exact original Blackwake Toll-Tusk Standard remains visible before and after its one-time dominion-command claim."
+    },
+    "site_moonchain_raid_ledger": {
+      "asset_id": "resource_site_dominion_moonchain_raid_ledger",
+      "unclaimed_asset_id": "resource_site_dominion_moonchain_raid_ledger",
+      "fit": "Exact original Moonchain Raid Ledger remains visible before and after its one-time dominion-command claim."
+    },
+    "site_last_margin_eulogy_mast": {
+      "asset_id": "resource_site_dominion_last_margin_mast",
+      "unclaimed_asset_id": "resource_site_dominion_last_margin_mast",
+      "fit": "Exact original Last-Margin Eulogy Mast remains visible before and after its one-time dominion-command claim."
+    },
+    "site_drowned_name_archive": {
+      "asset_id": "resource_site_dominion_drowned_name_archive",
+      "unclaimed_asset_id": "resource_site_dominion_drowned_name_archive",
+      "fit": "Exact original Drowned Name Archive remains visible before and after its one-time dominion-command claim."
+    },
+    "site_crown_drum_verdict_dais": {
+      "asset_id": "resource_site_dominion_crown_drum_dais",
+      "unclaimed_asset_id": "resource_site_dominion_crown_drum_dais",
+      "fit": "Exact original Crown-Drum Verdict Dais remains visible before and after its one-time dominion-command claim."
+    },
+    "site_fenwake_undertow_beacon": {
+      "asset_id": "resource_site_dominion_fenwake_undertow_beacon",
+      "unclaimed_asset_id": "resource_site_dominion_fenwake_undertow_beacon",
+      "fit": "Exact original Fenwake Undertow Beacon remains visible before and after its one-time dominion-command claim."
+    },
+    "site_nine_ray_halo_range": {
+      "asset_id": "resource_site_dominion_nine_ray_halo_range",
+      "unclaimed_asset_id": "resource_site_dominion_nine_ray_halo_range",
+      "fit": "Exact original Nine-Ray Halo Range remains visible before and after its one-time dominion-command claim."
+    },
+    "site_meridian_shadow_dial": {
+      "asset_id": "resource_site_dominion_meridian_shadow_dial",
+      "unclaimed_asset_id": "resource_site_dominion_meridian_shadow_dial",
+      "fit": "Exact original Meridian Shadow Dial remains visible before and after its one-time dominion-command claim."
     }
   },
   "artifact_default_sprite": {

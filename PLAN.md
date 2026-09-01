@@ -24,9 +24,42 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; select and record the next coherent content-and-art batch before editing live catalogs.
-- Most recently completed implementation slice: `content-twelve-marchland-grand-route-operations-10184`, twelve large-board hero-led operations that deepen the least-used towns, heroes, warworks, and encounter routes.
-- Current package boundary: matching Linux and Windows release exports measure 236029584 bytes, 13970416 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none; audit the expanded live catalog and select the next coherent content-and-art batch before editing live catalogs.
+- Most recently completed implementation slice: `content-ten-commander-dominion-sieges-10184`, ten paired large-board siege operations that close the direct-lead floor and deepen the least-used authored encounters, towns, and units.
+- Current package boundary: matching Linux and Windows release exports measure 236223188 bytes, 13776812 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Ten Commander Dominion Sieges
+
+id: `content-ten-commander-dominion-sieges-10184`
+
+Status: completed.
+
+Completion evidence:
+- ten skirmish-only dominion sieges now provide five 22x14 and five 22x16 boards, two per selected commander, with thirty town placements, ten exact five-stack hosts, fifty authored battle fronts, 130 field-resource placements, eighty victory objectives, and ten guarded siege-command landmarks;
+- the five selected commanders advance from three to five direct authored leads, closing the whole hero catalog floor at four; the two one-placement encounters advance to three, all nine two-placement encounters advance to four, the two least-reused units advance to six groups, and the six least-used Marchland seats advance to nine placements;
+- ten original transparent landmark masters derive one compact 480x48 runtime atlas with exact hero/site mappings, prompt/hash/accessibility provenance, and source-master exclusion from both release packages;
+- the single consolidated smoke passed ten large-board launches, ten representative real battle wins, ten exact one-time integrated claims, ten hostile-town captures, ten exact art routes, ten eight-objective victories, ten visible captures, and ten save-version-9 round trips; repository validation checks all fifty authored fronts;
+- repository validation and sequential Linux/Windows release-package gates passed; both packages included all 47 required resource-site atlases, excluded generated source art, booted successfully, and produced an identical 236223188-byte PCK below the unchanged ceiling.
+
+Selection finding:
+- Vellum Quench, Orrik Tollreaver, Thir Obituary-Ink, Zhorra Fenwake, and Mirro Halometer are the only heroes still at the three-scenario direct-lead floor;
+- Aurora Ballista and Saltwake Eulogists are the least-reused live faction units, two directly authored encounters have one placement, and nine have two placements;
+- six Marchland seats remain the least-used towns at seven placements, while no authored scenario currently uses the supported 22x14 or 22x16 large-board shapes.
+
+Implementation boundary:
+- author two original skirmish-only dominion sieges per selected commander, split evenly across 22x14 and 22x16 boards, with two friendly towns, one hostile town, an exact five-stack company, five authored battle fronts, field economy, six reactive hooks, enemy pressure, and a deadline;
+- pair the ten operations so every selected low-placement encounter receives two new live placements, the six least-used towns each receive two placements, and the two least-reused units receive meaningful company reuse;
+- add ten guarded original siege-command landmarks with one-time XP, resources, recruits, objective flags, pathing, rendering, and save-version-9 behavior;
+- generate ten transparent original landmark masters and derive one compact 480x48 runtime atlas with exact prompt/hash/accessibility provenance, source-master package exclusion, and Windows/Linux symmetry.
+
+Completion criteria:
+- all ten scenarios launch through skirmish authority with exact commanders, five-stack companies, three towns, supported board dimensions, twelve-or-fourteen field sites, six hooks, five real fronts, and eight victory objectives including hostile-town capture;
+- one consolidated smoke wins one representative production battle per map, claims all ten landmarks once, verifies exact art and reward behavior, captures all ten hostile towns, completes all objectives, writes ten captures, and round-trips every case through save version 9; repository validation checks all fifty authored fronts;
+- inspect the complete capture set, then run repository validation and sequential Linux/Windows packaged startup below the unchanged 250000000-byte ceiling.
+
+Non-goals:
+- no new faction, hero definition, town definition, unit definition, encounter definition, objective type, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes map, hero, unit, landmark, name, text, art, heraldry, or protected visual expression.
 
 ## Twelve Marchland Grand-Route Operations
 

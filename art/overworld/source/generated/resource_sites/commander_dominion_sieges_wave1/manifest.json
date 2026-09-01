@@ -1,0 +1,176 @@
+{
+  "schema_id": "ten_commander_dominion_sieges_art_v1",
+  "content_batch_id": "content-ten-commander-dominion-sieges-10184",
+  "generation_mode": "built_in_imagegen",
+  "source_model": "built_in_imagegen_original_commander_dominion_sieges_atlas",
+  "prompt_set_summary": "Ten transparent original siege-command landmarks paired to the five remaining direct-lead-floor heroes, with deliberately distinct 48px silhouettes.",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/commander_dominion_sieges_atlas.png",
+  "runtime_atlas_size": [
+    480,
+    48
+  ],
+  "runtime_atlas_sha256": "c494c021ff746de7a38d06e0e2f93f7a79f000ea4b071f2e874cba2ad8d08d06",
+  "source_package_policy": "retained_for_provenance_excluded_from_linux_and_windows_exports",
+  "items": [
+    {
+      "site_id": "site_quench_cantilever_breach_gauge",
+      "hero_id": "hero_brasshollow_vellum_quench",
+      "asset_id": "resource_site_dominion_quench_cantilever_gauge",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/quench_cantilever_breach_gauge_source.png",
+      "source_sha256": "3a5bfe3e2f99b073bc2a846f11543d9798410e6b0350d524c2548f06b89ed65b",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-74fc1caf-f7bc-4411-96a6-034dc204e4f2.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld siege-command landmark source; Primary request: Create Quench-Cantilever Breach Gauge for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent alpha background; Subject and readable identity: A squat black-iron cantilever spans a molten quench basin beneath nested gauges, a cracked bell, hooked counterweight, and four riveted feet.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with generous padding, strong asymmetric non-color silhouette readable at 48x48; Constraints: one object only; preserved alpha; no ground, scenery, characters, creatures, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A squat black-iron cantilever spans a molten quench basin beneath nested gauges, a cracked bell, hooked counterweight, and four riveted feet."
+    },
+    {
+      "site_id": "site_counterweight_verdict_press",
+      "hero_id": "hero_brasshollow_vellum_quench",
+      "asset_id": "resource_site_dominion_counterweight_verdict_press",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/counterweight_verdict_press_source.png",
+      "source_sha256": "da323b5ed908edbfaf7400f539feef3c4817dd68b21b98bf523e55d56cd926d8",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-6821c83a-67c6-49b3-8d95-cae588b1edb2.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld siege-command landmark source; Primary request: Create Counterweight Verdict Press for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent alpha background; Subject and readable identity: A tall asymmetric stamp press carries a broad blank brass plate, three unequal counterweights, steam vent, toothed flywheel, and split iron base.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with generous padding, strong asymmetric non-color silhouette readable at 48x48; Constraints: one object only; preserved alpha; no ground, scenery, characters, creatures, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A tall asymmetric stamp press carries a broad blank brass plate, three unequal counterweights, steam vent, toothed flywheel, and split iron base."
+    },
+    {
+      "site_id": "site_blackwake_toll_tusk_standard",
+      "hero_id": "hero_orrik",
+      "asset_id": "resource_site_dominion_blackwake_toll_tusk",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/blackwake_toll_tusk_standard_source.png",
+      "source_sha256": "e150ed1a6a8f1c55e1a1181d9f7bcb9e26ad2cd9cf29e994ce03e84d2ed15720",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c6249bba-f2c1-41b8-95ae-d647c6dd54cf.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld siege-command landmark source; Primary request: Create Blackwake Toll-Tusk Standard for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent alpha background; Subject and readable identity: A curved antler-and-reed toll arch carries a huge ivory tusk bell, heavy chain, blackwater lantern, three tally hooks, and muddy stone feet.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with generous padding, strong asymmetric non-color silhouette readable at 48x48; Constraints: one object only; preserved alpha; no ground, scenery, characters, creatures, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A curved antler-and-reed toll arch carries a huge ivory tusk bell, heavy chain, blackwater lantern, three tally hooks, and muddy stone feet."
+    },
+    {
+      "site_id": "site_moonchain_raid_ledger",
+      "hero_id": "hero_orrik",
+      "asset_id": "resource_site_dominion_moonchain_raid_ledger",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/moonchain_raid_ledger_source.png",
+      "source_sha256": "5e21fa73818f3d905ad5d2a4fb2906017207a173eaea0333cbfd98f3c36d3be6",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-558abab2-5c22-4ef7-a225-321018db3c7d.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld siege-command landmark source; Primary request: Create Moonchain Raid Ledger for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent alpha background; Subject and readable identity: A low hide-drum command desk carries a chain-bead abacus, three blank wax tally leaves, crescent reed pennant, ferry weight, and root tripod.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with generous padding, strong asymmetric non-color silhouette readable at 48x48; Constraints: one object only; preserved alpha; no ground, scenery, characters, creatures, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A low hide-drum command desk carries a chain-bead abacus, three blank wax tally leaves, crescent reed pennant, ferry weight, and root tripod."
+    },
+    {
+      "site_id": "site_last_margin_eulogy_mast",
+      "hero_id": "hero_veilmourn_thir_obituaryink",
+      "asset_id": "resource_site_dominion_last_margin_mast",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/last_margin_eulogy_mast_source.png",
+      "source_sha256": "5313530165a4001a7a014c6cdcf5937c5d9c864ac3e04b212917847ed9cc5f3c",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d09ffd90-ef94-4fba-8a5f-a2f4a5f4416b.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld siege-command landmark source; Primary request: Create Last-Margin Eulogy Mast for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent alpha background; Subject and readable identity: An ink-black sail mast carries a broad blank hanging scroll, clapperless salt bell, three white quill vanes, anchor hook, and bone feet.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with generous padding, strong asymmetric non-color silhouette readable at 48x48; Constraints: one object only; preserved alpha; no ground, scenery, characters, creatures, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "An ink-black sail mast carries a broad blank hanging scroll, clapperless salt bell, three white quill vanes, anchor hook, and bone feet."
+    },
+    {
+      "site_id": "site_drowned_name_archive",
+      "hero_id": "hero_veilmourn_thir_obituaryink",
+      "asset_id": "resource_site_dominion_drowned_name_archive",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/drowned_name_archive_source.png",
+      "source_sha256": "14fbf6a0c5ddc27f57548ac86f20dcc866d3a361a461b3e2976cf201d6c5a4da",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-97afd1a9-fa0b-4e09-8d2c-7f8d5fca3ebe.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld siege-command landmark source; Primary request: Create Drowned Name Archive for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent alpha background; Subject and readable identity: A ribbed ship-cabinet reliquary holds blank tideglass tablets, a half-submerged sounding bell, rope drawers, pale lantern, and keel base.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with generous padding, strong asymmetric non-color silhouette readable at 48x48; Constraints: one object only; preserved alpha; no ground, scenery, characters, creatures, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A ribbed ship-cabinet reliquary holds blank tideglass tablets, a half-submerged sounding bell, rope drawers, pale lantern, and keel base."
+    },
+    {
+      "site_id": "site_crown_drum_verdict_dais",
+      "hero_id": "hero_mireclaw_zhorra_fenwake",
+      "asset_id": "resource_site_dominion_crown_drum_dais",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/crown_drum_verdict_dais_source.png",
+      "source_sha256": "7127d4b079f3c0159b706332041111b774118bd63436189a07c6c6008a139aa0",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-aadd5cb8-3298-4570-8072-13b5bbfa94fe.png",
+      "atlas_region": [
+        288,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld siege-command landmark source; Primary request: Create Crown-Drum Verdict Dais for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent alpha background; Subject and readable identity: A gnarled root-and-antler dais supports a huge hide verdict drum, reed-tooth crown, three bone beaters, hanging moon seals, and clawed feet.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with generous padding, strong asymmetric non-color silhouette readable at 48x48; Constraints: one object only; preserved alpha; no ground, scenery, characters, creatures, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A gnarled root-and-antler dais supports a huge hide verdict drum, reed-tooth crown, three bone beaters, hanging moon seals, and clawed feet."
+    },
+    {
+      "site_id": "site_fenwake_undertow_beacon",
+      "hero_id": "hero_mireclaw_zhorra_fenwake",
+      "asset_id": "resource_site_dominion_fenwake_undertow_beacon",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/fenwake_undertow_beacon_source.png",
+      "source_sha256": "a4a426a0169d0214471ca5bd1e9632901d5d1ff406f2dfac36d2110ac91438b9",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f6bfdd99-8d35-4bfa-8676-f84c5d8b190d.png",
+      "atlas_region": [
+        336,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld siege-command landmark source; Primary request: Create Fenwake Undertow Beacon for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent alpha background; Subject and readable identity: A crooked reed beacon carries a spiral wake fan, drowned-blue flame cage, hanging bone plumbs, crescent hook, and root-and-mud base.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with generous padding, strong asymmetric non-color silhouette readable at 48x48; Constraints: one object only; preserved alpha; no ground, scenery, characters, creatures, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A crooked reed beacon carries a spiral wake fan, drowned-blue flame cage, hanging bone plumbs, crescent hook, and root-and-mud base."
+    },
+    {
+      "site_id": "site_nine_ray_halo_range",
+      "hero_id": "hero_sunvault_mirro_halometer",
+      "asset_id": "resource_site_dominion_nine_ray_halo_range",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/nine_ray_halo_range_source.png",
+      "source_sha256": "a3fb000244bd4b7ecdd3e21743cb4e5590b6332ce2be53131ed4fd53780b6160",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-2cb8a7f6-ac06-4682-a8b2-24ddf5b7f966.png",
+      "atlas_region": [
+        384,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld siege-command landmark source; Primary request: Create Nine-Ray Halo Range for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent alpha background; Subject and readable identity: An asymmetric ivory survey instrument carries nine unequal prism rays, a huge oval lens, diagonal sighting rod, crystal plumbs, and forked tripod.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with generous padding, strong asymmetric non-color silhouette readable at 48x48; Constraints: one object only; preserved alpha; no ground, scenery, characters, creatures, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "An asymmetric ivory survey instrument carries nine unequal prism rays, a huge oval lens, diagonal sighting rod, crystal plumbs, and forked tripod."
+    },
+    {
+      "site_id": "site_meridian_shadow_dial",
+      "hero_id": "hero_sunvault_mirro_halometer",
+      "asset_id": "resource_site_dominion_meridian_shadow_dial",
+      "source_path": "res://art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1/meridian_shadow_dial_source.png",
+      "source_sha256": "eb600627a4967f556796a82e5f268eb2537b552cd4337aa2cd8873dbd2bc81c1",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-57cc5f25-b0d9-46f8-aa67-b2961ec67645.png",
+      "atlas_region": [
+        432,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld siege-command landmark source; Primary request: Create Meridian Shadow Dial for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent alpha background; Subject and readable identity: A tall faceted sundial carries two offset floating rings, a black prism shadow blade, diamond lens, calibrated arc, and stepped ivory base.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with generous padding, strong asymmetric non-color silhouette readable at 48x48; Constraints: one object only; preserved alpha; no ground, scenery, characters, creatures, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A tall faceted sundial carries two offset floating rings, a black prism shadow blade, diamond lens, calibrated arc, and stepped ivory base."
+    }
+  ]
+}

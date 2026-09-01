@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit the expanded live catalog and select the next coherent content-and-original-art batch before running another smoke."
+    "Audit the expanded 281-scenario live catalog and select the next coherent content-and-original-art batch before running another smoke."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Twelve Marchland Grand-Route Operations is complete: twelve original large-board skirmishes, twelve route-command landmarks, seventy-two authored fronts, and matching Linux/Windows packages.",
+  "currentNotes": "Ten Commander Dominion Sieges is complete: ten original large-board skirmishes, ten guarded landmarks, fifty authored fronts, and matching Linux/Windows packages.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "",
   "currentSliceId": "",
-  "currentSliceNotes": "No active slice selected after completing content-twelve-marchland-grand-route-operations-10184.",
+  "currentSliceNotes": "No active slice selected after completing content-ten-commander-dominion-sieges-10184.",
   "currentSliceStatus": "",
   "currentSliceTitle": "",
-  "currentSliceUpdatedAt": "2026-08-31T22:14:10Z",
+  "currentSliceUpdatedAt": "2026-09-01T01:42:41Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107602,6 +107602,16 @@
       "startedAt": "2026-09-01T00:30:12Z",
       "notes": "Completed twelve large Marchland grand-route operations with twelve original landmark masters, seventy-two authored fronts, twelve representative live battle probes, exact claims/art/objectives/save-v9, repository validation, and matching 236029584-byte Linux/Windows packages.",
       "completedAt": "2026-09-01T01:13:01Z"
+    },
+    {
+      "id": "content-ten-commander-dominion-sieges-10184",
+      "title": "Ten Commander Dominion Sieges",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-09-01T01:42:41Z",
+      "startedAt": "2026-09-01T01:19:25Z",
+      "notes": "Completed ten paired 22x14 and 22x16 siege operations with ten original guarded landmarks and fifty authored fronts. Consolidated smoke passed 10 launches, 10 real battle probes, 10 claims, 10 town captures, 10 exact art routes, 10 victories, 10 captures, and 10 save-v9 round trips; repository validation and matching 236223188-byte Linux/Windows package gates passed.",
+      "completedAt": "2026-09-01T01:42:41Z"
     }
   ],
   "project": "heroes-like",
@@ -107611,8 +107621,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "No blocker remains for Eight Commander Doctrine Expeditions. The broader game still needs another scoped content-and-original-art batch selected before implementation continues.",
-  "remainingWork": "Audit the expanded 247-scenario live catalog and select the next coherent content-and-original-art batch; do not run a smoke until that batch is complete.",
+  "remainingGap": "No blocker remains for Ten Commander Dominion Sieges. Broader production completion and release readiness remain open outside this validated slice.",
+  "remainingWork": "Audit the expanded 281-scenario live catalog and select the next coherent content-and-original-art batch; do not run another smoke until that batch is complete.",
   "reportOnlyEvidence": [
     {
       "entries": [
