@@ -28,6 +28,12 @@ PRESET_NAME = "Windows Release"
 MIN_EXE_BYTES = 500_000
 MIN_PCK_BYTES = 10_000_000
 MAX_RELEASE_PCK_BYTES = 250_000_000
+RUNTIME_AUDIO_MANIFEST_PATHS = (
+    ROOT / "content" / "ui_sfx_manifest.json",
+    ROOT / "content" / "presentation_sfx_manifest.json",
+    ROOT / "content" / "ambient_sfx_manifest.json",
+    ROOT / "content" / "music_runtime_manifest.json",
+)
 EXPORT_TIMEOUT_SECONDS = 360
 RUNTIME_TIMEOUT_SECONDS = 180
 WINE_CLEANUP_TIMEOUT_SECONDS = 30
@@ -839,8 +845,29 @@ def imported_payload_paths_for(import_entries: tuple[str, ...]) -> set[str]:
     return payload_paths
 
 
+def runtime_audio_import_paths() -> tuple[set[str], set[str]]:
+    import_entries: set[str] = set()
+    payload_entries: set[str] = set()
+    for manifest_path in RUNTIME_AUDIO_MANIFEST_PATHS:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        cues = manifest.get("cues", {})
+        if not isinstance(cues, dict):
+            continue
+        for cue in cues.values():
+            if not isinstance(cue, dict):
+                continue
+            source_path = str(cue.get("path", ""))
+            if not source_path.startswith("res://"):
+                continue
+            import_entry = f"{source_path.removeprefix('res://')}.import"
+            import_entries.add(import_entry)
+            payload_entries.update(imported_payload_paths_for((import_entry,)))
+    return import_entries, payload_entries
+
+
 def pck_terrain_payload_summary() -> dict:
     source_art_metadata_paths, source_art_imported_payload_paths = source_art_import_payload_paths()
+    required_runtime_audio_import_entries, required_runtime_audio_payload_entries = runtime_audio_import_paths()
     required_faction_encounter_texture_entries = imported_payload_paths_for(REQUIRED_FACTION_ENCOUNTER_PCK_IMPORT_ENTRIES)
     required_signature_encounter_texture_entries = imported_payload_paths_for(REQUIRED_SIGNATURE_ENCOUNTER_PCK_IMPORT_ENTRIES)
     required_recurring_encounter_atlas_texture_entries = imported_payload_paths_for(REQUIRED_RECURRING_ENCOUNTER_ATLAS_PCK_IMPORT_ENTRIES)
@@ -991,6 +1018,11 @@ def pck_terrain_payload_summary() -> dict:
         "source_art_imported_payload_entries": [],
         "source_art_imported_payload_bytes": 0,
         "source_art_excluded": False,
+        "required_runtime_audio_import_entries": sorted(required_runtime_audio_import_entries),
+        "required_runtime_audio_payload_entries": sorted(required_runtime_audio_payload_entries),
+        "runtime_audio_import_entries": [],
+        "runtime_audio_payload_entries": [],
+        "runtime_audio_entries_present": False,
     }
     if not PCK_PATH.exists():
         return summary
@@ -1028,6 +1060,10 @@ def pck_terrain_payload_summary() -> dict:
                 if entry_path in source_art_imported_payload_paths:
                     summary["source_art_imported_payload_entries"].append(entry_path)
                     summary["source_art_imported_payload_bytes"] += entry_size
+                if entry_path in required_runtime_audio_import_entries:
+                    summary["runtime_audio_import_entries"].append(entry_path)
+                if entry_path in required_runtime_audio_payload_entries:
+                    summary["runtime_audio_payload_entries"].append(entry_path)
                 for prefix in FORBIDDEN_TERRAIN_PCK_PREFIXES:
                     if entry_path.startswith(prefix):
                         summary["forbidden_entries"].append(entry_path)
@@ -1193,6 +1229,12 @@ def pck_terrain_payload_summary() -> dict:
         and not summary["source_art_metadata_entries"]
         and not summary["source_art_imported_payload_entries"]
     )
+    summary["runtime_audio_entries_present"] = (
+        len(required_runtime_audio_import_entries) > 0
+        and len(required_runtime_audio_import_entries) == len(required_runtime_audio_payload_entries)
+        and set(summary["runtime_audio_import_entries"]) == required_runtime_audio_import_entries
+        and set(summary["runtime_audio_payload_entries"]) == required_runtime_audio_payload_entries
+    )
     return summary
 
 
@@ -1263,6 +1305,7 @@ def main() -> int:
         and bool(terrain_payload["elder_wilds_unit_art_entries_present"])
         and bool(terrain_payload["reserve_company_unit_art_entries_present"])
         and bool(terrain_payload["marchland_local_retinue_art_entries_present"])
+        and bool(terrain_payload["runtime_audio_entries_present"])
         and bool(terrain_payload["source_art_excluded"])
     )
 
@@ -1458,6 +1501,9 @@ def main() -> int:
         "source_art_pck_imported_payload_count": len(terrain_payload["source_art_imported_payload_entries"]),
         "source_art_pck_imported_payload_bytes": terrain_payload["source_art_imported_payload_bytes"],
         "source_art_pck_excluded": terrain_payload["source_art_excluded"],
+        "runtime_audio_pck_import_entry_count": len(terrain_payload["runtime_audio_import_entries"]),
+        "runtime_audio_pck_payload_count": len(terrain_payload["runtime_audio_payload_entries"]),
+        "runtime_audio_pck_entries_present": terrain_payload["runtime_audio_entries_present"],
         "pck_within_release_size_ceiling": int(pck["size_bytes"]) <= MAX_RELEASE_PCK_BYTES,
         "fatal_export_matches": fatal_matches,
         "wine_runtime_returncode": runtime_result["returncode"],

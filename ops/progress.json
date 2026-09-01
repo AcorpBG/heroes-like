@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Six Uncrowned Sovereign Roads is complete: six 20x12 build-recruit-capture scenarios and The Uncrowned Circuit campaign now provide six live sovereign town-development routes with thirteen original art identities.",
+  "currentNotes": "Windows first-run cache independence is complete: shared army-bar typing no longer depends on the generated class cache, and manifest audio fails over without resource-load errors when an import payload is unavailable.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-uncrowned-sovereign-roads-10184",
-  "currentSliceId": "content-six-uncrowned-sovereign-roads-10184",
-  "currentSliceNotes": "Completed six large dual-mode roads, one six-chapter campaign, six exact five-stack companies, eighteen production battles, six tier-seven build/recruit chains, six guarded live throne claims, one emblem, and six chapter seals. One consolidated smoke, repository validation, and sequential Linux/Windows packaged startup all passed.",
+  "currentSlice": "packaging-windows-first-run-cache-independence-10184",
+  "currentSliceId": "packaging-windows-first-run-cache-independence-10184",
+  "currentSliceNotes": "Completed explicit ArmyStackBar script typing, shared cache-aware audio loading, missing-payload runtime proof, repository validation, and matching Linux/Windows package gates with all 118 audio imports and payloads present.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Six Uncrowned Sovereign Roads",
-  "currentSliceUpdatedAt": "2026-09-01T03:48:23Z",
+  "currentSliceTitle": "Windows First-Run Cache Independence",
+  "currentSliceUpdatedAt": "2026-09-01T15:52:53Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107652,6 +107652,50 @@
       "startedAt": "2026-09-01T03:16:18Z",
       "notes": "Completed six 20x12 campaign/skirmish roads and The Uncrowned Circuit with six exact five-stack companies, eighteen production fronts, six live tier-seven town build/recruit chains, six guarded throne claims, bounded common-resource-only chapter handoff, one original emblem, six original field throne masters, and six derived seals. The single consolidated smoke passed six launches, builds, recruitments, throne claims, hostile-town captures, witness handoffs, chapter victories, save-v9 round trips, eighteen real battles, and all thirteen art identities. Repository validation and sequential Linux/Windows package gates passed with 25 emblems, 114 seals, 50 resource-site atlases, clean startup, source-art exclusion, and a matching 237389792-byte PCK.",
       "completedAt": "2026-09-01T03:48:23Z"
+    },
+    {
+      "id": "packaging-windows-first-run-cache-independence-10184",
+      "title": "Windows First-Run Cache Independence",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "test_compatibility_correction",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Make the user-reproduced Windows first-run gameplay-script and imported-audio paths independent of incomplete generated Godot cache state.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "scripts/audio/RuntimeAudioLoader.gd",
+        "scripts/autoload/MusicAudio.gd",
+        "scripts/autoload/AmbientAudio.gd",
+        "scripts/autoload/UiAudio.gd",
+        "scripts/autoload/PresentationAudio.gd",
+        "tests/runtime_audio_cache_fallback_report.gd",
+        "tests/runtime_audio_cache_fallback_report.tscn",
+        "tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Overworld and Town bind ArmyStackBar through an explicit script preload and parse without generated global-class discovery",
+        "Manifest-driven audio checks source/import payload availability before loading and falls back without resource errors",
+        "Repository, focused runtime, clean editor, Linux package, and Windows package gates pass with every manifest-owned audio import payload present"
+      ],
+      "nonGoals": [
+        "Gameplay, content, balance, save-schema, or native RMG changes",
+        "Signing, publication, clean native Windows certification, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-01T15:38:11Z",
+      "startedAt": "2026-09-01T15:38:11Z",
+      "updatedAt": "2026-09-01T15:52:53Z",
+      "completedAt": "2026-09-01T15:52:53Z",
+      "notes": "Completed explicit ArmyStackBar script typing in Overworld/Town and one shared cache-aware loader across music, ambient, UI, and presentation audio. Missing-import fallback, army, UI, ambient, and full music runtime reports passed; clean editor parse and repository validation passed. Sequential Linux/Windows exports and packaged startups passed with matching 237390240-byte PCKs, all 118 manifest-owned import records, all 118 imported payloads, the exact menu-motion Vorbis payload, and no fatal runtime errors.",
+      "remainingWork": "Broader production completion, clean native Windows certification, signing, publication, and release readiness remain outside this correction."
     }
   ],
   "project": "heroes-like",
@@ -107661,7 +107705,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The Uncrowned Sovereign Roads slice is complete. Broader production completion and release readiness remain open outside this slice.",
+  "remainingGap": "The Windows first-run cache-independence correction is complete. Broader production completion and release readiness remain open outside this slice.",
   "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open.",
   "reportOnlyEvidence": [
     {
