@@ -16915,6 +16915,126 @@
       "presentation_role": "grand_arcanum_field_academy",
       "accessible_description": "A tilted whalebone crescent bears shroud sails, a drowned lantern mask, tide marker, and three memory chimes.",
       "background": "transparent"
+    },
+    "resource_site_uncrowned_cinderlock_throne": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/cinderlock_open_charter_throne_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/cinderlock_open_charter_throne_source.png",
+      "source_model": "built_in_image_gen_original_uncrowned_sovereign_roads",
+      "assigned_resource_site_id": "site_cinderlock_open_charter_throne",
+      "presentation_role": "uncrowned_sovereign_field_throne",
+      "accessible_description": "A black sluice-stone seat stands beneath an open broken brass ring beside a white ember bowl.",
+      "background": "transparent"
+    },
+    "resource_site_uncrowned_murkward_tribunal": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/murkward_antler_tribunal_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/murkward_antler_tribunal_source.png",
+      "source_model": "built_in_image_gen_original_uncrowned_sovereign_roads",
+      "assigned_resource_site_id": "site_murkward_antler_tribunal",
+      "presentation_role": "uncrowned_sovereign_field_throne",
+      "accessible_description": "Unequal drowned antlers frame a bogstone seat, hide drum, reed scales, and peat lantern.",
+      "background": "transparent"
+    },
+    "resource_site_uncrowned_dawnmirror_matrix": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/dawnmirror_uncrowned_matrix_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/dawnmirror_uncrowned_matrix_source.png",
+      "source_model": "built_in_image_gen_original_uncrowned_sovereign_roads",
+      "assigned_resource_site_id": "site_dawnmirror_uncrowned_matrix",
+      "presentation_role": "uncrowned_sovereign_field_throne",
+      "accessible_description": "An ivory-gold seat hangs in an offset prism halo crossed by three calibration needles.",
+      "background": "transparent"
+    },
+    "resource_site_uncrowned_graftroot_dais": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/graftroot_living_dais_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/graftroot_living_dais_source.png",
+      "source_model": "built_in_image_gen_original_uncrowned_sovereign_roads",
+      "assigned_resource_site_id": "site_graftroot_living_dais",
+      "presentation_role": "uncrowned_sovereign_field_throne",
+      "accessible_description": "A living root seat grows beneath unequal flowering boughs, two seed lamps, and a graft spool.",
+      "background": "transparent"
+    },
+    "resource_site_uncrowned_orevein_assay_seat": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/orevein_saintless_assay_seat_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/orevein_saintless_assay_seat_source.png",
+      "source_model": "built_in_image_gen_original_uncrowned_sovereign_roads",
+      "assigned_resource_site_id": "site_orevein_saintless_assay_seat",
+      "presentation_role": "uncrowned_sovereign_field_throne",
+      "accessible_description": "A basalt and brass assay seat carries three gauges, an open clamp, and a red relief valve.",
+      "background": "transparent"
+    },
+    "resource_site_uncrowned_bellwake_sounding_chair": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/bellwake_empty_sounding_chair_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/bellwake_empty_sounding_chair_source.png",
+      "source_model": "built_in_image_gen_original_uncrowned_sovereign_roads",
+      "assigned_resource_site_id": "site_bellwake_empty_sounding_chair",
+      "presentation_role": "uncrowned_sovereign_field_throne",
+      "accessible_description": "Whalebone and blackwood frame an empty tide chair beneath shroud sails, a drowned bell, and three chimes.",
+      "background": "transparent"
     }
   },
   "resource_site_sprites": {
@@ -18539,6 +18659,36 @@
       "asset_id": "resource_site_grand_arcanum_mistmourning_archive",
       "unclaimed_asset_id": "resource_site_grand_arcanum_mistmourning_archive",
       "fit": "Exact original Mist-Mourning Drift Archive remains visible before and after its three-spell lesson."
+    },
+    "site_cinderlock_open_charter_throne": {
+      "asset_id": "resource_site_uncrowned_cinderlock_throne",
+      "unclaimed_asset_id": "resource_site_uncrowned_cinderlock_throne",
+      "fit": "Exact original Cinderlock Open Charter Throne remains visible before and after its witnessed claim."
+    },
+    "site_murkward_antler_tribunal": {
+      "asset_id": "resource_site_uncrowned_murkward_tribunal",
+      "unclaimed_asset_id": "resource_site_uncrowned_murkward_tribunal",
+      "fit": "Exact original Murkward Antler Tribunal remains visible before and after its witnessed claim."
+    },
+    "site_dawnmirror_uncrowned_matrix": {
+      "asset_id": "resource_site_uncrowned_dawnmirror_matrix",
+      "unclaimed_asset_id": "resource_site_uncrowned_dawnmirror_matrix",
+      "fit": "Exact original Dawnmirror Uncrowned Matrix remains visible before and after its witnessed claim."
+    },
+    "site_graftroot_living_dais": {
+      "asset_id": "resource_site_uncrowned_graftroot_dais",
+      "unclaimed_asset_id": "resource_site_uncrowned_graftroot_dais",
+      "fit": "Exact original Graftroot Living Dais remains visible before and after its witnessed claim."
+    },
+    "site_orevein_saintless_assay_seat": {
+      "asset_id": "resource_site_uncrowned_orevein_assay_seat",
+      "unclaimed_asset_id": "resource_site_uncrowned_orevein_assay_seat",
+      "fit": "Exact original Orevein Saintless Assay Seat remains visible before and after its witnessed claim."
+    },
+    "site_bellwake_empty_sounding_chair": {
+      "asset_id": "resource_site_uncrowned_bellwake_sounding_chair",
+      "unclaimed_asset_id": "resource_site_uncrowned_bellwake_sounding_chair",
+      "fit": "Exact original Bellwake Empty Sounding Chair remains visible before and after its witnessed claim."
     }
   },
   "artifact_default_sprite": {

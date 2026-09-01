@@ -1,0 +1,91 @@
+{
+  "schema_id": "uncrowned_circuit_campaign_art_v1",
+  "content_batch_id": "content-six-uncrowned-sovereign-roads-10184",
+  "generator_mode": "built_in_image_gen",
+  "generated_at": "2026-09-01",
+  "campaign_id": "campaign_uncrowned_circuit",
+  "runtime_pipeline": "Six transparent throne masters are alpha-trimmed onto 512px source canvases, packed into one 288x48 field atlas, and reused as six 64px chapter seals. A separately generated emblem is alpha-trimmed onto a 1254px source master and downscaled to 128px. Source masters are excluded from release packages.",
+  "generated_originals": [
+    "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c713e69a-a9de-411d-81ba-27cd4c15b6d5.png",
+    "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-576fc902-3945-414c-9960-a5030461ec92.png",
+    "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0d4d3213-41a1-4bd3-ae4b-fa44035db9bc.png",
+    "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a6886d56-d85e-45f3-a414-a8a8293a7270.png",
+    "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b9a1d639-15b5-4b86-a32a-ff68077037c7.png",
+    "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7a9bf88e-2b3f-4ae7-bd0c-5a17987b19f4.png",
+    "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-00221d34-ce49-496f-a7de-8e6f67e84769.png"
+  ],
+  "prompts": [
+    "Original transparent campaign emblem: an open six-spoked bronze circuit around an empty central crown-shaped negative space; ember writ, antler drum, prism halo, root graft, pressure gauge, and drowned bell clasps; hand-painted strategy heraldry; no text, character, scenery, border, franchise reference, or watermark.",
+    "Original transparent Cinderlock Open Charter Throne: blackened sluice-stone empty seat, forked brass writ arms, open broken crown ring, white ember bowl, red wax counterweight; hand-painted strategy sprite; no character, text, scenery, franchise reference, or watermark.",
+    "Original transparent Murkward Antler Tribunal: squat bogstone empty seat, unequal drowned antler arch, hide-drum back, reed-chain scales, peat lantern; hand-painted strategy sprite; no character, text, scenery, franchise reference, or watermark.",
+    "Original transparent Dawnmirror Uncrowned Matrix: ivory-gold empty seat, offset open prism halo, split sunrise lens, three calibration needles; hand-painted strategy sprite; no character, text, scenery, franchise reference, or watermark.",
+    "Original transparent Graftroot Living Dais: empty root-woven seat, unequal flowering boughs, seed lamps, graft spool; hand-painted strategy sprite; no character, text, scenery, franchise reference, or watermark.",
+    "Original transparent Orevein Saintless Assay Seat: empty basalt-brass industrial throne, three pressure gauges, riveted rails, open crown clamp, red relief valve; hand-painted strategy sprite; no character, text, scenery, franchise reference, or watermark.",
+    "Original transparent Bellwake Empty Sounding Chair: whalebone-blackwood empty tide chair, shroud sails, drowned bell, three memory chimes, crown-shaped negative space; hand-painted strategy sprite; no character, text, scenery, franchise reference, or watermark."
+  ],
+  "assets": [
+    {
+      "id": "campaign_emblem_uncrowned_circuit",
+      "role": "campaign_emblem",
+      "source_path": "res://art/campaigns/source/generated/emblems/uncrowned_circuit_source.png",
+      "runtime_path": "res://art/campaigns/runtime/emblems/uncrowned_circuit.png",
+      "source_sha256": "80d9862a906f28bc1d899c3117c24e888147fec641a0eac9974e240f02b8c5a8",
+      "runtime_sha256": "699f4a943a53c24f78a7d394ccab8524ff67db11374f66a532c9442dcf1aed26",
+      "non_color_identity": "Six materially distinct clasps form an open bronze circuit around an empty center."
+    },
+    {
+      "id": "campaign_chapter_seal_powderwrit_cinderlock_charter_ascent",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/uncrowned_cinderlock_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/uncrowned_cinderlock.png",
+      "source_sha256": "caa0a628f242206e1a6622bc61d813c9e5e38a91f289888282afc8ca6da95b0a",
+      "runtime_sha256": "70c12c333ab6c28dd7e03d856fb98dac343b7f8f17fc5b558f69d33f968c550c",
+      "non_color_identity": "A black sluice-stone seat stands beneath an open broken brass ring beside a white ember bowl."
+    },
+    {
+      "id": "campaign_chapter_seal_reedscript_murkward_antler_ascent",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/uncrowned_murkward_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/uncrowned_murkward.png",
+      "source_sha256": "1e3b85d1895d3b9ebec2ede3891c6e6b19acc54bd4f1f8ab4eb40b11d676ad1f",
+      "runtime_sha256": "f58d823d7e4a9e579d129d5b45fb186607cdd802fa13ccb21fd3392ff5558f84",
+      "non_color_identity": "Unequal drowned antlers frame a bogstone seat, hide drum, reed scales, and peat lantern."
+    },
+    {
+      "id": "campaign_chapter_seal_sevenfold_dawnmirror_daybreak_ascent",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/uncrowned_dawnmirror_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/uncrowned_dawnmirror.png",
+      "source_sha256": "e4aaf348e427a7cd1bffd7024f993e2926fef12cb1ad7fa13139b5b70b30b3a8",
+      "runtime_sha256": "29d67bb603dfdb31812cbff900f810e4c66ca4488d214455c4db4f039d32fa6f",
+      "non_color_identity": "An ivory-gold seat hangs in an offset prism halo crossed by three calibration needles."
+    },
+    {
+      "id": "campaign_chapter_seal_seedseer_graftroot_worldroot_ascent",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/uncrowned_graftroot_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/uncrowned_graftroot.png",
+      "source_sha256": "f7cd73659345e09446c2b0debd067f151e32ec4087f624ba9d18e14252d4e256",
+      "runtime_sha256": "c03c462ffa366179669093ef7e03112d60b37c0d90e42e873a0870dd28411ffe",
+      "non_color_identity": "A living root seat grows beneath unequal flowering boughs, two seed lamps, and a graft spool."
+    },
+    {
+      "id": "campaign_chapter_seal_blackgauge_orevein_foundry_ascent",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/uncrowned_orevein_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/uncrowned_orevein.png",
+      "source_sha256": "57e80e440696eac6e633211deb05bb518bb6be1a434dc2a774c44ada670badcd",
+      "runtime_sha256": "9347d7b4b4dc9c9033cb9576d02593fe3a373578adc64c52daa44e72425297d2",
+      "non_color_identity": "A basalt and brass assay seat carries three gauges, an open clamp, and a red relief valve."
+    },
+    {
+      "id": "campaign_chapter_seal_keelwarden_bellwake_leviathan_ascent",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/uncrowned_bellwake_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/uncrowned_bellwake.png",
+      "source_sha256": "3d419e5d1672ba67a7a0254ef3dc209cb28e5c00bb897dea0409e85888c62455",
+      "runtime_sha256": "118a124419d7a7f41322020ef8e89399566fb12fac31f16047edda03f8a10ece",
+      "non_color_identity": "Whalebone and blackwood frame an empty tide chair beneath shroud sails, a drowned bell, and three chimes."
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "content_batch_id": "content-six-uncrowned-sovereign-roads-10184",
+  "source_model": "built_in_image_gen_original_uncrowned_sovereign_roads",
+  "generation_mode": "built_in_image_gen",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+  "runtime_atlas_size": [
+    288,
+    48
+  ],
+  "runtime_atlas_sha256": "8c113912715df43b774dcaa65c465a154f8007ea9ed7fb8ff2c85aaf5242847d",
+  "items": [
+    {
+      "site_id": "site_cinderlock_open_charter_throne",
+      "asset_id": "resource_site_uncrowned_cinderlock_throne",
+      "source_file": "cinderlock_open_charter_throne_source.png",
+      "source_sha256": "e3687621ad71125a2d5c5c0dfaf25ab8611a37fc9955a1fab693e23dd60812d1",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Original transparent Cinderlock Open Charter Throne: blackened sluice-stone empty seat, forked brass writ arms, open broken crown ring, white ember bowl, red wax counterweight; hand-painted strategy sprite; no character, text, scenery, franchise reference, or watermark."
+    },
+    {
+      "site_id": "site_murkward_antler_tribunal",
+      "asset_id": "resource_site_uncrowned_murkward_tribunal",
+      "source_file": "murkward_antler_tribunal_source.png",
+      "source_sha256": "f4b194cea2d7b565fda0d5ce8e610f28e362c17c4454bb0c4a5c83f46c55741f",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Original transparent Murkward Antler Tribunal: squat bogstone empty seat, unequal drowned antler arch, hide-drum back, reed-chain scales, peat lantern; hand-painted strategy sprite; no character, text, scenery, franchise reference, or watermark."
+    },
+    {
+      "site_id": "site_dawnmirror_uncrowned_matrix",
+      "asset_id": "resource_site_uncrowned_dawnmirror_matrix",
+      "source_file": "dawnmirror_uncrowned_matrix_source.png",
+      "source_sha256": "25d314ee56a55dc12272567f14662387e58f2acfc16a9233b9cac2208b3ceb3b",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Original transparent Dawnmirror Uncrowned Matrix: ivory-gold empty seat, offset open prism halo, split sunrise lens, three calibration needles; hand-painted strategy sprite; no character, text, scenery, franchise reference, or watermark."
+    },
+    {
+      "site_id": "site_graftroot_living_dais",
+      "asset_id": "resource_site_uncrowned_graftroot_dais",
+      "source_file": "graftroot_living_dais_source.png",
+      "source_sha256": "4db641e045c47b923a34abea9a6eda72cfc7b97efa094a8244e74dd17e51045a",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Original transparent Graftroot Living Dais: empty root-woven seat, unequal flowering boughs, seed lamps, graft spool; hand-painted strategy sprite; no character, text, scenery, franchise reference, or watermark."
+    },
+    {
+      "site_id": "site_orevein_saintless_assay_seat",
+      "asset_id": "resource_site_uncrowned_orevein_assay_seat",
+      "source_file": "orevein_saintless_assay_seat_source.png",
+      "source_sha256": "77e8ff9aa0a93822a678979d1d0a38fbfad514b4667908ed242bfa3464211036",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Original transparent Orevein Saintless Assay Seat: empty basalt-brass industrial throne, three pressure gauges, riveted rails, open crown clamp, red relief valve; hand-painted strategy sprite; no character, text, scenery, franchise reference, or watermark."
+    },
+    {
+      "site_id": "site_bellwake_empty_sounding_chair",
+      "asset_id": "resource_site_uncrowned_bellwake_sounding_chair",
+      "source_file": "bellwake_empty_sounding_chair_source.png",
+      "source_sha256": "b2d5e3c9b8b618c47e8a62dd5ca78ea1abc48f32fcd31271d5a6eecdde855b4b",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Original transparent Bellwake Empty Sounding Chair: whalebone-blackwood empty tide chair, shroud sails, drowned bell, three memory chimes, crown-shaped negative space; hand-painted strategy sprite; no character, text, scenery, franchise reference, or watermark."
+    }
+  ]
+}

@@ -4984,6 +4984,84 @@
         {"unit_id": "unit_veilmourn_dreamwake_foganchor_colossi", "count": 4}
       ],
       "content_batch_id": "content-six-grand-arcanum-convocations-10184"
+    },
+    {
+      "id": "army_uncrowned_cinderlock_charter_company",
+      "name": "Cinderlock Charter Ascent Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 58},
+        {"unit_id": "unit_embercourt_lantern_sappers", "count": 34},
+        {"unit_id": "unit_embercourt_beaconline_writguard", "count": 20},
+        {"unit_id": "unit_embercourt_cinderseal_bombardiers", "count": 10},
+        {"unit_id": "unit_embercourt_sluicefire_lindworms", "count": 4}
+      ],
+      "content_batch_id": "content-six-uncrowned-sovereign-roads-10184"
+    },
+    {
+      "id": "army_uncrowned_murkward_antler_company",
+      "name": "Murkward Antler Ascent Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 58},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 34},
+        {"unit_id": "unit_mireclaw_fenbell_chainstalkers", "count": 20},
+        {"unit_id": "unit_mireclaw_gorefen_rippers", "count": 10},
+        {"unit_id": "unit_mireclaw_mireglass_reedcasters", "count": 4}
+      ],
+      "content_batch_id": "content-six-uncrowned-sovereign-roads-10184"
+    },
+    {
+      "id": "army_uncrowned_dawnmirror_daybreak_company",
+      "name": "Dawnmirror Daybreak Ascent Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 58},
+        {"unit_id": "unit_mirror_duelist", "count": 34},
+        {"unit_id": "unit_aurora_ballista", "count": 20},
+        {"unit_id": "unit_sunvault_aurora_ballistae", "count": 10},
+        {"unit_id": "unit_sunvault_zenith_lensbearers", "count": 4}
+      ],
+      "content_batch_id": "content-six-uncrowned-sovereign-roads-10184"
+    },
+    {
+      "id": "army_uncrowned_graftroot_worldroot_company",
+      "name": "Graftroot Worldroot Ascent Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 58},
+        {"unit_id": "unit_thornwake_canopy_rammers", "count": 34},
+        {"unit_id": "unit_thornwake_dawnseed_bolters", "count": 20},
+        {"unit_id": "unit_thornwake_graft_matriarchs", "count": 10},
+        {"unit_id": "unit_thornwake_stagknot_runners", "count": 4}
+      ],
+      "content_batch_id": "content-six-uncrowned-sovereign-roads-10184"
+    },
+    {
+      "id": "army_uncrowned_orevein_foundry_company",
+      "name": "Orevein Foundry Ascent Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_tallyspring_throwers", "count": 58},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 34},
+        {"unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons", "count": 20},
+        {"unit_id": "unit_brasshollow_crucible_crawlers", "count": 10},
+        {"unit_id": "unit_brasshollow_pressure_lancers", "count": 4}
+      ],
+      "content_batch_id": "content-six-uncrowned-sovereign-roads-10184"
+    },
+    {
+      "id": "army_uncrowned_bellwake_leviathan_company",
+      "name": "Bellwake Leviathan Ascent Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_saltbell_casters", "count": 58},
+        {"unit_id": "unit_veilmourn_wakechain_boarders", "count": 34},
+        {"unit_id": "unit_veilmourn_saltwake_eulogists", "count": 20},
+        {"unit_id": "unit_veilmourn_mirrorkeel_reavers", "count": 10},
+        {"unit_id": "unit_veilmourn_gloamkeel_bulwarks", "count": 4}
+      ],
+      "content_batch_id": "content-six-uncrowned-sovereign-roads-10184"
     }
   ]
 }
