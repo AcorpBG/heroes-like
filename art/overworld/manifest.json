@@ -15971,6 +15971,282 @@
       "assigned_hero_id": "hero_veilmourn_jessa_keelwarden",
       "presentation_role": "keelwarden_keel_sounding_frame",
       "accessible_description": "An inverted ship-keel rib carries a cracked sounding bell, long plumb hook, tideglass floats, rope knots, and forked finial."
+    },
+    "resource_site_route_cinderquill_kiln_desk": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/cinderquill_route_kiln_desk_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/cinderquill_route_kiln_desk_source.png",
+      "source_model": "built_in_imagegen_original_marchland_grand_route_operations_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_cinderquill_route_kiln_desk",
+      "assigned_hero_id": "hero_embercourt_orra_cinderquill",
+      "presentation_role": "cinderquill_route_kiln_desk",
+      "accessible_description": "A brick route kiln supports blank charter slates beneath a feather-shaped iron chimney and curled brass paper rail."
+    },
+    "resource_site_route_lockmaster_seven_lock_gate": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/lockmaster_seven_lock_march_gate_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/lockmaster_seven_lock_march_gate_source.png",
+      "source_model": "built_in_imagegen_original_marchland_grand_route_operations_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_lockmaster_seven_lock_march_gate",
+      "assigned_hero_id": "hero_embercourt_saren_lockmaster",
+      "presentation_role": "lockmaster_seven_lock_march_gate",
+      "accessible_description": "A narrow river gate carries seven visibly different locks, a broken counterweight, chain loops, and one hooded lantern."
+    },
+    "resource_site_route_chainboom_breach_drum": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/chainboom_reed_breach_drum_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/chainboom_reed_breach_drum_source.png",
+      "source_model": "built_in_imagegen_original_marchland_grand_route_operations_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_chainboom_reed_breach_drum",
+      "assigned_hero_id": "hero_mireclaw_kessa_chainboom",
+      "presentation_role": "chainboom_reed_breach_drum",
+      "accessible_description": "A chained marsh drum bears a split reed-boom arm, bone beaters, hooked float cages, and a muddy keel foot."
+    },
+    "resource_site_route_reedscript_flood_ledger": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/reedscript_flood_ledger_stand_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/reedscript_flood_ledger_stand_source.png",
+      "source_model": "built_in_imagegen_original_marchland_grand_route_operations_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_reedscript_flood_ledger_stand",
+      "assigned_hero_id": "hero_mireclaw_pell_reedscript",
+      "presentation_role": "reedscript_flood_ledger_stand",
+      "accessible_description": "A crooked reed lectern holds blank wax leaves beside a crescent water gauge, clay plumb, and flood markers."
+    },
+    "resource_site_route_daynote_dawn_chime": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/daynote_dawn_chime_array_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/daynote_dawn_chime_array_source.png",
+      "source_model": "built_in_imagegen_original_marchland_grand_route_operations_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_daynote_dawn_chime_array",
+      "assigned_hero_id": "hero_sunvault_essa_daynote",
+      "presentation_role": "daynote_dawn_chime_array",
+      "accessible_description": "An asymmetric radiant frame carries five crystal chimes, a split sundial, diagonal striker, and prism plumbs."
+    },
+    "resource_site_route_glassmarshal_prism_beacon": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/glassmarshal_prism_rank_beacon_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/glassmarshal_prism_rank_beacon_source.png",
+      "source_model": "built_in_imagegen_original_marchland_grand_route_operations_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_glassmarshal_prism_rank_beacon",
+      "assigned_hero_id": "hero_sunvault_ilyr_glassmarshal",
+      "presentation_role": "glassmarshal_prism_rank_beacon",
+      "accessible_description": "Four staggered prism blades rise from a stepped base above a mirrored rail, crossing rods, and diamond lens."
+    },
+    "resource_site_route_graftsibyl_root_omen": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png",
+      "atlas_region": [
+        288,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/graftsibyl_root_omen_frame_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/graftsibyl_root_omen_frame_source.png",
+      "source_model": "built_in_imagegen_original_marchland_grand_route_operations_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_graftsibyl_root_omen_frame",
+      "assigned_hero_id": "hero_thornwake_nara_graftsibyl",
+      "presentation_role": "graftsibyl_root_omen_frame",
+      "accessible_description": "A living-root frame surrounds an empty seed cradle with leaf mirrors, a bark pointer, graft vials, and clawed feet."
+    },
+    "resource_site_route_seedseer_windseed_orrery": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png",
+      "atlas_region": [
+        336,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/seedseer_windseed_orrery_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/seedseer_windseed_orrery_source.png",
+      "source_model": "built_in_imagegen_original_marchland_grand_route_operations_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_seedseer_windseed_orrery",
+      "assigned_hero_id": "hero_thornwake_veyra_seedseer",
+      "presentation_role": "seedseer_windseed_orrery",
+      "accessible_description": "Three unequal seed pods circle on branch orbits above a leaf vane, root plumb, antler braces, and vine tripod."
+    },
+    "resource_site_route_bellfounder_road_bell": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png",
+      "atlas_region": [
+        384,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/bellfounder_road_bell_gantry_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/bellfounder_road_bell_gantry_source.png",
+      "source_model": "built_in_imagegen_original_marchland_grand_route_operations_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_bellfounder_road_bell_gantry",
+      "assigned_hero_id": "hero_brasshollow_oren_bellfounder",
+      "presentation_role": "bellfounder_road_bell_gantry",
+      "accessible_description": "A mobile casting gantry suspends an unfinished faceted bell beside a pouring arm, mold clamps, and warning hammer."
+    },
+    "resource_site_route_ashmeter_cinder_scale": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png",
+      "atlas_region": [
+        432,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/ashmeter_cinder_scale_station_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/ashmeter_cinder_scale_station_source.png",
+      "source_model": "built_in_imagegen_original_marchland_grand_route_operations_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_ashmeter_cinder_scale_station",
+      "assigned_hero_id": "hero_brasshollow_pava_ashmeter",
+      "presentation_role": "ashmeter_cinder_scale_station",
+      "accessible_description": "A low assay station carries a tilted balance scale, ash cups, calibration arc, chain weights, and furnace pot."
+    },
+    "resource_site_route_vowless_blank_bell": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png",
+      "atlas_region": [
+        480,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/vowless_blank_bell_mast_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/vowless_blank_bell_mast_source.png",
+      "source_model": "built_in_imagegen_original_marchland_grand_route_operations_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_vowless_blank_bell_mast",
+      "assigned_hero_id": "hero_veilmourn_nacre_vowless",
+      "presentation_role": "vowless_blank_bell_mast",
+      "accessible_description": "A bare harbor mast raises a broad white clapperless bell with a crescent sail rib, pendants, and anchor hook."
+    },
+    "resource_site_route_vanehook_crosswind_mooring": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png",
+      "atlas_region": [
+        528,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/vanehook_crosswind_mooring_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/vanehook_crosswind_mooring_source.png",
+      "source_model": "built_in_imagegen_original_marchland_grand_route_operations_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_vanehook_crosswind_mooring",
+      "assigned_hero_id": "hero_veilmourn_ruln_vanehook",
+      "presentation_role": "vanehook_crosswind_mooring",
+      "accessible_description": "A crooked harbor mooring bears opposing wind fins, a rope drum, direction discs, storm lantern, and split anchor base."
     }
   },
   "resource_site_sprites": {
@@ -17425,6 +17701,66 @@
       "asset_id": "resource_site_muster_keelwarden_keel_sounding_frame",
       "unclaimed_asset_id": "resource_site_muster_keelwarden_keel_sounding_frame",
       "fit": "Exact original Keel-Warden Keel-Sounding Frame remains visible before and after its one-time warband claim."
+    },
+    "site_cinderquill_route_kiln_desk": {
+      "asset_id": "resource_site_route_cinderquill_kiln_desk",
+      "unclaimed_asset_id": "resource_site_route_cinderquill_kiln_desk",
+      "fit": "Exact original Cinderquill Route-Kiln Desk remains visible before and after its one-time route-command claim."
+    },
+    "site_lockmaster_seven_lock_march_gate": {
+      "asset_id": "resource_site_route_lockmaster_seven_lock_gate",
+      "unclaimed_asset_id": "resource_site_route_lockmaster_seven_lock_gate",
+      "fit": "Exact original Lockmaster Seven-Lock March Gate remains visible before and after its one-time route-command claim."
+    },
+    "site_chainboom_reed_breach_drum": {
+      "asset_id": "resource_site_route_chainboom_breach_drum",
+      "unclaimed_asset_id": "resource_site_route_chainboom_breach_drum",
+      "fit": "Exact original Chainboom Reed-Breach Drum remains visible before and after its one-time route-command claim."
+    },
+    "site_reedscript_flood_ledger_stand": {
+      "asset_id": "resource_site_route_reedscript_flood_ledger",
+      "unclaimed_asset_id": "resource_site_route_reedscript_flood_ledger",
+      "fit": "Exact original Reedscript Flood-Ledger Stand remains visible before and after its one-time route-command claim."
+    },
+    "site_daynote_dawn_chime_array": {
+      "asset_id": "resource_site_route_daynote_dawn_chime",
+      "unclaimed_asset_id": "resource_site_route_daynote_dawn_chime",
+      "fit": "Exact original Daynote Dawn-Chime Array remains visible before and after its one-time route-command claim."
+    },
+    "site_glassmarshal_prism_rank_beacon": {
+      "asset_id": "resource_site_route_glassmarshal_prism_beacon",
+      "unclaimed_asset_id": "resource_site_route_glassmarshal_prism_beacon",
+      "fit": "Exact original Glassmarshal Prism-Rank Beacon remains visible before and after its one-time route-command claim."
+    },
+    "site_graftsibyl_root_omen_frame": {
+      "asset_id": "resource_site_route_graftsibyl_root_omen",
+      "unclaimed_asset_id": "resource_site_route_graftsibyl_root_omen",
+      "fit": "Exact original Graft-Sibyl Root-Omen Frame remains visible before and after its one-time route-command claim."
+    },
+    "site_seedseer_windseed_orrery": {
+      "asset_id": "resource_site_route_seedseer_windseed_orrery",
+      "unclaimed_asset_id": "resource_site_route_seedseer_windseed_orrery",
+      "fit": "Exact original Seedseer Windseed Orrery remains visible before and after its one-time route-command claim."
+    },
+    "site_bellfounder_road_bell_gantry": {
+      "asset_id": "resource_site_route_bellfounder_road_bell",
+      "unclaimed_asset_id": "resource_site_route_bellfounder_road_bell",
+      "fit": "Exact original Bellfounder Road-Bell Gantry remains visible before and after its one-time route-command claim."
+    },
+    "site_ashmeter_cinder_scale_station": {
+      "asset_id": "resource_site_route_ashmeter_cinder_scale",
+      "unclaimed_asset_id": "resource_site_route_ashmeter_cinder_scale",
+      "fit": "Exact original Ashmeter Cinder-Scale Station remains visible before and after its one-time route-command claim."
+    },
+    "site_vowless_blank_bell_mast": {
+      "asset_id": "resource_site_route_vowless_blank_bell",
+      "unclaimed_asset_id": "resource_site_route_vowless_blank_bell",
+      "fit": "Exact original Vowless Blank-Bell Mast remains visible before and after its one-time route-command claim."
+    },
+    "site_vanehook_crosswind_mooring": {
+      "asset_id": "resource_site_route_vanehook_crosswind_mooring",
+      "unclaimed_asset_id": "resource_site_route_vanehook_crosswind_mooring",
+      "fit": "Exact original Vanehook Crosswind Mooring remains visible before and after its one-time route-command claim."
     }
   },
   "artifact_default_sprite": {

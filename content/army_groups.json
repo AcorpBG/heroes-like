@@ -4544,6 +4544,174 @@
       ],
       "content_status": "marchland_warband_company_live",
       "content_batch_id": "content-twelve-marchland-warband-musters-10184"
+    },
+    {
+      "id": "army_cinderquill_grand_route_host",
+      "name": "Orra Cinderquill Grand-Route Host",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 90},
+        {"unit_id": "unit_embercourt_lantern_sappers", "count": 60},
+        {"unit_id": "unit_embercourt_bargebow_crews", "count": 36},
+        {"unit_id": "unit_embercourt_amberweir_lockpike_wardens", "count": 20},
+        {"unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels", "count": 12}
+      ],
+      "content_status": "marchland_grand_route_host_live",
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184"
+    },
+    {
+      "id": "army_sevenlock_grand_route_host",
+      "name": "Saren Lockmaster Grand-Route Host",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 90},
+        {"unit_id": "unit_embercourt_lantern_sappers", "count": 60},
+        {"unit_id": "unit_embercourt_bargebow_crews", "count": 36},
+        {"unit_id": "unit_embercourt_amberweir_lockpike_wardens", "count": 20},
+        {"unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels", "count": 12}
+      ],
+      "content_status": "marchland_grand_route_host_live",
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184"
+    },
+    {
+      "id": "army_chainboom_grand_route_host",
+      "name": "Kessa Chainboom Grand-Route Host",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 90},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 60},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 36},
+        {"unit_id": "unit_mireclaw_moonbite_votive_drummers", "count": 20},
+        {"unit_id": "unit_mireclaw_moonbite_mirehorn_breakers", "count": 12}
+      ],
+      "content_status": "marchland_grand_route_host_live",
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184"
+    },
+    {
+      "id": "army_floodledger_grand_route_host",
+      "name": "Pell Reedscript Grand-Route Host",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 90},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 60},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 36},
+        {"unit_id": "unit_mireclaw_moonbite_votive_drummers", "count": 20},
+        {"unit_id": "unit_mireclaw_moonbite_mirehorn_breakers", "count": 12}
+      ],
+      "content_status": "marchland_grand_route_host_live",
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184"
+    },
+    {
+      "id": "army_dawnchime_grand_route_host",
+      "name": "Essa Daynote Grand-Route Host",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 90},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 60},
+        {"unit_id": "unit_sunvault_mirror_duelists", "count": 36},
+        {"unit_id": "unit_sunvault_splitprism_parallax_fencers", "count": 20},
+        {"unit_id": "unit_sunvault_splitprism_heliograph_ballistae", "count": 12}
+      ],
+      "content_status": "marchland_grand_route_host_live",
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184"
+    },
+    {
+      "id": "army_prismrank_grand_route_host",
+      "name": "Ilyr Glassmarshal Grand-Route Host",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 90},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 60},
+        {"unit_id": "unit_sunvault_mirror_duelists", "count": 36},
+        {"unit_id": "unit_sunvault_splitprism_parallax_fencers", "count": 20},
+        {"unit_id": "unit_sunvault_splitprism_heliograph_ballistae", "count": 12}
+      ],
+      "content_status": "marchland_grand_route_host_live",
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184"
+    },
+    {
+      "id": "army_rootomen_grand_route_host",
+      "name": "Nara Graft-Sibyl Grand-Route Host",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 90},
+        {"unit_id": "unit_thornwake_bramblekite_needlers", "count": 60},
+        {"unit_id": "unit_thornwake_seedshield_wardens", "count": 36},
+        {"unit_id": "unit_thornwake_woundroot_hearthseed_slingers", "count": 20},
+        {"unit_id": "unit_thornwake_woundroot_rootmaul_behemoths", "count": 12}
+      ],
+      "content_status": "marchland_grand_route_host_live",
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184"
+    },
+    {
+      "id": "army_windseed_grand_route_host",
+      "name": "Veyra Seedseer Grand-Route Host",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 90},
+        {"unit_id": "unit_thornwake_bramblekite_needlers", "count": 60},
+        {"unit_id": "unit_thornwake_seedshield_wardens", "count": 36},
+        {"unit_id": "unit_thornwake_woundroot_hearthseed_slingers", "count": 20},
+        {"unit_id": "unit_thornwake_woundroot_rootmaul_behemoths", "count": 12}
+      ],
+      "content_status": "marchland_grand_route_host_live",
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184"
+    },
+    {
+      "id": "army_roadbell_grand_route_host",
+      "name": "Oren Bellfounder Grand-Route Host",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 90},
+        {"unit_id": "unit_brasshollow_quenchspool_slingers", "count": 60},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 36},
+        {"unit_id": "unit_brasshollow_whitegauge_datum_lancers", "count": 20},
+        {"unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons", "count": 12}
+      ],
+      "content_status": "marchland_grand_route_host_live",
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184"
+    },
+    {
+      "id": "army_cinderscale_grand_route_host",
+      "name": "Pava Ashmeter Grand-Route Host",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 90},
+        {"unit_id": "unit_brasshollow_quenchspool_slingers", "count": 60},
+        {"unit_id": "unit_brasshollow_gaugefire_arbalists", "count": 36},
+        {"unit_id": "unit_brasshollow_whitegauge_datum_lancers", "count": 20},
+        {"unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons", "count": 12}
+      ],
+      "content_status": "marchland_grand_route_host_live",
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184"
+    },
+    {
+      "id": "army_blankbell_grand_route_host",
+      "name": "Nacre Vowless Grand-Route Host",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 90},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 60},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 36},
+        {"unit_id": "unit_veilmourn_dreamwake_tideglass_oracles", "count": 20},
+        {"unit_id": "unit_veilmourn_dreamwake_foganchor_colossi", "count": 12}
+      ],
+      "content_status": "marchland_grand_route_host_live",
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184"
+    },
+    {
+      "id": "army_crosswind_grand_route_host",
+      "name": "Ruln Vanehook Grand-Route Host",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 90},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 60},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 36},
+        {"unit_id": "unit_veilmourn_dreamwake_tideglass_oracles", "count": 20},
+        {"unit_id": "unit_veilmourn_dreamwake_foganchor_colossi", "count": 12}
+      ],
+      "content_status": "marchland_grand_route_host_live",
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184"
     }
   ]
 }

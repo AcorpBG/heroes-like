@@ -19124,6 +19124,426 @@
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
+    },
+    {
+      "id": "site_cinderquill_route_kiln_desk",
+      "name": "Cinderquill Route-Kiln Desk",
+      "family": "scenario_objective",
+      "action_label": "Seal the Route-Kiln Ledger",
+      "summary": "Cinderquill Route-Kiln Desk establishes Orra Cinderquill's command after six battle fronts are opened.",
+      "claim_rewards": {
+        "gold": 800,
+        "embergrain": 2,
+        "experience": 250
+      },
+      "claim_recruits": {
+        "unit_embercourt_amberweir_lockpike_wardens": 3,
+        "unit_embercourt_amberweir_sluicebrand_mangonels": 1
+      },
+      "claim_flags": {
+        "cinderquill_route_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_grand_route_operation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184",
+      "public_text": {
+        "public_summary": "A brick route kiln supports blank charter slates beneath a feather-shaped iron chimney and curled brass paper rail.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_lockmaster_seven_lock_march_gate",
+      "name": "Lockmaster Seven-Lock March Gate",
+      "family": "scenario_objective",
+      "action_label": "Open the Seven-Lock Gate",
+      "summary": "Lockmaster Seven-Lock March Gate establishes Saren Lockmaster's command after six battle fronts are opened.",
+      "claim_rewards": {
+        "gold": 800,
+        "embergrain": 2,
+        "experience": 250
+      },
+      "claim_recruits": {
+        "unit_embercourt_amberweir_lockpike_wardens": 3,
+        "unit_embercourt_amberweir_sluicebrand_mangonels": 1
+      },
+      "claim_flags": {
+        "sevenlock_route_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_grand_route_operation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184",
+      "public_text": {
+        "public_summary": "A narrow river gate carries seven visibly different locks, a broken counterweight, chain loops, and one hooded lantern.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_chainboom_reed_breach_drum",
+      "name": "Chainboom Reed-Breach Drum",
+      "family": "scenario_objective",
+      "action_label": "Sound the Reed-Breach",
+      "summary": "Chainboom Reed-Breach Drum establishes Kessa Chainboom's command after six battle fronts are opened.",
+      "claim_rewards": {
+        "gold": 800,
+        "peatwax": 2,
+        "experience": 250
+      },
+      "claim_recruits": {
+        "unit_mireclaw_moonbite_votive_drummers": 3,
+        "unit_mireclaw_moonbite_mirehorn_breakers": 1
+      },
+      "claim_flags": {
+        "chainboom_route_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_grand_route_operation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184",
+      "public_text": {
+        "public_summary": "A chained marsh drum bears a split reed-boom arm, bone beaters, hooked float cages, and a muddy keel foot.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_reedscript_flood_ledger_stand",
+      "name": "Reedscript Flood-Ledger Stand",
+      "family": "scenario_objective",
+      "action_label": "Read the Flood Ledger",
+      "summary": "Reedscript Flood-Ledger Stand establishes Pell Reedscript's command after six battle fronts are opened.",
+      "claim_rewards": {
+        "gold": 800,
+        "peatwax": 2,
+        "experience": 250
+      },
+      "claim_recruits": {
+        "unit_mireclaw_moonbite_votive_drummers": 3,
+        "unit_mireclaw_moonbite_mirehorn_breakers": 1
+      },
+      "claim_flags": {
+        "floodledger_route_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_grand_route_operation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184",
+      "public_text": {
+        "public_summary": "A crooked reed lectern holds blank wax leaves beside a crescent water gauge, clay plumb, and flood markers.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_daynote_dawn_chime_array",
+      "name": "Daynote Dawn-Chime Array",
+      "family": "scenario_objective",
+      "action_label": "Ring the Dawn-Chime Array",
+      "summary": "Daynote Dawn-Chime Array establishes Essa Daynote's command after six battle fronts are opened.",
+      "claim_rewards": {
+        "gold": 800,
+        "aetherglass": 2,
+        "experience": 250
+      },
+      "claim_recruits": {
+        "unit_sunvault_splitprism_parallax_fencers": 3,
+        "unit_sunvault_splitprism_heliograph_ballistae": 1
+      },
+      "claim_flags": {
+        "dawnchime_route_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_grand_route_operation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184",
+      "public_text": {
+        "public_summary": "An asymmetric radiant frame carries five crystal chimes, a split sundial, diagonal striker, and prism plumbs.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_glassmarshal_prism_rank_beacon",
+      "name": "Glassmarshal Prism-Rank Beacon",
+      "family": "scenario_objective",
+      "action_label": "Align the Prism Ranks",
+      "summary": "Glassmarshal Prism-Rank Beacon establishes Ilyr Glassmarshal's command after six battle fronts are opened.",
+      "claim_rewards": {
+        "gold": 800,
+        "aetherglass": 2,
+        "experience": 250
+      },
+      "claim_recruits": {
+        "unit_sunvault_splitprism_parallax_fencers": 3,
+        "unit_sunvault_splitprism_heliograph_ballistae": 1
+      },
+      "claim_flags": {
+        "prismrank_route_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_grand_route_operation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184",
+      "public_text": {
+        "public_summary": "Four staggered prism blades rise from a stepped base above a mirrored rail, crossing rods, and diamond lens.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_graftsibyl_root_omen_frame",
+      "name": "Graft-Sibyl Root-Omen Frame",
+      "family": "scenario_objective",
+      "action_label": "Read the Root Omen",
+      "summary": "Graft-Sibyl Root-Omen Frame establishes Nara Graft-Sibyl's command after six battle fronts are opened.",
+      "claim_rewards": {
+        "gold": 800,
+        "verdant_grafts": 2,
+        "experience": 250
+      },
+      "claim_recruits": {
+        "unit_thornwake_woundroot_hearthseed_slingers": 3,
+        "unit_thornwake_woundroot_rootmaul_behemoths": 1
+      },
+      "claim_flags": {
+        "rootomen_route_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_grand_route_operation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184",
+      "public_text": {
+        "public_summary": "A living-root frame surrounds an empty seed cradle with leaf mirrors, a bark pointer, graft vials, and clawed feet.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_seedseer_windseed_orrery",
+      "name": "Seedseer Windseed Orrery",
+      "family": "scenario_objective",
+      "action_label": "Turn the Windseed Orrery",
+      "summary": "Seedseer Windseed Orrery establishes Veyra Seedseer's command after six battle fronts are opened.",
+      "claim_rewards": {
+        "gold": 800,
+        "verdant_grafts": 2,
+        "experience": 250
+      },
+      "claim_recruits": {
+        "unit_thornwake_woundroot_hearthseed_slingers": 3,
+        "unit_thornwake_woundroot_rootmaul_behemoths": 1
+      },
+      "claim_flags": {
+        "windseed_route_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_grand_route_operation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184",
+      "public_text": {
+        "public_summary": "Three unequal seed pods circle on branch orbits above a leaf vane, root plumb, antler braces, and vine tripod.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_bellfounder_road_bell_gantry",
+      "name": "Bellfounder Road-Bell Gantry",
+      "family": "scenario_objective",
+      "action_label": "Cast the Road Bell",
+      "summary": "Bellfounder Road-Bell Gantry establishes Oren Bellfounder's command after six battle fronts are opened.",
+      "claim_rewards": {
+        "gold": 800,
+        "brass_scrip": 2,
+        "experience": 250
+      },
+      "claim_recruits": {
+        "unit_brasshollow_whitegauge_datum_lancers": 3,
+        "unit_brasshollow_whitegauge_datum_breach_cannons": 1
+      },
+      "claim_flags": {
+        "roadbell_route_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_grand_route_operation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184",
+      "public_text": {
+        "public_summary": "A mobile casting gantry suspends an unfinished faceted bell beside a pouring arm, mold clamps, and warning hammer.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_ashmeter_cinder_scale_station",
+      "name": "Ashmeter Cinder-Scale Station",
+      "family": "scenario_objective",
+      "action_label": "Balance the Cinder Scale",
+      "summary": "Ashmeter Cinder-Scale Station establishes Pava Ashmeter's command after six battle fronts are opened.",
+      "claim_rewards": {
+        "gold": 800,
+        "brass_scrip": 2,
+        "experience": 250
+      },
+      "claim_recruits": {
+        "unit_brasshollow_whitegauge_datum_lancers": 3,
+        "unit_brasshollow_whitegauge_datum_breach_cannons": 1
+      },
+      "claim_flags": {
+        "cinderscale_route_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_grand_route_operation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184",
+      "public_text": {
+        "public_summary": "A low assay station carries a tilted balance scale, ash cups, calibration arc, chain weights, and furnace pot.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_vowless_blank_bell_mast",
+      "name": "Vowless Blank-Bell Mast",
+      "family": "scenario_objective",
+      "action_label": "Raise the Blank Bell",
+      "summary": "Vowless Blank-Bell Mast establishes Nacre Vowless's command after six battle fronts are opened.",
+      "claim_rewards": {
+        "gold": 800,
+        "memory_salt": 2,
+        "experience": 250
+      },
+      "claim_recruits": {
+        "unit_veilmourn_dreamwake_tideglass_oracles": 3,
+        "unit_veilmourn_dreamwake_foganchor_colossi": 1
+      },
+      "claim_flags": {
+        "blankbell_route_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_grand_route_operation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184",
+      "public_text": {
+        "public_summary": "A bare harbor mast raises a broad white clapperless bell with a crescent sail rib, pendants, and anchor hook.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_vanehook_crosswind_mooring",
+      "name": "Vanehook Crosswind Mooring",
+      "family": "scenario_objective",
+      "action_label": "Set the Crosswind Mooring",
+      "summary": "Vanehook Crosswind Mooring establishes Ruln Vanehook's command after six battle fronts are opened.",
+      "claim_rewards": {
+        "gold": 800,
+        "memory_salt": 2,
+        "experience": 250
+      },
+      "claim_recruits": {
+        "unit_veilmourn_dreamwake_tideglass_oracles": 3,
+        "unit_veilmourn_dreamwake_foganchor_colossi": 1
+      },
+      "claim_flags": {
+        "crosswind_route_command_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_grand_route_operation_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-grand-route-operations-10184",
+      "public_text": {
+        "public_summary": "A crooked harbor mooring bears opposing wind fins, a rope drum, direction discs, storm lantern, and split anchor base.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }
