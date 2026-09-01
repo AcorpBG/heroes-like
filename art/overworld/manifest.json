@@ -16477,6 +16477,324 @@
       "assigned_hero_id": "hero_sunvault_mirro_halometer",
       "presentation_role": "meridian_shadow_dial",
       "accessible_description": "A tall faceted sundial carries two offset floating rings, a black prism shadow blade, diamond lens, calibrated arc, and stepped ivory base."
+    },
+    "mapobj_cindervane_updraft_roost": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "8c5f7670e572de06079a22cae409d573a2d3a8342ff43ca30da256ec7a032b07",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/censerwing_updraft_roost_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/censerwing_updraft_roost_source.png",
+      "source_model": "built_in_imagegen_original_frontier_mythic_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "A split basalt chimney, curved bronze cage ribs, ember vanes, and an empty hanging censer cradle mark the updraft roost.",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "assigned_map_object_id": "object_cindervane_updraft_roost",
+      "presentation_role": "cindervane_updraft_roost_unclaimed"
+    },
+    "resource_site_neutral_cindervane_updraft_roost_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "8c5f7670e572de06079a22cae409d573a2d3a8342ff43ca30da256ec7a032b07",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/censerwing_updraft_roost_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/censerwing_updraft_roost_source.png",
+      "source_model": "built_in_imagegen_original_frontier_mythic_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "A split basalt chimney, curved bronze cage ribs, ember vanes, and an empty hanging censer cradle mark the updraft roost.",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "assigned_resource_site_id": "site_cindervane_updraft_roost",
+      "presentation_role": "cindervane_updraft_roost_controlled"
+    },
+    "encounter_frontier_mythic_cindervane_updraft_roost_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_cindervane_censerwings.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_cindervane_updraft_roost_watch",
+      "assigned_unit_id": "unit_neutral_cindervane_censerwings",
+      "asset_policy": "exact_curated_original_creature_identity",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "The exact silhouette of Cindervane Censerwings guarding Censerwing Updraft Roost."
+    },
+    "mapobj_fenmirror_shell_basin": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "8c5f7670e572de06079a22cae409d573a2d3a8342ff43ca30da256ec7a032b07",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/fenmirror_shell_basin_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/fenmirror_shell_basin_source.png",
+      "source_model": "built_in_imagegen_original_frontier_mythic_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "Two leaning crescent shell arches enclose a dark mirror basin, dangling reed chains, and a low root landing pier.",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "assigned_map_object_id": "object_fenmirror_shell_basin",
+      "presentation_role": "fenmirror_shell_basin_unclaimed"
+    },
+    "resource_site_neutral_fenmirror_shell_basin_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "8c5f7670e572de06079a22cae409d573a2d3a8342ff43ca30da256ec7a032b07",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/fenmirror_shell_basin_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/fenmirror_shell_basin_source.png",
+      "source_model": "built_in_imagegen_original_frontier_mythic_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "Two leaning crescent shell arches enclose a dark mirror basin, dangling reed chains, and a low root landing pier.",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "assigned_resource_site_id": "site_fenmirror_shell_basin",
+      "presentation_role": "fenmirror_shell_basin_controlled"
+    },
+    "encounter_frontier_mythic_fenmirror_shell_basin_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_fenmirror_gallowshells.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_fenmirror_shell_basin_watch",
+      "assigned_unit_id": "unit_neutral_fenmirror_gallowshells",
+      "asset_policy": "exact_curated_original_creature_identity",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "The exact silhouette of Fenmirror Gallowshells guarding Fenmirror Shell Basin."
+    },
+    "mapobj_prismwake_refraction_shelf": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "8c5f7670e572de06079a22cae409d573a2d3a8342ff43ca30da256ec7a032b07",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/prismwake_refraction_shelf_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/prismwake_refraction_shelf_source.png",
+      "source_model": "built_in_imagegen_original_frontier_mythic_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "An ivory floating shelf carries an offset oval lens arch, two prism sails, glass chimes, and three narrow crystal keels.",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "assigned_map_object_id": "object_prismwake_refraction_shelf",
+      "presentation_role": "prismwake_refraction_shelf_unclaimed"
+    },
+    "resource_site_neutral_prismwake_refraction_shelf_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "8c5f7670e572de06079a22cae409d573a2d3a8342ff43ca30da256ec7a032b07",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/prismwake_refraction_shelf_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/prismwake_refraction_shelf_source.png",
+      "source_model": "built_in_imagegen_original_frontier_mythic_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "An ivory floating shelf carries an offset oval lens arch, two prism sails, glass chimes, and three narrow crystal keels.",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "assigned_resource_site_id": "site_prismwake_refraction_shelf",
+      "presentation_role": "prismwake_refraction_shelf_controlled"
+    },
+    "encounter_frontier_mythic_prismwake_refraction_shelf_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_prismwake_raylings.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_prismwake_refraction_shelf_watch",
+      "assigned_unit_id": "unit_neutral_prismwake_raylings",
+      "asset_policy": "exact_curated_original_creature_identity",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "The exact silhouette of Prismwake Raylings guarding Prismwake Refraction Shelf."
+    },
+    "mapobj_knotstag_root_court": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "8c5f7670e572de06079a22cae409d573a2d3a8342ff43ca30da256ec7a032b07",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/knotstag_root_court_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/knotstag_root_court_source.png",
+      "source_model": "built_in_imagegen_original_frontier_mythic_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "A living-root amphitheater rises into two unequal antler gates around a hollow dais and three seed-lantern pods.",
+      "atlas_region": [
+        288,
+        0,
+        48,
+        48
+      ],
+      "assigned_map_object_id": "object_knotstag_root_court",
+      "presentation_role": "knotstag_root_court_unclaimed"
+    },
+    "resource_site_neutral_knotstag_root_court_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "8c5f7670e572de06079a22cae409d573a2d3a8342ff43ca30da256ec7a032b07",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/knotstag_root_court_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/knotstag_root_court_source.png",
+      "source_model": "built_in_imagegen_original_frontier_mythic_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "A living-root amphitheater rises into two unequal antler gates around a hollow dais and three seed-lantern pods.",
+      "atlas_region": [
+        336,
+        0,
+        48,
+        48
+      ],
+      "assigned_resource_site_id": "site_knotstag_root_court",
+      "presentation_role": "knotstag_root_court_controlled"
+    },
+    "encounter_frontier_mythic_knotstag_root_court_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_rootcrown_knotstags.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_knotstag_root_court_watch",
+      "assigned_unit_id": "unit_neutral_rootcrown_knotstags",
+      "asset_policy": "exact_curated_original_creature_identity",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "The exact silhouette of Rootcrown Knotstags guarding Knotstag Root-Court."
+    },
+    "mapobj_gaugecoil_pressure_burrow": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "8c5f7670e572de06079a22cae409d573a2d3a8342ff43ca30da256ec7a032b07",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/gaugecoil_pressure_burrow_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/gaugecoil_pressure_burrow_source.png",
+      "source_model": "built_in_imagegen_original_frontier_mythic_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "Three concentric pressure rings frame a dark drill rail beneath oversized blank gauges, a red relief valve, and six anchor feet.",
+      "atlas_region": [
+        384,
+        0,
+        48,
+        48
+      ],
+      "assigned_map_object_id": "object_gaugecoil_pressure_burrow",
+      "presentation_role": "gaugecoil_pressure_burrow_unclaimed"
+    },
+    "resource_site_neutral_gaugecoil_pressure_burrow_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "8c5f7670e572de06079a22cae409d573a2d3a8342ff43ca30da256ec7a032b07",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/gaugecoil_pressure_burrow_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/gaugecoil_pressure_burrow_source.png",
+      "source_model": "built_in_imagegen_original_frontier_mythic_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "Three concentric pressure rings frame a dark drill rail beneath oversized blank gauges, a red relief valve, and six anchor feet.",
+      "atlas_region": [
+        432,
+        0,
+        48,
+        48
+      ],
+      "assigned_resource_site_id": "site_gaugecoil_pressure_burrow",
+      "presentation_role": "gaugecoil_pressure_burrow_controlled"
+    },
+    "encounter_frontier_mythic_gaugecoil_pressure_burrow_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_gaugecoil_orewyrms.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_gaugecoil_pressure_burrow_watch",
+      "assigned_unit_id": "unit_neutral_gaugecoil_orewyrms",
+      "asset_policy": "exact_curated_original_creature_identity",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "The exact silhouette of Gaugecoil Orewyrms guarding Gaugecoil Pressure Burrow."
+    },
+    "mapobj_gloambell_sounding_deep": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "8c5f7670e572de06079a22cae409d573a2d3a8342ff43ca30da256ec7a032b07",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/gloambell_sounding_deep_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/gloambell_sounding_deep_source.png",
+      "source_model": "built_in_imagegen_original_frontier_mythic_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "A tilted whalebone arch shelters one drowned bell, two tideglass pools, pale sounding rods, and a narrow keel stair.",
+      "atlas_region": [
+        480,
+        0,
+        48,
+        48
+      ],
+      "assigned_map_object_id": "object_gloambell_sounding_deep",
+      "presentation_role": "gloambell_sounding_deep_unclaimed"
+    },
+    "resource_site_neutral_gloambell_sounding_deep_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
+      "atlas_size": [
+        576,
+        48
+      ],
+      "runtime_sha256": "8c5f7670e572de06079a22cae409d573a2d3a8342ff43ca30da256ec7a032b07",
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/gloambell_sounding_deep_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/gloambell_sounding_deep_source.png",
+      "source_model": "built_in_imagegen_original_frontier_mythic_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "A tilted whalebone arch shelters one drowned bell, two tideglass pools, pale sounding rods, and a narrow keel stair.",
+      "atlas_region": [
+        528,
+        0,
+        48,
+        48
+      ],
+      "assigned_resource_site_id": "site_gloambell_sounding_deep",
+      "presentation_role": "gloambell_sounding_deep_controlled"
+    },
+    "encounter_frontier_mythic_gloambell_sounding_deep_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_gloambell_wake_mantas.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_gloambell_sounding_deep_watch",
+      "assigned_unit_id": "unit_neutral_gloambell_wake_mantas",
+      "asset_policy": "exact_curated_original_creature_identity",
+      "distinct_sprite_assignment": true,
+      "accessible_description": "The exact silhouette of Gloambell Wake-Mantas guarding Gloambell Sounding Deep."
     }
   },
   "resource_site_sprites": {
@@ -18041,6 +18359,36 @@
       "asset_id": "resource_site_dominion_meridian_shadow_dial",
       "unclaimed_asset_id": "resource_site_dominion_meridian_shadow_dial",
       "fit": "Exact original Meridian Shadow Dial remains visible before and after its one-time dominion-command claim."
+    },
+    "site_cindervane_updraft_roost": {
+      "asset_id": "resource_site_neutral_cindervane_updraft_roost_controlled",
+      "unclaimed_asset_id": "mapobj_cindervane_updraft_roost",
+      "fit": "Exact original Censerwing Updraft Roost changes from unclaimed structure to pennant-marked controlled state."
+    },
+    "site_fenmirror_shell_basin": {
+      "asset_id": "resource_site_neutral_fenmirror_shell_basin_controlled",
+      "unclaimed_asset_id": "mapobj_fenmirror_shell_basin",
+      "fit": "Exact original Fenmirror Shell Basin changes from unclaimed structure to pennant-marked controlled state."
+    },
+    "site_prismwake_refraction_shelf": {
+      "asset_id": "resource_site_neutral_prismwake_refraction_shelf_controlled",
+      "unclaimed_asset_id": "mapobj_prismwake_refraction_shelf",
+      "fit": "Exact original Prismwake Refraction Shelf changes from unclaimed structure to pennant-marked controlled state."
+    },
+    "site_knotstag_root_court": {
+      "asset_id": "resource_site_neutral_knotstag_root_court_controlled",
+      "unclaimed_asset_id": "mapobj_knotstag_root_court",
+      "fit": "Exact original Knotstag Root-Court changes from unclaimed structure to pennant-marked controlled state."
+    },
+    "site_gaugecoil_pressure_burrow": {
+      "asset_id": "resource_site_neutral_gaugecoil_pressure_burrow_controlled",
+      "unclaimed_asset_id": "mapobj_gaugecoil_pressure_burrow",
+      "fit": "Exact original Gaugecoil Pressure Burrow changes from unclaimed structure to pennant-marked controlled state."
+    },
+    "site_gloambell_sounding_deep": {
+      "asset_id": "resource_site_neutral_gloambell_sounding_deep_controlled",
+      "unclaimed_asset_id": "mapobj_gloambell_sounding_deep",
+      "fit": "Exact original Gloambell Sounding Deep changes from unclaimed structure to pennant-marked controlled state."
     }
   },
   "artifact_default_sprite": {
@@ -18448,7 +18796,13 @@
     "encounter_greenbarrow_named_rival_company": "hero_roster_thornwake_merek_greenbarrow",
     "encounter_bellfounder_named_rival_company": "hero_lead_brasshollow_oren_bellfounder",
     "encounter_vanehook_named_rival_company": "hero_lead_veilmourn_ruln_vanehook",
-    "encounter_pikeward_named_rival_company": "hero_specialist_torren"
+    "encounter_pikeward_named_rival_company": "hero_specialist_torren",
+    "encounter_cindervane_updraft_roost_watch": "encounter_frontier_mythic_cindervane_updraft_roost_watch",
+    "encounter_fenmirror_shell_basin_watch": "encounter_frontier_mythic_fenmirror_shell_basin_watch",
+    "encounter_prismwake_refraction_shelf_watch": "encounter_frontier_mythic_prismwake_refraction_shelf_watch",
+    "encounter_knotstag_root_court_watch": "encounter_frontier_mythic_knotstag_root_court_watch",
+    "encounter_gaugecoil_pressure_burrow_watch": "encounter_frontier_mythic_gaugecoil_pressure_burrow_watch",
+    "encounter_gloambell_sounding_deep_watch": "encounter_frontier_mythic_gloambell_sounding_deep_watch"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

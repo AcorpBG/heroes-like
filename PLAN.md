@@ -16986,6 +16986,37 @@ Non-goals:
 - no new map, encounter, army, hero, unit, town, building, spell, artifact, combat rule, AI rule, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes campaign, map, name, text, insignia, or protected visual expression.
 
+## Six Frontier Mythic Habitats
+
+id: `content-six-frontier-mythic-habitats-10184`
+
+Status: completed.
+
+Current finding:
+- the 281-scenario catalog already has broad map, town, encounter, hero, and objective coverage, while neutral roster breadth is now the clearest live-content gap: thirty-seven neutral units occur in only one authored army group and twenty-four occur in only two;
+- recent batches have expanded composed operations faster than genuinely new recruitable creature identities, so the next high-impact batch must add playable roster choices and their complete habitat graph rather than another map-only family;
+- the release package currently has enough measured headroom for six package-optimized unit surface sets and one compact habitat atlas while generated source masters remain excluded on both platforms.
+
+Implementation boundary:
+- add six original neutral creatures, one faction-adjacent frontier ecology each, with production stats, two live abilities, complete portrait/battle/standee/overworld/animation surfaces, transparent generated-source provenance, and package-optimized palettes;
+- add six persistent recruitable neutral habitats with exact unclaimed/controlled art, six neutral army groups, six guarded encounters, and complete dwelling, resource-site, map-object, AI, reward, and save-version-9 contracts;
+- add six original skirmish-only 18x14 scenarios, one per faction and one current four-map lead-floor hero each, placing the new habitat and three authored copies of its corresponding encounter for eighteen new battle fronts total while preserving data-driven runtime authority and Windows/Linux parity.
+
+Completion criteria:
+- all six scenarios launch through normal live authority, all eighteen authored battles construct, each habitat guard resolves, every habitat claims and recruits its exact new creature, objectives complete, exact art resolves, and save-version-9 round trips remain exact;
+- run one consolidated six-scenario gameplay/art/save smoke only after the complete content-and-art batch is wired, review representative captures, then run repository validation and sequential Linux/Windows packaged startup below the unchanged 250000000-byte ceiling;
+- update operational counts and evidence honestly, commit and push the validated slice, and make no whole-game release-readiness claim.
+
+Completion result:
+- six original neutral creatures now ship with two live abilities each and complete curated portrait, battle-icon, grounded-standee, overworld-icon, and ten-state animation surfaces; six original habitats ship with distinct unclaimed and controlled states in one compact 576x48 runtime atlas;
+- six persistent guarded dwellings, six army groups, six encounters, and six 18x14 skirmishes add eighteen authored battle fronts, all-nine-resource development routes, five reactive event hooks per map, exact habitat claim/recruit objectives, and save-version-9 authority; the live catalogs now contain 160 units, 49 neutral dwellings, 365 sites, 422 map objects, 425 army groups, 203 encounters, and 287 active scenarios;
+- the single consolidated smoke passes all six launches, eighteen production battle payloads, six representative live victories, six habitat claims/recruits, six objective victories, six exact-art routes, six save round trips, and six reviewed captures; repository validation passes;
+- Linux and Windows release exports and packaged startups both pass with the matching 237190092-byte PCK, leaving 12809908 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero definition, town definition, building, spell, artifact, campaign, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes creature, dwelling, scenario, name, text, silhouette, or protected visual expression.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
