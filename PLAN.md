@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; audit the expanded live catalog before selecting the next coherent production-content batch.
-- Most recently completed implementation slice: `content-six-uncrowned-sovereign-roads-10184`, six large town-development roads joined into the first campaign whose live progression requires building and recruiting each faction's sovereign unit.
+- No implementation slice is active after completing `ux-generated-map-faction-hero-selection-10184`.
+- Most recently completed implementation slice: `ux-generated-map-faction-hero-selection-10184`, which adds authoritative faction and faction-filtered hero choices to generated skirmish setup and package/session startup.
 - Current package boundary: matching Linux and Windows release exports measure 237389792 bytes, 12610208 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
 
 ## Six Uncrowned Sovereign Roads
@@ -17201,6 +17201,36 @@ Completion result:
 Non-goals:
 - no new building definitions, construction timing system, economy/balance/AI rule, town backdrop replacement, save-version bump, or native RMG change;
 - no copied Heroes building, town layout, asset, name, text, or protected visual expression; no signing, publication, whole-game validation, or release-readiness claim.
+
+## Generated Map Faction And Hero Selection
+
+id: `ux-generated-map-faction-hero-selection-10184`
+
+Status: completed.
+
+Current finding:
+- generated skirmish setup exposes seed, size, player count, water, and level controls but no player faction or hero choice;
+- native package projection hardcodes the player to Embercourt/Lyra even though all six factions and their live hero rosters already exist;
+- the recovered H3MapEd workflow can remain byte/state authoritative while the project-owned runtime projection applies selected original-game identity after final-payload generation.
+
+Implementation boundary:
+- add compact faction and faction-filtered hero dropdowns to Map Forge, preserving the scenery-first disclosure and supported size/water/level controls;
+- preserve selected identity in normalized config, replay provenance, package/session boundaries, the player start town, active hero, and faction-appropriate opening army without changing recovered native phase behavior;
+- validate dropdown filtering, deterministic identity, generated launch, starting town/hero/army authority, repository integrity, and Linux/Windows native build symmetry.
+
+Completion criteria:
+- all six factions are selectable, changing faction rebuilds the hero dropdown to only that faction's live heroes, and the selected identities appear in the setup preview;
+- generated package/session startup uses the exact selected faction, hero, faction town, and opening army while replay metadata retains the choice;
+- focused runtime, repository validation, and Linux/Windows native build checks pass without altering native H3MapEd final-payload bytes or making broader parity/release claims.
+
+Completion result:
+- Map Forge now exposes all six original factions and rebuilds its compact hero dropdown from the selected faction's eleven live commanders; preview and retry/setup state preserve the exact choice;
+- native and fallback normalization retain `player_setup`, while the post-payload project projection assigns the selected faction town, hero, faction opening army, replay provenance, and identity-isolated package id without changing recovered H3MapEd workflow input or final-payload bytes;
+- the focused Veilmourn/Orso launch passed with Bellwake Harbor and Bellwake Privateers, the existing generated-map setup/retry and 1280x720 composition smokes passed, repository validation passed, and fresh Linux plus Windows native Debug builds succeeded.
+
+Non-goals:
+- no recovered H3MapEd phase, template selection, object placement, terrain, guard/reward, road, or final-payload behavior changes;
+- no new factions, heroes, towns, armies, save-version bump, copied Heroes content, signing, publication, whole-game validation, or release-readiness claim.
 
 ## Progress Reconciliation
 

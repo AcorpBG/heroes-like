@@ -618,6 +618,16 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(162, 34)
 layout_mode = 2
 
+[node name="GeneratedFactionPicker" type="OptionButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(176, 34)
+layout_mode = 2
+
+[node name="GeneratedHeroPicker" type="OptionButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(176, 34)
+layout_mode = 2
+
 [node name="GeneratedTemplatePicker" type="OptionButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls"]
 unique_name_in_owner = true
 visible = false
@@ -1698,6 +1708,8 @@ size_flags_horizontal = 3
 [connection signal="item_selected" from="SkirmishCommandRail/SkirmishLaunchRow/DifficultyPicker" to="." method="_on_difficulty_selected"]
 [connection signal="text_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedSeed" to="." method="_on_generated_seed_changed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedSizePicker" to="." method="_on_generated_size_selected"]
+[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedFactionPicker" to="." method="_on_generated_faction_selected"]
+[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedHeroPicker" to="." method="_on_generated_hero_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedTemplatePicker" to="." method="_on_generated_template_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedProfilePicker" to="." method="_on_generated_profile_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedPlayerCountPicker" to="." method="_on_generated_player_count_selected"]

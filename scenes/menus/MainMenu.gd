@@ -134,6 +134,8 @@ const TAB_HELP_TOPIC := {
 @onready var _generated_size_picker: OptionButton = %GeneratedSizePicker
 @onready var _generated_template_picker: OptionButton = %GeneratedTemplatePicker
 @onready var _generated_profile_picker: OptionButton = %GeneratedProfilePicker
+@onready var _generated_faction_picker: OptionButton = %GeneratedFactionPicker
+@onready var _generated_hero_picker: OptionButton = %GeneratedHeroPicker
 @onready var _generated_player_count_picker: OptionButton = %GeneratedPlayerCountPicker
 @onready var _generated_water_picker: OptionButton = %GeneratedWaterPicker
 @onready var _generated_underground_toggle: OptionButton = %GeneratedUndergroundToggle
@@ -236,6 +238,8 @@ var _generated_seed := ""
 var _generated_size_class_id := ""
 var _generated_template_id := ""
 var _generated_profile_id := ""
+var _generated_faction_id := ""
+var _generated_hero_id := ""
 var _generated_player_count := 3
 var _generated_water_mode := "land"
 var _generated_underground := false
@@ -979,6 +983,20 @@ func _on_generated_profile_selected(index: int) -> void:
 	if index < 0 or index >= _generated_profile_picker.get_item_count():
 		return
 	_generated_profile_id = String(_generated_profile_picker.get_item_metadata(index))
+	_refresh_generated_random_map_setup()
+
+func _on_generated_faction_selected(index: int) -> void:
+	if index < 0 or index >= _generated_faction_picker.get_item_count():
+		return
+	_generated_faction_id = String(_generated_faction_picker.get_item_metadata(index))
+	_generated_hero_id = ScenarioSelectRulesScript.random_map_default_hero_id_for_faction(_generated_faction_id)
+	_rebuild_generated_hero_picker()
+	_refresh_generated_random_map_setup()
+
+func _on_generated_hero_selected(index: int) -> void:
+	if index < 0 or index >= _generated_hero_picker.get_item_count():
+		return
+	_generated_hero_id = String(_generated_hero_picker.get_item_metadata(index))
 	_refresh_generated_random_map_setup()
 
 func _on_generated_player_count_selected(index: int) -> void:
@@ -2614,6 +2632,10 @@ func _configure_generated_random_map_controls() -> void:
 		_generated_template_id = String(options.get("default_template_id", "translated_rmg_template_049_v1"))
 	if _generated_profile_id == "":
 		_generated_profile_id = String(options.get("default_profile_id", "translated_rmg_profile_049_v1"))
+	if _generated_faction_id == "":
+		_generated_faction_id = String(options.get("default_faction_id", "faction_embercourt"))
+	if _generated_hero_id == "":
+		_generated_hero_id = String(options.get("default_hero_id", "hero_lyra"))
 	if _generated_player_count <= 0:
 		_generated_player_count = int(options.get("default_player_count", 3))
 	_clamp_generated_player_count_to_template()
@@ -2626,10 +2648,14 @@ func _configure_generated_random_map_controls() -> void:
 	_rebuild_generated_option_picker(_generated_size_picker, options.get("size_classes", []), _generated_size_class_id, "size")
 	_rebuild_generated_option_picker(_generated_template_picker, options.get("templates", []), _generated_template_id, "template")
 	_rebuild_generated_profile_picker()
+	_rebuild_generated_option_picker(_generated_faction_picker, options.get("factions", []), _generated_faction_id, "faction")
+	_rebuild_generated_hero_picker()
 	_generated_template_picker.visible = false
 	_generated_profile_picker.visible = false
 	_generated_template_picker.tooltip_text = "Map layout is chosen automatically from the selected size and seed."
 	_generated_profile_picker.tooltip_text = "Map rules are chosen automatically for this setup."
+	_generated_faction_picker.tooltip_text = "Choose the faction for your starting town and forces."
+	_generated_hero_picker.tooltip_text = "Choose the commander who leads your selected faction on Day 1."
 
 	_rebuild_generated_player_count_picker()
 
@@ -2677,6 +2703,17 @@ func _rebuild_generated_option_picker(picker: OptionButton, options: Array, sele
 	if selected_index >= 0:
 		picker.select(selected_index)
 	picker.tooltip_text = "Choose the generated map %s." % label_key
+
+func _rebuild_generated_hero_picker() -> void:
+	var options := ScenarioSelectRulesScript.random_map_hero_options_for_faction(_generated_faction_id)
+	var selection_valid := false
+	for option in options:
+		if option is Dictionary and String(option.get("id", "")) == _generated_hero_id:
+			selection_valid = true
+			break
+	if not selection_valid:
+		_generated_hero_id = ScenarioSelectRulesScript.random_map_default_hero_id_for_faction(_generated_faction_id)
+	_rebuild_generated_option_picker(_generated_hero_picker, options, _generated_hero_id, "hero")
 
 func _rebuild_skirmish_browser() -> void:
 	_skirmish_entries = ScenarioSelectRulesScript.build_skirmish_browser_entries()
@@ -2800,7 +2837,11 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 			"islands": "Islands",
 		}.get(_generated_water_mode, "Land")
 		var level_label := "Surface + Underground" if _generated_underground else "Surface only"
-		plan_text = "Seed: %s | %s | %d players | %s | %s" % [
+		var faction := ContentService.get_faction(_generated_faction_id)
+		var hero := ContentService.get_hero(_generated_hero_id)
+		plan_text = "%s · %s | Seed: %s | %s | %d players | %s | %s" % [
+			String(faction.get("name", _generated_faction_id)),
+			String(hero.get("name", _generated_hero_id)),
 			seed_label,
 			ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
 			_generated_player_count,
@@ -3022,6 +3063,8 @@ func _set_generated_random_map_inputs_disabled(disabled: bool) -> void:
 		_generated_size_picker,
 		_generated_template_picker,
 		_generated_profile_picker,
+		_generated_faction_picker,
+		_generated_hero_picker,
 		_generated_player_count_picker,
 		_generated_water_picker,
 		_generated_underground_toggle,
@@ -3053,6 +3096,8 @@ func _generated_random_map_preview_setup() -> Dictionary:
 		"difficulty_label": ScenarioSelectRulesScript.difficulty_label(_selected_difficulty),
 		"scenario_id": "",
 		"scenario_name": "Generated Skirmish",
+		"player_faction_id": _generated_faction_id,
+		"player_hero_id": _generated_hero_id,
 		"size_class_id": _generated_size_class_id,
 		"size_class_label": ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
 		"template_id": "native_catalog_auto",
@@ -3093,7 +3138,9 @@ func _generated_random_map_config() -> Dictionary:
 		_generated_water_mode,
 		_generated_underground,
 		_generated_size_class_id,
-		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
+		_generated_faction_id,
+		_generated_hero_id
 	)
 	config["seed_source"] = seed_source
 	config["seed_input"] = raw_seed
@@ -4426,6 +4473,8 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 	var visible_controls := [
 		"seed",
 		"size_class",
+		"faction",
+		"hero",
 		"player_count",
 		"water_mode",
 		"level_count",
@@ -4437,6 +4486,10 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 		"seed": _generated_seed,
 		"size_class_id": _generated_size_class_id,
 		"size_class_label": ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
+		"faction_id": _generated_faction_id,
+		"faction_label": _generated_faction_picker.get_item_text(_generated_faction_picker.selected) if _generated_faction_picker.selected >= 0 else "",
+		"hero_id": _generated_hero_id,
+		"hero_label": _generated_hero_picker.get_item_text(_generated_hero_picker.selected) if _generated_hero_picker.selected >= 0 else "",
 		"player_count": _generated_player_count,
 		"water_mode": _generated_water_mode,
 		"underground": _generated_underground,
@@ -4444,6 +4497,10 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 		"level_options": _picker_item_labels(_generated_underground_toggle),
 		"retry_policy": ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
 		"size_options": _picker_item_labels(_generated_size_picker),
+		"faction_options": _picker_item_labels(_generated_faction_picker),
+		"faction_option_ids": _picker_item_metadata_strings(_generated_faction_picker),
+		"hero_options": _picker_item_labels(_generated_hero_picker),
+		"hero_option_ids": _picker_item_metadata_strings(_generated_hero_picker),
 		"player_count_options": _picker_item_labels(_generated_player_count_picker),
 		"player_count_values": _picker_item_metadata_ints(_generated_player_count_picker),
 		"water_options": _picker_item_labels(_generated_water_picker),
@@ -4683,6 +4740,24 @@ func validation_select_generated_profile(profile_id: String) -> bool:
 			continue
 		_generated_profile_picker.select(index)
 		_on_generated_profile_selected(index)
+		return true
+	return false
+
+func validation_select_generated_faction(faction_id: String) -> bool:
+	for index in range(_generated_faction_picker.get_item_count()):
+		if String(_generated_faction_picker.get_item_metadata(index)) != faction_id:
+			continue
+		_generated_faction_picker.select(index)
+		_on_generated_faction_selected(index)
+		return true
+	return false
+
+func validation_select_generated_hero(hero_id: String) -> bool:
+	for index in range(_generated_hero_picker.get_item_count()):
+		if String(_generated_hero_picker.get_item_metadata(index)) != hero_id:
+			continue
+		_generated_hero_picker.select(index)
+		_on_generated_hero_selected(index)
 		return true
 	return false
 
@@ -5408,6 +5483,8 @@ func _apply_visual_theme() -> void:
 		_generated_size_picker,
 		_generated_template_picker,
 		_generated_profile_picker,
+		_generated_faction_picker,
+		_generated_hero_picker,
 		_generated_player_count_picker,
 		_generated_water_picker,
 		_generated_underground_toggle,
