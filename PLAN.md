@@ -24,9 +24,41 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; audit the expanded live catalog and select the next coherent content-and-art batch before editing live catalogs.
-- Most recently completed implementation slice: `content-ten-commander-dominion-sieges-10184`, ten paired large-board siege operations that close the direct-lead floor and deepen the least-used authored encounters, towns, and units.
-- Current package boundary: matching Linux and Windows release exports measure 236223188 bytes, 13776812 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none selected; audit the expanded live catalog before starting the next coherent content-and-original-art batch.
+- Most recently completed implementation slice: `content-wild-atlas-accord-campaign-10184`, a six-chapter cross-faction campaign over the Frontier Mythic Habitat maps with exact witness handoff and original campaign art.
+- Current package boundary: matching Linux and Windows release exports measure 237107592 bytes, 12892408 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## The Wild Atlas Accord
+
+id: `content-wild-atlas-accord-campaign-10184`
+
+Status: completed.
+
+Completion evidence:
+- The Wild Atlas Accord is live as the twenty-fourth campaign and promotes all six Frontier Mythic Habitat maps into an exact Censerwing, Fenmirror, Prismwake, Knotstag, Gaugecoil, and Gloambell chapter sequence; campaign coverage rises from 102 to 108 scenarios while every map remains available for skirmish.
+- Each chapter converts its existing habitat-recruit objective into one explicit atlas-bearing witness, gates the next chapter on victory plus that witness, and transfers only the witness and capped common stores; commander progression, armies, spells, artifacts, and every rare resource remain chapter-local.
+- The Gloambell finale hydrates roster hero Tova Rootwright as its fixed Thornwake rival. Seven separately generated transparent originals produce one 128px campaign emblem and six byte-distinct 64px chapter seals with accessible non-color descriptions and retained prompt/hash provenance.
+- The one consolidated smoke passed six exact campaign launches and leads, eighteen production battle resolutions, six live habitat claims and exact creature recruits, six witness handoffs, six victories, six save-version-9 round trips, the named finale rival, seven campaign art identities, and six inspected live captures.
+- Repository validation passed once after the complete batch. Sequential Linux and Windows package gates both booted successfully, included exactly 24 emblems and 108 chapter seals, excluded all generated source art, and produced the same 237107592-byte PCK below the unchanged ceiling.
+
+Current finding:
+- all six Frontier Mythic Habitat maps are complete live skirmishes, but none has a campaign route; 185 of the 287 active scenarios remain outside campaign progression;
+- the existing campaign runtime already supports cross-commander chapter gating, bounded common-resource carryover, personal-state isolation, narrative browser copy, save version 9, and exact emblem/seal presentation without another subsystem;
+- promoting the habitat sequence into one campaign makes the new creatures part of persistent player progression while seven original identities add visible campaign presentation rather than unused art.
+
+Implementation boundary:
+- author one six-chapter cross-faction campaign in the exact habitat order Censerwing, Fenmirror, Prismwake, Knotstag, Gaugecoil, and Gloambell, with complete briefing, intel, stakes, aftermath, journal, unlock, and completion copy;
+- add one exact habitat-witness hook per chapter, export only that witness plus tightly capped common resources, reject hero progression, army, spell, artifact, and rare-resource leakage, and place a fixed roster-backed Thornwake rival on the final Gloambell battle;
+- generate one original campaign emblem and six byte-distinct chapter seals with strong non-color silhouettes, accessible descriptions, exact source/runtime provenance, source exclusion, and symmetric Linux/Windows packaging.
+
+Completion criteria:
+- all six chapters launch through campaign authority in order, remain available as skirmishes, complete their three production battles and habitat claim/recruit objective, hand off only the exact witness and capped common stores, win, save/resume, and complete the campaign;
+- the campaign browser resolves one 128px emblem and six distinct 64px chapter seals, while the final battle hydrates its fixed roster-backed rival and all art appears in representative captures;
+- run one consolidated six-chapter gameplay/art/save smoke only after the full batch, then repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling; commit and push without a whole-game release-readiness claim.
+
+Non-goals:
+- no new faction, hero definition, town definition, unit, building, spell, artifact, encounter formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes campaign, insignia, name, text, art, or protected visual expression.
 
 ## Ten Commander Dominion Sieges
 

@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit the expanded 281-scenario live catalog and select the next coherent content-and-original-art batch before running another smoke."
+    "Audit the expanded 287-scenario live catalog and select the next coherent content-and-original-art batch before running another smoke."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Six Frontier Mythic Habitats is complete: six original neutral creatures, six recruitable habitats, six authored skirmishes, eighteen battle fronts, and matching Linux/Windows packages are validated.",
+  "currentNotes": "The Wild Atlas Accord is complete and validated: all six Frontier Mythic Habitat maps now form one cross-faction campaign with exact witness handoff, a named finale rival, and seven original campaign identities.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-frontier-mythic-habitats-10184",
-  "currentSliceId": "content-six-frontier-mythic-habitats-10184",
-  "currentSliceNotes": "Completed and validated; the broader content-and-original-art goal remains active, but no follow-on production slice has been selected yet.",
+  "currentSlice": "content-wild-atlas-accord-campaign-10184",
+  "currentSliceId": "content-wild-atlas-accord-campaign-10184",
+  "currentSliceNotes": "Completed all six campaign chapters and seven original art identities before one consolidated smoke; repository validation and sequential Linux/Windows package gates passed at 237107592 bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Six Frontier Mythic Habitats",
-  "currentSliceUpdatedAt": "2026-09-01T02:20:10Z",
+  "currentSliceTitle": "The Wild Atlas Accord",
+  "currentSliceUpdatedAt": "2026-09-01T02:43:20Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107622,6 +107622,16 @@
       "startedAt": "2026-09-01T02:00:00Z",
       "notes": "Completed six original neutral creatures with full unit-art surfaces, six original recruitable habitats with unclaimed/controlled art, six guarded encounters, eighteen authored battle fronts, and six 18x14 faction skirmishes. The single consolidated smoke passed six launches, eighteen production payloads, six representative live victories, six claims/recruits, six objective victories, six exact-art routes, six reviewed captures, and six save-v9 round trips; repository validation and matching 237190092-byte Linux/Windows package gates passed.",
       "completedAt": "2026-09-01T02:20:10Z"
+    },
+    {
+      "id": "content-wild-atlas-accord-campaign-10184",
+      "title": "The Wild Atlas Accord",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-09-01T02:43:20Z",
+      "startedAt": "2026-09-01T02:25:53Z",
+      "notes": "Completed one six-chapter cross-faction campaign over the Frontier Mythic Habitat maps with exact habitat-witness handoff, bounded common-resource-only carryover, roster-backed Tova Rootwright finale, and seven separately generated original campaign art identities. The single consolidated smoke passed six launches/leads, eighteen battle resolutions, six claims/recruits, six witness handoffs, six victories, six save-v9 round trips, seven art identities, and the named rival. Repository validation and sequential Linux/Windows package gates passed with 24 emblems, 108 chapter seals, source-art exclusion, clean startup, and a matching 237107592-byte PCK.",
+      "completedAt": "2026-09-01T02:43:20Z"
     }
   ],
   "project": "heroes-like",
@@ -107631,8 +107641,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "No blocker remains for Ten Commander Dominion Sieges. Broader production completion and release readiness remain open outside this validated slice.",
-  "remainingWork": "Audit the expanded 281-scenario live catalog and select the next coherent content-and-original-art batch; do not run another smoke until that batch is complete.",
+  "remainingGap": "No blocker remains for The Wild Atlas Accord. Broader production completion and release readiness remain open outside this validated slice.",
+  "remainingWork": "Audit the expanded 287-scenario live catalog and select the next coherent content-and-original-art batch; do not run another smoke until that batch is complete.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -108166,7 +108176,7 @@
   ],
   "summary": "Completed Six Marchland Warworks as one coherent six-unit, six-building, six-map, twelve-master production-content batch with consolidated validation.",
   "taskId": "10184",
-  "updatedAt": "2026-09-01T01:13:01Z",
+  "updatedAt": "2026-09-01T02:43:20Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

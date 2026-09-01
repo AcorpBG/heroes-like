@@ -1,0 +1,91 @@
+{
+  "schema_id": "wild_atlas_accord_campaign_art_v1",
+  "content_batch_id": "content-wild-atlas-accord-campaign-10184",
+  "generator_mode": "built_in_image_gen",
+  "generated_at": "2026-09-01",
+  "campaign_id": "campaign_wild_atlas_accord",
+  "runtime_pipeline": "Seven separately generated transparent originals are alpha-trimmed onto 1254px source masters and Lanczos-downscaled to one 128px emblem and six 64px chapter seals. Source masters are excluded from release packages.",
+  "generated_originals": [
+    "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-5a35253d-7108-4939-9d04-63cdc1c4d31f.png",
+    "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-389bcc5e-7bae-48fd-96ec-7056baac2232.png",
+    "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-3f30ef28-3310-4f66-8582-ae7307c3ab9d.png",
+    "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-376bd759-07b3-48b7-a033-4f1c971d7079.png",
+    "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7c95de3c-6580-476d-a18d-48e8030e92ab.png",
+    "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0471343b-dbf8-4cb6-8dcb-664187bb93c1.png",
+    "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ae1655b3-ecaf-4c72-9ec8-ed460b3619b6.png"
+  ],
+  "prompts": [
+    "Original transparent campaign emblem: an open asymmetrical brass field atlas with six irregular clasps orbiting a pale compass-seed flame; the clasps suggest ember vanes, crescent shell, prism lens, root antlers, pressure rings, and a drowned bell; hand-painted fantasy strategy UI heraldry, strong non-color silhouette, no characters, text, logo, watermark, franchise design, scenery, or border.",
+    "Original transparent chapter seal: split basalt chimney, four ember vanes, curved bronze cage ribs, empty censer; hand-painted fantasy strategy UI heraldry, strong non-color silhouette, no creature, character, text, logo, watermark, franchise design, scenery, or border.",
+    "Original transparent chapter seal: unequal crescent shells, dark mirror basin, reed chain and root lip; hand-painted fantasy strategy UI heraldry, strong non-color silhouette, no creature, character, text, logo, watermark, franchise design, scenery, or border.",
+    "Original transparent chapter seal: offset oval lens, two asymmetric prism sails, three crystal keels; hand-painted fantasy strategy UI heraldry, strong non-color silhouette, no creature, character, text, logo, watermark, franchise design, scenery, or border.",
+    "Original transparent chapter seal: unequal living-root antlers, hollow seed dais, three seed lanterns; hand-painted fantasy strategy UI heraldry, strong non-color silhouette, no creature, character, text, logo, watermark, franchise design, scenery, or border.",
+    "Original transparent chapter seal: three brass pressure rings, diagonal wedge drill rail, two blank gauges, red relief valve; hand-painted fantasy strategy UI heraldry, strong non-color silhouette, no creature, character, text, logo, watermark, franchise design, scenery, or border.",
+    "Original transparent chapter seal: tilted whalebone arch, drowned bell, hooked keel stair, four sounding rods, two tideglass pools; hand-painted fantasy strategy UI heraldry, strong non-color silhouette, no creature, character, text, logo, watermark, franchise design, scenery, or border."
+  ],
+  "assets": [
+    {
+      "id": "campaign_emblem_wild_atlas_accord",
+      "role": "campaign_emblem",
+      "source_path": "res://art/campaigns/source/generated/emblems/wild_atlas_accord_source.png",
+      "runtime_path": "res://art/campaigns/runtime/emblems/wild_atlas_accord.png",
+      "source_sha256": "6a2e99a4bf4f3d4f034910a2fcf1b6cc296e7aa66e55a8e9d15e1cb163bca12f",
+      "runtime_sha256": "d15376abdf12cb582e9aeced5c2bfac478750de1089a261203d19f8e5916882d",
+      "non_color_identity": "An open asymmetrical field atlas carries six materially distinct clasps around a pale compass-seed flame."
+    },
+    {
+      "id": "campaign_chapter_seal_emberwell_censerwing_updraft",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/censerwing_updraft_seal_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/censerwing_updraft_seal.png",
+      "source_sha256": "95430f1b1f742c63d08140b89f27d36d1359047359f41a184b2b7ab169c3c31e",
+      "runtime_sha256": "a8018074c049830c938f502ff968400a8e2c051128ae84d8961f6037f5ed9d64",
+      "non_color_identity": "A split basalt chimney and four ember vanes curve around an empty bronze censer."
+    },
+    {
+      "id": "campaign_chapter_seal_fenhook_fenmirror_muster",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/fenmirror_basin_seal_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/fenmirror_basin_seal.png",
+      "source_sha256": "64ed8ea1814cfdadbdec36529ac2f437af9287d29c93a728a9ced95fd706f42a",
+      "runtime_sha256": "85515b531569206d76c36cd6ce118fea6decbf25f9669c1e03388f263d270264",
+      "non_color_identity": "Two unequal crescent shells rise around a dark mirror basin rooted into a reed-wrapped landing."
+    },
+    {
+      "id": "campaign_chapter_seal_glasswind_prismwake_crossing",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/prismwake_crossing_seal_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/prismwake_crossing_seal.png",
+      "source_sha256": "926b2a5f7b1e3639d0f9125094769f8c59823cc953d2db40cd67be46be6978db",
+      "runtime_sha256": "7907ae169e9f5bf9155637dcf6e4797fbd777b35b91e723175273b4f8d6f127b",
+      "non_color_identity": "Two asymmetric prism sails and three crystal keels frame an offset oval lens."
+    },
+    {
+      "id": "campaign_chapter_seal_boltroot_knotstag_circuit",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/rootcrown_circuit_seal_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/rootcrown_circuit_seal.png",
+      "source_sha256": "4001a8a4cab39c3a7c629da32b988360319c6c25dd71b70cfc115cce89f02bb0",
+      "runtime_sha256": "f6e7279e106ac47a3b1fa0a2d08d5cbb826128206ba311da6c185383f423257a",
+      "non_color_identity": "Unequal living-root antlers surround a hollow seed dais and three hanging seed lanterns."
+    },
+    {
+      "id": "campaign_chapter_seal_debtrune_gaugecoil_burrow",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/gaugecoil_burrow_seal_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/gaugecoil_burrow_seal.png",
+      "source_sha256": "0783ca08f7427f636bef3b799617b7c9a4c2c6dfd54a18f25851c4ef537d7748",
+      "runtime_sha256": "89c73f5d70d965345ddcc1d27e9eb8cc53b38dfcf5a4b30d3bb6c98343bfd586",
+      "non_color_identity": "Three brass pressure rings carry a diagonal drill rail, two blank gauges, and a red relief valve."
+    },
+    {
+      "id": "campaign_chapter_seal_mistcorsair_gloambell_sounding",
+      "role": "chapter_seal",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/gloambell_sounding_seal_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/gloambell_sounding_seal.png",
+      "source_sha256": "a586b2d06db9bcb5a03c9655f76f00a4c887da6ad9400527ee2cb8d1ae5fd1cf",
+      "runtime_sha256": "9cea9264b5555fd4ccee2b5678bcbde97a14520492a36c411540ea05bdb93d6a",
+      "non_color_identity": "A drowned bell hangs beneath a tilted whalebone arch above two tideglass pools and a hooked keel stair."
+    }
+  ]
+}
