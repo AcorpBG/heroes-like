@@ -1262,7 +1262,7 @@ func _assert_rail_word_boundary_ellipsis_contract(shell: Control) -> bool:
 			or not briefing.is_visible_in_tree() \
 			or not panel_rect.encloses(label_rect) \
 			or not hero_panel.get_global_rect().encloses(army_rect) \
-			or visible_rail_count < 6 \
+			or visible_rail_count < (2 if width == 1280 else 4) \
 			or fitting_rail_count < 1 \
 			or (width == 1280 and army_text_width <= army_rect.size.x + 0.5):
 			return _fail_overworld_objective_brief("Rail did not preserve exact semantic text/tooltips and native word-ellipsis pixel ownership at %d: briefing_full=%s briefing=%s expected=%s army_full=%s army=%s expected_army=%s army_width=%s army_rect=%s visible=%s fitting=%s label=%s panel=%s." % [width, full_briefing, briefing.text, expected_visible, full_army, army.text, expected_army, army_text_width, army_rect, visible_rail_count, fitting_rail_count, label_rect, panel_rect])
@@ -1555,7 +1555,7 @@ func _assert_end_turn_readiness_confirmation_contract(shell: Node) -> bool:
 			"Push toward Claim Duskfen Bastion",
 			"Primary order:",
 			"Confirmation:",
-			"Movement remains before ending the day.",
+			"A route order is available before ending the day.",
 			"Spend check:",
 			"unspent move will not carry over",
 			"End turn forecast:",

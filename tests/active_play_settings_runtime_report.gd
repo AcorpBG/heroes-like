@@ -327,7 +327,7 @@ func _battle_system_command_layout_contract(shell, compact: bool) -> Dictionary:
 		structural_nodes_present
 		and footer_row.columns == (1 if compact else 2)
 		and system_panel.is_visible_in_tree()
-		and (system_panel.get_theme_stylebox("panel") is StyleBoxEmpty) == compact
+		and system_panel.get_theme_stylebox("panel") is StyleBoxEmpty
 		and system_body.is_visible_in_tree() == not compact
 		and speed_bar.is_visible_in_tree() == not compact
 		and action_guide.text.split("\n", false).size() == (1 if compact else 3)

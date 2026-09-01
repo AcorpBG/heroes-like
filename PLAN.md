@@ -17140,6 +17140,37 @@ Non-goals:
 - no gameplay, balance, content, save-schema, native RMG, signing, publication, or release-readiness change;
 - no claim that Wine replaces clean native Windows certification.
 
+## Scenery-First Core UI Composition
+
+id: `ux-scenery-first-core-ui-composition-10184`
+
+Status: completed 2026-09-01.
+
+Current finding:
+- the main menu, overworld, town, battle, and scenario outcome first views expose too much explanatory text and layer multiple generic/procedural panel borders over their dominant scenery or play surface;
+- the detailed information already has tooltip, contextual drawer, catalog, or secondary-board paths, so the first view can be substantially quieter without removing player authority;
+- existing authored screen art should remain the dominant composition, with a single original shared image frame reserved for tall command rails and accessibility fallbacks retained for high contrast.
+
+Implementation boundary:
+- reduce redundant headings, reports, and visible instructions across the five core screens while retaining full explanations in tooltips and explicit Details/catalog flows;
+- replace shallow stacked panel treatments with transparent overlays, preserve authored scenic/map/battlefield frames, and use one original transparent nine-slice asset only where a tall management rail needs a readable edge;
+- validate 1280x720 and 1920x1080 first views, compact/high-contrast behavior, core command reachability, repository integrity, and Linux/Windows packaging.
+
+Completion criteria:
+- each core first view keeps scenery or the active play surface dominant, exposes only concise status/action copy, and retains detailed information on demand;
+- standard contrast uses borderless shallow overlays, high contrast retains readable non-texture fallbacks, and responsive layouts keep all primary commands contained at supported sizes;
+- repository validation, focused UI runtime coverage, visual captures at both target sizes, and sequential Linux/Windows packaged startup pass.
+
+Completion result:
+- the five core first views now prioritize the authored scenery, map, or battlefield; redundant headings and instructional paragraphs were removed, compact copy retains full tooltips, and the outcome recap starts collapsed behind Details;
+- shallow shell/footer/action panels are borderless in standard contrast, high contrast keeps explicit flat fallbacks, and one original transparent ironwood/bronze nine-slice frame is limited to the tall Overworld and Town management rails;
+- repository validation, clean editor parsing, Army Stack Management, Player Comprehension Layout, Menu/Outcome Visual, and Active-Play Settings runtime coverage pass; reviewed captures pass at 1280x720 and 1920x1080;
+- Linux and Windows release exports/startups pass with matching 237722656-byte PCKs, including the imported shared UI-frame source, metadata, and texture payload.
+
+Non-goals:
+- no gameplay, balance, AI, content, save-schema, or native RMG behavior changes;
+- no whole-game release-readiness, signing, publication, or clean native Windows certification claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

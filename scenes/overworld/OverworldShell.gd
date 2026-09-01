@@ -13,6 +13,7 @@ const UI_ART_OVERWORLD_PARCHMENT_PANEL := "res://art/ui/runtime/overworld/parchm
 const UI_ART_OVERWORLD_WOOD_PANEL := "res://art/ui/runtime/overworld/wood_panel.png"
 const UI_ART_OVERWORLD_MINIMAP_FRAME := "res://art/ui/runtime/overworld/minimap_frame.png"
 const UI_ART_OVERWORLD_HERO_FRAME := "res://art/ui/runtime/overworld/hero_frame.png"
+const UI_ART_SHARED_HUD_FRAME := "res://art/ui/runtime/shared/hud_frame_ornate.png"
 const OVERWORLD_VFX_MANIFEST_PATH := "res://content/overworld_vfx_manifest.json"
 const KEYBOARD_HERO_MOVE_DELTAS := {
 	&"hero_move_up": Vector2i.UP,
@@ -459,7 +460,7 @@ func _apply_responsive_layout() -> void:
 	var large_scale_footer := constrained_desktop_band and SettingsService.ui_scale_percent() >= 130
 	_command_row.add_theme_constant_override("separation", 4 if constrained_desktop_band else 6)
 	_sidebar_shell_panel.visible = not narrow_layout
-	_sidebar_shell_panel.custom_minimum_size.x = 284.0 if compact_layout else 320.0
+	_sidebar_shell_panel.custom_minimum_size.x = 272.0 if compact_layout else 308.0
 	_briefing_panel.visible = not compact_layout
 	_commitment_panel.visible = not compact_layout and _active_drawer == ""
 	_cue_chip_panel.visible = not compact_layout
@@ -473,6 +474,10 @@ func _apply_responsive_layout() -> void:
 	_save_status_label.visible = not narrow_layout
 	_save_slot_picker.visible = not narrow_layout
 	_map_view.custom_minimum_size = Vector2(520.0, 320.0) if compact_layout else Vector2(640.0, 400.0)
+	_army_label.visible = false
+	_heroes_label.visible = false
+	_action_title_label.visible = false
+	_frontier_indicator_label.visible = false
 	_system_panel.custom_minimum_size.x = 220.0 if narrow_layout else (252.0 if compact_layout else 308.0)
 	_primary_action_button.custom_minimum_size.x = 170.0 if large_scale_footer else 210.0
 	_primary_action_button.clip_text = true
@@ -12230,6 +12235,14 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_art_panel(_command_band_panel, UI_ART_OVERWORLD_RESOURCE_BAR, "earth", 44, 10, Color(0.70, 0.68, 0.62, 1.0))
 	FrontierVisualKit.apply_art_panel(_orders_panel, UI_ART_OVERWORLD_WOOD_PANEL, "ink", 62, 10, Color(0.58, 0.58, 0.54, 1.0))
 	FrontierVisualKit.apply_art_panel(_system_panel, UI_ART_OVERWORLD_RESOURCE_BAR, "banner", 44, 10, Color(0.72, 0.70, 0.64, 1.0))
+	FrontierVisualKit.apply_clear_panel(_shell_panel)
+	FrontierVisualKit.apply_clear_panel(_map_panel)
+	FrontierVisualKit.apply_clear_panel(_top_strip_panel)
+	FrontierVisualKit.apply_clear_panel(_hero_panel)
+	FrontierVisualKit.apply_clear_panel(_event_panel)
+	FrontierVisualKit.apply_clear_panel(_action_panel)
+	FrontierVisualKit.apply_ornate_frame(_sidebar_shell_panel, UI_ART_SHARED_HUD_FRAME, "frame", 112, 8, Color(0.78, 0.76, 0.70, 0.94))
+	FrontierVisualKit.apply_clear_panel(_command_band_panel)
 	_command_spine.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 	FrontierVisualKit.apply_button(_open_command_button, "secondary", 128.0, 34.0, 13)

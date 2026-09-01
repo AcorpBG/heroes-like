@@ -40,7 +40,7 @@ const MAIN_MENU_STAGE_DOCK_ASSET_PATH := "res://art/ui/runtime/main_menu/stage_d
 const MAIN_MENU_STAGE_DOCK_TEXTURE_SIZE := Vector2(1024.0, 1024.0)
 const MAIN_MENU_STAGE_DOCK_TEXTURE_MARGINS := Vector4(56.0, 56.0, 56.0, 56.0)
 const MAIN_MENU_STAGE_DOCK_TEXTURE_MODULATE := Color(0.86, 0.88, 0.88, 0.98)
-const MAIN_MENU_POCKET_FRAME_MODEL := "shared_stage_cartography_quiet_pocket_frame"
+const MAIN_MENU_POCKET_FRAME_MODEL := "borderless_scenery_overlay_with_high_contrast_fallback"
 const MAIN_MENU_POCKET_TEXTURE_MARGINS := Vector4(56.0, 56.0, 56.0, 56.0)
 const MAIN_MENU_POCKET_TEXTURE_MODULATE := Color(0.72, 0.76, 0.78, 0.88)
 const MAIN_MENU_WORDMARK_FACE_COLOR := Color(0.98, 0.84, 0.46, 1.0)
@@ -53,9 +53,9 @@ const MAIN_MENU_EYEBROW_OUTLINE_COLOR := Color(0.04, 0.03, 0.02, 0.92)
 const MAIN_MENU_EYEBROW_SHADOW_COLOR := Color(0.0, 0.0, 0.0, 0.66)
 const MAIN_MENU_SUBTITLE_FACE_COLOR := Color(0.86, 0.90, 0.93, 1.0)
 const MAIN_MENU_SUBTITLE_HIGH_CONTRAST_FACE_COLOR := Color(0.96, 0.98, 1.0, 1.0)
-const MAIN_MENU_LOGO_POCKET_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.152)
-const MAIN_MENU_LOGO_POCKET_NOTICE_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.200)
-const MAIN_MENU_FOOTER_POCKET_ANCHORS := Rect2(0.032, 0.895, 0.340, 0.080)
+const MAIN_MENU_LOGO_POCKET_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.127)
+const MAIN_MENU_LOGO_POCKET_NOTICE_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.172)
+const MAIN_MENU_FOOTER_POCKET_ANCHORS := Rect2(0.032, 0.922, 0.340, 0.053)
 const MAIN_MENU_STAGE_DOCK_WINDOW_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080), Vector2i(1280, 720)]
 const MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
 const MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
@@ -111,6 +111,10 @@ func _run_main_menu_smoke() -> bool:
 	var original_high_contrast := SettingsService.high_contrast_ui_enabled()
 	var original_color_cue_mode := SettingsService.color_cue_mode_id()
 	var original_keyboard_navigation_layout := SettingsService.keyboard_navigation_layout_id()
+	if original_ui_scale != 100:
+		SettingsService.set_ui_scale_percent(100)
+	if original_high_contrast:
+		SettingsService.set_high_contrast_ui_enabled(false)
 	var session = ScenarioFactory.create_session(
 		"river-pass",
 		"normal",
@@ -123,6 +127,7 @@ func _run_main_menu_smoke() -> bool:
 	add_child(shell)
 	await get_tree().process_frame
 	await get_tree().process_frame
+	var initial_high_contrast := SettingsService.high_contrast_ui_enabled()
 
 	var hero_stage = shell.get_node_or_null("%HeroStage")
 	if hero_stage == null:
@@ -155,7 +160,12 @@ func _run_main_menu_smoke() -> bool:
 		return false
 	var title_rect: Rect2 = (public_title as Label).get_global_rect()
 	var logo_panel: Control = shell.get_node("LogoPocketPanel") as Control
+	var footer_panel := shell.get_node_or_null("FooterPocketPanel") as PanelContainer
 	var logo_rect: Rect2 = logo_panel.get_global_rect()
+	if footer_panel == null or not footer_panel.is_visible_in_tree():
+		push_error("Main menu smoke: compact first-view expedition footer is missing.")
+		get_tree().quit(1)
+		return false
 	var frontier_crest = shell.get_node_or_null("LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader/WarGlyph")
 	if not (frontier_crest is TextureRect) or not _assert_frontier_crest_asset(frontier_crest as TextureRect):
 		get_tree().quit(1)
@@ -170,7 +180,7 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: the AURELION REACH title overflows the compact logo pocket.")
 		get_tree().quit(1)
 		return false
-	if not _main_menu_wordmark_theme_exact(shell, original_high_contrast):
+	if not _main_menu_wordmark_theme_exact(shell, initial_high_contrast):
 		get_tree().quit(1)
 		return false
 
@@ -253,8 +263,10 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	var editor_utility_frame: Dictionary = first_view_snapshot.get("editor_utility_frame", {}) if first_view_snapshot.get("editor_utility_frame", {}) is Dictionary else {}
-	if String(editor_utility_frame.get("style_class", "")) != "StyleBoxTexture" \
-			or String(editor_utility_frame.get("normal_texture_path", "")) != "res://art/ui/runtime/shared/button_secondary_normal.png" \
+	var expected_editor_style_class := "StyleBoxFlat" if initial_high_contrast else "StyleBoxTexture"
+	var expected_editor_texture_path := "" if initial_high_contrast else "res://art/ui/runtime/shared/button_secondary_normal.png"
+	if String(editor_utility_frame.get("style_class", "")) != expected_editor_style_class \
+			or String(editor_utility_frame.get("normal_texture_path", "")) != expected_editor_texture_path \
 			or not is_equal_approx(float(editor_utility_frame.get("anchor_top", 0.0)), 0.681) \
 			or not is_equal_approx(float(editor_utility_frame.get("anchor_bottom", 0.0)), 0.729) \
 			or String(editor_utility_frame.get("tooltip_text", "")) != (editor_button as Button).tooltip_text:
@@ -995,7 +1007,7 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	var contrast_pocket_surface: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")
-	if String(contrast_pocket_surface.get("rendering_mode", "")) != "smoke_fallback" \
+	if String(contrast_pocket_surface.get("rendering_mode", "")) != "high_contrast_fallback" \
 			or String(contrast_pocket_surface.get("logo_style_class", "")) != "StyleBoxFlat" \
 			or String(contrast_pocket_surface.get("footer_style_class", "")) != "StyleBoxFlat" \
 			or String(contrast_pocket_surface.get("logo_texture_path", "")) != "" \
@@ -1042,12 +1054,13 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: Stage Dock surface did not restore its original contrast-dependent rendering mode: %s." % [restored_stage_surface])
 		get_tree().quit(1)
 		return false
-	var expected_restored_pocket_mode := "smoke_fallback" if original_high_contrast else "authored_cartography_pockets"
+	var expected_restored_pocket_mode := "high_contrast_fallback" if original_high_contrast else "borderless_scenery_overlay"
+	var expected_restored_pocket_class := "StyleBoxFlat" if original_high_contrast else "StyleBoxEmpty"
 	if String(restored_pocket_surface.get("rendering_mode", "")) != expected_restored_pocket_mode \
-			or String(restored_pocket_surface.get("logo_style_class", "")) != expected_restored_class \
-			or String(restored_pocket_surface.get("footer_style_class", "")) != expected_restored_class \
-			or (not original_high_contrast and String(restored_pocket_surface.get("logo_texture_path", "")) != MAIN_MENU_STAGE_DOCK_ASSET_PATH) \
-			or (not original_high_contrast and String(restored_pocket_surface.get("footer_texture_path", "")) != MAIN_MENU_STAGE_DOCK_ASSET_PATH):
+			or String(restored_pocket_surface.get("logo_style_class", "")) != expected_restored_pocket_class \
+			or String(restored_pocket_surface.get("footer_style_class", "")) != expected_restored_pocket_class \
+			or (not original_high_contrast and String(restored_pocket_surface.get("logo_texture_path", "")) != "") \
+			or (not original_high_contrast and String(restored_pocket_surface.get("footer_texture_path", "")) != ""):
 		push_error("Main menu smoke: first-view pocket surfaces did not restore their original contrast-dependent rendering mode: %s." % [restored_pocket_surface])
 		get_tree().quit(1)
 		return false
@@ -1504,6 +1517,11 @@ func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel
 			return false
 		for state in ["normal", "hover", "pressed", "disabled"]:
 			var style := editor_button.get_theme_stylebox(state)
+			if SettingsService.high_contrast_ui_enabled():
+				if not (style is StyleBoxFlat):
+					push_error("Main menu smoke: Editor utility %s state is not the high-contrast fallback at %s." % [state, requested_size])
+					return false
+				continue
 			if not (style is StyleBoxTexture):
 				push_error("Main menu smoke: Editor utility %s state is not asset-backed at %s." % [state, requested_size])
 				return false
@@ -1531,6 +1549,8 @@ func _main_menu_wordmark_theme_exact(shell: Control, expected_high_contrast: boo
 	var exact := title.text == "AURELION REACH" \
 		and eyebrow.text == "KINGDOM FRONT" \
 		and subtitle.text == "Choose the next march from the border citadel." \
+		and not eyebrow.visible \
+		and not subtitle.visible \
 		and title.get_theme_font_size("font_size") == 38 \
 		and eyebrow.get_theme_font_size("font_size") == 14 \
 		and subtitle.get_theme_font_size("font_size") == 14 \
@@ -1555,30 +1575,27 @@ func _main_menu_pocket_summary_exact(summary: Dictionary, viewport_size: Vector2
 	var viewport_rect := Rect2(Vector2.ZERO, viewport_size)
 	var logo_rect: Rect2 = summary.get("logo_rect", Rect2())
 	var footer_rect: Rect2 = summary.get("footer_rect", Rect2())
+	var high_contrast := bool(summary.get("high_contrast", false))
+	var expected_style_class := "StyleBoxFlat" if high_contrast else "StyleBoxEmpty"
+	var expected_rendering_mode := "high_contrast_fallback" if high_contrast else "borderless_scenery_overlay"
 	var checks := {
 		"model": String(summary.get("model", "")) == MAIN_MENU_POCKET_FRAME_MODEL,
 		"asset_path": String(summary.get("asset_path", "")) == MAIN_MENU_STAGE_DOCK_ASSET_PATH,
 		"asset_exists": bool(summary.get("asset_exists", false)),
-		"logo_style": String(summary.get("logo_style_class", "")) == "StyleBoxTexture",
-		"footer_style": String(summary.get("footer_style_class", "")) == "StyleBoxTexture",
-		"logo_texture": String(summary.get("logo_texture_path", "")) == MAIN_MENU_STAGE_DOCK_ASSET_PATH,
-		"footer_texture": String(summary.get("footer_texture_path", "")) == MAIN_MENU_STAGE_DOCK_ASSET_PATH,
-		"logo_margins": summary.get("logo_texture_margins", Vector4.ZERO) == MAIN_MENU_POCKET_TEXTURE_MARGINS,
-		"footer_margins": summary.get("footer_texture_margins", Vector4.ZERO) == MAIN_MENU_POCKET_TEXTURE_MARGINS,
-		"logo_modulate": summary.get("logo_modulate", Color.WHITE) == MAIN_MENU_POCKET_TEXTURE_MODULATE,
-		"footer_modulate": summary.get("footer_modulate", Color.WHITE) == MAIN_MENU_POCKET_TEXTURE_MODULATE,
+		"logo_style": String(summary.get("logo_style_class", "")) == expected_style_class,
+		"footer_style": String(summary.get("footer_style_class", "")) == expected_style_class,
+		"logo_texture": String(summary.get("logo_texture_path", "")) == "",
+		"footer_texture": String(summary.get("footer_texture_path", "")) == "",
 		"logo_anchors": (summary.get("logo_anchors", Rect2()) as Rect2).position.distance_to(MAIN_MENU_LOGO_POCKET_ANCHORS.position) <= 0.0001 \
 			and (summary.get("logo_anchors", Rect2()) as Rect2).size.distance_to(MAIN_MENU_LOGO_POCKET_ANCHORS.size) <= 0.0001,
 		"footer_anchors": (summary.get("footer_anchors", Rect2()) as Rect2).position.distance_to(MAIN_MENU_FOOTER_POCKET_ANCHORS.position) <= 0.0001 \
 			and (summary.get("footer_anchors", Rect2()) as Rect2).size.distance_to(MAIN_MENU_FOOTER_POCKET_ANCHORS.size) <= 0.0001,
 		"logo_visible": bool(summary.get("logo_visible", false)),
-		"footer_visible": bool(summary.get("footer_visible", false)),
 		"title": String(summary.get("title_text", "")) == "AURELION REACH",
-		"footer_copy_exact": String(summary.get("active_expedition_text", "")) == String(summary.get("active_expedition_tooltip", "")),
-		"load_copy": String(summary.get("active_expedition_text", "")).contains("Load: choose a saved expedition."),
-		"quit_copy": String(summary.get("active_expedition_text", "")).contains("Quit check: save first automatically, then closes client."),
-		"standard_contrast": not bool(summary.get("high_contrast", true)),
-		"rendering_mode": String(summary.get("rendering_mode", "")) == "authored_cartography_pockets",
+		"footer_one_line": String(summary.get("active_expedition_text", "")).split("\n", false).size() == 1,
+		"load_copy_in_tooltip": String(summary.get("active_expedition_tooltip", "")).contains("Load: choose a saved expedition."),
+		"quit_copy_in_tooltip": String(summary.get("active_expedition_tooltip", "")).contains("Quit check: save first automatically, then closes client."),
+		"rendering_mode": String(summary.get("rendering_mode", "")) == expected_rendering_mode,
 		"high_contrast_fallback": String(summary.get("high_contrast_fallback_class", "")) == "StyleBoxFlat",
 		"missing_asset_fallback": String(summary.get("missing_asset_fallback_class", "")) == "StyleBoxFlat",
 		"fallbacks_texture_free": bool(summary.get("fallbacks_texture_free", false)),
@@ -1784,27 +1801,26 @@ func _assert_footer_pocket_containment(shell: Control, viewport_size: Vector2, c
 		return false
 	var viewport_rect := Rect2(Vector2.ZERO, viewport_size)
 	var footer_rect := footer_panel.get_global_rect()
-	var title_rect := footer_title.get_global_rect()
 	var body_rect := footer_body.get_global_rect()
 	var body_lines := footer_body.text.split("\n", false)
 	var tooltip_lines := footer_body.tooltip_text.split("\n", false)
 	if not footer_panel.is_visible_in_tree() \
 			or footer_panel.grow_vertical != Control.GROW_DIRECTION_BEGIN \
 			or not is_equal_approx(footer_panel.anchor_left, 0.032) \
-			or not is_equal_approx(footer_panel.anchor_top, 0.895) \
+			or not is_equal_approx(footer_panel.anchor_top, 0.922) \
 			or not is_equal_approx(footer_panel.anchor_right, 0.372) \
 			or not is_equal_approx(footer_panel.anchor_bottom, 0.975) \
 			or footer_rect.size.y + 0.5 < footer_panel.get_combined_minimum_size().y \
 			or body_rect.size.y + 0.5 < footer_body.get_combined_minimum_size().y \
 			or not _rect_is_contained(viewport_rect, footer_rect) \
-			or not _rect_is_contained(footer_rect, title_rect) \
 			or not _rect_is_contained(footer_rect, body_rect) \
 			or footer_title.text != "Frontier Log" \
-			or body_lines != tooltip_lines \
-			or body_lines.size() < 3 \
-			or not footer_body.text.contains("Load: choose a saved expedition.") \
-			or not footer_body.text.contains("Quit check: save first automatically, then closes client."):
-		push_error("Main menu smoke: Frontier Log is clipped or changed at %s: viewport=%s footer=%s title=%s body=%s min=%s text=%s tooltip=%s." % [context, viewport_rect, footer_rect, title_rect, body_rect, footer_panel.get_combined_minimum_size(), footer_body.text, footer_body.tooltip_text])
+			or footer_title.visible \
+			or body_lines.size() != 1 \
+			or tooltip_lines.size() < 3 \
+			or not footer_body.tooltip_text.contains("Load: choose a saved expedition.") \
+			or not footer_body.tooltip_text.contains("Quit check: save first automatically, then closes client."):
+		push_error("Main menu smoke: compact expedition line is clipped or changed at %s: viewport=%s footer=%s body=%s min=%s text=%s tooltip=%s." % [context, viewport_rect, footer_rect, body_rect, footer_panel.get_combined_minimum_size(), footer_body.text, footer_body.tooltip_text])
 		return false
 	return true
 
@@ -1886,7 +1902,9 @@ func _assert_no_score_leak(label: String, texts: Array) -> bool:
 		"ai_score",
 		"weight",
 	]:
-		if joined.find(token) >= 0:
+		var field_pattern := RegEx.new()
+		field_pattern.compile("(^|[^a-z0-9_])%s([^a-z0-9_]|$)" % token)
+		if field_pattern.search(joined) != null:
 			push_error("%s leaked internal score field '%s'. text=%s" % [label, token, joined])
 			get_tree().quit(1)
 			return false
@@ -1998,10 +2016,21 @@ func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
 	_set_outcome_ambient_accessibility(false, false)
 	await get_tree().process_frame
 	var recap_tabs := shell.get_node_or_null("%RecapTabs") as TabContainer
-	if recap_tabs == null or not _shared_tab_plaque_standard_exact(recap_tabs, ["Progress", "Arc", "Carry", "After", "Journal"], 4.0):
+	var recap_details := shell.get_node_or_null("%RecapDetails") as Button
+	if recap_tabs == null or recap_details == null or recap_tabs.is_visible_in_tree() or not recap_details.is_visible_in_tree():
+		push_error("Outcome smoke: recap details did not begin collapsed behind an explicit command.")
+		get_tree().quit(1)
+		return false
+	shell.call("_on_recap_details_pressed")
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not recap_tabs.is_visible_in_tree() or not _shared_tab_plaque_standard_exact(recap_tabs, ["Progress", "Arc", "Carry", "After", "Journal"], 4.0):
 		push_error("Outcome smoke: recap tabs did not retain exact compact shared plaques, titles, order, current page, and fit.")
 		get_tree().quit(1)
 		return false
+	shell.call("_on_recap_details_pressed")
+	await get_tree().process_frame
+	await get_tree().process_frame
 	var live_banner = shell.get_node_or_null("%OutcomeBanner")
 	if live_banner == null or not live_banner.has_method("validation_summary"):
 		push_error("Outcome smoke: live result banner does not expose authored-emblem validation.")

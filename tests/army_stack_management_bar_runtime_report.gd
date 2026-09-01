@@ -196,7 +196,7 @@ func _town_ui_case(viewport: Vector2i) -> Dictionary:
 		shell.queue_free()
 		return {}
 	var hero_id := String(SessionState.ensure_active_session().overworld.get("active_hero_id", ""))
-	var mode_button: Button = _text_button(bar, "Split Half")
+	var mode_button: Button = _text_button(bar, "Half")
 	var source: Button = _slot_button(bar, HeroCommandRules.HOLDER_GARRISON, 0)
 	var destination: Button = _slot_button(bar, hero_id, 2)
 	if not _require(mode_button != null and source != null and destination != null, "Town split controls were not live."):

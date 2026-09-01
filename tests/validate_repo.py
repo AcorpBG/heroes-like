@@ -17062,7 +17062,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
             'for node_name in ["Advance", "Strike", "Shoot", "Defend", "QuickResolve", "Retreat", "Surrender"]:',
             "footer_row.columns == (1 if compact else 2)",
             "system_panel.is_visible_in_tree()",
-            '(system_panel.get_theme_stylebox("panel") is StyleBoxEmpty) == compact',
+            'system_panel.get_theme_stylebox("panel") is StyleBoxEmpty',
             "system_body.is_visible_in_tree() == not compact",
             "speed_bar.is_visible_in_tree() == not compact",
             'action_guide.text.split("\\n", false).size() == (1 if compact else 3)',
@@ -19667,7 +19667,7 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
     footer_pocket_block = scene_node_block(main_menu_scene_text, "FooterPocketPanel", "PanelContainer")
     for required_token in (
         "anchor_left = 0.032",
-        "anchor_top = 0.895",
+        "anchor_top = 0.922",
         "anchor_right = 0.372",
         "anchor_bottom = 0.975",
         "grow_vertical = 0",
@@ -19850,17 +19850,17 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
         'footer_panel.grow_vertical != Control.GROW_DIRECTION_BEGIN',
         'var body_lines := footer_body.text.split("\\n", false)',
         'var tooltip_lines := footer_body.tooltip_text.split("\\n", false)',
-        'body_lines != tooltip_lines',
-        'body_lines.size() < 3',
+        'body_lines.size() != 1',
+        'tooltip_lines.size() < 3',
         'not _rect_is_contained(viewport_rect, footer_rect)',
-        'not _rect_is_contained(footer_rect, title_rect)',
+        'footer_title.visible',
         'not _rect_is_contained(footer_rect, body_rect)',
         '(close_stage_button as Button).pressed.emit()',
         'not _assert_footer_pocket_containment(shell, shell.size, "returned first view")',
         "Vector2i(int(viewport_size.x), int(viewport_size.y)) != requested_size",
         "command.get_global_rect().end.x > first_view_rect.end.x + 0.5",
         "command.get_global_rect().end.y > first_view_rect.end.y + 0.5",
-        'String(editor_utility_frame.get("style_class", "")) != "StyleBoxTexture"',
+        'String(editor_utility_frame.get("style_class", "")) != expected_editor_style_class',
     ):
         ensure(required_token in menu_smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing Editor utility-frame proof: {required_token}")
     editor_frame_match = re.search(
@@ -20147,7 +20147,7 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         )
 
     for required_token in (
-        'const MAIN_MENU_POCKET_FRAME_MODEL := "shared_stage_cartography_quiet_pocket_frame"',
+        'const MAIN_MENU_POCKET_FRAME_MODEL := "borderless_scenery_overlay_with_high_contrast_fallback"',
         "const MAIN_MENU_POCKET_TEXTURE_MARGIN := 56.0",
         "const MAIN_MENU_POCKET_TEXTURE_MODULATE := Color(0.72, 0.76, 0.78, 0.88)",
         "@onready var _logo_pocket_panel: PanelContainer = $LogoPocketPanel",
@@ -20160,12 +20160,14 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         '"footer_texture_path": footer_texture_path',
         '"logo_anchors": Rect2(',
         '"footer_anchors": Rect2(',
-        '"rendering_mode": "authored_cartography_pockets" if logo_style is StyleBoxTexture and footer_style is StyleBoxTexture else "smoke_fallback"',
-        'var pocket_style := _main_menu_pocket_surface_style(STAGE_DOCK_CARTOGRAPHY_PATH, FrontierVisualKit.high_contrast_enabled())',
-        '_logo_pocket_panel.add_theme_stylebox_override("panel", pocket_style)',
-        '_footer_pocket_panel.add_theme_stylebox_override("panel", pocket_style.duplicate())',
-        "const MAIN_MENU_LOGO_POCKET_COMPACT_BOTTOM := 0.180",
-        "const MAIN_MENU_LOGO_POCKET_NOTICE_BOTTOM := 0.228",
+        'const MAIN_MENU_POCKET_FRAME_MODEL := "borderless_scenery_overlay_with_high_contrast_fallback"',
+        '"rendering_mode": "borderless_scenery_overlay" if logo_style is StyleBoxEmpty and footer_style is StyleBoxEmpty else "high_contrast_fallback"',
+        'if FrontierVisualKit.high_contrast_enabled():',
+        'var pocket_style := _main_menu_pocket_surface_style(STAGE_DOCK_CARTOGRAPHY_PATH, true)',
+        'FrontierVisualKit.apply_clear_panel(_logo_pocket_panel)',
+        'FrontierVisualKit.apply_clear_panel(_footer_pocket_panel)',
+        "const MAIN_MENU_LOGO_POCKET_COMPACT_BOTTOM := 0.155",
+        "const MAIN_MENU_LOGO_POCKET_NOTICE_BOTTOM := 0.200",
         "func _sync_logo_pocket_notice_height(has_notice: bool) -> void:",
         "_logo_pocket_panel.anchor_bottom = MAIN_MENU_LOGO_POCKET_NOTICE_BOTTOM if has_notice else MAIN_MENU_LOGO_POCKET_COMPACT_BOTTOM",
         '"summary_visible": _summary_label.is_visible_in_tree()',
@@ -20175,8 +20177,8 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         ensure(required_token in menu_text, errors, f"MainMenu.gd is missing cartographic pocket-frame token: {required_token}")
     ensure(menu_text.count("func _main_menu_pocket_surface_style(") == 1, errors, "MainMenu.gd must own exactly one first-view pocket surface factory")
     ensure(menu_text.count("func validation_main_menu_pocket_surface_summary()") == 1, errors, "MainMenu.gd must own exactly one first-view pocket surface summary")
-    ensure(menu_text.count('_logo_pocket_panel.add_theme_stylebox_override("panel", pocket_style)') == 1, errors, "MainMenu.gd must apply the cartographic logo-pocket surface exactly once")
-    ensure(menu_text.count('_footer_pocket_panel.add_theme_stylebox_override("panel", pocket_style.duplicate())') == 1, errors, "MainMenu.gd must apply one detached cartographic footer-pocket surface")
+    ensure(menu_text.count('FrontierVisualKit.apply_clear_panel(_logo_pocket_panel)') == 1, errors, "MainMenu.gd must keep one borderless standard-contrast title overlay")
+    ensure(menu_text.count('FrontierVisualKit.apply_clear_panel(_footer_pocket_panel)') == 1, errors, "MainMenu.gd must keep one borderless standard-contrast expedition line")
     refresh_summary_match = re.search(r"func _refresh_summary\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", menu_text, flags=re.DOTALL)
     adaptive_height_match = re.search(r"func _sync_logo_pocket_notice_height\(has_notice: bool\) -> void:\n(?P<body>.*?)(?=\nfunc )", menu_text, flags=re.DOTALL)
     ensure(refresh_summary_match is not None and adaptive_height_match is not None, errors, "Main Menu adaptive title-pocket refresh/helper could not be isolated")
@@ -20185,9 +20187,11 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         refresh_order = tuple(refresh_body.find(token) for token in (
             "var lead := _menu_notice",
             '_summary_label.visible = lead != ""',
-            "_set_compact_label(_summary_label, lead, 3, 84)",
+            "_set_compact_label(_summary_label, lead, 2, 72)",
             "_sync_logo_pocket_notice_height(_summary_label.visible)",
-            "_set_compact_label(\n\t\t_active_expedition_label,",
+            "var expedition_summary := _build_footer_expedition_summary()",
+            "_set_compact_label(_active_expedition_label, expedition_summary, 1, 58)",
+            "_active_expedition_label.tooltip_text = expedition_summary",
         ))
         ensure(all(index >= 0 for index in refresh_order) and list(refresh_order) == sorted(refresh_order), errors, "Main Menu summary refresh must set exact notice content/visibility, sync adaptive height, then retain footer copy")
         ensure(refresh_body.count("_sync_logo_pocket_notice_height(_summary_label.visible)") == 1, errors, "Main Menu summary refresh must sync adaptive title-pocket height exactly once")
@@ -20291,12 +20295,12 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         "MAIN_MENU_SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT / float(viewport_size.y)",
         "MAIN_MENU_SKIRMISH_DOCK_MAX_HEIGHT_RATIO",
         "MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS.size.x",
-        'const MAIN_MENU_POCKET_FRAME_MODEL := "shared_stage_cartography_quiet_pocket_frame"',
+        'const MAIN_MENU_POCKET_FRAME_MODEL := "borderless_scenery_overlay_with_high_contrast_fallback"',
         "const MAIN_MENU_POCKET_TEXTURE_MARGINS := Vector4(56.0, 56.0, 56.0, 56.0)",
         "const MAIN_MENU_POCKET_TEXTURE_MODULATE := Color(0.72, 0.76, 0.78, 0.88)",
-        "const MAIN_MENU_LOGO_POCKET_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.152)",
-        "const MAIN_MENU_LOGO_POCKET_NOTICE_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.200)",
-        "const MAIN_MENU_FOOTER_POCKET_ANCHORS := Rect2(0.032, 0.895, 0.340, 0.080)",
+        "const MAIN_MENU_LOGO_POCKET_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.127)",
+        "const MAIN_MENU_LOGO_POCKET_NOTICE_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.172)",
+        "const MAIN_MENU_FOOTER_POCKET_ANCHORS := Rect2(0.032, 0.922, 0.340, 0.053)",
         'var pocket_summary: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")',
         "if not _main_menu_pocket_summary_exact(pocket_summary, viewport_size):",
         "if not await _assert_main_menu_adaptive_logo_pocket(shell, viewport_size):",
@@ -20305,10 +20309,10 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         '(summary.get("logo_anchors", Rect2()) as Rect2).position.distance_to(MAIN_MENU_LOGO_POCKET_ANCHORS.position) <= 0.0001',
         '(summary.get("footer_anchors", Rect2()) as Rect2).position.distance_to(MAIN_MENU_FOOTER_POCKET_ANCHORS.position) <= 0.0001',
         'String(summary.get("title_text", "")) == "AURELION REACH"',
-        'String(summary.get("active_expedition_text", "")).contains("Load: choose a saved expedition.")',
-        'String(summary.get("active_expedition_text", "")).contains("Quit check: save first automatically, then closes client.")',
+        'String(summary.get("active_expedition_tooltip", "")).contains("Load: choose a saved expedition.")',
+        'String(summary.get("active_expedition_tooltip", "")).contains("Quit check: save first automatically, then closes client.")',
         'var contrast_pocket_surface: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")',
-        'String(contrast_pocket_surface.get("rendering_mode", "")) != "smoke_fallback"',
+        'String(contrast_pocket_surface.get("rendering_mode", "")) != "high_contrast_fallback"',
         'var restored_pocket_surface: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")',
         'String(restored_pocket_surface.get("rendering_mode", "")) != expected_restored_pocket_mode',
         "func _assert_main_menu_adaptive_logo_pocket(shell: Control, viewport_size: Vector2) -> bool:",
@@ -26565,18 +26569,21 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
 
     for required_token in (
         "var content_size := _content_box.size",
-        "var sidebar_width := OUTCOME_COMPACT_SIDEBAR_WIDTH if compact_layout else OUTCOME_WIDE_SIDEBAR_WIDTH",
+        "var sidebar_width := (OUTCOME_COMPACT_SIDEBAR_WIDTH if compact_layout else OUTCOME_WIDE_SIDEBAR_WIDTH) if _recap_expanded else OUTCOME_COLLAPSED_COMMAND_WIDTH",
+        "var sidebar_height := content_size.y if _recap_expanded else maxf(OUTCOME_COLLAPSED_COMMAND_HEIGHT, _sidebar_shell.get_combined_minimum_size().y)",
         "var left_available := maxf(0.0, content_size.x - sidebar_width - edge_gap)",
         "var banner_width := minf(left_available, OUTCOME_COMPACT_BANNER_WIDTH if compact_layout else OUTCOME_WIDE_BANNER_WIDTH)",
         "_banner.position = Vector2.ZERO",
         "_banner.size = Vector2(banner_width, banner_height)",
-        "_sidebar_shell.position = Vector2(content_size.x - sidebar_width, 0.0)",
-        "_sidebar_shell.size = Vector2(sidebar_width, content_size.y)",
+        "_sidebar_shell.position = Vector2(content_size.x - sidebar_width, 0.0 if _recap_expanded else content_size.y - sidebar_height)",
+        "_sidebar_shell.size = Vector2(sidebar_width, sidebar_height)",
         "_command_column.position = Vector2(0.0, content_size.y - dock_height)",
         "_command_column.size = Vector2(dock_width, dock_height)",
         "_banner_art_panel.custom_minimum_size.x = OUTCOME_COMPACT_BANNER_ART_WIDTH if compact_layout else OUTCOME_WIDE_BANNER_ART_WIDTH",
         "_outcome_banner.custom_minimum_size.y = OUTCOME_COMPACT_EMBLEM_HEIGHT if compact_layout else OUTCOME_WIDE_EMBLEM_HEIGHT",
-        "_actions_hint_label.visible = true",
+        "_recap_tabs.visible = _recap_expanded",
+        "_actions_hint_label.visible = _recap_expanded",
+        '_recap_details_button.text = "Close" if _recap_expanded else "Details"',
         "var visible_status_line := (",
         "else (next_step_summary if next_step_summary != \"\" else (action_cue_summary if action_cue_summary != \"\" else \"Review the outcome, then choose the next step.\"))",
         "_action_status_label.tooltip_text = \"\\n\".join(action_status_lines + [follow_up_tooltip, retry_tooltip]).strip_edges()",
@@ -37639,7 +37646,7 @@ def validate_overworld_rail_word_boundary_ellipsis(errors: list[str]) -> None:
             "String(visible_lines[0]).length() > 42",
             "String(visible_lines[1]).length() > 42",
             "not briefing.is_visible_in_tree()",
-            "visible_rail_count < 6",
+            "visible_rail_count < (2 if width == 1280 else 4)",
             "fitting_rail_count < 1",
         ):
             ensure(required_token in focused_body, errors, f"Focused rail proof is missing exact budget/mid-token token: {required_token}")
@@ -54873,8 +54880,8 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
     town_responsive_start = town_text.find("func _apply_responsive_layout() -> void:")
     town_responsive_end = town_text.find("\nfunc ", town_responsive_start + 1)
     town_responsive = town_text[town_responsive_start:] if town_responsive_end < 0 else town_text[town_responsive_start:town_responsive_end]
-    ensure(town_text.count("const TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH := 304.0") == 1, errors, "Town must own one exact 304px compact management-rail budget")
-    ensure(town_text.count("const TOWN_WIDE_MANAGEMENT_RAIL_WIDTH := 400.0") == 1, errors, "Town must retain one exact 400px wide management-rail budget")
+    ensure(town_text.count("const TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH := 290.0") == 1, errors, "Town must own one exact 290px compact management-rail budget")
+    ensure(town_text.count("const TOWN_WIDE_MANAGEMENT_RAIL_WIDTH := 352.0") == 1, errors, "Town must retain one exact 352px wide management-rail budget")
     required_town_source_order = [
         town_responsive.find("var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0"),
         town_responsive.find("var narrow_layout := available_size.x < 1100.0"),
@@ -54923,7 +54930,8 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
         'var status_chip := shell.get_node("%StatusChip") as PanelContainer',
         'var status_label := shell.get_node("%Status") as Label',
         "is_equal_approx(status_chip.custom_minimum_size.x, 118.0)",
-        "if status_label.clip_text != narrow:",
+        "var expected_clip := narrow or (not compact and viewport_size.x <= 1600.0 and SettingsService.ui_scale_percent() >= 130)",
+        "if status_label.clip_text != expected_clip:",
         'if not tooltip.begins_with("%s\\n" % full_status):',
         "elif tooltip != full_status:",
         "func _expect_command_available(target: Button, label: String, viewport_size: Vector2) -> bool:",
@@ -54962,7 +54970,7 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
         'if String(resource_snapshot.get("tooltip_text", "")) != String(resource_snapshot.get("full_summary", "")):',
         "func _expect_town_sidebar_contract(shell: Control, compact: bool, viewport_size: Vector2) -> bool:",
         'var sidebar := shell.get_node("%SidebarShell") as PanelContainer',
-        "var expected_width := 304.0 if compact else 400.0",
+        "var expected_width := 290.0 if compact else 352.0",
         "if not is_equal_approx(sidebar.custom_minimum_size.x, expected_width):",
         "if sidebar.visible and sidebar.size.x + 0.01 < sidebar.get_combined_minimum_size().x:",
         'var management_tabs := shell.get_node("%ManagementTabs") as TabContainer',
@@ -78170,7 +78178,7 @@ def validate_army_stack_management_bar(errors: list[str]) -> None:
         'button.text = str(int(slot.get("count", 0))) if occupied else "·"',
         'button.icon = _texture(String(slot.get("battle_icon", "")))',
         'button.pressed.connect(_on_slot_pressed.bind(holder_id, slot_index, occupied))',
-        '"Move All"', '"Split Half"', '"Split One"',
+        '"All"', '"Half"', '"One"',
         "operation_requested.emit(_selected_holder_id, _selected_slot_index, holder_id, slot_index, _amount_token)",
     ):
         ensure(token in bar_text, errors, f"Shared army bar is missing its visible/input contract: {token}")
@@ -78231,7 +78239,7 @@ def validate_army_stack_management_bar(errors: list[str]) -> None:
         "await _press_ui_accept()",
         'pressed.action = &"ui_accept"',
         "Input.parse_input_event(pressed)",
-        '_text_button(bar, "Split Half")',
+        '_text_button(bar, "Half")',
         "get_viewport().get_visible_rect().encloses(panel_rect)",
         'print("%s %s" % [REPORT_ID',
     ):
@@ -83418,6 +83426,15 @@ def main() -> int:
     args = parser.parse_args()
 
     errors: list[str] = []
+    ui_frame_path = ROOT / "art/ui/runtime/shared/hud_frame_ornate.png"
+    ensure(ui_frame_path.is_file(), errors, "Scenery-first core UI frame is missing")
+    if ui_frame_path.is_file():
+        ui_frame_bytes = ui_frame_path.read_bytes()
+        ensure(png_size(ui_frame_path) == (1254, 1254), errors, "Scenery-first core UI frame must remain an exact 1254x1254 PNG")
+        ensure(len(ui_frame_bytes) > 25 and ui_frame_bytes[:8] == b"\x89PNG\r\n\x1a\n" and ui_frame_bytes[25] == 6, errors, "Scenery-first core UI frame must retain RGBA transparency")
+        ensure(hashlib.sha256(ui_frame_bytes).hexdigest() == "cb9defc1741e32d5a4a46962f804e5a85c7e14ba69b2b4c0fd1b9b52d23cbc5a", errors, "Scenery-first core UI frame bytes changed without visual revalidation")
+    for ui_owner_path in (ROOT / "scenes/overworld/OverworldShell.gd", ROOT / "scenes/town/TownShell.gd"):
+        ensure('const UI_ART_SHARED_HUD_FRAME := "res://art/ui/runtime/shared/hud_frame_ornate.png"' in ui_owner_path.read_text(encoding="utf-8"), errors, f"{ui_owner_path.name} lost the shared authored rail-frame owner")
     validate_main_menu_painted_torch_ambient_glow(errors)
     validate_main_menu_stage_dock_reveal_transition(errors)
     validate_shared_heraldic_hardware_cursor(errors)
