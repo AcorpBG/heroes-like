@@ -24,9 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected after completing `content-eight-commander-doctrine-expeditions-10184`.
-- Most recently completed implementation slice: `content-eight-commander-doctrine-expeditions-10184`, eight long-form hero-led doctrine expeditions with eight original guarded command landmarks.
-- Current package boundary: matching Linux and Windows release exports measure 235582988 bytes, 14417012 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none selected after completing `content-twelve-marchland-warband-musters-10184`.
+- Most recently completed implementation slice: `content-twelve-marchland-warband-musters-10184`, twelve hero-led Marchland warband musters using the least-reused faction towns, units, and neutral fronts.
+- Current package boundary: matching Linux and Windows release exports measure 235788640 bytes, 14211360 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Twelve Marchland Warband Musters
+
+id: `content-twelve-marchland-warband-musters-10184`
+
+Status: completed.
+
+Completion evidence:
+- twelve skirmish-authority scenarios now add twelve exact five-stack warbands, forty-eight authored neutral fronts, twelve guarded one-time recruit landmarks, and twelve distinct original landmark masters in one 576x48 runtime atlas;
+- the single consolidated live smoke passed twelve launches, forty-eight production battle probes, twelve exact integrated claims, twelve objective victories, twelve captures, and twelve save-version-9 round trips;
+- repository validation and sequential Linux/Windows package startup passed at 235788640 bytes with forty-five required resource-site atlases and no packaged generated source masters.
+
+Current finding:
+- Amberweir Granary, Moonbite Reedshrine, Splitprism Duelcourt, Woundroot Hearthgrove, Whitegauge Calibration Yard, and Dreamwake Oracle Harbor are the only towns with just three authored placements;
+- their twelve local retinue and warwork units are the least-reused faction units, with the six tier-4 companies appearing in two army groups and the six tier-6 companies in one, while twenty-nine heroes remain at the three-scenario direct-lead floor;
+- twenty-four regionally fitting neutral encounters have only one authored placement, and the 16x10 and 20x12 board sizes have only five and four scenarios respectively.
+
+Implementation boundary:
+- author twelve original skirmish-only warband musters, two per faction and one per selected three-lead-floor hero, split evenly across 16x10 and 20x12 boards;
+- use each low-placement Marchland town as the player home in two maps, place both of its local units in exact five-stack opening companies, and route each faction pair through four distinct low-placement neutral encounters for forty-eight authored battle fronts;
+- add twelve guarded original rally landmarks with one-time XP, rare-resource, exact local-unit recruit, objective-flag, pathing, rendering, and save-version-9 behavior, plus two-town pressure routes, field economy, reactive reinforcements, and late reserves;
+- generate twelve transparent original landmark masters, derive one compact 576x48 runtime atlas with prompt/hash/accessibility provenance, exclude source masters from release packages, and preserve Linux/Windows symmetry.
+
+Completion criteria:
+- all twelve scenarios launch through skirmish authority with exact heroes, five-stack companies, two towns, supported map dimensions, ten-or-twelve field sites, five reactive hooks, and four real encounter fronts;
+- the consolidated smoke wins forty-eight production battles, claims every guarded rally once, grants exact XP/resource/recruit/flag payloads without repeat mutation, resolves exact field art, completes all objectives, and round-trips every case through save version 9;
+- inspect representative captures only after the complete batch, then run repository validation and sequential Linux/Windows packaged startup below the unchanged 250000000-byte ceiling.
+
+Non-goals:
+- no new faction, hero definition, town definition, building, unit definition, spell, artifact, encounter definition, progression rule, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes map, commander, unit, landmark, name, text, art, heraldry, or protected visual expression.
 
 ## Eight Commander Doctrine Expeditions
 
