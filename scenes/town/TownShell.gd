@@ -4,6 +4,7 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
 const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemLoadResumedCuePresenter.gd")
+const ArmyStackBarScript = preload("res://scenes/shared/ArmyStackBar.gd")
 
 const UI_ART_TOWN_BANNER_FRAME := "res://art/ui/runtime/town/banner_frame.png"
 const UI_ART_TOWN_CREST_MEDALLION := "res://art/ui/runtime/town/crest_medallion.png"
@@ -59,7 +60,7 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _hero_actions: Container = %HeroActions
 @onready var _specialty_actions: Container = %SpecialtyActions
 @onready var _army_label: Label = %Army
-@onready var _army_management: ArmyStackBar = %ArmyManagement
+@onready var _army_management: ArmyStackBarScript = %ArmyManagement
 @onready var _town_label: Label = %TownSummary
 @onready var _defense_label: Label = %Defense
 @onready var _pressure_label: Label = %Pressure

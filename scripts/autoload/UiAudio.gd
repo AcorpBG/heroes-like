@@ -1,6 +1,8 @@
 class_name HeroesUiAudio
 extends Node
 
+const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")
+
 const SAMPLE_RATE := 22050
 const MAX_ACTIVE_PLAYERS := 8
 const REDUCED_REPETITION_MAX_ACTIVE_PLAYERS := 4
@@ -217,15 +219,7 @@ func _play_imported_audio_cue(cue_id: String) -> Dictionary:
 	var path := String(cue.get("path", "")).strip_edges()
 	if path == "":
 		return {}
-	var stream: AudioStream = null
-	if ResourceLoader.exists(path):
-		var resource = load(path)
-		if resource is AudioStream:
-			stream = resource
-	if stream == null and FileAccess.file_exists(path):
-		var wav_stream := AudioStreamWAV.load_from_file(path)
-		if wav_stream is AudioStream:
-			stream = wav_stream
+	var stream := RuntimeAudioLoaderScript.load_stream(path)
 	if stream == null:
 		return {}
 	var stream_mix_rate := 0

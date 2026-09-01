@@ -1,6 +1,8 @@
 class_name HeroesAmbientAudio
 extends Node
 
+const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")
+
 const SAMPLE_RATE := 44100
 const MAX_ACTIVE_PLAYERS := 4
 const MAX_TRANSITION_PLAYERS := MAX_ACTIVE_PLAYERS * 2
@@ -290,20 +292,7 @@ func _play_imported_layer(layer: Dictionary, start_silent: bool = false) -> bool
 	var path := String(cue.get("path", "")).strip_edges()
 	if path == "":
 		return false
-	var stream: AudioStream = null
-	if ResourceLoader.exists(path):
-		var resource = load(path)
-		if resource is AudioStream:
-			stream = resource
-	if stream == null and FileAccess.file_exists(path):
-		if path.get_extension().to_lower() == "ogg":
-			var ogg_stream := AudioStreamOggVorbis.load_from_file(path)
-			if ogg_stream is AudioStream:
-				stream = ogg_stream
-		else:
-			var wav_stream := AudioStreamWAV.load_from_file(path)
-			if wav_stream is AudioStream:
-				stream = wav_stream
+	var stream := RuntimeAudioLoaderScript.load_stream(path)
 	if stream == null:
 		return false
 	var playback_stream: AudioStream = stream

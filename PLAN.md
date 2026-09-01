@@ -17108,6 +17108,38 @@ Non-goals:
 - no new faction, hero definition, town definition, building, spell, artifact, campaign, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes creature, dwelling, scenario, name, text, silhouette, or protected visual expression.
 
+## Windows First-Run Cache Independence
+
+id: `packaging-windows-first-run-cache-independence-10184`
+
+Status: completed 2026-09-01.
+
+Current finding:
+- a fresh Windows project copy can parse `OverworldShell.gd` and `TownShell.gd` before Godot has populated the global script-class cache, leaving the shared `ArmyStackBar` type unresolved even though its script is present;
+- manifest-driven audio currently calls `load()` after `ResourceLoader.exists()`, which can follow committed import metadata to a not-yet-created `.godot/imported` payload and emit a hard resource error during first-run import;
+- existing Windows package startup stops at Boot/MainMenu and does not prove the Overworld/Town scripts parse independently of the generated global class cache or that every manifest-owned audio import payload is present.
+
+Implementation boundary:
+- make Overworld and Town bind the shared army bar through an explicit script preload instead of depending on generated global class registration;
+- centralize cache-aware runtime audio loading for music, ambient, UI, and presentation cues so source audio is used directly when available, imported payloads are loaded only when their destination exists, and the established generated waveform remains the safe fallback;
+- add focused validation for cache-independent script ownership and packaged runtime-audio payload completeness on Linux and Windows.
+- exercise a missing-import-payload fixture directly, proving present source bytes load without a resource error and a fully missing pair returns quietly to the synthesized caller fallback.
+
+Completion criteria:
+- Overworld and Town parse and their shared army management runtime report passes without relying on `ArmyStackBar` global-class discovery;
+- missing import-cache payloads do not trigger `Cannot open file` or `Failed loading resource` from manifest-driven audio and retain the generated waveform fallback;
+- repository validation, clean editor parse, focused audio/army runtime coverage, and sequential Linux/Windows packaged startup pass with all manifest-owned imported audio payloads present.
+
+Completion result:
+- Overworld and Town now preload the exact shared army-bar script and use that script resource as the type, removing their dependency on generated global-class registration;
+- music, ambient, UI, and presentation audio now share a cache-aware loader that only calls `ResourceLoader.load()` after the declared import destination exists, otherwise reads present source audio or returns quietly to the established synthesized fallback;
+- the missing-import fixture, Army Stack Management, UI Audio, Ambient Audio, and full Music Audio runtime reports pass; clean editor parsing and repository validation pass;
+- Linux and Windows release exports/startups pass with matching 237390240-byte PCKs, and each package contains all 118 manifest-owned audio import records plus all 118 imported payloads, including the exact menu-motion Vorbis stream reported missing on Windows.
+
+Non-goals:
+- no gameplay, balance, content, save-schema, native RMG, signing, publication, or release-readiness change;
+- no claim that Wine replaces clean native Windows certification.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

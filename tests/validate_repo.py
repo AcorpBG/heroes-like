@@ -32,6 +32,7 @@ UI_AUDIO_PATH = ROOT / "scripts" / "autoload" / "UiAudio.gd"
 PRESENTATION_AUDIO_PATH = ROOT / "scripts" / "autoload" / "PresentationAudio.gd"
 AMBIENT_AUDIO_PATH = ROOT / "scripts" / "autoload" / "AmbientAudio.gd"
 MUSIC_AUDIO_PATH = ROOT / "scripts" / "autoload" / "MusicAudio.gd"
+RUNTIME_AUDIO_LOADER_PATH = ROOT / "scripts" / "audio" / "RuntimeAudioLoader.gd"
 LIVE_VALIDATION_HARNESS_PATH = ROOT / "scripts" / "autoload" / "LiveValidationHarness.gd"
 APP_ROUTER_PATH = ROOT / "scripts" / "autoload" / "AppRouter.gd"
 SESSION_STATE_PATH = ROOT / "scripts" / "autoload" / "SessionState.gd"
@@ -71026,6 +71027,14 @@ def validate_packaging_linux_export_smoke(errors: list[str]) -> None:
             'entry_path.startswith(".godot/imported/")',
             'summary["artifact_field_texture_names"].append(imported_name)',
             'bool(terrain_payload["artifact_field_entries_present"])',
+            "RUNTIME_AUDIO_MANIFEST_PATHS",
+            "def runtime_audio_import_paths() -> tuple[set[str], set[str]]:",
+            'if entry_path in required_runtime_audio_import_entries:',
+            'if entry_path in required_runtime_audio_payload_entries:',
+            'bool(terrain_payload["runtime_audio_entries_present"])',
+            '"runtime_audio_pck_import_entry_count"',
+            '"runtime_audio_pck_payload_count"',
+            '"runtime_audio_pck_entries_present"',
             "def source_art_import_payload_paths() -> tuple[set[str], set[str]]:",
             '(ROOT / "art").glob("*/source/**/*.import")',
             "metadata_paths.add(import_path.relative_to(ROOT).as_posix())",
@@ -71153,6 +71162,14 @@ def validate_packaging_windows_export_smoke(errors: list[str]) -> None:
             'entry_path.startswith(".godot/imported/")',
             'summary["artifact_field_texture_names"].append(imported_name)',
             'bool(terrain_payload["artifact_field_entries_present"])',
+            "RUNTIME_AUDIO_MANIFEST_PATHS",
+            "def runtime_audio_import_paths() -> tuple[set[str], set[str]]:",
+            'if entry_path in required_runtime_audio_import_entries:',
+            'if entry_path in required_runtime_audio_payload_entries:',
+            'bool(terrain_payload["runtime_audio_entries_present"])',
+            '"runtime_audio_pck_import_entry_count"',
+            '"runtime_audio_pck_payload_count"',
+            '"runtime_audio_pck_entries_present"',
             "def source_art_import_payload_paths() -> tuple[set[str], set[str]]:",
             '(ROOT / "art").glob("*/source/**/*.import")',
             "metadata_paths.add(import_path.relative_to(ROOT).as_posix())",
@@ -72171,6 +72188,70 @@ def validate_packaged_runtime_issue_log_smoke(errors: list[str]) -> None:
             ensure(required_token in menu_smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing support-bundle token: {required_token}")
 
 
+def validate_runtime_audio_loader(errors: list[str]) -> None:
+    report_path = ROOT / "tests" / "runtime_audio_cache_fallback_report.gd"
+    report_scene_path = ROOT / "tests" / "runtime_audio_cache_fallback_report.tscn"
+    ensure(RUNTIME_AUDIO_LOADER_PATH.exists(), errors, "Missing cache-aware runtime audio loader")
+    ensure(report_path.exists(), errors, "Missing runtime audio cache-fallback report")
+    ensure(report_scene_path.exists(), errors, "Missing runtime audio cache-fallback report scene")
+    if not RUNTIME_AUDIO_LOADER_PATH.exists():
+        return
+    loader_text = RUNTIME_AUDIO_LOADER_PATH.read_text(encoding="utf-8")
+    for token in (
+        "extends RefCounted",
+        "static func load_stream(path: String) -> AudioStream:",
+        "static func imported_payload_path(path: String) -> String:",
+        "static func _load_source_stream(path: String) -> AudioStream:",
+        "if not FileAccess.file_exists(path):",
+        "AudioStreamOggVorbis.load_from_file(path)",
+        "AudioStreamWAV.load_from_file(path)",
+        'var import_metadata_path := "%s.import" % path.strip_edges()',
+        "var metadata := ConfigFile.new()",
+        'metadata.get_value("remap", "path", "")',
+        'metadata.get_value("deps", "dest_files", [])',
+        'if imported_path != "" and FileAccess.file_exists(imported_path):',
+        "var resource := ResourceLoader.load(normalized)",
+    ):
+        ensure(token in loader_text, errors, f"RuntimeAudioLoader.gd is missing cache-safety token: {token}")
+    ensure(
+        loader_text.index("var imported_path := imported_payload_path(normalized)")
+        < loader_text.index('if imported_path != "" and FileAccess.file_exists(imported_path):')
+        < loader_text.index("var resource := ResourceLoader.load(normalized)")
+        < loader_text.index("return _load_source_stream(normalized)"),
+        errors,
+        "Runtime audio loading must prove the imported destination exists before ResourceLoader.load and otherwise fall back to present source bytes",
+    )
+    ensure("ResourceLoader.exists" not in loader_text, errors, "Runtime audio cache safety must not trust ResourceLoader.exists for incomplete imports")
+
+    for autoload_path in (UI_AUDIO_PATH, PRESENTATION_AUDIO_PATH, AMBIENT_AUDIO_PATH, MUSIC_AUDIO_PATH):
+        if not autoload_path.exists():
+            continue
+        text = autoload_path.read_text(encoding="utf-8")
+        ensure(
+            'const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")' in text
+            and "RuntimeAudioLoaderScript.load_stream(path)" in text,
+            errors,
+            f"{autoload_path.name} must use the shared cache-aware runtime audio loader",
+        )
+        ensure("ResourceLoader.exists(path)" not in text and "load(path)" not in text, errors, f"{autoload_path.name} must not probe and load an incomplete import remap directly")
+
+    if report_path.exists():
+        report_text = report_path.read_text(encoding="utf-8")
+        for token in (
+            'const REPORT_ID := "RUNTIME_AUDIO_CACHE_FALLBACK_REPORT"',
+            'const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")',
+            "FileAccess.get_file_as_bytes(SOURCE_WAV_PATH)",
+            "_write_import_metadata(fixture_path, missing_payload_path)",
+            "RuntimeAudioLoaderScript.load_stream(fixture_path)",
+            "source_fallback is AudioStreamWAV",
+            "RuntimeAudioLoaderScript.load_stream(absent_source_path)",
+            "unavailable == null",
+        ):
+            ensure(token in report_text, errors, f"Runtime audio cache-fallback report is missing token: {token}")
+    if report_scene_path.exists():
+        ensure('path="res://tests/runtime_audio_cache_fallback_report.gd"' in report_scene_path.read_text(encoding="utf-8"), errors, "Runtime audio cache-fallback scene must load its focused report script")
+
+
 def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
     project_path = ROOT / "project.godot"
     required_paths = (
@@ -72201,7 +72282,8 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             "func _ui_sfx_manifest_cue",
             "func _play_imported_audio_cue",
             "func _play_generated_waveform",
-            "AudioStreamWAV.load_from_file",
+            'const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")',
+            "RuntimeAudioLoaderScript.load_stream(path)",
             "AudioStreamGenerator",
             "AudioStreamGeneratorPlayback",
             "AudioStreamPlayer",
@@ -72440,7 +72522,8 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         "SettingsService.reduced_repetitive_sounds_enabled()",
         "SettingsService.effects_audio_bus_name()",
         "func _play_imported_audio_cue",
-        "AudioStreamWAV.load_from_file",
+        'const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")',
+        "RuntimeAudioLoaderScript.load_stream(path)",
         "func _play_generated_waveform",
         "AudioStreamGeneratorPlayback",
         "func _trim_players_to_budget",
@@ -72921,8 +73004,8 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "AMBIENT_SFX_MANIFEST_PATH",
             "func _ambient_sfx_manifest_cue",
             "func _play_imported_layer",
-            "AudioStreamOggVorbis.load_from_file",
-            "AudioStreamWAV.load_from_file",
+            'const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")',
+            "RuntimeAudioLoaderScript.load_stream(path)",
             "AudioStreamGenerator",
             "AudioStreamGeneratorPlayback",
             "AudioStreamPlayer",
@@ -73245,8 +73328,8 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "MUSIC_RUNTIME_MANIFEST_PATH",
             "func _music_runtime_manifest_cue",
             "func _play_imported_layer",
-            "AudioStreamOggVorbis.load_from_file",
-            "AudioStreamWAV.load_from_file",
+            'const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")',
+            "RuntimeAudioLoaderScript.load_stream(path)",
             "AudioStreamGenerator",
             "AudioStreamGeneratorPlayback",
             "AudioStreamPlayer",
@@ -78116,7 +78199,8 @@ def validate_army_stack_management_bar(errors: list[str]) -> None:
         script_text = script_path.read_text(encoding="utf-8")
         scene_text = scene_path.read_text(encoding="utf-8")
         for token in (
-            "@onready var _army_management: ArmyStackBar = %ArmyManagement",
+            'const ArmyStackBarScript = preload("res://scenes/shared/ArmyStackBar.gd")',
+            "@onready var _army_management: ArmyStackBarScript = %ArmyManagement",
             "_army_management.operation_requested.connect(_on_army_slot_operation_requested)",
             authority_call,
             "_army_management.clear_selection()",
@@ -78754,7 +78838,7 @@ def validate_six_unbound_wild_concords(errors: list[str]) -> None:
         ensure(all(str(cue.get("path", "")).endswith(".ogg") and int(cue.get("duration_msec", 0)) == expected_duration and res_path_to_disk(str(cue.get("path", ""))).is_file() for cue in cues.values() if isinstance(cue, dict)), errors, f"{manifest_name} has missing or non-OGG runtime cues")
     for autoload_path in (ROOT / "scripts" / "autoload" / "MusicAudio.gd", ROOT / "scripts" / "autoload" / "AmbientAudio.gd"):
         text = autoload_path.read_text(encoding="utf-8")
-        ensure("const SAMPLE_RATE := 44100" in text and "AudioStreamOggVorbis.load_from_file" in text and '"imported_ogg"' in text and '"vorbis"' in text, errors, f"{autoload_path.name} lost imported Vorbis playback")
+        ensure("const SAMPLE_RATE := 44100" in text and "RuntimeAudioLoaderScript.load_stream(path)" in text and '"imported_ogg"' in text and '"vorbis"' in text, errors, f"{autoload_path.name} lost imported Vorbis playback")
 
     if smoke_script_path.is_file():
         smoke_text = smoke_script_path.read_text(encoding="utf-8")
@@ -83655,6 +83739,7 @@ def main() -> int:
     validate_packaging_release_candidate_pipeline(errors)
     validate_packaged_settings_persistence_smoke(errors)
     validate_packaged_runtime_issue_log_smoke(errors)
+    validate_runtime_audio_loader(errors)
     validate_ui_audio_cue_runtime(errors)
     validate_presentation_audio_runtime(errors)
     validate_overworld_ambient_audio_runtime(errors)

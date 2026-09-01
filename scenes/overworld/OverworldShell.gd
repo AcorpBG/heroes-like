@@ -5,6 +5,7 @@ const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const AnimationCueCatalogScript = preload("res://scripts/core/AnimationCueCatalog.gd")
 const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
 const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemLoadResumedCuePresenter.gd")
+const ArmyStackBarScript = preload("res://scenes/shared/ArmyStackBar.gd")
 
 const UI_ART_OVERWORLD_RESOURCE_BAR := "res://art/ui/runtime/overworld/resource_bar.png"
 const UI_ART_OVERWORLD_SIDEBAR_FRAME := "res://art/ui/runtime/overworld/sidebar_frame.png"
@@ -62,7 +63,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _hero_portrait: HeroPortraitView = %HeroPortrait
 @onready var _hero_label: Label = %Hero
 @onready var _army_label: Label = %Army
-@onready var _army_management: ArmyStackBar = %ArmyManagement
+@onready var _army_management: ArmyStackBarScript = %ArmyManagement
 @onready var _heroes_label: Label = %Heroes
 @onready var _action_title_label: Label = %ActionTitle
 @onready var _frontier_indicator_label: Label = %FrontierIndicator
