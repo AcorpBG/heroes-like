@@ -227,7 +227,8 @@ static func compact_text(full_text: String, max_lines: int, max_chars: int = 92,
 	if lines.size() > max_lines:
 		var hidden := lines.size() - max_lines
 		lines = lines.slice(0, max_lines)
-		lines.append("+ %d more" % hidden)
+		if not lines.is_empty():
+			lines[lines.size() - 1] = "%s  +%d" % [lines[lines.size() - 1], hidden]
 	return "\n".join(lines)
 
 static func placeholder_label(text: String, tone: String = "muted") -> Label:
@@ -370,6 +371,38 @@ static func apply_panel(panel: PanelContainer, tone: String, corner_radius: int 
 
 static func apply_art_panel(panel: PanelContainer, path: String, fallback_tone: String = "ink", texture_margin: int = 32, content_margin: int = 10, modulate: Color = Color(1.0, 1.0, 1.0, 1.0)) -> void:
 	panel.add_theme_stylebox_override("panel", texture_panel_style(path, fallback_tone, texture_margin, content_margin, modulate))
+
+static func ornate_frame_style(path: String, fallback_tone: String = "frame", texture_margin: int = 96, content_margin: int = 8, modulate: Color = Color(1.0, 1.0, 1.0, 1.0)) -> StyleBox:
+	if high_contrast_enabled() or path == "" or not ResourceLoader.exists(path):
+		return panel_style(fallback_tone)
+	var texture := load(path) as Texture2D
+	if texture == null:
+		return panel_style(fallback_tone)
+	var margin := minf(
+		float(texture_margin),
+		minf(float(texture.get_width()), float(texture.get_height())) * 0.5 - 1.0
+	)
+	var style := StyleBoxTexture.new()
+	style.texture = texture
+	style.texture_margin_left = margin
+	style.texture_margin_top = margin
+	style.texture_margin_right = margin
+	style.texture_margin_bottom = margin
+	style.content_margin_left = content_margin
+	style.content_margin_top = content_margin
+	style.content_margin_right = content_margin
+	style.content_margin_bottom = content_margin
+	style.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	style.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	style.draw_center = true
+	style.modulate_color = modulate
+	return style
+
+static func apply_ornate_frame(panel: PanelContainer, path: String, fallback_tone: String = "frame", texture_margin: int = 96, content_margin: int = 8, modulate: Color = Color(1.0, 1.0, 1.0, 1.0)) -> void:
+	panel.add_theme_stylebox_override("panel", ornate_frame_style(path, fallback_tone, texture_margin, content_margin, modulate))
+
+static func apply_clear_panel(panel: PanelContainer) -> void:
+	panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 
 static func apply_badge(panel: PanelContainer, tone: String) -> void:
 	panel.add_theme_stylebox_override("panel", badge_style(tone))

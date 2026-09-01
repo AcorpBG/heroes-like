@@ -1648,7 +1648,7 @@ func _refresh() -> void:
 	var intent_forecast := BattleRules.intent_forecast_payload(_session)
 	_last_refresh_intent_forecast = intent_forecast
 	_last_refresh_intent_forecast_battle_hash = hash(_session.battle)
-	_action_guide.visible = true
+	_action_guide.visible = false
 	_set_battle_action_guide(
 		"%s\n%s\n%s" % [
 			String(intent_forecast.get("visible_text", BattleRules.describe_action_surface(_session))),
@@ -1665,6 +1665,7 @@ func _refresh() -> void:
 	var action_confirmation_tooltip := String(action_confirmation.get("tooltip_text", "")).strip_edges()
 	if action_confirmation_tooltip != "":
 		_action_guide.tooltip_text = "%s\n\n%s" % [_action_guide.tooltip_text, action_confirmation_tooltip]
+	_action_panel.tooltip_text = _action_guide.tooltip_text
 	_battle_board_view.set_battle_state(_session)
 	buckets["surface_and_board"] = ProfileLogScript.elapsed_ms(section_started)
 
@@ -2862,13 +2863,13 @@ func _refresh_save_slot_picker() -> void:
 	save_tooltip_lines.append("Selected slot:\n%s" % SaveService.describe_slot_details(summary))
 	_system_body_label.tooltip_text = "\n".join(save_tooltip_lines)
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
-	_save_button.text = String(surface.get("save_button_label", "Save Battle"))
+	_save_button.text = "Save" if _compact_layout_active else String(surface.get("save_button_label", "Save Battle"))
 	_save_button.tooltip_text = _join_tooltip_sections([
 		String(surface.get("save_button_tooltip", "Save the active battle safely.")),
 		save_check,
 		save_handoff,
 	])
-	_menu_button.text = String(surface.get("menu_button_label", "Main Menu"))
+	_menu_button.text = "Menu" if _compact_layout_active else String(surface.get("menu_button_label", "Main Menu"))
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
 func validation_snapshot() -> Dictionary:
@@ -3663,6 +3664,7 @@ func _set_battle_action_guide(full_text: String) -> void:
 	_action_guide_source_text = full_text
 	_refit_battle_action_guide()
 	_action_guide.tooltip_text = full_text
+	_action_panel.tooltip_text = full_text
 
 func _refit_battle_action_guide() -> void:
 	if _action_guide_source_text == "":
@@ -3751,6 +3753,8 @@ func _apply_responsive_layout() -> void:
 	_prev_target_button.visible = not compact_layout
 	_next_target_button.visible = not compact_layout
 	_battle_board_view.custom_minimum_size = Vector2(520.0, 240.0) if compact_layout else Vector2(620.0, 300.0)
+	_action_guide.visible = false
+	_action_panel.tooltip_text = _action_guide_source_text
 
 func _on_tactical_details_pressed() -> void:
 	if _compact_layout_active:
@@ -4245,6 +4249,10 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_art_panel(_footer_panel, UI_ART_BATTLE_FOOTER_PANEL, "ink", 62, 12, Color(0.62, 0.60, 0.56, 1.0))
 	FrontierVisualKit.apply_art_panel(_action_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "gold", 54, 10, Color(0.58, 0.52, 0.46, 1.0))
 	FrontierVisualKit.apply_art_panel(_system_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "ink", 54, 10, Color(0.50, 0.50, 0.48, 1.0))
+	FrontierVisualKit.apply_clear_panel(_battlefield_panel)
+	FrontierVisualKit.apply_clear_panel(_footer_panel)
+	FrontierVisualKit.apply_clear_panel(_action_panel)
+	FrontierVisualKit.apply_clear_panel(_system_panel)
 	var system_panel_style := _system_panel.get_theme_stylebox("panel")
 	if system_panel_style != null:
 		_wide_system_panel_style = system_panel_style.duplicate()

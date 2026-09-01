@@ -85,7 +85,7 @@ func _build_static_surface() -> void:
 	if _holders_box != null:
 		return
 	var heading := Label.new()
-	heading.text = "Army Formation"
+	heading.text = "Formation"
 	heading.tooltip_text = "Select a stack, choose Move All or a split amount, then choose its destination slot."
 	add_child(heading)
 	_holders_box = VBoxContainer.new()
@@ -96,9 +96,9 @@ func _build_static_surface() -> void:
 	mode_row.name = "ArmyModeRow"
 	mode_row.add_theme_constant_override("separation", 4)
 	for definition in [
-		{"token": "all", "label": "Move All", "tooltip": "Move, merge, or swap the complete selected stack."},
-		{"token": "half", "label": "Split Half", "tooltip": "Move half of the selected stack into an empty slot or matching unit stack."},
-		{"token": "1", "label": "Split One", "tooltip": "Move one unit into an empty slot or matching unit stack."},
+		{"token": "all", "label": "All", "tooltip": "Move, merge, or swap the complete selected stack."},
+		{"token": "half", "label": "Half", "tooltip": "Move half of the selected stack into an empty slot or matching unit stack."},
+		{"token": "1", "label": "One", "tooltip": "Move one unit into an empty slot or matching unit stack."},
 	]:
 		var button := Button.new()
 		var token := String(definition.get("token", "all"))
@@ -114,7 +114,8 @@ func _build_static_surface() -> void:
 	_status_label = Label.new()
 	_status_label.name = "ArmyInstruction"
 	_status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_status_label.text = "Select a stack, then its destination."
+	_status_label.text = "Choose stack → destination"
+	_status_label.tooltip_text = "Select a stack, choose an amount, then choose its destination slot."
 	add_child(_status_label)
 	_update_mode_styles()
 
@@ -133,7 +134,7 @@ func _rebuild_holder_rows() -> void:
 		var row_box := VBoxContainer.new()
 		row_box.add_theme_constant_override("separation", 2)
 		var label := Label.new()
-		label.text = "%s · %d troops" % [String(holder.get("holder_label", holder_id)), int(holder.get("troop_count", 0))]
+		label.text = "%s · %d" % [String(holder.get("holder_label", holder_id)), int(holder.get("troop_count", 0))]
 		label.clip_text = true
 		label.tooltip_text = label.text
 		row_box.add_child(label)
@@ -238,10 +239,9 @@ func _update_status() -> void:
 	if _status_label == null:
 		return
 	if _selected_holder_id == "":
-		_status_label.text = "Select a stack, choose an amount, then its destination."
+		_status_label.text = "Choose stack → destination"
 	else:
-		_status_label.text = "%s selected in slot %d · %s · choose destination." % [
-			_selected_holder_id.capitalize(),
+		_status_label.text = "Slot %d · %s → destination" % [
 			_selected_slot_index + 1,
 			_amount_label(),
 		]

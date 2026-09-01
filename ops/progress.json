@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Windows first-run cache independence is complete: shared army-bar typing no longer depends on the generated class cache, and manifest audio fails over without resource-load errors when an import payload is unavailable.",
+  "currentNotes": "Scenery-first core UI composition is complete across the main menu, overworld, town, battle, and outcome first views, with concise visible copy, detail-on-demand, dual-size review, and matching Linux/Windows package proof.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "packaging-windows-first-run-cache-independence-10184",
-  "currentSliceId": "packaging-windows-first-run-cache-independence-10184",
-  "currentSliceNotes": "Completed explicit ArmyStackBar script typing, shared cache-aware audio loading, missing-payload runtime proof, repository validation, and matching Linux/Windows package gates with all 118 audio imports and payloads present.",
+  "currentSlice": "ux-scenery-first-core-ui-composition-10184",
+  "currentSliceId": "ux-scenery-first-core-ui-composition-10184",
+  "currentSliceNotes": "Completed concise first-view copy, borderless shallow overlays, one original shared tall-rail frame, an on-demand outcome recap, responsive/accessibility runtime coverage, dual-size visual review, and matching Linux/Windows package gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Windows First-Run Cache Independence",
-  "currentSliceUpdatedAt": "2026-09-01T15:52:53Z",
+  "currentSliceTitle": "Scenery-First Core UI Composition",
+  "currentSliceUpdatedAt": "2026-09-01T17:10:58Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107696,6 +107696,53 @@
       "completedAt": "2026-09-01T15:52:53Z",
       "notes": "Completed explicit ArmyStackBar script typing in Overworld/Town and one shared cache-aware loader across music, ambient, UI, and presentation audio. Missing-import fallback, army, UI, ambient, and full music runtime reports passed; clean editor parse and repository validation passed. Sequential Linux/Windows exports and packaged startups passed with matching 237390240-byte PCKs, all 118 manifest-owned import records, all 118 imported payloads, the exact menu-motion Vorbis payload, and no fatal runtime errors.",
       "remainingWork": "Broader production completion, clean native Windows certification, signing, publication, and release readiness remain outside this correction."
+    },
+    {
+      "id": "ux-scenery-first-core-ui-composition-10184",
+      "title": "Scenery-First Core UI Composition",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Make the five core first-view interfaces scenery-first, concise, image-authored, and responsive without removing detailed information or accessibility fallbacks.",
+      "implementationTargets": [
+        "art/ui/runtime/shared/hud_frame_ornate.png",
+        "scripts/ui/FrontierVisualKit.gd",
+        "scenes/menus/MainMenu.tscn",
+        "scenes/menus/MainMenu.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/battle/BattleShell.gd",
+        "scenes/results/ScenarioOutcomeShell.tscn",
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "scenes/shared/ArmyStackBar.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/player_comprehension_layout_smoke.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Main menu, overworld, town, battle, and outcome first views keep scenery or the active play surface dominant and move long explanations to tooltips or explicit detail flows",
+        "Standard contrast removes shallow generic borders while high contrast retains readable fallbacks and primary controls stay contained at 1280x720 and 1920x1080",
+        "Repository, focused UI runtime, visual review, Linux package, and Windows package gates pass"
+      ],
+      "nonGoals": [
+        "Gameplay, balance, AI, content, save-schema, or native RMG behavior changes",
+        "Signing, publication, clean native Windows certification, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-01T16:48:47Z",
+      "startedAt": "2026-09-01T16:48:47Z",
+      "updatedAt": "2026-09-01T17:10:58Z",
+      "completedAt": "2026-09-01T17:10:58Z",
+      "notes": "Completed scenery-first composition across all five core screens with compact visible copy, full tooltip/detail paths, borderless shallow surfaces, one original shared tall-rail frame, and a collapsed outcome recap. Repository validation, clean parse, focused army/player-comprehension/menu-outcome/active-play runtime coverage, normalized 1280x720 and 1920x1080 visual review, and sequential Linux/Windows export/startup gates passed with matching 237722656-byte PCKs containing the new frame import.",
+      "remainingWork": "Broader UI polish, clean native Windows certification, signing, publication, whole-game validation, and release readiness remain outside this slice."
     }
   ],
   "project": "heroes-like",

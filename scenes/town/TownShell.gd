@@ -12,8 +12,9 @@ const UI_ART_TOWN_PARCHMENT_PANEL := "res://art/ui/runtime/town/parchment_panel.
 const UI_ART_TOWN_RECRUIT_ROW := "res://art/ui/runtime/town/recruit_row.png"
 const UI_ART_TOWN_RESOURCE_LEDGER := "res://art/ui/runtime/town/resource_ledger.png"
 const UI_ART_TOWN_BUILD_PANEL := "res://art/ui/runtime/town/build_panel.png"
-const TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH := 304.0
-const TOWN_WIDE_MANAGEMENT_RAIL_WIDTH := 400.0
+const UI_ART_SHARED_HUD_FRAME := "res://art/ui/runtime/shared/hud_frame_ornate.png"
+const TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH := 290.0
+const TOWN_WIDE_MANAGEMENT_RAIL_WIDTH := 352.0
 const TOWN_MANAGEMENT_TAB_CONTENT_MARGIN_HORIZONTAL := 4.0
 const TOWN_MANAGEMENT_TAB_STATE_STYLES := [
 	&"tab_selected",
@@ -239,6 +240,12 @@ func _apply_responsive_layout() -> void:
 	_event_label.visible = not compact_layout
 	_status_label.visible = not compact_layout
 	_building_label.visible = not compact_layout
+	for node_name in ["BuildTitle", "RecruitTitle", "BuildLauncherDescription", "MusterLauncherDescription"]:
+		var compact_copy := find_child(node_name, true, false) as Control
+		if compact_copy != null:
+			compact_copy.visible = not compact_layout
+	_open_build_catalog_button.text = "Construction" if compact_layout else "Open Construction Ledger"
+	_open_muster_catalog_button.text = "Muster Hall" if compact_layout else "Open Muster Hall"
 	_town_stage_view.custom_minimum_size = Vector2(520.0, 280.0) if compact_layout else Vector2(620.0, 320.0)
 	if _town_catalog_panel != null:
 		_town_catalog_panel.custom_minimum_size = Vector2(
@@ -5842,7 +5849,17 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_art_panel(_logistics_panel, UI_ART_TOWN_BUILD_PANEL, "teal", 58, 12, Color(0.50, 0.56, 0.54, 1.0))
 	FrontierVisualKit.apply_art_panel(_town_catalog_panel, UI_ART_TOWN_PARCHMENT_PANEL, "earth", 66, 16, Color(0.60, 0.55, 0.48, 1.0))
 	FrontierVisualKit.apply_art_panel(_footer_panel, UI_ART_TOWN_BANNER_FRAME, "banner", 68, 12, Color(0.70, 0.66, 0.60, 1.0))
+	FrontierVisualKit.apply_clear_panel(_town_stage_panel)
+	FrontierVisualKit.apply_clear_panel(_command_panel)
+	FrontierVisualKit.apply_clear_panel(_build_panel)
+	FrontierVisualKit.apply_clear_panel(_recruit_panel)
+	FrontierVisualKit.apply_clear_panel(_study_panel)
+	FrontierVisualKit.apply_clear_panel(_market_panel)
+	FrontierVisualKit.apply_clear_panel(_logistics_panel)
+	FrontierVisualKit.apply_clear_panel(_footer_panel)
+	FrontierVisualKit.apply_ornate_frame(_sidebar_shell_panel, UI_ART_SHARED_HUD_FRAME, "frame", 112, 8, Color(0.78, 0.74, 0.68, 0.94))
 	FrontierVisualKit.apply_tab_container(_management_tabs)
+	_management_tabs.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	_apply_town_management_tab_breathing_room()
 	_management_tabs.set_tab_title(0, "Build")
 	_management_tabs.set_tab_title(1, "Muster")

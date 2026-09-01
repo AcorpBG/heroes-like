@@ -22,6 +22,8 @@ const OUTCOME_WIDE_SIDEBAR_WIDTH := 356.0
 const OUTCOME_COMPACT_DOCK_HEIGHT := 184.0
 const OUTCOME_WIDE_DOCK_HEIGHT := 204.0
 const OUTCOME_WIDE_DOCK_WIDTH := 1250.0
+const OUTCOME_COLLAPSED_COMMAND_WIDTH := 388.0
+const OUTCOME_COLLAPSED_COMMAND_HEIGHT := 94.0
 const OUTCOME_RECAP_TAB_CONTENT_MARGIN_HORIZONTAL := 4.0
 const OUTCOME_RECAP_TAB_STATE_STYLES := [
 	&"tab_selected",
@@ -70,6 +72,7 @@ const OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME := {
 @onready var _save_slot_picker: OptionButton = %SaveSlot
 @onready var _save_button: Button = %Save
 @onready var _menu_button: Button = %Menu
+@onready var _recap_details_button: Button = %RecapDetails
 @onready var _guide_button: Button = %Guide
 @onready var _guide_panel: PanelContainer = %GuidePanel
 @onready var _guide_label: Label = %OutcomeGuide
@@ -99,6 +102,7 @@ const OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME := {
 @onready var _sidebar_box: VBoxContainer = $ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox
 @onready var _save_pad: MarginContainer = $ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad
 @onready var _save_box: VBoxContainer = $ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox
+@onready var _save_title_label: Label = $ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveTitle
 
 var _session: SessionStateStore.SessionData
 var _model: Dictionary = {}
@@ -141,6 +145,7 @@ var _validation_outcome_new_session_perform_count := 0
 var _validation_outcome_new_session_route_count := 0
 var _validation_outcome_new_session_routing_suppressed := false
 var _compact_layout_active := false
+var _recap_expanded := false
 var _save_written_cue_presenter: SystemSaveWrittenCuePresenter
 var _load_resumed_cue_presenter: SystemLoadResumedCuePresenter
 
@@ -338,8 +343,19 @@ func _apply_responsive_layout() -> void:
 	if content_size.x <= 0.0 or content_size.y <= 0.0:
 		call_deferred("_apply_responsive_layout")
 		return
+	_recap_tabs.visible = _recap_expanded
+	_save_title_label.visible = _recap_expanded
+	_save_status_label.visible = _recap_expanded
+	_actions_hint_label.visible = _recap_expanded
+	_return_cue_label.visible = _recap_expanded and not compact_layout
+	_set_margin(_sidebar_pad, (6 if compact_layout else 10) if _recap_expanded else 4)
+	_sidebar_box.add_theme_constant_override("separation", (4 if compact_layout else 8) if _recap_expanded else 0)
+	_set_margin(_save_pad, (6 if compact_layout else 10) if _recap_expanded else 4, (4 if compact_layout else 8) if _recap_expanded else 2)
+	_save_box.add_theme_constant_override("separation", 2 if compact_layout else 4)
 	var edge_gap := 6.0 if compact_layout else 8.0
-	var sidebar_width := OUTCOME_COMPACT_SIDEBAR_WIDTH if compact_layout else OUTCOME_WIDE_SIDEBAR_WIDTH
+	var sidebar_width := (OUTCOME_COMPACT_SIDEBAR_WIDTH if compact_layout else OUTCOME_WIDE_SIDEBAR_WIDTH) if _recap_expanded else OUTCOME_COLLAPSED_COMMAND_WIDTH
+	sidebar_width = minf(sidebar_width, content_size.x * 0.42)
+	var sidebar_height := content_size.y if _recap_expanded else maxf(OUTCOME_COLLAPSED_COMMAND_HEIGHT, _sidebar_shell.get_combined_minimum_size().y)
 	var left_available := maxf(0.0, content_size.x - sidebar_width - edge_gap)
 	var banner_width := minf(left_available, OUTCOME_COMPACT_BANNER_WIDTH if compact_layout else OUTCOME_WIDE_BANNER_WIDTH)
 	var banner_height := maxf(
@@ -358,8 +374,8 @@ func _apply_responsive_layout() -> void:
 	_banner.size = Vector2(banner_width, banner_height)
 	_main_row.position = Vector2.ZERO
 	_main_row.size = content_size
-	_sidebar_shell.position = Vector2(content_size.x - sidebar_width, 0.0)
-	_sidebar_shell.size = Vector2(sidebar_width, content_size.y)
+	_sidebar_shell.position = Vector2(content_size.x - sidebar_width, 0.0 if _recap_expanded else content_size.y - sidebar_height)
+	_sidebar_shell.size = Vector2(sidebar_width, sidebar_height)
 	_command_column.position = Vector2(0.0, content_size.y - dock_height)
 	_command_column.size = Vector2(dock_width, dock_height)
 	_set_margin(_banner_pad, 6 if compact_layout else 10)
@@ -375,14 +391,16 @@ func _apply_responsive_layout() -> void:
 	_set_margin(_resource_pad, 4 if compact_layout else 6, 3 if compact_layout else 4)
 	_set_margin(_actions_pad, 6 if compact_layout else 10)
 	_actions_box.add_theme_constant_override("separation", 4 if compact_layout else 6)
-	_set_margin(_sidebar_pad, 6 if compact_layout else 10)
-	_sidebar_box.add_theme_constant_override("separation", 4 if compact_layout else 8)
-	_set_margin(_save_pad, 6 if compact_layout else 10, 4 if compact_layout else 8)
-	_save_box.add_theme_constant_override("separation", 2 if compact_layout else 4)
-	_actions_hint_label.visible = true
-	_return_cue_label.visible = not compact_layout
+	_recap_details_button.text = "Close" if _recap_expanded else "Details"
+	_recap_details_button.tooltip_text = "Close the detailed outcome recap." if _recap_expanded else "Open progress, campaign, carryover, aftermath, and chronicle details."
 	if layout_changed and _session != null:
 		call_deferred("_refresh")
+
+func _on_recap_details_pressed() -> void:
+	_recap_expanded = not _recap_expanded
+	_apply_responsive_layout()
+	_recap_details_button.grab_focus()
+	call_deferred("_configure_outcome_keyboard_focus", false)
 
 func _set_margin(container: MarginContainer, horizontal: int, vertical: int = -1) -> void:
 	if container == null:
@@ -549,7 +567,7 @@ func _refresh_save_surface() -> void:
 		String(surface.get("menu_button_tooltip", "")),
 	])
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
-	_save_button.text = String(surface.get("save_button_label", "Save Outcome"))
+	_save_button.text = String(surface.get("save_button_label", "Save Outcome")) if _recap_expanded else "Save"
 	_save_button.tooltip_text = _join_tooltip_sections([
 		String(surface.get("save_button_tooltip", "Save the current outcome safely.")),
 		String(outcome_save_check.get("tooltip_text", "")),
@@ -557,7 +575,7 @@ func _refresh_save_surface() -> void:
 		save_check,
 		return_handoff,
 	])
-	_menu_button.text = String(surface.get("menu_button_label", "Main Menu"))
+	_menu_button.text = String(surface.get("menu_button_label", "Main Menu")) if _recap_expanded else "Menu"
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 	_refresh_guide_surface()
 
@@ -632,6 +650,7 @@ func _configure_outcome_keyboard_focus(
 		_save_slot_picker,
 		_save_button,
 		_menu_button,
+		_recap_details_button,
 		_guide_button,
 	]
 	var controls := FrontierVisualKit.configure_focus_cycle(surfaces)
@@ -2065,7 +2084,15 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 132.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_save_button, "primary", 126.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_menu_button, "secondary", 138.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_recap_details_button, "secondary", 96.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_guide_button, "secondary", 96.0, 34.0, 13)
+	FrontierVisualKit.apply_clear_panel($ContentMargin/Content/MainRow/CommandColumn/ForceCards/HeroPanel)
+	FrontierVisualKit.apply_clear_panel($ContentMargin/Content/MainRow/CommandColumn/ForceCards/ArmyPanel)
+	FrontierVisualKit.apply_clear_panel($ContentMargin/Content/MainRow/CommandColumn/ForceCards/ResourcePanel)
+	FrontierVisualKit.apply_clear_panel($ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel)
+	FrontierVisualKit.apply_clear_panel(_banner)
+	FrontierVisualKit.apply_clear_panel(_actions_panel)
+	FrontierVisualKit.apply_clear_panel(_sidebar_shell)
 
 	for label in find_children("*", "Label", true, false):
 		if label is Label:

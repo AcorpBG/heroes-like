@@ -41,10 +41,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
 
 [node name="Shell" type="PanelContainer" parent="ShellMargin"]
 unique_name_in_owner = true
@@ -54,22 +54,22 @@ size_flags_vertical = 3
 
 [node name="ShellPad" type="MarginContainer" parent="ShellMargin/Shell"]
 layout_mode = 2
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 6
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
 [node name="Content" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
 [node name="BodyRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 4
 
 [node name="MapPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow"]
 unique_name_in_owner = true
@@ -79,10 +79,10 @@ size_flags_vertical = 3
 
 [node name="MapPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
 [node name="MapBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapPanel/MapPad"]
 layout_mode = 2
@@ -98,10 +98,10 @@ size_flags_vertical = 3
 
 [node name="MapInset" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapPanel/MapPad/MapBox/MapFrame"]
 layout_mode = 2
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 6
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
 
 [node name="Map" type="Control" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapPanel/MapPad/MapBox/MapFrame/MapInset"]
 unique_name_in_owner = true
@@ -182,7 +182,7 @@ text = "Scenario objectives"
 
 [node name="HeroPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 238)
+custom_minimum_size = Vector2(0, 204)
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -222,6 +222,7 @@ text = "Hero"
 
 [node name="Army" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 autowrap_mode = 3
 text = "Army"
@@ -234,6 +235,7 @@ script = ExtResource("9_army_stack_bar")
 
 [node name="Heroes" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 autowrap_mode = 3
 text = "Heroes"
@@ -246,7 +248,7 @@ theme_override_constants/separation = 4
 
 [node name="EventPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -263,6 +265,7 @@ theme_override_constants/separation = 2
 
 [node name="EventTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/EventPanel/EventPad/EventBox"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 text = "Log"
 
@@ -270,6 +273,8 @@ text = "Log"
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
+max_lines_visible = 1
+text_overrun_behavior = 3
 text = "Field reports will surface here."
 
 [node name="CommitmentPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
@@ -349,6 +354,7 @@ theme_override_constants/separation = 5
 
 [node name="ActionTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/ActionPanel/ActionPad/ActionBox"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 text = "Panels"
 
@@ -373,6 +379,7 @@ text = "Frontier"
 
 [node name="FrontierIndicator" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/ActionPanel/ActionPad/ActionBox"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 text = "Frontier: steady"
 

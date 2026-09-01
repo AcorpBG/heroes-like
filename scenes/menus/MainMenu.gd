@@ -13,7 +13,7 @@ const STAGE_DOCK_CARTOGRAPHY_PATH := "res://art/ui/runtime/main_menu/stage_dock_
 const STAGE_DOCK_TEXTURE_SIZE := Vector2(1024.0, 1024.0)
 const STAGE_DOCK_TEXTURE_MARGIN := 56.0
 const STAGE_DOCK_TEXTURE_MODULATE := Color(0.86, 0.88, 0.88, 0.98)
-const MAIN_MENU_POCKET_FRAME_MODEL := "shared_stage_cartography_quiet_pocket_frame"
+const MAIN_MENU_POCKET_FRAME_MODEL := "borderless_scenery_overlay_with_high_contrast_fallback"
 const MAIN_MENU_POCKET_TEXTURE_MARGIN := 56.0
 const MAIN_MENU_POCKET_TEXTURE_MODULATE := Color(0.72, 0.76, 0.78, 0.88)
 const MAIN_MENU_WORDMARK_FACE_COLOR := Color(0.98, 0.84, 0.46, 1.0)
@@ -25,8 +25,8 @@ const MAIN_MENU_EYEBROW_OUTLINE_COLOR := Color(0.04, 0.03, 0.02, 0.92)
 const MAIN_MENU_EYEBROW_SHADOW_COLOR := Color(0.0, 0.0, 0.0, 0.66)
 const MAIN_MENU_EYEBROW_OUTLINE_SIZE := 1
 const MAIN_MENU_EYEBROW_SHADOW_OFFSET := Vector2i(1, 1)
-const MAIN_MENU_LOGO_POCKET_COMPACT_BOTTOM := 0.180
-const MAIN_MENU_LOGO_POCKET_NOTICE_BOTTOM := 0.228
+const MAIN_MENU_LOGO_POCKET_COMPACT_BOTTOM := 0.155
+const MAIN_MENU_LOGO_POCKET_NOTICE_BOTTOM := 0.200
 const CAMPAIGN_COMPACT_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
 const CAMPAIGN_EXPANDED_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)
 const CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0
@@ -362,14 +362,11 @@ func _latest_continue_surface() -> Dictionary:
 func _refresh_summary() -> void:
 	var lead := _menu_notice
 	_summary_label.visible = lead != ""
-	_set_compact_label(_summary_label, lead, 3, 84)
+	_set_compact_label(_summary_label, lead, 2, 72)
 	_sync_logo_pocket_notice_height(_summary_label.visible)
-	_set_compact_label(
-		_active_expedition_label,
-		_build_footer_expedition_summary(),
-		5,
-		84
-	)
+	var expedition_summary := _build_footer_expedition_summary()
+	_set_compact_label(_active_expedition_label, expedition_summary, 1, 58)
+	_active_expedition_label.tooltip_text = expedition_summary
 
 func _sync_logo_pocket_notice_height(has_notice: bool) -> void:
 	_logo_pocket_panel.anchor_bottom = MAIN_MENU_LOGO_POCKET_NOTICE_BOTTOM if has_notice else MAIN_MENU_LOGO_POCKET_COMPACT_BOTTOM
@@ -4115,7 +4112,7 @@ func validation_main_menu_pocket_surface_summary() -> Dictionary:
 		"active_expedition_text": _active_expedition_label.text,
 		"active_expedition_tooltip": _active_expedition_label.tooltip_text,
 		"high_contrast": FrontierVisualKit.high_contrast_enabled(),
-		"rendering_mode": "authored_cartography_pockets" if logo_style is StyleBoxTexture and footer_style is StyleBoxTexture else "smoke_fallback",
+		"rendering_mode": "borderless_scenery_overlay" if logo_style is StyleBoxEmpty and footer_style is StyleBoxEmpty else "high_contrast_fallback",
 		"high_contrast_fallback_class": high_contrast_fallback.get_class(),
 		"missing_asset_fallback_class": missing_asset_fallback.get_class(),
 		"fallbacks_texture_free": not (high_contrast_fallback is StyleBoxTexture) and not (missing_asset_fallback is StyleBoxTexture),
@@ -5348,9 +5345,13 @@ func _apply_visual_theme() -> void:
 		"panel",
 		_stage_dock_surface_style(STAGE_DOCK_CARTOGRAPHY_PATH, FrontierVisualKit.high_contrast_enabled())
 	)
-	var pocket_style := _main_menu_pocket_surface_style(STAGE_DOCK_CARTOGRAPHY_PATH, FrontierVisualKit.high_contrast_enabled())
-	_logo_pocket_panel.add_theme_stylebox_override("panel", pocket_style)
-	_footer_pocket_panel.add_theme_stylebox_override("panel", pocket_style.duplicate())
+	if FrontierVisualKit.high_contrast_enabled():
+		var pocket_style := _main_menu_pocket_surface_style(STAGE_DOCK_CARTOGRAPHY_PATH, true)
+		_logo_pocket_panel.add_theme_stylebox_override("panel", pocket_style)
+		_footer_pocket_panel.add_theme_stylebox_override("panel", pocket_style.duplicate())
+	else:
+		FrontierVisualKit.apply_clear_panel(_logo_pocket_panel)
+		FrontierVisualKit.apply_clear_panel(_footer_pocket_panel)
 
 	FrontierVisualKit.apply_tab_container(_menu_tabs, "smoke")
 	for list in [_campaign_list, _chapter_list, _skirmish_list, _help_list, _save_list]:
@@ -5461,6 +5462,11 @@ func _apply_visual_theme() -> void:
 	_apply_main_menu_wordmark_theme()
 	FrontierVisualKit.apply_label(_subtitle_label, "body", 14)
 	FrontierVisualKit.apply_label(_summary_label, "body", 15)
+	_active_expedition_label.add_theme_color_override("font_outline_color", MAIN_MENU_WORDMARK_OUTLINE_COLOR)
+	_active_expedition_label.add_theme_constant_override("outline_size", 2)
+	_active_expedition_label.add_theme_color_override("font_shadow_color", MAIN_MENU_WORDMARK_SHADOW_COLOR)
+	_active_expedition_label.add_theme_constant_override("shadow_offset_x", 2)
+	_active_expedition_label.add_theme_constant_override("shadow_offset_y", 2)
 	FrontierVisualKit.apply_label(_stage_dock_title_label, "title", 18)
 	FrontierVisualKit.apply_label(_stage_dock_hint_label, "muted", 13)
 	FrontierVisualKit.apply_label(_active_expedition_label, "body", 13)

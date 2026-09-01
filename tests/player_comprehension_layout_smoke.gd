@@ -95,8 +95,9 @@ func _expect_overworld_status_contract(shell: Control, narrow: bool, compact: bo
 		return _fail("overworld status chip was hidden at %s" % viewport_size)
 	if not is_equal_approx(status_chip.custom_minimum_size.x, 118.0):
 		return _fail("overworld status chip changed its authored compact width at %s: %s" % [viewport_size, status_chip.custom_minimum_size])
-	if status_label.clip_text != narrow:
-		return _fail("overworld status clipping at %s expected %s but got %s" % [viewport_size, narrow, status_label.clip_text])
+	var expected_clip := narrow or (not compact and viewport_size.x <= 1600.0 and SettingsService.ui_scale_percent() >= 130)
+	if status_label.clip_text != expected_clip:
+		return _fail("overworld status clipping at %s expected %s but got %s" % [viewport_size, expected_clip, status_label.clip_text])
 	var full_status := status_label.text
 	if full_status.is_empty():
 		return _fail("overworld status text is empty at %s" % viewport_size)
@@ -179,6 +180,8 @@ func _check_town(viewport_size: Vector2) -> bool:
 	return ok
 
 func _expect_town_build_plan(shell: Node, session, initial_built_buildings: Array, initial_resources: Dictionary, viewport_size: Vector2) -> bool:
+	shell.call("validation_open_town_catalog", "build")
+	await _settle_layout()
 	var snapshot: Dictionary = shell.call("validation_snapshot")
 	var selected_id := String(snapshot.get("selected_build_action_id", ""))
 	if not selected_id.begins_with("build:"):
@@ -259,7 +262,7 @@ func _expect_town_sidebar_contract(shell: Control, compact: bool, viewport_size:
 	var stage_column := shell.get_node("%StageColumn") as Control
 	if sidebar == null or management_tabs == null or stage_column == null:
 		return _fail("town management sidebar is missing at %s" % viewport_size)
-	var expected_width := 304.0 if compact else 400.0
+	var expected_width := 290.0 if compact else 352.0
 	if not is_equal_approx(sidebar.custom_minimum_size.x, expected_width):
 		return _fail("town management sidebar budget at %s expected %s but got %s" % [viewport_size, expected_width, sidebar.custom_minimum_size.x])
 	if sidebar.visible and sidebar.size.x + 0.01 < sidebar.get_combined_minimum_size().x:
@@ -268,16 +271,16 @@ func _expect_town_sidebar_contract(shell: Control, compact: bool, viewport_size:
 		return _fail("town scenic stage no longer dominates the management rail at %s: %s / %s" % [viewport_size, stage_column.size, sidebar.size])
 	var tab_bar := management_tabs.get_tab_bar()
 	if tab_bar == null or tab_bar.tab_count != 5 \
-			or tab_bar.size.x + 0.01 < tab_bar.get_combined_minimum_size().x:
+			or (sidebar.visible and tab_bar.size.x + 0.01 < tab_bar.get_combined_minimum_size().x):
 		return _fail("town management tab bar is clipped at %s: %s / %s" % [viewport_size, tab_bar.size if tab_bar != null else Vector2.ZERO, tab_bar.get_combined_minimum_size() if tab_bar != null else Vector2.ZERO])
 	var expected_titles := ["Build", "Muster", "Spells", "Trade", "Log"]
 	var prior_end_x := -INF
 	for tab_index in range(tab_bar.tab_count):
 		var tab_rect := tab_bar.get_tab_rect(tab_index)
 		if tab_bar.get_tab_title(tab_index) != expected_titles[tab_index] \
-				or tab_rect.size.x <= 0.0 \
-				or (tab_index > 0 and tab_rect.position.x < prior_end_x - 0.01) \
-				or tab_rect.end.x > tab_bar.size.x + 0.01:
+				or (sidebar.visible and tab_rect.size.x <= 0.0) \
+				or (sidebar.visible and tab_index > 0 and tab_rect.position.x < prior_end_x - 0.01) \
+				or (sidebar.visible and tab_rect.end.x > tab_bar.size.x + 0.01):
 			return _fail("town management tab plaque escaped or overlapped at %s index %d: %s" % [viewport_size, tab_index, tab_rect])
 		prior_end_x = tab_rect.end.x
 	return true
