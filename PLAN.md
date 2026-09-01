@@ -24,9 +24,42 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected; audit the expanded live catalog before starting the next coherent content-and-original-art batch.
-- Most recently completed implementation slice: `content-wild-atlas-accord-campaign-10184`, a six-chapter cross-faction campaign over the Frontier Mythic Habitat maps with exact witness handoff and original campaign art.
-- Current package boundary: matching Linux and Windows release exports measure 237107592 bytes, 12892408 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none selected after completing the Grand Arcanum batch; the next content/art slice requires a fresh live-catalog audit.
+- Most recently completed implementation slice: `content-six-grand-arcanum-convocations-10184`, six large faction spellwright trials with eighteen direct spell routes and six original academy identities.
+- Current package boundary: matching Linux and Windows release exports measure 237206140 bytes, 12793860 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Grand Arcanum Convocations
+
+id: `content-six-grand-arcanum-convocations-10184`
+
+Status: completed.
+
+Completion evidence:
+- six skirmish-only 18x12 boards now launch six exact spellwrights with six five-stack signature companies, paired Marchland towns, eighteen distinct production encounter fronts, field economy, reactive reserves and pressure, and eight-condition victory chains;
+- six guarded academy sites provide eighteen previously unreferenced low-, middle-, and high-tier faction spells through live one-time claims, scoped spell objectives, hostile-town capture, and save-version-9 persistence; the active catalog now holds 293 scenarios, 431 army groups, and 371 resource sites;
+- six separately generated transparent masters derive one compact 288x48 runtime atlas with exact mappings, prompt/hash/accessibility provenance, and package exclusion for high-resolution sources;
+- the one consolidated smoke passed six launches, eighteen lessons and runtime spell resolutions, eighteen real battle victories, six exact art routes, six missing-spell controls, six scenario victories, six captures, and six exact save-version-9 round trips;
+- repository validation passed after the complete batch. Sequential Linux and Windows package gates both booted successfully, included all 49 resource-site atlases, excluded generated source art, and produced the same 237206140-byte PCK below the unchanged ceiling.
+
+Selection finding:
+- only 18 of 287 active scenarios require learning a spell, and 92 of 119 authored spells have no direct scenario, hero, town, or building reference beyond generic school-pool availability;
+- Amberweir Granary, Moonbite Reedshrine, Splitprism Duelcourt, Woundroot Hearthgrove, Whitegauge Calibration Yard, and Dreamwake Oracle Harbor remain the six least-used faction towns at nine or ten placements;
+- each town's tier-4 and tier-6 signature companies remain among the least-reused faction units, while six suitable spellwright commanders remain on the four-scenario direct-lead floor and the 18x12 board has only fifteen authored maps.
+
+Implementation boundary:
+- author six original skirmish-only 18x12 Grand Arcanum Convocations, one per faction, each led by a four-lead-floor spellwright with the corresponding low-use town as its home and another low-use town as the hostile seat;
+- create six exact five-stack player companies containing both underused local signature units, reuse eighteen low-placement production encounters as three guarded examination fronts per map, and add field economy, reactive hooks, hostile pressure, late reserves, and an opposing-town capture;
+- add one guarded original field academy per scenario that teaches three currently unreferenced faction-school spells spanning low, middle, and high tiers, exposes exact spell-known objectives, one-time claim state, scoped event dependencies, spell runtime resolution, and save-version-9 persistence;
+- generate six transparent original academy masters and derive one compact 288x48 runtime atlas with exact prompt/hash/accessibility provenance, source-master package exclusion, and symmetric Windows/Linux packaging.
+
+Completion criteria:
+- all six scenarios launch through skirmish authority with exact heroes, five-stack companies, paired low-use towns, 18x12 boards, three production encounters, field economy, and eight victory objectives;
+- one consolidated smoke after the complete batch must win one representative real battle per map while probing all eighteen production payloads, claim every academy once, teach and resolve all eighteen exact spells, prove missing-spell controls and scoped objective checks, capture every opposing town, complete every scenario, inspect six captures, and round-trip save version 9;
+- repository validation and sequential Linux/Windows packaged startup pass below the unchanged 250000000-byte ceiling with the new runtime atlas present and generated source masters excluded; commit and push without a whole-game release-readiness claim.
+
+Non-goals:
+- no new faction, hero definition, town definition, unit definition, spell definition, artifact, encounter definition, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes school, spell, map, landmark, name, text, iconography, art, or protected visual expression.
 
 ## The Wild Atlas Accord
 

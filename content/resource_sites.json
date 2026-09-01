@@ -20482,6 +20482,234 @@
       },
       "content_batch_id": "content-six-frontier-mythic-habitats-10184",
       "batch_role": "guarded_frontier_mythic_dwelling"
+    },
+    {
+      "id": "site_dawnwrit_grand_convocation",
+      "name": "Dawn-Writ Column",
+      "family": "shrine",
+      "action_label": "Convene the Three Grand Lessons",
+      "summary": "An asymmetric ivory and brass road obelisk carries three signal rings, a forked lantern crown, and a white-gold oath flame.",
+      "claim_rewards": {
+        "experience": 240
+      },
+      "hero_command_bonus": {
+        "attack": 1
+      },
+      "learn_spell_id": "spell_beacon_dawn_ward_21",
+      "learn_spell_ids": [
+        "spell_beacon_dawn_ward_21",
+        "spell_beacon_roadward_charge_23",
+        "spell_beacon_bell_lance_25"
+      ],
+      "claim_flags": {
+        "dawnwrit_grand_convocation_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "triune_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-grand-arcanum-convocations-10184",
+      "public_text": {
+        "public_summary": "An asymmetric ivory and brass road obelisk carries three signal rings, a forked lantern crown, and a white-gold oath flame.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_leechmoon_grand_convocation",
+      "name": "Leechmoon Poultice Court",
+      "family": "shrine",
+      "action_label": "Convene the Three Grand Lessons",
+      "summary": "A crescent bogstone court joins a hide drum, crooked reed retort, hanging poultice bowl, and three flood stakes.",
+      "claim_rewards": {
+        "experience": 240
+      },
+      "hero_command_bonus": {
+        "defense": 1
+      },
+      "learn_spell_id": "spell_mire_leech_poultice_26",
+      "learn_spell_ids": [
+        "spell_mire_leech_poultice_26",
+        "spell_mire_flood_rot_28",
+        "spell_mire_silt_frenzy_20"
+      ],
+      "claim_flags": {
+        "leechmoon_grand_convocation_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "triune_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-grand-arcanum-convocations-10184",
+      "public_text": {
+        "public_summary": "A crescent bogstone court joins a hide drum, crooked reed retort, hanging poultice bowl, and three flood stakes.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_aurora_halo_grand_convocation",
+      "name": "Aurora Halo Array",
+      "family": "shrine",
+      "action_label": "Convene the Three Grand Lessons",
+      "summary": "An offset oval lens turns inside three unequal halo rails beneath a prism vane and glass calibration needles.",
+      "claim_rewards": {
+        "experience": 240
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
+      "learn_spell_id": "spell_lens_aurora_array_26",
+      "learn_spell_ids": [
+        "spell_lens_aurora_array_26",
+        "spell_lens_halo_ray_18",
+        "spell_lens_aurora_chorus_10"
+      ],
+      "claim_flags": {
+        "aurorahalo_grand_convocation_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "triune_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-grand-arcanum-convocations-10184",
+      "public_text": {
+        "public_summary": "An offset oval lens turns inside three unequal halo rails beneath a prism vane and glass calibration needles.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_loambriar_grand_convocation",
+      "name": "Loam-Briar Graft Loom",
+      "family": "shrine",
+      "action_label": "Convene the Three Grand Lessons",
+      "summary": "A living root arch supports a graft spool, thorn stake, bloom lamp, and three unequal bough forks.",
+      "claim_rewards": {
+        "experience": 240
+      },
+      "hero_command_bonus": {
+        "defense": 1
+      },
+      "learn_spell_id": "spell_root_loam_bloom_26",
+      "learn_spell_ids": [
+        "spell_root_loam_bloom_26",
+        "spell_root_green_briar_28",
+        "spell_root_bloom_bark_20"
+      ],
+      "claim_flags": {
+        "loambriar_grand_convocation_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "triune_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-grand-arcanum-convocations-10184",
+      "public_text": {
+        "public_summary": "A living root arch supports a graft spool, thorn stake, bloom lamp, and three unequal bough forks.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_ashrail_grand_convocation",
+      "name": "Ash-Rail Clause Forge",
+      "family": "shrine",
+      "action_label": "Convene the Three Grand Lessons",
+      "summary": "A squat basalt and brass forge carries a diagonal hammer rail, riveted mantle, three clamp jaws, and a red pressure gauge.",
+      "claim_rewards": {
+        "experience": 240
+      },
+      "hero_command_bonus": {
+        "power": 1
+      },
+      "learn_spell_id": "spell_furnace_rivet_mantle_21",
+      "learn_spell_ids": [
+        "spell_furnace_rivet_mantle_21",
+        "spell_furnace_brass_bellows_23",
+        "spell_furnace_ash_rail_25"
+      ],
+      "claim_flags": {
+        "ashrail_grand_convocation_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "triune_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-grand-arcanum-convocations-10184",
+      "public_text": {
+        "public_summary": "A squat basalt and brass forge carries a diagonal hammer rail, riveted mantle, three clamp jaws, and a red pressure gauge.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_mistmourning_grand_convocation",
+      "name": "Mist-Mourning Drift Archive",
+      "family": "shrine",
+      "action_label": "Convene the Three Grand Lessons",
+      "summary": "A tilted whalebone crescent bears shroud sails, a drowned lantern mask, tide marker, and three memory chimes.",
+      "claim_rewards": {
+        "experience": 240
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
+      "learn_spell_id": "spell_veil_mist_duel_26",
+      "learn_spell_ids": [
+        "spell_veil_mist_duel_26",
+        "spell_veil_moon_mark_28",
+        "spell_veil_mourning_fogbind_20"
+      ],
+      "claim_flags": {
+        "mistmourning_grand_convocation_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "triune_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-six-grand-arcanum-convocations-10184",
+      "public_text": {
+        "public_summary": "A tilted whalebone crescent bears shroud sails, a drowned lantern mask, tide marker, and three memory chimes.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }
