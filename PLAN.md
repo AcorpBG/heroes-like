@@ -24,9 +24,41 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected after completing `content-twelve-marchland-warband-musters-10184`.
-- Most recently completed implementation slice: `content-twelve-marchland-warband-musters-10184`, twelve hero-led Marchland warband musters using the least-reused faction towns, units, and neutral fronts.
-- Current package boundary: matching Linux and Windows release exports measure 235788640 bytes, 14211360 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none; select and record the next coherent content-and-art batch before editing live catalogs.
+- Most recently completed implementation slice: `content-twelve-marchland-grand-route-operations-10184`, twelve large-board hero-led operations that deepen the least-used towns, heroes, warworks, and encounter routes.
+- Current package boundary: matching Linux and Windows release exports measure 236029584 bytes, 13970416 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Twelve Marchland Grand-Route Operations
+
+id: `content-twelve-marchland-grand-route-operations-10184`
+
+Status: completed.
+
+Completion evidence:
+- twelve skirmish-only grand-route operations now provide six 24x14 and six 24x16 boards, two per faction, with twelve promoted three-lead heroes, thirty-six player/forward/enemy town placements, twelve exact five-stack hosts, seventy-two authored battle fronts, 180 field-resource placements, and twelve guarded route-command landmarks;
+- twelve original transparent landmark masters now derive one compact 576x48 runtime atlas with exact hero/site mappings, prompts, hashes, accessible descriptions, retained source provenance, and source-master exclusion from both release packages;
+- the single consolidated smoke passed twelve large-board launches, twelve representative real battle wins, twelve exact one-time integrated claims, twelve exact art resolutions, twelve eight-objective victories, twelve captures, and twelve save-version-9 round trips in 21.8 seconds, while repository validation checks all seventy-two authored fronts;
+- repository validation passed, followed by sequential Linux and Windows release-package gates; both packages booted successfully, included all 46 required resource-site atlases, excluded source art, and produced an identical 236029584-byte PCK, 13970416 bytes below the 250000000-byte ceiling.
+
+Selection finding:
+- only one authored scenario uses a 24x14 board and one uses 24x16, leaving large strategic routes substantially underrepresented despite live support for multi-town logistics, enemy pressure, six-front objectives, and save-version-9 continuity;
+- seventeen heroes remain at the three-scenario direct-lead floor, while the six Marchland towns remain the least-used towns at five placements and their tier-six warworks remain the least-used faction units at three army-group uses;
+- forty-five encounter types have only two authored placements, providing a coherent opportunity to deepen live encounter reuse without adding disconnected definitions.
+
+Implementation boundary:
+- author twelve original skirmish-only grand-route operations, two per faction and one per selected three-lead-floor hero, split evenly across 24x14 and 24x16 boards;
+- use each Marchland town as the home of two operations, add a same-faction forward town and one hostile town, launch an exact five-stack company containing both local Marchland units, and route each faction pair through six distinct two-placement encounter types for seventy-two authored battle fronts;
+- add twelve guarded original route-command landmarks with one-time XP, rare-resource, exact local-unit recruit, objective-flag, pathing, rendering, and save behavior, plus large-board field economy, six reactive hooks, enemy pressure, and late reserves;
+- generate twelve transparent original landmark masters, derive one compact 576x48 runtime atlas with prompt/hash/accessibility provenance, exclude source masters from release packages, and preserve Linux/Windows symmetry.
+
+Completion criteria:
+- all twelve scenarios launch through skirmish authority with exact heroes, five-stack companies, three towns, supported large board dimensions, fourteen-or-sixteen field sites, six reactive hooks, and six real encounter fronts;
+- one consolidated smoke wins one representative production battle on each of the twelve large maps while repository validation checks all seventy-two authored fronts, claims every guarded route-command landmark once, grants exact integrated XP/resource/recruit/flag payloads without repeat mutation, resolves exact field art, completes all eight objectives, and round-trips every case through save version 9;
+- inspect the complete capture set after the batch, then run repository validation and sequential Linux/Windows packaged startup below the unchanged 250000000-byte ceiling.
+
+Non-goals:
+- no new faction, hero definition, town definition, building, unit definition, spell, artifact, encounter definition, objective type, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes map, hero, unit, landmark, name, text, art, heraldry, or protected visual expression.
 
 ## Twelve Marchland Warband Musters
 

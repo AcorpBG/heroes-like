@@ -1,0 +1,208 @@
+{
+  "schema_id": "twelve_marchland_grand_route_operations_art_v1",
+  "content_batch_id": "content-twelve-marchland-grand-route-operations-10184",
+  "generation_mode": "built_in_imagegen",
+  "source_model": "built_in_imagegen_original_marchland_grand_route_operations_atlas",
+  "prompt_set_summary": "Twelve transparent original route-command landmarks for twelve underused heroes, built around strong faction-readable silhouettes at 48px.",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png",
+  "runtime_atlas_size": [
+    576,
+    48
+  ],
+  "runtime_atlas_sha256": "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360",
+  "source_package_policy": "retained_for_provenance_excluded_from_linux_and_windows_exports",
+  "items": [
+    {
+      "site_id": "site_cinderquill_route_kiln_desk",
+      "hero_id": "hero_embercourt_orra_cinderquill",
+      "asset_id": "resource_site_route_cinderquill_kiln_desk",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/cinderquill_route_kiln_desk_source.png",
+      "source_sha256": "f01d672bb6fd5afe358f200957d904ef29109192f9c395f5f503c52ae38d2e61",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-4f344f04-3001-46c3-afd8-a927afa9a5d6.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Cinderquill Route-Kiln Desk for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject and readable identity: A brick route kiln supports blank charter slates beneath a feather-shaped iron chimney and curled brass paper rail.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A brick route kiln supports blank charter slates beneath a feather-shaped iron chimney and curled brass paper rail."
+    },
+    {
+      "site_id": "site_lockmaster_seven_lock_march_gate",
+      "hero_id": "hero_embercourt_saren_lockmaster",
+      "asset_id": "resource_site_route_lockmaster_seven_lock_gate",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/lockmaster_seven_lock_march_gate_source.png",
+      "source_sha256": "857b78dcf4a9aadad62b6eda0a4dc3cf86dfcb5f908212ee04820da8957823e5",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-789e52a3-d668-49be-90ee-18bab86c76f6.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Lockmaster Seven-Lock March Gate for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject and readable identity: A narrow river gate carries seven visibly different locks, a broken counterweight, chain loops, and one hooded lantern.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A narrow river gate carries seven visibly different locks, a broken counterweight, chain loops, and one hooded lantern."
+    },
+    {
+      "site_id": "site_chainboom_reed_breach_drum",
+      "hero_id": "hero_mireclaw_kessa_chainboom",
+      "asset_id": "resource_site_route_chainboom_breach_drum",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/chainboom_reed_breach_drum_source.png",
+      "source_sha256": "c6e04d6db1027345d65ad65ed9a2c054bf4397c2569c7140d8e1a526fc90e72a",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-29c93eea-e1d1-4485-a5ce-8943cc427fc4.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Chainboom Reed-Breach Drum for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject and readable identity: A chained marsh drum bears a split reed-boom arm, bone beaters, hooked float cages, and a muddy keel foot.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A chained marsh drum bears a split reed-boom arm, bone beaters, hooked float cages, and a muddy keel foot."
+    },
+    {
+      "site_id": "site_reedscript_flood_ledger_stand",
+      "hero_id": "hero_mireclaw_pell_reedscript",
+      "asset_id": "resource_site_route_reedscript_flood_ledger",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/reedscript_flood_ledger_stand_source.png",
+      "source_sha256": "a792bda32d774e5bd543d76d25cf9d9bd1a7e29545dc1c212382ebd84724423a",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-4562bb86-8543-4f30-86ce-fd842cb1a6ee.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Reedscript Flood-Ledger Stand for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject and readable identity: A crooked reed lectern holds blank wax leaves beside a crescent water gauge, clay plumb, and flood markers.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A crooked reed lectern holds blank wax leaves beside a crescent water gauge, clay plumb, and flood markers."
+    },
+    {
+      "site_id": "site_daynote_dawn_chime_array",
+      "hero_id": "hero_sunvault_essa_daynote",
+      "asset_id": "resource_site_route_daynote_dawn_chime",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/daynote_dawn_chime_array_source.png",
+      "source_sha256": "a7317324b103c635d118e384de2b3cbf876e019a2fa0fc46fb5feda2a21278c7",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-51ad8acf-54df-4fa9-a116-be9e98834f0f.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Daynote Dawn-Chime Array for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject and readable identity: An asymmetric radiant frame carries five crystal chimes, a split sundial, diagonal striker, and prism plumbs.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "An asymmetric radiant frame carries five crystal chimes, a split sundial, diagonal striker, and prism plumbs."
+    },
+    {
+      "site_id": "site_glassmarshal_prism_rank_beacon",
+      "hero_id": "hero_sunvault_ilyr_glassmarshal",
+      "asset_id": "resource_site_route_glassmarshal_prism_beacon",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/glassmarshal_prism_rank_beacon_source.png",
+      "source_sha256": "20e5ff7e1e05e740115fed5300d29cf90f19ab932a8d4fea8a99835661a43e94",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-27ecd7fd-92c4-4e14-bb3c-2130620d4b68.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Glassmarshal Prism-Rank Beacon for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject and readable identity: Four staggered prism blades rise from a stepped base above a mirrored rail, crossing rods, and diamond lens.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "Four staggered prism blades rise from a stepped base above a mirrored rail, crossing rods, and diamond lens."
+    },
+    {
+      "site_id": "site_graftsibyl_root_omen_frame",
+      "hero_id": "hero_thornwake_nara_graftsibyl",
+      "asset_id": "resource_site_route_graftsibyl_root_omen",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/graftsibyl_root_omen_frame_source.png",
+      "source_sha256": "5351df6f961e75fbf228c5f50ccc5f9ad3aac9a81101653b9bf9844f1c2593d5",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-6233c077-7e0e-4df7-a4ac-ce952e9b8f94.png",
+      "atlas_region": [
+        288,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Graft-Sibyl Root-Omen Frame for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject and readable identity: A living-root frame surrounds an empty seed cradle with leaf mirrors, a bark pointer, graft vials, and clawed feet.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A living-root frame surrounds an empty seed cradle with leaf mirrors, a bark pointer, graft vials, and clawed feet."
+    },
+    {
+      "site_id": "site_seedseer_windseed_orrery",
+      "hero_id": "hero_thornwake_veyra_seedseer",
+      "asset_id": "resource_site_route_seedseer_windseed_orrery",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/seedseer_windseed_orrery_source.png",
+      "source_sha256": "d4d787a7c69ba4134ed65179727d555a44dd2e4161e8ea29529191e7703c16f7",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-fc9c5491-46e6-4689-9e20-216cc674ecbe.png",
+      "atlas_region": [
+        336,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Seedseer Windseed Orrery for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject and readable identity: Three unequal seed pods circle on branch orbits above a leaf vane, root plumb, antler braces, and vine tripod.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "Three unequal seed pods circle on branch orbits above a leaf vane, root plumb, antler braces, and vine tripod."
+    },
+    {
+      "site_id": "site_bellfounder_road_bell_gantry",
+      "hero_id": "hero_brasshollow_oren_bellfounder",
+      "asset_id": "resource_site_route_bellfounder_road_bell",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/bellfounder_road_bell_gantry_source.png",
+      "source_sha256": "1ca623d3ecac06c2032d1979e753dafa971c8553b63691d92fa72c568d6e1698",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-294fad39-14d9-48ad-b820-751b1f9c2191.png",
+      "atlas_region": [
+        384,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Bellfounder Road-Bell Gantry for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject and readable identity: A mobile casting gantry suspends an unfinished faceted bell beside a pouring arm, mold clamps, and warning hammer.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A mobile casting gantry suspends an unfinished faceted bell beside a pouring arm, mold clamps, and warning hammer."
+    },
+    {
+      "site_id": "site_ashmeter_cinder_scale_station",
+      "hero_id": "hero_brasshollow_pava_ashmeter",
+      "asset_id": "resource_site_route_ashmeter_cinder_scale",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/ashmeter_cinder_scale_station_source.png",
+      "source_sha256": "73b5cb5e27f026be2f202790f7325009444516e53a887da52870f2c27df15115",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d0e33f53-e5cc-4a81-bbf9-1060acda1800.png",
+      "atlas_region": [
+        432,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Ashmeter Cinder-Scale Station for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject and readable identity: A low assay station carries a tilted balance scale, ash cups, calibration arc, chain weights, and furnace pot.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A low assay station carries a tilted balance scale, ash cups, calibration arc, chain weights, and furnace pot."
+    },
+    {
+      "site_id": "site_vowless_blank_bell_mast",
+      "hero_id": "hero_veilmourn_nacre_vowless",
+      "asset_id": "resource_site_route_vowless_blank_bell",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/vowless_blank_bell_mast_source.png",
+      "source_sha256": "607c121a4ceaf63fbc0e843c8674f5e7df2dd8490c125cc37d66d737f86e21d0",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-cc1eb9e4-0ec5-474f-9535-5f0b18de8ce6.png",
+      "atlas_region": [
+        480,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Vowless Blank-Bell Mast for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject and readable identity: A bare harbor mast raises a broad white clapperless bell with a crescent sail rib, pendants, and anchor hook.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A bare harbor mast raises a broad white clapperless bell with a crescent sail rib, pendants, and anchor hook."
+    },
+    {
+      "site_id": "site_vanehook_crosswind_mooring",
+      "hero_id": "hero_veilmourn_ruln_vanehook",
+      "asset_id": "resource_site_route_vanehook_crosswind_mooring",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1/vanehook_crosswind_mooring_source.png",
+      "source_sha256": "ae58d294e935c38b8c625727558bbe50e9b068a6fcae25c7ff59625187dd9a77",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-1afcd48d-50b2-4e66-9b88-3b675fa95826.png",
+      "atlas_region": [
+        528,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Vanehook Crosswind Mooring for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject and readable identity: A crooked harbor mooring bears opposing wind fins, a rope drum, direction discs, storm lantern, and split anchor base.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A crooked harbor mooring bears opposing wind fins, a rope drum, direction discs, storm lantern, and split anchor base."
+    }
+  ]
+}

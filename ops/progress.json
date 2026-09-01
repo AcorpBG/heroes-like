@@ -16255,11 +16255,11 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Eight Commander Doctrine Expeditions is complete: eight original 18x12 hero-led skirmishes, eight guarded command landmarks, thirty-two battle fronts, and matching Linux/Windows packages.",
+  "currentNotes": "Twelve Marchland Grand-Route Operations is complete: twelve original large-board skirmishes, twelve route-command landmarks, seventy-two authored fronts, and matching Linux/Windows packages.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "",
   "currentSliceId": "",
-  "currentSliceNotes": "No active slice selected after completing content-twelve-marchland-warband-musters-10184.",
+  "currentSliceNotes": "No active slice selected after completing content-twelve-marchland-grand-route-operations-10184.",
   "currentSliceStatus": "",
   "currentSliceTitle": "",
   "currentSliceUpdatedAt": "2026-08-31T22:14:10Z",
@@ -107592,6 +107592,16 @@
       "startedAt": "2026-09-01T00:01:08Z",
       "notes": "Implemented twelve live Marchland warband musters with twelve original landmarks; consolidated smoke passed 12 launches, 48 production battles, 12 claims/victories/captures/save-v9; repo and Linux/Windows package gates pass at 235788640 bytes.",
       "completedAt": "2026-09-01T00:26:57Z"
+    },
+    {
+      "id": "content-twelve-marchland-grand-route-operations-10184",
+      "title": "content twelve marchland grand route operations 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-09-01T01:13:01Z",
+      "startedAt": "2026-09-01T00:30:12Z",
+      "notes": "Completed twelve large Marchland grand-route operations with twelve original landmark masters, seventy-two authored fronts, twelve representative live battle probes, exact claims/art/objectives/save-v9, repository validation, and matching 236029584-byte Linux/Windows packages.",
+      "completedAt": "2026-09-01T01:13:01Z"
     }
   ],
   "project": "heroes-like",
@@ -108136,7 +108146,7 @@
   ],
   "summary": "Completed Six Marchland Warworks as one coherent six-unit, six-building, six-map, twelve-master production-content batch with consolidated validation.",
   "taskId": "10184",
-  "updatedAt": "2026-09-01T00:26:57Z",
+  "updatedAt": "2026-09-01T01:13:01Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
