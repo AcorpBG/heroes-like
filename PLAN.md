@@ -24,9 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected after completing the Grand Arcanum batch; the next content/art slice requires a fresh live-catalog audit.
-- Most recently completed implementation slice: `content-six-grand-arcanum-convocations-10184`, six large faction spellwright trials with eighteen direct spell routes and six original academy identities.
-- Current package boundary: matching Linux and Windows release exports measure 237206140 bytes, 12793860 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Active implementation slice: none; audit the expanded live catalog before selecting the next coherent production-content batch.
+- Most recently completed implementation slice: `content-six-uncrowned-sovereign-roads-10184`, six large town-development roads joined into the first campaign whose live progression requires building and recruiting each faction's sovereign unit.
+- Current package boundary: matching Linux and Windows release exports measure 237389792 bytes, 12610208 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Six Uncrowned Sovereign Roads
+
+id: `content-six-uncrowned-sovereign-roads-10184`
+
+Status: completed.
+
+Selection finding:
+- none of the 108 campaign-enabled scenarios combines a live town-building objective with a live army-recruitment objective, although both mechanics exist in twelve skirmish-only Marchland trials;
+- the 20x12 board has only ten authored scenarios, thirty-eight heroes remain on the four-scenario direct-lead floor, and Brasshollow plus Veilmourn each have only sixteen campaign-enabled scenarios versus Embercourt's twenty;
+- Cinderlock Bastion, Murkward Ford, Dawnmirror Observatory, Graftroot Caravan, Orevein Gantry, and Bellwake Harbor are relatively low-use non-Marchland faction towns whose sovereign tier-seven dwellings and units already have complete live rules and art but no campaign arc centered on building and commanding them.
+
+Implementation boundary:
+- author six original 20x12 scenarios, one per faction, each led by a four-lead-floor commander from a low-use non-Marchland home town toward another selected hostile town through three distinct production encounters, field economy, pressure, late reserves, and hostile-town capture;
+- make each scenario begin with the exact tier-six prerequisite and enough nine-resource runway to build its existing tier-seven dwelling, recruit its sovereign unit into the active five-stack company, and claim one guarded original uncrowned field throne;
+- join the six scenarios into The Uncrowned Circuit campaign with exact chapter unlocks, one sovereign-witness flag per chapter, capped common-resource-only carryover, personal command isolation, complete narrative copy, one original emblem, and six chapter seals derived from the same six field-throne masters;
+- generate six transparent original field-throne masters plus one separately generated campaign emblem, derive one compact 288x48 overworld atlas, one 128px emblem, and six 64px seals, and retain exact prompt/hash/accessibility provenance with source exclusion on Windows and Linux.
+
+Completion criteria:
+- all six scenarios launch in campaign and skirmish modes with exact heroes, five-stack companies, paired towns, 20x12 boards, nine-resource development runway, three distinct live encounters, the correct tier-seven build/recruit chain, one guarded throne, seven victory objectives, and save-version-9 behavior;
+- one consolidated six-chapter smoke after the complete batch must build all six sovereign dwellings, recruit all six tier-seven units, win all eighteen production battles, claim every throne once, prove witness handoff and personal-state isolation, capture every hostile town, complete all six chapters, resolve all thirteen art identities, inspect six captures, and round-trip save version 9;
+- repository validation and sequential Linux/Windows package startup pass below the unchanged 250000000-byte ceiling with 25 campaign emblems, 114 chapter seals, the fiftieth resource-site atlas, and no generated source masters; commit and push without a whole-game release-readiness claim.
+
+Non-goals:
+- no new faction, hero, town, building definition, unit definition, spell, artifact, encounter definition, objective type, combat formula, strategic-AI algorithm, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes campaign, crown, throne, unit, town, name, text, heraldry, art, or protected visual expression.
 
 ## Six Grand Arcanum Convocations
 

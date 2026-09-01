@@ -20710,6 +20710,258 @@
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
+    },
+    {
+      "id": "site_cinderlock_open_charter_throne",
+      "name": "Cinderlock Open Charter Throne",
+      "family": "scenario_objective",
+      "action_label": "Witness the Open Seat",
+      "summary": "A black sluice-stone seat stands beneath an open broken brass ring beside a white ember bowl.",
+      "claim_rewards": {
+        "experience": 240,
+        "embergrain": 2
+      },
+      "hero_command_bonus": {
+        "defense": 1
+      },
+      "claim_flags": {
+        "uncrowned_cinderlock_throne_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "objective_event_contract": {
+        "objective_kind": "uncrowned_sovereign_throne",
+        "event_expectation": "raises the exact chapter throne flag through the live site claim action",
+        "scenario_id": "powderwrit-cinderlock-charter-ascent",
+        "objective_id": "cinderlock_claim_throne",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      },
+      "content_status": "uncrowned_sovereign_throne_live",
+      "content_batch_id": "content-six-uncrowned-sovereign-roads-10184",
+      "public_text": {
+        "public_summary": "A black sluice-stone seat stands beneath an open broken brass ring beside a white ember bowl.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_murkward_antler_tribunal",
+      "name": "Murkward Antler Tribunal",
+      "family": "scenario_objective",
+      "action_label": "Witness the Open Seat",
+      "summary": "Unequal drowned antlers frame a bogstone seat, hide drum, reed scales, and peat lantern.",
+      "claim_rewards": {
+        "experience": 240,
+        "peatwax": 2
+      },
+      "hero_command_bonus": {
+        "attack": 1
+      },
+      "claim_flags": {
+        "uncrowned_murkward_throne_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "objective_event_contract": {
+        "objective_kind": "uncrowned_sovereign_throne",
+        "event_expectation": "raises the exact chapter throne flag through the live site claim action",
+        "scenario_id": "reedscript-murkward-antler-ascent",
+        "objective_id": "murkward_claim_throne",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      },
+      "content_status": "uncrowned_sovereign_throne_live",
+      "content_batch_id": "content-six-uncrowned-sovereign-roads-10184",
+      "public_text": {
+        "public_summary": "Unequal drowned antlers frame a bogstone seat, hide drum, reed scales, and peat lantern.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_dawnmirror_uncrowned_matrix",
+      "name": "Dawnmirror Uncrowned Matrix",
+      "family": "scenario_objective",
+      "action_label": "Witness the Open Seat",
+      "summary": "An ivory-gold seat hangs in an offset prism halo crossed by three calibration needles.",
+      "claim_rewards": {
+        "experience": 240,
+        "aetherglass": 2
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
+      "claim_flags": {
+        "uncrowned_dawnmirror_throne_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "objective_event_contract": {
+        "objective_kind": "uncrowned_sovereign_throne",
+        "event_expectation": "raises the exact chapter throne flag through the live site claim action",
+        "scenario_id": "sevenfold-dawnmirror-daybreak-ascent",
+        "objective_id": "dawnmirror_claim_throne",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      },
+      "content_status": "uncrowned_sovereign_throne_live",
+      "content_batch_id": "content-six-uncrowned-sovereign-roads-10184",
+      "public_text": {
+        "public_summary": "An ivory-gold seat hangs in an offset prism halo crossed by three calibration needles.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_graftroot_living_dais",
+      "name": "Graftroot Living Dais",
+      "family": "scenario_objective",
+      "action_label": "Witness the Open Seat",
+      "summary": "A living root seat grows beneath unequal flowering boughs, two seed lamps, and a graft spool.",
+      "claim_rewards": {
+        "experience": 240,
+        "verdant_grafts": 2
+      },
+      "hero_command_bonus": {
+        "defense": 1
+      },
+      "claim_flags": {
+        "uncrowned_graftroot_throne_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "objective_event_contract": {
+        "objective_kind": "uncrowned_sovereign_throne",
+        "event_expectation": "raises the exact chapter throne flag through the live site claim action",
+        "scenario_id": "seedseer-graftroot-worldroot-ascent",
+        "objective_id": "graftroot_claim_throne",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      },
+      "content_status": "uncrowned_sovereign_throne_live",
+      "content_batch_id": "content-six-uncrowned-sovereign-roads-10184",
+      "public_text": {
+        "public_summary": "A living root seat grows beneath unequal flowering boughs, two seed lamps, and a graft spool.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_orevein_saintless_assay_seat",
+      "name": "Orevein Saintless Assay Seat",
+      "family": "scenario_objective",
+      "action_label": "Witness the Open Seat",
+      "summary": "A basalt and brass assay seat carries three gauges, an open clamp, and a red relief valve.",
+      "claim_rewards": {
+        "experience": 240,
+        "brass_scrip": 2
+      },
+      "hero_command_bonus": {
+        "power": 1
+      },
+      "claim_flags": {
+        "uncrowned_orevein_throne_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "objective_event_contract": {
+        "objective_kind": "uncrowned_sovereign_throne",
+        "event_expectation": "raises the exact chapter throne flag through the live site claim action",
+        "scenario_id": "blackgauge-orevein-foundry-ascent",
+        "objective_id": "orevein_claim_throne",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      },
+      "content_status": "uncrowned_sovereign_throne_live",
+      "content_batch_id": "content-six-uncrowned-sovereign-roads-10184",
+      "public_text": {
+        "public_summary": "A basalt and brass assay seat carries three gauges, an open clamp, and a red relief valve.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_bellwake_empty_sounding_chair",
+      "name": "Bellwake Empty Sounding Chair",
+      "family": "scenario_objective",
+      "action_label": "Witness the Open Seat",
+      "summary": "Whalebone and blackwood frame an empty tide chair beneath shroud sails, a drowned bell, and three chimes.",
+      "claim_rewards": {
+        "experience": 240,
+        "memory_salt": 2
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
+      "claim_flags": {
+        "uncrowned_bellwake_throne_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "scenario_placement_migration": true
+      },
+      "objective_event_contract": {
+        "objective_kind": "uncrowned_sovereign_throne",
+        "event_expectation": "raises the exact chapter throne flag through the live site claim action",
+        "scenario_id": "keelwarden-bellwake-leviathan-ascent",
+        "objective_id": "bellwake_claim_throne",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      },
+      "content_status": "uncrowned_sovereign_throne_live",
+      "content_batch_id": "content-six-uncrowned-sovereign-roads-10184",
+      "public_text": {
+        "public_summary": "Whalebone and blackwood frame an empty tide chair beneath shroud sails, a drowned bell, and three chimes.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }

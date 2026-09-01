@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit the expanded 293-scenario live catalog and select the next coherent production-content and original-art batch."
+    "Audit the expanded live catalog and select the next coherent production-content and original-art batch."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Six Grand Arcanum Convocations is complete: six large spellwright maps add eighteen direct spell routes, deepen six Marchland towns and twelve signature units, and ship six original academy identities.",
+  "currentNotes": "Six Uncrowned Sovereign Roads is complete: six 20x12 build-recruit-capture scenarios and The Uncrowned Circuit campaign now provide six live sovereign town-development routes with thirteen original art identities.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-grand-arcanum-convocations-10184",
-  "currentSliceId": "content-six-grand-arcanum-convocations-10184",
-  "currentSliceNotes": "Completed six 18x12 skirmishes, six five-stack companies, six paired-town roads, eighteen distinct encounter fronts, eighteen direct spell lessons, six original academy masters, and one compact runtime atlas. One consolidated live smoke, repository validation, and sequential Linux/Windows package gates passed.",
+  "currentSlice": "content-six-uncrowned-sovereign-roads-10184",
+  "currentSliceId": "content-six-uncrowned-sovereign-roads-10184",
+  "currentSliceNotes": "Completed six large dual-mode roads, one six-chapter campaign, six exact five-stack companies, eighteen production battles, six tier-seven build/recruit chains, six guarded live throne claims, one emblem, and six chapter seals. One consolidated smoke, repository validation, and sequential Linux/Windows packaged startup all passed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Six Grand Arcanum Convocations",
-  "currentSliceUpdatedAt": "2026-09-01T03:07:35Z",
+  "currentSliceTitle": "Six Uncrowned Sovereign Roads",
+  "currentSliceUpdatedAt": "2026-09-01T03:48:23Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107642,6 +107642,16 @@
       "startedAt": "2026-09-01T02:47:31Z",
       "notes": "Completed six large spellwright skirmishes with paired Marchland towns, six exact five-stack signature companies, eighteen distinct production encounter fronts, eighteen previously unreferenced spell routes, six guarded one-time academies, and six separately generated original academy masters in one compact atlas. The one consolidated smoke passed six launches, eighteen lessons and spell resolutions, eighteen real battle victories, six missing-spell controls, six exact art routes, six scenario victories, and six save-v9 round trips. Repository validation and sequential Linux/Windows package gates passed with 49 resource-site atlases, source-art exclusion, clean startup, and a matching 237206140-byte PCK.",
       "completedAt": "2026-09-01T03:07:35Z"
+    },
+    {
+      "id": "content-six-uncrowned-sovereign-roads-10184",
+      "title": "Six Uncrowned Sovereign Roads",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-09-01T03:48:23Z",
+      "startedAt": "2026-09-01T03:16:18Z",
+      "notes": "Completed six 20x12 campaign/skirmish roads and The Uncrowned Circuit with six exact five-stack companies, eighteen production fronts, six live tier-seven town build/recruit chains, six guarded throne claims, bounded common-resource-only chapter handoff, one original emblem, six original field throne masters, and six derived seals. The single consolidated smoke passed six launches, builds, recruitments, throne claims, hostile-town captures, witness handoffs, chapter victories, save-v9 round trips, eighteen real battles, and all thirteen art identities. Repository validation and sequential Linux/Windows package gates passed with 25 emblems, 114 seals, 50 resource-site atlases, clean startup, source-art exclusion, and a matching 237389792-byte PCK.",
+      "completedAt": "2026-09-01T03:48:23Z"
     }
   ],
   "project": "heroes-like",
@@ -107651,8 +107661,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The Grand Arcanum batch is complete. Broader production completion and release readiness remain open; the next content/art slice is not yet selected.",
-  "remainingWork": "Audit the expanded 293-scenario catalog, select the next coherent production-content and original-art slice, and continue without a whole-game release-readiness claim.",
+  "remainingGap": "The Uncrowned Sovereign Roads slice is complete. Broader production completion and release readiness remain open outside this slice.",
+  "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -108186,7 +108196,7 @@
   ],
   "summary": "Completed Six Marchland Warworks as one coherent six-unit, six-building, six-map, twelve-master production-content batch with consolidated validation.",
   "taskId": "10184",
-  "updatedAt": "2026-09-01T03:07:35Z",
+  "updatedAt": "2026-09-01T03:48:23Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
