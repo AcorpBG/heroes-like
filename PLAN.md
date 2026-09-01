@@ -17171,6 +17171,37 @@ Non-goals:
 - no gameplay, balance, AI, content, save-schema, or native RMG behavior changes;
 - no whole-game release-readiness, signing, publication, or clean native Windows certification claim.
 
+## Live Town Building Skyline Progression
+
+id: `ux-live-town-building-skyline-progression-10184`
+
+Status: completed 2026-09-01.
+
+Current finding:
+- every live town already owns an exact scenic backdrop and every buildable building owns an original transparent 256x256 runtime painting, but the town stage only draws the static backdrop; construction changes labels and district counts without changing the visible town;
+- towns expose twenty-three to thirty stable starting/buildable building identities, so a fixed, depth-sorted plot field can preserve a readable unbuilt-to-complete progression without adding a second gameplay state or copying protected Heroes town art;
+- construction is immediate in the current rules, so the relevant player states are an understated unbuilt plot, a persistent completed structure, and the existing short completion reveal for the just-built structure.
+
+Implementation boundary:
+- add one data-driven scenic plot resolver to `TownStageView` that assigns every starting/buildable building a stable normalized plot, draws subtle faction-tinted foundations while unbuilt, and draws the building's existing transparent runtime painting once authoritative `built_buildings` contains it;
+- keep upgrade chains in one plot so an upgraded structure replaces its predecessor, depth-sort the visible skyline, retain exact-town/faction backdrops and scenery-first overlays, and expose validation summaries rather than introducing labels or another panel over the scene;
+- add focused live construction and save/resume coverage across all thirty-two towns plus representative 1280x720 and 1920x1080 captures, repository validation, and sequential Linux/Windows packaged startup.
+
+Completion criteria:
+- every town resolves all of its authored starting/buildable buildings to contained, stable plots with a loadable exact runtime texture, unbuilt plots remain visually subordinate, and every authoritative completed building appears in the skyline;
+- a live build mutates the existing town authority once, immediately replaces its unbuilt plot with the exact completed building, preserves upgrade replacement, and remains exact after save-version-9 round trip;
+- focused runtime/capture review, repository validation, clean parsing, and sequential Linux/Windows exports and packaged startups pass without changing gameplay, save schema, or package parity.
+
+Completion result:
+- the live town stage now derives a stable three-depth plot field from each town's authored starting/buildable catalog, renders subtle faction-tinted foundations before construction, and replaces them with the existing exact transparent building paintings from authoritative `built_buildings` state;
+- upgrade chains share one plot and replace their predecessor, the just-built structure receives the existing bounded completion reveal with reduced-motion fallback, and the static upgrade graph is cached while current built visibility remains live;
+- the focused report passes all thirty-two towns, 836 individual town/building visibility routes, one real construction mutation, save-version-9 restoration, and six reviewed unbuilt/built/complete captures at 1280x720 and 1920x1080; exact-town backdrop and building-completion cue regressions pass;
+- repository validation and clean parsing pass; Linux and Windows exports/startups pass with matching 237744192-byte PCKs containing all 160 building textures and 160 import records.
+
+Non-goals:
+- no new building definitions, construction timing system, economy/balance/AI rule, town backdrop replacement, save-version bump, or native RMG change;
+- no copied Heroes building, town layout, asset, name, text, or protected visual expression; no signing, publication, whole-game validation, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

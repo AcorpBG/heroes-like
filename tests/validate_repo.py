@@ -269,6 +269,8 @@ TOWN_STAGE_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownStageView.gd"
 TOWN_VFX_MANIFEST_PATH = CONTENT_DIR / "town_vfx_manifest.json"
 COMPLETE_TOWN_BACKDROP_REPORT_SCRIPT_PATH = ROOT / "tests" / "complete_town_backdrop_runtime_report.gd"
 COMPLETE_TOWN_BACKDROP_REPORT_SCENE_PATH = ROOT / "tests" / "complete_town_backdrop_runtime_report.tscn"
+TOWN_BUILDING_SKYLINE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_building_skyline_progression_report.gd"
+TOWN_BUILDING_SKYLINE_REPORT_SCENE_PATH = ROOT / "tests" / "town_building_skyline_progression_report.tscn"
 TOWN_BUILDING_COMPLETE_VFX_SOURCE_PATH = ROOT / "art" / "town" / "source" / "build_complete_vfx_source.png"
 TOWN_BUILDING_COMPLETE_VFX_RUNTIME_PATH = ROOT / "art" / "town" / "runtime" / "vfx" / "build_complete.png"
 TOWN_BUILDING_COMPLETE_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_building_complete_vfx_asset_runtime_report.gd"
@@ -30623,6 +30625,54 @@ def validate_town_faction_progression(errors: list[str]) -> None:
     town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in ("TownRules.describe_status", "TownRules.describe_summary", "TownRules.describe_buildings", "TownRules.describe_market", "TownRules.describe_recruitment", "TownRules.describe_responses"):
         ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required town progression token: {required_token}")
+
+
+def validate_town_building_skyline_progression(errors: list[str]) -> None:
+    required_paths = (
+        TOWN_STAGE_SCRIPT_PATH,
+        TOWN_BUILDING_SKYLINE_REPORT_SCRIPT_PATH,
+        TOWN_BUILDING_SKYLINE_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town building skyline owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        'const BUILDING_SKYLINE_MODEL := "stable_depth_sorted_authored_building_plots"',
+        "func _draw_scenic_building_progression(scene_rect: Rect2) -> void:",
+        "func _town_building_plot_entries(scene_rect: Rect2) -> Array:",
+        "func _town_building_plot_groups() -> Array:",
+        "func _town_building_plot_root(building_id: String, catalog_set: Dictionary) -> String:",
+        "func validation_town_building_progression_summary() -> Dictionary:",
+        'TownRulesScript.building_icon_path(building_id)',
+        'SettingsService.reduced_motion_enabled()',
+    ):
+        ensure(token in stage_text, errors, f"TownStageView is missing live building skyline ownership: {token}")
+    draw_match = re.search(r"func _draw\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", stage_text, re.DOTALL)
+    draw_block = draw_match.group("body") if draw_match is not None else ""
+    ensure(draw_match is not None, errors, "Could not isolate TownStageView skyline draw order")
+    draw_order = [
+        draw_block.find("_draw_scenic_backdrop(scene_rect)"),
+        draw_block.find("_draw_scenic_building_progression(scene_rect)"),
+        draw_block.find("_draw_status_plaques(scene_rect)"),
+    ]
+    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Town building skyline must draw after scenery and before existing status overlays")
+
+    report_text = TOWN_BUILDING_SKYLINE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        "town_rows.size() == 32",
+        "TownRules.build_active_town(session, building_id)",
+        "restored.from_dict(session.to_dict())",
+        "building_id in Array(restored_summary.get(\"visible_building_ids\", []))",
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '"unbuilt", "built", "complete"',
+    ):
+        ensure(token in report_text, errors, f"Town skyline focused report is missing required live proof: {token}")
+    scene_text = TOWN_BUILDING_SKYLINE_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('path="res://tests/town_building_skyline_progression_report.gd"' in scene_text, errors, "Town skyline report scene must own the focused runtime script")
+    ensure_scene_nodes(scene_text, errors, "town_building_skyline_progression_report.tscn", [("TownBuildingSkylineProgressionReport", "Node")])
 
 
 def validate_town_building_complete_vfx_assets(errors: list[str]) -> None:
@@ -83520,6 +83570,7 @@ def main() -> int:
     validate_battle_spell_timing_board(errors)
     validate_battle_faction_identity(errors)
     validate_town_faction_progression(errors)
+    validate_town_building_skyline_progression(errors)
     validate_town_building_complete_vfx_assets(errors)
     validate_town_recruitment_vfx_assets(errors)
     validate_town_route_response_dispatch_feedback(errors)
