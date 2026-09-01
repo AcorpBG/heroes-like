@@ -19894,6 +19894,594 @@
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
+    },
+    {
+      "id": "site_cindervane_updraft_roost",
+      "name": "Censerwing Updraft Roost",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_cindervane_updraft_roost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 500,
+        "embergrain": 1
+      },
+      "claim_flags": {
+        "cindervane_updraft_roost_claimed": true
+      },
+      "control_income": {
+        "gold": 130,
+        "embergrain": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_cindervane_censerwings": 1,
+        "unit_neutral_cinderpot_hurlers": 3
+      },
+      "weekly_recruits": {
+        "unit_neutral_cindervane_censerwings": 1,
+        "unit_neutral_cinderpot_hurlers": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_cindervane_censerwings": 1,
+          "unit_neutral_cinderpot_hurlers": 3
+        },
+        "weekly_recruits": {
+          "unit_neutral_cindervane_censerwings": 1,
+          "unit_neutral_cinderpot_hurlers": 1
+        },
+        "guard_army_group_id": "army_neutral_cindervane_updraft_roost_watch",
+        "guard_encounter_id": "encounter_cindervane_updraft_roost_watch"
+      },
+      "response_profile": {
+        "action_label": "Secure Censerwing Updraft Roost",
+        "summary": "A split basalt chimney, curved bronze cage ribs, ember vanes, and an empty hanging censer cradle mark the updraft roost.",
+        "movement_cost": 7,
+        "resource_cost": {
+          "gold": 720,
+          "embergrain": 1
+        },
+        "watch_days": 6,
+        "quality_bonus": 5,
+        "readiness_bonus": 4,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_cindervane_updraft_roost",
+        "neutral_dwelling_family_id": "neutral_dwelling_cindervane_updraft_roost",
+        "resource_site_id": "site_cindervane_updraft_roost",
+        "roster_unit_ids": [
+          "unit_neutral_cindervane_censerwings",
+          "unit_neutral_cinderpot_hurlers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "elite",
+        "visible_cue": "the visible cindervane censerwings watch blocks Censerwing Updraft Roost before recruitment",
+        "guard_army_group_id": "army_neutral_cindervane_updraft_roost_watch",
+        "guard_encounter_id": "encounter_cindervane_updraft_roost_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact cindervane censerwings watch must fall before the weekly muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "elite",
+        "guard_army_group_id": "army_neutral_cindervane_updraft_roost_watch",
+        "guard_encounter_id": "encounter_cindervane_updraft_roost_watch",
+        "visible_cue": "the visible cindervane censerwings watch blocks Censerwing Updraft Roost before recruitment",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-frontier-mythic-habitats-10184",
+      "batch_role": "guarded_frontier_mythic_dwelling"
+    },
+    {
+      "id": "site_fenmirror_shell_basin",
+      "name": "Fenmirror Shell Basin",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_fenmirror_shell_basin",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 500,
+        "peatwax": 1
+      },
+      "claim_flags": {
+        "fenmirror_shell_basin_claimed": true
+      },
+      "control_income": {
+        "gold": 130,
+        "peatwax": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_fenmirror_gallowshells": 1,
+        "unit_neutral_peatflare_jarriers": 3
+      },
+      "weekly_recruits": {
+        "unit_neutral_fenmirror_gallowshells": 1,
+        "unit_neutral_peatflare_jarriers": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_fenmirror_gallowshells": 1,
+          "unit_neutral_peatflare_jarriers": 3
+        },
+        "weekly_recruits": {
+          "unit_neutral_fenmirror_gallowshells": 1,
+          "unit_neutral_peatflare_jarriers": 1
+        },
+        "guard_army_group_id": "army_neutral_fenmirror_shell_basin_watch",
+        "guard_encounter_id": "encounter_fenmirror_shell_basin_watch"
+      },
+      "response_profile": {
+        "action_label": "Secure Fenmirror Shell Basin",
+        "summary": "Two leaning crescent shell arches enclose a dark mirror basin, dangling reed chains, and a low root landing pier.",
+        "movement_cost": 7,
+        "resource_cost": {
+          "gold": 720,
+          "peatwax": 1
+        },
+        "watch_days": 6,
+        "quality_bonus": 5,
+        "readiness_bonus": 4,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_fenmirror_shell_basin",
+        "neutral_dwelling_family_id": "neutral_dwelling_fenmirror_shell_basin",
+        "resource_site_id": "site_fenmirror_shell_basin",
+        "roster_unit_ids": [
+          "unit_neutral_fenmirror_gallowshells",
+          "unit_neutral_peatflare_jarriers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "elite",
+        "visible_cue": "the visible fenmirror gallowshells watch blocks Fenmirror Shell Basin before recruitment",
+        "guard_army_group_id": "army_neutral_fenmirror_shell_basin_watch",
+        "guard_encounter_id": "encounter_fenmirror_shell_basin_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact fenmirror gallowshells watch must fall before the weekly muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "elite",
+        "guard_army_group_id": "army_neutral_fenmirror_shell_basin_watch",
+        "guard_encounter_id": "encounter_fenmirror_shell_basin_watch",
+        "visible_cue": "the visible fenmirror gallowshells watch blocks Fenmirror Shell Basin before recruitment",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-frontier-mythic-habitats-10184",
+      "batch_role": "guarded_frontier_mythic_dwelling"
+    },
+    {
+      "id": "site_prismwake_refraction_shelf",
+      "name": "Prismwake Refraction Shelf",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_prismwake_refraction_shelf",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 500,
+        "aetherglass": 1
+      },
+      "claim_flags": {
+        "prismwake_refraction_shelf_claimed": true
+      },
+      "control_income": {
+        "gold": 130,
+        "aetherglass": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_prismwake_raylings": 1,
+        "unit_neutral_snowglass_markers": 3
+      },
+      "weekly_recruits": {
+        "unit_neutral_prismwake_raylings": 1,
+        "unit_neutral_snowglass_markers": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_prismwake_raylings": 1,
+          "unit_neutral_snowglass_markers": 3
+        },
+        "weekly_recruits": {
+          "unit_neutral_prismwake_raylings": 1,
+          "unit_neutral_snowglass_markers": 1
+        },
+        "guard_army_group_id": "army_neutral_prismwake_refraction_shelf_watch",
+        "guard_encounter_id": "encounter_prismwake_refraction_shelf_watch"
+      },
+      "response_profile": {
+        "action_label": "Secure Prismwake Refraction Shelf",
+        "summary": "An ivory floating shelf carries an offset oval lens arch, two prism sails, glass chimes, and three narrow crystal keels.",
+        "movement_cost": 7,
+        "resource_cost": {
+          "gold": 720,
+          "aetherglass": 1
+        },
+        "watch_days": 6,
+        "quality_bonus": 5,
+        "readiness_bonus": 4,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_prismwake_refraction_shelf",
+        "neutral_dwelling_family_id": "neutral_dwelling_prismwake_refraction_shelf",
+        "resource_site_id": "site_prismwake_refraction_shelf",
+        "roster_unit_ids": [
+          "unit_neutral_prismwake_raylings",
+          "unit_neutral_snowglass_markers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "elite",
+        "visible_cue": "the visible prismwake raylings watch blocks Prismwake Refraction Shelf before recruitment",
+        "guard_army_group_id": "army_neutral_prismwake_refraction_shelf_watch",
+        "guard_encounter_id": "encounter_prismwake_refraction_shelf_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact prismwake raylings watch must fall before the weekly muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "elite",
+        "guard_army_group_id": "army_neutral_prismwake_refraction_shelf_watch",
+        "guard_encounter_id": "encounter_prismwake_refraction_shelf_watch",
+        "visible_cue": "the visible prismwake raylings watch blocks Prismwake Refraction Shelf before recruitment",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-frontier-mythic-habitats-10184",
+      "batch_role": "guarded_frontier_mythic_dwelling"
+    },
+    {
+      "id": "site_knotstag_root_court",
+      "name": "Knotstag Root-Court",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_knotstag_root_court",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 500,
+        "verdant_grafts": 1
+      },
+      "claim_flags": {
+        "knotstag_root_court_claimed": true
+      },
+      "control_income": {
+        "gold": 130,
+        "verdant_grafts": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_rootcrown_knotstags": 1,
+        "unit_neutral_thornbow_scouts": 3
+      },
+      "weekly_recruits": {
+        "unit_neutral_rootcrown_knotstags": 1,
+        "unit_neutral_thornbow_scouts": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_rootcrown_knotstags": 1,
+          "unit_neutral_thornbow_scouts": 3
+        },
+        "weekly_recruits": {
+          "unit_neutral_rootcrown_knotstags": 1,
+          "unit_neutral_thornbow_scouts": 1
+        },
+        "guard_army_group_id": "army_neutral_knotstag_root_court_watch",
+        "guard_encounter_id": "encounter_knotstag_root_court_watch"
+      },
+      "response_profile": {
+        "action_label": "Secure Knotstag Root-Court",
+        "summary": "A living-root amphitheater rises into two unequal antler gates around a hollow dais and three seed-lantern pods.",
+        "movement_cost": 7,
+        "resource_cost": {
+          "gold": 720,
+          "verdant_grafts": 1
+        },
+        "watch_days": 6,
+        "quality_bonus": 5,
+        "readiness_bonus": 4,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_knotstag_root_court",
+        "neutral_dwelling_family_id": "neutral_dwelling_knotstag_root_court",
+        "resource_site_id": "site_knotstag_root_court",
+        "roster_unit_ids": [
+          "unit_neutral_rootcrown_knotstags",
+          "unit_neutral_thornbow_scouts"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "elite",
+        "visible_cue": "the visible rootcrown knotstags watch blocks Knotstag Root-Court before recruitment",
+        "guard_army_group_id": "army_neutral_knotstag_root_court_watch",
+        "guard_encounter_id": "encounter_knotstag_root_court_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact rootcrown knotstags watch must fall before the weekly muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "elite",
+        "guard_army_group_id": "army_neutral_knotstag_root_court_watch",
+        "guard_encounter_id": "encounter_knotstag_root_court_watch",
+        "visible_cue": "the visible rootcrown knotstags watch blocks Knotstag Root-Court before recruitment",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-frontier-mythic-habitats-10184",
+      "batch_role": "guarded_frontier_mythic_dwelling"
+    },
+    {
+      "id": "site_gaugecoil_pressure_burrow",
+      "name": "Gaugecoil Pressure Burrow",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_gaugecoil_pressure_burrow",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 500,
+        "brass_scrip": 1
+      },
+      "claim_flags": {
+        "gaugecoil_pressure_burrow_claimed": true
+      },
+      "control_income": {
+        "gold": 130,
+        "brass_scrip": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_gaugecoil_orewyrms": 1,
+        "unit_neutral_tunnelmark_bolters": 3
+      },
+      "weekly_recruits": {
+        "unit_neutral_gaugecoil_orewyrms": 1,
+        "unit_neutral_tunnelmark_bolters": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_gaugecoil_orewyrms": 1,
+          "unit_neutral_tunnelmark_bolters": 3
+        },
+        "weekly_recruits": {
+          "unit_neutral_gaugecoil_orewyrms": 1,
+          "unit_neutral_tunnelmark_bolters": 1
+        },
+        "guard_army_group_id": "army_neutral_gaugecoil_pressure_burrow_watch",
+        "guard_encounter_id": "encounter_gaugecoil_pressure_burrow_watch"
+      },
+      "response_profile": {
+        "action_label": "Secure Gaugecoil Pressure Burrow",
+        "summary": "Three concentric pressure rings frame a dark drill rail beneath oversized blank gauges, a red relief valve, and six anchor feet.",
+        "movement_cost": 7,
+        "resource_cost": {
+          "gold": 720,
+          "brass_scrip": 1
+        },
+        "watch_days": 6,
+        "quality_bonus": 5,
+        "readiness_bonus": 4,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_gaugecoil_pressure_burrow",
+        "neutral_dwelling_family_id": "neutral_dwelling_gaugecoil_pressure_burrow",
+        "resource_site_id": "site_gaugecoil_pressure_burrow",
+        "roster_unit_ids": [
+          "unit_neutral_gaugecoil_orewyrms",
+          "unit_neutral_tunnelmark_bolters"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "elite",
+        "visible_cue": "the visible gaugecoil orewyrms watch blocks Gaugecoil Pressure Burrow before recruitment",
+        "guard_army_group_id": "army_neutral_gaugecoil_pressure_burrow_watch",
+        "guard_encounter_id": "encounter_gaugecoil_pressure_burrow_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact gaugecoil orewyrms watch must fall before the weekly muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "elite",
+        "guard_army_group_id": "army_neutral_gaugecoil_pressure_burrow_watch",
+        "guard_encounter_id": "encounter_gaugecoil_pressure_burrow_watch",
+        "visible_cue": "the visible gaugecoil orewyrms watch blocks Gaugecoil Pressure Burrow before recruitment",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-frontier-mythic-habitats-10184",
+      "batch_role": "guarded_frontier_mythic_dwelling"
+    },
+    {
+      "id": "site_gloambell_sounding_deep",
+      "name": "Gloambell Sounding Deep",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_gloambell_sounding_deep",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 500,
+        "memory_salt": 1
+      },
+      "claim_flags": {
+        "gloambell_sounding_deep_claimed": true
+      },
+      "control_income": {
+        "gold": 130,
+        "memory_salt": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_gloambell_wake_mantas": 1,
+        "unit_neutral_lanternskate_throwers": 3
+      },
+      "weekly_recruits": {
+        "unit_neutral_gloambell_wake_mantas": 1,
+        "unit_neutral_lanternskate_throwers": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_gloambell_wake_mantas": 1,
+          "unit_neutral_lanternskate_throwers": 3
+        },
+        "weekly_recruits": {
+          "unit_neutral_gloambell_wake_mantas": 1,
+          "unit_neutral_lanternskate_throwers": 1
+        },
+        "guard_army_group_id": "army_neutral_gloambell_sounding_deep_watch",
+        "guard_encounter_id": "encounter_gloambell_sounding_deep_watch"
+      },
+      "response_profile": {
+        "action_label": "Secure Gloambell Sounding Deep",
+        "summary": "A tilted whalebone arch shelters one drowned bell, two tideglass pools, pale sounding rods, and a narrow keel stair.",
+        "movement_cost": 7,
+        "resource_cost": {
+          "gold": 720,
+          "memory_salt": 1
+        },
+        "watch_days": 6,
+        "quality_bonus": 5,
+        "readiness_bonus": 4,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_gloambell_sounding_deep",
+        "neutral_dwelling_family_id": "neutral_dwelling_gloambell_sounding_deep",
+        "resource_site_id": "site_gloambell_sounding_deep",
+        "roster_unit_ids": [
+          "unit_neutral_gloambell_wake_mantas",
+          "unit_neutral_lanternskate_throwers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "apex",
+        "visible_cue": "the visible gloambell wake-mantas watch blocks Gloambell Sounding Deep before recruitment",
+        "guard_army_group_id": "army_neutral_gloambell_sounding_deep_watch",
+        "guard_encounter_id": "encounter_gloambell_sounding_deep_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact gloambell wake-mantas watch must fall before the weekly muster opens"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "apex",
+        "guard_army_group_id": "army_neutral_gloambell_sounding_deep_watch",
+        "guard_encounter_id": "encounter_gloambell_sounding_deep_watch",
+        "visible_cue": "the visible gloambell wake-mantas watch blocks Gloambell Sounding Deep before recruitment",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-six-frontier-mythic-habitats-10184",
+      "batch_role": "guarded_frontier_mythic_dwelling"
     }
   ]
 }

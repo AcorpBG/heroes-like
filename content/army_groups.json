@@ -4852,6 +4852,60 @@
       ],
       "content_status": "commander_dominion_siege_host_live",
       "content_batch_id": "content-ten-commander-dominion-sieges-10184"
+    },
+    {
+      "id": "army_neutral_cindervane_updraft_roost_watch",
+      "name": "Censerwing Updraft Roost Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_cindervane_censerwings", "count": 2},
+        {"unit_id": "unit_neutral_cinderpot_hurlers", "count": 7}
+      ]
+    },
+    {
+      "id": "army_neutral_fenmirror_shell_basin_watch",
+      "name": "Fenmirror Shell Basin Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_fenmirror_gallowshells", "count": 2},
+        {"unit_id": "unit_neutral_peatflare_jarriers", "count": 7}
+      ]
+    },
+    {
+      "id": "army_neutral_prismwake_refraction_shelf_watch",
+      "name": "Prismwake Refraction Shelf Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_prismwake_raylings", "count": 2},
+        {"unit_id": "unit_neutral_snowglass_markers", "count": 7}
+      ]
+    },
+    {
+      "id": "army_neutral_knotstag_root_court_watch",
+      "name": "Knotstag Root-Court Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_rootcrown_knotstags", "count": 2},
+        {"unit_id": "unit_neutral_thornbow_scouts", "count": 7}
+      ]
+    },
+    {
+      "id": "army_neutral_gaugecoil_pressure_burrow_watch",
+      "name": "Gaugecoil Pressure Burrow Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_gaugecoil_orewyrms", "count": 2},
+        {"unit_id": "unit_neutral_tunnelmark_bolters", "count": 7}
+      ]
+    },
+    {
+      "id": "army_neutral_gloambell_sounding_deep_watch",
+      "name": "Gloambell Sounding Deep Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_gloambell_wake_mantas", "count": 1},
+        {"unit_id": "unit_neutral_lanternskate_throwers", "count": 7}
+      ]
     }
   ]
 }

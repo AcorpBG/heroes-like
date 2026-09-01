@@ -6,8 +6,8 @@
     "prompt_summary": "One distinct original generated overworld sprite asset for each authored non-decoration map object that previously lacked a unique sprite assignment after the decorative/blocker foundation pass.",
     "source_model": "built_in_image_gen_chroma_key_split",
     "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
-    "new_generated_sprite_count": 216,
-    "generated_batch_count": 19,
+    "new_generated_sprite_count": 222,
+    "generated_batch_count": 20,
     "generated_batches": [
       {
         "batch_index": 1,
@@ -160,20 +160,28 @@
           211,
           216
         ]
+      },
+      {
+        "batch_index": 20,
+        "workspace_source_manifest": "res://art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/manifest.json",
+        "object_index_range": [
+          217,
+          222
+        ]
       }
     ]
   },
   "coverage": {
-    "authored_map_object_count": 416,
+    "authored_map_object_count": 422,
     "foundation_decorative_or_blocker_distinct_count": 200,
     "preexisting_unique_non_decorative_count": 0,
-    "new_distinct_non_decorative_asset_count": 216,
-    "total_distinct_authored_map_object_count_after_pass": 416,
+    "new_distinct_non_decorative_asset_count": 222,
+    "total_distinct_authored_map_object_count_after_pass": 422,
     "by_family": {
       "faction_landmark": 9,
       "guarded_reward_site": 32,
       "mine": 10,
-      "neutral_dwelling": 63,
+      "neutral_dwelling": 69,
       "neutral_encounter": 6,
       "pickup": 9,
       "repeatable_service": 7,
@@ -402,7 +410,13 @@
     "mapobj_mirror_daybreak_drill_prism",
     "mapobj_five_bough_veteran_grove",
     "mapobj_three_gauge_chapter_foundry",
-    "mapobj_fog_keel_lastwatch_mooring"
+    "mapobj_fog_keel_lastwatch_mooring",
+    "mapobj_cindervane_updraft_roost",
+    "mapobj_fenmirror_shell_basin",
+    "mapobj_prismwake_refraction_shelf",
+    "mapobj_knotstag_root_court",
+    "mapobj_gaugecoil_pressure_burrow",
+    "mapobj_gloambell_sounding_deep"
   ],
   "object_sprite_mappings": {
     "object_roadward_lodge": {
@@ -1916,6 +1930,48 @@
       "assignment_source": "veteran_company_muster_completion",
       "family": "neutral_dwelling",
       "source_batch": 19
+    },
+    "object_cindervane_updraft_roost": {
+      "asset_id": "mapobj_cindervane_updraft_roost",
+      "fit": "Distinct original Censerwing Updraft Roost unclaimed habitat assigned to its authored neutral dwelling.",
+      "assignment_source": "frontier_mythic_habitat_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 20
+    },
+    "object_fenmirror_shell_basin": {
+      "asset_id": "mapobj_fenmirror_shell_basin",
+      "fit": "Distinct original Fenmirror Shell Basin unclaimed habitat assigned to its authored neutral dwelling.",
+      "assignment_source": "frontier_mythic_habitat_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 20
+    },
+    "object_prismwake_refraction_shelf": {
+      "asset_id": "mapobj_prismwake_refraction_shelf",
+      "fit": "Distinct original Prismwake Refraction Shelf unclaimed habitat assigned to its authored neutral dwelling.",
+      "assignment_source": "frontier_mythic_habitat_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 20
+    },
+    "object_knotstag_root_court": {
+      "asset_id": "mapobj_knotstag_root_court",
+      "fit": "Distinct original Knotstag Root-Court unclaimed habitat assigned to its authored neutral dwelling.",
+      "assignment_source": "frontier_mythic_habitat_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 20
+    },
+    "object_gaugecoil_pressure_burrow": {
+      "asset_id": "mapobj_gaugecoil_pressure_burrow",
+      "fit": "Distinct original Gaugecoil Pressure Burrow unclaimed habitat assigned to its authored neutral dwelling.",
+      "assignment_source": "frontier_mythic_habitat_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 20
+    },
+    "object_gloambell_sounding_deep": {
+      "asset_id": "mapobj_gloambell_sounding_deep",
+      "fit": "Distinct original Gloambell Sounding Deep unclaimed habitat assigned to its authored neutral dwelling.",
+      "assignment_source": "frontier_mythic_habitat_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 20
     }
   }
 }
