@@ -16259,7 +16259,7 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "",
   "currentSliceId": "",
-  "currentSliceNotes": "",
+  "currentSliceNotes": "No active slice selected after completing content-twelve-marchland-warband-musters-10184.",
   "currentSliceStatus": "",
   "currentSliceTitle": "",
   "currentSliceUpdatedAt": "2026-08-31T22:14:10Z",
@@ -107582,6 +107582,16 @@
       "startedAt": "2026-08-31T23:35:55Z",
       "notes": "Shipped eight original 18x12 commander doctrine expeditions, eight five-stack companies, eight guarded live command landmarks, and one 384x48 original runtime atlas. Consolidated smoke passed 8 launches, 32 production battles, 8 one-time XP/command/flag claims, 8 exact art routes, 8 victories, 8 captures, and 8 save-v9 round trips. Full repository validation and sequential Linux/Windows package startup passed at matching 235582988-byte PCKs with source masters excluded.",
       "completedAt": "2026-08-31T23:57:37Z"
+    },
+    {
+      "id": "content-twelve-marchland-warband-musters-10184",
+      "title": "content twelve marchland warband musters 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-09-01T00:26:57Z",
+      "startedAt": "2026-09-01T00:01:08Z",
+      "notes": "Implemented twelve live Marchland warband musters with twelve original landmarks; consolidated smoke passed 12 launches, 48 production battles, 12 claims/victories/captures/save-v9; repo and Linux/Windows package gates pass at 235788640 bytes.",
+      "completedAt": "2026-09-01T00:26:57Z"
     }
   ],
   "project": "heroes-like",
@@ -108126,7 +108136,7 @@
   ],
   "summary": "Completed Six Marchland Warworks as one coherent six-unit, six-building, six-map, twelve-master production-content batch with consolidated validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-31T23:57:37Z",
+  "updatedAt": "2026-09-01T00:26:57Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

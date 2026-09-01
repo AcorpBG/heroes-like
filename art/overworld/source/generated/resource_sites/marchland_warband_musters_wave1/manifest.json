@@ -1,0 +1,208 @@
+{
+  "schema_id": "twelve_marchland_warband_musters_art_v1",
+  "content_batch_id": "content-twelve-marchland-warband-musters-10184",
+  "generation_mode": "built_in_imagegen",
+  "source_model": "built_in_imagegen_original_marchland_warband_musters_atlas",
+  "prompt_set_summary": "Twelve original transparent rally landmarks for twelve underused live heroes, with faction-readable non-color silhouettes at 48px and no packaged source-master dependency.",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/marchland_warband_musters_atlas.png",
+  "runtime_atlas_size": [
+    576,
+    48
+  ],
+  "runtime_atlas_sha256": "1d10aeb8be99da25bf5bcbd8e685feed2e0e3587d5c5952db1620fa12d08fea0",
+  "source_package_policy": "retained_for_provenance_excluded_from_linux_and_windows_exports",
+  "items": [
+    {
+      "site_id": "site_tollbrand_toll_chain_standard",
+      "hero_id": "hero_embercourt_helva_tollbrand",
+      "asset_id": "resource_site_muster_tollbrand_toll_chain_standard",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_warband_musters_wave1/tollbrand_toll_chain_standard_source.png",
+      "source_sha256": "476de23ffa2c664bdfcbf1bdfea71149de6da253a7735811e31bfecf94874887",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-faa5bffb-48c3-4597-a754-4aa1f385eb10.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld rally landmark source; Primary request: Create Tollbrand Toll-Chain Standard for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: a broad river-toll rally arch on two stone feet, crossed by a heavy chain, with an oversized hooked brass tally bell, three unequal lock plates, and a small ember lantern; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A broad stone-footed toll arch carries a heavy chain, hooked tally bell, unequal lock plates, and one ember lantern."
+    },
+    {
+      "site_id": "site_beaconscribe_beacon_ledger_post",
+      "hero_id": "hero_embercourt_jorun_beaconscribe",
+      "asset_id": "resource_site_muster_beaconscribe_beacon_ledger_post",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_warband_musters_wave1/beaconscribe_beacon_ledger_post_source.png",
+      "source_sha256": "285a334cecb9a93fc1d03d8213f3d9462916ad17b2795656e979b5fc57f9c049",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-4e6424df-f1ee-4516-8206-42ea3466a09b.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld rally landmark source; Primary request: Create Beaconscribe Beacon-Ledger Muster Post for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: a tall asymmetrical timber muster post with a hooded beacon brazier, blank hinged brass ledger plate, two offset sluice paddles, three hanging seal weights, and forked signal crown; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "An asymmetric timber post raises a hooded beacon above a blank ledger plate, offset paddles, hanging weights, and forked crown."
+    },
+    {
+      "site_id": "site_mudkeel_keel_drum_rally",
+      "hero_id": "hero_mireclaw_brakka_mudkeel",
+      "asset_id": "resource_site_muster_mudkeel_keel_drum_rally",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_warband_musters_wave1/mudkeel_keel_drum_rally_source.png",
+      "source_sha256": "4d92e750ef56e615f38570d01aa07fdf8914c17532ac9ff33991661dce4df1c4",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-8190417a-17bb-4d3a-a90f-89ad34594d6c.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld rally landmark source; Primary request: Create Mudkeel Keel-Drum Rally for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: a low half-moon skiff rib carrying a huge hide muster drum, crooked mud-coated keel, two chained beaters, three reed pennant fins, and hooked ferry weight; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A half-moon skiff rib carries a huge hide drum, crooked keel, chained beaters, reed fins, and hooked ferry weight."
+    },
+    {
+      "site_id": "site_rotlamp_muster_cage",
+      "hero_id": "hero_mireclaw_edda_rotlamp",
+      "asset_id": "resource_site_muster_rotlamp_muster_cage",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_warband_musters_wave1/rotlamp_muster_cage_source.png",
+      "source_sha256": "28be9febe255e5eda79b013dea34756de0c42ff5bb37b36962f49e738c98dfe9",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-3014ce54-e31f-4645-83e9-3e393012363c.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld rally landmark source; Primary request: Create Rotlamp Muster Cage for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: a leaning wicker lantern cage with three oversized layered marsh fungi, crescent reed hood, two uneven bone handles, hanging clay drum, and long root hook; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A leaning wicker cage shelters three luminous marsh fungi beneath a crescent hood, uneven handles, clay drum, and root hook."
+    },
+    {
+      "site_id": "site_sunvein_sun_thread_standard",
+      "hero_id": "hero_sunvault_calis_sunvein",
+      "asset_id": "resource_site_muster_sunvein_sun_thread_standard",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_warband_musters_wave1/sunvein_sun_thread_standard_source.png",
+      "source_sha256": "e63727c412069ffcaf32eacba8eb23574575a9d7d9f177613688c7b819b7c910",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-4a4e3e3d-3baa-4779-9137-0806dd4cb9af.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld rally landmark source; Primary request: Create Sunvein Sun-Thread Standard for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: a compact faceted prism obelisk wrapped by three broad ribbon-like light rails, an offset seven-ray sunwheel, two hanging crystal plumbs, and split fork base; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A faceted prism obelisk twists inside three broad light rails beneath an offset sunwheel and two crystal plumbs."
+    },
+    {
+      "site_id": "site_lenscaptain_range_lens_rally",
+      "hero_id": "hero_sunvault_dovan_lenscaptain",
+      "asset_id": "resource_site_muster_lenscaptain_range_lens_rally",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_warband_musters_wave1/lenscaptain_range_lens_rally_source.png",
+      "source_sha256": "a2d6183ce2979b0053be2acb1a5a9cfa31343d3f76c28ea053c4fd44adde15c9",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-65b2d034-0ec8-4dc9-91c8-de9a6b557ae6.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld rally landmark source; Primary request: Create Lens-Captain Range-Lens Rally for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: an enormous oval survey lens on a forked ivory tripod with a long sighting needle, three unequal calibration vanes, hinged mirror flap, and suspended prism weight; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A huge oval survey lens rests on a forked tripod with a sighting needle, calibration vanes, mirror flap, and prism weight."
+    },
+    {
+      "site_id": "site_loamchant_chorus_bough",
+      "hero_id": "hero_thornwake_elian_loamchant",
+      "asset_id": "resource_site_muster_loamchant_chorus_bough",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_warband_musters_wave1/loamchant_chorus_bough_source.png",
+      "source_sha256": "25757474d742c722c909f5bbec5381eabd566f4da49443c1286c454dd9609a0f",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-84fab9ca-ae30-4df1-9d23-6b2c7305a884.png",
+      "atlas_region": [
+        288,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld rally landmark source; Primary request: Create Loamchant Chorus Bough for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: an arching living root bough with three large hollow seed-pod resonators, a spiral loam horn, two uneven leaf chimes, and braided root feet; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A living root arch carries three hollow seed-pod resonators, a spiral loam horn, leaf chimes, and braided feet."
+    },
+    {
+      "site_id": "site_thorncart_cart_crown_rally",
+      "hero_id": "hero_thornwake_halen_thorncart",
+      "asset_id": "resource_site_muster_thorncart_cart_crown_rally",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_warband_musters_wave1/thorncart_cart_crown_rally_source.png",
+      "source_sha256": "4b490e622cc7bea02275df46ae61e36f6e9384f456ca389afdc6e252be3288b5",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-403c738f-a1da-4b57-b0e9-0c1a59f023c4.png",
+      "atlas_region": [
+        336,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld rally landmark source; Primary request: Create Thorncart Cart-Crown Rally for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: an oversized broken cartwheel grown through a thorn-root crown, with short axle drum, three hanging bark tally discs, hooked tow branch, and two leaf pennants; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A broken cartwheel grows through a thorn crown beside an axle drum, hanging bark tallies, hooked tow branch, and leaf pennants."
+    },
+    {
+      "site_id": "site_debtrune_debt_seal_gantry",
+      "hero_id": "hero_brasshollow_harro_debtrune",
+      "asset_id": "resource_site_muster_debtrune_debt_seal_gantry",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_warband_musters_wave1/debtrune_debt_seal_gantry_source.png",
+      "source_sha256": "bb10d529b71ddd38ee24a9fab2125f1e67a662d4cc2e146c7e24c36bf866bda0",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b7cf9878-b506-4a52-90fc-b3c717c94ab5.png",
+      "atlas_region": [
+        384,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld rally landmark source; Primary request: Create Debt-Rune Debt-Seal Gantry for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: a squat black-iron assay gantry carrying a blank hexagonal seal plate, large toothed balance wheel, three uneven counterweights, broken measuring arm, and two pressure feet; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A squat assay gantry balances a blank seal plate against a toothed wheel, uneven weights, broken measuring arm, and pressure feet."
+    },
+    {
+      "site_id": "site_pitmarshal_pit_bell_rally",
+      "hero_id": "hero_brasshollow_selka_pitmarshal",
+      "asset_id": "resource_site_muster_pitmarshal_pit_bell_rally",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_warband_musters_wave1/pitmarshal_pit_bell_rally_source.png",
+      "source_sha256": "8b46bc0278c3063fcd560103764e03a7b5d250974c6ba5d3109626a9c507c6c2",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-4764040e-8eb6-4408-9343-8993012b58f2.png",
+      "atlas_region": [
+        432,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld rally landmark source; Primary request: Create Pit-Marshal Pit-Bell Rally for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: a compact mine-cage headframe holding an oversized pressure bell, hooked lift chain, three descending gauge pipes, square ore skip, and crooked warning hammer; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A compact mine headframe holds a huge pressure bell, lift chain, descending gauge pipes, ore skip, and warning hammer."
+    },
+    {
+      "site_id": "site_mistcorsair_fog_sail_muster",
+      "hero_id": "hero_veilmourn_cela_mistcorsair",
+      "asset_id": "resource_site_muster_mistcorsair_fog_sail",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_warband_musters_wave1/mistcorsair_fog_sail_muster_source.png",
+      "source_sha256": "7236aebc2fd0619d54648ce33846f2c277b7937f92ec8dc228a5342a89c5ef3d",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-86d5b59b-f1af-4a3b-9487-9d306f9670cb.png",
+      "atlas_region": [
+        480,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld rally landmark source; Primary request: Create Mist-Corsair Fog-Sail Muster for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: a sharply folded crescent fog sail on a crooked mast with a broad boarding hook, three uneven mistglass signal discs, hanging lantern cage, and coiled deck rope; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "A sharply folded crescent fog sail rises beside a boarding hook, mistglass signals, lantern cage, and coiled deck rope."
+    },
+    {
+      "site_id": "site_keelwarden_keel_sounding_frame",
+      "hero_id": "hero_veilmourn_jessa_keelwarden",
+      "asset_id": "resource_site_muster_keelwarden_keel_sounding_frame",
+      "source_path": "res://art/overworld/source/generated/resource_sites/marchland_warband_musters_wave1/keelwarden_keel_sounding_frame_source.png",
+      "source_sha256": "d7b3018f8b5dc462c8ef4fa50502cc23aae5d9a42a0bb017a02a5c0fb082ca0b",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-61464478-fd27-4151-af66-7473dafbe1ae.png",
+      "atlas_region": [
+        528,
+        0,
+        48,
+        48
+      ],
+      "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld rally landmark source; Primary request: Create Keel-Warden Keel-Sounding Frame for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject: a tall inverted ship-keel rib on two narrow feet with a cracked sounding bell, long plumb hook, two offset tideglass floats, three rope knots, and forked bone finial; Style/medium: polished hand-painted 2D original fantasy game landmark art with crisp material separation; Composition/framing: isolated high three-quarter view, centered with generous padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
+      "accessible_description": "An inverted ship-keel rib carries a cracked sounding bell, long plumb hook, tideglass floats, rope knots, and forked finial."
+    }
+  ]
+}

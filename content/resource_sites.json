@@ -18704,6 +18704,426 @@
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
+    },
+    {
+      "id": "site_tollbrand_toll_chain_standard",
+      "name": "Tollbrand Toll-Chain Standard",
+      "family": "scenario_objective",
+      "action_label": "Ring the Toll-Chain Muster",
+      "summary": "Tollbrand Toll-Chain Standard assembles Helva Tollbrand's two local Marchland companies after its four-front route is opened.",
+      "claim_rewards": {
+        "gold": 600,
+        "embergrain": 1,
+        "experience": 150
+      },
+      "claim_recruits": {
+        "unit_embercourt_amberweir_lockpike_wardens": 3,
+        "unit_embercourt_amberweir_sluicebrand_mangonels": 1
+      },
+      "claim_flags": {
+        "tollchain_rally_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_warband_muster_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-warband-musters-10184",
+      "public_text": {
+        "public_summary": "A broad stone-footed toll arch carries a heavy chain, hooked tally bell, unequal lock plates, and one ember lantern.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_beaconscribe_beacon_ledger_post",
+      "name": "Beaconscribe Beacon-Ledger Muster Post",
+      "family": "scenario_objective",
+      "action_label": "Open the Beacon Ledger",
+      "summary": "Beaconscribe Beacon-Ledger Muster Post assembles Jorun Beaconscribe's two local Marchland companies after its four-front route is opened.",
+      "claim_rewards": {
+        "gold": 600,
+        "embergrain": 1,
+        "experience": 150
+      },
+      "claim_recruits": {
+        "unit_embercourt_amberweir_lockpike_wardens": 3,
+        "unit_embercourt_amberweir_sluicebrand_mangonels": 1
+      },
+      "claim_flags": {
+        "beaconledger_rally_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_warband_muster_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-warband-musters-10184",
+      "public_text": {
+        "public_summary": "An asymmetric timber post raises a hooded beacon above a blank ledger plate, offset paddles, hanging weights, and forked crown.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_mudkeel_keel_drum_rally",
+      "name": "Mudkeel Keel-Drum Rally",
+      "family": "scenario_objective",
+      "action_label": "Beat the Keel-Drum",
+      "summary": "Mudkeel Keel-Drum Rally assembles Brakka Mudkeel's two local Marchland companies after its four-front route is opened.",
+      "claim_rewards": {
+        "gold": 600,
+        "peatwax": 1,
+        "experience": 150
+      },
+      "claim_recruits": {
+        "unit_mireclaw_moonbite_votive_drummers": 3,
+        "unit_mireclaw_moonbite_mirehorn_breakers": 1
+      },
+      "claim_flags": {
+        "keeldrum_rally_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_warband_muster_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-warband-musters-10184",
+      "public_text": {
+        "public_summary": "A half-moon skiff rib carries a huge hide drum, crooked keel, chained beaters, reed fins, and hooked ferry weight.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_rotlamp_muster_cage",
+      "name": "Rotlamp Muster Cage",
+      "family": "scenario_objective",
+      "action_label": "Light the Rotlamp Muster",
+      "summary": "Rotlamp Muster Cage assembles Edda Rotlamp's two local Marchland companies after its four-front route is opened.",
+      "claim_rewards": {
+        "gold": 600,
+        "peatwax": 1,
+        "experience": 150
+      },
+      "claim_recruits": {
+        "unit_mireclaw_moonbite_votive_drummers": 3,
+        "unit_mireclaw_moonbite_mirehorn_breakers": 1
+      },
+      "claim_flags": {
+        "rotlamp_rally_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_warband_muster_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-warband-musters-10184",
+      "public_text": {
+        "public_summary": "A leaning wicker cage shelters three luminous marsh fungi beneath a crescent hood, uneven handles, clay drum, and root hook.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_sunvein_sun_thread_standard",
+      "name": "Sunvein Sun-Thread Standard",
+      "family": "scenario_objective",
+      "action_label": "Draw the Sun Thread",
+      "summary": "Sunvein Sun-Thread Standard assembles Calis Sunvein's two local Marchland companies after its four-front route is opened.",
+      "claim_rewards": {
+        "gold": 600,
+        "aetherglass": 1,
+        "experience": 150
+      },
+      "claim_recruits": {
+        "unit_sunvault_splitprism_parallax_fencers": 3,
+        "unit_sunvault_splitprism_heliograph_ballistae": 1
+      },
+      "claim_flags": {
+        "sunthread_rally_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_warband_muster_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-warband-musters-10184",
+      "public_text": {
+        "public_summary": "A faceted prism obelisk twists inside three broad light rails beneath an offset sunwheel and two crystal plumbs.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_lenscaptain_range_lens_rally",
+      "name": "Lens-Captain Range-Lens Rally",
+      "family": "scenario_objective",
+      "action_label": "Align the Range Lens",
+      "summary": "Lens-Captain Range-Lens Rally assembles Dovan Lens-Captain's two local Marchland companies after its four-front route is opened.",
+      "claim_rewards": {
+        "gold": 600,
+        "aetherglass": 1,
+        "experience": 150
+      },
+      "claim_recruits": {
+        "unit_sunvault_splitprism_parallax_fencers": 3,
+        "unit_sunvault_splitprism_heliograph_ballistae": 1
+      },
+      "claim_flags": {
+        "rangelens_rally_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_warband_muster_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-warband-musters-10184",
+      "public_text": {
+        "public_summary": "A huge oval survey lens rests on a forked tripod with a sighting needle, calibration vanes, mirror flap, and prism weight.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_loamchant_chorus_bough",
+      "name": "Loamchant Chorus Bough",
+      "family": "scenario_objective",
+      "action_label": "Sound the Chorus Bough",
+      "summary": "Loamchant Chorus Bough assembles Elian Loamchant's two local Marchland companies after its four-front route is opened.",
+      "claim_rewards": {
+        "gold": 600,
+        "verdant_grafts": 1,
+        "experience": 150
+      },
+      "claim_recruits": {
+        "unit_thornwake_woundroot_hearthseed_slingers": 3,
+        "unit_thornwake_woundroot_rootmaul_behemoths": 1
+      },
+      "claim_flags": {
+        "chorusbough_rally_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_warband_muster_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-warband-musters-10184",
+      "public_text": {
+        "public_summary": "A living root arch carries three hollow seed-pod resonators, a spiral loam horn, leaf chimes, and braided feet.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_thorncart_cart_crown_rally",
+      "name": "Thorncart Cart-Crown Rally",
+      "family": "scenario_objective",
+      "action_label": "Turn the Cart Crown",
+      "summary": "Thorncart Cart-Crown Rally assembles Halen Thorncart's two local Marchland companies after its four-front route is opened.",
+      "claim_rewards": {
+        "gold": 600,
+        "verdant_grafts": 1,
+        "experience": 150
+      },
+      "claim_recruits": {
+        "unit_thornwake_woundroot_hearthseed_slingers": 3,
+        "unit_thornwake_woundroot_rootmaul_behemoths": 1
+      },
+      "claim_flags": {
+        "cartcrown_rally_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_warband_muster_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-warband-musters-10184",
+      "public_text": {
+        "public_summary": "A broken cartwheel grows through a thorn crown beside an axle drum, hanging bark tallies, hooked tow branch, and leaf pennants.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_debtrune_debt_seal_gantry",
+      "name": "Debt-Rune Debt-Seal Gantry",
+      "family": "scenario_objective",
+      "action_label": "Balance the Debt Seal",
+      "summary": "Debt-Rune Debt-Seal Gantry assembles Harro Debt-Rune's two local Marchland companies after its four-front route is opened.",
+      "claim_rewards": {
+        "gold": 600,
+        "brass_scrip": 1,
+        "experience": 150
+      },
+      "claim_recruits": {
+        "unit_brasshollow_whitegauge_datum_lancers": 3,
+        "unit_brasshollow_whitegauge_datum_breach_cannons": 1
+      },
+      "claim_flags": {
+        "debtseal_rally_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_warband_muster_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-warband-musters-10184",
+      "public_text": {
+        "public_summary": "A squat assay gantry balances a blank seal plate against a toothed wheel, uneven weights, broken measuring arm, and pressure feet.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_pitmarshal_pit_bell_rally",
+      "name": "Pit-Marshal Pit-Bell Rally",
+      "family": "scenario_objective",
+      "action_label": "Strike the Pit Bell",
+      "summary": "Pit-Marshal Pit-Bell Rally assembles Selka Pitmarshal's two local Marchland companies after its four-front route is opened.",
+      "claim_rewards": {
+        "gold": 600,
+        "brass_scrip": 1,
+        "experience": 150
+      },
+      "claim_recruits": {
+        "unit_brasshollow_whitegauge_datum_lancers": 3,
+        "unit_brasshollow_whitegauge_datum_breach_cannons": 1
+      },
+      "claim_flags": {
+        "pitbell_rally_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_warband_muster_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-warband-musters-10184",
+      "public_text": {
+        "public_summary": "A compact mine headframe holds a huge pressure bell, lift chain, descending gauge pipes, ore skip, and warning hammer.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_mistcorsair_fog_sail_muster",
+      "name": "Mist-Corsair Fog-Sail Muster",
+      "family": "scenario_objective",
+      "action_label": "Raise the Fog Sail",
+      "summary": "Mist-Corsair Fog-Sail Muster assembles Cela Mist-Corsair's two local Marchland companies after its four-front route is opened.",
+      "claim_rewards": {
+        "gold": 600,
+        "memory_salt": 1,
+        "experience": 150
+      },
+      "claim_recruits": {
+        "unit_veilmourn_dreamwake_tideglass_oracles": 3,
+        "unit_veilmourn_dreamwake_foganchor_colossi": 1
+      },
+      "claim_flags": {
+        "fogsail_rally_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_warband_muster_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-warband-musters-10184",
+      "public_text": {
+        "public_summary": "A sharply folded crescent fog sail rises beside a boarding hook, mistglass signals, lantern cage, and coiled deck rope.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_keelwarden_keel_sounding_frame",
+      "name": "Keel-Warden Keel-Sounding Frame",
+      "family": "scenario_objective",
+      "action_label": "Sound the Keel Frame",
+      "summary": "Keel-Warden Keel-Sounding Frame assembles Jessa Keelwarden's two local Marchland companies after its four-front route is opened.",
+      "claim_rewards": {
+        "gold": 600,
+        "memory_salt": 1,
+        "experience": 150
+      },
+      "claim_recruits": {
+        "unit_veilmourn_dreamwake_tideglass_oracles": 3,
+        "unit_veilmourn_dreamwake_foganchor_colossi": 1
+      },
+      "claim_flags": {
+        "keelsounding_rally_landmark_claimed": true
+      },
+      "runtime_boundary": {
+        "status": "marchland_warband_muster_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "hero_progression_activation": true,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-twelve-marchland-warband-musters-10184",
+      "public_text": {
+        "public_summary": "An inverted ship-keel rib carries a cracked sounding bell, long plumb hook, tideglass floats, rope knots, and forked finial.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }
