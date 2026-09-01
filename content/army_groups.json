@@ -4906,6 +4906,84 @@
         {"unit_id": "unit_neutral_gloambell_wake_mantas", "count": 1},
         {"unit_id": "unit_neutral_lanternskate_throwers", "count": 7}
       ]
+    },
+    {
+      "id": "army_dawnwrit_grand_convocation_company",
+      "name": "Dawn-Writ Grand Convocation Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 54},
+        {"unit_id": "unit_embercourt_lantern_sappers", "count": 32},
+        {"unit_id": "unit_embercourt_bargebow_crews", "count": 20},
+        {"unit_id": "unit_embercourt_amberweir_lockpike_wardens", "count": 10},
+        {"unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels", "count": 4}
+      ],
+      "content_batch_id": "content-six-grand-arcanum-convocations-10184"
+    },
+    {
+      "id": "army_leechmoon_grand_convocation_company",
+      "name": "Leechmoon Grand Convocation Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 54},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 32},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 20},
+        {"unit_id": "unit_mireclaw_moonbite_votive_drummers", "count": 10},
+        {"unit_id": "unit_mireclaw_moonbite_mirehorn_breakers", "count": 4}
+      ],
+      "content_batch_id": "content-six-grand-arcanum-convocations-10184"
+    },
+    {
+      "id": "army_aurora_halo_grand_convocation_company",
+      "name": "Aurora Halo Grand Convocation Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 54},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 32},
+        {"unit_id": "unit_sunvault_mirror_duelists", "count": 20},
+        {"unit_id": "unit_sunvault_splitprism_parallax_fencers", "count": 10},
+        {"unit_id": "unit_sunvault_splitprism_heliograph_ballistae", "count": 4}
+      ],
+      "content_batch_id": "content-six-grand-arcanum-convocations-10184"
+    },
+    {
+      "id": "army_loambriar_grand_convocation_company",
+      "name": "Loam-Briar Grand Convocation Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 54},
+        {"unit_id": "unit_thornwake_thornwhip_carriers", "count": 32},
+        {"unit_id": "unit_thornwake_sporeglass_menders", "count": 20},
+        {"unit_id": "unit_thornwake_woundroot_hearthseed_slingers", "count": 10},
+        {"unit_id": "unit_thornwake_woundroot_rootmaul_behemoths", "count": 4}
+      ],
+      "content_batch_id": "content-six-grand-arcanum-convocations-10184"
+    },
+    {
+      "id": "army_ashrail_grand_convocation_company",
+      "name": "Ash-Rail Grand Convocation Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 54},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 32},
+        {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 20},
+        {"unit_id": "unit_brasshollow_whitegauge_datum_lancers", "count": 10},
+        {"unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons", "count": 4}
+      ],
+      "content_batch_id": "content-six-grand-arcanum-convocations-10184"
+    },
+    {
+      "id": "army_mistmourning_grand_convocation_company",
+      "name": "Mist-Mourning Grand Convocation Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 54},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 32},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 20},
+        {"unit_id": "unit_veilmourn_dreamwake_tideglass_oracles", "count": 10},
+        {"unit_id": "unit_veilmourn_dreamwake_foganchor_colossi", "count": 4}
+      ],
+      "content_batch_id": "content-six-grand-arcanum-convocations-10184"
     }
   ]
 }

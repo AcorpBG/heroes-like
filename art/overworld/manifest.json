@@ -16795,6 +16795,126 @@
       "asset_policy": "exact_curated_original_creature_identity",
       "distinct_sprite_assignment": true,
       "accessible_description": "The exact silhouette of Gloambell Wake-Mantas guarding Gloambell Sounding Deep."
+    },
+    "resource_site_grand_arcanum_dawnwrit_column": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/dawnwrit_column_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/dawnwrit_column_source.png",
+      "source_model": "built_in_image_gen_original_grand_arcanum_convocations_atlas",
+      "assigned_resource_site_id": "site_dawnwrit_grand_convocation",
+      "presentation_role": "grand_arcanum_field_academy",
+      "accessible_description": "An asymmetric ivory and brass road obelisk carries three signal rings, a forked lantern crown, and a white-gold oath flame.",
+      "background": "transparent"
+    },
+    "resource_site_grand_arcanum_leechmoon_court": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/leechmoon_poultice_court_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/leechmoon_poultice_court_source.png",
+      "source_model": "built_in_image_gen_original_grand_arcanum_convocations_atlas",
+      "assigned_resource_site_id": "site_leechmoon_grand_convocation",
+      "presentation_role": "grand_arcanum_field_academy",
+      "accessible_description": "A crescent bogstone court joins a hide drum, crooked reed retort, hanging poultice bowl, and three flood stakes.",
+      "background": "transparent"
+    },
+    "resource_site_grand_arcanum_aurora_halo_array": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/aurora_halo_array_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/aurora_halo_array_source.png",
+      "source_model": "built_in_image_gen_original_grand_arcanum_convocations_atlas",
+      "assigned_resource_site_id": "site_aurora_halo_grand_convocation",
+      "presentation_role": "grand_arcanum_field_academy",
+      "accessible_description": "An offset oval lens turns inside three unequal halo rails beneath a prism vane and glass calibration needles.",
+      "background": "transparent"
+    },
+    "resource_site_grand_arcanum_loambriar_loom": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/loambriar_graft_loom_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/loambriar_graft_loom_source.png",
+      "source_model": "built_in_image_gen_original_grand_arcanum_convocations_atlas",
+      "assigned_resource_site_id": "site_loambriar_grand_convocation",
+      "presentation_role": "grand_arcanum_field_academy",
+      "accessible_description": "A living root arch supports a graft spool, thorn stake, bloom lamp, and three unequal bough forks.",
+      "background": "transparent"
+    },
+    "resource_site_grand_arcanum_ashrail_forge": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/ashrail_clause_forge_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/ashrail_clause_forge_source.png",
+      "source_model": "built_in_image_gen_original_grand_arcanum_convocations_atlas",
+      "assigned_resource_site_id": "site_ashrail_grand_convocation",
+      "presentation_role": "grand_arcanum_field_academy",
+      "accessible_description": "A squat basalt and brass forge carries a diagonal hammer rail, riveted mantle, three clamp jaws, and a red pressure gauge.",
+      "background": "transparent"
+    },
+    "resource_site_grand_arcanum_mistmourning_archive": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/mistmourning_drift_archive_source.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/mistmourning_drift_archive_source.png",
+      "source_model": "built_in_image_gen_original_grand_arcanum_convocations_atlas",
+      "assigned_resource_site_id": "site_mistmourning_grand_convocation",
+      "presentation_role": "grand_arcanum_field_academy",
+      "accessible_description": "A tilted whalebone crescent bears shroud sails, a drowned lantern mask, tide marker, and three memory chimes.",
+      "background": "transparent"
     }
   },
   "resource_site_sprites": {
@@ -18389,6 +18509,36 @@
       "asset_id": "resource_site_neutral_gloambell_sounding_deep_controlled",
       "unclaimed_asset_id": "mapobj_gloambell_sounding_deep",
       "fit": "Exact original Gloambell Sounding Deep changes from unclaimed structure to pennant-marked controlled state."
+    },
+    "site_dawnwrit_grand_convocation": {
+      "asset_id": "resource_site_grand_arcanum_dawnwrit_column",
+      "unclaimed_asset_id": "resource_site_grand_arcanum_dawnwrit_column",
+      "fit": "Exact original Dawn-Writ Column remains visible before and after its three-spell lesson."
+    },
+    "site_leechmoon_grand_convocation": {
+      "asset_id": "resource_site_grand_arcanum_leechmoon_court",
+      "unclaimed_asset_id": "resource_site_grand_arcanum_leechmoon_court",
+      "fit": "Exact original Leechmoon Poultice Court remains visible before and after its three-spell lesson."
+    },
+    "site_aurora_halo_grand_convocation": {
+      "asset_id": "resource_site_grand_arcanum_aurora_halo_array",
+      "unclaimed_asset_id": "resource_site_grand_arcanum_aurora_halo_array",
+      "fit": "Exact original Aurora Halo Array remains visible before and after its three-spell lesson."
+    },
+    "site_loambriar_grand_convocation": {
+      "asset_id": "resource_site_grand_arcanum_loambriar_loom",
+      "unclaimed_asset_id": "resource_site_grand_arcanum_loambriar_loom",
+      "fit": "Exact original Loam-Briar Graft Loom remains visible before and after its three-spell lesson."
+    },
+    "site_ashrail_grand_convocation": {
+      "asset_id": "resource_site_grand_arcanum_ashrail_forge",
+      "unclaimed_asset_id": "resource_site_grand_arcanum_ashrail_forge",
+      "fit": "Exact original Ash-Rail Clause Forge remains visible before and after its three-spell lesson."
+    },
+    "site_mistmourning_grand_convocation": {
+      "asset_id": "resource_site_grand_arcanum_mistmourning_archive",
+      "unclaimed_asset_id": "resource_site_grand_arcanum_mistmourning_archive",
+      "fit": "Exact original Mist-Mourning Drift Archive remains visible before and after its three-spell lesson."
     }
   },
   "artifact_default_sprite": {

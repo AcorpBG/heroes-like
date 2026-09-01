@@ -1,0 +1,91 @@
+{
+  "content_batch_id": "content-six-grand-arcanum-convocations-10184",
+  "source_model": "built_in_image_gen_original_grand_arcanum_convocations_atlas",
+  "generation_mode": "built_in_image_gen",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+  "runtime_atlas_size": [
+    288,
+    48
+  ],
+  "runtime_atlas_sha256": "5d1b47b73c03464a7e0e3d8531c888b60f27d952f564ee4efcb359b568dbb5c7",
+  "items": [
+    {
+      "site_id": "site_dawnwrit_grand_convocation",
+      "asset_id": "resource_site_grand_arcanum_dawnwrit_column",
+      "source_file": "dawnwrit_column_source.png",
+      "source_sha256": "f2d486de58e6731ffc6ac04a71e25c0b78badbea73bad65a4ce744fc9f96aab8",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "prompt": "An asymmetric ivory and brass road obelisk carries three signal rings, a forked lantern crown, and a white-gold oath flame."
+    },
+    {
+      "site_id": "site_leechmoon_grand_convocation",
+      "asset_id": "resource_site_grand_arcanum_leechmoon_court",
+      "source_file": "leechmoon_poultice_court_source.png",
+      "source_sha256": "c093fc255abe36d8aec940a7b38805d021d064b16e8368c22322154e963be3b3",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "prompt": "A crescent bogstone court joins a hide drum, crooked reed retort, hanging poultice bowl, and three flood stakes."
+    },
+    {
+      "site_id": "site_aurora_halo_grand_convocation",
+      "asset_id": "resource_site_grand_arcanum_aurora_halo_array",
+      "source_file": "aurora_halo_array_source.png",
+      "source_sha256": "02f923a745a4aebfc1eeb3d73f5ad766d104aabade610f651dedbf35474859b6",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "prompt": "An offset oval lens turns inside three unequal halo rails beneath a prism vane and glass calibration needles."
+    },
+    {
+      "site_id": "site_loambriar_grand_convocation",
+      "asset_id": "resource_site_grand_arcanum_loambriar_loom",
+      "source_file": "loambriar_graft_loom_source.png",
+      "source_sha256": "0a07e2a01ad19cc4bfca76d635a7562785b65f5fc1e9e7dc3cace14981a3093a",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "prompt": "A living root arch supports a graft spool, thorn stake, bloom lamp, and three unequal bough forks."
+    },
+    {
+      "site_id": "site_ashrail_grand_convocation",
+      "asset_id": "resource_site_grand_arcanum_ashrail_forge",
+      "source_file": "ashrail_clause_forge_source.png",
+      "source_sha256": "cd5e6627306ff179ffbfba18789be8b03e2f2364ace9d5ea6ce7389d6fe97beb",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "prompt": "A squat basalt and brass forge carries a diagonal hammer rail, riveted mantle, three clamp jaws, and a red pressure gauge."
+    },
+    {
+      "site_id": "site_mistmourning_grand_convocation",
+      "asset_id": "resource_site_grand_arcanum_mistmourning_archive",
+      "source_file": "mistmourning_drift_archive_source.png",
+      "source_sha256": "ceeda4928fa688ff90e071c245bc3415a0b0ca51df92b79e74c573fa4996dad2",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "prompt": "A tilted whalebone crescent bears shroud sails, a drowned lantern mask, tide marker, and three memory chimes."
+    }
+  ]
+}
