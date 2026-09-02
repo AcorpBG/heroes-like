@@ -36763,11 +36763,11 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'sparse_anchor_density < 0.25 or sparse_anchor_density > 0.75',
         'int(summary.get("composition_key_count", 0)) != visual_anchor_count',
         'not bool(summary.get("all_transformed_bounds_within_mass_margin", false))',
-        'float(summary.get("mass_bounds_margin_tiles", 0.0)), 0.34',
+        'float(summary.get("mass_bounds_margin_tiles", 0.0)), 0.52',
         'int(summary.get("distinct_body_asset_count", 0)) < 8',
         'int(summary.get("repeated_def_multi_asset_count", 0)) <= 0',
         'String(summary.get("composition_signature", "")).length() != 64',
-        'float(summary.get("body_sprite_extent_tiles", 0.0)), 0.92',
+        'float(summary.get("body_sprite_extent_tiles", 0.0)), 1.20',
         'int(summary.get("asset_cluster_tiles", 0)) != 4',
         'int(summary.get("motif_key_count", 0)) <= int(summary.get("distinct_body_asset_count", 0))',
         'int(summary.get("motif_key_count", 0)) > visual_anchor_count',
@@ -43832,6 +43832,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (576, 48)
             elif source_model == "built_in_image_gen_original_overworld_landmark":
                 expected_canvas = (144, 48)
+            elif source_model == "built_in_image_gen_original_world_facing_ownership_pennant":
+                expected_canvas = (128, 128)
             elif source_model == "built_in_image_gen_original_third_hearth_town_atlas":
                 expected_canvas = (640, 128)
             elif source_model == "built_in_image_gen_original_horizon_citadel_atlas":
@@ -83504,6 +83506,75 @@ def validate_six_frontier_mythic_habitats(errors: list[str]) -> None:
         ensure("REQUIRED_FRONTIER_MYTHIC_UNIT_IDS" in packaging_text and "frontier_mythic_habitats_atlas.png.import" in packaging_text and "== 48" in packaging_text, errors, f"{packaging_path.name} must audit frontier-mythic unit surfaces and habitat atlas")
 
 
+def validate_overworld_live_object_art_coverage(errors: list[str]) -> None:
+    report_path = ROOT / "tests" / "overworld_live_object_art_coverage_report.gd"
+    scene_path = ROOT / "tests" / "overworld_live_object_art_coverage_report.tscn"
+    art_manifest_path = ROOT / "art" / "overworld" / "manifest.json"
+    pennant_source_manifest_path = ROOT / "art" / "overworld" / "source" / "generated" / "ownership_pennants" / "world_facing_v1" / "manifest.json"
+    for path in (report_path, scene_path, art_manifest_path, pennant_source_manifest_path):
+        ensure(path.exists(), errors, f"Missing exhaustive Overworld object-art coverage owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (report_path, scene_path, art_manifest_path, pennant_source_manifest_path)):
+        return
+    report_text = report_path.read_text(encoding="utf-8")
+    scene_text = scene_path.read_text(encoding="utf-8")
+    art_manifest = load_json(art_manifest_path)
+    pennant_source_manifest = load_json(pennant_source_manifest_path)
+    for token in (
+        'const REPORT_SCHEMA_ID := "overworld_live_object_art_coverage_report_v1"',
+        '"size_class_id": "homm3_small"',
+        '"size_class_id": "homm3_large"',
+        'ContentService.load_json("res://content/scenarios.json")',
+        'ScenarioFactoryScript.create_session(scenario_id, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)',
+        'service.generate_random_map(config, {"startup_path": "overworld_live_object_art_coverage_',
+        'NativeRandomMapPackageSessionBridgeScript.build_session_from_adoption',
+        'view.validation_tile_presentation(tile)',
+        'bool(art.get("fallback_procedural_marker", true))',
+        'art.get("sprite_asset_ids", []).is_empty()',
+        'view.validation_generated_object_visual_summary()',
+        'not bool(summary.get("all_body_assets_loaded", false))',
+        'not bool(summary.get("all_generated_records_anchored", false))',
+        'view.validation_hero_draw_layout(tile, false)',
+        '"hero_command_pennants"',
+        '"town_ownership_pennants"',
+        'bool(pennant.get("procedural_fallback", true))',
+        '"valid_procedural_fallback_count": 0',
+        '"empty_sprite_asset_count": 0',
+        '"missing_runtime_texture_count": 0',
+        '"route_and_selection_reticles"',
+        '"transient_feedback_vfx"',
+    ):
+        ensure(token in report_text, errors, f"Exhaustive Overworld object-art coverage report is missing required proof: {token}")
+    for forbidden in (
+        'session.overworld["map_objects"] =',
+        'session.overworld["resource_nodes"] =',
+        'session.overworld["artifact_nodes"] =',
+        'session.overworld["encounters"] =',
+        'fallback_procedural_marker"] = false',
+    ):
+        ensure(forbidden not in report_text, errors, f"Overworld object-art coverage must observe production objects without hiding or rewriting them: {forbidden}")
+    ensure('script = ExtResource("1")' in scene_text and 'overworld_live_object_art_coverage_report.gd' in scene_text, errors, "Overworld object-art coverage scene must own the exhaustive runtime report")
+    expected_assets = {
+        "player": ("ownership_pennant_player", "5167cb7405f59bf62b9207d7d0fd68ade31cfa8ef63e81d00349d870d93b3148"),
+        "enemy": ("ownership_pennant_enemy", "9af3abbd56103454743ea0a430a7e893cb59d2b598855505e92ef2f692cfddf3"),
+        "neutral": ("ownership_pennant_neutral", "6af38b8ab9758f0c686d2ef852f278564825bd8cf93288440275e2a7dad76ba5"),
+    }
+    ownership_mappings = art_manifest.get("ownership_pennant_sprites", {})
+    object_assets = art_manifest.get("object_assets", {})
+    source_assets = pennant_source_manifest.get("runtime_assets", {})
+    ensure(pennant_source_manifest.get("generation_mode") == "built_in_image_gen" and pennant_source_manifest.get("use_case") == "stylized-concept", errors, "Ownership-pennant source manifest must retain built-in image generation provenance")
+    for owner, (asset_id, expected_hash) in expected_assets.items():
+        ensure(ownership_mappings.get(owner) == asset_id, errors, f"Ownership pennant mapping drifted for {owner}")
+        asset = object_assets.get(asset_id, {})
+        runtime_path = res_path_to_disk(str(asset.get("path", ""))) if isinstance(asset, dict) else ROOT / "missing"
+        ensure(runtime_path.is_file() and png_size(runtime_path) == (128, 128), errors, f"Ownership pennant {owner} must retain its 128x128 runtime PNG")
+        if runtime_path.is_file():
+            ensure(hashlib.sha256(runtime_path.read_bytes()).hexdigest() == expected_hash, errors, f"Ownership pennant {owner} runtime pixels drifted")
+            header = runtime_path.read_bytes()[:26]
+            ensure(len(header) >= 26 and header[25] == 6, errors, f"Ownership pennant {owner} must retain RGBA transparency")
+        source_entry = source_assets.get(owner, {}) if isinstance(source_assets, dict) else {}
+        ensure(source_entry.get("asset_id") == asset_id and source_entry.get("runtime_sha256") == expected_hash and bool(source_entry.get("prompt")), errors, f"Ownership pennant {owner} source provenance is incomplete")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -83665,6 +83736,7 @@ def main() -> int:
     validate_overworld_small_map_visual_scale(errors)
     validate_overworld_compact_town_owner_pennants(errors)
     validate_generated_map_object_visual_coherence(errors)
+    validate_overworld_live_object_art_coverage(errors)
     validate_overworld_130_scale_footer_containment(errors)
     validate_overworld_hero_card_mana_first_view(errors)
     validate_overworld_rail_word_boundary_ellipsis(errors)

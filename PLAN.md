@@ -17324,6 +17324,36 @@ Non-goals:
 - no terrain topology, map-generation placement, Native RMG phase/final-payload, AI, balance, content, or save-schema change;
 - no copied Heroes assets or protected visual expression, packaged hardware certification, signing, publication, whole-game validation, or release-readiness claim.
 
+## Overworld Live Object Art Coverage
+
+id: `ux-overworld-live-object-art-coverage-10184`
+
+Status: completed.
+
+Implemented result:
+- audited all 299 authored scenarios plus deterministic native Small and Large generated maps through the production renderer: 9,465 live world-facing placements, including 606 town ownership pennants and 301 hero command pennants, resolve 831 distinct imported assets with zero valid procedural fallbacks, empty sprite ids, or missing textures;
+- replaced the visible code-drawn town/hero pennants with three original transparent player, enemy, and neutral image assets; accessibility owner marks sit on the painted cloth, while the old geometry remains only as a missing-asset fail-safe;
+- inspected authored small/large and native-generated captures; focused map-object/decorative/town/hero reports, editor parsing, repository validation, and Linux/Windows exports and packaged boots pass. The known exit-only texture RID warning remains a separate renderer-shutdown issue.
+
+Initial finding:
+- every authored map-object definition has a mapped runtime sprite, but the live renderer can still use its procedural safety silhouettes when a placement alias, resource-site bridge, generated-map record, or texture import does not resolve;
+- the owner observed object-shaped geometry during play, so coverage must be proven through actual authored and generated session records rather than manifest counts alone;
+- route reticles, fog, roads, movement cues, and transient feedback remain intentional interface layers; the owner-visible procedural ownership and command pennants are part of the world-facing art gate and must use authored image assets.
+
+Implementation boundary:
+- audit every live town, hero, resource, artifact, encounter, decorative object, and standalone map object presented by all authored scenarios plus representative deterministic generated-map sizes through the production renderer;
+- replace each valid live world-object fallback with original generated image art and data-driven mappings, retaining procedural drawing only as fail-safe behavior for invalid or missing content;
+- preserve gameplay placement, footprint, blocking, interaction, save, generation, and AI authority, then validate Linux and Windows import/package symmetry.
+
+Completion criteria:
+- no valid authored-scenario or representative generated-map world-object placement reports `fallback_procedural_marker`, an empty sprite asset, or a missing runtime texture;
+- inspected authored and generated captures show painted world objects and painted ownership/command pennants, with only non-object UI/feedback geometry excluded from the art gate;
+- focused runtime coverage, repository validation, clean parsing, and sequential Linux/Windows package startup pass.
+
+Non-goals:
+- no terrain topology, object placement, encounter balance, AI, save-schema, Native RMG, route/selection/fog UI, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes assets, protected names, heraldry, or protected visual expression.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

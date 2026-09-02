@@ -88,7 +88,30 @@
     "town_shadow_policy": "no_town_cast_shadow_or_vertical_mass_shadow",
     "town_base_ellipse": "removed"
   },
+  "ownership_pennant_sprites": {
+    "player": "ownership_pennant_player",
+    "enemy": "ownership_pennant_enemy",
+    "neutral": "ownership_pennant_neutral"
+  },
   "object_assets": {
+    "ownership_pennant_player": {
+      "path": "res://art/overworld/runtime/objects/ownership_pennants/player_pennant.png",
+      "source_trimmed": "res://art/overworld/source/generated/ownership_pennants/world_facing_v1/player_pennant_source.png",
+      "source_model": "built_in_image_gen_original_world_facing_ownership_pennant",
+      "source_manifest": "res://art/overworld/source/generated/ownership_pennants/world_facing_v1/manifest.json"
+    },
+    "ownership_pennant_enemy": {
+      "path": "res://art/overworld/runtime/objects/ownership_pennants/enemy_pennant.png",
+      "source_trimmed": "res://art/overworld/source/generated/ownership_pennants/world_facing_v1/enemy_pennant_source.png",
+      "source_model": "built_in_image_gen_original_world_facing_ownership_pennant",
+      "source_manifest": "res://art/overworld/source/generated/ownership_pennants/world_facing_v1/manifest.json"
+    },
+    "ownership_pennant_neutral": {
+      "path": "res://art/overworld/runtime/objects/ownership_pennants/neutral_pennant.png",
+      "source_trimmed": "res://art/overworld/source/generated/ownership_pennants/world_facing_v1/neutral_pennant_source.png",
+      "source_model": "built_in_image_gen_original_world_facing_ownership_pennant",
+      "source_manifest": "res://art/overworld/source/generated/ownership_pennants/world_facing_v1/manifest.json"
+    },
     "frontier_town": {
       "path": "res://art/overworld/runtime/objects/towns/frontier_town.png",
       "source_trimmed": "res://art/overworld/source/trimmed/towns/frontier_town-trimmed.png"

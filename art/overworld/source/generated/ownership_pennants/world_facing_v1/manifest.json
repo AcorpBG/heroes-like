@@ -1,0 +1,36 @@
+{
+  "schema": "world_facing_ownership_pennants_v1",
+  "generation_mode": "built_in_image_gen",
+  "use_case": "stylized-concept",
+  "generation_session_directory": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc",
+  "runtime_processing": "alpha_trim_then_aspect_fit_within_112x112_and_center_on_transparent_128x128_canvas",
+  "runtime_assets": {
+    "player": {
+      "asset_id": "ownership_pennant_player",
+      "source_path": "res://art/overworld/source/generated/ownership_pennants/world_facing_v1/player_pennant_source.png",
+      "source_sha256": "b9996439405d069878920029543be61fa68ce5cd4395f3487b7a219572be1c9b",
+      "runtime_path": "res://art/overworld/runtime/objects/ownership_pennants/player_pennant.png",
+      "runtime_sha256": "5167cb7405f59bf62b9207d7d0fd68ade31cfa8ef63e81d00349d870d93b3148",
+      "generated_original": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7b6da33c-6eb6-47be-a998-1c7149aba410.png",
+      "prompt": "Use case: stylized-concept. Create one original player ownership pennant for a polished painterly fantasy strategy-game overworld: a slender forged-metal pole carrying a small wind-shaped deep teal cloth with antique-gold edging, blank with no emblem. Three-quarter isometric view, strong readable silhouette at 48 pixels, genuinely transparent background with preserved alpha. One object only; no ground, scenery, character, text, symbols, heraldry, logo, watermark, frame, or copied franchise design."
+    },
+    "enemy": {
+      "asset_id": "ownership_pennant_enemy",
+      "source_path": "res://art/overworld/source/generated/ownership_pennants/world_facing_v1/enemy_pennant_source.png",
+      "source_sha256": "0b0bd8b843dde84c9847f974c957b0f35118dbbd4af206bd0cca6aa1be6ffd2e",
+      "runtime_path": "res://art/overworld/runtime/objects/ownership_pennants/enemy_pennant.png",
+      "runtime_sha256": "9af3abbd56103454743ea0a430a7e893cb59d2b598855505e92ef2f692cfddf3",
+      "generated_original": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cff3f4f3-2961-42f5-9d79-440e9a103147.png",
+      "prompt": "Use case: stylized-concept. Create one original enemy ownership pennant for a polished painterly fantasy strategy-game overworld: a slender forged-metal pole carrying a small wind-shaped deep weathered crimson cloth with smoke-black edging and antique-brass fittings, blank with no emblem. Three-quarter isometric view, strong readable silhouette at 48 pixels, genuinely transparent background with preserved alpha. One object only; no ground, scenery, character, text, symbols, heraldry, logo, watermark, frame, or copied franchise design."
+    },
+    "neutral": {
+      "asset_id": "ownership_pennant_neutral",
+      "source_path": "res://art/overworld/source/generated/ownership_pennants/world_facing_v1/neutral_pennant_source.png",
+      "source_sha256": "402ba5b641dacd3dc02db76edf6bccef72a496f64ca63c3e2efa3bde15a43b68",
+      "runtime_path": "res://art/overworld/runtime/objects/ownership_pennants/neutral_pennant.png",
+      "runtime_sha256": "6af38b8ab9758f0c686d2ef852f278564825bd8cf93288440275e2a7dad76ba5",
+      "generated_original": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-537563f4-d772-49f9-87fd-3f69012023f3.png",
+      "prompt": "Use case: stylized-concept. Create one original neutral ownership pennant for a polished painterly fantasy strategy-game overworld: a slender forged-metal pole carrying a small wind-shaped warm weathered ivory-gray cloth with muted bronze edging, blank with no emblem. Three-quarter isometric view, strong readable silhouette at 48 pixels, genuinely transparent background with preserved alpha. One object only; no ground, scenery, character, text, symbols, heraldry, logo, watermark, frame, or copied franchise design."
+    }
+  }
+}
