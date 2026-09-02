@@ -39,14 +39,14 @@ func _static_manifest_summary() -> Dictionary:
 			decorative_count += 1
 		else:
 			non_decorative_count += 1
-	if decorative_count != 200 or non_decorative_count != 192:
+	if decorative_count != 200 or non_decorative_count != 222:
 		_fail("Unexpected authored map object split: decorative=%d non_decorative=%d." % [decorative_count, non_decorative_count])
 		return {}
-	if distinct_asset_ids.size() != 192 or mappings.size() != 192:
-		_fail("Map object sprite manifest must map 192 authored non-decoration objects to distinct assets, found distinct=%d mapped=%d." % [distinct_asset_ids.size(), mappings.size()])
+	if distinct_asset_ids.size() != 222 or mappings.size() != 222:
+		_fail("Map object sprite manifest must map 222 authored non-decoration objects to distinct assets, found distinct=%d mapped=%d." % [distinct_asset_ids.size(), mappings.size()])
 		return {}
-	if int(coverage.get("total_distinct_authored_map_object_count_after_pass", 0)) != 392:
-		_fail("Map object sprite coverage does not prove all 392 authored map objects after the pass: %s" % JSON.stringify(coverage))
+	if int(coverage.get("total_distinct_authored_map_object_count_after_pass", 0)) != 422:
+		_fail("Map object sprite coverage does not prove all 422 authored map objects after the pass: %s" % JSON.stringify(coverage))
 		return {}
 	for object_id_value in mappings.keys():
 		var object_id := String(object_id_value)
@@ -72,7 +72,12 @@ func _static_manifest_summary() -> Dictionary:
 		if not ResourceLoader.exists(path):
 			_fail("Map object distinct runtime texture is not importable: %s -> %s" % [asset_id, path])
 			return {}
-		if _texture_has_visible_outer_alpha(path, 3):
+		var atlas_region: Variant = entry.get("atlas_region", [])
+		if atlas_region is Array and not atlas_region.is_empty():
+			if atlas_region.size() != 4:
+				_fail("Map object distinct runtime atlas region is malformed: %s -> %s" % [asset_id, atlas_region])
+				return {}
+		elif _texture_has_visible_outer_alpha(path, 3):
 			_fail("Map object distinct runtime texture has visible crop-border alpha: %s -> %s" % [asset_id, path])
 			return {}
 	return {

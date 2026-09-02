@@ -264,6 +264,7 @@ const HERO_COMMAND_PENNANT_WIDTH_FACTOR := 0.19
 const HERO_COMMAND_PENNANT_HEIGHT_FACTOR := 0.12
 const HERO_COMMAND_PENNANT_POLE_HEIGHT_FACTOR := 0.43
 const HERO_COMMAND_PENNANT_ALPHA := 0.96
+const HERO_COMMAND_PENNANT_ASSET_EXTENT_FACTOR := 0.60
 const TOWN_PRESENTATION_MODEL := "town_3x4_visual_landmark_3x2_logical_bottom_middle_entry"
 const TOWN_GROUNDING_MODEL := "tall_town_landmark_settled_without_base_ellipse"
 const TOWN_ANCHOR_STYLE := "town_contact_cues_no_base_ellipse"
@@ -293,6 +294,7 @@ const TOWN_OWNER_PENNANT_FOLD_ALPHA := 0.34
 const TOWN_OWNER_PENNANT_HIGHLIGHT_ALPHA := 0.42
 const TOWN_OWNER_PENNANT_SHADOW_OFFSET_FACTOR := 0.010
 const TOWN_OWNER_PENNANT_OUTLINE_WIDTH_FACTOR := 0.014
+const TOWN_OWNER_PENNANT_ASSET_EXTENT_FACTOR := 0.54
 const MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR := 0.18
 const MARKER_GROUND_ANCHOR_HEIGHT_FACTOR := 0.34
 const MARKER_GROUND_ANCHOR_WIDTH_FACTOR := 1.16
@@ -536,6 +538,7 @@ var _object_asset_regions: Dictionary = {}
 var _object_textures: Dictionary = {}
 var _object_texture_missing: Dictionary = {}
 var _object_texture_visible_regions: Dictionary = {}
+var _ownership_pennant_asset_ids: Dictionary = {}
 var _unit_art_textures: Dictionary = {}
 var _unit_art_texture_missing: Dictionary = {}
 var _resource_site_asset_ids: Dictionary = {}
@@ -4406,6 +4409,19 @@ func _draw_town_owner_pennant(rect: Rect2, color: Color, remembered: bool, owner
 		owner,
 		FrontierVisualKitScript.color_cue_assist_enabled()
 	)
+	var asset_id := String(profile.get("asset_id", ""))
+	var asset_texture = _object_texture_for_asset(asset_id)
+	if asset_texture is Texture2D:
+		var shows_color_cue_assist := bool(profile.get("color_cue_assist", false))
+		_canvas_draw_texture_rect(
+			asset_texture,
+			profile.get("asset_rect", Rect2()),
+			false,
+			OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
+		)
+		if shows_color_cue_assist:
+			_draw_town_owner_asset_mark(profile, owner)
+		return
 	var extent := float(profile.get("extent", 0.0))
 	var pole_top: Vector2 = profile.get("pole_top", Vector2.ZERO)
 	var pole_bottom: Vector2 = profile.get("pole_bottom", Vector2.ZERO)
@@ -4434,6 +4450,14 @@ func _draw_town_owner_pennant(rect: Rect2, color: Color, remembered: bool, owner
 	_canvas_draw_circle(pole_top, maxf(1.2, extent * 0.010), profile.get("pole_color", Color.WHITE))
 	if bool(profile.get("color_cue_assist", false)):
 		_draw_town_owner_flag_mark(profile.get("mark_center", pole_top), extent, owner, profile.get("mark_color", MARKER_OUTLINE_COLOR))
+
+func _draw_town_owner_asset_mark(profile: Dictionary, owner: String) -> void:
+	_draw_town_owner_flag_mark(
+		profile.get("asset_mark_center", Vector2.ZERO),
+		float(profile.get("extent", 0.0)),
+		owner,
+		profile.get("mark_color", MARKER_OUTLINE_COLOR)
+	)
 
 func _town_owner_pennant_profile(
 	rect: Rect2,
@@ -4493,12 +4517,23 @@ func _town_owner_pennant_profile(
 	var fold_color := Color(outline_color.r, outline_color.g, outline_color.b, minf(outline_color.a, TOWN_OWNER_PENNANT_FOLD_ALPHA))
 	var highlight_source := cloth_color.lightened(0.42)
 	var highlight_color := Color(highlight_source.r, highlight_source.g, highlight_source.b, TOWN_OWNER_PENNANT_HIGHLIGHT_ALPHA if not remembered else TOWN_OWNER_PENNANT_HIGHLIGHT_ALPHA * 0.70)
+	var asset_extent := extent * TOWN_OWNER_PENNANT_ASSET_EXTENT_FACTOR
+	var asset_position := rect.position + Vector2(rect.size.x * 0.63, rect.size.y * 0.04)
+	asset_position.x = minf(asset_position.x, rect.end.x - asset_extent)
+	asset_position.y = minf(asset_position.y, rect.end.y - asset_extent)
+	var asset_rect := Rect2(
+		asset_position,
+		Vector2(asset_extent, asset_extent)
+	)
 	return {
 		"model": TOWN_OWNER_PENNANT_MODEL,
 		"owner": owner,
 		"remembered": remembered,
 		"color_cue_assist": color_cue_assist,
 		"shape_id": shape_id,
+		"asset_id": _ownership_pennant_asset_id(owner),
+		"asset_rect": asset_rect,
+		"asset_mark_center": asset_rect.position + asset_rect.size * Vector2(0.60, 0.30),
 		"extent": extent,
 		"pole_top": pole_top,
 		"pole_bottom": pole_bottom,
@@ -4529,6 +4564,9 @@ func _town_owner_pennant_profile(
 		"legacy_height_factor": TOWN_OWNER_PENNANT_LEGACY_HEIGHT_FACTOR,
 		"painted_area_ratio_to_legacy": (TOWN_OWNER_PENNANT_WIDTH_FACTOR * TOWN_OWNER_PENNANT_HEIGHT_FACTOR) / (TOWN_OWNER_PENNANT_LEGACY_WIDTH_FACTOR * TOWN_OWNER_PENNANT_LEGACY_HEIGHT_FACTOR),
 	}
+
+func _ownership_pennant_asset_id(owner: String) -> String:
+	return String(_ownership_pennant_asset_ids.get(owner, ""))
 
 func _points_bounds(points: PackedVector2Array) -> Rect2:
 	if points.is_empty():
@@ -4798,10 +4836,17 @@ func _hero_command_pennant_profile(rect: Rect2, active: bool) -> Dictionary:
 		shadow_points.append(point + shadow_offset)
 	var owner_color := FrontierVisualKitScript.semantic_color("player", PLAYER_TOWN_COLOR)
 	var cloth_alpha := HERO_COMMAND_PENNANT_ALPHA if active else HERO_COMMAND_PENNANT_ALPHA * 0.82
+	var asset_extent := extent * HERO_COMMAND_PENNANT_ASSET_EXTENT_FACTOR
+	var asset_rect := Rect2(
+		rect.position + rect.size * Vector2(0.38, 0.04),
+		Vector2(asset_extent, asset_extent)
+	)
 	return {
 		"model": HERO_COMMAND_PENNANT_MODEL,
 		"active": active,
 		"shape_id": "active_square_fold" if active else "reserve_swallowtail",
+		"asset_id": _ownership_pennant_asset_id("player"),
+		"asset_rect": asset_rect,
 		"extent": extent,
 		"pole_top": pole_top,
 		"pole_bottom": pole_bottom,
@@ -4825,6 +4870,14 @@ func _hero_command_pennant_profile(rect: Rect2, active: bool) -> Dictionary:
 
 func _draw_hero_command_pennant(profile: Dictionary) -> void:
 	if profile.is_empty():
+		return
+	var asset_id := String(profile.get("asset_id", ""))
+	var asset_texture = _object_texture_for_asset(asset_id)
+	if asset_texture is Texture2D:
+		var modulate := OBJECT_SPRITE_VISIBLE_MODULATE
+		if not bool(profile.get("active", false)):
+			modulate.a *= 0.82
+		_canvas_draw_texture_rect(asset_texture, profile.get("asset_rect", Rect2()), false, modulate)
 		return
 	var extent := float(profile.get("extent", 0.0))
 	var pole_top: Vector2 = profile.get("pole_top", Vector2.ZERO)
@@ -4855,6 +4908,12 @@ func _hero_command_pennant_validation_payload(profile: Dictionary, containing_re
 		"model": String(profile.get("model", "")),
 		"active": bool(profile.get("active", false)),
 		"shape_id": String(profile.get("shape_id", "")),
+		"asset_id": String(profile.get("asset_id", "")),
+		"asset_path": String(_object_asset_paths.get(String(profile.get("asset_id", "")), "")),
+		"asset_loaded": _object_texture_for_asset(String(profile.get("asset_id", ""))) is Texture2D,
+		"asset_rect": _rect_payload(profile.get("asset_rect", Rect2())),
+		"asset_contained": containing_rect.encloses(profile.get("asset_rect", Rect2())),
+		"procedural_fallback": not (_object_texture_for_asset(String(profile.get("asset_id", ""))) is Texture2D),
 		"cloth_points": _vector2_array_payload(cloth_points),
 		"shadow_points": _vector2_array_payload(shadow_points),
 		"pole_top": _vector2_payload(profile.get("pole_top", Vector2.ZERO)),
@@ -7233,6 +7292,13 @@ func _town_owner_pennant_validation_payload(profile: Dictionary, rect: Rect2) ->
 		"remembered": bool(profile.get("remembered", false)),
 		"color_cue_assist": bool(profile.get("color_cue_assist", false)),
 		"shape_id": String(profile.get("shape_id", "")),
+		"asset_id": String(profile.get("asset_id", "")),
+		"asset_path": String(_object_asset_paths.get(String(profile.get("asset_id", "")), "")),
+		"asset_loaded": _object_texture_for_asset(String(profile.get("asset_id", ""))) is Texture2D,
+		"asset_rect": _rect_payload(profile.get("asset_rect", Rect2())),
+		"asset_contained": rect.encloses(profile.get("asset_rect", Rect2())),
+		"asset_mark_contained": profile.get("asset_rect", Rect2()).has_point(profile.get("asset_mark_center", Vector2.ZERO)),
+		"procedural_fallback": not (_object_texture_for_asset(String(profile.get("asset_id", ""))) is Texture2D),
 		"single_pass_draw_count": int(profile.get("single_pass_draw_count", 0)),
 		"cloth_layer_count": int(profile.get("cloth_layer_count", 0)),
 		"point_count": cloth_points.size(),
@@ -10520,6 +10586,7 @@ func _load_overworld_art_manifest() -> void:
 	_object_textures.clear()
 	_object_texture_missing.clear()
 	_object_texture_visible_regions.clear()
+	_ownership_pennant_asset_ids.clear()
 	_resource_site_asset_ids.clear()
 	_resource_site_unclaimed_asset_ids.clear()
 	_resource_site_object_profiles.clear()
@@ -10568,6 +10635,14 @@ func _load_overworld_art_manifest() -> void:
 			var atlas_region: Variant = entry.get("atlas_region", [])
 			if atlas_region is Array and not atlas_region.is_empty():
 				_object_asset_regions[asset_id] = atlas_region.duplicate(true)
+
+	var ownership_pennant_sprites = _overworld_art_manifest.get("ownership_pennant_sprites", {})
+	if ownership_pennant_sprites is Dictionary:
+		for owner_value in ownership_pennant_sprites.keys():
+			var owner := String(owner_value)
+			var asset_id := String(ownership_pennant_sprites.get(owner_value, ""))
+			if owner != "" and asset_id != "":
+				_ownership_pennant_asset_ids[owner] = asset_id
 
 	var resource_site_sprites = _overworld_art_manifest.get("resource_site_sprites", {})
 	if resource_site_sprites is Dictionary:

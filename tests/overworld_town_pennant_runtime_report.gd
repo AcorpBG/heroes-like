@@ -3,8 +3,8 @@ extends Node
 const SCENARIO_ID := "river-pass"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const PENNANT_MODEL := "single_pass_compact_heraldic_cloth_pennant"
-const WIDTH_FACTOR := 0.140
-const HEIGHT_FACTOR := 0.100
+const WIDTH_FACTOR := 0.052
+const HEIGHT_FACTOR := 0.040
 const LEGACY_WIDTH_FACTOR := 0.17
 const LEGACY_HEIGHT_FACTOR := 0.12
 const VISIBLE_ALPHA := 0.96
@@ -149,12 +149,19 @@ func _assert_town_variants(
 				expected_shape = "compact_diamond"
 				expected_points = 4
 		var cloth_color: Dictionary = variant.get("cloth_color", {})
+		var expected_asset_id := "ownership_pennant_%s" % owner
 		var expected_alpha := REMEMBERED_ALPHA if remembered else VISIBLE_ALPHA
 		var expected_ratio := (WIDTH_FACTOR * HEIGHT_FACTOR) / (LEGACY_WIDTH_FACTOR * LEGACY_HEIGHT_FACTOR)
 		all_exact = all_exact \
 			and String(variant.get("model", "")) == PENNANT_MODEL \
 			and owner in ["player", "enemy", "neutral"] \
 			and String(variant.get("shape_id", "")) == expected_shape \
+			and String(variant.get("asset_id", "")) == expected_asset_id \
+			and String(variant.get("asset_path", "")) == "res://art/overworld/runtime/objects/ownership_pennants/%s_pennant.png" % owner \
+			and bool(variant.get("asset_loaded", false)) \
+			and bool(variant.get("asset_contained", false)) \
+			and bool(variant.get("asset_mark_contained", false)) \
+			and not bool(variant.get("procedural_fallback", true)) \
 			and int(variant.get("point_count", 0)) == expected_points \
 			and int(variant.get("single_pass_draw_count", 0)) == 1 \
 			and int(variant.get("cloth_layer_count", 0)) == 1 \
@@ -180,6 +187,11 @@ func _assert_town_variants(
 				every_variant_once = every_variant_once and int(keys.get("%s:%s:%s" % [owner, remembered, assist], 0)) == 1
 	var current_exact := String(current_pennant.get("model", "")) == PENNANT_MODEL \
 		and String(current_pennant.get("owner", "")) == expected_owner \
+		and String(current_pennant.get("asset_id", "")) == "ownership_pennant_%s" % expected_owner \
+		and bool(current_pennant.get("asset_loaded", false)) \
+		and bool(current_pennant.get("asset_contained", false)) \
+		and bool(current_pennant.get("asset_mark_contained", false)) \
+		and not bool(current_pennant.get("procedural_fallback", true)) \
 		and int(current_pennant.get("single_pass_draw_count", 0)) == 1 \
 		and int(current_pennant.get("cloth_layer_count", 0)) == 1 \
 		and bool(current_pennant.get("cloth_contained", false)) \
@@ -193,6 +205,8 @@ func _assert_town_variants(
 		"variant_count": variants.size(),
 		"every_variant_once": every_variant_once,
 		"current_exact": current_exact,
+		"first_variant": variants[0] if not variants.is_empty() and not all_exact else {},
+		"current": current_pennant if not current_exact else {},
 		"compact_area_ratio": (WIDTH_FACTOR * HEIGHT_FACTOR) / (LEGACY_WIDTH_FACTOR * LEGACY_HEIGHT_FACTOR),
 	}
 

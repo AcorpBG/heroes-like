@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource path="res://tests/overworld_live_object_art_coverage_report.gd" type="Script" id="1"]
+
+[node name="OverworldLiveObjectArtCoverageReport" type="Node"]
+script = ExtResource("1")

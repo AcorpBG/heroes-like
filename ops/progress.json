@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Completed the owner-requested Overworld visual overhaul: irregular biome surface detail and micro-brush texture are live, blockers render at actual landscape-mass scale, and towns use a taller 3x4 visual envelope while retaining the exact 3x2 logical footprint.",
+  "currentNotes": "Completed live Overworld object-art coverage across all 299 authored scenarios and native Small/Large generation. All 9,465 audited world-facing placements resolve image art; procedural ownership and command pennants were replaced by original transparent player, enemy, and neutral PNG assets.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-world-surface-town-landmarks-10184",
-  "currentSliceId": "ux-overworld-world-surface-town-landmarks-10184",
-  "currentSliceNotes": "Completed original terrain-atlas ingestion, irregular biome surface composition, real 0.86-tile authored blockers, overlapping generated blocker masses, and 3x4 visual-only town landmarks. Focused/broad runtime, generated Large geometry, editor import, repository, Linux package, and fresh-Wine Windows package/generated-flow gates pass.",
+  "currentSlice": "ux-overworld-live-object-art-coverage-10184",
+  "currentSliceId": "ux-overworld-live-object-art-coverage-10184",
+  "currentSliceNotes": "Audited 9,465 live placements across 299 authored scenarios and native Small/Large generation with zero valid procedural fallbacks, empty asset ids, or missing textures. Replaced visible procedural town-owner and hero-command pennants with three original transparent image assets and passed focused, repository, Linux, and Windows gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld World Surface And 3x4 Town Landmarks",
-  "currentSliceUpdatedAt": "2026-09-02T20:24:55Z",
+  "currentSliceTitle": "Overworld Live Object Art Coverage",
+  "currentSliceUpdatedAt": "2026-09-02T22:08:36Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -108010,6 +108010,60 @@
         "release_ready_claimed": false
       },
       "remainingWork": "No work remains in this bounded visual slice. Renderer shutdown cleanup, broader production completion, hardware certification, signing, publication, and release readiness remain separate."
+    },
+    {
+      "id": "ux-overworld-live-object-art-coverage-10184",
+      "title": "Overworld Live Object Art Coverage",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Audit every live authored and representative generated Overworld world object through the production renderer and replace unintended procedural object fallbacks with original image assets without changing gameplay authority.",
+      "implementationTargets": [
+        "art/overworld/runtime",
+        "art/overworld/source/generated",
+        "art/overworld/manifest.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "No valid authored or representative generated world-object placement resolves to a procedural marker, empty sprite asset, or missing runtime texture",
+        "Inspected authored and generated captures show painted world objects and painted ownership or command pennants while route, selection, fog, road, and feedback geometry remains outside the object-art gate",
+        "Focused runtime coverage, repository validation, clean parsing, and Linux/Windows package startup pass"
+      ],
+      "nonGoals": [
+        "Terrain topology, object placement, encounter balance, AI, save schema, Native RMG, or route, selection, fog, and feedback UI changes",
+        "Copied Heroes assets, signing, publication, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-02T21:24:50Z",
+      "startedAt": "2026-09-02T21:24:50Z",
+      "updatedAt": "2026-09-02T22:08:36Z",
+      "completedAt": "2026-09-02T22:08:36Z",
+      "notes": "Completed from direct owner playtest evidence. The production renderer audit covers all 299 authored scenarios and deterministic native Small/Large generated maps. All valid map objects resolve imported art. The visible non-art culprit was the procedural town-owner and hero-command pennant layer; it now uses three original built-in-imagegen transparent PNG assets with data-driven owner mapping, contained accessibility marks, remembered-state modulation, and procedural geometry retained only as a missing-asset fail-safe. Authored and generated captures were inspected. Focused object/decorative/town/hero tests, editor parse/import, repository validation, Linux export/boot, and Windows export/Wine generated setup/overworld/town startup pass. The pre-existing exit-only texture RID warning remains separate.",
+      "metrics": {
+        "authored_scenario_count_audited": 299,
+        "generated_case_count_audited": 2,
+        "live_world_object_placements_audited": 9465,
+        "town_ownership_pennant_count_audited": 606,
+        "hero_command_pennant_count_audited": 301,
+        "distinct_resolved_asset_count": 831,
+        "object_asset_catalog_count": 1174,
+        "valid_procedural_fallback_count": 0,
+        "empty_sprite_asset_count": 0,
+        "missing_runtime_texture_count": 0,
+        "linux_pck_size_bytes": 238990348,
+        "windows_pck_size_bytes": 238990348,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "No work remains in this bounded live object-art coverage slice. The known exit-only texture RID warning, broader visual polish, hardware certification, signing, publication, and release readiness remain separate."
     }
   ],
   "project": "heroes-like",

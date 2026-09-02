@@ -152,10 +152,9 @@ func _native_runtime_presentation_summary(static_summary: Dictionary) -> Diction
 		return {}
 	var art_manifest: Dictionary = ContentService.load_json("res://art/overworld/manifest.json")
 	var object_assets: Dictionary = art_manifest.get("object_assets", {}) if art_manifest.get("object_assets", {}) is Dictionary else {}
-	var decorative_manifest: Dictionary = ContentService.load_json("res://art/overworld/decorative_object_sprites.json")
-	var mappings: Dictionary = decorative_manifest.get("object_sprite_mappings", {}) if decorative_manifest.get("object_sprite_mappings", {}) is Dictionary else {}
 	var target_object: Dictionary = {}
 	var target_asset_id := ""
+	var target_tile := Vector2i(-1, -1)
 	var town_tiles := _town_tile_keys(session)
 	for object_value in map_objects:
 		if not (object_value is Dictionary):
@@ -164,23 +163,34 @@ func _native_runtime_presentation_summary(static_summary: Dictionary) -> Diction
 		var object_tile := Vector2i(int(object.get("x", -1)), int(object.get("y", -1)))
 		if town_tiles.has(_tile_key(object_tile)):
 			continue
-		var object_id := String(object.get("object_id", ""))
-		var mapping: Dictionary = mappings.get(object_id, {}) if mappings.get(object_id, {}) is Dictionary else {}
-		var asset_id := String(mapping.get("asset_id", ""))
-		if asset_id == "" or not object_assets.has(asset_id):
+		if String(object.get("runtime_object_role", "")) != "decorative_blocker_sprite":
 			continue
 		target_object = object
-		target_asset_id = asset_id
 		break
 	if target_object.is_empty():
-		_fail("Generated decorative objects did not resolve through the decorative sprite mapping.")
+		_fail("Generated payload did not expose a decorative blocker record.")
 		return {}
 	var view: Variant = OverworldMapViewScript.new()
 	view.size = Vector2(960, 640)
 	add_child(view)
-	var target_tile := Vector2i(int(target_object.get("x", -1)), int(target_object.get("y", -1)))
-	view.set_map_state(session, session.overworld.get("map", []), map_size, target_tile)
+	view.set_map_state(session, session.overworld.get("map", []), map_size, Vector2i(int(target_object.get("x", -1)), int(target_object.get("y", -1))))
 	await get_tree().process_frame
+	var generated_summary: Dictionary = view.validation_generated_object_visual_summary()
+	for entry_value in generated_summary.get("body_entries", []):
+		if not (entry_value is Dictionary):
+			continue
+		var entry: Dictionary = entry_value
+		if not bool(entry.get("visual_anchor", false)):
+			continue
+		var asset_id := String(entry.get("asset_id", ""))
+		if asset_id == "" or not object_assets.has(asset_id) or not bool(entry.get("asset_loaded", false)):
+			continue
+		target_asset_id = asset_id
+		target_tile = Vector2i(int(entry.get("x", -1)), int(entry.get("y", -1)))
+		break
+	if target_asset_id == "" or target_tile.x < 0:
+		_fail("Generated decorative body anchors did not resolve a loaded runtime sprite: %s" % JSON.stringify(generated_summary))
+		return {}
 	var presentation: Dictionary = view.validation_tile_presentation(target_tile)
 	remove_child(view)
 	view.queue_free()

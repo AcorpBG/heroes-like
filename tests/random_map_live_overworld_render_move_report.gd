@@ -89,6 +89,17 @@ func _run() -> void:
 	var map_visual_before := _map_visual_summary(overworld)
 	if not _assert_generated_visual_summary(map_visual_before, "before_move"):
 		return
+	if OS.get_environment("RANDOM_MAP_LIVE_VISUAL_CAPTURE_ONLY") == "1":
+		if not await _capture_if_requested("before_move"):
+			return
+		print("RANDOM_MAP_LIVE_VISUAL_CAPTURE_ONLY %s" % JSON.stringify({
+			"ok": true,
+			"size_class_id": _active_size_class_id,
+			"seed": _active_seed,
+			"map_size": {"x": _expected_map_size.x, "y": _expected_map_size.y},
+		}))
+		get_tree().quit(0)
+		return
 	var terrain_transition_before := _terrain_transition_summary(overworld)
 	if OS.get_environment("RANDOM_MAP_LIVE_VISUAL_REVEAL_ALL") == "1" and not _assert_terrain_transition_summary(terrain_transition_before, "before_move"):
 		return
@@ -1086,7 +1097,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if summary.is_empty():
 		_fail("%s generated visual summary is unavailable." % label)
 		return false
-	if String(summary.get("presentation_model", "")) != "exact_body_cells_sparse_placement_mass_anchors_v3":
+	if String(summary.get("presentation_model", "")) != "exact_body_cells_overlapping_landscape_mass_anchors_v4":
 		_fail("%s generated body presentation model is not exact: %s" % [label, JSON.stringify(summary)])
 		return false
 	var is_default_fixture := _active_size_class_id == SIZE_CLASS_ID and _active_seed == EXPLICIT_SEED
@@ -1102,7 +1113,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if not bool(summary.get("body_tile_keys_exact", false)) or not bool(summary.get("all_body_assets_loaded", false)) or not bool(summary.get("all_body_assets_terrain_matched", false)) or not bool(summary.get("all_generated_records_anchored", false)):
 		_fail("%s generated body presentation is incomplete: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 0.92):
+	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 1.20):
 		_fail("%s generated body sprite extent changed: %s" % [label, summary.get("body_sprite_extent_tiles", -1.0)])
 		return false
 	if int(summary.get("asset_cluster_tiles", 0)) != 4:
@@ -1124,7 +1135,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 		or int(summary.get("motif_key_count", 0)) > visual_anchor_count:
 		_fail("%s generated body motifs did not form bounded placement-local masses: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	if not bool(summary.get("all_transformed_bounds_within_mass_margin", false)) or not is_equal_approx(float(summary.get("mass_bounds_margin_tiles", 0.0)), 0.34):
+	if not bool(summary.get("all_transformed_bounds_within_mass_margin", false)) or not is_equal_approx(float(summary.get("mass_bounds_margin_tiles", 0.0)), 0.52):
 		_fail("%s generated body composition escaped its owning placement mass margin: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
 	if int(summary.get("distinct_body_asset_count", 0)) < 8 or int(summary.get("repeated_def_multi_asset_count", 0)) <= 0:
