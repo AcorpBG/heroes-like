@@ -1,7 +1,7 @@
 extends Node
 
 const SCENARIO_ID := "ninefold-confluence"
-const TERRAIN_DETAIL_ATLAS_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"
+const TERRAIN_DETAIL_ATLAS_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png"
 const TERRAIN_DETAIL_ATLAS_SIZE := Vector2i(1024, 1024)
 const TERRAIN_DETAIL_CELL_SIZE := 256
 const TERRAIN_DETAIL_CELL_INSET := 16
@@ -351,7 +351,7 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 		return false
 	var shoreline_detail: Dictionary = shoreline.get("terrain_detail_decal", {}) if shoreline.get("terrain_detail_decal", {}) is Dictionary else {}
 	if (
-		String(shoreline_detail.get("model", "")) != "rich_biome_aware_painterly_surface_clusters_v2"
+		String(shoreline_detail.get("model", "")) != "biome_specific_painterly_landmark_clusters_v3"
 		or String(shoreline_detail.get("terrain_group", "")) != "water"
 		or bool(shoreline_detail.get("drawn", true))
 		or not bool(shoreline_detail.get("water_excluded", false))
@@ -399,7 +399,6 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 	var lighting_rows: Array = []
 	var grain_rows: Array = []
 	var detail_rows: Array = []
-	var drawn_detail_count := 0
 	for presentation_value in presentations:
 		var presentation: Dictionary = presentation_value
 		var terrain: Dictionary = presentation.get("terrain_presentation", {}) if presentation.get("terrain_presentation", {}) is Dictionary else {}
@@ -448,12 +447,7 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 		if not _terrain_detail_decal_payload_exact(detail, terrain_group):
 			_fail("Ninefold smoke: explored terrain detail decal contract is incomplete: %s." % JSON.stringify(detail))
 			return false
-		if bool(detail.get("drawn", false)):
-			drawn_detail_count += 1
 		detail_rows.append(detail)
-	if drawn_detail_count <= 0:
-		_fail("Ninefold smoke: live 2x2 grass fixture did not draw any sparse biome surface detail: %s." % JSON.stringify(detail_rows))
-		return false
 	var north_west_lighting: Dictionary = lighting_rows[0]
 	var repeated_terrain: Dictionary = repeated_presentation.get("terrain_presentation", {}) if repeated_presentation.get("terrain_presentation", {}) is Dictionary else {}
 	var repeated_lighting: Dictionary = repeated_terrain.get("terrain_macro_lighting", {}) if repeated_terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
@@ -505,7 +499,7 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 	if String(hidden_grain.get("model", "")) != "single_normalized_map_space_seamless_painterly_microtexture" or bool(hidden_grain.get("drawn", true)) or not bool(hidden_grain.get("hidden_by_unexplored_shroud", false)) or bool(hidden_grain.get("terrain_identity_sampled", true)):
 		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain grain: %s." % JSON.stringify(hidden_grain))
 		return false
-	if String(hidden_detail.get("model", "")) != "rich_biome_aware_painterly_surface_clusters_v2" or bool(hidden_detail.get("drawn", true)) or not bool(hidden_detail.get("hidden_by_unexplored_shroud", false)) or bool(hidden_detail.get("terrain_identity_sampled", true)):
+	if String(hidden_detail.get("model", "")) != "biome_specific_painterly_landmark_clusters_v3" or bool(hidden_detail.get("drawn", true)) or not bool(hidden_detail.get("hidden_by_unexplored_shroud", false)) or bool(hidden_detail.get("terrain_identity_sampled", true)):
 		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain surface detail: %s." % JSON.stringify(hidden_detail))
 		return false
 	if String(hidden_water_ripples.get("model", "")) != "deterministic_broken_painterly_current_pairs" or bool(hidden_water_ripples.get("drawn", true)) or not bool(hidden_water_ripples.get("hidden_by_unexplored_shroud", false)) or bool(hidden_water_ripples.get("terrain_identity_sampled", true)):
@@ -522,30 +516,31 @@ func _terrain_detail_decal_payload_exact(detail: Dictionary, expected_group: Str
 	var expected_cell_ids: Array = []
 	match expected_group:
 		"grasslands":
-			expected_cell_ids = [0, 1, 6, 8, 10, 11, 12, 15]
+			expected_cell_ids = [0, 4, 8, 12]
 		"forest":
-			expected_cell_ids = [3, 4, 7, 9, 13, 14]
+			expected_cell_ids = [1, 5, 9, 13]
 		"mire":
-			expected_cell_ids = [5, 8, 10, 15]
+			expected_cell_ids = [3, 7, 11, 15]
 		"rough", "rock", "underground":
-			expected_cell_ids = [2, 3, 4, 9, 13, 14]
+			expected_cell_ids = [2, 6, 10, 14]
 		"dirt", "sand":
-			expected_cell_ids = [2, 3, 7, 13]
+			expected_cell_ids = [2, 6, 10, 14]
 		"ash":
-			expected_cell_ids = [3, 7, 10, 13]
+			expected_cell_ids = [2, 6, 10, 14]
 	if (
-		String(detail.get("model", "")) != "rich_biome_aware_painterly_surface_clusters_v2"
-		or String(detail.get("source_model", "")) != "original_generated_clean_alpha_4x4_natural_cluster_atlas"
+		String(detail.get("model", "")) != "biome_specific_painterly_landmark_clusters_v3"
+		or String(detail.get("source_model", "")) != "built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"
 		or String(detail.get("terrain_group", "")) != expected_group
 		or not bool(detail.get("atlas_texture_loaded", false))
-		or String(detail.get("atlas_texture_path", "")) != "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"
+		or String(detail.get("atlas_texture_path", "")) != "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png"
 		or detail.get("atlas_size", {}) != {"x": 1024, "y": 1024}
 		or detail.get("atlas_grid", {}) != {"x": 4, "y": 4}
 		or detail.get("atlas_cell_size", {}) != {"x": 256, "y": 256}
-		or int(detail.get("density_modulus", 0)) != 2
+		or int(detail.get("density_modulus", 0)) != 9
+		or detail.get("active_density_residues", []) != [0]
 		or bool(detail.get("interactive", true))
 		or bool(detail.get("collision", true))
-		or not is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.88)
+		or not is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.74)
 		or String(detail.get("draw_order", "")) != "after_macro_lighting_before_roads_objects_and_fog"
 		or not bool(detail.get("hidden_by_unexplored_shroud", false))
 		or String(detail.get("variation_basis", "")) != "tile_coordinate_and_terrain_id_only"
@@ -565,9 +560,9 @@ func _terrain_detail_decal_payload_exact(detail: Dictionary, expected_group: Str
 		and int(source_rect.get("width", 0)) == 256
 		and int(source_rect.get("height", 0)) == 256
 		and bool(detail.get("destination_contained", false))
-		and extent_factor >= 0.38 and extent_factor <= 0.52
-		and float(offset.get("x", -1.0)) >= -0.13 and float(offset.get("x", 1.0)) <= 0.13
-		and float(offset.get("y", -1.0)) >= -0.08 and float(offset.get("y", 1.0)) <= 0.12
+		and extent_factor >= 0.30 and extent_factor <= 0.48
+		and float(offset.get("x", -1.0)) >= -0.16 and float(offset.get("x", 1.0)) <= 0.16
+		and float(offset.get("y", -1.0)) >= -0.08 and float(offset.get("y", 1.0)) <= 0.14
 		and float(destination_rect.get("width", 0.0)) > 0.0
 		and is_equal_approx(float(destination_rect.get("width", 0.0)), float(destination_rect.get("height", -1.0)))
 	)
@@ -1016,7 +1011,7 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if not bool(town_art.get("uses_asset_sprite", false)) or "town_identity_riverwatch" not in town_asset_ids or bool(town_art.get("fallback_procedural_marker", true)):
 		_fail("Ninefold smoke: large-map starting town is not using the exact Riverwatch Hold identity sprite: %s." % town_presentation)
 		return false
-	if String(town_art.get("town_sprite_grounding_model", "")) != "town_sprite_settled_without_base_ellipse" or bool(town_art.get("town_base_ellipse", true)) or bool(town_art.get("town_cast_shadow", true)):
+	if String(town_art.get("town_sprite_grounding_model", "")) != "tall_town_landmark_settled_without_base_ellipse" or bool(town_art.get("town_base_ellipse", true)) or bool(town_art.get("town_cast_shadow", true)):
 		_fail("Ninefold smoke: large-map starting town sprite did not use the corrected no-ellipse/no-cast-shadow grounding: %s." % town_presentation)
 		return false
 
@@ -1025,6 +1020,12 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if not _assert_marker_style(resource_presentation, "resource", false):
 		return false
 	var art_presentation: Dictionary = resource_presentation.get("art_presentation", {})
+	if bool(art_presentation.get("uses_asset_sprite", false)):
+		var resource_asset_ids: Array = art_presentation.get("sprite_asset_ids", [])
+		if bool(art_presentation.get("fallback_procedural_marker", true)) or "resource_site_recurring_prism_watch_relay" not in resource_asset_ids:
+			_fail("Ninefold smoke: mapped large-map resource site did not resolve its exact authored sprite: %s." % resource_presentation)
+			return false
+		return true
 	if bool(art_presentation.get("uses_asset_sprite", true)) or not bool(art_presentation.get("fallback_procedural_marker", false)):
 		_fail("Ninefold smoke: unmapped large-map resource site did not keep procedural marker fallback: %s." % resource_presentation)
 		return false
@@ -1055,7 +1056,7 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 	if String(readability.get("presence_model", "")) != "footprint_scaled_world_object":
 		_fail("Ninefold smoke: large-map %s marker no longer reports object-first footprint presence: %s." % [expected_kind, presentation])
 		return false
-	var expected_occlusion := "town_sprite_settled_without_base_ellipse" if is_town else ("ground_contact_without_foreground_lip" if uses_procedural_fallback else ("sprite_contact_without_foreground_lip" if uses_mapped_sprite else ""))
+	var expected_occlusion := "tall_town_landmark_settled_without_base_ellipse" if is_town else ("ground_contact_without_foreground_lip" if uses_procedural_fallback else ("sprite_contact_without_foreground_lip" if uses_mapped_sprite else ""))
 	if String(readability.get("occlusion_model", "")) != expected_occlusion:
 		_fail("Ninefold smoke: large-map %s marker no longer reports the expected foreground contact model: %s." % [expected_kind, presentation])
 		return false
@@ -1082,8 +1083,8 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			_fail("Ninefold smoke: large-map town marker must present as a 3x2 footprint: %s." % presentation)
 			return false
 		var town_presentation: Dictionary = presentation.get("town_presentation", {})
-		if not bool(town_presentation.get("has_town_footprint", false)) or String(town_presentation.get("presentation_model", "")) != "town_3x2_footprint_bottom_middle_entry":
-			_fail("Ninefold smoke: large-map town metadata does not expose the 3x2 presentation model: %s." % presentation)
+		if not bool(town_presentation.get("has_town_footprint", false)) or String(town_presentation.get("presentation_model", "")) != "town_3x4_visual_landmark_3x2_logical_bottom_middle_entry" or int(town_presentation.get("visual_footprint_width_tiles", 0)) != 3 or int(town_presentation.get("visual_footprint_height_tiles", 0)) != 4:
+			_fail("Ninefold smoke: large-map town metadata does not expose the 3x4 visual and retained 3x2 logical model: %s." % presentation)
 			return false
 		if String(town_presentation.get("entry_role", "")) != "bottom_middle_visit_approach" or not bool(town_presentation.get("entry_is_visit_tile", false)):
 			_fail("Ninefold smoke: large-map town does not expose the bottom-middle visit approach tile: %s." % presentation)
@@ -1167,13 +1168,13 @@ func _assert_town_grounding_correction(readability: Dictionary, presentation: Di
 	if bool(readability.get("upper_mass_backdrop", true)) or bool(readability.get("vertical_mass_shadow", true)):
 		_fail("Ninefold smoke: large-map town still reports upper-mass shadow/backdrop treatment: %s." % presentation)
 		return false
-	if String(readability.get("depth_cue_model", "")) != "town_contact_line_without_cast_shadow" or bool(readability.get("directional_contact_shadow", true)) or float(readability.get("contact_shadow_alpha", 1.0)) > 0.01:
+	if String(readability.get("depth_cue_model", "")) != "tall_town_entry_ground_contact_without_cast_shadow" or bool(readability.get("directional_contact_shadow", true)) or float(readability.get("contact_shadow_alpha", 1.0)) > 0.01:
 		_fail("Ninefold smoke: large-map town still reports directional cast-shadow depth cues: %s." % presentation)
 		return false
 	if bool(readability.get("base_occlusion_pads", true)) or float(readability.get("base_occlusion_alpha", 1.0)) > 0.01:
 		_fail("Ninefold smoke: large-map town still reports foreground base occlusion pads: %s." % presentation)
 		return false
-	if String(readability.get("town_grounding_model", "")) != "town_sprite_settled_without_base_ellipse" or String(readability.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
+	if String(readability.get("town_grounding_model", "")) != "tall_town_landmark_settled_without_base_ellipse" or String(readability.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
 		_fail("Ninefold smoke: large-map town grounding metadata does not describe the no-ellipse presentation: %s." % presentation)
 		return false
 	if bool(readability.get("town_base_ellipse", true)) or bool(readability.get("town_underlay", true)) or bool(readability.get("town_cast_shadow", true)) or not bool(readability.get("town_contact_cue", false)):

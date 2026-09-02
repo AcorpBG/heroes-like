@@ -289,7 +289,7 @@ func _assert_blocker_mass_focused_summary(summary: Dictionary, label: String) ->
 		"focused_mass_large": 3,
 	}
 	if (
-		String(summary.get("presentation_model", "")) != "exact_body_cells_sparse_placement_mass_anchors_v3"
+		String(summary.get("presentation_model", "")) != "exact_body_cells_overlapping_landscape_mass_anchors_v4"
 		or int(summary.get("generated_record_count", 0)) != 4
 		or int(summary.get("expected_body_tile_count", 0)) != 24
 		or int(summary.get("indexed_body_tile_count", 0)) != 24
@@ -604,16 +604,17 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 			if bool(detail.get("water_excluded", false)):
 				terrain_detail_water_excluded_count += 1
 			var detail_exact: bool = (
-				String(detail.get("model", "")) == "rich_biome_aware_painterly_surface_clusters_v2"
-				and String(detail.get("source_model", "")) == "original_generated_clean_alpha_4x4_natural_cluster_atlas"
+				String(detail.get("model", "")) == "biome_specific_painterly_landmark_clusters_v3"
+				and String(detail.get("source_model", "")) == "built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"
 				and bool(detail.get("atlas_texture_loaded", false))
 				and detail.get("atlas_size", {}) == {"x": 1024, "y": 1024}
 				and detail.get("atlas_grid", {}) == {"x": 4, "y": 4}
 				and detail.get("atlas_cell_size", {}) == {"x": 256, "y": 256}
-				and int(detail.get("density_modulus", 0)) == 2
+				and int(detail.get("density_modulus", 0)) == 9
+				and detail.get("active_density_residues", []) == [0]
 				and not bool(detail.get("interactive", true))
 				and not bool(detail.get("collision", true))
-				and is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.88)
+				and is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.74)
 				and String(detail.get("draw_order", "")) == "after_macro_lighting_before_roads_objects_and_fog"
 				and bool(detail.get("hidden_by_unexplored_shroud", false))
 				and String(detail.get("variation_basis", "")) == "tile_coordinate_and_terrain_id_only"
@@ -1058,9 +1059,9 @@ func _assert_terrain_transition_summary(summary: Dictionary, label: String) -> b
 		or summary.get("terrain_grain_texture_paths", []) != ["res://art/overworld/runtime/terrain_tiles/detail/terrain_grain_overlay.png"]
 		or terrain_grain_modulate_alphas.size() != 1
 		or not is_equal_approx(float(terrain_grain_modulate_alphas[0]), 0.72)
-		or summary.get("terrain_detail_model_ids", []) != ["rich_biome_aware_painterly_surface_clusters_v2"]
-		or summary.get("terrain_detail_source_model_ids", []) != ["original_generated_clean_alpha_4x4_natural_cluster_atlas"]
-		or summary.get("terrain_detail_texture_paths", []) != ["res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"]
+		or summary.get("terrain_detail_model_ids", []) != ["biome_specific_painterly_landmark_clusters_v3"]
+		or summary.get("terrain_detail_source_model_ids", []) != ["built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"]
+		or summary.get("terrain_detail_texture_paths", []) != ["res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png"]
 		or summary.get("water_ripple_model_ids", []) != ["deterministic_broken_painterly_current_pairs"]
 	):
 		_fail("%s generated terrain transitions or continuous macro-lighting contract did not remain exact: %s" % [label, JSON.stringify(summary)])

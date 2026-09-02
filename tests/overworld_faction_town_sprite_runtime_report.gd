@@ -5,8 +5,8 @@ const THIRD_HEARTHS_SCENARIO_ID := "third-hearths-confluence"
 const THIRD_HEARTHS_ATLAS_PATH := "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png"
 const HORIZON_CITADELS_ATLAS_PATH := "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
-const TOWN_VISUAL_EXTENT_TILES := 1.36
-const TOWN_EXTENT_FRACTION := 0.68
+const TOWN_VISUAL_EXTENT_TILES := 2.85
+const TOWN_EXTENT_FRACTION := 0.95
 const TOWN_GROUND_CLEARANCE_TILES := 0.18
 const EXPECTED_TOWN_ASSETS := {
 	"town_riverwatch": "town_identity_riverwatch",
@@ -43,6 +43,14 @@ const THIRD_HEARTH_OBJECTIVES := {
 	"town_cindercoil_foundry": "claim_third_cindercoil",
 	"town_gloamwake_anchorage": "claim_third_gloamwake",
 }
+const HORIZON_CITADEL_TOWN_IDS := [
+	"town_rainwrit_bastion",
+	"town_hollowreed_sanctuary",
+	"town_meridian_choirhold",
+	"town_crownroot_refuge",
+	"town_blackbell_foundry",
+	"town_pale_sounding_harbor",
+]
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -171,6 +179,7 @@ func _validate_profiles(shell: Node, profiles: Array) -> Dictionary:
 	var seen_assets: Dictionary = {}
 	var visible_asset_exact := true
 	var scale_exact := true
+	var first_scale_failure: Dictionary = {}
 	var grounding_exact := true
 	var footprint_authority_exact := true
 	var owner_pennant_exact := color_cues.has("player_town_color") and color_cues.has("enemy_town_color") and color_cues.has("neutral_town_color")
@@ -185,25 +194,29 @@ func _validate_profiles(shell: Node, profiles: Array) -> Dictionary:
 			return {"ok": false, "reason": "asset_identity", "profile": profile}
 		if not bool(profile.get("uses_identity_sprite", false)) or bool(profile.get("uses_faction_sprite", true)) or bool(profile.get("uses_default_sprite", true)):
 			return {"ok": false, "reason": "fallback_state", "profile": profile}
-		var expected_path := THIRD_HEARTHS_ATLAS_PATH if town_id in THIRD_HEARTH_OBJECTIVES else "res://art/overworld/runtime/objects/towns/identity/%s.png" % town_id
+		var expected_path := THIRD_HEARTHS_ATLAS_PATH if town_id in THIRD_HEARTH_OBJECTIVES else (HORIZON_CITADELS_ATLAS_PATH if town_id in HORIZON_CITADEL_TOWN_IDS else "res://art/overworld/runtime/objects/towns/identity/%s.png" % town_id)
 		if String(profile.get("sprite_path", "")) != expected_path or not (load(expected_path) is Texture2D):
 			return {"ok": false, "reason": "texture_path", "profile": profile}
 		var scale_payload: Dictionary = map_view.call("validation_town_sprite_scale_payload", sprite_asset_id)
-		scale_exact = scale_exact and _town_scale_exact(scale_payload)
+		var row_scale_exact := _town_scale_exact(scale_payload)
+		if not row_scale_exact and first_scale_failure.is_empty():
+			first_scale_failure = {"town_id": town_id, "payload": scale_payload}
+		scale_exact = scale_exact and row_scale_exact
 		grounding_exact = grounding_exact and bool(scale_payload.get("painted_bottom_grounded_exact", false)) and is_equal_approx(float(scale_payload.get("painted_bottom_clearance_tiles", 0.0)), TOWN_GROUND_CLEARANCE_TILES)
 		seen_towns[town_id] = true
 		seen_assets[sprite_asset_id] = true
-		footprint_authority_exact = footprint_authority_exact and int(profile.get("footprint_width_tiles", 0)) == 3 and int(profile.get("footprint_height_tiles", 0)) == 2 and String(profile.get("entry_role", "")) == "bottom_middle_visit_approach" and bool(profile.get("entry_is_visit_tile", false)) and bool(profile.get("non_entry_tiles_blocked", false)) and String(profile.get("presentation_passability", "")) == "entry_only"
+		footprint_authority_exact = footprint_authority_exact and int(profile.get("footprint_width_tiles", 0)) == 3 and int(profile.get("footprint_height_tiles", 0)) == 2 and int(profile.get("visual_footprint_width_tiles", 0)) == 3 and int(profile.get("visual_footprint_height_tiles", 0)) == 4 and String(profile.get("visual_anchor_model", "")) == "three_by_four_entry_center_bottom" and String(profile.get("entry_role", "")) == "bottom_middle_visit_approach" and bool(profile.get("entry_is_visit_tile", false)) and bool(profile.get("non_entry_tiles_blocked", false)) and String(profile.get("presentation_passability", "")) == "entry_only"
 		var entry: Dictionary = profile.get("entry_tile", {})
 		var presentation: Dictionary = shell.call("validation_tile_presentation", int(entry.get("x", -1)), int(entry.get("y", -1)))
 		var art: Dictionary = presentation.get("art_presentation", {})
 		var sprite_asset_ids: Array = art.get("sprite_asset_ids", [])
-		visible_asset_exact = visible_asset_exact and bool(art.get("uses_asset_sprite", false)) and sprite_asset_id in sprite_asset_ids and not bool(art.get("fallback_procedural_marker", true)) and String(art.get("town_sprite_grounding_model", "")) == "town_sprite_settled_without_base_ellipse" and not bool(art.get("town_base_ellipse", true)) and not bool(art.get("town_cast_shadow", true))
+		visible_asset_exact = visible_asset_exact and bool(art.get("uses_asset_sprite", false)) and sprite_asset_id in sprite_asset_ids and not bool(art.get("fallback_procedural_marker", true)) and String(art.get("town_sprite_grounding_model", "")) == "tall_town_landmark_settled_without_base_ellipse" and not bool(art.get("town_base_ellipse", true)) and not bool(art.get("town_cast_shadow", true))
 	return {
 		"ok": seen_towns.size() == EXPECTED_TOWN_ASSETS.size() and seen_assets.size() == EXPECTED_TOWN_ASSETS.size() and visible_asset_exact and scale_exact and grounding_exact and footprint_authority_exact and owner_pennant_exact,
 		"asset_ids": seen_assets.keys(),
 		"visible_asset_exact": visible_asset_exact,
 		"scale_exact": scale_exact,
+		"first_scale_failure": first_scale_failure,
 		"grounding_exact": grounding_exact,
 		"footprint_authority_exact": footprint_authority_exact,
 		"owner_pennant_exact": owner_pennant_exact,
@@ -264,10 +277,7 @@ func _town_by_id(towns: Array, town_id: String) -> Dictionary:
 func _validate_horizon_citadels_content() -> Dictionary:
 	var atlas := load(HORIZON_CITADELS_ATLAS_PATH)
 	var scenario: Dictionary = ContentService.get_scenario(SCENARIO_ID)
-	var exact_town_ids := [
-		"town_rainwrit_bastion", "town_hollowreed_sanctuary", "town_meridian_choirhold",
-		"town_crownroot_refuge", "town_blackbell_foundry", "town_pale_sounding_harbor",
-	]
+	var exact_town_ids := HORIZON_CITADEL_TOWN_IDS
 	var placed_ids: Array = []
 	for placement_value in scenario.get("towns", []):
 		if placement_value is Dictionary:
@@ -293,10 +303,12 @@ func _validate_horizon_citadels_content() -> Dictionary:
 
 func _town_scale_exact(payload: Dictionary) -> bool:
 	return not payload.is_empty() \
+		and payload.get("visual_footprint", {}) == {"width": 3, "height": 4} \
+		and payload.get("logical_footprint", {}) == {"width": 3, "height": 2} \
 		and is_equal_approx(float(payload.get("visible_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES) \
 		and is_equal_approx(float(payload.get("visible_extent_fraction_of_footprint_depth", 0.0)), TOWN_EXTENT_FRACTION) \
-		and is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 2.125) \
-		and is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 1.7) \
+		and is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 4.453125) \
+		and is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 3.5625) \
 		and is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0))) \
 		and bool(payload.get("painted_bottom_grounded_exact", false)) \
 		and bool(payload.get("sprite_contained_in_footprint", false)) \
@@ -341,8 +353,8 @@ func _identity_fixture_towns() -> Array:
 		towns.append({
 			"placement_id": "identity_fixture_%s" % town_id,
 			"town_id": town_id,
-			"x": 8 + (index % 5) * 10,
-			"y": 10 + floori(float(index) / 5.0) * 14,
+			"x": 6 + (index % 6) * 9,
+			"y": 8 + floori(float(index) / 6.0) * 11,
 			"owner": ["player", "enemy", "neutral"][index % 3],
 		})
 	return towns

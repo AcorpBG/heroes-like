@@ -36211,7 +36211,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     ensure(map_text.count("const MAX_SMALL_MAP_FIT_TILE_EXTENT := 104.0") == 1, errors, "Small-map fit must own one exact 104px visual extent cap")
     ensure(map_text.count('const SMALL_MAP_CARTOGRAPHIC_MATTE_MODEL := "quiet_survey_field_below_playable_board"') == 1, errors, "Small-map surround must own one exact quiet cartographic matte model")
     ensure(map_text.count("const SMALL_MAP_CARTOGRAPHIC_MATTE_MIN_GUTTER := 48.0") == 1, errors, "Small-map cartographic matte must require one exact 48px material gutter")
-    ensure(map_text.count("const TOWN_SPRITE_EXTENT_FACTOR := 0.68") == 1, errors, "Town art must own one exact footprint-proportional 68% short-span scale")
+    ensure(map_text.count("const TOWN_SPRITE_EXTENT_FACTOR := 0.95") == 1, errors, "Town art must own one exact 3x4 visual-landmark scale")
     extent_block = gd_function_block(map_text, "_tile_extent_for_viewport")
     uncapped_block = gd_function_block(map_text, "_uncapped_whole_map_fit_tile_extent")
     metrics_block = gd_function_block(map_text, "validation_view_metrics")
@@ -36329,17 +36329,19 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         ensure(forbidden not in town_draw_payload_block, errors, f"Town draw payload must remain pure renderer geometry without gameplay or draw mutation: {forbidden}")
     for token in (
         '"visual_sprite_extent_fraction_of_footprint": TOWN_SPRITE_EXTENT_FACTOR',
-        '"visual_sprite_extent_tiles": TOWN_SPRITE_EXTENT_FACTOR * float(mini(TOWN_PRESENTATION_FOOTPRINT.x, TOWN_PRESENTATION_FOOTPRINT.y))',
+        '"visual_sprite_extent_tiles": TOWN_SPRITE_EXTENT_FACTOR * float(mini(TOWN_VISUAL_FOOTPRINT.x, TOWN_VISUAL_FOOTPRINT.y))',
     ):
         ensure(token in town_payload_block, errors, f"Town presentation must expose exact visual/logical scale separation: {token}")
     for preserved_token in (
         "const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)",
         "const TOWN_ENTRY_OFFSET := Vector2i(1, 1)",
-        "const TOWN_SPRITE_EXTENT_FACTOR := 0.68",
+        "const TOWN_VISUAL_FOOTPRINT := Vector2i(3, 4)",
+        'const TOWN_VISUAL_ANCHOR_MODEL := "three_by_four_entry_center_bottom"',
+        "const TOWN_SPRITE_EXTENT_FACTOR := 0.95",
         "const TOWN_SPRITE_GROUND_CLEARANCE_TILES := 0.18",
         "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.64",
         "const OBJECT_SPRITE_EXTENT_FACTOR := 0.88",
-        'const TOWN_PRESENTATION_MODEL := "town_3x2_footprint_bottom_middle_entry"',
+        'const TOWN_PRESENTATION_MODEL := "town_3x4_visual_landmark_3x2_logical_bottom_middle_entry"',
     ):
         ensure(preserved_token in map_text, errors, f"Small-map visual cap must preserve object presentation authority: {preserved_token}")
 
@@ -36350,8 +36352,8 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         "const MAX_SMALL_MAP_TILE_EXTENT := 104.0",
         'const SMALL_MAP_MATTE_MODEL := "quiet_survey_field_below_playable_board"',
         "const SMALL_MAP_MATTE_MIN_GUTTER := 48.0",
-        'const SCALE_HIERARCHY_MODEL := "balanced_cartographic_bands_v4"',
-        "const TOWN_VISUAL_EXTENT_TILES := 1.36",
+        'const SCALE_HIERARCHY_MODEL := "landscape_mass_and_landmark_bands_v5"',
+        "const TOWN_VISUAL_EXTENT_TILES := 2.85",
         "const HERO_FIELD_VISUAL_EXTENT_TILES := 0.64",
         "const HERO_TOWN_VISITOR_VISUAL_EXTENT_TILES := 0.4484",
         'var metrics: Dictionary = map_view.call("validation_view_metrics")',
@@ -36377,13 +36379,13 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     ):
         ensure(token in report_text, errors, f"Focused small-map scale report is missing exact live proof: {token}")
     ensure(report_text.count("await _small_map_row(viewport_size)") == 1 and report_text.count("await _large_map_control(Vector2i(1920, 1080))") == 1, errors, "Focused scale report must run exactly two small-map viewport rows then one large-map control")
-    ensure(report_text.count('if bool(row.get("cartographic_matte_active", false)):') == 1 and 'if matte_active_rows != VIEWPORT_SIZES.size():' in report_text, errors, "Focused scale report must require the matte for both material-gutter logical viewports")
+    ensure(report_text.count('if bool(row.get("cartographic_matte_active", false)):') == 1 and 'OS.get_environment("OVERWORLD_WORLD_SURFACE_CAPTURE_DIR").strip_edges() == "" and matte_active_rows != VIEWPORT_SIZES.size()' in report_text, errors, "Focused scale report must require the matte for both logical headless viewports while permitting real-display capture geometry")
     for token in (
         'int(profile.get("footprint_width_tiles", 0)) != 3',
         'int(profile.get("footprint_height_tiles", 0)) != 2',
         'int(profile.get("blocked_footprint_cell_count", 0)) + int(profile.get("off_map_footprint_cell_count", 0)) != 5',
         'String(profile.get("scale_hierarchy_model", "")) != SCALE_HIERARCHY_MODEL',
-        'float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.68',
+        'float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.95',
         'float(profile.get("visual_sprite_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES',
         'String(profile.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline"',
         'String(profile.get("entry_role", "")) != "bottom_middle_visit_approach"',
@@ -36434,18 +36436,18 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1",
         "const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34",
         'const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"',
-        "const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.92",
+        "const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 1.20",
         "const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.93",
         "const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.07",
         "const GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES := 4",
         "const GENERATED_DECORATIVE_BODY_OFFSET_X_TILES := 0.12",
         "const GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES := -0.04",
         "const GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES := 0.04",
-        "const GENERATED_DECORATIVE_BODY_MASS_SMALL_EXTENT_TILES := 1.16",
-        "const GENERATED_DECORATIVE_BODY_MASS_MEDIUM_EXTENT_TILES := 1.44",
-        "const GENERATED_DECORATIVE_BODY_MASS_LARGE_EXTENT_TILES := 1.68",
-        "const GENERATED_DECORATIVE_BODY_MASS_BOUNDS_MARGIN_TILES := 0.34",
-        'const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_body_cells_sparse_placement_mass_anchors_v3"',
+        "const GENERATED_DECORATIVE_BODY_MASS_SMALL_EXTENT_TILES := 1.52",
+        "const GENERATED_DECORATIVE_BODY_MASS_MEDIUM_EXTENT_TILES := 1.90",
+        "const GENERATED_DECORATIVE_BODY_MASS_LARGE_EXTENT_TILES := 2.28",
+        "const GENERATED_DECORATIVE_BODY_MASS_BOUNDS_MARGIN_TILES := 0.52",
+        'const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_body_cells_overlapping_landscape_mass_anchors_v4"',
         "var _generated_decorative_bodies_by_tile: Dictionary = {}",
         "var _generated_decorative_blocker_asset_ids_by_biome: Dictionary = {}",
         "var _generated_decorative_blocker_fallback_asset_ids: Array = []",
@@ -36749,7 +36751,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'var save_reload_restored_authority := _generated_save_reload_authority(restored_session)',
         'not _save_authority_values_equal(save_reload_restored_authority, save_reload_source_authority)',
         '"save_reload_authority_exact": true',
-        'String(summary.get("presentation_model", "")) != "exact_body_cells_sparse_placement_mass_anchors_v3"',
+        'String(summary.get("presentation_model", "")) != "exact_body_cells_overlapping_landscape_mass_anchors_v4"',
         'int(summary.get("expected_body_tile_count", 0)) != 464',
         'not bool(summary.get("body_tile_keys_exact", false))',
         'not bool(summary.get("all_body_assets_loaded", false))',
@@ -36836,7 +36838,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         '"focused_mass_small": 1',
         '"focused_mass_medium": 2',
         '"focused_mass_large": 3',
-        'String(summary.get("presentation_model", "")) != "exact_body_cells_sparse_placement_mass_anchors_v3"',
+        'String(summary.get("presentation_model", "")) != "exact_body_cells_overlapping_landscape_mass_anchors_v4"',
         'int(summary.get("generated_record_count", 0)) != 4',
         'int(summary.get("expected_body_tile_count", 0)) != 24',
         'int(summary.get("indexed_body_tile_count", 0)) != 24',
@@ -36900,13 +36902,13 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     for token in (
         "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.30",
         "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.36",
-        'const WORLD_OBJECT_SCALE_HIERARCHY_MODEL := "balanced_cartographic_bands_v4"',
+        'const WORLD_OBJECT_SCALE_HIERARCHY_MODEL := "landscape_mass_and_landmark_bands_v5"',
         "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.46",
         "const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.54",
         "const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.50",
         "const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.58",
-        "const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.48",
-        "const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.34",
+        "const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.86",
+        "const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.42",
         "const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.41",
         "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_MIN_TILES := 0.54",
         "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_SPAN_MIN_STEP_TILES := 0.06",
@@ -36917,7 +36919,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES := 0.80",
         "const OBJECT_VISIBLE_FOOTPRINT_INSET_TILES := 0.02",
         "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.64",
-        "const TOWN_SPRITE_EXTENT_FACTOR := 0.68",
+        "const TOWN_SPRITE_EXTENT_FACTOR := 0.95",
         "const TOWN_SPRITE_GROUND_CLEARANCE_TILES := 0.18",
     ):
         ensure(map_text.count(token) == 1, errors, f"Overworld world-scale hierarchy must own one exact production constant: {token}")
@@ -36996,7 +36998,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         '"durable_structure":',
         "base = OBJECT_DURABLE_VISIBLE_EXTENT_TILES",
         'scale_class in ["durable_structure", "waypoint", "landmark", "terrain_blocker"]',
-        "return clampf(base, OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES, OBJECT_LANDMARK_VISIBLE_EXTENT_TILES)",
+        "maxf(OBJECT_LANDMARK_VISIBLE_EXTENT_TILES, OBJECT_BLOCKER_VISIBLE_EXTENT_TILES)",
     ):
         ensure(token in extent_block, errors, f"Visible sprite hierarchy is missing an exact semantic scale boundary: {token}")
     for forbidden in ("asset_id", "texture", "get_image", "session", "_session", "runtime_object_role"):
@@ -37112,7 +37114,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     validation_town_scale_block = gd_function_block(map_text, "validation_town_sprite_scale_payload")
     for token in (
         'asset_id: String = "town_faction_embercourt"',
-        "Vector2(TOWN_PRESENTATION_FOOTPRINT) * single_tile_extent",
+        "Vector2(TOWN_VISUAL_FOOTPRINT) * single_tile_extent",
         "var first_region := _object_texture_visible_region(asset_id, texture)",
         "var second_region := _object_texture_visible_region(asset_id, texture)",
         "var draw_payload := _town_sprite_draw_payload(asset_id, texture, footprint_rect, single_tile_extent)",
@@ -37182,10 +37184,10 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'float(artifact.get("visible_extent_tiles", 0.0)), 0.30',
         'String(pickup.get("semantic_scale_class", "")) != "loose_pickup"',
         'float(pickup.get("visible_extent_tiles", 0.0)), 0.36',
-        'float(decoration.get("visible_extent_tiles", 0.0)), 0.34',
+        'float(decoration.get("visible_extent_tiles", 0.0)), 0.42',
         'float(generic_object.get("visible_extent_tiles", 0.0)), 0.41',
         'float(encounter.get("visible_extent_tiles", 0.0)), 0.46',
-        'float(blocker.get("visible_extent_tiles", 0.0)), 0.48',
+        'float(blocker.get("visible_extent_tiles", 0.0)), 0.86',
         'float(waypoint.get("visible_extent_tiles", 0.0)), 0.50',
         'float(hero.get("sprite_extent_fraction", 0.0)), 0.64',
         'float(service.get("visible_extent_tiles", 0.0)), 0.54',
@@ -37207,15 +37209,15 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'not bool(clipped_large_service.get("sprite_contained_in_visible_footprint", false))',
         'bool(large_service.get("footprint_clipped", true))',
         'float(clipped_large_service.get("visible_extent_tiles", 0.0)), 0.80',
-        'float(town.get("visible_extent_tiles", 0.0)), 1.36',
-        'float(town.get("visible_extent_fraction_of_footprint_depth", 0.0)), 0.68',
-        'float(town.get("town_to_hero_extent_ratio", 0.0)), 2.125',
-        'float(town.get("town_to_largest_other_object_extent_ratio", 0.0)), 1.7',
+        'float(town.get("visible_extent_tiles", 0.0)), 2.85',
+        'float(town.get("visible_extent_fraction_of_footprint_depth", 0.0)), 0.95',
+        'float(town.get("town_to_hero_extent_ratio", 0.0)), 4.453125',
+        'float(town.get("town_to_largest_other_object_extent_ratio", 0.0)), 3.5625',
         'float(town.get("painted_bottom_clearance_tiles", 0.0)), 0.18',
         'not bool(town.get("painted_bottom_grounded_exact", false))',
         'float(town_center.get("x", 0.0)), 1.5',
         'float(town_center.get("y", 0.0)) <= 0.0',
-        'float(town_center.get("y", 0.0)) >= 2.0',
+        'float(town_center.get("y", 0.0)) >= 4.0',
         'not bool(town.get("sprite_contained_in_footprint", false))',
         '"id": "object_wood_wagon"',
         '"map_roles": ["small_reward", "build_resource", "counter_capture_target"]',
@@ -44181,10 +44183,12 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(object_rendering.get("mapped_sprite_vertical_mass_shadow", "")) == "removed_for_resource_artifact_encounter_mapped_sprites", errors, "Overworld object rendering must document removal of mapped sprite vertical mass shadows")
         ensure(str(object_rendering.get("mapped_sprite_foreground_lip", "")) == "removed_for_resource_artifact_encounter_mapped_sprites", errors, "Overworld object rendering must document removal of mapped sprite foreground lips")
         ensure(str(object_rendering.get("fallback_silhouette", "")) == "family_specific_procedural_world_object", errors, "Overworld object rendering must document family-specific procedural fallback silhouettes")
-        ensure(str(object_rendering.get("town_footprint", "")) == "town_3x2_footprint_bottom_middle_entry", errors, "Overworld object rendering must document the 3x2 town footprint and bottom-middle entry model")
+        ensure(str(object_rendering.get("town_footprint", "")) == "town_3x4_visual_landmark_3x2_logical_bottom_middle_entry", errors, "Overworld object rendering must document the 3x4 visual landmark and retained 3x2 logical entry model")
+        ensure(str(object_rendering.get("town_visual_footprint", "")) == "3x4_entry_center_bottom", errors, "Overworld object rendering must document the exact 3x4 visual town envelope")
+        ensure(str(object_rendering.get("town_logical_footprint", "")) == "3x2_bottom_middle_entry", errors, "Overworld object rendering must document the retained 3x2 logical town footprint")
         ensure(str(object_rendering.get("town_entry_role", "")) == "bottom_middle_visit_approach", errors, "Overworld object rendering must document the town bottom-middle visit approach role")
         ensure(str(object_rendering.get("town_non_entry_tiles", "")) == "blocked_non_entry_footprint", errors, "Overworld object rendering must document non-entry town footprint cells as blocked")
-        ensure(str(object_rendering.get("town_grounding", "")) == "town_sprite_settled_without_base_ellipse", errors, "Overworld object rendering must document the town-specific no-ellipse grounding model")
+        ensure(str(object_rendering.get("town_grounding", "")) == "tall_town_landmark_settled_without_base_ellipse", errors, "Overworld object rendering must document the tall-town no-ellipse grounding model")
         ensure(str(object_rendering.get("town_footprint_cues", "")) == "no_visible_helper_cues_3x2_contract", errors, "Overworld object rendering must document that town footprint/helper cues are not visible")
         ensure(str(object_rendering.get("town_entry_apron", "")) == "removed", errors, "Overworld object rendering must document that town entry aprons are removed")
         ensure(str(object_rendering.get("town_gate_helper", "")) == "removed", errors, "Overworld object rendering must document that town gate helper cues are removed")
@@ -44366,16 +44370,18 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "ghosted_sprite_with_ground_anchor",
         "TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)",
         "TOWN_ENTRY_OFFSET := Vector2i(1, 1)",
+        "TOWN_VISUAL_FOOTPRINT := Vector2i(3, 4)",
+        "three_by_four_entry_center_bottom",
         "TOWN_GROUNDING_MODEL",
         "TOWN_ANCHOR_STYLE",
         "TOWN_DEPTH_CUE_MODEL",
         "TOWN_FOOTPRINT_CUE_MODEL",
-        "town_3x2_footprint_bottom_middle_entry",
+        "town_3x4_visual_landmark_3x2_logical_bottom_middle_entry",
         "bottom_middle_visit_approach",
         "blocked_non_entry_footprint",
-        "town_sprite_settled_without_base_ellipse",
+        "tall_town_landmark_settled_without_base_ellipse",
         "town_contact_cues_no_base_ellipse",
-        "town_contact_line_without_cast_shadow",
+        "tall_town_entry_ground_contact_without_cast_shadow",
         "no_visible_helper_cues_3x2_contract",
         "ghosted_sprite_without_echo_plate",
     ):
@@ -44947,48 +44953,88 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         for forbidden in ("rand", "Time.", "session.", "_map_data", "_terrain_at", "set_map_state", "queue_redraw", "await ", "create_timer"):
             ensure(forbidden not in block, errors, f"{block_name} must remain deterministic and presentation-only: {forbidden}")
 
-    terrain_detail_path = ROOT / "art" / "overworld" / "runtime" / "terrain_tiles" / "detail" / "terrain_detail_decal_atlas_rich_v2.png"
+    for token in (
+        'const TERRAIN_MICROTEXTURE_MODEL := "deterministic_biome_tinted_brush_strokes_v1"',
+        "const TERRAIN_MICROTEXTURE_STROKE_COUNT := 5",
+        "const TERRAIN_MICROTEXTURE_MIN_LENGTH_FACTOR := 0.045",
+        "const TERRAIN_MICROTEXTURE_MAX_LENGTH_FACTOR := 0.13",
+        "const TERRAIN_MICROTEXTURE_SHADOW_ALPHA := 0.07",
+        "const TERRAIN_MICROTEXTURE_HIGHLIGHT_ALPHA := 0.13",
+    ):
+        ensure(map_view_text.count(token) == 1, errors, f"Terrain microtexture must own one exact bounded presentation constant: {token}")
+    terrain_surface_block = gd_function_block(map_view_text, "_draw_tile_terrain_surface")
+    terrain_microtexture_block = gd_function_block(map_view_text, "_draw_painterly_terrain_microtexture")
+    ensure(
+        terrain_surface_block.find("_draw_terrain_tile_art(tile, rect, terrain)")
+        < terrain_surface_block.find("_draw_painterly_terrain_microtexture(tile, rect, terrain)")
+        < terrain_surface_block.find("_draw_terrain_transitions(tile, rect, terrain)"),
+        errors,
+        "Painterly terrain microtexture must sit above the base tile and below authoritative terrain transitions.",
+    )
+    for token in (
+        'if terrain_group == "water"',
+        "for stroke_index in range(TERRAIN_MICROTEXTURE_STROKE_COUNT):",
+        '_stable_unit_fraction("micro_x:%s" % key)',
+        '_stable_unit_fraction("micro_y:%s" % key)',
+        "_canvas_draw_line(start + Vector2(0.0, line_width)",
+        "_canvas_draw_line(start, finish, highlight_color",
+    ):
+        ensure(token in terrain_microtexture_block, errors, f"Terrain microtexture is missing deterministic live brushwork: {token}")
+    for forbidden in ("rand", "Time.", "session.", "_session.", "set_map_state", "queue_redraw", "await ", "create_timer"):
+        ensure(forbidden not in terrain_microtexture_block, errors, f"Terrain microtexture must remain deterministic and presentation-only: {forbidden}")
+    for token in (
+        '"terrain_microtexture": {',
+        '"model": TERRAIN_MICROTEXTURE_MODEL',
+        '"stroke_count": TERRAIN_MICROTEXTURE_STROKE_COUNT if _terrain_group(terrain) != "water" else 0',
+        '"variation_basis": "tile_coordinate_terrain_id_and_stroke_index_only"',
+        '"draw_order": "after_base_tile_before_terrain_transitions_grain_decals_roads_objects_and_fog"',
+    ):
+        ensure(token in map_view_text, errors, f"Terrain presentation payload must expose the live microtexture contract: {token}")
+
+    terrain_detail_path = ROOT / "art" / "overworld" / "runtime" / "terrain_tiles" / "detail" / "terrain_detail_decal_atlas_world_v3.png"
     ensure(terrain_detail_path.is_file(), errors, "Overworld terrain detail decals must ship one project-local runtime atlas.")
     if terrain_detail_path.is_file():
         terrain_detail_bytes = terrain_detail_path.read_bytes()
         ensure(png_size(terrain_detail_path) == (1024, 1024), errors, "Overworld terrain detail decal atlas must remain exactly 1024x1024.")
         ensure(len(terrain_detail_bytes) > 25 and terrain_detail_bytes[:8] == b"\x89PNG\r\n\x1a\n" and terrain_detail_bytes[25] == 6, errors, "Overworld terrain detail decal atlas must remain an RGBA PNG with transparent cutout clusters.")
-        ensure(hashlib.sha256(terrain_detail_bytes).hexdigest() == "1a079b938adc29db80637714be2783d378bc671854340915c8b705bf7a227398", errors, "Overworld rich terrain detail atlas must retain the inspected clean-alpha production bitmap.")
+        ensure(hashlib.sha256(terrain_detail_bytes).hexdigest() == "5fb4c87e5c80d5f03755028ef3aefd97ac178bf6952e5c018fd585bfa146c097", errors, "Overworld world-surface terrain detail atlas must retain the inspected alpha-cleaned production bitmap.")
     for token in (
-        'const TERRAIN_DETAIL_DECAL_MODEL := "rich_biome_aware_painterly_surface_clusters_v2"',
-        'const TERRAIN_DETAIL_DECAL_SOURCE_MODEL := "original_generated_clean_alpha_4x4_natural_cluster_atlas"',
-        'const TERRAIN_DETAIL_DECAL_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"',
+        'const TERRAIN_DETAIL_DECAL_MODEL := "biome_specific_painterly_landmark_clusters_v3"',
+        'const TERRAIN_DETAIL_DECAL_SOURCE_MODEL := "built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"',
+        'const TERRAIN_DETAIL_DECAL_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png"',
         "const TERRAIN_DETAIL_DECAL_ATLAS_SIZE := Vector2i(1024, 1024)",
         "const TERRAIN_DETAIL_DECAL_GRID_SIZE := Vector2i(4, 4)",
         "const TERRAIN_DETAIL_DECAL_CELL_SIZE := Vector2i(256, 256)",
-        "const TERRAIN_DETAIL_DECAL_DENSITY_MODULUS := 2",
-        "const TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR := 0.38",
-        "const TERRAIN_DETAIL_DECAL_MAX_EXTENT_FACTOR := 0.52",
-        "const TERRAIN_DETAIL_DECAL_MAX_OFFSET_X_FACTOR := 0.13",
+        "const TERRAIN_DETAIL_DECAL_DENSITY_MODULUS := 9",
+        "const TERRAIN_DETAIL_DECAL_ACTIVE_RESIDUES := [0]",
+        "const TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR := 0.30",
+        "const TERRAIN_DETAIL_DECAL_MAX_EXTENT_FACTOR := 0.48",
+        "const TERRAIN_DETAIL_DECAL_MAX_OFFSET_X_FACTOR := 0.16",
         "const TERRAIN_DETAIL_DECAL_MIN_OFFSET_Y_FACTOR := -0.08",
-        "const TERRAIN_DETAIL_DECAL_MAX_OFFSET_Y_FACTOR := 0.12",
-        "const TERRAIN_DETAIL_DECAL_MODULATE := Color(0.96, 0.98, 0.92, 0.88)",
+        "const TERRAIN_DETAIL_DECAL_MAX_OFFSET_Y_FACTOR := 0.14",
+        "const TERRAIN_DETAIL_DECAL_MODULATE := Color(0.96, 0.98, 0.92, 0.74)",
     ):
         ensure(map_view_text.count(token) == 1, errors, f"Terrain detail decals must own one exact bounded presentation constant: {token}")
     detail_cells_block = gd_function_block(map_view_text, "_terrain_detail_decal_cells_for_group")
     detail_payload_block = gd_function_block(map_view_text, "_terrain_detail_decal_payload")
     detail_draw_block = gd_function_block(map_view_text, "_draw_terrain_detail_decal")
     for token in (
-        '"grasslands":\n\t\t\treturn [0, 1, 6, 8, 10, 11, 12, 15]',
-        '"forest":\n\t\t\treturn [3, 4, 7, 9, 13, 14]',
-        '"mire":\n\t\t\treturn [5, 8, 10, 15]',
-        '"rough", "rock", "underground":\n\t\t\treturn [2, 3, 4, 9, 13, 14]',
-        '"dirt", "sand":\n\t\t\treturn [2, 3, 7, 13]',
-        '"ash":\n\t\t\treturn [3, 7, 10, 13]',
+        '"grasslands":\n\t\t\treturn [0, 4, 8, 12]',
+        '"forest":\n\t\t\treturn [1, 5, 9, 13]',
+        '"mire":\n\t\t\treturn [3, 7, 11, 15]',
+        '"rough", "rock", "underground":\n\t\t\treturn [2, 6, 10, 14]',
+        '"dirt", "sand":\n\t\t\treturn [2, 6, 10, 14]',
+        '"ash":\n\t\t\treturn [2, 6, 10, 14]',
     ):
         ensure(token in detail_cells_block, errors, f"Terrain detail decals must retain exact biome-aware atlas choices: {token}")
     for token in (
         "var terrain := _terrain_at(tile)",
         "var terrain_group := _terrain_group(terrain)",
-        "var seed := absi((tile.x * 101) + (tile.y * 211) + (terrain.hash() * 17))",
+        'var seed := absi(("terrain_detail:%d:%d:%s" % [tile.x, tile.y, terrain]).hash())',
         "var density_residue := posmod(seed, TERRAIN_DETAIL_DECAL_DENSITY_MODULUS)",
         "var road_excluded := not _road_tile_payload(tile).is_empty()",
-        "not cell_ids.is_empty() and not road_excluded and density_residue == 0",
+        "not cell_ids.is_empty() and not road_excluded and density_residue in TERRAIN_DETAIL_DECAL_ACTIVE_RESIDUES",
+        '"active_density_residues": TERRAIN_DETAIL_DECAL_ACTIVE_RESIDUES.duplicate()',
         '"interactive": false',
         '"collision": false',
         '"source_model": TERRAIN_DETAIL_DECAL_SOURCE_MODEL',
@@ -45024,7 +45070,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 
     ninefold_atlas_block = gd_function_block(ninefold_transition_text, "_assert_rich_terrain_detail_atlas")
     for token in (
-        'const TERRAIN_DETAIL_ATLAS_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"',
+        'const TERRAIN_DETAIL_ATLAS_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png"',
         "const TERRAIN_DETAIL_ATLAS_SIZE := Vector2i(1024, 1024)",
         "const TERRAIN_DETAIL_CELL_SIZE := 256",
         "const TERRAIN_DETAIL_CELL_INSET := 16",
@@ -45252,7 +45298,6 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'var detail: Dictionary = terrain.get("terrain_detail_decal", {})',
         'var terrain_group := String(terrain.get("terrain_group", ""))',
         '_terrain_detail_decal_payload_exact(detail, terrain_group)',
-        "drawn_detail_count <= 0",
         "repeated_detail != detail_rows[0]",
         'bool(hidden_detail.get("drawn", true))',
         'bool(hidden_detail.get("terrain_identity_sampled", true))',
@@ -45263,18 +45308,19 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     ensure('_assert_terrain_macro_lighting(shell, session, receiver_tile)' in gd_function_block(ninefold_transition_text, "_assert_neighbor_terrain_transitions"), errors, "Ninefold terrain boundary flow must run the focused macro-lighting owner before transition checks.")
     ninefold_detail_exact_block = gd_function_block(ninefold_transition_text, "_terrain_detail_decal_payload_exact")
     for token in (
-        'String(detail.get("model", "")) != "rich_biome_aware_painterly_surface_clusters_v2"',
-        'String(detail.get("source_model", "")) != "original_generated_clean_alpha_4x4_natural_cluster_atlas"',
-        'String(detail.get("atlas_texture_path", "")) != "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"',
+        'String(detail.get("model", "")) != "biome_specific_painterly_landmark_clusters_v3"',
+        'String(detail.get("source_model", "")) != "built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"',
+        'String(detail.get("atlas_texture_path", "")) != "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png"',
         'detail.get("atlas_size", {}) != {"x": 1024, "y": 1024}',
         'detail.get("atlas_grid", {}) != {"x": 4, "y": 4}',
-        'int(detail.get("density_modulus", 0)) != 2',
-        '"grasslands":\n\t\t\texpected_cell_ids = [0, 1, 6, 8, 10, 11, 12, 15]',
-        '"forest":\n\t\t\texpected_cell_ids = [3, 4, 7, 9, 13, 14]',
-        '"dirt", "sand":\n\t\t\texpected_cell_ids = [2, 3, 7, 13]',
+        'int(detail.get("density_modulus", 0)) != 9',
+        'detail.get("active_density_residues", []) != [0]',
+        '"grasslands":\n\t\t\texpected_cell_ids = [0, 4, 8, 12]',
+        '"forest":\n\t\t\texpected_cell_ids = [1, 5, 9, 13]',
+        '"dirt", "sand":\n\t\t\texpected_cell_ids = [2, 6, 10, 14]',
         'cell_id in expected_cell_ids',
-        'extent_factor >= 0.38 and extent_factor <= 0.52',
-        'float(offset.get("x", -1.0)) >= -0.13',
+        'extent_factor >= 0.30 and extent_factor <= 0.48',
+        'float(offset.get("x", -1.0)) >= -0.16',
         'float(offset.get("y", -1.0)) >= -0.08',
         'bool(detail.get("destination_contained", false))',
     ):
@@ -45413,9 +45459,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 		'int(summary.get("terrain_detail_exact_count", 0)) != explored_tile_count',
 		'int(summary.get("terrain_detail_invalid_count", -1)) != 0',
 		'int(summary.get("terrain_detail_drawn_count", 0)) <= 0',
-		'["rich_biome_aware_painterly_surface_clusters_v2"]',
-		'["original_generated_clean_alpha_4x4_natural_cluster_atlas"]',
-		'["res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"]',
+		'["biome_specific_painterly_landmark_clusters_v3"]',
+		'["built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"]',
+		'["res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png"]',
 		'int(summary.get("water_ripple_exact_count", 0)) != explored_tile_count',
 		'int(summary.get("water_ripple_invalid_count", -1)) != 0',
 		'int(summary.get("water_ripple_water_tile_count", 0)) <= 0',
@@ -48322,8 +48368,8 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
     ensure_scene_nodes(report_scene, errors, "overworld_faction_town_sprite_runtime_report.tscn", [("OverworldFactionTownSpriteRuntimeReport", "Node")])
     for token in (
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
-        'const TOWN_VISUAL_EXTENT_TILES := 1.36',
-        'const TOWN_EXTENT_FRACTION := 0.68',
+        'const TOWN_VISUAL_EXTENT_TILES := 2.85',
+        'const TOWN_EXTENT_FRACTION := 0.95',
         'const TOWN_GROUND_CLEARANCE_TILES := 0.18',
         'const EXPECTED_TOWN_ASSETS := {',
         'ScenarioFactory.create_session(SCENARIO_ID, "hard", SessionState.LAUNCH_MODE_SKIRMISH)',
@@ -48337,14 +48383,14 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
         "for profile_value in profiles:",
         'shell.call("validation_tile_presentation"',
         'sprite_asset_id in sprite_asset_ids',
-        'String(art.get("town_sprite_grounding_model", "")) == "town_sprite_settled_without_base_ellipse"',
+        'String(art.get("town_sprite_grounding_model", "")) == "tall_town_landmark_settled_without_base_ellipse"',
         'shell.get_node_or_null("%Map")',
         'map_view.call("validation_color_cue_summary")',
         'map_view.call("validation_town_sprite_scale_payload", sprite_asset_id)',
         'is_equal_approx(float(payload.get("visible_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES)',
         'is_equal_approx(float(payload.get("visible_extent_fraction_of_footprint_depth", 0.0)), TOWN_EXTENT_FRACTION)',
-        'is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 2.125)',
-        'is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 1.7)',
+        'is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 4.453125)',
+        'is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 3.5625)',
         'bool(payload.get("painted_bottom_grounded_exact", false))',
         'String(payload.get("sprite_silhouette_model", "")) == "eight_direction_alpha_silhouette_outline"',
         'bool(payload.get("sprite_silhouette_contained_in_footprint", false))',
@@ -48379,8 +48425,8 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
         for token in (
             'const GENERATED_LARGE_SEED := "town-explicit-save-surface-large-10184"',
             'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
-            'const TOWN_VISUAL_EXTENT_TILES := 1.36',
-            'const TOWN_EXTENT_FRACTION := 0.68',
+            'const TOWN_VISUAL_EXTENT_TILES := 2.85',
+            'const TOWN_EXTENT_FRACTION := 0.95',
             '"translated_rmg_template_042_v1"',
             '"translated_rmg_profile_042_v1"',
             '"homm3_large"',
@@ -48394,6 +48440,8 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
             'map_view.call("validation_town_sprite_scale_payload", String(profile.get("sprite_asset_id", "")))',
             'int(profile.get("footprint_width_tiles", 0)) == 3',
             'int(profile.get("footprint_height_tiles", 0)) == 2',
+            'int(profile.get("visual_footprint_width_tiles", 0)) == 3',
+            'int(profile.get("visual_footprint_height_tiles", 0)) == 4',
             'var click_routing_exact := scale_exact',
             'map_view.call("town_footprint_selection", clicked_tile)',
             'click_selection.get("entry_tile", Vector2i(-1, -1)) == expected_entry',
@@ -48406,8 +48454,8 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
             'OverworldRules._blocked_tile_index(session) == blocked_before',
             '_town_interaction_authority(session) == interaction_before',
             'is_equal_approx(float(payload.get("visible_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES)',
-            'is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 2.125)',
-            'is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 1.7)',
+            'is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 4.453125)',
+            'is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 3.5625)',
             'bool(payload.get("painted_bottom_grounded_exact", false))',
             'String(payload.get("sprite_silhouette_model", "")) == "eight_direction_alpha_silhouette_outline"',
             'bool(payload.get("sprite_silhouette_contained_in_footprint", false))',
@@ -49241,7 +49289,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.4484)',
         'is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.64)',
         'tile_rect.encloses(hero_rect) and tile_rect.encloses(sprite_rect)',
-        'String(town_presentation.get("presentation_model", "")) == "town_3x2_footprint_bottom_middle_entry"',
+        'String(town_presentation.get("presentation_model", "")) == "town_3x4_visual_landmark_3x2_logical_bottom_middle_entry"',
         'bool(tile_presentation.get("has_town_non_entry", false))',
         'String(town_presentation.get("tile_role", "")) == "blocked_non_entry_footprint"',
         'var faction_fallback_exact := _validate_faction_fallback(map_view)',
@@ -49347,9 +49395,9 @@ def validate_overworld_compact_town_owner_pennants(errors: list[str]) -> None:
     visual_text = visual_path.read_text(encoding="utf-8")
     for token in (
         'const TOWN_OWNER_PENNANT_MODEL := "single_pass_compact_heraldic_cloth_pennant"',
-        "const TOWN_OWNER_PENNANT_WIDTH_FACTOR := 0.140",
-        "const TOWN_OWNER_PENNANT_HEIGHT_FACTOR := 0.100",
-        "const TOWN_OWNER_PENNANT_POLE_HEIGHT_FACTOR := 0.220",
+        "const TOWN_OWNER_PENNANT_WIDTH_FACTOR := 0.052",
+        "const TOWN_OWNER_PENNANT_HEIGHT_FACTOR := 0.040",
+        "const TOWN_OWNER_PENNANT_POLE_HEIGHT_FACTOR := 0.128",
         "const TOWN_OWNER_PENNANT_LEGACY_WIDTH_FACTOR := 0.17",
         "const TOWN_OWNER_PENNANT_LEGACY_HEIGHT_FACTOR := 0.12",
         "const TOWN_OWNER_PENNANT_CLOTH_ALPHA := 0.96",
