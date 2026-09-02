@@ -2304,6 +2304,7 @@ static func advance_raids(
 			current = next_step
 			encounters[index] = encounter
 			session.overworld["encounters"] = encounters
+			OverworldRulesScript.invalidate_spatial_lookup(session)
 			if raid_reached_town_battle_contact(session, encounter, faction_id):
 				encounter["arrived"] = true
 				encounter["goal_distance"] = 0

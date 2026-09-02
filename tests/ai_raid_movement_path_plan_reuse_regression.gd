@@ -510,8 +510,9 @@ func _all_checks_exact(checks: Dictionary) -> bool:
 	return true
 
 func _live_three_step_raid_case(failures: Array) -> Dictionary:
-	var session = _path_session(_filled_map(12, 5, "grass"))
+	var session = _path_session(_filled_map(12, 5, "grass"), true)
 	session.day = 2
+	_set_session_hero_position(session, Vector2i(11, 0))
 	session.overworld["towns"] = [{
 		"placement_id": "path_plan_player_town",
 		"name": "Path Plan Hold",
@@ -549,6 +550,9 @@ func _live_three_step_raid_case(failures: Array) -> Dictionary:
 		},
 	}
 	session.overworld["encounters"] = [raid]
+	var primed_old_tile: Dictionary = OverworldRules._encounter_at_tile(session, 1, 2)
+	if String(primed_old_tile.get("placement_id", "")) != "path_plan_raid":
+		failures.append("Live raid contact fixture did not prime the original encounter tile: %s" % JSON.stringify(primed_old_tile))
 	var result := EnemyAdventureRules.advance_raids(
 		session,
 		_enemy_config(),
@@ -565,6 +569,17 @@ func _live_three_step_raid_case(failures: Array) -> Dictionary:
 		failures.append("Live tactical-pressure raid did not take three deterministic steps: %s" % JSON.stringify(updated))
 	if int(updated.get("goal_distance", -1)) != 5 or movement_events.size() != 1:
 		failures.append("Live raid movement outcome changed: raid=%s events=%s" % [JSON.stringify(updated), JSON.stringify(movement_events)])
+	var stale_old_tile: Dictionary = OverworldRules._encounter_at_tile(session, 1, 2)
+	var current_tile: Dictionary = OverworldRules._encounter_at_tile(session, 4, 2)
+	if not stale_old_tile.is_empty() or String(current_tile.get("placement_id", "")) != "path_plan_raid":
+		failures.append("Moved raid spatial lookup retained the old tile or missed the current tile: old=%s current=%s" % [JSON.stringify(stale_old_tile), JSON.stringify(current_tile)])
+	_set_session_hero_position(session, Vector2i(3, 2))
+	OverworldRules.refresh_fog_of_war(session)
+	session.battle = {}
+	var contact_result := OverworldRules.try_move(session, 1, 0)
+	var battle_raid_id := String(session.battle.get("resolved_key", ""))
+	if String(contact_result.get("route", "")) != "battle" or battle_raid_id != "path_plan_raid":
+		failures.append("Entering the moved raid's current tile did not open its battle: result=%s battle=%s" % [JSON.stringify(contact_result), JSON.stringify(session.battle)])
 	var profile: Dictionary = result.get("profile", {}) if result.get("profile", {}) is Dictionary else {}
 	var profile_phases: Dictionary = profile.get("phases_ms", {}) if profile.get("phases_ms", {}) is Dictionary else {}
 	for required_phase in ["target_path_context_ms", "target_assign_ms", "target_town_defense_redirect_ms", "target_resource_defense_redirect_ms", "target_unreachable_redirect_ms"]:
@@ -575,10 +590,14 @@ func _live_three_step_raid_case(failures: Array) -> Dictionary:
 		"position": {"x": int(updated.get("x", -1)), "y": int(updated.get("y", -1))},
 		"goal_distance": int(updated.get("goal_distance", -1)),
 		"movement_event_count": movement_events.size(),
+		"old_tile_cleared": stale_old_tile.is_empty(),
+		"current_tile_raid_id": String(current_tile.get("placement_id", "")),
+		"contact_route": String(contact_result.get("route", "")),
+		"battle_raid_id": battle_raid_id,
 		"profile": profile,
 	}
 
-func _path_session(map: Array):
+func _path_session(map: Array, preserve_player_state: bool = false):
 	var session = ScenarioFactory.create_session(
 		SCENARIO_ID,
 		"normal",
@@ -586,12 +605,31 @@ func _path_session(map: Array):
 	)
 	session.overworld["map"] = map
 	session.overworld["map_size"] = {"width": map[0].size(), "height": map.size()}
-	for key in ["towns", "encounters", "map_objects", "resource_nodes", "artifact_nodes", "player_heroes"]:
+	for key in ["towns", "encounters", "map_objects", "resource_nodes", "artifact_nodes"]:
 		session.overworld[key] = []
+	if not preserve_player_state:
+		session.overworld["player_heroes"] = []
 	session.overworld["resolved_encounters"] = []
-	session.overworld["hero"] = {}
+	if not preserve_player_state:
+		session.overworld["hero"] = {}
 	EnemyAdventureRules._path_distance_surface_cache.clear()
 	return session
+
+func _set_session_hero_position(session, tile: Vector2i) -> void:
+	var position := {"x": tile.x, "y": tile.y}
+	session.overworld["hero_position"] = position.duplicate(true)
+	var hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+	hero["position"] = position.duplicate(true)
+	session.overworld["hero"] = hero
+	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
+	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
+	for index in range(heroes.size()):
+		var hero_value = heroes[index]
+		if not (hero_value is Dictionary) or String(hero_value.get("id", "")) != active_hero_id:
+			continue
+		hero_value["position"] = position.duplicate(true)
+		heroes[index] = hero_value
+	session.overworld["player_heroes"] = heroes
 
 func _enemy_config() -> Dictionary:
 	for config_value in ContentService.get_scenario(SCENARIO_ID).get("enemy_factions", []):

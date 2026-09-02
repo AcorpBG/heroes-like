@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Windows first-run stabilization is complete: the reported ArmyStackBar errors were reproduced against pre-fix source, current shells and cold-cache menu audio pass focused regressions, and a fresh Windows package passes clean-prefix Boot/MainMenu plus generated Veilmourn/Orso Overworld-to-Town startup.",
+  "currentNotes": "Moved enemy raid combat detection is fixed: authoritative raid movement now invalidates the shared spatial lookup, and a primed-cache runtime regression proves entering the raid's new visible tile opens the exact battle.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "release-windows-first-run-stabilization-10184",
-  "currentSliceId": "release-windows-first-run-stabilization-10184",
-  "currentSliceNotes": "Completed cache-clean shell/audio regressions, fresh Linux and Windows Release native builds/exports, and two-prefix Windows package validation through generated Overworld and player Town entry without fatal startup errors.",
+  "currentSlice": "bugfix-overworld-moved-raid-combat-10184",
+  "currentSliceId": "bugfix-overworld-moved-raid-combat-10184",
+  "currentSliceNotes": "Completed O(1) spatial lookup invalidation on live raid coordinate mutation. The focused regression proves old-tile eviction, new-tile lookup, and exact battle contact after three movement steps; core systems smoke and repository validation pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Windows First-Run Package Stabilization",
-  "currentSliceUpdatedAt": "2026-09-02T14:57:17Z",
+  "currentSliceTitle": "Moved Enemy Raid Combat Detection",
+  "currentSliceUpdatedAt": "2026-09-02T17:04:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21784,7 +21784,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice with direct current behavior evidence; do not reopen completed Battle or Large RMG optimizations without a new measured red.",
+  "nextActionGuardrailNote": "Select the next tracker-approved release-bound implementation slice from current playtest evidence; do not broaden this completed cache fix into AI strategy, balance, content, native RMG, or packaging.",
   "notes": "The seven-school signature battle-VFX slice is complete. The broader user goal to expand production content and distinctive art remains active for future selected slices.",
   "plannedSlices": [
     {
@@ -107908,6 +107908,55 @@
         "release_ready_claimed": false
       },
       "remainingWork": "Physical Windows hardware certification, installer signing, publication, whole-game validation, and release readiness remain outside this completed slice."
+    },
+    {
+      "id": "bugfix-overworld-moved-raid-combat-10184",
+      "title": "Moved Enemy Raid Combat Detection",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Fix the owner-reported runtime defect where a hero can enter a moved enemy raid's visible current tile without starting battle because the shared spatial lookup retains its former coordinates.",
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Encounter-by-tile lookup reflects position changes while encounter count remains constant",
+        "Entering a moved hostile raid's current tile opens battle with the correct raid and commander identity",
+        "Focused runtime regression and repository validation pass"
+      ],
+      "nonGoals": [
+        "Strategic AI targeting, raid strength, combat balance, pathfinding semantics, content, save schema, native RMG, or visual changes",
+        "Packaging, signing, publication, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-02T17:00:18Z",
+      "startedAt": "2026-09-02T17:00:18Z",
+      "updatedAt": "2026-09-02T17:04:38Z",
+      "completedAt": "2026-09-02T17:04:38Z",
+      "notes": "Completed from owner playtest evidence. Enemy raid movement now invalidates the shared overworld spatial lookup immediately after every authoritative coordinate mutation. The focused live regression first failed against the stale cache, then passed by priming the old tile, advancing the same raid three steps with unchanged encounter count, proving the old tile empty and current tile exact, and entering the current tile into the path_plan_raid battle. The broader core systems smoke and repository validation also pass.",
+      "metrics": {
+        "owner_reported_reproduction": true,
+        "stale_position_signature_confirmed": true,
+        "pre_fix_runtime_regression_reproduced": true,
+        "old_tile_cleared_after_move": true,
+        "current_tile_raid_lookup_exact": true,
+        "moved_raid_battle_route_exact": true,
+        "focused_runtime_regression_passed": true,
+        "core_systems_regression_smoke_passed": true,
+        "repository_validation_passed": true,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "No work remains in this bounded defect slice; broader playtest coverage, packaging, signing, publication, whole-game validation, and release readiness remain separate."
     }
   ],
   "project": "heroes-like",
@@ -107917,7 +107966,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The reported first-run failure modes are closed in focused and packaged Wine validation, but physical Windows hardware certification and broader release completion remain open.",
+  "remainingGap": "The moved-raid combat miss is closed in focused and broader runtime validation; physical Windows certification and broader release completion remain open.",
   "remainingWork": "Select the next coherent release-bound implementation slice; physical Windows certification, signing, publication, whole-game validation, and release readiness remain open.",
   "reportOnlyEvidence": [
     {
@@ -108452,7 +108501,7 @@
   ],
   "summary": "Completed Six Marchland Warworks as one coherent six-unit, six-building, six-map, twelve-master production-content batch with consolidated validation.",
   "taskId": "10184",
-  "updatedAt": "2026-09-01T03:48:23Z",
+  "updatedAt": "2026-09-02T17:04:38Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

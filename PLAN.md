@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- No implementation slice is active after completing `release-windows-first-run-stabilization-10184`.
-- Most recently completed implementation slice: `release-windows-first-run-stabilization-10184`, which proves the current cache-safe script/audio behavior in a fresh Windows package through generated Overworld and Town entry.
+- No implementation slice is active after completing `bugfix-overworld-moved-raid-combat-10184`.
+- Most recently completed implementation slice: `bugfix-overworld-moved-raid-combat-10184`, which fixes current-tile battle contact after live enemy raid movement.
 - Current package boundary: matching Linux and Windows release exports measure 237753728 bytes, 12246272 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
 
 ## Six Uncrowned Sovereign Roads
@@ -17261,6 +17261,35 @@ Completion result:
 
 Non-goals:
 - no gameplay, balance, content, save-schema, native RMG, visual redesign, installer-signing, publication, physical-hardware certification, whole-game validation, or release-readiness claim.
+
+## Moved Enemy Raid Combat Detection
+
+id: `bugfix-overworld-moved-raid-combat-10184`
+
+Status: completed.
+
+Initial finding:
+- an owner playtest could move the active hero onto a visible enemy raid without starting battle;
+- enemy raid movement mutates encounter coordinates while the shared overworld spatial-lookup signature tracks collection sizes but not encounter positions, allowing battle detection to retain the raid's former tile;
+- static encounter battle coverage does not exercise lookup creation before a live raid moves.
+
+Implementation boundary:
+- make overworld spatial encounter lookups invalidate or rebuild when live encounter positions change without weakening indexed lookup ownership;
+- add a focused runtime regression that primes the lookup, moves a hostile raid, then proves the old tile is clear and entering the new tile opens battle;
+- run focused runtime and repository validation without changing AI strategy, encounter balance, map generation, save schema, or content.
+
+Completion criteria:
+- encounter-by-tile queries reflect moved and newly positioned raids even when the encounter count is unchanged;
+- stepping onto a moved visible hostile raid creates the correct battle payload and preserves commander identity;
+- focused runtime coverage and repository validation pass on the current Godot project.
+
+Completion result:
+- live raid movement now invalidates the shared overworld spatial lookup immediately after each authoritative coordinate mutation, preserving O(1) steady-state lookup without stale encounter tiles;
+- the focused regression primes the original raid tile, advances the same raid three steps without changing encounter count, proves the old tile clears and the new tile resolves, then enters that tile and receives the exact raid battle payload;
+- the focused raid regression, broader core systems regression smoke, repository validation, and diff hygiene all pass.
+
+Non-goals:
+- no strategic-AI targeting, raid strength, combat balance, pathfinding semantics, content, save-schema, native RMG, visual, packaging, signing, publication, whole-game validation, or release-readiness changes.
 
 ## Progress Reconciliation
 
