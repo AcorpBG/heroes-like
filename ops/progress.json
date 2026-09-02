@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Generated skirmish faction and hero selection is complete: all six factions and faction-filtered live heroes flow through preview, package projection, session startup, player town, opening army, and replay provenance without changing recovered H3MapEd generation phases.",
+  "currentNotes": "Windows first-run stabilization is complete: the reported ArmyStackBar errors were reproduced against pre-fix source, current shells and cold-cache menu audio pass focused regressions, and a fresh Windows package passes clean-prefix Boot/MainMenu plus generated Veilmourn/Orso Overworld-to-Town startup.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-generated-map-faction-hero-selection-10184",
-  "currentSliceId": "ux-generated-map-faction-hero-selection-10184",
-  "currentSliceNotes": "Completed six-faction and faction-filtered hero selection through Map Forge, normalized config, native package projection, generated session startup, player town, opening army, and replay provenance.",
+  "currentSlice": "release-windows-first-run-stabilization-10184",
+  "currentSliceId": "release-windows-first-run-stabilization-10184",
+  "currentSliceNotes": "Completed cache-clean shell/audio regressions, fresh Linux and Windows Release native builds/exports, and two-prefix Windows package validation through generated Overworld and player Town entry without fatal startup errors.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Generated Map Faction And Hero Selection",
-  "currentSliceUpdatedAt": "2026-09-01T22:29:11Z",
+  "currentSliceTitle": "Windows First-Run Package Stabilization",
+  "currentSliceUpdatedAt": "2026-09-02T14:57:17Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -107848,6 +107848,66 @@
         "release_ready_claimed": false
       },
       "remainingWork": "Broader generated-map configuration, whole-game validation, Windows-on-device certification, signing, publication, and release readiness remain outside this completed slice."
+    },
+    {
+      "id": "release-windows-first-run-stabilization-10184",
+      "title": "Windows First-Run Package Stabilization",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Close the owner-reported Windows ArmyStackBar parse and imported-audio first-run failures in a fresh current-HEAD package and prove the startup path through live generated gameplay.",
+      "implementationTargets": [
+        "scenes/shared/ArmyStackBar.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "scripts/audio/RuntimeAudioLoader.gd",
+        "scripts/autoload/MusicAudio.gd",
+        "scripts/autoload/AmbientAudio.gd",
+        "tests",
+        "tools/build_release_candidate.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Overworld and Town parse without global-class cache authority and audio falls back safely when a generated imported payload is absent",
+        "A clean Windows/Wine package boots Main Menu and traverses generated faction/hero launch into Overworld and player Town without script or resource errors",
+        "Repository validation and Linux/Windows release-native and package checks pass while physical Windows certification remains unclaimed"
+      ],
+      "nonGoals": [
+        "Gameplay, balance, content, save-schema, native RMG, or visual redesign changes",
+        "Installer signing, publication, physical Windows hardware certification, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-02T14:28:28Z",
+      "startedAt": "2026-09-02T14:28:28Z",
+      "updatedAt": "2026-09-02T14:57:17Z",
+      "completedAt": "2026-09-02T14:57:17Z",
+      "notes": "Completed from owner-reported Windows startup evidence. Pre-fix shell scripts reproduced both ArmyStackBar parse errors in pristine projects; current preload-owned shell references passed cache-clean first import and live Overworld/Town instantiation. The cold-cache audio report now drives all three real menu OGG layers, including the exact reported missing menu_motion import destination, through MusicAudio without imported payloads. Fresh Windows Release output passed Boot/MainMenu/native-DLL load and a separate clean-prefix Veilmourn/Orso generated launch through Overworld into Bellwake Harbor with no fatal matches. Matching Linux Release build/export and repository validation passed. Bounded standalone native self-test probes produced no output and are not claimed as semantic passes; physical Windows hardware remains untested.",
+      "metrics": {
+        "historical_army_stack_parse_errors_reproduced": 2,
+        "current_cache_clean_shell_import_passed": true,
+        "army_stack_live_viewport_count": 2,
+        "cold_cache_menu_source_ogg_layers": 3,
+        "cold_cache_menu_active_players": 3,
+        "windows_release_native_build_passed": true,
+        "linux_release_native_build_passed": true,
+        "windows_export_size_bytes": 237753728,
+        "linux_export_size_bytes": 237753728,
+        "release_pck_ceiling_headroom_bytes": 12246272,
+        "windows_clean_prefix_runtime_count": 2,
+        "packaged_generated_flow_step_count": 3,
+        "windows_packaged_fatal_match_count": 0,
+        "repository_validation_passed": true,
+        "standalone_native_selftest_semantic_pass_claimed": false,
+        "physical_windows_certification_claimed": false,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "Physical Windows hardware certification, installer signing, publication, whole-game validation, and release readiness remain outside this completed slice."
     }
   ],
   "project": "heroes-like",
@@ -107857,8 +107917,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The requested generated-map faction and hero selection is complete. Broader production completion and release readiness remain open outside this slice.",
-  "remainingWork": "Select the next coherent release-bound implementation slice; broader generated-map configuration, whole-game validation, Windows-on-device certification, signing, publication, and release readiness remain open.",
+  "remainingGap": "The reported first-run failure modes are closed in focused and packaged Wine validation, but physical Windows hardware certification and broader release completion remain open.",
+  "remainingWork": "Select the next coherent release-bound implementation slice; physical Windows certification, signing, publication, whole-game validation, and release readiness remain open.",
   "reportOnlyEvidence": [
     {
       "entries": [

@@ -38,6 +38,9 @@ EXPORT_TIMEOUT_SECONDS = 360
 RUNTIME_TIMEOUT_SECONDS = 180
 WINE_CLEANUP_TIMEOUT_SECONDS = 30
 WINE_PREFIX = ARTIFACT_DIR / "wine-prefix"
+GENERATED_WINE_PREFIX = ARTIFACT_DIR / "generated-wine-prefix"
+GENERATED_FLOW_OUTPUT_DIR = ARTIFACT_DIR / "generated-flow"
+GENERATED_FLOW_REPORT_PATH = GENERATED_FLOW_OUTPUT_DIR / "live_validation_report.json"
 WINE_BINARY = os.environ.get("WINE", shutil.which("wine") or "")
 WINESERVER_BINARY = shutil.which("wineserver") or ""
 REQUIRED_WINDOWS_DLLS = (
@@ -640,6 +643,17 @@ RUNTIME_MARKERS = {
     "main_menu_loaded": "MainMenu.scn",
     "native_dll_loaded": REQUIRED_WINDOWS_DLLS[0],
 }
+GENERATED_RUNTIME_MARKERS = {
+    **RUNTIME_MARKERS,
+    "generated_setup_entered": "Captured step generated_map_setup.",
+    "generated_overworld_entered": "Captured step generated_overworld_entered.",
+    "generated_town_entered": "Captured step generated_player_town_entered.",
+    "generated_flow_completed": "Packaged generated-map first-run validation completed successfully.",
+}
+
+
+def wine_z_path(path: Path) -> str:
+    return "Z:" + str(path.resolve()).replace("/", "\\")
 
 
 def utc_now() -> str:
@@ -1247,6 +1261,11 @@ def main() -> int:
         REPORT_PATH.unlink()
     if WINE_PREFIX.exists():
         shutil.rmtree(WINE_PREFIX)
+    if GENERATED_WINE_PREFIX.exists():
+        shutil.rmtree(GENERATED_WINE_PREFIX)
+    if GENERATED_FLOW_OUTPUT_DIR.exists():
+        shutil.rmtree(GENERATED_FLOW_OUTPUT_DIR)
+    GENERATED_FLOW_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     export_command = [
         "godot",
@@ -1364,7 +1383,90 @@ def main() -> int:
         and not runtime_fatal_matches
         and all(runtime_markers.get(name, False) for name in RUNTIME_MARKERS)
     )
-    ok = export_ok and runtime_ok
+
+    generated_runtime_env = {
+        "WINEPREFIX": str(GENERATED_WINE_PREFIX),
+        "WINEARCH": "win64",
+        "WINEDEBUG": "-all,+loaddll",
+        "WINEDLLOVERRIDES": "dinput8=",
+    }
+    generated_runtime_command = [
+        WINE_BINARY,
+        str(EXE_PATH),
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--rendering-method",
+        "gl_compatibility",
+        "--verbose",
+        "--",
+        "--live-validation-flow=boot_to_generated_skirmish_town",
+        "--live-validation-generated-seed=windows-first-run-10184",
+        "--live-validation-generated-faction=faction_veilmourn",
+        "--live-validation-generated-hero=hero_veilmourn_orso_nightchart",
+        f"--live-validation-output={wine_z_path(GENERATED_FLOW_OUTPUT_DIR)}",
+    ]
+    generated_runtime_result = (
+        run_command(
+            generated_runtime_command,
+            RUNTIME_TIMEOUT_SECONDS,
+            env_overrides=generated_runtime_env,
+            fatal_patterns=FATAL_RUNTIME_PATTERNS,
+            markers=GENERATED_RUNTIME_MARKERS,
+        )
+        if export_ok and runtime_ok and WINE_BINARY
+        else unavailable_runtime_result(
+            "Baseline Windows runtime failed before generated-map launch"
+            if export_ok and not runtime_ok
+            else "Windows export failed before generated-map launch"
+            if not export_ok
+            else "wine executable not found"
+        )
+    )
+    generated_cleanup_result = (
+        run_command(
+            [WINESERVER_BINARY, "-k"],
+            WINE_CLEANUP_TIMEOUT_SECONDS,
+            env_overrides={"WINEPREFIX": str(GENERATED_WINE_PREFIX), "WINEDEBUG": "-all"},
+        )
+        if WINESERVER_BINARY and GENERATED_WINE_PREFIX.exists()
+        else None
+    )
+    generated_runtime_summary = generated_runtime_result.get("output_summary", {})
+    generated_runtime_markers = generated_runtime_summary.get("markers", {})
+    generated_runtime_fatal_matches = list(generated_runtime_summary.get("fatal_pattern_matches", []))
+    generated_flow_report = {}
+    generated_flow_report_error = ""
+    if GENERATED_FLOW_REPORT_PATH.is_file():
+        try:
+            generated_flow_report = json.loads(GENERATED_FLOW_REPORT_PATH.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            generated_flow_report_error = str(exc)
+    generated_step_ids = [
+        str(step.get("id", ""))
+        for step in generated_flow_report.get("steps", [])
+        if isinstance(step, dict)
+    ] if isinstance(generated_flow_report, dict) else []
+    generated_report_ok = (
+        isinstance(generated_flow_report, dict)
+        and bool(generated_flow_report.get("ok", False))
+        and generated_flow_report.get("flow") == "boot_to_generated_skirmish_town"
+        and generated_flow_report.get("generated_faction_id") == "faction_veilmourn"
+        and generated_flow_report.get("generated_hero_id") == "hero_veilmourn_orso_nightchart"
+        and generated_step_ids == [
+            "generated_map_setup",
+            "generated_overworld_entered",
+            "generated_player_town_entered",
+        ]
+    )
+    generated_runtime_ok = (
+        generated_runtime_result["returncode"] == 0
+        and not generated_runtime_result["timed_out"]
+        and not generated_runtime_fatal_matches
+        and all(generated_runtime_markers.get(name, False) for name in GENERATED_RUNTIME_MARKERS)
+        and generated_report_ok
+    )
+    ok = export_ok and runtime_ok and generated_runtime_ok
 
     report = {
         "schema_id": SCHEMA_ID,
@@ -1381,6 +1483,7 @@ def main() -> int:
                 "The release PCK excludes development source-art metadata and imported source textures while retaining runtime assets.",
                 "The packaged executable starts under Wine in a fresh isolated prefix and initializes Godot plus Boot and MainMenu resources.",
                 "Wine loader output proves the packaged Windows release GDExtension DLL is loaded during startup.",
+                "A second fresh Wine prefix launches the packaged generated-map faction/hero flow through Overworld into the player Town.",
             ],
             "does_not_claim": [
                 "clean native Windows execution",
@@ -1414,6 +1517,24 @@ def main() -> int:
             "fatal_runtime_matches": runtime_fatal_matches,
             "cleanup": cleanup_result,
             "ok": runtime_ok,
+        },
+        "windows_generated_runtime": {
+            "runner": "wine",
+            "fresh_prefix": relative(GENERATED_WINE_PREFIX),
+            "flow_output_dir": relative(GENERATED_FLOW_OUTPUT_DIR),
+            "flow_report_path": relative(GENERATED_FLOW_REPORT_PATH),
+            "directinput_override": "dinput8=",
+            "headless": True,
+            "dummy_audio": True,
+            "result": generated_runtime_result,
+            "markers": generated_runtime_markers,
+            "fatal_runtime_patterns": list(FATAL_RUNTIME_PATTERNS),
+            "fatal_runtime_matches": generated_runtime_fatal_matches,
+            "flow_report": generated_flow_report,
+            "flow_report_error": generated_flow_report_error,
+            "step_ids": generated_step_ids,
+            "cleanup": generated_cleanup_result,
+            "ok": generated_runtime_ok,
         },
     }
     REPORT_PATH.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -1509,6 +1630,12 @@ def main() -> int:
         "wine_runtime_returncode": runtime_result["returncode"],
         "wine_runtime_markers": runtime_markers,
         "fatal_runtime_matches": runtime_fatal_matches,
+        "generated_wine_runtime_returncode": generated_runtime_result["returncode"],
+        "generated_wine_runtime_markers": generated_runtime_markers,
+        "generated_wine_runtime_fatal_matches": generated_runtime_fatal_matches,
+        "generated_flow_report_ok": generated_report_ok,
+        "generated_flow_step_ids": generated_step_ids,
+        "generated_flow_report": relative(GENERATED_FLOW_REPORT_PATH),
         "report": relative(REPORT_PATH),
     }
     print(f"{REPORT_ID} {json.dumps(summary, sort_keys=True)}")

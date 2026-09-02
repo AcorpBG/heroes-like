@@ -24,9 +24,9 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- No implementation slice is active after completing `ux-generated-map-faction-hero-selection-10184`.
-- Most recently completed implementation slice: `ux-generated-map-faction-hero-selection-10184`, which adds authoritative faction and faction-filtered hero choices to generated skirmish setup and package/session startup.
-- Current package boundary: matching Linux and Windows release exports measure 237389792 bytes, 12610208 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- No implementation slice is active after completing `release-windows-first-run-stabilization-10184`.
+- Most recently completed implementation slice: `release-windows-first-run-stabilization-10184`, which proves the current cache-safe script/audio behavior in a fresh Windows package through generated Overworld and Town entry.
+- Current package boundary: matching Linux and Windows release exports measure 237753728 bytes, 12246272 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
 
 ## Six Uncrowned Sovereign Roads
 
@@ -17231,6 +17231,36 @@ Completion result:
 Non-goals:
 - no recovered H3MapEd phase, template selection, object placement, terrain, guard/reward, road, or final-payload behavior changes;
 - no new factions, heroes, towns, armies, save-version bump, copied Heroes content, signing, publication, whole-game validation, or release-readiness claim.
+
+## Windows First-Run Package Stabilization
+
+id: `release-windows-first-run-stabilization-10184`
+
+Status: completed.
+
+Initial finding:
+- an owner-tested Windows package reported `ArmyStackBar` global-type parse failures and a missing `.godot/imported/menu_motion.ogg` payload during Main Menu startup;
+- current source contains preload-owned army-bar type annotations and a source-audio fallback, but those corrections have not yet been proven together in a fresh current-HEAD Windows distributable and clean runtime profile;
+- the latest faction/hero slice rebuilt native Debug libraries only, not a full Windows release package.
+
+Implementation boundary:
+- reproduce or directly guard both first-run failure modes with focused regression ownership;
+- rebuild the release-native extension and Windows package from current source without stale `.godot` cache authority;
+- run fresh-prefix Windows/Wine startup and a packaged menu-to-generated-map session path, inspect logs for parse/resource failures, and retain exact package evidence.
+
+Completion criteria:
+- current Overworld and Town scripts parse without relying on global-class cache registration, and the packaged Main Menu starts music without requiring a pre-existing imported-audio cache file;
+- a fresh Windows package boots from a clean Wine prefix, loads Main Menu, launches a generated faction/hero setup into Overworld, and opens its player town without script or missing-resource errors;
+- repository validation and symmetric Linux/Windows release-native build/package checks pass, with remaining physical Windows hardware certification explicitly unclaimed.
+
+Completion result:
+- the historical pre-fix shell scripts reproduced both reported `ArmyStackBar` parse errors in pristine projects, while current source completed a cache-clean first import and instantiated Overworld and Town at 1280x720 and 1920x1080 without parse errors;
+- the cold-cache audio regression now uses all three real menu OGG layers and the exact reported missing `menu_motion` import destination; the existing source loader played all three through `MusicAudio` with no imported payload present and no resource error;
+- fresh Windows Release native output and a Windows export passed baseline Boot/MainMenu in one clean Wine prefix and a Veilmourn/Orso generated launch through Overworld into Bellwake Harbor in a second clean prefix, with no fatal log matches; the matching Linux Release native build/export and repository validation also passed;
+- standalone native self-test executables produced no output within the bounded Linux/Wine probes, so those probes are not claimed as semantic passes; packaged native library loading and the live generated route are the authoritative runtime evidence, and physical Windows hardware remains untested.
+
+Non-goals:
+- no gameplay, balance, content, save-schema, native RMG, visual redesign, installer-signing, publication, physical-hardware certification, whole-game validation, or release-readiness claim.
 
 ## Progress Reconciliation
 

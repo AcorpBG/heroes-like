@@ -8,6 +8,7 @@ const FLOW_BOOT_TO_CAMPAIGN_RESOLVED_OUTCOME := "boot_to_campaign_resolved_outco
 const FLOW_BOOT_TO_CAMPAIGN_DEFEAT_OUTCOME := "boot_to_campaign_defeat_outcome"
 const FLOW_BOOT_TO_CAMPAIGN_FULL_ARC := "boot_to_campaign_full_arc"
 const FLOW_BOOT_TO_SKIRMISH_STRATEGIC_SOAK := "boot_to_skirmish_strategic_soak"
+const FLOW_BOOT_TO_GENERATED_SKIRMISH_TOWN := "boot_to_generated_skirmish_town"
 const MAIN_MENU_SCENE := "res://scenes/menus/MainMenu.tscn"
 const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
@@ -121,6 +122,8 @@ func _execute_flow() -> bool:
 			return await _execute_boot_to_campaign_full_arc_flow()
 		FLOW_BOOT_TO_SKIRMISH_STRATEGIC_SOAK:
 			return await _execute_boot_to_skirmish_strategic_soak_flow()
+		FLOW_BOOT_TO_GENERATED_SKIRMISH_TOWN:
+			return await _execute_boot_to_generated_skirmish_town_flow()
 		_:
 			return _fail("Unsupported live validation flow requested.", {"flow": _config.get("flow", "")})
 
@@ -140,6 +143,85 @@ func _execute_boot_to_skirmish_overworld_flow() -> bool:
 	after_action_snapshot["progress_action"] = action_result
 	_capture_step("overworld_progressed", after_action_snapshot)
 	_log("Live validation flow completed successfully.")
+	return true
+
+func _execute_boot_to_generated_skirmish_town_flow() -> bool:
+	_log("Waiting for Main Menu before generated-map setup.")
+	var menu = await _wait_for_scene(MAIN_MENU_SCENE, 10000)
+	if menu == null:
+		return _fail("Boot did not reach Main Menu for generated-map validation.", {})
+	await _settle_frames(8)
+	menu.call("validation_open_skirmish_stage")
+	await _settle_frames(4)
+	var generated_seed := String(_config.get("generated_seed", "windows-first-run-10184"))
+	var faction_id := String(_config.get("generated_faction_id", "faction_veilmourn"))
+	var hero_id := String(_config.get("generated_hero_id", "hero_veilmourn_orso_nightchart"))
+	if not _require(bool(menu.call("validation_select_generated_size_class", "homm3_small")), "Generated validation could not select Small size.", menu.call("validation_generated_random_map_snapshot")):
+		return false
+	if not _require(bool(menu.call("validation_select_generated_player_count", 2)), "Generated validation could not select two players.", menu.call("validation_generated_random_map_snapshot")):
+		return false
+	if not _require(bool(menu.call("validation_select_generated_water_mode", "land")), "Generated validation could not select land mode.", menu.call("validation_generated_random_map_snapshot")):
+		return false
+	if not _require(bool(menu.call("validation_set_generated_underground", false)), "Generated validation could not select surface-only mode.", menu.call("validation_generated_random_map_snapshot")):
+		return false
+	if not _require(bool(menu.call("validation_set_generated_seed", generated_seed)), "Generated validation could not set the requested seed.", menu.call("validation_generated_random_map_snapshot")):
+		return false
+	if not _require(bool(menu.call("validation_select_generated_faction", faction_id)), "Generated validation could not select the requested faction.", menu.call("validation_generated_random_map_snapshot")):
+		return false
+	if not _require(bool(menu.call("validation_select_generated_hero", hero_id)), "Generated validation could not select the requested hero.", menu.call("validation_generated_random_map_snapshot")):
+		return false
+	_capture_step("generated_map_setup", menu.call("validation_generated_random_map_snapshot"))
+
+	var launch_result: Dictionary = await menu.call("validation_start_generated_skirmish_staged_route_to_overworld")
+	if not _require(bool(launch_result.get("started", false)), "Generated validation did not stage and route an active session.", launch_result):
+		return false
+	var overworld = await _wait_for_scene(OVERWORLD_SCENE, 15000)
+	if overworld == null:
+		return _fail("Generated validation did not reach Overworld.", launch_result)
+	await _settle_frames(8)
+	var session = SessionState.ensure_active_session()
+	var provenance := _dictionary_value(session.flags.get("generated_random_map_provenance", {}))
+	var saved_setup := _dictionary_value(_dictionary_value(provenance.get("input_config", {})).get("player_setup", {}))
+	if not _require(bool(session.flags.get("generated_random_map", false)), "Generated validation session lost generated-map authority.", provenance):
+		return false
+	if not _require(session.hero_id == hero_id and String(saved_setup.get("faction_id", "")) == faction_id and String(saved_setup.get("hero_id", "")) == hero_id, "Generated validation session did not preserve selected faction and hero.", {"session_hero_id": session.hero_id, "player_setup": saved_setup}):
+		return false
+	var overworld_snapshot: Dictionary = overworld.call("validation_snapshot")
+	overworld_snapshot["generated_player_setup"] = saved_setup
+	_capture_step("generated_overworld_entered", overworld_snapshot)
+
+	var player_town := {}
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary and String(town_value.get("owner", "")) == "player":
+			player_town = town_value
+			break
+	if not _require(not player_town.is_empty(), "Generated validation session has no player-owned town.", {"town_count": session.overworld.get("towns", []).size()}):
+		return false
+	var hero_state := _dictionary_value(session.overworld.get("hero", {}))
+	hero_state["x"] = int(player_town.get("x", 0))
+	hero_state["y"] = int(player_town.get("y", 0))
+	session.overworld["hero"] = hero_state
+	var player_heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
+	for hero_index in range(player_heroes.size()):
+		if player_heroes[hero_index] is Dictionary and String(player_heroes[hero_index].get("id", "")) == session.hero_id:
+			player_heroes[hero_index]["x"] = int(player_town.get("x", 0))
+			player_heroes[hero_index]["y"] = int(player_town.get("y", 0))
+			break
+	session.overworld["player_heroes"] = player_heroes
+	var visit_result := OverworldRules.set_active_town_visit(session, String(player_town.get("placement_id", "")))
+	if not _require(bool(visit_result.get("ok", false)), "Generated validation could not establish the player-town visit.", {"town": player_town, "visit": visit_result}):
+		return false
+	AppRouter.go_to_town()
+	var town = await _wait_for_scene(TOWN_SCENE, 10000)
+	if town == null:
+		return _fail("Generated player-town handoff completed without a Town scene.", {"town": player_town, "visit": visit_result})
+	await _settle_frames(6)
+	var town_snapshot: Dictionary = town.call("validation_snapshot")
+	town_snapshot["generated_town_visit"] = visit_result
+	if not _require(String(town_snapshot.get("game_state", "")) == "town", "Generated player Town did not hold town game state.", town_snapshot):
+		return false
+	_capture_step("generated_player_town_entered", town_snapshot)
+	_log("Packaged generated-map first-run validation completed successfully.")
 	return true
 
 func _execute_boot_to_skirmish_defeat_outcome_flow() -> bool:
@@ -3943,6 +4025,9 @@ func _parse_user_args(args: Array) -> Dictionary:
 		"campaign_id": "campaign_reedfall",
 		"scenario_id": "river-pass",
 		"difficulty": "normal",
+		"generated_seed": "windows-first-run-10184",
+		"generated_faction_id": "faction_veilmourn",
+		"generated_hero_id": "hero_veilmourn_orso_nightchart",
 		"manual_slot": 2,
 		"output_dir": "",
 	}
@@ -3968,6 +4053,18 @@ func _parse_user_args(args: Array) -> Dictionary:
 		if arg.begins_with("--live-validation-difficulty="):
 			config["enabled"] = true
 			config["difficulty"] = arg.trim_prefix("--live-validation-difficulty=")
+			continue
+		if arg.begins_with("--live-validation-generated-seed="):
+			config["enabled"] = true
+			config["generated_seed"] = arg.trim_prefix("--live-validation-generated-seed=")
+			continue
+		if arg.begins_with("--live-validation-generated-faction="):
+			config["enabled"] = true
+			config["generated_faction_id"] = arg.trim_prefix("--live-validation-generated-faction=")
+			continue
+		if arg.begins_with("--live-validation-generated-hero="):
+			config["enabled"] = true
+			config["generated_hero_id"] = arg.trim_prefix("--live-validation-generated-hero=")
 			continue
 		if arg.begins_with("--live-validation-manual-slot="):
 			config["enabled"] = true
@@ -4001,6 +4098,9 @@ func _begin_report() -> void:
 		"scenario_id": String(_config.get("scenario_id", "")),
 		"current_scenario_id": String(_config.get("scenario_id", "")),
 		"difficulty": String(_config.get("difficulty", "")),
+		"generated_seed": String(_config.get("generated_seed", "")),
+		"generated_faction_id": String(_config.get("generated_faction_id", "")),
+		"generated_hero_id": String(_config.get("generated_hero_id", "")),
 		"manual_slot": int(_config.get("manual_slot", 0)),
 		"output_dir": _output_dir,
 		"display": OS.get_environment("DISPLAY"),
@@ -4029,6 +4129,9 @@ func _capture_step(step_id: String, payload: Dictionary) -> void:
 	_log("Captured step %s." % step_id)
 
 func _capture_screenshot(step_id: String) -> String:
+	if DisplayServer.get_name().to_lower() == "headless":
+		_log("Screenshot skipped for %s because the display server is headless." % step_id)
+		return ""
 	var image := get_viewport().get_texture().get_image()
 	if image == null or image.is_empty():
 		_log("Screenshot skipped for %s because the viewport image was unavailable." % step_id)

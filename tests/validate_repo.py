@@ -65415,6 +65415,7 @@ def validate_live_client_harness(errors: list[str]) -> None:
         'const FLOW_BOOT_TO_SKIRMISH_OVERWORLD := "boot_to_skirmish_overworld"',
         'const FLOW_BOOT_TO_SKIRMISH_TOWN_BATTLE := "boot_to_skirmish_town_battle"',
         'const FLOW_BOOT_TO_SKIRMISH_DEFEAT_OUTCOME := "boot_to_skirmish_defeat_outcome"',
+        'const FLOW_BOOT_TO_GENERATED_SKIRMISH_TOWN := "boot_to_generated_skirmish_town"',
         'const FLOW_BOOT_TO_CAMPAIGN_RESOLVED_OUTCOME := "boot_to_campaign_resolved_outcome"',
         'const FLOW_BOOT_TO_CAMPAIGN_DEFEAT_OUTCOME := "boot_to_campaign_defeat_outcome"',
         'const FLOW_BOOT_TO_CAMPAIGN_FULL_ARC := "boot_to_campaign_full_arc"',
@@ -65423,6 +65424,7 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "const SCENARIO_OUTCOME_SCENE :=",
         "FLOW_BOOT_TO_SKIRMISH_RESOLVED_OUTCOME",
         "func _execute_boot_to_skirmish_defeat_outcome_flow",
+        "func _execute_boot_to_generated_skirmish_town_flow",
         "func _execute_boot_to_campaign_resolved_outcome_flow",
         "func _execute_boot_to_campaign_defeat_outcome_flow",
         "func _execute_boot_to_campaign_full_arc_flow",
@@ -65445,6 +65447,9 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "func _scenario_resolution_text",
         "func _resolve_defeat_pressure_battle_interrupt",
         "func _route_from_overworld_to_scene",
+        'validation_start_generated_skirmish_staged_route_to_overworld',
+        '--live-validation-generated-faction=',
+        '--live-validation-generated-hero=',
         "func _save_and_resume_battle_from_main_menu",
         "func _save_and_resume_outcome_from_main_menu",
         "func _clear_required_encounters_to_outcome",
@@ -72300,12 +72305,17 @@ def validate_runtime_audio_loader(errors: list[str]) -> None:
         for token in (
             'const REPORT_ID := "RUNTIME_AUDIO_CACHE_FALLBACK_REPORT"',
             'const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")',
+            '"music_menu_theme_motion": "res://art/audio/runtime/music/menu_motion.ogg"',
+            'menu_motion.ogg-774a4e315ae3f6482f7c06a6c3e415b2.oggvorbisstr',
             "FileAccess.get_file_as_bytes(SOURCE_WAV_PATH)",
             "_write_import_metadata(fixture_path, missing_payload_path)",
             "RuntimeAudioLoaderScript.load_stream(fixture_path)",
             "source_fallback is AudioStreamWAV",
             "RuntimeAudioLoaderScript.load_stream(absent_source_path)",
             "unavailable == null",
+            "source_ogg_fallback is AudioStreamOggVorbis",
+            'MusicAudio.sync_context("menu", "validation_cold_cache_menu"',
+            "source_ogg_layer_count == MusicAudio.MAX_ACTIVE_PLAYERS",
         ):
             ensure(token in report_text, errors, f"Runtime audio cache-fallback report is missing token: {token}")
     if report_scene_path.exists():
