@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Completed live Overworld object-art coverage across all 299 authored scenarios and native Small/Large generation. All 9,465 audited world-facing placements resolve image art; procedural ownership and command pennants were replaced by original transparent player, enemy, and neutral PNG assets.",
+  "currentNotes": "Completed six original seamless faction settlement compositions with village, developing, and fully built variants selected from authoritative construction state; removed the isolated building skyline and kept generated masters outside Linux and Windows packages.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-live-object-art-coverage-10184",
-  "currentSliceId": "ux-overworld-live-object-art-coverage-10184",
-  "currentSliceNotes": "Audited 9,465 live placements across 299 authored scenarios and native Small/Large generation with zero valid procedural fallbacks, empty asset ids, or missing textures. Replaced visible procedural town-owner and hero-command pennants with three original transparent image assets and passed focused, repository, Linux, and Windows gates.",
+  "currentSlice": "ux-town-seamless-development-scenes-10184",
+  "currentSliceId": "ux-town-seamless-development-scenes-10184",
+  "currentSliceNotes": "All six factions now use coherent 1600x900 village, developing, and fully built scenes derived from shared compositions. A real Riverwatch build crossed the stage threshold, save version 9 restored the exact stage, the old icon/stake skyline is absent, and matching Linux/Windows PCKs pass at 244939128 bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Live Object Art Coverage",
-  "currentSliceUpdatedAt": "2026-09-02T22:08:36Z",
+  "currentSliceTitle": "Seamless Town Development Scenes",
+  "currentSliceUpdatedAt": "2026-09-02T23:09:27Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -108064,6 +108064,66 @@
         "release_ready_claimed": false
       },
       "remainingWork": "No work remains in this bounded live object-art coverage slice. The known exit-only texture RID warning, broader visual polish, hardware certification, signing, publication, and release readiness remain separate."
+    },
+    {
+      "id": "ux-town-seamless-development-scenes-10184",
+      "title": "Seamless Town Development Scenes",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Replace the Town screen's isolated building row with coherent faction settlement paintings whose village, developing, and fully built stages are derived from the same scene and selected from real construction state.",
+      "implementationTargets": [
+        "art/towns/source/generated/development_scenes",
+        "art/towns/runtime/backdrops/development_scenes",
+        "content/town_development_scene_manifest.json",
+        "scenes/town/TownStageView.gd",
+        "tests",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "All six live factions resolve unique imported 1600x900 village, developing, and fully built settlement scenes derived from a shared faction composition",
+        "The live Town stage no longer draws isolated building icons or construction stakes over a backdrop and selects its seamless scene from authoritative built-building progress",
+        "A real build and save/resume preserve construction authority and the exact resulting scene stage",
+        "Focused runtime, capture inspection, parse, repository, Linux package, and Windows package gates pass below the unchanged package ceiling"
+      ],
+      "nonGoals": [
+        "Town economy, construction prerequisites, building effects, recruitment, AI, save schema, Overworld, battle, or Native RMG changes",
+        "Copied Heroes assets or layouts, hardware certification, signing, publication, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-02T22:20:00Z",
+      "startedAt": "2026-09-02T22:20:00Z",
+      "updatedAt": "2026-09-02T23:09:27Z",
+      "completedAt": "2026-09-02T23:09:27Z",
+      "notes": "Generated one original fully built composition for each of the six factions and edit-derived developing and village variants that preserve camera, terrain, lighting, and architectural identity while removing structures. TownStageView now selects those scenes from real built-building progress and no longer draws isolated icons, foundations, or stakes. The focused live report proves all 32 towns, an actual build threshold crossing, save-version-9 restoration, and six inspected captures. Repository validation and matching Linux/Windows exports pass; the broad town/battle smoke advances through this new contract before reaching its separate unchanged compact Trade-tab spacing assertion.",
+      "metrics": {
+        "target_faction_count": 6,
+        "target_stage_count_per_faction": 3,
+        "implemented_faction_count": 6,
+        "implemented_scene_count": 18,
+        "unique_runtime_scene_count": 18,
+        "validated_authored_town_count": 32,
+        "inspected_capture_count": 6,
+        "live_build_transition": "village_to_developing",
+        "save_version": 9,
+        "linux_pck_bytes": 244939128,
+        "windows_pck_bytes": 244939128,
+        "pck_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 5060872,
+        "generated_source_art_exported": false,
+        "isolated_building_overlay_enabled": false,
+        "town_economy_authority_changed": false,
+        "save_version_changed": false,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "No work remains in this bounded seamless Town development-scene slice. The known exit-only texture RID warning, the separate compact Trade-tab spacing assertion in the broad town/battle smoke, per-building painted-state granularity beyond the three shipped stages, hardware certification, signing, publication, whole-game validation, and release readiness remain separate."
     }
   ],
   "project": "heroes-like",
@@ -108074,7 +108134,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "",
-  "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open.",
+  "remainingWork": "Select the next coherent production slice. The known exit-only texture RID warning, separate compact Trade-tab spacing assertion, broader production completion, and release readiness remain open.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -108606,9 +108666,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Implementing the owner-selected Overworld world-surface, blocker-composition, and 6x6 tall-town visual overhaul.",
+  "summary": "Completed the seamless Town development-scene slice with six original faction compositions, three authoritative construction stages per faction, and matching Linux and Windows package proof.",
   "taskId": "10184",
-  "updatedAt": "2026-09-02T17:15:00Z",
+  "updatedAt": "2026-09-02T23:09:27Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

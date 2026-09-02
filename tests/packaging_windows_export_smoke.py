@@ -52,6 +52,7 @@ FORBIDDEN_TERRAIN_PCK_PREFIXES = (
 )
 FORBIDDEN_DEVELOPMENT_PCK_PREFIXES = (
     "reports/",
+    "art/towns/source/generated/development_scenes/",
     "art/overworld/runtime/terrain_tiles/generated/grastl/source_sheets/",
     "art/overworld/runtime/terrain_tiles/generated/grastl/experiments/",
 )
@@ -574,6 +575,10 @@ REQUIRED_TOWN_SCENIC_BACKDROP_NAMES = (
     "town_crownroot_refuge", "town_blackbell_foundry", "town_pale_sounding_harbor",
     "town_amberweir_granary", "town_moonbite_reedshrine", "town_splitprism_duelcourt",
     "town_woundroot_hearthgrove", "town_whitegauge_calibration_yard", "town_dreamwake_oracle_harbor",
+) + tuple(
+    f"town_{faction_id}_{stage_id}"
+    for faction_id in ("embercourt", "mireclaw", "sunvault", "thornwake", "brasshollow", "veilmourn")
+    for stage_id in ("village", "developing", "fully_built")
 )
 REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES = (
     "art/towns/runtime/backdrops/town_embercourt.png.import",
@@ -614,6 +619,10 @@ REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES = (
     "art/towns/runtime/backdrops/marchland_seats/town_woundroot_hearthgrove.png.import",
     "art/towns/runtime/backdrops/marchland_seats/town_whitegauge_calibration_yard.png.import",
     "art/towns/runtime/backdrops/marchland_seats/town_dreamwake_oracle_harbor.png.import",
+) + tuple(
+    f"art/towns/runtime/backdrops/development_scenes/town_{faction_id}_{stage_id}.png.import"
+    for faction_id in ("embercourt", "mireclaw", "sunvault", "thornwake", "brasshollow", "veilmourn")
+    for stage_id in ("village", "developing", "fully_built")
 )
 FATAL_EXPORT_PATTERNS = (
     "SCRIPT ERROR",

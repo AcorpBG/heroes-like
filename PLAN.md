@@ -24,9 +24,30 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- No implementation slice is active after completing `bugfix-overworld-moved-raid-combat-10184`.
-- Most recently completed implementation slice: `bugfix-overworld-moved-raid-combat-10184`, which fixes current-tile battle contact after live enemy raid movement.
-- Current package boundary: matching Linux and Windows release exports measure 237753728 bytes, 12246272 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- No implementation slice is active after completing `ux-town-seamless-development-scenes-10184`.
+- Most recently completed implementation slice: `ux-town-seamless-development-scenes-10184`, which replaces the isolated Town building row with authoritative seamless village, developing, and fully built faction scenes.
+- Current package boundary: matching Linux and Windows release exports measure 244939128 bytes, 5060872 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Seamless Town Development Scenes
+
+id: `ux-town-seamless-development-scenes-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace the visible depth-sorted row of isolated building icons and construction stakes with one seamless painted settlement scene per faction;
+- retain a fully developed scene for each of the six live factions, then derive matching developing-town and village scenes from that same composition by removing structures while preserving landscape, camera, lighting, roads, and architectural identity;
+- select the scene stage from the authoritative built-building count, keep construction/economy authority unchanged, and preserve compact build access through the existing management catalog;
+- retain explicit stage metadata and validation so Linux and Windows packages contain all runtime variants while generated source masters stay outside exports.
+
+Completion criteria:
+- all six factions resolve three imported 1600x900 scene stages with unique art, exact stage thresholds, and no visible isolated-building skyline overlay;
+- a real build advances the authoritative town state and, when crossing a threshold, advances the seamless scene; save/resume restores the same scene stage without changing save version or construction rules;
+- representative village, developing, and fully built captures are inspected at 1280x720 and 1920x1080, and focused town, parse, repository, Linux package, and Windows package gates pass below the unchanged 250000000-byte ceiling.
+
+Non-goals:
+- no town economy, construction prerequisite, building effect, recruitment, AI, save-schema, Overworld, battle, or Native RMG changes;
+- no copied Heroes town art, architecture, names, layouts, or protected visual expression; no signing, publication, whole-game validation, or release-readiness claim.
 
 ## Six Uncrowned Sovereign Roads
 

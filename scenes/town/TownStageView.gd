@@ -32,15 +32,9 @@ const SCENIC_AMBIENT_LIGHT_PULSE_SPEED := 1.35
 const SCENIC_AMBIENT_LIGHT_PULSE_MIN := 0.82
 const SCENIC_AMBIENT_LIGHT_PULSE_MAX := 1.0
 const SCENIC_AMBIENT_LIGHT_STATIC_SCALE := 0.88
-const BUILDING_SKYLINE_MODEL := "stable_depth_sorted_authored_building_plots"
-const BUILDING_SKYLINE_ROW_Y := [0.42, 0.57, 0.73]
-const BUILDING_SKYLINE_X_MIN := 0.075
-const BUILDING_SKYLINE_X_MAX := 0.925
-const BUILDING_SKYLINE_ICON_HEIGHT_RATIOS := [0.205, 0.235, 0.265]
-const BUILDING_SKYLINE_MIN_ICON_SIZE := 46.0
-const BUILDING_SKYLINE_MAX_ICON_SIZE := 118.0
-const BUILDING_FOUNDATION_FILL_ALPHA := 0.13
-const BUILDING_FOUNDATION_BORDER_ALPHA := 0.34
+const DEVELOPMENT_SCENE_MODEL := "authoritative_seamless_faction_settlement_stages"
+const DEVELOPMENT_SCENE_STAGE_ORDER := ["village", "developing", "fully_built"]
+const DEVELOPMENT_SCENE_DEVELOPING_MIN_RATIO := 0.34
 const SCENIC_AMBIENT_LIGHTS := {
 	"faction_embercourt": [
 		{"position": Vector2(0.61, 0.15), "radius": 0.075, "color": Color(1.0, 0.50, 0.16), "strength": 0.78},
@@ -119,6 +113,70 @@ const FACTION_BACKDROP_TEXTURES := {
 	"faction_brasshollow": preload("res://art/towns/runtime/backdrops/town_brasshollow.png"),
 	"faction_veilmourn": preload("res://art/towns/runtime/backdrops/town_veilmourn.png"),
 }
+const FACTION_DEVELOPMENT_SCENE_PATHS := {
+	"faction_embercourt": {
+		"village": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_village.png",
+		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_developing.png",
+		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_fully_built.png",
+	},
+	"faction_mireclaw": {
+		"village": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_village.png",
+		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_developing.png",
+		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_fully_built.png",
+	},
+	"faction_sunvault": {
+		"village": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_village.png",
+		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_developing.png",
+		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_fully_built.png",
+	},
+	"faction_thornwake": {
+		"village": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_village.png",
+		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_developing.png",
+		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_fully_built.png",
+	},
+	"faction_brasshollow": {
+		"village": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_village.png",
+		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_developing.png",
+		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_fully_built.png",
+	},
+	"faction_veilmourn": {
+		"village": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_village.png",
+		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_developing.png",
+		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_fully_built.png",
+	},
+}
+const FACTION_DEVELOPMENT_SCENE_TEXTURES := {
+	"faction_embercourt": {
+		"village": preload("res://art/towns/runtime/backdrops/development_scenes/town_embercourt_village.png"),
+		"developing": preload("res://art/towns/runtime/backdrops/development_scenes/town_embercourt_developing.png"),
+		"fully_built": preload("res://art/towns/runtime/backdrops/development_scenes/town_embercourt_fully_built.png"),
+	},
+	"faction_mireclaw": {
+		"village": preload("res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_village.png"),
+		"developing": preload("res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_developing.png"),
+		"fully_built": preload("res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_fully_built.png"),
+	},
+	"faction_sunvault": {
+		"village": preload("res://art/towns/runtime/backdrops/development_scenes/town_sunvault_village.png"),
+		"developing": preload("res://art/towns/runtime/backdrops/development_scenes/town_sunvault_developing.png"),
+		"fully_built": preload("res://art/towns/runtime/backdrops/development_scenes/town_sunvault_fully_built.png"),
+	},
+	"faction_thornwake": {
+		"village": preload("res://art/towns/runtime/backdrops/development_scenes/town_thornwake_village.png"),
+		"developing": preload("res://art/towns/runtime/backdrops/development_scenes/town_thornwake_developing.png"),
+		"fully_built": preload("res://art/towns/runtime/backdrops/development_scenes/town_thornwake_fully_built.png"),
+	},
+	"faction_brasshollow": {
+		"village": preload("res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_village.png"),
+		"developing": preload("res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_developing.png"),
+		"fully_built": preload("res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_fully_built.png"),
+	},
+	"faction_veilmourn": {
+		"village": preload("res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_village.png"),
+		"developing": preload("res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_developing.png"),
+		"fully_built": preload("res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_fully_built.png"),
+	},
+}
 const DISTRICT_ORDER := ["military", "economy", "spellcraft", "logistics", "defense"]
 const DISTRICT_LABELS := {
 	"military": "Military",
@@ -163,10 +221,7 @@ var _scenic_ambient_light_phase := 0.0
 var _resolved_scenic_backdrop_path := ""
 var _resolved_scenic_backdrop_scope := ""
 var _resolved_scenic_backdrop_texture: Texture2D
-var _town_building_textures: Dictionary = {}
-var _town_building_texture_missing: Dictionary = {}
-var _town_building_plot_group_cache_signature := ""
-var _town_building_plot_group_cache: Array = []
+var _resolved_development_scene_stage := ""
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -261,6 +316,7 @@ func _clear_town_state(session) -> void:
 	_resolved_scenic_backdrop_path = ""
 	_resolved_scenic_backdrop_scope = ""
 	_resolved_scenic_backdrop_texture = null
+	_resolved_development_scene_stage = ""
 
 func _duplicate_dictionary(value: Variant) -> Dictionary:
 	return value.duplicate(true) if value is Dictionary else {}
@@ -283,7 +339,6 @@ func _draw() -> void:
 	else:
 		draw_rect(scene_rect, Color(0.02, 0.03, 0.04, 0.08), true)
 		_draw_scenic_ambient_light(scene_rect)
-	_draw_scenic_building_progression(scene_rect)
 	_draw_status_plaques(scene_rect)
 	_draw_district_strip(scene_rect)
 	_draw_command_markers(scene_rect)
@@ -1096,159 +1151,6 @@ func _draw_scenic_ambient_light(scene_rect: Rect2) -> void:
 			var ring_alpha := lerpf(0.018, 0.003, ring_ratio) * strength * pulse_scale
 			draw_circle(center, radius * ring_ratio, Color(color.r, color.g, color.b, ring_alpha), true, -1.0, true)
 
-func _draw_scenic_building_progression(scene_rect: Rect2) -> void:
-	var entries := _town_building_plot_entries(scene_rect)
-	for entry_value in entries:
-		if not entry_value is Dictionary:
-			continue
-		var entry: Dictionary = entry_value
-		var foundation_rect: Rect2 = entry.get("foundation_rect", Rect2())
-		var category_color: Color = entry.get("category_color", _accent_color())
-		var foundation_alpha := BUILDING_FOUNDATION_FILL_ALPHA
-		var border_alpha := BUILDING_FOUNDATION_BORDER_ALPHA
-		if FrontierVisualKitScript.high_contrast_enabled():
-			foundation_alpha = 0.24
-			border_alpha = 0.72
-		var foundation_fill := Color(category_color.r, category_color.g, category_color.b, foundation_alpha)
-		var foundation_border := Color(category_color.r, category_color.g, category_color.b, border_alpha)
-		draw_colored_polygon(_ellipse_polygon(foundation_rect, 24), Color(0.0, 0.0, 0.0, 0.28))
-		var inset_foundation := foundation_rect.grow(-2.0)
-		if inset_foundation.size.x > 0.0 and inset_foundation.size.y > 0.0:
-			draw_colored_polygon(_ellipse_polygon(inset_foundation, 24), foundation_fill)
-		draw_polyline(_ellipse_polygon(foundation_rect, 24), foundation_border, 1.25, true)
-
-		var visible_building_id := String(entry.get("visible_building_id", ""))
-		if visible_building_id == "":
-			_draw_unbuilt_plot_stakes(foundation_rect, foundation_border)
-			continue
-		var texture: Texture2D = _town_building_texture(visible_building_id)
-		if texture == null:
-			continue
-		var building_rect: Rect2 = entry.get("building_rect", Rect2())
-		var reveal_scale := _town_building_reveal_scale(visible_building_id)
-		if not is_equal_approx(reveal_scale, 1.0):
-			var reveal_size := building_rect.size * reveal_scale
-			building_rect = Rect2(
-				Vector2(building_rect.get_center().x - reveal_size.x * 0.5, building_rect.end.y - reveal_size.y),
-				reveal_size
-			)
-			var reveal_color := Color(category_color.r, category_color.g, category_color.b, 0.22)
-			draw_circle(foundation_rect.get_center(), foundation_rect.size.x * 0.72 * reveal_scale, reveal_color)
-		draw_texture_rect(texture, building_rect, false)
-
-func _draw_unbuilt_plot_stakes(foundation_rect: Rect2, color: Color) -> void:
-	var center := foundation_rect.get_center()
-	var stake_height := maxf(4.0, foundation_rect.size.y * 0.72)
-	var half_span := foundation_rect.size.x * 0.22
-	draw_line(center + Vector2(-half_span, 1.0), center + Vector2(-half_span, -stake_height), color, 1.0, true)
-	draw_line(center + Vector2(half_span, 1.0), center + Vector2(half_span, -stake_height), color, 1.0, true)
-	draw_line(center + Vector2(-half_span, -stake_height * 0.68), center + Vector2(half_span, -stake_height * 0.68), color, 1.0, true)
-
-func _ellipse_polygon(rect: Rect2, segment_count: int) -> PackedVector2Array:
-	var points := PackedVector2Array()
-	var center := rect.get_center()
-	var radii := rect.size * 0.5
-	for index in range(maxi(8, segment_count) + 1):
-		var angle := TAU * float(index) / float(maxi(8, segment_count))
-		points.append(center + Vector2(cos(angle) * radii.x, sin(angle) * radii.y))
-	return points
-
-func _town_building_plot_entries(scene_rect: Rect2) -> Array:
-	var groups := _town_building_plot_groups()
-	var plot_count := groups.size()
-	if plot_count <= 0 or scene_rect.size.x <= 0.0 or scene_rect.size.y <= 0.0:
-		return []
-	var row_count := 3 if plot_count > 18 else (2 if plot_count > 8 else 1)
-	var column_count := ceili(float(plot_count) / float(row_count))
-	var built_ids := _normalized_string_array(_town.get("built_buildings", []))
-	var entries: Array = []
-	for plot_index in range(plot_count):
-		var group: Dictionary = groups[plot_index]
-		var row := mini(row_count - 1, int(plot_index / column_count))
-		var column := plot_index % column_count
-		var row_start := row * column_count
-		var used_columns := mini(column_count, plot_count - row_start)
-		var x_step := (BUILDING_SKYLINE_X_MAX - BUILDING_SKYLINE_X_MIN) / float(maxi(1, column_count - 1))
-		var row_width := x_step * float(maxi(0, used_columns - 1))
-		var x_normalized := 0.5 - row_width * 0.5 + float(column) * x_step
-		if row % 2 == 1 and used_columns == column_count and column_count > 1:
-			x_normalized += x_step * 0.18
-		x_normalized = clampf(x_normalized, BUILDING_SKYLINE_X_MIN, BUILDING_SKYLINE_X_MAX)
-		var y_normalized := float(BUILDING_SKYLINE_ROW_Y[row])
-		var foundation_center := scene_rect.position + Vector2(scene_rect.size.x * x_normalized, scene_rect.size.y * y_normalized)
-		var icon_size := clampf(
-			scene_rect.size.y * float(BUILDING_SKYLINE_ICON_HEIGHT_RATIOS[row]),
-			BUILDING_SKYLINE_MIN_ICON_SIZE,
-			BUILDING_SKYLINE_MAX_ICON_SIZE
-		)
-		var foundation_size := Vector2(icon_size * 0.64, maxf(8.0, icon_size * 0.16))
-		var foundation_rect := Rect2(foundation_center - foundation_size * 0.5, foundation_size)
-		var building_rect := Rect2(
-			Vector2(foundation_center.x - icon_size * 0.5, foundation_center.y - icon_size + foundation_size.y * 0.18),
-			Vector2(icon_size, icon_size)
-		)
-		var variants: Array = group.get("variant_ids", []) if group.get("variant_ids", []) is Array else []
-		var visible_building_id := ""
-		for variant_value in variants:
-			var variant_id := String(variant_value)
-			if variant_id in built_ids:
-				visible_building_id = variant_id
-		var category := String(group.get("category", "support"))
-		entries.append({
-			"plot_index": plot_index,
-			"plot_id": String(group.get("plot_id", "")),
-			"row": row,
-			"column": column,
-			"category": category,
-			"category_color": DISTRICT_COLORS.get(category, _accent_color()),
-			"variant_ids": variants.duplicate(),
-			"visible_building_id": visible_building_id,
-			"built": visible_building_id != "",
-			"foundation_rect": foundation_rect,
-			"building_rect": building_rect,
-			"contained": scene_rect.encloses(foundation_rect) and scene_rect.encloses(building_rect),
-		})
-	return entries
-
-func _town_building_plot_groups() -> Array:
-	var catalog_ids := _town_building_catalog_ids()
-	if catalog_ids.is_empty():
-		return []
-	var cache_signature := "%s|%s" % [
-		String(_town_template.get("id", _town.get("town_id", ""))),
-		"|".join(catalog_ids),
-	]
-	if cache_signature == _town_building_plot_group_cache_signature:
-		return _town_building_plot_group_cache
-	var catalog_set: Dictionary = {}
-	for building_id_value in catalog_ids:
-		catalog_set[String(building_id_value)] = true
-	var grouped: Dictionary = {}
-	var group_order: Array = []
-	for building_id_value in catalog_ids:
-		var building_id := String(building_id_value)
-		var plot_id := _town_building_plot_root(building_id, catalog_set)
-		if not grouped.has(plot_id):
-			var building := ContentService.get_building(building_id)
-			grouped[plot_id] = {
-				"plot_id": plot_id,
-				"category": String(building.get("category", "support")),
-				"variant_ids": [],
-			}
-			group_order.append(plot_id)
-		var group: Dictionary = grouped[plot_id]
-		var variants: Array = group.get("variant_ids", []) if group.get("variant_ids", []) is Array else []
-		if building_id not in variants:
-			variants.append(building_id)
-		group["variant_ids"] = variants
-		grouped[plot_id] = group
-	var groups: Array = []
-	for plot_id_value in group_order:
-		groups.append(Dictionary(grouped[String(plot_id_value)]).duplicate(true))
-	_town_building_plot_group_cache_signature = cache_signature
-	_town_building_plot_group_cache = groups
-	return _town_building_plot_group_cache
-
 func _town_building_catalog_ids() -> Array:
 	var result: Array = []
 	_append_unique_building_ids(result, _town_template.get("starting_building_ids", []))
@@ -1274,123 +1176,65 @@ func _normalized_string_array(values: Variant) -> Array:
 			result.append(normalized)
 	return result
 
-func _town_building_plot_root(building_id: String, catalog_set: Dictionary) -> String:
-	var current := building_id
-	var visited: Dictionary = {}
-	for unused in range(32):
-		if current == "" or visited.has(current):
-			break
-		visited[current] = true
-		var building := ContentService.get_building(current)
-		var predecessor := String(building.get("upgrade_from", "")).strip_edges()
-		if predecessor == "" or not catalog_set.has(predecessor):
-			break
-		current = predecessor
-	return current if current != "" else building_id
-
-func _town_building_texture(building_id: String) -> Texture2D:
-	if building_id == "" or _town_building_texture_missing.has(building_id):
-		return null
-	if _town_building_textures.has(building_id):
-		return _town_building_textures.get(building_id) as Texture2D
-	var texture_path := TownRulesScript.building_icon_path(building_id)
-	if texture_path == "" or not ResourceLoader.exists(texture_path, "Texture2D"):
-		_town_building_texture_missing[building_id] = true
-		return null
-	var texture := load(texture_path) as Texture2D
-	if texture == null:
-		_town_building_texture_missing[building_id] = true
-		return null
-	_town_building_textures[building_id] = texture
-	return texture
-
-func _town_building_reveal_scale(building_id: String) -> float:
-	if (
-		SettingsService.reduced_motion_enabled()
-		or String(_town_action_presentation.get("event_id", "")) != "town_building_built"
-		or String(_town_action_presentation.get("building_id", "")) != building_id
-	):
-		return 1.0
-	var duration_ms := maxi(1, int(_town_action_presentation.get("duration_ms", 1)))
-	var elapsed_ms := maxi(0, Time.get_ticks_msec() - int(_town_action_presentation.get("started_msec", 0)))
-	var progress := clampf(float(elapsed_ms) / float(duration_ms), 0.0, 1.0)
-	return lerpf(1.16, 1.0, ease(progress, 2.0))
-
 func validation_town_building_progression_summary() -> Dictionary:
-	var scene_rect := _town_scene_rect()
-	var entries := _town_building_plot_entries(scene_rect)
 	var catalog_ids := _town_building_catalog_ids()
 	var built_ids := _normalized_string_array(_town.get("built_buildings", []))
-	var visible_ids: Array = []
-	var unbuilt_plot_ids: Array = []
-	var variant_texture_rows: Array = []
-	var all_contained := not entries.is_empty()
-	for entry_value in entries:
-		if not entry_value is Dictionary:
-			all_contained = false
-			continue
-		var entry: Dictionary = entry_value
-		if not bool(entry.get("contained", false)):
-			all_contained = false
-		var visible_id := String(entry.get("visible_building_id", ""))
-		if visible_id != "":
-			visible_ids.append(visible_id)
-		else:
-			unbuilt_plot_ids.append(String(entry.get("plot_id", "")))
-		for variant_value in Array(entry.get("variant_ids", [])):
-			var variant_id := String(variant_value)
-			var texture_path := TownRulesScript.building_icon_path(variant_id)
-			var texture := _town_building_texture(variant_id)
-			variant_texture_rows.append({
-				"building_id": variant_id,
-				"plot_id": String(entry.get("plot_id", "")),
-				"texture_path": texture_path,
-				"texture_loaded": texture != null,
-				"texture_size": texture.get_size() if texture != null else Vector2.ZERO,
-			})
-	var visible_covers_built := true
+	var constructed_ids: Array = []
 	for built_id_value in built_ids:
 		var built_id := String(built_id_value)
-		if built_id not in catalog_ids:
-			visible_covers_built = false
-			break
-		var root_id := _town_building_plot_root(built_id, _dictionary_set(catalog_ids))
-		var root_visible := false
-		for entry_value in entries:
-			if entry_value is Dictionary and String(entry_value.get("plot_id", "")) == root_id and String(entry_value.get("visible_building_id", "")) != "":
-				root_visible = true
-				break
-		if not root_visible:
-			visible_covers_built = false
-			break
+		if built_id in catalog_ids and built_id not in constructed_ids:
+			constructed_ids.append(built_id)
+	var ratio := float(constructed_ids.size()) / float(catalog_ids.size()) if not catalog_ids.is_empty() else 0.0
+	var stage_id := _town_development_stage_id()
+	var faction_id := _town_faction_id()
+	var stage_paths: Dictionary = FACTION_DEVELOPMENT_SCENE_PATHS.get(faction_id, {})
+	var stage_textures: Dictionary = FACTION_DEVELOPMENT_SCENE_TEXTURES.get(faction_id, {})
+	var texture_rows: Array = []
+	for candidate_stage_value in DEVELOPMENT_SCENE_STAGE_ORDER:
+		var candidate_stage := String(candidate_stage_value)
+		var candidate_texture: Variant = stage_textures.get(candidate_stage, null)
+		texture_rows.append({
+			"stage_id": candidate_stage,
+			"path": String(stage_paths.get(candidate_stage, "")),
+			"texture_loaded": candidate_texture is Texture2D,
+			"texture_size": (candidate_texture as Texture2D).get_size() if candidate_texture is Texture2D else Vector2.ZERO,
+		})
 	return {
-		"model": BUILDING_SKYLINE_MODEL,
+		"model": DEVELOPMENT_SCENE_MODEL,
 		"town_id": String(_town_template.get("id", _town.get("town_id", ""))),
-		"faction_id": _town_faction_id(),
+		"faction_id": faction_id,
 		"catalog_building_ids": catalog_ids.duplicate(),
 		"catalog_building_count": catalog_ids.size(),
 		"authoritative_built_ids": built_ids.duplicate(),
 		"authoritative_built_count": built_ids.size(),
-		"plot_count": entries.size(),
-		"visible_building_ids": visible_ids,
-		"visible_building_count": visible_ids.size(),
-		"unbuilt_plot_ids": unbuilt_plot_ids,
-		"unbuilt_plot_count": unbuilt_plot_ids.size(),
-		"entries": entries.duplicate(true),
-		"variant_texture_rows": variant_texture_rows,
-		"all_textures_loaded": variant_texture_rows.size() == catalog_ids.size() and variant_texture_rows.all(func(row): return bool(row.get("texture_loaded", false)) and row.get("texture_size", Vector2.ZERO) == Vector2(256, 256)),
-		"all_contained": all_contained,
-		"visible_covers_authoritative_built": visible_covers_built,
-		"unbuilt_foundation_fill_alpha": BUILDING_FOUNDATION_FILL_ALPHA,
-		"unbuilt_foundation_border_alpha": BUILDING_FOUNDATION_BORDER_ALPHA,
-		"draw_order": ["scenic_backdrop", "ambient_light_bloom", "building_foundations", "completed_building_textures", "status_plaques", "district_strip", "command_markers", "header", "town_action_presentation"],
+		"constructed_catalog_ids": constructed_ids,
+		"constructed_catalog_count": constructed_ids.size(),
+		"completion_ratio": ratio,
+		"developing_min_ratio": DEVELOPMENT_SCENE_DEVELOPING_MIN_RATIO,
+		"fully_built_requires_complete_catalog": true,
+		"stage_id": stage_id,
+		"stage_path": String(stage_paths.get(stage_id, "")),
+		"stage_texture_rows": texture_rows,
+		"all_stage_textures_loaded": texture_rows.size() == DEVELOPMENT_SCENE_STAGE_ORDER.size() and texture_rows.all(func(row): return bool(row.get("texture_loaded", false)) and row.get("texture_size", Vector2.ZERO) == Vector2(1600, 900)),
+		"isolated_building_overlay_enabled": false,
+		"isolated_building_texture_count": 0,
+		"construction_stake_overlay_enabled": false,
+		"draw_order": ["seamless_development_scene", "ambient_light_bloom", "status_plaques", "district_strip", "command_markers", "header", "town_action_presentation"],
 	}
 
-func _dictionary_set(values: Array) -> Dictionary:
-	var result: Dictionary = {}
-	for value in values:
-		result[String(value)] = true
-	return result
+func _town_development_stage_id() -> String:
+	var catalog_ids := _town_building_catalog_ids()
+	if catalog_ids.is_empty():
+		return "village"
+	var built_ids := _normalized_string_array(_town.get("built_buildings", []))
+	var constructed_count := 0
+	for building_id_value in catalog_ids:
+		if String(building_id_value) in built_ids:
+			constructed_count += 1
+	if constructed_count >= catalog_ids.size():
+		return "fully_built"
+	var ratio := float(constructed_count) / float(catalog_ids.size())
+	return "developing" if ratio >= DEVELOPMENT_SCENE_DEVELOPING_MIN_RATIO else "village"
 
 func _scenic_ambient_light_entries(scene_rect: Rect2) -> Array:
 	var texture := _scenic_backdrop_texture()
@@ -1458,6 +1302,18 @@ func _resolve_scenic_backdrop() -> void:
 	_resolved_scenic_backdrop_path = ""
 	_resolved_scenic_backdrop_scope = ""
 	_resolved_scenic_backdrop_texture = null
+	_resolved_development_scene_stage = ""
+	var faction_id := _town_faction_id()
+	var stage_id := _town_development_stage_id()
+	var development_paths: Dictionary = FACTION_DEVELOPMENT_SCENE_PATHS.get(faction_id, {})
+	var development_textures: Dictionary = FACTION_DEVELOPMENT_SCENE_TEXTURES.get(faction_id, {})
+	var development_texture: Variant = development_textures.get(stage_id, null)
+	if development_texture is Texture2D:
+		_resolved_development_scene_stage = stage_id
+		_resolved_scenic_backdrop_path = String(development_paths.get(stage_id, ""))
+		_resolved_scenic_backdrop_scope = "faction_development_scene"
+		_resolved_scenic_backdrop_texture = development_texture as Texture2D
+		return
 	var town_path := String(_town_template.get("scenic_backdrop_path", "")).strip_edges()
 	if town_path != "" and ResourceLoader.exists(town_path, "Texture2D"):
 		var town_resource: Resource = load(town_path)
@@ -1466,7 +1322,6 @@ func _resolve_scenic_backdrop() -> void:
 			_resolved_scenic_backdrop_scope = "exact_town"
 			_resolved_scenic_backdrop_texture = town_resource as Texture2D
 			return
-	var faction_id := _town_faction_id()
 	var faction_texture: Variant = FACTION_BACKDROP_TEXTURES.get(faction_id, null)
 	if faction_texture is Texture2D:
 		_resolved_scenic_backdrop_path = String(FACTION_BACKDROP_PATHS.get(faction_id, ""))
@@ -1499,6 +1354,8 @@ func validation_scenic_backdrop_summary() -> Dictionary:
 		"faction_id": faction_id,
 		"mapped_path": _resolved_scenic_backdrop_path,
 		"selection_scope": _resolved_scenic_backdrop_scope,
+		"development_stage": _resolved_development_scene_stage,
+		"development_model": DEVELOPMENT_SCENE_MODEL,
 		"texture_loaded": texture != null,
 		"texture_size": texture_size,
 		"destination_rect": scene_rect,

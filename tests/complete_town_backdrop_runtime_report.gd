@@ -39,13 +39,13 @@ const FACTION_FALLBACK_CASES := {
 	"town_brasshollow_orevein_gantry": "faction_brasshollow",
 	"town_veilmourn_bellwake_harbor": "faction_veilmourn",
 }
-const FACTION_BACKDROPS := {
-	"faction_embercourt": "res://art/towns/runtime/backdrops/town_embercourt.png",
-	"faction_mireclaw": "res://art/towns/runtime/backdrops/town_mireclaw.png",
-	"faction_sunvault": "res://art/towns/runtime/backdrops/town_sunvault.png",
-	"faction_thornwake": "res://art/towns/runtime/backdrops/town_thornwake.png",
-	"faction_brasshollow": "res://art/towns/runtime/backdrops/town_brasshollow.png",
-	"faction_veilmourn": "res://art/towns/runtime/backdrops/town_veilmourn.png",
+const FACTION_DEVELOPMENT_BACKDROPS := {
+	"faction_embercourt": {"village": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_village.png", "developing": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_developing.png", "fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_fully_built.png"},
+	"faction_mireclaw": {"village": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_village.png", "developing": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_developing.png", "fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_fully_built.png"},
+	"faction_sunvault": {"village": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_village.png", "developing": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_developing.png", "fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_fully_built.png"},
+	"faction_thornwake": {"village": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_village.png", "developing": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_developing.png", "fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_fully_built.png"},
+	"faction_brasshollow": {"village": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_village.png", "developing": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_developing.png", "fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_fully_built.png"},
+	"faction_veilmourn": {"village": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_village.png", "developing": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_developing.png", "fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_fully_built.png"},
 }
 
 var _original_content_scale_size := Vector2i.ZERO
@@ -62,7 +62,7 @@ func _run() -> void:
 		return
 	var fallback := await _fallback_contract()
 	if not bool(fallback.get("ok", false)):
-		_fail("Faction fallback contract failed", fallback, original_size)
+		_fail("Faction development-scene contract failed", fallback, original_size)
 		return
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(CAPTURE_DIR))
 	var rows := []
@@ -72,7 +72,7 @@ func _run() -> void:
 			var row: Dictionary = await _run_town_case(viewport_size, town_id)
 			rows.append(row)
 			if not bool(row.get("ok", false)):
-				_fail("Live exact-town backdrop failed", row, original_size)
+				_fail("Live seamless Town backdrop failed", row, original_size)
 				return
 	get_window().size = original_size
 	get_window().content_scale_size = _original_content_scale_size
@@ -133,8 +133,10 @@ func _fallback_contract() -> Dictionary:
 		var exact: bool = (
 			String(summary.get("town_id", "")) == town_id
 			and String(summary.get("faction_id", "")) == faction_id
-			and String(summary.get("selection_scope", "")) == "faction_fallback"
-			and String(summary.get("mapped_path", "")) == String(FACTION_BACKDROPS[faction_id])
+			and String(summary.get("selection_scope", "")) == "faction_development_scene"
+			and String(summary.get("development_stage", "")) == "village"
+			and String(summary.get("development_model", "")) == "authoritative_seamless_faction_settlement_stages"
+			and String(summary.get("mapped_path", "")) == String(Dictionary(FACTION_DEVELOPMENT_BACKDROPS[faction_id]).get("village", ""))
 			and bool(summary.get("texture_loaded", false))
 			and summary.get("texture_size", Vector2.ZERO) == Vector2(1600, 900)
 			and bool(summary.get("source_within_texture", false))
@@ -168,11 +170,16 @@ func _run_town_case(viewport_size: Vector2i, town_id: String) -> Dictionary:
 	var stage: Node = shell.get_node_or_null("%TownStage")
 	var summary: Dictionary = stage.validation_scenic_backdrop_summary() if stage != null else {}
 	var shell_surface := _shell_surface_contract(shell)
-	var expected_path := String(TOWN_CASES[town_id].get("path", ""))
+	var faction_id := String(ContentService.get_town(town_id).get("faction_id", ""))
+	var expected_stage := String(summary.get("development_stage", ""))
+	var faction_paths: Dictionary = FACTION_DEVELOPMENT_BACKDROPS.get(faction_id, {})
+	var expected_path := String(faction_paths.get(expected_stage, ""))
 	var mapping_exact: bool = (
 		stage != null
 		and String(summary.get("town_id", "")) == town_id
-		and String(summary.get("selection_scope", "")) == "exact_town"
+		and String(summary.get("selection_scope", "")) == "faction_development_scene"
+		and String(summary.get("development_model", "")) == "authoritative_seamless_faction_settlement_stages"
+		and expected_stage in ["village", "developing", "fully_built"]
 		and String(summary.get("mapped_path", "")) == expected_path
 		and bool(summary.get("texture_loaded", false))
 		and summary.get("texture_size", Vector2.ZERO) == Vector2(1600, 900)

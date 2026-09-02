@@ -1,0 +1,72 @@
+{
+  "schema_id": "town_development_scene_manifest_v1",
+  "generator_mode": "codex_builtin_image_generation",
+  "use_case": "stylized-concept_and_precise-object-edit",
+  "generated_at": "2026-09-02",
+  "source_dimensions": [1672, 941],
+  "runtime_dimensions": [1600, 900],
+  "runtime_derivation": "ImageMagick exact 1600x900 resize with metadata stripped",
+  "stage_policy": {
+    "village": "less than 34 percent of the authored building catalog constructed",
+    "developing": "at least 34 percent but not the complete authored building catalog constructed",
+    "fully_built": "the complete authored building catalog constructed"
+  },
+  "common_full_prompt": "Transform the existing faction composition into a fully developed seamless settlement. Preserve the camera, landscape, lighting, palette, and hand-painted rendering; integrate the named authored building identities through shared roads, walls, waterways, courtyards, and materials; no isolated building row, text, UI, watermark, or copied franchise design.",
+  "common_reduction_prompt": "Use the fully built image as the immutable composition anchor. Remove the specified late or most structures, replace them with believable environment, and preserve camera, crop, horizon, terrain, waterways, natural landmarks, light, palette, architectural language, and surviving-building positions so every stage is unmistakably the same place.",
+  "factions": {
+    "faction_embercourt": {
+      "architecture": "Slate-and-oak river court joined by fortified canals, civic masonry, copper roofs, and ember beacons.",
+      "fully_built_buildings": ["civic town hall", "market and granary quarter", "tollstone weir", "bargebow slip", "oath pikehall", "beacon court", "drake sluice", "charter bastion"],
+      "stages": {
+        "village": {"source_path": "res://art/towns/source/generated/development_scenes/town_embercourt_village_source.png", "source_sha256": "accf520333d309803af1803ba239de9a60c3de6d88c2a39981812c1828c1dbb2", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_village.png", "runtime_sha256": "813a0740a9308bd28db6c6d923c64cbabaa2400ca51a3a812b98cd727459abb5"},
+        "developing": {"source_path": "res://art/towns/source/generated/development_scenes/town_embercourt_developing_source.png", "source_sha256": "0ad213b412197f4406b4d01a2d09ad6da9a0ab172edeeb3423fafe34e099110e", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_developing.png", "runtime_sha256": "0773daf80d43534323d4838a7ca490b9e4b8ddf0a27c665e0b1ffa5ec8edf099"},
+        "fully_built": {"source_path": "res://art/towns/source/generated/development_scenes/town_embercourt_fully_built_source.png", "source_sha256": "346b9543449cedbe7232fbb793062cbfe78738378d25bd7ee2a42a7f08e39843", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_fully_built.png", "runtime_sha256": "b58e1944a4acd7db173854502615ec8b64063e70d59120ebff098f45976d0c55"}
+      }
+    },
+    "faction_mireclaw": {
+      "architecture": "Bone, blackbranch, reeds, and hide grown across chained stilt walks in a drowned marsh.",
+      "fully_built_buildings": ["timber-and-bone council hall", "reed toll", "chainboom ferry", "blackbranch den", "mudglass drum court", "sporewake shrine", "floodtide forge", "nightglass dominion", "antler apex pit"],
+      "stages": {
+        "village": {"source_path": "res://art/towns/source/generated/development_scenes/town_mireclaw_village_source.png", "source_sha256": "7320d5e385eb08bdf73f9b07f1ba2939b8a7440eab779e36cedac7c6956ca98b", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_village.png", "runtime_sha256": "0a266ee9e3c8f62d79718ddf010937d6109852764816802392522e4bec419a80"},
+        "developing": {"source_path": "res://art/towns/source/generated/development_scenes/town_mireclaw_developing_source.png", "source_sha256": "ef35751ebbacb593097bfd43390af9a2654e2f0ef7d3ed527d56e5952176fcc1", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_developing.png", "runtime_sha256": "5a215f949a4a821d658d2947ddd9459c86c941284657ff78982b2aecb5b21cc1"},
+        "fully_built": {"source_path": "res://art/towns/source/generated/development_scenes/town_mireclaw_fully_built_source.png", "source_sha256": "b0a7b7924177caaadc8ae794883842c259731ab40161b5632fcc476521f51d9f", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_fully_built.png", "runtime_sha256": "b6d64ace8bb2e43417e845c39e8e5f7f04c7cfff45c4a326f99726bf1f18d61d"}
+      }
+    },
+    "faction_sunvault": {
+      "architecture": "Ivory stone, gold calibration frames, aetherglass prisms, mirrored courts, and measured waterways.",
+      "fully_built_buildings": ["civic hall", "lens-tithe market", "shard yard", "prism lens gallery", "duelist mirror forge", "harmonic cloister", "zenith observatory", "aurora bastion spire", "daybreak matrix"],
+      "stages": {
+        "village": {"source_path": "res://art/towns/source/generated/development_scenes/town_sunvault_village_source.png", "source_sha256": "214333759988aee9cfc8c85da3f1b30bf65b4d65fdb354c17dacfc29c223d4d5", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_village.png", "runtime_sha256": "800dd9c147b36005d3991777680d4922e30b28a03b07ecdf9561e841bb91f0b3"},
+        "developing": {"source_path": "res://art/towns/source/generated/development_scenes/town_sunvault_developing_source.png", "source_sha256": "8b9e8f8af66bd2580d783843d79d656e5226764795c52d1b235d3d1f3663a5a4", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_developing.png", "runtime_sha256": "6bd67f6131ff9afa90503b6ecc865c6084ddb12bc63f048098d887ddc7efdbae"},
+        "fully_built": {"source_path": "res://art/towns/source/generated/development_scenes/town_sunvault_fully_built_source.png", "source_sha256": "b819a9a6c3ec70d15c56e857f3738414f3c8756bd0e24eeceff3fd9966f5b0fc", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_fully_built.png", "runtime_sha256": "e39203ec94275adce6219a975fc5e25726daacfdbfad5adf52a756718dbcc5c1"}
+      }
+    },
+    "faction_thornwake": {
+      "architecture": "Living root roads, woven branch bridges, seedglass domes, fungal gardens, and a heart-tree civic core.",
+      "fully_built_buildings": ["heartwood council hall", "loam market", "seed vault", "sporeglass hothouse", "bramble toll", "barkmantle run", "pilgrim orchard", "graftworks", "worldroot gate"],
+      "stages": {
+        "village": {"source_path": "res://art/towns/source/generated/development_scenes/town_thornwake_village_source.png", "source_sha256": "e6ba0908ef59e3898be9ea60bfa626b65afc8a7d846c4ad9dba03b241dfe979a", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_village.png", "runtime_sha256": "1bfdf5bcd4031cb57d72da10ba9423c3c31d9e3e611761ed4922d63921303e85"},
+        "developing": {"source_path": "res://art/towns/source/generated/development_scenes/town_thornwake_developing_source.png", "source_sha256": "27046edc98060b0633db1aa23ce600eb04f0ea37656997f327953d700f2c31f5", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_developing.png", "runtime_sha256": "3672353ff707eb5525bd0a23c13bd5c38eefe13aa8e97b0ffd6f68dad7149271"},
+        "fully_built": {"source_path": "res://art/towns/source/generated/development_scenes/town_thornwake_fully_built_source.png", "source_sha256": "ec14e17479176e42374b92e72a463d26a5ec3e7c68cfeb2edbe63c71f4202556", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_fully_built.png", "runtime_sha256": "0190d4315d0423d58d55e6afedb98e2cc3476995ac3ff921c9bcd15555102533"}
+      }
+    },
+    "faction_brasshollow": {
+      "architecture": "Black iron, brass, dark stone, pressure rails, pipe galleries, cranes, quench channels, and furnace courts.",
+      "fully_built_buildings": ["charter hall", "ore-tithe market", "rivet kennels", "pavis foundry", "boiler cathedral", "pressure rail", "crucible dock", "titan charter hall", "grand assay bell"],
+      "stages": {
+        "village": {"source_path": "res://art/towns/source/generated/development_scenes/town_brasshollow_village_source.png", "source_sha256": "91508b9addfee521e51a8b37e47b4037cc5154161655fae24a2a7e5725c0d890", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_village.png", "runtime_sha256": "19b325a11b6a6a6ae4ba3efc677cf0e2d6b57f1ec85601a563aa94ff1b8f1236"},
+        "developing": {"source_path": "res://art/towns/source/generated/development_scenes/town_brasshollow_developing_source.png", "source_sha256": "e8b72f8f21cba8250bfdf69cdff57d2bed98a924437a6642987d18b6179fe18b", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_developing.png", "runtime_sha256": "50d6e4b2115293b36621a1325f8ba3d3b8f2b07d2a8b0916598bde493f731690"},
+        "fully_built": {"source_path": "res://art/towns/source/generated/development_scenes/town_brasshollow_fully_built_source.png", "source_sha256": "724cc22ba51fd91c0366cc623e0cc0ca2922d4c2f409e0553fee73a4f92258c1", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_fully_built.png", "runtime_sha256": "d65eb13086f7db4c04c805acca9e6de7e76cb5d9bf2363347d73505d2af9cf19"}
+      }
+    },
+    "faction_veilmourn": {
+      "architecture": "Dark timber, wet slate, iron chains, tideglass roofs, bell towers, black-sail lofts, and memorial arches.",
+      "fully_built_buildings": ["drowned admiralty", "ransom exchange", "bell harbor", "mirror drydock", "harpoon gantry", "obituary vault", "mistgate slip", "leviathan sounding tower", "last-memory beacon"],
+      "stages": {
+        "village": {"source_path": "res://art/towns/source/generated/development_scenes/town_veilmourn_village_source.png", "source_sha256": "305dc88e58c536b9437205b56bf9f8a0f807c1313b980a2ee6f6d81eb2451923", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_village.png", "runtime_sha256": "842b299ca1fba6c5ce1345462b9022e2648dc98d19395d064e6a0e0d32de845c"},
+        "developing": {"source_path": "res://art/towns/source/generated/development_scenes/town_veilmourn_developing_source.png", "source_sha256": "651871f6e46498407c849b92570f5e816e44c2f21ce1345acbb4eda73c5b68d6", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_developing.png", "runtime_sha256": "5af9977e4f2359bda1bd598577c9da6f8f1ef22b68242d313b41cfdc7cc71ad4"},
+        "fully_built": {"source_path": "res://art/towns/source/generated/development_scenes/town_veilmourn_fully_built_source.png", "source_sha256": "1b7798311630dc077aa587317dd28f3a1dc8e5f710d995cb6025722d8ad5ab08", "runtime_path": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_fully_built.png", "runtime_sha256": "368c1bc04e33b8167745c70e373b99ab2679697eb70845b9209ea9c459f6b372"}
+      }
+    }
+  }
+}
