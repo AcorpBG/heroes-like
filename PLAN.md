@@ -17291,6 +17291,39 @@ Completion result:
 Non-goals:
 - no strategic-AI targeting, raid strength, combat balance, pathfinding semantics, content, save-schema, native RMG, visual, packaging, signing, publication, whole-game validation, or release-readiness changes.
 
+## Overworld World Surface And 3x4 Town Landmarks
+
+id: `ux-overworld-world-surface-town-landmarks-10184`
+
+Status: completed.
+
+Initial finding:
+- current terrain relies on broad flat base cells with sparse repeated detail, so roads, biomes, and traversable ground read as a tiled backdrop instead of a continuous painted world;
+- the existing blocker paintings are individually strong but render as small isolated tokens, leaving ridges, tree lines, and marsh barriers visually detached from the terrain they block;
+- towns use detailed 512x512 original paintings, but their current 3x2 presentation model and compressed painted extent make them read as map props rather than substantial settlement landmarks.
+
+Implementation boundary:
+- add an original transparent terrain-detail atlas and revise deterministic surface layering so each biome gains varied, seam-safe ground texture without hiding roads, routes, fog state, or interaction targets;
+- compose blocker art at a larger grounded landscape scale with deterministic neighboring-cell overlap and depth behavior, while retaining exact authored/generated blocking tiles and interaction authority;
+- split town visual presentation from its existing logical visit/body contract, render towns in a tall 3x4 visual envelope, and keep entry routing, click priority, pathing, passability, ownership, fog, selection, session, and save authority exact;
+- validate authored small maps and generated large maps at 1280x720 and 1920x1080, focused surface/blocker/town geometry, repository integrity, and Linux/Windows asset import and package startup.
+
+Completion criteria:
+- inspected captures show cohesive painterly terrain with materially reduced flat/repeated tile appearance and blockers that read as connected terrain masses instead of miniature tokens;
+- every faction town uses the exact 3x4 visual landmark contract with substantially taller painted presence, while the existing logical visit/body tiles and encounter-first interaction behavior remain exact;
+- focused runtime geometry/interaction coverage, broad Overworld validation, repository validation, clean parsing, and sequential Linux/Windows package startup pass.
+
+Completion result:
+- generated and ingested an original 4x4 transparent terrain-detail atlas with exact cell gutters, then combined it with deterministic biome-tinted micro-brush texture, irregular sparse placement, road exclusion, fog ownership, and biome-specific meadow/forest/highland/mire choices;
+- enlarged authored blockers to a real 0.86-tile landscape rank by removing the lower landmark clamp, and expanded generated blocker bodies into deterministic 1.20/1.52/1.90/2.28-tile overlapping masses while retaining their exact collision tiles, paths, and save authority;
+- all 26 authored town identities and generated-map towns now use a bottom-center 3x4 visual envelope with 2.85-tile painted presence, while the existing 3x2 logical body, single entry, routing, click, selection, fog, and save contracts remain unchanged;
+- inspected authored small/large captures at both target resolutions; focused object scale, blocker mass/pathing/save, all-town identity, generated 108x108 town geometry, broad Ninefold, core, editor parse/import, repository validation, Linux export/boot, and fresh-Wine Windows generated setup/overworld/town startup pass;
+- the GLES capture path still emits the pre-existing exit-only one-texture RID leak after its successful report; renderer shutdown cleanup remains separate from this bounded visual slice.
+
+Non-goals:
+- no terrain topology, map-generation placement, Native RMG phase/final-payload, AI, balance, content, or save-schema change;
+- no copied Heroes assets or protected visual expression, packaged hardware certification, signing, publication, whole-game validation, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

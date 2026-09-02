@@ -6,8 +6,8 @@ const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const MAX_SMALL_MAP_TILE_EXTENT := 104.0
 const SMALL_MAP_MATTE_MODEL := "quiet_survey_field_below_playable_board"
 const SMALL_MAP_MATTE_MIN_GUTTER := 48.0
-const SCALE_HIERARCHY_MODEL := "balanced_cartographic_bands_v4"
-const TOWN_VISUAL_EXTENT_TILES := 1.36
+const SCALE_HIERARCHY_MODEL := "landscape_mass_and_landmark_bands_v5"
+const TOWN_VISUAL_EXTENT_TILES := 2.85
 const HERO_FIELD_VISUAL_EXTENT_TILES := 0.64
 const HERO_TOWN_VISITOR_VISUAL_EXTENT_TILES := 0.4484
 
@@ -26,7 +26,7 @@ func _run() -> void:
 		if not bool(row.get("ok", false)):
 			_fail("Small-map visual scale row failed: %s" % row)
 			return
-	if matte_active_rows != VIEWPORT_SIZES.size():
+	if OS.get_environment("OVERWORLD_WORLD_SURFACE_CAPTURE_DIR").strip_edges() == "" and matte_active_rows != VIEWPORT_SIZES.size():
 		_fail("Small-map cartographic matte must activate for every material-gutter viewport: %s" % [small_rows])
 		return
 	var large_row := await _large_map_control(Vector2i(1920, 1080))
@@ -107,6 +107,7 @@ func _small_map_row(viewport_size: Vector2i) -> Dictionary:
 	var authority_exact := session.to_dict() == authority_before
 	var shell_rect: Rect2 = shell.get_global_rect() if shell is Control else Rect2()
 	var containment_exact := get_viewport().get_visible_rect().encloses(shell_rect)
+	await _capture_if_requested("authored_small", viewport_size)
 	shell.queue_free()
 	await get_tree().process_frame
 	return {
@@ -131,6 +132,7 @@ func _large_map_control(viewport_size: Vector2i) -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var session = ScenarioFactory.create_session(LARGE_SCENARIO_ID, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	_reveal_all(session)
 	session = SessionState.set_active_session(session)
 	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
 	add_child(shell)
@@ -151,6 +153,7 @@ func _large_map_control(viewport_size: Vector2i) -> Dictionary:
 		and tile_extent > 0.0 and tile_extent < MAX_SMALL_MAP_TILE_EXTENT \
 		and not bool(metrics.get("small_map_cartographic_matte_active", true)) \
 		and session.to_dict() == authority_before
+	await _capture_if_requested("authored_large", viewport_size)
 	shell.queue_free()
 	await get_tree().process_frame
 	return {
@@ -173,9 +176,12 @@ func _town_footprint_exact(shell: Node) -> bool:
 		var profile: Dictionary = profile_value
 		if int(profile.get("footprint_width_tiles", 0)) != 3 \
 			or int(profile.get("footprint_height_tiles", 0)) != 2 \
+			or int(profile.get("visual_footprint_width_tiles", 0)) != 3 \
+			or int(profile.get("visual_footprint_height_tiles", 0)) != 4 \
+			or String(profile.get("visual_anchor_model", "")) != "three_by_four_entry_center_bottom" \
 			or int(profile.get("blocked_footprint_cell_count", 0)) + int(profile.get("off_map_footprint_cell_count", 0)) != 5 \
 			or String(profile.get("scale_hierarchy_model", "")) != SCALE_HIERARCHY_MODEL \
-			or not is_equal_approx(float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.68) \
+			or not is_equal_approx(float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.95) \
 			or not is_equal_approx(float(profile.get("visual_sprite_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES) \
 			or String(profile.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline" \
 			or float(profile.get("sprite_silhouette_width_factor", 0.0)) < 0.010 \
@@ -250,6 +256,18 @@ func _reveal_all(session) -> void:
 		"explored_count": map_size.x * map_size.y,
 		"total_tiles": map_size.x * map_size.y,
 	}
+
+func _capture_if_requested(stem: String, viewport_size: Vector2i) -> void:
+	var capture_dir := OS.get_environment("OVERWORLD_WORLD_SURFACE_CAPTURE_DIR").strip_edges()
+	if capture_dir == "":
+		return
+	await RenderingServer.frame_post_draw
+	var absolute_dir := ProjectSettings.globalize_path(capture_dir)
+	if DirAccess.make_dir_recursive_absolute(absolute_dir) != OK:
+		return
+	var image := get_viewport().get_texture().get_image()
+	if image != null and not image.is_empty():
+		image.save_png(absolute_dir.path_join("%s_%dx%d.png" % [stem, viewport_size.x, viewport_size.y]))
 
 func _rect_from_payload(payload: Variant) -> Rect2:
 	if not (payload is Dictionary):

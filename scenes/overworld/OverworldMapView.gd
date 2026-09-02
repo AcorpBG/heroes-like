@@ -168,7 +168,7 @@ const MARKER_PLATE_RADIUS_FACTOR := 0.31
 const HERO_PLATE_RADIUS_FACTOR := 0.33
 const OBJECT_SPRITE_PLATE_RADIUS_FACTOR := 0.40
 const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
-const WORLD_OBJECT_SCALE_HIERARCHY_MODEL := "balanced_cartographic_bands_v4"
+const WORLD_OBJECT_SCALE_HIERARCHY_MODEL := "landscape_mass_and_landmark_bands_v5"
 const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.30
 const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.36
 const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.46
@@ -176,8 +176,8 @@ const OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.82
 const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.54
 const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.50
 const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.58
-const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.48
-const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.34
+const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.86
+const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.42
 const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.41
 const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_MIN_TILES := 0.54
 const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_SPAN_MIN_STEP_TILES := 0.06
@@ -190,18 +190,18 @@ const OBJECT_VISIBLE_FOOTPRINT_INSET_TILES := 0.02
 const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
 const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
 const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"
-const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.92
+const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 1.20
 const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.93
 const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.07
 const GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES := 4
 const GENERATED_DECORATIVE_BODY_OFFSET_X_TILES := 0.12
 const GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES := -0.04
 const GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES := 0.04
-const GENERATED_DECORATIVE_BODY_MASS_SMALL_EXTENT_TILES := 1.16
-const GENERATED_DECORATIVE_BODY_MASS_MEDIUM_EXTENT_TILES := 1.44
-const GENERATED_DECORATIVE_BODY_MASS_LARGE_EXTENT_TILES := 1.68
-const GENERATED_DECORATIVE_BODY_MASS_BOUNDS_MARGIN_TILES := 0.34
-const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_body_cells_sparse_placement_mass_anchors_v3"
+const GENERATED_DECORATIVE_BODY_MASS_SMALL_EXTENT_TILES := 1.52
+const GENERATED_DECORATIVE_BODY_MASS_MEDIUM_EXTENT_TILES := 1.90
+const GENERATED_DECORATIVE_BODY_MASS_LARGE_EXTENT_TILES := 2.28
+const GENERATED_DECORATIVE_BODY_MASS_BOUNDS_MARGIN_TILES := 0.52
+const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_body_cells_overlapping_landscape_mass_anchors_v4"
 const GENERATED_DECORATIVE_BIOME_BY_TERRAIN := {
 	"grass": "biome_grasslands",
 	"forest": "biome_deep_forest",
@@ -264,24 +264,26 @@ const HERO_COMMAND_PENNANT_WIDTH_FACTOR := 0.19
 const HERO_COMMAND_PENNANT_HEIGHT_FACTOR := 0.12
 const HERO_COMMAND_PENNANT_POLE_HEIGHT_FACTOR := 0.43
 const HERO_COMMAND_PENNANT_ALPHA := 0.96
-const TOWN_PRESENTATION_MODEL := "town_3x2_footprint_bottom_middle_entry"
-const TOWN_GROUNDING_MODEL := "town_sprite_settled_without_base_ellipse"
+const TOWN_PRESENTATION_MODEL := "town_3x4_visual_landmark_3x2_logical_bottom_middle_entry"
+const TOWN_GROUNDING_MODEL := "tall_town_landmark_settled_without_base_ellipse"
 const TOWN_ANCHOR_STYLE := "town_contact_cues_no_base_ellipse"
-const TOWN_DEPTH_CUE_MODEL := "town_contact_line_without_cast_shadow"
+const TOWN_DEPTH_CUE_MODEL := "tall_town_entry_ground_contact_without_cast_shadow"
 const TOWN_FOOTPRINT_CUE_MODEL := "no_visible_helper_cues_3x2_contract"
 const TOWN_ENTRY_ROLE := "bottom_middle_visit_approach"
 const TOWN_NON_ENTRY_ROLE := "blocked_non_entry_footprint"
 const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)
 const TOWN_ENTRY_OFFSET := Vector2i(1, 1)
-const TOWN_SPRITE_EXTENT_FACTOR := 0.68
+const TOWN_VISUAL_FOOTPRINT := Vector2i(3, 4)
+const TOWN_VISUAL_ANCHOR_MODEL := "three_by_four_entry_center_bottom"
+const TOWN_SPRITE_EXTENT_FACTOR := 0.95
 const TOWN_SPRITE_GROUND_CLEARANCE_TILES := 0.18
 const TOWN_ADJUNCT_RESOURCE_LAYOUT_MODEL := "compact_outward_edge_town_footprint_resource"
 const TOWN_ADJUNCT_RESOURCE_EXTENT_FACTOR := 0.64
 const TOWN_ADJUNCT_RESOURCE_VISIBLE_EXTENT_CAP_TILES := 0.56
 const TOWN_OWNER_PENNANT_MODEL := "single_pass_compact_heraldic_cloth_pennant"
-const TOWN_OWNER_PENNANT_WIDTH_FACTOR := 0.140
-const TOWN_OWNER_PENNANT_HEIGHT_FACTOR := 0.100
-const TOWN_OWNER_PENNANT_POLE_HEIGHT_FACTOR := 0.220
+const TOWN_OWNER_PENNANT_WIDTH_FACTOR := 0.052
+const TOWN_OWNER_PENNANT_HEIGHT_FACTOR := 0.040
+const TOWN_OWNER_PENNANT_POLE_HEIGHT_FACTOR := 0.128
 const TOWN_OWNER_PENNANT_LEGACY_WIDTH_FACTOR := 0.17
 const TOWN_OWNER_PENNANT_LEGACY_HEIGHT_FACTOR := 0.12
 const TOWN_OWNER_PENNANT_CLOTH_ALPHA := 0.96
@@ -385,19 +387,26 @@ const TERRAIN_GRAIN_MODEL := "single_normalized_map_space_seamless_painterly_mic
 const TERRAIN_GRAIN_SOURCE_MODEL := "original_generated_neutral_grain_mirrored_seamless_alpha"
 const TERRAIN_GRAIN_MODULATE := Color(1.0, 1.0, 1.0, 0.72)
 const TERRAIN_GRAIN_EXPECTED_SIZE := Vector2i(1024, 1024)
-const TERRAIN_DETAIL_DECAL_MODEL := "rich_biome_aware_painterly_surface_clusters_v2"
-const TERRAIN_DETAIL_DECAL_SOURCE_MODEL := "original_generated_clean_alpha_4x4_natural_cluster_atlas"
-const TERRAIN_DETAIL_DECAL_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"
+const TERRAIN_MICROTEXTURE_MODEL := "deterministic_biome_tinted_brush_strokes_v1"
+const TERRAIN_MICROTEXTURE_STROKE_COUNT := 5
+const TERRAIN_MICROTEXTURE_MIN_LENGTH_FACTOR := 0.045
+const TERRAIN_MICROTEXTURE_MAX_LENGTH_FACTOR := 0.13
+const TERRAIN_MICROTEXTURE_SHADOW_ALPHA := 0.07
+const TERRAIN_MICROTEXTURE_HIGHLIGHT_ALPHA := 0.13
+const TERRAIN_DETAIL_DECAL_MODEL := "biome_specific_painterly_landmark_clusters_v3"
+const TERRAIN_DETAIL_DECAL_SOURCE_MODEL := "built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"
+const TERRAIN_DETAIL_DECAL_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png"
 const TERRAIN_DETAIL_DECAL_ATLAS_SIZE := Vector2i(1024, 1024)
 const TERRAIN_DETAIL_DECAL_GRID_SIZE := Vector2i(4, 4)
 const TERRAIN_DETAIL_DECAL_CELL_SIZE := Vector2i(256, 256)
-const TERRAIN_DETAIL_DECAL_DENSITY_MODULUS := 2
-const TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR := 0.38
-const TERRAIN_DETAIL_DECAL_MAX_EXTENT_FACTOR := 0.52
-const TERRAIN_DETAIL_DECAL_MAX_OFFSET_X_FACTOR := 0.13
+const TERRAIN_DETAIL_DECAL_DENSITY_MODULUS := 9
+const TERRAIN_DETAIL_DECAL_ACTIVE_RESIDUES := [0]
+const TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR := 0.30
+const TERRAIN_DETAIL_DECAL_MAX_EXTENT_FACTOR := 0.48
+const TERRAIN_DETAIL_DECAL_MAX_OFFSET_X_FACTOR := 0.16
 const TERRAIN_DETAIL_DECAL_MIN_OFFSET_Y_FACTOR := -0.08
-const TERRAIN_DETAIL_DECAL_MAX_OFFSET_Y_FACTOR := 0.12
-const TERRAIN_DETAIL_DECAL_MODULATE := Color(0.96, 0.98, 0.92, 0.88)
+const TERRAIN_DETAIL_DECAL_MAX_OFFSET_Y_FACTOR := 0.14
+const TERRAIN_DETAIL_DECAL_MODULATE := Color(0.96, 0.98, 0.92, 0.74)
 const TERRAIN_AMBIENT_MODEL := "deterministic_sparse_explored_tile_ambient_life"
 const TERRAIN_AMBIENT_DRAW_ORDER := ["terrain_and_roads", "ambient_life", "fog_and_objects", "routes_and_selection", "vfx", "frame_and_ui"]
 const TERRAIN_AMBIENT_PHASE_SPEED := 0.38
@@ -1947,7 +1956,31 @@ func _draw_tile_terrain_surface(tile: Vector2i, rect: Rect2) -> void:
 		var base_color: Color = _terrain_color(terrain, "base_color", TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"]))
 		_canvas_draw_rect(rect, base_color, true)
 		_draw_authored_terrain_pattern(tile, rect, terrain, true)
+	_draw_painterly_terrain_microtexture(tile, rect, terrain)
 	_draw_terrain_transitions(tile, rect, terrain)
+
+func _draw_painterly_terrain_microtexture(tile: Vector2i, rect: Rect2, terrain: String) -> void:
+	var terrain_group := _terrain_group(terrain)
+	if terrain_group == "water" or rect.size.x <= 0.0 or rect.size.y <= 0.0:
+		return
+	var detail_color: Color = _terrain_color(terrain, "detail_color", Color(0.70, 0.68, 0.48, 1.0))
+	var extent := minf(rect.size.x, rect.size.y)
+	var line_width := maxf(0.7, extent * 0.009)
+	for stroke_index in range(TERRAIN_MICROTEXTURE_STROKE_COUNT):
+		var key := "%d:%d:%s:%d" % [tile.x, tile.y, terrain, stroke_index]
+		var start_factor := Vector2(
+			lerpf(0.10, 0.82, _stable_unit_fraction("micro_x:%s" % key)),
+			lerpf(0.14, 0.86, _stable_unit_fraction("micro_y:%s" % key))
+		)
+		var length_factor := lerpf(TERRAIN_MICROTEXTURE_MIN_LENGTH_FACTOR, TERRAIN_MICROTEXTURE_MAX_LENGTH_FACTOR, _stable_unit_fraction("micro_length:%s" % key))
+		var angle := lerpf(-0.72, 0.38, _stable_unit_fraction("micro_angle:%s" % key))
+		var direction := Vector2(cos(angle), sin(angle))
+		var start := rect.position + rect.size * start_factor
+		var finish := start + direction * extent * length_factor
+		var shadow_color := Color(0.025, 0.035, 0.025, TERRAIN_MICROTEXTURE_SHADOW_ALPHA)
+		var highlight_color := Color(detail_color.r, detail_color.g, detail_color.b, TERRAIN_MICROTEXTURE_HIGHLIGHT_ALPHA)
+		_canvas_draw_line(start + Vector2(0.0, line_width), finish + Vector2(0.0, line_width), shadow_color, line_width + 0.5, true)
+		_canvas_draw_line(start, finish, highlight_color, line_width, true)
 
 func _draw_tile_state_overlay(tile: Vector2i, rect: Rect2) -> void:
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
@@ -2316,17 +2349,17 @@ func _terrain_grain_overlay_payload(explored: bool) -> Dictionary:
 func _terrain_detail_decal_cells_for_group(terrain_group: String) -> Array:
 	match terrain_group:
 		"grasslands":
-			return [0, 1, 6, 8, 10, 11, 12, 15]
+			return [0, 4, 8, 12]
 		"forest":
-			return [3, 4, 7, 9, 13, 14]
+			return [1, 5, 9, 13]
 		"mire":
-			return [5, 8, 10, 15]
+			return [3, 7, 11, 15]
 		"rough", "rock", "underground":
-			return [2, 3, 4, 9, 13, 14]
+			return [2, 6, 10, 14]
 		"dirt", "sand":
-			return [2, 3, 7, 13]
+			return [2, 6, 10, 14]
 		"ash":
-			return [3, 7, 10, 13]
+			return [2, 6, 10, 14]
 	return []
 
 func _terrain_detail_decal_payload(tile: Vector2i, rect: Rect2) -> Dictionary:
@@ -2335,10 +2368,12 @@ func _terrain_detail_decal_payload(tile: Vector2i, rect: Rect2) -> Dictionary:
 	var texture = _terrain_art_texture(TERRAIN_DETAIL_DECAL_TEXTURE_PATH)
 	var texture_loaded := texture is Texture2D and Vector2i(texture.get_size()) == TERRAIN_DETAIL_DECAL_ATLAS_SIZE
 	var cell_ids := _terrain_detail_decal_cells_for_group(terrain_group)
-	var seed := absi((tile.x * 101) + (tile.y * 211) + (terrain.hash() * 17))
+	# Hash the complete coordinate key instead of reducing a linear x/y expression.
+	# The former expression made the sparse accents land on a visible diagonal lattice.
+	var seed := absi(("terrain_detail:%d:%d:%s" % [tile.x, tile.y, terrain]).hash())
 	var density_residue := posmod(seed, TERRAIN_DETAIL_DECAL_DENSITY_MODULUS)
 	var road_excluded := not _road_tile_payload(tile).is_empty()
-	var eligible := texture_loaded and not terrain.is_empty() and not cell_ids.is_empty() and not road_excluded and density_residue == 0
+	var eligible := texture_loaded and not terrain.is_empty() and not cell_ids.is_empty() and not road_excluded and density_residue in TERRAIN_DETAIL_DECAL_ACTIVE_RESIDUES
 	var cell_id := int(cell_ids[posmod(floori(float(seed) / float(TERRAIN_DETAIL_DECAL_DENSITY_MODULUS)), cell_ids.size())]) if eligible else -1
 	var extent_factor := lerpf(
 		TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR,
@@ -2375,6 +2410,7 @@ func _terrain_detail_decal_payload(tile: Vector2i, rect: Rect2) -> Dictionary:
 		"extent_factor": extent_factor,
 		"offset_factor": _vector2_payload(offset_factor),
 		"density_modulus": TERRAIN_DETAIL_DECAL_DENSITY_MODULUS,
+		"active_density_residues": TERRAIN_DETAIL_DECAL_ACTIVE_RESIDUES.duplicate(),
 		"density_residue": density_residue,
 		"road_excluded": road_excluded,
 		"water_excluded": terrain_group == "water",
@@ -3471,9 +3507,9 @@ func _draw_tile_state_icon(tile: Vector2i, rect: Rect2) -> void:
 		if not _draw_standalone_map_object_sprite(standalone_map_object, object_rect, remembered, tile):
 			_draw_standalone_map_object_marker(standalone_map_object, object_rect, remembered, tile)
 	if _has_town_at(tile):
-		var footprint_rect := _town_footprint_rect_for_entry(tile)
-		if not _draw_town_sprite(footprint_rect, rect, remembered, tile):
-			_draw_town_marker(footprint_rect, rect, _town_color(tile), remembered, tile)
+		var visual_rect := _town_visual_rect_for_entry(tile)
+		if not _draw_town_sprite(visual_rect, rect, remembered, tile):
+			_draw_town_marker(visual_rect, rect, _town_color(tile), remembered, tile)
 	var resource_node := _resource_node_at(tile)
 	if not resource_node.is_empty():
 		var resource_rect := _resource_draw_rect(resource_node, rect, tile)
@@ -4546,14 +4582,14 @@ func _draw_town_footprint_underlay(_tile: Vector2i, _rect: Rect2) -> void:
 
 func _draw_town_grounding_anchor(rect: Rect2, remembered: bool, tile: Vector2i) -> Dictionary:
 	var extent := minf(rect.size.x, rect.size.y)
-	var center := rect.position + rect.size * Vector2(0.50, 0.76)
-	var radii := Vector2(rect.size.x * 0.30, maxf(2.0, rect.size.y * 0.055))
+	var center := rect.position + rect.size * Vector2(0.50, 0.958)
+	var radii := Vector2(rect.size.x * 0.25, maxf(2.0, rect.size.y * 0.030))
 	_draw_town_ground_scuffs(tile, center, radii, remembered, extent)
 	return {
 		"center": center,
 		"radii": radii,
 		"extent": extent,
-		"footprint": TOWN_PRESENTATION_FOOTPRINT,
+		"footprint": TOWN_VISUAL_FOOTPRINT,
 	}
 
 func _draw_town_ground_scuffs(tile: Vector2i, center: Vector2, radii: Vector2, remembered: bool, extent: float) -> void:
@@ -5781,7 +5817,11 @@ func _sprite_extent_fraction(profile: Dictionary, footprint: Vector2i) -> float:
 	if scale_class in ["durable_structure", "waypoint", "landmark", "terrain_blocker"]:
 		base += float(maxi(footprint.x - 1, 0)) * 0.06
 		base += float(maxi(footprint.y - 1, 0)) * 0.03
-	return clampf(base, OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES, OBJECT_LANDMARK_VISIBLE_EXTENT_TILES)
+	return clampf(
+		base,
+		OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES,
+		maxf(OBJECT_LANDMARK_VISIBLE_EXTENT_TILES, OBJECT_BLOCKER_VISIBLE_EXTENT_TILES)
+	)
 
 func _semantic_visual_scale_class(profile: Dictionary) -> String:
 	var family := String(profile.get("family", "pickup")).strip_edges()
@@ -6391,7 +6431,7 @@ func validation_town_sprite_scale_payload(asset_id: String = "town_faction_ember
 	if not (texture is Texture2D):
 		return {}
 	var single_tile_extent := 100.0
-	var footprint_rect := Rect2(Vector2.ZERO, Vector2(TOWN_PRESENTATION_FOOTPRINT) * single_tile_extent)
+	var footprint_rect := Rect2(Vector2.ZERO, Vector2(TOWN_VISUAL_FOOTPRINT) * single_tile_extent)
 	var cache_size_before := _object_texture_visible_regions.size()
 	var first_region := _object_texture_visible_region(asset_id, texture)
 	var cache_size_after_first := _object_texture_visible_regions.size()
@@ -6408,7 +6448,10 @@ func validation_town_sprite_scale_payload(asset_id: String = "town_faction_ember
 		"asset_id": asset_id,
 		"family": "town",
 		"scale_hierarchy_model": WORLD_OBJECT_SCALE_HIERARCHY_MODEL,
-		"footprint": {"width": TOWN_PRESENTATION_FOOTPRINT.x, "height": TOWN_PRESENTATION_FOOTPRINT.y},
+		"footprint": {"width": TOWN_VISUAL_FOOTPRINT.x, "height": TOWN_VISUAL_FOOTPRINT.y},
+		"visual_footprint": {"width": TOWN_VISUAL_FOOTPRINT.x, "height": TOWN_VISUAL_FOOTPRINT.y},
+		"logical_footprint": {"width": TOWN_PRESENTATION_FOOTPRINT.x, "height": TOWN_PRESENTATION_FOOTPRINT.y},
+		"visual_anchor_model": TOWN_VISUAL_ANCHOR_MODEL,
 		"visible_scale_model": String(draw_payload.get("visible_scale_model", "")),
 		"uses_painted_bounds": bool(first_region.get("uses_painted_bounds", false)),
 		"source_aspect": float(draw_payload.get("source_aspect", 0.0)),
@@ -7508,6 +7551,9 @@ func _town_presentation_payload_for_town(town: Dictionary, include_cells: bool) 
 		"presentation_model": TOWN_PRESENTATION_MODEL,
 		"footprint_width_tiles": TOWN_PRESENTATION_FOOTPRINT.x,
 		"footprint_height_tiles": TOWN_PRESENTATION_FOOTPRINT.y,
+		"visual_footprint_width_tiles": TOWN_VISUAL_FOOTPRINT.x,
+		"visual_footprint_height_tiles": TOWN_VISUAL_FOOTPRINT.y,
+		"visual_anchor_model": TOWN_VISUAL_ANCHOR_MODEL,
 		"footprint_cue_model": TOWN_FOOTPRINT_CUE_MODEL,
 		"base_ellipse": false,
 		"filled_underlay": false,
@@ -7535,7 +7581,7 @@ func _town_presentation_payload_for_town(town: Dictionary, include_cells: bool) 
 		"uses_faction_sprite": faction_id != "" and String(_town_faction_asset_ids.get(faction_id, "")) == sprite_asset_id,
 		"uses_default_sprite": sprite_asset_id == _town_default_asset_id,
 		"visual_sprite_extent_fraction_of_footprint": TOWN_SPRITE_EXTENT_FACTOR,
-		"visual_sprite_extent_tiles": TOWN_SPRITE_EXTENT_FACTOR * float(mini(TOWN_PRESENTATION_FOOTPRINT.x, TOWN_PRESENTATION_FOOTPRINT.y)),
+		"visual_sprite_extent_tiles": TOWN_SPRITE_EXTENT_FACTOR * float(mini(TOWN_VISUAL_FOOTPRINT.x, TOWN_VISUAL_FOOTPRINT.y)),
 		"owner_pennant_model": TOWN_OWNER_PENNANT_MODEL,
 		"owner_pennant_single_pass": true,
 		"owner_pennant_width_factor": TOWN_OWNER_PENNANT_WIDTH_FACTOR,
@@ -7623,6 +7669,12 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 				"hidden_by_unexplored_shroud": true,
 			},
 			"terrain_grain_overlay": _terrain_grain_overlay_payload(false),
+			"terrain_microtexture": {
+				"model": TERRAIN_MICROTEXTURE_MODEL,
+				"drawn": false,
+				"hidden_by_unexplored_shroud": true,
+				"terrain_identity_sampled": false,
+			},
 			"terrain_detail_decal": {
 				"model": TERRAIN_DETAIL_DECAL_MODEL,
 				"drawn": false,
@@ -7710,6 +7762,20 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"terrain_macro_lighting": terrain_macro_lighting,
 		"water_shoreline_contour": water_shoreline_contour,
 		"terrain_grain_overlay": _terrain_grain_overlay_payload(true),
+		"terrain_microtexture": {
+			"model": TERRAIN_MICROTEXTURE_MODEL,
+			"drawn": _terrain_group(terrain) != "water",
+			"stroke_count": TERRAIN_MICROTEXTURE_STROKE_COUNT if _terrain_group(terrain) != "water" else 0,
+			"min_length_factor": TERRAIN_MICROTEXTURE_MIN_LENGTH_FACTOR,
+			"max_length_factor": TERRAIN_MICROTEXTURE_MAX_LENGTH_FACTOR,
+			"shadow_alpha": TERRAIN_MICROTEXTURE_SHADOW_ALPHA,
+			"highlight_alpha": TERRAIN_MICROTEXTURE_HIGHLIGHT_ALPHA,
+			"interactive": false,
+			"collision": false,
+			"variation_basis": "tile_coordinate_terrain_id_and_stroke_index_only",
+			"draw_order": "after_base_tile_before_terrain_transitions_grain_decals_roads_objects_and_fog",
+			"hidden_by_unexplored_shroud": true,
+		},
 		"terrain_detail_decal": _terrain_detail_decal_payload(tile, Rect2(Vector2.ZERO, Vector2.ONE)),
 		"water_surface_ripples": _water_surface_ripple_payload(tile, Rect2(Vector2.ZERO, Vector2.ONE)),
 		"uses_sampled_texture": false,
@@ -10943,6 +11009,8 @@ func _town_object_profile() -> Dictionary:
 		"id": "default_town_world_object",
 		"family": "town",
 		"footprint": TOWN_PRESENTATION_FOOTPRINT,
+		"visual_footprint": TOWN_VISUAL_FOOTPRINT,
+		"visual_anchor_model": TOWN_VISUAL_ANCHOR_MODEL,
 		"presentation_model": TOWN_PRESENTATION_MODEL,
 		"entry_role": TOWN_ENTRY_ROLE,
 		"entry_offset": {"x": TOWN_ENTRY_OFFSET.x, "y": TOWN_ENTRY_OFFSET.y},
@@ -11116,6 +11184,16 @@ func _town_entry_tile(town: Dictionary) -> Vector2i:
 
 func _town_footprint_origin_for_entry(entry: Vector2i) -> Vector2i:
 	return entry - TOWN_ENTRY_OFFSET
+
+func _town_visual_rect_for_entry(entry: Vector2i) -> Rect2:
+	var entry_rect := _tile_rect(_board_rect(), entry)
+	if entry_rect.size.x <= 0.0 or entry_rect.size.y <= 0.0:
+		return entry_rect
+	var visual_size := entry_rect.size * Vector2(TOWN_VISUAL_FOOTPRINT)
+	return Rect2(
+		Vector2(entry_rect.get_center().x - visual_size.x * 0.5, entry_rect.end.y - visual_size.y),
+		visual_size
+	)
 
 func _town_footprint_rect_for_entry(entry: Vector2i) -> Rect2:
 	var cells := _town_in_bounds_footprint_cells_for_entry(entry)

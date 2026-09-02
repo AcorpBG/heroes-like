@@ -4,8 +4,8 @@ const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRule
 const REPORT_ID := "OVERWORLD_GENERATED_LARGE_TOWN_SCALE_RUNTIME_REPORT"
 const GENERATED_LARGE_SEED := "town-explicit-save-surface-large-10184"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
-const TOWN_VISUAL_EXTENT_TILES := 1.36
-const TOWN_EXTENT_FRACTION := 0.68
+const TOWN_VISUAL_EXTENT_TILES := 2.85
+const TOWN_EXTENT_FRACTION := 0.95
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -101,6 +101,9 @@ func _viewport_row(session, shell, viewport_size: Vector2i, authority_before: Di
 		footprint_exact = footprint_exact \
 			and int(profile.get("footprint_width_tiles", 0)) == 3 \
 			and int(profile.get("footprint_height_tiles", 0)) == 2 \
+			and int(profile.get("visual_footprint_width_tiles", 0)) == 3 \
+			and int(profile.get("visual_footprint_height_tiles", 0)) == 4 \
+			and String(profile.get("visual_anchor_model", "")) == "three_by_four_entry_center_bottom" \
 			and int(profile.get("blocked_footprint_cell_count", 0)) + int(profile.get("off_map_footprint_cell_count", 0)) == 5 \
 			and bool(profile.get("entry_is_visit_tile", false)) \
 			and bool(profile.get("non_entry_tiles_blocked", false)) \
@@ -164,10 +167,13 @@ func _viewport_row(session, shell, viewport_size: Vector2i, authority_before: Di
 
 func _scale_payload_exact(payload: Dictionary) -> bool:
 	return not payload.is_empty() \
+		and payload.get("visual_footprint", {}) == {"width": 3, "height": 4} \
+		and payload.get("logical_footprint", {}) == {"width": 3, "height": 2} \
+		and String(payload.get("visual_anchor_model", "")) == "three_by_four_entry_center_bottom" \
 		and is_equal_approx(float(payload.get("visible_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES) \
 		and is_equal_approx(float(payload.get("visible_extent_fraction_of_footprint_depth", 0.0)), TOWN_EXTENT_FRACTION) \
-		and is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 2.125) \
-		and is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 1.7) \
+		and is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 4.453125) \
+		and is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 3.5625) \
 		and bool(payload.get("painted_bottom_grounded_exact", false)) \
 		and bool(payload.get("sprite_contained_in_footprint", false)) \
 		and String(payload.get("sprite_silhouette_model", "")) == "eight_direction_alpha_silhouette_outline" \

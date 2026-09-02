@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Moved enemy raid combat detection is fixed: authoritative raid movement now invalidates the shared spatial lookup, and a primed-cache runtime regression proves entering the raid's new visible tile opens the exact battle.",
+  "currentNotes": "Completed the owner-requested Overworld visual overhaul: irregular biome surface detail and micro-brush texture are live, blockers render at actual landscape-mass scale, and towns use a taller 3x4 visual envelope while retaining the exact 3x2 logical footprint.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "bugfix-overworld-moved-raid-combat-10184",
-  "currentSliceId": "bugfix-overworld-moved-raid-combat-10184",
-  "currentSliceNotes": "Completed O(1) spatial lookup invalidation on live raid coordinate mutation. The focused regression proves old-tile eviction, new-tile lookup, and exact battle contact after three movement steps; core systems smoke and repository validation pass.",
+  "currentSlice": "ux-overworld-world-surface-town-landmarks-10184",
+  "currentSliceId": "ux-overworld-world-surface-town-landmarks-10184",
+  "currentSliceNotes": "Completed original terrain-atlas ingestion, irregular biome surface composition, real 0.86-tile authored blockers, overlapping generated blocker masses, and 3x4 visual-only town landmarks. Focused/broad runtime, generated Large geometry, editor import, repository, Linux package, and fresh-Wine Windows package/generated-flow gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Moved Enemy Raid Combat Detection",
-  "currentSliceUpdatedAt": "2026-09-02T17:04:38Z",
+  "currentSliceTitle": "Overworld World Surface And 3x4 Town Landmarks",
+  "currentSliceUpdatedAt": "2026-09-02T20:24:55Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21784,7 +21784,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved release-bound implementation slice from current playtest evidence; do not broaden this completed cache fix into AI strategy, balance, content, native RMG, or packaging.",
+  "nextActionGuardrailNote": "Select the next tracker-approved release-bound implementation slice from current playtest evidence; preserve the completed Overworld terrain, blocker, 3x4 town, pathing, save, and cross-platform package contracts without broadening them into topology, balance, or Native RMG changes.",
   "notes": "The seven-school signature battle-VFX slice is complete. The broader user goal to expand production content and distinctive art remains active for future selected slices.",
   "plannedSlices": [
     {
@@ -107957,6 +107957,59 @@
         "release_ready_claimed": false
       },
       "remainingWork": "No work remains in this bounded defect slice; broader playtest coverage, packaging, signing, publication, whole-game validation, and release readiness remain separate."
+    },
+    {
+      "id": "ux-overworld-world-surface-town-landmarks-10184",
+      "title": "Overworld World Surface And 3x4 Town Landmarks",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Make the live Overworld read as a cohesive painted strategy-game world through richer terrain surface composition, grounded blocker masses, and tall 3x4 visual town landmarks without changing map or interaction authority.",
+      "implementationTargets": [
+        "art/overworld/runtime/terrain_tiles/detail",
+        "art/overworld/source/generated/terrain",
+        "art/overworld/manifest.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Inspected dual-resolution authored and generated captures show cohesive varied terrain and blockers grounded as landscape masses rather than isolated tokens",
+        "All faction towns render through an exact tall 3x4 visual contract while logical visit/body tiles, encounter priority, pathing, selection, fog, session, and save authority remain exact",
+        "Focused runtime geometry and interaction tests, broad Overworld validation, repository validation, clean parsing, and Linux/Windows package startup pass"
+      ],
+      "nonGoals": [
+        "Terrain topology, map-generation placement, Native RMG, AI, balance, content, or save-schema changes",
+        "Copied Heroes assets, hardware certification, signing, publication, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-02T17:15:00Z",
+      "startedAt": "2026-09-02T17:15:00Z",
+      "updatedAt": "2026-09-02T20:24:55Z",
+      "completedAt": "2026-09-02T20:24:55Z",
+      "notes": "Completed from direct owner feedback, amended from the initial 6x6 request to the owner's clarified 3x4 visual landmark envelope. The renderer now owns a generated original terrain-detail atlas, deterministic micro-brush texture, irregular sparse biome accents, actual 0.86-tile authored blocker scale, 1.20/1.52/1.90/2.28-tile generated blocker masses, and 2.85-tile towns inside the 3x4 visual envelope. The 3x2 logical town body and exact entry, blocking, routing, selection, fog, session, and save authority remain unchanged. Inspected captures and focused/broad runtime, generated Large, core, editor, repository, Linux package, and Windows/Wine generated-flow gates pass. The pre-existing exit-only GLES texture RID warning remains separate.",
+      "metrics": {
+        "terrain_detail_atlas_cells": 16,
+        "terrain_detail_density_modulus": 9,
+        "authored_blocker_extent_tiles": 0.86,
+        "generated_blocker_mass_extent_tiles": [1.2, 1.52, 1.9, 2.28],
+        "town_visual_footprint": "3x4",
+        "town_logical_footprint": "3x2",
+        "town_visible_extent_tiles": 2.85,
+        "authored_town_identity_count": 26,
+        "generated_large_map_size": "108x108",
+        "linux_pck_size_bytes": 238966956,
+        "windows_pck_size_bytes": 238966956,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "No work remains in this bounded visual slice. Renderer shutdown cleanup, broader production completion, hardware certification, signing, publication, and release readiness remain separate."
     }
   ],
   "project": "heroes-like",
@@ -107966,8 +108019,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The moved-raid combat miss is closed in focused and broader runtime validation; physical Windows certification and broader release completion remain open.",
-  "remainingWork": "Select the next coherent release-bound implementation slice; physical Windows certification, signing, publication, whole-game validation, and release readiness remain open.",
+  "remainingGap": "",
+  "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -108499,9 +108552,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed Six Marchland Warworks as one coherent six-unit, six-building, six-map, twelve-master production-content batch with consolidated validation.",
+  "summary": "Implementing the owner-selected Overworld world-surface, blocker-composition, and 6x6 tall-town visual overhaul.",
   "taskId": "10184",
-  "updatedAt": "2026-09-02T17:04:38Z",
+  "updatedAt": "2026-09-02T17:15:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

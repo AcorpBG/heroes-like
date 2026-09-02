@@ -544,7 +544,7 @@ func _assert_terrain_ambient_life_contract(map_node: Control, session) -> bool:
 		and bool(normal_after.get("animating", false))
 		and not bool(normal_after.get("reduced_motion", true))
 		and not bool(normal_after.get("high_contrast", true))
-		and int(normal_after.get("density_modulus", 0)) == 4
+		and int(normal_after.get("density_modulus", 0)) == 9
 		and int(normal_after.get("entry_count", 0)) > 0
 		and bool(normal_after.get("all_contained", false))
 		and bool(normal_after.get("all_explored", false))
@@ -4338,10 +4338,10 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	if (
-		String(decoration.get("semantic_scale_class", "")) != "ground_detail" or not is_equal_approx(float(decoration.get("visible_extent_tiles", 0.0)), 0.34)
+		String(decoration.get("semantic_scale_class", "")) != "ground_detail" or not is_equal_approx(float(decoration.get("visible_extent_tiles", 0.0)), 0.42)
 		or String(generic_object.get("semantic_scale_class", "")) != "map_object" or not is_equal_approx(float(generic_object.get("visible_extent_tiles", 0.0)), 0.41)
 		or String(encounter.get("semantic_scale_class", "")) != "encounter" or not is_equal_approx(float(encounter.get("visible_extent_tiles", 0.0)), 0.46)
-		or String(blocker.get("semantic_scale_class", "")) != "terrain_blocker" or not is_equal_approx(float(blocker.get("visible_extent_tiles", 0.0)), 0.48)
+		or String(blocker.get("semantic_scale_class", "")) != "terrain_blocker" or not is_equal_approx(float(blocker.get("visible_extent_tiles", 0.0)), 0.86)
 		or String(waypoint.get("semantic_scale_class", "")) != "waypoint" or not is_equal_approx(float(waypoint.get("visible_extent_tiles", 0.0)), 0.50)
 	):
 		push_error("Overworld smoke: map-object middle ranks no longer form one world-scale ladder. decoration=%s generic=%s encounter=%s blocker=%s waypoint=%s" % [decoration, generic_object, encounter, blocker, waypoint])
@@ -4402,10 +4402,12 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	var town_center: Dictionary = town.get("sprite_center_tiles", {})
-	if not is_equal_approx(float(town.get("visible_extent_tiles", 0.0)), 1.36) \
-		or not is_equal_approx(float(town.get("visible_extent_fraction_of_footprint_depth", 0.0)), 0.68) \
-		or not is_equal_approx(float(town.get("town_to_hero_extent_ratio", 0.0)), 2.125) \
-		or not is_equal_approx(float(town.get("town_to_largest_other_object_extent_ratio", 0.0)), 1.7) \
+	if not is_equal_approx(float(town.get("visible_extent_tiles", 0.0)), 2.85) \
+		or not is_equal_approx(float(town.get("visible_extent_fraction_of_footprint_depth", 0.0)), 0.95) \
+		or not is_equal_approx(float(town.get("town_to_hero_extent_ratio", 0.0)), 4.453125) \
+		or not is_equal_approx(float(town.get("town_to_largest_other_object_extent_ratio", 0.0)), 3.5625) \
+		or town.get("visual_footprint", {}) != {"width": 3, "height": 4} \
+		or town.get("logical_footprint", {}) != {"width": 3, "height": 2} \
 		or not is_equal_approx(float(town.get("painted_bottom_clearance_tiles", 0.0)), 0.18) \
 		or not bool(town.get("painted_bottom_grounded_exact", false)) \
 		or not bool(town.get("sprite_contained_in_footprint", false)) \
@@ -4414,7 +4416,7 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		or not bool(town.get("sprite_silhouette_contained_in_footprint", false)) \
 		or not is_equal_approx(float(town_center.get("x", 0.0)), 1.5) \
 		or float(town_center.get("y", 0.0)) <= 0.0 \
-		or float(town_center.get("y", 0.0)) >= 2.0:
+		or float(town_center.get("y", 0.0)) >= 4.0:
 		push_error("Overworld smoke: town art no longer owns the bounded top of the shared world-scale hierarchy. payload=%s" % town)
 		get_tree().quit(1)
 		return false
@@ -4451,16 +4453,14 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		return false
 	if not (
 		float(artifact.get("visible_extent_tiles", 0.0))
-		< float(decoration.get("visible_extent_tiles", 0.0))
-		and float(decoration.get("visible_extent_tiles", 0.0))
 		< float(pickup.get("visible_extent_tiles", 0.0))
 		and float(pickup.get("visible_extent_tiles", 0.0))
 		< float(generic_object.get("visible_extent_tiles", 0.0))
 		and float(generic_object.get("visible_extent_tiles", 0.0))
+		< float(decoration.get("visible_extent_tiles", 0.0))
+		and float(decoration.get("visible_extent_tiles", 0.0))
 		< float(encounter.get("visible_extent_tiles", 0.0))
 		and float(encounter.get("visible_extent_tiles", 0.0))
-		< float(blocker.get("visible_extent_tiles", 0.0))
-		and float(blocker.get("visible_extent_tiles", 0.0))
 		< float(waypoint.get("visible_extent_tiles", 0.0))
 		and float(waypoint.get("visible_extent_tiles", 0.0))
 		< float(service.get("visible_extent_tiles", 0.0))
@@ -4475,6 +4475,8 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		and float(multi_tile_service.get("visible_extent_tiles", 0.0))
 		< float(large_service.get("visible_extent_tiles", 0.0))
 		and float(large_service.get("visible_extent_tiles", 0.0))
+		< float(blocker.get("visible_extent_tiles", 0.0))
+		and float(blocker.get("visible_extent_tiles", 0.0))
 		< float(town.get("visible_extent_tiles", 0.0))
 	):
 		push_error("Overworld smoke: prop-to-actor-footprint world-scale ordering is incoherent. artifact=%s decoration=%s pickup=%s generic=%s blocker=%s encounter=%s waypoint=%s service=%s hero=%s objective=%s wide=%s multi=%s large=%s town=%s" % [artifact, decoration, pickup, generic_object, blocker, encounter, waypoint, service, hero, objective, wide_service, multi_tile_service, large_service, town])

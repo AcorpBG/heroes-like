@@ -1,0 +1,26 @@
+{
+  "schema": "overworld_world_surface_source_manifest_v1",
+  "generation_mode": "built_in_image_gen",
+  "generated_original": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b45e37d4-786b-4269-891f-202c6cf0c382.png",
+  "source": {
+    "path": "res://art/overworld/source/generated/terrain/world_surface_v3/terrain_detail_decal_atlas_world_v3_source.png",
+    "size": [1254, 1254],
+    "sha256": "828cc41a1256283b2c4fd6dd7ecf3c4efa161a9a2f1dd442d010a39e3733e597"
+  },
+  "runtime": {
+    "path": "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png",
+    "size": [1024, 1024],
+    "grid": [4, 4],
+    "cell_size": [256, 256],
+    "sha256": "5fb4c87e5c80d5f03755028ef3aefd97ac178bf6952e5c018fd585bfa146c097",
+    "derivation": "Lanczos resize to exact atlas size, alpha cleanup, and exact 16-pixel transparent cell gutters"
+  },
+  "cell_families": {
+    "meadow": [0, 4, 8, 12],
+    "forest": [1, 5, 9, 13],
+    "highland": [2, 6, 10, 14],
+    "mire": [3, 7, 11, 15]
+  },
+  "prompt_summary": "A transparent exact 4x4 atlas of sixteen isolated hand-painted meadow, forest, highland, and mire ground-detail clusters for a polished top-down fantasy strategy overworld, with generous gutters and small-scale-readable silhouettes.",
+  "originality_policy": "Original generated fantasy landscape detail; no copied names, assets, maps, compositions, UI, or protected visual expression."
+}
