@@ -2618,6 +2618,13 @@ static func _spatial_lookup_index(session: SessionStateStoreScript.SessionData) 
 	_spatial_lookup_signatures[session_id] = signature
 	return index
 
+static func invalidate_spatial_lookup(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	var session_id := String(session.session_id)
+	_spatial_lookup_indexes.erase(session_id)
+	_spatial_lookup_signatures.erase(session_id)
+
 static func _spatial_lookup_signature(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null:
 		return ""
