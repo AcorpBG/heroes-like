@@ -3,12 +3,12 @@ extends Node
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 const TownStageViewScript = preload("res://scenes/town/TownStageView.gd")
 const TOWN_SCENIC_BACKDROP_PATHS := {
-	"faction_embercourt": "res://art/towns/runtime/backdrops/town_embercourt.png",
-	"faction_mireclaw": "res://art/towns/runtime/backdrops/town_mireclaw.png",
-	"faction_sunvault": "res://art/towns/runtime/backdrops/town_sunvault.png",
-	"faction_thornwake": "res://art/towns/runtime/backdrops/town_thornwake.png",
-	"faction_brasshollow": "res://art/towns/runtime/backdrops/town_brasshollow.png",
-	"faction_veilmourn": "res://art/towns/runtime/backdrops/town_veilmourn.png",
+	"faction_embercourt": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_village.png",
+	"faction_mireclaw": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_village.png",
+	"faction_sunvault": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_village.png",
+	"faction_thornwake": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_village.png",
+	"faction_brasshollow": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_village.png",
+	"faction_veilmourn": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_village.png",
 }
 const BATTLE_TERRAIN_AMBIENT_EXPECTED := {
 	"plains": {"profile_key": "grass", "profile_id": "sunlit_pollen", "kind": "pollen", "count": 14},
@@ -254,6 +254,9 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 	var live_summary: Dictionary = live_board.call("validation_scenic_backdrop_summary")
 	if String(live_summary.get("faction_id", "")) != "faction_embercourt" \
 			or String(live_summary.get("mapped_path", "")) != String(TOWN_SCENIC_BACKDROP_PATHS.get("faction_embercourt", "")) \
+			or String(live_summary.get("selection_scope", "")) != "faction_development_scene" \
+			or String(live_summary.get("development_stage", "")) != "village" \
+			or String(live_summary.get("development_model", "")) != "authoritative_seamless_faction_settlement_stages" \
 			or not bool(live_summary.get("texture_loaded", false)) \
 			or String(live_summary.get("rendering_mode", "")) != "cover_crop_scenic_backdrop" \
 			or bool(live_summary.get("procedural_fallback", true)):
@@ -317,6 +320,9 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 			var watch_summary: Dictionary = fixture.validation_command_watch_summary()
 			if String(summary.get("faction_id", "")) != faction_id \
 					or String(summary.get("mapped_path", "")) != String(TOWN_SCENIC_BACKDROP_PATHS.get(faction_id, "")) \
+					or String(summary.get("selection_scope", "")) != "faction_development_scene" \
+					or String(summary.get("development_stage", "")) != "village" \
+					or String(summary.get("development_model", "")) != "authoritative_seamless_faction_settlement_stages" \
 					or not bool(summary.get("texture_loaded", false)) \
 					or summary.get("texture_size", Vector2.ZERO) != Vector2(1600.0, 900.0) \
 					or String(summary.get("rendering_mode", "")) != "cover_crop_scenic_backdrop" \

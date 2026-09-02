@@ -267,6 +267,7 @@ TOWN_SCENE_PATH = ROOT / "scenes" / "town" / "TownShell.tscn"
 TOWN_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownShell.gd"
 TOWN_STAGE_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownStageView.gd"
 TOWN_VFX_MANIFEST_PATH = CONTENT_DIR / "town_vfx_manifest.json"
+TOWN_DEVELOPMENT_SCENE_MANIFEST_PATH = CONTENT_DIR / "town_development_scene_manifest.json"
 COMPLETE_TOWN_BACKDROP_REPORT_SCRIPT_PATH = ROOT / "tests" / "complete_town_backdrop_runtime_report.gd"
 COMPLETE_TOWN_BACKDROP_REPORT_SCENE_PATH = ROOT / "tests" / "complete_town_backdrop_runtime_report.tscn"
 TOWN_BUILDING_SKYLINE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_building_skyline_progression_report.gd"
@@ -30632,48 +30633,85 @@ def validate_town_faction_progression(errors: list[str]) -> None:
 def validate_town_building_skyline_progression(errors: list[str]) -> None:
     required_paths = (
         TOWN_STAGE_SCRIPT_PATH,
+        TOWN_DEVELOPMENT_SCENE_MANIFEST_PATH,
         TOWN_BUILDING_SKYLINE_REPORT_SCRIPT_PATH,
         TOWN_BUILDING_SKYLINE_REPORT_SCENE_PATH,
     )
     for path in required_paths:
-        ensure(path.exists(), errors, f"Missing Town building skyline owner: {path.relative_to(ROOT)}")
+        ensure(path.exists(), errors, f"Missing seamless Town development-scene owner: {path.relative_to(ROOT)}")
     if not all(path.exists() for path in required_paths):
         return
 
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
-        'const BUILDING_SKYLINE_MODEL := "stable_depth_sorted_authored_building_plots"',
-        "func _draw_scenic_building_progression(scene_rect: Rect2) -> void:",
-        "func _town_building_plot_entries(scene_rect: Rect2) -> Array:",
-        "func _town_building_plot_groups() -> Array:",
-        "func _town_building_plot_root(building_id: String, catalog_set: Dictionary) -> String:",
+        'const DEVELOPMENT_SCENE_MODEL := "authoritative_seamless_faction_settlement_stages"',
+        'const DEVELOPMENT_SCENE_STAGE_ORDER := ["village", "developing", "fully_built"]',
+        "const FACTION_DEVELOPMENT_SCENE_PATHS := {",
+        "const FACTION_DEVELOPMENT_SCENE_TEXTURES := {",
+        "func _town_development_stage_id() -> String:",
         "func validation_town_building_progression_summary() -> Dictionary:",
-        'TownRulesScript.building_icon_path(building_id)',
-        'SettingsService.reduced_motion_enabled()',
+        '"isolated_building_overlay_enabled": false',
+        '"construction_stake_overlay_enabled": false',
+        '"faction_development_scene"',
     ):
-        ensure(token in stage_text, errors, f"TownStageView is missing live building skyline ownership: {token}")
+        ensure(token in stage_text, errors, f"TownStageView is missing seamless development-scene ownership: {token}")
+    for forbidden_token in (
+        "func _draw_scenic_building_progression(scene_rect: Rect2) -> void:",
+        "func _draw_unbuilt_plot_stakes(",
+        "TownRulesScript.building_icon_path(building_id)",
+        "_draw_scenic_building_progression(scene_rect)",
+    ):
+        ensure(forbidden_token not in stage_text, errors, f"TownStageView still owns the removed isolated-building skyline: {forbidden_token}")
     draw_match = re.search(r"func _draw\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", stage_text, re.DOTALL)
     draw_block = draw_match.group("body") if draw_match is not None else ""
-    ensure(draw_match is not None, errors, "Could not isolate TownStageView skyline draw order")
+    ensure(draw_match is not None, errors, "Could not isolate TownStageView seamless scene draw order")
     draw_order = [
         draw_block.find("_draw_scenic_backdrop(scene_rect)"),
-        draw_block.find("_draw_scenic_building_progression(scene_rect)"),
         draw_block.find("_draw_status_plaques(scene_rect)"),
     ]
-    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Town building skyline must draw after scenery and before existing status overlays")
+    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Town status overlays must draw after the seamless development scene")
+
+    manifest = load_json(TOWN_DEVELOPMENT_SCENE_MANIFEST_PATH)
+    ensure(manifest.get("schema_id") == "town_development_scene_manifest_v1", errors, "Town development scene manifest schema must remain explicit")
+    factions = manifest.get("factions", {}) if isinstance(manifest.get("factions"), dict) else {}
+    expected_factions = {
+        "faction_embercourt", "faction_mireclaw", "faction_sunvault",
+        "faction_thornwake", "faction_brasshollow", "faction_veilmourn",
+    }
+    ensure(set(factions) == expected_factions, errors, "Town development scene manifest must cover the six live factions exactly")
+    runtime_hashes: set[str] = set()
+    for faction_id in sorted(expected_factions):
+        faction = factions.get(faction_id, {}) if isinstance(factions.get(faction_id), dict) else {}
+        ensure(bool(faction.get("architecture")), errors, f"{faction_id} must describe its settlement architecture")
+        ensure(len(faction.get("fully_built_buildings", [])) >= 8, errors, f"{faction_id} must describe at least eight fully built landmarks")
+        stages = faction.get("stages", {}) if isinstance(faction.get("stages"), dict) else {}
+        ensure(set(stages) == {"village", "developing", "fully_built"}, errors, f"{faction_id} must own all three seamless stages")
+        for stage_id in ("village", "developing", "fully_built"):
+            row = stages.get(stage_id, {}) if isinstance(stages.get(stage_id), dict) else {}
+            for kind in ("source", "runtime"):
+                asset_path = ROOT / str(row.get(f"{kind}_path", "")).removeprefix("res://")
+                ensure(asset_path.is_file(), errors, f"Missing {faction_id} {stage_id} {kind} Town scene")
+                if asset_path.is_file():
+                    digest = hashlib.sha256(asset_path.read_bytes()).hexdigest()
+                    ensure(digest == row.get(f"{kind}_sha256"), errors, f"{faction_id} {stage_id} {kind} Town scene hash drifted")
+                    if kind == "runtime":
+                        runtime_hashes.add(digest)
+    ensure(len(runtime_hashes) == 18, errors, "The six Town factions must retain eighteen distinct runtime stage paintings")
 
     report_text = TOWN_BUILDING_SKYLINE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
         "town_rows.size() == 32",
         "TownRules.build_active_town(session, building_id)",
         "restored.from_dict(session.to_dict())",
-        "building_id in Array(restored_summary.get(\"visible_building_ids\", []))",
+        'String(restored_summary.get("stage_id", "")) == "developing"',
+        '"isolated_building_overlay_enabled"',
+        '"faction_development_scene"',
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
-        '"unbuilt", "built", "complete"',
+        'const EXPECTED_STAGES := ["village", "developing", "fully_built"]',
     ):
-        ensure(token in report_text, errors, f"Town skyline focused report is missing required live proof: {token}")
+        ensure(token in report_text, errors, f"Town development-scene focused report is missing required live proof: {token}")
     scene_text = TOWN_BUILDING_SKYLINE_REPORT_SCENE_PATH.read_text(encoding="utf-8")
-    ensure('path="res://tests/town_building_skyline_progression_report.gd"' in scene_text, errors, "Town skyline report scene must own the focused runtime script")
+    ensure('path="res://tests/town_building_skyline_progression_report.gd"' in scene_text, errors, "Town development-scene report scene must own the focused runtime script")
     ensure_scene_nodes(scene_text, errors, "town_building_skyline_progression_report.tscn", [("TownBuildingSkylineProgressionReport", "Node")])
 
 
@@ -32799,15 +32837,16 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         "for viewport_size in VIEWPORT_SIZES:",
         "for town_id_value in TOWN_CASES.keys():",
         "OverworldRules.set_active_town_visit(session, placement_id)",
-        'String(summary.get("selection_scope", "")) == "exact_town"',
-        'String(summary.get("selection_scope", "")) == "faction_fallback"',
+        'String(summary.get("selection_scope", "")) == "faction_development_scene"',
+        'String(summary.get("development_stage", "")) == "village"',
+        'String(summary.get("development_model", "")) == "authoritative_seamless_faction_settlement_stages"',
         'summary.get("texture_size", Vector2.ZERO) == Vector2(1600, 900)',
         "viewport_texture.get_image().save_png",
         "session.to_dict() == authority_before",
         'print("COMPLETE_TOWN_BACKDROP_RUNTIME_REPORT %s"',
     ):
         ensure(required_token in exact_backdrop_report_text, errors, f"Complete Town backdrop report is missing consolidated live proof: {required_token}")
-    ensure(exact_backdrop_report_text.count('"town_') >= 32 and exact_backdrop_report_text.count('"faction_') >= 12, errors, "Complete Town backdrop report must cover all twenty-six exact towns and all six detached faction fallbacks")
+    ensure(exact_backdrop_report_text.count('"town_') >= 32 and exact_backdrop_report_text.count('"faction_') >= 12, errors, "Complete Town backdrop report must cover all twenty-six catalog towns and all six seamless faction development scenes")
     ensure('path="res://tests/complete_town_backdrop_runtime_report.gd"' in exact_backdrop_scene_text, errors, "Complete Town backdrop report scene must own the focused runtime script")
     for required_token in (
         "func _assert_town_scenic_action_count_label_contract(live_board: Node, session) -> bool:",
