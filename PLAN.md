@@ -24,9 +24,34 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- No implementation slice is active after completing `bugfix-town-development-first-import-10184`.
-- Most recently completed implementation slice: `bugfix-town-development-first-import-10184`, which removes the fresh-Windows-import TownStageView preload failure while retaining all seamless development scenes.
-- Current package boundary: matching Linux and Windows release exports measure 244939960 bytes, 5060040 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- No implementation slice is active after completing `ux-town-screen-layout-and-dialog-controls-10221`.
+- Most recently completed implementation slice: `ux-town-screen-layout-and-dialog-controls-10221`, which implements the owner-annotated compact Town HUD, full-bleed scenic composition, painted main-building construction hotspot, and five accessible direct-dialog controls.
+- Current package boundary: matching Linux and Windows release exports measure 244965224 bytes, 5034776 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Town Screen Layout And Dialog Controls
+
+id: `ux-town-screen-layout-and-dialog-controls-10221`
+
+Status: completed 2026-09-03. Focused 2048x1079 and 1280x720 layout/dialog coverage, six-faction three-stage hotspot coverage, rendered progression, repository validation, and Linux/Windows package checks passed.
+
+Owner evidence: annotated 2048x1079 Town screenshot supplied with task #10221.
+
+Requirements: `docs/screen-wireframes.md`, section 3 Town.
+
+Implementation boundary:
+- collapse the Town HUD into one compact identity/resource row and make the seamless faction development scene the responsive full-bleed surface beneath it;
+- retain readable overlaid edge controls and bottom navigation while replacing the large tab/detail sidebar with five compact accessible icon launchers for Build, Muster, Spells, Trade, and Log;
+- route the painted main-building hotspot and Build icon through the same authoritative construction-ledger path, with normalized faction/stage hotspot metadata that remains aligned under responsive cover cropping;
+- route every other icon to its existing authoritative flow or to a consistent state dialog when unavailable, preserving the Log count badge and keyboard/controller focus behavior.
+
+Completion criteria:
+- focused runtime coverage proves the compact header/full-bleed constraints, normalized main-building routing, and all five icon-to-dialog routes;
+- inspected captures at 2048x1079 and one smaller supported resolution show the scenic scene as the dominant surface without clipped or overlapping controls;
+- Town regressions, repository validation, and established Linux/Windows export and packaged-startup checks pass below the unchanged package ceiling.
+
+Non-goals:
+- no art regeneration, town construction/economy/progression rule change, save-schema change, package-limit change, Overworld, battle, AI, balance, or Native RMG work;
+- no copied Heroes assets or protected layouts, signing, publication, whole-game validation, or release-readiness claim.
 
 ## Town Development First-Import Parse Fix
 

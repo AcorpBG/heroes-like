@@ -36034,6 +36034,82 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
         end = text.find("\nfunc ", start + 1)
         return text[start:] if end < 0 else text[start:end]
 
+    # Task #10221 retires the visible five-page management card. Validate the
+    # replacement compact command dock, full-bleed composition, direct dialog
+    # routes, and crop-aware faction/stage hotspot through its focused owner.
+    report_script_path = ROOT / "tests" / "town_screen_layout_and_dialog_controls_report.gd"
+    report_scene_path = ROOT / "tests" / "town_screen_layout_and_dialog_controls_report.tscn"
+    stage_path = ROOT / "scenes" / "town" / "TownStageView.gd"
+    for path in (TOWN_SCRIPT_PATH, TOWN_SCENE_PATH, stage_path, report_script_path, report_scene_path):
+        ensure(path.exists(), errors, f"Missing owner-directed Town layout owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (TOWN_SCRIPT_PATH, TOWN_SCENE_PATH, stage_path, report_script_path, report_scene_path)):
+        return
+
+    script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
+    stage_text = stage_path.read_text(encoding="utf-8")
+    report_text = report_script_path.read_text(encoding="utf-8")
+    report_scene_text = report_scene_path.read_text(encoding="utf-8")
+
+    ensure_scene_nodes(report_scene_text, errors, "town_screen_layout_and_dialog_controls_report.tscn", [("TownScreenLayoutAndDialogControlsReport", "Node")])
+    management_match = re.search(r'\[node name="ManagementTabs" type="TabContainer"[^\n]*\]\n(?P<body>.*?)(?=\n\[node name="BuildPanel")', scene_text, re.S)
+    ensure(scene_text.count('[node name="ManagementTabs" type="TabContainer"') == 1, errors, "Town must retain one legacy backing control for existing action ownership")
+    ensure(management_match is not None and "visible = false" in management_match.group("body"), errors, "Legacy Town management tabs must remain hidden from the scenic composition")
+    ensure(scene_text.count('[node name="ActionDock" type="PanelContainer"') == 1, errors, "Town must own exactly one compact direct-action dock")
+    for action_name in ("BuildAction", "MusterAction", "SpellsAction", "TradeAction", "LogAction"):
+        action_match = re.search(rf'\[node name="{action_name}" type="Button"[^\n]*\]\n(?P<body>.*?)(?=\n\[node )', scene_text, re.S)
+        ensure(action_match is not None, errors, f"Town compact command is missing: {action_name}")
+        if action_match is not None:
+            body = action_match.group("body")
+            for token in ("unique_name_in_owner = true", "custom_minimum_size = Vector2(44, 44)", "focus_mode = 2", "tooltip_text =", "accessibility_name =", "accessibility_description ="):
+                ensure(token in body, errors, f"Town {action_name} is missing accessible compact-control ownership: {token}")
+    ensure(scene_text.count('[node name="LogBadge" type="Label"') == 1, errors, "Town Log direct action must retain one readiness-count badge")
+    ensure(scene_text.count('[node name="DomainActions" type="VBoxContainer"') == 1, errors, "Town direct dialogs must own one shared authoritative domain-action surface")
+
+    for token in (
+        "const TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH := 290.0",
+        "const TOWN_HEADER_HEIGHT := 48.0",
+        "const TOWN_FOOTER_HEIGHT := 48.0",
+        "func _promote_town_edge_overlays() -> void:",
+        '_town_stage_view.call("set_external_command_overlay", true)',
+        '_town_stage_view.connect("main_building_activated", main_building_callable)',
+        "func validation_owner_town_layout_snapshot() -> Dictionary:",
+        "func validation_direct_action_controls_snapshot() -> Dictionary:",
+        "func validation_activate_direct_action(mode: String) -> Dictionary:",
+        "func validation_activate_main_building_hotspot() -> Dictionary:",
+    ):
+        ensure(token in script_text, errors, f"TownShell owner-directed layout contract is missing: {token}")
+    open_catalog = gd_function_block(script_text, "_open_town_catalog")
+    for mode, title in (("build", "Construction Ledger"), ("muster", "Muster Hall"), ("spells", "Spell Study"), ("trade", "Town Market"), ("log", "Town Log & Logistics")):
+        ensure(f'"{mode}"' in open_catalog and f'"{title}"' in open_catalog, errors, f"Town direct {mode} dialog must retain its authored title and route")
+
+    ensure(stage_text.count("const MAIN_BUILDING_HOTSPOTS := {") == 1, errors, "TownStageView must own one explicit normalized main-building hotspot map")
+    for faction_id in ("faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake", "faction_brasshollow", "faction_veilmourn"):
+        ensure(stage_text.count(f'"{faction_id}":') >= 1, errors, f"Town main-building hotspot metadata is missing faction: {faction_id}")
+    for token in ("signal main_building_activated", '"village": Rect2(', '"developing": Rect2(', '"fully_built": Rect2(', "func _sync_main_building_hotspot() -> void:", "func validation_main_building_hotspot_summary() -> Dictionary:"):
+        ensure(token in stage_text, errors, f"Town main-building hotspot contract is missing: {token}")
+
+    for token in (
+        "const VIEWPORT_SIZES := [Vector2i(2048, 1079), Vector2i(1280, 720)]",
+        'const STAGE_IDS := ["village", "developing", "fully_built"]',
+        'const DIRECT_MODES := ["build", "muster", "spells", "trade", "log"]',
+        'shell.call("validation_owner_town_layout_snapshot")',
+        'shell.call("validation_direct_action_controls_snapshot")',
+        'shell.call("validation_activate_main_building_hotspot")',
+        'shell.call("validation_activate_direct_action", mode)',
+        'float(layout.get("header_height_ratio", 1.0)) <= 0.10',
+        'float(layout.get("scenic_area_ratio", 0.0)) >= 0.78',
+        'not bool(layout.get("legacy_management_tabs_visible", true))',
+        'int(row.get("focus_mode", Control.FOCUS_NONE)) == Control.FOCUS_ALL',
+        'String(row.get("accessibility_description", "")) != ""',
+        'for faction_id_value in FACTION_IDS:',
+        'for stage_id_value in STAGE_IDS:',
+        'image.save_png(ProjectSettings.globalize_path(capture_path)) == OK',
+        'print("TOWN_SCREEN_LAYOUT_AND_DIALOG_CONTROLS_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Focused owner-directed Town layout report is missing runtime proof: {token}")
+    return
+
     smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
     visual_path = ROOT / "tests" / "ui_runtime_skin_visual_report.gd"
     for path in (TOWN_SCRIPT_PATH, TOWN_SCENE_PATH, smoke_path, visual_path):
@@ -48149,7 +48225,7 @@ def validate_town_faction_crest_runtime(errors: list[str]) -> None:
     scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
     for token in (
         '[node name="CrestStack" type="Control" parent="ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad/CrestBox"]',
-        "custom_minimum_size = Vector2(42, 40)",
+        "custom_minimum_size = Vector2(36, 34)",
         '[node name="CrestGlyph" type="Control" parent="ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad/CrestBox/CrestStack"]',
         'glyph_id = "town"',
         '[node name="CrestIcon" type="TextureRect" parent="ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad/CrestBox/CrestStack"]',
@@ -54920,9 +54996,9 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
     if town_pad_match is not None:
         for token in (
             'theme_override_constants/margin_left = 0',
-            'theme_override_constants/margin_top = 4',
+            'theme_override_constants/margin_top = 0',
             'theme_override_constants/margin_right = 0',
-            'theme_override_constants/margin_bottom = 4',
+            'theme_override_constants/margin_bottom = 0',
         ):
             ensure(token in town_pad_match.group("body"), errors, f"Town ResourcePad is missing exact compact ledger inset: {token}")
     ensure('[node name="Resources" type="MenuButton" parent="ContentMargin/Content/Banner/BannerPad/TopBar/ResourceChip/ResourcePad"]' in town_scene_text, errors, "Town resource menu must remain nested in the authored ledger frame")
@@ -54934,7 +55010,7 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
         ensure('FrontierVisualKit.apply_button(_resource_label, "secondary", 210.0, 30.0, 12)' in shell_text, errors, f"{shell_label} must keep the stockpile menu bounded in the existing visual language")
         ensure("FrontierVisualKit.apply_label(_resource_label" not in shell_text, errors, f"{shell_label} must not style the MenuButton through the old Label API")
     ensure("@onready var _resource_chip_panel: PanelContainer = %ResourceChip" in town_shell_text, errors, "Town shell must type the authored stockpile ledger frame")
-    ensure('FrontierVisualKit.apply_art_panel(_resource_chip_panel, UI_ART_TOWN_RESOURCE_LEDGER, "gold", 62, 8, Color(0.70, 0.62, 0.48, 1.0))' in town_shell_text, errors, "Town stockpile frame must reuse the exact authored resource-ledger art and single horizontal inset")
+    ensure('FrontierVisualKit.apply_art_panel(_resource_chip_panel, UI_ART_TOWN_RESOURCE_LEDGER, "gold", 62, 2, Color(0.70, 0.62, 0.48, 1.0))' in town_shell_text, errors, "Town stockpile frame must reuse the exact authored resource-ledger art with the compact header inset")
 
     responsive = block(overworld_shell_text, "_apply_responsive_layout")
     responsive_order = [
@@ -55042,27 +55118,32 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
     town_responsive_start = town_text.find("func _apply_responsive_layout() -> void:")
     town_responsive_end = town_text.find("\nfunc ", town_responsive_start + 1)
     town_responsive = town_text[town_responsive_start:] if town_responsive_end < 0 else town_text[town_responsive_start:town_responsive_end]
-    ensure(town_text.count("const TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH := 290.0") == 1, errors, "Town must own one exact 290px compact management-rail budget")
-    ensure(town_text.count("const TOWN_WIDE_MANAGEMENT_RAIL_WIDTH := 352.0") == 1, errors, "Town must retain one exact 352px wide management-rail budget")
+    ensure(town_text.count("const TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH := 290.0") == 1, errors, "Town must own one exact 290px compact command-overlay budget")
+    ensure(town_text.count("const TOWN_WIDE_MANAGEMENT_RAIL_WIDTH := 290.0") == 1, errors, "Town must keep the direct command overlay at one stable 290px width")
     required_town_source_order = [
-        town_responsive.find("var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0"),
-        town_responsive.find("var narrow_layout := available_size.x < 1100.0"),
+        town_responsive.find("var compact_layout := available_size.x < 1440.0 or available_size.y < 760.0"),
+        town_responsive.find("var narrow_layout := available_size.x < 960.0"),
         town_responsive.find("_header_label.clip_text = compact_layout"),
         town_responsive.find("_resource_chip_panel.custom_minimum_size.x = 96.0 if compact_layout else 226.0"),
         town_responsive.find("_resource_label.custom_minimum_size.x = 80.0 if compact_layout else 210.0"),
         town_responsive.find("_resource_label.set_compact_mode(compact_layout)"),
-        town_responsive.find("_sidebar_shell_panel.custom_minimum_size.x = TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH if compact_layout else TOWN_WIDE_MANAGEMENT_RAIL_WIDTH"),
-        town_responsive.find("_town_orders_toggle_button.visible = narrow_layout"),
+        town_responsive.find("_stage_column.visible = true"),
+        town_responsive.find("_sidebar_shell_panel.visible = true"),
+        town_responsive.find("_town_orders_toggle_button.visible = false"),
+        town_responsive.find("var rail_width := TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH if compact_layout else TOWN_WIDE_MANAGEMENT_RAIL_WIDTH"),
+        town_responsive.find("_sidebar_shell_panel.offset_left = -rail_width - TOWN_EDGE_GAP"),
     ]
-    ensure(all(index >= 0 for index in required_town_source_order) and required_town_source_order == sorted(required_town_source_order), errors, "Town compact Header/resource and management-rail budgets must be applied before retaining narrow Town Orders ownership")
+    ensure(all(index >= 0 for index in required_town_source_order) and required_town_source_order == sorted(required_town_source_order), errors, "Town compact header/resource budgets must precede the full-bleed stage and stable edge-overlay placement")
     for token in (
         "_header_label.clip_text = compact_layout",
         "_resource_chip_panel.custom_minimum_size.x = 96.0 if compact_layout else 226.0",
         "_resource_label.custom_minimum_size.x = 80.0 if compact_layout else 210.0",
         "_resource_label.set_compact_mode(compact_layout)",
-        "_sidebar_shell_panel.custom_minimum_size.x = TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH if compact_layout else TOWN_WIDE_MANAGEMENT_RAIL_WIDTH",
+        "_stage_column.visible = true",
+        "_sidebar_shell_panel.visible = true",
+        "_town_orders_toggle_button.visible = false",
     ):
-        ensure(town_responsive.count(token) == 1, errors, f"Town responsive layout must own exactly one compact edge-label assignment: {token}")
+        ensure(town_responsive.count(token) == 1, errors, f"Town responsive layout must own exactly one compact/full-bleed assignment: {token}")
     refresh_start = town_text.find("func _refresh(first_render_minimal: bool = false) -> void:")
     refresh_end = town_text.find("\nfunc ", refresh_start + 1)
     refresh = town_text[refresh_start:] if refresh_end < 0 else town_text[refresh_start:refresh_end]

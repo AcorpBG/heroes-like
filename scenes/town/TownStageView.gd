@@ -1,6 +1,7 @@
 extends Control
 
 signal town_action_presentation_blocking_changed(blocking: bool)
+signal main_building_activated
 
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
@@ -35,6 +36,39 @@ const SCENIC_AMBIENT_LIGHT_STATIC_SCALE := 0.88
 const DEVELOPMENT_SCENE_MODEL := "authoritative_seamless_faction_settlement_stages"
 const DEVELOPMENT_SCENE_STAGE_ORDER := ["village", "developing", "fully_built"]
 const DEVELOPMENT_SCENE_DEVELOPING_MIN_RATIO := 0.34
+const MAIN_BUILDING_HOTSPOT_MODEL := "normalized_faction_stage_cover_crop"
+const MAIN_BUILDING_HOTSPOTS := {
+	"faction_embercourt": {
+		"village": Rect2(0.61, 0.39, 0.17, 0.27),
+		"developing": Rect2(0.73, 0.25, 0.20, 0.43),
+		"fully_built": Rect2(0.72, 0.21, 0.17, 0.46),
+	},
+	"faction_mireclaw": {
+		"village": Rect2(0.44, 0.35, 0.22, 0.31),
+		"developing": Rect2(0.45, 0.27, 0.24, 0.37),
+		"fully_built": Rect2(0.57, 0.19, 0.21, 0.45),
+	},
+	"faction_sunvault": {
+		"village": Rect2(0.27, 0.36, 0.18, 0.30),
+		"developing": Rect2(0.25, 0.34, 0.18, 0.31),
+		"fully_built": Rect2(0.43, 0.18, 0.19, 0.47),
+	},
+	"faction_thornwake": {
+		"village": Rect2(0.43, 0.28, 0.23, 0.38),
+		"developing": Rect2(0.36, 0.08, 0.31, 0.62),
+		"fully_built": Rect2(0.40, 0.08, 0.25, 0.61),
+	},
+	"faction_brasshollow": {
+		"village": Rect2(0.05, 0.32, 0.27, 0.43),
+		"developing": Rect2(0.04, 0.18, 0.25, 0.54),
+		"fully_built": Rect2(0.58, 0.14, 0.28, 0.57),
+	},
+	"faction_veilmourn": {
+		"village": Rect2(0.29, 0.15, 0.19, 0.52),
+		"developing": Rect2(0.30, 0.15, 0.20, 0.51),
+		"fully_built": Rect2(0.42, 0.17, 0.25, 0.54),
+	},
+}
 const SCENIC_AMBIENT_LIGHTS := {
 	"faction_embercourt": [
 		{"position": Vector2(0.61, 0.15), "radius": 0.075, "color": Color(1.0, 0.50, 0.16), "strength": 0.78},
@@ -191,11 +225,14 @@ var _resolved_scenic_backdrop_scope := ""
 var _resolved_scenic_backdrop_texture: Texture2D
 var _resolved_development_scene_stage := ""
 var _development_scene_texture_cache: Dictionary = {}
+var _main_building_hotspot: Button
+var _external_command_overlay := false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	focus_mode = Control.FOCUS_NONE
 	custom_minimum_size = Vector2(620, 320)
+	_create_main_building_hotspot()
 	_load_town_vfx_manifest()
 	if not SettingsService.settings_changed.is_connected(_on_settings_changed):
 		SettingsService.settings_changed.connect(_on_settings_changed)
@@ -218,6 +255,7 @@ func _process(delta: float) -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
+		_sync_main_building_hotspot()
 		queue_redraw()
 
 func set_town_state(session) -> void:
@@ -240,6 +278,7 @@ func set_town_state(session) -> void:
 			_occupation = OverworldRulesScript.town_occupation_state(session, _town)
 			_front = OverworldRulesScript.town_front_state(session, _town)
 	_sync_processing_state()
+	_sync_main_building_hotspot()
 	queue_redraw()
 
 func set_precomputed_town_state(session, state: Dictionary) -> void:
@@ -264,6 +303,7 @@ func set_precomputed_town_state(session, state: Dictionary) -> void:
 	_front = _duplicate_dictionary(state.get("front", {}))
 	_resolve_scenic_backdrop()
 	_sync_processing_state()
+	_sync_main_building_hotspot()
 	queue_redraw()
 
 func _clear_town_state(session) -> void:
@@ -286,6 +326,7 @@ func _clear_town_state(session) -> void:
 	_resolved_scenic_backdrop_scope = ""
 	_resolved_scenic_backdrop_texture = null
 	_resolved_development_scene_stage = ""
+	_sync_main_building_hotspot()
 
 func _duplicate_dictionary(value: Variant) -> Dictionary:
 	return value.duplicate(true) if value is Dictionary else {}
@@ -298,11 +339,7 @@ func _draw() -> void:
 	if _town.is_empty():
 		return
 
-	var board_rect := Rect2(Vector2(14.0, 14.0), size - Vector2(28.0, 28.0))
-	draw_rect(board_rect, BOARD_FILL, true)
-	draw_rect(board_rect, FRAME_COLOR, false, 3.0)
-
-	var scene_rect := board_rect.grow(-12.0)
+	var scene_rect := _town_scene_rect()
 	if not _draw_scenic_backdrop(scene_rect):
 		_draw_procedural_stage(scene_rect)
 	else:
@@ -310,7 +347,8 @@ func _draw() -> void:
 		_draw_scenic_ambient_light(scene_rect)
 	_draw_status_plaques(scene_rect)
 	_draw_district_strip(scene_rect)
-	_draw_command_markers(scene_rect)
+	if not _external_command_overlay:
+		_draw_command_markers(scene_rect)
 	_draw_header(scene_rect)
 	_draw_town_action_presentation(scene_rect)
 
@@ -599,7 +637,103 @@ func validation_town_building_complete_vfx_asset_summary() -> Dictionary:
 	}
 
 func _town_scene_rect() -> Rect2:
-	return Rect2(Vector2(26.0, 26.0), size - Vector2(52.0, 52.0))
+	return Rect2(Vector2.ZERO, Vector2(maxf(0.0, size.x), maxf(0.0, size.y)))
+
+func _create_main_building_hotspot() -> void:
+	_main_building_hotspot = Button.new()
+	_main_building_hotspot.name = "MainBuildingHotspot"
+	_main_building_hotspot.text = ""
+	_main_building_hotspot.flat = false
+	_main_building_hotspot.focus_mode = Control.FOCUS_ALL
+	_main_building_hotspot.mouse_filter = Control.MOUSE_FILTER_STOP
+	_main_building_hotspot.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_main_building_hotspot.tooltip_text = "Open the construction ledger for this town."
+	_main_building_hotspot.accessibility_name = "Main town building"
+	_main_building_hotspot.accessibility_description = "Open the same construction ledger as the Build command."
+	_main_building_hotspot.z_index = 20
+	var normal_style := StyleBoxEmpty.new()
+	_main_building_hotspot.add_theme_stylebox_override("normal", normal_style)
+	var hover_style := StyleBoxFlat.new()
+	hover_style.bg_color = Color(0.98, 0.76, 0.24, 0.13)
+	hover_style.border_color = Color(1.0, 0.84, 0.42, 0.92)
+	hover_style.set_border_width_all(2)
+	hover_style.set_corner_radius_all(8)
+	_main_building_hotspot.add_theme_stylebox_override("hover", hover_style)
+	var pressed_style := hover_style.duplicate()
+	pressed_style.bg_color = Color(0.98, 0.76, 0.24, 0.24)
+	_main_building_hotspot.add_theme_stylebox_override("pressed", pressed_style)
+	var focus_style := hover_style.duplicate()
+	focus_style.bg_color = Color(0.98, 0.76, 0.24, 0.08)
+	focus_style.set_border_width_all(3)
+	_main_building_hotspot.add_theme_stylebox_override("focus", focus_style)
+	_main_building_hotspot.pressed.connect(_on_main_building_hotspot_pressed)
+	add_child(_main_building_hotspot)
+	_sync_main_building_hotspot()
+
+func _on_main_building_hotspot_pressed() -> void:
+	main_building_activated.emit()
+
+func main_building_hotspot_control() -> Control:
+	return _main_building_hotspot
+
+func set_external_command_overlay(enabled: bool) -> void:
+	_external_command_overlay = enabled
+	queue_redraw()
+
+func _main_building_normalized_rect() -> Rect2:
+	var faction_hotspots: Dictionary = MAIN_BUILDING_HOTSPOTS.get(_town_faction_id(), {})
+	var stage_id := _town_development_stage_id()
+	return faction_hotspots.get(stage_id, Rect2())
+
+func _main_building_destination_rect() -> Rect2:
+	var texture := _scenic_backdrop_texture()
+	var scene_rect := _town_scene_rect()
+	var normalized_rect := _main_building_normalized_rect()
+	if texture == null or normalized_rect.size.x <= 0.0 or normalized_rect.size.y <= 0.0 or scene_rect.size.x <= 0.0 or scene_rect.size.y <= 0.0:
+		return Rect2()
+	var texture_size := texture.get_size()
+	var source_rect := _cover_source_rect(texture_size, scene_rect.size)
+	var hotspot_source_rect := Rect2(normalized_rect.position * texture_size, normalized_rect.size * texture_size)
+	var visible_source_rect := source_rect.intersection(hotspot_source_rect)
+	if visible_source_rect.size.x <= 0.0 or visible_source_rect.size.y <= 0.0:
+		return Rect2()
+	return Rect2(
+		scene_rect.position + (visible_source_rect.position - source_rect.position) / source_rect.size * scene_rect.size,
+		visible_source_rect.size / source_rect.size * scene_rect.size
+	)
+
+func _sync_main_building_hotspot() -> void:
+	if _main_building_hotspot == null:
+		return
+	var destination_rect := _main_building_destination_rect()
+	_main_building_hotspot.visible = not _town.is_empty() and destination_rect.size.x >= 24.0 and destination_rect.size.y >= 24.0
+	if _main_building_hotspot.visible:
+		_main_building_hotspot.position = destination_rect.position
+		_main_building_hotspot.size = destination_rect.size
+
+func validation_main_building_hotspot_summary() -> Dictionary:
+	var texture := _scenic_backdrop_texture()
+	var scene_rect := _town_scene_rect()
+	var texture_size := texture.get_size() if texture != null else Vector2.ZERO
+	var source_rect := _cover_source_rect(texture_size, scene_rect.size) if texture != null else Rect2()
+	var normalized_rect := _main_building_normalized_rect()
+	var destination_rect := _main_building_destination_rect()
+	return {
+		"model": MAIN_BUILDING_HOTSPOT_MODEL,
+		"faction_id": _town_faction_id(),
+		"stage_id": _town_development_stage_id(),
+		"normalized_rect": normalized_rect,
+		"source_rect": source_rect,
+		"destination_rect": destination_rect,
+		"scene_rect": scene_rect,
+		"visible": _main_building_hotspot != null and _main_building_hotspot.visible,
+		"contained": scene_rect.encloses(destination_rect),
+		"focus_mode": _main_building_hotspot.focus_mode if _main_building_hotspot != null else Control.FOCUS_NONE,
+		"tooltip_text": _main_building_hotspot.tooltip_text if _main_building_hotspot != null else "",
+		"accessibility_name": _main_building_hotspot.accessibility_name if _main_building_hotspot != null else "",
+		"accessibility_description": _main_building_hotspot.accessibility_description if _main_building_hotspot != null else "",
+		"routes_to": "TownShell._on_open_build_catalog_pressed",
+	}
 
 func _town_action_presentation_rect(scene_rect: Rect2) -> Rect2:
 	var presentation_size := Vector2(minf(260.0, scene_rect.size.x * 0.48), 54.0)
@@ -1345,7 +1479,7 @@ func _cover_source_rect(texture_size: Vector2, destination_size: Vector2) -> Rec
 func validation_scenic_backdrop_summary() -> Dictionary:
 	var faction_id := _town_faction_id()
 	var texture := _scenic_backdrop_texture()
-	var scene_rect := Rect2(Vector2(26.0, 26.0), size - Vector2(52.0, 52.0))
+	var scene_rect := _town_scene_rect()
 	var texture_size := texture.get_size() if texture != null else Vector2.ZERO
 	var source_rect := _cover_source_rect(texture_size, scene_rect.size) if texture != null else Rect2()
 	return {
@@ -1375,7 +1509,7 @@ func validation_scenic_backdrop_summary() -> Dictionary:
 
 func validation_scenic_ambient_light_summary() -> Dictionary:
 	var texture := _scenic_backdrop_texture()
-	var scene_rect := Rect2(Vector2(26.0, 26.0), size - Vector2(52.0, 52.0))
+	var scene_rect := _town_scene_rect()
 	var texture_size := texture.get_size() if texture != null else Vector2.ZERO
 	var source_rect := _cover_source_rect(texture_size, scene_rect.size) if texture != null else Rect2()
 	var entries := _scenic_ambient_light_entries(scene_rect)
@@ -1406,8 +1540,7 @@ func validation_scenic_ambient_light_summary() -> Dictionary:
 	}
 
 func validation_status_plaques_summary() -> Dictionary:
-	var scene_size := Vector2(maxf(0.0, size.x - 52.0), maxf(0.0, size.y - 52.0))
-	var scene_rect := Rect2(Vector2(26.0, 26.0), scene_size)
+	var scene_rect := _town_scene_rect()
 	var plaques := _status_plaque_payloads()
 	var rects := _status_plaque_rects(scene_rect, plaques.size())
 	var contained := rects.size() == plaques.size()
@@ -1426,8 +1559,7 @@ func validation_status_plaques_summary() -> Dictionary:
 	}
 
 func validation_scenic_overlay_summary() -> Dictionary:
-	var scene_size := Vector2(maxf(0.0, size.x - 52.0), maxf(0.0, size.y - 52.0))
-	var scene_rect := Rect2(Vector2(26.0, 26.0), scene_size)
+	var scene_rect := _town_scene_rect()
 	var status_payloads := _status_plaque_payloads()
 	var status_rects := _status_plaque_rects(scene_rect, status_payloads.size())
 	var district_payloads := _district_strip_payloads()
@@ -1476,8 +1608,7 @@ func validation_scenic_overlay_summary() -> Dictionary:
 	}
 
 func validation_command_watch_summary() -> Dictionary:
-	var scene_size := Vector2(maxf(0.0, size.x - 52.0), maxf(0.0, size.y - 52.0))
-	var scene_rect := Rect2(Vector2(26.0, 26.0), scene_size)
+	var scene_rect := _town_scene_rect()
 	var payloads := _command_watch_payloads()
 	var watch_rect := _command_watch_rect(scene_rect)
 	var cell_rects := _command_watch_cell_rects(watch_rect, payloads.size())
@@ -1524,7 +1655,7 @@ func validation_command_watch_summary() -> Dictionary:
 	}
 
 func validation_header_action_count_summary() -> Dictionary:
-	var scene_rect := Rect2(Vector2(26.0, 26.0), Vector2(maxf(0.0, size.x - 52.0), maxf(0.0, size.y - 52.0)))
+	var scene_rect := _town_scene_rect()
 	var max_width := maxf(0.0, scene_rect.size.x - 36.0)
 	var title_full_text := _header_title_text()
 	var full_text := _header_action_count_text()

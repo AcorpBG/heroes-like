@@ -28,10 +28,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
 [node name="Content" type="VBoxContainer" parent="ContentMargin"]
 layout_mode = 2
@@ -46,10 +46,10 @@ size_flags_horizontal = 3
 
 [node name="BannerPad" type="MarginContainer" parent="ContentMargin/Content/Banner"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 6
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 2
 
 [node name="TopBar" type="HBoxContainer" parent="ContentMargin/Content/Banner/BannerPad"]
 layout_mode = 2
@@ -57,22 +57,22 @@ theme_override_constants/separation = 8
 
 [node name="CrestFrame" type="PanelContainer" parent="ContentMargin/Content/Banner/BannerPad/TopBar"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(58, 0)
+custom_minimum_size = Vector2(46, 0)
 layout_mode = 2
 
 [node name="CrestPad" type="MarginContainer" parent="ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame"]
 layout_mode = 2
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 5
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 2
 
 [node name="CrestBox" type="VBoxContainer" parent="ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad"]
 layout_mode = 2
 theme_override_constants/separation = 2
 
 [node name="CrestStack" type="Control" parent="ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad/CrestBox"]
-custom_minimum_size = Vector2(42, 40)
+custom_minimum_size = Vector2(36, 34)
 layout_mode = 2
 
 [node name="CrestGlyph" type="Control" parent="ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad/CrestBox/CrestStack"]
@@ -138,9 +138,9 @@ layout_mode = 2
 [node name="ResourcePad" type="MarginContainer" parent="ContentMargin/Content/Banner/BannerPad/TopBar/ResourceChip"]
 layout_mode = 2
 theme_override_constants/margin_left = 0
-theme_override_constants/margin_top = 4
+theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 0
-theme_override_constants/margin_bottom = 4
+theme_override_constants/margin_bottom = 0
 
 [node name="Resources" type="MenuButton" parent="ContentMargin/Content/Banner/BannerPad/TopBar/ResourceChip/ResourcePad"]
 unique_name_in_owner = true
@@ -174,10 +174,10 @@ size_flags_vertical = 3
 
 [node name="TownStagePad" type="MarginContainer" parent="ContentMargin/Content/MainRow/StageColumn/TownStagePanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 6
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
 [node name="TownStageBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/StageColumn/TownStagePanel/TownStagePad"]
 layout_mode = 2
@@ -209,10 +209,10 @@ size_flags_vertical = 3
 
 [node name="TownStageInset" type="MarginContainer" parent="ContentMargin/Content/MainRow/StageColumn/TownStagePanel/TownStagePad/TownStageBox/TownStageFrame"]
 layout_mode = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
 [node name="TownStage" type="Control" parent="ContentMargin/Content/MainRow/StageColumn/TownStagePanel/TownStagePad/TownStageBox/TownStageFrame/TownStageInset"]
 unique_name_in_owner = true
@@ -417,8 +417,94 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Army"
 
+[node name="ActionDock" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ActionDockPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ActionDock"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="ActionButtons" type="HBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ActionDock/ActionDockPad"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="BuildAction" type="Button" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ActionDock/ActionDockPad/ActionButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+focus_mode = 2
+tooltip_text = "Open the construction ledger."
+accessibility_name = "Build"
+accessibility_description = "Open the construction ledger for this town."
+text = "B"
+
+[node name="MusterAction" type="Button" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ActionDock/ActionDockPad/ActionButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+focus_mode = 2
+tooltip_text = "Open the muster hall."
+accessibility_name = "Muster"
+accessibility_description = "Open recruitment and the faction unit roster."
+text = "M"
+
+[node name="SpellsAction" type="Button" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ActionDock/ActionDockPad/ActionButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+focus_mode = 2
+tooltip_text = "Open spell study."
+accessibility_name = "Spells"
+accessibility_description = "Open spell study and the active hero spellbook."
+text = "S"
+
+[node name="TradeAction" type="Button" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ActionDock/ActionDockPad/ActionButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+focus_mode = 2
+tooltip_text = "Open the town market."
+accessibility_name = "Trade"
+accessibility_description = "Open the town market and available exchanges."
+text = "T"
+
+[node name="LogAction" type="Button" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ActionDock/ActionDockPad/ActionButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+focus_mode = 2
+tooltip_text = "Open the town log and logistics."
+accessibility_name = "Log"
+accessibility_description = "Open the town log, garrison, artifacts, hires, transfers, and response orders."
+text = "L"
+
+[node name="LogBadge" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ActionDock/ActionDockPad/ActionButtons/LogAction"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -18.0
+offset_top = 2.0
+offset_right = -2.0
+offset_bottom = 18.0
+grow_horizontal = 0
+mouse_filter = 2
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="ManagementTabs" type="TabContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(0, 460)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -841,6 +927,13 @@ theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 columns = 4
 
+[node name="DomainActions" type="VBoxContainer" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox/TownCatalogScroll/CatalogContent"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
 [node name="BuildPlan" type="Label" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -939,6 +1032,11 @@ text = "Close Guide"
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Menu" to="." method="_on_menu_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox/OpenBuildCatalog" to="." method="_on_open_build_catalog_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/RecruitPanel/RecruitPad/RecruitBox/OpenMusterCatalog" to="." method="_on_open_muster_catalog_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ActionDock/ActionDockPad/ActionButtons/BuildAction" to="." method="_on_open_build_catalog_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ActionDock/ActionDockPad/ActionButtons/MusterAction" to="." method="_on_open_muster_catalog_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ActionDock/ActionDockPad/ActionButtons/SpellsAction" to="." method="_on_open_spells_dialog_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ActionDock/ActionDockPad/ActionButtons/TradeAction" to="." method="_on_open_trade_dialog_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ActionDock/ActionDockPad/ActionButtons/LogAction" to="." method="_on_open_log_dialog_pressed"]
 [connection signal="pressed" from="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox/CatalogHeader/TownCatalogClose" to="." method="_on_town_catalog_close_pressed"]
 [connection signal="pressed" from="TownGuideOverlay/GuideCenter/TownGuidePanel/GuidePad/GuideBox/TownGuideClose" to="." method="_on_town_guide_close_pressed"]
 [connection signal="canceled" from="ManualSaveOverwriteDialog" to="." method="_on_manual_save_overwrite_canceled"]

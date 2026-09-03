@@ -14,7 +14,17 @@ const UI_ART_TOWN_RESOURCE_LEDGER := "res://art/ui/runtime/town/resource_ledger.
 const UI_ART_TOWN_BUILD_PANEL := "res://art/ui/runtime/town/build_panel.png"
 const UI_ART_SHARED_HUD_FRAME := "res://art/ui/runtime/shared/hud_frame_ornate.png"
 const TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH := 290.0
-const TOWN_WIDE_MANAGEMENT_RAIL_WIDTH := 352.0
+const TOWN_WIDE_MANAGEMENT_RAIL_WIDTH := 290.0
+const TOWN_HEADER_HEIGHT := 48.0
+const TOWN_FOOTER_HEIGHT := 48.0
+const TOWN_EDGE_GAP := 8.0
+const TOWN_ACTION_ICON_PATHS := {
+	"build": "res://art/towns/runtime/building_categories/civic.png",
+	"muster": "res://art/towns/runtime/building_categories/dwelling.png",
+	"spells": "res://art/towns/runtime/building_categories/magic.png",
+	"trade": "res://art/towns/runtime/building_categories/economy.png",
+	"log": "res://art/towns/runtime/building_categories/support.png",
+}
 const TOWN_MANAGEMENT_TAB_CONTENT_MARGIN_HORIZONTAL := 4.0
 const TOWN_MANAGEMENT_TAB_STATE_STYLES := [
 	&"tab_selected",
@@ -34,6 +44,14 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _command_ledger_panel: PanelContainer = %CommandLedgerPanel
 @onready var _sidebar_shell_panel: PanelContainer = %SidebarShell
 @onready var _command_panel: PanelContainer = %CommandPanel
+@onready var _action_dock_panel: PanelContainer = %ActionDock
+@onready var _action_buttons: HBoxContainer = %ActionButtons
+@onready var _build_action_button: Button = %BuildAction
+@onready var _muster_action_button: Button = %MusterAction
+@onready var _spells_action_button: Button = %SpellsAction
+@onready var _trade_action_button: Button = %TradeAction
+@onready var _log_action_button: Button = %LogAction
+@onready var _log_badge_label: Label = %LogBadge
 @onready var _management_tabs: TabContainer = %ManagementTabs
 @onready var _build_panel: PanelContainer = %BuildPanel
 @onready var _recruit_panel: PanelContainer = %RecruitPanel
@@ -100,6 +118,7 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _town_catalog_subtitle_label: Label = %TownCatalogSubtitle
 @onready var _town_catalog_scroll: ScrollContainer = %TownCatalogScroll
 @onready var _town_catalog_close_button: Button = %TownCatalogClose
+@onready var _domain_actions: VBoxContainer = %DomainActions
 @onready var _guide_overlay: Control = %TownGuideOverlay
 @onready var _guide_panel: PanelContainer = %TownGuidePanel
 @onready var _guide_title_label: Label = %TownGuideTitle
@@ -145,6 +164,11 @@ func _ready() -> void:
 	var buckets := {}
 	var phase_started := ProfileLogScript.begin_usec()
 	_apply_visual_theme()
+	_prepare_direct_dialog_surfaces()
+	_promote_town_edge_overlays()
+	_configure_direct_action_buttons()
+	if _town_stage_view.has_method("set_external_command_overlay"):
+		_town_stage_view.call("set_external_command_overlay", true)
 	_save_written_cue_presenter = SystemSaveWrittenCuePresenterScript.new()
 	_save_written_cue_presenter.name = "SystemSaveWrittenCuePresenter"
 	add_child(_save_written_cue_presenter)
@@ -164,6 +188,9 @@ func _ready() -> void:
 	_town_catalog_overlay.visible = false
 	if not _town_stage_view.town_action_presentation_blocking_changed.is_connected(_on_town_action_presentation_blocking_changed):
 		_town_stage_view.town_action_presentation_blocking_changed.connect(_on_town_action_presentation_blocking_changed)
+	var main_building_callable := Callable(self, "_on_open_build_catalog_pressed")
+	if _town_stage_view.has_signal("main_building_activated") and not _town_stage_view.is_connected("main_building_activated", main_building_callable):
+		_town_stage_view.connect("main_building_activated", main_building_callable)
 	_confirm_build_button.pressed.connect(_on_confirm_build_pressed)
 	if not _management_tabs.tab_changed.is_connected(_on_management_tab_changed):
 		_management_tabs.tab_changed.connect(_on_management_tab_changed)
@@ -220,25 +247,21 @@ func _apply_responsive_layout() -> void:
 	var parent_control := get_parent() as Control
 	if parent_control != null and parent_control.size.x > 0.0 and parent_control.size.y > 0.0:
 		available_size = parent_control.size
-	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
-	var narrow_layout := available_size.x < 1100.0
+	var compact_layout := available_size.x < 1440.0 or available_size.y < 760.0
+	var narrow_layout := available_size.x < 960.0
 	_header_label.clip_text = compact_layout
 	_resource_chip_panel.custom_minimum_size.x = 96.0 if compact_layout else 226.0
 	_resource_label.custom_minimum_size.x = 80.0 if compact_layout else 210.0
 	_resource_label.set_compact_mode(compact_layout)
 	_narrow_layout_active = narrow_layout
-	if not narrow_layout:
-		_narrow_orders_open = false
-	_stage_column.visible = not narrow_layout or not _narrow_orders_open
-	_sidebar_shell_panel.visible = not narrow_layout or _narrow_orders_open
-	_sidebar_shell_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL if narrow_layout and _narrow_orders_open else Control.SIZE_FILL
-	_sidebar_shell_panel.custom_minimum_size.x = TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH if compact_layout else TOWN_WIDE_MANAGEMENT_RAIL_WIDTH
-	_town_orders_toggle_button.visible = narrow_layout
-	_town_orders_toggle_button.text = "View Town" if _narrow_orders_open else "Town Orders"
-	_town_orders_toggle_button.tooltip_text = "Return to the scenic town view." if _narrow_orders_open else "Open construction, muster, spells, trade, and town-log orders."
-	_command_panel.visible = not compact_layout
-	_event_label.visible = not compact_layout
-	_status_label.visible = not compact_layout
+	_narrow_orders_open = false
+	_stage_column.visible = true
+	_sidebar_shell_panel.visible = true
+	_sidebar_shell_panel.custom_minimum_size = Vector2.ZERO
+	_town_orders_toggle_button.visible = false
+	_command_panel.visible = available_size.x >= 1120.0 and available_size.y >= 640.0
+	_event_label.visible = false
+	_status_label.visible = available_size.x >= 920.0
 	_building_label.visible = not compact_layout
 	for node_name in ["BuildTitle", "RecruitTitle", "BuildLauncherDescription", "MusterLauncherDescription"]:
 		var compact_copy := find_child(node_name, true, false) as Control
@@ -246,7 +269,16 @@ func _apply_responsive_layout() -> void:
 			compact_copy.visible = not compact_layout
 	_open_build_catalog_button.text = "Construction" if compact_layout else "Open Construction Ledger"
 	_open_muster_catalog_button.text = "Muster Hall" if compact_layout else "Open Muster Hall"
-	_town_stage_view.custom_minimum_size = Vector2(520.0, 280.0) if compact_layout else Vector2(620.0, 320.0)
+	_town_stage_view.custom_minimum_size = Vector2(480.0, 270.0) if compact_layout else Vector2(620.0, 320.0)
+	var rail_width := TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH if compact_layout else TOWN_WIDE_MANAGEMENT_RAIL_WIDTH
+	_sidebar_shell_panel.offset_left = -rail_width - TOWN_EDGE_GAP
+	_sidebar_shell_panel.offset_top = TOWN_HEADER_HEIGHT + TOWN_EDGE_GAP
+	_sidebar_shell_panel.offset_right = -TOWN_EDGE_GAP
+	_sidebar_shell_panel.offset_bottom = _sidebar_shell_panel.offset_top + (196.0 if _command_panel.visible else 70.0)
+	_footer_panel.offset_left = TOWN_EDGE_GAP
+	_footer_panel.offset_top = -TOWN_FOOTER_HEIGHT - TOWN_EDGE_GAP
+	_footer_panel.offset_right = -TOWN_EDGE_GAP
+	_footer_panel.offset_bottom = -TOWN_EDGE_GAP
 	if _town_catalog_panel != null:
 		_town_catalog_panel.custom_minimum_size = Vector2(
 			min(1080.0, max(620.0, available_size.x - 44.0)),
@@ -258,11 +290,100 @@ func _apply_responsive_layout() -> void:
 	if _recruit_actions is GridContainer:
 		(_recruit_actions as GridContainer).columns = catalog_columns
 
+func _promote_town_edge_overlays() -> void:
+	if _sidebar_shell_panel.get_parent() != self:
+		_sidebar_shell_panel.reparent(self)
+	if _footer_panel.get_parent() != self:
+		_footer_panel.reparent(self)
+	for overlay in [_sidebar_shell_panel, _footer_panel]:
+		overlay.layout_mode = 0
+		overlay.anchor_left = 1.0 if overlay == _sidebar_shell_panel else 0.0
+		overlay.anchor_top = 0.0 if overlay == _sidebar_shell_panel else 1.0
+		overlay.anchor_right = 1.0
+		overlay.anchor_bottom = 0.0 if overlay == _sidebar_shell_panel else 1.0
+	_sidebar_shell_panel.z_index = 12
+	_footer_panel.z_index = 14
+
+func _prepare_direct_dialog_surfaces() -> void:
+	var ordered_surfaces := [
+		_study_label,
+		_study_actions,
+		_spellbook_label,
+		_market_label,
+		_market_actions,
+		_army_management,
+		_artifact_label,
+		_artifact_actions,
+		_tavern_label,
+		_tavern_actions,
+		_transfer_label,
+		_transfer_actions,
+		_response_label,
+		_response_actions,
+	]
+	for surface in ordered_surfaces:
+		if surface != null and surface.get_parent() != _domain_actions:
+			surface.reparent(_domain_actions)
+	_set_direct_dialog_surface_visibility("")
+
+func _direct_dialog_mode_surfaces(mode: String) -> Array:
+	match mode:
+		"spells":
+			return [_study_label, _study_actions, _spellbook_label]
+		"trade":
+			return [_market_label, _market_actions]
+		"log":
+			return [_army_management, _artifact_label, _artifact_actions, _tavern_label, _tavern_actions, _transfer_label, _transfer_actions, _response_label, _response_actions]
+		_:
+			return []
+
+func _set_direct_dialog_surface_visibility(mode: String) -> void:
+	var visible_surfaces := _direct_dialog_mode_surfaces(mode)
+	for child in _domain_actions.get_children():
+		if child is CanvasItem:
+			(child as CanvasItem).visible = child in visible_surfaces
+
+func _configure_direct_action_buttons() -> void:
+	var controls := {
+		"build": _build_action_button,
+		"muster": _muster_action_button,
+		"spells": _spells_action_button,
+		"trade": _trade_action_button,
+		"log": _log_action_button,
+	}
+	for mode_value in controls:
+		var mode := String(mode_value)
+		var button: Button = controls[mode]
+		var icon_path := String(TOWN_ACTION_ICON_PATHS.get(mode, ""))
+		var texture: Texture2D = load(icon_path) as Texture2D if icon_path != "" and ResourceLoader.exists(icon_path, "Texture2D") else null
+		button.icon = texture
+		button.text = "" if texture != null else mode.left(1).to_upper()
+		button.expand_icon = true
+		button.add_theme_constant_override("icon_max_width", 28)
+		button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_log_badge_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	FrontierVisualKit.apply_label(_log_badge_label, "title", 10)
+	var badge_style := StyleBoxFlat.new()
+	badge_style.bg_color = Color(0.66, 0.19, 0.12, 0.98)
+	badge_style.border_color = Color(1.0, 0.80, 0.40, 0.95)
+	badge_style.set_border_width_all(1)
+	badge_style.set_corner_radius_all(8)
+	_log_badge_label.add_theme_stylebox_override("normal", badge_style)
+
 func _on_open_build_catalog_pressed() -> void:
 	_open_town_catalog("build")
 
 func _on_open_muster_catalog_pressed() -> void:
 	_open_town_catalog("muster")
+
+func _on_open_spells_dialog_pressed() -> void:
+	_open_town_catalog("spells")
+
+func _on_open_trade_dialog_pressed() -> void:
+	_open_town_catalog("trade")
+
+func _on_open_log_dialog_pressed() -> void:
+	_open_town_catalog("log")
 
 func _on_town_catalog_close_pressed() -> void:
 	_close_town_catalog()
@@ -271,7 +392,7 @@ func _town_catalog_is_open() -> bool:
 	return _town_catalog_overlay != null and _town_catalog_overlay.visible
 
 func _open_town_catalog(mode: String) -> void:
-	if mode not in ["build", "muster"] or _session == null:
+	if mode not in ["build", "muster", "spells", "trade", "log"] or _session == null:
 		return
 	if _town_action_input_blocker != null and _town_action_input_blocker.visible:
 		return
@@ -281,6 +402,8 @@ func _open_town_catalog(mode: String) -> void:
 	_town_catalog_mode = mode
 	_build_actions.visible = mode == "build"
 	_recruit_actions.visible = mode == "muster"
+	_domain_actions.visible = mode in ["spells", "trade", "log"]
+	_set_direct_dialog_surface_visibility(mode)
 	_build_plan_label.visible = mode == "build"
 	_confirm_build_button.visible = mode == "build"
 	if mode == "build":
@@ -288,11 +411,29 @@ func _open_town_catalog(mode: String) -> void:
 		_town_catalog_title_label.text = "Construction Ledger"
 		_town_catalog_subtitle_label.text = "%d town works • standing, available, and locked plans" % catalog.size()
 		_rebuild_build_actions(catalog)
-	else:
+	elif mode == "muster":
 		var catalog := TownRules.get_muster_catalog(_session)
 		_town_catalog_title_label.text = "Muster Hall"
 		_town_catalog_subtitle_label.text = "%d roster units • tiers, reserves, weekly growth, costs, and dwelling locks" % catalog.size()
 		_rebuild_recruit_actions(catalog)
+	elif mode == "spells":
+		var actions := TownRules.get_spell_learning_actions(_session)
+		_town_catalog_title_label.text = "Spell Study"
+		_town_catalog_subtitle_label.text = "%d study order%s • unavailable study remains explained below" % [actions.size(), "" if actions.size() == 1 else "s"]
+		_rebuild_study_actions(actions)
+	elif mode == "trade":
+		var actions := TownRules.get_market_actions(_session)
+		_town_catalog_title_label.text = "Town Market"
+		_town_catalog_subtitle_label.text = "%d exchange order%s • restricted resources remain source-driven" % [actions.size(), "" if actions.size() == 1 else "s"]
+		_rebuild_market_actions(actions)
+	else:
+		var actions := _logistics_tab_actions()
+		_town_catalog_title_label.text = "Town Log & Logistics"
+		_town_catalog_subtitle_label.text = "%d active order%s • garrison, artifacts, hires, transfers, and frontier responses" % [actions.size(), "" if actions.size() == 1 else "s"]
+		_rebuild_tavern_actions(TownRules.get_tavern_actions(_session))
+		_rebuild_transfer_actions(TownRules.get_transfer_actions(_session))
+		_rebuild_response_actions(TownRules.get_response_actions(_session))
+		_rebuild_artifact_actions(TownRules.get_artifact_actions(_session))
 	_town_catalog_scroll.scroll_vertical = 0
 	_town_catalog_overlay.visible = true
 	call_deferred("_configure_town_keyboard_focus", true)
@@ -330,10 +471,7 @@ func _on_confirm_build_pressed() -> void:
 		return
 	if bool(action.get("market_coverable", false)) and not bool(action.get("direct_affordable", false)):
 		_close_town_catalog(false)
-		if _management_tabs.current_tab != 3:
-			_management_tabs.current_tab = 3
-		else:
-			_refresh(true)
+		_open_town_catalog("trade")
 		return
 	if bool(action.get("disabled", false)):
 		return
@@ -824,8 +962,10 @@ func _configure_town_keyboard_focus(force: bool = false) -> void:
 		var catalog_surfaces := [_town_catalog_close_button]
 		if _town_catalog_mode == "build":
 			catalog_surfaces.append_array([_build_actions, _confirm_build_button])
-		else:
+		elif _town_catalog_mode == "muster":
 			catalog_surfaces.append(_recruit_actions)
+		else:
+			catalog_surfaces.append(_domain_actions)
 		var catalog_controls := FrontierVisualKit.configure_focus_cycle(catalog_surfaces)
 		FrontierVisualKit.grab_keyboard_focus(self, _town_catalog_close_button, catalog_controls, force)
 		return
@@ -833,11 +973,11 @@ func _configure_town_keyboard_focus(force: bool = false) -> void:
 		var guide_controls := FrontierVisualKit.configure_focus_cycle([_guide_close_button])
 		FrontierVisualKit.grab_keyboard_focus(self, _guide_close_button, guide_controls, true)
 		return
-	var tab_surfaces := _town_keyboard_focus_surfaces()
-	var tab_controls := _town_focusable_controls(tab_surfaces)
-	var tab_bar := _management_tabs.get_tab_bar()
-	var surfaces := [tab_bar]
-	surfaces.append_array(tab_surfaces)
+	var direct_surfaces := [_build_action_button, _muster_action_button, _spells_action_button, _trade_action_button, _log_action_button]
+	if _town_stage_view.has_method("main_building_hotspot_control"):
+		direct_surfaces.push_front(_town_stage_view.call("main_building_hotspot_control"))
+	var surfaces := []
+	surfaces.append_array(direct_surfaces)
 	surfaces.append_array([
 		_hero_actions,
 		_specialty_actions,
@@ -850,12 +990,7 @@ func _configure_town_keyboard_focus(force: bool = false) -> void:
 		_menu_button,
 	])
 	var controls := FrontierVisualKit.configure_focus_cycle(surfaces)
-	var preferred: Control = _town_orders_toggle_button if _narrow_layout_active and not _narrow_orders_open else null
-	if preferred == null:
-		if not tab_controls.is_empty():
-			preferred = tab_controls[0]
-		elif FrontierVisualKit.is_keyboard_focusable(tab_bar):
-			preferred = tab_bar
+	var preferred: Control = _build_action_button
 	FrontierVisualKit.grab_keyboard_focus(self, preferred, controls, force)
 
 func _configure_town_guide_surface() -> void:
@@ -2578,6 +2713,9 @@ func validation_snapshot() -> Dictionary:
 		"confirm_build_button_tooltip_text": _confirm_build_button.tooltip_text,
 		"confirm_build_button_disabled": _confirm_build_button.disabled,
 		"town_catalog": validation_town_catalog_snapshot(),
+		"owner_town_layout": validation_owner_town_layout_snapshot(),
+		"direct_action_controls": validation_direct_action_controls_snapshot(),
+		"main_building_hotspot": _town_stage_view.validation_main_building_hotspot_summary() if _town_stage_view.has_method("validation_main_building_hotspot_summary") else {},
 		"build_catalog": _duplicate_action_array(TownRules.get_build_catalog(_session)),
 		"muster_catalog": _duplicate_action_array(TownRules.get_muster_catalog(_session)),
 		"narrow_layout_active": _narrow_layout_active,
@@ -2676,6 +2814,94 @@ func validation_snapshot() -> Dictionary:
 		"latest_save_summary": SaveService.latest_loadable_summary(),
 	}
 
+func validation_owner_town_layout_snapshot() -> Dictionary:
+	var viewport_rect := Rect2(global_position, size)
+	var header_rect := _banner_panel.get_global_rect()
+	var stage_rect: Rect2 = _town_stage_view.get_global_rect()
+	var sidebar_rect := _sidebar_shell_panel.get_global_rect()
+	var footer_rect := _footer_panel.get_global_rect()
+	var viewport_area := maxf(1.0, viewport_rect.size.x * viewport_rect.size.y)
+	return {
+		"model": "compact_header_full_bleed_scenic_with_edge_overlays",
+		"viewport_rect": viewport_rect,
+		"header_rect": header_rect,
+		"stage_rect": stage_rect,
+		"sidebar_rect": sidebar_rect,
+		"footer_rect": footer_rect,
+		"header_single_row": not _event_label.visible and header_rect.size.y <= 72.0,
+		"header_height_ratio": header_rect.size.y / maxf(1.0, viewport_rect.size.y),
+		"scenic_area_ratio": stage_rect.size.x * stage_rect.size.y / viewport_area,
+		"scenic_reaches_viewport_edges": stage_rect.position.x <= 1.0 and stage_rect.end.x >= viewport_rect.end.x - 1.0,
+		"sidebar_overlays_scenic": stage_rect.intersects(sidebar_rect),
+		"footer_overlays_scenic": stage_rect.intersects(footer_rect),
+		"sidebar_contained": viewport_rect.encloses(sidebar_rect),
+		"footer_contained": viewport_rect.encloses(footer_rect),
+		"legacy_management_tabs_visible": _management_tabs.visible,
+		"direct_action_dock_visible": _action_dock_panel.visible,
+	}
+
+func validation_direct_action_controls_snapshot() -> Dictionary:
+	var rows := []
+	var controls := {
+		"build": _build_action_button,
+		"muster": _muster_action_button,
+		"spells": _spells_action_button,
+		"trade": _trade_action_button,
+		"log": _log_action_button,
+	}
+	for mode_value in controls:
+		var mode := String(mode_value)
+		var button: Button = controls[mode]
+		rows.append({
+			"mode": mode,
+			"rect": button.get_global_rect(),
+			"visible": button.is_visible_in_tree(),
+			"icon_loaded": button.icon != null,
+			"icon_only": button.icon != null and button.text == "",
+			"focus_mode": button.focus_mode,
+			"tooltip_text": button.tooltip_text,
+			"accessibility_name": button.accessibility_name,
+			"accessibility_description": button.accessibility_description,
+		})
+	return {
+		"model": "five_compact_icon_dialog_launchers",
+		"rows": rows,
+		"count": rows.size(),
+		"log_badge_text": _log_badge_label.text,
+		"log_badge_visible": _log_badge_label.is_visible_in_tree(),
+		"active_dialog_mode": _town_catalog_mode,
+		"dialog_open": _town_catalog_is_open(),
+		"dialog_title": _town_catalog_title_label.text,
+	}
+
+func validation_activate_direct_action(mode: String) -> Dictionary:
+	if _town_catalog_is_open():
+		_close_town_catalog(false)
+	match mode:
+		"build":
+			_build_action_button.emit_signal("pressed")
+		"muster":
+			_muster_action_button.emit_signal("pressed")
+		"spells":
+			_spells_action_button.emit_signal("pressed")
+		"trade":
+			_trade_action_button.emit_signal("pressed")
+		"log":
+			_log_action_button.emit_signal("pressed")
+	return validation_direct_action_controls_snapshot()
+
+func validation_activate_main_building_hotspot() -> Dictionary:
+	if _town_catalog_is_open():
+		_close_town_catalog(false)
+	var hotspot: Control = _town_stage_view.call("main_building_hotspot_control") if _town_stage_view.has_method("main_building_hotspot_control") else null
+	if hotspot is Button:
+		(hotspot as Button).emit_signal("pressed")
+	return {
+		"hotspot": _town_stage_view.validation_main_building_hotspot_summary() if _town_stage_view.has_method("validation_main_building_hotspot_summary") else {},
+		"dialog": validation_direct_action_controls_snapshot(),
+		"same_authoritative_build_route": _town_catalog_is_open() and _town_catalog_mode == "build" and _town_catalog_title_label.text == "Construction Ledger",
+	}
+
 func _town_guide_validation_snapshot() -> Dictionary:
 	var focus_owner := get_viewport().gui_get_focus_owner() if is_inside_tree() else null
 	return {
@@ -2735,6 +2961,8 @@ func validation_town_catalog_snapshot() -> Dictionary:
 		"overlay_rect": _town_catalog_overlay.get_global_rect(),
 		"build_grid_visible": _build_actions.visible,
 		"muster_grid_visible": _recruit_actions.visible,
+		"domain_actions_visible": _domain_actions.visible,
+		"domain_visible_child_count": _domain_actions.get_children().filter(func(child): return child is CanvasItem and (child as CanvasItem).visible).size(),
 		"confirm_build_visible": _confirm_build_button.visible,
 		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
 		"focus_inside": focus_owner != null and _town_catalog_overlay.is_ancestor_of(focus_owner),
@@ -3233,6 +3461,7 @@ func _catalog_build_tooltip(action: Dictionary) -> String:
 		"Cost: %s" % TownRules._describe_resources(action.get("cost", {})),
 		String(action.get("catalog_status_detail", "")),
 		String(action.get("summary", "")),
+		_town_action_button_tooltip(action, "build"),
 		"Select this card to inspect it. Construction only occurs after explicit confirmation.",
 	])
 
@@ -3329,7 +3558,7 @@ func _refresh_build_plan_surface(actions: Array) -> void:
 		_confirm_build_button.text = "Open Trade for %s" % _short_text(name, 17)
 		_confirm_build_button.tooltip_text = _join_tooltip_sections([
 			String(action.get("market_summary", "Trade can cover the missing common resources.")),
-			"Open the Trade tab without spending resources.",
+			"Open the Town Market without spending resources.",
 		])
 		_confirm_build_button.disabled = false
 	else:
@@ -3426,6 +3655,7 @@ func _catalog_muster_tooltip(action: Dictionary) -> String:
 		"Reserve %d | Weekly growth +%d" % [int(action.get("available_count", 0)), int(action.get("weekly_growth", 0))],
 		String(action.get("catalog_status_detail", "")),
 		String(action.get("summary", "")),
+		_town_action_button_tooltip(action, "recruit"),
 	])
 
 func _rebuild_tavern_actions(actions_override: Variant = null) -> void:
@@ -3708,10 +3938,10 @@ func _town_action_button_cue_text(action: Dictionary, lane: String) -> String:
 
 func _town_build_plan_next_step(action: Dictionary, label: String, readiness: String) -> String:
 	if bool(action.get("disabled", false)):
-		return "Review %s in Build tab to inspect the missing requirements." % label
+		return "Review %s in the Construction Ledger to inspect the missing requirements." % label
 	if readiness.begins_with("Needs exchange"):
-		return "Select %s in Build tab, then use Trade before confirming." % label
-	return "Select %s in Build tab, then review and confirm the plan." % label
+		return "Select %s in the Construction Ledger, then use the Town Market before confirming." % label
+	return "Select %s in the Construction Ledger, then review and confirm the plan." % label
 
 func _town_action_button_readiness(action: Dictionary, lane: String) -> String:
 	if bool(action.get("disabled", false)):
@@ -3785,15 +4015,19 @@ func _town_action_lane_label(lane: String) -> String:
 func _town_action_surface_label(lane: String) -> String:
 	match lane:
 		"build":
-			return "Build tab"
-		"recruit", "hero", "tavern", "transfer", "specialty":
-			return "Muster tab"
-		"study", "artifact":
-			return "Spells tab"
+			return "Construction Ledger"
+		"recruit":
+			return "Muster Hall"
+		"hero", "specialty":
+			return "Command sidebar"
+		"tavern", "transfer", "artifact":
+			return "Town Log"
+		"study":
+			return "Spell Study"
 		"market":
-			return "Trade tab"
+			return "Town Market"
 		"response":
-			return "Log tab"
+			return "Town Log"
 		_:
 			return "Town orders"
 
@@ -5683,6 +5917,7 @@ func _refresh_management_tab_cues() -> void:
 		_management_tabs.set_tab_title(index, String(tab.get("title", "")))
 	_management_tabs.tooltip_text = String(payload.get("tooltip_text", ""))
 	_sync_management_tab_tooltip()
+	_sync_direct_action_badges(payload)
 
 func _refresh_management_tab_titles_minimal() -> void:
 	var titles := ["Build", "Muster", "Spells", "Trade", "Log"]
@@ -5690,6 +5925,19 @@ func _refresh_management_tab_titles_minimal() -> void:
 		_management_tabs.set_tab_title(index, String(titles[index]))
 	_management_tabs.tooltip_text = "Town command tabs refresh after the first town frame."
 	_sync_management_tab_tooltip()
+	_sync_direct_action_badges(_management_tab_readiness_payload())
+
+func _sync_direct_action_badges(payload: Dictionary) -> void:
+	var tabs: Array = payload.get("tabs", []) if payload.get("tabs", []) is Array else []
+	var log_entry: Dictionary = tabs[4] if tabs.size() > 4 and tabs[4] is Dictionary else {}
+	var log_count := int(log_entry.get("ready_count", 0))
+	_log_badge_label.text = str(log_count)
+	_log_badge_label.tooltip_text = String(log_entry.get("summary", "Log: no active orders"))
+	_log_action_button.tooltip_text = _join_tooltip_sections([
+		"Open the town log and logistics.",
+		String(log_entry.get("summary", "No town-log orders are currently listed.")),
+	])
+	_log_action_button.accessibility_description = _log_action_button.tooltip_text
 
 func _management_tab_readiness_payload() -> Dictionary:
 	var tabs := [
@@ -5822,6 +6070,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_town_stage_frame_panel, "frame")
 	FrontierVisualKit.apply_panel(_sidebar_shell_panel, "ink")
 	FrontierVisualKit.apply_panel(_command_panel, "ink")
+	FrontierVisualKit.apply_panel(_action_dock_panel, "ink")
 	FrontierVisualKit.apply_panel(_town_panel, "gold")
 	FrontierVisualKit.apply_panel(_outlook_panel, "teal")
 	FrontierVisualKit.apply_panel(_command_ledger_panel, "earth")
@@ -5832,8 +6081,8 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_logistics_panel, "teal")
 	FrontierVisualKit.apply_panel(_town_catalog_panel, "earth")
 	FrontierVisualKit.apply_panel(_footer_panel, "banner")
-	FrontierVisualKit.apply_art_panel(_banner_panel, UI_ART_TOWN_BANNER_FRAME, "banner", 68, 14, Color(0.78, 0.74, 0.66, 1.0))
-	FrontierVisualKit.apply_art_panel(_crest_panel, UI_ART_TOWN_CREST_MEDALLION, "gold", 70, 10, Color(0.82, 0.78, 0.70, 1.0))
+	FrontierVisualKit.apply_art_panel(_banner_panel, UI_ART_TOWN_BANNER_FRAME, "banner", 68, 2, Color(0.78, 0.74, 0.66, 1.0))
+	FrontierVisualKit.apply_art_panel(_crest_panel, UI_ART_TOWN_CREST_MEDALLION, "gold", 70, 2, Color(0.82, 0.78, 0.70, 1.0))
 	FrontierVisualKit.apply_art_panel(_town_stage_panel, UI_ART_TOWN_BUILD_PANEL, "earth", 58, 12, Color(0.66, 0.60, 0.54, 1.0))
 	FrontierVisualKit.apply_art_panel(_town_stage_frame_panel, UI_ART_TOWN_RECRUIT_ROW, "frame", 62, 12, Color(0.66, 0.62, 0.56, 1.0))
 	FrontierVisualKit.apply_art_panel(_sidebar_shell_panel, UI_ART_TOWN_PARCHMENT_PANEL, "ink", 66, 12, Color(0.44, 0.42, 0.38, 1.0))
@@ -5841,7 +6090,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_art_panel(_town_panel, UI_ART_TOWN_RESOURCE_LEDGER, "gold", 62, 12, Color(0.56, 0.50, 0.44, 1.0))
 	FrontierVisualKit.apply_art_panel(_outlook_panel, UI_ART_TOWN_RESOURCE_LEDGER, "teal", 62, 12, Color(0.50, 0.56, 0.54, 1.0))
 	FrontierVisualKit.apply_art_panel(_command_ledger_panel, UI_ART_TOWN_RESOURCE_LEDGER, "earth", 62, 12, Color(0.52, 0.50, 0.46, 1.0))
-	FrontierVisualKit.apply_art_panel(_resource_chip_panel, UI_ART_TOWN_RESOURCE_LEDGER, "gold", 62, 8, Color(0.70, 0.62, 0.48, 1.0))
+	FrontierVisualKit.apply_art_panel(_resource_chip_panel, UI_ART_TOWN_RESOURCE_LEDGER, "gold", 62, 2, Color(0.70, 0.62, 0.48, 1.0))
 	FrontierVisualKit.apply_art_panel(_build_panel, UI_ART_TOWN_BUILD_PANEL, "earth", 58, 12, Color(0.58, 0.52, 0.46, 1.0))
 	FrontierVisualKit.apply_art_panel(_recruit_panel, UI_ART_TOWN_RECRUIT_ROW, "green", 62, 12, Color(0.58, 0.62, 0.52, 1.0))
 	FrontierVisualKit.apply_art_panel(_study_panel, UI_ART_TOWN_PARCHMENT_PANEL, "blue", 66, 12, Color(0.42, 0.44, 0.52, 1.0))
@@ -5850,7 +6099,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_art_panel(_town_catalog_panel, UI_ART_TOWN_PARCHMENT_PANEL, "earth", 66, 16, Color(0.60, 0.55, 0.48, 1.0))
 	FrontierVisualKit.apply_art_panel(_footer_panel, UI_ART_TOWN_BANNER_FRAME, "banner", 68, 12, Color(0.70, 0.66, 0.60, 1.0))
 	FrontierVisualKit.apply_clear_panel(_town_stage_panel)
-	FrontierVisualKit.apply_clear_panel(_command_panel)
+	FrontierVisualKit.apply_clear_panel(_town_stage_frame_panel)
 	FrontierVisualKit.apply_clear_panel(_build_panel)
 	FrontierVisualKit.apply_clear_panel(_recruit_panel)
 	FrontierVisualKit.apply_clear_panel(_study_panel)
@@ -5858,6 +6107,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_clear_panel(_logistics_panel)
 	FrontierVisualKit.apply_clear_panel(_footer_panel)
 	FrontierVisualKit.apply_ornate_frame(_sidebar_shell_panel, UI_ART_SHARED_HUD_FRAME, "frame", 112, 8, Color(0.78, 0.74, 0.68, 0.94))
+	FrontierVisualKit.apply_ornate_frame(_action_dock_panel, UI_ART_SHARED_HUD_FRAME, "frame", 112, 6, Color(0.78, 0.74, 0.68, 0.96))
 	FrontierVisualKit.apply_tab_container(_management_tabs)
 	_management_tabs.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	_apply_town_management_tab_breathing_room()
@@ -5869,6 +6119,8 @@ func _apply_visual_theme() -> void:
 
 	for button in [_confirm_build_button, _open_build_catalog_button, _open_muster_catalog_button, _town_orders_toggle_button, _save_button, _leave_button, _guide_button, _settings_button, _menu_button]:
 		_style_action_button(button, true)
+	for button in [_build_action_button, _muster_action_button, _spells_action_button, _trade_action_button, _log_action_button]:
+		FrontierVisualKit.apply_button(button, "secondary", 44.0, 44.0, 11)
 	FrontierVisualKit.apply_button(_town_catalog_close_button, "secondary", 108.0, 30.0, 12)
 	FrontierVisualKit.apply_button(_guide_close_button, "secondary", 108.0, 30.0, 12)
 	FrontierVisualKit.apply_panel(_guide_panel, "ink")
@@ -5882,7 +6134,7 @@ func _apply_visual_theme() -> void:
 		if label is Label:
 			FrontierVisualKit.apply_label(label, "title", 13)
 
-	FrontierVisualKit.apply_label(_header_label, "title", 20)
+	FrontierVisualKit.apply_label(_header_label, "title", 16)
 	FrontierVisualKit.apply_label(_status_label, "body", 12)
 	FrontierVisualKit.apply_button(_resource_label, "secondary", 210.0, 30.0, 12)
 	_resource_label.flat = true

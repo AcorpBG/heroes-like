@@ -75,7 +75,7 @@ func _run_case(viewport_size: Vector2i) -> Dictionary:
 		shell.call("validation_toggle_narrow_town_orders")
 		await get_tree().process_frame
 
-	var build_launcher := shell.get_node("%OpenBuildCatalog") as Button
+	var build_launcher := shell.get_node("%BuildAction") as Button
 	build_launcher.grab_focus()
 	var build_previous_focus := get_viewport().gui_get_focus_owner()
 	shell.call("validation_open_town_catalog", "build")
@@ -92,9 +92,7 @@ func _run_case(viewport_size: Vector2i) -> Dictionary:
 	await get_tree().process_frame
 	var build_close_focus := get_viewport().gui_get_focus_owner()
 	var build_focus_returned := build_close_focus == build_previous_focus
-	(shell.get_node("%ManagementTabs") as TabContainer).current_tab = 1
-	await get_tree().process_frame
-	var muster_launcher := shell.get_node("%OpenMusterCatalog") as Button
+	var muster_launcher := shell.get_node("%MusterAction") as Button
 	muster_launcher.grab_focus()
 	var muster_previous_focus := get_viewport().gui_get_focus_owner()
 	shell.call("validation_open_town_catalog", "muster")

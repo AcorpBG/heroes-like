@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/town_screen_layout_and_dialog_controls_report.gd" id="1"]
+
+[node name="TownScreenLayoutAndDialogControlsReport" type="Node"]
+script = ExtResource("1")

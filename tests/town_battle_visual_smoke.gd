@@ -1815,159 +1815,70 @@ func _assert_town_command_tab_readiness_cues(shell: Node) -> bool:
 
 func _assert_town_management_card_contract(shell: Node, session) -> bool:
 	var authority_before: Dictionary = session.to_dict()
-	var tabs: TabContainer = shell.get_node("%ManagementTabs")
 	var shell_control := shell as Control
-	var sidebar_box := tabs.get_parent() as VBoxContainer
-	var watermark: TextureRect = shell.get_node("%BuildFactionWatermark")
-	var crest_icon: TextureRect = shell.get_node("%CrestIcon")
-	var build_box: VBoxContainer = shell.get_node("%BuildFactionWatermark").get_parent()
-	var confirm_build: Button = shell.get_node("%ConfirmBuild")
-	var rows := [
-		{"title": "Build", "page": shell.get_node("%BuildPanel")},
-		{"title": "Muster", "page": shell.get_node("%RecruitPanel")},
-		{"title": "Spells", "page": shell.get_node("%StudyPanel")},
-		{"title": "Trade", "page": shell.get_node("%MarketPanel")},
-		{"title": "Log", "page": shell.get_node("%LogisticsPanel")},
-	]
-	var tab_bar := tabs.get_tab_bar()
-	if tab_bar == null:
-		push_error("Town smoke: ManagementTabs did not expose its native TabBar.")
-		return false
-	if tabs.tab_alignment != HORIZONTAL_ALIGNMENT_CENTER:
-		push_error("Town smoke: ManagementTabs lost its centered five-plaque command group.")
-		return false
-	for style_name in ["tab_selected", "tab_hovered", "tab_unselected", "tab_disabled"]:
-		var style := tabs.get_theme_stylebox(style_name)
-		if style == null \
-				or not is_equal_approx(style.content_margin_left, 4.0) \
-				or not is_equal_approx(style.content_margin_right, 4.0):
-			push_error("Town smoke: management tab plaque %s lost its exact 4px horizontal breathing room." % style_name)
-			return false
-	if not is_equal_approx(tabs.custom_minimum_size.y, 460.0) \
-			or tabs.size_flags_vertical != Control.SIZE_EXPAND_FILL:
-		push_error("Town smoke: ManagementTabs lost its exact 460px minimum-plus-expand rail policy: minimum=%s flags=%s." % [tabs.custom_minimum_size, tabs.size_flags_vertical])
-		return false
-	if shell_control == null \
-			or sidebar_box == null \
-			or watermark.texture == null \
-			or watermark.texture != crest_icon.texture \
-			or watermark.texture.resource_path != TownRules.faction_crest_icon_path("faction_embercourt") \
-			or watermark.custom_minimum_size != Vector2.ZERO \
-			or watermark.size_flags_vertical != Control.SIZE_EXPAND_FILL \
-			or watermark.mouse_filter != Control.MOUSE_FILTER_IGNORE \
-			or watermark.focus_mode != Control.FOCUS_NONE \
-			or watermark.expand_mode != TextureRect.EXPAND_IGNORE_SIZE \
-			or watermark.stretch_mode != TextureRect.STRETCH_KEEP_ASPECT_CENTERED \
-			or not is_equal_approx(watermark.self_modulate.a, 0.14) \
-			or watermark.tooltip_text != "" \
-			or not watermark.visible:
-		push_error("Town smoke: Build faction watermark lost its exact passive live-crest contract.")
+	if shell_control == null:
+		push_error("Town smoke: TownShell is not a responsive Control.")
 		return false
 	var window := get_window()
 	var original_window_size := window.size
 	var original_shell_size := shell_control.size
-	var original_tab := tabs.current_tab
-	tabs.current_tab = 0
 	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
 		window.size = viewport_size
 		shell_control.size = Vector2(viewport_size)
 		await get_tree().process_frame
 		await get_tree().process_frame
 		await get_tree().process_frame
-		var tab_font := tab_bar.get_theme_font("font")
-		var tab_font_size := tab_bar.get_theme_font_size("font_size")
-		var prior_tab_end := 0.0
-		var first_tab_start := INF
-		for tab_index in range(rows.size()):
-			var tab_title := tabs.get_tab_title(tab_index)
-			var tab_rect := tab_bar.get_tab_rect(tab_index)
-			var text_width := tab_font.get_string_size(tab_title, HORIZONTAL_ALIGNMENT_LEFT, -1.0, tab_font_size).x if tab_font != null and tab_font_size > 0 else INF
-			if tab_rect.position.x + 0.01 < prior_tab_end \
-					or tab_rect.end.x > tab_bar.size.x + 0.01 \
-					or tab_rect.size.x + 0.5 < text_width + 8.0:
-				push_error("Town smoke: management tab %s lacks ordered text-safe breathing room at %s: rect=%s text_width=%s bar=%s." % [tab_title, viewport_size, tab_rect, text_width, tab_bar.size])
-				window.size = original_window_size
-				shell_control.size = original_shell_size
-				return false
-			if tab_index == 0:
-				first_tab_start = tab_rect.position.x
-			prior_tab_end = tab_rect.end.x
-		if absf(first_tab_start - (tab_bar.size.x - prior_tab_end)) > 1.0:
-			push_error("Town smoke: management tab group is not centered at %s: first=%s last=%s bar=%s." % [viewport_size, first_tab_start, prior_tab_end, tab_bar.size])
+		var layout: Dictionary = shell.call("validation_owner_town_layout_snapshot")
+		var direct: Dictionary = shell.call("validation_direct_action_controls_snapshot")
+		var direct_rows: Array = direct.get("rows", []) if direct.get("rows", []) is Array else []
+		var sidebar_rect: Rect2 = layout.get("sidebar_rect", Rect2())
+		var exact: bool = window.size == viewport_size \
+			and bool(layout.get("header_single_row", false)) \
+			and float(layout.get("header_height_ratio", 1.0)) <= 0.10 \
+			and float(layout.get("scenic_area_ratio", 0.0)) >= 0.78 \
+			and bool(layout.get("scenic_reaches_viewport_edges", false)) \
+			and bool(layout.get("sidebar_overlays_scenic", false)) \
+			and bool(layout.get("footer_overlays_scenic", false)) \
+			and bool(layout.get("sidebar_contained", false)) \
+			and bool(layout.get("footer_contained", false)) \
+			and not bool(layout.get("legacy_management_tabs_visible", true)) \
+			and direct_rows.size() == 5 \
+			and String(direct.get("log_badge_text", "")) != ""
+		for row_value in direct_rows:
+			var row: Dictionary = row_value
+			exact = exact and bool(row.get("visible", false)) \
+				and bool(row.get("icon_only", false)) \
+				and int(row.get("focus_mode", Control.FOCUS_NONE)) == Control.FOCUS_ALL \
+				and String(row.get("tooltip_text", "")) != "" \
+				and String(row.get("accessibility_name", "")) != "" \
+				and sidebar_rect.encloses(row.get("rect", Rect2()))
+		if not exact:
+			push_error("Town smoke: compact direct-action Town layout failed at %s: layout=%s direct=%s." % [viewport_size, layout, direct])
 			window.size = original_window_size
 			shell_control.size = original_shell_size
 			return false
-		var watermark_rect := watermark.get_global_rect()
-		var build_box_rect := build_box.get_global_rect()
-		var confirm_rect := confirm_build.get_global_rect()
-		var tabs_rect := tabs.get_global_rect()
-		var sidebar_box_rect := sidebar_box.get_global_rect()
-		if window.size != viewport_size \
-				or tabs_rect.size.y + 0.01 < 460.0 \
-				or not sidebar_box_rect.encloses(tabs_rect) \
-				or absf(sidebar_box_rect.end.y - tabs_rect.end.y) > 1.0 \
-				or (viewport_size.y >= 1080 and tabs_rect.size.y < 600.0) \
-				or not watermark.is_visible_in_tree() \
-				or watermark_rect.size.x <= 0.0 \
-				or watermark_rect.size.y <= 0.0 \
-				or not build_box_rect.encloses(watermark_rect) \
-				or watermark_rect.intersects(confirm_rect) \
-				or watermark_rect.position.y + 0.01 < confirm_rect.end.y:
-			push_error("Town smoke: Build faction watermark is not contained below Build controls at %s: watermark=%s build=%s confirm=%s." % [viewport_size, watermark_rect, build_box_rect, confirm_rect])
-			window.size = original_window_size
-			shell_control.size = original_shell_size
+	var expected_titles := {"build": "Construction Ledger", "muster": "Muster Hall", "spells": "Spell Study", "trade": "Town Market", "log": "Town Log & Logistics"}
+	for mode_value in expected_titles:
+		var mode := String(mode_value)
+		var result: Dictionary = shell.call("validation_activate_direct_action", mode)
+		if not bool(result.get("dialog_open", false)) \
+				or String(result.get("active_dialog_mode", "")) != mode \
+				or String(result.get("dialog_title", "")) != String(expected_titles[mode]):
+			push_error("Town smoke: direct %s command did not open its authoritative dialog: %s." % [mode, result])
 			return false
-	var original_high_contrast := FrontierVisualKitScript.high_contrast_enabled()
-	FrontierVisualKitScript.set_high_contrast_enabled(true)
-	shell.call("_refresh_faction_crest")
-	await get_tree().process_frame
-	if watermark.visible:
-		push_error("Town smoke: decorative Build faction watermark remained visible in high-contrast mode.")
-		FrontierVisualKitScript.set_high_contrast_enabled(original_high_contrast)
-		window.size = original_window_size
-		shell_control.size = original_shell_size
+		shell.call("validation_close_town_catalog")
+		await get_tree().process_frame
+	var hotspot_result: Dictionary = shell.call("validation_activate_main_building_hotspot")
+	if not bool(hotspot_result.get("same_authoritative_build_route", false)):
+		push_error("Town smoke: painted main building did not route through the Build construction ledger: %s." % hotspot_result)
 		return false
-	FrontierVisualKitScript.set_high_contrast_enabled(original_high_contrast)
-	shell.call("_refresh_faction_crest")
+	shell.call("validation_close_town_catalog")
 	window.size = original_window_size
 	shell_control.size = original_shell_size
 	await get_tree().process_frame
 	await get_tree().process_frame
-	if not watermark.visible:
-		push_error("Town smoke: Build faction watermark did not restore with the live crest after high-contrast validation.")
-		return false
-	for index in range(rows.size()):
-		var row: Dictionary = rows[index]
-		tabs.current_tab = index
-		await get_tree().process_frame
-		await get_tree().process_frame
-		var page: Control = row.get("page")
-		var expected_title := String(row.get("title", ""))
-		var actual_title := tabs.get_tab_title(index)
-		if actual_title != expected_title and not actual_title.begins_with("%s " % expected_title) \
-				or tabs.size.y + 0.01 < 460.0 \
-				or not tabs.get_global_rect().encloses(page.get_global_rect()):
-			push_error("Town smoke: management card title/height/page containment mismatch at tab %s: title=%s tabs=%s page=%s." % [index, actual_title, tabs.get_global_rect(), page.get_global_rect()])
-			return false
-	var logistics_scroll: ScrollContainer = shell.get_node("%LogisticsScroll")
-	var artifacts: Control = shell.get_node("%Artifacts")
-	var response_actions: Control = shell.get_node("%ResponseActions")
-	if not logistics_scroll.get_global_rect().encloses(artifacts.get_global_rect()) \
-			or logistics_scroll.get_v_scroll_bar().max_value <= logistics_scroll.get_v_scroll_bar().page + 0.01:
-		push_error("Town smoke: Log card did not expose its top content and a real bounded vertical scroll range.")
-		return false
-	logistics_scroll.scroll_vertical = int(logistics_scroll.get_v_scroll_bar().max_value)
-	await get_tree().process_frame
-	await get_tree().process_frame
-	if not logistics_scroll.get_global_rect().encloses(response_actions.get_global_rect()):
-		push_error("Town smoke: Log card could not reach its final response actions through native scrolling.")
-		return false
-	logistics_scroll.scroll_vertical = 0
-	tabs.current_tab = original_tab
-	await get_tree().process_frame
-	await get_tree().process_frame
 	if session.to_dict() != authority_before:
-		push_error("Town smoke: inspecting management-card geometry changed Town/session authority.")
+		push_error("Town smoke: inspecting direct Town dialogs changed Town/session authority.")
 		return false
 	return true
 
@@ -2027,7 +1938,7 @@ func _assert_town_action_button_command_cues(shell: Node) -> bool:
 			if tooltip.contains("Command cue:") and tooltip.contains("Next:"):
 				lanes_with_cues.append(String(lane))
 	var all_text := "\n".join(all_text_lines)
-	for token in ["Command cue:", "Next:", "Build tab", "Muster tab"]:
+	for token in ["Command cue:", "Next:", "Construction Ledger", "Muster Hall"]:
 		if not all_text.contains(token):
 			push_error("Town smoke: action-button command cues lost %s clarity: %s." % [token, all_text])
 			return false
