@@ -1914,6 +1914,45 @@
   "blocker": "",
   "completedImplementationEvidence": [
     {
+      "id": "ux-town-integrated-building-progression-20260903",
+      "title": "Integrated Town Building Progression",
+      "sliceId": "ux-town-integrated-building-progression-10226",
+      "status": "completed",
+      "validatedAt": "2026-09-03T21:34:25Z",
+      "updatedAt": "2026-09-03T21:34:25Z",
+      "latestFinding": "All 32 authored towns resolve authoritative built structures through explicit faction scene plots and exact original raster art; visible structures own aligned accessible information hotspots, and real construction/save restoration plus Linux/Windows packages pass.",
+      "artifacts": [
+        "content/town_building_scene_layouts.json",
+        "tools/generate_town_building_scene_layouts.py",
+        "scenes/town/TownStageView.gd",
+        "scenes/town/TownShell.gd",
+        "tests/town_building_skyline_progression_report.gd",
+        "tests/complete_town_backdrop_runtime_report.gd",
+        "docs/town-integrated-building-progression-requirements.md",
+        "docs/town-integrated-building-progression-report.md",
+        ".artifacts/town_integrated_building_progression/captures/town_riverwatch_sparse_1280x720.png",
+        ".artifacts/town_integrated_building_progression/captures/town_riverwatch_developed_2048x1079.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "authored_town_count": 32,
+        "faction_count": 6,
+        "faction_building_mapping_count": 179,
+        "runtime_building_texture_count": 160,
+        "responsive_capture_count": 6,
+        "save_version": 9,
+        "linux_packaged_startup_passed": true,
+        "windows_packaged_startup_passed": true,
+        "windows_generated_town_entry_passed": true,
+        "pck_size_bytes": 245073436,
+        "pck_size_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 4926564,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "Select the next bounded owner-directed Phase 6 implementation slice; the unrelated Battle System-frame smoke assertion and Moonbite Reedshrine 30-turn balance target remain outside this completed Town UX slice."
+    },
+    {
       "id": "performance-large-generated-map-runtime-20260903",
       "title": "Large Generated Map Runtime Performance",
       "sliceId": "performance-large-generated-map-runtime-10225",
@@ -16334,14 +16373,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Owner-directed #10225 is complete with deterministic performance, save-equivalence, repository, and platform-package evidence.",
+  "currentNotes": "Owner-directed #10226 is complete with integrated per-building Town scenes, clickable authored information, save restoration, responsive visual evidence, and platform-package proof.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-large-generated-map-runtime-10225",
-  "currentSliceId": "performance-large-generated-map-runtime-10225",
-  "currentSliceNotes": "Completed: exact signature 7362cf00 retained; native hotspot over 16x faster; focused 5/15-second command bounds and platform packages pass.",
+  "currentSlice": "ux-town-integrated-building-progression-10226",
+  "currentSliceId": "ux-town-integrated-building-progression-10226",
+  "currentSliceNotes": "Completed: all 32 towns use explicit faction plots and exact built-art layers; real construction/save restoration, accessible information routing, responsive captures, repository validation, and matching platform packages pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Large Generated Map Runtime Performance",
-  "currentSliceUpdatedAt": "2026-09-03T19:05:00Z",
+  "currentSliceTitle": "Integrated Town Building Progression",
+  "currentSliceUpdatedAt": "2026-09-03T21:34:25Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21646,7 +21685,7 @@
       }
     }
   },
-  "guardrailNote": "Select the next tracker-approved bounded implementation slice; preserve completed Battle RNG/results, legality, balance, animation, input/focus/accessibility, save/schema, content, and Native RMG authority.",
+  "guardrailNote": "Select the next tracker-approved bounded implementation slice; preserve completed Town scenic rendering, building information, construction, save, and gameplay authority.",
   "lastValidation": {
     "id": "content-eight-commanders-proving-roads-20260831",
     "title": "Eight Commanders' Proving Roads",
@@ -21801,7 +21840,7 @@
     "ops/progress.json"
   ],
   "latestEvidenceId": "content-eight-commanders-proving-roads-20260831",
-  "latestFinding": "Large-map native decorative materialization is over 16x faster on the deterministic 108x108 fixture, whose signature remains 7362cf00; focused commands, save round trip, repository validation, and matching Linux/Windows package gates pass.",
+  "latestFinding": "All 32 authored towns now resolve their authoritative built structures through explicit six-faction settlement plots and exact original raster art; built layers and accessible hit targets share one crop-aware transform, and real construction/save restoration plus Linux/Windows packages pass.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -21864,8 +21903,51 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select and track the next bounded owner-directed Phase 6 implementation slice before editing.",
-  "notes": "Owner-directed #10225 Large-map performance is completed. Prior #10224 post-battle reporting remains completed.",
+  "notes": "Owner-directed #10226 integrated Town building progression is completed. Prior #10225 Large-map performance and #10224 post-battle reporting remain completed.",
   "plannedSlices": [
+    {
+      "id": "ux-town-integrated-building-progression-10226",
+      "title": "Integrated Town Building Progression",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/town-integrated-building-progression-requirements.md",
+        "content/building_art_manifest.json",
+        "content/town_development_scene_manifest.json"
+      ],
+      "purpose": "Make every completed Town building appear at a deliberate integrated scenic location and provide an aligned accessible information hotspot without changing construction or save authority.",
+      "implementationTargets": [
+        "content/town_building_scene_layouts.json",
+        "scenes/town/TownStageView.gd",
+        "scenes/town/TownShell.gd",
+        "tests",
+        "tests/validate_repo.py",
+        "docs/town-integrated-building-progression-requirements.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every authored town building maps to one exact loadable raster and a deterministic contained faction plot, with upgrade chains replacing predecessors and no random or procedural plot fallback",
+        "A real construction appears immediately and restores identically after a save-version-9 round trip without changing construction or resource authority",
+        "Every visible building has a cover-crop-aligned accessible hit target that opens accurate authored building information",
+        "Focused all-town and responsive visual tests, repository validation, and Linux/Windows export/package startup pass below the unchanged package ceiling"
+      ],
+      "nonGoals": [
+        "Building rules, content, costs, prerequisites, economy, balance, AI, save schema, Overworld, Battle, Campaign, or Native RMG changes",
+        "Copied Heroes art or layout, procedural building substitutes, broad Town-shell redesign, package-ceiling changes, signing, publication, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-03T19:30:00Z",
+      "startedAt": "2026-09-03T19:30:00Z",
+      "updatedAt": "2026-09-03T21:34:25Z",
+      "completedAt": "2026-09-03T21:34:25Z",
+      "notes": "Completed with 179 explicit six-faction catalog mappings across all 32 towns, stable village bases, exact authoritative built-art layers, shared upgrade plots, aligned accessible information hotspots, real construction/save restoration, responsive visual evidence, and matching Linux/Windows package startup.",
+      "remainingWork": "No work remains inside this slice. The unrelated Battle System-frame smoke assertion and Moonbite Reedshrine 30-turn balance target remain outside its scope.",
+      "result": "Explicit faction settlement plots now present each authoritative completed building as a depth-scaled original raster layer and route aligned click/focus activation to authored building information without changing construction, progression, or save authority."
+    },
     {
       "id": "performance-large-generated-map-runtime-10225",
       "title": "Large Generated Map Runtime Performance",
@@ -108977,8 +109059,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "performance_large_generated_map_runtime_completed",
-  "status": "in_progress",
+  "result": "town_integrated_building_progression_completed",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -109078,9 +109160,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed #10225: deterministic Large-map generation and normal play no longer exhibit minute-long stalls; exact map/save authority and Linux/Windows parity are preserved.",
-  "taskId": "10225",
-  "updatedAt": "2026-09-03T19:05:00Z",
+  "summary": "Completed #10226: authoritative completed buildings appear as explicit scene-aligned raster layers and expose accessible read-only information hotspots without changing construction or save authority.",
+  "taskId": "10226",
+  "updatedAt": "2026-09-03T21:34:25Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

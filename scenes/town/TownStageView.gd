@@ -2,6 +2,7 @@ extends Control
 
 signal town_action_presentation_blocking_changed(blocking: bool)
 signal main_building_activated
+signal building_activated(building_id: String)
 
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
@@ -9,6 +10,7 @@ const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 const TOWN_VFX_MANIFEST_PATH := "res://content/town_vfx_manifest.json"
+const TOWN_BUILDING_SCENE_LAYOUT_PATH := "res://content/town_building_scene_layouts.json"
 const FRAME_FILL := Color(0.05, 0.07, 0.09, 1.0)
 const BOARD_FILL := Color(0.09, 0.11, 0.12, 1.0)
 const FRAME_COLOR := Color(0.78, 0.66, 0.38, 0.94)
@@ -33,9 +35,9 @@ const SCENIC_AMBIENT_LIGHT_PULSE_SPEED := 1.35
 const SCENIC_AMBIENT_LIGHT_PULSE_MIN := 0.82
 const SCENIC_AMBIENT_LIGHT_PULSE_MAX := 1.0
 const SCENIC_AMBIENT_LIGHT_STATIC_SCALE := 0.88
-const DEVELOPMENT_SCENE_MODEL := "authoritative_seamless_faction_settlement_stages"
-const DEVELOPMENT_SCENE_STAGE_ORDER := ["village", "developing", "fully_built"]
-const DEVELOPMENT_SCENE_DEVELOPING_MIN_RATIO := 0.34
+const DEVELOPMENT_SCENE_MODEL := "authoritative_integrated_per_building_settlement"
+const INTEGRATED_BUILDING_MODEL := "explicit_faction_ground_anchor_depth_and_perspective"
+const INTEGRATED_BUILDING_SOURCE_SIZE := Vector2(1600.0, 900.0)
 const MAIN_BUILDING_HOTSPOT_MODEL := "normalized_faction_stage_cover_crop"
 const MAIN_BUILDING_HOTSPOTS := {
 	"faction_embercourt": {
@@ -226,12 +228,18 @@ var _resolved_scenic_backdrop_texture: Texture2D
 var _resolved_development_scene_stage := ""
 var _development_scene_texture_cache: Dictionary = {}
 var _main_building_hotspot: Button
+var _building_scene_layout_manifest: Dictionary = {}
+var _building_scene_layout_loaded := false
+var _town_building_textures: Dictionary = {}
+var _town_building_texture_missing: Dictionary = {}
+var _building_hotspots: Dictionary = {}
 var _external_command_overlay := false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	focus_mode = Control.FOCUS_NONE
 	custom_minimum_size = Vector2(620, 320)
+	_load_building_scene_layout_manifest()
 	_create_main_building_hotspot()
 	_load_town_vfx_manifest()
 	if not SettingsService.settings_changed.is_connected(_on_settings_changed):
@@ -256,6 +264,7 @@ func _process(delta: float) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_sync_main_building_hotspot()
+		_sync_building_hotspots()
 		queue_redraw()
 
 func set_town_state(session) -> void:
@@ -279,6 +288,7 @@ func set_town_state(session) -> void:
 			_front = OverworldRulesScript.town_front_state(session, _town)
 	_sync_processing_state()
 	_sync_main_building_hotspot()
+	_sync_building_hotspots()
 	queue_redraw()
 
 func set_precomputed_town_state(session, state: Dictionary) -> void:
@@ -304,6 +314,7 @@ func set_precomputed_town_state(session, state: Dictionary) -> void:
 	_resolve_scenic_backdrop()
 	_sync_processing_state()
 	_sync_main_building_hotspot()
+	_sync_building_hotspots()
 	queue_redraw()
 
 func _clear_town_state(session) -> void:
@@ -327,6 +338,7 @@ func _clear_town_state(session) -> void:
 	_resolved_scenic_backdrop_texture = null
 	_resolved_development_scene_stage = ""
 	_sync_main_building_hotspot()
+	_sync_building_hotspots()
 
 func _duplicate_dictionary(value: Variant) -> Dictionary:
 	return value.duplicate(true) if value is Dictionary else {}
@@ -345,6 +357,7 @@ func _draw() -> void:
 	else:
 		draw_rect(scene_rect, Color(0.02, 0.03, 0.04, 0.08), true)
 		_draw_scenic_ambient_light(scene_rect)
+		_draw_integrated_buildings(scene_rect)
 	_draw_status_plaques(scene_rect)
 	_draw_district_strip(scene_rect)
 	if not _external_command_overlay:
@@ -676,13 +689,54 @@ func _on_main_building_hotspot_pressed() -> void:
 func main_building_hotspot_control() -> Control:
 	return _main_building_hotspot
 
+func building_hotspot_controls() -> Array:
+	var controls: Array = []
+	for entry_value in _town_building_scene_entries(_town_scene_rect()):
+		var entry: Dictionary = entry_value
+		var building_id := String(entry.get("visible_building_id", ""))
+		if building_id == "" or bool(entry.get("embedded_in_base", false)):
+			continue
+		var button: Button = _building_hotspots.get(building_id) as Button
+		if button != null and button.visible:
+			controls.append(button)
+	return controls
+
+func validation_activate_building_hotspot(building_id: String) -> Dictionary:
+	var button: Button = _building_hotspots.get(building_id) as Button
+	if button != null and button.visible:
+		button.emit_signal("pressed")
+	return validation_building_hotspot_summary(building_id)
+
+func validation_building_hotspot_summary(building_id: String) -> Dictionary:
+	var button: Button = _building_hotspots.get(building_id) as Button
+	var matching_entry: Dictionary = {}
+	for entry_value in _town_building_scene_entries(_town_scene_rect()):
+		var entry: Dictionary = entry_value
+		if String(entry.get("visible_building_id", "")) == building_id:
+			matching_entry = entry
+			break
+	var destination_rect: Rect2 = matching_entry.get("destination_rect", Rect2())
+	return {
+		"building_id": building_id,
+		"exists": button != null,
+		"visible": button != null and button.visible,
+		"destination_rect": destination_rect,
+		"button_rect": button.get_rect() if button != null else Rect2(),
+		"aligned": button != null and button.position.is_equal_approx(destination_rect.position) and button.size.is_equal_approx(destination_rect.size),
+		"focus_mode": button.focus_mode if button != null else Control.FOCUS_NONE,
+		"tooltip_text": button.tooltip_text if button != null else "",
+		"accessibility_name": button.accessibility_name if button != null else "",
+		"accessibility_description": button.accessibility_description if button != null else "",
+		"routes_to": "TownShell._on_town_building_activated",
+	}
+
 func set_external_command_overlay(enabled: bool) -> void:
 	_external_command_overlay = enabled
 	queue_redraw()
 
 func _main_building_normalized_rect() -> Rect2:
 	var faction_hotspots: Dictionary = MAIN_BUILDING_HOTSPOTS.get(_town_faction_id(), {})
-	var stage_id := _town_development_stage_id()
+	var stage_id := "village"
 	return faction_hotspots.get(stage_id, Rect2())
 
 func _main_building_destination_rect() -> Rect2:
@@ -721,7 +775,7 @@ func validation_main_building_hotspot_summary() -> Dictionary:
 	return {
 		"model": MAIN_BUILDING_HOTSPOT_MODEL,
 		"faction_id": _town_faction_id(),
-		"stage_id": _town_development_stage_id(),
+		"stage_id": "village",
 		"normalized_rect": normalized_rect,
 		"source_rect": source_rect,
 		"destination_rect": destination_rect,
@@ -1254,6 +1308,212 @@ func _draw_scenic_ambient_light(scene_rect: Rect2) -> void:
 			var ring_alpha := lerpf(0.018, 0.003, ring_ratio) * strength * pulse_scale
 			draw_circle(center, radius * ring_ratio, Color(color.r, color.g, color.b, ring_alpha), true, -1.0, true)
 
+func _load_building_scene_layout_manifest() -> void:
+	if _building_scene_layout_loaded:
+		return
+	_building_scene_layout_loaded = true
+	_building_scene_layout_manifest = {}
+	if not FileAccess.file_exists(TOWN_BUILDING_SCENE_LAYOUT_PATH):
+		return
+	var file := FileAccess.open(TOWN_BUILDING_SCENE_LAYOUT_PATH, FileAccess.READ)
+	if file == null:
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if parsed is Dictionary and String(parsed.get("schema_id", "")) == "town_integrated_building_scene_layout_v1":
+		_building_scene_layout_manifest = parsed
+
+func _building_scene_faction_layout() -> Dictionary:
+	_load_building_scene_layout_manifest()
+	var factions: Dictionary = _building_scene_layout_manifest.get("factions", {}) if _building_scene_layout_manifest.get("factions", {}) is Dictionary else {}
+	var faction_layout: Variant = factions.get(_town_faction_id(), {})
+	return faction_layout if faction_layout is Dictionary else {}
+
+func _town_building_scene_entries(scene_rect: Rect2) -> Array:
+	var faction_layout := _building_scene_faction_layout()
+	var plots: Array = faction_layout.get("plots", []) if faction_layout.get("plots", []) is Array else []
+	var modulate_values: Array = faction_layout.get("modulate", []) if faction_layout.get("modulate", []) is Array else []
+	var building_modulate := Color.WHITE
+	if modulate_values.size() == 4:
+		building_modulate = Color(float(modulate_values[0]), float(modulate_values[1]), float(modulate_values[2]), float(modulate_values[3]))
+	var catalog_ids := _town_building_catalog_ids()
+	var catalog_set := _dictionary_set(catalog_ids)
+	var built_ids := _normalized_string_array(_town.get("built_buildings", []))
+	var entries: Array = []
+	for plot_value in plots:
+		if not plot_value is Dictionary:
+			continue
+		var plot: Dictionary = plot_value
+		var mapped_ids: Array = plot.get("building_ids", []) if plot.get("building_ids", []) is Array else []
+		var variant_ids: Array = []
+		for building_id_value in mapped_ids:
+			var building_id := String(building_id_value)
+			if catalog_set.has(building_id):
+				variant_ids.append(building_id)
+		if variant_ids.is_empty():
+			continue
+		var visible_building_id := ""
+		for variant_id_value in variant_ids:
+			var variant_id := String(variant_id_value)
+			if variant_id in built_ids:
+				visible_building_id = variant_id
+		var anchor_values: Array = plot.get("anchor", []) if plot.get("anchor", []) is Array else []
+		if anchor_values.size() != 2:
+			continue
+		var anchor := Vector2(float(anchor_values[0]), float(anchor_values[1]))
+		var height_ratio := float(plot.get("height_ratio", 0.0))
+		var width_ratio := height_ratio * INTEGRATED_BUILDING_SOURCE_SIZE.y / INTEGRATED_BUILDING_SOURCE_SIZE.x
+		var normalized_rect := Rect2(Vector2(anchor.x - width_ratio * 0.5, anchor.y - height_ratio), Vector2(width_ratio, height_ratio))
+		var projection := _project_normalized_source_rect(normalized_rect, scene_rect)
+		var building := ContentService.get_building(visible_building_id) if visible_building_id != "" else {}
+		entries.append({
+			"plot_id": String(plot.get("plot_id", "")),
+			"variant_ids": variant_ids,
+			"visible_building_id": visible_building_id,
+			"embedded_in_base": bool(plot.get("embedded_in_base", false)),
+			"anchor": anchor,
+			"height_ratio": height_ratio,
+			"normalized_rect": normalized_rect,
+			"source_rect": projection.get("source_rect", Rect2()),
+			"visible_source_rect": projection.get("visible_source_rect", Rect2()),
+			"destination_rect": projection.get("destination_rect", Rect2()),
+			"texture_region_ratio": projection.get("texture_region_ratio", Rect2()),
+			"source_contained": normalized_rect.position.x >= 0.0 and normalized_rect.position.y >= 0.0 and normalized_rect.end.x <= 1.0 and normalized_rect.end.y <= 1.0,
+			"destination_contained": scene_rect.encloses(projection.get("destination_rect", Rect2())),
+			"building_name": String(building.get("name", visible_building_id)),
+			"building_description": String(building.get("description", "")),
+			"category": String(building.get("category", "")),
+			"modulate": building_modulate,
+		})
+	entries.sort_custom(func(a: Dictionary, b: Dictionary): return float(a.get("anchor", Vector2.ZERO).y) < float(b.get("anchor", Vector2.ZERO).y))
+	return entries
+
+func _project_normalized_source_rect(normalized_rect: Rect2, scene_rect: Rect2) -> Dictionary:
+	var texture := _scenic_backdrop_texture()
+	if texture == null or normalized_rect.size.x <= 0.0 or normalized_rect.size.y <= 0.0 or scene_rect.size.x <= 0.0 or scene_rect.size.y <= 0.0:
+		return {}
+	var texture_size := texture.get_size()
+	var cover_source_rect := _cover_source_rect(texture_size, scene_rect.size)
+	var object_source_rect := Rect2(normalized_rect.position * texture_size, normalized_rect.size * texture_size)
+	var visible_source_rect := cover_source_rect.intersection(object_source_rect)
+	if visible_source_rect.size.x <= 0.0 or visible_source_rect.size.y <= 0.0:
+		return {"source_rect": object_source_rect, "visible_source_rect": Rect2()}
+	var destination_rect := Rect2(
+		scene_rect.position + (visible_source_rect.position - cover_source_rect.position) / cover_source_rect.size * scene_rect.size,
+		visible_source_rect.size / cover_source_rect.size * scene_rect.size
+	)
+	return {
+		"source_rect": object_source_rect,
+		"visible_source_rect": visible_source_rect,
+		"destination_rect": destination_rect,
+		"texture_region_ratio": Rect2(
+			(visible_source_rect.position - object_source_rect.position) / object_source_rect.size,
+			visible_source_rect.size / object_source_rect.size
+		),
+	}
+
+func _draw_integrated_buildings(scene_rect: Rect2) -> void:
+	for entry_value in _town_building_scene_entries(scene_rect):
+		var entry: Dictionary = entry_value
+		var building_id := String(entry.get("visible_building_id", ""))
+		if building_id == "" or bool(entry.get("embedded_in_base", false)):
+			continue
+		var texture := _town_building_texture(building_id)
+		if texture == null:
+			continue
+		var destination_rect: Rect2 = entry.get("destination_rect", Rect2())
+		var region_ratio: Rect2 = entry.get("texture_region_ratio", Rect2(Vector2.ZERO, Vector2.ONE))
+		if destination_rect.size.x <= 0.0 or destination_rect.size.y <= 0.0:
+			continue
+		var reveal_scale := _town_building_reveal_scale(building_id)
+		if not is_equal_approx(reveal_scale, 1.0):
+			var reveal_size := destination_rect.size * reveal_scale
+			destination_rect = Rect2(Vector2(destination_rect.get_center().x - reveal_size.x * 0.5, destination_rect.end.y - reveal_size.y), reveal_size)
+		var texture_size := texture.get_size()
+		var texture_region := Rect2(region_ratio.position * texture_size, region_ratio.size * texture_size)
+		draw_texture_rect_region(texture, destination_rect, texture_region, entry.get("modulate", Color.WHITE))
+
+func _town_building_texture(building_id: String) -> Texture2D:
+	if building_id == "" or _town_building_texture_missing.has(building_id):
+		return null
+	if _town_building_textures.has(building_id):
+		return _town_building_textures.get(building_id) as Texture2D
+	var texture_path := TownRulesScript.building_icon_path(building_id)
+	if texture_path == "" or not ResourceLoader.exists(texture_path, "Texture2D"):
+		_town_building_texture_missing[building_id] = true
+		return null
+	var texture := load(texture_path) as Texture2D
+	if texture == null:
+		_town_building_texture_missing[building_id] = true
+		return null
+	_town_building_textures[building_id] = texture
+	return texture
+
+func _town_building_reveal_scale(building_id: String) -> float:
+	if SettingsService.reduced_motion_enabled() or String(_town_action_presentation.get("event_id", "")) != "town_building_built" or String(_town_action_presentation.get("building_id", "")) != building_id:
+		return 1.0
+	var duration_ms := maxi(1, int(_town_action_presentation.get("duration_ms", 1)))
+	var elapsed_ms := maxi(0, Time.get_ticks_msec() - int(_town_action_presentation.get("started_msec", 0)))
+	var progress := clampf(float(elapsed_ms) / float(duration_ms), 0.0, 1.0)
+	return lerpf(1.06, 1.0, ease(progress, 2.0))
+
+func _create_building_hotspot(building_id: String) -> Button:
+	var button := Button.new()
+	button.name = "BuildingHotspot_%s" % building_id.trim_prefix("building_")
+	button.text = ""
+	button.flat = false
+	button.focus_mode = Control.FOCUS_ALL
+	button.mouse_filter = Control.MOUSE_FILTER_STOP
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	button.z_index = 6
+	button.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	var hover_style := StyleBoxFlat.new()
+	hover_style.bg_color = Color(1.0, 0.82, 0.36, 0.07)
+	hover_style.border_color = Color(1.0, 0.86, 0.48, 0.82)
+	hover_style.set_border_width_all(2)
+	hover_style.set_corner_radius_all(8)
+	button.add_theme_stylebox_override("hover", hover_style)
+	var pressed_style := hover_style.duplicate()
+	pressed_style.bg_color = Color(1.0, 0.82, 0.36, 0.16)
+	button.add_theme_stylebox_override("pressed", pressed_style)
+	var focus_style := hover_style.duplicate()
+	focus_style.border_color = Color(1.0, 0.94, 0.68, 1.0)
+	focus_style.set_border_width_all(3)
+	button.add_theme_stylebox_override("focus", focus_style)
+	button.pressed.connect(_on_building_hotspot_pressed.bind(building_id))
+	add_child(button)
+	_building_hotspots[building_id] = button
+	return button
+
+func _on_building_hotspot_pressed(building_id: String) -> void:
+	building_activated.emit(building_id)
+
+func _sync_building_hotspots() -> void:
+	for existing_button_value in _building_hotspots.values():
+		if existing_button_value is Button:
+			(existing_button_value as Button).visible = false
+	if _town.is_empty() or not is_inside_tree():
+		return
+	for entry_value in _town_building_scene_entries(_town_scene_rect()):
+		var entry: Dictionary = entry_value
+		var building_id := String(entry.get("visible_building_id", ""))
+		if building_id == "" or bool(entry.get("embedded_in_base", false)):
+			continue
+		var destination_rect: Rect2 = entry.get("destination_rect", Rect2())
+		if destination_rect.size.x < 24.0 or destination_rect.size.y < 24.0:
+			continue
+		var button: Button = _building_hotspots.get(building_id) as Button
+		if button == null:
+			button = _create_building_hotspot(building_id)
+		var building := ContentService.get_building(building_id)
+		var building_name := String(building.get("name", building_id))
+		var description := String(building.get("description", ""))
+		button.tooltip_text = "%s\n%s\nOpen building information." % [building_name, description]
+		button.accessibility_name = "%s building" % building_name
+		button.accessibility_description = "%s Press to open building information." % description
+		button.position = destination_rect.position
+		button.size = destination_rect.size
+		button.visible = true
+
 func _town_building_catalog_ids() -> Array:
 	var result: Array = []
 	_append_unique_building_ids(result, _town_template.get("starting_building_ids", []))
@@ -1279,64 +1539,100 @@ func _normalized_string_array(values: Variant) -> Array:
 			result.append(normalized)
 	return result
 
+func _dictionary_set(values: Array) -> Dictionary:
+	var result: Dictionary = {}
+	for value in values:
+		result[String(value)] = true
+	return result
+
 func validation_town_building_progression_summary() -> Dictionary:
+	var scene_rect := _town_scene_rect()
+	var entries := _town_building_scene_entries(scene_rect)
 	var catalog_ids := _town_building_catalog_ids()
 	var built_ids := _normalized_string_array(_town.get("built_buildings", []))
-	var constructed_ids: Array = []
-	for built_id_value in built_ids:
-		var built_id := String(built_id_value)
-		if built_id in catalog_ids and built_id not in constructed_ids:
-			constructed_ids.append(built_id)
-	var ratio := float(constructed_ids.size()) / float(catalog_ids.size()) if not catalog_ids.is_empty() else 0.0
-	var stage_id := _town_development_stage_id()
 	var faction_id := _town_faction_id()
 	var stage_paths: Dictionary = FACTION_DEVELOPMENT_SCENE_PATHS.get(faction_id, {})
+	var mapped_ids: Array = []
+	var visible_ids: Array = []
 	var texture_rows: Array = []
-	for candidate_stage_value in DEVELOPMENT_SCENE_STAGE_ORDER:
-		var candidate_stage := String(candidate_stage_value)
-		var candidate_texture := _development_scene_texture(faction_id, candidate_stage)
-		texture_rows.append({
-			"stage_id": candidate_stage,
-			"path": String(stage_paths.get(candidate_stage, "")),
-			"texture_loaded": candidate_texture is Texture2D,
-			"texture_size": (candidate_texture as Texture2D).get_size() if candidate_texture is Texture2D else Vector2.ZERO,
-		})
+	var all_source_contained := not entries.is_empty()
+	var all_destination_contained := not entries.is_empty()
+	var all_hotspots_aligned := true
+	for entry_value in entries:
+		var entry: Dictionary = entry_value
+		all_source_contained = all_source_contained and bool(entry.get("source_contained", false))
+		all_destination_contained = all_destination_contained and bool(entry.get("destination_contained", false))
+		for variant_value in Array(entry.get("variant_ids", [])):
+			var variant_id := String(variant_value)
+			if variant_id not in mapped_ids:
+				mapped_ids.append(variant_id)
+			var texture := _town_building_texture(variant_id)
+			texture_rows.append({
+				"building_id": variant_id,
+				"plot_id": String(entry.get("plot_id", "")),
+				"texture_path": TownRulesScript.building_icon_path(variant_id),
+				"texture_loaded": texture != null,
+				"texture_size": texture.get_size() if texture != null else Vector2.ZERO,
+			})
+		var visible_id := String(entry.get("visible_building_id", ""))
+		if visible_id == "":
+			continue
+		visible_ids.append(visible_id)
+		if bool(entry.get("embedded_in_base", false)):
+			continue
+		var button: Button = _building_hotspots.get(visible_id) as Button
+		var destination_rect: Rect2 = entry.get("destination_rect", Rect2())
+		all_hotspots_aligned = all_hotspots_aligned and button != null and button.visible and button.position.is_equal_approx(destination_rect.position) and button.size.is_equal_approx(destination_rect.size)
+	var visible_covers_built := true
+	for built_id_value in built_ids:
+		var built_id := String(built_id_value)
+		if built_id not in catalog_ids:
+			visible_covers_built = false
+			break
+		var covered := false
+		for entry_value in entries:
+			var entry: Dictionary = entry_value
+			if built_id in Array(entry.get("variant_ids", [])) and String(entry.get("visible_building_id", "")) != "":
+				covered = true
+				break
+		if not covered:
+			visible_covers_built = false
+			break
 	return {
-		"model": DEVELOPMENT_SCENE_MODEL,
+		"model": INTEGRATED_BUILDING_MODEL,
+		"manifest_path": TOWN_BUILDING_SCENE_LAYOUT_PATH,
+		"manifest_loaded": not _building_scene_layout_manifest.is_empty(),
+		"manifest_schema_id": String(_building_scene_layout_manifest.get("schema_id", "")),
 		"town_id": String(_town_template.get("id", _town.get("town_id", ""))),
 		"faction_id": faction_id,
 		"catalog_building_ids": catalog_ids.duplicate(),
 		"catalog_building_count": catalog_ids.size(),
 		"authoritative_built_ids": built_ids.duplicate(),
 		"authoritative_built_count": built_ids.size(),
-		"constructed_catalog_ids": constructed_ids,
-		"constructed_catalog_count": constructed_ids.size(),
-		"completion_ratio": ratio,
-		"developing_min_ratio": DEVELOPMENT_SCENE_DEVELOPING_MIN_RATIO,
-		"fully_built_requires_complete_catalog": true,
-		"stage_id": stage_id,
-		"stage_path": String(stage_paths.get(stage_id, "")),
-		"stage_texture_rows": texture_rows,
-		"all_stage_textures_loaded": texture_rows.size() == DEVELOPMENT_SCENE_STAGE_ORDER.size() and texture_rows.all(func(row): return bool(row.get("texture_loaded", false)) and row.get("texture_size", Vector2.ZERO) == Vector2(1600, 900)),
+		"mapped_building_ids": mapped_ids,
+		"mapping_covers_catalog": mapped_ids.size() == catalog_ids.size() and catalog_ids.all(func(building_id): return building_id in mapped_ids),
+		"plot_count": entries.size(),
+		"entries": entries,
+		"visible_building_ids": visible_ids,
+		"visible_building_count": visible_ids.size(),
+		"visible_covers_authoritative_built": visible_covers_built,
+		"all_textures_loaded": texture_rows.size() == catalog_ids.size() and texture_rows.all(func(row): return bool(row.get("texture_loaded", false)) and row.get("texture_size", Vector2.ZERO) == Vector2(256, 256)),
+		"texture_rows": texture_rows,
+		"all_source_rects_contained": all_source_contained,
+		"all_destination_rects_contained": all_destination_contained,
+		"all_visible_hotspots_aligned": all_hotspots_aligned,
+		"visible_information_hotspot_count": visible_ids.filter(func(building_id): return building_id != "building_town_hall").size(),
+		"base_stage_id": "village",
+		"base_stage_path": String(stage_paths.get("village", "")),
+		"base_texture_loaded": _scenic_backdrop_texture() != null,
+		"integrated_building_layers_enabled": true,
+		"integrated_building_texture_count": visible_ids.size() - (1 if "building_town_hall" in visible_ids else 0),
 		"isolated_building_overlay_enabled": false,
 		"isolated_building_texture_count": 0,
 		"construction_stake_overlay_enabled": false,
-		"draw_order": ["seamless_development_scene", "ambient_light_bloom", "status_plaques", "district_strip", "command_markers", "header", "town_action_presentation"],
+		"runtime_generated_plot_fallback_enabled": false,
+		"draw_order": ["village_base_scene", "ambient_light_bloom", "depth_sorted_exact_building_layers", "status_plaques", "district_strip", "command_markers", "header", "town_action_presentation"],
 	}
-
-func _town_development_stage_id() -> String:
-	var catalog_ids := _town_building_catalog_ids()
-	if catalog_ids.is_empty():
-		return "village"
-	var built_ids := _normalized_string_array(_town.get("built_buildings", []))
-	var constructed_count := 0
-	for building_id_value in catalog_ids:
-		if String(building_id_value) in built_ids:
-			constructed_count += 1
-	if constructed_count >= catalog_ids.size():
-		return "fully_built"
-	var ratio := float(constructed_count) / float(catalog_ids.size())
-	return "developing" if ratio >= DEVELOPMENT_SCENE_DEVELOPING_MIN_RATIO else "village"
 
 func _scenic_ambient_light_entries(scene_rect: Rect2) -> Array:
 	var texture := _scenic_backdrop_texture()
@@ -1438,7 +1734,7 @@ func _resolve_scenic_backdrop() -> void:
 	_resolved_scenic_backdrop_texture = null
 	_resolved_development_scene_stage = ""
 	var faction_id := _town_faction_id()
-	var stage_id := _town_development_stage_id()
+	var stage_id := "village"
 	var development_paths: Dictionary = FACTION_DEVELOPMENT_SCENE_PATHS.get(faction_id, {})
 	var development_texture := _development_scene_texture(faction_id, stage_id)
 	if development_texture != null:

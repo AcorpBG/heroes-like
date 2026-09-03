@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10225
+Task: #10226
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -25,8 +25,40 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - No owner-directed implementation slice is currently active.
-- Most recently completed implementation slice: `performance-large-generated-map-runtime-10225`, which removes the measured quadratic native materialization stall and repeated Large-map runtime copies while preserving map signature, gameplay, and save authority.
-- Current package boundary: matching Linux and Windows release exports measure 245006172 bytes, 4993828 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Most recently completed implementation slice: `ux-town-integrated-building-progression-10226`, which makes authoritative constructed buildings appear on explicit faction settlement plots and opens accessible authored building information without changing Town rules or save authority.
+- Current package boundary: matching Linux and Windows release exports measure 245073436 bytes, 4926564 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Integrated Town Building Progression
+
+id: `ux-town-integrated-building-progression-10226`
+
+Status: completed.
+
+Owner direction: begin each Town from its faction's sparse settlement scene, then make every authoritative completed building appear at a deliberate scenic location as part of the town rather than as a random icon row or coarse whole-scene stage swap; every visible building must be clickable and explain its gameplay purpose.
+
+Requirements: `docs/town-integrated-building-progression-requirements.md`, `project.md` Phase 6 production alpha Town UX, the existing construction/save authority, `content/building_art_manifest.json`, and `content/town_development_scene_manifest.json`.
+
+Implementation boundary:
+- keep the faction village panorama as the stable scenic base and place each starting/buildable structure through explicit faction-aware normalized layout metadata, shared upgrade plots, authored depth/scale, and exact original raster building art;
+- derive visibility only from authoritative `built_buildings`, update immediately after construction, preserve save-version-9 restoration, and fail focused validation on missing art/layout ownership instead of substituting random/procedural plots;
+- align building rendering and interactive hit regions through the same cover-crop transform, with hover/focus affordance, tooltip/accessibility text, keyboard/controller reachability, and a compact information dialog describing the selected building's live authored effects;
+- retain the existing construction ledger and all Town rules, costs, prerequisites, progression, faction identity, command surfaces, and Linux/Windows package limits.
+
+Completion criteria:
+- every starting/buildable building across all authored towns maps deterministically to one contained, deliberate faction plot with a loadable exact raster asset; upgrade chains replace their predecessor in the same plot and no isolated row, random placement, stake, or generic fallback is visible;
+- one real construction appears immediately in the scenic town, survives save/resume with identical layout, and leaves construction/resource authority unchanged;
+- every currently visible building has a cover-crop-aligned mouse/focus target whose activation opens accurate name, description, category, cost, prerequisite, and live effect information without routing through a new gameplay state;
+- focused all-town/runtime/responsive visual coverage, repository validation, and matching Linux/Windows export/package startup pass below the unchanged package ceiling.
+
+Non-goals:
+- no building definition, cost, prerequisite, income, growth, recruitment, spell, market, defense, construction timing, AI, balance, save-schema, Overworld, battle, campaign, or Native RMG changes;
+- no copied Heroes town art/layout, procedural building substitutes, broad Town-shell redesign, package-ceiling change, signing, publication, whole-game validation, or release-readiness claim.
+
+Result:
+- the stable faction village base now gains only the exact authoritative built structures at checked-in faction-aware ground anchors; 179 faction catalog mappings cover all 32 towns, upgrade chains replace their predecessor on one plot, and no random/stake/generated fallback is exposed;
+- every visible non-base building owns the same crop-aware rectangle for painting and accessible activation, opening a read-only information surface with its authored description, construction requirements, and gameplay effects, while the base Town Hall retains its authoritative construction-ledger route;
+- real Riverwatch construction, exact resource mutation, save-version-9 restoration, all-town texture/layout/hotspot coverage, the 18-stage first-import probe, the 52-case backdrop report, repository validation, and inspected 1280x720/2048x1079 captures pass;
+- Linux and Windows release exports both boot with identical 245073436-byte PCKs, source art remains excluded, and Windows also passes generated setup/overworld/Town entry under Wine. The unrelated broad Battle System-frame assertion and Moonbite Reedshrine 30-turn balance target remain independently red and unclaimed.
 
 ## Large Generated Map Runtime Performance
 

@@ -135,7 +135,7 @@ func _fallback_contract() -> Dictionary:
 			and String(summary.get("faction_id", "")) == faction_id
 			and String(summary.get("selection_scope", "")) == "faction_development_scene"
 			and String(summary.get("development_stage", "")) == "village"
-			and String(summary.get("development_model", "")) == "authoritative_seamless_faction_settlement_stages"
+			and String(summary.get("development_model", "")) == "authoritative_integrated_per_building_settlement"
 			and String(summary.get("mapped_path", "")) == String(Dictionary(FACTION_DEVELOPMENT_BACKDROPS[faction_id]).get("village", ""))
 			and bool(summary.get("texture_loaded", false))
 			and summary.get("texture_size", Vector2.ZERO) == Vector2(1600, 900)
@@ -178,7 +178,7 @@ func _run_town_case(viewport_size: Vector2i, town_id: String) -> Dictionary:
 		stage != null
 		and String(summary.get("town_id", "")) == town_id
 		and String(summary.get("selection_scope", "")) == "faction_development_scene"
-		and String(summary.get("development_model", "")) == "authoritative_seamless_faction_settlement_stages"
+		and String(summary.get("development_model", "")) == "authoritative_integrated_per_building_settlement"
 		and expected_stage in ["village", "developing", "fully_built"]
 		and String(summary.get("mapped_path", "")) == expected_path
 		and bool(summary.get("texture_loaded", false))
@@ -222,12 +222,13 @@ func _shell_surface_contract(shell: Node) -> Dictionary:
 	var controls := {
 		"stage": shell.get_node_or_null("%TownStage"),
 		"management_tabs": shell.get_node_or_null("%ManagementTabs"),
-		"build_catalog": shell.get_node_or_null("%OpenBuildCatalog"),
-		"muster_catalog": shell.get_node_or_null("%OpenMusterCatalog"),
+		"action_dock": shell.get_node_or_null("%ActionDock"),
+		"build_action": shell.get_node_or_null("%BuildAction"),
+		"muster_action": shell.get_node_or_null("%MusterAction"),
 		"leave": shell.get_node_or_null("%Leave"),
 	}
 	var exact := true
-	var required_visible := ["stage", "management_tabs", "leave"]
+	var required_visible := ["stage", "action_dock", "build_action", "muster_action", "leave"]
 	var labels := []
 	for label_value in controls.keys():
 		var label := String(label_value)
@@ -235,6 +236,8 @@ func _shell_surface_contract(shell: Node) -> Dictionary:
 		exact = exact and control != null and control.size.x > 0.0 and control.size.y > 0.0
 		if label in required_visible:
 			exact = exact and control.is_visible_in_tree()
+		if label == "management_tabs":
+			exact = exact and not control.is_visible_in_tree()
 		labels.append({"id": label, "visible": control != null and control.is_visible_in_tree(), "size": control.size if control != null else Vector2.ZERO})
 	return {"ok": exact, "controls": labels}
 

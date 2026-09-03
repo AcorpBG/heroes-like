@@ -145,6 +145,12 @@ var _last_departure_confirmation := {}
 var _selected_build_action_id := ""
 var _town_catalog_mode := ""
 var _town_catalog_previous_focus: Control
+var _selected_building_info_id := ""
+var _building_info_surface: VBoxContainer
+var _building_info_icon: TextureRect
+var _building_info_status: Label
+var _building_info_description: Label
+var _building_info_effects: Label
 var _narrow_layout_active := false
 var _narrow_orders_open := false
 var _last_management_tab_index := 0
@@ -192,6 +198,9 @@ func _ready() -> void:
 	var main_building_callable := Callable(self, "_on_open_build_catalog_pressed")
 	if _town_stage_view.has_signal("main_building_activated") and not _town_stage_view.is_connected("main_building_activated", main_building_callable):
 		_town_stage_view.connect("main_building_activated", main_building_callable)
+	var building_callable := Callable(self, "_on_town_building_activated")
+	if _town_stage_view.has_signal("building_activated") and not _town_stage_view.is_connected("building_activated", building_callable):
+		_town_stage_view.connect("building_activated", building_callable)
 	_confirm_build_button.pressed.connect(_on_confirm_build_pressed)
 	if not _management_tabs.tab_changed.is_connected(_on_management_tab_changed):
 		_management_tabs.tab_changed.connect(_on_management_tab_changed)
@@ -325,7 +334,51 @@ func _prepare_direct_dialog_surfaces() -> void:
 	for surface in ordered_surfaces:
 		if surface != null and surface.get_parent() != _domain_actions:
 			surface.reparent(_domain_actions)
+	_create_building_information_surface()
 	_set_direct_dialog_surface_visibility("")
+
+func _create_building_information_surface() -> void:
+	if _building_info_surface != null:
+		return
+	_building_info_surface = VBoxContainer.new()
+	_building_info_surface.name = "BuildingInformation"
+	_building_info_surface.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_building_info_surface.add_theme_constant_override("separation", 12)
+	var identity_row := HBoxContainer.new()
+	identity_row.name = "BuildingIdentity"
+	identity_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	identity_row.add_theme_constant_override("separation", 16)
+	_building_info_surface.add_child(identity_row)
+	_building_info_icon = TextureRect.new()
+	_building_info_icon.name = "BuildingPainting"
+	_building_info_icon.custom_minimum_size = Vector2(176.0, 176.0)
+	_building_info_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_building_info_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_building_info_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	identity_row.add_child(_building_info_icon)
+	var copy_column := VBoxContainer.new()
+	copy_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	copy_column.add_theme_constant_override("separation", 8)
+	identity_row.add_child(copy_column)
+	_building_info_status = Label.new()
+	_building_info_status.name = "BuildingStatus"
+	_building_info_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	FrontierVisualKit.apply_label(_building_info_status, "title", 16)
+	copy_column.add_child(_building_info_status)
+	_building_info_description = Label.new()
+	_building_info_description.name = "BuildingDescription"
+	_building_info_description.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_building_info_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	FrontierVisualKit.apply_label(_building_info_description, "body", 15)
+	copy_column.add_child(_building_info_description)
+	_building_info_surface.add_child(HSeparator.new())
+	_building_info_effects = Label.new()
+	_building_info_effects.name = "BuildingEffects"
+	_building_info_effects.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_building_info_effects.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	FrontierVisualKit.apply_label(_building_info_effects, "body", 14)
+	_building_info_surface.add_child(_building_info_effects)
+	_domain_actions.add_child(_building_info_surface)
 
 func _direct_dialog_mode_surfaces(mode: String) -> Array:
 	match mode:
@@ -335,6 +388,8 @@ func _direct_dialog_mode_surfaces(mode: String) -> Array:
 			return [_market_label, _market_actions]
 		"log":
 			return [_army_management, _artifact_label, _artifact_actions, _tavern_label, _tavern_actions, _transfer_label, _transfer_actions, _response_label, _response_actions]
+		"building_info":
+			return [_building_info_surface]
 		_:
 			return []
 
@@ -386,6 +441,102 @@ func _on_open_trade_dialog_pressed() -> void:
 func _on_open_log_dialog_pressed() -> void:
 	_open_town_catalog("log")
 
+func _on_town_building_activated(building_id: String) -> void:
+	if _session == null:
+		return
+	var town := TownRules.get_active_town(_session)
+	var built_ids: Array = town.get("built_buildings", []) if town.get("built_buildings", []) is Array else []
+	if building_id == "" or building_id not in built_ids or ContentService.get_building(building_id).is_empty():
+		return
+	_selected_building_info_id = building_id
+	_open_town_catalog("building_info")
+
+func _populate_building_information(building_id: String) -> void:
+	var building := ContentService.get_building(building_id)
+	if building.is_empty():
+		_town_catalog_title_label.text = "Building Information"
+		_town_catalog_subtitle_label.text = "This building is not available in the active town."
+		_building_info_icon.texture = null
+		_building_info_status.text = "Unavailable"
+		_building_info_description.text = "No authored building record could be resolved."
+		_building_info_effects.text = ""
+		return
+	var building_name := String(building.get("name", building_id))
+	var category := String(building.get("category", "support")).capitalize()
+	_town_catalog_title_label.text = building_name
+	_town_catalog_subtitle_label.text = "Completed %s building • inspect its permanent town contribution" % category.to_lower()
+	_building_info_status.text = "%s • Standing in %s" % [category, String(_header_label.text).split(" • ")[0]]
+	_building_info_description.text = String(building.get("description", "No description available."))
+	var texture_path := TownRules.building_icon_path(building_id)
+	_building_info_icon.texture = load(texture_path) as Texture2D if texture_path != "" and ResourceLoader.exists(texture_path, "Texture2D") else null
+	_building_info_icon.tooltip_text = "%s — original Town building painting" % building_name
+	_building_info_icon.accessibility_name = "%s building painting" % building_name
+	_building_info_icon.accessibility_description = String(building.get("description", ""))
+	_building_info_effects.text = "\n".join(_building_information_lines(building))
+	_building_info_effects.tooltip_text = _building_info_effects.text
+
+func _building_information_lines(building: Dictionary) -> Array:
+	var lines: Array = []
+	var cost: Dictionary = building.get("cost", {}) if building.get("cost", {}) is Dictionary else {}
+	lines.append("Construction cost: %s" % TownRules._describe_resources(cost, "founding structure"))
+	var requirement_names: Array = []
+	for requirement_id_value in Array(building.get("requires", [])):
+		var requirement := ContentService.get_building(String(requirement_id_value))
+		requirement_names.append(String(requirement.get("name", requirement_id_value)))
+	lines.append("Requires: %s" % (", ".join(requirement_names) if not requirement_names.is_empty() else "none"))
+	var upgrade_from := String(building.get("upgrade_from", ""))
+	if upgrade_from != "":
+		var predecessor := ContentService.get_building(upgrade_from)
+		lines.append("Replaces: %s on the same town site" % String(predecessor.get("name", upgrade_from)))
+	var effects: Array = []
+	var income: Dictionary = building.get("income", {}) if building.get("income", {}) is Dictionary else {}
+	if not income.is_empty():
+		effects.append("Daily income: %s" % TownRules._describe_resources(income))
+	var unlock_unit_id := String(building.get("unlock_unit_id", ""))
+	if unlock_unit_id != "":
+		var unit := ContentService.get_unit(unlock_unit_id)
+		effects.append("Unlocks recruitment: %s" % String(unit.get("name", unlock_unit_id)))
+	var growth_bonus: Dictionary = building.get("growth_bonus", {}) if building.get("growth_bonus", {}) is Dictionary else {}
+	for unit_id_value in growth_bonus:
+		var unit_id := String(unit_id_value)
+		var unit := ContentService.get_unit(unit_id)
+		effects.append("Weekly growth: +%d %s" % [int(growth_bonus.get(unit_id, 0)), String(unit.get("name", unit_id))])
+	var discounts: Dictionary = building.get("recruitment_discount_percent", {}) if building.get("recruitment_discount_percent", {}) is Dictionary else {}
+	for unit_id_value in discounts:
+		var unit_id := String(unit_id_value)
+		var unit := ContentService.get_unit(unit_id)
+		effects.append("Recruitment discount: %d%% for %s" % [int(discounts.get(unit_id, 0)), String(unit.get("name", unit_id))])
+	if int(building.get("spell_tier", 0)) > 0:
+		effects.append("Spell study: opens tier %d" % int(building.get("spell_tier", 0)))
+	if int(building.get("readiness_bonus", 0)) != 0:
+		effects.append("Town readiness: +%d" % int(building.get("readiness_bonus", 0)))
+	if int(building.get("pressure_bonus", 0)) != 0:
+		effects.append("Frontier pressure: +%d" % int(building.get("pressure_bonus", 0)))
+	var recovery_relief: Dictionary = building.get("recovery_relief", {}) if building.get("recovery_relief", {}) is Dictionary else {}
+	if not recovery_relief.is_empty():
+		effects.append("Recovery support: %s" % _humanize_building_effect_dictionary(recovery_relief))
+	var market_profile: Dictionary = building.get("market_profile", {}) if building.get("market_profile", {}) is Dictionary else {}
+	if not market_profile.is_empty():
+		effects.append("Market: %s" % String(market_profile.get("specialty_summary", "specialized exchange rates")))
+	var capital_project: Dictionary = building.get("capital_project", {}) if building.get("capital_project", {}) is Dictionary else {}
+	if not capital_project.is_empty():
+		effects.append("Capital project: %s" % String(capital_project.get("summary", "strengthens the town and its frontier reach")))
+	var artifact_contract: Dictionary = building.get("artifact_reward_contract", {}) if building.get("artifact_reward_contract", {}) is Dictionary else {}
+	if not artifact_contract.is_empty() and not bool(artifact_contract.get("metadata_only", true)):
+		effects.append("Artifact commission: %s, %s" % [String(artifact_contract.get("reward_tier", "standard")).capitalize(), "one-time" if bool(artifact_contract.get("one_time_reward", false)) else "repeatable"])
+	if effects.is_empty():
+		effects.append("Supports the town through its authored civic role.")
+	lines.append("Effects:")
+	for effect_value in effects:
+		lines.append("• %s" % String(effect_value))
+	return lines
+
+func _humanize_building_effect_dictionary(values: Dictionary) -> String:
+	var parts: Array = []
+	for key_value in values:
+		parts.append("%s %s" % [String(key_value).replace("_", " "), str(values.get(key_value))])
+	return ", ".join(parts)
+
 func _on_town_catalog_close_pressed() -> void:
 	_close_town_catalog()
 
@@ -393,7 +544,7 @@ func _town_catalog_is_open() -> bool:
 	return _town_catalog_overlay != null and _town_catalog_overlay.visible
 
 func _open_town_catalog(mode: String) -> void:
-	if mode not in ["build", "muster", "spells", "trade", "log"] or _session == null:
+	if mode not in ["build", "muster", "spells", "trade", "log", "building_info"] or _session == null:
 		return
 	if _town_action_input_blocker != null and _town_action_input_blocker.visible:
 		return
@@ -403,7 +554,7 @@ func _open_town_catalog(mode: String) -> void:
 	_town_catalog_mode = mode
 	_build_actions.visible = mode == "build"
 	_recruit_actions.visible = mode == "muster"
-	_domain_actions.visible = mode in ["spells", "trade", "log"]
+	_domain_actions.visible = mode in ["spells", "trade", "log", "building_info"]
 	_set_direct_dialog_surface_visibility(mode)
 	_build_plan_label.visible = mode == "build"
 	_confirm_build_button.visible = mode == "build"
@@ -427,7 +578,7 @@ func _open_town_catalog(mode: String) -> void:
 		_town_catalog_title_label.text = "Town Market"
 		_town_catalog_subtitle_label.text = "%d exchange order%s • restricted resources remain source-driven" % [actions.size(), "" if actions.size() == 1 else "s"]
 		_rebuild_market_actions(actions)
-	else:
+	elif mode == "log":
 		var actions := _logistics_tab_actions()
 		_town_catalog_title_label.text = "Town Log & Logistics"
 		_town_catalog_subtitle_label.text = "%d active order%s • garrison, artifacts, hires, transfers, and frontier responses" % [actions.size(), "" if actions.size() == 1 else "s"]
@@ -435,6 +586,8 @@ func _open_town_catalog(mode: String) -> void:
 		_rebuild_transfer_actions(TownRules.get_transfer_actions(_session))
 		_rebuild_response_actions(TownRules.get_response_actions(_session))
 		_rebuild_artifact_actions(TownRules.get_artifact_actions(_session))
+	else:
+		_populate_building_information(_selected_building_info_id)
 	_town_catalog_scroll.scroll_vertical = 0
 	_town_catalog_overlay.visible = true
 	call_deferred("_configure_town_keyboard_focus", true)
@@ -982,6 +1135,8 @@ func _configure_town_keyboard_focus(force: bool = false) -> void:
 	var direct_surfaces := [_build_action_button, _muster_action_button, _spells_action_button, _trade_action_button, _log_action_button]
 	if _town_stage_view.has_method("main_building_hotspot_control"):
 		direct_surfaces.push_front(_town_stage_view.call("main_building_hotspot_control"))
+	if _town_stage_view.has_method("building_hotspot_controls"):
+		direct_surfaces.append_array(_town_stage_view.call("building_hotspot_controls"))
 	var surfaces := []
 	surfaces.append_array(direct_surfaces)
 	surfaces.append_array([
@@ -2924,6 +3079,31 @@ func validation_activate_main_building_hotspot() -> Dictionary:
 		"hotspot": _town_stage_view.validation_main_building_hotspot_summary() if _town_stage_view.has_method("validation_main_building_hotspot_summary") else {},
 		"dialog": validation_direct_action_controls_snapshot(),
 		"same_authoritative_build_route": _town_catalog_is_open() and _town_catalog_mode == "build" and _town_catalog_title_label.text == "Construction Ledger",
+	}
+
+func validation_activate_building_information(building_id: String) -> Dictionary:
+	if _town_catalog_is_open():
+		_close_town_catalog(false)
+	if _town_stage_view.has_method("validation_activate_building_hotspot"):
+		_town_stage_view.call("validation_activate_building_hotspot", building_id)
+	return validation_building_information_snapshot(building_id)
+
+func validation_building_information_snapshot(building_id: String = "") -> Dictionary:
+	var expected_id := building_id if building_id != "" else _selected_building_info_id
+	var building := ContentService.get_building(expected_id)
+	return {
+		"building_id": expected_id,
+		"open": _town_catalog_is_open(),
+		"mode": _town_catalog_mode,
+		"title": _town_catalog_title_label.text,
+		"expected_title": String(building.get("name", expected_id)),
+		"description": _building_info_description.text if _building_info_description != null else "",
+		"expected_description": String(building.get("description", "")),
+		"effects": _building_info_effects.text if _building_info_effects != null else "",
+		"icon_loaded": _building_info_icon != null and _building_info_icon.texture != null,
+		"surface_visible": _building_info_surface != null and _building_info_surface.is_visible_in_tree(),
+		"read_only": true,
+		"hotspot": _town_stage_view.call("validation_building_hotspot_summary", expected_id) if _town_stage_view.has_method("validation_building_hotspot_summary") else {},
 	}
 
 func _town_guide_validation_snapshot() -> Dictionary:
