@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Fixed the fresh-Windows-import TownStageView parse failure by tracking all eighteen import sidecars and replacing eager PNG preloads with lazy imported-resource loading plus a cold-source decode fallback.",
+  "currentNotes": "Completed the owner-annotated Town composition with a compact single-row HUD, full-bleed responsive scenic art, a normalized main-building construction hotspot, and five compact accessible direct-dialog actions.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "bugfix-town-development-first-import-10184",
-  "currentSliceId": "bugfix-town-development-first-import-10184",
-  "currentSliceNotes": "Removed all eighteen eager development-scene PNG preloads, added lazy cache-backed loading and source decode fallback, tracked the import sidecars, and passed cold-import, focused town/save, repository, Linux, and Windows/Wine validation.",
+  "currentSlice": "ux-town-screen-layout-and-dialog-controls-10221",
+  "currentSliceId": "ux-town-screen-layout-and-dialog-controls-10221",
+  "currentSliceNotes": "Implemented and validated the owner-directed Town screen at 2048x1079 and 1280x720, including eighteen faction/stage hotspot mappings, five direct dialog routes, and matching Linux/Windows packages.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Development First-Import Parse Fix",
-  "currentSliceUpdatedAt": "2026-09-03T08:01:18Z",
+  "currentSliceTitle": "Town Screen Layout And Dialog Controls",
+  "currentSliceUpdatedAt": "2026-09-03T09:08:29Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21787,6 +21787,63 @@
   "nextActionGuardrailNote": "Select the next tracker-approved release-bound implementation slice from current playtest evidence; preserve the completed Overworld terrain, blocker, 3x4 town, pathing, save, and cross-platform package contracts without broadening them into topology, balance, or Native RMG changes.",
   "notes": "The seven-school signature battle-VFX slice is complete. The broader user goal to expand production content and distinctive art remains active for future selected slices.",
   "plannedSlices": [
+    {
+      "id": "ux-town-screen-layout-and-dialog-controls-10221",
+      "title": "Town Screen Layout And Dialog Controls",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Implement the owner-annotated Town composition with a compact HUD, responsive full-bleed scenic surface, authoritative painted main-building build access, and compact direct-dialog controls.",
+      "implementationTargets": [
+        "scenes/town/TownShell.tscn",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownStageView.gd",
+        "tests",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The Town header is a compact single row and the responsive scenic development scene owns the full content viewport beneath it without clipped edge controls",
+        "A normalized faction and development-stage main-building hotspot routes through the same authoritative construction ledger path as Build with hover, focus, keyboard, and controller support",
+        "Compact accessible Build, Muster, Spells, Trade, and Log icon controls each open a dialog or ledger directly and the Log retains its count badge",
+        "Focused Town coverage, inspected 2048x1079 and smaller captures, repository validation, and Linux/Windows package checks pass"
+      ],
+      "nonGoals": [
+        "Town art regeneration, gameplay, construction, economy, progression, save schema, package limit, Overworld, battle, AI, balance, or Native RMG changes",
+        "Copied Heroes expression, signing, publication, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-03T08:18:23Z",
+      "startedAt": "2026-09-03T08:18:23Z",
+      "updatedAt": "2026-09-03T09:08:29Z",
+      "completedAt": "2026-09-03T09:08:29Z",
+      "notes": "Completed from direct owner markup. The live Town now uses a compact header, full-bleed stage, crop-aware main-building construction hotspot, and accessible direct dialogs; focused rendered and cross-platform package validation passed.",
+      "metrics": {
+        "annotated_target_resolution": "2048x1079",
+        "required_direct_action_count": 5,
+        "required_faction_count": 6,
+        "required_development_stage_count": 3,
+        "validated_layout_resolution_count": 2,
+        "validated_hotspot_case_count": 18,
+        "validated_direct_action_count": 5,
+        "linux_packaged_startup_passed": true,
+        "windows_packaged_startup_passed": true,
+        "windows_generated_town_entry_passed": true,
+        "pck_size_bytes": 244965224,
+        "pck_size_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 5034776,
+        "save_version_changed": false,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "No work remains in #10221. Broader production completion and release readiness remain outside this slice."
+    },
     {
       "id": "content-six-faction-artifact-sets-10184",
       "title": "Six-Faction Artifact Sets And Insignia",
