@@ -1113,6 +1113,12 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if not bool(summary.get("body_tile_keys_exact", false)) or not bool(summary.get("all_body_assets_loaded", false)) or not bool(summary.get("all_body_assets_terrain_matched", false)) or not bool(summary.get("all_generated_records_anchored", false)):
 		_fail("%s generated body presentation is incomplete: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
+	if not bool(summary.get("legacy_primary_markers_suppressed", false)) or int(summary.get("indexed_legacy_primary_marker_count", -1)) != 0:
+		_fail("%s generated DEF anchors still expose duplicate procedural markers: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
+		return false
+	if is_default_fixture and int(summary.get("legacy_primary_marker_candidate_count", 0)) != 65:
+		_fail("%s deterministic generated DEF-anchor candidate count changed: %s" % [label, summary.get("legacy_primary_marker_candidate_count", -1)])
+		return false
 	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 1.20):
 		_fail("%s generated body sprite extent changed: %s" % [label, summary.get("body_sprite_extent_tiles", -1.0)])
 		return false
@@ -1278,6 +1284,9 @@ func _compact_generated_visual_summary(summary: Dictionary) -> Dictionary:
 	return {
 		"presentation_model": String(summary.get("presentation_model", "")),
 		"generated_record_count": int(summary.get("generated_record_count", 0)),
+		"legacy_primary_marker_candidate_count": int(summary.get("legacy_primary_marker_candidate_count", 0)),
+		"indexed_legacy_primary_marker_count": int(summary.get("indexed_legacy_primary_marker_count", -1)),
+		"legacy_primary_markers_suppressed": bool(summary.get("legacy_primary_markers_suppressed", false)),
 		"expected_body_tile_count": int(summary.get("expected_body_tile_count", 0)),
 		"indexed_body_tile_count": int(summary.get("indexed_body_tile_count", 0)),
 		"body_tile_keys_exact": bool(summary.get("body_tile_keys_exact", false)),

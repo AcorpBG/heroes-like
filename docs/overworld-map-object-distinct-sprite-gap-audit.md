@@ -1,5 +1,9 @@
 # Overworld Map Object Distinct Sprite Gap Audit
 
+## 2026-09-03 scope clarification
+
+The completed authored-object mapping claim in this audit was correct for its then-current 386-definition catalog, but it was not a guarantee about every generated-package presentation record. Task #10222 found that generated `decorative_blocker_sprite` records with empty authored object ids were separately indexing their legacy DEF anchor and their authoritative raster body. The raw duplicate could therefore expose `_draw_ruin_silhouette()` even though authored manifest coverage was complete. `docs/overworld-placeholder-art-resolution-report.md` records the runtime correction and the focused zero-normal-fallback proof. The current catalog contains 422 authored definitions, all still covered by the distinct decorative/non-decorative manifests.
+
 Slice: `overworld-map-object-distinct-sprite-gap-fill-10184`
 
 ## Scope

@@ -249,13 +249,17 @@ func _audit_session(view: Variant, session: Variant, source: String, generated: 
 		_counts["generated_decorative_visual_anchors"] = int(_counts.get("generated_decorative_visual_anchors", 0)) + int(summary.get("visual_anchor_count", 0))
 		if not bool(summary.get("body_tile_keys_exact", false)) \
 			or not bool(summary.get("all_body_assets_loaded", false)) \
-			or not bool(summary.get("all_generated_records_anchored", false)):
+			or not bool(summary.get("all_generated_records_anchored", false)) \
+			or not bool(summary.get("legacy_primary_markers_suppressed", false)) \
+			or int(summary.get("indexed_legacy_primary_marker_count", -1)) != 0:
 			_record_failure("%s generated decorative mass art is incomplete: %s" % [source, JSON.stringify({
 				"generated_record_count": summary.get("generated_record_count", 0),
 				"visual_anchor_count": summary.get("visual_anchor_count", 0),
 				"body_tile_keys_exact": summary.get("body_tile_keys_exact", false),
 				"all_body_assets_loaded": summary.get("all_body_assets_loaded", false),
 				"all_generated_records_anchored": summary.get("all_generated_records_anchored", false),
+				"legacy_primary_marker_candidate_count": summary.get("legacy_primary_marker_candidate_count", 0),
+				"indexed_legacy_primary_marker_count": summary.get("indexed_legacy_primary_marker_count", -1),
 			})])
 		for entry_value in summary.get("body_entries", []):
 			if entry_value is Dictionary and bool(entry_value.get("visual_anchor", false)):
@@ -264,22 +268,35 @@ func _audit_session(view: Variant, session: Variant, source: String, generated: 
 func _audit_tile_object(view: Variant, object: Dictionary, source: String, kind: String, expected_flag: String) -> void:
 	var tile := Vector2i(int(object.get("x", -1)), int(object.get("y", -1)))
 	var presentation: Dictionary = view.validation_tile_presentation(tile)
-	var art: Dictionary = presentation.get("art_presentation", {}) if presentation.get("art_presentation", {}) is Dictionary else {}
 	_counts[kind + "s"] = int(_counts.get(kind + "s", 0)) + 1
-	if not bool(presentation.get(expected_flag, false)) \
-		or not bool(art.get("uses_asset_sprite", false)) \
-		or bool(art.get("fallback_procedural_marker", true)) \
-		or not (art.get("sprite_asset_ids", []) is Array) \
-		or art.get("sprite_asset_ids", []).is_empty():
-		_record_failure("%s %s %s at %s lacks live art: %s" % [source, kind, object.get("placement_id", object.get("id", "")), tile, JSON.stringify(presentation)])
+	var asset_id := _exact_layer_asset_id(view, object, kind)
+	var texture_loaded := asset_id != "" and view.call("_object_texture_for_asset", asset_id) is Texture2D
+	if not bool(presentation.get(expected_flag, false)) or not texture_loaded:
+		_record_failure("%s %s %s at %s lacks exact layer art (asset=%s): %s" % [source, kind, object.get("placement_id", object.get("id", "")), tile, asset_id, JSON.stringify(presentation)])
 		return
-	for asset_id_value in art.get("sprite_asset_ids", []):
-		_asset_ids[String(asset_id_value)] = true
+	_asset_ids[asset_id] = true
 	if kind == "town":
 		var town_presentation: Dictionary = presentation.get("town_presentation", {}) if presentation.get("town_presentation", {}) is Dictionary else {}
 		var owner_pennant: Dictionary = town_presentation.get("owner_pennant", {}) if town_presentation.get("owner_pennant", {}) is Dictionary else {}
 		_counts["town_ownership_pennants"] = int(_counts.get("town_ownership_pennants", 0)) + 1
 		_audit_pennant(owner_pennant, source, "town_owner", String(object.get("placement_id", object.get("id", ""))))
+
+func _exact_layer_asset_id(view: Variant, object: Dictionary, kind: String) -> String:
+	match kind:
+		"town":
+			return String(view.call("_town_sprite_asset_id", object))
+		"resource":
+			return String(view.call("_resource_asset_id", object))
+		"artifact":
+			return String(view.call("_artifact_sprite_asset_id", object))
+		"encounter":
+			var identity_asset_id := String(view.call("_encounter_identity_asset_id", object))
+			if bool(object.get("prefer_identity_landmark", false)) and identity_asset_id != "":
+				return identity_asset_id
+			return String(view.call("_encounter_asset_id", object))
+		"standalone_map_object":
+			return String(view.call("_standalone_map_object_asset_id", object))
+	return ""
 
 func _audit_pennant(pennant: Dictionary, source: String, kind: String, placement_id: String) -> void:
 	var asset_id := String(pennant.get("asset_id", ""))
