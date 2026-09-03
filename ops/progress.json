@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Completed the owner-annotated Town composition with a compact single-row HUD, full-bleed responsive scenic art, a normalized main-building construction hotspot, and five compact accessible direct-dialog actions.",
+  "currentNotes": "Completed #10222 by removing the duplicate legacy DEF-anchor visual index while retaining every generated placement, package footprint, pathing cell, and terrain-matched original raster body.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-screen-layout-and-dialog-controls-10221",
-  "currentSliceId": "ux-town-screen-layout-and-dialog-controls-10221",
-  "currentSliceNotes": "Implemented and validated the owner-directed Town screen at 2048x1079 and 1280x720, including eighteen faction/stage hotspot mappings, five direct dialog routes, and matching Linux/Windows packages.",
+  "currentSlice": "bugfix-overworld-placeholder-art-resolution-10222",
+  "currentSliceId": "bugfix-overworld-placeholder-art-resolution-10222",
+  "currentSliceNotes": "Validated the exact generated decorative anchor path, zero normal visible procedural fallbacks, two inspected resolutions, exhaustive authored/live art coverage, and matching Linux/Windows packages.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Screen Layout And Dialog Controls",
-  "currentSliceUpdatedAt": "2026-09-03T09:08:29Z",
+  "currentSliceTitle": "Overworld Placeholder Art Resolution",
+  "currentSliceUpdatedAt": "2026-09-03T10:13:29Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21784,9 +21784,72 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved release-bound implementation slice from current playtest evidence; preserve the completed Overworld terrain, blocker, 3x4 town, pathing, save, and cross-platform package contracts without broadening them into topology, balance, or Native RMG changes.",
+  "nextActionGuardrailNote": "Resolve only the owner-captured overworld placeholder path and validate all normal visible object categories; preserve topology, placement, gameplay, save, Town, and unrelated art behavior.",
   "notes": "The seven-school signature battle-VFX slice is complete. The broader user goal to expand production content and distinctive art remains active for future selected slices.",
   "plannedSlices": [
+    {
+      "id": "bugfix-overworld-placeholder-art-resolution-10222",
+      "title": "Overworld Placeholder Art Resolution",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md",
+        "docs/overworld-map-object-distinct-sprite-gap-audit.md",
+        "art/overworld/manifest.json",
+        "art/overworld/map_object_sprites.json",
+        "art/overworld/decorative_object_sprites.json"
+      ],
+      "purpose": "Replace the owner-captured green procedural overworld fallback with authoritative original raster art while preserving the exact object's gameplay and deterministic generated-map identity.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "art/overworld",
+        "tests",
+        "tools",
+        "docs/overworld-placeholder-art-resolution-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Deterministic evidence identifies the screenshot object's exact runtime and placement identity and proves its authoritative identity-to-raster resolution",
+        "Focused Godot coverage proves zero normal-play procedural fallback across map objects, resource sites, artifacts, encounters, towns, and affected generated-map adoption",
+        "Existing distinct and decorative sprite reports remain green and an inspected in-context capture shows the corrected object",
+        "Repository validation plus Linux and Windows export, package, startup, and representative map-entry checks pass below the unchanged package ceiling"
+      ],
+      "nonGoals": [
+        "RMG topology, placement density, balance, gameplay, pathing, interaction, save schema, Town UI, or unrelated art-family changes",
+        "Deleting legitimate objects, procedural replacement art, copied Heroes assets, package-limit changes, signing, publication, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-03T09:44:23Z",
+      "startedAt": "2026-09-03T09:44:23Z",
+      "updatedAt": "2026-09-03T10:13:29Z",
+      "completedAt": "2026-09-03T10:13:29Z",
+      "notes": "Completed from direct owner evidence. Generated decorative package records now resolve only through their authoritative terrain-matched raster bodies; raw legacy DEF anchors no longer expose the procedural ruin marker.",
+      "metrics": {
+        "authored_map_object_definition_count": 422,
+        "deterministic_generated_record_count": 175,
+        "legacy_primary_marker_candidate_count": 65,
+        "indexed_legacy_primary_marker_count": 0,
+        "generated_body_anchor_count": 223,
+        "focused_normal_visible_layer_count": 334,
+        "focused_procedural_fallback_count": 0,
+        "exhaustive_live_world_object_placement_count": 9465,
+        "visual_capture_resolution_count": 2,
+        "linux_packaged_startup_passed": true,
+        "windows_packaged_startup_passed": true,
+        "windows_generated_overworld_entry_passed": true,
+        "windows_generated_town_entry_passed": true,
+        "pck_size_bytes": 244965688,
+        "pck_size_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 5034312,
+        "save_version_changed": false,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "No work remains in #10222. Broader production completion, Native RMG parity, and release readiness remain outside this slice."
+    },
     {
       "id": "ux-town-screen-layout-and-dialog-controls-10221",
       "title": "Town Screen Layout And Dialog Controls",
@@ -108773,9 +108836,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Fixed the fresh-Windows-import TownStageView parse failure while retaining all eighteen seamless faction development scenes and matching Linux and Windows package proof.",
-  "taskId": "10184",
-  "updatedAt": "2026-09-03T08:01:18Z",
+  "summary": "Completed #10222: generated blocker records no longer draw orphan procedural legacy anchors, and their original generated raster bodies remain authoritative across validated Linux and Windows packages.",
+  "taskId": "10222",
+  "updatedAt": "2026-09-03T10:13:29Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

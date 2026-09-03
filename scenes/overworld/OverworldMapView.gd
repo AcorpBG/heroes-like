@@ -6208,6 +6208,8 @@ func validation_placement_debug_overlay_snapshot() -> Dictionary:
 func validation_generated_object_visual_summary() -> Dictionary:
 	var expected_body_keys: Dictionary = {}
 	var generated_record_count := 0
+	var legacy_primary_marker_candidates: Array = []
+	var indexed_legacy_primary_marker_count := 0
 	if _session != null:
 		for object_value in _session.overworld.get("map_objects", []):
 			if not (object_value is Dictionary):
@@ -6219,11 +6221,27 @@ func validation_generated_object_visual_summary() -> Dictionary:
 			if not (package_block_tiles is Array) or package_block_tiles.is_empty():
 				continue
 			generated_record_count += 1
+			var package_body_keys: Dictionary = {}
 			for tile_value in _tiles_from_payloads(package_block_tiles):
 				if tile_value is Vector2i:
 					var tile: Vector2i = tile_value
 					if tile.x >= 0 and tile.y >= 0 and tile.x < _map_size.x and tile.y < _map_size.y:
-						expected_body_keys[_tile_key(tile)] = true
+						var body_key := _tile_key(tile)
+						expected_body_keys[body_key] = true
+						package_body_keys[body_key] = true
+			var primary_tile := Vector2i(int(object.get("x", -1)), int(object.get("y", -1)))
+			var primary_key := _tile_key(primary_tile)
+			if primary_tile.x >= 0 and primary_tile.y >= 0 and primary_tile.x < _map_size.x and primary_tile.y < _map_size.y \
+				and not package_body_keys.has(primary_key):
+				legacy_primary_marker_candidates.append({
+					"placement_id": String(object.get("placement_id", "")),
+					"h3m_def_name": String(object.get("h3m_def_name", "")),
+					"x": primary_tile.x,
+					"y": primary_tile.y,
+				})
+				var indexed_primary: Dictionary = _decorative_objects_by_tile.get(primary_key, {})
+				if String(indexed_primary.get("placement_id", "")) == String(object.get("placement_id", "")):
+					indexed_legacy_primary_marker_count += 1
 	var indexed_keys: Array = _generated_decorative_bodies_by_tile.keys()
 	indexed_keys.sort()
 	var expected_keys: Array = expected_body_keys.keys()
@@ -6360,6 +6378,10 @@ func validation_generated_object_visual_summary() -> Dictionary:
 	return {
 		"presentation_model": GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL,
 		"generated_record_count": generated_record_count,
+		"legacy_primary_marker_candidate_count": legacy_primary_marker_candidates.size(),
+		"indexed_legacy_primary_marker_count": indexed_legacy_primary_marker_count,
+		"legacy_primary_markers_suppressed": indexed_legacy_primary_marker_count == 0,
+		"legacy_primary_marker_candidates": legacy_primary_marker_candidates,
 		"expected_body_tile_count": expected_keys.size(),
 		"indexed_body_tile_count": indexed_keys.size(),
 		"body_tile_keys_exact": indexed_keys == expected_keys,
@@ -10194,8 +10216,18 @@ func _rebuild_static_object_indexes() -> void:
 		var tile := Vector2i(int(object.get("x", -1)), int(object.get("y", -1)))
 		if tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
 			continue
+		var package_block_tiles = object.get("package_block_tiles", null)
+		var uses_generated_body: bool = String(object.get("runtime_object_role", "")).strip_edges() == "decorative_blocker_sprite" \
+			and package_block_tiles is Array \
+			and not package_block_tiles.is_empty()
+		if uses_generated_body:
+			# The package x/y value is the legacy DEF anchor, not another visible
+			# world object. Indexing it separately drew an orphan procedural ruin
+			# beside the authoritative raster body whenever it sat outside the
+			# package's blocking cells.
+			_index_generated_decorative_body_cells(object)
+			continue
 		_decorative_objects_by_tile[_tile_key(tile)] = object
-		_index_generated_decorative_body_cells(object)
 
 func _index_generated_decorative_body_cells(object: Dictionary) -> void:
 	if String(object.get("runtime_object_role", "")).strip_edges() != "decorative_blocker_sprite":

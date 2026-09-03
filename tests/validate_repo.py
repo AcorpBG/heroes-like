@@ -36846,7 +36846,8 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     summary_block = gd_function_block(map_text, "validation_generated_object_visual_summary")
     for token in (
         'object.get("package_block_tiles", null)',
-        'expected_body_keys[_tile_key(tile)] = true',
+        'expected_body_keys[body_key] = true',
+        '"legacy_primary_markers_suppressed": indexed_legacy_primary_marker_count == 0',
         '"body_tile_keys_exact": indexed_keys == expected_keys',
         '"visual_anchor_count": visual_anchor_count',
         '"visual_anchor_placement_count": visual_anchor_placement_ids.size()',
@@ -83669,11 +83670,13 @@ def validate_overworld_live_object_art_coverage(errors: list[str]) -> None:
         'service.generate_random_map(config, {"startup_path": "overworld_live_object_art_coverage_',
         'NativeRandomMapPackageSessionBridgeScript.build_session_from_adoption',
         'view.validation_tile_presentation(tile)',
-        'bool(art.get("fallback_procedural_marker", true))',
-        'art.get("sprite_asset_ids", []).is_empty()',
+        'var asset_id := _exact_layer_asset_id(view, object, kind)',
+        'view.call("_object_texture_for_asset", asset_id) is Texture2D',
         'view.validation_generated_object_visual_summary()',
         'not bool(summary.get("all_body_assets_loaded", false))',
         'not bool(summary.get("all_generated_records_anchored", false))',
+        'not bool(summary.get("legacy_primary_markers_suppressed", false))',
+        'int(summary.get("indexed_legacy_primary_marker_count", -1)) != 0',
         'view.validation_hero_draw_layout(tile, false)',
         '"hero_command_pennants"',
         '"town_ownership_pennants"',
@@ -83714,6 +83717,66 @@ def validate_overworld_live_object_art_coverage(errors: list[str]) -> None:
             ensure(len(header) >= 26 and header[25] == 6, errors, f"Ownership pennant {owner} must retain RGBA transparency")
         source_entry = source_assets.get(owner, {}) if isinstance(source_assets, dict) else {}
         ensure(source_entry.get("asset_id") == asset_id and source_entry.get("runtime_sha256") == expected_hash and bool(source_entry.get("prompt")), errors, f"Ownership pennant {owner} source provenance is incomplete")
+
+
+def validate_overworld_placeholder_art_resolution(errors: list[str]) -> None:
+    map_view_path = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
+    report_path = ROOT / "tests" / "overworld_placeholder_art_resolution_report.gd"
+    scene_path = ROOT / "tests" / "overworld_placeholder_art_resolution_report.tscn"
+    for path in (map_view_path, report_path, scene_path):
+        ensure(path.is_file(), errors, f"Missing #10222 placeholder-art owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in (map_view_path, report_path, scene_path)):
+        return
+    map_text = map_view_path.read_text(encoding="utf-8")
+    def gd_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    rebuild = gd_block(map_text, "_rebuild_static_object_indexes")
+    for token in (
+        'var uses_generated_body: bool = String(object.get("runtime_object_role", "")).strip_edges() == "decorative_blocker_sprite"',
+        'and package_block_tiles is Array',
+        'and not package_block_tiles.is_empty()',
+        'if uses_generated_body:',
+        '_index_generated_decorative_body_cells(object)',
+        'continue',
+        '_decorative_objects_by_tile[_tile_key(tile)] = object',
+    ):
+        ensure(token in rebuild, errors, f"Generated decorative anchor suppression lost required runtime step: {token}")
+    branch_start = rebuild.find('if uses_generated_body:')
+    body_index = rebuild.find('_index_generated_decorative_body_cells(object)', branch_start)
+    branch_continue = rebuild.find('continue', body_index)
+    raw_index = rebuild.rfind('_decorative_objects_by_tile[_tile_key(tile)] = object')
+    ensure(0 <= branch_start < body_index < branch_continue < raw_index, errors, "Generated body records must be indexed through raster body cells before raw decorative indexing")
+    summary = gd_block(map_text, "validation_generated_object_visual_summary")
+    for token in (
+        '"legacy_primary_marker_candidate_count": legacy_primary_marker_candidates.size()',
+        '"indexed_legacy_primary_marker_count": indexed_legacy_primary_marker_count',
+        '"legacy_primary_markers_suppressed": indexed_legacy_primary_marker_count == 0',
+        '"legacy_primary_marker_candidates": legacy_primary_marker_candidates',
+    ):
+        ensure(token in summary, errors, f"Generated visual summary lost #10222 exact fallback evidence: {token}")
+    report_text = report_path.read_text(encoding="utf-8")
+    for token in (
+        'const REPORT_SCHEMA_ID := "overworld_placeholder_art_resolution_report_v1"',
+        'const SEED := "live-render-move-10184"',
+        'menu.validation_start_generated_skirmish_staged()',
+        'view.validation_generated_object_visual_summary()',
+        'EXPECTED_MARKER_CANDIDATE_COUNT := 65',
+        'int(summary.get("indexed_legacy_primary_marker_count", -1)) == 0',
+        'bool(summary.get("legacy_primary_markers_suppressed", false))',
+        'bool(summary.get("all_body_assets_loaded", false))',
+        'exact_asset_path.ends_with(".png")',
+        '"original_generated" in exact_asset_policy',
+        '"procedural_fallback_count": failures.size()',
+        'session.to_dict() == authority_before',
+        'not bool(overlay.get("enabled", true))',
+    ):
+        ensure(token in report_text, errors, f"Focused #10222 Godot report is missing proof token: {token}")
+    ensure('overworld_placeholder_art_resolution_report.gd' in scene_path.read_text(encoding="utf-8"), errors, "Focused #10222 scene lost its report script")
 
 
 def main() -> int:
@@ -83878,6 +83941,7 @@ def main() -> int:
     validate_overworld_compact_town_owner_pennants(errors)
     validate_generated_map_object_visual_coherence(errors)
     validate_overworld_live_object_art_coverage(errors)
+    validate_overworld_placeholder_art_resolution(errors)
     validate_overworld_130_scale_footer_containment(errors)
     validate_overworld_hero_card_mana_first_view(errors)
     validate_overworld_rail_word_boundary_ellipsis(errors)

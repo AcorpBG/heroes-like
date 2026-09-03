@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10184
+Task: #10222
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -24,9 +24,34 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- No implementation slice is active after completing `ux-town-screen-layout-and-dialog-controls-10221`.
-- Most recently completed implementation slice: `ux-town-screen-layout-and-dialog-controls-10221`, which implements the owner-annotated compact Town HUD, full-bleed scenic composition, painted main-building construction hotspot, and five accessible direct-dialog controls.
-- Current package boundary: matching Linux and Windows release exports measure 244965224 bytes, 5034776 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- No implementation slice is active after completing `bugfix-overworld-placeholder-art-resolution-10222`.
+- Most recently completed implementation slice: `bugfix-overworld-placeholder-art-resolution-10222`, which removes the orphan procedural DEF-anchor presentation from generated blocker records while retaining their authoritative original raster bodies and unchanged gameplay state.
+- Current package boundary: matching Linux and Windows release exports measure 244965688 bytes, 5034312 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Overworld Placeholder Art Resolution
+
+id: `bugfix-overworld-placeholder-art-resolution-10222`
+
+Status: completed 2026-09-03. The deterministic generated case resolves all 65 former raw-anchor candidates through the authoritative body pipeline with zero indexed procedural duplicates, both inspected captures are clean, and focused, repository, Linux, and Windows package checks passed.
+
+Owner evidence: screenshot supplied with task #10222 showing a green, black-framed procedural object among painted overworld props.
+
+Requirements: `docs/overworld-map-object-distinct-sprite-gap-audit.md`, `art/overworld/manifest.json`, `art/overworld/map_object_sprites.json`, `art/overworld/decorative_object_sprites.json`.
+
+Implementation boundary:
+- identify the screenshot object's exact generated-map placement identity and trace every map-object, resource-site, artifact, encounter, town, marker/overlay, Native RMG adoption, and fallback resolution step that produced the procedural ruin visual;
+- retain the object's coordinates, footprint, pathing, interaction, save behavior, and deterministic placement while resolving every normal reachable state in the affected path to authoritative manifest-backed original raster art;
+- make missing or mismatched normal-play sprite mappings fail focused validation instead of silently exposing procedural geometry, while preserving deliberate non-gameplay diagnostics;
+- follow the existing source/generated/trimmed/runtime asset pipeline and provenance contract, with Linux and Windows package parity below the unchanged package ceiling.
+
+Completion criteria:
+- deterministic evidence identifies the screenshot object and proves its exact runtime identity resolves to an appropriate unique raster asset with zero procedural fallback in normal play;
+- a focused Godot report covers all normal visible overworld categories and the affected generated-map path, while existing distinct/decorative reports remain green;
+- an inspected in-context capture shows the correction, and repository validation plus Linux/Windows export, package, startup, and map-entry checks pass.
+
+Non-goals:
+- no RMG topology, placement density or balance, gameplay, pathing, interaction, save-schema, town UI, or unrelated art-family changes;
+- no deletion or hiding of legitimate content, procedural replacement art, copied Heroes assets, package-limit change, signing, publication, whole-game validation, or release-readiness claim.
 
 ## Town Screen Layout And Dialog Controls
 
