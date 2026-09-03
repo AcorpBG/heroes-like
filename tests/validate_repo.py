@@ -272,6 +272,8 @@ COMPLETE_TOWN_BACKDROP_REPORT_SCRIPT_PATH = ROOT / "tests" / "complete_town_back
 COMPLETE_TOWN_BACKDROP_REPORT_SCENE_PATH = ROOT / "tests" / "complete_town_backdrop_runtime_report.tscn"
 TOWN_BUILDING_SKYLINE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_building_skyline_progression_report.gd"
 TOWN_BUILDING_SKYLINE_REPORT_SCENE_PATH = ROOT / "tests" / "town_building_skyline_progression_report.tscn"
+TOWN_DEVELOPMENT_FIRST_IMPORT_PROBE_SCRIPT_PATH = ROOT / "tests" / "town_development_first_import_probe.gd"
+TOWN_DEVELOPMENT_FIRST_IMPORT_PROBE_SCENE_PATH = ROOT / "tests" / "town_development_first_import_probe.tscn"
 TOWN_BUILDING_COMPLETE_VFX_SOURCE_PATH = ROOT / "art" / "town" / "source" / "build_complete_vfx_source.png"
 TOWN_BUILDING_COMPLETE_VFX_RUNTIME_PATH = ROOT / "art" / "town" / "runtime" / "vfx" / "build_complete.png"
 TOWN_BUILDING_COMPLETE_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_building_complete_vfx_asset_runtime_report.gd"
@@ -30636,6 +30638,8 @@ def validate_town_building_skyline_progression(errors: list[str]) -> None:
         TOWN_DEVELOPMENT_SCENE_MANIFEST_PATH,
         TOWN_BUILDING_SKYLINE_REPORT_SCRIPT_PATH,
         TOWN_BUILDING_SKYLINE_REPORT_SCENE_PATH,
+        TOWN_DEVELOPMENT_FIRST_IMPORT_PROBE_SCRIPT_PATH,
+        TOWN_DEVELOPMENT_FIRST_IMPORT_PROBE_SCENE_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing seamless Town development-scene owner: {path.relative_to(ROOT)}")
@@ -30647,7 +30651,10 @@ def validate_town_building_skyline_progression(errors: list[str]) -> None:
         'const DEVELOPMENT_SCENE_MODEL := "authoritative_seamless_faction_settlement_stages"',
         'const DEVELOPMENT_SCENE_STAGE_ORDER := ["village", "developing", "fully_built"]',
         "const FACTION_DEVELOPMENT_SCENE_PATHS := {",
-        "const FACTION_DEVELOPMENT_SCENE_TEXTURES := {",
+        "func _development_scene_texture(faction_id: String, stage_id: String) -> Texture2D:",
+        "func _development_scene_import_payload_exists(texture_path: String) -> bool:",
+        'ResourceLoader.load(texture_path, "Texture2D")',
+        "ImageTexture.create_from_image(source_image)",
         "func _town_development_stage_id() -> String:",
         "func validation_town_building_progression_summary() -> Dictionary:",
         '"isolated_building_overlay_enabled": false',
@@ -30660,6 +30667,7 @@ def validate_town_building_skyline_progression(errors: list[str]) -> None:
         "func _draw_unbuilt_plot_stakes(",
         "TownRulesScript.building_icon_path(building_id)",
         "_draw_scenic_building_progression(scene_rect)",
+        'preload("res://art/towns/runtime/backdrops/development_scenes/',
     ):
         ensure(forbidden_token not in stage_text, errors, f"TownStageView still owns the removed isolated-building skyline: {forbidden_token}")
     draw_match = re.search(r"func _draw\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", stage_text, re.DOTALL)
@@ -30713,6 +30721,19 @@ def validate_town_building_skyline_progression(errors: list[str]) -> None:
     scene_text = TOWN_BUILDING_SKYLINE_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure('path="res://tests/town_building_skyline_progression_report.gd"' in scene_text, errors, "Town development-scene report scene must own the focused runtime script")
     ensure_scene_nodes(scene_text, errors, "town_building_skyline_progression_report.tscn", [("TownBuildingSkylineProgressionReport", "Node")])
+
+    first_import_text = TOWN_DEVELOPMENT_FIRST_IMPORT_PROBE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        'const TownStageViewScript = preload("res://scenes/town/TownStageView.gd")',
+        'const STAGE_IDS := ["village", "developing", "fully_built"]',
+        'stage.call("_development_scene_texture", faction_id, stage_id)',
+        'texture.get_size() == Vector2(1600, 900)',
+        'print("TOWN_DEVELOPMENT_FIRST_IMPORT_PROBE %s"',
+    ):
+        ensure(token in first_import_text, errors, f"Town development first-import probe is missing required proof: {token}")
+    first_import_scene_text = TOWN_DEVELOPMENT_FIRST_IMPORT_PROBE_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('path="res://tests/town_development_first_import_probe.gd"' in first_import_scene_text, errors, "Town development first-import scene must own its probe script")
+    ensure_scene_nodes(first_import_scene_text, errors, "town_development_first_import_probe.tscn", [("TownDevelopmentFirstImportProbe", "Node")])
 
 
 def validate_town_building_complete_vfx_assets(errors: list[str]) -> None:

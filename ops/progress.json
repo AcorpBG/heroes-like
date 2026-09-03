@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Completed six original seamless faction settlement compositions with village, developing, and fully built variants selected from authoritative construction state; removed the isolated building skyline and kept generated masters outside Linux and Windows packages.",
+  "currentNotes": "Fixed the fresh-Windows-import TownStageView parse failure by tracking all eighteen import sidecars and replacing eager PNG preloads with lazy imported-resource loading plus a cold-source decode fallback.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-seamless-development-scenes-10184",
-  "currentSliceId": "ux-town-seamless-development-scenes-10184",
-  "currentSliceNotes": "All six factions now use coherent 1600x900 village, developing, and fully built scenes derived from shared compositions. A real Riverwatch build crossed the stage threshold, save version 9 restored the exact stage, the old icon/stake skyline is absent, and matching Linux/Windows PCKs pass at 244939128 bytes.",
+  "currentSlice": "bugfix-town-development-first-import-10184",
+  "currentSliceId": "bugfix-town-development-first-import-10184",
+  "currentSliceNotes": "Removed all eighteen eager development-scene PNG preloads, added lazy cache-backed loading and source decode fallback, tracked the import sidecars, and passed cold-import, focused town/save, repository, Linux, and Windows/Wine validation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Seamless Town Development Scenes",
-  "currentSliceUpdatedAt": "2026-09-02T23:09:27Z",
+  "currentSliceTitle": "Town Development First-Import Parse Fix",
+  "currentSliceUpdatedAt": "2026-09-03T08:01:18Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -108066,6 +108066,56 @@
       "remainingWork": "No work remains in this bounded live object-art coverage slice. The known exit-only texture RID warning, broader visual polish, hardware certification, signing, publication, and release readiness remain separate."
     },
     {
+      "id": "bugfix-town-development-first-import-10184",
+      "title": "Town Development First-Import Parse Fix",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Allow a fresh Windows source checkout to parse TownStageView before Godot has imported the newly added town-stage PNGs.",
+      "implementationTargets": [
+        "scenes/town/TownStageView.gd",
+        "tests",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "TownStageView contains no eager preload of development-scene PNGs and parses with a cold import cache",
+        "All eighteen scene variants and the real build/save stage transition still pass",
+        "Linux and Windows packages retain all stage assets and Windows/Wine generated-town entry passes"
+      ],
+      "nonGoals": [
+        "Town art regeneration, construction/economy changes, save-version changes, or unrelated engine compatibility work"
+      ],
+      "createdAt": "2026-09-03T07:52:06Z",
+      "startedAt": "2026-09-03T07:52:06Z",
+      "updatedAt": "2026-09-03T08:01:18Z",
+      "completedAt": "2026-09-03T08:01:18Z",
+      "notes": "Removed all eighteen eager development-scene PNG preloads, added lazy imported-resource resolution with a cache and raw-source decode fallback, and tracked the eighteen runtime import sidecars. A controlled partial-cold-cache probe moved every imported town-stage payload away and still loaded all eighteen 1600x900 images without a preload, parser, or missing-resource error. The normal focused progression report retained all 32 towns, the live village-to-developing build transition, save-version-9 restoration, and six captures. Repository validation and matching Linux/Windows exports pass, including the Windows/Wine generated-town flow.",
+      "metrics": {
+        "affected_eager_preload_count": 18,
+        "remaining_eager_preload_count": 0,
+        "tracked_import_sidecar_count": 18,
+        "cold_cache_scene_count": 18,
+        "cold_cache_parse_error_count": 0,
+        "validated_authored_town_count": 32,
+        "linux_pck_bytes": 244939960,
+        "windows_pck_bytes": 244939960,
+        "pck_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 5060040,
+        "save_version_changed": false,
+        "town_economy_authority_changed": false,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "No work remains in this bounded fresh-import parse fix. The known exit-only texture RID warning, unrelated broader smoke assertions, hardware certification, signing, publication, whole-game validation, and release readiness remain separate."
+    },
+    {
       "id": "ux-town-seamless-development-scenes-10184",
       "title": "Seamless Town Development Scenes",
       "status": "completed",
@@ -108134,7 +108184,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "",
-  "remainingWork": "Select the next coherent production slice. The known exit-only texture RID warning, separate compact Trade-tab spacing assertion, broader production completion, and release readiness remain open.",
+  "remainingWork": "Select the next coherent production slice. The known exit-only texture RID warning, broader production completion, and release readiness remain open.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -108666,9 +108716,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed the seamless Town development-scene slice with six original faction compositions, three authoritative construction stages per faction, and matching Linux and Windows package proof.",
+  "summary": "Fixed the fresh-Windows-import TownStageView parse failure while retaining all eighteen seamless faction development scenes and matching Linux and Windows package proof.",
   "taskId": "10184",
-  "updatedAt": "2026-09-02T23:09:27Z",
+  "updatedAt": "2026-09-03T08:01:18Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

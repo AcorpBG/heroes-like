@@ -145,38 +145,6 @@ const FACTION_DEVELOPMENT_SCENE_PATHS := {
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_fully_built.png",
 	},
 }
-const FACTION_DEVELOPMENT_SCENE_TEXTURES := {
-	"faction_embercourt": {
-		"village": preload("res://art/towns/runtime/backdrops/development_scenes/town_embercourt_village.png"),
-		"developing": preload("res://art/towns/runtime/backdrops/development_scenes/town_embercourt_developing.png"),
-		"fully_built": preload("res://art/towns/runtime/backdrops/development_scenes/town_embercourt_fully_built.png"),
-	},
-	"faction_mireclaw": {
-		"village": preload("res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_village.png"),
-		"developing": preload("res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_developing.png"),
-		"fully_built": preload("res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_fully_built.png"),
-	},
-	"faction_sunvault": {
-		"village": preload("res://art/towns/runtime/backdrops/development_scenes/town_sunvault_village.png"),
-		"developing": preload("res://art/towns/runtime/backdrops/development_scenes/town_sunvault_developing.png"),
-		"fully_built": preload("res://art/towns/runtime/backdrops/development_scenes/town_sunvault_fully_built.png"),
-	},
-	"faction_thornwake": {
-		"village": preload("res://art/towns/runtime/backdrops/development_scenes/town_thornwake_village.png"),
-		"developing": preload("res://art/towns/runtime/backdrops/development_scenes/town_thornwake_developing.png"),
-		"fully_built": preload("res://art/towns/runtime/backdrops/development_scenes/town_thornwake_fully_built.png"),
-	},
-	"faction_brasshollow": {
-		"village": preload("res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_village.png"),
-		"developing": preload("res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_developing.png"),
-		"fully_built": preload("res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_fully_built.png"),
-	},
-	"faction_veilmourn": {
-		"village": preload("res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_village.png"),
-		"developing": preload("res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_developing.png"),
-		"fully_built": preload("res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_fully_built.png"),
-	},
-}
 const DISTRICT_ORDER := ["military", "economy", "spellcraft", "logistics", "defense"]
 const DISTRICT_LABELS := {
 	"military": "Military",
@@ -222,6 +190,7 @@ var _resolved_scenic_backdrop_path := ""
 var _resolved_scenic_backdrop_scope := ""
 var _resolved_scenic_backdrop_texture: Texture2D
 var _resolved_development_scene_stage := ""
+var _development_scene_texture_cache: Dictionary = {}
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -1188,11 +1157,10 @@ func validation_town_building_progression_summary() -> Dictionary:
 	var stage_id := _town_development_stage_id()
 	var faction_id := _town_faction_id()
 	var stage_paths: Dictionary = FACTION_DEVELOPMENT_SCENE_PATHS.get(faction_id, {})
-	var stage_textures: Dictionary = FACTION_DEVELOPMENT_SCENE_TEXTURES.get(faction_id, {})
 	var texture_rows: Array = []
 	for candidate_stage_value in DEVELOPMENT_SCENE_STAGE_ORDER:
 		var candidate_stage := String(candidate_stage_value)
-		var candidate_texture: Variant = stage_textures.get(candidate_stage, null)
+		var candidate_texture := _development_scene_texture(faction_id, candidate_stage)
 		texture_rows.append({
 			"stage_id": candidate_stage,
 			"path": String(stage_paths.get(candidate_stage, "")),
@@ -1298,6 +1266,38 @@ func _on_settings_changed(_settings: Dictionary) -> void:
 func _scenic_backdrop_texture() -> Texture2D:
 	return _resolved_scenic_backdrop_texture
 
+func _development_scene_texture(faction_id: String, stage_id: String) -> Texture2D:
+	var faction_paths: Dictionary = FACTION_DEVELOPMENT_SCENE_PATHS.get(faction_id, {})
+	var texture_path := String(faction_paths.get(stage_id, "")).strip_edges()
+	if texture_path == "":
+		return null
+	if _development_scene_texture_cache.has(texture_path):
+		return _development_scene_texture_cache.get(texture_path) as Texture2D
+	if _development_scene_import_payload_exists(texture_path):
+		var resource: Resource = ResourceLoader.load(texture_path, "Texture2D")
+		if resource is Texture2D:
+			_development_scene_texture_cache[texture_path] = resource
+			return resource as Texture2D
+	var source_path := ProjectSettings.globalize_path(texture_path)
+	if FileAccess.file_exists(source_path):
+		var source_image := Image.new()
+		if source_image.load(source_path) == OK and not source_image.is_empty():
+			var source_texture := ImageTexture.create_from_image(source_image)
+			if source_texture != null:
+				_development_scene_texture_cache[texture_path] = source_texture
+				return source_texture
+	return null
+
+func _development_scene_import_payload_exists(texture_path: String) -> bool:
+	var import_path := "%s.import" % texture_path
+	if not FileAccess.file_exists(import_path):
+		return false
+	var import_config := ConfigFile.new()
+	if import_config.load(import_path) != OK:
+		return false
+	var imported_path := String(import_config.get_value("remap", "path", "")).strip_edges()
+	return imported_path != "" and FileAccess.file_exists(imported_path)
+
 func _resolve_scenic_backdrop() -> void:
 	_resolved_scenic_backdrop_path = ""
 	_resolved_scenic_backdrop_scope = ""
@@ -1306,13 +1306,12 @@ func _resolve_scenic_backdrop() -> void:
 	var faction_id := _town_faction_id()
 	var stage_id := _town_development_stage_id()
 	var development_paths: Dictionary = FACTION_DEVELOPMENT_SCENE_PATHS.get(faction_id, {})
-	var development_textures: Dictionary = FACTION_DEVELOPMENT_SCENE_TEXTURES.get(faction_id, {})
-	var development_texture: Variant = development_textures.get(stage_id, null)
-	if development_texture is Texture2D:
+	var development_texture := _development_scene_texture(faction_id, stage_id)
+	if development_texture != null:
 		_resolved_development_scene_stage = stage_id
 		_resolved_scenic_backdrop_path = String(development_paths.get(stage_id, ""))
 		_resolved_scenic_backdrop_scope = "faction_development_scene"
-		_resolved_scenic_backdrop_texture = development_texture as Texture2D
+		_resolved_scenic_backdrop_texture = development_texture
 		return
 	var town_path := String(_town_template.get("scenic_backdrop_path", "")).strip_edges()
 	if town_path != "" and ResourceLoader.exists(town_path, "Texture2D"):
