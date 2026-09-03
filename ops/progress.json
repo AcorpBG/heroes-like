@@ -1914,6 +1914,43 @@
   "blocker": "",
   "completedImplementationEvidence": [
     {
+      "id": "bugfix-overworld-intermittent-hero-movement-lock-20260903",
+      "title": "Intermittent Overworld Hero Movement Lock",
+      "sliceId": "bugfix-overworld-intermittent-hero-movement-lock-10227",
+      "status": "completed",
+      "validatedAt": "2026-09-03T22:39:37Z",
+      "updatedAt": "2026-09-03T22:39:37Z",
+      "latestFinding": "F3/F4 were passive persistent overlays incorrectly classified as exclusive input owners; they now remain observational while exact keyboard, controller, and pointer-route movement continues and real owners remain mutation-safe.",
+      "artifacts": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_gameplay_movement_input_ownership_regression.gd",
+        "tests/random_map_pathing_debug_overlay_report.gd",
+        "tests/overworld_cached_route_execution_regression.gd",
+        "tests/overworld_controller_route_selection_regression.gd",
+        "tests/overworld_route_destination_only_action_regression.gd",
+        "docs/overworld-intermittent-hero-movement-lock-requirements.md",
+        "docs/overworld-intermittent-hero-movement-lock-report.md",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "nonmodal_overlay_cases": 3,
+        "movement_modes_per_overlay": 3,
+        "movement_points_spent_per_overlay": 4,
+        "exclusive_owner_cases": 8,
+        "generated_map_case_count": 1,
+        "save_version": 9,
+        "linux_packaged_startup_passed": true,
+        "windows_packaged_startup_passed": true,
+        "windows_generated_town_entry_passed": true,
+        "pck_size_bytes": 245073628,
+        "pck_size_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 4926372,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "Select the next bounded owner-directed Phase 6 implementation slice. The environment-sensitive full-route VFX assertion, known exit-only texture RID warning, broader production completion, and release readiness remain separate."
+    },
+    {
       "id": "ux-town-integrated-building-progression-20260903",
       "title": "Integrated Town Building Progression",
       "sliceId": "ux-town-integrated-building-progression-10226",
@@ -16373,14 +16410,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Owner-directed #10226 is complete with integrated per-building Town scenes, clickable authored information, save restoration, responsive visual evidence, and platform-package proof.",
+  "currentNotes": "Owner-directed #10227 is complete with corrected non-modal overlay input ownership, exact movement/runtime regressions, and matching platform package proof.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-integrated-building-progression-10226",
-  "currentSliceId": "ux-town-integrated-building-progression-10226",
-  "currentSliceNotes": "Completed: all 32 towns use explicit faction plots and exact built-art layers; real construction/save restoration, accessible information routing, responsive captures, repository validation, and matching platform packages pass.",
+  "currentSlice": "bugfix-overworld-intermittent-hero-movement-lock-10227",
+  "currentSliceId": "bugfix-overworld-intermittent-hero-movement-lock-10227",
+  "currentSliceNotes": "Completed: F3/F4 remain observational while keyboard, controller, and pointer routes move exactly; real owners, generated pathing, repository validation, and platform packages pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Integrated Town Building Progression",
-  "currentSliceUpdatedAt": "2026-09-03T21:34:25Z",
+  "currentSliceTitle": "Intermittent Overworld Hero Movement Lock",
+  "currentSliceUpdatedAt": "2026-09-03T22:39:37Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21685,7 +21722,7 @@
       }
     }
   },
-  "guardrailNote": "Select the next tracker-approved bounded implementation slice; preserve completed Town scenic rendering, building information, construction, save, and gameplay authority.",
+  "guardrailNote": "Select the next tracker-approved bounded implementation slice; preserve completed movement input ownership, pathing, interaction, save, generated-map, Town, Battle, and Native RMG authority.",
   "lastValidation": {
     "id": "content-eight-commanders-proving-roads-20260831",
     "title": "Eight Commanders' Proving Roads",
@@ -21840,7 +21877,7 @@
     "ops/progress.json"
   ],
   "latestEvidenceId": "content-eight-commanders-proving-roads-20260831",
-  "latestFinding": "All 32 authored towns now resolve their authoritative built structures through explicit six-faction settlement plots and exact original raster art; built layers and accessible hit targets share one crop-aware transform, and real construction/save restoration plus Linux/Windows packages pass.",
+  "latestFinding": "Persistent F3/F4 observation overlays no longer claim exclusive movement ownership; exact keyboard, controller, and pointer-route movement continues while all real owners remain mutation-safe.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -21903,8 +21940,49 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select and track the next bounded owner-directed Phase 6 implementation slice before editing.",
-  "notes": "Owner-directed #10226 integrated Town building progression is completed. Prior #10225 Large-map performance and #10224 post-battle reporting remain completed.",
+  "notes": "Owner-directed #10227 movement-lock correction is completed. Prior #10226 integrated Town building progression, #10225 Large-map performance, and #10224 post-battle reporting remain completed.",
   "plannedSlices": [
+    {
+      "id": "bugfix-overworld-intermittent-hero-movement-lock-10227",
+      "title": "Intermittent Overworld Hero Movement Lock",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/overworld-intermittent-hero-movement-lock-requirements.md",
+        "docs/overworld-refresh-input-pipeline-plan.md"
+      ],
+      "purpose": "Prevent persistent non-modal Overworld diagnostic overlays from suppressing valid hero movement while retaining every real input owner and movement/pathing rule.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_gameplay_movement_input_ownership_regression.gd",
+        "tests",
+        "tests/validate_repo.py",
+        "docs/overworld-intermittent-hero-movement-lock-requirements.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Focused runtime coverage reproduces the current F3/F4 movement lock and proves keyboard, controller, pointer selection, and route execution remain available with either or both overlays visible",
+        "Real modal owners and transient command execution still block movement without mutation or ghost controller repeats",
+        "Authored and generated representative movement retains exact pathing and interaction authority",
+        "Repository validation and Linux/Windows release package startup pass below the unchanged package ceiling"
+      ],
+      "nonGoals": [
+        "Movement economy, topology, passability, object footprints, interactions, AI, balance, RMG generation, save schema, Town, Battle, or art changes",
+        "Package-ceiling changes, signing, publication, whole-game validation, release readiness, or unrelated cleanup"
+      ],
+      "createdAt": "2026-09-03T22:29:26Z",
+      "startedAt": "2026-09-03T22:29:26Z",
+      "updatedAt": "2026-09-03T22:39:37Z",
+      "completedAt": "2026-09-03T22:39:37Z",
+      "notes": "Completed: F3/F4 are observational rather than exclusive owners; three overlay combinations preserve exact keyboard/controller/pointer movement, eight real owners remain mutation-safe, and generated plus platform checks pass.",
+      "remainingWork": "No work remains inside this slice. The environment-sensitive full-route VFX assertion, known exit-only texture RID warning, broader production completion, and release readiness remain separate.",
+      "result": "Persistent non-modal diagnostic overlays no longer suppress or cancel valid Overworld hero movement; authoritative movement and pathing rules are unchanged."
+    },
     {
       "id": "ux-town-integrated-building-progression-10226",
       "title": "Integrated Town Building Progression",
@@ -108628,7 +108706,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "",
-  "remainingWork": "Select the next coherent owner-directed Phase 6 slice. The known exit-only texture RID warning, obsolete native capability-label regression, broader production completion, and release readiness remain open.",
+  "remainingWork": "Select the next coherent owner-directed Phase 6 slice. The environment-sensitive full-route VFX assertion, known exit-only texture RID warning, obsolete native capability-label regression, broader production completion, and release readiness remain open.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -109059,7 +109137,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "town_integrated_building_progression_completed",
+  "result": "overworld_intermittent_hero_movement_lock_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -109160,9 +109238,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed #10226: authoritative completed buildings appear as explicit scene-aligned raster layers and expose accessible read-only information hotspots without changing construction or save authority.",
-  "taskId": "10226",
-  "updatedAt": "2026-09-03T21:34:25Z",
+  "summary": "Completed #10227: persistent non-modal diagnostic overlays no longer suppress valid Overworld hero movement, while real input owners and authoritative pathing remain intact.",
+  "taskId": "10227",
+  "updatedAt": "2026-09-03T22:39:37Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

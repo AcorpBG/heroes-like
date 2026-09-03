@@ -39202,6 +39202,7 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             '"end_turn_confirmation_open"',
             '"end_turn_committing"',
             '"debug_active"',
+            '"diagnostic_overlays_visible"',
             "validation_reset_gameplay_movement_input_state",
             "validation_gameplay_movement_input_snapshot",
             "validation_controller_move_repeat",
@@ -39230,6 +39231,34 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             "validation_gameplay_movement_input_snapshot",
         ):
             ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing gameplay movement-input ownership token: {required_token}")
+        movement_gate_match = re.search(
+            r"func _overworld_gameplay_movement_blocked_reason\(\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+            overworld_script_text,
+            re.S,
+        )
+        ensure(movement_gate_match is not None, errors, "Could not isolate the Overworld gameplay movement blocked-reason gate")
+        if movement_gate_match is not None:
+            movement_gate_body = movement_gate_match.group("body")
+            ensure(
+                "_debug_command_in_progress" in movement_gate_body
+                and "_debug_overlay_enabled" not in movement_gate_body
+                and "_placement_debug_overlay_enabled" not in movement_gate_body,
+                errors,
+                "Persistent F3/F4 observation overlays must not claim exclusive movement ownership; only an active debug command may return debug_active",
+            )
+        for setter_name in ("_set_debug_overlay_enabled", "_set_placement_debug_overlay_enabled"):
+            setter_match = re.search(
+                rf"func {re.escape(setter_name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc )",
+                overworld_script_text,
+                re.S,
+            )
+            ensure(setter_match is not None, errors, f"Could not isolate {setter_name}")
+            if setter_match is not None:
+                ensure(
+                    "_on_overworld_interaction_owner_opened" not in setter_match.group("body"),
+                    errors,
+                    f"Non-modal observation setter {setter_name} must not cancel live movement/route input state",
+                )
     if OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION_SCENE_PATH.exists():
         movement_input_scene_text = OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
         ensure(

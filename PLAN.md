@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10226
+Task: #10227
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -25,8 +25,38 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - No owner-directed implementation slice is currently active.
-- Most recently completed implementation slice: `ux-town-integrated-building-progression-10226`, which makes authoritative constructed buildings appear on explicit faction settlement plots and opens accessible authored building information without changing Town rules or save authority.
-- Current package boundary: matching Linux and Windows release exports measure 245073436 bytes, 4926564 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Most recently completed implementation slice: `bugfix-overworld-intermittent-hero-movement-lock-10227`, which keeps persistent F3/F4 observation overlays non-modal so valid hero movement no longer appears frozen while preserving real input owners and pathing authority.
+- Current package boundary: matching Linux and Windows release exports measure 245073628 bytes, 4926372 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Intermittent Overworld Hero Movement Lock
+
+id: `bugfix-overworld-intermittent-hero-movement-lock-10227`
+
+Status: completed 2026-09-03.
+
+Owner direction: fix the intermittent condition where an otherwise movable active hero stops responding to Overworld movement input.
+
+Requirements: `docs/overworld-intermittent-hero-movement-lock-requirements.md`, `project.md` Phase 6 production alpha input reliability, `docs/overworld-refresh-input-pipeline-plan.md`, and the existing movement/pathing/input-ownership contracts.
+
+Implementation boundary:
+- reproduce and distinguish legitimate movement refusal from a stale or incorrectly classified UI/input owner, preserving truthful reasons for no daily movement, blocked terrain, open modal dialogs, and in-progress commits;
+- keep persistent non-modal diagnostic overlays observational so enabling F3/F4 cannot suppress normal keyboard, controller, pointer route selection, or route execution;
+- ensure transient debug-command capture releases after every command outcome and movement refusal remains visibly explained rather than silently appearing frozen;
+- preserve authoritative movement cost, pathing, object footprints, interactions, encounter routing, save version 9, generated-map identity, and Linux/Windows behavior.
+
+Completion criteria:
+- a focused runtime regression reproduces the movement lock on current main and proves keyboard/controller movement continues with each non-modal overlay independently and together;
+- real modal owners and an active debug command still block movement without state mutation or ghost controller repeats, while ordinary movement and route execution remain exact;
+- authored and generated representative sessions retain pathing/interaction authority, repository validation passes, and Linux/Windows package startup remains below the unchanged package ceiling.
+
+Non-goals:
+- no movement-budget, topology, passability, object-footprint, encounter, AI, balance, RMG generation, save-schema, Town, Battle, art, or broad UI redesign changes;
+- no hiding legitimate blocked-route feedback, package-limit change, signing, publication, whole-game validation, or release-readiness claim.
+
+Result:
+- the shared gameplay input gate now treats only the transient command-capture interval as `debug_active`; persistent F3 path profiling and F4 placement inspection remain visible without claiming movement ownership or cancelling a selected controller route;
+- focused runtime coverage proves keyboard, left-stick, and two-step pointer-route movement spend exact movement with F3, F4, and both together, while all eight real drawer/modal/commit owners still prevent mutation and release without ghost repeats;
+- the deterministic generated Small pathing case, cached execution, controller route selection, destination-only routing, repository validation, Godot editor parse, and matching Linux/Windows release package startup pass; Windows also passes generated setup, Overworld entry, and Town entry under Wine.
 
 ## Integrated Town Building Progression
 

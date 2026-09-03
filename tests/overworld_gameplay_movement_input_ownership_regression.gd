@@ -14,9 +14,8 @@ const OWNER_ROWS := [
 	{"id": "end_turn_confirmation", "reason": "end_turn_confirmation_open"},
 	{"id": "end_turn_commit", "reason": "end_turn_committing"},
 	{"id": "debug_command", "reason": "debug_active"},
-	{"id": "debug_overlay", "reason": "debug_active"},
-	{"id": "placement_debug", "reason": "debug_active"},
 ]
+const OBSERVATION_OVERLAY_CASES := ["debug_overlay", "placement_debug", "combined_debug_overlays"]
 
 var _original_session = null
 var _original_slot := 1
@@ -52,6 +51,13 @@ func _run() -> void:
 			await _discard_shell(shell)
 			return
 		rows[String(row.id)] = proof
+	var overlay_rows := {}
+	for overlay_id in OBSERVATION_OVERLAY_CASES:
+		var overlay_proof: Dictionary = await _prove_nonmodal_observation_overlay(shell, session, overlay_id)
+		if overlay_proof.is_empty():
+			await _discard_shell(shell)
+			return
+		overlay_rows[overlay_id] = overlay_proof
 	var race: Dictionary = await _prove_activation_race(shell, session)
 	if race.is_empty():
 		await _discard_shell(shell)
@@ -62,7 +68,7 @@ func _run() -> void:
 		return
 	await _discard_shell(shell)
 	_cleanup()
-	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "owners": rows, "activation_race": race, "ordinary": ordinary, "save_version": SessionState.SAVE_VERSION})])
+	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "owners": rows, "nonmodal_observation_overlays": overlay_rows, "activation_race": race, "ordinary": ordinary, "save_version": SessionState.SAVE_VERSION})])
 	get_tree().quit(0)
 
 
@@ -144,6 +150,73 @@ func _prove_activation_race(shell: Node, session) -> Dictionary:
 	return {"armed_move_count": 1, "post_owner_repeat_moves": 0}
 
 
+func _prove_nonmodal_observation_overlay(shell: Node, session, overlay_id: String) -> Dictionary:
+	var move: Dictionary = _legal_cardinal_move(session, 6)
+	if move.is_empty():
+		return _fail_dictionary("No six-step legal movement remained for %s." % overlay_id)
+	_set_observation_overlay_case(shell, overlay_id, true)
+	await _settle(2)
+	var open_snapshot: Dictionary = shell.validation_gameplay_movement_input_snapshot()
+	if String(open_snapshot.get("blocked_reason", "missing")) != "" \
+		or bool(open_snapshot.get("debug_active", true)) \
+		or not bool(open_snapshot.get("diagnostic_overlays_visible", false)):
+		_set_observation_overlay_case(shell, overlay_id, false)
+		return _fail_dictionary("%s still claimed gameplay input ownership: %s" % [overlay_id, JSON.stringify(_compact(open_snapshot))])
+
+	var hero_before := OverworldRules.hero_position(session)
+	var movement_before := int(session.overworld.get("movement", {}).get("current", 0))
+	await _press_physical_key(move.keycode)
+	var after_keyboard := OverworldRules.hero_position(session)
+	if after_keyboard != hero_before + move.delta:
+		_set_observation_overlay_case(shell, overlay_id, false)
+		return _fail_dictionary("Configured physical movement did not pass through %s." % overlay_id)
+
+	var axis: Dictionary = _axis_for_delta(move.delta)
+	shell.validation_reset_gameplay_movement_input_state()
+	await _send_axis(int(axis.axis), float(axis.value))
+	await _send_axis(int(axis.axis), 0.0)
+	var after_controller := OverworldRules.hero_position(session)
+	if after_controller != after_keyboard + move.delta:
+		_set_observation_overlay_case(shell, overlay_id, false)
+		return _fail_dictionary("Controller movement did not pass through %s." % overlay_id)
+
+	var route_target: Vector2i = after_controller + move.delta * 2
+	var selected: Dictionary = shell.validation_select_tile(route_target.x, route_target.y)
+	var primary: Dictionary = shell.validation_perform_primary_action()
+	var after_route := OverworldRules.hero_position(session)
+	var final_snapshot: Dictionary = shell.validation_gameplay_movement_input_snapshot()
+	if not bool(selected.get("ok", false)) \
+		or not bool(primary.get("ok", false)) \
+		or after_route != route_target \
+		or String(final_snapshot.get("blocked_reason", "missing")) != "" \
+		or bool(final_snapshot.get("debug_active", true)) \
+		or not bool(final_snapshot.get("diagnostic_overlays_visible", false)) \
+		or int(session.overworld.get("movement", {}).get("current", -1)) != movement_before - 4:
+		_set_observation_overlay_case(shell, overlay_id, false)
+		return _fail_dictionary("Pointer route movement did not remain live through %s: selected=%s primary=%s snapshot=%s" % [overlay_id, JSON.stringify(selected), JSON.stringify(primary), JSON.stringify(_compact(final_snapshot))])
+
+	_set_observation_overlay_case(shell, overlay_id, false)
+	await _settle(2)
+	if String(shell.validation_gameplay_movement_input_snapshot().get("blocked_reason", "missing")) != "":
+		return _fail_dictionary("Closing %s left a stale movement owner." % overlay_id)
+	return {
+		"blocked_reason": "",
+		"keyboard_steps": 1,
+		"controller_steps": 1,
+		"pointer_route_steps": 2,
+		"movement_spent": 4,
+		"overlay_remained_visible_during_commands": true,
+		"debug_command_released": true,
+	}
+
+
+func _set_observation_overlay_case(shell: Node, overlay_id: String, enabled: bool) -> void:
+	if overlay_id in ["debug_overlay", "combined_debug_overlays"]:
+		shell.validation_set_debug_overlay_enabled(enabled)
+	if overlay_id in ["placement_debug", "combined_debug_overlays"]:
+		shell.validation_set_placement_debug_overlay_enabled(enabled)
+
+
 func _prove_ordinary_focused_movement(shell: Node, session) -> Dictionary:
 	var command: Control = shell.get_node_or_null("%EndTurn")
 	if command == null:
@@ -203,10 +276,6 @@ func _open_owner(shell: Node, owner_id: String) -> bool:
 			shell.validation_set_end_turn_commit_in_progress(true)
 		"debug_command":
 			shell.validation_set_debug_command_in_progress(true)
-		"debug_overlay":
-			shell.validation_set_debug_overlay_enabled(true)
-		"placement_debug":
-			shell.validation_set_placement_debug_overlay_enabled(true)
 		_:
 			return false
 	return true
@@ -232,10 +301,6 @@ func _close_owner(shell: Node, owner_id: String) -> void:
 			shell.validation_set_end_turn_commit_in_progress(false)
 		"debug_command":
 			shell.validation_set_debug_command_in_progress(false)
-		"debug_overlay":
-			shell.validation_set_debug_overlay_enabled(false)
-		"placement_debug":
-			shell.validation_set_placement_debug_overlay_enabled(false)
 	await _settle(2)
 
 
@@ -407,6 +472,10 @@ func _require_hooks(shell: Node) -> bool:
 		"validation_controller_move_repeat",
 		"validation_set_end_turn_commit_in_progress",
 		"validation_set_debug_command_in_progress",
+		"validation_set_debug_overlay_enabled",
+		"validation_set_placement_debug_overlay_enabled",
+		"validation_select_tile",
+		"validation_perform_primary_action",
 		"validation_gameplay_movement_input_snapshot",
 		"validation_controller_route_cursor_snapshot",
 	]:
@@ -420,7 +489,7 @@ func _tile(value: Variant) -> Vector2i:
 
 
 func _compact(snapshot: Dictionary) -> Dictionary:
-	return {"reason": snapshot.get("blocked_reason"), "keyboard": snapshot.get("keyboard_blocked_count"), "controller": snapshot.get("controller_blocked_count"), "repeat": snapshot.get("repeat_blocked_count"), "moves": snapshot.get("controller_move_count"), "axis": snapshot.get("controller_axis"), "direction": snapshot.get("controller_direction"), "timer": snapshot.get("repeat_timer_active"), "focus": snapshot.get("focus_owner")}
+	return {"reason": snapshot.get("blocked_reason"), "keyboard": snapshot.get("keyboard_blocked_count"), "controller": snapshot.get("controller_blocked_count"), "repeat": snapshot.get("repeat_blocked_count"), "moves": snapshot.get("controller_move_count"), "axis": snapshot.get("controller_axis"), "direction": snapshot.get("controller_direction"), "timer": snapshot.get("repeat_timer_active"), "focus": snapshot.get("focus_owner"), "debug_active": snapshot.get("debug_active"), "diagnostic_overlays_visible": snapshot.get("diagnostic_overlays_visible")}
 
 
 func _canonical(value: Variant) -> Variant:
