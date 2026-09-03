@@ -24,9 +24,28 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- No implementation slice is active after completing `ux-town-seamless-development-scenes-10184`.
-- Most recently completed implementation slice: `ux-town-seamless-development-scenes-10184`, which replaces the isolated Town building row with authoritative seamless village, developing, and fully built faction scenes.
-- Current package boundary: matching Linux and Windows release exports measure 244939128 bytes, 5060872 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- No implementation slice is active after completing `bugfix-town-development-first-import-10184`.
+- Most recently completed implementation slice: `bugfix-town-development-first-import-10184`, which removes the fresh-Windows-import TownStageView preload failure while retaining all seamless development scenes.
+- Current package boundary: matching Linux and Windows release exports measure 244939960 bytes, 5060040 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Town Development First-Import Parse Fix
+
+id: `bugfix-town-development-first-import-10184`
+
+Status: completed.
+
+Implementation boundary:
+- remove eager GDScript preloads of the newly added town-stage PNGs so a fresh Windows source checkout can compile before its import cache exists;
+- resolve stage textures lazily through the imported ResourceLoader path, with a source-PNG decode fallback for first-run source launches;
+- preserve the authoritative three-stage selection, art, economy, save schema, and package footprint.
+
+Completion criteria:
+- TownStageView parses from a deliberately cold import state without `Preload file ... has no resource loaders`;
+- the focused town progression report still resolves all eighteen scenes and the real build/save transition;
+- Linux and Windows exports still contain every runtime stage and the Windows/Wine generated-town flow passes.
+
+Non-goals:
+- no town art regeneration, construction/economy changes, save-version change, or unrelated Godot-version compatibility work.
 
 ## Seamless Town Development Scenes
 
