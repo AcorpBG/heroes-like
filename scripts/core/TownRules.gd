@@ -3221,7 +3221,7 @@ static func _stationed_reserve_count(session: SessionStateStoreScript.SessionDat
 	return reserve_count
 
 static func _town_threat_lines(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var threat_lines := []
 	var town_placement_id := String(town.get("placement_id", ""))
 	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)

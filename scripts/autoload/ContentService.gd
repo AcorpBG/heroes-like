@@ -243,6 +243,17 @@ func get_scenario(id: String) -> Dictionary:
 	var draft: Dictionary = _generated_scenario_drafts.get(id, {})
 	return draft.duplicate(true) if not draft.is_empty() else {}
 
+# Immutable runtime queries must use this accessor. Generated scenarios can contain
+# tens of megabytes of terrain and object records, so deep-copying the full draft
+# for every objective/front lookup is prohibitively expensive on Large maps. Code
+# which edits or exports a scenario must continue to use get_scenario().
+func get_scenario_readonly(id: String) -> Dictionary:
+	var authored := get_content_by_id(SCENARIOS_PATH, id)
+	if not authored.is_empty():
+		return authored
+	var draft: Dictionary = _generated_scenario_drafts.get(id, {})
+	return draft if not draft.is_empty() else {}
+
 func get_scenario_dependency_record(id: String) -> Dictionary:
 	var authored := get_content_by_id(SCENARIOS_PATH, id)
 	if not authored.is_empty():

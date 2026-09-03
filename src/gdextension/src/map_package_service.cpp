@@ -11,6 +11,7 @@
 #include <godot_cpp/variant/packed_int32_array.hpp>
 
 #include <algorithm>
+#include <chrono>
 #include <cstdint>
 #include <string>
 #include <unordered_set>
@@ -39,6 +40,12 @@ constexpr const char *MAP_OBJECT_CATALOG_PATH = "res://content/map_objects.json"
 constexpr const char *RESOURCE_SITE_CATALOG_PATH = "res://content/resource_sites.json";
 constexpr const char *ARTIFACT_CATALOG_PATH = "res://content/artifacts.json";
 constexpr uint64_t HASH_MODULUS = 4294967296ULL;
+
+using SteadyClock = std::chrono::steady_clock;
+
+double elapsed_milliseconds(const SteadyClock::time_point &started_at) {
+	return std::chrono::duration<double, std::milli>(SteadyClock::now() - started_at).count();
+}
 
 PackedStringArray capabilities() {
 	PackedStringArray result;
@@ -2920,8 +2927,23 @@ Dictionary MapPackageService::random_map_config_identity(Dictionary config) cons
 }
 
 Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary options) const {
-	(void)options;
+	const bool include_performance_profile = bool(options.get("include_performance_profile", false));
+	const auto total_started_at = SteadyClock::now();
+	Dictionary performance_profile;
+	performance_profile["schema_id"] = "aurelion_native_rmg_generation_performance_profile_v1";
+	performance_profile["size_class_id"] = String(config.get("size_class_id", ""));
+	performance_profile["buckets_ms"] = Dictionary();
+	auto record_bucket = [&](const char *bucket, const SteadyClock::time_point &started_at) {
+		if (!include_performance_profile) {
+			return;
+		}
+		Dictionary buckets = performance_profile.get("buckets_ms", Dictionary());
+		buckets[bucket] = elapsed_milliseconds(started_at);
+		performance_profile["buckets_ms"] = buckets;
+	};
+	const auto normalize_started_at = SteadyClock::now();
 	Dictionary normalized = normalize_random_map_config(config);
+	record_bucket("normalize_config", normalize_started_at);
 	if (!h3maped_core_supports_land_scope(normalized)) {
 		return native_rmg_exact_chain_unimplemented_blocked_result(
 				normalized,
@@ -2972,10 +2994,14 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	workflow_config.setup_caller_arg_0x0c =
 			aurelion::h3maped_rmg_core::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1;
 
+	const auto workflow_started_at = SteadyClock::now();
 	const auto workflow =
 			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
+	record_bucket("recovered_workflow", workflow_started_at);
+	const auto projection_started_at = SteadyClock::now();
 	const auto projection =
 			aurelion::h3maped_rmg_core::project_runtime_map_from_native_owned_final_payload(workflow);
+	record_bucket("final_payload_projection", projection_started_at);
 	if (!projection.applied) {
 		Dictionary blocked;
 		blocked["ok"] = false;
@@ -3050,13 +3076,17 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	component_counts["town_count"] = town_count;
 	metadata["component_counts"] = component_counts;
 	map_state["metadata"] = metadata;
+	const auto terrain_started_at = SteadyClock::now();
 	map_state["terrain_layers"] = runtime_terrain_layers(projection);
+	record_bucket("terrain_variant_projection", terrain_started_at);
 	Dictionary route_graph;
 	route_graph["schema_id"] = "aurelion_route_graph";
 	route_graph["nodes"] = Array();
 	route_graph["edges"] = Array();
 	map_state["route_graph"] = route_graph;
+	const auto objects_started_at = SteadyClock::now();
 	Dictionary runtime_object_projection = runtime_objects(map_id, projection, normalized);
+	record_bucket("object_variant_projection", objects_started_at);
 	if (!bool(runtime_object_projection.get("ok", false))) {
 		Dictionary blocked;
 		blocked["ok"] = false;
@@ -3174,8 +3204,10 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	scenario_document.instantiate();
 	scenario_document->configure(scenario_state);
 
+	const auto validation_started_at = SteadyClock::now();
 	Dictionary map_validation = validate_map_document_structural_report(map_document);
 	Dictionary scenario_validation = validate_scenario_document_structural_report(scenario_document, map_document);
+	record_bucket("document_validation", validation_started_at);
 	if (!bool(map_validation.get("ok", false)) || !bool(scenario_validation.get("ok", false))) {
 		Dictionary blocked;
 		blocked["ok"] = false;
@@ -3201,6 +3233,10 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["scenario_document"] = scenario_document;
 	result["map_validation"] = map_validation;
 	result["scenario_validation"] = scenario_validation;
+	if (include_performance_profile) {
+		performance_profile["total_ms"] = elapsed_milliseconds(total_started_at);
+		result["performance_profile"] = performance_profile;
+	}
 	result["final_payload_byte_count"] = workflow.final_payload_writeout_0x4ad1e3.total_payload_byte_count;
 	result["final_payload_fnv1a32"] = payload_token;
 	result["runtime_tile_count"] = projection.tile_count;

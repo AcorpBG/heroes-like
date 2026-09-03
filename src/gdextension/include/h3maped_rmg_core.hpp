@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace aurelion::h3maped_rmg_core {
@@ -334,6 +335,9 @@ struct SourceObjectResolvedWrapper4af785 {
 	int32_t wrapper_index = -1;
 	int32_t source_catalog_index = -1;
 	SourceObjectRecord0x4c source_record_copy;
+	bool decorative_score_cache_built_0x49b89c = false;
+	bool decorative_score_cache_valid_0x49b89c = false;
+	std::array<int32_t, 48> decorative_score_cache_0x49b89c {};
 	int32_t metadata_bucket_index_0x08 = -1;
 	int32_t resolver_lane_0x04 = 9;
 	int32_t wrapper_0x04 = -1;
@@ -3602,6 +3606,9 @@ struct GeneratorObjectPrivateState {
 	int32_t source_order_direct_commit_count_0x4a93a2 = 0;
 	std::vector<SourceOrderObjectPlacementState4a93a2> source_order_direct_candidate_vectors_0x4a93a2;
 	std::vector<ObjectRecordReference4a54a7> object_records_0xec4_ecc;
+	// Derived lookup only. The authoritative recovered vector and its source
+	// order remain unchanged; every append refreshes this key-to-index cache.
+	std::unordered_map<uint32_t, size_t> object_record_index_by_key_0xec4_ecc;
 	int32_t object_record_vector_append_count_0x4a54a7 = 0;
 	int32_t generated_cell_object_reference_append_count_0x4a54a7 = 0;
 	int32_t descriptor_counter_increment_count_0x4a54a7 = 0;

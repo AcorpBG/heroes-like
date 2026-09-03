@@ -24,7 +24,7 @@ static func normalize_session(
 	if session == null:
 		return
 
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var resolved_primary_id := String(session.hero_id)
 	if resolved_primary_id == "":
 		resolved_primary_id = primary_hero_id if primary_hero_id != "" else String(scenario.get("hero_id", ""))
@@ -1107,7 +1107,7 @@ static func recruitable_hero_ids(session: SessionStateStoreScript.SessionData) -
 	var recruitable := []
 	if session == null:
 		return recruitable
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var player_faction := ContentService.get_faction(String(scenario.get("player_faction_id", "")))
 	var controlled := {}
 	for hero in session.overworld.get("player_heroes", []):

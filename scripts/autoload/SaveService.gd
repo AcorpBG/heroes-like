@@ -1549,7 +1549,12 @@ func _save_payload(
 	_runtime_save_profile_bucket(profile, "save_normalize", ProfileLogScript.elapsed_ms(normalize_started))
 	if not profile.is_empty():
 		profile["save_normalize_skipped"] = payload_is_prepared
-		profile["save_normalize_skip_reason"] = "prepared_normalized_manual_payload" if payload_is_prepared else ""
+		if payload_is_prepared and bool(profile.get("trusted_live_payload", false)):
+			profile["save_normalize_skip_reason"] = "trusted_live_normalized_autosave"
+		elif payload_is_prepared:
+			profile["save_normalize_skip_reason"] = "prepared_normalized_manual_payload"
+		else:
+			profile["save_normalize_skip_reason"] = ""
 	saved_payload_out.clear()
 	for key in normalized.keys():
 		saved_payload_out[key] = normalized[key]
@@ -1635,7 +1640,7 @@ func _save_runtime_session(
 
 	_runtime_save_profile_step(profile, "to_dict_start")
 	var to_dict_started := ProfileLogScript.begin_usec()
-	var runtime_payload := session.to_dict()
+	var runtime_payload := _runtime_payload_for_save(session)
 	_runtime_save_profile_bucket(profile, "to_dict", ProfileLogScript.elapsed_ms(to_dict_started))
 	_runtime_save_profile_step(profile, "to_dict_done")
 	var sanitized_session: SessionStateStoreScript.SessionData = null
@@ -1645,6 +1650,7 @@ func _save_runtime_session(
 		_runtime_save_profile_bucket(profile, "restore_normalize", 0.0)
 		profile["restore_normalize_skipped"] = true
 		profile["restore_normalize_skip_reason"] = "trusted_live_normalized_autosave"
+		profile["trusted_live_payload"] = true
 		sanitized_session = session
 	else:
 		_runtime_save_profile_step(profile, "restore_normalize_start")
@@ -1680,7 +1686,7 @@ func _save_runtime_session(
 	var summary := {}
 	var cache_slot_id := ""
 	var saved_payload := {}
-	var payload_is_prepared := bool(profile.get("prepared_payload", false))
+	var payload_is_prepared := bool(profile.get("prepared_payload", false)) or bool(profile.get("trusted_live_payload", false))
 	var write_payload := payload_for_write
 	if payload_is_prepared:
 		_clear_transition_autosave_intent_from_owned_payload(write_payload)
@@ -1778,7 +1784,7 @@ func _can_use_trusted_live_autosave_payload(
 		return false
 	if not (String(payload.get("scenario_status", "")) in SessionStateStoreScript.SUPPORTED_SCENARIO_STATUSES):
 		return false
-	if ContentService.get_scenario(String(payload.get("scenario_id", ""))).is_empty():
+	if ContentService.get_scenario_readonly(String(payload.get("scenario_id", ""))).is_empty():
 		return false
 	if not OverworldRulesScript.is_runtime_session_normalized(session):
 		return false
@@ -1793,9 +1799,35 @@ func _can_use_trusted_live_autosave_payload(
 		_:
 			return session.battle.is_empty()
 
+func _runtime_payload_for_save(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null:
+		return {}
+	# Build one owned snapshot directly. Calling to_dict() and then deep-copying the
+	# entire payload again for two top-level flag edits is especially expensive for
+	# package-backed Large maps. Preserve every existing save field and schema key.
+	var overworld_source := session.overworld.duplicate(false)
+	var flags_source := session.flags.duplicate(false)
+	return {
+		"save_version": session.save_version,
+		"session_id": session.session_id,
+		"scenario_id": session.scenario_id,
+		"hero_id": session.hero_id,
+		"day": session.day,
+		"difficulty": session.difficulty,
+		"launch_mode": session.launch_mode,
+		"game_state": session.game_state,
+		"scenario_status": session.scenario_status,
+		"scenario_summary": session.scenario_summary,
+		"overworld": overworld_source.duplicate(true),
+		"battle": session.battle.duplicate(true),
+		"flags": flags_source.duplicate(true),
+	}
+
 func _payload_without_transition_autosave_intent(payload: Dictionary) -> Dictionary:
-	var cleaned := payload.duplicate(true)
-	var flags: Dictionary = cleaned.get("flags", {}) if cleaned.get("flags", {}) is Dictionary else {}
+	# Callers pass an owned save snapshot, so only the branch being modified needs
+	# duplication. Deep-copying the entire Large-map payload here doubled save time.
+	var cleaned := payload.duplicate(false)
+	var flags: Dictionary = cleaned.get("flags", {}).duplicate(true) if cleaned.get("flags", {}) is Dictionary else {}
 	if flags.is_empty():
 		return cleaned
 	for key in TRANSITION_AUTOSAVE_INTENT_FLAGS:
@@ -1987,7 +2019,9 @@ func _save_raw_dictionary(
 		return ""
 
 	var stringify_started := ProfileLogScript.begin_usec()
-	var json_text := JSON.stringify(payload, "\t")
+	# Runtime saves are machine-owned. Compact JSON avoids formatting and then
+	# parsing/writing several extra megabytes on object-dense generated maps.
+	var json_text := JSON.stringify(payload)
 	_runtime_save_profile_bucket(profile, "stringify", ProfileLogScript.elapsed_ms(stringify_started))
 	var candidate_path := _save_transaction_candidate_path(file_path)
 	var backup_path := _save_transaction_backup_path(file_path)
@@ -2497,7 +2531,7 @@ func _normalize_restore_result(payload: Dictionary, slot_type: String = "") -> D
 	elif generated_registration.has("ok") and not bool(generated_registration.get("ok", false)):
 		warnings.append(String(generated_registration.get("message", "Generated random-map provenance could not be restored.")))
 
-	var scenario := ContentService.get_scenario(scenario_id)
+	var scenario := ContentService.get_scenario_readonly(scenario_id)
 	if scenario.is_empty():
 		return {
 			"ok": false,
@@ -2582,7 +2616,7 @@ func _normalize_restore_result(payload: Dictionary, slot_type: String = "") -> D
 
 func _ensure_generated_random_map_scenario_registered(normalized_payload: Dictionary) -> Dictionary:
 	var scenario_id := String(normalized_payload.get("scenario_id", ""))
-	if scenario_id == "" or not ContentService.get_scenario(scenario_id).is_empty():
+	if scenario_id == "" or not ContentService.get_scenario_readonly(scenario_id).is_empty():
 		return {"ok": true, "registered": false}
 	if String(normalized_payload.get("launch_mode", "")) != SessionStateStoreScript.LAUNCH_MODE_SKIRMISH:
 		return {}
@@ -2650,7 +2684,7 @@ func _register_native_generated_random_map_scenario_from_payload(normalized_payl
 	var scenario_id := String(normalized_payload.get("scenario_id", ""))
 	if scenario_id == "":
 		return {"ok": false, "registered": false, "message": "Native generated random-map save is missing a scenario id."}
-	if not ContentService.get_scenario(scenario_id).is_empty():
+	if not ContentService.get_scenario_readonly(scenario_id).is_empty():
 		return {"ok": true, "registered": false}
 	var overworld: Dictionary = normalized_payload.get("overworld", {}) if normalized_payload.get("overworld", {}) is Dictionary else {}
 	var map_size: Dictionary = overworld.get("map_size", {}) if overworld.get("map_size", {}) is Dictionary else {}
@@ -2783,7 +2817,7 @@ func _native_generated_restore_player_faction(overworld: Dictionary) -> String:
 
 func _populate_summary_from_payload(summary: Dictionary, payload: Dictionary) -> Dictionary:
 	var scenario_id := String(payload.get("scenario_id", ""))
-	var scenario := ContentService.get_scenario(scenario_id)
+	var scenario := ContentService.get_scenario_readonly(scenario_id)
 	var launch_mode := SessionStateStoreScript.normalize_launch_mode(payload.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN))
 	var campaign_metadata := _campaign_metadata_for_scenario(scenario_id, launch_mode)
 	var session_flags = payload.get("flags", {})

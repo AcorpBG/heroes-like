@@ -30692,7 +30692,7 @@ def validate_town_faction_progression(errors: list[str]) -> None:
         "func town_weekly_growth",
         "func _effective_player_town_weekly_growth",
         'String(town.get("owner", "neutral")) == "player"',
-        "return _effective_player_town_weekly_growth(session, town)",
+        "var result := _effective_player_town_weekly_growth(session, town) if session != null",
         "var weekly_growth := _effective_player_town_weekly_growth(session, town)",
         "func _project_player_town_at_daybreak",
         "projected_session.day = next_day",
@@ -41035,7 +41035,7 @@ def validate_ai_known_world_memory_candidate_compatibility(errors: list[str]) ->
         '"town_placement_ids": []',
         '"flag_ids": []',
         '"tiles": []',
-        "ContentService.get_scenario(session.scenario_id)",
+        "ContentService.get_scenario_readonly(session.scenario_id)",
         'for bucket in ["victory", "defeat"]:',
         "placement_id not in town_placement_ids",
         'String(objective.get("type", "")) == "flag_true"',
@@ -41072,7 +41072,7 @@ def validate_ai_known_world_memory_candidate_compatibility(errors: list[str]) ->
     ensure(descriptor_match is not None, errors, "Could not isolate production target-descriptor catalog.")
     descriptor_body = descriptor_match.group("body") if descriptor_match else ""
     descriptor_anchor_order = (
-        "var scenario = ContentService.get_scenario(session.scenario_id)",
+        "var scenario = ContentService.get_scenario_readonly(session.scenario_id)",
         "var objective_anchor_surface := _objective_anchor_surface(session, scenario)",
         'var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", [])',
         'var objective_town_ids: Array = objective_anchor_surface.get("town_placement_ids", [])',
@@ -41089,7 +41089,7 @@ def validate_ai_known_world_memory_candidate_compatibility(errors: list[str]) ->
         errors,
         "Target-descriptor catalog lost exact one-scenario/one-anchor surface reuse and family order.",
     )
-    ensure(descriptor_body.count("ContentService.get_scenario(") == 1, errors, "Target-descriptor catalog must materialize the generated scenario exactly once.")
+    ensure(descriptor_body.count("ContentService.get_scenario_readonly(") == 1, errors, "Target-descriptor catalog must access the generated scenario read-only exactly once.")
     ensure(descriptor_body.count("_objective_anchor_surface(") == 1, errors, "Target-descriptor catalog must materialize the objective-anchor surface exactly once.")
     for forbidden_token in ("_town_started_enemy(session", "_town_is_objective_anchor(session", "static var", "session.flags", "call_deferred", "await "):
         ensure(forbidden_token not in descriptor_body, errors, f"Target-descriptor objective reuse must remain exact, synchronous, and invocation-local: {forbidden_token}")
@@ -42798,7 +42798,7 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func ai_live_town_retake_target_selection_plan",
-        "ai_live_town_retake_target_selection_plan(session, config, raid)",
+        "ai_live_town_retake_target_selection_plan(session, config, raid, preloaded_path_context)",
         "func _redirect_fragile_raid_for_known_target_risk",
         "func _town_assault_advance_risk_report",
         "func _hero_intercept_advance_risk_report",

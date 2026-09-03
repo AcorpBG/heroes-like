@@ -30,7 +30,7 @@ static func create_session(
 	difficulty: String = "normal",
 	launch_mode: String = SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN
 ) -> SessionStateStoreScript.SessionData:
-	var scenario := ContentService.get_scenario(scenario_id)
+	var scenario := ContentService.get_scenario_readonly(scenario_id)
 	if scenario.is_empty():
 		push_error("Unable to build session for missing scenario %s." % scenario_id)
 		return SessionStateStoreScript.new_session_data()

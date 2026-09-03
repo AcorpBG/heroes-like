@@ -1213,7 +1213,7 @@ func _request_end_turn(show_dialog: bool = true) -> Dictionary:
 		"warning_signature": String(warning.get("signature", "")),
 		"warning_reasons": _duplicate_array(warning.get("reasons", [])),
 		"risk_unconsumed": bool(warning.get("risk_unconsumed", false)),
-		"session_payload_signature": JSON.stringify(_session.to_dict()),
+		"session_payload_signature": _end_turn_session_state_signature(),
 	}
 	var copy := _end_turn_confirmation_copy(warning)
 	_end_turn_confirmation_dialog.title = String(copy.get("title", "Confirm End Turn?"))
@@ -1237,7 +1237,11 @@ func _request_end_turn(show_dialog: bool = true) -> Dictionary:
 func _current_end_turn_warning() -> Dictionary:
 	# Core forecast descriptions normalize their cached forecast state. Keep warning
 	# inspection read-only so opening/canceling a confirmation cannot alter a save.
-	var overworld_before := _session.overworld.duplicate(true)
+	var had_forecast_state := _session.overworld.has(OverworldRules.COMMAND_RISK_FORECAST_KEY)
+	var forecast_before_value: Variant = _session.overworld.get(OverworldRules.COMMAND_RISK_FORECAST_KEY, {})
+	var forecast_before: Variant = forecast_before_value.duplicate(true) \
+		if forecast_before_value is Dictionary or forecast_before_value is Array \
+		else forecast_before_value
 	var surface := _end_turn_confirmation_surface()
 	var risk_surface := OverworldRules.describe_command_risk_surfaces(_session)
 	var risk_data_value: Variant = risk_surface.get("forecast_data", {})
@@ -1276,7 +1280,10 @@ func _current_end_turn_warning() -> Dictionary:
 		"risk_surface": risk_surface,
 		"risk_unconsumed": risk_unconsumed,
 	}
-	_session.overworld = overworld_before
+	if had_forecast_state:
+		_session.overworld[OverworldRules.COMMAND_RISK_FORECAST_KEY] = forecast_before
+	else:
+		_session.overworld.erase(OverworldRules.COMMAND_RISK_FORECAST_KEY)
 	return warning
 
 func _end_turn_confirmation_copy(warning: Dictionary) -> Dictionary:
@@ -1384,9 +1391,47 @@ func _stale_end_turn_request_fields(pending: Dictionary) -> Array:
 		stale_fields.append("day")
 	if String(pending.get("status", "")) != _session.scenario_status or String(_session.game_state) != "overworld":
 		stale_fields.append("status")
-	if stale_fields.is_empty() and String(pending.get("session_payload_signature", "")) != JSON.stringify(_session.to_dict()):
+	if stale_fields.is_empty() and String(pending.get("session_payload_signature", "")) != _end_turn_session_state_signature():
 		stale_fields.append("warning_signature")
 	return stale_fields
+
+func _end_turn_session_state_signature() -> String:
+	# The dialog only needs an in-process stale-state guard. Variant hashing walks
+	# mutable authoritative state without allocating and serializing immutable
+	# package/render catalogs from a Large generated map twice per confirmation.
+	var mutable_overworld := _session.overworld.duplicate(false)
+	for immutable_key in [
+		"map",
+		"map_size",
+		"terrain_layers",
+		"map_objects",
+		"package_source_object_ids",
+		"package_source_objects_by_id",
+		"map_package_ref",
+		"scenario_package_ref",
+		"native_random_map_package_session_adoption",
+		"generated_random_map_identity",
+		"generated_random_map_validation",
+		"native_random_map_runtime_scenario_record",
+	]:
+		mutable_overworld.erase(immutable_key)
+	var mutable_flags := _session.flags.duplicate(false)
+	mutable_flags.erase("native_random_map_runtime_scenario_record")
+	return str(hash([
+		_session.save_version,
+		_session.session_id,
+		_session.scenario_id,
+		_session.hero_id,
+		_session.day,
+		_session.difficulty,
+		_session.launch_mode,
+		_session.game_state,
+		_session.scenario_status,
+		_session.scenario_summary,
+		mutable_overworld,
+		_session.battle,
+		mutable_flags,
+	]))
 
 func _focus_end_turn_cancel_after_popup() -> void:
 	await get_tree().process_frame
@@ -2403,7 +2448,7 @@ func _sync_overworld_music_audio(source: String) -> void:
 func _music_session_metadata() -> Dictionary:
 	if _session == null:
 		return {}
-	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(_session.scenario_id)
 	return {
 		"scenario_id": _session.scenario_id,
 		"player_faction_id": String(scenario.get("player_faction_id", "")),
@@ -3682,7 +3727,7 @@ func _refresh_status_surfaces(generated_surface_start: int, preloaded_refresh_wa
 			_profile_end("refresh_generated_surfaces", generated_surface_start)
 		return true
 	var header_profile_start := _debug_refresh_profile_begin("refresh_header_objective_status_resources")
-	var scenario = ContentService.get_scenario(_session.scenario_id)
+	var scenario = ContentService.get_scenario_readonly(_session.scenario_id)
 	_header_label.text = String(scenario.get("name", "Overworld Command"))
 	var objective_header_surfaces := OverworldRules.describe_objective_header_surfaces(_session)
 	_profile_add("objective_stakes_surface_builds", 1)
@@ -3865,7 +3910,7 @@ func _refresh_tooltip_context_drawer_surfaces(
 	_debug_refresh_profile_end("refresh_tooltip_context_drawers", tooltip_context_profile_start)
 
 func _refresh_generated_opening_surfaces() -> void:
-	var scenario = ContentService.get_scenario(_session.scenario_id)
+	var scenario = ContentService.get_scenario_readonly(_session.scenario_id)
 	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
 	var movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
 	var hero_pos := OverworldRules.hero_position(_session)
@@ -6549,7 +6594,7 @@ func _selected_tile_objective_label() -> String:
 	var placement_id := _selected_tile_objective_placement_id()
 	if placement_id == "":
 		return ""
-	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(_session.scenario_id)
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
 		return ""
