@@ -33,6 +33,11 @@ constexpr const char *NATIVE_RMG_SCHEMA_ID = "aurelion_native_random_map_config_
 constexpr const char *NATIVE_RMG_VERSION = "native_rmg_exact_h3maped_state_chain_v1";
 constexpr const char *HOMM3_RE_PROXY_CATALOG_PATH = "res://content/homm3_re_reward_object_proxy_catalog.json";
 constexpr const char *HOMM3_RE_PROXY_CATALOG_SCHEMA = "homm3_re_reward_object_proxy_catalog_v1";
+constexpr const char *RANDOM_MAP_OBJECT_ELIGIBILITY_PATH = "res://content/random_map_object_eligibility.json";
+constexpr const char *RANDOM_MAP_OBJECT_ELIGIBILITY_SCHEMA = "aurelion_random_map_object_eligibility_v1";
+constexpr const char *MAP_OBJECT_CATALOG_PATH = "res://content/map_objects.json";
+constexpr const char *RESOURCE_SITE_CATALOG_PATH = "res://content/resource_sites.json";
+constexpr const char *ARTIFACT_CATALOG_PATH = "res://content/artifacts.json";
 constexpr uint64_t HASH_MODULUS = 4294967296ULL;
 
 PackedStringArray capabilities() {
@@ -462,8 +467,10 @@ const char *runtime_object_kind(int32_t type_id) {
 		case 5: return "artifact";
 		case 53: return "mine";
 		case 54:
-		case 71: return "guard";
-		case 98: return "town";
+		case 71: case 72: case 73: case 74: case 75:
+		case 162: case 163: case 164:
+			return "guard";
+		case 77: case 98: return "town";
 		case 66: case 67: case 68: case 69: case 76: case 79:
 		case 83: case 88: case 89: case 90: case 93: case 101:
 			return "reward_reference";
@@ -473,6 +480,158 @@ const char *runtime_object_kind(int32_t type_id) {
 			return "decorative_obstacle";
 		default: return "h3m_object";
 	}
+}
+
+Dictionary runtime_json_dictionary(const String &path) {
+	if (!FileAccess::file_exists(path)) {
+		return Dictionary();
+	}
+	Ref<FileAccess> file = FileAccess::open(path, FileAccess::READ);
+	if (file.is_null() || !file->is_open()) {
+		return Dictionary();
+	}
+	Ref<JSON> parser;
+	parser.instantiate();
+	if (parser->parse(file->get_as_text()) != OK) {
+		return Dictionary();
+	}
+	Variant data = parser->get_data();
+	return data.get_type() == Variant::DICTIONARY ? Dictionary(data) : Dictionary();
+}
+
+bool runtime_string_array_contains(const Variant &value, const String &needle) {
+	if (value.get_type() != Variant::ARRAY) {
+		return false;
+	}
+	Array values = value;
+	for (int64_t index = 0; index < values.size(); ++index) {
+		if (String(values[index]) == needle) {
+			return true;
+		}
+	}
+	return false;
+}
+
+Dictionary runtime_random_map_object_eligibility() {
+	Dictionary registry = runtime_json_dictionary(RANDOM_MAP_OBJECT_ELIGIBILITY_PATH);
+	if (String(registry.get("schema_id", "")) != RANDOM_MAP_OBJECT_ELIGIBILITY_SCHEMA
+			|| String(registry.get("native_generation_boundary", ""))
+					!= "classification_and_runtime_proxy_selection_only_no_phase_placement_topology_footprint_mask_rng_or_final_payload_changes") {
+		return Dictionary();
+	}
+	return registry;
+}
+
+Dictionary runtime_authored_pool_definition(const Dictionary &registry, const String &pool_id) {
+	Variant pools_value = registry.get("authored_pools", Variant());
+	if (pools_value.get_type() != Variant::ARRAY) {
+		return Dictionary();
+	}
+	Array pools = pools_value;
+	for (int64_t index = 0; index < pools.size(); ++index) {
+		if (pools[index].get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary pool = pools[index];
+		if (String(pool.get("id", "")) == pool_id) {
+			return pool;
+		}
+	}
+	return Dictionary();
+}
+
+bool runtime_map_object_matches_pool(
+		const Dictionary &item,
+		const Dictionary &pool,
+		const std::unordered_set<std::string> &resource_site_ids) {
+	const String item_id = String(item.get("id", ""));
+	const String primary_class = String(item.get("primary_class", ""));
+	const bool explicit_match = runtime_string_array_contains(pool.get("explicit_object_ids", Variant()), item_id);
+	Variant primary_classes = pool.get("primary_classes", Variant());
+	if (primary_classes.get_type() == Variant::ARRAY
+			&& !runtime_string_array_contains(primary_classes, primary_class)
+			&& !explicit_match) {
+		return false;
+	}
+	Variant families = pool.get("families", Variant());
+	if (families.get_type() == Variant::ARRAY
+			&& !runtime_string_array_contains(families, String(item.get("family", "")))) {
+		return false;
+	}
+	Dictionary runtime_boundary = item.get("runtime_boundary", Dictionary());
+	if (runtime_string_array_contains(
+			pool.get("exclude_runtime_statuses", Variant()),
+			String(runtime_boundary.get("status", "")))) {
+		return false;
+	}
+	if (bool(pool.get("require_resource_site", false))) {
+		const String site_id = String(item.get("resource_site_id", ""));
+		if (site_id.is_empty() || resource_site_ids.count(std::string(site_id.utf8().get_data())) == 0) {
+			return false;
+		}
+	}
+	return !item_id.is_empty();
+}
+
+Dictionary runtime_authored_pool_candidates(const Dictionary &registry) {
+	Dictionary result;
+	Dictionary map_catalog = runtime_json_dictionary(MAP_OBJECT_CATALOG_PATH);
+	Dictionary site_catalog = runtime_json_dictionary(RESOURCE_SITE_CATALOG_PATH);
+	Dictionary artifact_catalog = runtime_json_dictionary(ARTIFACT_CATALOG_PATH);
+	Array map_items = map_catalog.get("items", Array());
+	Array site_items = site_catalog.get("items", Array());
+	Array artifact_items = artifact_catalog.get("items", Array());
+	std::unordered_set<std::string> resource_site_ids;
+	for (int64_t index = 0; index < site_items.size(); ++index) {
+		if (site_items[index].get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		const String site_id = String(Dictionary(site_items[index]).get("id", ""));
+		if (!site_id.is_empty()) {
+			resource_site_ids.insert(std::string(site_id.utf8().get_data()));
+		}
+	}
+	Array pools = registry.get("authored_pools", Array());
+	for (int64_t pool_index = 0; pool_index < pools.size(); ++pool_index) {
+		if (pools[pool_index].get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary pool = pools[pool_index];
+		const String pool_id = String(pool.get("id", ""));
+		const String domain = String(pool.get("content_domain", ""));
+		Array candidates;
+		if (domain == "map_object") {
+			for (int64_t item_index = 0; item_index < map_items.size(); ++item_index) {
+				if (map_items[item_index].get_type() != Variant::DICTIONARY) {
+					continue;
+				}
+				Dictionary item = map_items[item_index];
+				if (runtime_map_object_matches_pool(item, pool, resource_site_ids)) {
+					candidates.append(item.duplicate(true));
+				}
+			}
+		} else if (domain == "artifact") {
+			for (int64_t item_index = 0; item_index < artifact_items.size(); ++item_index) {
+				if (artifact_items[item_index].get_type() == Variant::DICTIONARY
+						&& !String(Dictionary(artifact_items[item_index]).get("id", "")).is_empty()) {
+					candidates.append(Dictionary(artifact_items[item_index]).duplicate(true));
+				}
+			}
+		}
+		for (int64_t item_index = 1; item_index < candidates.size(); ++item_index) {
+			Variant current = candidates[item_index];
+			const String current_id = String(Dictionary(current).get("id", ""));
+			int64_t insert_index = item_index;
+			while (insert_index > 0
+					&& String(Dictionary(candidates[insert_index - 1]).get("id", "")) > current_id) {
+				candidates[insert_index] = candidates[insert_index - 1];
+				--insert_index;
+			}
+			candidates[insert_index] = current;
+		}
+		result[pool_id] = candidates;
+	}
+	return result;
 }
 
 Array runtime_live_proxy_catalog_entries() {
@@ -575,6 +734,86 @@ Dictionary runtime_live_proxy_entry(
 	return Dictionary();
 }
 
+Dictionary runtime_authored_pool_proxy_entry(
+		const Dictionary &registry,
+		const Dictionary &candidates_by_pool,
+		const Dictionary &catalog_entry,
+		const aurelion::h3maped_rmg_core::RuntimeMapObjectProjection &source,
+		const String &map_id) {
+	Dictionary source_type_pools = registry.get("source_type_pools", Dictionary());
+	const String source_type_key = String::num_int64(source.type_id);
+	const String pool_id = String(source_type_pools.get(source_type_key, ""));
+	if (pool_id.is_empty()) {
+		return catalog_entry.duplicate(true);
+	}
+	Dictionary pool = runtime_authored_pool_definition(registry, pool_id);
+	Variant candidates_value = candidates_by_pool.get(pool_id, Variant());
+	if (pool.is_empty() || candidates_value.get_type() != Variant::ARRAY) {
+		return Dictionary();
+	}
+	Array candidates = candidates_value;
+	if (candidates.is_empty()) {
+		return Dictionary();
+	}
+	if (!catalog_entry.is_empty()) {
+		Dictionary entry = catalog_entry.duplicate(true);
+		entry["native_authored_pool_id"] = pool_id;
+		entry["native_authored_pool_candidate_count"] = candidates.size();
+		entry["native_authored_pool_candidate_id"] = entry.get("native_proxy_object_id", "");
+		entry["native_authored_pool_selection_token"] = String("exact_catalog:") + String(entry.get("id", ""));
+		entry["native_authored_pool_selection_mode"] = "existing_exact_catalog_identity";
+		entry["native_authored_pool_registry_path"] = RANDOM_MAP_OBJECT_ELIGIBILITY_PATH;
+		entry["native_authored_pool_registry_schema"] = RANDOM_MAP_OBJECT_ELIGIBILITY_SCHEMA;
+		entry["native_authored_pool_source_placement_unchanged"] = true;
+		entry["native_authored_pool_final_payload_unchanged"] = true;
+		return entry;
+	}
+	const String selection_token = hash32_hex(
+			map_id + String(":") + String::num_int64(source.serialized_index)
+			+ String(":") + source_type_key + String(":")
+			+ String::num_int64(source.subtype) + String(":") + pool_id);
+	const int64_t candidate_index = int64_t(hash32_int(selection_token)) % candidates.size();
+	Dictionary candidate = candidates[candidate_index];
+	Dictionary entry = catalog_entry.duplicate(true);
+	const String domain = String(pool.get("content_domain", ""));
+	const String candidate_id = String(candidate.get("id", ""));
+	entry.erase("native_proxy_site_id");
+	entry.erase("native_resource_id");
+	entry.erase("native_artifact_id");
+	entry["id"] = String("authored_pool_proxy_") + source_type_key + String("_")
+			+ String::num_int64(source.subtype) + String("_") + pool_id;
+	entry["generated_kind"] = pool.get("generated_kind", "");
+	entry["source_kind"] = "homm3_re_final_payload_post_projection_original_content_pool";
+	entry["semantic_category"] = pool.get("semantic_category", pool_id);
+	entry["native_proxy_object_id"] = candidate_id;
+	if (domain == "artifact") {
+		entry["native_artifact_id"] = candidate_id;
+		entry["native_proxy_family"] = candidate.get("family", "artifact");
+		entry["native_proxy_category"] = candidate.get("artifact_class", "artifact");
+	} else {
+		const String site_id = String(candidate.get("resource_site_id", ""));
+		if (!site_id.is_empty()) {
+			entry["native_proxy_site_id"] = site_id;
+		}
+		entry["native_proxy_family"] = candidate.get("family", "");
+		entry["native_proxy_category"] = candidate.get("primary_class", "");
+	}
+	entry["homm3_re_object_type_id"] = source.type_id;
+	entry["homm3_re_object_type_name"] = String(source.def_name.c_str());
+	entry["homm3_re_object_subtype"] = source.subtype;
+	entry["homm3_re_object_def_ref"] = String(source.def_name.c_str());
+	entry["native_authored_pool_id"] = pool_id;
+	entry["native_authored_pool_candidate_count"] = candidates.size();
+	entry["native_authored_pool_candidate_id"] = candidate_id;
+	entry["native_authored_pool_selection_token"] = selection_token;
+	entry["native_authored_pool_selection_mode"] = "stable_source_ordinal_pool_index";
+	entry["native_authored_pool_registry_path"] = RANDOM_MAP_OBJECT_ELIGIBILITY_PATH;
+	entry["native_authored_pool_registry_schema"] = RANDOM_MAP_OBJECT_ELIGIBILITY_SCHEMA;
+	entry["native_authored_pool_source_placement_unchanged"] = true;
+	entry["native_authored_pool_final_payload_unchanged"] = true;
+	return entry;
+}
+
 void apply_runtime_live_proxy_entry(Dictionary &object, const Dictionary &entry) {
 	if (entry.is_empty()) {
 		return;
@@ -606,8 +845,28 @@ void apply_runtime_live_proxy_entry(Dictionary &object, const Dictionary &entry)
 		}
 	}
 	object["homm3_re_reward_object_catalog_id"] = entry.get("id", "");
-	object["homm3_re_reward_object_catalog_path"] = HOMM3_RE_PROXY_CATALOG_PATH;
-	object["homm3_re_reward_object_catalog_schema"] = HOMM3_RE_PROXY_CATALOG_SCHEMA;
+	if (!String(entry.get("native_authored_pool_id", "")).is_empty()) {
+		object["native_authored_pool_resolution_status"] = "mapped";
+		for (const char *field : {
+					"native_authored_pool_id",
+					"native_authored_pool_candidate_id",
+					"native_authored_pool_selection_token",
+					"native_authored_pool_selection_mode",
+					"native_authored_pool_registry_path",
+					"native_authored_pool_registry_schema" }) {
+			object[field] = entry.get(field, "");
+		}
+		object["native_authored_pool_candidate_count"] = entry.get("native_authored_pool_candidate_count", 0);
+		object["native_authored_pool_source_placement_unchanged"] = true;
+		object["native_authored_pool_final_payload_unchanged"] = true;
+		if (String(entry.get("native_authored_pool_selection_mode", "")) == "existing_exact_catalog_identity") {
+			object["homm3_re_reward_object_catalog_path"] = HOMM3_RE_PROXY_CATALOG_PATH;
+			object["homm3_re_reward_object_catalog_schema"] = HOMM3_RE_PROXY_CATALOG_SCHEMA;
+		}
+	} else {
+		object["homm3_re_reward_object_catalog_path"] = HOMM3_RE_PROXY_CATALOG_PATH;
+		object["homm3_re_reward_object_catalog_schema"] = HOMM3_RE_PROXY_CATALOG_SCHEMA;
+	}
 	object["homm3_re_reward_object_source_kind"] = entry.get("source_kind", "");
 	object["homm3_re_object_type_id"] = entry.get("homm3_re_object_type_id", 0);
 	object["homm3_re_object_type_name"] = entry.get("homm3_re_object_type_name", "");
@@ -996,20 +1255,33 @@ Dictionary runtime_terrain_layers(const aurelion::h3maped_rmg_core::RuntimeMapPa
 	return layers;
 }
 
-Array runtime_objects(
+Dictionary runtime_objects(
 		const String &map_id,
 		const aurelion::h3maped_rmg_core::RuntimeMapPayloadProjection &projection,
 		const Dictionary &normalized_config) {
 	Array result;
+	Array failures;
 	const Array live_proxy_catalog = runtime_live_proxy_catalog_entries();
+	const Dictionary eligibility = runtime_random_map_object_eligibility();
+	const Dictionary candidates_by_pool = runtime_authored_pool_candidates(eligibility);
+	const Dictionary source_type_pools = eligibility.get("source_type_pools", Dictionary());
+	const Dictionary source_kind_passthrough = eligibility.get("source_kind_passthrough", Dictionary());
+	const Dictionary source_type_exclusions = eligibility.get("source_type_exclusions", Dictionary());
+	Dictionary resolution_counts;
 	for (const auto &source : projection.objects) {
 		Dictionary object;
 		const String base_kind = runtime_object_kind(source.type_id);
-		const Dictionary live_proxy = runtime_live_proxy_entry(
+		const Dictionary catalog_proxy = runtime_live_proxy_entry(
 				live_proxy_catalog,
 				source.type_id,
 				source.subtype,
 				base_kind);
+		const Dictionary live_proxy = runtime_authored_pool_proxy_entry(
+				eligibility,
+				candidates_by_pool,
+				catalog_proxy,
+				source,
+				map_id);
 		const String kind = live_proxy.is_empty()
 				? base_kind
 				: String(live_proxy.get("generated_kind", base_kind));
@@ -1056,6 +1328,38 @@ Array runtime_objects(
 		}
 		object["blocking_body"] = !source.body_tiles.empty();
 		apply_runtime_live_proxy_entry(object, live_proxy);
+		const String source_type_key = String::num_int64(source.type_id);
+		String resolution_status = String(object.get("native_authored_pool_resolution_status", ""));
+		if (resolution_status.is_empty()) {
+			if (source_kind_passthrough.has(source_type_key)) {
+				resolution_status = "native_runtime_passthrough";
+			} else if (source_type_exclusions.has(source_type_key)) {
+				resolution_status = "unsupported_source_type";
+				object["native_authored_pool_exclusion_reason"] = source_type_exclusions.get(source_type_key, "");
+			} else if (kind == "decorative_obstacle" || visit_tiles.is_empty()) {
+				resolution_status = "renderer_managed_nonvisitable_body";
+			} else if (source_type_pools.has(source_type_key)) {
+				resolution_status = "mapped_pool_resolution_failed";
+			} else {
+				resolution_status = "unclassified_visitable_source_type";
+			}
+			object["native_authored_pool_resolution_status"] = resolution_status;
+		}
+		resolution_counts[resolution_status] = int64_t(resolution_counts.get(resolution_status, 0)) + 1;
+		if (!visit_tiles.is_empty()
+				&& (resolution_status == "unsupported_source_type"
+						|| resolution_status == "mapped_pool_resolution_failed"
+						|| resolution_status == "unclassified_visitable_source_type")) {
+			Dictionary failure;
+			failure["code"] = resolution_status;
+			failure["type_id"] = source.type_id;
+			failure["subtype"] = source.subtype;
+			failure["definition_name"] = String(source.def_name.c_str());
+			failure["serialized_index"] = source.serialized_index;
+			failure["visit_tile_count"] = visit_tiles.size();
+			failure["reason"] = object.get("native_authored_pool_exclusion_reason", "");
+			failures.append(failure);
+		}
 		if (kind == "town") {
 			const auto *slot = runtime_slot_for_town(source, projection);
 			object["owner"] = slot == nullptr ? "neutral" : (slot->human ? "player" : "enemy");
@@ -1088,7 +1392,16 @@ Array runtime_objects(
 		}
 		result.append(object);
 	}
-	return result;
+	Dictionary report;
+	report["ok"] = failures.is_empty() && !eligibility.is_empty();
+	report["objects"] = result;
+	report["failures"] = failures;
+	report["failure_count"] = failures.size();
+	report["resolution_counts"] = resolution_counts;
+	report["registry_path"] = RANDOM_MAP_OBJECT_ELIGIBILITY_PATH;
+	report["registry_schema"] = RANDOM_MAP_OBJECT_ELIGIBILITY_SCHEMA;
+	report["registry_loaded"] = !eligibility.is_empty();
+	return report;
 }
 
 Dictionary build_native_package_session_adoption(const Dictionary &generated_map, const Dictionary &options) {
@@ -2743,7 +3056,31 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	route_graph["nodes"] = Array();
 	route_graph["edges"] = Array();
 	map_state["route_graph"] = route_graph;
-	map_state["objects"] = runtime_objects(map_id, projection, normalized);
+	Dictionary runtime_object_projection = runtime_objects(map_id, projection, normalized);
+	if (!bool(runtime_object_projection.get("ok", false))) {
+		Dictionary blocked;
+		blocked["ok"] = false;
+		blocked["status"] = "blocked";
+		blocked["error_code"] = "native_rmg_authored_object_pool_resolution_failed";
+		blocked["message"] = "Native final-payload objects did not all resolve through an original-content pool or an explicit nonvisitable/passthrough owner.";
+		blocked["object_pool_resolution"] = runtime_object_projection;
+		blocked["final_payload_fnv1a32"] = payload_token;
+		blocked["final_payload_byte_count"] = workflow.final_payload_writeout_0x4ad1e3.total_payload_byte_count;
+		return blocked;
+	}
+	Dictionary metadata_pool_resolution;
+	for (const char *field : {
+				"failure_count",
+				"resolution_counts",
+				"registry_path",
+				"registry_schema",
+				"registry_loaded" }) {
+		metadata_pool_resolution[field] = runtime_object_projection.get(field, Variant());
+	}
+	metadata_pool_resolution["ok"] = true;
+	metadata["native_authored_object_pool_resolution"] = metadata_pool_resolution;
+	map_state["metadata"] = metadata;
+	map_state["objects"] = runtime_object_projection.get("objects", Array());
 	Ref<MapDocument> map_document;
 	map_document.instantiate();
 	map_document->configure(map_state);

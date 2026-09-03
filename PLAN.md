@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10222
+Task: #10223
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -24,9 +24,39 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- No implementation slice is active after completing `bugfix-overworld-placeholder-art-resolution-10222`.
-- Most recently completed implementation slice: `bugfix-overworld-placeholder-art-resolution-10222`, which removes the orphan procedural DEF-anchor presentation from generated blocker records while retaining their authoritative original raster bodies and unchanged gameplay state.
-- Current package boundary: matching Linux and Windows release exports measure 244965688 bytes, 5034312 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- No implementation slice is active after completing `native-rmg-authored-object-pool-adoption-10223`.
+- Most recently completed implementation slice: `native-rmg-authored-object-pool-adoption-10223`, which classifies every authored Overworld object and routes compatible native source records through deterministic original-content pools without changing recovered generation.
+- Current package boundary: matching Linux and Windows release exports measure 244974124 bytes, 5025876 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Native RMG Authored Object Pool Adoption
+
+id: `native-rmg-authored-object-pool-adoption-10223`
+
+Status: completed 2026-09-03.
+
+Owner direction: promote the #10222 follow-up audit into the next implementation goal so authored Overworld objects are explicitly classified for random-map use and compatible live objects enter the authoritative native RMG proxy path.
+
+Requirements: `docs/lessons-learned.md`, `docs/native-rmg-homm3-re-object-table-proxy-report.md`, `docs/overworld-map-object-distinct-sprite-gap-audit.md`, `content/map_objects.json`, `content/resource_sites.json`, `content/homm3_re_reward_object_proxy_catalog.json`.
+
+Implementation boundary:
+- add one data-driven eligibility registry that classifies every authored map object as native-pool eligible or intentionally excluded, with explicit source-kind, runtime-surface, and exclusion reasons;
+- expand post-projection native proxy selection across semantically compatible original objects without changing recovered H3MapEd generation, placement, source order, footprints, passability masks, action tiles, or final payload bytes;
+- prevent visitable source records from silently entering gameplay as inert raw `h3m_object` entries: supported semantic types must resolve to live original content, while unsupported source types fail adoption with exact type/subtype evidence;
+- repair focused proxy coverage so current result schemas, deterministic selection, every authored eligibility classification, and Small through Extra Large supported workflows are checked.
+
+Completion criteria:
+- every `content/map_objects.json` id resolves to exactly one eligible or excluded registry decision and every eligible id is reachable through a compatible native proxy pool;
+- deterministic native generation retains exact final-payload identity while selecting broader original object/site identities, with zero unclassified visitable records in the supported validation matrix;
+- focused Godot reports, repository validation, and Linux/Windows export/package/startup/generated-map entry gates pass below the unchanged package ceiling.
+
+Completion evidence:
+- all 422 authored map objects resolve exactly once: 336 compatible pool members and 86 explicit exclusions; all 69 artifacts remain candidates for artifact-bearing source records;
+- the Small through Extra Large matrix projects 9,466 records, maps 2,449 through authored pools, retains 418 authoritative town/guard passthroughs and 6,599 renderer-owned nonvisitable bodies, and exposes zero unclassified visitable records;
+- deterministic selection-formula, package conversion, distinct map-object/decorative raster ownership, repository/editor parsing, and final Linux/Windows release export/startup/generated-flow checks pass with matching 244,974,124-byte PCKs.
+
+Non-goals:
+- no recovered RMG phase, topology, placement count, density, RNG call order, final payload, balance, save schema, combat, Town, campaign, or authored-scenario changes;
+- no heuristic reinterpretation of unknown source semantics, copied Heroes content, procedural art, package-limit change, signing, publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Placeholder Art Resolution
 

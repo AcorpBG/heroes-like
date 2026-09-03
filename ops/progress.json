@@ -16255,14 +16255,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Completed #10222 by removing the duplicate legacy DEF-anchor visual index while retaining every generated placement, package footprint, pathing cell, and terrain-matched original raster body.",
+  "currentNotes": "Completed #10223 with exhaustive authored-object eligibility, deterministic post-projection original-content selection, fail-closed visitable handling, and matching Linux/Windows package validation.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "bugfix-overworld-placeholder-art-resolution-10222",
-  "currentSliceId": "bugfix-overworld-placeholder-art-resolution-10222",
-  "currentSliceNotes": "Validated the exact generated decorative anchor path, zero normal visible procedural fallbacks, two inspected resolutions, exhaustive authored/live art coverage, and matching Linux/Windows packages.",
+  "currentSlice": "native-rmg-authored-object-pool-adoption-10223",
+  "currentSliceId": "native-rmg-authored-object-pool-adoption-10223",
+  "currentSliceNotes": "All 422 authored objects are classified; the four-size matrix has zero unclassified visitable records and final Linux/Windows generated-flow packages pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Placeholder Art Resolution",
-  "currentSliceUpdatedAt": "2026-09-03T10:13:29Z",
+  "currentSliceTitle": "Native RMG Authored Object Pool Adoption",
+  "currentSliceUpdatedAt": "2026-09-03T13:18:04Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21784,9 +21784,71 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Resolve only the owner-captured overworld placeholder path and validate all normal visible object categories; preserve topology, placement, gameplay, save, Town, and unrelated art behavior.",
+  "nextActionGuardrailNote": "Classify every authored Overworld object and expand only semantically compatible post-projection native proxies; do not change recovered H3MapEd phase behavior, placement, topology, masks, RNG, or final payload.",
   "notes": "The seven-school signature battle-VFX slice is complete. The broader user goal to expand production content and distinctive art remains active for future selected slices.",
   "plannedSlices": [
+    {
+      "id": "native-rmg-authored-object-pool-adoption-10223",
+      "title": "Native RMG Authored Object Pool Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md",
+        "docs/native-rmg-homm3-re-object-table-proxy-report.md",
+        "docs/overworld-map-object-distinct-sprite-gap-audit.md",
+        "content/map_objects.json",
+        "content/resource_sites.json",
+        "content/homm3_re_reward_object_proxy_catalog.json"
+      ],
+      "purpose": "Give every authored Overworld object an explicit native-RMG eligibility decision and route every compatible live object through deterministic original-content proxy selection without changing recovered generation.",
+      "implementationTargets": [
+        "content/random_map_object_eligibility.json",
+        "content/homm3_re_reward_object_proxy_catalog.json",
+        "src/gdextension/src/map_package_service.cpp",
+        "tests",
+        "docs/native-rmg-authored-object-pool-adoption-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every authored map-object id receives exactly one eligible or excluded registry decision and every eligible id is reachable through a compatible native proxy pool",
+        "Supported semantic source records resolve deterministically to live original object/site content while unsupported visitable records fail adoption with exact type/subtype evidence",
+        "Small through Extra Large deterministic generation preserves final-payload identity and exposes zero unclassified visitable records in the supported validation matrix",
+        "Repository validation and Linux/Windows export, package, startup, and generated-map entry checks pass below the unchanged package ceiling"
+      ],
+      "nonGoals": [
+        "Recovered RMG phase, topology, placement count, density, RNG order, final payload, balance, save schema, combat, Town, campaign, or authored-scenario changes",
+        "Heuristic unknown-source reinterpretation, copied Heroes content, procedural art, package-limit changes, signing, publication, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-03T12:24:47Z",
+      "startedAt": "2026-09-03T12:24:47Z",
+      "updatedAt": "2026-09-03T13:18:04Z",
+      "completedAt": "2026-09-03T13:18:04Z",
+      "notes": "Completed from the #10222 follow-up audit. Every authored object now has one eligibility decision; compatible source records resolve through deterministic original-content pools while exact catalog rows retain compatibility and recovered generation remains unchanged.",
+      "metrics": {
+        "authored_map_object_count": 422,
+        "authored_gameplay_object_count": 222,
+        "baseline_live_native_proxy_object_id_count": 26,
+        "baseline_small_unmapped_visitable_count": 4,
+        "baseline_medium_unmapped_visitable_count": 57,
+        "baseline_xlarge_unmapped_visitable_count": 309,
+        "eligible_authored_map_object_count": 336,
+        "excluded_authored_map_object_count": 86,
+        "artifact_pool_candidate_count": 69,
+        "source_type_pool_count": 102,
+        "validated_projected_object_count": 9466,
+        "validated_mapped_object_count": 2449,
+        "validated_unclassified_visitable_count": 0,
+        "linux_windows_pck_bytes": 244974124,
+        "save_version_changed": false,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "None for #10223. New nonblocking scenic placement categories or exact source-game object-effect emulation require separate owner-directed slices and are not implied by this completion."
+    },
     {
       "id": "bugfix-overworld-placeholder-art-resolution-10222",
       "title": "Overworld Placeholder Art Resolution",
@@ -108836,9 +108898,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed #10222: generated blocker records no longer draw orphan procedural legacy anchors, and their original generated raster bodies remain authoritative across validated Linux and Windows packages.",
-  "taskId": "10222",
-  "updatedAt": "2026-09-03T10:13:29Z",
+  "summary": "Completed #10223: all authored Overworld objects are explicitly eligible or excluded, compatible native source records use deterministic original-content pools, and zero unclassified visitable records remain in the supported matrix.",
+  "taskId": "10223",
+  "updatedAt": "2026-09-03T13:18:04Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
