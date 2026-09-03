@@ -67208,6 +67208,102 @@ def validate_map_editor_package_save_copy(errors: list[str]) -> None:
         )
 
 
+def validate_native_rmg_authored_object_pool_eligibility(errors: list[str]) -> None:
+    registry_path = CONTENT_DIR / "random_map_object_eligibility.json"
+    focused_report_path = ROOT / "tests/native_random_map_homm3_re_object_table_proxy_report.gd"
+    ensure(registry_path.is_file(), errors, "Native RMG authored-object eligibility registry is missing")
+    ensure(focused_report_path.is_file(), errors, "Native RMG authored-object pool focused report is missing")
+    if not registry_path.is_file():
+        return
+    registry = load_json(registry_path)
+    authored = load_json(CONTENT_DIR / "map_objects.json").get("items", [])
+    site_ids = set(items_index(load_json(CONTENT_DIR / "resource_sites.json")))
+    artifact_ids = set(items_index(load_json(CONTENT_DIR / "artifacts.json")))
+    ensure(registry.get("schema_id") == "aurelion_random_map_object_eligibility_v1", errors, "Native RMG authored-object eligibility schema drifted")
+    ensure(
+        registry.get("native_generation_boundary") == "classification_and_runtime_proxy_selection_only_no_phase_placement_topology_footprint_mask_rng_or_final_payload_changes",
+        errors,
+        "Native RMG authored-object eligibility must remain post-projection only",
+    )
+    ensure(
+        registry.get("exact_catalog_precedence") == "existing_live_type_subtype_proxy_rows_retain_their_established_runtime_identity_before_broader_pool_selection",
+        errors,
+        "Native RMG authored-object eligibility must preserve established exact catalog identities",
+    )
+    candidate_ids_by_pool: dict[str, set[str]] = {}
+    eligible_decisions: dict[str, str] = {}
+    for pool in registry.get("authored_pools", []):
+        if not isinstance(pool, dict):
+            continue
+        pool_id = str(pool.get("id", ""))
+        if pool.get("content_domain") == "artifact":
+            candidates = set(artifact_ids)
+        else:
+            candidates = set()
+            for item in authored:
+                if not isinstance(item, dict):
+                    continue
+                explicit = str(item.get("id", "")) in pool.get("explicit_object_ids", [])
+                if pool.get("primary_classes") and str(item.get("primary_class", "")) not in pool.get("primary_classes", []) and not explicit:
+                    continue
+                if pool.get("families") and str(item.get("family", "")) not in pool.get("families", []):
+                    continue
+                runtime_boundary = item.get("runtime_boundary", {}) if isinstance(item.get("runtime_boundary", {}), dict) else {}
+                if str(runtime_boundary.get("status", "")) in pool.get("exclude_runtime_statuses", []):
+                    continue
+                if pool.get("require_resource_site") and str(item.get("resource_site_id", "")) not in site_ids:
+                    continue
+                object_id = str(item.get("id", ""))
+                candidates.add(object_id)
+                eligible_decisions[object_id] = pool_id
+        candidate_ids_by_pool[pool_id] = candidates
+        ensure(bool(candidates), errors, f"Native RMG authored-object pool {pool_id} has no candidates")
+
+    excluded_decisions: dict[str, str] = {}
+    for item in authored:
+        if not isinstance(item, dict):
+            continue
+        object_id = str(item.get("id", ""))
+        decisions = [f"eligible:{eligible_decisions[object_id]}"] if object_id in eligible_decisions else []
+        for exclusion in registry.get("authored_exclusions", []):
+            if not isinstance(exclusion, dict):
+                continue
+            if exclusion.get("primary_classes") and str(item.get("primary_class", "")) not in exclusion.get("primary_classes", []):
+                continue
+            if exclusion.get("families") and str(item.get("family", "")) not in exclusion.get("families", []):
+                continue
+            runtime_boundary = item.get("runtime_boundary", {}) if isinstance(item.get("runtime_boundary", {}), dict) else {}
+            if exclusion.get("runtime_statuses") and str(runtime_boundary.get("status", "")) not in exclusion.get("runtime_statuses", []):
+                continue
+            if exclusion.get("require_missing_resource_site") and str(item.get("resource_site_id", "")) in site_ids:
+                continue
+            exclusion_id = str(exclusion.get("id", ""))
+            decisions.append(f"excluded:{exclusion_id}")
+            excluded_decisions[object_id] = exclusion_id
+        ensure(len(decisions) == 1, errors, f"Authored map object {object_id} must have exactly one native-RMG eligibility decision, got {decisions}")
+    ensure(len(authored) == 422, errors, "Native RMG eligibility baseline must cover all 422 authored map objects")
+    ensure(len(eligible_decisions) == 336, errors, "Native RMG eligibility must expose the 336 compatible authored map objects")
+    ensure(len(excluded_decisions) == 86, errors, "Native RMG eligibility must retain 86 explicit safety/scenario exclusions")
+    source_type_pools = registry.get("source_type_pools", {})
+    for type_id, pool_id in source_type_pools.items():
+        ensure(str(pool_id) in candidate_ids_by_pool and bool(candidate_ids_by_pool.get(str(pool_id))), errors, f"Native RMG source type {type_id} points to missing or empty authored pool {pool_id}")
+    ensure(not (set(source_type_pools) & set(registry.get("source_type_exclusions", {}))), errors, "Native RMG source types cannot be both pool-mapped and excluded")
+    ensure(not (set(source_type_pools) & set(registry.get("source_kind_passthrough", {}))), errors, "Native RMG source types cannot be both pool-mapped and passthrough")
+    if focused_report_path.is_file():
+        report_text = focused_report_path.read_text(encoding="utf-8")
+        for token in (
+            'native_random_map_homm3_re_object_table_proxy_report_v2',
+            '"homm3_small"',
+            '"homm3_medium"',
+            '"homm3_large"',
+            '"homm3_extra_large"',
+            'unclassified_visitable_count',
+            'deterministic_selection_formula_verified',
+            '_hash32_hex(source_token)',
+        ):
+            ensure(token in report_text, errors, f"Native RMG authored-object focused report is missing coverage token: {token}")
+
+
 def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
     guard_path = ROOT / "tools" / "rmg_no_godot_guard.py"
     wrapper_path = ROOT / "tools" / "rmg_native_batch_export.py"
@@ -67603,6 +67699,8 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";',
             'constexpr const char *HOMM3_RE_PROXY_CATALOG_PATH = "res://content/homm3_re_reward_object_proxy_catalog.json";',
             'constexpr const char *HOMM3_RE_PROXY_CATALOG_SCHEMA = "homm3_re_reward_object_proxy_catalog_v1";',
+            'constexpr const char *RANDOM_MAP_OBJECT_ELIGIBILITY_PATH = "res://content/random_map_object_eligibility.json";',
+            'constexpr const char *RANDOM_MAP_OBJECT_ELIGIBILITY_SCHEMA = "aurelion_random_map_object_eligibility_v1";',
             "Array runtime_live_proxy_catalog_entries()",
             'String(catalog.get("schema_id", "")) != HOMM3_RE_PROXY_CATALOG_SCHEMA',
             'String(catalog.get("asset_policy", "")) != "provenance_only_original_proxy_art"',
@@ -67617,6 +67715,10 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             '&& String(entry.get("native_proxy_object_id", "")) == artifact_id',
             '&& String(entry.get("native_proxy_site_id", "")).is_empty();',
             "Dictionary runtime_live_proxy_entry(",
+            "Dictionary runtime_authored_pool_proxy_entry(",
+            'entry["native_authored_pool_candidate_id"] = candidate_id;',
+            'entry["native_authored_pool_source_placement_unchanged"] = true;',
+            'entry["native_authored_pool_final_payload_unchanged"] = true;',
             '&& !runtime_proxy_entry_has_live_artifact_surface(entry)))',
             'if (kind_entries.size() == 1)',
             'if (kind_entries.is_empty() && exact_entries.size() == 1)',
@@ -67624,8 +67726,10 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'object["artifact_id"] = artifact_id;',
             'object["homm3_re_art_asset_policy"] = "provenance_only_original_proxy_art";',
             "const Array live_proxy_catalog = runtime_live_proxy_catalog_entries();",
-            "const Dictionary live_proxy = runtime_live_proxy_entry(",
+            "const Dictionary catalog_proxy = runtime_live_proxy_entry(",
+            "const Dictionary live_proxy = runtime_authored_pool_proxy_entry(",
             "apply_runtime_live_proxy_entry(object, live_proxy);",
+            'blocked["error_code"] = "native_rmg_authored_object_pool_resolution_failed";',
             'if (live_proxy.is_empty()) {\n\t\t\t\tobject["site_id"] = source.subtype == 2 ? "site_ridge_quarry" : "site_brightwood_sawmill";',
             'if (live_proxy.is_empty()) {\n\t\t\t\tobject["site_id"] = "site_generated_town_required_source_cache";',
         ):
@@ -67634,14 +67738,17 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ensure(native_text.count("Array runtime_live_proxy_catalog_entries()") == 1, errors, "Native live proxy catalog loader must remain unique")
         ensure(native_text.count("bool runtime_proxy_entry_has_live_artifact_surface(const Dictionary &entry)") == 1, errors, "Native live artifact proxy eligibility helper must remain unique")
         ensure(native_text.count("Dictionary runtime_live_proxy_entry(") == 1, errors, "Native live proxy resolver must remain unique")
+        ensure(native_text.count("Dictionary runtime_authored_pool_proxy_entry(") == 1, errors, "Native authored-pool proxy resolver must remain unique")
         ensure(native_text.count("void apply_runtime_live_proxy_entry(") == 1, errors, "Native live proxy projection helper must remain unique")
         proxy_loader_start = native_text.find("Array runtime_live_proxy_catalog_entries()")
         proxy_resolver_start = native_text.find("Dictionary runtime_live_proxy_entry(")
+        authored_pool_resolver_start = native_text.find("Dictionary runtime_authored_pool_proxy_entry(")
         proxy_apply_start = native_text.find("void apply_runtime_live_proxy_entry(")
-        proxy_runtime_start = native_text.find("Array runtime_objects(")
+        proxy_runtime_start = native_text.find("Dictionary runtime_objects(")
         proxy_runtime_end = native_text.find("Dictionary build_native_package_session_adoption(", proxy_runtime_start)
         proxy_loader_block = native_text[proxy_loader_start:proxy_resolver_start]
-        proxy_resolver_block = native_text[proxy_resolver_start:proxy_apply_start]
+        proxy_resolver_block = native_text[proxy_resolver_start:authored_pool_resolver_start]
+        authored_pool_resolver_block = native_text[authored_pool_resolver_start:proxy_apply_start]
         proxy_apply_block = native_text[proxy_apply_start:proxy_runtime_start]
         proxy_runtime_block = native_text[proxy_runtime_start:proxy_runtime_end]
         live_site_start = proxy_loader_block.find("bool runtime_proxy_entry_has_live_site_surface(")
@@ -67654,7 +67761,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "Native live-site proxy eligibility must reject metadata-only or unknown explicit status before kind/surface selection",
         )
         ensure(proxy_runtime_block.find("const Array live_proxy_catalog") < proxy_runtime_block.find("for (const auto &source : projection.objects)"), errors, "Native proxy catalog must load once before the ordered runtime object projection")
-        ensure(proxy_runtime_block.find("const Dictionary live_proxy") < proxy_runtime_block.find("const String kind =") < proxy_runtime_block.find("apply_runtime_live_proxy_entry(object, live_proxy);"), errors, "Native proxy resolution must precede kind-specific live materialization")
+        ensure(proxy_runtime_block.find("const Dictionary catalog_proxy") < proxy_runtime_block.find("const Dictionary live_proxy") < proxy_runtime_block.find("const String kind =") < proxy_runtime_block.find("apply_runtime_live_proxy_entry(object, live_proxy);"), errors, "Native catalog and authored-pool proxy resolution must precede kind-specific live materialization")
         for forbidden_token in (
             "type_id == 17",
             "type_id == 107",
@@ -67668,7 +67775,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "object_reedscript_vow_shrine",
             "site_reedscript_vow_shrine",
         ):
-            ensure(forbidden_token not in proxy_resolver_block + proxy_apply_block, errors, f"Native live proxy projection must not invent unsupported identity logic: {forbidden_token}")
+            ensure(forbidden_token not in proxy_resolver_block + proxy_apply_block, errors, f"Native exact-catalog proxy projection must not invent unsupported identity logic: {forbidden_token}")
         for forbidden_token in (
             "type_id == 67",
             "type_id == 68",
@@ -67676,6 +67783,14 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "artifact_warcrest_pennon",
         ):
             ensure(forbidden_token not in proxy_resolver_block + proxy_apply_block, errors, f"Native artifact proxy projection must remain catalog-driven: {forbidden_token}")
+        for required_token in (
+            'const String selection_token = hash32_hex(',
+            'const int64_t candidate_index = int64_t(hash32_int(selection_token)) % candidates.size();',
+            'entry["native_authored_pool_registry_schema"] = RANDOM_MAP_OBJECT_ELIGIBILITY_SCHEMA;',
+            'entry["native_authored_pool_selection_mode"] = "stable_source_ordinal_pool_index";',
+            'entry["native_authored_pool_selection_mode"] = "existing_exact_catalog_identity";',
+        ):
+            ensure(required_token in authored_pool_resolver_block, errors, f"Native authored-pool projection is missing deterministic data-driven selection token: {required_token}")
         for forbidden_token in (
             "static Array",
             "static Dictionary",
@@ -84128,6 +84243,7 @@ def main() -> int:
     validate_live_validation_screenshot_orientation(errors)
     validate_live_client_harness(errors)
     validate_native_rmg_homm3_validation_adoption_gate(errors)
+    validate_native_rmg_authored_object_pool_eligibility(errors)
     validate_legacy_scenario_package_conversion(errors)
     validate_map_editor_package_save_copy(errors)
     validate_native_rmg_no_godot_export_boundary(errors)
