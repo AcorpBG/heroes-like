@@ -297,7 +297,7 @@ static func build_current_session_summary(session: SessionStateStoreScript.Sessi
 	if session == null or session.scenario_id == "":
 		return "Campaign progress is saved separately from expedition slots."
 
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var scenario_name := String(scenario.get("name", session.scenario_id))
 	var lines := [
 		"%s | %s | %s"
@@ -351,7 +351,7 @@ static func build_skirmish_browser_entries() -> Array:
 static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> Dictionary:
 	if maps_folder_package_id_is_valid(scenario_id):
 		return build_maps_folder_package_skirmish_setup(scenario_id, difficulty_id)
-	var scenario := ContentService.get_scenario(scenario_id)
+	var scenario := ContentService.get_scenario_readonly(scenario_id)
 	if scenario.is_empty():
 		return {}
 	if ContentService.has_authored_scenario(scenario_id) and not _scenario_domain_is_player_facing():
@@ -1049,6 +1049,9 @@ static func build_random_map_skirmish_setup(input_config: Dictionary, difficulty
 	return build_random_map_skirmish_setup_with_retry(input_config, difficulty_id, RANDOM_MAP_PLAYER_RETRY_POLICY)
 
 static func _build_random_map_skirmish_setup_single_attempt(input_config: Dictionary, difficulty_id: String = "normal") -> Dictionary:
+	var profile_enabled := OS.get_environment("HEROES_PROFILE_LOG").strip_edges() != ""
+	var total_started_usec := Time.get_ticks_usec()
+	var profile_buckets := {}
 	var normalized_difficulty := normalize_difficulty(difficulty_id)
 	var service: Variant = _native_map_package_service()
 	if service == null:
@@ -1057,7 +1060,12 @@ static func _build_random_map_skirmish_setup_single_attempt(input_config: Dictio
 			"Native MapPackageService is required for generated skirmish startup.",
 			normalized_difficulty
 		)
-	var generated: Dictionary = service.generate_random_map(input_config, {"startup_path": "generated_skirmish"})
+	var stage_started_usec := Time.get_ticks_usec()
+	var generated: Dictionary = service.generate_random_map(input_config, {
+		"startup_path": "generated_skirmish",
+		"include_performance_profile": profile_enabled,
+	})
+	profile_buckets["native_generate"] = float(Time.get_ticks_usec() - stage_started_usec) / 1000.0
 	var report: Dictionary = generated.get("report", generated.get("validation_report", {})) if generated.get("report", generated.get("validation_report", {})) is Dictionary else {}
 	if report.is_empty() and bool(generated.get("ok", false)):
 		report = {
@@ -1122,10 +1130,12 @@ static func _build_random_map_skirmish_setup_single_attempt(input_config: Dictio
 			legacy_report
 		)
 
+	stage_started_usec = Time.get_ticks_usec()
 	var adoption: Dictionary = service.convert_generated_payload(generated, {
 		"feature_gate": GENERATED_MAP_PACKAGE_FEATURE_GATE,
 		"session_save_version": SessionStateStoreScript.SAVE_VERSION,
 	})
+	profile_buckets["convert_generated_payload"] = float(Time.get_ticks_usec() - stage_started_usec) / 1000.0
 	if not bool(adoption.get("ok", false)):
 		return _native_package_setup_failure(
 			String(adoption.get("error_code", "native_package_conversion_failed")),
@@ -1133,7 +1143,9 @@ static func _build_random_map_skirmish_setup_single_attempt(input_config: Dictio
 			normalized_difficulty,
 			adoption.get("report", {}) if adoption.get("report", {}) is Dictionary else report
 		)
+	stage_started_usec = Time.get_ticks_usec()
 	var persisted := _persist_and_load_generated_packages(service, adoption, generated)
+	profile_buckets["persist_and_load_packages"] = float(Time.get_ticks_usec() - stage_started_usec) / 1000.0
 	if not bool(persisted.get("ok", false)):
 		return _native_package_setup_failure(
 			String(persisted.get("error_code", "native_package_persist_load_failed")),
@@ -1147,7 +1159,7 @@ static func _build_random_map_skirmish_setup_single_attempt(input_config: Dictio
 	var setup_summary := _native_random_map_setup_summary(generated, adoption, persisted, report, retry_status, normalized_difficulty)
 	var scenario_ref: Dictionary = persisted.get("scenario_ref", {}) if persisted.get("scenario_ref", {}) is Dictionary else {}
 	var map_ref: Dictionary = persisted.get("map_ref", {}) if persisted.get("map_ref", {}) is Dictionary else {}
-	return {
+	var result := {
 		"ok": true,
 		"setup_kind": "generated_random_map_skirmish",
 		"startup_source": "native_rmg_disk_package",
@@ -1186,6 +1198,14 @@ static func _build_random_map_skirmish_setup_single_attempt(input_config: Dictio
 		"campaign_adoption": false,
 		"alpha_parity_claim": bool(generated.get("full_parity_claim", false)),
 	}
+	if profile_enabled:
+		profile_buckets["total_single_attempt"] = float(Time.get_ticks_usec() - total_started_usec) / 1000.0
+		result["performance_profile"] = {
+			"schema_id": "aurelion_generated_map_setup_performance_profile_v1",
+			"buckets_ms": profile_buckets,
+			"native_generation": generated.get("performance_profile", {}),
+		}
+	return result
 
 static func start_random_map_skirmish_session(input_config: Dictionary, difficulty_id: String = "normal") -> SessionStateStoreScript.SessionData:
 	var setup := build_random_map_skirmish_setup_with_retry(input_config, difficulty_id, RANDOM_MAP_PLAYER_RETRY_POLICY)
@@ -1274,7 +1294,7 @@ static func describe_session_commander_preview(session: SessionStateStoreScript.
 	if session == null or session.scenario_id == "":
 		return "Commander preview unavailable."
 	OverworldRulesScript.normalize_overworld_state(session)
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var hero = session.overworld.get("hero", {})
 	var command = hero.get("command", {})
 	var lines := ["Commander Preview"]

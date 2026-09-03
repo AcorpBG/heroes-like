@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Implement and validate the persisted post-battle report and casualty ledger."
+    "Select the next coherent owner-directed Phase 6 implementation slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1913,6 +1913,53 @@
   "active_slice": "",
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "performance-large-generated-map-runtime-20260903",
+      "title": "Large Generated Map Runtime Performance",
+      "sliceId": "performance-large-generated-map-runtime-10225",
+      "status": "completed",
+      "validatedAt": "2026-09-03T19:05:00Z",
+      "updatedAt": "2026-09-03T19:05:00Z",
+      "latestFinding": "The deterministic 108x108 Large fixture preserves materialized signature 7362cf00 while the quadratic native decorative lookup hotspot improves by more than 16x; selection, movement, Town transition, exact save, and full End Turn meet the focused 5/15-second bounds.",
+      "artifacts": [
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/autoload/ContentService.gd",
+        "scripts/autoload/SaveService.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "tests/large_generated_map_runtime_profile_report.gd",
+        "docs/large-generated-map-runtime-performance-report.md",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "map_width": 108,
+        "map_height": 108,
+        "materialized_map_signature": "7362cf00",
+        "baseline_decorative_dispatch_ms": 103853,
+        "optimized_decorative_dispatch_ms": 6300,
+        "decorative_dispatch_speedup": 16.48,
+        "final_cold_selection_ms": 414.676,
+        "final_warm_selection_ms": 181.24,
+        "final_move_ms": 346.101,
+        "final_town_transition_ms": 1760.956,
+        "final_explicit_save_ms": 3997.617,
+        "final_end_turn_ms": 9982.44,
+        "save_version": 9,
+        "linux_packaged_startup_passed": true,
+        "windows_packaged_startup_passed": true,
+        "windows_generated_flow_passed": true,
+        "pck_size_bytes": 245006172,
+        "pck_size_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 4993828,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "None for #10225. The legacy native adoption capability-label regression and broader release readiness remain separate work."
+    },
     {
       "id": "ux-post-battle-report-casualty-ledger-20260903",
       "title": "Post-Battle Report And Casualty Ledger",
@@ -16287,14 +16334,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Owner-directed #10224 is completed: every resolved player battle now pauses on a persisted casualty/consequence report with safe continuation routing.",
+  "currentNotes": "Owner-directed #10225 is complete with deterministic performance, save-equivalence, repository, and platform-package evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-post-battle-report-casualty-ledger-10224",
-  "currentSliceId": "ux-post-battle-report-casualty-ledger-10224",
-  "currentSliceNotes": "Capture terminal battle casualties before battle-state clear, persist the report, and route acknowledgement safely to the existing destination.",
+  "currentSlice": "performance-large-generated-map-runtime-10225",
+  "currentSliceId": "performance-large-generated-map-runtime-10225",
+  "currentSliceNotes": "Completed: exact signature 7362cf00 retained; native hotspot over 16x faster; focused 5/15-second command bounds and platform packages pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Post-Battle Report And Casualty Ledger",
-  "currentSliceUpdatedAt": "2026-09-03T13:57:18Z",
+  "currentSliceTitle": "Large Generated Map Runtime Performance",
+  "currentSliceUpdatedAt": "2026-09-03T19:05:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21754,7 +21801,7 @@
     "ops/progress.json"
   ],
   "latestEvidenceId": "content-eight-commanders-proving-roads-20260831",
-  "latestFinding": "All six Marchland seats now have three authored scenario placements and two town-exclusive production choices. The consolidated batch passed eighteen live battles, six build/growth/recruit/art/scenario/save routes, repository validation, and Linux/Windows packaged startup at 235019112 bytes.",
+  "latestFinding": "Large-map native decorative materialization is over 16x faster on the deterministic 108x108 fixture, whose signature remains 7362cf00; focused commands, save round trip, repository validation, and matching Linux/Windows package gates pass.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -21816,9 +21863,56 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select and tracker-register the next owner-directed Phase 6 slice before implementation; do not infer unrelated Town, Outcome, RMG, balance, or release-readiness work from #10224.",
-  "notes": "Owner-directed #10224 is completed. No implementation slice is currently active; prior #10223 native-RMG object-pool adoption remains completed.",
+  "nextActionGuardrailNote": "Select and track the next bounded owner-directed Phase 6 implementation slice before editing.",
+  "notes": "Owner-directed #10225 Large-map performance is completed. Prior #10224 post-battle reporting remains completed.",
   "plannedSlices": [
+    {
+      "id": "performance-large-generated-map-runtime-10225",
+      "title": "Large Generated Map Runtime Performance",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md",
+        "docs/large-generated-map-runtime-performance-requirements.md",
+        "docs/large-generated-map-runtime-performance-report.md",
+        "docs/profile-jsonl-usage.md",
+        "docs/overworld-refresh-input-pipeline-plan.md"
+      ],
+      "purpose": "Make normal play responsive on generated Large 108x108 maps by profiling and correcting the measured synchronous runtime bottleneck without changing map or gameplay authority.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/autoload/ContentService.gd",
+        "scripts/autoload/SaveService.gd",
+        "tests",
+        "docs/large-generated-map-runtime-performance-requirements.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "A deterministic player-facing generated Large map reproduces the observed stall with wall-clock and subsystem attribution before the fix",
+        "The corrected quadratic hotspot improves by at least one order of magnitude; selection, hover, movement, Town transition, and save complete below five seconds and full multi-faction End Turn below fifteen seconds in the validation environment",
+        "Generated payload, gameplay, save, routing, cache invalidation, and deterministic results remain exact",
+        "Focused regressions, repository validation, and Linux/Windows export/package/startup/generated-map entry pass below the unchanged package ceiling"
+      ],
+      "nonGoals": [
+        "Native RMG recovery/topology/output, density, balance, gameplay, content, save schema, art, Town layout, battle report, or unrelated UI changes",
+        "Heuristic generation tuning, deferred hidden work, copied Heroes content, package-limit changes, signing, publication, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-03T14:07:45Z",
+      "startedAt": "2026-09-03T14:07:45Z",
+      "updatedAt": "2026-09-03T19:05:00Z",
+      "completedAt": "2026-09-03T19:05:00Z",
+      "notes": "Completed with exact generated signature, focused command and save equivalence, native selftest, repository validation, and matching Linux/Windows release package evidence.",
+      "remainingWork": "None for #10225."
+    },
     {
       "id": "ux-post-battle-report-casualty-ledger-10224",
       "title": "Post-Battle Report And Casualty Ledger",
@@ -108452,7 +108546,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "",
-  "remainingWork": "Select the next coherent production slice. The known exit-only texture RID warning, broader production completion, and release readiness remain open.",
+  "remainingWork": "Select the next coherent owner-directed Phase 6 slice. The known exit-only texture RID warning, obsolete native capability-label regression, broader production completion, and release readiness remain open.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -108883,7 +108977,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_six_marchland_warworks_completed",
+  "result": "performance_large_generated_map_runtime_completed",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -108984,9 +109078,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "In progress #10224: add a persisted post-battle report with authoritative casualty ledgers and safe continuation routing.",
-  "taskId": "10224",
-  "updatedAt": "2026-09-03T13:26:28Z",
+  "summary": "Completed #10225: deterministic Large-map generation and normal play no longer exhibit minute-long stalls; exact map/save authority and Linux/Windows parity are preserved.",
+  "taskId": "10225",
+  "updatedAt": "2026-09-03T19:05:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

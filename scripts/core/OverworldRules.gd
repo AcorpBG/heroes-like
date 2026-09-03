@@ -35,6 +35,8 @@ const ENCOUNTER_ARMY_DETAIL_GROUP_LIMIT := 4
 
 static var _normalized_read_scope_session_id := ""
 static var _normalized_read_scope_depth := 0
+static var _normalized_read_scope_cache: Dictionary = {}
+static var _last_normalized_read_scope_cache_profile: Dictionary = {}
 static var _runtime_normalized_signatures: Dictionary = {}
 static var _spatial_lookup_indexes: Dictionary = {}
 static var _spatial_lookup_signatures: Dictionary = {}
@@ -223,7 +225,7 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 	session.save_version = SessionStateStoreScript.SAVE_VERSION
 	DifficultyRulesScript.normalize_session(session)
 
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var hero_id := session.hero_id
 	if hero_id == "":
 		hero_id = String(scenario.get("hero_id", ""))
@@ -382,6 +384,8 @@ static func begin_normalized_read_scope(session: SessionStateStoreScript.Session
 		normalize_overworld_state_for_runtime(session)
 		_normalized_read_scope_session_id = String(session.session_id)
 		_normalized_read_scope_depth = 1
+		_normalized_read_scope_cache = {}
+		_last_normalized_read_scope_cache_profile = {"hits": 0, "misses": 0, "entries": 0}
 		return
 	if String(session.session_id) == _normalized_read_scope_session_id:
 		_normalized_read_scope_depth += 1
@@ -395,8 +399,46 @@ static func end_normalized_read_scope(session: SessionStateStoreScript.SessionDa
 		return
 	_normalized_read_scope_depth -= 1
 	if _normalized_read_scope_depth <= 0:
+		_last_normalized_read_scope_cache_profile["entries"] = _normalized_read_scope_cache.size()
 		_normalized_read_scope_depth = 0
 		_normalized_read_scope_session_id = ""
+		_normalized_read_scope_cache = {}
+
+static func validation_last_normalized_read_scope_cache_profile() -> Dictionary:
+	return _last_normalized_read_scope_cache_profile.duplicate(true)
+
+static func _town_read_scope_cache_key(
+		session: SessionStateStoreScript.SessionData,
+		kind: String,
+		town: Dictionary,
+		extra: String = "") -> String:
+	if (
+		session == null
+		or _normalized_read_scope_depth <= 0
+		or String(session.session_id) != _normalized_read_scope_session_id
+	):
+		return ""
+	return "%s|%s|%s" % [kind, JSON.stringify(town).sha256_text(), extra]
+
+static func _town_read_scope_cache_has(key: String) -> bool:
+	if key == "" or not _normalized_read_scope_cache.has(key):
+		if key != "":
+			_last_normalized_read_scope_cache_profile["misses"] = int(_last_normalized_read_scope_cache_profile.get("misses", 0)) + 1
+		return false
+	_last_normalized_read_scope_cache_profile["hits"] = int(_last_normalized_read_scope_cache_profile.get("hits", 0)) + 1
+	return true
+
+static func _town_read_scope_cache_get(key: String) -> Variant:
+	var value: Variant = _normalized_read_scope_cache.get(key)
+	if value is Dictionary or value is Array:
+		return value.duplicate(true)
+	return value
+
+static func _town_read_scope_cache_store(key: String, value: Variant) -> void:
+	if key == "":
+		return
+	_normalized_read_scope_cache[key] = value.duplicate(true) if value is Dictionary or value is Array else value
+	_last_normalized_read_scope_cache_profile["entries"] = _normalized_read_scope_cache.size()
 
 static func normalize_overworld_state_bridge(session) -> void:
 	normalize_overworld_state(session)
@@ -3086,7 +3128,7 @@ static func _weekday_of_day(day: int) -> int:
 
 static func describe_hero(session: SessionStateStoreScript.SessionData) -> String:
 	var hero = session.overworld.get("hero", {})
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	return "\n".join(
 		[
 			HeroCommandRulesScript.hero_identity_context_line(hero, String(scenario.get("player_faction_id", ""))),
@@ -3422,7 +3464,7 @@ static func _terrain_id_at(session: SessionStateStoreScript.SessionData, x: int,
 
 static func describe_objective_board(session: SessionStateStoreScript.SessionData) -> String:
 	_normalize_scenario_state_rules(session)
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
 		return "Objectives\n- No authored objectives."
@@ -3459,7 +3501,7 @@ static func _objective_stakes_surface(session: SessionStateStoreScript.SessionDa
 	normalize_overworld_state(session)
 	if session == null or session.scenario_id == "":
 		return {}
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
 		return {}
@@ -4822,23 +4864,44 @@ static func _dispatch_context_brief(session: SessionStateStoreScript.SessionData
 			return "Open ground at %d,%d on %s" % [pos.x, pos.y, terrain]
 
 static func town_weekly_growth(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
-	if session != null and String(town.get("owner", "neutral")) == "player":
-		return _effective_player_town_weekly_growth(session, town)
-	return _town_weekly_growth(town, session)
+	var cache_key := _town_read_scope_cache_key(session, "weekly_growth", town)
+	if _town_read_scope_cache_has(cache_key):
+		return _town_read_scope_cache_get(cache_key)
+	var result := _effective_player_town_weekly_growth(session, town) if session != null and String(town.get("owner", "neutral")) == "player" else _town_weekly_growth(town, session)
+	_town_read_scope_cache_store(cache_key, result)
+	return result
 
 static func town_income(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
 	return _calculate_town_income(town, session)
 
 static func town_reinforcement_quality(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
-	return _town_reinforcement_quality(town, session)
+	var cache_key := _town_read_scope_cache_key(session, "reinforcement_quality", town)
+	if _town_read_scope_cache_has(cache_key):
+		return int(_town_read_scope_cache_get(cache_key))
+	var result := _town_reinforcement_quality(town, session)
+	_town_read_scope_cache_store(cache_key, result)
+	return result
 
 static func town_battle_readiness(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
-	return _town_battle_readiness(town, session)
+	var cache_key := _town_read_scope_cache_key(session, "battle_readiness", town)
+	if _town_read_scope_cache_has(cache_key):
+		return int(_town_read_scope_cache_get(cache_key))
+	var result := _town_battle_readiness(town, session)
+	_town_read_scope_cache_store(cache_key, result)
+	return result
 
 static func town_pressure_output(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
-	return _town_pressure_output(town, session)
+	var cache_key := _town_read_scope_cache_key(session, "pressure_output", town)
+	if _town_read_scope_cache_has(cache_key):
+		return int(_town_read_scope_cache_get(cache_key))
+	var result := _town_pressure_output(town, session)
+	_town_read_scope_cache_store(cache_key, result)
+	return result
 
 static func town_development_metrics(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
+	var cache_key := _town_read_scope_cache_key(session, "development_metrics", town)
+	if _town_read_scope_cache_has(cache_key):
+		return _town_read_scope_cache_get(cache_key)
 	var logistics := _town_logistics_state(session, town) if session != null else _empty_town_logistics_state()
 	var recovery := _town_recovery_state(session, town, logistics)
 	var capital_project := _town_capital_project_state(town, session, logistics, recovery)
@@ -4850,7 +4913,7 @@ static func town_development_metrics(town: Dictionary, session: SessionStateStor
 		"occupation": occupation,
 	}
 	var quality := _town_reinforcement_quality(town, session, context)
-	return {
+	var result := {
 		"reinforcement_quality": quality,
 		"battle_readiness": _town_battle_readiness(town, session, context, quality),
 		"pressure_output": _town_pressure_output(town, session, context, quality),
@@ -4859,6 +4922,8 @@ static func town_development_metrics(town: Dictionary, session: SessionStateStor
 		"capital_project": capital_project,
 		"occupation": occupation,
 	}
+	_town_read_scope_cache_store(cache_key, result)
+	return result
 
 static func town_strategic_role(town: Dictionary) -> String:
 	return _town_strategic_role(town)
@@ -4873,16 +4938,36 @@ static func describe_town_identity_surface(town: Dictionary, session: SessionSta
 	return _town_identity_surface(town, session)
 
 static func town_capital_project_state(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
-	return _town_capital_project_state(town, session)
+	var cache_key := _town_read_scope_cache_key(session, "capital_project", town)
+	if _town_read_scope_cache_has(cache_key):
+		return _town_read_scope_cache_get(cache_key)
+	var result := _town_capital_project_state(town, session)
+	_town_read_scope_cache_store(cache_key, result)
+	return result
 
 static func town_logistics_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	return _town_logistics_state(session, town)
+	var cache_key := _town_read_scope_cache_key(session, "logistics", town)
+	if _town_read_scope_cache_has(cache_key):
+		return _town_read_scope_cache_get(cache_key)
+	var result := _town_logistics_state(session, town)
+	_town_read_scope_cache_store(cache_key, result)
+	return result
 
 static func town_recovery_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	return _town_recovery_state(session, town)
+	var cache_key := _town_read_scope_cache_key(session, "recovery", town)
+	if _town_read_scope_cache_has(cache_key):
+		return _town_read_scope_cache_get(cache_key)
+	var result := _town_recovery_state(session, town)
+	_town_read_scope_cache_store(cache_key, result)
+	return result
 
 static func town_public_threat_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	return _town_command_risk_state(session, town)
+	var cache_key := _town_read_scope_cache_key(session, "public_threat", town)
+	if _town_read_scope_cache_has(cache_key):
+		return _town_read_scope_cache_get(cache_key)
+	var result := _town_command_risk_state(session, town)
+	_town_read_scope_cache_store(cache_key, result)
+	return result
 
 static func town_battlefront_profile(town: Dictionary) -> Dictionary:
 	return _town_battlefront_profile(town)
@@ -4892,10 +4977,21 @@ static func town_front_state(
 	town: Dictionary,
 	precomputed_development_metrics: Dictionary = {}
 ) -> Dictionary:
-	return _town_front_state(session, town, precomputed_development_metrics)
+	var extra := JSON.stringify(precomputed_development_metrics).sha256_text() if not precomputed_development_metrics.is_empty() else ""
+	var cache_key := _town_read_scope_cache_key(session, "front", town, extra)
+	if _town_read_scope_cache_has(cache_key):
+		return _town_read_scope_cache_get(cache_key)
+	var result := _town_front_state(session, town, precomputed_development_metrics)
+	_town_read_scope_cache_store(cache_key, result)
+	return result
 
 static func town_occupation_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	return _town_occupation_state(session, town)
+	var cache_key := _town_read_scope_cache_key(session, "occupation", town)
+	if _town_read_scope_cache_has(cache_key):
+		return _town_read_scope_cache_get(cache_key)
+	var result := _town_occupation_state(session, town)
+	_town_read_scope_cache_store(cache_key, result)
+	return result
 
 static func town_market_state(town: Dictionary) -> Dictionary:
 	return _town_market_state(town)
@@ -7089,7 +7185,7 @@ static func _encounter_hook_consequence_line(
 	if session == null or session.scenario_id == "":
 		return ""
 	var objective_ids := _encounter_clear_objective_ids(session, encounter)
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var summaries := []
 	for hook in scenario.get("script_hooks", []):
 		if not (hook is Dictionary):
@@ -7115,7 +7211,7 @@ static func _encounter_clear_objectives(
 	var placement_id := encounter_key(encounter)
 	var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	var victory_flags: Array[String] = _string_array(encounter_def.get("victory_flags", []))
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var objective_bucket = scenario.get("objectives", {})
 	if not (objective_bucket is Dictionary):
 		return objectives
@@ -9889,21 +9985,6 @@ static func _town_front_state(
 	var objective_anchor := _town_is_objective_anchor(session, String(town.get("placement_id", "")))
 	var role := _town_strategic_role(town)
 	var enemy_label := String(ContentService.get_faction(faction_id).get("name", faction_id)) if faction_id != "" else ""
-	var logistics: Dictionary = precomputed_development_metrics.get("logistics", {}) \
-		if precomputed_development_metrics.get("logistics", {}) is Dictionary \
-		else {}
-	if logistics.is_empty():
-		logistics = _town_logistics_state(session, town)
-	var recovery: Dictionary = precomputed_development_metrics.get("recovery", {}) \
-		if precomputed_development_metrics.get("recovery", {}) is Dictionary \
-		else {}
-	if recovery.is_empty():
-		recovery = _town_recovery_state(session, town, logistics)
-	var capital_project: Dictionary = precomputed_development_metrics.get("capital_project", {}) \
-		if precomputed_development_metrics.get("capital_project", {}) is Dictionary \
-		else {}
-	if capital_project.is_empty():
-		capital_project = _town_capital_project_state(town, session, logistics, recovery)
 	var base_priority := _town_front_priority_seed(role, objective_anchor)
 	var result := {
 		"active": false,
@@ -9924,6 +10005,27 @@ static func _town_front_state(
 	}
 	if faction_id == "":
 		return result
+	if state_id not in ["retake", "stabilizing", "defend"]:
+		return result
+	if state_id == "retake" and owner != "player":
+		return result
+	if state_id in ["stabilizing", "defend"] and owner != "enemy":
+		return result
+	var logistics: Dictionary = precomputed_development_metrics.get("logistics", {}) \
+		if precomputed_development_metrics.get("logistics", {}) is Dictionary \
+		else {}
+	if logistics.is_empty():
+		logistics = _town_logistics_state(session, town)
+	var recovery: Dictionary = precomputed_development_metrics.get("recovery", {}) \
+		if precomputed_development_metrics.get("recovery", {}) is Dictionary \
+		else {}
+	if recovery.is_empty():
+		recovery = _town_recovery_state(session, town, logistics)
+	var capital_project: Dictionary = precomputed_development_metrics.get("capital_project", {}) \
+		if precomputed_development_metrics.get("capital_project", {}) is Dictionary \
+		else {}
+	if capital_project.is_empty():
+		capital_project = _town_capital_project_state(town, session, logistics, recovery)
 	match state_id:
 		"retake":
 			if owner != "player":
@@ -12030,7 +12132,7 @@ static func _grant_resource_site_artifact_reward(
 		return {"applied": false, "reason": "source_not_opted_in"}
 	if String(node.get("artifact_reward_id", "")) != "":
 		return {"applied": false, "reason": "source_reward_already_claimed"}
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var faction_id := String(scenario.get("player_faction_id", ""))
 	var source_key := "%s:%s:%s" % [
 		session.scenario_id,
@@ -12876,7 +12978,7 @@ static func _finalize_action_result(
 	var objective_count := 0
 	var hook_count := 0
 	if scenario_event_facts.is_empty():
-		var scenario := ContentService.get_scenario(session.scenario_id) if session != null else {}
+		var scenario := ContentService.get_scenario_readonly(session.scenario_id) if session != null else {}
 		var objectives = scenario.get("objectives", {}) if scenario is Dictionary else {}
 		if objectives is Dictionary:
 			var victory_objectives = objectives.get("victory", [])
@@ -12998,7 +13100,7 @@ static func _should_surface_command_risk_forecast(session: SessionStateStoreScri
 	return forecast_state is Dictionary and not bool(forecast_state.get("shown", false))
 
 static func _command_briefing_lines(session: SessionStateStoreScript.SessionData) -> Array:
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var lines := []
 	var posture_line := _command_briefing_posture_line(session)
 	if posture_line != "":
@@ -13295,7 +13397,7 @@ static func _command_commitment_action_line(session: SessionStateStoreScript.Ses
 	var encounter_plan := _nearest_visible_encounter_plan(session)
 	if not encounter_plan.is_empty():
 		return String(encounter_plan.get("order", "Advance on the nearest hostile contact."))
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var objectives = scenario.get("objectives", {})
 	if objectives is Dictionary:
 		var victory_labels: Array = _scenario_objective_labels_from_bucket(session, objectives.get("victory", []), 1)
@@ -13883,7 +13985,7 @@ static func _command_risk_logistics_items(
 
 static func _command_risk_objective_items(session: SessionStateStoreScript.SessionData, pressured_town_ids: Dictionary, include_details: bool = true) -> Array:
 	var items := []
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
 		return items
@@ -13924,7 +14026,7 @@ static func _command_risk_objective_items(session: SessionStateStoreScript.Sessi
 
 static func _command_risk_posture_items(session: SessionStateStoreScript.SessionData, include_details: bool = true) -> Array:
 	var items := []
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	for config in scenario.get("enemy_factions", []):
 		if not (config is Dictionary):
 			continue
@@ -14111,7 +14213,7 @@ static func _town_command_risk_state(
 		"front_summary": "",
 		"front_public_clause": "",
 	}
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var placement_id := String(town.get("placement_id", ""))
 	if placement_id == "":
 		return state
@@ -14214,7 +14316,7 @@ static func _enemy_state_for_faction(session: SessionStateStoreScript.SessionDat
 static func _scenario_town_started_enemy(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
 	if session == null or placement_id == "":
 		return false
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	for town in scenario.get("towns", []):
 		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
 			return String(town.get("owner", "neutral")) == "enemy"
@@ -14223,7 +14325,7 @@ static func _scenario_town_started_enemy(session: SessionStateStoreScript.Sessio
 static func _town_is_objective_anchor(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
 	if session == null or placement_id == "":
 		return false
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
 		return false

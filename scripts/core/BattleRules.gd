@@ -179,7 +179,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 	buckets["resolve_encounter"] = ProfileLogScript.elapsed_ms(phase_started)
 
 	phase_started = ProfileLogScript.begin_usec()
-	var scenario = ContentService.get_scenario(session.scenario_id)
+	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var battle_context = _normalized_battle_context(session, encounter_placement)
 	var player_setup = _player_setup_for_battle(session, encounter_placement, battle_context)
 	var enemy_army = _enemy_army_for_battle(session, encounter_placement, encounter, battle_context)
@@ -1207,7 +1207,7 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 		"y": int(battle_position.get("y", OverworldRulesScript.hero_position(session).y)),
 	}
 	var encounter = ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
-	var scenario = ContentService.get_scenario(session.scenario_id)
+	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var encounter_placement = _current_battle_encounter_placement(session)
 	session.battle["resolved_key"] = _normalized_battle_resolved_key(session, encounter_placement, normalized_context)
 	session.battle["encounter_name"] = _battle_name(session, encounter, normalized_context, encounter_placement)
@@ -1931,7 +1931,7 @@ static func describe_entry_context(session: SessionStateStoreScript.SessionData)
 		return "Battle context unavailable."
 	var battle = session.battle
 	var encounter = ContentService.get_encounter(String(battle.get("encounter_id", "")))
-	var scenario = ContentService.get_scenario(session.scenario_id)
+	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var lines := [
 		"Matchup: %s vs %s." % [
 			_player_force_name_from_battle(battle),
@@ -2176,7 +2176,7 @@ static func describe_commander_summary(session: SessionStateStoreScript.SessionD
 		"%s | %s" % [
 			HeroCommandRulesScript.hero_identity_context_line(
 				commander_state,
-				String(ContentService.get_scenario(session.scenario_id).get("player_faction_id", "")) if side == "player" else _battle_enemy_faction_id(session)
+				String(ContentService.get_scenario_readonly(session.scenario_id).get("player_faction_id", "")) if side == "player" else _battle_enemy_faction_id(session)
 			),
 			_commander_role_label(battle, side),
 		],
@@ -3508,7 +3508,7 @@ static func _objective_pull_line(
 	var urgency = _field_objective_urgency_summary(session, battle)
 	if urgency != "":
 		return urgency
-	var scenario = ContentService.get_scenario(session.scenario_id)
+	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var encounter_objective = _encounter_objective_for_battle(session, battle, scenario)
 	if not encounter_objective.is_empty():
 		return "Clearing this host advances %s." % ScenarioRulesScript._objective_label(session, encounter_objective)
@@ -4515,7 +4515,7 @@ static func _should_surface_tactical_briefing(session: SessionStateStoreScript.S
 
 static func _tactical_briefing_lines(session: SessionStateStoreScript.SessionData) -> Array:
 	var battle = session.battle
-	var scenario = ContentService.get_scenario(session.scenario_id)
+	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var lines = []
 	var battlefield_line = _tactical_battlefield_line(session, battle)
 	if battlefield_line != "":
@@ -6785,7 +6785,7 @@ static func _apply_player_battle_salvage_reward(session: SessionStateStoreScript
 		var reserved_artifact_id := String(node_value.get("artifact_id", "")).strip_edges()
 		if reserved_artifact_id != "" and reserved_artifact_id not in excluded_artifact_ids:
 			excluded_artifact_ids.append(reserved_artifact_id)
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var faction_id := String(scenario.get("player_faction_id", ""))
 	var selection := ArtifactRulesScript.select_live_source_reward(
 		"battle_salvage",
@@ -13089,7 +13089,7 @@ static func _field_objective_urgency_summary(session: SessionStateStoreScript.Se
 			parts.append(objective_brief)
 	else:
 		parts.append("Active pressure %s" % "; ".join(urgent.slice(0, min(2, urgent.size()))))
-	var scenario_line = _tactical_objective_line(session, battle, ContentService.get_scenario(session.scenario_id)).trim_prefix("Battle aim: ").strip_edges()
+	var scenario_line = _tactical_objective_line(session, battle, ContentService.get_scenario_readonly(session.scenario_id)).trim_prefix("Battle aim: ").strip_edges()
 	if scenario_line != "":
 		parts.append(scenario_line)
 	var rounds_remaining = max(0, int(battle.get("max_rounds", 12)) - int(battle.get("round", 1)) + 1)

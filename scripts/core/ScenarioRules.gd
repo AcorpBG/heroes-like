@@ -45,7 +45,7 @@ static func scenario_record_for_session(session: SessionStateStoreScript.Session
 	runtime_record = session.overworld.get("native_random_map_runtime_scenario_record", {}) if session.overworld.get("native_random_map_runtime_scenario_record", {}) is Dictionary else {}
 	if not runtime_record.is_empty() and String(runtime_record.get("id", "")) == session.scenario_id:
 		return runtime_record
-	return ContentService.get_scenario(session.scenario_id)
+	return ContentService.get_scenario_readonly(session.scenario_id)
 
 static func evaluate_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_scenario_state(session)
@@ -623,7 +623,7 @@ static func describe_objectives(session: SessionStateStoreScript.SessionData) ->
 	return "\n".join(lines)
 
 static func describe_scenario_briefing(scenario_id: String) -> String:
-	var scenario := ContentService.get_scenario(scenario_id)
+	var scenario := ContentService.get_scenario_readonly(scenario_id)
 	if scenario.is_empty():
 		return ""
 	return "\n".join(_scenario_briefing_lines(scenario))
@@ -945,7 +945,7 @@ static func _outcome_action_cue_text(session: SessionStateStoreScript.SessionDat
 			if session.scenario_status == "victory":
 				return "Replays this chapter fresh; save first if you want this outcome available later."
 			return "Retries this chapter fresh; save first if you want this outcome available later."
-		var target_scenario := ContentService.get_scenario(target_scenario_id)
+		var target_scenario := ContentService.get_scenario_readonly(target_scenario_id)
 		var target_name := String(target_scenario.get("name", target_scenario_id))
 		if target_name != "":
 			return "Starts %s at current difficulty; save this outcome first to keep the handoff." % target_name
@@ -1268,7 +1268,7 @@ static func _next_campaign_chapter_label(session: SessionStateStoreScript.Sessio
 			continue
 		var scenario_id := String(entry.get("scenario_id", ""))
 		if found_current and scenario_id != "":
-			var next_scenario := ContentService.get_scenario(scenario_id)
+			var next_scenario := ContentService.get_scenario_readonly(scenario_id)
 			return _campaign_chapter_label(campaign, scenario_id, String(next_scenario.get("name", scenario_id)))
 		if scenario_id == session.scenario_id:
 			found_current = true

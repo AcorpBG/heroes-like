@@ -6869,7 +6869,7 @@ static func _tile_key_xy(x: int, y: int) -> String:
 static func _enemy_faction_configs_for_session(session: SessionStateStoreScript.SessionData) -> Array:
 	if session == null:
 		return []
-	var scenario = ContentService.get_scenario(session.scenario_id)
+	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var configs = scenario.get("enemy_factions", [])
 	if configs is Array and not configs.is_empty():
 		var valid_configs := _valid_enemy_faction_configs(configs)

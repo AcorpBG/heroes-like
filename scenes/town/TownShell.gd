@@ -134,6 +134,7 @@ var _last_return_to_menu_result: Dictionary = {}
 var _validation_return_to_menu_request_count := 0
 var _last_action_recap := {}
 var _last_town_entity_cache_result := {}
+var _last_town_entity_build_buckets := {}
 var _last_economy_readability_surface := {}
 var _last_rendered_build_actions := []
 var _last_rendered_recruit_actions := []
@@ -870,6 +871,11 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	buckets["tabs"] = ProfileLogScript.elapsed_ms(section_started)
 	TownRules.end_read_scope(_session)
 	OverworldRules.end_normalized_read_scope(_session)
+	var rules_read_cache := OverworldRules.validation_last_normalized_read_scope_cache_profile()
+	_last_town_entity_cache_result["rules_read_cache"] = rules_read_cache
+	buckets["rules_read_cache_hits"] = float(rules_read_cache.get("hits", 0))
+	buckets["rules_read_cache_misses"] = float(rules_read_cache.get("misses", 0))
+	buckets["rules_read_cache_entries"] = float(rules_read_cache.get("entries", 0))
 	ProfileLogScript.emit_general("town", "refresh", "town_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(false), _session)
 	call_deferred("_configure_town_keyboard_focus", false)
 
@@ -1209,6 +1215,7 @@ func _active_town_entity_view_state(town: Dictionary, minimal: bool = false) -> 
 		"signature": signature,
 		"signature_ms": signature_ms,
 		"build_ms": build_ms,
+		"build_buckets_ms": _last_town_entity_build_buckets.duplicate(true),
 		"dynamic_ms": 0.0,
 		"minimal": minimal,
 	}
@@ -2030,6 +2037,8 @@ func _player_controlled_economy_site_count() -> int:
 	return count
 
 func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
+	var build_buckets := {}
+	var section_started := ProfileLogScript.begin_usec()
 	var current_lanes := _current_town_tab_lanes()
 	var active_town := TownRules.get_active_town(_session)
 	# The Resource Ledger needs both action models even when the first render only
@@ -2037,14 +2046,22 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 	# that the ledger reads; contextual projection/impact copy remains on the full
 	# action surfaces and follows their existing invalidation boundary.
 	var full_build_actions := _duplicate_action_array(TownRules.get_build_actions(_session))
+	build_buckets["build_actions"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	var full_recruit_actions := _duplicate_action_array(TownRules.get_recruit_actions(_session))
+	build_buckets["recruit_actions"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	var economy_build_actions := _economy_build_action_models(full_build_actions)
 	var economy_recruit_actions := _economy_recruit_action_models(full_recruit_actions)
 	var build_action_copy_models := _build_action_copy_models(full_build_actions)
 	var recruit_action_copy_models := _recruit_action_copy_models(full_recruit_actions)
 	var economy_surface := _economy_readability_surface(economy_build_actions, economy_recruit_actions)
 	var economy_context_surface := _economy_context_surface_from_readability(economy_surface)
+	build_buckets["economy_surfaces"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	var stage_state := _build_town_stage_view_state(active_town)
+	build_buckets["stage_state"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	var departure_context_surface := {
 		"town_name": TownRules._town_name(active_town),
 		"front": OverworldRules.town_front_state(_session, active_town).duplicate(true),
@@ -2053,6 +2070,8 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 		"recovery": _duplicate_dictionary(stage_state.get("recovery", {})),
 	}
 	var defense_check := _defense_check_surface()
+	build_buckets["departure_and_defense"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	var production_overview := TownRules.describe_production_overview(_session) if (not minimal or current_lanes.has("build")) else ""
 	var production_text := _production_overview_with_defense_check(
 		production_overview,
@@ -2081,7 +2100,9 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 	var order_target := TownRules.town_order_target_handoff(_session)
 	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
 	var town_context_surface := {} if minimal else _town_action_context_surface(dispatch_text)
-	return {
+	build_buckets["readiness_and_descriptions"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
+	var view_state := {
 		"header_text": TownRules.describe_header(_session),
 		"status_text": TownRules.describe_status(_session),
 		"resources_text": OverworldRules.describe_resources(_session),
@@ -2139,6 +2160,9 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 		"artifact_actions": _duplicate_action_array(TownRules.get_artifact_actions(_session)) if (not minimal or current_lanes.has("logistics")) else [],
 		"stage_state": stage_state,
 	}
+	build_buckets["view_state_assembly"] = ProfileLogScript.elapsed_ms(section_started)
+	_last_town_entity_build_buckets = build_buckets
+	return view_state
 
 func _build_town_stage_view_state(town_override: Dictionary = {}) -> Dictionary:
 	var town := town_override if not town_override.is_empty() else TownRules.get_active_town(_session)

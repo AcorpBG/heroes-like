@@ -778,7 +778,7 @@ static func assign_target(
 		raid = _maybe_preempt_for_battle_pressure_floor(session, config, raid, faction_id)
 	else:
 		raid = _clear_delivery_intercept_target(raid)
-		var plan := _assignment_plan_for_raid_without_valid_target(session, config, raid, faction_id)
+		var plan := _assignment_plan_for_raid_without_valid_target(session, config, raid, faction_id, preloaded_path_context)
 		if not plan.is_empty():
 			if plan.get("hero_task_record", {}) is Dictionary:
 				task_record_for_assignment = plan.get("hero_task_record", {}).duplicate(true)
@@ -787,7 +787,7 @@ static func assign_target(
 			raid.merge(plan, true)
 	if _raid_target_points_to_self(raid) or _raid_target_points_to_pressure_host(session, raid, faction_id):
 		raid = _clear_regroup_target(raid)
-		var repair_plan := _assignment_plan_for_raid_without_valid_target(session, config, raid, faction_id)
+		var repair_plan := _assignment_plan_for_raid_without_valid_target(session, config, raid, faction_id, preloaded_path_context)
 		if not repair_plan.is_empty():
 			if repair_plan.get("hero_task_record", {}) is Dictionary:
 				task_record_for_assignment = repair_plan.get("hero_task_record", {}).duplicate(true)
@@ -828,19 +828,20 @@ static func _assignment_plan_for_raid_without_valid_target(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	raid: Dictionary,
-	faction_id: String
+	faction_id: String,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
-	var plan = ai_live_town_retake_target_selection_plan(session, config, raid)
+	var plan = ai_live_town_retake_target_selection_plan(session, config, raid, preloaded_path_context)
 	if plan.is_empty():
-		plan = ai_post_capture_town_support_target_selection_plan(session, config, raid)
+		plan = ai_post_capture_town_support_target_selection_plan(session, config, raid, preloaded_path_context)
 	if plan.is_empty():
 		plan = _current_tile_resource_target_selection_plan(session, config, raid, faction_id)
 	if plan.is_empty():
-		plan = ai_hero_task_saved_target_selection_plan(session, config, raid)
+		plan = ai_hero_task_saved_target_selection_plan(session, config, raid, preloaded_path_context)
 	if plan.is_empty():
-		plan = ai_active_front_support_target_selection_plan(session, config, raid)
+		plan = ai_active_front_support_target_selection_plan(session, config, raid, preloaded_path_context)
 	if plan.is_empty():
-		var live_plan := ai_hero_task_live_target_selection_plan(session, config, raid)
+		var live_plan := ai_hero_task_live_target_selection_plan(session, config, raid, preloaded_path_context)
 		if not live_plan.is_empty() and _live_task_plan_can_preempt_explicit_objective(config, live_plan):
 			plan = live_plan
 	if plan.is_empty() and _config_has_explicit_objective_targets(config):
@@ -848,18 +849,20 @@ static func _assignment_plan_for_raid_without_valid_target(
 			session,
 			config,
 			{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))},
-			raid
+			raid,
+			preloaded_path_context
 		)
 		if plan.is_empty():
 			plan = _explicit_objective_fallback_target_selection_plan(session, config, raid, faction_id)
 	if plan.is_empty():
-		plan = ai_hero_task_live_target_selection_plan(session, config, raid)
+		plan = ai_hero_task_live_target_selection_plan(session, config, raid, preloaded_path_context)
 	if plan.is_empty():
 		plan = choose_target(
 			session,
 			config,
 			{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))},
-			raid
+			raid,
+			preloaded_path_context
 		)
 	return plan
 
@@ -1974,7 +1977,8 @@ static func _active_front_support_candidate_beats(candidate: Dictionary, best: D
 static func ai_live_town_retake_target_selection_plan(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	raid: Dictionary
+	raid: Dictionary,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or raid.is_empty():
 		return {}
@@ -2003,10 +2007,14 @@ static func ai_live_town_retake_target_selection_plan(
 		if _ai_hero_task_live_target_reserved(session, faction_id, "town", town_id, current_placement_id, _ai_hero_task_actor_id_from_raid(raid), true):
 			continue
 		var staging_tiles := _town_staging_tiles(session, town)
-		var goal_distance := _path_distance(session, origin_pos, staging_tiles, current_placement_id, faction_id)
+		var goal_distance := _path_distance_with_context(preloaded_path_context, origin_pos, staging_tiles) \
+			if not preloaded_path_context.is_empty() \
+			else _path_distance(session, origin_pos, staging_tiles, current_placement_id, faction_id)
 		if goal_distance >= 9999:
 			continue
-		var goal_tile := _best_goal_tile(session, origin_pos, staging_tiles, faction_id)
+		var goal_tile := _best_goal_tile_with_path_context(preloaded_path_context, origin_pos, staging_tiles) \
+			if not preloaded_path_context.is_empty() \
+			else _best_goal_tile(session, origin_pos, staging_tiles, faction_id)
 		var objective_anchor := _town_is_objective_anchor(session, town_id)
 		var reason_codes := ["town_siege", "retake_front"]
 		if objective_anchor:
@@ -2044,7 +2052,8 @@ static func ai_live_town_retake_target_selection_plan(
 static func ai_post_capture_town_support_target_selection_plan(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	raid: Dictionary
+	raid: Dictionary,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or raid.is_empty():
 		return {}
@@ -2079,10 +2088,14 @@ static func ai_post_capture_town_support_target_selection_plan(
 		return {}
 	var origin_pos := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var staging_tiles := _town_staging_tiles(session, town)
-	var goal_distance := _path_distance(session, origin_pos, staging_tiles, String(raid.get("placement_id", "")), faction_id)
+	var goal_distance := _path_distance_with_context(preloaded_path_context, origin_pos, staging_tiles) \
+		if not preloaded_path_context.is_empty() \
+		else _path_distance(session, origin_pos, staging_tiles, String(raid.get("placement_id", "")), faction_id)
 	if goal_distance >= 9999:
 		return {}
-	var goal_tile := _best_goal_tile(session, origin_pos, staging_tiles, faction_id)
+	var goal_tile := _best_goal_tile_with_path_context(preloaded_path_context, origin_pos, staging_tiles) \
+		if not preloaded_path_context.is_empty() \
+		else _best_goal_tile(session, origin_pos, staging_tiles, faction_id)
 	var reason_codes := ["town_defense", "front_stabilization", "garrison_reinforced", "post_capture_support"]
 	for code in previous_reason_codes:
 		if code in ["town_expansion", "neutral_town_claim", "neutral_town_siege", "objective_front"] and code not in reason_codes:
@@ -8312,10 +8325,11 @@ static func choose_target(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	origin: Dictionary,
-	commander_source: Variant = {}
+	commander_source: Variant = {},
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	var origin_pos = Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
-	var candidates = _target_candidates(session, config, origin_pos)
+	var candidates = _target_candidates(session, config, origin_pos, false, preloaded_path_context)
 	if candidates.is_empty():
 		var exploration_plan := _no_known_target_exploration_plan(session, config, origin_pos, commander_source)
 		if not exploration_plan.is_empty():
@@ -8609,7 +8623,8 @@ static func _no_known_target_regroup_plan(
 static func ai_hero_task_live_target_selection_plan(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	raid: Dictionary
+	raid: Dictionary,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or raid.is_empty():
 		return {}
@@ -8635,7 +8650,7 @@ static func ai_hero_task_live_target_selection_plan(
 		return {}
 	var origin := {"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))}
 	var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
-	var candidates := _target_candidates(session, config, origin_pos)
+	var candidates := _target_candidates(session, config, origin_pos, false, preloaded_path_context)
 	var plans := []
 	var local_sequence := 1
 	for candidate_value in candidates:
@@ -9946,7 +9961,7 @@ static func _target_candidate_descriptors(
 	var seen := {}
 	var descriptors := []
 	var faction_id = String(config.get("faction_id", ""))
-	var scenario = ContentService.get_scenario(session.scenario_id)
+	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var objective_anchor_surface := _objective_anchor_surface(session, scenario)
 	var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", []) if objective_anchor_surface.get("tiles", []) is Array else []
 	var objective_town_ids: Array = objective_anchor_surface.get("town_placement_ids", []) if objective_anchor_surface.get("town_placement_ids", []) is Array else []
@@ -14182,7 +14197,8 @@ static func _ai_hero_task_live_reserved_target_lookup(
 static func ai_hero_task_saved_target_selection_plan(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	raid: Dictionary
+	raid: Dictionary,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or raid.is_empty():
 		return {}
@@ -14192,6 +14208,7 @@ static func ai_hero_task_saved_target_selection_plan(
 		return {}
 	var current_placement_id := String(raid.get("placement_id", ""))
 	var origin_pos := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var saved_task_path_context: Variant = preloaded_path_context if not preloaded_path_context.is_empty() else null
 	var best := {}
 	for task_value in _ai_hero_task_live_tasks_for_faction(session, faction_id):
 		if not (task_value is Dictionary):
@@ -14203,7 +14220,7 @@ static func ai_hero_task_saved_target_selection_plan(
 			continue
 		if int(task.get("expires_day", 0)) > 0 and int(task.get("expires_day", 0)) < int(session.day):
 			continue
-		var plan := _ai_hero_task_plan_from_saved_task(session, config, raid, task, origin_pos, current_placement_id)
+		var plan := _ai_hero_task_plan_from_saved_task(session, config, raid, task, origin_pos, current_placement_id, saved_task_path_context)
 		if plan.is_empty():
 			continue
 		if best.is_empty() or _saved_task_plan_beats(plan, best):
@@ -16707,7 +16724,7 @@ static func _objective_anchor_surface(
 	}
 	if session == null:
 		return surface
-	var scenario: Dictionary = preloaded_scenario if preloaded_scenario is Dictionary else ContentService.get_scenario(session.scenario_id)
+	var scenario: Dictionary = preloaded_scenario if preloaded_scenario is Dictionary else ContentService.get_scenario_readonly(session.scenario_id)
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
 		return surface
@@ -16803,7 +16820,7 @@ static func _assignment_penalty(session: SessionStateStoreScript.SessionData, ta
 	return penalty
 
 static func _town_started_enemy(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
-	var scenario = ContentService.get_scenario(session.scenario_id)
+	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	return _town_started_enemy_in_scenario(scenario, placement_id)
 
 static func _town_started_enemy_in_scenario(scenario: Dictionary, placement_id: String) -> bool:
@@ -16813,7 +16830,7 @@ static func _town_started_enemy_in_scenario(scenario: Dictionary, placement_id: 
 	return false
 
 static func _town_is_objective_anchor(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
-	var scenario = ContentService.get_scenario(session.scenario_id)
+	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
 		return false
@@ -16828,7 +16845,7 @@ static func _encounter_is_objective_anchor(session: SessionStateStoreScript.Sess
 	var victory_flags: Array = encounter_template.get("victory_flags", [])
 	if not (victory_flags is Array) or victory_flags.is_empty():
 		return false
-	var scenario = ContentService.get_scenario(session.scenario_id)
+	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
 		return false
@@ -19723,6 +19740,22 @@ static func _blocked_tile_index_lookup(blocked_tiles: Dictionary, map_size: Vect
 			lookup[index] = true
 	return lookup
 
+static func _blocked_tile_mask(
+		tile_count: int,
+		encounter_blocked: Dictionary,
+		resource_blocked: Dictionary,
+		hero_blocked: Dictionary,
+		terrain_blocked: Dictionary) -> PackedByteArray:
+	var mask := PackedByteArray()
+	mask.resize(tile_count)
+	mask.fill(0)
+	for blocked_lookup in [encounter_blocked, resource_blocked, hero_blocked, terrain_blocked]:
+		for index_value in blocked_lookup.keys():
+			var index := int(index_value)
+			if index >= 0 and index < tile_count:
+				mask[index] = 1
+	return mask
+
 static func _path_distance_field_for_start(path_context: Dictionary, start_index: int) -> PackedInt32Array:
 	var field_cache: Dictionary = path_context.get("distance_field_cache", {}) if path_context.get("distance_field_cache", {}) is Dictionary else {}
 	if field_cache.has(start_index):
@@ -19734,28 +19767,46 @@ static func _path_distance_field_for_start(path_context: Dictionary, start_index
 	distances.fill(-1)
 	if start_index < 0 or start_index >= tile_count:
 		return distances
-	var encounter_blocked: Dictionary = path_context.get("encounter_blocked_indices", {})
-	var resource_blocked: Dictionary = path_context.get("resource_blocked_indices", {})
-	var hero_blocked: Dictionary = path_context.get("hero_blocked_indices", {})
-	var terrain_blocked: Dictionary = path_context.get("terrain_blocked_indices", {})
-	var queue := [start_index]
+	var blocked_mask: PackedByteArray = path_context.get("blocked_tile_mask", PackedByteArray())
+	if blocked_mask.size() != tile_count:
+		blocked_mask = _blocked_tile_mask(
+			tile_count,
+			path_context.get("encounter_blocked_indices", {}),
+			path_context.get("resource_blocked_indices", {}),
+			path_context.get("hero_blocked_indices", {}),
+			path_context.get("terrain_blocked_indices", {})
+		)
+		path_context["blocked_tile_mask"] = blocked_mask
+	var queue := PackedInt32Array()
+	queue.resize(tile_count)
+	queue[0] = start_index
 	distances[start_index] = 0
 	var head := 0
-	while head < queue.size():
+	var tail := 1
+	var width := map_size.x
+	var height := map_size.y
+	while head < tail:
 		var pos_index: int = int(queue[head])
 		head += 1
-		var pos := _vector_from_index(pos_index, map_size)
+		var pos_x := pos_index % width
+		var pos_y := int(pos_index / width)
 		var next_distance := int(distances[pos_index]) + 1
 		for delta in PATH_MOVEMENT_DELTAS:
-			var next_index := _tile_index(pos + delta, map_size)
-			if next_index < 0 or int(distances[next_index]) >= 0:
+			var next_x: int = pos_x + delta.x
+			var next_y: int = pos_y + delta.y
+			if next_x < 0 or next_y < 0 or next_x >= width or next_y >= height:
 				continue
-			if _position_blocked_for_distance_field(next_index, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
+			var next_index := next_y * width + next_x
+			if int(distances[next_index]) >= 0 or blocked_mask[next_index] != 0:
 				continue
-			if _path_step_cuts_blocked_corner_index(pos_index, next_index, map_size, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
-				continue
+			if delta.x != 0 and delta.y != 0:
+				var side_a_index := pos_y * width + next_x
+				var side_b_index := next_y * width + pos_x
+				if blocked_mask[side_a_index] != 0 and blocked_mask[side_b_index] != 0:
+					continue
 			distances[next_index] = next_distance
-			queue.append(next_index)
+			queue[tail] = next_index
+			tail += 1
 	field_cache[start_index] = distances
 	path_context["distance_field_cache"] = field_cache
 	return distances

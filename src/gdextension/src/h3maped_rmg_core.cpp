@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <chrono>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -10,6 +11,7 @@
 #include <deque>
 #include <functional>
 #include <iomanip>
+#include <iterator>
 #include <limits>
 #include <map>
 #include <queue>
@@ -6918,6 +6920,8 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 	}
 
 	state.object_records_0xec4_ecc.push_back(object_record);
+	state.object_record_index_by_key_0xec4_ecc[object_record_key] =
+			state.object_records_0xec4_ecc.size() - 1U;
 	state.object_record_vector_append_count_0x4a54a7 += 1;
 	state.object_record_vector_ec4_ecc.present = true;
 	state.object_record_vector_ec4_ecc.contents_known = true;
@@ -12103,7 +12107,7 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 							result.wrapper_cleanup_count_0x49cebd += 1;
 						}
 					}
-					result.attempts.push_back(attempt);
+					result.attempts.push_back(std::move(attempt));
 					continue;
 				}
 
@@ -12141,7 +12145,7 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 				if (coordinate_scan.applied && coordinate_scan.blocked_reason.empty()) {
 					result.successful_coordinate_scan_count += 1;
 					lane_success = true;
-					result.attempts.push_back(attempt);
+					result.attempts.push_back(std::move(attempt));
 					break;
 				}
 				attempt.wrapper_cleanup_invoked_0x49cebd = true;
@@ -12152,7 +12156,7 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 				attempt.blocked_reason = coordinate_scan.blocked_reason.empty()
 						? "0x4aab7e_0x4aa9b7_coordinate_scan_failed"
 						: coordinate_scan.blocked_reason;
-				result.attempts.push_back(attempt);
+				result.attempts.push_back(std::move(attempt));
 			}
 		}
 
@@ -12216,6 +12220,12 @@ static int32_t decorative_scorer_scratch_index_0x49e1bf(int32_t local_x, int32_t
 static const ObjectRecordReference4a54a7 *object_record_by_key_0xec4_ecc(
 		const GeneratorObjectPrivateState &state,
 		uint32_t object_record_key) {
+	const auto cached = state.object_record_index_by_key_0xec4_ecc.find(object_record_key);
+	if (cached != state.object_record_index_by_key_0xec4_ecc.end()
+			&& cached->second < state.object_records_0xec4_ecc.size()
+			&& state.object_records_0xec4_ecc[cached->second].object_record_key == object_record_key) {
+		return &state.object_records_0xec4_ecc[cached->second];
+	}
 	const auto it = std::find_if(state.object_records_0xec4_ecc.begin(),
 			state.object_records_0xec4_ecc.end(),
 			[&](const ObjectRecordReference4a54a7 &object_record) {
@@ -12352,6 +12362,7 @@ static DecorativeScorerScratch49e1bf decorative_dispatch_scorer_first_pass_0x49e
 		const GeneratorObjectPrivateState &state,
 		const SourceObjectRecord0x4c &source_record,
 		const RandTrnObstacleScoreRecord49dc9e &score_record,
+		const std::array<int32_t, 48> *source_score_cache_0x49b89c,
 		int32_t candidate_x,
 		int32_t candidate_y,
 		int32_t candidate_level,
@@ -12360,18 +12371,21 @@ static DecorativeScorerScratch49e1bf decorative_dispatch_scorer_first_pass_0x49e
 	result.scorer_first_pass_candidate_anchor_count_0x49e1bf += 1;
 	DecorativeScorerScratch49e1bf scratch;
 	scratch.compare_score_index_0x49b89c.fill(0);
-	std::array<int32_t, 48> candidate_score_cache_0x49b89c {};
+	std::array<int32_t, 48> fallback_score_cache_0x49b89c {};
 	const bool trace_target_0x49e1bf = decorative_trace_target_0x49e1bf_allowed(
 			source_record,
 			candidate_x,
 			candidate_y,
 			candidate_level);
-	if (!build_source_object_score_cache_values_0x49b89c(
-				source_record,
-				candidate_score_cache_0x49b89c,
-				true)) {
-		result.scorer_neighbor_pass_score_index_missing_count_0x49b89c += 1;
-		return scratch;
+	if (source_score_cache_0x49b89c == nullptr) {
+		if (!build_source_object_score_cache_values_0x49b89c(
+					source_record,
+					fallback_score_cache_0x49b89c,
+					true)) {
+			result.scorer_neighbor_pass_score_index_missing_count_0x49b89c += 1;
+			return scratch;
+		}
+		source_score_cache_0x49b89c = &fallback_score_cache_0x49b89c;
 	}
 	for (int32_t row = 0; row < source_record.descriptor_height_0x38; ++row) {
 		const int32_t cell_y = candidate_y - row;
@@ -12416,7 +12430,7 @@ static DecorativeScorerScratch49e1bf decorative_dispatch_scorer_first_pass_0x49e
 				const int32_t score_cache_offset = object_record_score_cache_offset_0x49b89c(col, row);
 				if (score_cache_offset >= 0) {
 					scratch.compare_score_index_0x49b89c[size_t(scratch_index)] =
-							candidate_score_cache_0x49b89c[size_t(score_cache_offset)];
+							(*source_score_cache_0x49b89c)[size_t(score_cache_offset)];
 				}
 			}
 				const bool source_primary_mask_bit =
@@ -12945,7 +12959,10 @@ static bool decorative_dispatch_scorer_neighbor_pass_0x49e1bf(
 }
 
 struct DecorativeWeightedCandidate49e700 {
-	SourceObjectRecord0x4c source_record;
+	// Non-owning reference to the stable resolver wrapper catalog. Candidates
+	// live only for one dispatch pop; copying the descriptor's nested vectors
+	// here made Large-map decorative scoring needlessly quadratic in memory.
+	const SourceObjectRecord0x4c *source_record = nullptr;
 	int32_t source_catalog_index_0x49da08 = -1;
 	int32_t decorative_obstacle_id_0x10 = -1;
 	int32_t candidate_x = 0;
@@ -13032,6 +13049,7 @@ static bool decorative_dispatch_collect_record_candidates_0x49e700(
 		const GeneratorObjectPrivateState &state,
 		const SourceObjectRecord0x4c &source_record,
 		const RandTrnObstacleScoreRecord49dc9e &score_record,
+		const std::array<int32_t, 48> *source_score_cache_0x49b89c,
 		int32_t dispatch_x,
 		int32_t dispatch_y,
 		int32_t dispatch_level,
@@ -13079,6 +13097,7 @@ static bool decorative_dispatch_collect_record_candidates_0x49e700(
 						state,
 						source_record,
 						score_record,
+						source_score_cache_0x49b89c,
 						candidate_x,
 						candidate_y,
 						dispatch_level,
@@ -13157,7 +13176,7 @@ static bool decorative_dispatch_collect_record_candidates_0x49e700(
 				continue;
 			}
 			DecorativeWeightedCandidate49e700 candidate;
-			candidate.source_record = source_record;
+			candidate.source_record = &source_record;
 			candidate.source_catalog_index_0x49da08 = source_object_catalog_index_0x49da08(source_record);
 			candidate.decorative_obstacle_id_0x10 = score_record.obstacle_id;
 			candidate.candidate_x = candidate_x;
@@ -13264,7 +13283,11 @@ static bool decorative_dispatch_post_commit_clear_bit26_0x49e700(
 		const DecorativeWeightedCandidate49e700 &candidate,
 		std::vector<DecorativeCoordinateWorklistEntry49e700> &worklist,
 		DecorativeFlaggedCellDispatchResult49eb8d &result) {
-	const SourceObjectRecord0x4c &source_record = candidate.source_record;
+	if (candidate.source_record == nullptr) {
+		result.blocked_reason = "0x49e700_post_commit_source_record_missing";
+		return false;
+	}
+	const SourceObjectRecord0x4c &source_record = *candidate.source_record;
 	if (!source_record.descriptor_mask_fields_0x34_0x48_known
 			|| source_record.descriptor_width_0x34 <= 0
 			|| source_record.descriptor_height_0x38 <= 0) {
@@ -13487,6 +13510,7 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 		const int32_t terrain_code = generated_cell_terrain_code_0x24(record);
 
 		std::vector<DecorativeWeightedCandidate49e700> accepted_candidates;
+		accepted_candidates.reserve(256);
 		int32_t accepted_weight_total = 0;
 		for (const int32_t bucket_index_0x54092c : DECORATIVE_TYPE_TABLE_0X54092C) {
 			if (bucket_index_0x54092c < 0 || bucket_index_0x54092c >= SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8) {
@@ -13500,7 +13524,7 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 					result.blocked_reason = "0x49e700_source_wrapper_bucket_entry_out_of_range";
 					return;
 				}
-				const SourceObjectResolvedWrapper4af785 &wrapper =
+				SourceObjectResolvedWrapper4af785 &wrapper =
 						resolver_state.wrappers[size_t(wrapper_vector_index)];
 				const SourceObjectRecord0x4c &source_record = wrapper.source_record_copy;
 				result.dispatch_probe_source_record_scan_count_0x49e700 += 1;
@@ -13516,10 +13540,21 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 				if (!decorative_dispatch_type_allowed_0x49e700(state, source_record.type_id_0x1c)) {
 					continue;
 				}
+				if (!wrapper.decorative_score_cache_built_0x49b89c) {
+					wrapper.decorative_score_cache_valid_0x49b89c =
+							build_source_object_score_cache_values_0x49b89c(
+									source_record,
+									wrapper.decorative_score_cache_0x49b89c,
+									true);
+					wrapper.decorative_score_cache_built_0x49b89c = true;
+				}
 				if (!decorative_dispatch_collect_record_candidates_0x49e700(
 							state,
 							source_record,
 							*score_record,
+							wrapper.decorative_score_cache_valid_0x49b89c
+									? &wrapper.decorative_score_cache_0x49b89c
+									: nullptr,
 							current.x,
 							current.y,
 							current.level,
@@ -13589,8 +13624,13 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 			const DecorativeWeightedCandidate49e700 &selected =
 					accepted_candidates[size_t(result.selected_candidate_index_0x49e9ad)];
 			result.selected_candidate_score_0x49e9ad = selected.score;
-			result.selected_candidate_source_row_0x49e9ad = selected.source_record.source_row;
-			result.selected_candidate_def_name_0x49e9ad = selected.source_record.def_name;
+			if (selected.source_record == nullptr) {
+				result.blocked_reason = "0x49e700_selected_source_record_missing";
+				return;
+			}
+			const SourceObjectRecord0x4c &selected_source_record = *selected.source_record;
+			result.selected_candidate_source_row_0x49e9ad = selected_source_record.source_row;
+			result.selected_candidate_def_name_0x49e9ad = selected_source_record.def_name;
 			if (capture_target_pop_trace_0x49e700) {
 				std::fprintf(stderr,
 						"RMG_TRACE_49E700_TARGET_SELECT pop_index=%d pop=%d,%d,%d candidates=%zu total=%d rng=%d remainder=%d selected_index=%d selected=%d,%d,%d selected_source_row=%d selected_source_type=%d selected_def=%s selected_score=%d status=selected\n",
@@ -13606,18 +13646,18 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 						selected.candidate_x,
 						selected.candidate_y,
 						selected.candidate_level,
-						selected.source_record.source_row,
-						selected.source_record.type_id_0x1c,
-						selected.source_record.def_name.c_str(),
+						selected_source_record.source_row,
+						selected_source_record.type_id_0x1c,
+						selected_source_record.def_name.c_str(),
 						selected.score);
 			}
 
 		int32_t descriptor_offset_x_0x2c = 0;
 		int32_t descriptor_offset_y_0x30 = 0;
 		const bool descriptor_projection_enabled_0x29 =
-				selected.source_record.action_count > 0;
+				selected_source_record.action_count > 0;
 		if (!descriptor_source_cell_offset_from_recovered_secondary_mask_0x4906fb(
-					selected.source_record,
+					selected_source_record,
 					descriptor_offset_x_0x2c,
 					descriptor_offset_y_0x30)) {
 			result.blocked_reason = "0x49e700_selected_descriptor_source_cell_offsets_0x2c_0x30_missing";
@@ -13629,14 +13669,14 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 		const ObjectFootprintCommitResult4a54a7 commit = object_footprint_commit_4a54a7(
 				state,
 				object_record_key,
-				selected.source_record.type_id_0x1c,
+				selected_source_record.type_id_0x1c,
 				selected.candidate_x,
 				selected.candidate_y,
 				selected.candidate_level,
 				descriptor_projection_enabled_0x29,
 				descriptor_offset_x_0x2c,
 				descriptor_offset_y_0x30,
-				&selected.source_record,
+				&selected_source_record,
 				true,
 				0,
 				-1,
@@ -13656,9 +13696,9 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 						selected.candidate_x,
 						selected.candidate_y,
 						selected.candidate_level,
-						selected.source_record.source_row,
-						selected.source_record.type_id_0x1c,
-						selected.source_record.def_name.c_str(),
+						selected_source_record.source_row,
+						selected_source_record.type_id_0x1c,
+						selected_source_record.def_name.c_str(),
 						selected.score,
 						accepted_candidates.size(),
 						accepted_weight_total,
@@ -13670,17 +13710,17 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 		if (capture_first_dispatch_0x49e700) {
 			result.first_dispatch_commit_x_sample_0x49ea25.push_back(selected.candidate_x);
 			result.first_dispatch_commit_y_sample_0x49ea25.push_back(selected.candidate_y);
-			result.first_dispatch_commit_source_row_sample_0x49ea25.push_back(selected.source_record.source_row);
+			result.first_dispatch_commit_source_row_sample_0x49ea25.push_back(selected_source_record.source_row);
 		}
 		if (!state.object_records_0xec4_ecc.empty()) {
 			ObjectRecordReference4a54a7 &object_record = state.object_records_0xec4_ecc.back();
 			object_record.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
-			object_record.descriptor_source_key_0x00 = selected.source_record.source_row;
+			object_record.descriptor_source_key_0x00 = selected_source_record.source_row;
 			object_record.source_catalog_index_0x49da08 = selected.source_catalog_index_0x49da08;
 			object_record.decorative_score_record_0x10_known = selected.decorative_obstacle_id_0x10 >= 0;
 			object_record.decorative_obstacle_id_0x10 = selected.decorative_obstacle_id_0x10;
 			object_record.copied_source_record_carried = true;
-			object_record.source_record_copy = selected.source_record;
+			object_record.source_record_copy = selected_source_record;
 			build_object_record_score_cache_0x49b89c(object_record);
 		}
 			if (!decorative_dispatch_post_commit_clear_bit26_0x49e700(state, selected, worklist, result)) {
@@ -13708,7 +13748,7 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 			result.first_dispatch_pop_rng_value_sample_0x49e9ad.push_back(result.rng_value_0x49e9ad);
 			result.first_dispatch_pop_selected_x_sample_0x49ea25.push_back(selected.candidate_x);
 			result.first_dispatch_pop_selected_y_sample_0x49ea25.push_back(selected.candidate_y);
-			result.first_dispatch_pop_selected_source_row_sample_0x49e9ad.push_back(selected.source_record.source_row);
+			result.first_dispatch_pop_selected_source_row_sample_0x49e9ad.push_back(selected_source_record.source_row);
 			result.first_dispatch_pop_post_commit_coordinate_append_count_sample_0x49eb01.push_back(
 					result.post_commit_coordinate_append_count_0x49eb01
 					- pop_post_commit_coordinate_base_0x49eb01);
@@ -13932,15 +13972,9 @@ static int32_t generator_state_object_descriptor_type_0x4aa603(const GeneratorOb
 		return -1;
 	}
 	const uint32_t object_record_key = record.object_references_0x04_0x08.front();
-	const auto it = std::find_if(state.object_records_0xec4_ecc.begin(),
-			state.object_records_0xec4_ecc.end(),
-			[&](const ObjectRecordReference4a54a7 &object_record) {
-				return object_record.object_record_key == object_record_key;
-			});
-	if (it != state.object_records_0xec4_ecc.end()) {
-		return it->descriptor_type_0x1c;
-	}
-	return -1;
+	const ObjectRecordReference4a54a7 *object_record =
+			object_record_by_key_0xec4_ecc(state, object_record_key);
+	return object_record != nullptr ? object_record->descriptor_type_0x1c : -1;
 }
 
 static int32_t reward_guard_relation_source_owner_0x4aa9b7(const GeneratorRelationOwnerState4a218c &relation) {
@@ -34540,9 +34574,9 @@ static RewardGuardSourceStreamResult4aab7e reward_guard_source_order_loop_0x4ac5
 		return aggregate;
 	}
 
-	auto merge_reward_guard_source_stream = [](RewardGuardSourceStreamResult4aab7e &target, const RewardGuardSourceStreamResult4aab7e &stream) {
+	auto merge_reward_guard_source_stream = [](RewardGuardSourceStreamResult4aab7e &target, RewardGuardSourceStreamResult4aab7e &&stream) {
 		if (!target.invoked) {
-			target = stream;
+			target = std::move(stream);
 			return;
 		}
 		target.invoked = target.invoked || stream.invoked;
@@ -34562,12 +34596,18 @@ static RewardGuardSourceStreamResult4aab7e reward_guard_source_order_loop_0x4ac5
 		target.materialization_attempt_count += stream.materialization_attempt_count;
 		target.successful_coordinate_scan_count += stream.successful_coordinate_scan_count;
 		target.wrapper_cleanup_count_0x49cebd += stream.wrapper_cleanup_count_0x49cebd;
-		target.lanes.insert(target.lanes.end(), stream.lanes.begin(), stream.lanes.end());
-		target.attempts.insert(target.attempts.end(), stream.attempts.begin(), stream.attempts.end());
+		target.lanes.insert(
+				target.lanes.end(),
+				std::make_move_iterator(stream.lanes.begin()),
+				std::make_move_iterator(stream.lanes.end()));
+		target.attempts.insert(
+				target.attempts.end(),
+				std::make_move_iterator(stream.attempts.begin()),
+				std::make_move_iterator(stream.attempts.end()));
 		target.owner_growths_0x4ac552.insert(
 				target.owner_growths_0x4ac552.end(),
-				stream.owner_growths_0x4ac552.begin(),
-				stream.owner_growths_0x4ac552.end());
+				std::make_move_iterator(stream.owner_growths_0x4ac552.begin()),
+				std::make_move_iterator(stream.owner_growths_0x4ac552.end()));
 		if (target.blocked_reason.empty() && !stream.blocked_reason.empty()) {
 			target.blocked_reason = stream.blocked_reason;
 		}
@@ -34631,8 +34671,9 @@ static RewardGuardSourceStreamResult4aab7e reward_guard_source_order_loop_0x4ac5
 					rng.state);
 		}
 		stream.owner_growths_0x4ac552.push_back(owner_growth);
-		merge_reward_guard_source_stream(aggregate, stream);
-		if (!stream.blocked_reason.empty()) {
+		const bool stream_blocked = !stream.blocked_reason.empty();
+		merge_reward_guard_source_stream(aggregate, std::move(stream));
+		if (stream_blocked) {
 			return aggregate;
 		}
 	}
@@ -41438,13 +41479,33 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 	result.current_phase_id = "entry_scope";
 	result.supported_scope = supports_workflow_execution_scope(config);
 
-	auto add_phase = [&result](const std::string &id, const std::string &anchor, const std::string &status, const std::string &blocker) {
+	const bool profile_workflow_phases = std::getenv("AURELION_RMG_PROFILE_PHASES") != nullptr;
+	const auto workflow_profile_started_at = std::chrono::steady_clock::now();
+	auto previous_phase_profile_at = workflow_profile_started_at;
+	auto profile_checkpoint = [profile_workflow_phases, workflow_profile_started_at, &previous_phase_profile_at](const char *id) {
+		if (!profile_workflow_phases) {
+			return;
+		}
+		const auto now = std::chrono::steady_clock::now();
+		const double phase_ms = std::chrono::duration<double, std::milli>(now - previous_phase_profile_at).count();
+		const double total_ms = std::chrono::duration<double, std::milli>(now - workflow_profile_started_at).count();
+		std::fprintf(stderr, "RMG_PERFORMANCE_CHECKPOINT id=%s phase_ms=%.3f total_ms=%.3f\n", id, phase_ms, total_ms);
+		previous_phase_profile_at = now;
+	};
+	auto add_phase = [&result, profile_workflow_phases, workflow_profile_started_at, &previous_phase_profile_at](const std::string &id, const std::string &anchor, const std::string &status, const std::string &blocker) {
 		H3MapedRmgWorkflowPhase phase;
 		phase.id = id;
 		phase.h3maped_anchor = anchor;
 		phase.status = status;
 		phase.blocker = blocker;
 		result.phases.push_back(phase);
+		if (profile_workflow_phases && (status == "complete" || status == "complete_source_order_prefix" || status == "complete_source_order_payload_parity")) {
+			const auto now = std::chrono::steady_clock::now();
+			const double phase_ms = std::chrono::duration<double, std::milli>(now - previous_phase_profile_at).count();
+			const double total_ms = std::chrono::duration<double, std::milli>(now - workflow_profile_started_at).count();
+			std::fprintf(stderr, "RMG_PERFORMANCE_PHASE id=%s phase_ms=%.3f total_ms=%.3f\n", id.c_str(), phase_ms, total_ms);
+			previous_phase_profile_at = now;
+		}
 	};
 	const bool trace_object_phase_counts = std::getenv("AURELION_RMG_TRACE_OBJECT_PHASE_COUNTS") != nullptr;
 	auto trace_object_phase_count = [&](const char *phase, uint32_t source_boundary) {
@@ -41773,6 +41834,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 							result.generator_object_private_state.generated_cell_buffer,
 							result.generator_object_private_state.relation_owner_vectors_10e4_10e8,
 							route_free_cell_rng);
+				profile_checkpoint("route_free_cell_phase_0x4a8260_0x4a4c8e");
 				if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 					std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_0x4a8260_0x4a4c8e state=0x%08x\n", route_free_cell_rng.state);
 				}
@@ -41804,6 +41866,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		result.generator_object_private_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_ported = true;
 		const Post4a4c8eCleanupResult4a8c15 post_4a4c8e_cleanup =
 				post_4a4c8e_cleanup_scan_0x4a8c15(result.generator_object_private_state.generated_cell_buffer);
+		profile_checkpoint("post_4a4c8e_cleanup_scan_0x4a8c15");
 		result.generator_object_private_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_input_known =
 				post_4a4c8e_cleanup.input_known;
 			result.generator_object_private_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied =
@@ -41839,6 +41902,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		result.generator_object_private_state.materialization_bridge_relation_loop_0x4a4913_ported = true;
 			const MaterializationBridgeRelationLoopResult4a4913 relation_loop =
 					materialization_bridge_relation_loop_0x4a4913(result.generator_object_private_state, route_free_cell_rng);
+			profile_checkpoint("materialization_bridge_relation_loop_0x4a4913");
 			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_relation_loop_0x4a4913 state=0x%08x\n", route_free_cell_rng.state);
 			}
@@ -41884,6 +41948,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			apply_materialization_bridge_relation_normalization_0x4a5767(
 					result.generator_object_private_state,
 					route_free_cell_rng);
+			profile_checkpoint("materialization_bridge_relation_normalization_0x4a5767_pre_water");
 			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_pre_water_0x4a5767 state=0x%08x\n", route_free_cell_rng.state);
 			}
@@ -41901,6 +41966,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 						result.generator_object_private_state.relation_owner_vectors_10e4_10e8,
 						config.water_mode,
 						route_free_cell_rng);
+			profile_checkpoint("materialization_bridge_water_edge_writer_0x4a4fc5");
 			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(
 						stderr,
@@ -41978,12 +42044,14 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				config.player_count,
 				config.setup_object_0x44_known,
 				config.setup_object_0x44);
+		profile_checkpoint("apply_endpoint_materialization_state_d014");
 			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=before_0x4a79a3 state=0x%08x\n", route_free_cell_rng.state);
 			}
 			result.generator_object_private_state.connection_tail_replay_0x4a79a3_ported = true;
 		result.generator_object_private_state.connection_tail_replay_0x4a79a3 =
 					connection_tail_replay_0x4a79a3(result.generator_object_private_state, route_free_cell_rng);
+		profile_checkpoint("connection_tail_replay_0x4a79a3");
 			if (trace_object_phase_counts) {
 				const ConnectionTailReplayResult4a79a3 &connection_tail =
 						result.generator_object_private_state.connection_tail_replay_0x4a79a3;
@@ -42032,6 +42100,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				result.generator_object_private_state.relation_source_order_scan_0x4a89da_ported = true;
 				result.generator_object_private_state.relation_source_order_scan_0x4a89da =
 					relation_source_order_scan_caller_gated_0x4ac552_0x4a89da(result.generator_object_private_state, route_free_cell_rng);
+				profile_checkpoint("relation_source_order_scan_0x4a89da");
 			trace_object_phase_count("after_0x4a89da_0x4ac7af", 0x004ac7afU);
 			workflow_phase_full_grid_trace(
 					"AURELION_RMG_TRACE_POST_4A89DA_GRID",
@@ -42068,6 +42137,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				result.generator_object_private_state.mine_resource_materialization_0x4a9d6a_ported = true;
 				result.generator_object_private_state.mine_resource_materialization_0x4a9d6a =
 						mine_resource_materialization_0x4a9d6a(result.generator_object_private_state, route_free_cell_rng);
+				profile_checkpoint("mine_resource_materialization_0x4a9d6a");
 				trace_object_phase_count("after_0x4a9d6a_0x4ac7b6", 0x004ac7b6U);
 				workflow_phase_full_grid_trace(
 						"AURELION_RMG_TRACE_POST_4A9D6A_GRID",
@@ -42101,6 +42171,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			}
 		if (result.generator_object_private_state.remaining_private_state_blockers.empty()) {
 			apply_reward_guard_terrain_pressure_0x4aadd2(result.generator_object_private_state);
+			profile_checkpoint("reward_guard_terrain_pressure_0x4aadd2");
 			workflow_phase_cell_trace("after_reward_guard_terrain_pressure_0x4aadd2", result.generator_object_private_state.generated_cell_buffer);
 			workflow_phase_full_grid_trace(
 					"AURELION_RMG_TRACE_POST_4AADD2_GRID",
@@ -42110,6 +42181,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			// 0x4a9d6a. The earlier 0x4a5767 replay belongs to 0x4a8c15's
 			// internal tail, so reward/guard must see this post-mine replay too.
 			apply_materialization_bridge_relation_normalization_0x4a5767(result.generator_object_private_state, route_free_cell_rng);
+			profile_checkpoint("materialization_bridge_relation_normalization_0x4a5767_post_mine");
 			workflow_phase_cell_trace("after_post_mine_relation_normalization_0x4a5767", result.generator_object_private_state.generated_cell_buffer);
 			workflow_phase_full_grid_trace(
 					"AURELION_RMG_TRACE_POST_OUTER_4A5767_GRID",
@@ -42122,6 +42194,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			}
 			result.generator_object_private_state.reward_guard_source_stream_0x4aab7e =
 					reward_guard_source_order_loop_0x4ac552_0x4aab7e(result.generator_object_private_state, route_free_cell_rng);
+			profile_checkpoint("reward_guard_source_order_loop_0x4aab7e");
 			trace_object_phase_count("after_0x4aab7e_0x4ac826", 0x004ac826U);
 			workflow_phase_full_grid_trace(
 					"AURELION_RMG_TRACE_POST_4AAB7E_GRID",
@@ -42259,6 +42332,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				result.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d_ported = true;
 				result.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d =
 						decorative_flagged_cell_dispatch_0x49eb8d(result.generator_object_private_state, route_free_cell_rng);
+				profile_checkpoint("decorative_flagged_cell_dispatch_0x49eb8d");
 				trace_object_phase_count("after_0x49eb8d_0x4ac844", 0x004ac844U);
 				workflow_phase_full_grid_trace(
 						"AURELION_RMG_TRACE_POST_49EB8D_GRID",

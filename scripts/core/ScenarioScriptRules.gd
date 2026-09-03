@@ -62,7 +62,7 @@ static func process_hooks(session: SessionStateStoreScript.SessionData) -> Dicti
 	if session == null or session.scenario_id == "":
 		return {"fired_ids": [], "messages": [], "message": ""}
 
-	var scenario = ContentService.get_scenario(session.scenario_id)
+	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var hooks = _sorted_hooks(scenario.get("script_hooks", []))
 	if hooks.is_empty():
 		return {"fired_ids": [], "messages": [], "message": ""}
@@ -585,7 +585,7 @@ static func _add_enemy_pressure(session: SessionStateStoreScript.SessionData, fa
 	return {"messages": []}
 
 static func _enemy_label(session: SessionStateStoreScript.SessionData, faction_id: String) -> String:
-	var scenario = ContentService.get_scenario(session.scenario_id if session != null else "")
+	var scenario = ContentService.get_scenario_readonly(session.scenario_id if session != null else "")
 	for config in scenario.get("enemy_factions", []):
 		if config is Dictionary and String(config.get("faction_id", "")) == faction_id:
 			return String(config.get("label", faction_id))

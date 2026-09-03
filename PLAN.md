@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10224
+Task: #10225
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -25,8 +25,36 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - No owner-directed implementation slice is currently active.
-- Most recently completed implementation slice: `ux-post-battle-report-casualty-ledger-10224`, which pauses every resolved player battle on a persisted casualty and consequence report before the existing Overworld or Scenario Outcome destination.
-- Current package boundary: matching Linux and Windows release exports measure 244997916 bytes, 5002084 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Most recently completed implementation slice: `performance-large-generated-map-runtime-10225`, which removes the measured quadratic native materialization stall and repeated Large-map runtime copies while preserving map signature, gameplay, and save authority.
+- Current package boundary: matching Linux and Windows release exports measure 245006172 bytes, 4993828 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Large Generated Map Runtime Performance
+
+id: `performance-large-generated-map-runtime-10225`
+
+Status: completed 2026-09-03. The deterministic 108x108 fixture retains materialized signature `7362cf00`; the quadratic decorative lookup hotspot is over 16x faster, focused commands remain within their 5/15-second bounds, exact generated save round trip passes, and matching Linux/Windows package gates pass at 245006172 bytes.
+
+Completion evidence: `docs/large-generated-map-runtime-performance-report.md`.
+
+Owner direction: profile and fix the severe sluggishness on a generated Large 108x108 map, where ordinary gameplay operations were observed taking more than one minute.
+
+Requirements: `docs/large-generated-map-runtime-performance-requirements.md`, `project.md` Phase 6 production alpha performance, `docs/lessons-learned.md`, and the existing profiling/save/runtime contracts.
+
+Implementation boundary:
+- reproduce one deterministic native/generated Large map through the player-facing faction/hero setup and measure generation handoff, Overworld entry, refresh/selection, movement, end turn, Town entry/exit, and save paths;
+- use existing general and Overworld profile buckets plus focused wall-clock probes to name the actual synchronous bottleneck before changing behavior;
+- optimize only the measured runtime ownership path while preserving generated-map payload identity, gameplay results, save version, visible art, input behavior, and Linux/Windows parity;
+- add a deterministic Large-map performance regression that proves the corrected path stays bounded and that caches/fast paths invalidate when authoritative state changes.
+
+Completion criteria:
+- the exact one-minute-plus operation is reproduced with subsystem evidence and reduced to a responsive bound on the same deterministic Large fixture, with selection, hover, movement, Town transition, and save below five seconds and the full multi-faction End Turn below fifteen seconds in the validation environment;
+- focused equivalence checks prove the optimized result matches the pre-optimization authoritative gameplay/save/map state, and cache invalidation covers relevant state changes;
+- generated Large entry and repeated representative commands complete without stalls, fatal errors, or hidden deferred work;
+- focused regressions, repository validation, and matching Linux/Windows export/package startup and generated-map entry checks pass below the unchanged package ceiling.
+
+Non-goals:
+- no native RMG topology, phase/private-state, output payload, placement density, balance, gameplay-rule, content, save-schema, art, Town-layout, or battle-report changes;
+- no heuristic generation changes, copied Heroes content, package-limit change, signing, publication, whole-game validation, or release-readiness claim.
 
 ## Post-Battle Report And Casualty Ledger
 
