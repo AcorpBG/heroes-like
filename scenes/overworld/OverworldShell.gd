@@ -805,7 +805,10 @@ func _overworld_gameplay_movement_blocked_reason() -> String:
 		return "end_turn_confirmation_open"
 	if _end_turn_commit_in_progress:
 		return "end_turn_committing"
-	if _debug_command_in_progress or _debug_overlay_enabled or _placement_debug_overlay_enabled:
+	# F3/F4 are persistent, mouse-filter-ignoring observation layers. They must
+	# remain usable while profiling normal play; only the short synchronous
+	# command-capture interval owns movement input.
+	if _debug_command_in_progress:
 		return "debug_active"
 	return ""
 
@@ -9414,8 +9417,6 @@ func _build_debug_overlay() -> void:
 	_debug_overlay_panel.move_to_front()
 
 func _set_debug_overlay_enabled(enabled: bool) -> void:
-	if enabled:
-		_on_overworld_interaction_owner_opened()
 	_debug_overlay_enabled = enabled
 	if _debug_overlay_panel != null:
 		_debug_overlay_panel.visible = enabled
@@ -9424,8 +9425,6 @@ func _set_debug_overlay_enabled(enabled: bool) -> void:
 	_debug_update_overlay_text()
 
 func _set_placement_debug_overlay_enabled(enabled: bool) -> void:
-	if enabled:
-		_on_overworld_interaction_owner_opened()
 	_placement_debug_overlay_enabled = enabled
 	if _map_view != null and _map_view.has_method("set_placement_debug_overlay_enabled"):
 		_map_view.call("set_placement_debug_overlay_enabled", enabled)
@@ -10796,7 +10795,8 @@ func validation_gameplay_movement_input_snapshot() -> Dictionary:
 		"manual_overwrite_open": _manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible,
 		"end_turn_confirmation_open": _end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible,
 		"end_turn_commit_in_progress": _end_turn_commit_in_progress,
-		"debug_active": _debug_command_in_progress or _debug_overlay_enabled or _placement_debug_overlay_enabled,
+		"debug_active": _debug_command_in_progress,
+		"diagnostic_overlays_visible": _debug_overlay_enabled or _placement_debug_overlay_enabled,
 	}
 
 func validation_controller_route_axis(axis: int, value: float) -> Dictionary:
@@ -10872,7 +10872,8 @@ func validation_controller_route_cursor_snapshot() -> Dictionary:
 		"save_popup_open": _save_slot_picker != null and _save_slot_picker.get_popup().visible,
 		"manual_overwrite_open": _manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible,
 		"end_turn_confirmation_open": _end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible,
-		"debug_active": _debug_command_in_progress or _debug_overlay_enabled or _placement_debug_overlay_enabled,
+		"debug_active": _debug_command_in_progress,
+		"diagnostic_overlays_visible": _debug_overlay_enabled or _placement_debug_overlay_enabled,
 		"scenario_status": _session.scenario_status if _session != null else "",
 		"game_state": _session.game_state if _session != null else "",
 		"day": _session.day if _session != null else 0,
