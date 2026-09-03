@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10223
+Task: #10224
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -24,9 +24,37 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- No implementation slice is active after completing `native-rmg-authored-object-pool-adoption-10223`.
-- Most recently completed implementation slice: `native-rmg-authored-object-pool-adoption-10223`, which classifies every authored Overworld object and routes compatible native source records through deterministic original-content pools without changing recovered generation.
-- Current package boundary: matching Linux and Windows release exports measure 244974124 bytes, 5025876 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- No owner-directed implementation slice is currently active.
+- Most recently completed implementation slice: `ux-post-battle-report-casualty-ledger-10224`, which pauses every resolved player battle on a persisted casualty and consequence report before the existing Overworld or Scenario Outcome destination.
+- Current package boundary: matching Linux and Windows release exports measure 244997916 bytes, 5002084 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Post-Battle Report And Casualty Ledger
+
+id: `ux-post-battle-report-casualty-ledger-10224`
+
+Status: completed 2026-09-03.
+
+Owner direction: after every battle, show a dedicated battle report screen with casualties and the important result details before continuing to the field or scenario outcome.
+
+Requirements: `docs/post-battle-report-screen-requirements.md`, `project.md` Phase 6 production alpha UX, and the existing battle-resolution/save-routing contracts.
+
+Completion evidence: `docs/post-battle-report-screen-report.md`.
+
+Implementation boundary:
+- capture deterministic per-stack starting, surviving, and lost troop counts from the authoritative terminal battle state before it is cleared;
+- route every terminal battle family through one persisted report screen, then transactionally acknowledge and continue to the same Overworld or Scenario Outcome destination as before;
+- present responsive player/enemy ledgers, totals, outcome, rewards, artifacts, and aftermath consequences with mouse, keyboard, controller, tooltip, and accessibility support;
+- add focused runtime coverage and visual evidence at 2048x1079 and 1280x720 while preserving existing battle outcome, progression, and save behavior.
+
+Completion criteria:
+- victory, defeat, hero defeat, town loss, retreat, surrender, enemy withdrawal, and stalemate each create exactly one report with accurate stack and side totals;
+- pending reports survive autosave/load, Continue is the initial accessible focus, and a failed acknowledgement save leaves the report open for retry;
+- Continue routes continuing scenarios to the Overworld and terminal scenarios to Scenario Outcome without duplicating rewards or resolution side effects;
+- focused and existing Town-adjacent battle/outcome tests, repository validation, visual inspection, and matching Linux/Windows export/package startup pass below the unchanged package ceiling.
+
+Non-goals:
+- no combat formula, AI, balance, reward, progression, encounter, campaign, RMG, Town, or Overworld gameplay changes;
+- no save-version bump, art generation, copied Heroes assets, signing, publication, package-ceiling change, unrelated cleanup, whole-game validation, or release-readiness claim.
 
 ## Native RMG Authored Object Pool Adoption
 

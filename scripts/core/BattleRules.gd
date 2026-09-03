@@ -7652,9 +7652,16 @@ static func _record_battle_aftermath(
 	var artifact_summary := _battle_aftermath_artifact_summary(details)
 	var force_summary := _battle_aftermath_force_summary(session)
 	var world_summary := _battle_aftermath_world_summary(session, outcome, details)
+	var casualty_ledger := _battle_report_casualty_ledger(session.battle)
+	var battle_name := String(session.battle.get("encounter_name", session.battle.get("encounter_id", "Battle")))
 	var report := {
+		"report_version": 1,
+		"pending": true,
 		"outcome": outcome,
 		"headline": headline,
+		"battle_name": battle_name,
+		"terrain": String(session.battle.get("terrain", "")),
+		"rounds": max(1, int(session.battle.get("round", 1))),
 		"summary": summary,
 		"result_summary": result_summary,
 		"reward_summary": reward_summary,
@@ -7668,10 +7675,114 @@ static func _record_battle_aftermath(
 		"front_summary": String(details.get("front_summary", "")),
 		"logistics_summary": String(details.get("logistics_summary", "")),
 		"commander_summary": String(details.get("commander_summary", "")),
+		"casualties": casualty_ledger,
 		"day": session.day,
+		"scenario_id": session.scenario_id,
 	}
+	var report_identity := {
+		"scenario_id": session.scenario_id,
+		"day": session.day,
+		"battle_key": String(session.battle.get("resolved_key", session.battle.get("encounter_id", ""))),
+		"outcome": outcome,
+		"casualties": casualty_ledger,
+	}
+	report["report_id"] = JSON.stringify(report_identity).sha256_text()
 	report["return_summary"] = _battle_aftermath_return_summary(report)
 	session.flags["last_battle_aftermath"] = report
+
+static func pending_battle_report(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or not session.battle.is_empty():
+		return {}
+	var value: Variant = session.flags.get("last_battle_aftermath", {})
+	if not (value is Dictionary):
+		return {}
+	var report: Dictionary = value
+	if (
+		not bool(report.get("pending", false))
+		or int(report.get("report_version", 0)) != 1
+		or String(report.get("report_id", "")) == ""
+		or not (report.get("casualties", {}) is Dictionary)
+	):
+		return {}
+	return report.duplicate(true)
+
+static func acknowledge_pending_battle_report(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var report := pending_battle_report(session)
+	if report.is_empty():
+		return {"ok": false, "reason": "missing_pending_report", "report_id": ""}
+	report["pending"] = false
+	report["acknowledged"] = true
+	session.flags["last_battle_aftermath"] = report
+	session.flags["last_battle_report_acknowledged_id"] = String(report.get("report_id", ""))
+	return {
+		"ok": true,
+		"reason": "acknowledged",
+		"report_id": String(report.get("report_id", "")),
+		"report": report.duplicate(true),
+	}
+
+static func _battle_report_casualty_ledger(battle: Dictionary) -> Dictionary:
+	return {
+		"player": _battle_report_side_casualties(battle, "player"),
+		"enemy": _battle_report_side_casualties(battle, "enemy"),
+	}
+
+static func battle_report_casualty_ledger_bridge(battle: Dictionary) -> Dictionary:
+	return _battle_report_casualty_ledger(battle).duplicate(true)
+
+static func _battle_report_side_casualties(battle: Dictionary, side: String) -> Dictionary:
+	var rows: Array = []
+	var deployed := 0
+	var surviving := 0
+	var companies_deployed := 0
+	var companies_surviving := 0
+	for stack_value in battle.get("stacks", []):
+		if not (stack_value is Dictionary):
+			continue
+		var stack: Dictionary = stack_value
+		if String(stack.get("side", "")) != side:
+			continue
+		var starting_count: int = max(0, int(stack.get("base_count", 0)))
+		var surviving_count: int = max(0, _alive_count(stack))
+		var lost_count: int = max(0, starting_count - surviving_count)
+		deployed += starting_count
+		surviving += surviving_count
+		if starting_count > 0:
+			companies_deployed += 1
+		if surviving_count > 0:
+			companies_surviving += 1
+		rows.append({
+			"battle_id": String(stack.get("battle_id", "")),
+			"unit_id": String(stack.get("unit_id", "")),
+			"name": String(stack.get("name", stack.get("unit_id", "Unknown company"))),
+			"tier": clamp(int(stack.get("tier", 1)), 1, 7),
+			"starting": starting_count,
+			"surviving": surviving_count,
+			"lost": lost_count,
+			"destroyed": starting_count > 0 and surviving_count <= 0,
+		})
+	var label := "Your forces" if side == "player" else String(battle.get("enemy_army_name", "Enemy forces"))
+	if side == "player":
+		var player_commander = battle.get("player_commander_state", {})
+		if player_commander is Dictionary and String(player_commander.get("name", "")).strip_edges() != "":
+			label = String(player_commander.get("name", ""))
+	else:
+		var enemy_commander = battle.get("enemy_hero", {})
+		if enemy_commander is Dictionary and String(enemy_commander.get("name", "")).strip_edges() != "":
+			label = String(enemy_commander.get("name", ""))
+	return {
+		"side": side,
+		"label": label,
+		"rows": rows,
+		"totals": {
+			"deployed": deployed,
+			"surviving": surviving,
+			"lost": max(0, deployed - surviving),
+			"companies_deployed": companies_deployed,
+			"companies_surviving": companies_surviving,
+			"companies_destroyed": max(0, companies_deployed - companies_surviving),
+		},
+	}
 
 static func _battle_aftermath_result_summary(summary: String) -> String:
 	var clean_summary := summary.strip_edges()

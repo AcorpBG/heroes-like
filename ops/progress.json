@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit the expanded live catalog and select the next coherent production-content and original-art batch."
+    "Implement and validate the persisted post-battle report and casualty ledger."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1913,6 +1913,38 @@
   "active_slice": "",
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "ux-post-battle-report-casualty-ledger-20260903",
+      "title": "Post-Battle Report And Casualty Ledger",
+      "sliceId": "ux-post-battle-report-casualty-ledger-10224",
+      "status": "completed",
+      "validatedAt": "2026-09-03T13:57:18Z",
+      "updatedAt": "2026-09-03T13:57:18Z",
+      "latestFinding": "Every resolved player battle now pauses on one persisted report with exact player/enemy stack casualties and consequences before the existing destination; acknowledgement is autosave-transactional and failed saves retain the pending report.",
+      "artifacts": [
+        "scripts/core/BattleRules.gd",
+        "scripts/autoload/AppRouter.gd",
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleReportShell.gd",
+        "scenes/battle/BattleReportShell.tscn",
+        "tests/post_battle_report_runtime_report.gd",
+        "tests/post_battle_report_runtime_report.tscn",
+        "docs/post-battle-report-screen-report.md"
+      ],
+      "metrics": {
+        "terminal_outcome_family_count": 9,
+        "visual_capture_count": 2,
+        "wide_capture_width": 2048,
+        "small_capture_width": 1280,
+        "compact_stack_width": 960,
+        "save_version": 9,
+        "linux_windows_pck_bytes": 244997916,
+        "pck_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 5002084,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "None for #10224. Additional battle-history archives, replay data, or unrelated Town/Outcome responsive-test repair require separate owner-directed slices."
+    },
     {
       "id": "content-six-marchland-local-retinues-20260831",
       "title": "Six Marchland Local Retinues",
@@ -16255,14 +16287,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Completed #10223 with exhaustive authored-object eligibility, deterministic post-projection original-content selection, fail-closed visitable handling, and matching Linux/Windows package validation.",
+  "currentNotes": "Owner-directed #10224 is completed: every resolved player battle now pauses on a persisted casualty/consequence report with safe continuation routing.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "native-rmg-authored-object-pool-adoption-10223",
-  "currentSliceId": "native-rmg-authored-object-pool-adoption-10223",
-  "currentSliceNotes": "All 422 authored objects are classified; the four-size matrix has zero unclassified visitable records and final Linux/Windows generated-flow packages pass.",
+  "currentSlice": "ux-post-battle-report-casualty-ledger-10224",
+  "currentSliceId": "ux-post-battle-report-casualty-ledger-10224",
+  "currentSliceNotes": "Capture terminal battle casualties before battle-state clear, persist the report, and route acknowledgement safely to the existing destination.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Native RMG Authored Object Pool Adoption",
-  "currentSliceUpdatedAt": "2026-09-03T13:18:04Z",
+  "currentSliceTitle": "Post-Battle Report And Casualty Ledger",
+  "currentSliceUpdatedAt": "2026-09-03T13:57:18Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21784,9 +21816,63 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Classify every authored Overworld object and expand only semantically compatible post-projection native proxies; do not change recovered H3MapEd phase behavior, placement, topology, masks, RNG, or final payload.",
-  "notes": "The seven-school signature battle-VFX slice is complete. The broader user goal to expand production content and distinctive art remains active for future selected slices.",
+  "nextActionGuardrailNote": "Select and tracker-register the next owner-directed Phase 6 slice before implementation; do not infer unrelated Town, Outcome, RMG, balance, or release-readiness work from #10224.",
+  "notes": "Owner-directed #10224 is completed. No implementation slice is currently active; prior #10223 native-RMG object-pool adoption remains completed.",
   "plannedSlices": [
+    {
+      "id": "ux-post-battle-report-casualty-ledger-10224",
+      "title": "Post-Battle Report And Casualty Ledger",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/post-battle-report-screen-requirements.md",
+        "docs/post-battle-report-screen-report.md",
+        "scripts/core/BattleRules.gd",
+        "scripts/autoload/AppRouter.gd",
+        "scripts/autoload/SaveService.gd"
+      ],
+      "purpose": "Show every resolved tactical battle on a persisted, accessible report screen with authoritative player and enemy casualty ledgers before continuing to the existing destination.",
+      "implementationTargets": [
+        "scripts/core/BattleRules.gd",
+        "scripts/autoload/AppRouter.gd",
+        "scripts/autoload/SaveService.gd",
+        "scenes/battle/BattleReportShell.gd",
+        "scenes/battle/BattleReportShell.tscn",
+        "tests",
+        "docs/post-battle-report-screen-requirements.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every terminal battle family creates exactly one immutable report containing accurate per-stack and per-side starting, surviving, and lost troop counts",
+        "Pending reports survive autosave/load and acknowledgement is saved transactionally before routing to the existing Overworld or Scenario Outcome destination",
+        "The report is mouse, keyboard, controller, and accessibility usable and remains unclipped at 2048x1079 and 1280x720",
+        "Focused battle-report coverage, related battle/outcome/save regressions, repository validation, and Linux/Windows export/package startup pass below the unchanged package ceiling"
+      ],
+      "nonGoals": [
+        "Combat formula, AI, balance, reward, progression, encounter, campaign, RMG, Town, or Overworld gameplay changes",
+        "Save-version bump, art generation, copied Heroes assets, signing, publication, package-ceiling changes, unrelated cleanup, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-09-03T13:26:28Z",
+      "startedAt": "2026-09-03T13:26:28Z",
+      "updatedAt": "2026-09-03T13:57:18Z",
+      "completedAt": "2026-09-03T13:57:18Z",
+      "notes": "Completed with authoritative pre-clear casualty capture, one persisted report route for all nine terminal outcome families, transactional acknowledgement, accessible responsive presentation, inspected visual captures, focused regressions, repository validation, and matching Linux/Windows package startup evidence.",
+      "metrics": {
+        "terminal_outcome_family_count": 9,
+        "visual_capture_count": 2,
+        "save_version": 9,
+        "linux_windows_pck_bytes": 244997916,
+        "pck_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 5002084,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "None for #10224. Additional battle-history archives, replay data, or unrelated Town/Outcome responsive-test repair require separate owner-directed slices."
+    },
     {
       "id": "native-rmg-authored-object-pool-adoption-10223",
       "title": "Native RMG Authored Object Pool Adoption",
@@ -108898,9 +108984,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed #10223: all authored Overworld objects are explicitly eligible or excluded, compatible native source records use deterministic original-content pools, and zero unclassified visitable records remain in the supported matrix.",
-  "taskId": "10223",
-  "updatedAt": "2026-09-03T13:18:04Z",
+  "summary": "In progress #10224: add a persisted post-battle report with authoritative casualty ledgers and safe continuation routing.",
+  "taskId": "10224",
+  "updatedAt": "2026-09-03T13:26:28Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

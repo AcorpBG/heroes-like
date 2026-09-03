@@ -99,6 +99,11 @@ func _require_hooks() -> bool:
 		"validation_set_battle_resolution_checkpoint_routing_suppressed",
 		"validation_reset_battle_resolution_checkpoint_state",
 		"validation_battle_resolution_checkpoint_snapshot",
+		"go_to_battle_report",
+		"complete_battle_report",
+		"validation_set_battle_report_routing_suppressed",
+		"validation_reset_battle_report_state",
+		"validation_battle_report_snapshot",
 	]:
 		if not AppRouter.has_method(method_name):
 			return _fail_bool("AppRouter is missing battle-resolution checkpoint hook %s." % method_name)
@@ -368,6 +373,7 @@ func _prove_ordinary_success_and_exit_animation() -> Dictionary:
 	if int(router.get("save_attempt_count", -1)) != 1 \
 			or int(router.get("save_failure_count", -1)) != 0 \
 			or int(router.get("route_attempt_count", -1)) != 1 \
+			or String(router.get("last_route", {}).get("target", "")) != "battle_report" \
 			or int(after.get("durable_route_count", -1)) != 1 \
 			or restored == null \
 			or restored_gameplay != live_gameplay:
@@ -388,6 +394,8 @@ func _prove_terminal_outcome_bypass() -> Dictionary:
 	_clear_save_files()
 	AppRouter.validation_reset_battle_resolution_checkpoint_state()
 	AppRouter.validation_set_battle_resolution_checkpoint_routing_suppressed(true)
+	AppRouter.validation_reset_battle_report_state()
+	AppRouter.validation_set_battle_report_routing_suppressed(true)
 	AppRouter.validation_reset_scenario_outcome_route_state()
 	AppRouter.validation_set_scenario_outcome_routing_suppressed(true)
 	var session: SessionStateStoreScript.SessionData = _active_battle_fixture(40, SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN)
@@ -403,17 +411,22 @@ func _prove_terminal_outcome_bypass() -> Dictionary:
 	add_child(shell)
 	await _settle()
 	var checkpoint: Dictionary = AppRouter.validation_battle_resolution_checkpoint_snapshot()
+	var report: Dictionary = AppRouter.validation_battle_report_snapshot()
 	var outcome: Dictionary = AppRouter.validation_scenario_outcome_route_snapshot()
 	if session.scenario_status == "in_progress" \
 			or not session.battle.is_empty() \
 			or int(checkpoint.get("request_count", -1)) != 0 \
 			or int(checkpoint.get("save_attempt_count", -1)) != 0 \
-			or int(outcome.get("request_count", 0)) != 1 \
-			or int(outcome.get("route_attempt_count", 0)) != 1:
+			or int(report.get("entry_request_count", 0)) != 1 \
+			or int(report.get("entry_save_attempt_count", 0)) != 1 \
+			or int(report.get("route_attempt_count", 0)) != 1 \
+			or String(report.get("last_route", {}).get("target", "")) != "battle_report" \
+			or int(outcome.get("request_count", 0)) != 0 \
+			or int(outcome.get("route_attempt_count", 0)) != 0:
 		await _discard_shell(shell)
-		return _fail_dictionary("Terminal primary defeat did not bypass the Overworld checkpoint for Outcome: %s" % JSON.stringify({"status": session.scenario_status, "battle_active": not session.battle.is_empty(), "checkpoint": _compact_router(checkpoint), "outcome": _compact_outcome_router(outcome)}))
+		return _fail_dictionary("Terminal primary defeat did not bypass the Overworld checkpoint for Battle Report: %s" % JSON.stringify({"status": session.scenario_status, "battle_active": not session.battle.is_empty(), "checkpoint": _compact_router(checkpoint), "report": report, "outcome": _compact_outcome_router(outcome)}))
 	await _discard_shell(shell)
-	return {"scenario_status": session.scenario_status, "checkpoint_save_attempts": 0, "outcome_route_attempts": 1}
+	return {"scenario_status": session.scenario_status, "checkpoint_save_attempts": 0, "report_route_attempts": 1, "outcome_route_attempts_before_report_acknowledgement": 0}
 
 
 func _prove_nonterminal_control() -> Dictionary:

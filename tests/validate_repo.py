@@ -324,6 +324,11 @@ BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_wit
 BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCENE_PATH = ROOT / "tests" / "battle_withdrawal_confirmation_runtime_report.tscn"
 BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "battle_resolution_autosave_failure_route_safety_regression.gd"
 BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "battle_resolution_autosave_failure_route_safety_regression.tscn"
+POST_BATTLE_REPORT_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleReportShell.gd"
+POST_BATTLE_REPORT_SCENE_PATH = ROOT / "scenes" / "battle" / "BattleReportShell.tscn"
+POST_BATTLE_REPORT_RUNTIME_SCRIPT_PATH = ROOT / "tests" / "post_battle_report_runtime_report.gd"
+POST_BATTLE_REPORT_RUNTIME_SCENE_PATH = ROOT / "tests" / "post_battle_report_runtime_report.tscn"
+POST_BATTLE_REPORT_REQUIREMENTS_PATH = ROOT / "docs" / "post-battle-report-screen-requirements.md"
 BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "briefing_consumption_autosave_failure_safety_regression.gd"
 BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "briefing_consumption_autosave_failure_safety_regression.tscn"
 GENERATED_OPENING_AUTOSAVE_FAILURE_RETRY_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "generated_opening_autosave_failure_retry_regression.gd"
@@ -28904,6 +28909,112 @@ def validate_battle_resolution_autosave_failure_route_safety(errors: list[str]) 
         errors,
         "OverworldRules.gd must construct one shared player-town daybreak context array for both command-risk reducers",
     )
+
+
+def validate_post_battle_report_screen(errors: list[str]) -> None:
+    for path in (
+        POST_BATTLE_REPORT_SCRIPT_PATH,
+        POST_BATTLE_REPORT_SCENE_PATH,
+        POST_BATTLE_REPORT_RUNTIME_SCRIPT_PATH,
+        POST_BATTLE_REPORT_RUNTIME_SCENE_PATH,
+        POST_BATTLE_REPORT_REQUIREMENTS_PATH,
+        BATTLE_SCRIPT_PATH,
+        BATTLE_SCENE_PATH,
+        BATTLE_RULES_PATH,
+        APP_ROUTER_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing post-battle report file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (
+        POST_BATTLE_REPORT_SCRIPT_PATH,
+        POST_BATTLE_REPORT_SCENE_PATH,
+        POST_BATTLE_REPORT_RUNTIME_SCRIPT_PATH,
+        BATTLE_RULES_PATH,
+        APP_ROUTER_PATH,
+        BATTLE_SCRIPT_PATH,
+    )):
+        return
+
+    rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"report_version": 1',
+        '"pending": true',
+        '"casualties": casualty_ledger',
+        '"report_id"',
+        "func pending_battle_report(",
+        "func acknowledge_pending_battle_report(",
+        "func battle_report_casualty_ledger_bridge(",
+        "func _battle_report_side_casualties(",
+        '"starting": starting_count',
+        '"surviving": surviving_count',
+        '"lost": lost_count',
+        '"destroyed": starting_count > 0 and surviving_count <= 0',
+    ):
+        ensure(required_token in rules_text, errors, f"BattleRules.gd is missing post-battle report authority token: {required_token}")
+    ensure(
+        rules_text.count("_record_battle_aftermath(") >= 8,
+        errors,
+        "Every terminal battle family must continue through the shared aftermath/report recorder",
+    )
+
+    router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const BATTLE_REPORT_SCENE := "res://scenes/battle/BattleReportShell.tscn"',
+        "func go_to_battle_report(",
+        "func complete_battle_report(",
+        "BattleRules.pending_battle_report(session)",
+        "BattleRules.acknowledge_pending_battle_report(session)",
+        "SaveService.save_runtime_autosave_session(session)",
+        "session.from_dict(snapshot)",
+        '_record_battle_resolution_checkpoint_route(BATTLE_REPORT_SCENE, "already_saved")',
+        "func validation_battle_report_snapshot(",
+    ):
+        ensure(required_token in router_text, errors, f"AppRouter.gd is missing post-battle report routing token: {required_token}")
+
+    battle_shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '_record_validation_battle_resolution_attempt(result, "battle_report")',
+        '_begin_battle_exit_animation_handoff(result, "battle_report")',
+        "AppRouter.go_to_battle_report()",
+    ):
+        ensure(required_token in battle_shell_text, errors, f"BattleShell.gd is missing report-first terminal routing token: {required_token}")
+
+    scene_text = POST_BATTLE_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '[node name="BattleReportShell" type="Control"]',
+        '[node name="CasualtyScroll" type="ScrollContainer"',
+        '[node name="CasualtyGrid" type="GridContainer"',
+        '[node name="PlayerRows" type="VBoxContainer"',
+        '[node name="EnemyRows" type="VBoxContainer"',
+        '[node name="AftermathPanel" type="PanelContainer"',
+        'accessibility_name = "Continue from battle report"',
+        'method="_on_continue_pressed"',
+    ):
+        ensure(required_token in scene_text, errors, f"BattleReportShell.tscn is missing required presentation token: {required_token}")
+
+    shell_text = POST_BATTLE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "_casualty_grid.columns = 1 if _compact_layout else 2",
+        "func _populate_side(",
+        "func _add_casualty_row(",
+        "AppRouter.complete_battle_report()",
+        "_continue_button.grab_focus()",
+        "func validation_snapshot(",
+    ):
+        ensure(required_token in shell_text, errors, f"BattleReportShell.gd is missing required runtime token: {required_token}")
+
+    report_text = POST_BATTLE_REPORT_RUNTIME_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "POST_BATTLE_REPORT_RUNTIME_REPORT",
+        'const OUTCOME_FAMILIES := ["victory", "defeat", "hero_defeat", "town_lost", "retreat", "surrender", "enemy_retreat", "enemy_surrender", "stalemate"]',
+        "BattleAutoResolveRulesScript.resolve_active_battle(session)",
+        "SaveService.save_runtime_autosave_session(session)",
+        "SaveService.restore_autosave_session()",
+        "AppRouter.complete_battle_report(true)",
+        'OS.set_environment(FAILURE_ENV, "precommit")',
+        "CAPTURE_SIZES := [Vector2i(2048, 1079), Vector2i(1280, 720)]",
+        '"compact_960x720_columns": 1',
+    ):
+        ensure(required_token in report_text, errors, f"Post-battle report runtime coverage is missing token: {required_token}")
 
 
 def validate_briefing_consumption_autosave_failure_safety(errors: list[str]) -> None:
@@ -84000,6 +84111,7 @@ def main() -> int:
     validate_battle_quick_resolve_runtime(errors)
     validate_battle_withdrawal_confirmation_runtime(errors)
     validate_battle_resolution_autosave_failure_route_safety(errors)
+    validate_post_battle_report_screen(errors)
     validate_briefing_consumption_autosave_failure_safety(errors)
     validate_scenario_outcome_normal_entry_focus(errors)
     validate_active_play_main_menu_action_label(errors)
@@ -84344,6 +84456,7 @@ def main() -> int:
     print("- the battle shell now also surfaces a live tactical risk and readiness board using current initiative, commander cover, cohesion, ranged pressure, decisive targets, objective urgency, and dispatch state")
     print("- battle encounters now also author cover lines, obstruction lines, and firing-lane control points that drive movement pressure, ranged threat, commander safety, AI scoring, and shell summaries")
     print("- battle withdrawal now exposes a real surrender action, distinct retreat versus surrender consequences, and persisted aftermath recap across battle, outcome, and campaign flow")
+    print("- every resolved battle now pauses on a persisted report with per-stack and per-side casualty ledgers before the existing field or scenario-outcome route")
     print("- battle content now keeps distinct battlefield tags, commander traits, specialized army groups, terrain-payoff rules, and doctrine-aware AI scoring")
     print("- faction identity, town build trees, weekly musters, and thin town-shell progression wiring are present")
     print("- advanced town works now drive asymmetric pressure, reinforcement quality, and battle-readiness payoffs across Embercourt and Mireclaw")

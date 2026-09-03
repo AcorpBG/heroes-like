@@ -7,12 +7,14 @@ const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
 const MAIN_MENU_SCENE := "res://scenes/menus/MainMenu.tscn"
 const SCENARIO_OUTCOME_SCENE := "res://scenes/results/ScenarioOutcomeShell.tscn"
+const BATTLE_REPORT_SCENE := "res://scenes/battle/BattleReportShell.tscn"
 const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
 const BATTLE_SCENE := "res://scenes/battle/BattleShell.tscn"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
 const MAP_EDITOR_SCENE := "res://scenes/editor/MapEditorShell.tscn"
 const MAIN_MENU_PACKED_SCENE := preload("res://scenes/menus/MainMenu.tscn")
 const SCENARIO_OUTCOME_PACKED_SCENE := preload("res://scenes/results/ScenarioOutcomeShell.tscn")
+const BATTLE_REPORT_PACKED_SCENE := preload("res://scenes/battle/BattleReportShell.tscn")
 const OVERWORLD_PACKED_SCENE := preload("res://scenes/overworld/OverworldShell.tscn")
 const BATTLE_PACKED_SCENE := preload("res://scenes/battle/BattleShell.tscn")
 const TOWN_PACKED_SCENE := preload("res://scenes/town/TownShell.tscn")
@@ -30,6 +32,7 @@ const ACTIVE_PLAY_RETURN_FAILURE_MESSAGE := "Save failed. The expedition remains
 const ACTIVE_PLAY_RETURN_SUCCESS_MESSAGE := "Expedition saved. Returning to Main Menu."
 const BATTLE_ENTRY_AUTOSAVE_FAILURE_MESSAGE := "Battle is ready, but autosave failed. Use Save now to protect it."
 const BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE := "Battle resolved, but autosave failed. Use Save Battle now to protect the result."
+const BATTLE_REPORT_AUTOSAVE_FAILURE_MESSAGE := "The battle report could not be saved. Review it, then press Continue to retry."
 const SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE := "Outcome is ready, but autosave failed. Use Save now to protect it."
 
 var _menu_notice := ""
@@ -97,6 +100,18 @@ var _battle_resolution_checkpoint_last_result := {}
 var _battle_resolution_checkpoint_last_route := {}
 var _battle_resolution_checkpoint_last_runtime_issue := {}
 var _validation_battle_resolution_checkpoint_routing_suppressed := false
+var _battle_report_entry_request_count := 0
+var _battle_report_entry_save_attempt_count := 0
+var _battle_report_entry_save_failure_count := 0
+var _battle_report_continue_request_count := 0
+var _battle_report_continue_save_attempt_count := 0
+var _battle_report_continue_save_failure_count := 0
+var _battle_report_route_attempt_count := 0
+var _battle_report_suppressed_route_count := 0
+var _battle_report_last_entry_result: Dictionary = {}
+var _battle_report_last_continue_result: Dictionary = {}
+var _battle_report_last_route: Dictionary = {}
+var _validation_battle_report_routing_suppressed := false
 var _scenario_outcome_request_count := 0
 var _scenario_outcome_save_attempt_count := 0
 var _scenario_outcome_save_failure_count := 0
@@ -577,6 +592,9 @@ func go_to_overworld() -> void:
 		return
 
 	var session := SessionState.ensure_active_session()
+	if not BattleRules.pending_battle_report(session).is_empty():
+		go_to_battle_report(true)
+		return
 	if session.scenario_status != "in_progress":
 		_note_overworld_handoff_step("go_to_overworld_outcome_redirect")
 		ProfileLogScript.emit_general("router", "scene_transition", "go_to_overworld_outcome_redirect", ProfileLogScript.elapsed_ms(started), buckets, {
@@ -800,9 +818,9 @@ func route_checkpointed_battle_resolution() -> Dictionary:
 	var save_result: Dictionary = save_result_value if save_result_value is Dictionary else {}
 	_clear_battle_resolution_checkpoint_authority()
 	_battle_resolution_checkpoint_skipped_durable_route_count += 1
-	var routed := _record_battle_resolution_checkpoint_route(OVERWORLD_SCENE, "already_saved")
+	var routed := _record_battle_resolution_checkpoint_route(BATTLE_REPORT_SCENE, "already_saved")
 	if routed:
-		_change_scene(OVERWORLD_SCENE)
+		_change_scene(BATTLE_REPORT_SCENE)
 	else:
 		_clear_pending_battle_resolution_overworld_presentation()
 	_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
@@ -810,7 +828,7 @@ func route_checkpointed_battle_resolution() -> Dictionary:
 		true,
 		true,
 		"already_saved",
-		"Battle result saved. Returning to the field.",
+		"Battle result saved. Opening battle report.",
 		"",
 		true,
 		save_result
@@ -821,7 +839,7 @@ func _battle_resolution_checkpoint_route_after_save(checkpoint_result: Dictionar
 	var routed_result := route_checkpointed_battle_resolution()
 	if bool(routed_result.get("ok", false)):
 		routed_result["reason"] = "saved"
-		routed_result["message"] = "Battle result saved. Returning to the field."
+		routed_result["message"] = "Battle result saved. Opening battle report."
 		routed_result["save_result"] = checkpoint_result.get("save_result", {}).duplicate(true)
 		_battle_resolution_checkpoint_last_result = routed_result.duplicate(true)
 	return routed_result
@@ -862,7 +880,7 @@ func _record_battle_resolution_checkpoint_route(scene_path: String, reason: Stri
 	_battle_resolution_checkpoint_route_attempt_count += 1
 	_battle_resolution_checkpoint_last_route = {
 		"target_scene": scene_path,
-		"target": "overworld" if scene_path == OVERWORLD_SCENE else scene_path,
+		"target": "battle_report" if scene_path == BATTLE_REPORT_SCENE else "overworld" if scene_path == OVERWORLD_SCENE else scene_path,
 		"reason": reason,
 		"suppressed": _validation_battle_resolution_checkpoint_routing_suppressed,
 	}
@@ -1362,6 +1380,168 @@ func validation_battle_entry_snapshot() -> Dictionary:
 		"last_runtime_issue": _battle_entry_last_runtime_issue.duplicate(true),
 	}
 
+func go_to_battle_report(skip_required_save: bool = false) -> Dictionary:
+	_battle_report_entry_request_count += 1
+	if not SessionState.has_playable_session():
+		_battle_report_last_entry_result = _battle_report_result(
+			false, false, false, "missing_session", "No resolved battle report is available.", "main_menu", ""
+		)
+		_route_battle_report(MAIN_MENU_SCENE, "missing_session")
+		return _battle_report_last_entry_result.duplicate(true)
+	var session := SessionState.ensure_active_session()
+	var report := BattleRules.pending_battle_report(session)
+	if report.is_empty():
+		var fallback_scene := SCENARIO_OUTCOME_SCENE if session.scenario_status != "in_progress" else OVERWORLD_SCENE
+		var fallback_target := "scenario_outcome" if session.scenario_status != "in_progress" else "overworld"
+		_battle_report_last_entry_result = _battle_report_result(
+			false, false, false, "missing_pending_report", "No pending battle report remains.", fallback_target, ""
+		)
+		_route_battle_report(fallback_scene, "missing_pending_report")
+		return _battle_report_last_entry_result.duplicate(true)
+	if session.scenario_status != "in_progress":
+		session.game_state = "outcome"
+	else:
+		_prepare_battle_resolution_overworld_state(session)
+	var save_result: Dictionary = {}
+	var saved := skip_required_save
+	if skip_required_save:
+		saved = true
+	else:
+		_battle_report_entry_save_attempt_count += 1
+		save_result = SaveService.save_runtime_autosave_session(session)
+		saved = bool(save_result.get("ok", false))
+		if not saved:
+			_battle_report_entry_save_failure_count += 1
+	var routed := _route_battle_report(BATTLE_REPORT_SCENE, "saved" if saved else "autosave_failed")
+	_battle_report_last_entry_result = _battle_report_result(
+		saved,
+		saved,
+		routed,
+		"saved" if saved else "autosave_failed",
+		"Battle report ready." if saved else BATTLE_REPORT_AUTOSAVE_FAILURE_MESSAGE,
+		"battle_report",
+		String(report.get("report_id", ""))
+	)
+	_battle_report_last_entry_result["save_result"] = save_result.duplicate(true)
+	return _battle_report_last_entry_result.duplicate(true)
+
+func complete_battle_report(skip_required_save: bool = false) -> Dictionary:
+	_battle_report_continue_request_count += 1
+	if not SessionState.has_playable_session():
+		_battle_report_last_continue_result = _battle_report_result(
+			false, false, false, "missing_session", "No expedition is available for this report.", "stay", ""
+		)
+		return _battle_report_last_continue_result.duplicate(true)
+	var session := SessionState.ensure_active_session()
+	var report := BattleRules.pending_battle_report(session)
+	if report.is_empty():
+		_battle_report_last_continue_result = _battle_report_result(
+			false, false, false, "missing_pending_report", "This battle report is no longer pending.", "stay", ""
+		)
+		return _battle_report_last_continue_result.duplicate(true)
+	var snapshot := session.to_dict()
+	var acknowledgement := BattleRules.acknowledge_pending_battle_report(session)
+	if not bool(acknowledgement.get("ok", false)):
+		_battle_report_last_continue_result = _battle_report_result(
+			false, false, false, "acknowledgement_failed", "The battle report could not be acknowledged.", "stay", String(report.get("report_id", ""))
+		)
+		return _battle_report_last_continue_result.duplicate(true)
+	var terminal := session.scenario_status != "in_progress"
+	var target_scene := SCENARIO_OUTCOME_SCENE if terminal else OVERWORLD_SCENE
+	var target := "scenario_outcome" if terminal else "overworld"
+	if terminal:
+		session.game_state = "outcome"
+	else:
+		_prepare_battle_resolution_overworld_state(session)
+	var save_result: Dictionary = {}
+	var saved := skip_required_save
+	if not skip_required_save:
+		_battle_report_continue_save_attempt_count += 1
+		save_result = SaveService.save_runtime_autosave_session(session)
+		saved = bool(save_result.get("ok", false))
+	if not saved:
+		session.from_dict(snapshot)
+		_battle_report_continue_save_failure_count += 1
+		_battle_report_last_continue_result = _battle_report_result(
+			false, false, false, "autosave_failed", BATTLE_REPORT_AUTOSAVE_FAILURE_MESSAGE, "stay", String(report.get("report_id", ""))
+		)
+		_battle_report_last_continue_result["save_result"] = save_result.duplicate(true)
+		return _battle_report_last_continue_result.duplicate(true)
+	var routed := _route_battle_report(target_scene, "acknowledged")
+	_battle_report_last_continue_result = _battle_report_result(
+		true, true, routed, "acknowledged", "Battle report acknowledged.", target, String(report.get("report_id", ""))
+	)
+	_battle_report_last_continue_result["save_result"] = save_result.duplicate(true)
+	return _battle_report_last_continue_result.duplicate(true)
+
+func _battle_report_result(
+	ok: bool,
+	saved: bool,
+	routed: bool,
+	reason: String,
+	message: String,
+	target: String,
+	report_id: String
+) -> Dictionary:
+	return {
+		"ok": ok,
+		"saved": saved,
+		"routed": routed,
+		"reason": reason,
+		"message": message,
+		"target": target,
+		"report_id": report_id,
+	}
+
+func _route_battle_report(scene_path: String, reason: String) -> bool:
+	_battle_report_route_attempt_count += 1
+	_battle_report_last_route = {
+		"target_scene": scene_path,
+		"target": "battle_report" if scene_path == BATTLE_REPORT_SCENE else "scenario_outcome" if scene_path == SCENARIO_OUTCOME_SCENE else "overworld" if scene_path == OVERWORLD_SCENE else "main_menu",
+		"reason": reason,
+		"suppressed": _validation_battle_report_routing_suppressed,
+	}
+	if _validation_battle_report_routing_suppressed:
+		_battle_report_suppressed_route_count += 1
+		return false
+	_change_scene(scene_path)
+	return true
+
+func validation_set_battle_report_routing_suppressed(suppressed: bool) -> void:
+	_validation_battle_report_routing_suppressed = suppressed
+
+func validation_reset_battle_report_state() -> void:
+	_battle_report_entry_request_count = 0
+	_battle_report_entry_save_attempt_count = 0
+	_battle_report_entry_save_failure_count = 0
+	_battle_report_continue_request_count = 0
+	_battle_report_continue_save_attempt_count = 0
+	_battle_report_continue_save_failure_count = 0
+	_battle_report_route_attempt_count = 0
+	_battle_report_suppressed_route_count = 0
+	_battle_report_last_entry_result = {}
+	_battle_report_last_continue_result = {}
+	_battle_report_last_route = {}
+
+func validation_battle_report_snapshot() -> Dictionary:
+	var report := BattleRules.pending_battle_report(SessionState.ensure_active_session()) if SessionState.has_playable_session() else {}
+	return {
+		"entry_request_count": _battle_report_entry_request_count,
+		"entry_save_attempt_count": _battle_report_entry_save_attempt_count,
+		"entry_save_failure_count": _battle_report_entry_save_failure_count,
+		"continue_request_count": _battle_report_continue_request_count,
+		"continue_save_attempt_count": _battle_report_continue_save_attempt_count,
+		"continue_save_failure_count": _battle_report_continue_save_failure_count,
+		"route_attempt_count": _battle_report_route_attempt_count,
+		"suppressed_route_count": _battle_report_suppressed_route_count,
+		"routing_suppressed": _validation_battle_report_routing_suppressed,
+		"pending": not report.is_empty(),
+		"report_id": String(report.get("report_id", "")),
+		"last_entry_result": _battle_report_last_entry_result.duplicate(true),
+		"last_continue_result": _battle_report_last_continue_result.duplicate(true),
+		"last_route": _battle_report_last_route.duplicate(true),
+	}
+
 func go_to_scenario_outcome(skip_required_save: bool = false) -> Dictionary:
 	_scenario_outcome_request_count += 1
 	if not SessionState.has_playable_session():
@@ -1382,6 +1562,9 @@ func go_to_scenario_outcome(skip_required_save: bool = false) -> Dictionary:
 		return _scenario_outcome_last_result.duplicate(true)
 
 	var session := SessionState.ensure_active_session()
+	if not BattleRules.pending_battle_report(session).is_empty():
+		var report_redirect := go_to_battle_report(true)
+		return report_redirect
 	if session.scenario_status == "in_progress":
 		_clear_scenario_outcome_recovery()
 		_scenario_outcome_last_result = _scenario_outcome_result(
@@ -1676,6 +1859,9 @@ func resume_active_session() -> void:
 		return
 
 	var session := SessionState.ensure_active_session()
+	if not BattleRules.pending_battle_report(session).is_empty():
+		go_to_battle_report(true)
+		return
 	if session.scenario_status != "in_progress":
 		go_to_scenario_outcome(true)
 		return
@@ -1822,6 +2008,8 @@ func _clear_pending_load_resumed_presentation() -> void:
 func _reconcile_pending_load_resumed_scene(scene_path: String) -> void:
 	if _pending_load_resumed_presentation.is_empty():
 		return
+	if scene_path == BATTLE_REPORT_SCENE:
+		return
 	if String(_pending_load_resumed_presentation.get("expected_scene_path", "")) != scene_path:
 		_clear_pending_load_resumed_presentation()
 
@@ -1962,6 +2150,8 @@ func _change_scene(scene_path: String) -> void:
 func _reconcile_pending_battle_resolution_overworld_scene(scene_path: String) -> void:
 	if _pending_battle_resolution_overworld_presentation.is_empty():
 		return
+	if scene_path == BATTLE_REPORT_SCENE:
+		return
 	if String(_pending_battle_resolution_overworld_presentation.get("expected_scene_path", "")) != scene_path:
 		_clear_pending_battle_resolution_overworld_presentation()
 
@@ -1971,6 +2161,8 @@ func _packed_scene_for_route(scene_path: String) -> PackedScene:
 			return MAIN_MENU_PACKED_SCENE
 		SCENARIO_OUTCOME_SCENE:
 			return SCENARIO_OUTCOME_PACKED_SCENE
+		BATTLE_REPORT_SCENE:
+			return BATTLE_REPORT_PACKED_SCENE
 		OVERWORLD_SCENE:
 			return OVERWORLD_PACKED_SCENE
 		BATTLE_SCENE:
