@@ -1,0 +1,2071 @@
+{
+  "schema_id": "town_integrated_building_scene_layout_v1",
+  "source_art_manifest": "res://content/building_art_manifest.json",
+  "development_scene_manifest": "res://content/town_development_scene_manifest.json",
+  "placement_model": "explicit_faction_ground_anchor_depth_and_perspective",
+  "missing_mapping_policy": "validation_failure_no_runtime_generated_plot",
+  "factions": {
+    "faction_embercourt": {
+      "base_stage": "village",
+      "source_size": [
+        1600,
+        900
+      ],
+      "modulate": [
+        0.88,
+        0.82,
+        0.76,
+        0.96
+      ],
+      "plots": [
+        {
+          "plot_id": "building_town_hall",
+          "building_ids": [
+            "building_town_hall"
+          ],
+          "anchor": [
+            0.695,
+            0.66
+          ],
+          "height_ratio": 0.245,
+          "embedded_in_base": true
+        },
+        {
+          "plot_id": "building_muster_yard",
+          "building_ids": [
+            "building_muster_yard",
+            "building_watch_barracks"
+          ],
+          "anchor": [
+            0.17,
+            0.64
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_wayfarers_hall",
+          "building_ids": [
+            "building_wayfarers_hall"
+          ],
+          "anchor": [
+            0.84,
+            0.7
+          ],
+          "height_ratio": 0.17,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_market_square",
+          "building_ids": [
+            "building_market_square"
+          ],
+          "anchor": [
+            0.28,
+            0.61
+          ],
+          "height_ratio": 0.13,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_stone_store",
+          "building_ids": [
+            "building_stone_store"
+          ],
+          "anchor": [
+            0.91,
+            0.59
+          ],
+          "height_ratio": 0.12,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_bowyer_lodge",
+          "building_ids": [
+            "building_bowyer_lodge",
+            "building_beacon_range"
+          ],
+          "anchor": [
+            0.6,
+            0.56
+          ],
+          "height_ratio": 0.12,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_river_granary_exchange",
+          "building_ids": [
+            "building_river_granary_exchange"
+          ],
+          "anchor": [
+            0.72,
+            0.68
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_quartermasters_depot",
+          "building_ids": [
+            "building_quartermasters_depot"
+          ],
+          "anchor": [
+            0.08,
+            0.7
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_citadel_pikehall",
+          "building_ids": [
+            "building_citadel_pikehall"
+          ],
+          "anchor": [
+            0.24,
+            0.74
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_lantern_archive",
+          "building_ids": [
+            "building_lantern_archive",
+            "building_starseer_annex"
+          ],
+          "anchor": [
+            0.92,
+            0.47
+          ],
+          "height_ratio": 0.1,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_granary_lock_exchange",
+          "building_ids": [
+            "building_embercourt_granary_lock_exchange"
+          ],
+          "anchor": [
+            0.91,
+            0.75
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_tollstone_weir",
+          "building_ids": [
+            "building_embercourt_tollstone_weir"
+          ],
+          "anchor": [
+            0.47,
+            0.72
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_bargebow_slip",
+          "building_ids": [
+            "building_embercourt_bargebow_slip"
+          ],
+          "anchor": [
+            0.59,
+            0.8
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_oath_pikehall",
+          "building_ids": [
+            "building_embercourt_oath_pikehall"
+          ],
+          "anchor": [
+            0.37,
+            0.82
+          ],
+          "height_ratio": 0.17,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_beacon_court",
+          "building_ids": [
+            "building_embercourt_beacon_court"
+          ],
+          "anchor": [
+            0.8,
+            0.82
+          ],
+          "height_ratio": 0.17,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_drake_sluice",
+          "building_ids": [
+            "building_embercourt_drake_sluice"
+          ],
+          "anchor": [
+            0.69,
+            0.88
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_charter_bastion",
+          "building_ids": [
+            "building_embercourt_charter_bastion",
+            "building_embercourt_charter_flame"
+          ],
+          "anchor": [
+            0.2,
+            0.85
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_lockhouse_tally",
+          "building_ids": [
+            "building_embercourt_lockhouse_tally"
+          ],
+          "anchor": [
+            0.07,
+            0.88
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_beacon_writs",
+          "building_ids": [
+            "building_embercourt_beacon_writs"
+          ],
+          "anchor": [
+            0.48,
+            0.9
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_lantern_court",
+          "building_ids": [
+            "building_embercourt_lantern_court"
+          ],
+          "anchor": [
+            0.92,
+            0.89
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_relief_quay",
+          "building_ids": [
+            "building_embercourt_relief_quay"
+          ],
+          "anchor": [
+            0.31,
+            0.93
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_signal_citadel",
+          "building_ids": [
+            "building_signal_citadel"
+          ],
+          "anchor": [
+            0.8,
+            0.94
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_charter_bastion",
+          "building_ids": [
+            "building_charter_bastion"
+          ],
+          "anchor": [
+            0.12,
+            0.52
+          ],
+          "height_ratio": 0.11,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_beaconline_charter_house",
+          "building_ids": [
+            "building_embercourt_beaconline_charter_house"
+          ],
+          "anchor": [
+            0.4,
+            0.57
+          ],
+          "height_ratio": 0.12,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_rainwrit_stormseal_treasury",
+          "building_ids": [
+            "building_embercourt_rainwrit_stormseal_treasury"
+          ],
+          "anchor": [
+            0.52,
+            0.64
+          ],
+          "height_ratio": 0.13,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_amberweir_sluiceguard_lock",
+          "building_ids": [
+            "building_embercourt_amberweir_sluiceguard_lock"
+          ],
+          "anchor": [
+            0.64,
+            0.93
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_embercourt_amberweir_counterweight_foundry",
+          "building_ids": [
+            "building_embercourt_amberweir_counterweight_foundry"
+          ],
+          "anchor": [
+            0.94,
+            0.96
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        }
+      ]
+    },
+    "faction_mireclaw": {
+      "base_stage": "village",
+      "source_size": [
+        1600,
+        900
+      ],
+      "modulate": [
+        0.72,
+        0.75,
+        0.58,
+        0.94
+      ],
+      "plots": [
+        {
+          "plot_id": "building_town_hall",
+          "building_ids": [
+            "building_town_hall"
+          ],
+          "anchor": [
+            0.55,
+            0.66
+          ],
+          "height_ratio": 0.245,
+          "embedded_in_base": true
+        },
+        {
+          "plot_id": "building_blackbranch_den",
+          "building_ids": [
+            "building_blackbranch_den",
+            "building_reed_warren"
+          ],
+          "anchor": [
+            0.33,
+            0.6
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_wayfarers_hall",
+          "building_ids": [
+            "building_wayfarers_hall"
+          ],
+          "anchor": [
+            0.74,
+            0.6
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_market_square",
+          "building_ids": [
+            "building_market_square"
+          ],
+          "anchor": [
+            0.2,
+            0.55
+          ],
+          "height_ratio": 0.12,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mire_pens",
+          "building_ids": [
+            "building_mire_pens",
+            "building_fenscale_pens"
+          ],
+          "anchor": [
+            0.42,
+            0.52
+          ],
+          "height_ratio": 0.13,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_slingers_post",
+          "building_ids": [
+            "building_slingers_post",
+            "building_rot_warren"
+          ],
+          "anchor": [
+            0.67,
+            0.51
+          ],
+          "height_ratio": 0.12,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_war_drum_circle",
+          "building_ids": [
+            "building_war_drum_circle"
+          ],
+          "anchor": [
+            0.86,
+            0.54
+          ],
+          "height_ratio": 0.13,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_gorefen_ring",
+          "building_ids": [
+            "building_gorefen_ring"
+          ],
+          "anchor": [
+            0.12,
+            0.63
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_lantern_archive",
+          "building_ids": [
+            "building_lantern_archive",
+            "building_starseer_annex"
+          ],
+          "anchor": [
+            0.28,
+            0.69
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_blackbranch_den",
+          "building_ids": [
+            "building_mireclaw_blackbranch_den"
+          ],
+          "anchor": [
+            0.48,
+            0.66
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_chainboom_ferry",
+          "building_ids": [
+            "building_mireclaw_chainboom_ferry"
+          ],
+          "anchor": [
+            0.71,
+            0.7
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_war_drum_circle",
+          "building_ids": [
+            "building_mireclaw_war_drum_circle"
+          ],
+          "anchor": [
+            0.89,
+            0.68
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_sporewake_shrine",
+          "building_ids": [
+            "building_mireclaw_sporewake_shrine"
+          ],
+          "anchor": [
+            0.1,
+            0.78
+          ],
+          "height_ratio": 0.17,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_floodtide_forge",
+          "building_ids": [
+            "building_mireclaw_floodtide_forge"
+          ],
+          "anchor": [
+            0.26,
+            0.82
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_nightglass_dominion",
+          "building_ids": [
+            "building_mireclaw_nightglass_dominion",
+            "building_mireclaw_oathmire_court"
+          ],
+          "anchor": [
+            0.43,
+            0.78
+          ],
+          "height_ratio": 0.17,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_antler_pit",
+          "building_ids": [
+            "building_mireclaw_antler_pit"
+          ],
+          "anchor": [
+            0.6,
+            0.84
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_reed_toll",
+          "building_ids": [
+            "building_mireclaw_reed_toll"
+          ],
+          "anchor": [
+            0.77,
+            0.8
+          ],
+          "height_ratio": 0.17,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_silt_watch",
+          "building_ids": [
+            "building_mireclaw_silt_watch"
+          ],
+          "anchor": [
+            0.91,
+            0.84
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_bog_oracle_nest",
+          "building_ids": [
+            "building_mireclaw_bog_oracle_nest"
+          ],
+          "anchor": [
+            0.08,
+            0.93
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_boneboom_palisade",
+          "building_ids": [
+            "building_mireclaw_boneboom_palisade"
+          ],
+          "anchor": [
+            0.24,
+            0.91
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_fenbell_hunt_lodge",
+          "building_ids": [
+            "building_mireclaw_fenbell_hunt_lodge"
+          ],
+          "anchor": [
+            0.4,
+            0.95
+          ],
+          "height_ratio": 0.2,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_floodtide_forge",
+          "building_ids": [
+            "building_floodtide_forge"
+          ],
+          "anchor": [
+            0.58,
+            0.92
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_smugglers_flotilla",
+          "building_ids": [
+            "building_smugglers_flotilla"
+          ],
+          "anchor": [
+            0.75,
+            0.96
+          ],
+          "height_ratio": 0.2,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_nightglass_dominion",
+          "building_ids": [
+            "building_nightglass_dominion"
+          ],
+          "anchor": [
+            0.9,
+            0.93
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_hollowreed_moonwax_ossuary",
+          "building_ids": [
+            "building_mireclaw_hollowreed_moonwax_ossuary"
+          ],
+          "anchor": [
+            0.56,
+            0.57
+          ],
+          "height_ratio": 0.13,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_moonbite_votive_drum_court",
+          "building_ids": [
+            "building_mireclaw_moonbite_votive_drum_court"
+          ],
+          "anchor": [
+            0.33,
+            0.88
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_mireclaw_moonbite_mirehorn_chain_pen",
+          "building_ids": [
+            "building_mireclaw_moonbite_mirehorn_chain_pen"
+          ],
+          "anchor": [
+            0.69,
+            0.89
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        }
+      ]
+    },
+    "faction_sunvault": {
+      "base_stage": "village",
+      "source_size": [
+        1600,
+        900
+      ],
+      "modulate": [
+        0.92,
+        0.92,
+        0.86,
+        0.94
+      ],
+      "plots": [
+        {
+          "plot_id": "building_town_hall",
+          "building_ids": [
+            "building_town_hall"
+          ],
+          "anchor": [
+            0.36,
+            0.66
+          ],
+          "height_ratio": 0.245,
+          "embedded_in_base": true
+        },
+        {
+          "plot_id": "building_shard_yard",
+          "building_ids": [
+            "building_shard_yard",
+            "building_mirror_forge"
+          ],
+          "anchor": [
+            0.54,
+            0.64
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_wayfarers_hall",
+          "building_ids": [
+            "building_wayfarers_hall"
+          ],
+          "anchor": [
+            0.79,
+            0.675
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_lens_tithe",
+          "building_ids": [
+            "building_sunvault_lens_tithe"
+          ],
+          "anchor": [
+            0.46,
+            0.56
+          ],
+          "height_ratio": 0.11,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_market_square",
+          "building_ids": [
+            "building_market_square"
+          ],
+          "anchor": [
+            0.58,
+            0.54
+          ],
+          "height_ratio": 0.11,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_relay_scribes",
+          "building_ids": [
+            "building_sunvault_relay_scribes"
+          ],
+          "anchor": [
+            0.7,
+            0.55
+          ],
+          "height_ratio": 0.11,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_prism_range",
+          "building_ids": [
+            "building_prism_range",
+            "building_lens_gallery"
+          ],
+          "anchor": [
+            0.82,
+            0.57
+          ],
+          "height_ratio": 0.11,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_duel_circle",
+          "building_ids": [
+            "building_duel_circle"
+          ],
+          "anchor": [
+            0.91,
+            0.54
+          ],
+          "height_ratio": 0.1,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_resonant_exchange",
+          "building_ids": [
+            "building_resonant_exchange"
+          ],
+          "anchor": [
+            0.18,
+            0.62
+          ],
+          "height_ratio": 0.13,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_harmonic_cloister",
+          "building_ids": [
+            "building_harmonic_cloister"
+          ],
+          "anchor": [
+            0.31,
+            0.67
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_aurora_spire",
+          "building_ids": [
+            "building_aurora_spire"
+          ],
+          "anchor": [
+            0.5,
+            0.71
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_daybreak_matrix",
+          "building_ids": [
+            "building_daybreak_matrix"
+          ],
+          "anchor": [
+            0.63,
+            0.69
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_shard_yard",
+          "building_ids": [
+            "building_sunvault_shard_yard"
+          ],
+          "anchor": [
+            0.76,
+            0.72
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_lens_gallery",
+          "building_ids": [
+            "building_sunvault_lens_gallery"
+          ],
+          "anchor": [
+            0.89,
+            0.69
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_mirror_forge",
+          "building_ids": [
+            "building_sunvault_mirror_forge"
+          ],
+          "anchor": [
+            0.14,
+            0.78
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_harmonic_cloister",
+          "building_ids": [
+            "building_sunvault_harmonic_cloister"
+          ],
+          "anchor": [
+            0.28,
+            0.82
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_zenith_observatory",
+          "building_ids": [
+            "building_sunvault_zenith_observatory"
+          ],
+          "anchor": [
+            0.43,
+            0.79
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_aurora_spire",
+          "building_ids": [
+            "building_sunvault_aurora_spire"
+          ],
+          "anchor": [
+            0.58,
+            0.84
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_daybreak_matrix",
+          "building_ids": [
+            "building_sunvault_daybreak_matrix",
+            "building_sunvault_zenith_court"
+          ],
+          "anchor": [
+            0.73,
+            0.8
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_prism_oratory",
+          "building_ids": [
+            "building_sunvault_prism_oratory"
+          ],
+          "anchor": [
+            0.88,
+            0.84
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_halo_battery_yard",
+          "building_ids": [
+            "building_sunvault_halo_battery_yard"
+          ],
+          "anchor": [
+            0.12,
+            0.92
+          ],
+          "height_ratio": 0.17,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_lantern_archive",
+          "building_ids": [
+            "building_lantern_archive",
+            "building_starseer_annex"
+          ],
+          "anchor": [
+            0.27,
+            0.94
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_zenith_relay_hall",
+          "building_ids": [
+            "building_sunvault_zenith_relay_hall"
+          ],
+          "anchor": [
+            0.43,
+            0.91
+          ],
+          "height_ratio": 0.17,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_meridian_seven_facet_orrery",
+          "building_ids": [
+            "building_sunvault_meridian_seven_facet_orrery"
+          ],
+          "anchor": [
+            0.6,
+            0.95
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_splitprism_parallax_duel_hall",
+          "building_ids": [
+            "building_sunvault_splitprism_parallax_duel_hall"
+          ],
+          "anchor": [
+            0.77,
+            0.92
+          ],
+          "height_ratio": 0.17,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_sunvault_splitprism_heliograph_battery",
+          "building_ids": [
+            "building_sunvault_splitprism_heliograph_battery"
+          ],
+          "anchor": [
+            0.91,
+            0.94
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        }
+      ]
+    },
+    "faction_thornwake": {
+      "base_stage": "village",
+      "source_size": [
+        1600,
+        900
+      ],
+      "modulate": [
+        0.72,
+        0.82,
+        0.62,
+        0.94
+      ],
+      "plots": [
+        {
+          "plot_id": "building_town_hall",
+          "building_ids": [
+            "building_town_hall"
+          ],
+          "anchor": [
+            0.545,
+            0.66
+          ],
+          "height_ratio": 0.255,
+          "embedded_in_base": true
+        },
+        {
+          "plot_id": "building_thornwake_seed_vault",
+          "building_ids": [
+            "building_thornwake_seed_vault"
+          ],
+          "anchor": [
+            0.31,
+            0.65
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_wayfarers_hall",
+          "building_ids": [
+            "building_wayfarers_hall"
+          ],
+          "anchor": [
+            0.76,
+            0.66
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_market_square",
+          "building_ids": [
+            "building_market_square"
+          ],
+          "anchor": [
+            0.26,
+            0.54
+          ],
+          "height_ratio": 0.11,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_rootroad_markers",
+          "building_ids": [
+            "building_thornwake_rootroad_markers"
+          ],
+          "anchor": [
+            0.72,
+            0.54
+          ],
+          "height_ratio": 0.11,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_loam_ledger",
+          "building_ids": [
+            "building_thornwake_loam_ledger"
+          ],
+          "anchor": [
+            0.84,
+            0.57
+          ],
+          "height_ratio": 0.12,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_pollen_litany",
+          "building_ids": [
+            "building_thornwake_pollen_litany"
+          ],
+          "anchor": [
+            0.92,
+            0.54
+          ],
+          "height_ratio": 0.11,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_bramblewall_coppice",
+          "building_ids": [
+            "building_thornwake_bramblewall_coppice"
+          ],
+          "anchor": [
+            0.12,
+            0.65
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_old_grove_accord",
+          "building_ids": [
+            "building_thornwake_old_grove_accord"
+          ],
+          "anchor": [
+            0.23,
+            0.7
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_rootweave_tithe",
+          "building_ids": [
+            "building_thornwake_rootweave_tithe"
+          ],
+          "anchor": [
+            0.4,
+            0.68
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_bramble_marshal_moot",
+          "building_ids": [
+            "building_thornwake_bramble_marshal_moot"
+          ],
+          "anchor": [
+            0.7,
+            0.7
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_spore_oath_chantry",
+          "building_ids": [
+            "building_thornwake_spore_oath_chantry"
+          ],
+          "anchor": [
+            0.84,
+            0.72
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_thornwarden_husk_yard",
+          "building_ids": [
+            "building_thornwake_thornwarden_husk_yard"
+          ],
+          "anchor": [
+            0.93,
+            0.68
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_worldroot_gate",
+          "building_ids": [
+            "building_thornwake_verdant_concord_seat",
+            "building_thornwake_worldroot_gate"
+          ],
+          "anchor": [
+            0.11,
+            0.79
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_root_cairn_watch",
+          "building_ids": [
+            "building_thornwake_root_cairn_watch"
+          ],
+          "anchor": [
+            0.26,
+            0.83
+          ],
+          "height_ratio": 0.17,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_sap_chandler_grove",
+          "building_ids": [
+            "building_thornwake_sap_chandler_grove"
+          ],
+          "anchor": [
+            0.41,
+            0.79
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_bastion_seed_conclave",
+          "building_ids": [
+            "building_thornwake_bastion_seed_conclave"
+          ],
+          "anchor": [
+            0.57,
+            0.85
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_mycorrhizal_store",
+          "building_ids": [
+            "building_thornwake_mycorrhizal_store"
+          ],
+          "anchor": [
+            0.72,
+            0.8
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_rootlaw_moot",
+          "building_ids": [
+            "building_thornwake_rootlaw_moot"
+          ],
+          "anchor": [
+            0.86,
+            0.84
+          ],
+          "height_ratio": 0.17,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_bramble_toll",
+          "building_ids": [
+            "building_thornwake_bramble_toll"
+          ],
+          "anchor": [
+            0.94,
+            0.79
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_sporeglass_hothouse",
+          "building_ids": [
+            "building_thornwake_sporeglass_hothouse"
+          ],
+          "anchor": [
+            0.09,
+            0.93
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_barkmantle_run",
+          "building_ids": [
+            "building_thornwake_barkmantle_run"
+          ],
+          "anchor": [
+            0.24,
+            0.95
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_pilgrim_orchard",
+          "building_ids": [
+            "building_thornwake_pilgrim_orchard"
+          ],
+          "anchor": [
+            0.4,
+            0.92
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_graftworks",
+          "building_ids": [
+            "building_thornwake_graftworks"
+          ],
+          "anchor": [
+            0.56,
+            0.96
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_canopy_breach_grove",
+          "building_ids": [
+            "building_thornwake_canopy_breach_grove"
+          ],
+          "anchor": [
+            0.72,
+            0.92
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_seedglass_cantory",
+          "building_ids": [
+            "building_thornwake_seedglass_cantory"
+          ],
+          "anchor": [
+            0.88,
+            0.95
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_crownroot_heartseed_parliament",
+          "building_ids": [
+            "building_thornwake_crownroot_heartseed_parliament"
+          ],
+          "anchor": [
+            0.46,
+            0.57
+          ],
+          "height_ratio": 0.12,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_woundroot_rootmaul_hollow",
+          "building_ids": [
+            "building_thornwake_woundroot_rootmaul_hollow"
+          ],
+          "anchor": [
+            0.63,
+            0.58
+          ],
+          "height_ratio": 0.12,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_thornwake_woundroot_hearthseed_nursery",
+          "building_ids": [
+            "building_thornwake_woundroot_hearthseed_nursery"
+          ],
+          "anchor": [
+            0.48,
+            0.88
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        }
+      ]
+    },
+    "faction_brasshollow": {
+      "base_stage": "village",
+      "source_size": [
+        1600,
+        900
+      ],
+      "modulate": [
+        0.68,
+        0.62,
+        0.58,
+        0.94
+      ],
+      "plots": [
+        {
+          "plot_id": "building_town_hall",
+          "building_ids": [
+            "building_town_hall"
+          ],
+          "anchor": [
+            0.185,
+            0.75
+          ],
+          "height_ratio": 0.26,
+          "embedded_in_base": true
+        },
+        {
+          "plot_id": "building_brasshollow_ore_tithe_office",
+          "building_ids": [
+            "building_brasshollow_ore_tithe_office"
+          ],
+          "anchor": [
+            0.39,
+            0.63
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_wayfarers_hall",
+          "building_ids": [
+            "building_wayfarers_hall"
+          ],
+          "anchor": [
+            0.67,
+            0.65
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_market_square",
+          "building_ids": [
+            "building_market_square"
+          ],
+          "anchor": [
+            0.5,
+            0.51
+          ],
+          "height_ratio": 0.11,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_scalehouse",
+          "building_ids": [
+            "building_brasshollow_scalehouse"
+          ],
+          "anchor": [
+            0.65,
+            0.54
+          ],
+          "height_ratio": 0.12,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_clause_court",
+          "building_ids": [
+            "building_brasshollow_clause_court"
+          ],
+          "anchor": [
+            0.79,
+            0.51
+          ],
+          "height_ratio": 0.11,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_heatwright_vestry",
+          "building_ids": [
+            "building_brasshollow_heatwright_vestry"
+          ],
+          "anchor": [
+            0.9,
+            0.55
+          ],
+          "height_ratio": 0.12,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_gauge_arsenal",
+          "building_ids": [
+            "building_brasshollow_gauge_arsenal"
+          ],
+          "anchor": [
+            0.28,
+            0.65
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_debtworks_vault",
+          "building_ids": [
+            "building_brasshollow_debtworks_vault"
+          ],
+          "anchor": [
+            0.44,
+            0.69
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_ledger_mint",
+          "building_ids": [
+            "building_brasshollow_ledger_mint"
+          ],
+          "anchor": [
+            0.58,
+            0.66
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_foreman_clausehouse",
+          "building_ids": [
+            "building_brasshollow_foreman_clausehouse"
+          ],
+          "anchor": [
+            0.72,
+            0.7
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_caliper_sanctum",
+          "building_ids": [
+            "building_brasshollow_caliper_sanctum"
+          ],
+          "anchor": [
+            0.85,
+            0.66
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_redline_assembly_yard",
+          "building_ids": [
+            "building_brasshollow_redline_assembly_yard"
+          ],
+          "anchor": [
+            0.94,
+            0.71
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_titan_charter_hall",
+          "building_ids": [
+            "building_brasshollow_brassbound_directorate",
+            "building_brasshollow_titan_charter_hall"
+          ],
+          "anchor": [
+            0.3,
+            0.79
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_quenchwright_bay",
+          "building_ids": [
+            "building_brasshollow_quenchwright_bay"
+          ],
+          "anchor": [
+            0.46,
+            0.83
+          ],
+          "height_ratio": 0.17,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_rail_tax_office",
+          "building_ids": [
+            "building_brasshollow_rail_tax_office"
+          ],
+          "anchor": [
+            0.62,
+            0.79
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_warrant_engine_house",
+          "building_ids": [
+            "building_brasshollow_warrant_engine_house"
+          ],
+          "anchor": [
+            0.77,
+            0.85
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_rivet_kennels",
+          "building_ids": [
+            "building_brasshollow_rivet_kennels"
+          ],
+          "anchor": [
+            0.9,
+            0.8
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_pavis_foundry",
+          "building_ids": [
+            "building_brasshollow_pavis_foundry"
+          ],
+          "anchor": [
+            0.09,
+            0.89
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_boiler_cathedral",
+          "building_ids": [
+            "building_brasshollow_boiler_cathedral"
+          ],
+          "anchor": [
+            0.25,
+            0.92
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_pressure_rail",
+          "building_ids": [
+            "building_brasshollow_pressure_rail"
+          ],
+          "anchor": [
+            0.42,
+            0.95
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_crucible_dock",
+          "building_ids": [
+            "building_brasshollow_crucible_dock"
+          ],
+          "anchor": [
+            0.59,
+            0.92
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_redline_charter_bay",
+          "building_ids": [
+            "building_brasshollow_redline_charter_bay"
+          ],
+          "anchor": [
+            0.76,
+            0.96
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_quenchbell_mortar_bay",
+          "building_ids": [
+            "building_brasshollow_quenchbell_mortar_bay"
+          ],
+          "anchor": [
+            0.92,
+            0.92
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_blackbell_grand_assay_bell",
+          "building_ids": [
+            "building_brasshollow_blackbell_grand_assay_bell"
+          ],
+          "anchor": [
+            0.52,
+            0.59
+          ],
+          "height_ratio": 0.13,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_whitegauge_datum_railhouse",
+          "building_ids": [
+            "building_brasshollow_whitegauge_datum_railhouse"
+          ],
+          "anchor": [
+            0.75,
+            0.59
+          ],
+          "height_ratio": 0.13,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_brasshollow_whitegauge_breach_pressure_foundry",
+          "building_ids": [
+            "building_brasshollow_whitegauge_breach_pressure_foundry"
+          ],
+          "anchor": [
+            0.53,
+            0.88
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        }
+      ]
+    },
+    "faction_veilmourn": {
+      "base_stage": "village",
+      "source_size": [
+        1600,
+        900
+      ],
+      "modulate": [
+        0.62,
+        0.7,
+        0.78,
+        0.92
+      ],
+      "plots": [
+        {
+          "plot_id": "building_town_hall",
+          "building_ids": [
+            "building_town_hall"
+          ],
+          "anchor": [
+            0.385,
+            0.67
+          ],
+          "height_ratio": 0.255,
+          "embedded_in_base": true
+        },
+        {
+          "plot_id": "building_veilmourn_bell_harbor",
+          "building_ids": [
+            "building_veilmourn_bell_harbor"
+          ],
+          "anchor": [
+            0.58,
+            0.63
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_wayfarers_hall",
+          "building_ids": [
+            "building_wayfarers_hall"
+          ],
+          "anchor": [
+            0.79,
+            0.66
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_market_square",
+          "building_ids": [
+            "building_market_square"
+          ],
+          "anchor": [
+            0.5,
+            0.53
+          ],
+          "height_ratio": 0.11,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_fog_signal_buoys",
+          "building_ids": [
+            "building_veilmourn_fog_signal_buoys"
+          ],
+          "anchor": [
+            0.64,
+            0.56
+          ],
+          "height_ratio": 0.12,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_salvage_ledger",
+          "building_ids": [
+            "building_veilmourn_salvage_ledger"
+          ],
+          "anchor": [
+            0.76,
+            0.53
+          ],
+          "height_ratio": 0.11,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_wake_oratory",
+          "building_ids": [
+            "building_veilmourn_wake_oratory"
+          ],
+          "anchor": [
+            0.88,
+            0.57
+          ],
+          "height_ratio": 0.12,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_black_sail_loft",
+          "building_ids": [
+            "building_veilmourn_black_sail_loft"
+          ],
+          "anchor": [
+            0.12,
+            0.62
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_memory_anchor",
+          "building_ids": [
+            "building_veilmourn_memory_anchor"
+          ],
+          "anchor": [
+            0.26,
+            0.67
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_salt_counting_house",
+          "building_ids": [
+            "building_veilmourn_salt_counting_house"
+          ],
+          "anchor": [
+            0.5,
+            0.68
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_mourner_pilot_guild",
+          "building_ids": [
+            "building_veilmourn_mourner_pilot_guild"
+          ],
+          "anchor": [
+            0.66,
+            0.7
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_tideglass_chapel",
+          "building_ids": [
+            "building_veilmourn_tideglass_chapel"
+          ],
+          "anchor": [
+            0.8,
+            0.68
+          ],
+          "height_ratio": 0.14,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_drowned_map_room",
+          "building_ids": [
+            "building_veilmourn_drowned_map_room"
+          ],
+          "anchor": [
+            0.93,
+            0.71
+          ],
+          "height_ratio": 0.15,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_leviathan_sounding",
+          "building_ids": [
+            "building_veilmourn_memory_rite_court",
+            "building_veilmourn_leviathan_sounding"
+          ],
+          "anchor": [
+            0.12,
+            0.78
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_bell_chain_watch",
+          "building_ids": [
+            "building_veilmourn_bell_chain_watch"
+          ],
+          "anchor": [
+            0.27,
+            0.82
+          ],
+          "height_ratio": 0.17,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_saltwake_factor",
+          "building_ids": [
+            "building_veilmourn_saltwake_factor"
+          ],
+          "anchor": [
+            0.44,
+            0.79
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_drowned_admiralty",
+          "building_ids": [
+            "building_veilmourn_drowned_admiralty"
+          ],
+          "anchor": [
+            0.6,
+            0.84
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_ransom_exchange",
+          "building_ids": [
+            "building_veilmourn_ransom_exchange"
+          ],
+          "anchor": [
+            0.76,
+            0.8
+          ],
+          "height_ratio": 0.16,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_mirror_drydock",
+          "building_ids": [
+            "building_veilmourn_mirror_drydock"
+          ],
+          "anchor": [
+            0.9,
+            0.84
+          ],
+          "height_ratio": 0.17,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_harpoon_gantry",
+          "building_ids": [
+            "building_veilmourn_harpoon_gantry"
+          ],
+          "anchor": [
+            0.1,
+            0.91
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_obituary_vault",
+          "building_ids": [
+            "building_veilmourn_obituary_vault"
+          ],
+          "anchor": [
+            0.25,
+            0.95
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_mistgate_slip",
+          "building_ids": [
+            "building_veilmourn_mistgate_slip"
+          ],
+          "anchor": [
+            0.42,
+            0.91
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_wakeglass_chart_house",
+          "building_ids": [
+            "building_veilmourn_wakeglass_chart_house"
+          ],
+          "anchor": [
+            0.59,
+            0.96
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_saltwake_eulogy_house",
+          "building_ids": [
+            "building_veilmourn_saltwake_eulogy_house"
+          ],
+          "anchor": [
+            0.76,
+            0.92
+          ],
+          "height_ratio": 0.18,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_pale_sounding_last_memory_beacon",
+          "building_ids": [
+            "building_veilmourn_pale_sounding_last_memory_beacon"
+          ],
+          "anchor": [
+            0.91,
+            0.95
+          ],
+          "height_ratio": 0.19,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_dreamwake_tideglass_oratory",
+          "building_ids": [
+            "building_veilmourn_dreamwake_tideglass_oratory"
+          ],
+          "anchor": [
+            0.46,
+            0.59
+          ],
+          "height_ratio": 0.13,
+          "embedded_in_base": false
+        },
+        {
+          "plot_id": "building_veilmourn_dreamwake_foganchor_slip",
+          "building_ids": [
+            "building_veilmourn_dreamwake_foganchor_slip"
+          ],
+          "anchor": [
+            0.7,
+            0.59
+          ],
+          "height_ratio": 0.13,
+          "embedded_in_base": false
+        }
+      ]
+    }
+  }
+}

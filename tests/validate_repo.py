@@ -268,6 +268,8 @@ TOWN_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownShell.gd"
 TOWN_STAGE_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownStageView.gd"
 TOWN_VFX_MANIFEST_PATH = CONTENT_DIR / "town_vfx_manifest.json"
 TOWN_DEVELOPMENT_SCENE_MANIFEST_PATH = CONTENT_DIR / "town_development_scene_manifest.json"
+TOWN_BUILDING_SCENE_LAYOUT_PATH = CONTENT_DIR / "town_building_scene_layouts.json"
+TOWN_BUILDING_SCENE_LAYOUT_GENERATOR_PATH = ROOT / "tools" / "generate_town_building_scene_layouts.py"
 COMPLETE_TOWN_BACKDROP_REPORT_SCRIPT_PATH = ROOT / "tests" / "complete_town_backdrop_runtime_report.gd"
 COMPLETE_TOWN_BACKDROP_REPORT_SCENE_PATH = ROOT / "tests" / "complete_town_backdrop_runtime_report.tscn"
 TOWN_BUILDING_SKYLINE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_building_skyline_progression_report.gd"
@@ -30747,6 +30749,8 @@ def validate_town_building_skyline_progression(errors: list[str]) -> None:
     required_paths = (
         TOWN_STAGE_SCRIPT_PATH,
         TOWN_DEVELOPMENT_SCENE_MANIFEST_PATH,
+        TOWN_BUILDING_SCENE_LAYOUT_PATH,
+        TOWN_BUILDING_SCENE_LAYOUT_GENERATOR_PATH,
         TOWN_BUILDING_SKYLINE_REPORT_SCRIPT_PATH,
         TOWN_BUILDING_SKYLINE_REPORT_SCENE_PATH,
         TOWN_DEVELOPMENT_FIRST_IMPORT_PROBE_SCRIPT_PATH,
@@ -30759,15 +30763,20 @@ def validate_town_building_skyline_progression(errors: list[str]) -> None:
 
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
-        'const DEVELOPMENT_SCENE_MODEL := "authoritative_seamless_faction_settlement_stages"',
-        'const DEVELOPMENT_SCENE_STAGE_ORDER := ["village", "developing", "fully_built"]',
+        'const DEVELOPMENT_SCENE_MODEL := "authoritative_integrated_per_building_settlement"',
+        'const INTEGRATED_BUILDING_MODEL := "explicit_faction_ground_anchor_depth_and_perspective"',
+        'const TOWN_BUILDING_SCENE_LAYOUT_PATH := "res://content/town_building_scene_layouts.json"',
         "const FACTION_DEVELOPMENT_SCENE_PATHS := {",
         "func _development_scene_texture(faction_id: String, stage_id: String) -> Texture2D:",
         "func _development_scene_import_payload_exists(texture_path: String) -> bool:",
         'ResourceLoader.load(texture_path, "Texture2D")',
         "ImageTexture.create_from_image(source_image)",
-        "func _town_development_stage_id() -> String:",
+        "func _town_building_scene_entries(scene_rect: Rect2) -> Array:",
+        "func _draw_integrated_buildings(scene_rect: Rect2) -> void:",
+        "func _sync_building_hotspots() -> void:",
+        "signal building_activated(building_id: String)",
         "func validation_town_building_progression_summary() -> Dictionary:",
+        '"integrated_building_layers_enabled": true',
         '"isolated_building_overlay_enabled": false',
         '"construction_stake_overlay_enabled": false',
         '"faction_development_scene"',
@@ -30776,7 +30785,6 @@ def validate_town_building_skyline_progression(errors: list[str]) -> None:
     for forbidden_token in (
         "func _draw_scenic_building_progression(scene_rect: Rect2) -> void:",
         "func _draw_unbuilt_plot_stakes(",
-        "TownRulesScript.building_icon_path(building_id)",
         "_draw_scenic_building_progression(scene_rect)",
         'preload("res://art/towns/runtime/backdrops/development_scenes/',
     ):
@@ -30786,9 +30794,16 @@ def validate_town_building_skyline_progression(errors: list[str]) -> None:
     ensure(draw_match is not None, errors, "Could not isolate TownStageView seamless scene draw order")
     draw_order = [
         draw_block.find("_draw_scenic_backdrop(scene_rect)"),
+        draw_block.find("_draw_integrated_buildings(scene_rect)"),
         draw_block.find("_draw_status_plaques(scene_rect)"),
     ]
-    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Town status overlays must draw after the seamless development scene")
+    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Town building layers must draw over the base scene and below status overlays")
+
+    layout_manifest = load_json(TOWN_BUILDING_SCENE_LAYOUT_PATH)
+    ensure(layout_manifest.get("schema_id") == "town_integrated_building_scene_layout_v1", errors, "Town building scene-layout manifest schema must remain explicit")
+    ensure(layout_manifest.get("placement_model") == "explicit_faction_ground_anchor_depth_and_perspective", errors, "Town building scene-layout manifest must retain authored faction placement")
+    ensure(layout_manifest.get("missing_mapping_policy") == "validation_failure_no_runtime_generated_plot", errors, "Town building scene-layout manifest must fail closed on missing mappings")
+    layout_factions = layout_manifest.get("factions", {}) if isinstance(layout_manifest.get("factions"), dict) else {}
 
     manifest = load_json(TOWN_DEVELOPMENT_SCENE_MANIFEST_PATH)
     ensure(manifest.get("schema_id") == "town_development_scene_manifest_v1", errors, "Town development scene manifest schema must remain explicit")
@@ -30797,6 +30812,27 @@ def validate_town_building_skyline_progression(errors: list[str]) -> None:
         "faction_embercourt", "faction_mireclaw", "faction_sunvault",
         "faction_thornwake", "faction_brasshollow", "faction_veilmourn",
     }
+    ensure(set(layout_factions) == expected_factions, errors, "Town building scene-layout manifest must cover the six live factions exactly")
+    building_ids = {str(item.get("id", "")) for item in load_json(CONTENT_DIR / "buildings.json").get("items", []) if isinstance(item, dict)}
+    for faction_id in sorted(expected_factions):
+        layout = layout_factions.get(faction_id, {}) if isinstance(layout_factions.get(faction_id), dict) else {}
+        plots = layout.get("plots", []) if isinstance(layout.get("plots"), list) else []
+        mapped_ids: list[str] = []
+        ensure(layout.get("base_stage") == "village", errors, f"{faction_id} integrated Town layout must retain the empty village base")
+        ensure(layout.get("source_size") == [1600, 900], errors, f"{faction_id} integrated Town layout source size drifted")
+        ensure(len(plots) >= 20, errors, f"{faction_id} integrated Town layout needs authored plots for its catalog")
+        for plot in plots:
+            if not isinstance(plot, dict):
+                ensure(False, errors, f"{faction_id} integrated Town layout contains a non-object plot")
+                continue
+            anchor = plot.get("anchor", [])
+            ids = plot.get("building_ids", [])
+            ensure(isinstance(anchor, list) and len(anchor) == 2 and all(isinstance(value, (int, float)) and 0.0 <= float(value) <= 1.0 for value in anchor), errors, f"{faction_id} integrated Town plot has an invalid normalized anchor")
+            ensure(isinstance(ids, list) and bool(ids), errors, f"{faction_id} integrated Town plot has no building variants")
+            for building_id in ids if isinstance(ids, list) else []:
+                ensure(building_id in building_ids, errors, f"{faction_id} integrated Town plot references unknown building {building_id}")
+                mapped_ids.append(str(building_id))
+        ensure(len(mapped_ids) == len(set(mapped_ids)), errors, f"{faction_id} integrated Town layout maps a building more than once")
     ensure(set(factions) == expected_factions, errors, "Town development scene manifest must cover the six live factions exactly")
     runtime_hashes: set[str] = set()
     for faction_id in sorted(expected_factions):
@@ -30822,11 +30858,12 @@ def validate_town_building_skyline_progression(errors: list[str]) -> None:
         "town_rows.size() == 32",
         "TownRules.build_active_town(session, building_id)",
         "restored.from_dict(session.to_dict())",
-        'String(restored_summary.get("stage_id", "")) == "developing"',
-        '"isolated_building_overlay_enabled"',
+        '"integrated_building_layers_enabled"',
+        '"all_visible_hotspots_aligned"',
+        'validation_activate_building_information',
         '"faction_development_scene"',
-        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
-        'const EXPECTED_STAGES := ["village", "developing", "fully_built"]',
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(2048, 1079)]',
+        'for stage_id_value in ["sparse", "developing", "developed"]',
     ):
         ensure(token in report_text, errors, f"Town development-scene focused report is missing required live proof: {token}")
     scene_text = TOWN_BUILDING_SKYLINE_REPORT_SCENE_PATH.read_text(encoding="utf-8")
@@ -32971,7 +33008,7 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         "OverworldRules.set_active_town_visit(session, placement_id)",
         'String(summary.get("selection_scope", "")) == "faction_development_scene"',
         'String(summary.get("development_stage", "")) == "village"',
-        'String(summary.get("development_model", "")) == "authoritative_seamless_faction_settlement_stages"',
+        'String(summary.get("development_model", "")) == "authoritative_integrated_per_building_settlement"',
         'summary.get("texture_size", Vector2.ZERO) == Vector2(1600, 900)',
         "viewport_texture.get_image().save_png",
         "session.to_dict() == authority_before",

@@ -256,7 +256,7 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 			or String(live_summary.get("mapped_path", "")) != String(TOWN_SCENIC_BACKDROP_PATHS.get("faction_embercourt", "")) \
 			or String(live_summary.get("selection_scope", "")) != "faction_development_scene" \
 			or String(live_summary.get("development_stage", "")) != "village" \
-			or String(live_summary.get("development_model", "")) != "authoritative_seamless_faction_settlement_stages" \
+			or String(live_summary.get("development_model", "")) != "authoritative_integrated_per_building_settlement" \
 			or not bool(live_summary.get("texture_loaded", false)) \
 			or String(live_summary.get("rendering_mode", "")) != "cover_crop_scenic_backdrop" \
 			or bool(live_summary.get("procedural_fallback", true)):
@@ -322,7 +322,7 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 					or String(summary.get("mapped_path", "")) != String(TOWN_SCENIC_BACKDROP_PATHS.get(faction_id, "")) \
 					or String(summary.get("selection_scope", "")) != "faction_development_scene" \
 					or String(summary.get("development_stage", "")) != "village" \
-					or String(summary.get("development_model", "")) != "authoritative_seamless_faction_settlement_stages" \
+					or String(summary.get("development_model", "")) != "authoritative_integrated_per_building_settlement" \
 					or not bool(summary.get("texture_loaded", false)) \
 					or summary.get("texture_size", Vector2.ZERO) != Vector2(1600.0, 900.0) \
 					or String(summary.get("rendering_mode", "")) != "cover_crop_scenic_backdrop" \
