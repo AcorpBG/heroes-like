@@ -1,0 +1,234 @@
+[gd_scene load_steps=2 format=3 uid="uid://battle_report_shell"]
+
+[ext_resource type="Script" path="res://scenes/battle/BattleReportShell.gd" id="1"]
+
+[node name="BattleReportShell" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="BackdropArt" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+modulate = Color(0.42, 0.42, 0.42, 1)
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BackdropVeil" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.018, 0.025, 0.031, 0.68)
+
+[node name="ContentMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 14
+
+[node name="Content" type="VBoxContainer" parent="ContentMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="HeaderPanel" type="PanelContainer" parent="ContentMargin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HeaderPad" type="MarginContainer" parent="ContentMargin/Content/HeaderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 10
+
+[node name="HeaderBox" type="VBoxContainer" parent="ContentMargin/Content/HeaderPanel/HeaderPad"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TopLine" type="HBoxContainer" parent="ContentMargin/Content/HeaderPanel/HeaderPad/HeaderBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Outcome" type="Label" parent="ContentMargin/Content/HeaderPanel/HeaderPad/HeaderBox/TopLine"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(132, 0)
+layout_mode = 2
+text = "Victory"
+
+[node name="BattleName" type="Label" parent="ContentMargin/Content/HeaderPanel/HeaderPad/HeaderBox/TopLine"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+clip_text = true
+text = "Battle Report"
+
+[node name="Meta" type="Label" parent="ContentMargin/Content/HeaderPanel/HeaderPad/HeaderBox/TopLine"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Day 1 • 1 round"
+
+[node name="Summary" type="Label" parent="ContentMargin/Content/HeaderPanel/HeaderPad/HeaderBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+max_lines_visible = 2
+text = "The battle is resolved."
+
+[node name="CasualtyScroll" type="ScrollContainer" parent="ContentMargin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="CasualtyGrid" type="GridContainer" parent="ContentMargin/Content/CasualtyScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="PlayerPanel" type="PanelContainer" parent="ContentMargin/Content/CasualtyScroll/CasualtyGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(420, 270)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlayerPad" type="MarginContainer" parent="ContentMargin/Content/CasualtyScroll/CasualtyGrid/PlayerPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="PlayerBox" type="VBoxContainer" parent="ContentMargin/Content/CasualtyScroll/CasualtyGrid/PlayerPanel/PlayerPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PlayerTitle" type="Label" parent="ContentMargin/Content/CasualtyScroll/CasualtyGrid/PlayerPanel/PlayerPad/PlayerBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Your forces"
+
+[node name="PlayerTotals" type="Label" parent="ContentMargin/Content/CasualtyScroll/CasualtyGrid/PlayerPanel/PlayerPad/PlayerBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Deployed 0   Survived 0   Lost 0"
+
+[node name="PlayerDivider" type="HSeparator" parent="ContentMargin/Content/CasualtyScroll/CasualtyGrid/PlayerPanel/PlayerPad/PlayerBox"]
+layout_mode = 2
+
+[node name="PlayerRows" type="VBoxContainer" parent="ContentMargin/Content/CasualtyScroll/CasualtyGrid/PlayerPanel/PlayerPad/PlayerBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 7
+
+[node name="EnemyPanel" type="PanelContainer" parent="ContentMargin/Content/CasualtyScroll/CasualtyGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(420, 270)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EnemyPad" type="MarginContainer" parent="ContentMargin/Content/CasualtyScroll/CasualtyGrid/EnemyPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="EnemyBox" type="VBoxContainer" parent="ContentMargin/Content/CasualtyScroll/CasualtyGrid/EnemyPanel/EnemyPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="EnemyTitle" type="Label" parent="ContentMargin/Content/CasualtyScroll/CasualtyGrid/EnemyPanel/EnemyPad/EnemyBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Enemy forces"
+
+[node name="EnemyTotals" type="Label" parent="ContentMargin/Content/CasualtyScroll/CasualtyGrid/EnemyPanel/EnemyPad/EnemyBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Deployed 0   Survived 0   Lost 0"
+
+[node name="EnemyDivider" type="HSeparator" parent="ContentMargin/Content/CasualtyScroll/CasualtyGrid/EnemyPanel/EnemyPad/EnemyBox"]
+layout_mode = 2
+
+[node name="EnemyRows" type="VBoxContainer" parent="ContentMargin/Content/CasualtyScroll/CasualtyGrid/EnemyPanel/EnemyPad/EnemyBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 7
+
+[node name="AftermathPanel" type="PanelContainer" parent="ContentMargin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AftermathPad" type="MarginContainer" parent="ContentMargin/Content/AftermathPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 9
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 9
+
+[node name="AftermathBox" type="VBoxContainer" parent="ContentMargin/Content/AftermathPanel/AftermathPad"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="AftermathTitle" type="Label" parent="ContentMargin/Content/AftermathPanel/AftermathPad/AftermathBox"]
+layout_mode = 2
+text = "Battlefield consequences"
+
+[node name="Aftermath" type="Label" parent="ContentMargin/Content/AftermathPanel/AftermathPad/AftermathBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+max_lines_visible = 5
+text = "Rewards and strategic consequences."
+
+[node name="Footer" type="HBoxContainer" parent="ContentMargin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Status" type="Label" parent="ContentMargin/Content/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+vertical_alignment = 1
+autowrap_mode = 3
+text = "Review both casualty ledgers, then continue."
+
+[node name="Continue" type="Button" parent="ContentMargin/Content/Footer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(176, 42)
+layout_mode = 2
+focus_mode = 2
+tooltip_text = "Acknowledge this report, save the result, and continue."
+text = "Continue"
+accessibility_name = "Continue from battle report"
+accessibility_description = "Acknowledge this report, save the result, and continue."
+
+[connection signal="pressed" from="ContentMargin/Content/Footer/Continue" to="." method="_on_continue_pressed"]

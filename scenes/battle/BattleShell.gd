@@ -1304,10 +1304,12 @@ func _perform_action(action: String) -> Dictionary:
 func _handle_battle_resolution(result: Dictionary) -> bool:
 	_last_battle_resolution_routed = false
 	if _session.scenario_status != "in_progress":
-		_record_validation_battle_resolution_attempt(result, "outcome")
+		_record_validation_battle_resolution_attempt(result, "battle_report")
 		_last_battle_resolution_routed = true
+		if _begin_battle_exit_animation_handoff(result, "battle_report"):
+			return true
 		if _validation_battle_resolution_routing_enabled:
-			AppRouter.go_to_scenario_outcome()
+			AppRouter.go_to_battle_report()
 		return true
 	match String(result.get("state", "continue")):
 		"victory", "retreat", "surrender", "stalemate", "hero_defeat", "town_lost":
@@ -1317,12 +1319,12 @@ func _handle_battle_resolution(result: Dictionary) -> bool:
 				return true
 			return _checkpoint_battle_resolution_for_overworld(result, false)
 		"defeat":
-			_record_validation_battle_resolution_attempt(result, "outcome")
+			_record_validation_battle_resolution_attempt(result, "battle_report")
 			_last_battle_resolution_routed = true
-			if _begin_battle_exit_animation_handoff(result, "outcome"):
+			if _begin_battle_exit_animation_handoff(result, "battle_report"):
 				return true
 			if _validation_battle_resolution_routing_enabled:
-				AppRouter.go_to_scenario_outcome()
+				AppRouter.go_to_battle_report()
 			return true
 	return false
 
@@ -1481,8 +1483,8 @@ func _battle_resolution_checkpoint_block_result(action: String) -> Dictionary:
 
 func _complete_battle_exit_animation_handoff(route_target: String) -> void:
 	_battle_exit_handoff_in_progress = false
-	if route_target == "outcome":
-		AppRouter.go_to_scenario_outcome()
+	if route_target == "battle_report":
+		AppRouter.go_to_battle_report()
 	else:
 		_last_battle_resolution_routed = _route_checkpointed_battle_resolution()
 
