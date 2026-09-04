@@ -229,21 +229,25 @@ theme_override_constants/separation = 4
 [node name="HeroTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Command Roster"
+text = "Your Realm"
 
 [node name="RosterHeader" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="HeroRosterTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox/RosterHeader"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Heroes"
+horizontal_alignment = 1
 
 [node name="TownRosterTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox/RosterHeader"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Towns"
+horizontal_alignment = 1
 
 [node name="RosterScroll" type="ScrollContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
 unique_name_in_owner = true
@@ -257,19 +261,18 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
+alignment = 1
 
 [node name="HeroActions" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox/RosterScroll/RosterColumns"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(103, 0)
+custom_minimum_size = Vector2(86, 0)
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
 [node name="TownActions" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox/RosterScroll/RosterColumns"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(103, 0)
+custom_minimum_size = Vector2(86, 0)
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
 [node name="HeroIdentity" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]

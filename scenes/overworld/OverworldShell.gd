@@ -63,6 +63,8 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _commitment_title_label: Label = %CommitmentTitle
 @onready var _commitment_label: Label = %Commitment
 @onready var _hero_title_label: Label = %HeroTitle
+@onready var _hero_roster_title_label: Label = %HeroRosterTitle
+@onready var _town_roster_title_label: Label = %TownRosterTitle
 @onready var _hero_portrait: HeroPortraitView = %HeroPortrait
 @onready var _hero_label: Label = %Hero
 @onready var _army_label: Label = %Army
@@ -4445,12 +4447,21 @@ func _rebuild_hero_actions() -> void:
 	for child in _hero_actions.get_children():
 		child.queue_free()
 
+	var player_hero_ids := {}
+	for hero_value in _session.overworld.get("player_heroes", []):
+		if hero_value is Dictionary:
+			var owned_hero_id := String(hero_value.get("id", ""))
+			if owned_hero_id != "":
+				player_hero_ids[owned_hero_id] = true
 	var actions = _cached_hero_actions()
+	var displayed_hero_count := 0
 	for action in actions:
 		if not (action is Dictionary):
 			continue
 		var action_id := String(action.get("id", ""))
 		var hero_id := action_id.trim_prefix("switch_hero:")
+		if not player_hero_ids.has(hero_id):
+			continue
 		var hero := HeroCommandRules.hero_by_id(_session, hero_id)
 		var hero_name := String(hero.get("name", action.get("label", hero_id))).trim_prefix("Command ").strip_edges()
 		var is_active := hero_id == String(_session.overworld.get("active_hero_id", ""))
@@ -4473,14 +4484,19 @@ func _rebuild_hero_actions() -> void:
 		button.icon = _load_roster_icon(portrait_path)
 		button.set_meta("roster_kind", "hero")
 		button.set_meta("hero_id", hero_id)
+		button.set_meta("roster_owner", "player")
+		button.set_meta("visual_model", "ornamental_art_card")
 		button.set_meta("art_path", portrait_path)
 		button.set_meta("active", is_active)
 		button.pressed.connect(_on_hero_roster_pressed.bind(hero_id))
 		_hero_actions.add_child(button)
+		displayed_hero_count += 1
+	_hero_roster_title_label.text = "Heroes  %d" % displayed_hero_count
 
 func _rebuild_town_actions() -> void:
 	for child in _town_actions.get_children():
 		child.queue_free()
+	var displayed_town_count := 0
 	for value in _session.overworld.get("towns", []):
 		if not (value is Dictionary) or String(value.get("owner", "neutral")) != "player":
 			continue
@@ -4505,20 +4521,34 @@ func _rebuild_town_actions() -> void:
 		button.set_meta("roster_kind", "town")
 		button.set_meta("town_placement_id", placement_id)
 		button.set_meta("town_id", String(town.get("town_id", "")))
+		button.set_meta("roster_owner", "player")
+		button.set_meta("visual_model", "ornamental_art_card")
 		button.set_meta("art_path", backdrop_path)
 		button.set_meta("selected", is_selected)
 		button.set_meta("x", town_tile.x)
 		button.set_meta("y", town_tile.y)
 		button.pressed.connect(_on_town_rail_pressed.bind(int(town.get("x", 0)), int(town.get("y", 0))))
 		_town_actions.add_child(button)
+		displayed_town_count += 1
+	_town_roster_title_label.text = "Towns  %d" % displayed_town_count
 
 func _style_roster_icon_button(button: Button, role: String) -> void:
-	FrontierVisualKit.apply_button(button, role, 103.0, 40.0, 11)
-	button.custom_minimum_size = Vector2(103.0, 40.0)
-	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	FrontierVisualKit.apply_button(button, role, 86.0, 66.0, 11)
+	button.custom_minimum_size = Vector2(86.0, 66.0)
+	button.size_flags_horizontal = Control.SIZE_FILL
 	button.clip_text = true
 	button.expand_icon = true
-	button.add_theme_constant_override("icon_max_width", 82)
+	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.add_theme_constant_override("icon_max_width", 60)
+	var active := role == "primary"
+	var normal_tint := Color(1.0, 0.86, 0.48, 1.0) if active else Color(0.64, 0.72, 0.72, 0.96)
+	var hover_tint := Color(1.0, 0.92, 0.62, 1.0) if active else Color(0.82, 0.88, 0.84, 1.0)
+	var pressed_tint := Color(1.0, 0.78, 0.30, 1.0)
+	button.add_theme_stylebox_override("normal", FrontierVisualKit.ornate_frame_style(UI_ART_OVERWORLD_HERO_FRAME, "frame", 26, 7, normal_tint))
+	button.add_theme_stylebox_override("hover", FrontierVisualKit.ornate_frame_style(UI_ART_OVERWORLD_HERO_FRAME, "frame", 26, 7, hover_tint))
+	button.add_theme_stylebox_override("pressed", FrontierVisualKit.ornate_frame_style(UI_ART_OVERWORLD_HERO_FRAME, "frame", 26, 7, pressed_tint))
+	button.add_theme_stylebox_override("disabled", FrontierVisualKit.ornate_frame_style(UI_ART_OVERWORLD_HERO_FRAME, "frame", 26, 7, Color(0.42, 0.45, 0.44, 0.82)))
 
 func _load_roster_icon(path: String) -> Texture2D:
 	if path == "" or not ResourceLoader.exists(path, "Texture2D"):
@@ -10649,6 +10679,8 @@ func _validation_roster_entries(container: Container) -> Array:
 			"hero_id": String(button.get_meta("hero_id", "")),
 			"town_id": String(button.get_meta("town_id", "")),
 			"town_placement_id": String(button.get_meta("town_placement_id", "")),
+			"owner": String(button.get_meta("roster_owner", "")),
+			"visual_model": String(button.get_meta("visual_model", "")),
 			"art_path": String(button.get_meta("art_path", "")),
 			"icon_path": button.icon.resource_path if button.icon is Texture2D else "",
 			"icon_loaded": button.icon is Texture2D,
@@ -10659,6 +10691,9 @@ func _validation_roster_entries(container: Container) -> Array:
 			"accessibility_name": button.accessibility_name,
 			"accessibility_description": button.accessibility_description,
 			"tooltip": button.tooltip_text,
+			"icon_alignment": button.icon_alignment,
+			"minimum_width": button.custom_minimum_size.x,
+			"minimum_height": button.custom_minimum_size.y,
 			"rect": _control_rect_payload(button.get_global_rect()),
 		})
 	return entries
@@ -12627,6 +12662,8 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_label(_briefing_title_label, "gold", 11)
 	FrontierVisualKit.apply_label(_commitment_title_label, "green", 11)
 	FrontierVisualKit.apply_label(_hero_title_label, "gold", 13)
+	FrontierVisualKit.apply_label(_hero_roster_title_label, "muted", 11)
+	FrontierVisualKit.apply_label(_town_roster_title_label, "muted", 11)
 	FrontierVisualKit.apply_label(_action_title_label, "muted", 12)
 	FrontierVisualKit.apply_label(_frontier_indicator_label, "teal", 12)
 	FrontierVisualKit.apply_label(_command_title_label, "muted", 13)

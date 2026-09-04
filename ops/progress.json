@@ -1912,6 +1912,48 @@
   "blocker": "",
   "completedImplementationEvidence": [
     {
+      "id": "ux-overworld-owned-roster-visual-polish-20260904",
+      "title": "Overworld Owned Roster Visual Polish",
+      "sliceId": "ux-overworld-owned-roster-visual-polish-10235",
+      "status": "completed",
+      "validatedAt": "2026-09-04T18:05:00Z",
+      "updatedAt": "2026-09-04T18:05:00Z",
+      "latestFinding": "The live right rail shows exactly authoritative player heroes and current player-owned towns as centered original-art ornamental cards; untouched normal-play captures are separated from non-captured overflow stress data.",
+      "artifacts": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "tests/overworld_town_vision_command_roster_report.gd",
+        "tests/overworld_town_vision_command_roster_report.py",
+        "tests/validate_repo.py",
+        "docs/overworld-owned-roster-visual-polish-requirements.md",
+        "docs/overworld-owned-roster-visual-polish-report.md",
+        ".artifacts/overworld_owned_roster_visual_polish_10235/report.json",
+        ".artifacts/overworld_owned_roster_visual_polish_10235/owned_roster_normal_1920x1080.png",
+        ".artifacts/overworld_owned_roster_visual_polish_10235/owned_roster_normal_1280x720.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json",
+        ".artifacts/packaging_windows_manual_owned_roster_10235/live_validation_report.json"
+      ],
+      "metrics": {
+        "normal_player_hero_count": 1,
+        "normal_player_town_count": 2,
+        "normal_excluded_non_player_town_count": 10,
+        "normal_synthetic_ownership": false,
+        "overflow_capture_count": 0,
+        "card_width_pixels": 86,
+        "card_height_pixels": 66,
+        "linux_pck_bytes": 248218364,
+        "windows_pck_bytes": 248218364,
+        "pck_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 1781636,
+        "windows_direct_generated_flow_duration_ms": 15210,
+        "save_version_changed": false,
+        "native_rmg_output_changed": false,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "No work remains in bounded #10235. Broader visual polish, the known verbose Wine process-handle timeout, signing, publication, whole-game validation, and release readiness remain separate."
+    },
+    {
       "id": "ux-overworld-town-vision-and-command-roster-20260904",
       "title": "Overworld Town Vision And Command Roster",
       "sliceId": "ux-overworld-town-vision-and-command-roster-10234",
@@ -16449,14 +16491,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Owner-directed #10234 completed: player-owned towns provide exact radius-five permanent exploration and the right rail exposes all player heroes and owned towns through paired original-art icon controls.",
+  "currentNotes": "Owner-directed #10235 completed: the Overworld roster is ownership-exact, uses polished centered ornamental art cards, and its normal screenshots come from untouched gameplay state.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-town-vision-and-command-roster-10234",
-  "currentSliceId": "ux-overworld-town-vision-and-command-roster-10234",
-  "currentSliceNotes": "No owner-directed implementation slice is active. #10234 completed with exact town-vision, capture/save, roster routing/accessibility, responsive capture, repository, Linux package, and direct packaged Windows generated-entry evidence.",
+  "currentSlice": "ux-overworld-owned-roster-visual-polish-10235",
+  "currentSliceId": "ux-overworld-owned-roster-visual-polish-10235",
+  "currentSliceNotes": "No owner-directed implementation slice is active. #10235 completed with authoritative owned-id equality, ornamental card visuals, untouched responsive captures, repository validation, Linux packaging, and direct packaged Windows generated-entry evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Town Vision And Command Roster",
-  "currentSliceUpdatedAt": "2026-09-04T16:50:00Z",
+  "currentSliceTitle": "Overworld Owned Roster Visual Polish",
+  "currentSliceUpdatedAt": "2026-09-04T18:05:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21979,8 +22021,67 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select and track the next owner-directed Phase 6 implementation slice before changing runtime behavior.",
-  "notes": "Owner-directed #10234 Overworld town vision and command roster is completed. No implementation slice is active.",
+  "notes": "Owner-directed #10235 Overworld owned-roster visual polish is completed. No implementation slice is active.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-owned-roster-visual-polish-10235",
+      "title": "Overworld Owned Roster Visual Polish",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md",
+        "docs/overworld-map-first-command-rail-requirements.md",
+        "docs/overworld-town-vision-and-command-roster-requirements.md",
+        "docs/overworld-owned-roster-visual-polish-requirements.md"
+      ],
+      "purpose": "Show exactly the current player-owned heroes and towns in polished compact ornamental art cards, and replace misleading synthetic normal-play screenshots with untouched gameplay evidence.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "tests/overworld_town_vision_command_roster_report.gd",
+        "tests/overworld_town_vision_command_roster_report.py",
+        "tests/validate_repo.py",
+        "docs/overworld-owned-roster-visual-polish-requirements.md",
+        "docs/overworld-owned-roster-visual-polish-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Displayed ids exactly equal authoritative player hero and owned-town ids and exclude all enemy and neutral towns",
+        "Original art cards are centered, square-proportioned, accessible, focusable, selectable, and retain authoritative routing and separately labelled overflow reachability",
+        "Inspected untouched 1920x1080 and 1280x720 captures plus focused, map-first, repository, diff, and matching Linux and Windows package checks pass below 250000000 bytes"
+      ],
+      "nonGoals": [
+        "Ownership, capture, vision, movement, pathing, AI, RMG, content, save schema, balance, Town or Battle changes",
+        "Copied Heroes art, new generated art, package-limit change, signing, publication, whole-game validation, or release-readiness claim"
+      ],
+      "validationCommands": [
+        "python3 tests/overworld_town_vision_command_roster_report.py",
+        "python3 tests/overworld_map_first_command_rail_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "git diff --check"
+      ],
+      "createdAt": "2026-09-04T17:20:00Z",
+      "startedAt": "2026-09-04T17:20:00Z",
+      "updatedAt": "2026-09-04T18:05:00Z",
+      "completedAt": "2026-09-04T18:05:00Z",
+      "evidence": [
+        "docs/overworld-owned-roster-visual-polish-report.md",
+        ".artifacts/overworld_owned_roster_visual_polish_10235/report.json",
+        ".artifacts/overworld_owned_roster_visual_polish_10235/owned_roster_normal_1920x1080.png",
+        ".artifacts/overworld_owned_roster_visual_polish_10235/owned_roster_normal_1280x720.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json",
+        ".artifacts/packaging_windows_manual_owned_roster_10235/live_validation_report.json"
+      ],
+      "notes": "Completed. Runtime and evidence now show only authoritative player-owned entries, card art is centered in original ornamental frames, normal captures are untouched, and synthetic overflow produces no screenshots."
+    },
     {
       "id": "ux-overworld-town-vision-and-command-roster-10234",
       "title": "Overworld Town Vision And Command Roster",
@@ -109804,9 +109905,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed #10234: player-owned towns now provide exact permanent exploration and all player heroes and owned towns appear in an accessible compact right-rail roster.",
-  "taskId": "10234",
-  "updatedAt": "2026-09-04T16:50:00Z",
+  "summary": "Completed #10235: the Overworld roster shows only authoritative player-owned heroes and towns in polished original-art cards, with untouched normal-play visual evidence.",
+  "taskId": "10235",
+  "updatedAt": "2026-09-04T18:05:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

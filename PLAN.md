@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10234
+Task: #10235
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -24,8 +24,33 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed owner-directed implementation slice: `ux-overworld-town-vision-and-command-roster-10234`, which adds owned-town permanent exploration and a compact Heroes-inspired hero/town command roster in the existing right rail.
-- Current package boundary: matching Linux and Windows release exports measure 248217276 bytes, 1782724 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+- Most recently completed owner-directed implementation slice: `ux-overworld-owned-roster-visual-polish-10235`, which makes the command roster strictly ownership-derived, replaces thin icon bars with ornamental portrait/settlement cards, and separates honest normal-play captures from synthetic overflow validation.
+- Current package boundary: matching Linux and Windows release exports measure 248218364 bytes, 1781636 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+
+## Overworld Owned Roster Visual Polish
+
+id: `ux-overworld-owned-roster-visual-polish-10235`
+
+Status: completed 2026-09-04. The live roster now intersects hero actions with the authoritative player roster and retains the player-owner town filter, while original portraits/scenic art render as centered 86x66 ornamental cards with explicit owned counts and active/selected treatment. Untouched Ninefold evidence shows exactly Mira and its two starting player towns; a separate non-captured synthetic fixture proves overflow without promoting enemy towns in presentation evidence. Focused ownership/routing/layout checks, visual inspection at 1920x1080 and 1280x720, repository validation, Linux packaging, Windows export/startup markers, and direct packaged Windows generated setup -> Overworld -> Town pass at matching 248218364-byte PCK sizes.
+
+Owner direction: show only genuinely player-owned heroes and towns in the Overworld command roster, and replace the thin placeholder-like bars with a polished Heroes-inspired but original card treatment.
+
+Requirements: `docs/overworld-owned-roster-visual-polish-requirements.md`, `docs/overworld-town-vision-and-command-roster-requirements.md`, `docs/overworld-map-first-command-rail-requirements.md`, `project.md` Phase 6 production alpha UX, and `docs/lessons-learned.md`.
+
+Implementation boundary:
+- derive displayed hero and town ids only from current authoritative player ownership, never enemy/neutral/display-only records;
+- present each existing original portrait or scenic town image in a centered, compact ornamental card with clear active/selected state, tooltip, accessibility, focus, scrolling, and unchanged authoritative routing;
+- capture untouched normal play at 1920x1080 and 1280x720, while moving synthetic overflow proof into a separately labelled non-presentation fixture;
+- preserve the map-first layout, ownership/capture rules, town vision, movement, RMG output, save version 9, content, and package boundary.
+
+Completion criteria:
+- focused runtime evidence proves displayed ids exactly equal authoritative player hero and owned-town sets and exclude every enemy/neutral town;
+- card bounds are square-proportioned, icons centered and loaded, active/selected treatment readable, accessibility/routing intact, and synthetic overflow remains reachable;
+- inspected untouched normal-play captures at both target resolutions plus relevant roster, map-first, repository, diff, and matching Linux/Windows package checks pass below 250000000 bytes.
+
+Non-goals:
+- no ownership, capture, vision, movement, pathing, AI, RMG, scenario/content, save-schema, balance, Town/Battle, or package-limit changes;
+- no copied Heroes assets/pixels, new generated art, broad UI rewrite, signing, publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Town Vision And Command Roster
 
