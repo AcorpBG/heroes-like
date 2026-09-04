@@ -10,9 +10,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ARTIFACT_DIR = ROOT / ".artifacts" / "overworld_town_vision_command_roster_10234"
+ARTIFACT_DIR = ROOT / ".artifacts" / "overworld_owned_roster_visual_polish_10235"
 REPORT_PATH = ARTIFACT_DIR / "report.json"
-REPORT_ID = "OVERWORLD_TOWN_VISION_COMMAND_ROSTER_REPORT"
+REPORT_ID = "OVERWORLD_OWNED_ROSTER_VISUAL_POLISH_REPORT"
 
 
 def main() -> int:
@@ -53,6 +53,14 @@ def main() -> int:
     captures = [Path(path) for path in payload.get("command_roster", {}).get("captures", [])]
     if len(captures) != 2 or any(not path.is_file() or path.stat().st_size < 10_000 for path in captures):
         print(f"{REPORT_ID}: capture evidence is incomplete: {captures}", file=sys.stderr)
+        return 1
+    normal_play = payload.get("command_roster", {}).get("normal_play", {})
+    overflow = payload.get("command_roster", {}).get("overflow", {})
+    if normal_play.get("synthetic_ownership") is not False or overflow.get("synthetic_ownership") is not True:
+        print(f"{REPORT_ID}: normal and overflow fixtures are not truthfully separated", file=sys.stderr)
+        return 1
+    if overflow.get("captures"):
+        print(f"{REPORT_ID}: synthetic overflow fixture leaked into visual evidence", file=sys.stderr)
         return 1
     REPORT_PATH.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     vision = payload.get("town_vision", {})

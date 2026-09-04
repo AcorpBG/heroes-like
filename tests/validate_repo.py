@@ -84121,7 +84121,8 @@ def validate_overworld_town_vision_command_roster(errors: list[str]) -> None:
     report_scene_path = ROOT / "tests" / "overworld_town_vision_command_roster_report.tscn"
     wrapper_path = ROOT / "tests" / "overworld_town_vision_command_roster_report.py"
     requirements_path = ROOT / "docs" / "overworld-town-vision-and-command-roster-requirements.md"
-    required_paths = (rules_path, shell_path, scene_path, report_path, report_scene_path, wrapper_path, requirements_path)
+    polish_requirements_path = ROOT / "docs" / "overworld-owned-roster-visual-polish-requirements.md"
+    required_paths = (rules_path, shell_path, scene_path, report_path, report_scene_path, wrapper_path, requirements_path, polish_requirements_path)
     for path in required_paths:
         ensure(path.is_file(), errors, f"Missing #10234 town-vision/command-roster owner: {path.relative_to(ROOT)}")
     if not all(path.is_file() for path in required_paths):
@@ -84146,11 +84147,17 @@ def validate_overworld_town_vision_command_roster(errors: list[str]) -> None:
         '"model": "paired_hero_town_icon_columns"',
         'button.set_meta("town_placement_id", placement_id)',
         'button.accessibility_description = "Select this owned town and center its entry tile on the map."',
+        'for hero_value in _session.overworld.get("player_heroes", [])',
+        'if not player_hero_ids.has(hero_id):',
+        'button.set_meta("roster_owner", "player")',
+        'button.set_meta("visual_model", "ornamental_art_card")',
+        'button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER',
+        'FrontierVisualKit.ornate_frame_style(UI_ART_OVERWORLD_HERO_FRAME',
     ):
         ensure(token in shell_text, errors, f"#10234 command roster lost required routing/accessibility behavior: {token}")
 
     scene_text = scene_path.read_text(encoding="utf-8")
-    for token in ('name="RosterScroll"', 'name="RosterColumns"', 'name="HeroActions" type="VBoxContainer"', 'name="TownActions" type="VBoxContainer"'):
+    for token in ('name="RosterScroll"', 'name="RosterColumns"', 'name="HeroActions" type="VBoxContainer"', 'name="TownActions" type="VBoxContainer"', 'text = "Your Realm"', 'custom_minimum_size = Vector2(86, 0)'):
         ensure(token in scene_text, errors, f"#10234 command-roster scene lost required compact node: {token}")
 
     report_text = report_path.read_text(encoding="utf-8")
@@ -84167,11 +84174,19 @@ def validate_overworld_town_vision_command_roster(errors: list[str]) -> None:
         '"all_focusable"',
         '"all_accessible"',
         'get_window().content_scale_size = viewport',
+        '"fixture": "untouched_ninefold_confluence"',
+        '"synthetic_ownership": false',
+        '"fixture": "synthetic_overflow_only_no_visual_evidence"',
+        '"captures": []',
+        'actual_hero_ids != expected_hero_ids',
+        'actual_town_ids != expected_town_ids',
+        'String(entry.get("owner", "")) != "player"',
+        'String(entry.get("visual_model", "")) != "ornamental_art_card"',
     ):
         ensure(token in report_text, errors, f"Focused #10234 report is missing required proof: {token}")
     ensure("overworld_town_vision_command_roster_report.gd" in report_scene_path.read_text(encoding="utf-8"), errors, "Focused #10234 scene lost its report script")
     wrapper_text = wrapper_path.read_text(encoding="utf-8")
-    for token in ("xvfb-run", "OVERWORLD_TOWN_VISION_COMMAND_ROSTER_REPORT", "report.json", "len(captures) != 2"):
+    for token in ("xvfb-run", "OVERWORLD_OWNED_ROSTER_VISUAL_POLISH_REPORT", "report.json", "len(captures) != 2", 'normal_play.get("synthetic_ownership") is not False', 'if overflow.get("captures")'):
         ensure(token in wrapper_text, errors, f"Focused #10234 Python report owner is missing evidence handling: {token}")
 
 

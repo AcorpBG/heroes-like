@@ -3,8 +3,8 @@ extends Node
 const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 
-const REPORT_ID := "OVERWORLD_TOWN_VISION_COMMAND_ROSTER_REPORT"
-const ARTIFACT_DIR := "res://.artifacts/overworld_town_vision_command_roster_10234"
+const REPORT_ID := "OVERWORLD_OWNED_ROSTER_VISUAL_POLISH_REPORT"
+const ARTIFACT_DIR := "res://.artifacts/overworld_owned_roster_visual_polish_10235"
 const VIEWPORTS := [Vector2i(1920, 1080), Vector2i(1280, 720)]
 const MAP_SIZE := Vector2i(20, 20)
 const PLAYER_TOWN := {"placement_id": "vision_player", "town_id": "town_riverwatch", "x": 5, "y": 5, "owner": "player"}
@@ -87,6 +87,97 @@ func _validate_town_vision() -> Dictionary:
 func _validate_command_roster() -> Dictionary:
 	SessionState.reset_session()
 	var session = ScenarioFactoryScript.create_session("ninefold-confluence", "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
+	OverworldRules.normalize_overworld_state_for_runtime(session)
+	session = SessionState.set_active_session(session)
+	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(shell)
+	for _frame in range(8):
+		await get_tree().process_frame
+
+	var normal_initial: Dictionary = shell.validation_command_roster_snapshot()
+	_validate_roster_snapshot(normal_initial, session, "untouched_normal_play")
+	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
+	var active_hero_button := _roster_button(shell.get_node("%HeroActions"), "hero_id", active_hero_id)
+	if active_hero_button == null:
+		_failures.append("untouched normal play is missing its authoritative active hero card")
+	else:
+		active_hero_button.emit_signal("pressed")
+		for _frame in range(2):
+			await get_tree().process_frame
+	var active_hero_position := HeroCommandRules.hero_position_by_id(session, active_hero_id)
+	var after_hero_focus: Dictionary = shell.validation_snapshot()
+	if int(after_hero_focus.get("selected_tile", {}).get("x", -1)) != int(active_hero_position.get("x", -2)) or int(after_hero_focus.get("selected_tile", {}).get("y", -1)) != int(active_hero_position.get("y", -2)):
+		_failures.append("active owned hero card did not center the authoritative hero")
+
+	var target_town: Dictionary = _last_player_town(session)
+	var target_town_button := _roster_button(shell.get_node("%TownActions"), "town_placement_id", String(target_town.get("placement_id", "")))
+	if target_town_button == null:
+		_failures.append("untouched normal play is missing an authoritative owned-town card")
+	else:
+		target_town_button.emit_signal("pressed")
+		for _frame in range(2):
+			await get_tree().process_frame
+	var after_town: Dictionary = shell.validation_snapshot()
+	if int(after_town.get("selected_tile", {}).get("x", -1)) != int(target_town.get("x", -2)) or int(after_town.get("selected_tile", {}).get("y", -1)) != int(target_town.get("y", -2)):
+		_failures.append("owned-town card did not route through authoritative town selection")
+	var selected_roster: Dictionary = shell.validation_command_roster_snapshot()
+	if int(selected_roster.get("selected_town_button_count", 0)) != 1:
+		_failures.append("owned-town roster did not expose exactly one selected holding")
+
+	var captures := []
+	var layouts := []
+	for viewport in VIEWPORTS:
+		get_window().size = viewport
+		get_window().content_scale_size = viewport
+		await get_tree().process_frame
+		await get_tree().process_frame
+		shell._focus_active_hero_from_roster()
+		await get_tree().process_frame
+		var layout: Dictionary = shell.validation_map_first_layout_snapshot()
+		var roster: Dictionary = shell.validation_command_roster_snapshot()
+		_validate_layout(layout, viewport)
+		_validate_roster_snapshot(roster, session, "untouched_normal_play_%dx%d" % [viewport.x, viewport.y])
+		layouts.append({"viewport": {"width": viewport.x, "height": viewport.y}, "layout": layout, "roster": roster})
+		var capture_path := await _capture("owned_roster_normal_%dx%d" % [viewport.x, viewport.y])
+		captures.append(capture_path)
+		if capture_path == "":
+			_failures.append("owned-roster normal-play capture failed at %s" % viewport)
+
+	var normal_play := {
+		"fixture": "untouched_ninefold_confluence",
+		"synthetic_ownership": false,
+		"authoritative_player_hero_ids": _expected_player_hero_ids(session),
+		"authoritative_player_town_ids": _expected_player_town_ids(session),
+		"excluded_non_player_town_ids": _expected_non_player_town_ids(session),
+		"initial": normal_initial,
+		"after_hero_focus": {
+			"active_hero_id": active_hero_id,
+			"selected_tile": after_hero_focus.get("selected_tile", {}),
+		},
+		"after_town_select": {
+			"placement_id": String(target_town.get("placement_id", "")),
+			"selected_tile": after_town.get("selected_tile", {}),
+		},
+		"layouts": layouts,
+		"captures": captures,
+	}
+
+	shell.queue_free()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var overflow := await _validate_synthetic_overflow_roster()
+	return {
+		"initial": normal_initial,
+		"normal_play": normal_play,
+		"overflow": overflow,
+		"layouts": layouts,
+		"captures": captures,
+	}
+
+
+func _validate_synthetic_overflow_roster() -> Dictionary:
+	SessionState.reset_session()
+	var session = ScenarioFactoryScript.create_session("ninefold-confluence", "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
 	var hero_specs := [
 		{"id": "hero_caelen", "x": 19, "y": 26},
 		{"id": "hero_lyra", "x": 23, "y": 30},
@@ -103,15 +194,17 @@ func _validate_command_roster() -> Dictionary:
 		heroes.append(hero)
 	session.overworld["player_heroes"] = heroes
 	var towns: Array = session.overworld.get("towns", [])
-	var promoted := 0
-	for index in range(towns.size()):
-		if not (towns[index] is Dictionary):
-			continue
-		var town: Dictionary = towns[index]
-		if String(town.get("owner", "neutral")) != "player" and promoted < 3:
-			town["owner"] = "player"
-			towns[index] = town
-			promoted += 1
+	var owned_templates := []
+	for town_value in towns:
+		if town_value is Dictionary and String(town_value.get("owner", "neutral")) == "player":
+			owned_templates.append(town_value)
+	for index in range(3):
+		var town: Dictionary = owned_templates[index % owned_templates.size()].duplicate(true)
+		town["placement_id"] = "synthetic_owned_overflow_%d" % index
+		town["owner"] = "player"
+		town["x"] = 18 + index * 2
+		town["y"] = 22
+		towns.append(town)
 	session.overworld["towns"] = towns
 	OverworldRules.normalize_overworld_state_for_runtime(session)
 	session = SessionState.set_active_session(session)
@@ -121,11 +214,11 @@ func _validate_command_roster() -> Dictionary:
 		await get_tree().process_frame
 
 	var initial: Dictionary = shell.validation_command_roster_snapshot()
-	_validate_roster_snapshot(initial, session)
+	_validate_roster_snapshot(initial, session, "synthetic_overflow_only")
 	var target_hero_id := "hero_caelen"
 	var target_hero_button := _roster_button(shell.get_node("%HeroActions"), "hero_id", target_hero_id)
 	if target_hero_button == null:
-		_failures.append("target reserve hero roster button is missing")
+		_failures.append("target reserve hero roster card is missing")
 	else:
 		target_hero_button.emit_signal("pressed")
 		for _frame in range(3):
@@ -133,79 +226,69 @@ func _validate_command_roster() -> Dictionary:
 	var hero_position := HeroCommandRules.hero_position_by_id(session, target_hero_id)
 	var after_hero: Dictionary = shell.validation_snapshot()
 	if String(session.overworld.get("active_hero_id", "")) != target_hero_id:
-		_failures.append("reserve hero icon did not route through authoritative hero switching")
+		_failures.append("reserve hero card did not route through authoritative hero switching")
 	if int(after_hero.get("selected_tile", {}).get("x", -1)) != int(hero_position.get("x", -2)) or int(after_hero.get("selected_tile", {}).get("y", -1)) != int(hero_position.get("y", -2)):
-		_failures.append("reserve hero icon did not center/select the activated hero")
-
-	var target_town: Dictionary = _last_player_town(session)
-	var target_town_button := _roster_button(shell.get_node("%TownActions"), "town_placement_id", String(target_town.get("placement_id", "")))
-	if target_town_button == null:
-		_failures.append("target owned-town roster button is missing")
-	else:
-		target_town_button.emit_signal("pressed")
-		for _frame in range(2):
-			await get_tree().process_frame
-	var after_town: Dictionary = shell.validation_snapshot()
-	if int(after_town.get("selected_tile", {}).get("x", -1)) != int(target_town.get("x", -2)) or int(after_town.get("selected_tile", {}).get("y", -1)) != int(target_town.get("y", -2)):
-		_failures.append("town icon did not route through authoritative town selection")
-	var selected_roster: Dictionary = shell.validation_command_roster_snapshot()
-	if int(selected_roster.get("selected_town_button_count", 0)) != 1:
-		_failures.append("town roster did not expose exactly one selected holding")
+		_failures.append("reserve hero card did not center/select the activated hero")
 
 	var scrolled: Dictionary = shell.validation_scroll_command_roster_to_end()
 	await get_tree().process_frame
 	if not bool(scrolled.get("overflow_available", false)) or int(shell.validation_command_roster_snapshot().get("scroll_vertical", 0)) <= 0:
 		_failures.append("larger hero/town roster is not reachable through bounded scrolling")
-
-	var captures := []
-	var layouts := []
-	for viewport in VIEWPORTS:
-		get_window().size = viewport
-		get_window().content_scale_size = viewport
-		await get_tree().process_frame
-		await get_tree().process_frame
-		shell._focus_active_hero_from_roster()
-		await get_tree().process_frame
-		var layout: Dictionary = shell.validation_map_first_layout_snapshot()
-		_validate_layout(layout, viewport)
-		layouts.append({"viewport": {"width": viewport.x, "height": viewport.y}, "layout": layout, "roster": shell.validation_command_roster_snapshot()})
-		var capture_path := await _capture("town_vision_roster_%dx%d" % [viewport.x, viewport.y])
-		captures.append(capture_path)
-		if capture_path == "":
-			_failures.append("roster capture failed at %s" % viewport)
 	return {
+		"fixture": "synthetic_overflow_only_no_visual_evidence",
+		"synthetic_ownership": true,
 		"initial": initial,
 		"after_hero_switch": {
 			"active_hero_id": String(session.overworld.get("active_hero_id", "")),
 			"selected_tile": after_hero.get("selected_tile", {}),
 		},
-		"after_town_select": {
-			"placement_id": String(target_town.get("placement_id", "")),
-			"selected_tile": after_town.get("selected_tile", {}),
-		},
 		"overflow": scrolled,
-		"layouts": layouts,
-		"captures": captures,
+		"captures": [],
 	}
 
 
-func _validate_roster_snapshot(snapshot: Dictionary, session) -> void:
-	var expected_heroes := int(session.overworld.get("player_heroes", []).size())
-	var expected_towns := 0
-	for town in session.overworld.get("towns", []):
-		if town is Dictionary and String(town.get("owner", "neutral")) == "player":
-			expected_towns += 1
+func _validate_roster_snapshot(snapshot: Dictionary, session, fixture: String) -> void:
+	var expected_hero_ids := _expected_player_hero_ids(session)
+	var expected_town_ids := _expected_player_town_ids(session)
+	var non_player_town_ids := _expected_non_player_town_ids(session)
+	var actual_hero_ids := _entry_ids(snapshot.get("hero_entries", []), "hero_id")
+	var actual_town_ids := _entry_ids(snapshot.get("town_entries", []), "town_placement_id")
+	var expected_heroes := expected_hero_ids.size()
+	var expected_towns := expected_town_ids.size()
 	if int(snapshot.get("hero_count", -1)) != expected_heroes or int(snapshot.get("town_count", -1)) != expected_towns:
-		_failures.append("right-rail roster does not cover every player hero and owned town")
+		_failures.append("%s roster does not cover every player hero and owned town" % fixture)
+	if actual_hero_ids != expected_hero_ids:
+		_failures.append("%s hero cards differ from the authoritative player_heroes ids" % fixture)
+	if actual_town_ids != expected_town_ids:
+		_failures.append("%s town cards differ from authoritative player-owned placement ids" % fixture)
+	for town_id in non_player_town_ids:
+		if actual_town_ids.has(town_id):
+			_failures.append("%s roster exposed non-player town %s" % [fixture, town_id])
 	for key in ["all_icons_loaded", "all_focusable", "all_accessible", "columns_side_by_side"]:
 		if not bool(snapshot.get(key, false)):
-			_failures.append("right-rail roster contract failed: %s" % key)
+			_failures.append("%s right-rail roster contract failed: %s" % [fixture, key])
 	if int(snapshot.get("active_hero_button_count", 0)) != 1:
-		_failures.append("right-rail roster does not expose exactly one active hero")
+		_failures.append("%s roster does not expose exactly one active hero" % fixture)
 	if _unique_entry_ids(snapshot.get("hero_entries", []), "hero_id") != expected_heroes:
-		_failures.append("hero roster has missing or duplicate identities")
+		_failures.append("%s hero roster has missing or duplicate identities" % fixture)
 	if _unique_entry_ids(snapshot.get("town_entries", []), "town_placement_id") != expected_towns:
-		_failures.append("town roster has missing or duplicate placement identities")
+		_failures.append("%s town roster has missing or duplicate placement identities" % fixture)
+	var all_entries: Array = []
+	all_entries.append_array(snapshot.get("hero_entries", []))
+	all_entries.append_array(snapshot.get("town_entries", []))
+	for entry_value in all_entries:
+		if not (entry_value is Dictionary):
+			continue
+		var entry: Dictionary = entry_value
+		var rect := _rect_from_payload(entry.get("rect", {}))
+		if String(entry.get("owner", "")) != "player":
+			_failures.append("%s roster card is not explicitly player-owned" % fixture)
+		if String(entry.get("visual_model", "")) != "ornamental_art_card":
+			_failures.append("%s roster card lost the ornamental visual model" % fixture)
+		if int(entry.get("icon_alignment", -1)) != HORIZONTAL_ALIGNMENT_CENTER:
+			_failures.append("%s roster art is not centered" % fixture)
+		if float(entry.get("minimum_height", 0.0)) < 64.0 or rect.size.y < 64.0 or rect.size.x < 56.0 or rect.size.x / maxf(rect.size.y, 1.0) > 1.45:
+			_failures.append("%s roster entry is still a thin bar instead of a compact art card" % fixture)
 
 
 func _validate_layout(layout: Dictionary, viewport: Vector2i) -> void:
@@ -291,6 +374,50 @@ func _unique_entry_ids(entries: Array, key: String) -> int:
 			if id != "":
 				ids[id] = true
 	return ids.size()
+
+
+func _entry_ids(entries: Array, key: String) -> Array:
+	var ids := []
+	for entry in entries:
+		if entry is Dictionary:
+			var id := String(entry.get(key, ""))
+			if id != "":
+				ids.append(id)
+	ids.sort()
+	return ids
+
+
+func _expected_player_hero_ids(session) -> Array:
+	var ids := []
+	for hero in session.overworld.get("player_heroes", []):
+		if hero is Dictionary:
+			var hero_id := String(hero.get("id", ""))
+			if hero_id != "":
+				ids.append(hero_id)
+	ids.sort()
+	return ids
+
+
+func _expected_player_town_ids(session) -> Array:
+	var ids := []
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("owner", "neutral")) == "player":
+			var placement_id := String(town.get("placement_id", ""))
+			if placement_id != "":
+				ids.append(placement_id)
+	ids.sort()
+	return ids
+
+
+func _expected_non_player_town_ids(session) -> Array:
+	var ids := []
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("owner", "neutral")) != "player":
+			var placement_id := String(town.get("placement_id", ""))
+			if placement_id != "":
+				ids.append(placement_id)
+	ids.sort()
+	return ids
 
 
 func _rect_from_payload(value: Variant) -> Rect2:
