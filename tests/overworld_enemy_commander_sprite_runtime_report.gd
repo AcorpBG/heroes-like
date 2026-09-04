@@ -139,7 +139,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 			and bool(fallback.get("uses_faction_encounter_sprite", false)) \
 			and not bool(fallback.get("uses_unit_icon_fallback", true)) \
 			and not bool(fallback.get("uses_encounter_sprite_fallback", true)) \
-			and is_equal_approx(float(fallback.get("faction_landmark_visible_extent_tiles", 0.0)), 0.82)
+			and is_equal_approx(float(fallback.get("faction_landmark_visible_extent_tiles", 0.0)), 1.08)
 		fallback_rows.append({"case": case_id, "exact": fallback_exact})
 		if not fallback_exact:
 			return await _finish_case(shell, {"ok": false, "failure": "fallback", "case": case_id, "profile": fallback})
@@ -203,7 +203,7 @@ func _validate_profiles(profiles: Array) -> Dictionary:
 			return {"ok": false, "reason": "unit_fallback_authority", "profile": profile}
 		hostile_treatment_exact = hostile_treatment_exact \
 			and String(profile.get("hostile_treatment", "")) == "open_hostile_flank_chevrons_and_threat_notch" \
-			and is_equal_approx(float(profile.get("visible_extent_tiles", 0.0)), 0.46) \
+			and is_equal_approx(float(profile.get("visible_extent_tiles", 0.0)), 0.88) \
 			and String(profile.get("grounding_model", "")) == "family_specific_contact_scuffs_no_marker_plate" \
 			and String(profile.get("contact_model", "")) == "localized_object_contact_shadow"
 		hostile_marker_geometry_exact = hostile_marker_geometry_exact and _hostile_marker_profile_exact(profile.get("hostile_marker_profile", {}))
@@ -239,8 +239,8 @@ func _validate_faction_landmark_profiles(profiles: Array) -> Dictionary:
 			and bool(profile.get("uses_faction_encounter_sprite", false)) \
 			and not bool(profile.get("uses_unit_icon_fallback", true)) \
 			and not bool(profile.get("uses_encounter_sprite_fallback", true)) \
-			and is_equal_approx(float(profile.get("faction_landmark_visible_extent_tiles", 0.0)), 0.82) \
-			and _hostile_marker_profile_exact(profile.get("hostile_marker_profile", {}))
+			and is_equal_approx(float(profile.get("faction_landmark_visible_extent_tiles", 0.0)), 1.08) \
+			and _hostile_marker_profile_exact(profile.get("hostile_marker_profile", {}), true)
 		rows.append({"faction_id": faction_id, "asset_id": expected_asset_id, "exact": exact})
 		if not exact:
 			return {"ok": false, "rows": rows, "profile": profile}
@@ -267,7 +267,7 @@ func _validate_non_faction_fallbacks(map_view: Node) -> Dictionary:
 		and String(unknown.get("encounter_asset_id", "")) == "hostile_camp"
 	return {"ok": neutral_exact and unknown_exact, "neutral_unit_icon_exact": neutral_exact, "unknown_default_exact": unknown_exact}
 
-func _hostile_marker_profile_exact(profile_value: Variant) -> bool:
+func _hostile_marker_profile_exact(profile_value: Variant, allow_landmark_overflow: bool = false) -> bool:
 	if not (profile_value is Dictionary):
 		return false
 	var profile: Dictionary = profile_value
@@ -279,13 +279,13 @@ func _hostile_marker_profile_exact(profile_value: Variant) -> bool:
 		and int(profile.get("threat_notch_count", 0)) == 1 \
 		and not bool(profile.get("continuous_ring", true)) \
 		and is_zero_approx(float(profile.get("interior_fill_alpha", -1.0))) \
-		and bool(profile.get("contained_in_tile", false)) \
+		and bool(profile.get("contained_in_tile", false)) == not allow_landmark_overflow \
 		and bool(profile.get("antialiased", false)) \
 		and is_equal_approx(float(profile.get("visible_alpha", 0.0)), 0.86) \
 		and is_equal_approx(float(profile.get("remembered_alpha", 0.0)), 0.62) \
 		and float(profile.get("line_width_px", 0.0)) > 0.0 \
 		and float(profile.get("shadow_width_px", 0.0)) > float(profile.get("line_width_px", 0.0)) \
-		and tile_rect.encloses(marker_rect) \
+		and (tile_rect.has_point(marker_rect.get_center()) and marker_rect.size.x <= tile_rect.size.x * 1.20 and marker_rect.size.y <= tile_rect.size.y * 1.20 if allow_landmark_overflow else tile_rect.encloses(marker_rect)) \
 		and marker_rect.encloses(icon_rect) \
 		and is_equal_approx(marker_rect.get_center().x, icon_rect.get_center().x) \
 		and is_equal_approx(marker_rect.get_center().y, icon_rect.get_center().y)

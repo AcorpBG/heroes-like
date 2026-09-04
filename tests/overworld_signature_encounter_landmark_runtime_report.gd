@@ -67,7 +67,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 			and not bool(payload.get("uses_faction_encounter_sprite", true)) \
 			and not bool(payload.get("uses_unit_icon_fallback", true)) \
 			and not bool(payload.get("uses_encounter_sprite_fallback", true)) \
-			and is_equal_approx(float(payload.get("faction_landmark_visible_extent_tiles", 0.0)), 0.82)
+			and is_equal_approx(float(payload.get("faction_landmark_visible_extent_tiles", 0.0)), 1.08)
 		exact_rows.append({"encounter_id": encounter_id, "asset_id": expected[0], "exact": exact})
 		if not exact:
 			return await _finish(shell, {"ok": false, "failure": "identity", "payload": payload})

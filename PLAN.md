@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10228
+Task: #10229
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -24,8 +24,32 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed owner-directed implementation slice: `ux-overworld-map-first-command-rail-10228`, which rebuilds the live Overworld around a dominant map, functional minimap, compact hero/town command rail, and slim resource/status ribbon while preserving existing actions and gameplay authority.
-- Current package boundary: matching Linux and Windows release exports measure 245087776 bytes, 4912224 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Most recently completed owner-directed implementation slice: `ux-overworld-landmark-readability-and-town-scale-10229`, which makes towns dominant three-by-four visual landmarks and restores distinguishable semantic scale/edge hierarchy to original raster objects without changing map or gameplay authority.
+- Current package boundary: matching Linux and Windows release exports measure 245089360 bytes, 4910640 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Overworld Landmark Readability And Town Scale
+
+id: `ux-overworld-landmark-readability-and-town-scale-10229`
+
+Status: completed 2026-09-04. Original manifest-backed art now renders through a `classic_readable_semantic_landmark_bands_v6` hierarchy: every town uses an exact 2.90-by-3.72 painted box inside its retained 3-by-4 visual envelope and 3-by-2 logical footprint, interactive objects receive restrained alpha silhouettes, decoration is subdued, and heroes are larger but contained. Focused semantic/town/click/session reports, all 26 authored towns, deterministic generated Large and authored responsive captures, repository validation, movement-input ownership, and matching Linux/Windows package startup pass at 245089360 bytes; Windows also passes generated setup, Overworld entry, and Town entry.
+
+Owner direction: compare the actual Heroes III adventure-map content hierarchy against the live game and materially improve the weak town scale and indistinguishable Overworld objects while retaining original Aurelion Reach art.
+
+Requirements: `docs/overworld-landmark-readability-and-town-scale-requirements.md`, `docs/overworld-map-object-distinct-sprite-gap-audit.md`, `docs/overworld-map-first-command-rail-requirements.md`, and `project.md` Phase 6 production alpha UX.
+
+Implementation boundary:
+- make towns visibly occupy a deliberate approximately three-wide, four-tall composition while retaining the exact 3x2 logical footprint and bottom-middle entry;
+- restore distinct semantic visual ranks for artifacts, pickups, encounters, heroes, structures, waypoints, landmarks, blockers, and towns using existing original manifest-backed raster art;
+- add restrained raster-edge silhouette separation for interactive objects and subordinate decorative detail without badges, labels, plates, procedural stand-ins, or placement changes;
+- preserve fog, camera, interaction, pathing, save, authored/generated package, and map-first command-rail authority.
+
+Completion criteria:
+- inspected 1920x1080 and 1280x720 captures of representative authored and deterministic generated Large maps show towns as dominant landmarks and every gameplay category distinguishable from terrain and decoration;
+- focused runtime coverage proves semantic scale ordering, actual town draw bounds, interactive raster edge treatment, and exact town/object interaction and session authority;
+- town footprint/click routing, movement, generated-map rendering, repository validation, and matching Linux/Windows package startup and generated-map entry pass below the unchanged ceiling.
+
+Non-goals:
+- no copied Heroes III art/content/UI, RMG topology/density, placements/counts, terrain generation, logical footprints, pathing, movement, interaction, AI, balance, save schema, Town/Battle UI, content rules, package-limit change, signing, publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Map-First Command Rail
 

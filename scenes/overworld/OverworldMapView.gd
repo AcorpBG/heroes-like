@@ -168,24 +168,24 @@ const MARKER_PLATE_RADIUS_FACTOR := 0.31
 const HERO_PLATE_RADIUS_FACTOR := 0.33
 const OBJECT_SPRITE_PLATE_RADIUS_FACTOR := 0.40
 const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
-const WORLD_OBJECT_SCALE_HIERARCHY_MODEL := "landscape_mass_and_landmark_bands_v5"
-const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.30
-const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.36
-const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.46
-const OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.82
-const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.54
-const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.50
-const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.58
-const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.86
-const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.42
-const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.41
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_MIN_TILES := 0.54
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_SPAN_MIN_STEP_TILES := 0.06
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_DEPTH_MIN_STEP_TILES := 0.08
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_CAP_TILES := 0.60
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_SPAN_CAP_STEP_TILES := 0.08
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_DEPTH_CAP_STEP_TILES := 0.10
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES := 0.80
+const WORLD_OBJECT_SCALE_HIERARCHY_MODEL := "classic_readable_semantic_landmark_bands_v6"
+const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.58
+const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.68
+const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.88
+const OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES := 1.08
+const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.82
+const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.78
+const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.94
+const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.92
+const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.46
+const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.62
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_MIN_TILES := 0.78
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_SPAN_MIN_STEP_TILES := 0.10
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_DEPTH_MIN_STEP_TILES := 0.12
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_CAP_TILES := 0.92
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_SPAN_CAP_STEP_TILES := 0.14
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_DEPTH_CAP_STEP_TILES := 0.16
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES := 1.35
 const OBJECT_VISIBLE_FOOTPRINT_INSET_TILES := 0.02
 const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
 const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
@@ -220,7 +220,8 @@ const GENERATED_DECORATIVE_BIOME_BY_TERRAIN := {
 	"cavern": "biome_subterranean_underways",
 	"underground": "biome_subterranean_underways",
 }
-const OBJECT_SPRITE_VISIBLE_MODULATE := Color(1.0, 1.0, 1.0, 0.96)
+const OBJECT_SPRITE_VISIBLE_MODULATE := Color(1.0, 1.0, 1.0, 1.0)
+const OBJECT_SPRITE_DECORATION_MODULATE := Color(0.82, 0.84, 0.78, 0.82)
 const OBJECT_SPRITE_SHADOW_MODULATE := Color(0.02, 0.018, 0.014, 0.30)
 const OBJECT_SPRITE_MEMORY_MODULATE := Color(0.72, 0.82, 0.84, 0.82)
 const OBJECT_PRESENCE_MODEL := "footprint_scaled_world_object"
@@ -245,11 +246,11 @@ const HERO_ANCHOR_STYLE := "hero_foot_contact_shadow"
 const HERO_DEPTH_CUE_MODEL := "hero_foot_contact_shadow_with_boot_occlusion"
 const HERO_FIELD_LAYOUT_MODE := "full_tile_world_hero"
 const HERO_TOWN_FOOTPRINT_LAYOUT_MODE := "compact_town_footprint_visitor"
-const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.64
-const HERO_SPRITE_LIFT_FACTOR := 0.30
+const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.86
+const HERO_SPRITE_LIFT_FACTOR := 0.25
 const HERO_GROUND_ANCHOR_Y_FACTOR := 0.72
 const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 0.76
-const HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR := 0.59
+const HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR := 0.68
 const HERO_TOWN_FOOTPRINT_VISITOR_RECT_CENTER_Y_FACTOR := 0.61
 const WORLD_SPRITE_SILHOUETTE_MODEL := "eight_direction_alpha_silhouette_outline"
 const TOWN_SPRITE_SILHOUETTE_WIDTH_FACTOR := 0.010
@@ -259,6 +260,10 @@ const TOWN_SPRITE_SILHOUETTE_MEMORY := Color(0.18, 0.31, 0.34, 0.78)
 const HERO_SPRITE_SILHOUETTE_WIDTH_FACTOR := 0.024
 const HERO_SPRITE_SILHOUETTE_MIN_PX := 1.35
 const HERO_SPRITE_SILHOUETTE_COLOR := Color(0.010, 0.012, 0.010, 0.92)
+const OBJECT_INTERACTIVE_SILHOUETTE_WIDTH_FACTOR := 0.024
+const OBJECT_INTERACTIVE_SILHOUETTE_MIN_PX := 1.15
+const OBJECT_INTERACTIVE_SILHOUETTE_VISIBLE := Color(0.010, 0.012, 0.009, 0.90)
+const OBJECT_INTERACTIVE_SILHOUETTE_MEMORY := Color(0.16, 0.28, 0.30, 0.74)
 const HERO_COMMAND_PENNANT_MODEL := "compact_player_command_flag"
 const HERO_COMMAND_PENNANT_WIDTH_FACTOR := 0.19
 const HERO_COMMAND_PENNANT_HEIGHT_FACTOR := 0.12
@@ -276,7 +281,8 @@ const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)
 const TOWN_ENTRY_OFFSET := Vector2i(1, 1)
 const TOWN_VISUAL_FOOTPRINT := Vector2i(3, 4)
 const TOWN_VISUAL_ANCHOR_MODEL := "three_by_four_entry_center_bottom"
-const TOWN_SPRITE_EXTENT_FACTOR := 0.95
+const TOWN_SPRITE_EXTENT_FACTOR := 1.24
+const TOWN_SPRITE_WIDTH_CAP_TILES := 2.90
 const TOWN_SPRITE_GROUND_CLEARANCE_TILES := 0.18
 const TOWN_ADJUNCT_RESOURCE_LAYOUT_MODEL := "compact_outward_edge_town_footprint_resource"
 const TOWN_ADJUNCT_RESOURCE_EXTENT_FACTOR := 0.64
@@ -3958,12 +3964,23 @@ func _town_sprite_draw_payload(asset_id: String, texture: Texture2D, footprint_r
 	var provisional_center := Vector2(footprint_rect.get_center().x, painted_ground_line_y - visible_extent_px * 0.5)
 	var payload := _object_painted_sprite_draw_payload(asset_id, texture, provisional_center, visible_extent_px)
 	var draw_rect: Rect2 = payload.get("draw_rect", Rect2(provisional_center, Vector2.ZERO))
+	var width_cap_px := single_tile_extent * TOWN_SPRITE_WIDTH_CAP_TILES
+	draw_rect.size = Vector2(width_cap_px, visible_extent_px)
+	draw_rect.position = Vector2(
+		footprint_rect.get_center().x - width_cap_px * 0.5,
+		painted_ground_line_y - visible_extent_px
+	)
 	var grounding_adjustment := painted_ground_line_y - draw_rect.end.y
 	draw_rect.position.y += grounding_adjustment
 	payload["draw_rect"] = draw_rect
+	payload["draw_size"] = draw_rect.size
+	payload["draw_aspect"] = draw_rect.size.x / maxf(draw_rect.size.y, 0.0001)
 	payload["sprite_center"] = provisional_center + Vector2(0.0, grounding_adjustment)
 	payload["visible_extent_px"] = visible_extent_px
 	payload["single_tile_extent_px"] = single_tile_extent
+	payload["town_width_cap_px"] = width_cap_px
+	payload["town_width_cap_tiles"] = TOWN_SPRITE_WIDTH_CAP_TILES
+	payload["town_vertical_landmark_fit"] = true
 	payload["painted_ground_line_y"] = painted_ground_line_y
 	payload["painted_bottom_clearance_px"] = footprint_rect.end.y - draw_rect.end.y
 	payload["footprint_rect"] = footprint_rect
@@ -4225,8 +4242,25 @@ func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profil
 	var draw_payload := _object_painted_sprite_draw_payload(asset_id, texture, sprite_center, sprite_extent)
 	var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)
 	var sprite_rect: Rect2 = draw_payload.get("draw_rect", Rect2(sprite_center, Vector2.ZERO))
-	_canvas_draw_texture_rect(draw_texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	if _mapped_object_uses_interactive_silhouette(profile):
+		_draw_sprite_silhouette_outline(
+			draw_texture,
+			sprite_rect,
+			OBJECT_INTERACTIVE_SILHOUETTE_MEMORY if remembered else OBJECT_INTERACTIVE_SILHOUETTE_VISIBLE,
+			maxf(OBJECT_INTERACTIVE_SILHOUETTE_MIN_PX, sprite_extent * OBJECT_INTERACTIVE_SILHOUETTE_WIDTH_FACTOR)
+		)
+	_canvas_draw_texture_rect(draw_texture, sprite_rect, false, _mapped_object_sprite_modulate(profile, remembered))
 	return true
+
+func _mapped_object_uses_interactive_silhouette(profile: Dictionary) -> bool:
+	return _semantic_visual_scale_class(profile) not in ["ground_detail", "terrain_blocker"]
+
+func _mapped_object_sprite_modulate(profile: Dictionary, remembered: bool) -> Color:
+	if remembered:
+		return OBJECT_SPRITE_MEMORY_MODULATE
+	if _semantic_visual_scale_class(profile) == "ground_detail":
+		return OBJECT_SPRITE_DECORATION_MODULATE
+	return OBJECT_SPRITE_VISIBLE_MODULATE
 
 func _object_canvas_draw_rect(asset_id: String, texture: Texture2D, sprite_center: Vector2, visible_extent_px: float, preloaded_region: Dictionary = {}) -> Rect2:
 	var region := preloaded_region if not preloaded_region.is_empty() else _object_texture_visible_region(asset_id, texture)
@@ -5878,7 +5912,7 @@ func _sprite_extent_fraction(profile: Dictionary, footprint: Vector2i) -> float:
 		base += float(maxi(footprint.y - 1, 0)) * 0.03
 	return clampf(
 		base,
-		OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES,
+		minf(OBJECT_DECORATION_VISIBLE_EXTENT_TILES, OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES),
 		maxf(OBJECT_LANDMARK_VISIBLE_EXTENT_TILES, OBJECT_BLOCKER_VISIBLE_EXTENT_TILES)
 	)
 
@@ -6470,6 +6504,10 @@ func validation_object_sprite_scale_payload(asset_id: String, family: String, fo
 		"primary_class": String(profile.get("primary_class", "")),
 		"footprint_tier": String(profile.get("footprint_tier", "")),
 		"semantic_scale_class": _semantic_visual_scale_class(profile),
+		"interactive_silhouette": _mapped_object_uses_interactive_silhouette(profile),
+		"interactive_silhouette_model": WORLD_SPRITE_SILHOUETTE_MODEL if _mapped_object_uses_interactive_silhouette(profile) else "none",
+		"interactive_silhouette_width_px": maxf(OBJECT_INTERACTIVE_SILHOUETTE_MIN_PX, visible_extent_px * OBJECT_INTERACTIVE_SILHOUETTE_WIDTH_FACTOR) if _mapped_object_uses_interactive_silhouette(profile) else 0.0,
+		"visible_modulate_alpha": _mapped_object_sprite_modulate(profile, false).a,
 		"footprint": {"width": normalized_footprint.x, "height": normalized_footprint.y},
 		"visible_footprint_span": {"width": normalized_visible_span.x, "height": normalized_visible_span.y},
 		"world_tile_extent_px": float(metrics.get("single_tile_extent_px", 0.0)),
@@ -6486,6 +6524,8 @@ func validation_object_sprite_scale_payload(asset_id: String, family: String, fo
 		"draw_aspect": float(draw_payload.get("draw_aspect", 0.0)),
 		"draw_rect": {"x": draw_rect.position.x, "y": draw_rect.position.y, "width": draw_rect.size.x, "height": draw_rect.size.y},
 		"draw_size_tiles": {"x": draw_size.x / single_tile_extent, "y": draw_size.y / single_tile_extent},
+		"painted_width_tiles": draw_size.x / single_tile_extent,
+		"painted_height_tiles": draw_size.y / single_tile_extent,
 		"visible_extent_tiles": visible_extent_px / single_tile_extent,
 		"uses_multi_tile_visual_cap": bool(metrics.get("uses_multi_tile_visual_cap", false)),
 		"min_tiles": float(metrics.get("min_tiles", 0.0)),
@@ -6546,8 +6586,12 @@ func validation_town_sprite_scale_payload(asset_id: String = "town_faction_ember
 		"source_aspect": float(draw_payload.get("source_aspect", 0.0)),
 		"draw_aspect": float(draw_payload.get("draw_aspect", 0.0)),
 		"draw_size_tiles": {"x": draw_size.x / single_tile_extent, "y": draw_size.y / single_tile_extent},
+		"painted_width_tiles": draw_size.x / single_tile_extent,
+		"painted_height_tiles": draw_size.y / single_tile_extent,
 		"draw_rect_tiles": {"x": draw_rect.position.x / single_tile_extent, "y": draw_rect.position.y / single_tile_extent, "width": draw_rect.size.x / single_tile_extent, "height": draw_rect.size.y / single_tile_extent},
 		"visible_extent_tiles": visible_extent_px / single_tile_extent,
+		"town_width_cap_tiles": float(draw_payload.get("town_width_cap_tiles", 0.0)),
+		"town_vertical_landmark_fit": bool(draw_payload.get("town_vertical_landmark_fit", false)),
 		"visible_extent_fraction_of_footprint_depth": TOWN_SPRITE_EXTENT_FACTOR,
 		"town_to_hero_extent_ratio": (visible_extent_px / single_tile_extent) / HERO_FIELD_SPRITE_EXTENT_FACTOR,
 		"town_to_largest_other_object_extent_ratio": (visible_extent_px / single_tile_extent) / MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES,
