@@ -16408,14 +16408,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Owner-directed #10230 is complete. Authored map objects now reach live sessions, the two sparsest authored maps have explicit original-raster route content, and corrected package metrics prove zero visitable-object adoption loss without Native RMG output changes.",
+  "currentNotes": "Owner-directed #10231 completed: normal-play terrain and every authoritative generated blocker body cell now resolve through original raster art without changing Native RMG or gameplay authority.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "overworld-strategic-density-and-route-occupancy-10230",
-  "currentSliceId": "overworld-strategic-density-and-route-occupancy-10230",
-  "currentSliceNotes": "Completed with 46 collectible/save-exact authored route pickups, 36 original-raster scenic blockers covering 203 authoritative body tiles, corrected Small-through-Extra-Large native-package density evidence with zero missing visitables, inspected responsive captures, and matching 245114576-byte Linux/Windows package flows.",
+  "currentSlice": "ux-overworld-raster-terrain-and-visible-blocker-mass-10231",
+  "currentSliceId": "ux-overworld-raster-terrain-and-visible-blocker-mass-10231",
+  "currentSliceNotes": "No owner-directed implementation slice is active. #10231 is completed with inspected raster terrain/body coverage and matching Linux/Windows package evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Strategic Density And Route Occupancy",
-  "currentSliceUpdatedAt": "2026-09-04T09:37:48Z",
+  "currentSliceTitle": "Overworld Raster Terrain And Visible Blocker Mass",
+  "currentSliceUpdatedAt": "2026-09-04T14:02:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21720,7 +21720,7 @@
       }
     }
   },
-  "guardrailNote": "Implement only #10230 live occupancy/destination cadence. Native RMG placement remains phase/private-state owned: no density scalar, synthetic post-payload object pass, retry, gate, or final-map delta tuning.",
+  "guardrailNote": "No implementation slice is active. #10231 preserved Native RMG output, placement, topology, density, roads, collision, action tiles, interactions, and save authority.",
   "lastValidation": {
     "id": "content-eight-commanders-proving-roads-20260831",
     "title": "Eight Commanders' Proving Roads",
@@ -21937,9 +21937,89 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "#10230 is complete; select a new bounded owner-directed slice before further implementation, and keep any future native density work source-parity owned and fail-closed.",
-  "notes": "Owner-directed #10230 Overworld strategic density and route occupancy is complete. #10229 landmark readability and prior Phase 6 slices remain completed.",
+  "nextActionGuardrailNote": "Select and track the next owner-directed Phase 6 implementation slice before changing runtime behavior.",
+  "notes": "Owner-directed #10231 Overworld raster terrain and visible blocker mass is completed. No implementation slice is active.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-raster-terrain-and-visible-blocker-mass-10231",
+      "title": "Overworld Raster Terrain And Visible Blocker Mass",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md",
+        "docs/overworld-content-bible.md",
+        "docs/overworld-raster-terrain-and-visible-blocker-mass-requirements.md"
+      ],
+      "purpose": "Replace repetitive procedural ground marks and invisible generated blocker collision with deterministic original-raster terrain variation and biome-appropriate visible masses while preserving exact package and gameplay authority.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/terrain_tiles",
+        "art/overworld/source/generated",
+        "tests/overworld_raster_terrain_blocker_mass_report.gd",
+        "tests/overworld_raster_terrain_blocker_mass_report.tscn",
+        "tests/overworld_raster_terrain_blocker_mass_report.py",
+        "tests/validate_repo.py",
+        "docs/overworld-raster-terrain-and-visible-blocker-mass-requirements.md",
+        "docs/overworld-raster-terrain-and-visible-blocker-mass-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Inspected deterministic Medium captures at 1920x1080 and 1280x720 eliminate the repeated scratch grid and show physical raster mass on every blocked region without route or control occlusion",
+        "Focused runtime coverage proves zero uncovered authoritative blocker body cells, manifest-backed raster resolution, deterministic composition, zero procedural normal-play ground marks, and unchanged package/gameplay authority",
+        "Existing generated-map, object-art, pathing, interaction, repository, and matching Linux/Windows package startup/generated-entry checks pass below 250000000 bytes"
+      ],
+      "nonGoals": [
+        "Copied Heroes art/maps/names/DEFs/pixels, procedural geometry, SVG, debug icons, or generic fallback art",
+        "Native RMG topology, placement, terrain selection, density, reward/guard, road, retry, gate, final-payload, parity, gameplay, collision, interaction, pathing, save-schema, Town/Battle UI, package-limit, signing, publication, whole-game, or release-readiness changes"
+      ],
+      "validationCommands": [
+        "python3 tests/overworld_raster_terrain_blocker_mass_report.py",
+        "godot4 --headless --path . --scene res://tests/random_map_generated_density_distribution_report.tscn",
+        "godot4 --headless --path . --scene res://tests/overworld_live_object_art_coverage_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "git diff --check"
+      ],
+      "createdAt": "2026-09-04T12:59:08Z",
+      "startedAt": "2026-09-04T12:59:08Z",
+      "updatedAt": "2026-09-04T14:02:00Z",
+      "completedAt": "2026-09-04T14:02:00Z",
+      "notes": "Completed. Removed the procedural ground-scratch pass, added 17 original continuous raster terrain materials and 16 original biome-specific tree clusters, and now renders every authoritative blocker body cell with deterministic biome-matched raster art.",
+      "result": "Deterministic Medium evidence covers 5184/5184 terrain cells and 2324/2324 authoritative blocker body cells with zero procedural scratch calls, zero uncovered collision cells, 83 distinct blocker assets, and unchanged session/collision/native-output authority. Inspected 1920x1080 and 1280x720 captures and broad object-art/pathing/save tests pass. Matching Linux/Windows PCKs are 246949848 bytes; Linux boot passes and direct packaged Windows validation completes generated setup, Overworld entry, and Town entry in 13759 ms. The stock verbose Wine wrapper process-handle timeout is documented separately.",
+      "evidenceArtifacts": [
+        "docs/overworld-raster-terrain-and-visible-blocker-mass-report.md",
+        "art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+        ".artifacts/overworld_raster_terrain_10231/report.json",
+        ".artifacts/overworld_raster_terrain_10231/medium_generated_1920x1080.png",
+        ".artifacts/overworld_raster_terrain_10231/medium_generated_1280x720.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json",
+        ".artifacts/packaging_windows_manual_generated_flow/live_validation_report.json"
+      ],
+      "metrics": {
+        "terrain_tile_count": 5184,
+        "procedural_microtexture_draw_calls": 0,
+        "authoritative_body_tile_count": 2324,
+        "visible_body_tile_count": 2324,
+        "uncovered_body_tile_count": 0,
+        "distinct_blocker_asset_count": 83,
+        "linux_pck_bytes": 246949848,
+        "windows_pck_bytes": 246949848,
+        "pck_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 3050152,
+        "save_version_changed": false,
+        "native_rmg_output_changed": false,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "No work remains in this bounded raster terrain and blocker-visibility slice. The known exit-only texture RID warning, stock verbose Wine wrapper handle timeout, Native RMG parity, signing, publication, hardware certification, whole-game validation, and release readiness remain separate."
+    },
     {
       "id": "overworld-strategic-density-and-route-occupancy-10230",
       "title": "Overworld Strategic Density And Route Occupancy",
@@ -108947,8 +109027,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The Overworld has uneven destination cadence: sparse authored maps and current local generated views leave large stretches of usable terrain without meaningful choices; exact package/runtime versus source-generation ownership is still being diagnosed.",
-  "remainingWork": "Complete #10230 through a measured runtime/content correction without heuristic Native RMG tuning, then run focused density, interaction, pathing, save, repository, capture, and Linux/Windows package validation.",
+  "remainingGap": "The bounded #10231 raster terrain and blocker-visibility gap is closed. Broader production completion and release readiness remain open.",
+  "remainingWork": "Select the next owner-directed Phase 6 implementation slice. Native RMG parity and release-wide certification remain separate unresolved work.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -109379,7 +109459,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_strategic_density_and_route_occupancy_in_progress",
+  "result": "overworld_raster_terrain_and_visible_blocker_mass_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -109480,9 +109560,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Implementing #10230: correct measured Overworld destination/occupancy gaps through live authored and package authority while preserving Native RMG phase/private-state discipline.",
-  "taskId": "10230",
-  "updatedAt": "2026-09-04T08:49:35Z",
+  "summary": "Completed #10231: original-raster terrain variation and complete visible raster coverage for authoritative generated blocker bodies without changing Native RMG or gameplay authority.",
+  "taskId": "10231",
+  "updatedAt": "2026-09-04T14:02:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

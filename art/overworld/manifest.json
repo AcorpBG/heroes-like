@@ -9,7 +9,7 @@
       "town_candidate_file": "towns/001-fantasy-strategy-game-overworld-map-obje.png",
       "encounter_candidate_file": "encounters/001-fantasy-strategy-game-overworld-map-obje.png"
     },
-    "note": "Generated object asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks. Live terrain uses the original authored quiet tile bank and procedural special-terrain fallback. The extracted HoMM3 atlas and generated renderer-study payloads remain local reference material and are excluded from official packages."
+    "note": "Generated object asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches. Live terrain uses the original authored quiet tile bank plus original generated raster surface-detail and grain assets; normal mapped terrain does not receive procedural scratch strokes. The extracted HoMM3 atlas and generated renderer-study payloads remain local reference material and are excluded from official packages."
   },
   "terrain_rendering": {
     "model": "authored_autotile_layers",
@@ -20,8 +20,40 @@
     "tile_art_source_basis": "original_procedural_reference_informed",
     "tile_art_preparation": "authored_original_64x64_tile_bank_with_procedural_special_terrain_fallback",
     "surface_detail_atlas": "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png",
-    "surface_detail_model": "biome_specific_painterly_landmark_clusters_v3",
+    "surface_detail_model": "biome_specific_painterly_landmark_clusters_denser_v4",
     "surface_detail_source_manifest": "res://art/overworld/source/generated/terrain/world_surface_v3/manifest.json",
+    "normal_play_microtexture_policy": "original_raster_only_no_procedural_strokes",
+    "generated_blocker_body_presentation": "every_authoritative_body_cell_has_overlapping_biome_matched_original_raster_member_v5",
+    "raster_base_v2": {
+      "model": "generated_original_map_space_raster_material_v2",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "runtime_size": [256, 256],
+      "map_span_tiles": 8,
+      "sampling": "continuous_map_space_regions_not_restarted_per_tile",
+      "terrain_assets": {
+        "grass": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/grass.png",
+        "plains": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/plains.png",
+        "forest": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/forest.png",
+        "mire": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/mire.png",
+        "swamp": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/swamp.png",
+        "rough": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/rough.png",
+        "hills": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/rough.png",
+        "rock": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/rock.png",
+        "ridge": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/rock.png",
+        "dirt": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/dirt.png",
+        "badlands": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/dirt.png",
+        "sand": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/sand.png",
+        "ash": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/ash.png",
+        "lava": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/lava.png",
+        "underground": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/underground.png",
+        "cavern": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/underground.png",
+        "snow": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/snow.png",
+        "ice": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/ice.png",
+        "coast": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/coast.png",
+        "shore": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/shore.png",
+        "water": "res://art/overworld/runtime/terrain_tiles/base_generated_v2/water.png"
+      }
+    },
     "terrain_transition_selection": "accepted_web_prototype_relation_class_row_lookup",
     "terrain_transition_rule": "settled_owner_relation_classes_select_recovered_row_buckets",
     "editor_terrain_placement_model": "homm3_owner_queue_rewrite_final_normalization.v1",
@@ -111,6 +143,134 @@
       "source_trimmed": "res://art/overworld/source/generated/ownership_pennants/world_facing_v1/neutral_pennant_source.png",
       "source_model": "built_in_image_gen_original_world_facing_ownership_pennant",
       "source_manifest": "res://art/overworld/source/generated/ownership_pennants/world_facing_v1/manifest.json"
+    },
+    "generated_tree_deciduous_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [0, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_deciduous_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [128, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_deciduous_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [256, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_deciduous_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [384, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_evergreen_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [0, 128, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_evergreen_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [128, 128, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_evergreen_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [256, 128, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_evergreen_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [384, 128, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_mire_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [0, 256, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_mire_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [128, 256, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_mire_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [256, 256, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_mire_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [384, 256, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_autumn": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [0, 384, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_frost": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [128, 384, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_badland": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [256, 384, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "generated_tree_ash": {
+      "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+      "atlas_region": [384, 384, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
+      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
     },
     "frontier_town": {
       "path": "res://art/overworld/runtime/objects/towns/frontier_town.png",
@@ -19133,7 +19293,7 @@
     "encounter_gloambell_sounding_deep_watch": "encounter_frontier_mythic_gloambell_sounding_deep_watch"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
-  "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",
+  "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_and_exact_original_raster_coverage_for_every_generated_package_body_cell",
   "map_object_sprite_manifest": "res://art/overworld/map_object_sprites.json",
   "map_object_sprite_mapping_policy": "distinct_generated_sprite_per_authored_non_decorative_gap_object_after_foundation_pass"
 }

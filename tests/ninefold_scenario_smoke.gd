@@ -351,7 +351,7 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 		return false
 	var shoreline_detail: Dictionary = shoreline.get("terrain_detail_decal", {}) if shoreline.get("terrain_detail_decal", {}) is Dictionary else {}
 	if (
-		String(shoreline_detail.get("model", "")) != "biome_specific_painterly_landmark_clusters_v3"
+		String(shoreline_detail.get("model", "")) != "biome_specific_painterly_landmark_clusters_denser_v4"
 		or String(shoreline_detail.get("terrain_group", "")) != "water"
 		or bool(shoreline_detail.get("drawn", true))
 		or not bool(shoreline_detail.get("water_excluded", false))
@@ -499,7 +499,7 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 	if String(hidden_grain.get("model", "")) != "single_normalized_map_space_seamless_painterly_microtexture" or bool(hidden_grain.get("drawn", true)) or not bool(hidden_grain.get("hidden_by_unexplored_shroud", false)) or bool(hidden_grain.get("terrain_identity_sampled", true)):
 		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain grain: %s." % JSON.stringify(hidden_grain))
 		return false
-	if String(hidden_detail.get("model", "")) != "biome_specific_painterly_landmark_clusters_v3" or bool(hidden_detail.get("drawn", true)) or not bool(hidden_detail.get("hidden_by_unexplored_shroud", false)) or bool(hidden_detail.get("terrain_identity_sampled", true)):
+	if String(hidden_detail.get("model", "")) != "biome_specific_painterly_landmark_clusters_denser_v4" or bool(hidden_detail.get("drawn", true)) or not bool(hidden_detail.get("hidden_by_unexplored_shroud", false)) or bool(hidden_detail.get("terrain_identity_sampled", true)):
 		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain surface detail: %s." % JSON.stringify(hidden_detail))
 		return false
 	if String(hidden_water_ripples.get("model", "")) != "deterministic_broken_painterly_current_pairs" or bool(hidden_water_ripples.get("drawn", true)) or not bool(hidden_water_ripples.get("hidden_by_unexplored_shroud", false)) or bool(hidden_water_ripples.get("terrain_identity_sampled", true)):
@@ -528,7 +528,7 @@ func _terrain_detail_decal_payload_exact(detail: Dictionary, expected_group: Str
 		"ash":
 			expected_cell_ids = [2, 6, 10, 14]
 	if (
-		String(detail.get("model", "")) != "biome_specific_painterly_landmark_clusters_v3"
+		String(detail.get("model", "")) != "biome_specific_painterly_landmark_clusters_denser_v4"
 		or String(detail.get("source_model", "")) != "built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"
 		or String(detail.get("terrain_group", "")) != expected_group
 		or not bool(detail.get("atlas_texture_loaded", false))
@@ -536,11 +536,11 @@ func _terrain_detail_decal_payload_exact(detail: Dictionary, expected_group: Str
 		or detail.get("atlas_size", {}) != {"x": 1024, "y": 1024}
 		or detail.get("atlas_grid", {}) != {"x": 4, "y": 4}
 		or detail.get("atlas_cell_size", {}) != {"x": 256, "y": 256}
-		or int(detail.get("density_modulus", 0)) != 9
+		or int(detail.get("density_modulus", 0)) != 5
 		or detail.get("active_density_residues", []) != [0]
 		or bool(detail.get("interactive", true))
 		or bool(detail.get("collision", true))
-		or not is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.74)
+		or not is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.82)
 		or String(detail.get("draw_order", "")) != "after_macro_lighting_before_roads_objects_and_fog"
 		or not bool(detail.get("hidden_by_unexplored_shroud", false))
 		or String(detail.get("variation_basis", "")) != "tile_coordinate_and_terrain_id_only"
@@ -560,7 +560,7 @@ func _terrain_detail_decal_payload_exact(detail: Dictionary, expected_group: Str
 		and int(source_rect.get("width", 0)) == 256
 		and int(source_rect.get("height", 0)) == 256
 		and bool(detail.get("destination_contained", false))
-		and extent_factor >= 0.30 and extent_factor <= 0.48
+		and extent_factor >= 0.44 and extent_factor <= 0.68
 		and float(offset.get("x", -1.0)) >= -0.16 and float(offset.get("x", 1.0)) <= 0.16
 		and float(offset.get("y", -1.0)) >= -0.08 and float(offset.get("y", 1.0)) <= 0.14
 		and float(destination_rect.get("width", 0.0)) > 0.0

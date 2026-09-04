@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10230
+Task: #10231
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -24,8 +24,34 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed owner-directed implementation slice: `overworld-strategic-density-and-route-occupancy-10230`, which restores authored scenic blockers, adds explicit low-value route destinations to the two sparsest authored maps, and measures native-package occupancy through authoritative action/body/road surfaces without guessed Native RMG tuning.
-- Current package boundary: matching Linux and Windows release exports measure 245114576 bytes, 4885424 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Most recently completed owner-directed implementation slice: `ux-overworld-raster-terrain-and-visible-blocker-mass-10231`, which replaces repeated procedural ground scratches and invisible blocker collision with continuous original raster terrain and exact biome-matched body-cell art without changing map authority.
+- Current package boundary: matching Linux and Windows release exports measure 246949848 bytes, 3050152 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Overworld Raster Terrain And Visible Blocker Mass
+
+id: `ux-overworld-raster-terrain-and-visible-blocker-mass-10231`
+
+Status: completed 2026-09-04. Normal play now samples 17 original raster terrain materials continuously in map space, never draws the rejected procedural scratch pass, and covers all 2324 authoritative body cells in the deterministic Medium case with loaded biome-matched raster art from an 83-asset blocker palette. Original generated tree clusters make forest/mire/cold/dry/ash blocking physically readable without changing package topology, terrain, roads, collision, action tiles, interaction, save, or Native RMG output. Inspected 1920x1080 and 1280x720 captures, focused and broad object-art/pathing/save reports, repository validation, Linux export/boot, and the packaged Windows generated setup -> Overworld -> Town flow pass at matching 246949848-byte PCKs. The stock Wine wrapper's verbose baseline process-handle timeout is recorded separately in the evidence report and is not a packaged game error.
+
+Owner direction: the generated Overworld ground is sterile and visibly repetitive, with obvious vertical scratch streaks; blocked space often has no visible trees, rocks, or other physical mass. Replace that presentation with cohesive original raster terrain and readable biome-appropriate blocker masses.
+
+Requirements: `docs/overworld-raster-terrain-and-visible-blocker-mass-requirements.md`, `docs/lessons-learned.md` Native RMG recovery discipline, `docs/overworld-content-bible.md`, and `project.md` Phase 6 production alpha presentation.
+
+Implementation boundary:
+- remove normal-play procedural ground strokes and route terrain variation through original raster assets with deterministic, non-gridlike macro variation;
+- render every authoritative generated blocker body cell as part of a cohesive biome-appropriate tree, rock, ridge, mire, or water mass using manifest-backed original raster assets;
+- preserve native package topology, terrain identity, roads, collision/body masks, action tiles, placement records, interactions, pathing, determinism, save version 9, and camera/input behavior exactly;
+- fail focused validation if any normal generated blocker body cell has no raster visual coverage or if procedural/debug stand-ins re-enter normal play.
+
+Completion criteria:
+- deterministic Medium generated-map captures at 1920x1080 and 1280x720 visibly eliminate the repeated scratch grid and make blocked regions readable as occupied terrain without clipping controls or obscuring routes;
+- focused runtime coverage proves zero uncovered authoritative blocker body cells, manifest-backed raster resolution for every rendered body member, deterministic presentation, and unchanged package/gameplay authority;
+- existing generated-map, object-art, pathing, interaction, repository, and matching Linux/Windows export/package startup and generated-entry checks pass below the unchanged 250000000-byte ceiling.
+
+Non-goals:
+- no copied Heroes art/maps/names/DEFs/pixels or protected expression; no procedural geometry, SVG, debug icon, or generic fallback art;
+- no Native RMG topology, placement, terrain selection, density, reward/guard, road, retry, or final-payload behavior change; no guessed recovery or parity claim;
+- no gameplay rules, balance, AI, interaction, pathing, collision, save schema, Town/Battle UI, package-limit, signing, publication, whole-game validation, or release-readiness change.
 
 ## Overworld Strategic Density And Route Occupancy
 

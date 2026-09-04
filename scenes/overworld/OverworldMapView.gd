@@ -190,18 +190,15 @@ const OBJECT_VISIBLE_FOOTPRINT_INSET_TILES := 0.02
 const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
 const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
 const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"
-const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 1.20
-const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.93
-const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.07
-const GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES := 4
+const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 1.28
+const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.88
+const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.08
+const GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES := 1
 const GENERATED_DECORATIVE_BODY_OFFSET_X_TILES := 0.12
-const GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES := -0.04
-const GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES := 0.04
-const GENERATED_DECORATIVE_BODY_MASS_SMALL_EXTENT_TILES := 1.52
-const GENERATED_DECORATIVE_BODY_MASS_MEDIUM_EXTENT_TILES := 1.90
-const GENERATED_DECORATIVE_BODY_MASS_LARGE_EXTENT_TILES := 2.28
-const GENERATED_DECORATIVE_BODY_MASS_BOUNDS_MARGIN_TILES := 0.52
-const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_body_cells_overlapping_landscape_mass_anchors_v4"
+const GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES := -0.08
+const GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES := 0.06
+const GENERATED_DECORATIVE_BODY_MASS_BOUNDS_MARGIN_TILES := 0.42
+const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_body_cell_raster_mass_coverage_v5"
 const GENERATED_DECORATIVE_BIOME_BY_TERRAIN := {
 	"grass": "biome_grasslands",
 	"forest": "biome_deep_forest",
@@ -395,26 +392,25 @@ const TERRAIN_GRAIN_MODEL := "single_normalized_map_space_seamless_painterly_mic
 const TERRAIN_GRAIN_SOURCE_MODEL := "original_generated_neutral_grain_mirrored_seamless_alpha"
 const TERRAIN_GRAIN_MODULATE := Color(1.0, 1.0, 1.0, 0.72)
 const TERRAIN_GRAIN_EXPECTED_SIZE := Vector2i(1024, 1024)
-const TERRAIN_MICROTEXTURE_MODEL := "deterministic_biome_tinted_brush_strokes_v1"
-const TERRAIN_MICROTEXTURE_STROKE_COUNT := 5
-const TERRAIN_MICROTEXTURE_MIN_LENGTH_FACTOR := 0.045
-const TERRAIN_MICROTEXTURE_MAX_LENGTH_FACTOR := 0.13
-const TERRAIN_MICROTEXTURE_SHADOW_ALPHA := 0.07
-const TERRAIN_MICROTEXTURE_HIGHLIGHT_ALPHA := 0.13
-const TERRAIN_DETAIL_DECAL_MODEL := "biome_specific_painterly_landmark_clusters_v3"
+const TERRAIN_RASTER_BASE_V2_MODEL := "generated_original_map_space_raster_material_v2"
+const TERRAIN_RASTER_BASE_V2_EXPECTED_SIZE := Vector2i(256, 256)
+const TERRAIN_RASTER_BASE_V2_MAP_SPAN_TILES := 8
+const TERRAIN_MICROTEXTURE_MODEL := "disabled_original_raster_surface_only_v2"
+const TERRAIN_MICROTEXTURE_STROKE_COUNT := 0
+const TERRAIN_DETAIL_DECAL_MODEL := "biome_specific_painterly_landmark_clusters_denser_v4"
 const TERRAIN_DETAIL_DECAL_SOURCE_MODEL := "built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"
 const TERRAIN_DETAIL_DECAL_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png"
 const TERRAIN_DETAIL_DECAL_ATLAS_SIZE := Vector2i(1024, 1024)
 const TERRAIN_DETAIL_DECAL_GRID_SIZE := Vector2i(4, 4)
 const TERRAIN_DETAIL_DECAL_CELL_SIZE := Vector2i(256, 256)
-const TERRAIN_DETAIL_DECAL_DENSITY_MODULUS := 9
+const TERRAIN_DETAIL_DECAL_DENSITY_MODULUS := 5
 const TERRAIN_DETAIL_DECAL_ACTIVE_RESIDUES := [0]
-const TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR := 0.30
-const TERRAIN_DETAIL_DECAL_MAX_EXTENT_FACTOR := 0.48
+const TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR := 0.44
+const TERRAIN_DETAIL_DECAL_MAX_EXTENT_FACTOR := 0.68
 const TERRAIN_DETAIL_DECAL_MAX_OFFSET_X_FACTOR := 0.16
 const TERRAIN_DETAIL_DECAL_MIN_OFFSET_Y_FACTOR := -0.08
 const TERRAIN_DETAIL_DECAL_MAX_OFFSET_Y_FACTOR := 0.14
-const TERRAIN_DETAIL_DECAL_MODULATE := Color(0.96, 0.98, 0.92, 0.74)
+const TERRAIN_DETAIL_DECAL_MODULATE := Color(0.96, 0.98, 0.92, 0.82)
 const TERRAIN_AMBIENT_MODEL := "deterministic_sparse_explored_tile_ambient_life"
 const TERRAIN_AMBIENT_DRAW_ORDER := ["terrain_and_roads", "ambient_life", "fog_and_objects", "routes_and_selection", "vfx", "frame_and_ui"]
 const TERRAIN_AMBIENT_PHASE_SPEED := 0.38
@@ -520,6 +516,7 @@ var _terrain_grammar: Dictionary = {}
 var _terrain_styles: Dictionary = {}
 var _terrain_overlay_styles: Dictionary = {}
 var _terrain_base_art: Dictionary = {}
+var _terrain_raster_base_v2_paths: Dictionary = {}
 var _terrain_edge_art: Dictionary = {}
 var _terrain_art_textures: Dictionary = {}
 var _terrain_art_transformed_textures: Dictionary = {}
@@ -1965,31 +1962,7 @@ func _draw_tile_terrain_surface(tile: Vector2i, rect: Rect2) -> void:
 		var base_color: Color = _terrain_color(terrain, "base_color", TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"]))
 		_canvas_draw_rect(rect, base_color, true)
 		_draw_authored_terrain_pattern(tile, rect, terrain, true)
-	_draw_painterly_terrain_microtexture(tile, rect, terrain)
 	_draw_terrain_transitions(tile, rect, terrain)
-
-func _draw_painterly_terrain_microtexture(tile: Vector2i, rect: Rect2, terrain: String) -> void:
-	var terrain_group := _terrain_group(terrain)
-	if terrain_group == "water" or rect.size.x <= 0.0 or rect.size.y <= 0.0:
-		return
-	var detail_color: Color = _terrain_color(terrain, "detail_color", Color(0.70, 0.68, 0.48, 1.0))
-	var extent := minf(rect.size.x, rect.size.y)
-	var line_width := maxf(0.7, extent * 0.009)
-	for stroke_index in range(TERRAIN_MICROTEXTURE_STROKE_COUNT):
-		var key := "%d:%d:%s:%d" % [tile.x, tile.y, terrain, stroke_index]
-		var start_factor := Vector2(
-			lerpf(0.10, 0.82, _stable_unit_fraction("micro_x:%s" % key)),
-			lerpf(0.14, 0.86, _stable_unit_fraction("micro_y:%s" % key))
-		)
-		var length_factor := lerpf(TERRAIN_MICROTEXTURE_MIN_LENGTH_FACTOR, TERRAIN_MICROTEXTURE_MAX_LENGTH_FACTOR, _stable_unit_fraction("micro_length:%s" % key))
-		var angle := lerpf(-0.72, 0.38, _stable_unit_fraction("micro_angle:%s" % key))
-		var direction := Vector2(cos(angle), sin(angle))
-		var start := rect.position + rect.size * start_factor
-		var finish := start + direction * extent * length_factor
-		var shadow_color := Color(0.025, 0.035, 0.025, TERRAIN_MICROTEXTURE_SHADOW_ALPHA)
-		var highlight_color := Color(detail_color.r, detail_color.g, detail_color.b, TERRAIN_MICROTEXTURE_HIGHLIGHT_ALPHA)
-		_canvas_draw_line(start + Vector2(0.0, line_width), finish + Vector2(0.0, line_width), shadow_color, line_width + 0.5, true)
-		_canvas_draw_line(start, finish, highlight_color, line_width, true)
 
 func _draw_tile_state_overlay(tile: Vector2i, rect: Rect2) -> void:
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
@@ -2026,7 +1999,18 @@ func _draw_terrain_tile_art(tile: Vector2i, rect: Rect2, terrain: String) -> boo
 	var texture = _terrain_art_texture_for_entry(entry)
 	if not (texture is Texture2D):
 		return false
-	_canvas_draw_texture_rect(texture, rect, false)
+	if bool(entry.get("map_space_sampling", false)) and Vector2i(texture.get_size()) == TERRAIN_RASTER_BASE_V2_EXPECTED_SIZE:
+		var source_tile_size := Vector2(TERRAIN_RASTER_BASE_V2_EXPECTED_SIZE) / float(TERRAIN_RASTER_BASE_V2_MAP_SPAN_TILES)
+		var source_rect := Rect2(
+			Vector2(
+				posmod(tile.x, TERRAIN_RASTER_BASE_V2_MAP_SPAN_TILES),
+				posmod(tile.y, TERRAIN_RASTER_BASE_V2_MAP_SPAN_TILES)
+			) * source_tile_size,
+			source_tile_size
+		)
+		_canvas_draw_texture_rect_region(texture, rect, source_rect)
+	else:
+		_canvas_draw_texture_rect(texture, rect, false)
 	return true
 
 func _draw_explored_terrain_boundary(tile: Vector2i, rect: Rect2) -> void:
@@ -3509,7 +3493,10 @@ func _draw_tile_state_icon(tile: Vector2i, rect: Rect2) -> void:
 	if not decorative_object.is_empty():
 		var decorative_rect := _decorative_object_footprint_rect(decorative_object, rect)
 		if not _draw_decorative_object_sprite(decorative_object, decorative_rect, remembered, tile):
-			_draw_decorative_object_marker(decorative_object, decorative_rect, remembered, tile)
+			# Generated package blockers are raster-only. Missing coverage is a
+			# validation failure, never permission to expose a procedural ruin.
+			if not bool(decorative_object.get("generated_decorative_body_cell", false)):
+				_draw_decorative_object_marker(decorative_object, decorative_rect, remembered, tile)
 	var standalone_map_object := _standalone_map_object_at(tile)
 	if not standalone_map_object.is_empty():
 		var object_rect := _decorative_object_footprint_rect(standalone_map_object, rect)
@@ -4158,7 +4145,7 @@ func _draw_decorative_object_sprite(object: Dictionary, rect: Rect2, remembered:
 
 func _draw_generated_decorative_body_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	if not bool(object.get("generated_body_visual_anchor", false)):
-		return true
+		return false
 	var asset_id := _decorative_object_asset_id(object)
 	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):
@@ -6429,8 +6416,11 @@ func validation_generated_object_visual_summary() -> Dictionary:
 		"body_tile_keys_exact": indexed_keys == expected_keys,
 		"loaded_body_asset_count": loaded_asset_count,
 		"visual_anchor_count": visual_anchor_count,
+		"uncovered_body_tile_count": maxi(0, indexed_keys.size() - visual_anchor_count),
+		"all_body_cells_visually_covered": visual_anchor_count == indexed_keys.size(),
 		"visual_anchor_placement_count": visual_anchor_placement_ids.size(),
 		"all_generated_records_anchored": visual_anchor_placement_ids.size() == generated_record_count,
+		"raster_coverage_density": float(visual_anchor_count) / float(maxi(indexed_keys.size(), 1)),
 		"sparse_anchor_density": float(visual_anchor_count) / float(maxi(indexed_keys.size(), 1)),
 		"all_body_assets_loaded": loaded_asset_count == visual_anchor_count,
 		"terrain_matched_body_asset_count": terrain_matched_asset_count,
@@ -7965,16 +7955,13 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"terrain_grain_overlay": _terrain_grain_overlay_payload(true),
 		"terrain_microtexture": {
 			"model": TERRAIN_MICROTEXTURE_MODEL,
-			"drawn": _terrain_group(terrain) != "water",
-			"stroke_count": TERRAIN_MICROTEXTURE_STROKE_COUNT if _terrain_group(terrain) != "water" else 0,
-			"min_length_factor": TERRAIN_MICROTEXTURE_MIN_LENGTH_FACTOR,
-			"max_length_factor": TERRAIN_MICROTEXTURE_MAX_LENGTH_FACTOR,
-			"shadow_alpha": TERRAIN_MICROTEXTURE_SHADOW_ALPHA,
-			"highlight_alpha": TERRAIN_MICROTEXTURE_HIGHLIGHT_ALPHA,
+			"drawn": false,
+			"stroke_count": TERRAIN_MICROTEXTURE_STROKE_COUNT,
+			"procedural_draw_calls": 0,
 			"interactive": false,
 			"collision": false,
-			"variation_basis": "tile_coordinate_terrain_id_and_stroke_index_only",
-			"draw_order": "after_base_tile_before_terrain_transitions_grain_decals_roads_objects_and_fog",
+			"variation_basis": "none_raster_assets_only",
+			"draw_order": "disabled",
 			"hidden_by_unexplored_shroud": true,
 		},
 		"terrain_detail_decal": _terrain_detail_decal_payload(tile, Rect2(Vector2.ZERO, Vector2.ONE)),
@@ -8803,10 +8790,21 @@ func _road_overlay_art_can_be_primary(overlay_id: String) -> bool:
 	return source_basis != "" and source_basis != TERRAIN_DEPRECATED_GENERATED_SOURCE_BASIS and source_basis.find("generated") < 0
 
 func _terrain_base_art_entry(terrain_id: String, tile: Vector2i) -> Dictionary:
+	var normalized_terrain_id := terrain_id.strip_edges().to_lower()
+	# Explicit local-reference validation keeps its self-contained receiver art;
+	# normal gameplay leaves that mode disabled and uses the original raster base.
 	var homm3_entry := _homm3_terrain_art_entry(terrain_id, tile)
 	if not homm3_entry.is_empty():
 		return homm3_entry
-	var entries = _terrain_base_art.get(terrain_id.strip_edges().to_lower(), [])
+	var raster_base_path := String(_terrain_raster_base_v2_paths.get(normalized_terrain_id, "")).strip_edges()
+	if raster_base_path != "":
+		return {
+			"variant_key": "%s:%s" % [TERRAIN_RASTER_BASE_V2_MODEL, normalized_terrain_id],
+			"path": raster_base_path,
+			"map_space_sampling": true,
+			"map_span_tiles": TERRAIN_RASTER_BASE_V2_MAP_SPAN_TILES,
+		}
+	var entries = _terrain_base_art.get(normalized_terrain_id, [])
 	if not (entries is Array) or entries.is_empty():
 		return {}
 	var index := _deterministic_art_index(tile, terrain_id, entries.size())
@@ -10350,8 +10348,6 @@ func _index_generated_decorative_body_cells(object: Dictionary) -> void:
 		return
 	var source_placement_id := String(object.get("placement_id", "")).strip_edges()
 	var body_tiles: Array = []
-	var min_tile := Vector2i(_map_size.x, _map_size.y)
-	var max_tile := Vector2i(-1, -1)
 	for tile_value in _tiles_from_payloads(package_block_tiles):
 		if not (tile_value is Vector2i):
 			continue
@@ -10361,8 +10357,6 @@ func _index_generated_decorative_body_cells(object: Dictionary) -> void:
 		if body_tile in body_tiles:
 			continue
 		body_tiles.append(body_tile)
-		min_tile = Vector2i(mini(min_tile.x, body_tile.x), mini(min_tile.y, body_tile.y))
-		max_tile = Vector2i(maxi(max_tile.x, body_tile.x), maxi(max_tile.y, body_tile.y))
 	if body_tiles.is_empty():
 		return
 	for body_tile_value in body_tiles:
@@ -10388,40 +10382,16 @@ func _index_generated_decorative_body_cells(object: Dictionary) -> void:
 		presentation["generated_body_source_placement_ids"] = [source_placement_id] if source_placement_id != "" else []
 		presentation["generated_body_source_count"] = 1
 		_generated_decorative_bodies_by_tile[key] = presentation
-	var desired_anchor_count := 1
-	if body_tiles.size() >= 9:
-		desired_anchor_count = 3
-	elif body_tiles.size() >= 5:
-		desired_anchor_count = 2
-	var selected_anchor_tiles: Array = []
-	for anchor_index in range(desired_anchor_count):
-		var target_x := lerpf(float(min_tile.x), float(max_tile.x), (float(anchor_index) + 0.5) / float(desired_anchor_count))
-		var best_tile := Vector2i(-1, -1)
-		var best_score := INF
-		for body_tile_value in body_tiles:
-			var candidate: Vector2i = body_tile_value
-			if candidate in selected_anchor_tiles:
-				continue
-			var existing: Dictionary = _generated_decorative_bodies_by_tile.get(_tile_key(candidate), {})
-			if bool(existing.get("generated_body_visual_anchor", false)):
-				continue
-			var score := absf(float(candidate.x) - target_x) * 100.0 + float(max_tile.y - candidate.y) * 12.0 + float(candidate.x) * 0.001
-			if score < best_score:
-				best_score = score
-				best_tile = candidate
-		if best_tile.x >= 0:
-			selected_anchor_tiles.append(best_tile)
-	var placement_bounds := {
-		"min_x": min_tile.x,
-		"min_y": min_tile.y,
-		"max_x": max_tile.x,
-		"max_y": max_tile.y,
-	}
-	var placement_footprint := Vector2i(max_tile.x - min_tile.x + 1, max_tile.y - min_tile.y + 1)
+	# Package body masks are the visual authority. A tightly bounded original
+	# raster member is attached to every unique collision cell; 1.28-tile
+	# painted extents overlap their neighbors into one legible landscape mass.
+	var selected_anchor_tiles: Array = body_tiles.duplicate()
 	for anchor_index in range(selected_anchor_tiles.size()):
 		var anchor_tile: Vector2i = selected_anchor_tiles[anchor_index]
 		var key := _tile_key(anchor_tile)
 		var existing: Dictionary = _generated_decorative_bodies_by_tile.get(key, {})
+		if bool(existing.get("generated_body_visual_anchor", false)):
+			continue
 		var source_ids: Array = existing.get("generated_body_source_placement_ids", []).duplicate(true)
 		if source_placement_id != "" and source_placement_id not in source_ids:
 			source_ids.append(source_placement_id)
@@ -10429,16 +10399,13 @@ func _index_generated_decorative_body_cells(object: Dictionary) -> void:
 		presentation["x"] = anchor_tile.x
 		presentation["y"] = anchor_tile.y
 		presentation["primary_tile"] = {"x": anchor_tile.x, "y": anchor_tile.y, "level": int(object.get("level", 0))}
-		presentation["bounds"] = placement_bounds.duplicate(true)
-		presentation["footprint"] = {"width": placement_footprint.x, "height": placement_footprint.y, "anchor": "bottom_center"}
+		presentation.erase("bounds")
+		presentation["footprint"] = {"width": 1, "height": 1, "anchor": "bottom_center"}
 		presentation["overworld_sprite_asset_id"] = _generated_decorative_body_asset_id(object, anchor_tile)
 		presentation["generated_body_motif_key"] = _generated_decorative_body_motif_key(object, anchor_tile)
 		var composition := _generated_decorative_body_composition(
 			object,
 			anchor_tile,
-			min_tile,
-			placement_footprint,
-			body_tiles.size(),
 			anchor_index,
 			selected_anchor_tiles.size()
 		)
@@ -10488,9 +10455,6 @@ func _generated_decorative_body_motif_key(object: Dictionary, tile: Vector2i) ->
 func _generated_decorative_body_composition(
 	object: Dictionary,
 	tile: Vector2i,
-	min_tile: Vector2i,
-	footprint: Vector2i,
-	body_tile_count: int,
 	anchor_index: int,
 	anchor_count: int
 ) -> Dictionary:
@@ -10514,20 +10478,13 @@ func _generated_decorative_body_composition(
 		lerpf(-GENERATED_DECORATIVE_BODY_OFFSET_X_TILES, GENERATED_DECORATIVE_BODY_OFFSET_X_TILES, _stable_unit_fraction("%s|offset_x" % composition_key)),
 		lerpf(GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES, GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES, _stable_unit_fraction("%s|offset_y" % composition_key))
 	)
-	var base_extent_tiles := GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES
-	if body_tile_count >= 9:
-		base_extent_tiles = GENERATED_DECORATIVE_BODY_MASS_LARGE_EXTENT_TILES
-	elif body_tile_count >= 5:
-		base_extent_tiles = GENERATED_DECORATIVE_BODY_MASS_MEDIUM_EXTENT_TILES
-	elif body_tile_count >= 3:
-		base_extent_tiles = GENERATED_DECORATIVE_BODY_MASS_SMALL_EXTENT_TILES
-	var sprite_extent_tiles := base_extent_tiles * scale_factor
+	var sprite_extent_tiles := GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES * scale_factor
 	var sprite_center_tiles := Vector2(
-		(float(tile.x - min_tile.x) + 0.5 + offset_tiles.x) / float(maxi(footprint.x, 1)),
-		(float(tile.y - min_tile.y) + 0.5 + offset_tiles.y - _object_lift_fraction("blocker", footprint)) / float(maxi(footprint.y, 1))
+		0.5 + offset_tiles.x,
+		0.5 + offset_tiles.y - _object_lift_fraction("blocker", Vector2i.ONE)
 	)
-	var horizontal_inset := maxf(0.0, sprite_extent_tiles * 0.5 - GENERATED_DECORATIVE_BODY_MASS_BOUNDS_MARGIN_TILES) / float(maxi(footprint.x, 1))
-	var vertical_inset := maxf(0.0, sprite_extent_tiles * 0.5 - GENERATED_DECORATIVE_BODY_MASS_BOUNDS_MARGIN_TILES) / float(maxi(footprint.y, 1))
+	var horizontal_inset := maxf(0.0, sprite_extent_tiles * 0.5 - GENERATED_DECORATIVE_BODY_MASS_BOUNDS_MARGIN_TILES)
+	var vertical_inset := maxf(0.0, sprite_extent_tiles * 0.5 - GENERATED_DECORATIVE_BODY_MASS_BOUNDS_MARGIN_TILES)
 	sprite_center_tiles = Vector2(
 		clampf(sprite_center_tiles.x, horizontal_inset, 1.0 - horizontal_inset),
 		clampf(sprite_center_tiles.y, vertical_inset, 1.0 - vertical_inset)
@@ -10726,6 +10683,7 @@ func _road_tile_payload(tile: Vector2i) -> Dictionary:
 
 func _load_overworld_art_manifest() -> void:
 	_overworld_art_manifest.clear()
+	_terrain_raster_base_v2_paths.clear()
 	_object_asset_paths.clear()
 	_object_asset_regions.clear()
 	_object_textures.clear()
@@ -10765,6 +10723,17 @@ func _load_overworld_art_manifest() -> void:
 		push_warning("Invalid overworld art manifest; procedural overworld markers remain active.")
 		return
 	_overworld_art_manifest = parser.data
+	var terrain_rendering = _overworld_art_manifest.get("terrain_rendering", {})
+	if terrain_rendering is Dictionary:
+		var raster_base = terrain_rendering.get("raster_base_v2", {})
+		if raster_base is Dictionary:
+			var terrain_assets = raster_base.get("terrain_assets", {})
+			if terrain_assets is Dictionary:
+				for terrain_id_value in terrain_assets.keys():
+					var terrain_id := String(terrain_id_value).strip_edges().to_lower()
+					var texture_path := String(terrain_assets.get(terrain_id_value, "")).strip_edges()
+					if terrain_id != "" and texture_path != "":
+						_terrain_raster_base_v2_paths[terrain_id] = texture_path
 
 	var object_assets = _overworld_art_manifest.get("object_assets", {})
 	if object_assets is Dictionary:
@@ -10946,6 +10915,24 @@ func _load_decorative_object_sprite_manifest(manifest_path: String) -> void:
 					if asset_id not in biome_asset_ids:
 						biome_asset_ids.append(asset_id)
 					_generated_decorative_blocker_asset_ids_by_biome[biome_id] = biome_asset_ids
+	var generated_body_palette = raw.get("generated_body_palette", {})
+	if generated_body_palette is Dictionary:
+		for biome_id_value in generated_body_palette.keys():
+			var biome_id := String(biome_id_value).strip_edges()
+			var palette_asset_ids = generated_body_palette.get(biome_id_value, [])
+			if biome_id == "" or not (palette_asset_ids is Array):
+				continue
+			var biome_asset_ids: Array = _generated_decorative_blocker_asset_ids_by_biome.get(biome_id, [])
+			for asset_id_value in palette_asset_ids:
+				var asset_id := String(asset_id_value).strip_edges()
+				if asset_id == "" or not _object_asset_paths.has(asset_id):
+					push_warning("Generated blocker palette asset is missing from the overworld manifest: %s" % asset_id)
+					continue
+				if asset_id not in biome_asset_ids:
+					biome_asset_ids.append(asset_id)
+				if asset_id not in _generated_decorative_blocker_fallback_asset_ids:
+					_generated_decorative_blocker_fallback_asset_ids.append(asset_id)
+			_generated_decorative_blocker_asset_ids_by_biome[biome_id] = biome_asset_ids
 	_generated_decorative_blocker_fallback_asset_ids.sort()
 	for biome_id_value in _generated_decorative_blocker_asset_ids_by_biome.keys():
 		var biome_asset_ids: Array = _generated_decorative_blocker_asset_ids_by_biome.get(biome_id_value, [])
