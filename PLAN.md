@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10227
+Task: #10228
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -24,9 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- No owner-directed implementation slice is currently active.
-- Most recently completed implementation slice: `bugfix-overworld-intermittent-hero-movement-lock-10227`, which keeps persistent F3/F4 observation overlays non-modal so valid hero movement no longer appears frozen while preserving real input owners and pathing authority.
-- Current package boundary: matching Linux and Windows release exports measure 245073628 bytes, 4926372 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Most recently completed owner-directed implementation slice: `ux-overworld-map-first-command-rail-10228`, which rebuilds the live Overworld around a dominant map, functional minimap, compact hero/town command rail, and slim resource/status ribbon while preserving existing actions and gameplay authority.
+- Current package boundary: matching Linux and Windows release exports measure 245087776 bytes, 4912224 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Overworld Map-First Command Rail
+
+id: `ux-overworld-map-first-command-rail-10228`
+
+Status: completed 2026-09-04.
+
+Owner direction: make the Overworld UI feel closer to the classic Heroes III adventure-map composition, using the supplied screenshot as layout inspiration while retaining Aurelion Reach's original art and identity.
+
+Requirements: `docs/overworld-map-first-command-rail-requirements.md`, `docs/screen-wireframes.md` section 2, `project.md` Phase 6 production alpha UX, and the existing Overworld input/save/debug contracts.
+
+Implementation boundary:
+- make the live map the dominant surface at desktop and compact supported resolutions, with one narrow right command rail and one slim bottom ribbon rather than nested dashboard panels;
+- add a functional high-contrast minimap that reflects terrain, fog exploration, heroes, towns, and the current viewport, and allows accessible pointer recentering without changing authoritative movement;
+- compact the hero/town roster, selected-hero identity, army row, contextual messages, and direct command buttons into the right rail while keeping every existing Command, Frontier, save, settings, menu, and end-turn flow reachable;
+- keep resource/date/status information and the primary contextual action readable in a shallow bottom ribbon, with responsive behavior and mouse, keyboard, controller, tooltip, and accessibility support.
+
+Completion criteria:
+- focused runtime coverage proves the map occupies the dominant supported viewport share, the rail and ribbon remain bounded without overlap at 1920x1060 and 1280x720, and all existing actions remain reachable;
+- the minimap deterministically mirrors representative authored and generated maps, marks selection and visible viewport, and pointer recentering changes presentation only;
+- inspected screenshots show a scenery-first Overworld with no clipped controls or large prose panels, and existing movement/save/debug behavior remains unchanged;
+- repository validation and matching Linux/Windows export/package startup and Overworld-entry checks pass below the unchanged package ceiling.
+
+Non-goals:
+- no copied Heroes III pixels, UI assets, names, or distinctive protected expression; no new generated art unless an original missing asset is proven necessary;
+- no movement, pathing, interaction, AI, balance, RMG, content, save-schema, Town, Battle, package-limit, signing, publication, whole-game validation, or release-readiness changes.
+
+Result:
+- the live Overworld now keeps a dominant map beside one compact full-height command rail, with resource/date/action/save controls in a shallow bottom ribbon and long Command/Frontier detail replacing the base rail while open;
+- a functional accessible minimap renders explored terrain, visibility, towns, heroes, and the viewed range, while pointer and keyboard recentering remain presentation-only and session-exact;
+- focused 1920x1060 and 1280x720 runtime evidence proves map/rail/footer containment, all seven army slots, the town roster, and all nine required actions remain bounded and reachable;
+- repository validation, movement-input ownership, visual inspection, and matching Linux/Windows packaged startup pass at 245087776 bytes, with generated Windows setup, Overworld entry, and Town entry also green.
 
 ## Intermittent Overworld Hero Movement Lock
 

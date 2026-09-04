@@ -6072,6 +6072,14 @@ func focus_on_hero() -> bool:
 		_invalidate_dynamic_layer("focus_on_hero")
 	return changed
 
+func focus_on_tile(tile: Vector2i) -> bool:
+	if tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
+		return false
+	if not _can_pan_camera():
+		return false
+	_ensure_camera_state()
+	return _set_camera_center(Vector2(float(tile.x), float(tile.y)), true)
+
 func _tile_rect(board_rect: Rect2, tile: Vector2i) -> Rect2:
 	var cell_size = board_rect.size / Vector2(float(max(_map_size.x, 1)), float(max(_map_size.y, 1)))
 	return Rect2(

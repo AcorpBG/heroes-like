@@ -1,7 +1,5 @@
 {
-  "actionableNextTasks": [
-    "Select the next coherent owner-directed Phase 6 implementation slice."
-  ],
+  "actionableNextTasks": [],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
       {
@@ -16410,14 +16408,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Owner-directed #10227 is complete with corrected non-modal overlay input ownership, exact movement/runtime regressions, and matching platform package proof.",
+  "currentNotes": "Owner-directed #10228 is complete: the live Overworld is map-first with a functional presentation-only minimap, compact right command rail, and slim footer, validated at two resolutions and in matching Linux/Windows packages.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "bugfix-overworld-intermittent-hero-movement-lock-10227",
-  "currentSliceId": "bugfix-overworld-intermittent-hero-movement-lock-10227",
-  "currentSliceNotes": "Completed: F3/F4 remain observational while keyboard, controller, and pointer routes move exactly; real owners, generated pathing, repository validation, and platform packages pass.",
+  "currentSlice": "ux-overworld-map-first-command-rail-10228",
+  "currentSliceId": "ux-overworld-map-first-command-rail-10228",
+  "currentSliceNotes": "Completed: dominant map, functional minimap, compact hero/army/town rail, replacement drawers, and shallow resource/action footer are live; focused authority, responsive, movement-owner, repository, and platform package checks pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Intermittent Overworld Hero Movement Lock",
-  "currentSliceUpdatedAt": "2026-09-03T22:39:37Z",
+  "currentSliceTitle": "Overworld Map-First Command Rail",
+  "currentSliceUpdatedAt": "2026-09-04T00:10:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21722,7 +21720,7 @@
       }
     }
   },
-  "guardrailNote": "Select the next tracker-approved bounded implementation slice; preserve completed movement input ownership, pathing, interaction, save, generated-map, Town, Battle, and Native RMG authority.",
+  "guardrailNote": "No implementation slice is active. Select and track the next bounded Phase 6 slice before changing runtime behavior.",
   "lastValidation": {
     "id": "content-eight-commanders-proving-roads-20260831",
     "title": "Eight Commanders' Proving Roads",
@@ -21939,9 +21937,86 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select and track the next bounded owner-directed Phase 6 implementation slice before editing.",
-  "notes": "Owner-directed #10227 movement-lock correction is completed. Prior #10226 integrated Town building progression, #10225 Large-map performance, and #10224 post-battle reporting remain completed.",
+  "nextActionGuardrailNote": "No implementation slice is active. Select and track the next bounded Phase 6 slice before changing runtime behavior.",
+  "notes": "Owner-directed #10228 Overworld map-first command rail is complete. Prior #10227 movement lock, #10226 integrated Town building progression, #10225 Large-map performance, and #10224 post-battle reporting remain completed.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-map-first-command-rail-10228",
+      "title": "Overworld Map-First Command Rail",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/overworld-map-first-command-rail-requirements.md",
+        "docs/screen-wireframes.md"
+      ],
+      "purpose": "Recompose the live Overworld around a dominant map, functional minimap, compact hero/town command rail, and slim resource/status ribbon using classic adventure-map composition as inspiration while keeping original Aurelion Reach art and behavior.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.tscn",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMinimap.gd",
+        "tests/overworld_map_first_command_rail_report.gd",
+        "tests/overworld_map_first_command_rail_report.tscn",
+        "tests/overworld_map_first_command_rail_report.py",
+        "tests/validate_repo.py",
+        "docs/overworld-map-first-command-rail-requirements.md",
+        "docs/overworld-map-first-command-rail-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Focused runtime coverage proves dominant map, bounded rail, and slim footer layout without overlap at 1920x1060 and 1280x720 while every existing action remains reachable",
+        "The minimap deterministically mirrors representative authored and generated maps, marks selection and viewed range, and pointer recentering changes presentation only",
+        "Inspected captures show a scenery-first Overworld with no clipped controls or large prose panels and preserve movement, save, drawer, and debug behavior",
+        "Repository validation and matching Linux/Windows release package startup and Overworld entry pass below the unchanged package ceiling"
+      ],
+      "nonGoals": [
+        "Copied Heroes III art, pixels, names, or distinctive protected expression; new generated art unless an original missing asset is proven necessary",
+        "Movement, pathing, interaction, AI, balance, RMG, content, save schema, Town, Battle, package-ceiling, signing, publication, whole-game validation, release-readiness, or unrelated cleanup changes"
+      ],
+      "createdAt": "2026-09-03T23:27:59Z",
+      "startedAt": "2026-09-03T23:27:59Z",
+      "updatedAt": "2026-09-04T00:10:08Z",
+      "completedAt": "2026-09-04T00:10:08Z",
+      "notes": "Completed after inspecting the supplied reference and final 1920x1060 and 1280x720 captures. Focused runtime authority/layout coverage, movement input ownership, repository validation, and matching Linux/Windows package startup passed.",
+      "remainingWork": "No work remains inside #10228. Independent stale broad-test expectations for a renamed wood-wagon asset, replaced route-step placeholder VFX, and the retired Town fifth tab remain outside this UI slice; broader production completion and release readiness remain open.",
+      "result": "The live Overworld now uses a dominant map, functional accessible presentation-only minimap, compact hero/army/town command rail, replacement Command/Frontier drawers, and shallow resource/action footer without changing gameplay or save authority.",
+      "evidenceArtifacts": [
+        "docs/overworld-map-first-command-rail-report.md",
+        ".artifacts/overworld_map_first_command_rail/report.json",
+        ".artifacts/overworld_map_first_command_rail/captures/overworld_map_first_1920x1060.png",
+        ".artifacts/overworld_map_first_command_rail/captures/overworld_map_first_1280x720.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "validationCommands": [
+        "python3 tests/overworld_map_first_command_rail_report.py",
+        "godot4 --headless --path . --scene res://tests/overworld_gameplay_movement_input_ownership_regression.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "git diff --check"
+      ],
+      "metrics": {
+        "responsive_viewport_count": 2,
+        "capture_count": 2,
+        "required_control_count": 9,
+        "compact_army_slot_count": 7,
+        "session_authority_exact": true,
+        "movement_input_ownership_passed": true,
+        "linux_packaged_startup_passed": true,
+        "windows_packaged_startup_passed": true,
+        "windows_generated_overworld_entry_passed": true,
+        "pck_size_bytes": 245087776,
+        "pck_size_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 4912224,
+        "save_version": 9,
+        "release_ready_claimed": false
+      }
+    },
     {
       "id": "bugfix-overworld-intermittent-hero-movement-lock-10227",
       "title": "Intermittent Overworld Hero Movement Lock",
@@ -109238,9 +109313,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed #10227: persistent non-modal diagnostic overlays no longer suppress valid Overworld hero movement, while real input owners and authoritative pathing remain intact.",
-  "taskId": "10227",
-  "updatedAt": "2026-09-03T22:39:37Z",
+  "summary": "Completed #10228: the live Overworld is map-first with a functional minimap, compact right command rail, and slim footer while gameplay and save authority remain unchanged.",
+  "taskId": "10228",
+  "updatedAt": "2026-09-04T00:10:08Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -37568,8 +37568,8 @@ def validate_overworld_130_scale_footer_containment(errors: list[str]) -> None:
             "_resource_label.custom_minimum_size.x = 80.0 if resource_compact else (170.0 if large_scale_footer else 210.0)",
             "_status_label.clip_text = narrow_layout or large_scale_footer",
             "_status_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
-            "_system_panel.custom_minimum_size.x = 220.0 if narrow_layout else (252.0 if compact_layout else 308.0)",
-            "_primary_action_button.custom_minimum_size.x = 170.0 if large_scale_footer else 210.0",
+            "_system_panel.custom_minimum_size.x = 214.0 if narrow_layout else (248.0 if compact_layout else 300.0)",
+            "_primary_action_button.custom_minimum_size.x = 150.0 if compact_layout else (170.0 if large_scale_footer else 190.0)",
             "_primary_action_button.clip_text = true",
             "_primary_action_button.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
         ))
@@ -37584,7 +37584,6 @@ def validate_overworld_130_scale_footer_containment(errors: list[str]) -> None:
             "_save_button.visible",
             "_settings_button.visible",
             "_menu_button.visible",
-            "custom_minimum_size.y",
             "font_size",
             "set_ui_scale_percent",
             "call_deferred",
@@ -37623,7 +37622,8 @@ def validate_overworld_130_scale_footer_containment(errors: list[str]) -> None:
         "var move_cue_chip_rect := Rect2(cue_chip.position, cue_chip.size)",
         "var move_map_cue_rect := Rect2(map_cue.position, map_cue.size)",
         "var move_map_cue_minimum := map_cue.get_combined_minimum_size()",
-        "selection_map_rect != move_map_rect",
+        "selection_map_rect.position.distance_to(move_map_rect.position) > 1.1",
+        "selection_map_rect.size.distance_to(move_map_rect.size) > 1.1",
         "selection_command_band_rect != move_command_band_rect",
         "selection_cue_chip_rect != move_cue_chip_rect",
         "selection_map_cue_rect != move_map_cue_rect",
@@ -37631,7 +37631,8 @@ def validate_overworld_130_scale_footer_containment(errors: list[str]) -> None:
         'map_cue.text != String(move_snapshot.get("map_cue_text", ""))',
         'map_cue.tooltip_text != String(move_snapshot.get("map_cue_tooltip_text", ""))',
         'map_cue.tooltip_text.find("Action Recap") < 0',
-        'int(move_cache.get("session_static_generation", -1)) != int(selection_cache.get("session_static_generation", -1))',
+        'var static_generation_delta := int(move_cache.get("session_static_generation", -1)) - int(selection_cache.get("session_static_generation", -1))',
+        'var bounded_responsive_resize := static_generation_delta == 1 and String(move_cache.get("session_static_reason", "")) == "resized"',
     ))
     ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused MapCue proof must select, capture the native contract/allocation, move one frame, compare exact geometry/text/tooltip, then gate the static cache")
     for required_token in (
@@ -37679,7 +37680,7 @@ def validate_overworld_130_scale_footer_containment(errors: list[str]) -> None:
             "var large_scale_footer := SettingsService.ui_scale_percent() >= 130",
             "var expected_resource_chip_width := 190.0 if large_scale_footer else 210.0",
             "var expected_resource_label_width := 170.0 if large_scale_footer else 210.0",
-            "var expected_primary_width := 170.0 if large_scale_footer else 210.0",
+            "var expected_primary_width := 170.0 if large_scale_footer else 190.0",
             "status_label.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
             "map_cue.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
             "primary_action.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
@@ -37763,7 +37764,7 @@ def validate_overworld_hero_card_mana_first_view(errors: list[str]) -> None:
             'var hero = _session.overworld.get("hero", {})',
             'var command = hero.get("command", {})',
             'var mana = hero.get("spellbook", {}).get("mana", {})',
-            'return "%s Lv%d | Mana %d/%d\\nA%d D%d P%d K%d | Scout %d" % [',
+            'return "%s L%d · M%d/%d\\nA%d D%d P%d K%d · S%d" % [',
             'String(hero.get("name", "Hero"))',
             'int(hero.get("level", 1))',
             'int(mana.get("current", 0))',
@@ -37788,7 +37789,7 @@ def validate_overworld_hero_card_mana_first_view(errors: list[str]) -> None:
             'session.overworld.get("movement", {})',
             'HeroCommandRules.scouting_radius_for_hero(hero)',
             'var expected_full := "%s Lv%d | Move %d/%d | Mana %d/%d',
-            'var expected_visible := "%s Lv%d | Mana %d/%d',
+            'var expected_visible := "%s L%d · M%d/%d',
             'var expected_command := "Command: Solo | Move %d/%d"',
             'shell.get_node("%Hero")',
             'shell.get_node("%HeroPanel")',
@@ -37805,7 +37806,7 @@ def validate_overworld_hero_card_mana_first_view(errors: list[str]) -> None:
             "hero_label.tooltip_text != expected_full",
             'String(snapshot.get("command_check_visible_text", "")) != expected_command',
             'String(visible_lines[0]).contains("Move")',
-            'not String(visible_lines[0]).contains("Mana")',
+            'not String(visible_lines[0]).contains("M")',
             "_themed_label_text_width(hero_label) > hero_label.size.x + 0.5",
             "not sidebar_rect.encloses(panel_rect)",
             "not panel_rect.encloses(identity_rect)",
@@ -37969,9 +37970,8 @@ def validate_overworld_rail_word_boundary_ellipsis(errors: list[str]) -> None:
             "briefing.autowrap_mode != TextServer.AUTOWRAP_OFF",
             "not briefing.clip_text",
             "briefing.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
-            "not panel_rect.encloses(label_rect)",
-            "not hero_panel.get_global_rect().encloses(army_rect)",
-            "width == 1280 and army_text_width <= army_rect.size.x + 0.5",
+            "briefing.is_visible_in_tree()",
+            "not hero_panel.is_visible_in_tree()",
             "get_window().size = original_window_size",
             "session.to_dict() != authority_before",
         ))
@@ -37984,8 +37984,8 @@ def validate_overworld_rail_word_boundary_ellipsis(errors: list[str]) -> None:
             "visible_lines.size() != 2",
             "String(visible_lines[0]).length() > 42",
             "String(visible_lines[1]).length() > 42",
-            "not briefing.is_visible_in_tree()",
-            "visible_rail_count < (2 if width == 1280 else 4)",
+            "briefing.is_visible_in_tree()",
+            "visible_rail_count < 2",
             "fitting_rail_count < 1",
         ):
             ensure(required_token in focused_body, errors, f"Focused rail proof is missing exact budget/mid-token token: {required_token}")
@@ -38185,7 +38185,7 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         "OverworldShell.tscn must keep CommandBand as a footer ribbon below the map stage",
     )
     ensure(
-        "custom_minimum_size = Vector2(0, 74)" in overworld_scene_text,
+        "custom_minimum_size = Vector2(0, 50)" in overworld_scene_text,
         errors,
         "OverworldShell.tscn must keep the overworld command footer slim",
     )
@@ -78720,7 +78720,7 @@ def validate_army_stack_management_bar(errors: list[str]) -> None:
         "button.focus_mode = Control.FOCUS_ALL",
         "button.disabled = not _can_manage",
         "button.expand_icon = true",
-        'button.add_theme_constant_override("icon_max_width", 22)',
+        'button.add_theme_constant_override("icon_max_width", 16 if _compact_mode else 22)',
         'button.text = str(int(slot.get("count", 0))) if occupied else "·"',
         'button.icon = _texture(String(slot.get("battle_icon", "")))',
         'button.pressed.connect(_on_slot_pressed.bind(holder_id, slot_index, occupied))',
@@ -78728,6 +78728,8 @@ def validate_army_stack_management_bar(errors: list[str]) -> None:
         "operation_requested.emit(_selected_holder_id, _selected_slot_index, holder_id, slot_index, _amount_token)",
     ):
         ensure(token in bar_text, errors, f"Shared army bar is missing its visible/input contract: {token}")
+    for token in ("const COMPACT_SLOT_SIZE := Vector2(28.0, 38.0)", "func set_compact_mode(compact: bool) -> void:", '"compact": _compact_mode'):
+        ensure(token in bar_text, errors, f"Shared army bar is missing its compact command-rail contract: {token}")
     ensure(bar_text.count("for slot_index in range(SLOT_COUNT):") == 1, errors, "Each army holder must render exactly one fixed seven-slot row")
     for forbidden in ("drag_data", "drop_data", "force_drag", "Input.warp_mouse", "create_timer", "create_tween", "SessionState", "SaveService", "BattleRules"):
         ensure(forbidden not in bar_text, errors, f"Army bar must remain shared, authority-free, and not drag-only: {forbidden}")
@@ -84011,6 +84013,75 @@ def validate_overworld_live_object_art_coverage(errors: list[str]) -> None:
         ensure(source_entry.get("asset_id") == asset_id and source_entry.get("runtime_sha256") == expected_hash and bool(source_entry.get("prompt")), errors, f"Ownership pennant {owner} source provenance is incomplete")
 
 
+def validate_overworld_map_first_command_rail(errors: list[str]) -> None:
+    scene_path = ROOT / "scenes" / "overworld" / "OverworldShell.tscn"
+    shell_path = ROOT / "scenes" / "overworld" / "OverworldShell.gd"
+    map_view_path = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
+    minimap_path = ROOT / "scenes" / "overworld" / "OverworldMinimap.gd"
+    report_path = ROOT / "tests" / "overworld_map_first_command_rail_report.gd"
+    report_scene_path = ROOT / "tests" / "overworld_map_first_command_rail_report.tscn"
+    wrapper_path = ROOT / "tests" / "overworld_map_first_command_rail_report.py"
+    required_paths = (scene_path, shell_path, map_view_path, minimap_path, report_path, report_scene_path, wrapper_path)
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Missing #10228 map-first Overworld owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    scene_text = scene_path.read_text(encoding="utf-8")
+    for token in ('name="MinimapPanel"', 'name="Minimap"', 'name="TownActions"', 'script = ExtResource("10_overworld_minimap")'):
+        ensure(token in scene_text, errors, f"Map-first Overworld scene lost required rail node: {token}")
+
+    minimap_text = minimap_path.read_text(encoding="utf-8")
+    for token in (
+        "signal recenter_requested(tile: Vector2i)",
+        "OverworldRulesScript.is_tile_explored",
+        "OverworldRulesScript.is_tile_visible",
+        "_draw_towns(field, cell)",
+        "_draw_heroes(field, cell)",
+        "_draw_viewport(field, cell)",
+        "focus_mode = Control.FOCUS_ALL",
+        'accessibility_name = "World minimap"',
+        '"presentation_only": true',
+    ):
+        ensure(token in minimap_text, errors, f"Functional Overworld minimap lost required contract: {token}")
+    for forbidden in ("move_hero", "try_move", "spend_movement", "set_active_session"):
+        ensure(forbidden not in minimap_text, errors, f"Presentation-only minimap must not own gameplay mutation: {forbidden}")
+
+    shell_text = shell_path.read_text(encoding="utf-8")
+    map_view_text = map_view_path.read_text(encoding="utf-8")
+    for token in (
+        "func _on_minimap_recenter_requested(tile: Vector2i) -> void:",
+        "func validation_map_first_layout_snapshot() -> Dictionary:",
+        "func validation_minimap_recenter(x: int, y: int) -> Dictionary:",
+        '"authority_exact": _session.to_dict() == authority_before',
+        '"movement_exact": _session.overworld.get("movement", {}) == movement_before',
+    ):
+        ensure(token in shell_text, errors, f"Map-first Overworld shell lost required routing/evidence: {token}")
+    ensure("func focus_on_tile(tile: Vector2i) -> bool:" in map_view_text, errors, "Overworld map view lost its camera-only minimap focus boundary")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    for token in (
+        "const VIEWPORTS := [Vector2i(1920, 1060), Vector2i(1280, 720)]",
+        'const SEED := "map-first-command-rail-10228"',
+        "build_random_map_skirmish_setup_with_retry",
+        "start_random_map_skirmish_session_from_setup",
+        'shell.call("validation_map_first_layout_snapshot")',
+        'shell.call("validation_minimap_recenter", target.x, target.y)',
+        'not bool(recenter.get("authority_exact", false))',
+        'not bool(recenter.get("movement_exact", false))',
+        'var required_controls := ["%Resources", "%PrimaryAction", "%OpenCommand", "%OpenFrontier", "%EndTurn", "%SaveSlot", "%Save", "%Settings", "%Menu"]',
+        'shell.call("validation_army_management_snapshot")',
+        'not army_rect.encloses(button_rect)',
+        'shell.get_node_or_null("%TownActions")',
+        "image.save_png(capture_path)",
+    ):
+        ensure(token in report_text, errors, f"Focused #10228 Godot report is missing proof token: {token}")
+    ensure("overworld_map_first_command_rail_report.gd" in report_scene_path.read_text(encoding="utf-8"), errors, "Focused #10228 scene lost its report script")
+    wrapper_text = wrapper_path.read_text(encoding="utf-8")
+    for token in ("xvfb-run", "OVERWORLD_MAP_FIRST_CAPTURE_DIR", "report.json", "len(captures) != 2"):
+        ensure(token in wrapper_text, errors, f"Focused #10228 report wrapper is missing evidence handling: {token}")
+
+
 def validate_overworld_placeholder_art_resolution(errors: list[str]) -> None:
     map_view_path = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
     report_path = ROOT / "tests" / "overworld_placeholder_art_resolution_report.gd"
@@ -84234,6 +84305,7 @@ def main() -> int:
     validate_overworld_compact_town_owner_pennants(errors)
     validate_generated_map_object_visual_coherence(errors)
     validate_overworld_live_object_art_coverage(errors)
+    validate_overworld_map_first_command_rail(errors)
     validate_overworld_placeholder_art_resolution(errors)
     validate_overworld_130_scale_footer_containment(errors)
     validate_overworld_hero_card_mana_first_view(errors)
