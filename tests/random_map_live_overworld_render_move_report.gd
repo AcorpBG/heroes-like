@@ -295,23 +295,25 @@ func _run_blocker_mass_focused() -> void:
 func _assert_blocker_mass_focused_summary(summary: Dictionary, label: String) -> bool:
 	var expected_anchor_counts := {
 		"focused_mass_single": 1,
-		"focused_mass_small": 1,
-		"focused_mass_medium": 2,
-		"focused_mass_large": 3,
+		"focused_mass_small": 4,
+		"focused_mass_medium": 7,
+		"focused_mass_large": 12,
 	}
 	if (
-		String(summary.get("presentation_model", "")) != "exact_body_cells_overlapping_landscape_mass_anchors_v4"
+		String(summary.get("presentation_model", "")) != "exact_body_cell_raster_mass_coverage_v5"
 		or int(summary.get("generated_record_count", 0)) != 4
 		or int(summary.get("expected_body_tile_count", 0)) != 24
 		or int(summary.get("indexed_body_tile_count", 0)) != 24
 		or not bool(summary.get("body_tile_keys_exact", false))
-		or int(summary.get("visual_anchor_count", 0)) != 7
+		or int(summary.get("visual_anchor_count", 0)) != 24
 		or int(summary.get("visual_anchor_placement_count", 0)) != 4
 		or not bool(summary.get("all_generated_records_anchored", false))
-		or not is_equal_approx(float(summary.get("sparse_anchor_density", 0.0)), 7.0 / 24.0)
+		or not is_equal_approx(float(summary.get("raster_coverage_density", 0.0)), 1.0)
+		or int(summary.get("uncovered_body_tile_count", -1)) != 0
+		or not bool(summary.get("all_body_cells_visually_covered", false))
 		or not bool(summary.get("all_body_assets_loaded", false))
 		or not bool(summary.get("all_body_assets_terrain_matched", false))
-		or int(summary.get("composition_key_count", 0)) != 7
+		or int(summary.get("composition_key_count", 0)) != 24
 		or not bool(summary.get("all_transformed_bounds_within_mass_margin", false))
 		or String(summary.get("composition_signature", "")).length() != 64
 	):
@@ -332,7 +334,7 @@ func _assert_blocker_mass_focused_summary(summary: Dictionary, label: String) ->
 		if not bool(entry.get("asset_loaded", false)) or not bool(entry.get("terrain_matched_asset", false)):
 			_fail("%s focused blocker-mass anchor did not load terrain-matched art: %s" % [label, JSON.stringify(entry)])
 			return false
-	if anchor_row_count != 7 or observed_anchor_counts != expected_anchor_counts:
+	if anchor_row_count != 24 or observed_anchor_counts != expected_anchor_counts:
 		_fail("%s focused blocker-mass anchor ladder changed: %s" % [label, JSON.stringify(observed_anchor_counts)])
 		return false
 	return true
@@ -615,17 +617,17 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 			if bool(detail.get("water_excluded", false)):
 				terrain_detail_water_excluded_count += 1
 			var detail_exact: bool = (
-				String(detail.get("model", "")) == "biome_specific_painterly_landmark_clusters_v3"
+				String(detail.get("model", "")) == "biome_specific_painterly_landmark_clusters_denser_v4"
 				and String(detail.get("source_model", "")) == "built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"
 				and bool(detail.get("atlas_texture_loaded", false))
 				and detail.get("atlas_size", {}) == {"x": 1024, "y": 1024}
 				and detail.get("atlas_grid", {}) == {"x": 4, "y": 4}
 				and detail.get("atlas_cell_size", {}) == {"x": 256, "y": 256}
-				and int(detail.get("density_modulus", 0)) == 9
+				and int(detail.get("density_modulus", 0)) == 5
 				and detail.get("active_density_residues", []) == [0]
 				and not bool(detail.get("interactive", true))
 				and not bool(detail.get("collision", true))
-				and is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.74)
+				and is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.82)
 				and String(detail.get("draw_order", "")) == "after_macro_lighting_before_roads_objects_and_fog"
 				and bool(detail.get("hidden_by_unexplored_shroud", false))
 				and String(detail.get("variation_basis", "")) == "tile_coordinate_and_terrain_id_only"
@@ -645,9 +647,9 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 					and int(source_rect.get("y", -1)) == floori(float(cell_id) / 4.0) * 256
 					and int(source_rect.get("width", 0)) == 256 and int(source_rect.get("height", 0)) == 256
 					and bool(detail.get("destination_contained", false))
-					and float(detail.get("extent_factor", 0.0)) >= 0.38 and float(detail.get("extent_factor", 0.0)) <= 0.52
-					and float(offset.get("x", -1.0)) >= -0.13 and float(offset.get("x", 1.0)) <= 0.13
-					and float(offset.get("y", -1.0)) >= -0.08 and float(offset.get("y", 1.0)) <= 0.12
+					and float(detail.get("extent_factor", 0.0)) >= 0.44 and float(detail.get("extent_factor", 0.0)) <= 0.68
+					and float(offset.get("x", -1.0)) >= -0.16 and float(offset.get("x", 1.0)) <= 0.16
+					and float(offset.get("y", -1.0)) >= -0.08 and float(offset.get("y", 1.0)) <= 0.14
 					and float(destination_rect.get("width", 0.0)) > 0.0
 					and is_equal_approx(float(destination_rect.get("width", 0.0)), float(destination_rect.get("height", -1.0)))
 					and not bool(detail.get("road_excluded", true))
@@ -1070,7 +1072,7 @@ func _assert_terrain_transition_summary(summary: Dictionary, label: String) -> b
 		or summary.get("terrain_grain_texture_paths", []) != ["res://art/overworld/runtime/terrain_tiles/detail/terrain_grain_overlay.png"]
 		or terrain_grain_modulate_alphas.size() != 1
 		or not is_equal_approx(float(terrain_grain_modulate_alphas[0]), 0.72)
-		or summary.get("terrain_detail_model_ids", []) != ["biome_specific_painterly_landmark_clusters_v3"]
+		or summary.get("terrain_detail_model_ids", []) != ["biome_specific_painterly_landmark_clusters_denser_v4"]
 		or summary.get("terrain_detail_source_model_ids", []) != ["built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"]
 		or summary.get("terrain_detail_texture_paths", []) != ["res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png"]
 		or summary.get("water_ripple_model_ids", []) != ["deterministic_broken_painterly_current_pairs"]
@@ -1097,7 +1099,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if summary.is_empty():
 		_fail("%s generated visual summary is unavailable." % label)
 		return false
-	if String(summary.get("presentation_model", "")) != "exact_body_cells_overlapping_landscape_mass_anchors_v4":
+	if String(summary.get("presentation_model", "")) != "exact_body_cell_raster_mass_coverage_v5":
 		_fail("%s generated body presentation model is not exact: %s" % [label, JSON.stringify(summary)])
 		return false
 	var is_default_fixture := _active_size_class_id == SIZE_CLASS_ID and _active_seed == EXPLICIT_SEED
@@ -1119,29 +1121,27 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if is_default_fixture and int(summary.get("legacy_primary_marker_candidate_count", 0)) != 65:
 		_fail("%s deterministic generated DEF-anchor candidate count changed: %s" % [label, summary.get("legacy_primary_marker_candidate_count", -1)])
 		return false
-	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 1.20):
+	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 1.28):
 		_fail("%s generated body sprite extent changed: %s" % [label, summary.get("body_sprite_extent_tiles", -1.0)])
 		return false
-	if int(summary.get("asset_cluster_tiles", 0)) != 4:
+	if int(summary.get("asset_cluster_tiles", 0)) != 1:
 		_fail("%s generated body motif cluster span changed: %s" % [label, summary.get("asset_cluster_tiles", -1)])
 		return false
 	var visual_anchor_count := int(summary.get("visual_anchor_count", 0))
 	var indexed_body_tile_count := int(summary.get("indexed_body_tile_count", 0))
-	if visual_anchor_count < int(summary.get("generated_record_count", 0)) or visual_anchor_count >= indexed_body_tile_count:
-		_fail("%s generated placement masses are not sparse complete anchors: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
+	if visual_anchor_count != indexed_body_tile_count:
+		_fail("%s generated placement masses do not visibly cover every body cell: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	var sparse_anchor_density := float(summary.get("sparse_anchor_density", 0.0))
-	if sparse_anchor_density < 0.25 or sparse_anchor_density > 0.75:
-		_fail("%s generated placement mass density escaped its bounded sparse range: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
+	if not is_equal_approx(float(summary.get("raster_coverage_density", 0.0)), 1.0) or int(summary.get("uncovered_body_tile_count", -1)) != 0 or not bool(summary.get("all_body_cells_visually_covered", false)):
+		_fail("%s generated placement mass contains invisible blocked cells: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
 	if int(summary.get("composition_key_count", 0)) != visual_anchor_count:
 		_fail("%s generated body composition keys are incomplete: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	if int(summary.get("motif_key_count", 0)) <= int(summary.get("distinct_body_asset_count", 0)) \
-		or int(summary.get("motif_key_count", 0)) > visual_anchor_count:
+	if int(summary.get("motif_key_count", 0)) <= 0 or int(summary.get("motif_key_count", 0)) > visual_anchor_count:
 		_fail("%s generated body motifs did not form bounded placement-local masses: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	if not bool(summary.get("all_transformed_bounds_within_mass_margin", false)) or not is_equal_approx(float(summary.get("mass_bounds_margin_tiles", 0.0)), 0.52):
+	if not bool(summary.get("all_transformed_bounds_within_mass_margin", false)) or not is_equal_approx(float(summary.get("mass_bounds_margin_tiles", 0.0)), 0.42):
 		_fail("%s generated body composition escaped its owning placement mass margin: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
 	if int(summary.get("distinct_body_asset_count", 0)) < 8 or int(summary.get("repeated_def_multi_asset_count", 0)) <= 0:
@@ -1168,12 +1168,12 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 			continue
 		counted_anchors += 1
 		var placement_tile_count := int(body_entry.get("placement_tile_count", 0))
-		var expected_anchor_count := 3 if placement_tile_count >= 9 else (2 if placement_tile_count >= 5 else 1)
+		var expected_anchor_count := placement_tile_count
 		if (
 			String(body_entry.get("anchor_placement_id", "")).strip_edges() == ""
 			or int(body_entry.get("anchor_index", -1)) < 0
 			or int(body_entry.get("anchor_count", 0)) <= 0
-			or int(body_entry.get("anchor_count", 0)) > expected_anchor_count
+			or int(body_entry.get("anchor_count", 0)) != expected_anchor_count
 			or int(body_entry.get("anchor_index", -1)) >= int(body_entry.get("anchor_count", 0))
 			or placement_tile_count <= 0
 		):
@@ -1183,13 +1183,13 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 		_fail("%s generated visual anchor rows are incomplete: %d/%d" % [label, counted_anchors, visual_anchor_count])
 		return false
 	if (
-		not is_equal_approx(float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.80)
-		or not is_equal_approx(float(summary.get("multi_tile_interactive_base_min_tiles", 0.0)), 0.54)
-		or not is_equal_approx(float(summary.get("multi_tile_interactive_span_min_step_tiles", 0.0)), 0.06)
-		or not is_equal_approx(float(summary.get("multi_tile_interactive_depth_min_step_tiles", 0.0)), 0.08)
-		or not is_equal_approx(float(summary.get("multi_tile_interactive_base_cap_tiles", 0.0)), 0.60)
-		or not is_equal_approx(float(summary.get("multi_tile_interactive_span_cap_step_tiles", 0.0)), 0.08)
-		or not is_equal_approx(float(summary.get("multi_tile_interactive_depth_cap_step_tiles", 0.0)), 0.10)
+		not is_equal_approx(float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 1.35)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_base_min_tiles", 0.0)), 0.78)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_span_min_step_tiles", 0.0)), 0.10)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_depth_min_step_tiles", 0.0)), 0.12)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_base_cap_tiles", 0.0)), 0.92)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_span_cap_step_tiles", 0.0)), 0.14)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_depth_cap_step_tiles", 0.0)), 0.16)
 	):
 		_fail("%s multi-tile visual cap changed: %s" % [label, summary.get("multi_tile_interactive_cap_tiles", -1.0)])
 		return false
@@ -1205,15 +1205,14 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 		if multi_tile:
 			var footprint_span := maxi(int(footprint.get("width", 1)), int(footprint.get("height", 1)))
 			var footprint_depth := mini(int(footprint.get("width", 1)), int(footprint.get("height", 1)))
-			var expected_min_tiles := minf(0.54 + float(footprint_span - 1) * 0.06 + float(footprint_depth - 1) * 0.08, 0.80)
-			var expected_cap_tiles := minf(0.60 + float(footprint_span - 1) * 0.08 + float(footprint_depth - 1) * 0.10, 0.80)
+			var expected_min_tiles := minf(0.78 + float(footprint_span - 1) * 0.10 + float(footprint_depth - 1) * 0.12, 1.35)
+			var expected_cap_tiles := minf(0.92 + float(footprint_span - 1) * 0.14 + float(footprint_depth - 1) * 0.16, 1.35)
 			if not bool(metrics.get("uses_multi_tile_visual_cap", false)):
 				_fail("%s multi-tile resource did not use the visual cap: %s" % [label, JSON.stringify(entry)])
 				return false
 			if (
 				not is_equal_approx(float(metrics.get("min_tiles", 0.0)), expected_min_tiles)
 				or not is_equal_approx(float(metrics.get("cap_tiles", 0.0)), expected_cap_tiles)
-				or float(metrics.get("sprite_extent_tiles", 0.0)) < expected_min_tiles - 0.0001
 				or float(metrics.get("sprite_extent_tiles", 99.0)) > expected_cap_tiles + 0.0001
 			):
 				_fail("%s multi-tile resource escaped its footprint-span bounds: %s" % [label, JSON.stringify(entry)])

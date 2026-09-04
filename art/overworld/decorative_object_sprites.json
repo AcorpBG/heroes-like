@@ -289,6 +289,53 @@
     "new_distinct_asset_count": 184,
     "legacy_archetype_asset_count": 16
   },
+  "generated_body_palette": {
+    "biome_grasslands": [
+      "generated_tree_deciduous_0",
+      "generated_tree_deciduous_1",
+      "generated_tree_deciduous_2",
+      "generated_tree_deciduous_3",
+      "generated_tree_evergreen_0",
+      "generated_tree_evergreen_1"
+    ],
+    "biome_deep_forest": [
+      "generated_tree_deciduous_0",
+      "generated_tree_deciduous_1",
+      "generated_tree_deciduous_2",
+      "generated_tree_deciduous_3",
+      "generated_tree_evergreen_0",
+      "generated_tree_evergreen_1",
+      "generated_tree_evergreen_2",
+      "generated_tree_evergreen_3",
+      "generated_tree_autumn"
+    ],
+    "biome_mire_fen": [
+      "generated_tree_mire_0",
+      "generated_tree_mire_1",
+      "generated_tree_mire_2",
+      "generated_tree_mire_3"
+    ],
+    "biome_coast_archipelago": [
+      "generated_tree_mire_0",
+      "generated_tree_mire_1"
+    ],
+    "biome_highland_ridge": [
+      "generated_tree_evergreen_0",
+      "generated_tree_evergreen_1",
+      "generated_tree_badland"
+    ],
+    "biome_rough_badlands": [
+      "generated_tree_badland"
+    ],
+    "biome_snow_frost_marches": [
+      "generated_tree_evergreen_2",
+      "generated_tree_evergreen_3",
+      "generated_tree_frost"
+    ],
+    "biome_ash_lava_wastes": [
+      "generated_tree_ash"
+    ]
+  },
   "legacy_archetype_asset_ids": [
     "decor_grass_root_millstone",
     "decor_forest_elder_root_overhang",

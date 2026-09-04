@@ -1,0 +1,60 @@
+{
+  "schema": "overworld_generated_raster_base_v2_manifest_v1",
+  "task_id": 10231,
+  "slice_id": "ux-overworld-raster-terrain-and-visible-blocker-mass-10231",
+  "generation_mode": "built_in_image_gen",
+  "generated_originals": [
+    "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-df524125-b392-42b3-9d3c-7fbae80e0616.png",
+    "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-83bb8513-aeec-4654-84ae-cd76e363f790.png",
+    "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-83f5d289-8f1c-4668-89b7-003492697a0f.png",
+    "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0d72a611-563d-4520-b710-931e77eb8ddb.png"
+  ],
+  "sources": [
+    {
+      "path": "res://art/overworld/source/generated/terrain/raster_base_v2/green_wet_atlas_source.png",
+      "size": [1254, 1254],
+      "sha256": "0aa363508aace9177e7b8e4edfb28de1d808254449ea44940ff7ea75d7245dab"
+    },
+    {
+      "path": "res://art/overworld/source/generated/terrain/raster_base_v2/dry_stone_atlas_source.png",
+      "size": [1254, 1254],
+      "sha256": "d0f7875692fa00571223c22ee8e18465c87385f1f9591a6987f0dcff8ee38294"
+    },
+    {
+      "path": "res://art/overworld/source/generated/terrain/raster_base_v2/cold_water_atlas_source.png",
+      "size": [1254, 1254],
+      "sha256": "b78f053121dda4fab53e326072532de4d8766e5efd8e068cf76213b66348912b"
+    },
+    {
+      "path": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
+      "size": [
+        1305,
+        1206
+      ],
+      "sha256": "24377cc15b9b2248d7ca4054f9ca91e39e031e588fea4bb03d08dcbaf7efe12e"
+    }
+  ],
+  "runtime": {
+    "root": "res://art/overworld/runtime/terrain_tiles/base_generated_v2",
+    "asset_count": 17,
+    "size": [256, 256],
+    "derivation": "Resize each source atlas to an exact 1024 square grid, crop selected 256 cells, downsample to 128, mirror on both axes into seamless 256 materials, strip metadata, and PNG-compress.",
+    "sampling": "Eight-by-eight continuous map-space source regions prevent the material motif from restarting on every tile."
+  },
+  "blocker_tree_palette": {
+    "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
+    "sha256": "baebebefcc5918d8255929d9d7d81d8aa1ea1b8802504a3092dfe3ce65564523",
+    "size": [512, 512],
+    "grid": [4, 4],
+    "cell_size": [128, 128],
+    "asset_count": 16,
+    "derivation": "Normalize the original transparent 4x4 generation to an exact grid, crop each source cell, contain into 128x128 without distortion, preserve alpha, clear transparent fringe pixels, and assemble one runtime atlas."
+  },
+  "prompts": [
+    "Exact 4x4 original top-down raster material atlas: lush meadow, plains, forest floor, mire, and swamp; edge-to-edge natural ground, subtle contrast, no objects, roads, text, borders, scratches, streaks, or copied imagery.",
+    "Exact 4x4 original top-down raster material atlas: highland, rock, dirt, badland, sand, ash, and volcanic earth; edge-to-edge natural ground, restrained contrast, no objects, roads, text, borders, scratches, streaks, or copied imagery.",
+    "Exact 4x4 original top-down raster material atlas: underground floor, snow, ice, coast, shore, and deep water; edge-to-edge natural ground, restrained contrast, no objects, roads, text, borders, scratches, streaks, or copied imagery.",
+    "Exact 4x4 original transparent-background top-down blocker sprite atlas: deciduous, evergreen, marsh, autumn, frostwood, dry thorn, and charred volcanic tree clusters; no frames, text, roads, landmarks, or copied imagery."
+  ],
+  "originality_policy": "Original generated Aurelion Reach terrain materials; no copied names, assets, maps, compositions, UI, DEFs, pixels, or protected visual expression."
+}

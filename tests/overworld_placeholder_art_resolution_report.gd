@@ -54,13 +54,24 @@ func _run() -> void:
 	for row_value in exact_anchor_rows:
 		var row: Dictionary = row_value
 		exact_asset_ids[String(row.get("asset_id", ""))] = true
-	var exact_asset_id := String(exact_asset_ids.keys()[0]) if exact_asset_ids.size() == 1 else ""
+	var exact_asset_id_values: Array = exact_asset_ids.keys()
+	exact_asset_id_values.sort()
+	var exact_asset_id := String(exact_asset_id_values[0]) if not exact_asset_id_values.is_empty() else ""
 	var art_manifest: Dictionary = ContentService.load_json("res://art/overworld/manifest.json")
 	var exact_asset: Dictionary = art_manifest.get("object_assets", {}).get(exact_asset_id, {}) if art_manifest.get("object_assets", {}) is Dictionary else {}
 	var exact_asset_path := String(exact_asset.get("path", ""))
 	var exact_source_model := String(exact_asset.get("source_model", ""))
 	var exact_asset_policy := String(exact_asset.get("asset_policy", ""))
 	var exact_texture_loaded := exact_asset_id != "" and view.call("_object_texture_for_asset", exact_asset_id) is Texture2D
+	var all_exact_assets_original_raster := not exact_asset_id_values.is_empty()
+	for asset_id_value in exact_asset_id_values:
+		var asset_id := String(asset_id_value)
+		var asset: Dictionary = art_manifest.get("object_assets", {}).get(asset_id, {}) if art_manifest.get("object_assets", {}) is Dictionary else {}
+		var asset_path := String(asset.get("path", ""))
+		var source_model := String(asset.get("source_model", ""))
+		var asset_policy := String(asset.get("asset_policy", ""))
+		if not asset_path.ends_with(".png") or not ResourceLoader.exists(asset_path) or not (view.call("_object_texture_for_asset", asset_id) is Texture2D) or not ("image_gen" in source_model.to_lower() and "original_generated" in asset_policy):
+			all_exact_assets_original_raster = false
 	var category_resolution := _category_resolution(view, session)
 	var overlay: Dictionary = view.validation_placement_debug_overlay_snapshot()
 
@@ -72,12 +83,13 @@ func _run() -> void:
 	_expect(bool(summary.get("all_generated_records_anchored", false)), "a generated decorative placement lost its raster body")
 	_expect(bool(summary.get("all_body_assets_loaded", false)), "a generated decorative body asset failed to load")
 	_expect(bool(summary.get("all_body_assets_terrain_matched", false)), "a generated decorative body resolved outside its biome art family")
+	_expect(bool(summary.get("all_body_cells_visually_covered", false)) and int(summary.get("uncovered_body_tile_count", -1)) == 0, "a generated blocked body cell remains visually empty")
 	_expect(not exact_candidate.is_empty(), "the deterministic screenshot-path identity was not reproduced")
-	_expect(exact_anchor_rows.size() == 1, "the exact screenshot-path placement did not resolve to one authoritative raster anchor")
-	_expect(exact_asset_ids.size() == 1 and exact_asset_id == EXACT_ASSET_ID, "the exact screenshot-path placement did not resolve to its unique expected asset")
+	_expect(not exact_anchor_rows.is_empty(), "the exact screenshot-path placement did not resolve across its authoritative raster body")
+	_expect(not exact_asset_ids.is_empty(), "the exact screenshot-path placement did not resolve to biome-appropriate raster assets")
 	_expect(exact_asset_path.ends_with(".png") and ResourceLoader.exists(exact_asset_path), "the exact resolved raster path is unavailable")
 	_expect(exact_texture_loaded, "the exact resolved raster texture did not load")
-	_expect("image_gen" in exact_source_model.to_lower() and "original_generated" in exact_asset_policy, "the exact raster lacks original generated-art provenance")
+	_expect(all_exact_assets_original_raster, "the exact placement raster set lacks original generated-art provenance")
 	_expect(int(category_resolution.get("normal_visible_layer_count", 0)) > 0, "the deterministic case exposed no normal visible layers")
 	_expect(int(category_resolution.get("procedural_fallback_count", -1)) == 0, "a normal visible object layer still lacks raster resolution")
 	_expect(not bool(overlay.get("enabled", true)), "the placement/debug overlay leaked into normal gameplay")
@@ -93,10 +105,12 @@ func _run() -> void:
 		"indexed_legacy_primary_marker_count": int(summary.get("indexed_legacy_primary_marker_count", -1)),
 		"exact_runtime_identity": exact_candidate,
 		"exact_asset_id": exact_asset_id,
+		"exact_asset_ids": exact_asset_id_values,
 		"exact_asset_path": exact_asset_path,
 		"exact_source_model": exact_source_model,
 		"exact_asset_policy": exact_asset_policy,
-		"exact_anchor_row": exact_anchor_rows[0] if exact_anchor_rows.size() == 1 else {},
+		"exact_anchor_row": exact_anchor_rows[0] if not exact_anchor_rows.is_empty() else {},
+		"exact_anchor_count": exact_anchor_rows.size(),
 		"category_resolution": category_resolution,
 		"placement_debug_overlay_enabled": bool(overlay.get("enabled", true)),
 		"gameplay_authority_unchanged": session.to_dict() == authority_before,
@@ -112,7 +126,7 @@ func _exact_candidate(candidates: Variant, body_entries: Variant) -> Dictionary:
 		if String(candidate.get("placement_id", "")) == EXACT_PLACEMENT_ID \
 			and String(candidate.get("h3m_def_name", "")) == EXACT_H3M_DEF_NAME \
 			and Vector2i(int(candidate.get("x", -1)), int(candidate.get("y", -1))) == EXACT_PRIMARY_TILE \
-			and _anchor_rows_for_placement(body_entries, EXACT_PLACEMENT_ID).size() == 1:
+			and not _anchor_rows_for_placement(body_entries, EXACT_PLACEMENT_ID).is_empty():
 			return candidate.duplicate(true)
 	return {}
 
