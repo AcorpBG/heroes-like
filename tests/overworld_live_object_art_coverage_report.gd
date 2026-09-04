@@ -24,6 +24,7 @@ var _counts := {
 	"encounters": 0,
 	"heroes": 0,
 	"standalone_map_objects": 0,
+	"decorative_objects": 0,
 	"generated_decorative_records": 0,
 	"generated_decorative_visual_anchors": 0,
 	"town_ownership_pennants": 0,
@@ -56,6 +57,7 @@ func _run() -> void:
 		+ int(_counts.get("encounters", 0)) \
 		+ int(_counts.get("heroes", 0)) \
 		+ int(_counts.get("standalone_map_objects", 0)) \
+		+ int(_counts.get("decorative_objects", 0)) \
 		+ int(_counts.get("generated_decorative_records", 0)) \
 		+ int(_counts.get("town_ownership_pennants", 0)) \
 		+ int(_counts.get("hero_command_pennants", 0))
@@ -241,8 +243,10 @@ func _audit_session(view: Variant, session: Variant, source: String, generated: 
 			continue
 		var tile := Vector2i(int(object.get("x", -1)), int(object.get("y", -1)))
 		var presentation: Dictionary = view.validation_tile_presentation(tile)
-		var expected_flag := "has_decorative_object" if bool(presentation.get("has_decorative_object", false)) else "has_standalone_map_object"
-		_audit_tile_object(view, object, source, "standalone_map_object", expected_flag)
+		if bool(view.call("_is_decorative_object_placement", object)):
+			_audit_tile_object(view, object, source, "decorative_object", "has_decorative_object")
+		else:
+			_audit_tile_object(view, object, source, "standalone_map_object", "has_standalone_map_object")
 	if generated:
 		var summary: Dictionary = view.validation_generated_object_visual_summary()
 		_counts["generated_decorative_records"] = int(_counts.get("generated_decorative_records", 0)) + int(summary.get("generated_record_count", 0))
@@ -296,6 +300,8 @@ func _exact_layer_asset_id(view: Variant, object: Dictionary, kind: String) -> S
 			return String(view.call("_encounter_asset_id", object))
 		"standalone_map_object":
 			return String(view.call("_standalone_map_object_asset_id", object))
+		"decorative_object":
+			return String(view.call("_decorative_object_asset_id", object))
 	return ""
 
 func _audit_pennant(pennant: Dictionary, source: String, kind: String, placement_id: String) -> void:

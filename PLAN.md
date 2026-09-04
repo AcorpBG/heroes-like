@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10229
+Task: #10230
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -24,8 +24,38 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed owner-directed implementation slice: `ux-overworld-landmark-readability-and-town-scale-10229`, which makes towns dominant three-by-four visual landmarks and restores distinguishable semantic scale/edge hierarchy to original raster objects without changing map or gameplay authority.
-- Current package boundary: matching Linux and Windows release exports measure 245089360 bytes, 4910640 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Most recently completed owner-directed implementation slice: `overworld-strategic-density-and-route-occupancy-10230`, which restores authored scenic blockers, adds explicit low-value route destinations to the two sparsest authored maps, and measures native-package occupancy through authoritative action/body/road surfaces without guessed Native RMG tuning.
+- Current package boundary: matching Linux and Windows release exports measure 245114576 bytes, 4885424 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Overworld Strategic Density And Route Occupancy
+
+id: `overworld-strategic-density-and-route-occupancy-10230`
+
+Status: completed 2026-09-04. Authored `map_objects` now survive scenario-to-session construction, Ninefold and Third Hearths gain 46 deterministic low-value interactables and 36 biome-matched original-raster blocker placements, and all additions preserve interaction, pathing, provenance, and save version 9. The repaired native-package report proves zero missing visitable source objects across Small through Extra Large without changing Native RMG output. Inspected 1920x1080 and 1280x720 captures, repository validation, and matching 245114576-byte Linux/Windows exports pass.
+
+Owner direction: the Overworld still feels materially emptier than a classic Heroes adventure map when usable space is compared with meaningful interactables; inspect the real density and correct the live experience.
+
+Requirements: `docs/overworld-strategic-density-and-route-occupancy-requirements.md`, `docs/lessons-learned.md` Native RMG recovery discipline, `docs/overworld-content-bible.md`, `docs/overworld-landmark-readability-and-town-scale-requirements.md`, and `project.md` Phase 6 production alpha UX/content.
+
+Implementation boundary:
+- measure authored scenarios and current disk-package generated sessions through their actual road, action/visit, body, pathing, and render authority, repairing the stale generated-density report before using it as a gate;
+- retain every authoritative native-package placement and final-payload identity while correcting any proven package/runtime adoption loss and making exact blocked body masks read as cohesive occupied terrain;
+- add only explicit semantically valid gameplay destinations to selected sparse authored maps, with interaction, pathing, art, save, AI, and authoring-source ownership;
+- refuse density scalars, synthetic post-payload rewards, retries, final-map delta tuning, or any Native RMG behavior change not backed by recovered phase/private-state proof.
+
+Completion criteria:
+- focused evidence truthfully reports interactables per usable area, reachable action surfaces, road-near destinations, blocked-body occupancy, local visible density, and largest empty regions for representative authored, Small, and Large live sessions;
+- corrected captures at 1920x1080 and 1280x720 show materially stronger route occupancy and destination cadence while retaining original art, readable routes, and exact native package placement identity;
+- added authored destinations and any package/runtime adoption correction pass interaction, pathing, deterministic save-version-9, object-pool/art, repository, and Linux/Windows package validation below the unchanged ceiling.
+
+Non-goals:
+- no copied Heroes assets/maps/names/DEFs/pixels; no heuristic Native RMG count/topology/placement change, density multiplier, package-time sprinkling, balance rewrite, save bump, Town/Battle UI, signing, publication, whole-game validation, or release-readiness claim.
+
+Result:
+- Ninefold rises from 153 to 189 live meaningful interactables (+23.53%) and gains 26 explicit scenic blockers with 151 authoritative body tiles; Third Hearths rises from 34 to 44 (+29.41%) and gains 10 blockers with 52 body tiles;
+- all 46 added pickups collect normally and survive exact save-version-9 round trips, every blocker resolves through existing original raster art and authoritative pathing, and the authoring tool is byte-for-byte idempotent;
+- the corrected package report finds 0 missing visitable source objects across 277 Small, 1190 Medium, 2888 Large, and 5083 Extra Large source-object packages, so no Native RMG generation or final payload was changed;
+- focused runtime, inspected responsive captures, repository validation, Godot parse, and matching Linux/Windows export/startup/generated-entry checks pass below the unchanged package ceiling. Guard-separated native reachability and remaining source-owned local gaps stay diagnostic pending recovered private-state proof.
 
 ## Overworld Landmark Readability And Town Scale
 

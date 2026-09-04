@@ -52089,7 +52089,8 @@ def validate_six_repeatable_field_services(errors: list[str]) -> None:
     art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     assets = art.get("object_assets", {})
     mappings = art.get("resource_site_sprites", {})
-    ensure(len(scenario.get("resource_nodes", [])) == 97 and len(scenario.get("encounters", [])) == 31, errors, "Ninefold must expose the 97-site content board with the elder sanctuary targets and six Elder Wilds watches")
+    prior_nodes = [node for node in scenario.get("resource_nodes", []) if isinstance(node, dict) and node.get("content_batch_id") != "overworld-strategic-density-and-route-occupancy-10230"]
+    ensure(len(prior_nodes) == 97 and len(scenario.get("encounters", [])) == 31, errors, "Ninefold must preserve the prior 97-site content board beneath additive density support")
     source_payloads = []
     for site_id, (object_id, placement_id, xy, cost, rewards, effects, visited_id, region) in expected.items():
         site = sites.get(site_id, {})
@@ -52396,7 +52397,8 @@ def validate_eight_guarded_route_gates(errors: list[str]) -> None:
     ensure(source_manifest.get("generation_mode") == "precise-object-edit" and source_manifest.get("source_model") == "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas", errors, "Guarded-route source provenance changed")
     ensure(source_manifest.get("runtime_atlas", {}).get("size") == [384,48] and source_manifest.get("runtime_atlas", {}).get("sha256") == atlas_sha, errors, "Guarded-route source atlas ownership changed")
     ensure(set(source_rows) == set(expected), errors, "Guarded-route source manifest must own exactly eight selected sites")
-    ensure(len(scenario.get("resource_nodes", [])) == 97 and len(scenario.get("encounters", [])) == 31, errors, "Ninefold Confluence must retain the complete 97-site, 31-encounter content board")
+    prior_nodes = [node for node in scenario.get("resource_nodes", []) if isinstance(node, dict) and node.get("content_batch_id") != "overworld-strategic-density-and-route-occupancy-10230"]
+    ensure(len(prior_nodes) == 97 and len(scenario.get("encounters", [])) == 31, errors, "Ninefold Confluence must retain the prior 97-site, 31-encounter content board beneath additive density support")
     source_payloads: list[bytes] = []
     for site_id, (object_id, placement_id, site_xy, guard_id, encounter_id, guard_xy, difficulty, seed, unclaimed_id, claimed_id, stem, source_sha, region) in expected.items():
         site = sites.get(site_id, {})
@@ -53150,7 +53152,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     placements = [node for scenario in scenarios if isinstance(scenario, dict) for node in scenario.get("resource_nodes", []) if isinstance(node, dict)] if isinstance(scenarios, list) else []
     placed_site_ids = {str(node.get("site_id", "")) for node in placements}
     placement_counts = {site_id: sum(1 for node in placements if str(node.get("site_id", "")) == site_id) for site_id in expected}
-    ensure(len(scenarios) >= 299 and len(placements) == 3118 and len(placed_site_ids) == 376, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
+    ensure(len(scenarios) >= 299 and len(placements) == 3164 and len(placed_site_ids) == 376, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
     ensure(placement_counts == {site_id: row[5] for site_id, row in expected.items()}, errors, "Recurring resource-site selected placement counts changed")
 
     resolver_paths: dict[str, str] = {}
@@ -78864,7 +78866,8 @@ def validate_sevenfold_high_arcanum(errors: list[str]) -> None:
         "site_mourning_tide_obelisk": ("third_arcanum_mourning", "spell_veil_mourning_fogbind_20", "high_arcanum_mourning_tide_rung", "knowledge", "resource_site_high_arcanum_mourning_tide_obelisk", [240, 0, 48, 48], "mourning_tide_obelisk_source.png", "7533196ecf4c307f93d1985bf1ffe00b97c8af65cb97179eb43d3d7c2fb48669"),
         "site_sevencount_verdict_table": ("third_arcanum_sevencount", "spell_old_measure_tally_tally_20", "high_arcanum_sevencount_verdict_rendered", "power", "resource_site_high_arcanum_sevencount_verdict_table", [288, 0, 48, 48], "sevencount_verdict_table_source.png", "3d8c0d78b1eb232291d6d4e1ffcf250d084b08682bbca8b94d0bb0a792e875a8"),
     }
-    ensure(len(sites) >= 291 and len(scenario.get("resource_nodes", [])) == 17, errors, "Sevenfold High Arcanum must retain the expanded site catalog and 17-node Third Hearths board")
+    prior_nodes = [node for node in scenario.get("resource_nodes", []) if isinstance(node, dict) and node.get("content_batch_id") != "overworld-strategic-density-and-route-occupancy-10230"]
+    ensure(len(sites) >= 291 and len(prior_nodes) == 17, errors, "Sevenfold High Arcanum must retain its prior 17-node Third Hearths board beneath additive density support")
     placement_by_id = {str(node.get("placement_id", "")): node for node in scenario.get("resource_nodes", []) if isinstance(node, dict)}
     ensure(atlas_path.is_file() and png_size(atlas_path) == (336, 48), errors, "Sevenfold High Arcanum atlas must be an exact 336x48 strip")
     if atlas_path.is_file():
@@ -78941,7 +78944,8 @@ def validate_two_elite_neutral_dwellings(errors: list[str]) -> None:
         },
     }
     ensure(len(units) >= 136 and len(dwellings) >= 37 and len(sites) >= 291 and len(objects) >= 404 and len(groups) >= 309 and len(encounters) >= 185, errors, "Elite-neutral batch must remain present in the expanding unit catalog and retain the 37-dwelling, 237-site, 404-object, 249-army, 179-encounter catalogs")
-    ensure(len(scenario.get("resource_nodes", [])) == 97 and len(scenario.get("encounters", [])) == 31, errors, "Elite-neutral batch must retain the expanded 97-site, 31-encounter Ninefold board")
+    prior_nodes = [node for node in scenario.get("resource_nodes", []) if isinstance(node, dict) and node.get("content_batch_id") != "overworld-strategic-density-and-route-occupancy-10230"]
+    ensure(len(prior_nodes) == 97 and len(scenario.get("encounters", [])) == 31, errors, "Elite-neutral batch must retain the prior 97-site, 31-encounter Ninefold board beneath additive density support")
     overworld_art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = overworld_art.get("object_assets", {})
     site_sprites = overworld_art.get("resource_site_sprites", {})
@@ -79059,7 +79063,8 @@ def validate_four_elder_wild_recruitment_sanctuaries(errors: list[str]) -> None:
         },
     }
     ensure(len(dwellings) >= 37 and len(sites) >= 291 and len(objects) >= 404, errors, "Elder-wild sanctuary batch must remain present in the expanded 37-dwelling, 225-site, 404-object catalogs")
-    ensure(len(scenario.get("resource_nodes", [])) == 97 and len(scenario.get("encounters", [])) == 31, errors, "Elder-wild sanctuary batch must own the expanded 97-site Ninefold board without duplicating its 31 guards")
+    prior_nodes = [node for node in scenario.get("resource_nodes", []) if isinstance(node, dict) and node.get("content_batch_id") != "overworld-strategic-density-and-route-occupancy-10230"]
+    ensure(len(prior_nodes) == 97 and len(scenario.get("encounters", [])) == 31, errors, "Elder-wild sanctuary batch must retain the prior 97-site Ninefold board beneath additive density support without duplicating its 31 guards")
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "elder_wild_sanctuaries" / "elder_wild_sanctuaries_atlas.png"
     atlas_sha = "5f937e368aa962e513d2fdd72475a6c36fbdb835d8c1c9026558b246bf3a6212"
     ensure(atlas_path.is_file() and png_size(atlas_path) == (384, 48), errors, "Elder-wild sanctuary atlas must retain compact 384x48 authority")

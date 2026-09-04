@@ -72,6 +72,7 @@ static func create_session(
 		"towns": town_states,
 		"resource_nodes": resource_states,
 		"artifact_nodes": ArtifactRulesScript.build_artifact_nodes(scenario.get("artifact_nodes", []), scenario_id),
+		"map_objects": _duplicate_array(scenario.get("map_objects", [])),
 		"enemy_states": enemy_states,
 		"scenario_script_state": ScenarioScriptRulesScript.build_script_state(),
 	}
@@ -466,6 +467,7 @@ static func _build_resource_states(placements: Variant) -> Array:
 
 static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
 	for key in [
+		"content_batch_id",
 		"object_id",
 		"zone_id",
 		"owner",

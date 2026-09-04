@@ -6465,6 +6465,67 @@ func validation_generated_object_visual_summary() -> Dictionary:
 		"resource_entries": resource_entries,
 	}
 
+func validation_authored_scenery_summary() -> Dictionary:
+	var entries: Array = []
+	var authored_count := 0
+	var indexed_count := 0
+	var loaded_asset_count := 0
+	var blocked_body_tile_count := 0
+	if _session == null:
+		return {
+			"authored_count": 0,
+			"indexed_count": 0,
+			"loaded_asset_count": 0,
+			"blocked_body_tile_count": 0,
+			"all_indexed": true,
+			"all_assets_loaded": true,
+			"entries": entries,
+		}
+	for object_value in _session.overworld.get("map_objects", []):
+		if not (object_value is Dictionary):
+			continue
+		var object: Dictionary = object_value
+		if not _is_decorative_object_placement(object) or String(object.get("runtime_object_role", "")) == "decorative_blocker_sprite":
+			continue
+		authored_count += 1
+		var placement_id := String(object.get("placement_id", ""))
+		var tile := Vector2i(int(object.get("x", -1)), int(object.get("y", -1)))
+		var indexed: Dictionary = _decorative_objects_by_tile.get(_tile_key(tile), {})
+		var is_indexed := String(indexed.get("placement_id", "")) == placement_id
+		if is_indexed:
+			indexed_count += 1
+		var asset_id := _decorative_object_asset_id(object)
+		var asset_loaded := asset_id != "" and _object_texture_for_asset(asset_id) is Texture2D
+		if asset_loaded:
+			loaded_asset_count += 1
+		var body_tiles: Array = object.get("body_tiles", []) if object.get("body_tiles", []) is Array else []
+		var blocked_count := 0
+		for body_value in body_tiles:
+			if not (body_value is Dictionary):
+				continue
+			var body_tile := Vector2i(int(body_value.get("x", -1)), int(body_value.get("y", -1)))
+			if OverworldRulesScript.tile_is_blocked(_session, body_tile.x, body_tile.y):
+				blocked_count += 1
+		blocked_body_tile_count += blocked_count
+		entries.append({
+			"placement_id": placement_id,
+			"object_id": String(object.get("object_id", "")),
+			"asset_id": asset_id,
+			"asset_loaded": asset_loaded,
+			"indexed": is_indexed,
+			"body_tile_count": body_tiles.size(),
+			"blocked_body_tile_count": blocked_count,
+		})
+	return {
+		"authored_count": authored_count,
+		"indexed_count": indexed_count,
+		"loaded_asset_count": loaded_asset_count,
+		"blocked_body_tile_count": blocked_body_tile_count,
+		"all_indexed": indexed_count == authored_count,
+		"all_assets_loaded": loaded_asset_count == authored_count,
+		"entries": entries,
+	}
+
 func validation_object_sprite_scale_payload(asset_id: String, family: String, footprint: Vector2i = Vector2i.ONE, profile_overrides: Dictionary = {}, visible_footprint_span: Vector2i = Vector2i.ZERO) -> Dictionary:
 	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):

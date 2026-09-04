@@ -5958,6 +5958,7 @@ static func _normalize_resource_nodes(nodes: Array) -> Array:
 
 static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
 	for key in [
+		"content_batch_id",
 		"object_id",
 		"zone_id",
 		"owner",
