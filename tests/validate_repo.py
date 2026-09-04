@@ -36601,11 +36601,13 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     town_draw_payload_order = tuple(town_draw_payload_block.find(token) for token in (
         "var footprint := _object_profile_footprint(_town_object_profile())",
         "var footprint_extent := minf(footprint_rect.size.x, footprint_rect.size.y)",
-        "var visible_extent_px := maxf(12.0, footprint_extent * TOWN_SPRITE_EXTENT_FACTOR)",
+        "var requested_visible_extent_px := maxf(12.0, footprint_extent * TOWN_SPRITE_EXTENT_FACTOR)",
         "var single_tile_extent := single_tile_extent_override if single_tile_extent_override > 0.0 else _object_world_tile_extent(footprint_rect, footprint)",
         "var painted_ground_line_y := footprint_rect.end.y - single_tile_extent * TOWN_SPRITE_GROUND_CLEARANCE_TILES",
-        "var provisional_center := Vector2(footprint_rect.get_center().x, painted_ground_line_y - visible_extent_px * 0.5)",
-        "var payload := _object_painted_sprite_draw_payload(asset_id, texture, provisional_center, visible_extent_px)",
+        "var provisional_center := Vector2(footprint_rect.get_center().x, painted_ground_line_y - requested_visible_extent_px * 0.5)",
+        "var payload := _object_painted_sprite_draw_payload(asset_id, texture, provisional_center, requested_visible_extent_px)",
+        "var aspect_fit_scale := minf(",
+        "draw_rect.size *= aspect_fit_scale",
         "var grounding_adjustment := painted_ground_line_y - draw_rect.end.y",
         "draw_rect.position.y += grounding_adjustment",
         'payload["painted_bottom_clearance_px"] = footprint_rect.end.y - draw_rect.end.y',
@@ -36625,10 +36627,12 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         "const TOWN_VISUAL_FOOTPRINT := Vector2i(3, 4)",
         'const TOWN_VISUAL_ANCHOR_MODEL := "three_by_four_entry_center_bottom"',
         "const TOWN_SPRITE_EXTENT_FACTOR := 1.24",
+        "const TOWN_SPRITE_WIDTH_CAP_TILES := 2.90",
+        "const TOWN_SPRITE_HEIGHT_CAP_TILES := 3.72",
         "const TOWN_SPRITE_GROUND_CLEARANCE_TILES := 0.18",
         "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.86",
         "const OBJECT_SPRITE_EXTENT_FACTOR := 0.88",
-        'const TOWN_PRESENTATION_MODEL := "town_3x4_visual_landmark_3x2_logical_bottom_middle_entry"',
+        'const TOWN_PRESENTATION_MODEL := "aspect_preserved_town_in_3x4_visual_envelope_3x2_logical_bottom_middle_entry"',
     ):
         ensure(preserved_token in map_text, errors, f"Small-map visual cap must preserve object presentation authority: {preserved_token}")
 
@@ -36731,6 +36735,72 @@ def validate_overworld_landmark_readability_runtime_report(errors: list[str]) ->
     ensure('script = ExtResource("1")' in scene_text and "overworld_landmark_readability_runtime_report.gd" in scene_text, errors, "Overworld landmark-readability scene must own the exact focused script")
     for token in ("subprocess.run(", '"--scene", SCENE', '"town_asset_count": 7', '"session_authority_exact": True'):
         ensure(token in runner_text, errors, f"Overworld landmark-readability runner is missing exact verification: {token}")
+
+
+def validate_overworld_town_proportion_environs(errors: list[str]) -> None:
+    requirements_path = ROOT / "docs" / "overworld-town-proportion-and-environs-requirements.md"
+    author_path = ROOT / "tools" / "author_overworld_town_environs_10236.py"
+    report_path = ROOT / "tests" / "overworld_town_proportion_environs_report.gd"
+    scene_path = ROOT / "tests" / "overworld_town_proportion_environs_report.tscn"
+    runner_path = ROOT / "tests" / "overworld_town_proportion_environs_report.py"
+    source_path = ROOT / "art" / "overworld" / "source" / "generated" / "towns" / "identity" / "town_riverwatch_source.png"
+    runtime_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "towns" / "identity" / "town_riverwatch.png"
+    required_paths = (requirements_path, author_path, report_path, scene_path, runner_path, source_path, runtime_path)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing #10236 town-proportion owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    author_text = author_path.read_text(encoding="utf-8")
+    report_text = report_path.read_text(encoding="utf-8")
+    runner_text = runner_path.read_text(encoding="utf-8")
+    for token in (
+        'const TOWN_PRESENTATION_MODEL := "aspect_preserved_town_in_3x4_visual_envelope_3x2_logical_bottom_middle_entry"',
+        'const TOWN_GROUNDING_MODEL := "painted_town_contact_edge_without_base_ellipse"',
+        "const TOWN_SPRITE_WIDTH_CAP_TILES := 2.90",
+        "const TOWN_SPRITE_HEIGHT_CAP_TILES := 3.72",
+        "var aspect_fit_scale := minf(",
+        'payload["town_aspect_preserved"] = is_equal_approx(',
+        '"town_aspect_preserved": bool(draw_payload.get("town_aspect_preserved", false))',
+    ):
+        ensure(token in map_text, errors, f"Town renderer is missing the #10236 aspect-preserving contract: {token}")
+    for forbidden in ("draw_rect.size = Vector2(width_cap_px, height_cap_px)", "draw_rect.size.x = width_cap_px", "draw_rect.size.y = height_cap_px"):
+        ensure(forbidden not in map_text, errors, f"Town renderer must not restore forced non-uniform stretching: {forbidden}")
+
+    manifest = json.loads((ROOT / "art" / "overworld" / "manifest.json").read_text(encoding="utf-8"))
+    riverwatch = manifest.get("object_assets", {}).get("town_identity_riverwatch", {})
+    ensure(riverwatch.get("path") == "res://art/overworld/runtime/objects/towns/identity/town_riverwatch.png", errors, "Riverwatch runtime sprite path changed")
+    ensure(riverwatch.get("source_generated") == "res://art/overworld/source/generated/towns/identity/town_riverwatch_source.png", errors, "Riverwatch generated source path changed")
+    ensure(riverwatch.get("source_model") == "built_in_image_gen_original_landset_edit_with_transparent_extraction", errors, "Riverwatch must retain original generated land-set provenance")
+    ensure(riverwatch.get("asset_policy") == "original_generated_runtime_sprite_no_homm3_art_import", errors, "Riverwatch must retain original-art policy")
+    ensure(png_size(runtime_path) == (512, 512), errors, "Riverwatch runtime sprite must remain a 512x512 PNG")
+    ensure(min(png_size(source_path)) >= 1024, errors, "Riverwatch generated source must retain high-resolution source art")
+    for path in (source_path, runtime_path):
+        with path.open("rb") as handle:
+            header = handle.read(26)
+        ensure(len(header) >= 26 and header[25] in (4, 6), errors, f"Town asset must retain a real PNG alpha channel: {path.relative_to(ROOT)}")
+
+    scenarios = json.loads((CONTENT_DIR / "scenarios.json").read_text(encoding="utf-8"))
+    scenario = next((item for item in scenarios.get("items", []) if item.get("id") == "ninefold-confluence"), {})
+    support = scenario.get("town_environs_support", {})
+    placements = [item for item in scenario.get("map_objects", []) if item.get("content_batch_id") == "ux-overworld-town-proportion-and-environs-10236"]
+    ensure(support.get("town_placement_id") == "ninefold_embercourt_survey_camp" and support.get("vision_radius") == 5 and support.get("authored_blocker_count") == 3, errors, "Ninefold town environs support metadata is not exact")
+    ensure(len(placements) == 3 and len({item.get("placement_id") for item in placements}) == 3, errors, "Ninefold must own exactly three distinct #10236 town-environs blockers")
+    road_layers = json.loads((CONTENT_DIR / "terrain_layers.json").read_text(encoding="utf-8"))
+    layer = next((item for item in road_layers.get("items", []) if item.get("id") == "ninefold-confluence"), {})
+    road_tiles = {(int(tile.get("x", -1)), int(tile.get("y", -1))) for road in layer.get("roads", []) for tile in road.get("tiles", [])}
+    town_anchor = (23, 26)
+    body_tiles = [(int(tile.get("x", -1)), int(tile.get("y", -1))) for item in placements for tile in item.get("body_tiles", [])]
+    ensure(all(abs(int(item.get("x", -99)) - town_anchor[0]) + abs(int(item.get("y", -99)) - town_anchor[1]) <= 5 for item in placements), errors, "Every #10236 blocker anchor must be inside the starting-town vision radius")
+    ensure(len(body_tiles) == 13 and not any(tile in road_tiles for tile in body_tiles), errors, "#10236 blocker bodies must own exactly 13 non-road tiles")
+
+    for token in ('BATCH_ID = "ux-overworld-town-proportion-and-environs-10236"', 'TOWN_PLACEMENT_ID = "ninefold_embercourt_survey_camp"', 'VISION_RADIUS = 5', '"vision_radius": VISION_RADIUS', '"native_rmg_unchanged": True', 'scenario["map_objects"] = retained_objects + authored'):
+        ensure(token in author_text, errors, f"Town-environs author is missing deterministic/idempotent ownership: {token}")
+    for token in ('const VIEWPORTS := [Vector2i(1920, 1080), Vector2i(1280, 720)]', 'map_view.call("validation_town_sprite_scale_payload", asset_id)', 'bool(scale.get("town_aspect_preserved", false))', 'String(object.get("content_batch_id", "")) != BATCH_ID', 'OverworldRules.tile_is_blocked(session, x, y)', '"native_rmg_output_changed": false'):
+        ensure(token in report_text, errors, f"Focused #10236 runtime report is missing exact live proof: {token}")
+    for token in ('timeout=300', '"town aspects are not preserved"', '"Riverwatch environs are not exact"', 'len(captures) != 2'):
+        ensure(token in runner_text, errors, f"Focused #10236 runner is missing exact verification: {token}")
 
 
 def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
@@ -37525,12 +37595,14 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'not bool(clipped_large_service.get("sprite_contained_in_visible_footprint", false))',
         'bool(large_service.get("footprint_clipped", true))',
         'float(clipped_large_service.get("visible_extent_tiles", 0.0)), 0.96',
-        'float(town.get("visible_extent_tiles", 0.0)), 3.72',
+        'float(town.get("visible_extent_tiles", 0.0)) > 3.7201',
         'float(town.get("visible_extent_fraction_of_footprint_depth", 0.0)), 1.24',
-        'float(town.get("painted_width_tiles", 0.0)), 2.90',
-        'float(town.get("painted_height_tiles", 0.0)), 3.72',
-        'float(town.get("town_to_hero_extent_ratio", 0.0)), 4.325581395348837',
-        'float(town.get("town_to_largest_other_object_extent_ratio", 0.0)), 2.7555555555555555',
+        'float(town.get("painted_width_tiles", 0.0)) > 2.9001',
+        'float(town.get("painted_height_tiles", 0.0)) > 3.7201',
+        'float(town.get("town_height_cap_tiles", 0.0)), 3.72',
+        'not bool(town.get("town_aspect_preserved", false))',
+        'float(town.get("town_to_hero_extent_ratio", 0.0)) <= 3.0',
+        'float(town.get("town_to_largest_other_object_extent_ratio", 0.0)) <= 2.0',
         'float(town.get("painted_bottom_clearance_tiles", 0.0)), 0.18',
         'not bool(town.get("painted_bottom_grounded_exact", false))',
         'float(town_center.get("x", 0.0)), 1.5',
@@ -44532,12 +44604,12 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(object_rendering.get("mapped_sprite_vertical_mass_shadow", "")) == "removed_for_resource_artifact_encounter_mapped_sprites", errors, "Overworld object rendering must document removal of mapped sprite vertical mass shadows")
         ensure(str(object_rendering.get("mapped_sprite_foreground_lip", "")) == "removed_for_resource_artifact_encounter_mapped_sprites", errors, "Overworld object rendering must document removal of mapped sprite foreground lips")
         ensure(str(object_rendering.get("fallback_silhouette", "")) == "family_specific_procedural_world_object", errors, "Overworld object rendering must document family-specific procedural fallback silhouettes")
-        ensure(str(object_rendering.get("town_footprint", "")) == "town_2_9x3_72_painted_landmark_3x2_logical_bottom_middle_entry", errors, "Overworld object rendering must document the 2.9x3.72 painted landmark and retained 3x2 logical entry model")
-        ensure(str(object_rendering.get("town_visual_footprint", "")) == "3x4_entry_center_bottom_with_bounded_vertical_landmark_fit", errors, "Overworld object rendering must document the exact 3x4 visual town envelope")
+        ensure(str(object_rendering.get("town_footprint", "")) == "aspect_preserved_town_within_2_9x3_72_visual_cap_3x2_logical_bottom_middle_entry", errors, "Overworld object rendering must document aspect-preserved art inside the 2.9x3.72 cap and retained 3x2 logical entry model")
+        ensure(str(object_rendering.get("town_visual_footprint", "")) == "3x4_entry_center_bottom_with_aspect_preserved_bounded_fit", errors, "Overworld object rendering must document the exact 3x4 aspect-preserved visual town envelope")
         ensure(str(object_rendering.get("town_logical_footprint", "")) == "3x2_bottom_middle_entry", errors, "Overworld object rendering must document the retained 3x2 logical town footprint")
         ensure(str(object_rendering.get("town_entry_role", "")) == "bottom_middle_visit_approach", errors, "Overworld object rendering must document the town bottom-middle visit approach role")
         ensure(str(object_rendering.get("town_non_entry_tiles", "")) == "blocked_non_entry_footprint", errors, "Overworld object rendering must document non-entry town footprint cells as blocked")
-        ensure(str(object_rendering.get("town_grounding", "")) == "tall_town_landmark_settled_without_base_ellipse", errors, "Overworld object rendering must document the tall-town no-ellipse grounding model")
+        ensure(str(object_rendering.get("town_grounding", "")) == "painted_town_contact_edge_without_base_ellipse", errors, "Overworld object rendering must document the painted-contact no-ellipse grounding model")
         ensure(str(object_rendering.get("town_footprint_cues", "")) == "no_visible_helper_cues_3x2_contract", errors, "Overworld object rendering must document that town footprint/helper cues are not visible")
         ensure(str(object_rendering.get("town_entry_apron", "")) == "removed", errors, "Overworld object rendering must document that town entry aprons are removed")
         ensure(str(object_rendering.get("town_gate_helper", "")) == "removed", errors, "Overworld object rendering must document that town gate helper cues are removed")
@@ -44725,12 +44797,12 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "TOWN_ANCHOR_STYLE",
         "TOWN_DEPTH_CUE_MODEL",
         "TOWN_FOOTPRINT_CUE_MODEL",
-        "town_3x4_visual_landmark_3x2_logical_bottom_middle_entry",
+        "aspect_preserved_town_in_3x4_visual_envelope_3x2_logical_bottom_middle_entry",
         "bottom_middle_visit_approach",
         "blocked_non_entry_footprint",
-        "tall_town_landmark_settled_without_base_ellipse",
+        "painted_town_contact_edge_without_base_ellipse",
         "town_contact_cues_no_base_ellipse",
-        "tall_town_entry_ground_contact_without_cast_shadow",
+        "painted_town_entry_ground_contact_without_cast_shadow",
         "no_visible_helper_cues_3x2_contract",
         "ghosted_sprite_without_echo_plate",
     ):
@@ -48613,7 +48685,7 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
                 ensure(source_path == expected_source and str(entry.get("source_atlas", "")) == "res://art/overworld/source/faction_town_sprite_atlas.png", errors, f"Overworld town identity asset {asset_id} must retain scenic and faction-silhouette provenance")
             else:
                 ensure(source_path == expected_source, errors, f"Overworld town identity asset {asset_id} must retain generated-source provenance")
-            expected_model = "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette" if marchland_seat else "built_in_image_gen_original_horizon_citadel_atlas" if horizon_citadel else "built_in_image_gen_original_third_hearth_town_atlas" if third_hearth else "built_in_image_gen_original_landmark"
+            expected_model = "built_in_image_gen_original_landset_edit_with_transparent_extraction" if town_id == "town_riverwatch" else "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette" if marchland_seat else "built_in_image_gen_original_horizon_citadel_atlas" if horizon_citadel else "built_in_image_gen_original_third_hearth_town_atlas" if third_hearth else "built_in_image_gen_original_landmark"
             ensure(str(entry.get("source_model", "")) == expected_model, errors, f"Overworld town identity asset {asset_id} must name its original generation source")
             ensure(str(entry.get("assigned_town_id", "")) == town_id, errors, f"Overworld town identity asset {asset_id} must retain exact town assignment")
             runtime_disk = res_path_to_disk(runtime_path)
@@ -48706,7 +48778,8 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
     ensure_scene_nodes(report_scene, errors, "overworld_faction_town_sprite_runtime_report.tscn", [("OverworldFactionTownSpriteRuntimeReport", "Node")])
     for token in (
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
-        'const TOWN_VISUAL_EXTENT_TILES := 3.72',
+        'const TOWN_VISUAL_EXTENT_CAP_TILES := 3.72',
+        'const TOWN_VISUAL_WIDTH_CAP_TILES := 2.90',
         'const TOWN_EXTENT_FRACTION := 1.24',
         'const TOWN_GROUND_CLEARANCE_TILES := 0.18',
         'const EXPECTED_TOWN_ASSETS := {',
@@ -48721,16 +48794,16 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
         "for profile_value in profiles:",
         'shell.call("validation_tile_presentation"',
         'sprite_asset_id in sprite_asset_ids',
-        'String(art.get("town_sprite_grounding_model", "")) == "tall_town_landmark_settled_without_base_ellipse"',
+        'String(art.get("town_sprite_grounding_model", "")) == "painted_town_contact_edge_without_base_ellipse"',
         'shell.get_node_or_null("%Map")',
         'map_view.call("validation_color_cue_summary")',
         'map_view.call("validation_town_sprite_scale_payload", sprite_asset_id)',
-        'is_equal_approx(float(payload.get("visible_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES)',
+        'float(payload.get("visible_extent_tiles", 0.0)) <= TOWN_VISUAL_EXTENT_CAP_TILES + 0.0001',
         'is_equal_approx(float(payload.get("visible_extent_fraction_of_footprint_depth", 0.0)), TOWN_EXTENT_FRACTION)',
-        'is_equal_approx(float(payload.get("painted_width_tiles", 0.0)), 2.90)',
-        'is_equal_approx(float(payload.get("painted_height_tiles", 0.0)), 3.72)',
-        'is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 4.325581395348837)',
-        'is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 2.7555555555555555)',
+        'float(payload.get("painted_width_tiles", 0.0)) <= TOWN_VISUAL_WIDTH_CAP_TILES + 0.0001',
+        'float(payload.get("painted_height_tiles", 0.0)) <= TOWN_VISUAL_EXTENT_CAP_TILES + 0.0001',
+        'bool(payload.get("town_aspect_preserved", false))',
+        'is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0)))',
         'bool(payload.get("painted_bottom_grounded_exact", false))',
         'String(payload.get("sprite_silhouette_model", "")) == "eight_direction_alpha_silhouette_outline"',
         'bool(payload.get("sprite_silhouette_contained_in_footprint", false))',
@@ -48765,7 +48838,8 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
         for token in (
             'const GENERATED_LARGE_SEED := "town-explicit-save-surface-large-10184"',
             'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
-            'const TOWN_VISUAL_EXTENT_TILES := 3.72',
+            'const TOWN_VISUAL_EXTENT_CAP_TILES := 3.72',
+            'const TOWN_VISUAL_WIDTH_CAP_TILES := 2.90',
             'const TOWN_EXTENT_FRACTION := 1.24',
             '"translated_rmg_template_042_v1"',
             '"translated_rmg_profile_042_v1"',
@@ -48793,11 +48867,11 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
             'bool(hero_layout.get("town_footprint_colocated", false))',
             'OverworldRules._blocked_tile_index(session) == blocked_before',
             '_town_interaction_authority(session) == interaction_before',
-            'is_equal_approx(float(payload.get("visible_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES)',
-            'is_equal_approx(float(payload.get("painted_width_tiles", 0.0)), 2.90)',
-            'is_equal_approx(float(payload.get("painted_height_tiles", 0.0)), 3.72)',
-            'is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 4.325581395348837)',
-            'is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 2.7555555555555555)',
+            'float(payload.get("visible_extent_tiles", 0.0)) <= TOWN_VISUAL_EXTENT_CAP_TILES + 0.0001',
+            'float(payload.get("painted_width_tiles", 0.0)) <= TOWN_VISUAL_WIDTH_CAP_TILES + 0.0001',
+            'float(payload.get("painted_height_tiles", 0.0)) <= TOWN_VISUAL_EXTENT_CAP_TILES + 0.0001',
+            'bool(payload.get("town_aspect_preserved", false))',
+            'is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0)))',
             'bool(payload.get("painted_bottom_grounded_exact", false))',
             'String(payload.get("sprite_silhouette_model", "")) == "eight_direction_alpha_silhouette_outline"',
             'bool(payload.get("sprite_silhouette_contained_in_footprint", false))',
@@ -49631,7 +49705,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.4484)',
         'is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.64)',
         'tile_rect.encloses(hero_rect) and tile_rect.encloses(sprite_rect)',
-        'String(town_presentation.get("presentation_model", "")) == "town_3x4_visual_landmark_3x2_logical_bottom_middle_entry"',
+        'String(town_presentation.get("presentation_model", "")) == "aspect_preserved_town_in_3x4_visual_envelope_3x2_logical_bottom_middle_entry"',
         'bool(tile_presentation.get("has_town_non_entry", false))',
         'String(town_presentation.get("tile_role", "")) == "blocked_non_entry_footprint"',
         'var faction_fallback_exact := _validate_faction_fallback(map_view)',
@@ -84412,6 +84486,7 @@ def main() -> int:
     validate_overworld_objective_brief_native_pixel_ellipsis(errors)
     validate_overworld_small_map_visual_scale(errors)
     validate_overworld_landmark_readability_runtime_report(errors)
+    validate_overworld_town_proportion_environs(errors)
     validate_overworld_compact_town_owner_pennants(errors)
     validate_generated_map_object_visual_coherence(errors)
     validate_overworld_live_object_art_coverage(errors)

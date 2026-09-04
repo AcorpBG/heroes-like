@@ -267,10 +267,10 @@ const HERO_COMMAND_PENNANT_HEIGHT_FACTOR := 0.12
 const HERO_COMMAND_PENNANT_POLE_HEIGHT_FACTOR := 0.43
 const HERO_COMMAND_PENNANT_ALPHA := 0.96
 const HERO_COMMAND_PENNANT_ASSET_EXTENT_FACTOR := 0.60
-const TOWN_PRESENTATION_MODEL := "town_3x4_visual_landmark_3x2_logical_bottom_middle_entry"
-const TOWN_GROUNDING_MODEL := "tall_town_landmark_settled_without_base_ellipse"
+const TOWN_PRESENTATION_MODEL := "aspect_preserved_town_in_3x4_visual_envelope_3x2_logical_bottom_middle_entry"
+const TOWN_GROUNDING_MODEL := "painted_town_contact_edge_without_base_ellipse"
 const TOWN_ANCHOR_STYLE := "town_contact_cues_no_base_ellipse"
-const TOWN_DEPTH_CUE_MODEL := "tall_town_entry_ground_contact_without_cast_shadow"
+const TOWN_DEPTH_CUE_MODEL := "painted_town_entry_ground_contact_without_cast_shadow"
 const TOWN_FOOTPRINT_CUE_MODEL := "no_visible_helper_cues_3x2_contract"
 const TOWN_ENTRY_ROLE := "bottom_middle_visit_approach"
 const TOWN_NON_ENTRY_ROLE := "blocked_non_entry_footprint"
@@ -280,6 +280,7 @@ const TOWN_VISUAL_FOOTPRINT := Vector2i(3, 4)
 const TOWN_VISUAL_ANCHOR_MODEL := "three_by_four_entry_center_bottom"
 const TOWN_SPRITE_EXTENT_FACTOR := 1.24
 const TOWN_SPRITE_WIDTH_CAP_TILES := 2.90
+const TOWN_SPRITE_HEIGHT_CAP_TILES := 3.72
 const TOWN_SPRITE_GROUND_CLEARANCE_TILES := 0.18
 const TOWN_ADJUNCT_RESOURCE_LAYOUT_MODEL := "compact_outward_edge_town_footprint_resource"
 const TOWN_ADJUNCT_RESOURCE_EXTENT_FACTOR := 0.64
@@ -3945,28 +3946,42 @@ func _draw_sprite_silhouette_outline(texture: Texture2D, rect: Rect2, color: Col
 func _town_sprite_draw_payload(asset_id: String, texture: Texture2D, footprint_rect: Rect2, single_tile_extent_override: float = 0.0) -> Dictionary:
 	var footprint := _object_profile_footprint(_town_object_profile())
 	var footprint_extent := minf(footprint_rect.size.x, footprint_rect.size.y)
-	var visible_extent_px := maxf(12.0, footprint_extent * TOWN_SPRITE_EXTENT_FACTOR)
+	var requested_visible_extent_px := maxf(12.0, footprint_extent * TOWN_SPRITE_EXTENT_FACTOR)
 	var single_tile_extent := single_tile_extent_override if single_tile_extent_override > 0.0 else _object_world_tile_extent(footprint_rect, footprint)
 	var painted_ground_line_y := footprint_rect.end.y - single_tile_extent * TOWN_SPRITE_GROUND_CLEARANCE_TILES
-	var provisional_center := Vector2(footprint_rect.get_center().x, painted_ground_line_y - visible_extent_px * 0.5)
-	var payload := _object_painted_sprite_draw_payload(asset_id, texture, provisional_center, visible_extent_px)
+	var provisional_center := Vector2(footprint_rect.get_center().x, painted_ground_line_y - requested_visible_extent_px * 0.5)
+	var payload := _object_painted_sprite_draw_payload(asset_id, texture, provisional_center, requested_visible_extent_px)
 	var draw_rect: Rect2 = payload.get("draw_rect", Rect2(provisional_center, Vector2.ZERO))
 	var width_cap_px := single_tile_extent * TOWN_SPRITE_WIDTH_CAP_TILES
-	draw_rect.size = Vector2(width_cap_px, visible_extent_px)
+	var height_cap_px := single_tile_extent * TOWN_SPRITE_HEIGHT_CAP_TILES
+	var aspect_fit_scale := minf(
+		1.0,
+		minf(
+			width_cap_px / maxf(draw_rect.size.x, 0.0001),
+			height_cap_px / maxf(draw_rect.size.y, 0.0001)
+		)
+	)
+	draw_rect.size *= aspect_fit_scale
 	draw_rect.position = Vector2(
-		footprint_rect.get_center().x - width_cap_px * 0.5,
-		painted_ground_line_y - visible_extent_px
+		footprint_rect.get_center().x - draw_rect.size.x * 0.5,
+		painted_ground_line_y - draw_rect.size.y
 	)
 	var grounding_adjustment := painted_ground_line_y - draw_rect.end.y
 	draw_rect.position.y += grounding_adjustment
+	var visible_extent_px := maxf(draw_rect.size.x, draw_rect.size.y)
 	payload["draw_rect"] = draw_rect
 	payload["draw_size"] = draw_rect.size
 	payload["draw_aspect"] = draw_rect.size.x / maxf(draw_rect.size.y, 0.0001)
-	payload["sprite_center"] = provisional_center + Vector2(0.0, grounding_adjustment)
+	payload["sprite_center"] = draw_rect.get_center()
 	payload["visible_extent_px"] = visible_extent_px
+	payload["requested_visible_extent_px"] = requested_visible_extent_px
 	payload["single_tile_extent_px"] = single_tile_extent
 	payload["town_width_cap_px"] = width_cap_px
 	payload["town_width_cap_tiles"] = TOWN_SPRITE_WIDTH_CAP_TILES
+	payload["town_height_cap_px"] = height_cap_px
+	payload["town_height_cap_tiles"] = TOWN_SPRITE_HEIGHT_CAP_TILES
+	payload["town_aspect_fit_scale"] = aspect_fit_scale
+	payload["town_aspect_preserved"] = is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0)))
 	payload["town_vertical_landmark_fit"] = true
 	payload["painted_ground_line_y"] = painted_ground_line_y
 	payload["painted_bottom_clearance_px"] = footprint_rect.end.y - draw_rect.end.y
@@ -6641,7 +6656,11 @@ func validation_town_sprite_scale_payload(asset_id: String = "town_faction_ember
 		"painted_height_tiles": draw_size.y / single_tile_extent,
 		"draw_rect_tiles": {"x": draw_rect.position.x / single_tile_extent, "y": draw_rect.position.y / single_tile_extent, "width": draw_rect.size.x / single_tile_extent, "height": draw_rect.size.y / single_tile_extent},
 		"visible_extent_tiles": visible_extent_px / single_tile_extent,
+		"requested_visible_extent_tiles": float(draw_payload.get("requested_visible_extent_px", 0.0)) / single_tile_extent,
 		"town_width_cap_tiles": float(draw_payload.get("town_width_cap_tiles", 0.0)),
+		"town_height_cap_tiles": float(draw_payload.get("town_height_cap_tiles", 0.0)),
+		"town_aspect_fit_scale": float(draw_payload.get("town_aspect_fit_scale", 0.0)),
+		"town_aspect_preserved": bool(draw_payload.get("town_aspect_preserved", false)),
 		"town_vertical_landmark_fit": bool(draw_payload.get("town_vertical_landmark_fit", false)),
 		"visible_extent_fraction_of_footprint_depth": TOWN_SPRITE_EXTENT_FACTOR,
 		"town_to_hero_extent_ratio": (visible_extent_px / single_tile_extent) / HERO_FIELD_SPRITE_EXTENT_FACTOR,

@@ -1912,6 +1912,52 @@
   "blocker": "",
   "completedImplementationEvidence": [
     {
+      "id": "ux-overworld-town-proportion-and-environs-20260904",
+      "title": "Overworld Town Proportion And Environs",
+      "sliceId": "ux-overworld-town-proportion-and-environs-10236",
+      "status": "completed",
+      "validatedAt": "2026-09-04T23:38:32Z",
+      "updatedAt": "2026-09-04T23:38:32Z",
+      "latestFinding": "Town sprites now preserve painted alpha-bounds aspect inside the 2.90x3.72 visual cap; Riverwatch uses an original transparent land-set raster and three path-safe raster blocker clusters are visible inside its radius-five authored reveal.",
+      "artifacts": [
+        "scenes/overworld/OverworldMapView.gd",
+        "content/scenarios.json",
+        "art/overworld/manifest.json",
+        "art/overworld/source/generated/towns/identity/town_riverwatch_source.png",
+        "art/overworld/runtime/objects/towns/identity/town_riverwatch.png",
+        "tools/author_overworld_town_environs_10236.py",
+        "tests/overworld_town_proportion_environs_report.gd",
+        "tests/overworld_town_proportion_environs_report.py",
+        "tests/validate_repo.py",
+        "docs/overworld-town-proportion-and-environs-requirements.md",
+        "docs/overworld-town-proportion-and-environs-report.md",
+        ".artifacts/overworld_town_proportion_environs_10236/report.json",
+        ".artifacts/overworld_town_proportion_environs_10236/ninefold_town_environs_1920x1080.png",
+        ".artifacts/overworld_town_proportion_environs_10236/ninefold_town_environs_1280x720.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "validated_live_town_profile_count": 12,
+        "authored_town_identity_count": 26,
+        "town_width_cap_tiles": 2.9,
+        "town_height_cap_tiles": 3.72,
+        "town_environs_blocker_count": 3,
+        "town_environs_body_tile_count": 13,
+        "town_vision_radius": 5,
+        "responsive_capture_count": 2,
+        "linux_pck_bytes": 248360044,
+        "windows_pck_bytes": 248360044,
+        "pck_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 1639956,
+        "save_version": 9,
+        "save_version_changed": false,
+        "native_rmg_output_changed": false,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "No work remains in bounded #10236. The pre-existing broad visual-smoke field-hero marker assertion, hardware certification, signing, publication, whole-game validation, Native RMG parity, and release readiness remain separate."
+    },
+    {
       "id": "ux-overworld-owned-roster-visual-polish-20260904",
       "title": "Overworld Owned Roster Visual Polish",
       "sliceId": "ux-overworld-owned-roster-visual-polish-10235",
@@ -16491,14 +16537,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Owner-directed #10235 completed: the Overworld roster is ownership-exact, uses polished centered ornamental art cards, and its normal screenshots come from untouched gameplay state.",
+  "currentNotes": "Owner-directed #10236 completed: town art preserves painted aspect, Riverwatch is an original transparent land-set raster, and the untouched starting reveal has path-safe visible blocker scenery.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-owned-roster-visual-polish-10235",
-  "currentSliceId": "ux-overworld-owned-roster-visual-polish-10235",
-  "currentSliceNotes": "No owner-directed implementation slice is active. #10235 completed with authoritative owned-id equality, ornamental card visuals, untouched responsive captures, repository validation, Linux packaging, and direct packaged Windows generated-entry evidence.",
+  "currentSlice": "ux-overworld-town-proportion-and-environs-10236",
+  "currentSliceId": "ux-overworld-town-proportion-and-environs-10236",
+  "currentSliceNotes": "Completed #10236: aspect-preserving town rendering, original transparent Riverwatch land-set raster, three visible path-safe authored blocker clusters, inspected dual-resolution evidence, repo validation, and matching Linux/Windows 248360044-byte package gates all pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Owned Roster Visual Polish",
-  "currentSliceUpdatedAt": "2026-09-04T18:05:00Z",
+  "currentSliceTitle": "Overworld Town Proportion And Environs",
+  "currentSliceUpdatedAt": "2026-09-04T23:38:32Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22020,9 +22066,74 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select and track the next owner-directed Phase 6 implementation slice before changing runtime behavior.",
-  "notes": "Owner-directed #10235 Overworld owned-roster visual polish is completed. No implementation slice is active.",
+  "nextActionGuardrailNote": "No next owner-directed slice is selected; keep Native RMG output and unrelated systems unchanged until the owner chooses one.",
+  "notes": "Owner-directed #10236 Overworld town proportion and environs correction completed in Phase 6.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-town-proportion-and-environs-10236",
+      "title": "Overworld Town Proportion And Environs",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md",
+        "docs/overworld-landmark-readability-and-town-scale-requirements.md",
+        "docs/overworld-strategic-density-and-route-occupancy-requirements.md",
+        "docs/overworld-town-proportion-and-environs-requirements.md"
+      ],
+      "purpose": "Correct forced town-raster distortion and make the untouched authored Ninefold starting town read as a grounded grassland settlement within visible path-safe scenery.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "content/scenarios.json",
+        "art/overworld/manifest.json",
+        "art/overworld/source/generated/towns/identity/town_riverwatch_source.png",
+        "art/overworld/runtime/objects/towns/identity/town_riverwatch.png",
+        "tools/author_overworld_town_environs_10236.py",
+        "tests/overworld_town_proportion_environs_report.gd",
+        "tests/overworld_town_proportion_environs_report.py",
+        "tests/validate_repo.py",
+        "docs/overworld-town-proportion-and-environs-requirements.md",
+        "docs/overworld-town-proportion-and-environs-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every manifest-backed town preserves its painted aspect inside the 3x4 envelope while exact 3x2 click and pathing authority remains unchanged",
+        "Riverwatch resolves to a new original land-set raster and the untouched Ninefold start contains visible biome-matched blocker bodies inside radius five with roads and town approaches clear",
+        "Inspected normal-play 1920x1080 and 1280x720 captures plus relevant runtime, repository, diff, and matching Linux and Windows package checks pass below 250000000 bytes"
+      ],
+      "nonGoals": [
+        "Native RMG topology, placement, density, terrain, roads, guards, rewards, retry, recovery, parity, or final-payload behavior",
+        "Logical town footprint, gameplay, movement costs, interaction, economy, AI, balance, save schema, Town or Battle UI, package-limit changes, copied art, signing, publication, or release-readiness claims"
+      ],
+      "validationCommands": [
+        "python3 tests/overworld_town_proportion_environs_report.py",
+        "godot4 --headless --path . --scene res://tests/overworld_faction_town_sprite_runtime_report.tscn",
+        "python3 tests/overworld_landmark_readability_runtime_report.py",
+        "godot4 --headless --path . --scene res://tests/overworld_strategic_density_runtime_report.tscn",
+        "python3 tests/overworld_town_vision_command_roster_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "git diff --check"
+      ],
+      "createdAt": "2026-09-04T23:15:00Z",
+      "startedAt": "2026-09-04T23:15:00Z",
+      "updatedAt": "2026-09-04T23:38:32Z",
+      "evidence": [
+        "docs/overworld-town-proportion-and-environs-report.md",
+        ".artifacts/overworld_town_proportion_environs_10236/report.json",
+        ".artifacts/overworld_town_proportion_environs_10236/ninefold_town_environs_1920x1080.png",
+        ".artifacts/overworld_town_proportion_environs_10236/ninefold_town_environs_1280x720.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "notes": "Completed #10236: aspect-preserving town rendering, original transparent Riverwatch land-set raster, three visible path-safe authored blocker clusters, inspected dual-resolution evidence, repo validation, and matching Linux/Windows 248360044-byte package gates all pass.",
+      "completedAt": "2026-09-04T23:38:32Z"
+    },
     {
       "id": "ux-overworld-owned-roster-visual-polish-10235",
       "title": "Overworld Owned Roster Visual Polish",
@@ -109188,7 +109299,12 @@
         "terrain_detail_atlas_cells": 16,
         "terrain_detail_density_modulus": 9,
         "authored_blocker_extent_tiles": 0.86,
-        "generated_blocker_mass_extent_tiles": [1.2, 1.52, 1.9, 2.28],
+        "generated_blocker_mass_extent_tiles": [
+          1.2,
+          1.52,
+          1.9,
+          2.28
+        ],
         "town_visual_footprint": "3x4",
         "town_logical_footprint": "3x2",
         "town_visible_extent_tiles": 2.85,
@@ -109372,8 +109488,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The bounded #10231 raster terrain and blocker-visibility gap is closed. Broader production completion and release readiness remain open.",
-  "remainingWork": "Select the next owner-directed Phase 6 implementation slice. Native RMG parity and release-wide certification remain separate unresolved work.",
+  "remainingGap": "No gap remains in bounded #10236. Native RMG parity and release-wide certification remain separate unresolved work.",
+  "remainingWork": "Select the next bounded owner-directed slice. Hardware certification, signing, publication, whole-game validation, Native RMG parity, and release readiness remain separate.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -109804,8 +109920,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_town_vision_and_command_roster_completed",
-  "status": "completed",
+  "result": "overworld_town_proportion_and_environs_in_progress",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -109905,9 +110021,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed #10235: the Overworld roster shows only authoritative player-owned heroes and towns in polished original-art cards, with untouched normal-play visual evidence.",
-  "taskId": "10235",
-  "updatedAt": "2026-09-04T18:05:00Z",
+  "summary": "Completed #10236: aspect-preserving town rendering, an original transparent Riverwatch land-set raster, and path-safe visible blocker scenery inside the untouched starting reveal.",
+  "taskId": "10236",
+  "updatedAt": "2026-09-04T23:38:32Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

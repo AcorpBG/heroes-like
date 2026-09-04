@@ -7,8 +7,8 @@ const CASES := [
 		"scenario_id": "ninefold-confluence",
 		"baseline_interactables": 153,
 		"expected_interactables": 189,
-		"expected_blockers": 26,
-		"expected_body_tiles": 151,
+		"expected_blockers": 29,
+		"expected_body_tiles": 164,
 	},
 	{
 		"scenario_id": "third-hearths-confluence",
@@ -132,10 +132,10 @@ func _visual_case(viewport_size: Vector2i) -> Dictionary:
 	shell.queue_free()
 	await get_tree().process_frame
 	return {
-		"ok": int(scenery.get("authored_count", 0)) == 26 \
-			and int(scenery.get("indexed_count", 0)) == 26 \
-			and int(scenery.get("loaded_asset_count", 0)) == 26 \
-			and int(scenery.get("blocked_body_tile_count", 0)) == 151 \
+		"ok": int(scenery.get("authored_count", 0)) == 29 \
+			and int(scenery.get("indexed_count", 0)) == 29 \
+			and int(scenery.get("loaded_asset_count", 0)) == 29 \
+			and int(scenery.get("blocked_body_tile_count", 0)) == 164 \
 			and bool(scenery.get("all_indexed", false)) \
 			and bool(scenery.get("all_assets_loaded", false)) \
 			and shell_contained,

@@ -4,7 +4,8 @@ const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRule
 const REPORT_ID := "OVERWORLD_GENERATED_LARGE_TOWN_SCALE_RUNTIME_REPORT"
 const GENERATED_LARGE_SEED := "town-explicit-save-surface-large-10184"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
-const TOWN_VISUAL_EXTENT_TILES := 3.72
+const TOWN_VISUAL_EXTENT_CAP_TILES := 3.72
+const TOWN_VISUAL_WIDTH_CAP_TILES := 2.90
 const TOWN_EXTENT_FRACTION := 1.24
 
 func _ready() -> void:
@@ -64,7 +65,7 @@ func _run() -> void:
 		"map_size": {"width": 108, "height": 108},
 		"town_count": session.overworld.get("towns", []).size(),
 		"viewports": [[1280, 720], [1920, 1080]],
-		"town_visual_extent_tiles": TOWN_VISUAL_EXTENT_TILES,
+		"town_visual_extent_cap_tiles": TOWN_VISUAL_EXTENT_CAP_TILES,
 		"town_extent_fraction": TOWN_EXTENT_FRACTION,
 		"rows": rows,
 		"session_authority_exact": true,
@@ -173,14 +174,17 @@ func _scale_payload_exact(payload: Dictionary) -> bool:
 		and payload.get("visual_footprint", {}) == {"width": 3, "height": 4} \
 		and payload.get("logical_footprint", {}) == {"width": 3, "height": 2} \
 		and String(payload.get("visual_anchor_model", "")) == "three_by_four_entry_center_bottom" \
-		and is_equal_approx(float(payload.get("visible_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES) \
+		and float(payload.get("visible_extent_tiles", 0.0)) <= TOWN_VISUAL_EXTENT_CAP_TILES + 0.0001 \
 		and is_equal_approx(float(payload.get("visible_extent_fraction_of_footprint_depth", 0.0)), TOWN_EXTENT_FRACTION) \
-		and is_equal_approx(float(payload.get("painted_width_tiles", 0.0)), 2.90) \
-		and is_equal_approx(float(payload.get("painted_height_tiles", 0.0)), 3.72) \
-		and is_equal_approx(float(payload.get("town_width_cap_tiles", 0.0)), 2.90) \
+		and float(payload.get("painted_width_tiles", 0.0)) <= TOWN_VISUAL_WIDTH_CAP_TILES + 0.0001 \
+		and float(payload.get("painted_height_tiles", 0.0)) <= TOWN_VISUAL_EXTENT_CAP_TILES + 0.0001 \
+		and is_equal_approx(float(payload.get("town_width_cap_tiles", 0.0)), TOWN_VISUAL_WIDTH_CAP_TILES) \
+		and is_equal_approx(float(payload.get("town_height_cap_tiles", 0.0)), TOWN_VISUAL_EXTENT_CAP_TILES) \
+		and bool(payload.get("town_aspect_preserved", false)) \
 		and bool(payload.get("town_vertical_landmark_fit", false)) \
-		and is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 4.325581395348837) \
-		and is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 2.7555555555555555) \
+		and float(payload.get("town_to_hero_extent_ratio", 0.0)) > 3.0 \
+		and float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)) > 2.0 \
+		and is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0))) \
 		and bool(payload.get("painted_bottom_grounded_exact", false)) \
 		and bool(payload.get("sprite_contained_in_footprint", false)) \
 		and String(payload.get("sprite_silhouette_model", "")) == "eight_direction_alpha_silhouette_outline" \
