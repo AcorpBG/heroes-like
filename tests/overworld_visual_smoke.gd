@@ -757,8 +757,16 @@ func _assert_overworld_command_check_cue_contract(shell: Node) -> bool:
 		["Command:", "Command Check", "Lyra Emberwell", "Solo command", "No reserve switch", "Next practical action:", "does not spend movement or end the day"]
 	):
 		return false
-	if String(heroes_label.text) != solo_expected_visible or not _label_text_fits_width(heroes_label) or hero_actions.get_child_count() != 0:
-		push_error("Overworld smoke: solo Hero command rail is clipped or still duplicates a placeholder row. label=%s width=%s children=%s" % [heroes_label.text, heroes_label.size.x, hero_actions.get_child_count()])
+	var solo_button := hero_actions.get_child(0) as Button if hero_actions.get_child_count() == 1 else null
+	if (
+		String(heroes_label.text) != solo_expected_visible
+		or not _label_text_fits_width(heroes_label)
+		or solo_button == null
+		or not bool(solo_button.get_meta("active", false))
+		or not (solo_button.icon is Texture2D)
+		or solo_button.accessibility_name.strip_edges() == ""
+	):
+		push_error("Overworld smoke: solo Hero command roster is clipped or missing its active accessible portrait control. label=%s width=%s children=%s" % [heroes_label.text, heroes_label.size.x, hero_actions.get_child_count()])
 		get_tree().quit(1)
 		return false
 	if not _assert_no_ai_score_leak("overworld solo command check cue", solo_text):
@@ -807,11 +815,11 @@ func _assert_overworld_command_check_cue_contract(shell: Node) -> bool:
 	var has_caelen_button := false
 	var has_placeholder_label := false
 	for child in hero_actions.get_children():
-		if child is Button and String((child as Button).text).contains("Caelen") and not (child as Button).disabled:
+		if child is Button and String((child as Button).get_meta("hero_id", "")) == "hero_caelen" and not (child as Button).disabled and (child as Button).icon is Texture2D:
 			has_caelen_button = true
 		if child is Label:
 			has_placeholder_label = true
-	if String(heroes_label.text) != reserve_expected_visible or not _label_text_fits_width(heroes_label) or not has_caelen_button or has_placeholder_label:
+	if String(heroes_label.text) != reserve_expected_visible or not _label_text_fits_width(heroes_label) or hero_actions.get_child_count() != 2 or not has_caelen_button or has_placeholder_label:
 		push_error("Overworld smoke: reserve Hero command rail is clipped, missing its live button, or retained a placeholder. label=%s width=%s actions=%s" % [heroes_label.text, heroes_label.size.x, action_surfaces])
 		get_tree().quit(1)
 		return false
@@ -1965,7 +1973,7 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 			push_error("Overworld smoke: light status panels must live inside the carved right shell.")
 			get_tree().quit(1)
 			return false
-	if not _assert_decluttered_right_shell(shell, sidebar_shell, command_spine, action_panel, [hero_actions, context_actions, specialty_actions, spell_actions, artifact_actions]):
+	if not _assert_decluttered_right_shell(shell, sidebar_shell, command_spine, action_panel, [context_actions, specialty_actions, spell_actions, artifact_actions]):
 		return false
 	for chip in [resource_chip, status_chip, cue_chip]:
 		if not _is_descendant_of(chip, command_band):

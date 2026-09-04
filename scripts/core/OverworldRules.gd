@@ -11,6 +11,7 @@ const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const FOG_KEY := "fog"
 const VISIBLE_TILES_KEY := "visible_tiles"
 const EXPLORED_TILES_KEY := "explored_tiles"
+const PLAYER_TOWN_VISION_RADIUS := 5
 const ACTIVE_TOWN_PLACEMENT_KEY := "active_town_placement_id"
 const COMMAND_BRIEFING_KEY := "command_briefing"
 const COMMAND_RISK_FORECAST_KEY := "command_risk_forecast"
@@ -464,6 +465,9 @@ static func refresh_fog_of_war(session: SessionStateStoreScript.SessionData) -> 
 	if not session.overworld.has("map") or not (session.overworld.get("map") is Array):
 		return
 	_normalize_fog_of_war(session)
+
+static func player_town_vision_radius() -> int:
+	return PLAYER_TOWN_VISION_RADIUS
 
 static func is_tile_visible(session: SessionStateStoreScript.SessionData, x: int, y: int) -> bool:
 	if session == null:
@@ -12369,6 +12373,14 @@ static func _reveal_all_current_fog_sources(session: SessionStateStoreScript.Ses
 			if hero is Dictionary:
 				source_count += 1
 				_apply_hero_reveal(explored_tiles, hero, map_size)
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "player":
+			continue
+		source_count += 1
+		_apply_site_reveal(explored_tiles, town, PLAYER_TOWN_VISION_RADIUS, map_size)
 	for node in session.overworld.get("resource_nodes", []):
 		if not (node is Dictionary):
 			continue

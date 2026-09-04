@@ -27149,13 +27149,14 @@ def validate_hero_command(errors: list[str]) -> None:
     rebuild_hero_actions_block = hero_command_function_block(overworld_script_text, "_rebuild_hero_actions")
     command_check_block = hero_command_function_block(overworld_script_text, "_command_check_surface")
     for required_token in (
-        "if actions.size() <= 1:",
+        'button.set_meta("hero_id", hero_id)',
+        "button.pressed.connect(_on_hero_roster_pressed.bind(hero_id))",
         'var visible_readiness := "Solo" if switchable_count <= 0 else "%d reserve%s"',
         'var visible := "Command: %s | %s"',
         "visible_readiness,",
         "movement_line,",
     ):
-        ensure(required_token in rebuild_hero_actions_block + command_check_block, errors, f"Overworld Hero command rail is missing exact compact-fit behavior: {required_token}")
+        ensure(required_token in rebuild_hero_actions_block + command_check_block, errors, f"Overworld Hero command surface is missing exact roster or compact-summary behavior: {required_token}")
     ensure(
         '_make_placeholder_label("Command check: solo")' not in rebuild_hero_actions_block
         and '"Command check: %s | %s | %s"' not in command_check_block
@@ -27171,10 +27172,12 @@ def validate_hero_command(errors: list[str]) -> None:
         'shell.get_node_or_null("%HeroActions") as VBoxContainer',
         'var solo_expected_visible := "Command: Solo | %s" % String(solo_command_check.get("movement_line", ""))',
         "String(heroes_label.text) != solo_expected_visible",
-        "hero_actions.get_child_count() != 0",
+        "hero_actions.get_child_count() == 1",
+        'not bool(solo_button.get_meta("active", false))',
         'var reserve_expected_visible := "Command: 1 reserve | %s" % String(reserve_command_check.get("movement_line", ""))',
         "String(heroes_label.text) != reserve_expected_visible",
-        "not has_caelen_button",
+        'String((child as Button).get_meta("hero_id", "")) == "hero_caelen"',
+        "hero_actions.get_child_count() != 2",
         "has_placeholder_label",
         "not _label_text_fits_width(heroes_label)",
     ):
@@ -84110,6 +84113,68 @@ def validate_overworld_map_first_command_rail(errors: list[str]) -> None:
         ensure(token in wrapper_text, errors, f"Focused #10228 report wrapper is missing evidence handling: {token}")
 
 
+def validate_overworld_town_vision_command_roster(errors: list[str]) -> None:
+    rules_path = ROOT / "scripts" / "core" / "OverworldRules.gd"
+    shell_path = ROOT / "scenes" / "overworld" / "OverworldShell.gd"
+    scene_path = ROOT / "scenes" / "overworld" / "OverworldShell.tscn"
+    report_path = ROOT / "tests" / "overworld_town_vision_command_roster_report.gd"
+    report_scene_path = ROOT / "tests" / "overworld_town_vision_command_roster_report.tscn"
+    wrapper_path = ROOT / "tests" / "overworld_town_vision_command_roster_report.py"
+    requirements_path = ROOT / "docs" / "overworld-town-vision-and-command-roster-requirements.md"
+    required_paths = (rules_path, shell_path, scene_path, report_path, report_scene_path, wrapper_path, requirements_path)
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Missing #10234 town-vision/command-roster owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    rules_text = rules_path.read_text(encoding="utf-8")
+    for token in (
+        "const PLAYER_TOWN_VISION_RADIUS := 5",
+        "static func player_town_vision_radius() -> int:",
+        'for town_value in session.overworld.get("towns", []):',
+        'String(town.get("owner", "neutral")) != "player"',
+        "_apply_site_reveal(explored_tiles, town, PLAYER_TOWN_VISION_RADIUS, map_size)",
+    ):
+        ensure(token in rules_text, errors, f"#10234 owned-town exploration lost required authority: {token}")
+
+    shell_text = shell_path.read_text(encoding="utf-8")
+    for token in (
+        "func _on_hero_roster_pressed(hero_id: String) -> void:",
+        '_on_hero_action_pressed("switch_hero:%s" % hero_id)',
+        "func _on_town_rail_pressed(x: int, y: int) -> void:",
+        "func validation_command_roster_snapshot() -> Dictionary:",
+        '"model": "paired_hero_town_icon_columns"',
+        'button.set_meta("town_placement_id", placement_id)',
+        'button.accessibility_description = "Select this owned town and center its entry tile on the map."',
+    ):
+        ensure(token in shell_text, errors, f"#10234 command roster lost required routing/accessibility behavior: {token}")
+
+    scene_text = scene_path.read_text(encoding="utf-8")
+    for token in ('name="RosterScroll"', 'name="RosterColumns"', 'name="HeroActions" type="VBoxContainer"', 'name="TownActions" type="VBoxContainer"'):
+        ensure(token in scene_text, errors, f"#10234 command-roster scene lost required compact node: {token}")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    for token in (
+        "const VIEWPORTS := [Vector2i(1920, 1080), Vector2i(1280, 720)]",
+        "OverworldRules.player_town_vision_radius()",
+        "enemy town revealed its center for the player",
+        "captured town did not add exactly one new radius-five permanent source",
+        "SessionStateStoreScript.SessionData.new()",
+        'shell.validation_command_roster_snapshot()',
+        'target_hero_button.emit_signal("pressed")',
+        'target_town_button.emit_signal("pressed")',
+        '"all_icons_loaded"',
+        '"all_focusable"',
+        '"all_accessible"',
+        'get_window().content_scale_size = viewport',
+    ):
+        ensure(token in report_text, errors, f"Focused #10234 report is missing required proof: {token}")
+    ensure("overworld_town_vision_command_roster_report.gd" in report_scene_path.read_text(encoding="utf-8"), errors, "Focused #10234 scene lost its report script")
+    wrapper_text = wrapper_path.read_text(encoding="utf-8")
+    for token in ("xvfb-run", "OVERWORLD_TOWN_VISION_COMMAND_ROSTER_REPORT", "report.json", "len(captures) != 2"):
+        ensure(token in wrapper_text, errors, f"Focused #10234 Python report owner is missing evidence handling: {token}")
+
+
 def validate_overworld_placeholder_art_resolution(errors: list[str]) -> None:
     map_view_path = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
     report_path = ROOT / "tests" / "overworld_placeholder_art_resolution_report.gd"
@@ -84336,6 +84401,7 @@ def main() -> int:
     validate_generated_map_object_visual_coherence(errors)
     validate_overworld_live_object_art_coverage(errors)
     validate_overworld_map_first_command_rail(errors)
+    validate_overworld_town_vision_command_roster(errors)
     validate_overworld_placeholder_art_resolution(errors)
     validate_overworld_130_scale_footer_containment(errors)
     validate_overworld_hero_card_mana_first_view(errors)
