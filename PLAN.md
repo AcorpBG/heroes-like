@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10231
+Task: #10232
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -24,8 +24,34 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed owner-directed implementation slice: `ux-overworld-raster-terrain-and-visible-blocker-mass-10231`, which replaces repeated procedural ground scratches and invisible blocker collision with continuous original raster terrain and exact biome-matched body-cell art without changing map authority.
-- Current package boundary: matching Linux and Windows release exports measure 246949848 bytes, 3050152 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Most recently completed owner-directed implementation slice: `ux-overworld-cohesive-biome-blocker-mass-art-10232`, which replaces the generated blocker body's mixed legacy-object mosaic with original cohesive biome palettes and landscape-integrated composition without changing map authority.
+- Current package boundary: matching Linux and Windows release exports measure 248246124 bytes, 1753876 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+
+## Overworld Cohesive Biome Blocker Mass Art
+
+id: `ux-overworld-cohesive-biome-blocker-mass-art-10232`
+
+Status: completed 2026-09-04. Three original transparent raster atlases provide 24 dedicated sprites across all nine generated-body biomes; authored landmark art is no longer mixed into that palette, and world-coordinate selection plus restrained 1.42-tile overlap removes legacy placement seams. The deterministic Medium case covers all 2324 body cells with 18 exercised assets and unchanged session/collision/native-output authority. Inspected 1920x1080 and 1280x720 captures, authored/live-art coverage, Small movement/save restoration, repository validation, Linux export/boot, and direct packaged Windows generated setup -> Overworld -> Town validation pass at matching 248246124-byte PCKs. The stock verbose Wine wrapper process-handle timeout remains separately documented and emitted no fatal runtime match.
+
+Owner direction: regenerate the visible generated-map blocker assets so neighboring trees, rocks, ridges, mire, snow, and ash masses share one coherent painted language and blend into their landscape rather than reading as separate square tokens.
+
+Requirements: `docs/overworld-cohesive-biome-blocker-mass-art-requirements.md`, `docs/overworld-raster-terrain-and-visible-blocker-mass-requirements.md`, `docs/lessons-learned.md` Native RMG recovery discipline, `docs/overworld-content-bible.md`, and `project.md` Phase 6 production alpha presentation.
+
+Implementation boundary:
+- generate a compact original transparent raster palette with consistent top-down perspective, lighting, scale, edge treatment, and biome-ground contact for exact generated blocker body cells;
+- keep authored decorative landmarks on their distinct identity art while making package-generated body cells resolve only through the dedicated cohesive palette rather than the broad authored-object catalog;
+- cluster and overlap adjacent exact body-cell sprites deterministically so blocker regions read as continuous landscape masses without exposing rectangular terrain plates;
+- preserve package topology, terrain, roads, placements, collision/body masks, action tiles, pathing, interactions, determinism, save version 9, camera/input, and Native RMG output exactly.
+
+Completion criteria:
+- inspected deterministic Medium captures at 1920x1080 and 1280x720 show cohesive biome masses with no checkerboard of square-backed decorative mini-scenes and no uncovered blocker collision;
+- focused runtime and asset coverage proves every generated body cell resolves through the dedicated original manifest-backed palette, adjacent selection is deterministic, authored landmarks retain their identity art, and normal play exposes no procedural/fallback geometry;
+- existing generated-map, art, pathing, interaction, repository, and matching Linux/Windows export/package startup and generated-entry checks pass below 250000000 bytes; completed captures are delivered to the owner through Proca on Discord.
+
+Non-goals:
+- no copied Heroes art/maps/names/DEFs/pixels or protected expression; no procedural geometry, SVG, debug icon, generic fallback, or scripted image synthesis;
+- no Native RMG topology, placement, terrain selection, density, reward/guard, road, retry, final-payload, recovery, or parity behavior change;
+- no gameplay, collision, interaction, pathing, AI, balance, save schema, Town/Battle UI, package-limit, signing, publication, whole-game validation, or release-readiness change.
 
 ## Overworld Raster Terrain And Visible Blocker Mass
 

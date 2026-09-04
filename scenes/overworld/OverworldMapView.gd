@@ -190,15 +190,15 @@ const OBJECT_VISIBLE_FOOTPRINT_INSET_TILES := 0.02
 const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
 const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
 const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"
-const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 1.28
-const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.88
-const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.08
+const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 1.42
+const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.96
+const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.04
 const GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES := 1
-const GENERATED_DECORATIVE_BODY_OFFSET_X_TILES := 0.12
-const GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES := -0.08
-const GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES := 0.06
+const GENERATED_DECORATIVE_BODY_OFFSET_X_TILES := 0.04
+const GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES := -0.05
+const GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES := 0.03
 const GENERATED_DECORATIVE_BODY_MASS_BOUNDS_MARGIN_TILES := 0.42
-const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_body_cell_raster_mass_coverage_v5"
+const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "cohesive_biome_exact_body_raster_mass_v6"
 const GENERATED_DECORATIVE_BIOME_BY_TERRAIN := {
 	"grass": "biome_grasslands",
 	"forest": "biome_deep_forest",
@@ -10439,36 +10439,28 @@ func _generated_decorative_body_asset_id(object: Dictionary, tile: Vector2i) -> 
 func _generated_decorative_body_motif_key(object: Dictionary, tile: Vector2i) -> String:
 	var terrain_id := _terrain_at(tile)
 	var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain_id, ""))
-	var placement_id := String(object.get("placement_id", "")).strip_edges()
-	if placement_id == "":
-		placement_id = String(object.get("h3m_def_name", "")).strip_edges()
 	var cluster_x := floori(float(tile.x) / float(GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES))
 	var cluster_y := floori(float(tile.y) / float(GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES))
-	return "%s|%s|%s|%d,%d" % [
+	# Package placement ids split one physical ridge or forest into many legacy
+	# DEF records. Keeping that identity in the art key made seams follow record
+	# boundaries. Presentation is instead stable in world/biome space while the
+	# exact source ids remain attached to each authoritative body cell.
+	return "%s|%s|%d,%d" % [
 		biome_id,
 		terrain_id,
-		placement_id,
 		cluster_x,
 		cluster_y,
 	]
 
 func _generated_decorative_body_composition(
-	object: Dictionary,
+	_object: Dictionary,
 	tile: Vector2i,
-	anchor_index: int,
-	anchor_count: int
+	_anchor_index: int,
+	_anchor_count: int
 ) -> Dictionary:
-	var placement_id := String(object.get("placement_id", "")).strip_edges()
-	if placement_id == "":
-		placement_id = String(object.get("h3m_def_name", "")).strip_edges()
-	var composition_key := "%s|%s|%d,%d|%d/%d" % [
-		placement_id,
-		String(object.get("h3m_def_name", "")),
-		tile.x,
-		tile.y,
-		anchor_index,
-		anchor_count,
-	]
+	var terrain_id := _terrain_at(tile)
+	var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain_id, ""))
+	var composition_key := "%s|%s|%d,%d" % [biome_id, terrain_id, tile.x, tile.y]
 	var scale_factor := lerpf(
 		GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN,
 		GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX,
@@ -10916,7 +10908,12 @@ func _load_decorative_object_sprite_manifest(manifest_path: String) -> void:
 						biome_asset_ids.append(asset_id)
 					_generated_decorative_blocker_asset_ids_by_biome[biome_id] = biome_asset_ids
 	var generated_body_palette = raw.get("generated_body_palette", {})
-	if generated_body_palette is Dictionary:
+	if generated_body_palette is Dictionary and not generated_body_palette.is_empty():
+		# Authored blocker mappings remain identity art for their authored objects.
+		# Generated package bodies have a separate, deliberately cohesive palette;
+		# mixing the two produced a checkerboard of self-contained landmark plates.
+		_generated_decorative_blocker_asset_ids_by_biome.clear()
+		_generated_decorative_blocker_fallback_asset_ids.clear()
 		for biome_id_value in generated_body_palette.keys():
 			var biome_id := String(biome_id_value).strip_edges()
 			var palette_asset_ids = generated_body_palette.get(biome_id_value, [])

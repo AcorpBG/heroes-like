@@ -291,49 +291,31 @@
   },
   "generated_body_palette": {
     "biome_grasslands": [
-      "generated_tree_deciduous_0",
-      "generated_tree_deciduous_1",
-      "generated_tree_deciduous_2",
-      "generated_tree_deciduous_3",
-      "generated_tree_evergreen_0",
-      "generated_tree_evergreen_1"
+      "cohesive_temperate_00", "cohesive_temperate_01", "cohesive_temperate_02", "cohesive_temperate_03", "cohesive_temperate_07", "cohesive_temperate_12"
     ],
     "biome_deep_forest": [
-      "generated_tree_deciduous_0",
-      "generated_tree_deciduous_1",
-      "generated_tree_deciduous_2",
-      "generated_tree_deciduous_3",
-      "generated_tree_evergreen_0",
-      "generated_tree_evergreen_1",
-      "generated_tree_evergreen_2",
-      "generated_tree_evergreen_3",
-      "generated_tree_autumn"
+      "cohesive_temperate_00", "cohesive_temperate_01", "cohesive_temperate_02", "cohesive_temperate_07", "cohesive_temperate_12"
     ],
     "biome_mire_fen": [
-      "generated_tree_mire_0",
-      "generated_tree_mire_1",
-      "generated_tree_mire_2",
-      "generated_tree_mire_3"
+      "cohesive_wet_cold_00", "cohesive_wet_cold_01", "cohesive_wet_cold_04", "cohesive_wet_cold_10"
     ],
     "biome_coast_archipelago": [
-      "generated_tree_mire_0",
-      "generated_tree_mire_1"
+      "cohesive_wet_cold_01", "cohesive_wet_cold_02", "cohesive_wet_cold_06", "cohesive_wet_cold_10"
     ],
     "biome_highland_ridge": [
-      "generated_tree_evergreen_0",
-      "generated_tree_evergreen_1",
-      "generated_tree_badland"
+      "cohesive_wet_cold_02", "cohesive_wet_cold_06", "cohesive_harsh_01", "cohesive_harsh_05"
     ],
     "biome_rough_badlands": [
-      "generated_tree_badland"
+      "cohesive_harsh_00", "cohesive_harsh_01", "cohesive_harsh_03", "cohesive_harsh_05"
     ],
     "biome_snow_frost_marches": [
-      "generated_tree_evergreen_2",
-      "generated_tree_evergreen_3",
-      "generated_tree_frost"
+      "cohesive_wet_cold_03", "cohesive_wet_cold_04", "cohesive_wet_cold_15"
     ],
     "biome_ash_lava_wastes": [
-      "generated_tree_ash"
+      "cohesive_harsh_00", "cohesive_harsh_01", "cohesive_harsh_02", "cohesive_harsh_03", "cohesive_harsh_05", "cohesive_harsh_07", "cohesive_harsh_09", "cohesive_harsh_10", "cohesive_harsh_12", "cohesive_harsh_14"
+    ],
+    "biome_subterranean_underways": [
+      "cohesive_harsh_01", "cohesive_harsh_05", "cohesive_harsh_09", "cohesive_harsh_10", "cohesive_harsh_14"
     ]
   },
   "legacy_archetype_asset_ids": [

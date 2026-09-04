@@ -16408,14 +16408,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Owner-directed #10231 completed: normal-play terrain and every authoritative generated blocker body cell now resolve through original raster art without changing Native RMG or gameplay authority.",
+  "currentNotes": "Owner-directed #10232 completed: exact generated blocker body cells now use a dedicated nine-biome original-raster palette with world-stable cohesive overlap and unchanged gameplay authority.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-raster-terrain-and-visible-blocker-mass-10231",
-  "currentSliceId": "ux-overworld-raster-terrain-and-visible-blocker-mass-10231",
-  "currentSliceNotes": "No owner-directed implementation slice is active. #10231 is completed with inspected raster terrain/body coverage and matching Linux/Windows package evidence.",
+  "currentSlice": "ux-overworld-cohesive-biome-blocker-mass-art-10232",
+  "currentSliceId": "ux-overworld-cohesive-biome-blocker-mass-art-10232",
+  "currentSliceNotes": "No owner-directed implementation slice is active. #10232 completed with inspected responsive captures, exact body/session/collision evidence, and matching Linux/Windows packages.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Raster Terrain And Visible Blocker Mass",
-  "currentSliceUpdatedAt": "2026-09-04T14:02:00Z",
+  "currentSliceTitle": "Overworld Cohesive Biome Blocker Mass Art",
+  "currentSliceUpdatedAt": "2026-09-04T15:00:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21938,8 +21938,91 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select and track the next owner-directed Phase 6 implementation slice before changing runtime behavior.",
-  "notes": "Owner-directed #10231 Overworld raster terrain and visible blocker mass is completed. No implementation slice is active.",
+  "notes": "Owner-directed #10232 Overworld cohesive biome blocker mass art is completed. No implementation slice is active.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-cohesive-biome-blocker-mass-art-10232",
+      "title": "Overworld Cohesive Biome Blocker Mass Art",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md",
+        "docs/overworld-content-bible.md",
+        "docs/overworld-raster-terrain-and-visible-blocker-mass-requirements.md",
+        "docs/overworld-cohesive-biome-blocker-mass-art-requirements.md"
+      ],
+      "purpose": "Replace the generated blocker body's mixed authored-object mosaic with original cohesive biome palettes and deterministic landscape-integrated composition while preserving exact package and gameplay authority.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "art/overworld/decorative_object_sprites.json",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects",
+        "art/overworld/source/generated",
+        "tests/overworld_cohesive_biome_blocker_mass_report.py",
+        "tests/validate_repo.py",
+        "docs/overworld-cohesive-biome-blocker-mass-art-requirements.md",
+        "docs/overworld-cohesive-biome-blocker-mass-art-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Inspected deterministic Medium captures at 1920x1080 and 1280x720 show cohesive biome masses without square-backed checkerboard tiles or uncovered blocker collision",
+        "Focused runtime and asset coverage proves dedicated-palette-only manifest resolution, deterministic adjacent composition, authored landmark identity preservation, zero normal-play procedural/fallback rendering, and unchanged package/gameplay authority",
+        "Existing generated-map, art, pathing, interaction, repository, and matching Linux/Windows package startup/generated-entry checks pass below 250000000 bytes and final captures are delivered through Proca on Discord"
+      ],
+      "nonGoals": [
+        "Copied Heroes art/maps/names/DEFs/pixels, procedural geometry, SVG, debug icons, generic fallbacks, or scripted image synthesis",
+        "Native RMG topology, placement, terrain selection, density, reward/guard, road, retry, final-payload, parity, gameplay, collision, interaction, pathing, save-schema, Town/Battle UI, package-limit, signing, publication, whole-game, or release-readiness changes"
+      ],
+      "validationCommands": [
+        "python3 tests/overworld_cohesive_biome_blocker_mass_report.py",
+        "python3 tests/overworld_raster_terrain_blocker_mass_report.py",
+        "godot4 --headless --path . --scene res://tests/overworld_live_object_art_coverage_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "git diff --check"
+      ],
+      "createdAt": "2026-09-04T14:30:00Z",
+      "startedAt": "2026-09-04T14:30:00Z",
+      "updatedAt": "2026-09-04T15:00:00Z",
+      "completedAt": "2026-09-04T15:00:00Z",
+      "notes": "Completed. Package-generated body cells now resolve only through 24 original cohesive sprites across nine biome palettes, with world-stable overlap and authored landmark identity preserved.",
+      "result": "Deterministic Medium evidence covers 2324/2324 body cells with 18 exercised cohesive assets, zero authored-palette overlap, zero opaque atlas corners, zero procedural fallback, and unchanged session/collision/Native-RMG-output authority. Inspected 1920x1080 and 1280x720 captures pass. Matching Linux/Windows PCKs are 248246124 bytes; Linux boot and direct packaged Windows generated setup, Overworld entry, and Town entry pass.",
+      "evidenceArtifacts": [
+        "docs/overworld-cohesive-biome-blocker-mass-art-report.md",
+        "art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+        ".artifacts/overworld_cohesive_biome_blocker_mass_10232/cohesion_report.json",
+        ".artifacts/overworld_cohesive_biome_blocker_mass_10232/medium_generated_1920x1080.png",
+        ".artifacts/overworld_cohesive_biome_blocker_mass_10232/medium_generated_1280x720.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json",
+        ".artifacts/packaging_windows_manual_cohesive_10232/live_validation_report.json"
+      ],
+      "metrics": {
+        "palette_biome_count": 9,
+        "dedicated_palette_asset_count": 24,
+        "authored_palette_intersection_count": 0,
+        "runtime_atlas_count": 3,
+        "authoritative_body_tile_count": 2324,
+        "visible_body_tile_count": 2324,
+        "uncovered_body_tile_count": 0,
+        "exercised_body_asset_count": 18,
+        "linux_pck_bytes": 248246124,
+        "windows_pck_bytes": 248246124,
+        "pck_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 1753876,
+        "windows_generated_flow_duration_ms": 15774,
+        "save_version_changed": false,
+        "native_rmg_output_changed": false,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "No work remains in this bounded art-cohesion slice. The known exit-only texture RID warning, verbose Wine wrapper process-handle timeout, stale optional Native RMG replay expectation, signing, publication, whole-game validation, and release readiness remain separate."
+    },
     {
       "id": "ux-overworld-raster-terrain-and-visible-blocker-mass-10231",
       "title": "Overworld Raster Terrain And Visible Blocker Mass",
@@ -109459,7 +109542,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_raster_terrain_and_visible_blocker_mass_completed",
+  "result": "overworld_cohesive_biome_blocker_mass_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -109560,9 +109643,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed #10231: original-raster terrain variation and complete visible raster coverage for authoritative generated blocker bodies without changing Native RMG or gameplay authority.",
-  "taskId": "10231",
-  "updatedAt": "2026-09-04T14:02:00Z",
+  "summary": "Completed #10232: dedicated original nine-biome blocker palettes and world-stable landscape-integrated exact-body composition without changing Native RMG or gameplay authority.",
+  "taskId": "10232",
+  "updatedAt": "2026-09-04T15:00:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
