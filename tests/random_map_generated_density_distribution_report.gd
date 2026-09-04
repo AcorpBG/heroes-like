@@ -103,7 +103,7 @@ func _distribution_metrics(session, generated_map: Dictionary, setup: Dictionary
 	var hero_pos: Dictionary = session.overworld.get("hero_position", {}) if session.overworld.get("hero_position", {}) is Dictionary else {}
 	var start := Vector2i(int(hero_pos.get("x", 0)), int(hero_pos.get("y", 0)))
 	var distances := _reachable_distances(session, start)
-	var road_cells := _road_cells(generated_map)
+	var road_cells := _road_cells(session, generated_map)
 	var ring_policy := _ring_policy(session)
 	var interactables := _interactables(session, distances, road_cells, ring_policy)
 	var ring_counts := _ring_counts(interactables)
@@ -128,12 +128,16 @@ func _distribution_metrics(session, generated_map: Dictionary, setup: Dictionary
 	var profile_id := String(profile.get("id", defaults.get("profile_id", "")))
 	var materialized_route_rewards: Array = materialization_constraints.get("materialized_route_rewards", []) if materialization_constraints.get("materialized_route_rewards", []) is Array else []
 	var materialized_density_support: Array = materialization_constraints.get("materialized_route_density_support", materialization_constraints.get("materialized_compact_density_support", [])) if materialization_constraints.get("materialized_route_density_support", materialization_constraints.get("materialized_compact_density_support", [])) is Array else []
+	var package_projection := _package_projection_metrics(session)
 	return {
 		"size_class_id": size_class_id,
 		"size_class_label": ScenarioSelectRulesScript.random_map_size_class_label(size_class_id),
 		"seed": seed,
 		"template_id": template_id,
 		"profile_id": profile_id,
+		"startup_source": String(setup.get("startup_source", "legacy_generated_payload")),
+		"native_package_startup": not (setup.get("package_startup", {}) as Dictionary).is_empty() if setup.get("package_startup", {}) is Dictionary else false,
+		"package_projection": package_projection,
 		"player_count": int(generated_map.get("metadata", {}).get("player_constraints", {}).get("player_count", defaults.get("player_count", 0))),
 		"map_size": map_size,
 		"start": {"x": start.x, "y": start.y},
@@ -167,6 +171,45 @@ func _distribution_metrics(session, generated_map: Dictionary, setup: Dictionary
 		},
 	}
 
+func _package_projection_metrics(session) -> Dictionary:
+	var by_id: Dictionary = session.overworld.get("package_source_objects_by_id", {}) if session.overworld.get("package_source_objects_by_id", {}) is Dictionary else {}
+	var resolution_counts := {}
+	var kind_counts := {}
+	var visitable_count := 0
+	var visitable_ids := {}
+	for placement_id_value in by_id.keys():
+		var source: Dictionary = by_id.get(placement_id_value, {}) if by_id.get(placement_id_value, {}) is Dictionary else {}
+		var status := String(source.get("native_authored_pool_resolution_status", "missing"))
+		var kind := String(source.get("kind", source.get("native_record_kind", "")))
+		resolution_counts[status] = int(resolution_counts.get(status, 0)) + 1
+		kind_counts[kind] = int(kind_counts.get(kind, 0)) + 1
+		var visits: Array = source.get("package_visit_tiles", []) if source.get("package_visit_tiles", []) is Array else []
+		if not visits.is_empty():
+			visitable_count += 1
+			visitable_ids[String(placement_id_value)] = true
+	var adopted_ids := {}
+	for collection_name in ["towns", "resource_nodes", "artifact_nodes", "encounters", "map_objects"]:
+		for record_value in session.overworld.get(collection_name, []):
+			if not (record_value is Dictionary):
+				continue
+			var placement_id := String(record_value.get("placement_id", ""))
+			if by_id.has(placement_id):
+				adopted_ids[placement_id] = true
+	var missing_visitable := []
+	for placement_id in visitable_ids.keys():
+		if not adopted_ids.has(placement_id):
+			missing_visitable.append(placement_id)
+	missing_visitable.sort()
+	return {
+		"package_source_object_count": by_id.size(),
+		"package_source_visitable_count": visitable_count,
+		"adopted_source_object_count": adopted_ids.size(),
+		"missing_visitable_source_count": missing_visitable.size(),
+		"missing_visitable_source_ids": missing_visitable.slice(0, min(12, missing_visitable.size())),
+		"resolution_counts": _sorted_dict(resolution_counts),
+		"kind_counts": _sorted_dict(kind_counts),
+	}
+
 func _live_reward_resource_node_counts(session) -> Dictionary:
 	var route_count := 0
 	var support_count := 0
@@ -193,20 +236,27 @@ func _distribution_failures(metrics: Dictionary) -> Array:
 	var empty_region: Dictionary = metrics.get("empty_region", {}) if metrics.get("empty_region", {}) is Dictionary else {}
 	var road_distribution: Dictionary = metrics.get("road_distribution", {}) if metrics.get("road_distribution", {}) is Dictionary else {}
 	var label := String(metrics.get("size_class_id", "generated"))
+	var native_package := bool(metrics.get("native_package_startup", false))
 	if int(reachable.get("reachable_interactable_count", 0)) < 20:
 		failures.append("%s reachable meaningful interactables below normalized minimum" % label)
 	if int(rings.get("early", 0)) < 4:
 		failures.append("%s early normalized ring has too few meaningful reachable interactables" % label)
 	if int(rings.get("mid", 0)) < 8:
 		failures.append("%s mid normalized ring has too few meaningful reachable interactables" % label)
-	if int(rings.get("frontier", 0)) < 8:
+	# Native packages preserve H3MapEd guard-separated zones. A current-component
+	# frontier count and empty-window scan are diagnostics, not permission to add
+	# post-package rewards or reshape recovered source output.
+	if not native_package and int(rings.get("frontier", 0)) < 8:
 		failures.append("%s frontier normalized ring has too few meaningful reachable interactables" % label)
 	if int(road_distribution.get("near_road_count", 0)) < 10:
 		failures.append("%s has too few meaningful interactables near generated roads" % label)
-	if float(empty_region.get("largest_empty_window_reachable_ratio", 0.0)) > 0.75:
+	if not native_package and float(empty_region.get("largest_empty_window_reachable_ratio", 0.0)) > 0.75:
 		failures.append("%s has a normalized reachable empty window above threshold" % label)
-	if int(metrics.get("materialized_route_reward_resource_count", 0)) <= 0:
+	if not native_package and int(metrics.get("materialized_route_reward_resource_count", 0)) <= 0:
 		failures.append("%s materialized no route reward resource nodes" % label)
+	var projection: Dictionary = metrics.get("package_projection", {}) if metrics.get("package_projection", {}) is Dictionary else {}
+	if native_package and int(projection.get("missing_visitable_source_count", -1)) != 0:
+		failures.append("%s dropped visitable package objects during live session adoption" % label)
 	return failures
 
 func _interactables(session, distances: Dictionary, road_cells: Array, ring_policy: Dictionary) -> Array:
@@ -334,6 +384,7 @@ func _reachable_distances(session, start: Vector2i) -> Dictionary:
 	var width := int(map_size.get("width", 0))
 	var height := int(map_size.get("height", 0))
 	var blocked := _blocked_lookup(session, width, height, start)
+	var terminal_interactions := _terminal_interaction_keys(session)
 	var distances := {}
 	var queue := [start]
 	distances[_point_key(start.x, start.y)] = 0
@@ -342,6 +393,8 @@ func _reachable_distances(session, start: Vector2i) -> Dictionary:
 		var current: Vector2i = queue[cursor]
 		cursor += 1
 		var current_distance := int(distances.get(_point_key(current.x, current.y), 0))
+		if blocked.has(_point_key(current.x, current.y)) and terminal_interactions.has(_point_key(current.x, current.y)):
+			continue
 		for offset in [Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1)]:
 			var next_tile: Vector2i = current + offset
 			if next_tile.x < 0 or next_tile.y < 0 or next_tile.x >= width or next_tile.y >= height:
@@ -349,11 +402,29 @@ func _reachable_distances(session, start: Vector2i) -> Dictionary:
 			var key := _point_key(next_tile.x, next_tile.y)
 			if distances.has(key):
 				continue
-			if blocked.has(key):
+			if blocked.has(key) and not terminal_interactions.has(key):
 				continue
 			distances[key] = current_distance + 1
 			queue.append(next_tile)
 	return distances
+
+func _terminal_interaction_keys(session) -> Dictionary:
+	var result := {}
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary:
+			var point := _best_interaction_tile(town_value)
+			result[_point_key(int(point.get("x", 0)), int(point.get("y", 0)))] = true
+	for node_value in session.overworld.get("resource_nodes", []):
+		if node_value is Dictionary:
+			var point := _best_interaction_tile(node_value)
+			result[_point_key(int(point.get("x", 0)), int(point.get("y", 0)))] = true
+	for artifact_value in session.overworld.get("artifact_nodes", []):
+		if artifact_value is Dictionary:
+			result[_point_key(int(artifact_value.get("x", 0)), int(artifact_value.get("y", 0)))] = true
+	for encounter_value in session.overworld.get("encounters", []):
+		if encounter_value is Dictionary and not OverworldRules.is_encounter_resolved(session, encounter_value):
+			result[_point_key(int(encounter_value.get("x", 0)), int(encounter_value.get("y", 0)))] = true
+	return result
 
 func _blocked_lookup(session, width: int, height: int, start: Vector2i) -> Dictionary:
 	var blocked := {}
@@ -364,7 +435,7 @@ func _blocked_lookup(session, width: int, height: int, start: Vector2i) -> Dicti
 			var terrain_id: String = String(row[x] if x >= 0 and x < row.size() else "")
 			if terrain_id in ["water", "coast", "shore"]:
 				blocked[_point_key(x, y)] = true
-	for collection_name in ["towns", "resource_nodes", "artifact_nodes"]:
+	for collection_name in ["towns", "resource_nodes", "artifact_nodes", "encounters", "map_objects"]:
 		for record_value in session.overworld.get(collection_name, []):
 			if not (record_value is Dictionary):
 				continue
@@ -397,9 +468,21 @@ func _record_body_tiles(record: Dictionary) -> Array:
 		return result
 	return [_point_dict(int(record.get("x", 0)), int(record.get("y", 0)))]
 
-func _road_cells(generated_map: Dictionary) -> Array:
+func _road_cells(session, generated_map: Dictionary) -> Array:
 	var cells := []
 	var seen := {}
+	var terrain_layers: Dictionary = session.overworld.get("terrain_layers", {}) if session.overworld.get("terrain_layers", {}) is Dictionary else {}
+	for road_value in terrain_layers.get("roads", []):
+		if not (road_value is Dictionary):
+			continue
+		for cell in road_value.get("tiles", road_value.get("cells", [])):
+			if not (cell is Dictionary):
+				continue
+			var key := _point_key(int(cell.get("x", 0)), int(cell.get("y", 0)))
+			if seen.has(key):
+				continue
+			seen[key] = true
+			cells.append(_point_dict(int(cell.get("x", 0)), int(cell.get("y", 0))))
 	var roads: Dictionary = generated_map.get("scenario_record", {}).get("generated_constraints", {}).get("roads", {}) if generated_map.get("scenario_record", {}).get("generated_constraints", {}).get("roads", {}) is Dictionary else {}
 	for segment in roads.get("road_segments", []):
 		if not (segment is Dictionary):

@@ -16408,14 +16408,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Owner-directed #10229 is complete: towns are consistent 2.90-by-3.72 painted landmarks, gameplay objects use distinct semantic scale bands and restrained alpha silhouettes, decoration is subordinate, and authored/generated plus Linux/Windows gates pass without gameplay-authority changes.",
+  "currentNotes": "Owner-directed #10230 is complete. Authored map objects now reach live sessions, the two sparsest authored maps have explicit original-raster route content, and corrected package metrics prove zero visitable-object adoption loss without Native RMG output changes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-landmark-readability-and-town-scale-10229",
-  "currentSliceId": "ux-overworld-landmark-readability-and-town-scale-10229",
-  "currentSliceNotes": "Completed with inspected authored and deterministic generated captures at both supported resolutions, exact 26-town footprint/save coverage, focused semantic scale and click routing, repository validation, movement-input ownership, and matching Linux/Windows 245089360-byte PCK startup; Windows generated setup, Overworld entry, and Town entry also pass.",
+  "currentSlice": "overworld-strategic-density-and-route-occupancy-10230",
+  "currentSliceId": "overworld-strategic-density-and-route-occupancy-10230",
+  "currentSliceNotes": "Completed with 46 collectible/save-exact authored route pickups, 36 original-raster scenic blockers covering 203 authoritative body tiles, corrected Small-through-Extra-Large native-package density evidence with zero missing visitables, inspected responsive captures, and matching 245114576-byte Linux/Windows package flows.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Landmark Readability And Town Scale",
-  "currentSliceUpdatedAt": "2026-09-04T00:52:54Z",
+  "currentSliceTitle": "Overworld Strategic Density And Route Occupancy",
+  "currentSliceUpdatedAt": "2026-09-04T09:37:48Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21720,7 +21720,7 @@
       }
     }
   },
-  "guardrailNote": "Implement only #10229 presentation hierarchy: no RMG topology/density, placements, logical footprints, pathing, gameplay, save-schema, Town/Battle, or copied reference art changes.",
+  "guardrailNote": "Implement only #10230 live occupancy/destination cadence. Native RMG placement remains phase/private-state owned: no density scalar, synthetic post-payload object pass, retry, gate, or final-map delta tuning.",
   "lastValidation": {
     "id": "content-eight-commanders-proving-roads-20260831",
     "title": "Eight Commanders' Proving Roads",
@@ -21937,9 +21937,95 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "#10229 is complete; select a new bounded owner-directed slice before further implementation, and do not treat this visual correction as whole-game release readiness.",
-  "notes": "Owner-directed #10229 Overworld landmark readability and town scale is complete. #10228 map-first command rail and prior Phase 6 slices remain completed.",
+  "nextActionGuardrailNote": "#10230 is complete; select a new bounded owner-directed slice before further implementation, and keep any future native density work source-parity owned and fail-closed.",
+  "notes": "Owner-directed #10230 Overworld strategic density and route occupancy is complete. #10229 landmark readability and prior Phase 6 slices remain completed.",
   "plannedSlices": [
+    {
+      "id": "overworld-strategic-density-and-route-occupancy-10230",
+      "title": "Overworld Strategic Density And Route Occupancy",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md",
+        "docs/overworld-content-bible.md",
+        "docs/overworld-strategic-density-and-route-occupancy-requirements.md",
+        "docs/overworld-strategic-density-and-route-occupancy-report.md",
+        "docs/overworld-landmark-readability-and-town-scale-requirements.md"
+      ],
+      "purpose": "Make authored and package-generated Overworld routes feel strategically occupied by correcting proven content/runtime density loss and presenting authoritative body/action/road surfaces truthfully without heuristic Native RMG tuning.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "scripts/core/ScenarioFactory.gd",
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tools/author_overworld_strategic_density_10230.py",
+        "tests/random_map_generated_density_distribution_report.gd",
+        "tests/overworld_live_object_art_coverage_report.gd",
+        "tests/overworld_strategic_density_runtime_report.gd",
+        "tests/overworld_strategic_density_runtime_report.tscn",
+        "tests/validate_repo.py",
+        "docs/overworld-strategic-density-and-route-occupancy-requirements.md",
+        "docs/overworld-strategic-density-and-route-occupancy-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Focused live-session evidence truthfully measures unique interactables, usable area, reachable action surfaces, road proximity, blocked-body occupancy, visible-screen cadence, and largest empty regions for authored, Small, and Large cases",
+        "Any content/adoption change preserves exact native package placement and final-payload identity, and selected authored additions are explicit real gameplay destinations with art, pathing, AI, and save authority",
+        "Inspected 1920x1080 and 1280x720 captures, interaction/pathing/save, object-pool/art, repository, and matching Linux/Windows package checks pass below the unchanged ceiling"
+      ],
+      "nonGoals": [
+        "Copied Heroes assets, maps, names, DEFs, pixels, or protected expression",
+        "Heuristic Native RMG count/topology/placement changes, density multipliers, package-time object sprinkling, brute-force retries, gates, or final-map delta tuning",
+        "Combat/economy balance rewrite, new faction, Town/Battle UI, save-version bump, signing, publication, whole-game validation, or release-readiness claim"
+      ],
+      "validationCommands": [
+        "godot4 --headless --path . --quit-after 240 tests/random_map_generated_density_distribution_report.tscn",
+        "xvfb-run -a -s '-screen 0 2200x1200x24' godot4 --path . --scene res://tests/overworld_strategic_density_runtime_report.tscn",
+        "godot4 --headless --path . tests/overworld_live_object_art_coverage_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "git diff --check"
+      ],
+      "createdAt": "2026-09-04T08:49:35Z",
+      "startedAt": "2026-09-04T08:49:35Z",
+      "updatedAt": "2026-09-04T09:37:48Z",
+      "completedAt": "2026-09-04T09:37:48Z",
+      "notes": "Completed. Authored ScenarioFactory sessions had omitted scenario map_objects, and Ninefold/Third Hearths had genuinely sparse destination cadence. The live fix carries authored scenery, adds 46 explicit collectible/save-exact route pickups and 36 biome-matched original-raster blockers covering 203 authoritative body tiles, and preserves provenance through normalization. The repaired package report reads live roads/action surfaces and proves zero missing visitable source objects across Small through Extra Large; no Native RMG output changed. Focused runtime, visual, repository, Linux, and Windows package flows pass at 245114576 bytes.",
+      "remainingWork": "No work remains inside #10230. Guard-separated native reachability and any remaining source-owned local density gap require recovered H3MapEd phase/private-state proof in a separate Native RMG slice; broader production completion and release readiness remain open.",
+      "evidenceArtifacts": [
+        "docs/overworld-strategic-density-and-route-occupancy-report.md",
+        ".artifacts/overworld_density_10230/ninefold_density_1920x1080.png",
+        ".artifacts/overworld_density_10230/ninefold_density_1280x720.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "ninefold_live_interactables_before": 153,
+        "ninefold_live_interactables_after": 189,
+        "third_hearths_live_interactables_before": 34,
+        "third_hearths_live_interactables_after": 44,
+        "authored_route_pickup_count": 46,
+        "authored_scenic_blocker_count": 36,
+        "authored_blocked_body_tile_count": 203,
+        "native_package_case_count": 4,
+        "missing_visitable_source_object_count": 0,
+        "save_version": 9,
+        "linux_packaged_startup_passed": true,
+        "windows_packaged_startup_passed": true,
+        "windows_generated_flow_passed": true,
+        "pck_size_bytes": 245114576,
+        "pck_size_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 4885424,
+        "native_rmg_output_changed": false,
+        "release_ready_claimed": false
+      }
+    },
     {
       "id": "ux-overworld-landmark-readability-and-town-scale-10229",
       "title": "Overworld Landmark Readability And Town Scale",
@@ -108861,8 +108947,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "",
-  "remainingWork": "Select the next coherent owner-directed Phase 6 slice. The environment-sensitive full-route VFX assertion, known exit-only texture RID warning, obsolete native capability-label regression, broader production completion, and release readiness remain open.",
+  "remainingGap": "The Overworld has uneven destination cadence: sparse authored maps and current local generated views leave large stretches of usable terrain without meaningful choices; exact package/runtime versus source-generation ownership is still being diagnosed.",
+  "remainingWork": "Complete #10230 through a measured runtime/content correction without heuristic Native RMG tuning, then run focused density, interaction, pathing, save, repository, capture, and Linux/Windows package validation.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -109293,7 +109379,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_landmark_readability_and_town_scale_completed",
+  "result": "overworld_strategic_density_and_route_occupancy_in_progress",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -109394,9 +109480,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed #10229: towns now render as consistent dominant 2.90-by-3.72 landmarks and original-raster gameplay objects use distinguishable semantic scale and alpha-silhouette hierarchy without changing map or gameplay authority.",
-  "taskId": "10229",
-  "updatedAt": "2026-09-04T00:52:54Z",
+  "summary": "Implementing #10230: correct measured Overworld destination/occupancy gaps through live authored and package authority while preserving Native RMG phase/private-state discipline.",
+  "taskId": "10230",
+  "updatedAt": "2026-09-04T08:49:35Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
