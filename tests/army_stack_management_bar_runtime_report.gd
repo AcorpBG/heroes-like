@@ -360,12 +360,13 @@ func _bar_contract_exact(snapshot: Dictionary, holder_count: int) -> bool:
 	return occupied_count > 0
 
 func _buttons_contained(snapshot: Dictionary, panel_rect: Rect2) -> bool:
+	var minimum_size := Vector2(28.0, 38.0) if bool(snapshot.get("compact", false)) else Vector2(36.0, 46.0)
 	for button_value in snapshot.get("buttons", []):
 		if not (button_value is Dictionary):
 			return false
 		var rect_value: Dictionary = button_value.get("rect", {}) if button_value.get("rect", {}) is Dictionary else {}
 		var rect := Rect2(float(rect_value.get("x", 0.0)), float(rect_value.get("y", 0.0)), float(rect_value.get("width", 0.0)), float(rect_value.get("height", 0.0)))
-		if rect.size.x < 36.0 or rect.size.y < 46.0 or not panel_rect.encloses(rect):
+		if rect.size.x < minimum_size.x or rect.size.y < minimum_size.y or not panel_rect.encloses(rect):
 			return false
 	return true
 

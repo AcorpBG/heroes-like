@@ -6,6 +6,7 @@ signal selection_changed(snapshot: Dictionary)
 
 const SLOT_COUNT := 7
 const SLOT_SIZE := Vector2(38.0, 48.0)
+const COMPACT_SLOT_SIZE := Vector2(28.0, 38.0)
 const SELECTED_MODULATE := Color(1.0, 0.82, 0.34, 1.0)
 const OCCUPIED_MODULATE := Color(1.0, 1.0, 1.0, 1.0)
 const EMPTY_MODULATE := Color(0.64, 0.69, 0.72, 0.88)
@@ -25,6 +26,7 @@ var _mode_buttons: Dictionary = {}
 var _slot_buttons: Dictionary = {}
 var _texture_cache: Dictionary = {}
 var _missing_textures: Dictionary = {}
+var _compact_mode := false
 
 func _ready() -> void:
 	add_theme_constant_override("separation", 4)
@@ -37,6 +39,16 @@ func configure(holders: Array, can_manage: bool = true) -> void:
 	if not _selected_slot_still_valid():
 		clear_selection()
 	_rebuild_holder_rows()
+
+func set_compact_mode(compact: bool) -> void:
+	if _compact_mode == compact:
+		return
+	_compact_mode = compact
+	for button_value in _slot_buttons.values():
+		var button := button_value as Button
+		if button != null:
+			button.custom_minimum_size = COMPACT_SLOT_SIZE if _compact_mode else SLOT_SIZE
+			button.add_theme_constant_override("icon_max_width", 16 if _compact_mode else 22)
 
 func clear_selection() -> void:
 	_selected_holder_id = ""
@@ -73,6 +85,7 @@ func validation_snapshot() -> Dictionary:
 		"holder_count": _holders.size(),
 		"slot_count_per_holder": SLOT_COUNT,
 		"can_manage": _can_manage,
+		"compact": _compact_mode,
 		"selected_holder_id": _selected_holder_id,
 		"selected_slot_index": _selected_slot_index,
 		"amount_token": _amount_token,
@@ -155,11 +168,11 @@ func _rebuild_holder_rows() -> void:
 func _make_slot_button(holder_id: String, slot_index: int, slot: Dictionary) -> Button:
 	var button := Button.new()
 	var occupied := bool(slot.get("occupied", false))
-	button.custom_minimum_size = SLOT_SIZE
+	button.custom_minimum_size = COMPACT_SLOT_SIZE if _compact_mode else SLOT_SIZE
 	button.focus_mode = Control.FOCUS_ALL
 	button.disabled = not _can_manage
 	button.expand_icon = true
-	button.add_theme_constant_override("icon_max_width", 22)
+	button.add_theme_constant_override("icon_max_width", 16 if _compact_mode else 22)
 	button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	button.add_theme_stylebox_override("normal", _slot_style(SLOT_FILL, SLOT_BORDER, 1))
 	button.add_theme_stylebox_override("hover", _slot_style(SLOT_HOVER_FILL, SLOT_HOVER_BORDER, 2))

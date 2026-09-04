@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://overworld_scene"]
+[gd_scene load_steps=11 format=3 uid="uid://overworld_scene"]
 
 [ext_resource type="Script" path="res://scenes/overworld/OverworldShell.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/overworld/OverworldMapView.gd" id="2"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://scenes/shared/ResourceStockpileMenu.gd" id="7_resource_stockpile_menu"]
 [ext_resource type="Script" path="res://scenes/overworld/OverworldSidebarOrnament.gd" id="8_sidebar_ornament"]
 [ext_resource type="Script" path="res://scenes/shared/ArmyStackBar.gd" id="9_army_stack_bar"]
+[ext_resource type="Script" path="res://scenes/overworld/OverworldMinimap.gd" id="10_overworld_minimap"]
 
 [node name="OverworldShell" type="Control"]
 layout_mode = 3
@@ -63,13 +64,13 @@ theme_override_constants/margin_bottom = 0
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 4
+theme_override_constants/separation = 2
 
 [node name="BodyRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 4
+theme_override_constants/separation = 2
 
 [node name="MapPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow"]
 unique_name_in_owner = true
@@ -98,10 +99,10 @@ size_flags_vertical = 3
 
 [node name="MapInset" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapPanel/MapPad/MapBox/MapFrame"]
 layout_mode = 2
-theme_override_constants/margin_left = 3
-theme_override_constants/margin_top = 3
-theme_override_constants/margin_right = 3
-theme_override_constants/margin_bottom = 3
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 1
 
 [node name="Map" type="Control" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapPanel/MapPad/MapBox/MapFrame/MapInset"]
 unique_name_in_owner = true
@@ -113,7 +114,7 @@ script = ExtResource("2")
 
 [node name="SidebarShell" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(320, 0)
+custom_minimum_size = Vector2(216, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -130,36 +131,62 @@ script = ExtResource("8_sidebar_ornament")
 
 [node name="SidebarPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell"]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
 
 [node name="SidebarBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad"]
+custom_minimum_size = Vector2(232, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
+
+[node name="MinimapPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 190)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MinimapPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/MinimapPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+
+[node name="Minimap" type="Control" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/MinimapPanel/MinimapPad"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 176)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
+mouse_default_cursor_shape = 2
+accessibility_name = "World minimap"
+accessibility_description = "Shows explored terrain, heroes, towns, and the viewed area. Activate to recenter without moving."
+script = ExtResource("10_overworld_minimap")
 
 [node name="TopStrip" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="TopPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/TopStrip"]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 6
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 3
 
 [node name="TopBar" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/TopStrip/TopPad"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
 [node name="BannerGlyph" type="Control" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/TopStrip/TopPad/TopBar"]
-custom_minimum_size = Vector2(42, 38)
+custom_minimum_size = Vector2(34, 32)
 layout_mode = 2
 script = ExtResource("3")
 glyph_id = "overworld"
@@ -172,7 +199,9 @@ alignment = 1
 [node name="Header" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/TopStrip/TopPad/TopBar/TitleBox"]
 unique_name_in_owner = true
 layout_mode = 2
+clip_text = true
 text = "Adventure Map"
+text_overrun_behavior = 3
 
 [node name="ObjectiveBrief" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/TopStrip/TopPad/TopBar/TitleBox"]
 unique_name_in_owner = true
@@ -182,16 +211,16 @@ text = "Scenario objectives"
 
 [node name="HeroPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 204)
+custom_minimum_size = Vector2(0, 190)
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="HeroPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 5
 
 [node name="HeroBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad"]
 layout_mode = 2
@@ -246,9 +275,16 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
+[node name="TownActions" type="FlowContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 3
+
 [node name="EventPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -308,6 +344,7 @@ text = "Immediate order and hold risk."
 
 [node name="BriefingPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -336,7 +373,7 @@ text = "Opening priorities will surface here."
 
 [node name="ActionPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 102)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -575,16 +612,16 @@ text = "Forecast"
 
 [node name="CommandBand" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 74)
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="CommandPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand"]
 layout_mode = 2
 theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 5
+theme_override_constants/margin_top = 3
 theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 5
+theme_override_constants/margin_bottom = 3
 
 [node name="CommandRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad"]
 layout_mode = 2

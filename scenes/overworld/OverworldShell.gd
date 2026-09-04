@@ -28,6 +28,8 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 
 @onready var _shell_panel: PanelContainer = %Shell
 @onready var _top_strip_panel: PanelContainer = %TopStrip
+@onready var _minimap_panel: PanelContainer = %MinimapPanel
+@onready var _minimap: Control = %Minimap
 @onready var _status_chip_panel: PanelContainer = %StatusChip
 @onready var _resource_chip_panel: PanelContainer = %ResourceChip
 @onready var _cue_chip_panel: PanelContainer = %CueChip
@@ -85,6 +87,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _context_label: Label = %Context
 @onready var _context_actions: Container = %ContextActions
 @onready var _hero_actions: Container = %HeroActions
+@onready var _town_actions: Container = %TownActions
 @onready var _spell_actions: Container = %SpellActions
 @onready var _specialty_actions: Container = %SpecialtyActions
 @onready var _artifact_actions: Container = %ArtifactActions
@@ -122,7 +125,7 @@ const DIRECTIONS := [
 	Vector2i(-1, 1),
 	Vector2i(1, 1),
 ]
-const RAIL_ACTION_WIDTH := 248.0
+const RAIL_ACTION_WIDTH := 184.0
 const RAIL_LINE_CHARS := 42
 const ACTION_FEEDBACK_CHARS := 40
 const DEBUG_OVERLAY_TOGGLE_KEY := KEY_F3
@@ -355,6 +358,9 @@ func _ready() -> void:
 	_profile_log_enabled = _profile_log_env_enabled()
 	_map_view.tile_pressed.connect(_on_map_tile_pressed)
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
+	var minimap_recenter_callable := Callable(self, "_on_minimap_recenter_requested")
+	if _minimap.has_signal("recenter_requested") and not _minimap.is_connected("recenter_requested", minimap_recenter_callable):
+		_minimap.connect("recenter_requested", minimap_recenter_callable)
 	if not _army_management.operation_requested.is_connected(_on_army_slot_operation_requested):
 		_army_management.operation_requested.connect(_on_army_slot_operation_requested)
 	_spell_cast_input_blocker.visible = false
@@ -459,10 +465,16 @@ func _apply_responsive_layout() -> void:
 	var constrained_desktop_band := not compact_layout and available_size.x <= 1600.0
 	var large_scale_footer := constrained_desktop_band and SettingsService.ui_scale_percent() >= 130
 	_command_row.add_theme_constant_override("separation", 4 if constrained_desktop_band else 6)
-	_sidebar_shell_panel.visible = not narrow_layout
-	_sidebar_shell_panel.custom_minimum_size.x = 272.0 if compact_layout else 308.0
-	_briefing_panel.visible = not compact_layout
-	_commitment_panel.visible = not compact_layout and _active_drawer == ""
+	_sidebar_shell_panel.visible = true
+	_sidebar_shell_panel.custom_minimum_size.x = 184.0 if narrow_layout else (198.0 if compact_layout else 216.0)
+	_minimap_panel.custom_minimum_size.y = 126.0 if narrow_layout else (142.0 if compact_layout else 190.0)
+	_minimap.custom_minimum_size.y = maxf(_minimap_panel.custom_minimum_size.y - 14.0, 96.0)
+	_top_strip_panel.custom_minimum_size.y = 38.0 if compact_layout else 44.0
+	_hero_panel.custom_minimum_size.y = 168.0 if compact_layout else 190.0
+	_action_panel.custom_minimum_size.y = 68.0 if compact_layout else 76.0
+	_command_band_panel.custom_minimum_size.y = 46.0 if compact_layout else 50.0
+	_briefing_panel.visible = false
+	_commitment_panel.visible = false
 	_cue_chip_panel.visible = not compact_layout
 	_resource_chip_panel.visible = true
 	_resource_chip_panel.custom_minimum_size.x = 96.0 if resource_compact else (190.0 if large_scale_footer else 210.0)
@@ -473,15 +485,17 @@ func _apply_responsive_layout() -> void:
 	_status_label.tooltip_text = "%s\n%s" % [_status_label.text, _resource_label.full_summary_text()] if compact_layout else _status_label.text
 	_save_status_label.visible = not narrow_layout
 	_save_slot_picker.visible = not narrow_layout
-	_map_view.custom_minimum_size = Vector2(520.0, 320.0) if compact_layout else Vector2(640.0, 400.0)
+	_map_view.custom_minimum_size = Vector2(480.0, 300.0) if compact_layout else Vector2(640.0, 400.0)
 	_army_label.visible = false
 	_heroes_label.visible = false
+	_army_management.set_compact_mode(true)
 	_action_title_label.visible = false
 	_frontier_indicator_label.visible = false
-	_system_panel.custom_minimum_size.x = 220.0 if narrow_layout else (252.0 if compact_layout else 308.0)
-	_primary_action_button.custom_minimum_size.x = 170.0 if large_scale_footer else 210.0
+	_system_panel.custom_minimum_size.x = 214.0 if narrow_layout else (248.0 if compact_layout else 300.0)
+	_primary_action_button.custom_minimum_size.x = 150.0 if compact_layout else (170.0 if large_scale_footer else 190.0)
 	_primary_action_button.clip_text = true
 	_primary_action_button.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
+	_sync_minimap()
 
 func _responsive_available_size() -> Vector2:
 	var available_size := get_viewport_rect().size
@@ -1116,6 +1130,7 @@ func _pan_map(delta: Vector2i) -> bool:
 	var changed := bool(_map_view.call("pan_tiles", delta))
 	if changed:
 		_update_map_tooltip()
+		_sync_minimap_viewport()
 	return changed
 
 func _focus_camera_on_hero() -> bool:
@@ -1124,7 +1139,35 @@ func _focus_camera_on_hero() -> bool:
 	var changed := bool(_map_view.call("focus_on_hero"))
 	if changed:
 		_update_map_tooltip()
+		_sync_minimap_viewport()
 	return changed
+
+func _on_minimap_recenter_requested(tile: Vector2i) -> void:
+	if _map_view == null or not _map_view.has_method("focus_on_tile"):
+		return
+	_map_view.call("focus_on_tile", tile)
+	_sync_minimap_viewport()
+	_update_map_tooltip()
+
+func _sync_minimap() -> void:
+	if _minimap == null or _session == null or not _minimap.has_method("configure"):
+		return
+	_minimap.call("configure", _session, _map_data, _map_size, _selected_tile, _map_visible_bounds())
+
+func _sync_minimap_viewport() -> void:
+	if _minimap == null or not _minimap.has_method("set_viewport_bounds"):
+		return
+	_minimap.call("set_viewport_bounds", _map_visible_bounds())
+
+func _map_visible_bounds() -> Rect2i:
+	if _map_view == null or not _map_view.has_method("validation_view_metrics"):
+		return Rect2i(Vector2i.ZERO, _map_size)
+	var metrics: Dictionary = _map_view.call("validation_view_metrics")
+	var bounds: Dictionary = metrics.get("visible_bounds", {}) if metrics.get("visible_bounds", {}) is Dictionary else {}
+	return Rect2i(
+		Vector2i(int(bounds.get("x", 0)), int(bounds.get("y", 0))),
+		Vector2i(maxi(int(bounds.get("width", _map_size.x)), 1), maxi(int(bounds.get("height", _map_size.y)), 1))
+	)
 
 func _configure_end_turn_confirmation() -> void:
 	_end_turn_confirmation_dialog.get_cancel_button().text = "Keep Waiting"
@@ -2582,6 +2625,7 @@ func _refresh_map_view() -> void:
 	)
 	if _map_view.has_method("set_placement_debug_overlay_enabled"):
 		_map_view.call("set_placement_debug_overlay_enabled", _placement_debug_overlay_enabled)
+	_sync_minimap()
 	_profile_end("refresh_set_map_state", set_map_state_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_done")
 
@@ -3674,6 +3718,7 @@ func _refresh_action_rails(request: Dictionary = {}) -> void:
 	if full_action_rails or _refresh_request_has_phase(request, REFRESH_PHASE_HERO_ACTIONS):
 		var hero_actions_profile_start := _debug_refresh_profile_begin("refresh_hero_actions")
 		_rebuild_hero_actions()
+		_rebuild_town_actions()
 		_rebuild_rendezvous_actions()
 		_debug_refresh_profile_end("refresh_hero_actions", hero_actions_profile_start)
 	if full_action_rails or _refresh_request_has_phase(request, REFRESH_PHASE_CONTEXT_ACTIONS):
@@ -3924,7 +3969,9 @@ func _refresh_generated_opening_surfaces() -> void:
 		int(movement.get("max", movement.get("current", 0))),
 	]
 	var resource_line := OverworldRules.describe_resources(_session)
-	_header_label.text = String(scenario.get("name", "Generated Map"))
+	var generated_name := String(scenario.get("name", "Generated Map"))
+	_header_label.text = "Generated Realm"
+	_header_label.tooltip_text = generated_name
 	_objective_brief_label.text = "Generated map opening" if opening_pending else "Generated map objective"
 	_objective_brief_label.tooltip_text = "Detailed objective and readiness surfaces are available from command/frontier drawers; routine generated-map movement keeps the live frame compact."
 	_status_label.text = "Day %d | Pos %d,%d | %s" % [_session.day, hero_pos.x, hero_pos.y, move_line]
@@ -4276,8 +4323,10 @@ func _use_generated_town_return_first_frame_refresh() -> bool:
 
 func _set_deferred_generated_save_status(text: String) -> void:
 	var save_ready := text.find("ready") >= 0
+	var selected_slot := SaveService.get_selected_manual_slot()
 	_save_status_label.text = text
 	_save_status_label.tooltip_text = "Generated map refresh keeps save summary inspection off first-frame and routine movement paths."
+	_save_slot_picker.tooltip_text = "Manual %d selected. Save details refresh when the save controls are used." % selected_slot
 	_save_button.text = "Save"
 	_save_button.tooltip_text = "Save the active expedition to the selected manual slot." if save_ready else "Save is available after the generated-map opening autosave settles."
 	_menu_button.text = "Main Menu"
@@ -4410,6 +4459,34 @@ func _rebuild_hero_actions() -> void:
 		_style_rail_action_button(button)
 		button.pressed.connect(_on_hero_action_pressed.bind(String(action.get("id", ""))))
 		_hero_actions.add_child(button)
+
+func _rebuild_town_actions() -> void:
+	for child in _town_actions.get_children():
+		child.queue_free()
+	for value in _session.overworld.get("towns", []):
+		if not (value is Dictionary) or String(value.get("owner", "neutral")) != "player":
+			continue
+		var town: Dictionary = value
+		var town_data := ContentService.get_town(String(town.get("town_id", "")))
+		var town_name := String(town_data.get("name", town.get("placement_id", "Town"))).strip_edges()
+		var button := Button.new()
+		button.text = town_name.left(12)
+		button.tooltip_text = "%s at %d,%d. Select and center this holding on the map." % [town_name, int(town.get("x", 0)), int(town.get("y", 0))]
+		button.accessibility_name = "Select town %s" % town_name
+		button.focus_mode = Control.FOCUS_ALL
+		FrontierVisualKit.apply_button(button, "secondary", 86.0, 24.0, 11)
+		button.pressed.connect(_on_town_rail_pressed.bind(int(town.get("x", 0)), int(town.get("y", 0))))
+		_town_actions.add_child(button)
+
+func _on_town_rail_pressed(x: int, y: int) -> void:
+	var tile := _selection_route_tile(Vector2i(x, y))
+	if not _tile_in_bounds(tile):
+		return
+	_set_selected_tile(tile)
+	if _map_view.has_method("focus_on_tile"):
+		_map_view.call("focus_on_tile", tile)
+	_refresh_selected_route_preview("town_rail_selection")
+	_sync_minimap_viewport()
 
 func _rebuild_rendezvous_actions() -> void:
 	_rendezvous_orders.clear()
@@ -7333,7 +7410,7 @@ func _hero_card_visible_text() -> String:
 	var hero = _session.overworld.get("hero", {})
 	var command = hero.get("command", {})
 	var mana = hero.get("spellbook", {}).get("mana", {})
-	return "%s Lv%d | Mana %d/%d\nA%d D%d P%d K%d | Scout %d" % [
+	return "%s L%d · M%d/%d\nA%d D%d P%d K%d · S%d" % [
 		String(hero.get("name", "Hero")),
 		int(hero.get("level", 1)),
 		int(mana.get("current", 0)),
@@ -8158,13 +8235,17 @@ func _sync_context_drawers(
 	var show_command := _active_drawer == "command"
 	var show_frontier := _active_drawer == "frontier"
 	var show_tile := not show_command and not show_frontier and _should_show_tile_context()
-	var available_size := _responsive_available_size()
-	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
 	_command_panel.visible = show_command
 	_frontier_panel.visible = show_frontier
 	_context_panel.visible = show_tile
 	_command_spine.visible = show_command or show_frontier or show_tile
-	_commitment_panel.visible = not compact_layout and not show_command and not show_frontier
+	_minimap_panel.visible = not show_command and not show_frontier
+	_top_strip_panel.visible = not show_command and not show_frontier
+	_hero_panel.visible = not show_command and not show_frontier
+	_event_panel.visible = not show_command and not show_frontier
+	_action_panel.visible = not show_command and not show_frontier
+	_commitment_panel.visible = false
+	_briefing_panel.visible = false
 	_open_command_button.button_pressed = show_command
 	_open_frontier_button.button_pressed = show_frontier
 	_refresh_drawer_handoff_cues(field_readiness, end_turn_forecast_surface, objective_header_surfaces)
@@ -8185,6 +8266,7 @@ func _configure_overworld_keyboard_focus(force: bool = false) -> void:
 		return
 	var surfaces := [
 		_primary_action_button,
+		_minimap,
 		_context_actions,
 		_open_command_button,
 		_open_frontier_button,
@@ -10411,6 +10493,8 @@ func validation_snapshot() -> Dictionary:
 		"save_status_visible_text": _save_status_label.text,
 		"save_status_tooltip_text": _save_status_label.tooltip_text,
 		"map_viewport": _validation_map_viewport_state(),
+		"minimap": _minimap.call("validation_snapshot") if _minimap != null and _minimap.has_method("validation_snapshot") else {},
+		"map_first_layout": validation_map_first_layout_snapshot(),
 		"town_presentation_profiles": _validation_town_presentation_profiles(),
 		"chrome": _validation_chrome_state(),
 		"debug_overlay": validation_debug_overlay_snapshot(),
@@ -10418,6 +10502,66 @@ func validation_snapshot() -> Dictionary:
 		"ambient_audio": validation_ambient_audio_summary(),
 		"music_audio": validation_music_audio_summary(),
 		"profile": validation_profile_snapshot(),
+	}
+
+func validation_map_first_layout_snapshot() -> Dictionary:
+	var viewport_rect := get_viewport_rect()
+	var map_rect := _map_panel.get_global_rect()
+	var rail_rect := _sidebar_shell_panel.get_global_rect()
+	var footer_rect := _command_band_panel.get_global_rect()
+	var minimap_rect := _minimap_panel.get_global_rect()
+	return {
+		"viewport": _control_rect_payload(viewport_rect),
+		"map": _control_rect_payload(map_rect),
+		"rail": _control_rect_payload(rail_rect),
+		"footer": _control_rect_payload(footer_rect),
+		"minimap": _control_rect_payload(minimap_rect),
+		"map_width_share": map_rect.size.x / maxf(viewport_rect.size.x, 1.0),
+		"body_height_share": map_rect.size.y / maxf(viewport_rect.size.y - footer_rect.size.y, 1.0),
+		"rail_visible": _sidebar_shell_panel.is_visible_in_tree(),
+		"minimap_visible": _minimap_panel.is_visible_in_tree(),
+		"footer_height_share": footer_rect.size.y / maxf(viewport_rect.size.y, 1.0),
+		"rail_width_owners": _validation_rail_width_owners(),
+	}
+
+func _validation_rail_width_owners() -> Array:
+	var rows := []
+	var pending: Array[Node] = [_sidebar_shell_panel]
+	while not pending.is_empty():
+		var node: Node = pending.pop_back()
+		for child in node.get_children():
+			pending.append(child)
+		var control := node as Control
+		if control != null and (control.get_combined_minimum_size().x >= 180.0 or control.custom_minimum_size.x >= 180.0):
+			rows.append({
+				"name": String(control.name),
+				"minimum": control.get_combined_minimum_size().x,
+				"custom": control.custom_minimum_size.x,
+				"visible": control.is_visible_in_tree(),
+			})
+	return rows
+
+func validation_minimap_recenter(x: int, y: int) -> Dictionary:
+	var authority_before: Dictionary = _session.to_dict()
+	var selected_before := _selected_tile
+	var movement_before: Dictionary = _duplicate_dictionary(_session.overworld.get("movement", {}))
+	_on_minimap_recenter_requested(Vector2i(x, y))
+	return {
+		"authority_exact": _session.to_dict() == authority_before,
+		"selection_exact": _selected_tile == selected_before,
+		"movement_exact": _session.overworld.get("movement", {}) == movement_before,
+		"map_view": _map_view.call("validation_view_metrics") if _map_view.has_method("validation_view_metrics") else {},
+		"minimap": _minimap.call("validation_snapshot") if _minimap.has_method("validation_snapshot") else {},
+	}
+
+func _control_rect_payload(rect: Rect2) -> Dictionary:
+	return {
+		"x": rect.position.x,
+		"y": rect.position.y,
+		"width": rect.size.x,
+		"height": rect.size.y,
+		"end_x": rect.end.x,
+		"end_y": rect.end.y,
 	}
 
 
@@ -10685,12 +10829,14 @@ func _validation_rendezvous_surface() -> Dictionary:
 func validation_open_command_drawer() -> Dictionary:
 	_set_active_drawer("command")
 	_sync_context_drawers()
+	_configure_overworld_keyboard_focus(true)
 	return _validation_chrome_state()
 
 func validation_open_frontier_drawer() -> Dictionary:
 	_set_active_drawer("frontier")
 	_refresh_frontier_drawer()
 	_sync_context_drawers()
+	_configure_overworld_keyboard_focus(true)
 	return _validation_chrome_state()
 
 func validation_select_tile(x: int, y: int) -> Dictionary:
@@ -12271,7 +12417,8 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_art_panel(_briefing_panel, UI_ART_OVERWORLD_PARCHMENT_PANEL, "gold", 54, 10, Color(0.48, 0.45, 0.40, 1.0))
 	FrontierVisualKit.apply_art_panel(_commitment_panel, UI_ART_OVERWORLD_WOOD_PANEL, "green", 58, 10, Color(0.54, 0.58, 0.48, 1.0))
 	FrontierVisualKit.apply_art_panel(_map_panel, UI_ART_OVERWORLD_WOOD_PANEL, "earth", 72, 14, Color(0.58, 0.55, 0.50, 1.0))
-	FrontierVisualKit.apply_art_panel(_map_frame_panel, UI_ART_OVERWORLD_MINIMAP_FRAME, "frame", 70, 12, Color(0.66, 0.66, 0.62, 1.0))
+	FrontierVisualKit.apply_art_panel(_map_frame_panel, UI_ART_OVERWORLD_MINIMAP_FRAME, "frame", 70, 4, Color(0.66, 0.66, 0.62, 1.0))
+	FrontierVisualKit.apply_art_panel(_minimap_panel, UI_ART_OVERWORLD_MINIMAP_FRAME, "frame", 70, 8, Color(0.78, 0.76, 0.68, 1.0))
 	FrontierVisualKit.apply_art_panel(_sidebar_shell_panel, UI_ART_OVERWORLD_SIDEBAR_FRAME, "frame", 70, 12, Color(0.82, 0.82, 0.78, 1.0))
 	FrontierVisualKit.apply_art_panel(_hero_panel, UI_ART_OVERWORLD_HERO_FRAME, "banner", 58, 10, Color(0.72, 0.70, 0.64, 1.0))
 	FrontierVisualKit.apply_art_panel(_action_panel, UI_ART_OVERWORLD_WOOD_PANEL, "ink", 62, 10, Color(0.62, 0.60, 0.55, 1.0))
@@ -12291,19 +12438,19 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_clear_panel(_command_band_panel)
 	_command_spine.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
-	FrontierVisualKit.apply_button(_open_command_button, "secondary", 128.0, 34.0, 13)
-	FrontierVisualKit.apply_button(_open_frontier_button, "secondary", 128.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_open_command_button, "secondary", 104.0, 30.0, 12)
+	FrontierVisualKit.apply_button(_open_frontier_button, "secondary", 104.0, 30.0, 12)
 	FrontierVisualKit.apply_button(_close_command_button, "secondary", 108.0, 30.0, 12)
 	FrontierVisualKit.apply_button(_close_frontier_button, "secondary", 108.0, 30.0, 12)
-	FrontierVisualKit.apply_button(_primary_action_button, "primary", 210.0, 36.0, 13)
-	FrontierVisualKit.apply_button(_end_turn_button, "primary", 104.0, 34.0, 13)
-	FrontierVisualKit.apply_button(_save_button, "secondary", 78.0, 32.0, 13)
-	FrontierVisualKit.apply_button(_settings_button, "secondary", 86.0, 32.0, 13)
+	FrontierVisualKit.apply_button(_primary_action_button, "primary", 190.0, 32.0, 12)
+	FrontierVisualKit.apply_button(_end_turn_button, "primary", 96.0, 30.0, 12)
+	FrontierVisualKit.apply_button(_save_button, "secondary", 68.0, 28.0, 12)
+	FrontierVisualKit.apply_button(_settings_button, "secondary", 76.0, 28.0, 12)
 	_settings_button.tooltip_text = "Adjust sound, battle pace, and readability without leaving the expedition."
-	FrontierVisualKit.apply_button(_menu_button, "secondary", 78.0, 32.0, 13)
-	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 92.0, 32.0, 13)
+	FrontierVisualKit.apply_button(_menu_button, "secondary", 72.0, 28.0, 12)
+	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 78.0, 28.0, 12)
 
-	FrontierVisualKit.apply_label(_header_label, "title", 22)
+	FrontierVisualKit.apply_label(_header_label, "title", 18)
 	FrontierVisualKit.apply_label(_objective_brief_label, "muted", 11)
 	FrontierVisualKit.apply_label(_status_label, "body", 12)
 	FrontierVisualKit.apply_button(_resource_label, "secondary", 210.0, 30.0, 12)
