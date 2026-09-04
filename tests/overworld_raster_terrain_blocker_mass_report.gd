@@ -37,7 +37,6 @@ func _run() -> void:
 		_failures.append("deterministic Medium session did not start")
 		return _finish({})
 	OverworldRules.normalize_overworld_state(session)
-	_reveal_all(session)
 	session = SessionState.set_active_session(session)
 	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
 	add_child(shell)
@@ -54,7 +53,7 @@ func _run() -> void:
 	_validate_body_summary(first_summary)
 	var terrain_summary := _terrain_summary(map_view, session)
 	_validate_terrain_summary(terrain_summary)
-	var focus_tile := _densest_body_focus(first_summary)
+	var focus_tile := OverworldRules.hero_position(session)
 	var rows: Array = []
 	for viewport_size in VIEWPORT_SIZES:
 		get_window().size = viewport_size
@@ -75,6 +74,7 @@ func _run() -> void:
 		})
 		if capture_path == "":
 			_failures.append("capture failed at %dx%d" % [viewport_size.x, viewport_size.y])
+	var lava_review := await _capture_lava_art_review(shell, session, first_summary, authority_before)
 	var redraw_summary: Dictionary = map_view.validation_generated_object_visual_summary()
 	if String(redraw_summary.get("composition_signature", "")) != String(first_summary.get("composition_signature", "")):
 		_failures.append("unchanged redraw changed blocker composition")
@@ -99,6 +99,7 @@ func _run() -> void:
 		"composition_signature": String(first_summary.get("composition_signature", "")),
 		"terrain": terrain_summary,
 		"rows": rows,
+		"lava_art_review": lava_review,
 		"session_authority_exact": session.to_dict() == authority_before,
 		"collision_authority_exact": OverworldRules._blocked_tile_index(session) == blocked_before,
 		"native_rmg_output_changed": false,
@@ -185,6 +186,59 @@ func _densest_body_focus(summary: Dictionary) -> Vector2i:
 			best = candidate
 	return best
 
+func _densest_biome_focus(summary: Dictionary, biome_id: String) -> Vector2i:
+	var tiles: Array = []
+	for value in summary.get("body_entries", []):
+		if value is Dictionary and String(value.get("biome_id", "")) == biome_id:
+			tiles.append(Vector2i(int(value.get("x", 0)), int(value.get("y", 0))))
+	var best := Vector2i(-1, -1)
+	var best_count := -1
+	for candidate_value in tiles:
+		var candidate: Vector2i = candidate_value
+		var count := 0
+		for tile_value in tiles:
+			var tile: Vector2i = tile_value
+			if abs(tile.x - candidate.x) <= 10 and abs(tile.y - candidate.y) <= 6:
+				count += 1
+		if count > best_count:
+			best_count = count
+			best = candidate
+	return best
+
+func _capture_lava_art_review(shell, session, summary: Dictionary, authority_before: Dictionary) -> Dictionary:
+	var focus := _densest_biome_focus(summary, "biome_ash_lava_wastes")
+	if focus.x < 0:
+		_failures.append("deterministic Medium map did not expose an ash/lava blocker region")
+		return {}
+	var normal_fog: Dictionary = session.overworld.get("fog", {}).duplicate(true)
+	_reveal_all_for_art_review(session)
+	shell.call("_refresh_map_view")
+	await get_tree().process_frame
+	get_window().size = Vector2i(1920, 1080)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	shell.validation_minimap_recenter(focus.x, focus.y)
+	await get_tree().process_frame
+	await RenderingServer.frame_post_draw
+	var absolute_dir := ProjectSettings.globalize_path(CAPTURE_DIR)
+	var image := get_viewport().get_texture().get_image()
+	var path := absolute_dir.path_join("medium_lava_art_review_reveal_all_1920x1080.png")
+	var written := image != null and not image.is_empty() and image.save_png(path) == OK
+	session.overworld["fog"] = normal_fog
+	shell.call("_refresh_map_view")
+	await get_tree().process_frame
+	if session.to_dict() != authority_before:
+		_failures.append("explicit lava art review did not restore normal fog/session authority")
+	if not written:
+		_failures.append("Medium lava art-review capture failed")
+	return {
+		"focus_tile": {"x": focus.x, "y": focus.y},
+		"capture_path": path if written else "",
+		"capture_written": written,
+		"reveal_all_explicitly_art_review_only": true,
+		"normal_fog_restored": session.to_dict() == authority_before,
+	}
+
 func _capture(viewport_size: Vector2i) -> String:
 	var absolute_dir := ProjectSettings.globalize_path(CAPTURE_DIR)
 	if DirAccess.make_dir_recursive_absolute(absolute_dir) != OK:
@@ -195,21 +249,17 @@ func _capture(viewport_size: Vector2i) -> String:
 	var path := absolute_dir.path_join("medium_generated_%dx%d.png" % [viewport_size.x, viewport_size.y])
 	return path if image.save_png(path) == OK else ""
 
-func _reveal_all(session) -> void:
+func _reveal_all_for_art_review(session) -> void:
 	var map_size := OverworldRules.derive_map_size(session)
-	var visible_tiles: Array = []
-	var explored_tiles: Array = []
+	var explored: Array = []
 	for _y in range(map_size.y):
-		var visible_row: Array = []
-		var explored_row: Array = []
+		var row: Array = []
 		for _x in range(map_size.x):
-			visible_row.append(true)
-			explored_row.append(true)
-		visible_tiles.append(visible_row)
-		explored_tiles.append(explored_row)
+			row.append(true)
+		explored.append(row)
 	session.overworld["fog"] = {
-		"visible_tiles": visible_tiles,
-		"explored_tiles": explored_tiles,
+		"visible_tiles": explored.duplicate(true),
+		"explored_tiles": explored,
 		"visible_count": map_size.x * map_size.y,
 		"explored_count": map_size.x * map_size.y,
 		"total_tiles": map_size.x * map_size.y,

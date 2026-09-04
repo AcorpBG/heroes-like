@@ -11061,6 +11061,11 @@ func validation_tile_presentation(x: int, y: int) -> Dictionary:
 		return {}
 	return _map_view.call("validation_tile_presentation", Vector2i(x, y))
 
+func validation_minimap_tile_presentation(x: int, y: int) -> Dictionary:
+	if _minimap == null or not _minimap.has_method("validation_tile_presentation"):
+		return {}
+	return _minimap.call("validation_tile_presentation", Vector2i(x, y))
+
 func validation_editor_restamp_payload(x: int, y: int) -> Dictionary:
 	if _map_view == null or not _map_view.has_method("validation_editor_restamp_payload"):
 		return {}

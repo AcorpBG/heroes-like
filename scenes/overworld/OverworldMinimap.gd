@@ -242,6 +242,15 @@ func _clamped_bounds(bounds: Rect2i) -> Rect2i:
 
 
 func validation_snapshot() -> Dictionary:
+	var explored_count := 0
+	var visible_count := 0
+	for y in range(_map_size.y):
+		for x in range(_map_size.x):
+			if _session != null and OverworldRulesScript.is_tile_explored(_session, x, y):
+				explored_count += 1
+			if _session != null and OverworldRulesScript.is_tile_visible(_session, x, y):
+				visible_count += 1
+	var total_tiles := _map_size.x * _map_size.y
 	return {
 		"map_size": {"x": _map_size.x, "y": _map_size.y},
 		"selected_tile": {"x": _selected_tile.x, "y": _selected_tile.y},
@@ -254,7 +263,34 @@ func validation_snapshot() -> Dictionary:
 		},
 		"last_recenter_tile": {"x": _last_recenter_tile.x, "y": _last_recenter_tile.y},
 		"terrain_cell_count": _map_size.x * _map_size.y,
+		"fog": {
+			"model": "authoritative_permanent_exploration",
+			"explored_count": explored_count,
+			"visible_count": visible_count,
+			"hidden_count": total_tiles - explored_count,
+			"total_tiles": total_tiles,
+			"visible_aliases_explored": visible_count == explored_count,
+			"unexplored_color": UNEXPLORED_COLOR.to_html(true),
+		},
 		"presentation_only": true,
 		"focusable": focus_mode == Control.FOCUS_ALL,
 		"accessible_name": accessibility_name,
+	}
+
+
+func validation_tile_presentation(tile: Vector2i) -> Dictionary:
+	if not _tile_in_bounds(tile):
+		return {"valid": false}
+	var explored := _session != null and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y)
+	var visible := _session != null and OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
+	var color := _tile_color(tile)
+	return {
+		"valid": true,
+		"tile": {"x": tile.x, "y": tile.y},
+		"explored": explored,
+		"visible": visible,
+		"hidden": not explored,
+		"rendering_mode": "unexplored_shroud" if not explored else "explored_terrain",
+		"color": color.to_html(true),
+		"uses_unexplored_color": not explored and color.is_equal_approx(UNEXPLORED_COLOR),
 	}
