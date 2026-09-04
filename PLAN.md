@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10233
+Task: #10234
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -24,8 +24,34 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed owner-directed implementation slice: `bugfix-overworld-fog-parity-and-lava-art-10233`, which restores honest normal-play fog evidence on both map surfaces and replaces the harsh-biome atlas with restrained original basalt, ash, and cooled-lava art.
-- Current package boundary: matching Linux and Windows release exports measure 248211212 bytes, 1788788 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+- Most recently completed owner-directed implementation slice: `ux-overworld-town-vision-and-command-roster-10234`, which adds owned-town permanent exploration and a compact Heroes-inspired hero/town command roster in the existing right rail.
+- Current package boundary: matching Linux and Windows release exports measure 248217276 bytes, 1782724 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+
+## Overworld Town Vision And Command Roster
+
+id: `ux-overworld-town-vision-and-command-roster-10234`
+
+Status: completed.
+
+Owner direction: player-owned towns must provide map vision, and the Overworld right rail must expose all owned heroes and towns through the compact two-column roster pattern visible in the supplied Heroes III reference screenshot.
+
+Requirements: `docs/overworld-town-vision-and-command-roster-requirements.md`, `docs/overworld-map-first-command-rail-requirements.md`, `docs/screen-wireframes.md` section 2, `project.md` permanent-exploration fog contract, and `docs/lessons-learned.md`.
+
+Implementation boundary:
+- add each player-owned town as an authoritative permanent-exploration source with one documented bounded radius, refreshing on initialization, capture, and ordinary fog refresh without changing transient-visibility or save-schema semantics;
+- replace loose right-rail hero/town text actions with one persistent compact two-column icon roster below the minimap, using original existing hero portraits and town scenic art, with active/selected state, tooltips, accessibility labels, keyboard/controller focus, scrolling for larger rosters, hero switching, hero centering, and town centering routed through current authoritative actions;
+- keep the selected hero identity, army controls, short status, Command/Frontier drawers, dominant map share, minimap, bottom ribbon, and 1920x1080/1280x720 responsive layouts intact;
+- preserve Native RMG output, map topology, town ownership/capture rules, hero/town records, pathing, interaction, save version 9, packages, and gameplay outside the requested town vision rule.
+
+Completion criteria:
+- focused core/runtime evidence proves every player-owned town reveals the exact documented radius, enemy/neutral towns reveal nothing, capture adds the new source, fog remains permanent, and save/reload preserves the result;
+- focused UI evidence proves every player hero and owned town has one unique icon control, all controls route correctly, overflow remains reachable, focus/accessibility metadata is present, and both responsive captures keep the map, minimap, roster, selected hero, and footer unclipped;
+- relevant fog, town capture, hero switching, map-first layout, save, repository, clean-diff, and matching Linux/Windows export/package startup/generated-entry checks pass below 250000000 bytes.
+
+Non-goals:
+- no copied Heroes III UI, icons, pixels, names, maps, or protected expression; the reference supplies only compact composition and interaction hierarchy;
+- no RMG topology, placement, terrain, density, road, reward/guard, retry, final-payload, recovery, or parity change;
+- no scouting-radius rewrite, enemy intelligence layer, minimap rule split, town balance/build changes, new hero/town content, save bump, Battle/Town-screen redesign, package-limit change, signing, publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Fog Parity And Lava Art
 

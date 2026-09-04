@@ -229,7 +229,48 @@ theme_override_constants/separation = 4
 [node name="HeroTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Hero"
+text = "Command Roster"
+
+[node name="RosterHeader" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HeroRosterTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox/RosterHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Heroes"
+
+[node name="TownRosterTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox/RosterHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Towns"
+
+[node name="RosterScroll" type="ScrollContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 94)
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="RosterColumns" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox/RosterScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="HeroActions" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox/RosterScroll/RosterColumns"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(103, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="TownActions" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox/RosterScroll/RosterColumns"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(103, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
 
 [node name="HeroIdentity" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
 layout_mode = 2
@@ -268,19 +309,6 @@ visible = false
 layout_mode = 2
 autowrap_mode = 3
 text = "Heroes"
-
-[node name="HeroActions" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
-
-[node name="TownActions" type="FlowContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/h_separation = 4
-theme_override_constants/v_separation = 3
 
 [node name="EventPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true

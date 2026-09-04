@@ -1912,6 +1912,47 @@
   "blocker": "",
   "completedImplementationEvidence": [
     {
+      "id": "ux-overworld-town-vision-and-command-roster-20260904",
+      "title": "Overworld Town Vision And Command Roster",
+      "sliceId": "ux-overworld-town-vision-and-command-roster-10234",
+      "status": "completed",
+      "validatedAt": "2026-09-04T16:50:00Z",
+      "updatedAt": "2026-09-04T16:50:00Z",
+      "latestFinding": "Player-owned towns now contribute exact radius-five permanent exploration, while the right rail exposes every player hero and owned town through paired original-art icon controls with authoritative switching or centering and responsive bounded scrolling.",
+      "artifacts": [
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "tests/overworld_town_vision_command_roster_report.gd",
+        "tests/overworld_town_vision_command_roster_report.tscn",
+        "tests/overworld_town_vision_command_roster_report.py",
+        "docs/overworld-town-vision-and-command-roster-requirements.md",
+        "docs/overworld-town-vision-and-command-roster-report.md",
+        ".artifacts/overworld_town_vision_command_roster_10234/report.json",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "town_vision_radius": 5,
+        "single_town_exact_explored_tile_count": 61,
+        "capture_union_exact_explored_tile_count": 122,
+        "enemy_neutral_town_source_count": 0,
+        "responsive_capture_count": 2,
+        "focused_hero_count": 4,
+        "focused_town_count": 5,
+        "save_version": 9,
+        "linux_packaged_startup_passed": true,
+        "windows_packaged_startup_markers_passed": true,
+        "windows_generated_town_entry_passed": true,
+        "pck_size_bytes": 248217276,
+        "pck_size_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 1782724,
+        "native_rmg_output_changed": false,
+        "release_ready_claimed": false
+      },
+      "remainingWork": "Select the next bounded owner-directed Phase 6 implementation slice. The separate active-hero command-marker geometry assertion, broader production completion, and release readiness remain open."
+    },
+    {
       "id": "bugfix-overworld-intermittent-hero-movement-lock-20260903",
       "title": "Intermittent Overworld Hero Movement Lock",
       "sliceId": "bugfix-overworld-intermittent-hero-movement-lock-10227",
@@ -16408,14 +16449,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Owner-directed #10233 completed: normal-play main-map and minimap fog exactly match authoritative permanent exploration, and the harsh blocker atlas now uses restrained original basalt, ash, and cooled-lava raster art.",
+  "currentNotes": "Owner-directed #10234 completed: player-owned towns provide exact radius-five permanent exploration and the right rail exposes all player heroes and owned towns through paired original-art icon controls.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "bugfix-overworld-fog-parity-and-lava-art-10233",
-  "currentSliceId": "bugfix-overworld-fog-parity-and-lava-art-10233",
-  "currentSliceNotes": "No owner-directed implementation slice is active. #10233 completed with exact main/minimap fog parity, inspected responsive captures, regenerated harsh-biome raster art, and matching Linux/Windows packages plus a direct packaged Windows generated gameplay flow.",
+  "currentSlice": "ux-overworld-town-vision-and-command-roster-10234",
+  "currentSliceId": "ux-overworld-town-vision-and-command-roster-10234",
+  "currentSliceNotes": "No owner-directed implementation slice is active. #10234 completed with exact town-vision, capture/save, roster routing/accessibility, responsive capture, repository, Linux package, and direct packaged Windows generated-entry evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Fog Parity And Lava Art",
-  "currentSliceUpdatedAt": "2026-09-04T15:36:27Z",
+  "currentSliceTitle": "Overworld Town Vision And Command Roster",
+  "currentSliceUpdatedAt": "2026-09-04T16:50:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21938,8 +21979,61 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select and track the next owner-directed Phase 6 implementation slice before changing runtime behavior.",
-  "notes": "Owner-directed #10233 Overworld fog parity and lava art is completed. No implementation slice is active.",
+  "notes": "Owner-directed #10234 Overworld town vision and command roster is completed. No implementation slice is active.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-town-vision-and-command-roster-10234",
+      "title": "Overworld Town Vision And Command Roster",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md",
+        "docs/screen-wireframes.md",
+        "docs/overworld-map-first-command-rail-requirements.md",
+        "docs/overworld-town-vision-and-command-roster-requirements.md"
+      ],
+      "purpose": "Make player-owned towns authoritative permanent-exploration sources and expose all owned heroes and towns in a compact accessible two-column right-rail icon roster inspired by the supplied classic adventure-map composition.",
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "tests/overworld_town_vision_command_roster_report.gd",
+        "tests/overworld_town_vision_command_roster_report.tscn",
+        "tests/overworld_town_vision_command_roster_report.py",
+        "docs/overworld-town-vision-and-command-roster-requirements.md",
+        "docs/overworld-town-vision-and-command-roster-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Exact focused proof covers radius-five player-town exploration, neutral and enemy exclusions, capture refresh, permanent memory, and save/reload",
+        "Every player hero and owned town has one original-art icon control with active or selected state, tooltip, accessibility, focus, overflow reachability, and authoritative switch or center routing",
+        "Inspected 1920x1080 and 1280x720 captures plus relevant fog, capture, hero, map-first, save, repository, diff, and matching Linux and Windows package checks pass below 250000000 bytes"
+      ],
+      "nonGoals": [
+        "Copied Heroes UI or art, RMG topology or recovery, fog redesign, town or hero content, pathing, AI, economy, balance beyond requested town sight, save bump, or unrelated screens",
+        "Package-limit increase, signing, publication, whole-game validation, or release-readiness claim"
+      ],
+      "validationCommands": [
+        "python3 tests/overworld_town_vision_command_roster_report.py",
+        "godot4 --headless --path . --scene res://tests/fog_of_war_homm_style_regression.tscn",
+        "python3 tests/overworld_map_first_command_rail_report.py",
+        "godot4 --headless --path . --scene res://tests/random_map_live_overworld_render_move_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "git diff --check"
+      ],
+      "createdAt": "2026-09-04T16:13:23Z",
+      "startedAt": "2026-09-04T16:13:23Z",
+      "updatedAt": "2026-09-04T16:50:00Z",
+      "completedAt": "2026-09-04T16:50:00Z",
+      "notes": "Implemented and validated exact owned-town exploration plus the accessible paired original-art hero/town roster. The Windows wrapper baseline timed out only after all startup markers; direct packaged generated setup, Overworld entry, and player-town entry passed."
+    },
     {
       "id": "bugfix-overworld-fog-parity-and-lava-art-10233",
       "title": "Overworld Fog Parity And Lava Art",
@@ -109609,7 +109703,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_fog_parity_and_lava_art_in_progress",
+  "result": "overworld_town_vision_and_command_roster_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -109710,9 +109804,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed #10233: honest normal-play main/minimap fog parity and regenerated original harsh-biome basalt, ash, and cooled-lava art without changing gameplay or Native RMG authority.",
-  "taskId": "10233",
-  "updatedAt": "2026-09-04T15:36:27Z",
+  "summary": "Completed #10234: player-owned towns now provide exact permanent exploration and all player heroes and owned towns appear in an accessible compact right-rail roster.",
+  "taskId": "10234",
+  "updatedAt": "2026-09-04T16:50:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

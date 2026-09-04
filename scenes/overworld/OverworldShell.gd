@@ -68,6 +68,8 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _army_label: Label = %Army
 @onready var _army_management: ArmyStackBarScript = %ArmyManagement
 @onready var _heroes_label: Label = %Heroes
+@onready var _roster_scroll: ScrollContainer = %RosterScroll
+@onready var _roster_columns: HBoxContainer = %RosterColumns
 @onready var _action_title_label: Label = %ActionTitle
 @onready var _frontier_indicator_label: Label = %FrontierIndicator
 @onready var _command_title_label: Label = %CommandTitle
@@ -467,14 +469,16 @@ func _apply_responsive_layout() -> void:
 	_command_row.add_theme_constant_override("separation", 4 if constrained_desktop_band else 6)
 	_sidebar_shell_panel.visible = true
 	_sidebar_shell_panel.custom_minimum_size.x = 184.0 if narrow_layout else (198.0 if compact_layout else 216.0)
-	_minimap_panel.custom_minimum_size.y = 126.0 if narrow_layout else (142.0 if compact_layout else 190.0)
+	_minimap_panel.custom_minimum_size.y = 108.0 if narrow_layout else (112.0 if compact_layout else 190.0)
 	_minimap.custom_minimum_size.y = maxf(_minimap_panel.custom_minimum_size.y - 14.0, 96.0)
 	_top_strip_panel.custom_minimum_size.y = 38.0 if compact_layout else 44.0
 	_hero_panel.custom_minimum_size.y = 168.0 if compact_layout else 190.0
+	_roster_scroll.custom_minimum_size.y = 70.0 if compact_layout else (176.0 if available_size.y >= 1000.0 else 94.0)
 	_action_panel.custom_minimum_size.y = 68.0 if compact_layout else 76.0
 	_command_band_panel.custom_minimum_size.y = 46.0 if compact_layout else 50.0
 	_briefing_panel.visible = false
 	_commitment_panel.visible = false
+	_event_panel.visible = not compact_layout and _active_drawer == ""
 	_cue_chip_panel.visible = not compact_layout
 	_resource_chip_panel.visible = true
 	_resource_chip_panel.custom_minimum_size.x = 96.0 if resource_compact else (190.0 if large_scale_footer else 210.0)
@@ -4442,22 +4446,36 @@ func _rebuild_hero_actions() -> void:
 		child.queue_free()
 
 	var actions = _cached_hero_actions()
-	if actions.size() <= 1:
-		return
-
 	for action in actions:
 		if not (action is Dictionary):
 			continue
-		var button = Button.new()
-		button.text = String(action.get("label", action.get("id", "Command")))
-		button.disabled = bool(action.get("disabled", false))
+		var action_id := String(action.get("id", ""))
+		var hero_id := action_id.trim_prefix("switch_hero:")
+		var hero := HeroCommandRules.hero_by_id(_session, hero_id)
+		var hero_name := String(hero.get("name", action.get("label", hero_id))).trim_prefix("Command ").strip_edges()
+		var is_active := hero_id == String(_session.overworld.get("active_hero_id", ""))
+		var button := Button.new()
+		button.name = "HeroRoster_%s" % hero_id
+		button.text = ""
+		button.toggle_mode = true
+		button.button_pressed = is_active
+		button.focus_mode = Control.FOCUS_ALL
+		button.accessibility_name = "%s hero %s" % ["Active" if is_active else "Select", hero_name]
+		button.accessibility_description = "Center this commander on the map." if is_active else "Make this commander active and center the map on them."
 		var switch_check := _hero_switch_check_surface(action)
 		button.tooltip_text = _join_tooltip_sections([
 			String(action.get("summary", "")),
 			String(switch_check.get("tooltip_text", "")),
 		])
-		_style_rail_action_button(button)
-		button.pressed.connect(_on_hero_action_pressed.bind(String(action.get("id", ""))))
+		_style_roster_icon_button(button, "primary" if is_active else "secondary")
+		var art := ContentService.get_hero_art(hero_id)
+		var portrait_path := String(art.get("portrait", ""))
+		button.icon = _load_roster_icon(portrait_path)
+		button.set_meta("roster_kind", "hero")
+		button.set_meta("hero_id", hero_id)
+		button.set_meta("art_path", portrait_path)
+		button.set_meta("active", is_active)
+		button.pressed.connect(_on_hero_roster_pressed.bind(hero_id))
 		_hero_actions.add_child(button)
 
 func _rebuild_town_actions() -> void:
@@ -4470,13 +4488,73 @@ func _rebuild_town_actions() -> void:
 		var town_data := ContentService.get_town(String(town.get("town_id", "")))
 		var town_name := String(town_data.get("name", town.get("placement_id", "Town"))).strip_edges()
 		var button := Button.new()
-		button.text = town_name.left(12)
+		var placement_id := String(town.get("placement_id", ""))
+		var town_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+		var is_selected := _selection_route_tile(_selected_tile) == town_tile
+		button.name = "TownRoster_%s" % placement_id
+		button.text = ""
+		button.toggle_mode = true
+		button.button_pressed = is_selected
 		button.tooltip_text = "%s at %d,%d. Select and center this holding on the map." % [town_name, int(town.get("x", 0)), int(town.get("y", 0))]
-		button.accessibility_name = "Select town %s" % town_name
+		button.accessibility_name = "%s town %s" % ["Selected" if is_selected else "Select", town_name]
+		button.accessibility_description = "Select this owned town and center its entry tile on the map."
 		button.focus_mode = Control.FOCUS_ALL
-		FrontierVisualKit.apply_button(button, "secondary", 86.0, 24.0, 11)
+		_style_roster_icon_button(button, "primary" if is_selected else "secondary")
+		var backdrop_path := String(town_data.get("scenic_backdrop_path", ""))
+		button.icon = _load_roster_icon(backdrop_path)
+		button.set_meta("roster_kind", "town")
+		button.set_meta("town_placement_id", placement_id)
+		button.set_meta("town_id", String(town.get("town_id", "")))
+		button.set_meta("art_path", backdrop_path)
+		button.set_meta("selected", is_selected)
+		button.set_meta("x", town_tile.x)
+		button.set_meta("y", town_tile.y)
 		button.pressed.connect(_on_town_rail_pressed.bind(int(town.get("x", 0)), int(town.get("y", 0))))
 		_town_actions.add_child(button)
+
+func _style_roster_icon_button(button: Button, role: String) -> void:
+	FrontierVisualKit.apply_button(button, role, 103.0, 40.0, 11)
+	button.custom_minimum_size = Vector2(103.0, 40.0)
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.clip_text = true
+	button.expand_icon = true
+	button.add_theme_constant_override("icon_max_width", 82)
+
+func _load_roster_icon(path: String) -> Texture2D:
+	if path == "" or not ResourceLoader.exists(path, "Texture2D"):
+		return null
+	return ResourceLoader.load(path, "Texture2D") as Texture2D
+
+func _on_hero_roster_pressed(hero_id: String) -> void:
+	if hero_id == String(_session.overworld.get("active_hero_id", "")):
+		_focus_active_hero_from_roster()
+		return
+	_on_hero_action_pressed("switch_hero:%s" % hero_id)
+
+func _focus_active_hero_from_roster() -> void:
+	var tile := OverworldRules.hero_position(_session)
+	_set_selected_tile(tile)
+	if _map_view.has_method("focus_on_tile"):
+		_map_view.call("focus_on_tile", tile)
+	_refresh_selected_route_preview("hero_roster_selection")
+	_sync_minimap_viewport()
+	_sync_roster_pressed_states()
+
+func _sync_roster_pressed_states() -> void:
+	var active_hero_id := String(_session.overworld.get("active_hero_id", ""))
+	for child in _hero_actions.get_children():
+		if child is Button:
+			var button := child as Button
+			var active := String(button.get_meta("hero_id", "")) == active_hero_id
+			button.button_pressed = active
+			button.set_meta("active", active)
+	var selected := _selection_route_tile(_selected_tile)
+	for child in _town_actions.get_children():
+		if child is Button:
+			var button := child as Button
+			var town_selected := Vector2i(int(button.get_meta("x", -1)), int(button.get_meta("y", -1))) == selected
+			button.button_pressed = town_selected
+			button.set_meta("selected", town_selected)
 
 func _on_town_rail_pressed(x: int, y: int) -> void:
 	var tile := _selection_route_tile(Vector2i(x, y))
@@ -4487,6 +4565,7 @@ func _on_town_rail_pressed(x: int, y: int) -> void:
 		_map_view.call("focus_on_tile", tile)
 	_refresh_selected_route_preview("town_rail_selection")
 	_sync_minimap_viewport()
+	_sync_roster_pressed_states()
 
 func _rebuild_rendezvous_actions() -> void:
 	_rendezvous_orders.clear()
@@ -8242,7 +8321,9 @@ func _sync_context_drawers(
 	_minimap_panel.visible = not show_command and not show_frontier
 	_top_strip_panel.visible = not show_command and not show_frontier
 	_hero_panel.visible = not show_command and not show_frontier
-	_event_panel.visible = not show_command and not show_frontier
+	var available_size := _responsive_available_size()
+	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
+	_event_panel.visible = not show_command and not show_frontier and not compact_layout
 	_action_panel.visible = not show_command and not show_frontier
 	_commitment_panel.visible = false
 	_briefing_panel.visible = false
@@ -10395,6 +10476,7 @@ func validation_snapshot() -> Dictionary:
 		"command_check_visible_text": String(command_check.get("visible_text", "")),
 		"command_check_tooltip_text": String(command_check.get("tooltip_text", "")),
 		"hero_action_surfaces": _validation_control_surfaces(_hero_actions),
+		"command_roster": validation_command_roster_snapshot(),
 		"army_text": OverworldRules.describe_army(_session),
 		"army_visible_text": _army_label.text,
 		"army_tooltip_text": _army_label.tooltip_text,
@@ -10523,6 +10605,85 @@ func validation_map_first_layout_snapshot() -> Dictionary:
 		"footer_height_share": footer_rect.size.y / maxf(viewport_rect.size.y, 1.0),
 		"rail_width_owners": _validation_rail_width_owners(),
 	}
+
+func validation_command_roster_snapshot() -> Dictionary:
+	var hero_entries := _validation_roster_entries(_hero_actions)
+	var town_entries := _validation_roster_entries(_town_actions)
+	var vertical_bar := _roster_scroll.get_v_scroll_bar()
+	var scroll_overflow := vertical_bar != null and vertical_bar.max_value > vertical_bar.page + 0.5
+	return {
+		"model": "paired_hero_town_icon_columns",
+		"hero_entries": hero_entries,
+		"town_entries": town_entries,
+		"hero_count": hero_entries.size(),
+		"town_count": town_entries.size(),
+		"active_hero_button_count": _validation_roster_flag_count(hero_entries, "active"),
+		"selected_town_button_count": _validation_roster_flag_count(town_entries, "selected"),
+		"all_icons_loaded": _validation_roster_loaded_count(hero_entries) + _validation_roster_loaded_count(town_entries) == hero_entries.size() + town_entries.size(),
+		"all_focusable": _validation_roster_focusable_count(hero_entries) + _validation_roster_focusable_count(town_entries) == hero_entries.size() + town_entries.size(),
+		"all_accessible": _validation_roster_accessible_count(hero_entries) + _validation_roster_accessible_count(town_entries) == hero_entries.size() + town_entries.size(),
+		"columns_side_by_side": _hero_actions.get_global_rect().position.x < _town_actions.get_global_rect().position.x,
+		"scroll_rect": _control_rect_payload(_roster_scroll.get_global_rect()),
+		"columns_rect": _control_rect_payload(_roster_columns.get_global_rect()),
+		"scroll_vertical": _roster_scroll.scroll_vertical,
+		"scroll_max": vertical_bar.max_value if vertical_bar != null else 0.0,
+		"scroll_page": vertical_bar.page if vertical_bar != null else 0.0,
+		"overflow_available": scroll_overflow,
+	}
+
+func validation_scroll_command_roster_to_end() -> Dictionary:
+	var vertical_bar := _roster_scroll.get_v_scroll_bar()
+	if vertical_bar != null:
+		_roster_scroll.scroll_vertical = int(maxf(0.0, vertical_bar.max_value - vertical_bar.page))
+	return validation_command_roster_snapshot()
+
+func _validation_roster_entries(container: Container) -> Array:
+	var entries := []
+	for child in container.get_children():
+		if not (child is Button):
+			continue
+		var button := child as Button
+		entries.append({
+			"name": button.name,
+			"kind": String(button.get_meta("roster_kind", "")),
+			"hero_id": String(button.get_meta("hero_id", "")),
+			"town_id": String(button.get_meta("town_id", "")),
+			"town_placement_id": String(button.get_meta("town_placement_id", "")),
+			"art_path": String(button.get_meta("art_path", "")),
+			"icon_path": button.icon.resource_path if button.icon is Texture2D else "",
+			"icon_loaded": button.icon is Texture2D,
+			"active": bool(button.get_meta("active", false)),
+			"selected": bool(button.get_meta("selected", false)),
+			"pressed": button.button_pressed,
+			"focusable": button.focus_mode == Control.FOCUS_ALL,
+			"accessibility_name": button.accessibility_name,
+			"accessibility_description": button.accessibility_description,
+			"tooltip": button.tooltip_text,
+			"rect": _control_rect_payload(button.get_global_rect()),
+		})
+	return entries
+
+func _validation_roster_flag_count(entries: Array, key: String) -> int:
+	var count := 0
+	for entry in entries:
+		if entry is Dictionary and bool(entry.get(key, false)):
+			count += 1
+	return count
+
+func _validation_roster_loaded_count(entries: Array) -> int:
+	return _validation_roster_flag_count(entries, "icon_loaded")
+
+func _validation_roster_focusable_count(entries: Array) -> int:
+	return _validation_roster_flag_count(entries, "focusable")
+
+func _validation_roster_accessible_count(entries: Array) -> int:
+	var count := 0
+	for entry in entries:
+		if not (entry is Dictionary):
+			continue
+		if String(entry.get("accessibility_name", "")).strip_edges() != "" and String(entry.get("accessibility_description", "")).strip_edges() != "" and String(entry.get("tooltip", "")).strip_edges() != "":
+			count += 1
+	return count
 
 func _validation_rail_width_owners() -> Array:
 	var rows := []
