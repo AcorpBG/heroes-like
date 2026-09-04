@@ -5,8 +5,8 @@ const THIRD_HEARTHS_SCENARIO_ID := "third-hearths-confluence"
 const THIRD_HEARTHS_ATLAS_PATH := "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png"
 const HORIZON_CITADELS_ATLAS_PATH := "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
-const TOWN_VISUAL_EXTENT_TILES := 2.85
-const TOWN_EXTENT_FRACTION := 0.95
+const TOWN_VISUAL_EXTENT_TILES := 3.72
+const TOWN_EXTENT_FRACTION := 1.24
 const TOWN_GROUND_CLEARANCE_TILES := 0.18
 const EXPECTED_TOWN_ASSETS := {
 	"town_riverwatch": "town_identity_riverwatch",
@@ -307,9 +307,13 @@ func _town_scale_exact(payload: Dictionary) -> bool:
 		and payload.get("logical_footprint", {}) == {"width": 3, "height": 2} \
 		and is_equal_approx(float(payload.get("visible_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES) \
 		and is_equal_approx(float(payload.get("visible_extent_fraction_of_footprint_depth", 0.0)), TOWN_EXTENT_FRACTION) \
-		and is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 4.453125) \
-		and is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 3.5625) \
-		and is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0))) \
+		and is_equal_approx(float(payload.get("painted_width_tiles", 0.0)), 2.90) \
+		and is_equal_approx(float(payload.get("painted_height_tiles", 0.0)), 3.72) \
+		and is_equal_approx(float(payload.get("town_width_cap_tiles", 0.0)), 2.90) \
+		and bool(payload.get("town_vertical_landmark_fit", false)) \
+		and is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 4.325581395348837) \
+		and is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 2.7555555555555555) \
+		and is_equal_approx(float(payload.get("draw_aspect", 0.0)), 2.90 / 3.72) \
 		and bool(payload.get("painted_bottom_grounded_exact", false)) \
 		and bool(payload.get("sprite_contained_in_footprint", false)) \
 		and String(payload.get("sprite_silhouette_model", "")) == "eight_direction_alpha_silhouette_outline" \
