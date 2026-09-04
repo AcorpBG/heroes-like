@@ -16408,14 +16408,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Owner-directed #10232 completed: exact generated blocker body cells now use a dedicated nine-biome original-raster palette with world-stable cohesive overlap and unchanged gameplay authority.",
+  "currentNotes": "Owner-directed #10233 completed: normal-play main-map and minimap fog exactly match authoritative permanent exploration, and the harsh blocker atlas now uses restrained original basalt, ash, and cooled-lava raster art.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-cohesive-biome-blocker-mass-art-10232",
-  "currentSliceId": "ux-overworld-cohesive-biome-blocker-mass-art-10232",
-  "currentSliceNotes": "No owner-directed implementation slice is active. #10232 completed with inspected responsive captures, exact body/session/collision evidence, and matching Linux/Windows packages.",
+  "currentSlice": "bugfix-overworld-fog-parity-and-lava-art-10233",
+  "currentSliceId": "bugfix-overworld-fog-parity-and-lava-art-10233",
+  "currentSliceNotes": "No owner-directed implementation slice is active. #10233 completed with exact main/minimap fog parity, inspected responsive captures, regenerated harsh-biome raster art, and matching Linux/Windows packages plus a direct packaged Windows generated gameplay flow.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Cohesive Biome Blocker Mass Art",
-  "currentSliceUpdatedAt": "2026-09-04T15:00:00Z",
+  "currentSliceTitle": "Overworld Fog Parity And Lava Art",
+  "currentSliceUpdatedAt": "2026-09-04T15:36:27Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21938,8 +21938,75 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select and track the next owner-directed Phase 6 implementation slice before changing runtime behavior.",
-  "notes": "Owner-directed #10232 Overworld cohesive biome blocker mass art is completed. No implementation slice is active.",
+  "notes": "Owner-directed #10233 Overworld fog parity and lava art is completed. No implementation slice is active.",
   "plannedSlices": [
+    {
+      "id": "bugfix-overworld-fog-parity-and-lava-art-10233",
+      "title": "Overworld Fog Parity And Lava Art",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md",
+        "docs/overworld-content-bible.md",
+        "docs/overworld-raster-terrain-and-visible-blocker-mass-requirements.md",
+        "docs/overworld-cohesive-biome-blocker-mass-art-requirements.md",
+        "docs/overworld-fog-parity-and-lava-art-requirements.md"
+      ],
+      "purpose": "Restore visible permanent-exploration fog parity between normal-play main-map and minimap presentation and replace weak lava blockers with cohesive original raster art while preserving exact package and gameplay authority.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "art/overworld/decorative_object_sprites.json",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3",
+        "art/overworld/source/generated/terrain/cohesive_blocker_mass_v3",
+        "tests",
+        "docs/overworld-fog-parity-and-lava-art-requirements.md",
+        "docs/overworld-fog-parity-and-lava-art-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Focused runtime proof matches authoritative explored and unexplored coordinates and counts on both main map and minimap before and after deterministic movement, with nonzero normal-play shroud and explicit reveal-all test isolation",
+        "Inspected 1920x1080 and 1280x720 normal-play generated-map captures show matching fog boundaries without clipped controls and cohesive dark lava or ash blocker art without bright repeated token motifs",
+        "Focused fog and lava art, existing Overworld movement and save, repository, diff, and matching Linux and Windows export or package startup and generated-entry checks pass below 250000000 bytes"
+      ],
+      "nonGoals": [
+        "Fog radius or exploration rules, route knowledge, gameplay, AI, balance, save schema, camera layout, or input changes",
+        "Native RMG topology, terrain selection, placement, density, road, reward or guard, retry, final-payload, recovery, or parity changes",
+        "Copied Heroes assets, procedural replacement art, package-limit increase, Town or Battle UI, signing, publication, whole-game validation, or release readiness"
+      ],
+      "validationCommands": [
+        "xvfb-run -a godot4 --path . --scene res://tests/overworld_fog_parity_lava_art_report.tscn",
+        "godot4 --headless --path . --scene res://tests/random_map_live_overworld_render_move_report.tscn",
+        "python3 tests/overworld_cohesive_biome_blocker_mass_report.py",
+        "godot4 --headless --path . --scene res://tests/overworld_live_object_art_coverage_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "git diff --check"
+      ],
+      "createdAt": "2026-09-04T14:59:48Z",
+      "startedAt": "2026-09-04T14:59:48Z",
+      "updatedAt": "2026-09-04T15:36:27Z",
+      "completedAt": "2026-09-04T15:36:27Z",
+      "evidence": [
+        "docs/overworld-fog-parity-and-lava-art-report.md",
+        ".artifacts/overworld_fog_parity_lava_art_10233/report.json",
+        ".artifacts/overworld_fog_parity_lava_art_10233/normal_fog_1920x1080.png",
+        ".artifacts/overworld_fog_parity_lava_art_10233/normal_fog_1280x720.png",
+        ".artifacts/overworld_cohesive_biome_blocker_mass_10232/report.json",
+        ".artifacts/overworld_cohesive_biome_blocker_mass_10232/medium_lava_art_review_reveal_all_1920x1080.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json",
+        ".artifacts/packaging_windows_manual_fog_lava_10233/live_validation_report.json"
+      ],
+      "notes": "Completed with zero authoritative/main/minimap fog mismatches before and after movement, normal capture fixtures no longer revealing the map, regenerated original RGBA harsh-biome art, exact body/collision/session preservation, inspected 1920x1080 and 1280x720 evidence, repository validation, Linux packaging, Windows export markers, and a direct packaged Windows generated setup -> Overworld -> Town pass. The stock verbose Wine wrapper retains its known process timeout after successful markers and no fatal match."
+    },
     {
       "id": "ux-overworld-cohesive-biome-blocker-mass-art-10232",
       "title": "Overworld Cohesive Biome Blocker Mass Art",
@@ -109542,7 +109609,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_cohesive_biome_blocker_mass_completed",
+  "result": "overworld_fog_parity_and_lava_art_in_progress",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -109643,9 +109710,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed #10232: dedicated original nine-biome blocker palettes and world-stable landscape-integrated exact-body composition without changing Native RMG or gameplay authority.",
-  "taskId": "10232",
-  "updatedAt": "2026-09-04T15:00:00Z",
+  "summary": "Completed #10233: honest normal-play main/minimap fog parity and regenerated original harsh-biome basalt, ash, and cooled-lava art without changing gameplay or Native RMG authority.",
+  "taskId": "10233",
+  "updatedAt": "2026-09-04T15:36:27Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

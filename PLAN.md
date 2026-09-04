@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10232
+Task: #10233
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -24,8 +24,34 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed owner-directed implementation slice: `ux-overworld-cohesive-biome-blocker-mass-art-10232`, which replaces the generated blocker body's mixed legacy-object mosaic with original cohesive biome palettes and landscape-integrated composition without changing map authority.
-- Current package boundary: matching Linux and Windows release exports measure 248246124 bytes, 1753876 bytes below the unchanged 250000000-byte ceiling; all generated source masters remain excluded from both packages.
+- Most recently completed owner-directed implementation slice: `bugfix-overworld-fog-parity-and-lava-art-10233`, which restores honest normal-play fog evidence on both map surfaces and replaces the harsh-biome atlas with restrained original basalt, ash, and cooled-lava art.
+- Current package boundary: matching Linux and Windows release exports measure 248211212 bytes, 1788788 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+
+## Overworld Fog Parity And Lava Art
+
+id: `bugfix-overworld-fog-parity-and-lava-art-10233`
+
+Status: completed 2026-09-04. Normal generated play now has exact automated main-map/minimap parity against authoritative permanent exploration before and after movement (25 explored/1271 hidden, then 32/1264, with zero surface mismatches). The screenshot harness no longer reveals the normal Medium case; reveal-all remains isolated and labeled for art review. The harsh atlas was regenerated through the original transparent-raster pipeline as natural basalt, ash, cooled rope lava, and sparse ember seams, with loadable terrain-matched coverage and no uncovered body cells. Inspected 1920x1080 and 1280x720 captures, fog regression, live object-art coverage, movement/save, repository validation, Linux packaging, Windows export/boot markers, and a direct packaged Windows generated setup -> Overworld -> Town flow pass at matching 248211212-byte PCKs. The stock verbose Wine wrapper still times out after successful boot markers and no fatal match, so direct packaged gameplay evidence closes that environment-specific wrapper gap.
+
+Owner direction: the delivered generated-map screenshots expose the whole map instead of showing fog of war on the main map and minimap, and the current lava blockers do not meet the surrounding landscape-art standard.
+
+Requirements: `docs/overworld-fog-parity-and-lava-art-requirements.md`, `docs/overworld-cohesive-biome-blocker-mass-art-requirements.md`, `docs/overworld-raster-terrain-and-visible-blocker-mass-requirements.md`, `docs/lessons-learned.md` Native RMG recovery discipline, and `project.md` permanent-exploration fog contract.
+
+Implementation boundary:
+- diagnose normal generated play independently from deliberate reveal-all art fixtures, then make the main map and minimap consume the same authoritative `session.overworld.fog` explored state with visible shroud at both responsive evidence resolutions;
+- retain explicit debug/reveal-all fixtures while preventing them from serving as normal-play fog evidence;
+- replace weak lava/ash blocker cells through the approved original transparent-raster source/runtime/provenance pipeline, with darker cohesive basalt, ash, and restrained ember treatment;
+- preserve terrain ids, package topology, roads, placements, collision/body masks, interaction, pathing, visibility radius and exploration rules, deterministic package/session output, save version 9, and Native RMG output exactly.
+
+Completion criteria:
+- focused runtime proof shows the exact authoritative explored/unexplored counts and state on both the main map and minimap before and after deterministic movement, with nonzero shroud in normal play and reveal-all remaining explicitly test-only;
+- inspected 1920x1080 and 1280x720 generated-map captures visibly show matching fog boundaries on the main map and minimap, with no clipped controls, and the lava region reads as cohesive painted terrain rather than bright repeated tokens;
+- focused fog/lava, existing Overworld art/movement/save, repository, clean-diff, and matching Linux/Windows export/package startup/generated-entry checks pass below 250000000 bytes; final captures are delivered through Proca on Discord.
+
+Non-goals:
+- no fog radius, scouting, memory policy, route knowledge, target eligibility, gameplay, AI, balance, save-schema, camera-layout, or input change;
+- no Native RMG topology, terrain selection, placement, density, road, reward/guard, retry, final-payload, recovery, or parity behavior change;
+- no copied Heroes art/maps/names/DEFs/pixels, procedural replacement art, package-limit increase, Town/Battle UI, signing, publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Cohesive Biome Blocker Mass Art
 
