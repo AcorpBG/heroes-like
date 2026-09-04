@@ -7,7 +7,7 @@ const SEED := "medium-random-screenshot-10230"
 const SIZE_CLASS_ID := "homm3_medium"
 const PLAYER_COUNT := 4
 const VIEWPORT_SIZES := [Vector2i(1920, 1080), Vector2i(1280, 720)]
-const CAPTURE_DIR := "res://.artifacts/overworld_raster_terrain_10231"
+const CAPTURE_DIR := "res://.artifacts/overworld_cohesive_biome_blocker_mass_10232"
 
 var _failures: Array = []
 
@@ -105,7 +105,7 @@ func _run() -> void:
 	})
 
 func _validate_body_summary(summary: Dictionary) -> void:
-	if String(summary.get("presentation_model", "")) != "exact_body_cell_raster_mass_coverage_v5":
+	if String(summary.get("presentation_model", "")) != "cohesive_biome_exact_body_raster_mass_v6":
 		_failures.append("generated body presentation model is stale")
 	var expected := int(summary.get("expected_body_tile_count", 0))
 	var indexed := int(summary.get("indexed_body_tile_count", 0))
@@ -119,6 +119,10 @@ func _validate_body_summary(summary: Dictionary) -> void:
 			_failures.append("generated blocker invariant failed: %s" % key)
 	if int(summary.get("distinct_body_asset_count", 0)) < 8:
 		_failures.append("generated blocker palette is not varied")
+	for value in summary.get("body_entries", []):
+		if value is Dictionary and not String(value.get("asset_id", "")).begins_with("cohesive_"):
+			_failures.append("generated body resolved outside dedicated cohesive palette")
+			break
 	if String(summary.get("composition_signature", "")).length() != 64:
 		_failures.append("generated blocker composition signature is missing")
 

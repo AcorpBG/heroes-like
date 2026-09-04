@@ -300,7 +300,7 @@ func _assert_blocker_mass_focused_summary(summary: Dictionary, label: String) ->
 		"focused_mass_large": 12,
 	}
 	if (
-		String(summary.get("presentation_model", "")) != "exact_body_cell_raster_mass_coverage_v5"
+		String(summary.get("presentation_model", "")) != "cohesive_biome_exact_body_raster_mass_v6"
 		or int(summary.get("generated_record_count", 0)) != 4
 		or int(summary.get("expected_body_tile_count", 0)) != 24
 		or int(summary.get("indexed_body_tile_count", 0)) != 24
@@ -1099,7 +1099,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if summary.is_empty():
 		_fail("%s generated visual summary is unavailable." % label)
 		return false
-	if String(summary.get("presentation_model", "")) != "exact_body_cell_raster_mass_coverage_v5":
+	if String(summary.get("presentation_model", "")) != "cohesive_biome_exact_body_raster_mass_v6":
 		_fail("%s generated body presentation model is not exact: %s" % [label, JSON.stringify(summary)])
 		return false
 	var is_default_fixture := _active_size_class_id == SIZE_CLASS_ID and _active_seed == EXPLICIT_SEED
@@ -1121,7 +1121,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if is_default_fixture and int(summary.get("legacy_primary_marker_candidate_count", 0)) != 65:
 		_fail("%s deterministic generated DEF-anchor candidate count changed: %s" % [label, summary.get("legacy_primary_marker_candidate_count", -1)])
 		return false
-	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 1.28):
+	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 1.42):
 		_fail("%s generated body sprite extent changed: %s" % [label, summary.get("body_sprite_extent_tiles", -1.0)])
 		return false
 	if int(summary.get("asset_cluster_tiles", 0)) != 1:
@@ -1139,7 +1139,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 		_fail("%s generated body composition keys are incomplete: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
 	if int(summary.get("motif_key_count", 0)) <= 0 or int(summary.get("motif_key_count", 0)) > visual_anchor_count:
-		_fail("%s generated body motifs did not form bounded placement-local masses: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
+		_fail("%s generated body motifs did not form bounded world-stable biome masses: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
 	if not bool(summary.get("all_transformed_bounds_within_mass_margin", false)) or not is_equal_approx(float(summary.get("mass_bounds_margin_tiles", 0.0)), 0.42):
 		_fail("%s generated body composition escaped its owning placement mass margin: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
@@ -1148,8 +1148,8 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 		_fail("%s generated body palette did not break repeated-definition stamping: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
 	if (
-		float(summary.get("scale_factor_min", 1.0)) >= 0.95
-		or float(summary.get("scale_factor_max", 1.0)) <= 1.01
+		float(summary.get("scale_factor_min", 1.0)) >= 0.98
+		or float(summary.get("scale_factor_max", 1.0)) <= 1.02
 		or float(summary.get("offset_x_min", 0.0)) >= -0.02
 		or float(summary.get("offset_x_max", 0.0)) <= 0.02
 	):

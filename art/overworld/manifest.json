@@ -23,7 +23,7 @@
     "surface_detail_model": "biome_specific_painterly_landmark_clusters_denser_v4",
     "surface_detail_source_manifest": "res://art/overworld/source/generated/terrain/world_surface_v3/manifest.json",
     "normal_play_microtexture_policy": "original_raster_only_no_procedural_strokes",
-    "generated_blocker_body_presentation": "every_authoritative_body_cell_has_overlapping_biome_matched_original_raster_member_v5",
+    "generated_blocker_body_presentation": "dedicated_cohesive_biome_palette_with_world_stable_overlap_v6",
     "raster_base_v2": {
       "model": "generated_original_map_space_raster_material_v2",
       "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
@@ -270,6 +270,198 @@
       "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
       "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
       "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_temperate_00": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/temperate_atlas.png",
+      "atlas_region": [0, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/temperate_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_temperate_01": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/temperate_atlas.png",
+      "atlas_region": [128, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/temperate_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_temperate_02": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/temperate_atlas.png",
+      "atlas_region": [256, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/temperate_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_temperate_03": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/temperate_atlas.png",
+      "atlas_region": [384, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/temperate_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_temperate_07": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/temperate_atlas.png",
+      "atlas_region": [384, 128, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/temperate_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_temperate_12": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/temperate_atlas.png",
+      "atlas_region": [0, 384, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/temperate_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_wet_cold_00": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [0, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/wet_cold_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_wet_cold_01": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [128, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/wet_cold_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_wet_cold_02": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [256, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/wet_cold_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_wet_cold_03": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [384, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/wet_cold_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_wet_cold_04": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [0, 128, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/wet_cold_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_wet_cold_06": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [256, 128, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/wet_cold_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_wet_cold_10": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [256, 256, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/wet_cold_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_wet_cold_15": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [384, 384, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/wet_cold_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_harsh_00": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [0, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/harsh_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_harsh_01": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [128, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/harsh_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_harsh_02": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [256, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/harsh_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_harsh_03": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [384, 0, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/harsh_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_harsh_05": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [128, 128, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/harsh_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_harsh_07": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [384, 128, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/harsh_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_harsh_09": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [128, 256, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/harsh_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_harsh_10": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [256, 256, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/harsh_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_harsh_12": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [0, 384, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/harsh_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "cohesive_harsh_14": {
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [256, 384, 128, 128],
+      "source_generated": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/harsh_source.png",
+      "source_model": "built_in_image_gen_original_cohesive_blocker_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json",
       "asset_policy": "original_generated_no_copied_pixels"
     },
     "frontier_town": {
