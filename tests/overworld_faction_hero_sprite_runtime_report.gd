@@ -431,7 +431,7 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 				and float(layout.get("ground_anchor_y_fraction", 0.0)) > 0.75 \
 				and bool(tile_presentation.get("has_visible_hero", false)) \
 				and bool(tile_presentation.get("has_town_non_entry", false)) \
-				and String(town_presentation.get("presentation_model", "")) == "town_3x4_visual_landmark_3x2_logical_bottom_middle_entry" \
+				and String(town_presentation.get("presentation_model", "")) == "aspect_preserved_town_in_3x4_visual_envelope_3x2_logical_bottom_middle_entry" \
 				and String(town_presentation.get("tile_role", "")) == "blocked_non_entry_footprint"
 		else:
 			ordinary_layout_count += 1

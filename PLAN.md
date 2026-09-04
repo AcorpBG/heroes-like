@@ -1,6 +1,6 @@
 # heroes-like Tactical Implementation Plan
 
-Task: #10235
+Task: #10236
 Document role: tactical execution plan
 Source strategy: `project.md`
 Reset date: 2026-04-27
@@ -24,8 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed owner-directed implementation slice: `ux-overworld-owned-roster-visual-polish-10235`, which makes the command roster strictly ownership-derived, replaces thin icon bars with ornamental portrait/settlement cards, and separates honest normal-play captures from synthetic overflow validation.
-- Current package boundary: matching Linux and Windows release exports measure 248218364 bytes, 1781636 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+- No owner-directed implementation slice is currently active.
+- Most recently completed owner-directed implementation slice: `ux-overworld-town-proportion-and-environs-10236`, which preserves every town raster's painted aspect, replaces Riverwatch with an original transparent land-set identity, and places three path-safe raster blocker clusters inside the authored Ninefold starting reveal.
+- Current package boundary: matching Linux and Windows release exports measure 248360044 bytes, 1639956 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+
+## Overworld Town Proportion And Environs
+
+id: `ux-overworld-town-proportion-and-environs-10236`
+
+Status: completed 2026-09-04. Town draw payloads now uniformly fit painted alpha bounds inside the established 2.90x3.72 cap instead of forcing both dimensions, Riverwatch uses an original transparent land-set raster through its canonical manifest identity, and three explicit grassland blocker clusters occupy 13 road-clear body tiles inside the starting town's radius-five reveal. Focused town/click/generated-map/fog/density owners, inspected 1920x1080 and 1280x720 captures, repository/diff validation, and matching 248360044-byte Linux/Windows export and packaged generated-flow checks pass.
+
+Owner direction: fix the visibly distorted Overworld town in the delivered Ninefold screenshot and the open, undecorated space around it; prove the correction in a new live screenshot rather than reusing the known-bad evidence.
+
+Requirements: `docs/overworld-town-proportion-and-environs-requirements.md`, `docs/overworld-landmark-readability-and-town-scale-requirements.md`, `docs/overworld-strategic-density-and-route-occupancy-requirements.md`, `docs/lessons-learned.md`, and `project.md` Phase 6 production alpha presentation.
+
+Implementation boundary:
+- preserve each original town raster's painted aspect ratio inside the established approximately three-wide/four-tall visual envelope, bottom-ground it to the unchanged 3x2 logical footprint, and remove the forced universal tall distortion;
+- replace the grassland Ninefold Riverwatch presentation with one original transparent land-set identity asset whose faction architecture remains recognizable and whose contact edge matches the surrounding grass/dirt rather than an isolated blue-water plate;
+- place a small explicit set of biome-matched original-raster blocker clusters inside the starting town's radius-five explored area, keeping roads, visit approaches, interactions, exact body masks, and deterministic authored-map behavior clear;
+- retain normal fog, town clicks, ownership, movement, save version 9, authored/generated package identity, and the existing map-first command rail.
+
+Completion criteria:
+- focused runtime evidence proves every town preserves its painted alpha-bounds aspect within the 3x4 visual envelope and retains exact 3x2 click/pathing authority;
+- the untouched Ninefold start contains visible blocker bodies inside its authoritative town-vision radius while every road/visit approach remains reachable and the Riverwatch identity resolves only to the new original manifest-backed land-set raster;
+- inspected 1920x1080 and 1280x720 normal-play captures show an undistorted, grounded town and readable surrounding scenery without clipped controls;
+- relevant town scale/click, authored object/pathing, fog, repository, diff, and matching Linux/Windows export/package startup and Overworld-entry checks pass below 250000000 bytes.
+
+Non-goals:
+- no Native RMG topology, placement, density, terrain selection, road, guard/reward, retry, recovery, or final-payload behavior change;
+- no logical town-footprint, movement-cost, interaction, economy, balance, AI, save-schema, Town/Battle UI, package-limit, signing, publication, whole-game validation, or release-readiness change;
+- no copied Heroes art, maps, names, DEFs, pixels, procedural geometry, SVG stand-ins, debug icons, or generic fallback art.
 
 ## Overworld Owned Roster Visual Polish
 

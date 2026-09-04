@@ -137,8 +137,11 @@ func _town_rows(map_view: Node) -> Array:
 		var payload: Dictionary = map_view.call("validation_town_sprite_scale_payload", asset_id)
 		rows.append({
 			"asset_id": asset_id,
+			"source_aspect": float(payload.get("source_aspect", 0.0)),
+			"draw_aspect": float(payload.get("draw_aspect", 0.0)),
 			"painted_width_tiles": float(payload.get("painted_width_tiles", 0.0)),
 			"painted_height_tiles": float(payload.get("painted_height_tiles", 0.0)),
+			"aspect_preserved": bool(payload.get("town_aspect_preserved", false)),
 			"logical_footprint": payload.get("logical_footprint", {}),
 			"visual_footprint": payload.get("visual_footprint", {}),
 			"grounded": bool(payload.get("painted_bottom_grounded_exact", false)),
@@ -151,8 +154,10 @@ func _town_scale_exact(rows: Array) -> bool:
 		return false
 	for row_value in rows:
 		var row: Dictionary = row_value
-		if not is_equal_approx(float(row.get("painted_width_tiles", 0.0)), 2.90) \
-			or not is_equal_approx(float(row.get("painted_height_tiles", 0.0)), 3.72) \
+		if float(row.get("painted_width_tiles", 0.0)) > 2.9001 \
+			or float(row.get("painted_height_tiles", 0.0)) > 3.7201 \
+			or not bool(row.get("aspect_preserved", false)) \
+			or not is_equal_approx(float(row.get("source_aspect", 0.0)), float(row.get("draw_aspect", -1.0))) \
 			or row.get("logical_footprint", {}) != {"width": 3, "height": 2} \
 			or row.get("visual_footprint", {}) != {"width": 3, "height": 4} \
 			or not bool(row.get("grounded", false)) \

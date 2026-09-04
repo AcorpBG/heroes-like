@@ -1011,7 +1011,7 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if not bool(town_art.get("uses_asset_sprite", false)) or "town_identity_riverwatch" not in town_asset_ids or bool(town_art.get("fallback_procedural_marker", true)):
 		_fail("Ninefold smoke: large-map starting town is not using the exact Riverwatch Hold identity sprite: %s." % town_presentation)
 		return false
-	if String(town_art.get("town_sprite_grounding_model", "")) != "tall_town_landmark_settled_without_base_ellipse" or bool(town_art.get("town_base_ellipse", true)) or bool(town_art.get("town_cast_shadow", true)):
+	if String(town_art.get("town_sprite_grounding_model", "")) != "painted_town_contact_edge_without_base_ellipse" or bool(town_art.get("town_base_ellipse", true)) or bool(town_art.get("town_cast_shadow", true)):
 		_fail("Ninefold smoke: large-map starting town sprite did not use the corrected no-ellipse/no-cast-shadow grounding: %s." % town_presentation)
 		return false
 
@@ -1056,7 +1056,7 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 	if String(readability.get("presence_model", "")) != "footprint_scaled_world_object":
 		_fail("Ninefold smoke: large-map %s marker no longer reports object-first footprint presence: %s." % [expected_kind, presentation])
 		return false
-	var expected_occlusion := "tall_town_landmark_settled_without_base_ellipse" if is_town else ("ground_contact_without_foreground_lip" if uses_procedural_fallback else ("sprite_contact_without_foreground_lip" if uses_mapped_sprite else ""))
+	var expected_occlusion := "painted_town_contact_edge_without_base_ellipse" if is_town else ("ground_contact_without_foreground_lip" if uses_procedural_fallback else ("sprite_contact_without_foreground_lip" if uses_mapped_sprite else ""))
 	if String(readability.get("occlusion_model", "")) != expected_occlusion:
 		_fail("Ninefold smoke: large-map %s marker no longer reports the expected foreground contact model: %s." % [expected_kind, presentation])
 		return false
@@ -1083,7 +1083,7 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			_fail("Ninefold smoke: large-map town marker must present as a 3x2 footprint: %s." % presentation)
 			return false
 		var town_presentation: Dictionary = presentation.get("town_presentation", {})
-		if not bool(town_presentation.get("has_town_footprint", false)) or String(town_presentation.get("presentation_model", "")) != "town_3x4_visual_landmark_3x2_logical_bottom_middle_entry" or int(town_presentation.get("visual_footprint_width_tiles", 0)) != 3 or int(town_presentation.get("visual_footprint_height_tiles", 0)) != 4:
+		if not bool(town_presentation.get("has_town_footprint", false)) or String(town_presentation.get("presentation_model", "")) != "aspect_preserved_town_in_3x4_visual_envelope_3x2_logical_bottom_middle_entry" or int(town_presentation.get("visual_footprint_width_tiles", 0)) != 3 or int(town_presentation.get("visual_footprint_height_tiles", 0)) != 4:
 			_fail("Ninefold smoke: large-map town metadata does not expose the 3x4 visual and retained 3x2 logical model: %s." % presentation)
 			return false
 		if String(town_presentation.get("entry_role", "")) != "bottom_middle_visit_approach" or not bool(town_presentation.get("entry_is_visit_tile", false)):
@@ -1168,13 +1168,13 @@ func _assert_town_grounding_correction(readability: Dictionary, presentation: Di
 	if bool(readability.get("upper_mass_backdrop", true)) or bool(readability.get("vertical_mass_shadow", true)):
 		_fail("Ninefold smoke: large-map town still reports upper-mass shadow/backdrop treatment: %s." % presentation)
 		return false
-	if String(readability.get("depth_cue_model", "")) != "tall_town_entry_ground_contact_without_cast_shadow" or bool(readability.get("directional_contact_shadow", true)) or float(readability.get("contact_shadow_alpha", 1.0)) > 0.01:
+	if String(readability.get("depth_cue_model", "")) != "painted_town_entry_ground_contact_without_cast_shadow" or bool(readability.get("directional_contact_shadow", true)) or float(readability.get("contact_shadow_alpha", 1.0)) > 0.01:
 		_fail("Ninefold smoke: large-map town still reports directional cast-shadow depth cues: %s." % presentation)
 		return false
 	if bool(readability.get("base_occlusion_pads", true)) or float(readability.get("base_occlusion_alpha", 1.0)) > 0.01:
 		_fail("Ninefold smoke: large-map town still reports foreground base occlusion pads: %s." % presentation)
 		return false
-	if String(readability.get("town_grounding_model", "")) != "tall_town_landmark_settled_without_base_ellipse" or String(readability.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
+	if String(readability.get("town_grounding_model", "")) != "painted_town_contact_edge_without_base_ellipse" or String(readability.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
 		_fail("Ninefold smoke: large-map town grounding metadata does not describe the no-ellipse presentation: %s." % presentation)
 		return false
 	if bool(readability.get("town_base_ellipse", true)) or bool(readability.get("town_underlay", true)) or bool(readability.get("town_cast_shadow", true)) or not bool(readability.get("town_contact_cue", false)):

@@ -42,6 +42,7 @@ GENERATED_WINE_PREFIX = ARTIFACT_DIR / "generated-wine-prefix"
 GENERATED_FLOW_OUTPUT_DIR = ARTIFACT_DIR / "generated-flow"
 GENERATED_FLOW_REPORT_PATH = GENERATED_FLOW_OUTPUT_DIR / "live_validation_report.json"
 WINE_BINARY = os.environ.get("WINE", shutil.which("wine") or "")
+WINEBOOT_BINARY = shutil.which("wineboot") or ""
 WINESERVER_BINARY = shutil.which("wineserver") or ""
 REQUIRED_WINDOWS_DLLS = (
     "aurelion_map_persistence.windows.template_release.x86_64.dll",
@@ -704,25 +705,35 @@ def run_command(
     env_overrides: dict[str, str] | None = None,
     fatal_patterns: tuple[str, ...] = FATAL_EXPORT_PATTERNS,
     markers: dict[str, str] | None = None,
+    quiet: bool = False,
+    output_path: Path | None = None,
 ) -> dict:
     env = os.environ.copy()
     env["GODOT_SILENCE_ROOT_WARNING"] = "1"
     if env_overrides:
         env.update(env_overrides)
     started = utc_now()
+    output_handle = None
+    if output_path is not None:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_handle = output_path.open("w", encoding="utf-8")
     try:
         completed = subprocess.run(
             args,
             cwd=ROOT,
             env=env,
-            stdout=subprocess.PIPE,
+            stdout=output_handle if output_handle is not None else (subprocess.DEVNULL if quiet else subprocess.PIPE),
             stderr=subprocess.STDOUT,
             text=True,
             errors="replace",
             timeout=timeout_seconds,
             check=False,
         )
-        output = completed.stdout or ""
+        if output_handle is not None:
+            output_handle.close()
+            output = output_path.read_text(encoding="utf-8", errors="replace") if output_path is not None else ""
+        else:
+            output = completed.stdout or ""
         return {
             "args": args,
             "started_at": started,
@@ -733,6 +744,8 @@ def run_command(
             "output_summary": output_summary(output, fatal_patterns, markers),
         }
     except FileNotFoundError as exc:
+        if output_handle is not None:
+            output_handle.close()
         return {
             "args": args,
             "started_at": started,
@@ -744,7 +757,9 @@ def run_command(
             "output_summary": output_summary(str(exc), fatal_patterns, markers),
         }
     except subprocess.TimeoutExpired as exc:
-        output = ""
+        if output_handle is not None:
+            output_handle.close()
+        output = output_path.read_text(encoding="utf-8", errors="replace") if output_path is not None and output_path.is_file() else ""
         if exc.stdout:
             output += exc.stdout if isinstance(exc.stdout, str) else exc.stdout.decode("utf-8", errors="replace")
         if exc.stderr:
@@ -1342,6 +1357,23 @@ def main() -> int:
         if WINE_BINARY
         else unavailable_runtime_result("wine executable not found")
     )
+    wine_prefix_init_result = (
+        run_command(
+            [WINEBOOT_BINARY, "-u"],
+            RUNTIME_TIMEOUT_SECONDS,
+            env_overrides={"WINEPREFIX": str(WINE_PREFIX), "WINEARCH": "win64", "WINEDEBUG": "-all"},
+            quiet=True,
+        )
+        if export_ok and WINE_BINARY and WINEBOOT_BINARY
+        else unavailable_runtime_result("Windows export or wineboot unavailable before prefix initialization")
+    )
+    wine_prefix_init_ok = wine_prefix_init_result["returncode"] == 0 and not wine_prefix_init_result["timed_out"]
+    if wine_prefix_init_ok and WINESERVER_BINARY:
+        run_command(
+            [WINESERVER_BINARY, "-k"],
+            WINE_CLEANUP_TIMEOUT_SECONDS,
+            env_overrides={"WINEPREFIX": str(WINE_PREFIX), "WINEDEBUG": "-all"},
+        )
     runtime_env = {
         "WINEPREFIX": str(WINE_PREFIX),
         "WINEARCH": "win64",
@@ -1368,10 +1400,11 @@ def main() -> int:
             env_overrides=runtime_env,
             fatal_patterns=FATAL_RUNTIME_PATTERNS,
             markers=RUNTIME_MARKERS,
+            output_path=ARTIFACT_DIR / "windows-runtime.log",
         )
-        if export_ok and WINE_BINARY
+        if export_ok and wine_prefix_init_ok and WINE_BINARY
         else unavailable_runtime_result(
-            "Windows export failed before runtime launch" if not export_ok else "wine executable not found"
+            "Windows export failed before runtime launch" if not export_ok else "Wine prefix initialization failed before runtime launch"
         )
     )
     cleanup_result = (
@@ -1399,6 +1432,23 @@ def main() -> int:
         "WINEDEBUG": "-all,+loaddll",
         "WINEDLLOVERRIDES": "dinput8=",
     }
+    generated_prefix_init_result = (
+        run_command(
+            [WINEBOOT_BINARY, "-u"],
+            RUNTIME_TIMEOUT_SECONDS,
+            env_overrides={"WINEPREFIX": str(GENERATED_WINE_PREFIX), "WINEARCH": "win64", "WINEDEBUG": "-all"},
+            quiet=True,
+        )
+        if export_ok and runtime_ok and WINEBOOT_BINARY
+        else unavailable_runtime_result("Baseline Windows runtime failed before generated-prefix initialization")
+    )
+    generated_prefix_init_ok = generated_prefix_init_result["returncode"] == 0 and not generated_prefix_init_result["timed_out"]
+    if generated_prefix_init_ok and WINESERVER_BINARY:
+        run_command(
+            [WINESERVER_BINARY, "-k"],
+            WINE_CLEANUP_TIMEOUT_SECONDS,
+            env_overrides={"WINEPREFIX": str(GENERATED_WINE_PREFIX), "WINEDEBUG": "-all"},
+        )
     generated_runtime_command = [
         WINE_BINARY,
         str(EXE_PATH),
@@ -1422,8 +1472,9 @@ def main() -> int:
             env_overrides=generated_runtime_env,
             fatal_patterns=FATAL_RUNTIME_PATTERNS,
             markers=GENERATED_RUNTIME_MARKERS,
+            output_path=ARTIFACT_DIR / "windows-generated-runtime.log",
         )
-        if export_ok and runtime_ok and WINE_BINARY
+        if export_ok and runtime_ok and generated_prefix_init_ok and WINE_BINARY
         else unavailable_runtime_result(
             "Baseline Windows runtime failed before generated-map launch"
             if export_ok and not runtime_ok
@@ -1516,6 +1567,7 @@ def main() -> int:
             "runner": "wine",
             "wine_binary": WINE_BINARY,
             "wine_version": wine_version_result,
+            "wine_prefix_init": wine_prefix_init_result,
             "fresh_prefix": relative(WINE_PREFIX),
             "directinput_override": "dinput8=",
             "headless": True,
@@ -1541,6 +1593,7 @@ def main() -> int:
             "fatal_runtime_matches": generated_runtime_fatal_matches,
             "flow_report": generated_flow_report,
             "flow_report_error": generated_flow_report_error,
+            "wine_prefix_init": generated_prefix_init_result,
             "step_ids": generated_step_ids,
             "cleanup": generated_cleanup_result,
             "ok": generated_runtime_ok,

@@ -107,12 +107,12 @@
     "fallback_marker_plate": "removed_for_resource_artifact_encounter_procedural_fallbacks",
     "fallback_upper_mass_backdrop": "removed_for_resource_artifact_encounter_procedural_fallbacks",
     "fallback_foreground_lip": "removed_for_resource_artifact_encounter_procedural_fallbacks",
-    "town_footprint": "town_2_9x3_72_painted_landmark_3x2_logical_bottom_middle_entry",
-    "town_visual_footprint": "3x4_entry_center_bottom_with_bounded_vertical_landmark_fit",
+    "town_footprint": "aspect_preserved_town_within_2_9x3_72_visual_cap_3x2_logical_bottom_middle_entry",
+    "town_visual_footprint": "3x4_entry_center_bottom_with_aspect_preserved_bounded_fit",
     "town_logical_footprint": "3x2_bottom_middle_entry",
     "town_entry_role": "bottom_middle_visit_approach",
     "town_non_entry_tiles": "blocked_non_entry_footprint",
-    "town_grounding": "tall_town_landmark_settled_without_base_ellipse",
+    "town_grounding": "painted_town_contact_edge_without_base_ellipse",
     "town_footprint_cues": "no_visible_helper_cues_3x2_contract",
     "town_entry_apron": "removed",
     "town_gate_helper": "removed",
@@ -495,8 +495,10 @@
     "town_identity_riverwatch": {
       "path": "res://art/overworld/runtime/objects/towns/identity/town_riverwatch.png",
       "source_generated": "res://art/overworld/source/generated/towns/identity/town_riverwatch_source.png",
-      "source_model": "built_in_image_gen_original_landmark",
-      "assigned_town_id": "town_riverwatch"
+      "source_model": "built_in_image_gen_original_landset_edit_with_transparent_extraction",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "assigned_town_id": "town_riverwatch",
+      "accessible_description": "A broad grey-stone Embercourt frontier fortress with red roofs, gold flame banners, a beacon tower, and an irregular grass-and-dirt settlement edge."
     },
     "town_identity_duskfen": {
       "path": "res://art/overworld/runtime/objects/towns/identity/town_duskfen.png",

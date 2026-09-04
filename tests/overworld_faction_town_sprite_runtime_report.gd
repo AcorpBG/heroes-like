@@ -5,7 +5,8 @@ const THIRD_HEARTHS_SCENARIO_ID := "third-hearths-confluence"
 const THIRD_HEARTHS_ATLAS_PATH := "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png"
 const HORIZON_CITADELS_ATLAS_PATH := "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
-const TOWN_VISUAL_EXTENT_TILES := 3.72
+const TOWN_VISUAL_EXTENT_CAP_TILES := 3.72
+const TOWN_VISUAL_WIDTH_CAP_TILES := 2.90
 const TOWN_EXTENT_FRACTION := 1.24
 const TOWN_GROUND_CLEARANCE_TILES := 0.18
 const EXPECTED_TOWN_ASSETS := {
@@ -210,7 +211,7 @@ func _validate_profiles(shell: Node, profiles: Array) -> Dictionary:
 		var presentation: Dictionary = shell.call("validation_tile_presentation", int(entry.get("x", -1)), int(entry.get("y", -1)))
 		var art: Dictionary = presentation.get("art_presentation", {})
 		var sprite_asset_ids: Array = art.get("sprite_asset_ids", [])
-		visible_asset_exact = visible_asset_exact and bool(art.get("uses_asset_sprite", false)) and sprite_asset_id in sprite_asset_ids and not bool(art.get("fallback_procedural_marker", true)) and String(art.get("town_sprite_grounding_model", "")) == "tall_town_landmark_settled_without_base_ellipse" and not bool(art.get("town_base_ellipse", true)) and not bool(art.get("town_cast_shadow", true))
+		visible_asset_exact = visible_asset_exact and bool(art.get("uses_asset_sprite", false)) and sprite_asset_id in sprite_asset_ids and not bool(art.get("fallback_procedural_marker", true)) and String(art.get("town_sprite_grounding_model", "")) == "painted_town_contact_edge_without_base_ellipse" and not bool(art.get("town_base_ellipse", true)) and not bool(art.get("town_cast_shadow", true))
 	return {
 		"ok": seen_towns.size() == EXPECTED_TOWN_ASSETS.size() and seen_assets.size() == EXPECTED_TOWN_ASSETS.size() and visible_asset_exact and scale_exact and grounding_exact and footprint_authority_exact and owner_pennant_exact,
 		"asset_ids": seen_assets.keys(),
@@ -305,15 +306,17 @@ func _town_scale_exact(payload: Dictionary) -> bool:
 	return not payload.is_empty() \
 		and payload.get("visual_footprint", {}) == {"width": 3, "height": 4} \
 		and payload.get("logical_footprint", {}) == {"width": 3, "height": 2} \
-		and is_equal_approx(float(payload.get("visible_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES) \
+		and float(payload.get("visible_extent_tiles", 0.0)) <= TOWN_VISUAL_EXTENT_CAP_TILES + 0.0001 \
 		and is_equal_approx(float(payload.get("visible_extent_fraction_of_footprint_depth", 0.0)), TOWN_EXTENT_FRACTION) \
-		and is_equal_approx(float(payload.get("painted_width_tiles", 0.0)), 2.90) \
-		and is_equal_approx(float(payload.get("painted_height_tiles", 0.0)), 3.72) \
-		and is_equal_approx(float(payload.get("town_width_cap_tiles", 0.0)), 2.90) \
+		and float(payload.get("painted_width_tiles", 0.0)) <= TOWN_VISUAL_WIDTH_CAP_TILES + 0.0001 \
+		and float(payload.get("painted_height_tiles", 0.0)) <= TOWN_VISUAL_EXTENT_CAP_TILES + 0.0001 \
+		and is_equal_approx(float(payload.get("town_width_cap_tiles", 0.0)), TOWN_VISUAL_WIDTH_CAP_TILES) \
+		and is_equal_approx(float(payload.get("town_height_cap_tiles", 0.0)), TOWN_VISUAL_EXTENT_CAP_TILES) \
+		and bool(payload.get("town_aspect_preserved", false)) \
 		and bool(payload.get("town_vertical_landmark_fit", false)) \
-		and is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 4.325581395348837) \
-		and is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 2.7555555555555555) \
-		and is_equal_approx(float(payload.get("draw_aspect", 0.0)), 2.90 / 3.72) \
+		and float(payload.get("town_to_hero_extent_ratio", 0.0)) > 3.0 \
+		and float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)) > 2.0 \
+		and is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0))) \
 		and bool(payload.get("painted_bottom_grounded_exact", false)) \
 		and bool(payload.get("sprite_contained_in_footprint", false)) \
 		and String(payload.get("sprite_silhouette_model", "")) == "eight_direction_alpha_silhouette_outline" \

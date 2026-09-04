@@ -3609,7 +3609,7 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 		push_error("Overworld smoke: %s marker no longer reports object-first footprint presence. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
 		return false
-	var expected_occlusion := "tall_town_landmark_settled_without_base_ellipse" if is_town else ("ground_contact_without_foreground_lip" if uses_procedural_fallback else ("sprite_contact_without_foreground_lip" if uses_mapped_sprite else ""))
+	var expected_occlusion := "painted_town_contact_edge_without_base_ellipse" if is_town else ("ground_contact_without_foreground_lip" if uses_procedural_fallback else ("sprite_contact_without_foreground_lip" if uses_mapped_sprite else ""))
 	if String(readability.get("occlusion_model", "")) != expected_occlusion:
 		push_error("Overworld smoke: %s marker no longer reports the expected foreground contact model. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
@@ -3641,7 +3641,7 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			get_tree().quit(1)
 			return false
 		var town_presentation: Dictionary = presentation.get("town_presentation", {})
-		if not bool(town_presentation.get("has_town_footprint", false)) or String(town_presentation.get("presentation_model", "")) != "town_3x4_visual_landmark_3x2_logical_bottom_middle_entry":
+		if not bool(town_presentation.get("has_town_footprint", false)) or String(town_presentation.get("presentation_model", "")) != "aspect_preserved_town_in_3x4_visual_envelope_3x2_logical_bottom_middle_entry":
 			push_error("Overworld smoke: town presentation metadata does not expose the 3x2 model. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false
@@ -3784,7 +3784,7 @@ func _assert_town_grounding_correction(readability: Dictionary, presentation: Di
 		push_error("Overworld smoke: town still reports upper-mass shadow/backdrop treatment. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
-	if String(readability.get("depth_cue_model", "")) != "tall_town_entry_ground_contact_without_cast_shadow" or bool(readability.get("directional_contact_shadow", true)) or float(readability.get("contact_shadow_alpha", 1.0)) > 0.01:
+	if String(readability.get("depth_cue_model", "")) != "painted_town_entry_ground_contact_without_cast_shadow" or bool(readability.get("directional_contact_shadow", true)) or float(readability.get("contact_shadow_alpha", 1.0)) > 0.01:
 		push_error("Overworld smoke: town still reports directional cast-shadow depth cues. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
@@ -3792,7 +3792,7 @@ func _assert_town_grounding_correction(readability: Dictionary, presentation: Di
 		push_error("Overworld smoke: town still reports foreground base occlusion pads. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
-	if String(readability.get("town_grounding_model", "")) != "tall_town_landmark_settled_without_base_ellipse" or String(readability.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
+	if String(readability.get("town_grounding_model", "")) != "painted_town_contact_edge_without_base_ellipse" or String(readability.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
 		push_error("Overworld smoke: town grounding metadata does not describe the no-ellipse presentation. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
@@ -4433,14 +4433,17 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	var town_center: Dictionary = town.get("sprite_center_tiles", {})
-	if not is_equal_approx(float(town.get("visible_extent_tiles", 0.0)), 3.72) \
+	if float(town.get("visible_extent_tiles", 0.0)) > 3.7201 \
 		or not is_equal_approx(float(town.get("visible_extent_fraction_of_footprint_depth", 0.0)), 1.24) \
-		or not is_equal_approx(float(town.get("painted_width_tiles", 0.0)), 2.90) \
-		or not is_equal_approx(float(town.get("painted_height_tiles", 0.0)), 3.72) \
+		or float(town.get("painted_width_tiles", 0.0)) > 2.9001 \
+		or float(town.get("painted_height_tiles", 0.0)) > 3.7201 \
 		or not is_equal_approx(float(town.get("town_width_cap_tiles", 0.0)), 2.90) \
+		or not is_equal_approx(float(town.get("town_height_cap_tiles", 0.0)), 3.72) \
+		or not bool(town.get("town_aspect_preserved", false)) \
 		or not bool(town.get("town_vertical_landmark_fit", false)) \
-		or not is_equal_approx(float(town.get("town_to_hero_extent_ratio", 0.0)), 4.325581395348837) \
-		or not is_equal_approx(float(town.get("town_to_largest_other_object_extent_ratio", 0.0)), 2.7555555555555555) \
+		or float(town.get("town_to_hero_extent_ratio", 0.0)) <= 3.0 \
+		or float(town.get("town_to_largest_other_object_extent_ratio", 0.0)) <= 2.0 \
+		or not is_equal_approx(float(town.get("source_aspect", 0.0)), float(town.get("draw_aspect", -1.0))) \
 		or town.get("visual_footprint", {}) != {"width": 3, "height": 4} \
 		or town.get("logical_footprint", {}) != {"width": 3, "height": 2} \
 		or not is_equal_approx(float(town.get("painted_bottom_clearance_tiles", 0.0)), 0.18) \
@@ -5287,7 +5290,7 @@ func _assert_art_sprite(presentation: Dictionary, expected_asset_id: String, rem
 		get_tree().quit(1)
 		return false
 	if is_town:
-		if String(art.get("sprite_settlement_model", "")) != "tall_town_landmark_settled_without_base_ellipse" or String(art.get("sprite_depth_cue_model", "")) != "tall_town_entry_ground_contact_without_cast_shadow":
+		if String(art.get("sprite_settlement_model", "")) != "painted_town_contact_edge_without_base_ellipse" or String(art.get("sprite_depth_cue_model", "")) != "painted_town_entry_ground_contact_without_cast_shadow":
 			push_error("Overworld smoke: town sprite does not report the quiet no-ellipse grounding model. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false
@@ -5295,7 +5298,7 @@ func _assert_art_sprite(presentation: Dictionary, expected_asset_id: String, rem
 			push_error("Overworld smoke: town sprite still reports placement bed or shadow/backdrop treatment. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false
-		if String(art.get("town_sprite_grounding_model", "")) != "tall_town_landmark_settled_without_base_ellipse" or String(art.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
+		if String(art.get("town_sprite_grounding_model", "")) != "painted_town_contact_edge_without_base_ellipse" or String(art.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
 			push_error("Overworld smoke: town art metadata does not expose the corrected footprint grounding model. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false
