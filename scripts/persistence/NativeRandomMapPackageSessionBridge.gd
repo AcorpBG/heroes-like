@@ -2,6 +2,7 @@ class_name NativeRandomMapPackageSessionBridge
 extends RefCounted
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 
@@ -201,23 +202,16 @@ static func _primary_start(adoption: Dictionary) -> Dictionary:
 	if scenario_document != null and scenario_document.has_method("get_start_contract"):
 		var start_contract: Dictionary = scenario_document.get_start_contract()
 		if start_contract.has("x") and start_contract.has("y"):
-			return {"x": int(start_contract.get("x", 0)), "y": int(start_contract.get("y", 0))}
+			return OverworldLevelRulesScript.position(start_contract)
 		var start_towns: Array = start_contract.get("player_start_towns", []) if start_contract.get("player_start_towns", []) is Array else []
 		for town_value in start_towns:
 			if town_value is Dictionary and String(town_value.get("owner", "")) == "player":
 				# Old packages may retain an off-road hero_start_tile. A new session
 				# always starts at the authoritative town entrance, never that hint.
-				var visit_tile: Dictionary = town_value.get("visit_tile", {}) if town_value.get("visit_tile", {}) is Dictionary else {}
-				if not visit_tile.is_empty():
-					return {"x": int(visit_tile.get("x", town_value.get("x", 0))), "y": int(visit_tile.get("y", town_value.get("y", 0)))}
-				var package_visit_tiles: Array = town_value.get("package_visit_tiles", []) if town_value.get("package_visit_tiles", []) is Array else []
-				if not package_visit_tiles.is_empty() and package_visit_tiles[0] is Dictionary:
-					var package_visit: Dictionary = package_visit_tiles[0]
-					return {"x": int(package_visit.get("x", town_value.get("x", 0))), "y": int(package_visit.get("y", town_value.get("y", 0)))}
-				return {"x": int(town_value.get("x", 0)), "y": int(town_value.get("y", 0))}
+				return OverworldLevelRulesScript.town_entrance(town_value)
 		var starts: Array = start_contract.get("player_starts", []) if start_contract.get("player_starts", []) is Array else []
 		if not starts.is_empty() and starts[0] is Dictionary:
-			return {"x": int(starts[0].get("x", 0)), "y": int(starts[0].get("y", 0))}
+			return OverworldLevelRulesScript.position(starts[0])
 	return {"x": 0, "y": 0}
 
 static func _primary_hero_id(scenario_document: Variant, fallback: String) -> String:
@@ -644,16 +638,17 @@ static func _ensure_generated_town_source_route_support(session: SessionStateSto
 		var town: Dictionary = town_value
 		if not (String(town.get("owner", "")) in ["player", "enemy", "neutral"]):
 			continue
+		var level := OverworldLevelRulesScript.level_of(town)
 		var start_tile := _generated_town_source_start_tile(session, town)
 		var required_resource_ids := _generated_town_required_source_ids(town)
 		if required_resource_ids.is_empty():
 			continue
-		var support_tile := start_tile if _generated_source_tile_available(session, start_tile) else Vector2i(-1, -1)
+		var support_tile := start_tile if _generated_source_tile_available(session, start_tile, level) else Vector2i(-1, -1)
 		if support_tile == Vector2i(-1, -1):
-			support_tile = _generated_town_source_support_tile(session, start_tile, 0)
+			support_tile = _generated_town_source_support_tile(session, start_tile, 0, level)
 		if support_tile == Vector2i(-1, -1):
 			support_tile = _existing_generated_town_support_tile(session, town)
-		if support_tile == Vector2i(-1, -1) or _generated_source_tile_reserved(session, support_tile):
+		if support_tile == Vector2i(-1, -1) or _generated_source_tile_reserved(session, support_tile, level):
 			continue
 		var node := _supplemental_generated_town_source_node(town, "required_sources", support_tile)
 		if node.is_empty():
@@ -755,7 +750,8 @@ static func _existing_generated_town_support_tile(session: SessionStateStoreScri
 static func _generated_town_source_support_tile(
 	session: SessionStateStoreScript.SessionData,
 	start_tile: Vector2i,
-	source_index: int
+	source_index: int,
+	level: int = -1
 ) -> Vector2i:
 	var map_size := OverworldRulesScript.derive_map_size(session)
 	if not _generated_source_in_bounds(start_tile, map_size):
@@ -772,11 +768,11 @@ static func _generated_town_source_support_tile(
 		var current_distance := int(distances.get(_generated_source_tile_key(current), 0))
 		if current_distance > 6:
 			continue
-		if current_distance >= 2 and _generated_source_tile_available(session, current):
+		if current_distance >= 2 and _generated_source_tile_available(session, current, level):
 			candidates.append(current)
-		elif current_distance == 1 and _generated_source_tile_available(session, current):
+		elif current_distance == 1 and _generated_source_tile_available(session, current, level):
 			near_candidates.append(current)
-		elif current_distance >= 2 and _generated_source_tile_stackable(session, current):
+		elif current_distance >= 2 and _generated_source_tile_stackable(session, current, level):
 			stackable_candidates.append(current)
 		for neighbor in _generated_source_route_neighbors(current):
 			if not _generated_source_in_bounds(neighbor, map_size):
@@ -784,13 +780,13 @@ static func _generated_town_source_support_tile(
 			var neighbor_key := _generated_source_tile_key(neighbor)
 			if distances.has(neighbor_key):
 				continue
-			if OverworldRulesScript.tile_step_cuts_blocked_corner(session, current, neighbor):
+			if OverworldRulesScript.tile_step_cuts_blocked_corner(session, current, neighbor, level):
 				continue
-			if OverworldRulesScript.tile_is_blocked(session, neighbor.x, neighbor.y):
-				if _generated_source_tile_stackable(session, neighbor):
+			if OverworldRulesScript.tile_is_blocked(session, neighbor.x, neighbor.y, level):
+				if _generated_source_tile_stackable(session, neighbor, level):
 					stackable_candidates.append(neighbor)
 				continue
-			if OverworldRulesScript.tile_has_route_interaction(session, neighbor.x, neighbor.y):
+			if OverworldRulesScript.tile_has_route_interaction(session, neighbor.x, neighbor.y, level):
 				continue
 			distances[neighbor_key] = current_distance + 1
 			queue.append(neighbor)
@@ -802,47 +798,50 @@ static func _generated_town_source_support_tile(
 		return stackable_candidates[source_index % stackable_candidates.size()]
 	return candidates[source_index % candidates.size()]
 
-static func _generated_source_tile_available(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
-	if _generated_source_tile_reserved(session, tile):
+static func _generated_source_tile_available(session: SessionStateStoreScript.SessionData, tile: Vector2i, level: int = -1) -> bool:
+	if _generated_source_tile_reserved(session, tile, level):
 		return false
-	if OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y):
+	if OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y, level):
 		return false
-	if OverworldRulesScript.tile_has_route_interaction(session, tile.x, tile.y):
+	if OverworldRulesScript.tile_has_route_interaction(session, tile.x, tile.y, level):
 		return false
 	for node_value in session.overworld.get("resource_nodes", []):
-		if node_value is Dictionary and int(node_value.get("x", -9999)) == tile.x and int(node_value.get("y", -9999)) == tile.y:
+		if node_value is Dictionary and OverworldLevelRulesScript.on_level(node_value, OverworldLevelRulesScript.query_level(session, level)) and int(node_value.get("x", -9999)) == tile.x and int(node_value.get("y", -9999)) == tile.y:
 			return false
 	for encounter_value in session.overworld.get("encounters", []):
-		if encounter_value is Dictionary and int(encounter_value.get("x", -9999)) == tile.x and int(encounter_value.get("y", -9999)) == tile.y:
+		if encounter_value is Dictionary and OverworldLevelRulesScript.on_level(encounter_value, OverworldLevelRulesScript.query_level(session, level)) and int(encounter_value.get("x", -9999)) == tile.x and int(encounter_value.get("y", -9999)) == tile.y:
 			return false
 	return true
 
-static func _generated_source_tile_stackable(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
-	if _generated_source_tile_reserved(session, tile):
+static func _generated_source_tile_stackable(session: SessionStateStoreScript.SessionData, tile: Vector2i, level: int = -1) -> bool:
+	if _generated_source_tile_reserved(session, tile, level):
 		return false
 	for node_value in session.overworld.get("resource_nodes", []):
 		if not (node_value is Dictionary):
 			continue
 		var node: Dictionary = node_value
+		if not OverworldLevelRulesScript.on_level(node, OverworldLevelRulesScript.query_level(session, level)):
+			continue
 		if int(node.get("x", -9999)) == tile.x and int(node.get("y", -9999)) == tile.y:
 			return true
 		var visit_tile: Dictionary = node.get("visit_tile", {}) if node.get("visit_tile", {}) is Dictionary else {}
 		if int(visit_tile.get("x", -9999)) == tile.x and int(visit_tile.get("y", -9999)) == tile.y:
 			return true
-	return not OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y)
+	return not OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y, level)
 
-static func _generated_source_tile_reserved(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
+static func _generated_source_tile_reserved(session: SessionStateStoreScript.SessionData, tile: Vector2i, level: int = -1) -> bool:
 	# Support caches are additional Aurelion economy content, not native source
 	# placements. They must never displace a hero or occupy a town's doorway.
-	if OverworldRulesScript.hero_position(session) == tile:
+	level = OverworldLevelRulesScript.query_level(session, level)
+	if OverworldLevelRulesScript.hero_level(session) == level and OverworldRulesScript.hero_position(session) == tile:
 		return true
 	for hero in session.overworld.get("player_heroes", []):
-		if hero is Dictionary:
+		if hero is Dictionary and OverworldLevelRulesScript.on_level(hero, level):
 			var position: Dictionary = hero.get("position", {})
 			if Vector2i(int(position.get("x", -1)), int(position.get("y", -1))) == tile:
 				return true
 	for town in session.overworld.get("towns", []):
-		if town is Dictionary and _generated_source_target_tile(town) == tile:
+		if town is Dictionary and OverworldLevelRulesScript.on_level(town, level) and _generated_source_target_tile(town) == tile:
 			return true
 	return false
 
@@ -859,6 +858,7 @@ static func _generated_source_target_tile(node: Dictionary) -> Vector2i:
 	return Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
 
 static func _generated_town_source_start_tile(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Vector2i:
+	var level := OverworldLevelRulesScript.level_of(town)
 	# Begin the support search at the actual doorway. The live town passage rule
 	# handles its wall sides; do not jump to a disconnected off-road component.
 	var entrance: Dictionary = town.get("visit_tile", {}) if town.get("visit_tile", {}) is Dictionary else {}
@@ -876,19 +876,20 @@ static func _generated_town_source_start_tile(session: SessionStateStoreScript.S
 				var candidate := Vector2i(int(tile_value.get("x", town.get("x", 0))), int(tile_value.get("y", town.get("y", 0))))
 				if fallback == Vector2i(-1, -1):
 					fallback = candidate
-				if _generated_source_route_start_tile_usable(session, candidate):
+				if _generated_source_route_start_tile_usable(session, candidate, level):
 					return candidate
 	for key in ["visit_tile", "primary_tile"]:
 		var tile: Dictionary = town.get(key, {}) if town.get(key, {}) is Dictionary else {}
 		if not tile.is_empty():
 			var candidate := Vector2i(int(tile.get("x", town.get("x", 0))), int(tile.get("y", town.get("y", 0))))
-			if _generated_source_route_start_tile_usable(session, candidate):
+			if _generated_source_route_start_tile_usable(session, candidate, level):
 				return candidate
 			if fallback == Vector2i(-1, -1):
 				fallback = candidate
 	var nearest := _generated_nearest_source_route_start_tile(
 		session,
-		Vector2i(int(town.get("x", fallback.x if fallback != Vector2i(-1, -1) else 0)), int(town.get("y", fallback.y if fallback != Vector2i(-1, -1) else 0)))
+		Vector2i(int(town.get("x", fallback.x if fallback != Vector2i(-1, -1) else 0)), int(town.get("y", fallback.y if fallback != Vector2i(-1, -1) else 0))),
+		8, level
 	)
 	if nearest != Vector2i(-1, -1):
 		return nearest
@@ -896,18 +897,19 @@ static func _generated_town_source_start_tile(session: SessionStateStoreScript.S
 		return fallback
 	return Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
 
-static func _generated_source_route_start_tile_usable(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
+static func _generated_source_route_start_tile_usable(session: SessionStateStoreScript.SessionData, tile: Vector2i, level: int = -1) -> bool:
 	var map_size := OverworldRulesScript.derive_map_size(session)
 	if not _generated_source_in_bounds(tile, map_size):
 		return false
-	if OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y):
+	if OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y, level):
 		return false
-	return not OverworldRulesScript.tile_has_route_interaction(session, tile.x, tile.y)
+	return not OverworldRulesScript.tile_has_route_interaction(session, tile.x, tile.y, level)
 
 static func _generated_nearest_source_route_start_tile(
 	session: SessionStateStoreScript.SessionData,
 	origin: Vector2i,
-	max_distance: int = 8
+	max_distance: int = 8,
+	level: int = -1
 ) -> Vector2i:
 	var map_size := OverworldRulesScript.derive_map_size(session)
 	if not _generated_source_in_bounds(origin, map_size):
@@ -921,7 +923,7 @@ static func _generated_nearest_source_route_start_tile(
 		var current_distance := int(distances.get(_generated_source_tile_key(current), 0))
 		if current_distance > max_distance:
 			continue
-		if current_distance > 0 and _generated_source_route_start_tile_usable(session, current):
+		if current_distance > 0 and _generated_source_route_start_tile_usable(session, current, level):
 			return current
 		for neighbor in _generated_source_route_neighbors(current):
 			if not _generated_source_in_bounds(neighbor, map_size):

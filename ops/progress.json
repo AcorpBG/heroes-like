@@ -1,17 +1,12 @@
 {
   "actionableNextTasks": [
     {
-      "id": "bugfix-rmg-level-aware-runtime-20260905",
-      "title": "RMG Level-Aware Runtime",
-      "status": "in_progress",
-      "updatedAt": "2026-09-05T19:02:05Z",
-      "startedAt": "2026-09-05T19:02:05Z",
-      "notes": "Entrance-boundary child completed with actual runtime/platform evidence. Current level-aware child must preserve terrain, occupancy, object/hero/town position, navigation, fog/minimap, AI and saves by level. Four two-level live cases still fail; no level implementation or full-goal completion claimed yet. Player/team, native transit/water, source-proven normal-water parity and integrated regressions remain required."
-    },
-    {
       "id": "bugfix-rmg-player-team-identity-20260905",
       "title": "RMG Distinct Player And Team Identity",
-      "status": "pending"
+      "status": "in_progress",
+      "updatedAt": "2026-09-05T20:32:25Z",
+      "startedAt": "2026-09-05T20:32:25Z",
+      "notes": "Entrance and level-aware runtime children completed with real runtime/platform evidence. Current child preserves native player slots and teams independently of faction, including repeated-faction six/eight-player AI ownership/turns and save/resume. Player/team implementation not yet changed. Native paired transit/water, source-proven normal-water parity and integrated regressions remain required; full goal is not complete."
     },
     {
       "id": "bugfix-rmg-native-transit-navigation-20260905",
@@ -1937,7 +1932,7 @@
     },
     "blockedReason": ""
   },
-  "active_slice": "bugfix-rmg-level-aware-runtime-20260905",
+  "active_slice": "bugfix-rmg-player-team-identity-20260905",
   "blocker": "",
   "completedImplementationEvidence": [
     {
@@ -16640,14 +16635,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Entrance-boundary child completed with actual runtime/platform evidence. Current level-aware child must preserve terrain, occupancy, object/hero/town position, navigation, fog/minimap, AI and saves by level. Four two-level live cases still fail; no level implementation or full-goal completion claimed yet. Player/team, native transit/water, source-proven normal-water parity and integrated regressions remain required.",
+  "currentNotes": "Entrance and level-aware runtime children completed with real runtime/platform evidence. Current child preserves native player slots and teams independently of faction, including repeated-faction six/eight-player AI ownership/turns and save/resume. Player/team implementation not yet changed. Native paired transit/water, source-proven normal-water parity and integrated regressions remain required; full goal is not complete.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "bugfix-rmg-level-aware-runtime-20260905",
-  "currentSliceId": "bugfix-rmg-level-aware-runtime-20260905",
-  "currentSliceNotes": "Entrance-boundary child completed with actual runtime/platform evidence. Current level-aware child must preserve terrain, occupancy, object/hero/town position, navigation, fog/minimap, AI and saves by level. Four two-level live cases still fail; no level implementation or full-goal completion claimed yet. Player/team, native transit/water, source-proven normal-water parity and integrated regressions remain required.",
+  "currentSlice": "bugfix-rmg-player-team-identity-20260905",
+  "currentSliceId": "bugfix-rmg-player-team-identity-20260905",
+  "currentSliceNotes": "Entrance and level-aware runtime children completed with real runtime/platform evidence. Current child preserves native player slots and teams independently of faction, including repeated-faction six/eight-player AI ownership/turns and save/resume. Player/team implementation not yet changed. Native paired transit/water, source-proven normal-water parity and integrated regressions remain required; full goal is not complete.",
   "currentSliceStatus": "in_progress",
-  "currentSliceTitle": "RMG Level-Aware Runtime",
-  "currentSliceUpdatedAt": "2026-09-05T19:02:05Z",
+  "currentSliceTitle": "RMG Distinct Player And Team Identity",
+  "currentSliceUpdatedAt": "2026-09-05T20:32:25Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22177,7 +22172,7 @@
         "Unrelated art/UI/balance/cleanup, heuristic native changes, disabled-feature substitution or release certification"
       ],
       "createdAt": "2026-09-05T18:28:40Z",
-      "updatedAt": "2026-09-05T19:02:05Z",
+      "updatedAt": "2026-09-05T20:32:25Z",
       "startedAt": "2026-09-05T18:28:40Z",
       "childSliceIds": [
         "bugfix-rmg-town-entrance-starts-20260905",
@@ -22187,7 +22182,7 @@
         "bugfix-rmg-normal-water-private-state-20260905",
         "bugfix-rmg-audit-integrated-regressions-20260905"
       ],
-      "latestFinding": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
+      "latestFinding": "Completed layer-aware runtime/adoption, occupancy, interactions, movement/stationing, fog/minimap, layer/roster selection, AI paths/scouting/scoring, battles and additive saves. All 83 native starts and 35 supported live entrance cases pass; final three two-level cases pass 49 checks each at 2048x1079; seed 68 also passes at 1280x720. Native objects/terrain/payloads unchanged. Relevant AI/battle/save/movement/transit regressions, 11 Python tests, repository validation, both native selftests, Linux/Windows exports/startup and packaged generated Overworld/Town flows pass. Both PCKs 248396092 bytes. Visually inspected final captures; production source hashes match final evidence. See docs/rmg-level-aware-runtime-report.md. Player/team, native transit/water, normal-water source parity and integrated regressions remain required."
     },
     {
       "id": "bugfix-rmg-town-entrance-starts-20260905",
@@ -22242,7 +22237,7 @@
     {
       "id": "bugfix-rmg-level-aware-runtime-20260905",
       "title": "RMG Level-Aware Runtime",
-      "status": "in_progress",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "parentId": "bugfix-rmg-audit-corrections-20260905",
       "parentSliceId": "bugfix-rmg-audit-corrections-20260905",
@@ -22255,7 +22250,8 @@
         "docs/rmg-start-placement-and-h3maped-audit.md",
         "docs/lessons-learned.md",
         "docs/h3maped-rmg-end-to-end-behavior.md",
-        "docs/rmg-python-validation-workflow.md"
+        "docs/rmg-python-validation-workflow.md",
+        "docs/rmg-level-aware-runtime-report.md"
       ],
       "implementationTargets": [
         "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
@@ -22263,12 +22259,20 @@
         "scripts/core/HeroCommandRules.gd",
         "scenes/overworld/OverworldMapView.gd",
         "scenes/overworld/OverworldShell.gd",
-        "scripts/core/SessionStateStore.gd"
+        "scripts/core/SessionStateStore.gd",
+        "scripts/core/OverworldLevelRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/ScenarioRules.gd",
+        "scenes/overworld/OverworldMinimap.gd",
+        "tools/rmg_start_placement_audit.py"
       ],
       "validationCommands": [
         "python3 -m unittest discover -s tests -p test_rmg_start_placement_audit.py",
-        "python3 tools/rmg_start_placement_audit.py --label corrections_matrix",
-        "python3 tools/rmg_retained_authority_audit.py --label corrections_retained",
+        "python3 tools/rmg_start_placement_audit.py --label level_all_entrances --require-entrance-starts",
+        "python3 tools/rmg_start_placement_audit.py --label level_release_evidence --case small_seed68,matrix_72_2_land,xlarge_seed77 --require-level-runtime --resolution 2048x1079",
+        "python3 tools/rmg_start_placement_audit.py --label level_validated_live_1280 --case small_seed68 --require-level-runtime --resolution 1280x720",
         "bin/h3maped_rmg_core_selftest",
         "WINEPREFIX=/root/dev/heroes-like/.artifacts/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
         "python3 tests/validate_repo.py",
@@ -22285,14 +22289,16 @@
         "Unrelated art/UI/balance/cleanup, heuristic native changes, disabled-feature substitution or release certification"
       ],
       "createdAt": "2026-09-05T18:28:40Z",
-      "updatedAt": "2026-09-05T19:02:05Z",
+      "updatedAt": "2026-09-05T20:32:25Z",
       "startedAt": "2026-09-05T19:02:05Z",
-      "notes": "Entrance-boundary child completed with actual runtime/platform evidence. Current level-aware child must preserve terrain, occupancy, object/hero/town position, navigation, fog/minimap, AI and saves by level. Four two-level live cases still fail; no level implementation or full-goal completion claimed yet. Player/team, native transit/water, source-proven normal-water parity and integrated regressions remain required."
+      "notes": "Completed layer-aware runtime/adoption, occupancy, interactions, movement/stationing, fog/minimap, layer/roster selection, AI paths/scouting/scoring, battles and additive saves. All 83 native starts and 35 supported live entrance cases pass; final three two-level cases pass 49 checks each at 2048x1079; seed 68 also passes at 1280x720. Native objects/terrain/payloads unchanged. Relevant AI/battle/save/movement/transit regressions, 11 Python tests, repository validation, both native selftests, Linux/Windows exports/startup and packaged generated Overworld/Town flows pass. Both PCKs 248396092 bytes. Visually inspected final captures; production source hashes match final evidence. See docs/rmg-level-aware-runtime-report.md. Player/team, native transit/water, normal-water source parity and integrated regressions remain required.",
+      "completedAt": "2026-09-05T20:32:25Z",
+      "implementationEvidence": "Completed layer-aware runtime/adoption, occupancy, interactions, movement/stationing, fog/minimap, layer/roster selection, AI paths/scouting/scoring, battles and additive saves. All 83 native starts and 35 supported live entrance cases pass; final three two-level cases pass 49 checks each at 2048x1079; seed 68 also passes at 1280x720. Native objects/terrain/payloads unchanged. Relevant AI/battle/save/movement/transit regressions, 11 Python tests, repository validation, both native selftests, Linux/Windows exports/startup and packaged generated Overworld/Town flows pass. Both PCKs 248396092 bytes. Visually inspected final captures; production source hashes match final evidence. See docs/rmg-level-aware-runtime-report.md. Player/team, native transit/water, normal-water source parity and integrated regressions remain required."
     },
     {
       "id": "bugfix-rmg-player-team-identity-20260905",
       "title": "RMG Distinct Player And Team Identity",
-      "status": "pending",
+      "status": "in_progress",
       "phase": "phase-6-production-alpha-layer",
       "parentId": "bugfix-rmg-audit-corrections-20260905",
       "parentSliceId": "bugfix-rmg-audit-corrections-20260905",
@@ -22332,7 +22338,9 @@
         "Unrelated art/UI/balance/cleanup, heuristic native changes, disabled-feature substitution or release certification"
       ],
       "createdAt": "2026-09-05T18:28:40Z",
-      "updatedAt": "2026-09-05T18:28:40Z"
+      "updatedAt": "2026-09-05T20:32:25Z",
+      "startedAt": "2026-09-05T20:32:25Z",
+      "notes": "Entrance and level-aware runtime children completed with real runtime/platform evidence. Current child preserves native player slots and teams independently of faction, including repeated-faction six/eight-player AI ownership/turns and save/resume. Player/team implementation not yet changed. Native paired transit/water, source-proven normal-water parity and integrated regressions remain required; full goal is not complete."
     },
     {
       "id": "bugfix-rmg-native-transit-navigation-20260905",
@@ -110821,9 +110829,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Owner authorized correction of every September RMG audit finding. Hero must always start at the owning town entrance. Implementing the entrance/guard boundary first, with required level-aware runtime, distinct player/team identity, native transit/water traversal, source-proven normal-water parity and integrated regressions tracked as children; none is claimed complete.",
+  "summary": "Owner authorized correction of every September RMG audit finding. Entrance starts and level-aware runtime children are implemented and validated. Distinct player/team identity is current; native paired transit/water traversal, source-proven normal-water parity and integrated regressions remain required. Full correction goal is in progress, not complete.",
   "taskId": "10236",
-  "updatedAt": "2026-09-05T19:02:05Z",
+  "updatedAt": "2026-09-05T20:32:25Z",
   "validation": {
     "id": "audit-rmg-start-placement-and-h3maped-comparison-20260905-audit",
     "title": "RMG Starting Heroes And H3MapEd Comparison Audit",

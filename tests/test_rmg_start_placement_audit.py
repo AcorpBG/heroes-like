@@ -57,6 +57,15 @@ class StartAuditTests(unittest.TestCase):
         self.assertEqual(2, retained.compare_bytes(b"abc", b"ab")["first_mismatch"])
         self.assertEqual(1, retained.compare_bytes(b"axc", b"abc")["first_mismatch"])
 
+    def test_level_checks_require_every_live_path_and_explicit_true(self):
+        row = {"id": "two_level", "ok": True, "map_size": {"levels": 2}, "level_runtime": {key: True for key in audit.LEVEL_RUNTIME_CHECKS | audit.LEVEL_TOGGLE_CHECKS}}
+        self.assertEqual([], audit.level_failures([row]))
+        row["level_runtime"].pop("battle_disk_resume_preserves_level")
+        row["level_runtime"]["roster_switches_hero_and_layer"] = 1
+        self.assertEqual({"battle_disk_resume_preserves_level", "roster_switches_hero_and_layer"}, {f["check"] for f in audit.level_failures([row])})
+        row["level_runtime"] = None
+        self.assertEqual(len(audit.LEVEL_RUNTIME_CHECKS | audit.LEVEL_TOGGLE_CHECKS), len(audit.level_failures([row])))
+
     def test_retained_matrix_has_exactly_24_shapes(self):
         self.assertEqual(24, len({(size, levels, water) for size, _, levels, water, _, _ in retained.CASES}))
 

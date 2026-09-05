@@ -2,6 +2,8 @@
 
 Owner-directed audit, 2026-09-05. Status: completed, with confirmed correctness failures and open implementation gaps below. This is an audit, not a generator or gameplay correction.
 
+Implementation follow-up: the entrance-start and level-aware runtime children now correct findings 1–3 within their documented boundaries; see `rmg-town-entrance-correction-report.md` and `rmg-level-aware-runtime-report.md`. All 83 sampled starts and 35 supported primary-hero entrance/movement/save cases pass. The baseline measurements below remain historical evidence, not current failures after those fixes. Player/team identity, native paired transit/water, normal-water native parity and integrated regressions remain open.
+
 ## Requirements and scope
 
 Reproduce heroes starting away from their own town using deterministic generated maps. Trace the recovered town/player record, native runtime start selection, package contract and live session position separately. Inspect town ownership, faction/hero selection, exact masks, reachable entrance, map levels and AI starts. Audit the wider native phase and runtime adoption boundary against recovered H3MapEd evidence, not against visual resemblance, object counts or old tracker completion claims.

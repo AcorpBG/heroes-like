@@ -22318,7 +22318,7 @@ def validate_map_editor_terrain_paint_normalization_deferral(errors: list[str]) 
     map_view_text = map_view_path.read_text(encoding="utf-8")
     for token in (
         "var _route_preview_enabled := true",
-        "if _route_preview_enabled:",
+        "if _route_preview_enabled and viewing_hero_level:",
         "_path_tiles = []",
         "_route_preview = {}",
         'path_profile_details["status"] = "disabled_for_editor_action_tool"',
@@ -27488,7 +27488,7 @@ def validate_overworld_fog(errors: list[str]) -> None:
     for required_token in (
         'for direction in ["N", "E", "S", "W"]:',
         "var neighbor: Vector2i = tile + checks[direction]",
-        "OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y)",
+        "OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y, _level)",
         "directions.append(direction)",
         "return directions",
     ):
@@ -34352,7 +34352,7 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         owned_town_target_body = owned_town_target_match.group("body")
         ensure(
             "if not _tile_in_bounds(_selected_tile):" in owned_town_target_body
-            and "if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):" in owned_town_target_body
+            and "if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y, LevelRules.view_level(_session)):" in owned_town_target_body
             and "var town := _town_at(_selected_tile.x, _selected_tile.y)" in owned_town_target_body
             and 'return not town.is_empty() and String(town.get("owner", "neutral")) == "player"' in owned_town_target_body,
             errors,
@@ -41174,16 +41174,16 @@ def validate_ai_known_world_memory_candidate_compatibility(errors: list[str]) ->
         errors,
         "Production known-world catalog lost exact town/resource/artifact/encounter order or exclusions.",
     )
-    ensure(catalog_body.rstrip().endswith("return catalog"), errors, "Production known-world catalog must return its invocation-local ordered catalog.")
+    ensure(catalog_body.rstrip().endswith("return LevelRules.canonical_spatial_records(catalog)"), errors, "Production known-world catalog must return its invocation-local ordered catalog with canonical spatial levels.")
     catalog_anchor_order = (
         "var objective_anchor_surface := _objective_anchor_surface(session)",
         'var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", [])',
         'for town_value in session.overworld.get("towns", []):',
         '_artifact_target_priority(session, node, objective_anchor_tiles)',
         '_encounter_target_priority(session, encounter, objective_anchor_tiles, objective_anchor_surface)',
-        "return catalog",
+        "return LevelRules.canonical_spatial_records(catalog)",
     )
-    catalog_anchor_positions = [catalog_body.rfind(token) if token == "return catalog" else catalog_body.find(token) for token in catalog_anchor_order]
+    catalog_anchor_positions = [catalog_body.rfind(token) if token == "return LevelRules.canonical_spatial_records(catalog)" else catalog_body.find(token) for token in catalog_anchor_order]
     ensure(
         all(position >= 0 for position in catalog_anchor_positions) and catalog_anchor_positions == sorted(catalog_anchor_positions),
         errors,
@@ -41209,7 +41209,7 @@ def validate_ai_known_world_memory_candidate_compatibility(errors: list[str]) ->
         'String(objective.get("type", "")) == "flag_true"',
         "flag_id not in flag_ids",
         'for town_value in session.overworld.get("towns", []):',
-        "tiles.append(Vector2i",
+        "tiles.append(_objective_world_tile(town, true))",
         'for encounter_value in session.overworld.get("encounters", []):',
         "_encounter_is_objective_anchor_from_surface",
         "return surface",
@@ -41329,7 +41329,7 @@ def validate_ai_known_world_memory_candidate_compatibility(errors: list[str]) ->
         'var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", [])',
         'var objective_town_ids: Array = objective_anchor_surface.get("town_placement_ids", [])',
         'var objective_anchor := String(town.get("placement_id", "")) in objective_town_ids',
-        "var objective_proximity_bonus := _objective_proximity_bonus_from_tiles(objective_anchor_tiles, x, y)",
+        "var objective_proximity_bonus := _objective_proximity_bonus_from_tiles(objective_anchor_tiles, x, y, LevelRules.level_of(town))",
         "_town_strategic_priority_bonus(session, town, faction_id, objective_anchor, objective_proximity_bonus)",
     ):
         ensure(required_token in planner_origins_body, errors, f"Planner origin ranking lost exact invocation-local objective reuse: {required_token}")
@@ -42583,7 +42583,7 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
         '"active_front_support_no_active_front_skip"',
         '"active_front_support_path_context_loaded"',
         '"active_front_support_path_context_reused"',
-        "var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context)",
+        "var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context, level)",
         '"ready_saved_task_no_prepared_commander_skip"',
         '"spawn_spell_projection_roster_reused"',
     ):
@@ -48952,6 +48952,10 @@ def validate_overworld_town_footprint_click_entry_routing(errors: list[str]) -> 
         ensure(forbidden not in map_selection, errors, f"Town footprint selection must use the existing renderer index without topology or timing changes: {forbidden}")
 
     pointer = local_function_block(shell_text, "_on_map_tile_pressed")
+    # Other-layer inspection has its own early read-only branch; verify the
+    # existing same-layer pointer sequence independently.
+    ensure("var handler_started_usec" in pointer, errors, "Same-level Town pointer branch is missing")
+    pointer = pointer[pointer.find("var handler_started_usec"):]
     pointer_order = tuple(pointer.find(token) for token in (
         "var town_footprint_selection := _town_footprint_selection(tile)",
         "var route_tile := _selection_route_tile(tile)",
@@ -56978,7 +56982,7 @@ def validate_overworld_object_blocked_feedback(errors: list[str]) -> None:
     for token in (
         "OverworldRules.blocking_object_feedback_surface_at_tile",
         'if blocking_object.is_empty():',
-        'if not OverworldRules.is_tile_visible(_session, tile.x, tile.y):',
+        'if not OverworldRules.is_tile_visible(_session, tile.x, tile.y, LevelRules.view_level(_session)):',
         '"blocked_reason": "An unseen obstacle blocks travel."',
         '"event_id": "overworld_object_blocked"',
         '"blocked_reason": "%s blocks travel." % String(blocking_object.get("name", "Object"))',
@@ -57126,7 +57130,7 @@ def validate_overworld_route_open_feedback(errors: list[str]) -> None:
         'String(node_value.get("placement_id", "")) == placement_id',
         'int(live_node.get("response_last_day", -1)) != int(_session.day)',
         'int(live_node.get("response_until_day", -1)) < int(_session.day)',
-        'not OverworldRules.is_tile_visible(_session, tile.x, tile.y)',
+        'not OverworldRules.is_tile_visible(_session, tile.x, tile.y, LevelRules.view_level(_session))',
         'ContentService.get_resource_site(site_id)',
         'cue_playback_policy_for_event(\n\t\t"overworld_route_open"',
         'String(policy.get("surface", "")) != "overworld"',
@@ -57287,7 +57291,7 @@ def validate_overworld_route_closed_feedback(errors: list[str]) -> None:
         'String(live_node.get("collected_by_faction_id", "")) in ["", "player"]',
         'int(live_node.get("response_last_day", -1)) != 0',
         'int(live_node.get("response_until_day", -1)) != 0',
-        'not OverworldRules.is_tile_visible(_session, tile.x, tile.y)',
+        'not OverworldRules.is_tile_visible(_session, tile.x, tile.y, LevelRules.view_level(_session))',
         'cue_playback_policy_for_event(\n\t\t"overworld_route_closed"',
         'String(policy.get("selected_playback_policy", "")) != "queue_resolved"',
         '"event_id": "overworld_route_closed"',
@@ -57390,7 +57394,7 @@ def validate_overworld_route_expiry_feedback(errors: list[str]) -> None:
         'response_until_day != int(_session.day)',
         'String(node.get("collected_by_faction_id", "")) != "player"',
         'OverworldRules._resource_site_response_state(_session, node, site).get("active", false)',
-        'OverworldRules.is_tile_visible(_session, tile.x, tile.y)',
+        'OverworldRules.is_tile_visible(_session, tile.x, tile.y, LevelRules.view_level(_session))',
         'OverworldRules.active_linked_transit_edges(_session)',
         '"response_last_day": response_last_day',
         '"response_until_day": response_until_day',
@@ -57409,7 +57413,7 @@ def validate_overworld_route_expiry_feedback(errors: list[str]) -> None:
         'String(live_node.get("response_commander_id", "")) != String(candidate.get("response_commander_id", ""))',
         'int(live_node.get("response_security_rating", 0)) != int(candidate.get("response_security_rating", -1))',
         'OverworldRules._resource_site_response_state(_session, live_node, site).get("active", true)',
-        'not OverworldRules.is_tile_visible(_session, tile.x, tile.y)',
+        'not OverworldRules.is_tile_visible(_session, tile.x, tile.y, LevelRules.view_level(_session))',
         'OverworldRules.active_linked_transit_edges(_session)',
         'signature == _last_route_expiry_presentation_signature',
         'cue_playback_policy_for_event(\n\t\t\t"overworld_route_closed"',
@@ -57524,7 +57528,7 @@ def validate_overworld_object_focus_cue_playback(errors: list[str]) -> None:
     for token in (
         "_object_focus_presentation = {}",
         'input_source not in ["pointer", "controller_route_cursor"]',
-        "OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y)",
+        "OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y, LevelRules.view_level(_session))",
         "not _selected_guarded_site_presentation().is_empty()",
         "_selected_route_destination_execution_descriptor(_selected_tile)",
         'object_kind not in ["town", "resource", "artifact", "encounter"]',
@@ -57562,7 +57566,7 @@ def validate_overworld_object_focus_cue_playback(errors: list[str]) -> None:
         'or _object_focus_input_source not in ["pointer", "controller_route_cursor"]',
         'or _object_focus_kind not in ["town", "resource", "artifact", "encounter"]',
         'or _object_focus_audio_cue_ids != ["audio_placeholder_object_focus"]',
-        "OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)",
+        "OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)",
         "var live_identity := _object_focus_identity_at(tile)",
         'expected_vfx_ids = ["focus_outline_static"]',
         'expected_vfx_ids = ["focus_outline_snap"]',
@@ -76632,7 +76636,7 @@ def validate_overworld_ten_land_transit_network(errors: list[str]) -> None:
         "bool(edge.get(\"two_way\", false)) and tile == to_tile",
         "static func linked_transit_neighbors_from_edges", "static func active_linked_transit_step",
         "static func active_linked_transit_signature", "movement_cost != 1",
-        "tile_is_blocked(session, endpoint.x, endpoint.y)", "tile_has_route_interaction(session, endpoint.x, endpoint.y)",
+        "tile_is_blocked(session, endpoint.x, endpoint.y, level)", "tile_has_route_interaction(session, endpoint.x, endpoint.y, level)",
     ):
         ensure(token in rules_text, errors, f"Ten-site land-transit rules are missing token: {token}")
     for _, object_id, *_ in cases:
@@ -84208,7 +84212,7 @@ def validate_overworld_town_vision_command_roster(errors: list[str]) -> None:
         "static func player_town_vision_radius() -> int:",
         'for town_value in session.overworld.get("towns", []):',
         'String(town.get("owner", "neutral")) != "player"',
-        "_apply_site_reveal(explored_tiles, town, PLAYER_TOWN_VISION_RADIUS, map_size)",
+        "_apply_site_reveal(explored_tiles, OverworldLevelRulesScript.town_entrance(town), PLAYER_TOWN_VISION_RADIUS, map_size)",
     ):
         ensure(token in rules_text, errors, f"#10234 owned-town exploration lost required authority: {token}")
 
@@ -84216,7 +84220,7 @@ def validate_overworld_town_vision_command_roster(errors: list[str]) -> None:
     for token in (
         "func _on_hero_roster_pressed(hero_id: String) -> void:",
         '_on_hero_action_pressed("switch_hero:%s" % hero_id)',
-        "func _on_town_rail_pressed(x: int, y: int) -> void:",
+        "func _on_town_rail_pressed(x: int, y: int, level: int = -1) -> void:",
         "func validation_command_roster_snapshot() -> Dictionary:",
         '"model": "paired_hero_town_icon_columns"',
         'button.set_meta("town_placement_id", placement_id)',

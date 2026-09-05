@@ -2,6 +2,7 @@ class_name OverworldRules
 extends RefCounted
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
@@ -329,6 +330,7 @@ static func _runtime_normalization_signature(session: SessionStateStoreScript.Se
 		str(session.day),
 		"%d,%d" % [map_size.x, map_size.y],
 		"%d,%d" % [hero_pos.x, hero_pos.y],
+		str(hero_level(session)),
 		"%d/%d" % [int(movement.get("current", 0)), int(movement.get("max", 0))],
 		str(_collection_size(session.overworld.get("map", []))),
 		str(_collection_size(session.overworld.get("terrain_layers", {}))),
@@ -469,21 +471,45 @@ static func refresh_fog_of_war(session: SessionStateStoreScript.SessionData) -> 
 static func player_town_vision_radius() -> int:
 	return PLAYER_TOWN_VISION_RADIUS
 
-static func is_tile_visible(session: SessionStateStoreScript.SessionData, x: int, y: int) -> bool:
+static func is_tile_visible(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	if session == null:
 		return false
 	if not _fog_state_ready(session):
 		normalize_overworld_state(session)
-	var fog = session.overworld.get(FOG_KEY, {})
+	var fog = fog_for_level(session, level)
 	return _grid_cell(fog.get(EXPLORED_TILES_KEY, fog.get(VISIBLE_TILES_KEY, [])), x, y)
 
-static func is_tile_explored(session: SessionStateStoreScript.SessionData, x: int, y: int) -> bool:
+static func is_tile_explored(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	if session == null:
 		return false
 	if not _fog_state_ready(session):
 		normalize_overworld_state(session)
-	var fog = session.overworld.get(FOG_KEY, {})
+	var fog = fog_for_level(session, level)
 	return _grid_cell(fog.get(EXPLORED_TILES_KEY, []), x, y)
+
+static func fog_for_level(session: SessionStateStoreScript.SessionData, level: int = -1) -> Dictionary:
+	if session == null:
+		return {}
+	level = OverworldLevelRulesScript.query_level(session, level)
+	var fog: Dictionary = session.overworld.get(FOG_KEY, {}) if session.overworld.get(FOG_KEY) is Dictionary else {}
+	var levels: Dictionary = fog.get("levels", {}) if fog.get("levels") is Dictionary else {}
+	if levels.get(str(level)) is Dictionary:
+		return levels[str(level)]
+	# A pre-level save's exploration belongs to surface. Do not reveal another
+	# level by copying that grid, and never move a legacy saved hero by inference.
+	return fog if level == int(fog.get("active_level", 0)) else {}
+
+static func _store_level_fog(session: SessionStateStoreScript.SessionData, payload: Dictionary, level: int = -1) -> void:
+	if OverworldLevelRulesScript.level_count(session) == 1:
+		session.overworld[FOG_KEY] = payload
+		return
+	level = OverworldLevelRulesScript.query_level(session, level)
+	var levels: Dictionary = session.overworld.get(FOG_KEY, {}).get("levels", {})
+	levels[str(level)] = payload
+	var active: Dictionary = levels.get(str(hero_level(session)), {}).duplicate(false)
+	active["levels"] = levels
+	active["active_level"] = hero_level(session)
+	session.overworld[FOG_KEY] = active
 
 static func describe_visibility(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null:
@@ -554,16 +580,17 @@ static func route_movement_preview(
 		"destination_tile": _route_tile_payload(destination_tile),
 	}
 
-static func active_linked_transit_edges(session: SessionStateStoreScript.SessionData) -> Array:
+static func active_linked_transit_edges(session: SessionStateStoreScript.SessionData, level: int = -1) -> Array:
 	var edges := []
 	if session == null:
 		return edges
+	level = OverworldLevelRulesScript.query_level(session, level)
 	var map_size := derive_map_size(session)
 	var resource_nodes = session.overworld.get("resource_nodes", [])
 	if not (resource_nodes is Array):
 		return edges
 	for node_value in resource_nodes:
-		if not (node_value is Dictionary):
+		if not (node_value is Dictionary) or not OverworldLevelRulesScript.on_level(node_value, level):
 			continue
 		var node: Dictionary = node_value
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
@@ -666,8 +693,8 @@ static func active_linked_transit_edges(session: SessionStateStoreScript.Session
 				or endpoint.y < 0
 				or endpoint.x >= map_size.x
 				or endpoint.y >= map_size.y
-				or (tile_is_blocked(session, endpoint.x, endpoint.y) and endpoint not in own_body_tiles)
-				or (tile_has_route_interaction(session, endpoint.x, endpoint.y) and endpoint not in own_interaction_tiles)
+				or (tile_is_blocked(session, endpoint.x, endpoint.y, level) and endpoint not in own_body_tiles)
+				or (tile_has_route_interaction(session, endpoint.x, endpoint.y, level) and endpoint not in own_interaction_tiles)
 			):
 				endpoints_safe = false
 				break
@@ -835,6 +862,19 @@ static func try_move_along_route(
 	)
 	return result
 
+static func _descriptor_matches_hero_level(session: SessionStateStoreScript.SessionData, descriptor: Dictionary) -> bool:
+	var level := hero_level(session)
+	if descriptor.has("level") and int(descriptor.level) != level:
+		return false
+	var placement_id := String(descriptor.get("placement_id", ""))
+	if placement_id != "" and placement_level(session, placement_id, level) != level:
+		return false
+	if String(descriptor.get("kind", "")) == "hero":
+		var target := HeroCommandRulesScript.hero_by_id(session, String(descriptor.get("hero_id", "")))
+		if not target.is_empty() and not OverworldLevelRulesScript.on_level(target, level):
+			return false
+	return true
+
 static func execute_prevalidated_route(
 	session: SessionStateStoreScript.SessionData,
 	route_tiles: Variant,
@@ -850,6 +890,9 @@ static func execute_prevalidated_route(
 	if path.size() <= 1:
 		_rules_profile_finish()
 		return {"ok": false, "message": "No route selected.", "route_steps": [], "route_validation_mode": "cached_prevalidated"}
+	if not _descriptor_matches_hero_level(session, destination_descriptor):
+		_rules_profile_finish()
+		return {"ok": false, "message": "The selected route belongs to another map level.", "route_steps": [], "route_validation_mode": "cached_prevalidated"}
 	var pos := hero_position(session)
 	if path[0] != pos:
 		_rules_profile_finish()
@@ -1326,7 +1369,7 @@ static func _apply_resource_site_strategic_effects(
 			result["messages"].append("Fresh field support restores %d movement." % (movement_after - movement_before))
 	var recovery_relief: int = maxi(0, int(authored.get("nearest_player_town_recovery_relief", 0)))
 	if recovery_relief > 0:
-		var nearest := _nearest_town_for_controller(session, "player", int(node.get("x", 0)), int(node.get("y", 0)))
+		var nearest := _nearest_town_for_controller(session, "player", int(node.get("x", 0)), int(node.get("y", 0)), OverworldLevelRulesScript.level_of(node))
 		var town = nearest.get("town", {})
 		if town is Dictionary and not town.is_empty():
 			var placement_id := String(town.get("placement_id", ""))
@@ -1568,6 +1611,8 @@ static func _resolve_destination_descriptor_interaction(
 	session: SessionStateStoreScript.SessionData,
 	descriptor: Dictionary
 ) -> Dictionary:
+	if not _descriptor_matches_hero_level(session, descriptor):
+		return {"ok": false, "message": "The selected object is on another map level.", "route": ""}
 	match String(descriptor.get("kind", "")):
 		"resource":
 			var resource_result := _find_resource_node_by_placement(session, String(descriptor.get("placement_id", "")))
@@ -2148,8 +2193,8 @@ static func get_active_encounter(session: SessionStateStoreScript.SessionData) -
 		return guard_result.get("encounter", {})
 	return {}
 
-static func guard_engagement_encounter_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
-	return _find_guard_engagement_at_tile(session, x, y).get("encounter", {})
+static func guard_engagement_encounter_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
+	return _find_guard_engagement_at_tile(session, x, y, level).get("encounter", {})
 
 static func _resource_node_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
 	var nodes = session.overworld.get("resource_nodes", [])
@@ -2219,6 +2264,12 @@ static func encounter_key(encounter: Dictionary) -> String:
 static func hero_position(session: SessionStateStoreScript.SessionData) -> Vector2i:
 	var pos = session.overworld.get("hero_position", {"x": 0, "y": 0})
 	return Vector2i(int(pos.get("x", 0)), int(pos.get("y", 0)))
+
+static func hero_level(session: SessionStateStoreScript.SessionData) -> int:
+	return OverworldLevelRulesScript.hero_level(session)
+
+static func map_for_level(session: SessionStateStoreScript.SessionData, level: int = -1) -> Array:
+	return OverworldLevelRulesScript.terrain_rows(session, level)
 
 static func derive_map_size(session: SessionStateStoreScript.SessionData) -> Vector2i:
 	var stored_size = session.overworld.get("map_size", {})
@@ -2342,17 +2393,17 @@ static func blocking_object_feedback_surface_at_tile(
 		}
 	return {}
 
-static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int, y: int) -> bool:
-	var map_data = session.overworld.get("map", [])
+static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
+	var map_data = map_for_level(session, level)
 	if y < 0 or not (map_data is Array) or y >= map_data.size():
-		return false
+		return true
 	var row = map_data[y]
 	if not (row is Array) or x < 0 or x >= row.size():
-		return false
+		return true
 	var terrain_id := String(row[x])
 	if not terrain_id_is_passable(terrain_id):
 		return true
-	return _blocked_tile_index(session).has(_tile_key(Vector2i(x, y)))
+	return _blocked_tile_index(session, level).has(_tile_key(Vector2i(x, y)))
 
 static func terrain_id_is_passable(terrain_id: String) -> bool:
 	var normalized := ContentService.normalize_terrain_id(String(terrain_id))
@@ -2363,7 +2414,7 @@ static func terrain_id_is_passable(terrain_id: String) -> bool:
 		return bool(biome.get("passable", true))
 	return true
 
-static func tile_has_route_interaction(session: SessionStateStoreScript.SessionData, x: int, y: int) -> bool:
+static func tile_has_route_interaction(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	if session == null:
 		return false
 	var capture_enabled := bool(_pathing_debug_profile.get("capture_enabled", false))
@@ -2371,8 +2422,9 @@ static func tile_has_route_interaction(session: SessionStateStoreScript.SessionD
 		_pathing_debug_profile["route_interaction_lookup_count"] = int(_pathing_debug_profile.get("route_interaction_lookup_count", 0)) + 1
 		_pathing_debug_profile["route_interaction_spatial_lookup_count"] = int(_pathing_debug_profile.get("route_interaction_spatial_lookup_count", 0)) + 1
 	var tile := Vector2i(x, y)
-	var lookup_index := _spatial_lookup_index(session)
-	if int(_find_guard_engagement_at_tile(session, x, y).get("index", -1)) >= 0:
+	level = OverworldLevelRulesScript.query_level(session, level)
+	var lookup_index := _spatial_lookup_index(session, level)
+	if int(_find_guard_engagement_at_tile(session, x, y, level).get("index", -1)) >= 0:
 		return true
 	var towns = session.overworld.get("towns", [])
 	var town_by_tile: Dictionary = lookup_index.get("town_by_tile", {}) if lookup_index.get("town_by_tile", {}) is Dictionary else {}
@@ -2395,10 +2447,8 @@ static func tile_has_route_interaction(session: SessionStateStoreScript.SessionD
 		var node = artifact_nodes[index] if artifact_nodes is Array and index >= 0 and index < artifact_nodes.size() else {}
 		if node is Dictionary and not bool(node.get("collected", false)):
 			return true
-	for encounter_value in session.overworld.get("encounters", []):
-		if not (encounter_value is Dictionary):
-			continue
-		var encounter: Dictionary = encounter_value
+	for encounter_index in _spatial_lookup_entries(lookup_index, "encounter_by_tile", tile):
+		var encounter: Dictionary = session.overworld.get("encounters", [])[int(encounter_index)]
 		if is_encounter_resolved(session, encounter):
 			continue
 		if int(encounter.get("x", -1)) == x and int(encounter.get("y", -1)) == y:
@@ -2410,28 +2460,28 @@ static func tile_has_route_interaction(session: SessionStateStoreScript.SessionD
 		if String(hero.get("id", "")) == String(session.overworld.get("active_hero_id", "")):
 			continue
 		var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
-		if int(position.get("x", -999)) == x and int(position.get("y", -999)) == y:
+		if OverworldLevelRulesScript.on_level(position, level) and int(position.get("x", -999)) == x and int(position.get("y", -999)) == y:
 			return true
 	return false
 
-static func tile_is_actionable_route_destination(session: SessionStateStoreScript.SessionData, x: int, y: int) -> bool:
-	return tile_has_route_interaction(session, x, y)
+static func tile_is_actionable_route_destination(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
+	return tile_has_route_interaction(session, x, y, level)
 
-static func tile_step_cuts_blocked_corner(session: SessionStateStoreScript.SessionData, from_tile: Vector2i, to_tile: Vector2i) -> bool:
+static func tile_step_cuts_blocked_corner(session: SessionStateStoreScript.SessionData, from_tile: Vector2i, to_tile: Vector2i, level: int = -1) -> bool:
 	var dx := to_tile.x - from_tile.x
 	var dy := to_tile.y - from_tile.y
 	if abs(dx) != 1 or abs(dy) != 1:
 		return false
 	var side_a := Vector2i(from_tile.x + dx, from_tile.y)
 	var side_b := Vector2i(from_tile.x, from_tile.y + dy)
-	if not tile_is_blocked(session, side_a.x, side_a.y) or not tile_is_blocked(session, side_b.x, side_b.y):
+	if not tile_is_blocked(session, side_a.x, side_a.y, level) or not tile_is_blocked(session, side_b.x, side_b.y, level):
 		return false
 	# A doorway is an interaction endpoint within the town's exact source body.
 	# Its own wall can border a legal diagonal ingress/egress; unrelated bodies
 	# and impassable terrain still close the corner. Destination blocking is
 	# checked independently by the movement/interaction rules.
-	var blocked := _blocked_tile_index(session)
-	var lookup := _spatial_lookup_index(session)
+	var blocked := _blocked_tile_index(session, level)
+	var lookup := _spatial_lookup_index(session, level)
 	var towns: Array = session.overworld.get("towns", [])
 	for endpoint in [from_tile, to_tile]:
 		var town_index := int(lookup.get("town_by_tile", {}).get(_tile_key(endpoint), -1))
@@ -2444,7 +2494,7 @@ static func tile_step_cuts_blocked_corner(session: SessionStateStoreScript.Sessi
 		var placement_id := String(town.get("placement_id", ""))
 		for side in [side_a, side_b]:
 			var owner: Variant = blocked.get(_tile_key(side), true)
-			if owner is String and owner == placement_id and terrain_id_is_passable(_terrain_id_at(session, side.x, side.y)):
+			if owner is String and owner == placement_id and terrain_id_is_passable(_terrain_id_at(session, side.x, side.y, level)):
 				return false
 	return true
 
@@ -2466,8 +2516,11 @@ static func _refresh_blocked_tile_index(session: SessionStateStoreScript.Session
 	var capture_enabled := bool(_pathing_debug_profile.get("capture_enabled", false))
 	var started_usec := Time.get_ticks_usec() if capture_enabled else 0
 	var resource_nodes = session.overworld.get("resource_nodes", [])
-	var index := _build_blocked_tile_index(session)
-	_blocked_tile_indexes[str(session.session_id)] = index
+	var level_indexes := {}
+	for level in range(OverworldLevelRulesScript.level_count(session)):
+		level_indexes[level] = _build_blocked_tile_index(session, level)
+	_blocked_tile_indexes[str(session.session_id)] = level_indexes
+	var index: Dictionary = level_indexes.get(hero_level(session), {})
 	_rules_profile_set("blocked_index", "rebuilt", true)
 	_rules_profile_set("blocked_index", "node_count", resource_nodes.size() if resource_nodes is Array else 0)
 	_rules_profile_set("blocked_index", "tile_count", index.size())
@@ -2487,7 +2540,7 @@ static func _refresh_blocked_tile_index_for_interaction(session: SessionStateSto
 	var body_tiles_changed := bool(topology_facts.get("body_tiles_changed", true))
 	var contract_known := bool(topology_facts.get("contract_known", false))
 	if contract_known and not blocks_changed and not body_tiles_changed and _blocked_tile_indexes.has(session_id):
-		var index: Dictionary = _blocked_tile_indexes.get(session_id, {})
+		var index: Dictionary = _blocked_tile_index(session)
 		_rules_profile_set("blocked_index", "rebuilt", false)
 		_rules_profile_set("blocked_index", "mode", "skipped")
 		_rules_profile_set("blocked_index", "reason", "topology_unchanged")
@@ -2504,7 +2557,7 @@ static func _refresh_blocked_tile_index_for_interaction(session: SessionStateSto
 static func _profile_blocked_index_not_applicable(session: SessionStateStoreScript.SessionData, reason: String) -> void:
 	var session_index_size := 0
 	if session != null:
-		var index: Dictionary = _blocked_tile_indexes.get(str(session.session_id), {}) if _blocked_tile_indexes.get(str(session.session_id), {}) is Dictionary else {}
+		var index: Dictionary = _blocked_tile_index(session)
 		session_index_size = index.size()
 	_rules_profile_set("blocked_index", "rebuilt", false)
 	_rules_profile_set("blocked_index", "mode", "not_applicable")
@@ -2663,28 +2716,27 @@ static func _profile_scenario_event_evaluation(session: SessionStateStoreScript.
 		_rules_profile_set("scenario_eval", String(profile_key), scenario_profile.get(profile_key))
 	return scenario_result
 
-static func _blocked_tile_index(session: SessionStateStoreScript.SessionData) -> Dictionary:
+static func _blocked_tile_index(session: SessionStateStoreScript.SessionData, level: int = -1) -> Dictionary:
 	if session == null:
 		return {}
 	var session_id := str(session.session_id)
 	if not _blocked_tile_indexes.has(session_id):
 		_refresh_blocked_tile_index(session)
-	return _blocked_tile_indexes.get(session_id, {})
+	return _blocked_tile_indexes.get(session_id, {}).get(OverworldLevelRulesScript.query_level(session, level), {})
 
-static func _spatial_lookup_index(session: SessionStateStoreScript.SessionData) -> Dictionary:
+static func _spatial_lookup_index(session: SessionStateStoreScript.SessionData, level: int = -1) -> Dictionary:
 	if session == null:
 		return {}
 	var session_id := String(session.session_id)
 	var signature := _spatial_lookup_signature(session)
-	if (
-		_spatial_lookup_indexes.has(session_id)
-		and String(_spatial_lookup_signatures.get(session_id, "")) == signature
-	):
-		return _spatial_lookup_indexes.get(session_id, {})
-	var index := _build_spatial_lookup_index(session)
-	_spatial_lookup_indexes[session_id] = index
-	_spatial_lookup_signatures[session_id] = signature
-	return index
+	if not _spatial_lookup_indexes.has(session_id) or String(_spatial_lookup_signatures.get(session_id, "")) != signature:
+		_spatial_lookup_indexes[session_id] = {}
+		_spatial_lookup_signatures[session_id] = signature
+	var resolved_level := OverworldLevelRulesScript.query_level(session, level)
+	var levels: Dictionary = _spatial_lookup_indexes[session_id]
+	if not levels.has(resolved_level):
+		levels[resolved_level] = _build_spatial_lookup_index(session, resolved_level)
+	return levels[resolved_level]
 
 static func invalidate_spatial_lookup(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
@@ -2701,13 +2753,26 @@ static func _spatial_lookup_signature(session: SessionStateStoreScript.SessionDa
 		String(session.session_id),
 		String(session.scenario_id),
 		"%d,%d" % [map_size.x, map_size.y],
+		str(OverworldLevelRulesScript.level_count(session)),
 		str(_collection_size(session.overworld.get("towns", []))),
 		str(_collection_size(session.overworld.get("resource_nodes", []))),
 		str(_collection_size(session.overworld.get("artifact_nodes", []))),
 		str(_collection_size(session.overworld.get("encounters", []))),
 	])
 
-static func _build_spatial_lookup_index(session: SessionStateStoreScript.SessionData) -> Dictionary:
+static func placement_level(session: SessionStateStoreScript.SessionData, placement_id: String, fallback: int = 0) -> int:
+	if session == null or placement_id == "":
+		return fallback
+	# Placement identity is global even though tile indexes are per level.
+	var index := _spatial_lookup_index(session, 0)
+	for pair in [["town_by_placement", "towns"], ["encounter_by_placement", "encounters"], ["resource_by_placement", "resource_nodes"], ["artifact_by_placement", "artifact_nodes"]]:
+		var rows: Array = session.overworld.get(pair[1], [])
+		var ordinal := int(index.get(pair[0], {}).get(placement_id, -1))
+		if ordinal >= 0 and ordinal < rows.size():
+			return OverworldLevelRulesScript.level_of(rows[ordinal])
+	return fallback
+
+static func _build_spatial_lookup_index(session: SessionStateStoreScript.SessionData, level: int = 0) -> Dictionary:
 	var index := {
 		"town_by_tile": {},
 		"town_by_placement": {},
@@ -2726,24 +2791,28 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 		for town_index in range(towns.size()):
 			var town = towns[town_index]
 			if town is Dictionary:
+				var placement_id := String(town.get("placement_id", ""))
+				if placement_id != "":
+					index["town_by_placement"][placement_id] = town_index
+				if not OverworldLevelRulesScript.on_level(town, level):
+					continue
 				town_by_tile[_tile_key(Vector2i(int(town.get("x", -1)), int(town.get("y", -1))))] = town_index
 				var visit_tile = town.get("visit_tile", {})
 				if visit_tile is Dictionary and not visit_tile.is_empty():
 					town_by_tile[_tile_key(Vector2i(int(visit_tile.get("x", -1)), int(visit_tile.get("y", -1))))] = town_index
-				var placement_id := String(town.get("placement_id", ""))
-				if placement_id != "":
-					index["town_by_placement"][placement_id] = town_index
 	var resources = session.overworld.get("resource_nodes", [])
 	if resources is Array:
 		for node_index in range(resources.size()):
 			var node = resources[node_index]
 			if not (node is Dictionary):
 				continue
-			var node_tile_key := _tile_key(Vector2i(int(node.get("x", -1)), int(node.get("y", -1))))
-			_append_spatial_lookup_entry(index["resource_by_tile"], node_tile_key, node_index)
 			var resource_placement_id := String(node.get("placement_id", ""))
 			if resource_placement_id != "":
 				index["resource_by_placement"][resource_placement_id] = node_index
+			if not OverworldLevelRulesScript.on_level(node, level):
+				continue
+			var node_tile_key := _tile_key(Vector2i(int(node.get("x", -1)), int(node.get("y", -1))))
+			_append_spatial_lookup_entry(index["resource_by_tile"], node_tile_key, node_index)
 			var map_object := _map_object_for_resource_node(node)
 			for interaction_tile in _resource_node_world_interaction_tiles(map_object, node):
 				if interaction_tile is Vector2i:
@@ -2756,6 +2825,8 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 				var artifact_placement_id := String(artifact.get("placement_id", ""))
 				if artifact_placement_id != "":
 					index["artifact_by_placement"][artifact_placement_id] = artifact_index
+				if not OverworldLevelRulesScript.on_level(artifact, level):
+					continue
 				_append_spatial_lookup_entry(
 					index["artifact_by_tile"],
 					_tile_key(Vector2i(int(artifact.get("x", -1)), int(artifact.get("y", -1)))),
@@ -2769,6 +2840,8 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 				var encounter_placement_id := String(encounter.get("placement_id", encounter.get("id", "")))
 				if encounter_placement_id != "":
 					index["encounter_by_placement"][encounter_placement_id] = encounter_index
+				if not OverworldLevelRulesScript.on_level(encounter, level):
+					continue
 				_append_spatial_lookup_entry(
 					index["encounter_by_tile"],
 					_tile_key(Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1)))),
@@ -2792,11 +2865,11 @@ static func _append_spatial_lookup_entry(index_value: Variant, key: String, entr
 	entries.append(entry_index)
 	index[key] = entries
 
-static func _find_guard_engagement_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
+static func _find_guard_engagement_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
 	if session == null:
 		return {"index": -1, "encounter": {}}
 	var encounters = session.overworld.get("encounters", [])
-	var lookup_index := _spatial_lookup_index(session)
+	var lookup_index := _spatial_lookup_index(session, level)
 	for encounter_index in _spatial_lookup_entries(lookup_index, "guard_engagement_by_tile", Vector2i(x, y)):
 		var index := int(encounter_index)
 		var encounter = encounters[index] if encounters is Array and index >= 0 and index < encounters.size() else {}
@@ -2833,12 +2906,15 @@ static func _spatial_lookup_entries(index: Dictionary, name: String, tile: Vecto
 	var table: Dictionary = index.get(name, {}) if index.get(name, {}) is Dictionary else {}
 	return table.get(_tile_key(tile), []) if table.get(_tile_key(tile), []) is Array else []
 
-static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionData) -> Dictionary:
+static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionData, level: int = -1) -> Dictionary:
 	var index := {}
 	if session == null:
 		return index
+	level = OverworldLevelRulesScript.query_level(session, level)
 	for town_value in session.overworld.get("towns", []):
 		if not (town_value is Dictionary):
+			continue
+		if not OverworldLevelRulesScript.on_level(town_value, level):
 			continue
 		# Nonempty strings retain exclusive town-wall ownership for doorway
 		# corner checks. Membership remains the authoritative blocking bit.
@@ -2851,13 +2927,15 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 		if not (encounter_value is Dictionary):
 			continue
 		var encounter: Dictionary = encounter_value
-		if is_encounter_resolved(session, encounter):
+		if not OverworldLevelRulesScript.on_level(encounter, level) or is_encounter_resolved(session, encounter):
 			continue
 		_append_generated_body_tiles_to_blocked_index(index, encounter, bool(encounter.get("blocking_body", true)))
 	for object_value in session.overworld.get("map_objects", []):
 		if not (object_value is Dictionary):
 			continue
 		var object: Dictionary = object_value
+		if not OverworldLevelRulesScript.on_level(object, level):
+			continue
 		var kind := String(object.get("kind", ""))
 		var family := String(object.get("object_family_id", object.get("family_id", "")))
 		var blocks_body := bool(object.get("blocking_body", kind == "decorative_obstacle" or family == "decorative_obstacle"))
@@ -2866,6 +2944,8 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 		if not (node_value is Dictionary):
 			continue
 		var node: Dictionary = node_value
+		if not OverworldLevelRulesScript.on_level(node, level):
+			continue
 		var map_object := _map_object_for_resource_node(node)
 		if not _resource_node_blocks_body_tiles(node, map_object):
 			continue
@@ -3485,8 +3565,8 @@ static func _terrain_name_at(session: SessionStateStoreScript.SessionData, x: in
 		return String(biome.get("name", terrain.capitalize()))
 	return terrain.capitalize() if terrain != "" else "Unknown terrain"
 
-static func _terrain_id_at(session: SessionStateStoreScript.SessionData, x: int, y: int) -> String:
-	var map_data = session.overworld.get("map", [])
+static func _terrain_id_at(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> String:
+	var map_data = map_for_level(session, level)
 	if y < 0 or not (map_data is Array) or y >= map_data.size():
 		return ""
 	var row = map_data[y]
@@ -3912,7 +3992,7 @@ static func _local_visible_threat_summary(session: SessionStateStoreScript.Sessi
 	var visible_contested_fronts := 0
 	var visible_commander_names: Array = []
 	for encounter in session.overworld.get("encounters", []):
-		if not (encounter is Dictionary):
+		if not (encounter is Dictionary) or not OverworldLevelRulesScript.on_level(encounter, hero_level(session)):
 			continue
 		if is_encounter_resolved(session, encounter):
 			continue
@@ -3934,7 +4014,7 @@ static func _local_visible_threat_summary(session: SessionStateStoreScript.Sessi
 		if String(encounter.get("contested_by_faction_id", "")) != "":
 			visible_contested_fronts += 1
 	for town in session.overworld.get("towns", []):
-		if not (town is Dictionary):
+		if not (town is Dictionary) or not OverworldLevelRulesScript.on_level(town, hero_level(session)):
 			continue
 		if String(town.get("owner", "neutral")) != "enemy":
 			continue
@@ -3943,7 +4023,7 @@ static func _local_visible_threat_summary(session: SessionStateStoreScript.Sessi
 		if is_tile_visible(session, town_x, town_y):
 			visible_enemy_towns += 1
 	for node in session.overworld.get("resource_nodes", []):
-		if not (node is Dictionary):
+		if not (node is Dictionary) or not OverworldLevelRulesScript.on_level(node, hero_level(session)):
 			continue
 		var collector := String(node.get("collected_by_faction_id", ""))
 		if collector == "" or collector == "player":
@@ -3951,7 +4031,7 @@ static func _local_visible_threat_summary(session: SessionStateStoreScript.Sessi
 		if is_tile_visible(session, int(node.get("x", -1)), int(node.get("y", -1))):
 			visible_denied_sites += 1
 	for node in session.overworld.get("artifact_nodes", []):
-		if not (node is Dictionary):
+		if not (node is Dictionary) or not OverworldLevelRulesScript.on_level(node, hero_level(session)):
 			continue
 		var collector := String(node.get("collected_by_faction_id", ""))
 		if collector == "" or collector == "player":
@@ -5314,7 +5394,7 @@ static func apply_controlled_resource_site_musters(session: SessionStateStoreScr
 			continue
 		if not (weekly_recruits is Dictionary) or weekly_recruits.is_empty():
 			continue
-		var town_result := _nearest_town_for_controller(session, controller_id, int(node.get("x", 0)), int(node.get("y", 0)))
+		var town_result := _nearest_town_for_controller(session, controller_id, int(node.get("x", 0)), int(node.get("y", 0)), OverworldLevelRulesScript.level_of(node))
 		if int(town_result.get("index", -1)) < 0:
 			continue
 		var town = town_result.get("town", {})
@@ -5581,7 +5661,8 @@ static func apply_resource_site_disruption(
 		session,
 		previous_controller,
 		int(node.get("x", 0)),
-		int(node.get("y", 0))
+		int(node.get("y", 0)),
+		OverworldLevelRulesScript.level_of(node)
 	)
 	if int(town_result.get("index", -1)) < 0:
 		return ""
@@ -5993,6 +6074,7 @@ static func _normalize_resource_nodes(nodes: Array) -> Array:
 
 static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
 	for key in [
+		"level",
 		"content_batch_id",
 		"object_id",
 		"zone_id",
@@ -6177,14 +6259,14 @@ static func _find_artifact_node_by_descriptor(session: SessionStateStoreScript.S
 			var indexed := int(by_placement.get(placement_id, -1))
 			if nodes is Array and indexed >= 0 and indexed < nodes.size():
 				var indexed_node = nodes[indexed]
-				if indexed_node is Dictionary and String(indexed_node.get("placement_id", "")) == placement_id and not bool(indexed_node.get("collected", false)):
+				if indexed_node is Dictionary and OverworldLevelRulesScript.on_level(indexed_node, hero_level(session)) and String(indexed_node.get("placement_id", "")) == placement_id and not bool(indexed_node.get("collected", false)):
 					_rules_profile_set("descriptor", "lookup_mode", "placement_index")
 					_rules_profile_add_ms("descriptor_lookup_ms", lookup_started_usec)
 					return {"index": indexed, "node": indexed_node}
 	_rules_profile_set("descriptor", "lookup_mode", "full_scan_fallback")
 	for index in range(nodes.size()):
 		var node = nodes[index]
-		if not (node is Dictionary):
+		if not (node is Dictionary) or not OverworldLevelRulesScript.on_level(node, hero_level(session)):
 			continue
 		if bool(node.get("collected", false)):
 			continue
@@ -8054,7 +8136,7 @@ static func _player_reserve_delivery_candidates(
 	var max_range = support_radius + range_bonus
 	var source_placement_id = String(source_town.get("placement_id", ""))
 	for town in session.overworld.get("towns", []):
-		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
+		if not (town is Dictionary) or not OverworldLevelRulesScript.same_level(town, source_town) or String(town.get("owner", "neutral")) != "player":
 			continue
 		var placement_id = String(town.get("placement_id", ""))
 		if placement_id == "" or placement_id == source_placement_id:
@@ -8112,7 +8194,7 @@ static func _player_reserve_delivery_candidates(
 			}
 		)
 	for hero in session.overworld.get("player_heroes", []):
-		if not (hero is Dictionary):
+		if not (hero is Dictionary) or not OverworldLevelRulesScript.same_level(hero, source_town):
 			continue
 		var hero_id = String(hero.get("id", ""))
 		if hero_id == "":
@@ -8160,11 +8242,11 @@ static func _player_hero_delivery_priority(session: SessionStateStoreScript.Sess
 	elif army_strength <= 200:
 		priority += 8
 	for encounter in session.overworld.get("encounters", []):
-		if not (encounter is Dictionary) or is_encounter_resolved(session, encounter):
+		if not (encounter is Dictionary) or not OverworldLevelRulesScript.same_level(encounter, hero) or is_encounter_resolved(session, encounter):
 			continue
 		var encounter_x := int(encounter.get("x", -1))
 		var encounter_y := int(encounter.get("y", -1))
-		if not is_tile_visible(session, encounter_x, encounter_y):
+		if not is_tile_visible(session, encounter_x, encounter_y, OverworldLevelRulesScript.level_of(hero)):
 			continue
 		var distance = abs(hero_position.x - encounter_x) + abs(hero_position.y - encounter_y)
 		if distance <= 1:
@@ -8174,9 +8256,9 @@ static func _player_hero_delivery_priority(session: SessionStateStoreScript.Sess
 		if String(encounter.get("target_kind", "")) == "hero" and bool(encounter.get("arrived", false)):
 			priority += 10
 	for town in session.overworld.get("towns", []):
-		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy":
+		if not (town is Dictionary) or not OverworldLevelRulesScript.same_level(town, hero) or String(town.get("owner", "neutral")) != "enemy":
 			continue
-		if not is_tile_visible(session, int(town.get("x", -1)), int(town.get("y", -1))):
+		if not is_tile_visible(session, int(town.get("x", -1)), int(town.get("y", -1)), OverworldLevelRulesScript.level_of(hero)):
 			continue
 		var town_distance = abs(hero_position.x - int(town.get("x", 0))) + abs(hero_position.y - int(town.get("y", 0)))
 		if town_distance <= 2:
@@ -8653,7 +8735,8 @@ static func _resource_node_linked_town(
 		session,
 		controller_id,
 		int(node.get("x", 0)),
-		int(node.get("y", 0))
+		int(node.get("y", 0)),
+		OverworldLevelRulesScript.level_of(node)
 	)
 	if int(town_result.get("index", -1)) < 0:
 		return {"index": -1, "town": {}}
@@ -9052,14 +9135,16 @@ static func _nearest_town_for_controller(
 	session: SessionStateStoreScript.SessionData,
 	controller_id: String,
 	x: int,
-	y: int
+	y: int,
+	level: int = -1
 ) -> Dictionary:
+	level = OverworldLevelRulesScript.query_level(session, level)
 	var best_index := -1
 	var best_distance := 9999
 	var towns = session.overworld.get("towns", [])
 	for index in range(towns.size()):
 		var town = towns[index]
-		if not (town is Dictionary) or not _town_matches_controller(town, controller_id):
+		if not (town is Dictionary) or not OverworldLevelRulesScript.on_level(town, level) or not _town_matches_controller(town, controller_id):
 			continue
 		var distance = abs(x - int(town.get("x", 0))) + abs(y - int(town.get("y", 0)))
 		if distance < best_distance:
@@ -9074,9 +9159,10 @@ static func _town_matches_controller(town: Dictionary, controller_id: String) ->
 		return String(town.get("owner", "neutral")) == "player"
 	return String(town.get("owner", "neutral")) == "enemy" and _town_faction_id(town) == controller_id
 
-static func _get_town_at(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
+static func _get_town_at(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
+	level = OverworldLevelRulesScript.query_level(session, level)
 	for town in session.overworld.get("towns", []):
-		if town is Dictionary and int(town.get("x", -1)) == x and int(town.get("y", -1)) == y:
+		if town is Dictionary and OverworldLevelRulesScript.on_level(town, level) and int(town.get("x", -1)) == x and int(town.get("y", -1)) == y:
 			return town
 	return {}
 
@@ -10478,7 +10564,7 @@ static func _resource_site_under_threat(session: SessionStateStoreScript.Session
 	var response_active := bool(_resource_site_response_state(session, node, site).get("active", false))
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter in session.overworld.get("encounters", []):
-		if not (encounter is Dictionary):
+		if not (encounter is Dictionary) or not OverworldLevelRulesScript.same_level(encounter, node):
 			continue
 		if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
 			continue
@@ -12246,7 +12332,7 @@ static func _town_requires_assault(town: Dictionary) -> bool:
 	return String(town.get("owner", "neutral")) == "enemy" and _town_garrison_headcount(town) > 0
 
 static func _set_active_hero_position(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> void:
-	var position := {"x": tile.x, "y": tile.y}
+	var position := OverworldLevelRulesScript.moved_position(session.overworld.get("hero_position", {}), tile)
 	session.overworld["hero_position"] = position.duplicate(true)
 	var active_hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
 	active_hero["position"] = position.duplicate(true)
@@ -12296,6 +12382,19 @@ static func _route_tile_payloads(tiles: Array) -> Array:
 
 static func _normalize_fog_of_war(session: SessionStateStoreScript.SessionData) -> void:
 	var map_size := derive_map_size(session)
+	if OverworldLevelRulesScript.level_count(session) > 1:
+		var levels := {}
+		for level in range(OverworldLevelRulesScript.level_count(session)):
+			var existing := fog_for_level(session, level)
+			var explored := _normalize_visibility_grid(existing.get(EXPLORED_TILES_KEY, []), map_size)
+			explored = _merge_visibility_grids(explored, _normalize_visibility_grid(existing.get(VISIBLE_TILES_KEY, []), map_size), map_size)
+			_reveal_all_current_fog_sources(session, explored, map_size, level)
+			levels[str(level)] = _build_fog_payload(_duplicate_visibility_grid(explored), explored, map_size)
+		var active: Dictionary = levels.get(str(hero_level(session)), {}).duplicate(false)
+		active["levels"] = levels
+		active["active_level"] = hero_level(session)
+		session.overworld[FOG_KEY] = active
+		return
 	var fog = session.overworld.get(FOG_KEY, {})
 	if not (fog is Dictionary):
 		fog = {}
@@ -12311,6 +12410,9 @@ static func _normalize_fog_of_war(session: SessionStateStoreScript.SessionData) 
 
 static func _reveal_current_fog_sources(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
+		return
+	if OverworldLevelRulesScript.level_count(session) > 1:
+		_normalize_fog_of_war(session)
 		return
 	if not _fog_state_ready(session):
 		_normalize_fog_of_war(session)
@@ -12340,7 +12442,7 @@ static func _reveal_route_fog(session: SessionStateStoreScript.SessionData, trav
 		if tile.x < 0 or tile.y < 0:
 			continue
 		var route_hero := hero.duplicate(true)
-		route_hero["position"] = {"x": tile.x, "y": tile.y}
+		route_hero["position"] = OverworldLevelRulesScript.moved_position(hero.get("position", {}), tile)
 		_apply_hero_reveal(explored_tiles, route_hero, map_size)
 	_rules_profile_add_ms("fog_apply_route_reveal_ms", route_reveal_started_usec)
 	var sources_started_usec := _rules_profile_timer()
@@ -12352,7 +12454,7 @@ static func _reveal_route_fog(session: SessionStateStoreScript.SessionData, trav
 	var payload := _build_fog_payload(visible_tiles, explored_tiles, map_size)
 	if before_explored_count >= 0:
 		_rules_profile_set("fog", "changed_cells", max(0, int(payload.get("explored_count", before_explored_count)) - before_explored_count))
-	session.overworld[FOG_KEY] = payload
+	_store_level_fog(session, payload)
 
 static func _reveal_spell_fog(session: SessionStateStoreScript.SessionData, radius: int) -> int:
 	if session == null or radius <= 0:
@@ -12374,7 +12476,7 @@ static func _reveal_spell_fog(session: SessionStateStoreScript.SessionData, radi
 	)
 	_reveal_all_current_fog_sources(session, explored_tiles, map_size)
 	var payload := _build_fog_payload(_duplicate_visibility_grid(explored_tiles), explored_tiles, map_size)
-	session.overworld[FOG_KEY] = payload
+	_store_level_fog(session, payload)
 	return max(0, int(payload.get("explored_count", before_count)) - before_count)
 
 static func _reveal_resource_site_claim_fog(
@@ -12387,33 +12489,35 @@ static func _reveal_resource_site_claim_fog(
 	if not _fog_state_ready(session):
 		_normalize_fog_of_war(session)
 	var map_size := derive_map_size(session)
-	var fog: Dictionary = session.overworld.get(FOG_KEY, {})
+	var level := OverworldLevelRulesScript.level_of(node)
+	var fog: Dictionary = fog_for_level(session, level)
 	var before_count := int(fog.get("explored_count", 0))
 	var explored_tiles := _normalize_visibility_grid(fog.get(EXPLORED_TILES_KEY, []), map_size)
 	_apply_site_reveal(explored_tiles, node, radius, map_size)
-	_reveal_all_current_fog_sources(session, explored_tiles, map_size)
+	_reveal_all_current_fog_sources(session, explored_tiles, map_size, level)
 	var payload := _build_fog_payload(_duplicate_visibility_grid(explored_tiles), explored_tiles, map_size)
-	session.overworld[FOG_KEY] = payload
+	_store_level_fog(session, payload, level)
 	return max(0, int(payload.get("explored_count", before_count)) - before_count)
 
-static func _reveal_all_current_fog_sources(session: SessionStateStoreScript.SessionData, explored_tiles: Array, map_size: Vector2i) -> void:
+static func _reveal_all_current_fog_sources(session: SessionStateStoreScript.SessionData, explored_tiles: Array, map_size: Vector2i, level: int = -1) -> void:
+	level = OverworldLevelRulesScript.query_level(session, level)
 	var source_count := 0
 	var heroes = session.overworld.get("player_heroes", [])
 	if heroes is Array:
 		for hero in heroes:
-			if hero is Dictionary:
+			if hero is Dictionary and OverworldLevelRulesScript.on_level(hero, level):
 				source_count += 1
 				_apply_hero_reveal(explored_tiles, hero, map_size)
 	for town_value in session.overworld.get("towns", []):
 		if not (town_value is Dictionary):
 			continue
 		var town: Dictionary = town_value
-		if String(town.get("owner", "neutral")) != "player":
+		if String(town.get("owner", "neutral")) != "player" or not OverworldLevelRulesScript.on_level(town, level):
 			continue
 		source_count += 1
-		_apply_site_reveal(explored_tiles, town, PLAYER_TOWN_VISION_RADIUS, map_size)
+		_apply_site_reveal(explored_tiles, OverworldLevelRulesScript.town_entrance(town), PLAYER_TOWN_VISION_RADIUS, map_size)
 	for node in session.overworld.get("resource_nodes", []):
-		if not (node is Dictionary):
+		if not (node is Dictionary) or not OverworldLevelRulesScript.on_level(node, level):
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if not _resource_site_is_persistent(site):
@@ -12429,6 +12533,8 @@ static func _fog_state_ready(session: SessionStateStoreScript.SessionData) -> bo
 		return false
 	var fog = session.overworld.get(FOG_KEY, {})
 	if not (fog is Dictionary):
+		return false
+	if int(fog.get("active_level", 0)) != hero_level(session):
 		return false
 	var visible_tiles = fog.get(VISIBLE_TILES_KEY, [])
 	var explored_tiles = fog.get(EXPLORED_TILES_KEY, [])
@@ -13609,7 +13715,7 @@ static func _nearest_logistics_plan(session: SessionStateStoreScript.SessionData
 	var pos := hero_position(session)
 	var best := {}
 	for node in session.overworld.get("resource_nodes", []):
-		if not (node is Dictionary):
+		if not (node is Dictionary) or not OverworldLevelRulesScript.on_level(node, hero_level(session)):
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if not _resource_site_is_persistent(site):
@@ -13693,7 +13799,7 @@ static func _nearest_visible_encounter_plan(session: SessionStateStoreScript.Ses
 	var pos := hero_position(session)
 	var best := {}
 	for encounter in session.overworld.get("encounters", []):
-		if not (encounter is Dictionary) or is_encounter_resolved(session, encounter):
+		if not (encounter is Dictionary) or not OverworldLevelRulesScript.on_level(encounter, hero_level(session)) or is_encounter_resolved(session, encounter):
 			continue
 		var x := int(encounter.get("x", -1))
 		var y := int(encounter.get("y", -1))

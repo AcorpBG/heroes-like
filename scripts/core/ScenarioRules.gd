@@ -1,6 +1,7 @@
 class_name ScenarioRules
 extends RefCounted
 
+const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
@@ -1817,8 +1818,7 @@ static func _hero_stationing_progress(
 	var position_matches := (
 		hero_position is Dictionary
 		and town_found
-		and int(hero_position.get("x", -1)) == int(town.get("x", -2))
-		and int(hero_position.get("y", -1)) == int(town.get("y", -2))
+		and LevelRules.position(hero_position) == LevelRules.town_entrance(town)
 	)
 	return {
 		"hero_id": hero_id,

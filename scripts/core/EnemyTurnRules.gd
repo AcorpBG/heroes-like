@@ -1,6 +1,7 @@
 class_name EnemyTurnRules
 extends RefCounted
 
+const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
@@ -926,6 +927,7 @@ static func _town_actor(town: Dictionary) -> Dictionary:
 		"name": _town_name(town),
 		"x": int(town.get("x", 0)),
 		"y": int(town.get("y", 0)),
+		"level": LevelRules.level_of(town),
 	}
 
 static func _visible_raids_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Array:
@@ -1399,10 +1401,10 @@ static func _enemy_activity_origin(town_entries: Array, config: Dictionary) -> D
 		var town: Dictionary = entry.get("town", {})
 		if town.is_empty():
 			continue
-		return {"x": int(town.get("x", 0)), "y": int(town.get("y", 0))}
+		return LevelRules.position(town)
 	var spawn_points = config.get("spawn_points", [])
 	if spawn_points is Array and not spawn_points.is_empty() and spawn_points[0] is Dictionary:
-		return {"x": int(spawn_points[0].get("x", 0)), "y": int(spawn_points[0].get("y", 0))}
+		return LevelRules.position(spawn_points[0])
 	return {"x": 0, "y": 0}
 
 static func _apply_empire_income(
@@ -1769,6 +1771,7 @@ static func _enemy_town_spell_study_event(
 			"name": commander_label,
 			"x": int(town.get("x", 0)),
 			"y": int(town.get("y", 0)),
+			"level": LevelRules.level_of(town),
 		},
 		{
 			"target_kind": "spell",
@@ -1776,6 +1779,7 @@ static func _enemy_town_spell_study_event(
 			"target_label": spell_name,
 			"x": int(town.get("x", 0)),
 			"y": int(town.get("y", 0)),
+			"level": LevelRules.level_of(town),
 		},
 		{
 			"actor_id": roster_hero_id,
@@ -2908,7 +2912,7 @@ static func _best_planned_task_recruitment_target(
 	var best := {}
 	var best_score := -1.0
 	var live_tasks := _planned_recruitment_live_tasks(session, faction_id, faction_recruitment_context)
-	var path_context := _planned_recruitment_path_context(session, faction_id, faction_recruitment_context)
+	var path_context := _planned_recruitment_path_context(session, faction_id, faction_recruitment_context, LevelRules.level_of(support_town))
 	var town_cache_key := String(support_town.get("placement_id", ""))
 	if town_cache_key == "":
 		town_cache_key = "%d:%d" % [int(support_town.get("x", 0)), int(support_town.get("y", 0))]
@@ -2937,7 +2941,7 @@ static func _best_planned_task_recruitment_target(
 				session,
 				faction_id,
 				actor_id,
-				{"x": int(support_town.get("x", 0)), "y": int(support_town.get("y", 0))},
+				LevelRules.position(support_town),
 				live_tasks,
 				path_context
 			)
@@ -3001,14 +3005,16 @@ static func _planned_recruitment_live_tasks(
 static func _planned_recruitment_path_context(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
-	faction_recruitment_context: Dictionary
+	faction_recruitment_context: Dictionary,
+	level: int = 0
 ) -> Dictionary:
-	var cached = faction_recruitment_context.get("planned_path_context", null)
+	var level_key := "planned_path_context" if level == 0 else "planned_path_context:%d" % level
+	var cached = faction_recruitment_context.get(level_key, null)
 	if cached is Dictionary and not cached.is_empty():
 		_planned_recruitment_profile_count(faction_recruitment_context, "planned_path_context_reused")
 		return cached
-	var path_context := EnemyAdventureRulesScript._path_distance_surface_context(session, "", faction_id)
-	faction_recruitment_context["planned_path_context"] = path_context
+	var path_context := EnemyAdventureRulesScript._path_distance_surface_context(session, "", faction_id, level)
+	faction_recruitment_context[level_key] = path_context
 	_planned_recruitment_profile_count(faction_recruitment_context, "planned_path_context_loaded")
 	return path_context
 
@@ -3763,6 +3769,7 @@ static func _spawn_raid(
 		"encounter_id": encounter_id,
 		"x": int(spawn_point.get("x", 0)),
 		"y": int(spawn_point.get("y", 0)),
+		"level": LevelRules.level_of(spawn_point),
 		"spawn_origin_x": int(spawn_point.get("x", 0)),
 		"spawn_origin_y": int(spawn_point.get("y", 0)),
 		"difficulty": "pressure",
@@ -4293,7 +4300,7 @@ static func _hero_intercept_candidate(session: SessionStateStoreScript.SessionDa
 	return best
 
 static func _hero_current_tile_interceptable(encounter: Dictionary, hero: Dictionary) -> bool:
-	if encounter.is_empty() or hero.is_empty():
+	if encounter.is_empty() or hero.is_empty() or not LevelRules.same_level(encounter, hero):
 		return false
 	var hero_position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
 	if hero_position.is_empty():
@@ -5261,13 +5268,15 @@ static func _spawn_scan_live_tasks(
 static func _spawn_scan_path_context(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
-	spawn_scan_context: Dictionary
+	spawn_scan_context: Dictionary,
+	level: int = 0
 ) -> Dictionary:
-	if spawn_scan_context.get("path_context", null) is Dictionary:
+	var level_key := "path_context" if level == 0 else "path_context:%d" % level
+	if spawn_scan_context.get(level_key, null) is Dictionary:
 		_spawn_profile_count("spawn_scan_path_context_reused")
-		return spawn_scan_context["path_context"]
-	var path_context := EnemyAdventureRulesScript._path_distance_surface_context(session, "", faction_id)
-	spawn_scan_context["path_context"] = path_context
+		return spawn_scan_context[level_key]
+	var path_context := EnemyAdventureRulesScript._path_distance_surface_context(session, "", faction_id, level)
+	spawn_scan_context[level_key] = path_context
 	_spawn_profile_count("spawn_scan_path_context_loaded")
 	return path_context
 
@@ -5311,7 +5320,7 @@ static func _saved_task_spawn_candidate_for_point(
 		spawn_scan_context
 	)
 	var live_tasks := _spawn_scan_live_tasks(session, faction_id, spawn_scan_context)
-	var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context)
+	var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context, LevelRules.level_of(point))
 	for commander_value in candidates:
 		if not (commander_value is Dictionary):
 			continue
@@ -5394,7 +5403,7 @@ static func _active_front_support_spawn_candidate_for_point(
 				session,
 				config,
 				probe,
-				_active_front_support_path_context(session, faction_id, spawn_scan_context)
+				_active_front_support_path_context(session, faction_id, spawn_scan_context, LevelRules.level_of(point))
 			)
 			support_plan_resolved = true
 		if support_plan.is_empty():
@@ -5424,10 +5433,11 @@ static func _active_front_support_spawn_candidate_for_point(
 static func _active_front_support_path_context(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
-	spawn_scan_context: Dictionary
+	spawn_scan_context: Dictionary,
+	level: int = 0
 ) -> Dictionary:
-	var reused := spawn_scan_context.get("path_context", null) is Dictionary
-	var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context)
+	var reused := spawn_scan_context.get("path_context" if level == 0 else "path_context:%d" % level, null) is Dictionary
+	var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context, level)
 	if reused:
 		_spawn_profile_count("active_front_support_path_context_reused")
 	else:
@@ -5476,6 +5486,7 @@ static func _active_front_support_prepared_probe(
 		"encounter_id": base_encounter_id,
 		"x": int(point.get("x", 0)),
 		"y": int(point.get("y", 0)),
+		"level": LevelRules.level_of(point),
 		"difficulty": "pressure",
 		"spawned_by_faction_id": faction_id,
 		"days_active": 0,
@@ -5519,7 +5530,7 @@ static func _fresh_spawn_target_candidate_for_point(
 	var rebuild_pressure_active := not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
 	var fresh_target_started_usec := _spawn_profile_timer()
 	var target_descriptors := _spawn_scan_target_descriptors(session, config, spawn_scan_context)
-	var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context)
+	var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context, LevelRules.level_of(point))
 	var started_usec := _spawn_profile_timer()
 	var target_candidates: Array = EnemyAdventureRulesScript._target_candidates_from_descriptors(
 		session,
@@ -5538,6 +5549,7 @@ static func _fresh_spawn_target_candidate_for_point(
 			"encounter_id": _primary_raid_encounter_id(config),
 			"x": int(point.get("x", 0)),
 			"y": int(point.get("y", 0)),
+			"level": LevelRules.level_of(point),
 			"difficulty": "pressure",
 			"spawned_by_faction_id": faction_id,
 			"days_active": 0,
@@ -5771,7 +5783,7 @@ static func _fallback_spawn_candidate_for_point(
 			plan = EnemyAdventureRulesScript.choose_target(
 				session,
 				config,
-				{"x": int(point.get("x", 0)), "y": int(point.get("y", 0))},
+				LevelRules.position(point),
 				_commander_roster_entry_for_launch(session, faction_id, roster_hero_id, state)
 			)
 			_spawn_profile_add_ms("fallback_choose_target_ms", started_usec)
@@ -5888,7 +5900,7 @@ static func _rebuild_pressure_exploration_plan(
 	while recent_target_ids.size() > EnemyAdventureRulesScript.RAID_RECENT_EXPLORATION_TARGET_LIMIT:
 		recent_target_ids.pop_front()
 	var rebuild_memory := {"recent_exploration_target_ids": recent_target_ids}
-	var path_context := EnemyAdventureRulesScript._path_distance_surface_context(session, "", faction_id)
+	var path_context := EnemyAdventureRulesScript._path_distance_surface_context(session, "", faction_id, LevelRules.level_of(point))
 	var plan := EnemyAdventureRulesScript._no_known_target_frontier_sweep_plan(
 		session,
 		config,
@@ -5951,7 +5963,7 @@ static func _rebuild_pressure_local_patrol_plan(
 				if route_distance < 1 or route_distance >= 9999:
 					continue
 				var score: int = 90 - (route_distance * 6) - abs(dx)
-				var target_id := "explore:%d:%d" % [tile.x, tile.y]
+				var target_id := EnemyAdventureRulesScript.exploration_target_id(tile, LevelRules.level_of(point))
 				if recent_target_lookup.has(target_id):
 					continue
 				if (
@@ -6019,6 +6031,7 @@ static func _spawn_candidate_ready_without_immediate_regroup(
 			"encounter_id": encounter_id,
 			"x": int(candidate.get("x", 0)),
 			"y": int(candidate.get("y", 0)),
+			"level": LevelRules.level_of(candidate),
 			"difficulty": "pressure",
 			"spawned_by_faction_id": faction_id,
 			"days_active": 0,
@@ -6084,7 +6097,7 @@ static func _rebuild_pressure_frontier_sweep_plan(
 			var center_score: int = 18 - abs(int(map_size.x / 2) - tile.x) - abs(int(map_size.y / 2) - tile.y)
 			var distance_score: int = 28 - abs(route_distance - 8)
 			var score: int = 160 + center_score + distance_score - int(floor(float(direct_distance) / 2.0))
-			var target_id := "explore:%d:%d" % [tile.x, tile.y]
+			var target_id := EnemyAdventureRulesScript.exploration_target_id(tile, LevelRules.level_of(point))
 			if recent_target_lookup.has(target_id):
 				continue
 			if (
@@ -6252,7 +6265,7 @@ static func _ready_saved_task_spawn_candidate_for_point(
 		spawn_scan_context["ready_saved_task_no_prepared_commander"] = true
 		_spawn_profile_count("ready_saved_task_no_prepared_commander_skip")
 		return {}
-	var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context)
+	var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context, LevelRules.level_of(point))
 	for commander_value in candidates:
 		if not (commander_value is Dictionary):
 			continue
@@ -6374,7 +6387,8 @@ static func _emergency_defense_spawn_candidate_for_point(
 	var path_context := _emergency_defense_path_context(
 		session,
 		faction_id,
-		emergency_scan_context
+		emergency_scan_context,
+		LevelRules.level_of(point)
 	)
 	var best_town := {}
 	var best_resource := {}
@@ -6509,6 +6523,7 @@ static func _emergency_defense_commander_probe(
 			"encounter_id": base_encounter_id,
 			"x": int(point.get("x", 0)),
 			"y": int(point.get("y", 0)),
+			"level": LevelRules.level_of(point),
 			"difficulty": "pressure",
 			"spawned_by_faction_id": faction_id,
 			"days_active": 0,
@@ -6531,14 +6546,17 @@ static func _emergency_defense_commander_probe(
 	probe["placement_id"] = "__emergency_defense_probe:%s:%d" % [roster_hero_id, spawn_order]
 	probe["x"] = int(point.get("x", 0))
 	probe["y"] = int(point.get("y", 0))
+	probe["level"] = LevelRules.level_of(point)
 	return probe
 
 static func _emergency_defense_path_context(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
-	emergency_scan_context: Dictionary
+	emergency_scan_context: Dictionary,
+	level: int = 0
 ) -> Dictionary:
-	var cached = emergency_scan_context.get("emergency_defense_path_context", null)
+	var level_key := "emergency_defense_path_context" if level == 0 else "emergency_defense_path_context:%d" % level
+	var cached = emergency_scan_context.get(level_key, null)
 	if cached is Dictionary and not cached.is_empty():
 		_reinforcement_profile_count("emergency_path_context_reused")
 		_spawn_profile_count("emergency_path_context_reused")
@@ -6546,9 +6564,10 @@ static func _emergency_defense_path_context(
 	var path_context := EnemyAdventureRulesScript._path_distance_surface_context(
 		session,
 		"",
-		faction_id
+		faction_id,
+		level
 	)
-	emergency_scan_context["emergency_defense_path_context"] = path_context
+	emergency_scan_context[level_key] = path_context
 	_reinforcement_profile_count("emergency_path_context_loaded")
 	_spawn_profile_count("emergency_path_context_loaded")
 	return path_context
@@ -6803,14 +6822,14 @@ static func _open_spawn_points(session: SessionStateStoreScript.SessionData, con
 			continue
 		var x = int(point.get("x", -1))
 		var y = int(point.get("y", -1))
-		if player_hero_occupied_tiles.has(_tile_key_xy(x, y)):
+		if player_hero_occupied_tiles.has(_tile_key_xy(x, y, LevelRules.level_of(point))):
 			continue
 
 		var occupied = false
 		for encounter in session.overworld.get("encounters", []):
 			if not (encounter is Dictionary):
 				continue
-			if int(encounter.get("x", -1)) != x or int(encounter.get("y", -1)) != y:
+			if not LevelRules.same_level(encounter, point) or int(encounter.get("x", -1)) != x or int(encounter.get("y", -1)) != y:
 				continue
 			if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
 				continue
@@ -6818,7 +6837,7 @@ static func _open_spawn_points(session: SessionStateStoreScript.SessionData, con
 			break
 
 		if not occupied:
-			points.append({"x": x, "y": y})
+			points.append(LevelRules.position(point))
 	return points
 
 static func _launch_decision_open_spawn_points(
@@ -6861,10 +6880,10 @@ static func _record_position_tile(occupied: Dictionary, position_value: Variant)
 	var position: Dictionary = position_value
 	if position.is_empty():
 		return
-	occupied[_tile_key_xy(int(position.get("x", -9999)), int(position.get("y", -9999)))] = true
+	occupied[_tile_key_xy(int(position.get("x", -9999)), int(position.get("y", -9999)), LevelRules.level_of(position))] = true
 
-static func _tile_key_xy(x: int, y: int) -> String:
-	return "%d,%d" % [x, y]
+static func _tile_key_xy(x: int, y: int, level: int = 0) -> String:
+	return "%d,%d,%d" % [x, y, level]
 
 static func _enemy_faction_configs_for_session(session: SessionStateStoreScript.SessionData) -> Array:
 	if session == null:
@@ -6993,7 +7012,7 @@ static func _default_spawn_points_for_faction(session: SessionStateStoreScript.S
 		var town: Dictionary = entry.get("town", {}) if entry.get("town", {}) is Dictionary else {}
 		if town.is_empty():
 			continue
-		points.append({"x": int(town.get("x", 0)), "y": int(town.get("y", 0))})
+		points.append(LevelRules.town_entrance(town))
 	return points
 
 static func _owned_town_count(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
@@ -7111,6 +7130,8 @@ static func _desired_town_strength(
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
 	var hero_position = session.overworld.get("hero_position", {"x": 0, "y": 0})
 	var distance = abs(int(hero_position.get("x", 0)) - int(town.get("x", 0))) + abs(int(hero_position.get("y", 0)) - int(town.get("y", 0)))
+	if not LevelRules.same_level(hero_position, town):
+		distance = 9999
 	var town_role: String = OverworldRulesScript.town_strategic_role(town)
 	var metrics: Dictionary = development_metrics if not development_metrics.is_empty() else OverworldRulesScript.town_development_metrics(town, session)
 	var logistics: Dictionary = metrics.get("logistics", {})
