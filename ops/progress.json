@@ -1,5 +1,7 @@
 {
-  "actionableNextTasks": [],
+  "actionableNextTasks": [
+    "performance-large-town-build-and-end-turn-20260905"
+  ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
       {
@@ -1908,7 +1910,7 @@
     },
     "blockedReason": ""
   },
-  "active_slice": "",
+  "active_slice": "performance-large-town-build-and-end-turn-20260905",
   "blocker": "",
   "completedImplementationEvidence": [
     {
@@ -16537,14 +16539,14 @@
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
     }
   ],
-  "currentNotes": "Implemented and validated: pixel-correct town presentation and subdued rail; same-map save write 4178.184 -> 2036.600 ms; unlimited named files with compact summary caches, explicit consent, recovery and legacy compatibility. All four live Save routes, physical modal inputs, deterministic 108x108 round trip, repo/diff and 248369356-byte Linux/Windows package checks pass. No release-readiness claim.",
+  "currentNotes": "Profiling and instrumentation validated: construction confirmation 8.03-11.29 s versus 0.23-0.31 s core mutation; full End Turn 8.64-16.88 s. Repeated catalogs, forced save-summary scans and AI arrival/planning are measured bottlenecks. Twelve full session comparisons, Town/turn regressions, repo/diff and matching 248370060-byte Linux/Windows packages pass. No optimization implemented; owner direction needed before expanding profiling into fixes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-visual-performance-file-saves-review-20260904",
-  "currentSliceId": "ux-visual-performance-file-saves-review-20260904",
-  "currentSliceNotes": "Implemented and validated: pixel-correct town presentation and subdued rail; same-map save write 4178.184 -> 2036.600 ms; unlimited named files with compact summary caches, explicit consent, recovery and legacy compatibility. All four live Save routes, physical modal inputs, deterministic 108x108 round trip, repo/diff and 248369356-byte Linux/Windows package checks pass. No release-readiness claim.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "Visual, Performance, And File Saves Review",
-  "currentSliceUpdatedAt": "2026-09-05T00:31:44Z",
+  "currentSlice": "performance-large-town-build-and-end-turn-20260905",
+  "currentSliceId": "performance-large-town-build-and-end-turn-20260905",
+  "currentSliceNotes": "Profiling and instrumentation validated: construction confirmation 8.03-11.29 s versus 0.23-0.31 s core mutation; full End Turn 8.64-16.88 s. Repeated catalogs, forced save-summary scans and AI arrival/planning are measured bottlenecks. Twelve full session comparisons, Town/turn regressions, repo/diff and matching 248370060-byte Linux/Windows packages pass. No optimization implemented; owner direction needed before expanding profiling into fixes.",
+  "currentSliceStatus": "in_progress",
+  "currentSliceTitle": "Large Map Town Construction And End Turn",
+  "currentSliceUpdatedAt": "2026-09-05T09:29:32Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21851,117 +21853,49 @@
   },
   "guardrailNote": "Scope is visual rendering, measured runtime performance, and file-based saving. Preserve map output, gameplay, legacy saves, unrelated artifacts, and the package ceiling.",
   "lastValidation": {
-    "id": "ux-visual-performance-file-saves-review-20260904",
-    "title": "Visual, Performance, And File Saves Review",
-    "sliceId": "ux-visual-performance-file-saves-review-20260904",
+    "id": "performance-large-town-build-and-end-turn-20260905-profile",
+    "title": "Large Map Town Construction And End Turn Profiling",
+    "sliceId": "performance-large-town-build-and-end-turn-20260905",
     "status": "completed",
-    "validatedAt": "2026-09-05T00:31:44Z",
-    "updatedAt": "2026-09-05T00:31:44Z",
-    "latestFinding": "Named-file save UI replaces the visible three-slot limit; duplicate snapshot copies and JSON parsing were measured save stalls. Live town pixels now match canonical art and presentation preserves aspect.",
+    "scope": "profiling_tooling_only_no_runtime_optimization",
+    "validatedAt": "2026-09-05T09:29:32Z",
     "artifacts": [
-      "docs/visual-performance-file-saves-report.md",
-      ".artifacts/visual_performance_file_saves_review/named_save_files_report.json",
-      ".artifacts/visual_performance_file_saves_review/large_final.log",
-      ".artifacts/visual_performance_file_saves_review/legacy_overwrite.log",
-      ".artifacts/overworld_town_proportion_environs_10236/report.json",
-      ".artifacts/packaging_linux_export_smoke/report.json",
-      ".artifacts/packaging_windows_export_smoke/report.json",
-      ".artifacts/visual_performance_file_saves_review/linux-generated-flow/live_validation_report.json"
+      "docs/large-town-build-and-end-turn-performance-report.md",
+      ".artifacts/large_town_build_end_turn_20260905/instrumented/report.json",
+      ".artifacts/large_town_build_end_turn_20260905/state_parity.json",
+      ".artifacts/large_town_build_end_turn_20260905/validation/repo.log",
+      ".artifacts/large_town_build_end_turn_20260905/validation/linux-final/report.json",
+      ".artifacts/large_town_build_end_turn_20260905/validation/windows-final/report.json"
     ],
-    "commands": [
-      "python3 tests/overworld_town_proportion_environs_report.py",
-      "godot4 --headless --path . res://tests/large_generated_map_runtime_profile_report.tscn",
-      "python3 tests/validate_repo.py",
-      "python3 tests/packaging_linux_export_smoke.py",
-      "python3 tests/packaging_windows_export_smoke.py",
-      "git diff --check",
-      "python3 tests/named_save_files_regression.py",
-      "godot4 --headless --path . --audio-driver Dummy res://tests/manual_save_overwrite_regression.tscn",
-      "godot4 --headless --path . --audio-driver Dummy res://tests/save_transactional_commit_regression.tscn",
-      "godot4 --headless --path . --audio-driver Dummy res://tests/save_slot_delete_regression.tscn",
-      "godot4 --headless --path . --audio-driver Dummy res://tests/generated_large_town_explicit_save_surface_regression.tscn",
-      "godot4 --headless --path . --audio-driver Dummy res://tests/overworld_faction_town_sprite_runtime_report.tscn",
-      "godot4 --headless --path . --audio-driver Dummy res://tests/overworld_generated_large_town_scale_runtime_report.tscn"
-    ],
-    "metrics": {
-      "save_version": 9,
-      "large_map_width": 108,
-      "large_map_height": 108,
-      "materialized_signature": "7362cf00",
-      "source_objects_preserved": 2961,
-      "snapshot_save_before_ms": 4178.184,
-      "snapshot_save_after_ms": 2036.6,
-      "named_file_save_ms": 2132.96,
-      "named_files_tested": 9,
-      "authored_town_identities_tested": 26,
-      "linux_pck_bytes": 248369356,
-      "windows_pck_bytes": 248369356,
-      "package_ceiling_bytes": 250000000
-    },
-    "remainingWork": "Select the next bounded owner-directed slice. Further generation/AI performance, hardware certification, signing/publication, whole-game validation and Native RMG parity remain separate."
+    "result": "Profiling and instrumentation validated: construction confirmation 8.03-11.29 s versus 0.23-0.31 s core mutation; full End Turn 8.64-16.88 s. Repeated catalogs, forced save-summary scans and AI arrival/planning are measured bottlenecks. Twelve full session comparisons, Town/turn regressions, repo/diff and matching 248370060-byte Linux/Windows packages pass. No optimization implemented; owner direction needed before expanding profiling into fixes."
   },
   "latestEvidence": {
-    "id": "ux-visual-performance-file-saves-review-20260904",
-    "title": "Visual, Performance, And File Saves Review",
-    "sliceId": "ux-visual-performance-file-saves-review-20260904",
+    "id": "performance-large-town-build-and-end-turn-20260905-profile",
+    "title": "Large Map Town Construction And End Turn Profiling",
+    "sliceId": "performance-large-town-build-and-end-turn-20260905",
     "status": "completed",
-    "validatedAt": "2026-09-05T00:31:44Z",
-    "updatedAt": "2026-09-05T00:31:44Z",
-    "latestFinding": "Named-file save UI replaces the visible three-slot limit; duplicate snapshot copies and JSON parsing were measured save stalls. Live town pixels now match canonical art and presentation preserves aspect.",
+    "scope": "profiling_tooling_only_no_runtime_optimization",
+    "validatedAt": "2026-09-05T09:29:32Z",
     "artifacts": [
-      "docs/visual-performance-file-saves-report.md",
-      ".artifacts/visual_performance_file_saves_review/named_save_files_report.json",
-      ".artifacts/visual_performance_file_saves_review/large_final.log",
-      ".artifacts/visual_performance_file_saves_review/legacy_overwrite.log",
-      ".artifacts/overworld_town_proportion_environs_10236/report.json",
-      ".artifacts/packaging_linux_export_smoke/report.json",
-      ".artifacts/packaging_windows_export_smoke/report.json",
-      ".artifacts/visual_performance_file_saves_review/linux-generated-flow/live_validation_report.json"
+      "docs/large-town-build-and-end-turn-performance-report.md",
+      ".artifacts/large_town_build_end_turn_20260905/instrumented/report.json",
+      ".artifacts/large_town_build_end_turn_20260905/state_parity.json",
+      ".artifacts/large_town_build_end_turn_20260905/validation/repo.log",
+      ".artifacts/large_town_build_end_turn_20260905/validation/linux-final/report.json",
+      ".artifacts/large_town_build_end_turn_20260905/validation/windows-final/report.json"
     ],
-    "commands": [
-      "python3 tests/overworld_town_proportion_environs_report.py",
-      "godot4 --headless --path . res://tests/large_generated_map_runtime_profile_report.tscn",
-      "python3 tests/validate_repo.py",
-      "python3 tests/packaging_linux_export_smoke.py",
-      "python3 tests/packaging_windows_export_smoke.py",
-      "git diff --check",
-      "python3 tests/named_save_files_regression.py",
-      "godot4 --headless --path . --audio-driver Dummy res://tests/manual_save_overwrite_regression.tscn",
-      "godot4 --headless --path . --audio-driver Dummy res://tests/save_transactional_commit_regression.tscn",
-      "godot4 --headless --path . --audio-driver Dummy res://tests/save_slot_delete_regression.tscn",
-      "godot4 --headless --path . --audio-driver Dummy res://tests/generated_large_town_explicit_save_surface_regression.tscn",
-      "godot4 --headless --path . --audio-driver Dummy res://tests/overworld_faction_town_sprite_runtime_report.tscn",
-      "godot4 --headless --path . --audio-driver Dummy res://tests/overworld_generated_large_town_scale_runtime_report.tscn"
-    ],
-    "metrics": {
-      "save_version": 9,
-      "large_map_width": 108,
-      "large_map_height": 108,
-      "materialized_signature": "7362cf00",
-      "source_objects_preserved": 2961,
-      "snapshot_save_before_ms": 4178.184,
-      "snapshot_save_after_ms": 2036.6,
-      "named_file_save_ms": 2132.96,
-      "named_files_tested": 9,
-      "authored_town_identities_tested": 26,
-      "linux_pck_bytes": 248369356,
-      "windows_pck_bytes": 248369356,
-      "package_ceiling_bytes": 250000000
-    },
-    "remainingWork": "Select the next bounded owner-directed slice. Further generation/AI performance, hardware certification, signing/publication, whole-game validation and Native RMG parity remain separate."
+    "result": "Profiling and instrumentation validated: construction confirmation 8.03-11.29 s versus 0.23-0.31 s core mutation; full End Turn 8.64-16.88 s. Repeated catalogs, forced save-summary scans and AI arrival/planning are measured bottlenecks. Twelve full session comparisons, Town/turn regressions, repo/diff and matching 248370060-byte Linux/Windows packages pass. No optimization implemented; owner direction needed before expanding profiling into fixes."
   },
   "latestEvidenceArtifacts": [
-    "docs/visual-performance-file-saves-report.md",
-    ".artifacts/visual_performance_file_saves_review/named_save_files_report.json",
-    ".artifacts/visual_performance_file_saves_review/large_final.log",
-    ".artifacts/visual_performance_file_saves_review/legacy_overwrite.log",
-    ".artifacts/overworld_town_proportion_environs_10236/report.json",
-    ".artifacts/packaging_linux_export_smoke/report.json",
-    ".artifacts/packaging_windows_export_smoke/report.json",
-    ".artifacts/visual_performance_file_saves_review/linux-generated-flow/live_validation_report.json"
+    "docs/large-town-build-and-end-turn-performance-report.md",
+    ".artifacts/large_town_build_end_turn_20260905/instrumented/report.json",
+    ".artifacts/large_town_build_end_turn_20260905/state_parity.json",
+    ".artifacts/large_town_build_end_turn_20260905/validation/repo.log",
+    ".artifacts/large_town_build_end_turn_20260905/validation/linux-final/report.json",
+    ".artifacts/large_town_build_end_turn_20260905/validation/windows-final/report.json"
   ],
-  "latestEvidenceId": "ux-visual-performance-file-saves-review-20260904",
-  "latestFinding": "Named-file save UI replaces the visible three-slot limit; duplicate snapshot copies and JSON parsing were measured save stalls. Live town pixels now match canonical art and presentation preserves aspect.",
+  "latestEvidenceId": "performance-large-town-build-and-end-turn-20260905-profile",
+  "latestFinding": "Full building confirmation repeatedly builds catalogs and forces stored-save inspection; day-three End Turn has 4.411 s inside arrival resolution versus 39 ms target repair.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -22023,9 +21957,66 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Review completed. Select a new bounded owner-directed slice before unrelated implementation work.",
-  "notes": "Owner-directed visual, performance and file-saves review completed in Phase 6.",
+  "nextActionGuardrailNote": "Do not turn the owner profiling request into gameplay/performance changes without approval. The selected profile tooling is validated; optimization is not complete.",
+  "notes": "Profiling and instrumentation validated: construction confirmation 8.03-11.29 s versus 0.23-0.31 s core mutation; full End Turn 8.64-16.88 s. Repeated catalogs, forced save-summary scans and AI arrival/planning are measured bottlenecks. Twelve full session comparisons, Town/turn regressions, repo/diff and matching 248370060-byte Linux/Windows packages pass. No optimization implemented; owner direction needed before expanding profiling into fixes.",
   "plannedSlices": [
+    {
+      "id": "performance-large-town-build-and-end-turn-20260905",
+      "title": "Large Map Town Construction And End Turn",
+      "status": "in_progress",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "tooling_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md",
+        "docs/large-town-build-and-end-turn-performance-requirements.md",
+        "docs/large-generated-map-runtime-performance-report.md",
+        "docs/visual-performance-file-saves-report.md",
+        "docs/large-town-build-and-end-turn-performance-report.md"
+      ],
+      "purpose": "Profile complete Large-map building purchases and End Turn; identify concrete bottlenecks and apply behavior-preserving optimizations if approved.",
+      "implementationTargets": [
+        "scenes/town/TownShell.gd",
+        "scripts/core/TownRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests"
+      ],
+      "completionCriteria": [
+        "Deterministic live building/turn wall-time and bucket evidence",
+        "Concrete source-backed root causes",
+        "For approved fixes: matched before/after state and decision parity with measured improvement",
+        "Relevant runtime, repository, diff and both-platform package checks pass"
+      ],
+      "nonGoals": [
+        "No RMG semantics, gameplay/AI-policy changes, visual redesign, schema migration, skipped autosaves, hidden-deferred stalls, unrelated cleanup, package-limit changes or release claims"
+      ],
+      "validationCommands": [
+        "python3 tests/large_town_build_end_turn_profile.py",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py"
+      ],
+      "createdAt": "2026-09-05T09:00:07Z",
+      "startedAt": "2026-09-05T09:00:07Z",
+      "updatedAt": "2026-09-05T09:29:32Z",
+      "notes": "Profiling and instrumentation validated: construction confirmation 8.03-11.29 s versus 0.23-0.31 s core mutation; full End Turn 8.64-16.88 s. Repeated catalogs, forced save-summary scans and AI arrival/planning are measured bottlenecks. Twelve full session comparisons, Town/turn regressions, repo/diff and matching 248370060-byte Linux/Windows packages pass. No optimization implemented; owner direction needed before expanding profiling into fixes.",
+      "profilingStatus": "completed",
+      "optimizationStatus": "awaiting_owner_direction",
+      "validationEvidence": [
+        "docs/large-town-build-and-end-turn-performance-report.md",
+        ".artifacts/large_town_build_end_turn_20260905/instrumented/report.json",
+        ".artifacts/large_town_build_end_turn_20260905/state_parity.json",
+        ".artifacts/large_town_build_end_turn_20260905/validation/repo.log",
+        ".artifacts/large_town_build_end_turn_20260905/validation/linux-final/report.json",
+        ".artifacts/large_town_build_end_turn_20260905/validation/windows-final/report.json"
+      ]
+    },
     {
       "id": "ux-visual-performance-file-saves-review-20260904",
       "title": "Visual, Performance, And File Saves Review",
@@ -109512,8 +109503,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "No gap remains in the bounded review. Large-map generation and AI latency, renderer shutdown RID warning, the separate field-hero marker smoke assertion and release certification remain unresolved.",
-  "remainingWork": "Select the next bounded owner-directed slice. Further generation/AI performance, hardware certification, signing/publication, whole-game validation and Native RMG parity remain separate.",
+  "remainingGap": "Profiling is complete, but runtime construction and End Turn latency are not fixed.",
+  "remainingWork": "Owner confirmation to apply the source-backed optimizations; then matched before/after validation. Broader release work remains separate.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -109944,7 +109935,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "visual_performance_file_saves_completed",
+  "result": "large_town_build_end_turn_profiling",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -110045,9 +110036,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed town presentation polish, measured save-path optimization and named-file saving with validated legacy compatibility.",
+  "summary": "Profiling and instrumentation validated: construction confirmation 8.03-11.29 s versus 0.23-0.31 s core mutation; full End Turn 8.64-16.88 s. Repeated catalogs, forced save-summary scans and AI arrival/planning are measured bottlenecks. Twelve full session comparisons, Town/turn regressions, repo/diff and matching 248370060-byte Linux/Windows packages pass. No optimization implemented; owner direction needed before expanding profiling into fixes.",
   "taskId": "10236",
-  "updatedAt": "2026-09-05T00:31:44Z",
+  "updatedAt": "2026-09-05T09:29:32Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
