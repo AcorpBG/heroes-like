@@ -15,10 +15,17 @@ This document is about H3MapEd recovery, not about the current native implementa
 
 ## Evidence Base
 
-Canonical binary:
+Historical recovery binary (already seed-58 patched; not a clean seed-patch input):
 
 - `.artifacts/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime/h3maped.exe`
 - SHA-256: `f1ab1565fdfb7581cf67ca18a5349bf26fce59f696ea33061f941d80fcc069be`
+
+The 2026-09-05 audit used clean `/root/Downloads/h3maped.exe`, SHA-256
+`4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37`,
+with the established artifact-only seed-constructor patch and recorded Wine
+traces. Provenance, matched inputs and fresh results are in
+`docs/rmg-start-placement-and-h3maped-audit.md`; no research executable or source
+game resources are shipped with the original game.
 
 Primary recovery ledgers and summaries:
 
@@ -45,7 +52,7 @@ R7 recovery status:
 - Ordered replay phases recovered: `18`.
 - Recovery manifest: `7` checkpoints, `49` frontier summaries, `178` recovered functions.
 - Native behavior changed by the R7 recovery artifacts alone: `false`.
-- Current native implementation: complete for the selected 24-workflow supported release matrix; broader H3MapEd configurations are not claimed by this ledger.
+- Current native implementation: the 2026-09-05 audit found one selected normal-water mismatch and runtime start/level/player adoption gaps. The fixed recovery inventory above is not a native completion claim; see `docs/rmg-start-placement-and-h3maped-audit.md`.
 
 ## Recovery Status Labels
 
@@ -498,9 +505,9 @@ Before native output can be called parity:
 Current native status, by the recovery ledger:
 
 - H3MapEd fixed recovery ledger: complete.
-- Native parity: complete for the selected 24-workflow supported release matrix across Small through XLarge, one/two levels, and land/normal-water/Islands.
-- Public `MapPackageService` owns authority-independent payload projection, paired map/scenario packages, and package-session adoption for that supported matrix.
-- Unsupported shapes, strengths, and broader H3MapEd configuration or allocator histories remain outside the completion claim and fail closed rather than being inferred.
+- Native parity: September audit comparisons are exact for 23 of 24 selected retained full-payload cases. Medium normal-water seed 10 differs; fresh owner grids first show a mismatch between post-`0x4a4c8e` and pre-`0x49eb8d`. Full details and unproven buffers are in the audit report, not inferred from final-map deltas.
+- Public `MapPackageService` implements authority-independent payload projection and paired map/scenario packages. Live session adoption remains exposed but has confirmed starting-tile, level and opponent-identity defects; successful serialization/export is not playable adoption.
+- Unsupported shapes, strengths, and broader H3MapEd configuration or allocator histories must fail closed rather than being inferred. This audit changed no runtime gates, native phases or gameplay rules.
 
 ## Invalid Work Patterns
 

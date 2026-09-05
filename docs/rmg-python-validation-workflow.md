@@ -23,13 +23,33 @@ H3MapEd RMG core proves final payload parity for a controlled authority case,
 `.amap`/`.ascenario` packages. Runtime package output is fail-closed unless the
 same-run compare is complete, native object serialization matches, and no
 recovered tile/object authority bytes were replayed. Native map JSON remains
-disabled. Public runtime generation is enabled only for the supported parity
-matrix and fails closed outside it.
+disabled. Public runtime generation is enabled for the configured release
+matrix and rejects unsupported shapes/strengths. That allowlist is not a
+per-request proof of current parity or correct live adoption; see the audit
+status below.
 
-## Current Completion Status
+## Current Validation Status — 2026-09-05
 
-As of 2026-07-19, this section supersedes the historical blocker descriptions
-below. The selected release matrix is exact for all 24 workflows spanning
+The owner-directed audit in `docs/rmg-start-placement-and-h3maped-audit.md`
+supersedes the blanket current completion claim below. Fresh unassisted native
+payloads match 23 of 24 retained selected owner cases; Medium normal-water seed
+10 differs, including private-state differences confirmed against a fresh
+executable run. Runtime start placement, two-level adoption and player-slot
+identity also have confirmed gaps. The legacy Godot boundary report currently
+fails its stale raw creature-bank expectation after authored-pool adoption.
+
+Generation remains exposed through `MapPackageService`; this audit did not
+change support gates or generation rules. Passing config normalization, native
+selftests or package startup is not playable adoption or all-phase parity.
+Python-owned `tools/rmg_start_placement_audit.py` and
+`tools/rmg_retained_authority_audit.py` record these boundaries, with sample
+limits and expected failing comparisons explicit in the audit report.
+
+## Historical Completion Record — 2026-07-19
+
+The July-19 record superseded the earlier blocker descriptions below, but is
+not current validation after the September audit. It recorded the selected
+release matrix as exact for all 24 workflows spanning
 Small, Medium, Large, and XLarge sizes; one and two levels; and land,
 normal-water, and Islands modes. Public `MapPackageService::generate_random_map`
 uses authority-independent inputs and owns payload projection, paired
@@ -43,9 +63,10 @@ the selected supported matrix.
 
 ## Historical Blocker Record
 
-The material below is retained as the implementation history that led to the
-completed matrix. Statements that public runtime generation is disabled or that
-the matrix is incomplete are superseded by the completion status above.
+The material below is retained as implementation history. Public runtime
+generation is no longer disabled as these older entries describe. Current
+parity/adoption gaps are stated in the September validation status above;
+neither historical blockages nor historical completion statements override it.
 
 Controlled Medium seed-10 setup-1 package projection is proven,
 but public `MapPackageService::generate_random_map` still lacks a production

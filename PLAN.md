@@ -24,9 +24,25 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- No owner-directed slice remains in progress; select the next bounded slice from the measured gaps, not an automatic balance/art rewrite.
+- Most recently completed owner-directed audit: `audit-rmg-start-placement-and-h3maped-comparison-20260905`; 36 runtime requests, 83 generated starts, 23/24 exact retained owner payloads, fresh executable/private-state water mismatch, and confirmed start/level/opponent/transit adoption gaps. Audit findings are not runtime fixes or parity completion; no slice is active. Select a bounded correction from `docs/rmg-start-placement-and-h3maped-audit.md` before implementing.
 - Most recently completed owner-directed implementation slice: `performance-full-play-runtime-review-20260905`: indexed content and demand-shaped save bars, safe warning/dialog/cursor lifecycle and exact controller tile selection; matched Battle refresh -60.9%, Large purchase waiting -27.6%, ten-turn waiting -15.4%, with 78 complete state comparisons and both-platform checks. Campaign-driver/AT-SPI, Moonbite pacing and existing Town visual gaps remain documented.
 - Current package boundary: matching Linux and Windows release exports measure 248376908 bytes, 1623092 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+
+## RMG Starting Heroes And H3MapEd Comparison Audit
+
+id: `audit-rmg-start-placement-and-h3maped-comparison-20260905`
+
+Status: completed 2026-09-05. Owner-directed audit-only child of the Phase 6 exact-mask runtime start selection correction, reviewing the Phase 3 native RMG boundary. Deterministic source-backed findings and explicit sampling limits are documented; no production behavior changed. Python/repository/native/platform checks pass, while the discovered native water comparison and stale legacy creature-bank assertion remain explicitly failing.
+
+Requirements/evidence: `docs/rmg-start-placement-and-h3maped-audit.md`, `docs/lessons-learned.md`, `docs/h3maped-rmg-end-to-end-behavior.md`, `docs/rmg-python-validation-workflow.md`, and `docs/native-rmg-authored-object-pool-adoption-report.md`.
+
+Targets: recovered core and source evidence; active native package projection/configuration; Godot session, hero/town/level adoption; deterministic Python-owned audit coverage. Compare the selected size/water/level matrix and player configuration boundaries, then report exact source-backed differences and unproven areas.
+
+Validation: deterministic start/town/route/level evidence, active native selftests on Linux and Windows, selected owner-payload/private-state comparisons where retained evidence exists, focused runtime adoption reports, Python audit tests, `python3 tests/validate_repo.py`, and `git diff --check`.
+
+Completion: reproducible hero-start diagnosis; broad subsystem/configuration coverage with explicit sampling limits; current recovered-source comparisons distinguished from historical claims and missing evidence; prioritized implementation/recovery gaps with exact owners; truthful audit report and tracker. No gameplay/system implementation credit for this audit.
+
+Non-goals: no generator, topology, density, object mask, RNG, gameplay, balance, save-schema, art or Town UI changes; no heuristic repairs, exhaustive-seed/full-H3MapEd parity claims, unrelated cleanup or release certification.
 
 ## Full Play Runtime Review And Optimization
 
@@ -12338,11 +12354,11 @@ State: foundation evidence is broad but not product completion. Completed implem
 Goal: translate HoMM-style random-map structure into original content and systems.
 
 Current boundary:
-- The source-backed native release matrix is byte-exact for 24 selected workflows across Small through Extra Large, land/normal-water/Islands, and one/two levels.
-- Runtime package/session adoption is authorized only for that parity-owned matrix; unsupported configurations and allocator histories remain fail-closed.
+- The 2026-09-05 audit supersedes the blanket current 24-workflow completion claim: 23 of 24 freshly generated selected payloads match retained owner bytes; Medium normal-water seed 10 differs, confirmed by fresh executable/private-state evidence.
+- The exposed package/session surface has confirmed displaced/blocked starts, level flattening and faction-keyed opponent merging. Generation parity and playable adoption need separate corrections/certification; this audit does not change runtime support gates.
 - The H3MapEd recovery ledger is prerequisite evidence and source ownership, not permission to claim arbitrary H3MapEd configuration parity.
 - Player-facing generated-skirmish controls now adopt the same 24-workflow boundary instead of retaining the older Small/Medium surface-land fence.
-- Native/generated package adoption evidence must remain scoped to the selected release matrix and must not be presented as whole-H3MapEd parity.
+- Evidence and exact follow-up owners: `docs/rmg-start-placement-and-h3maped-audit.md`. Unsupported configurations/allocator histories must remain fail-closed; selected matrix evidence must not be presented as whole-H3MapEd parity.
 
 ### Phase 4 - Headless AI Agent Balance Harness
 
