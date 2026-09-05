@@ -95,6 +95,16 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 		var response_result := OverworldRules.perform_context_action(session, "site_response")
 		_expect(bool(response_result.get("ok", false)), "%s repair response failed: %s" % [site_id, JSON.stringify(response_result)])
 	var active_node: Dictionary = _node_result(session, placement_id).get("node", {})
+	if site_id == "site_slipgate_mirror":
+		# The later density-content slice added a legitimate pickup on this
+		# approach. It must be collected before the exact safe transit opens.
+		var entry_cache: Dictionary = _node_result(session, "density_10230_switchback_cache").get("node", {})
+		_expect(not entry_cache.is_empty() and not bool(entry_cache.get("collected", false)), "Slipgate entry pickup fixture is missing or already collected.")
+		_expect(OverworldRules.active_linked_transit_edges(session).is_empty(), "Slipgate bypassed an uncollected entry pickup.")
+		_set_position(session, from_tile)
+		var pickup_result := OverworldRules._resolve_post_move_interaction(session)
+		entry_cache = _node_result(session, "density_10230_switchback_cache").get("node", {})
+		_expect(bool(pickup_result.get("ok", false)) and bool(entry_cache.get("collected", false)), "Slipgate entry pickup did not resolve through normal arrival.")
 	var active_asset_id := String(view.call("_resource_asset_id", active_node))
 	var texture = view.call("_object_texture_for_asset", active_asset_id)
 	var active_art_resolves: bool = active_asset_id == String(case.get("active", "")) and texture is AtlasTexture and texture.atlas.resource_path == ATLAS_PATH and texture.region == case.get("region")

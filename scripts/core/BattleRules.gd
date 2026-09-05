@@ -2,6 +2,7 @@ class_name BattleRules
 extends RefCounted
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
@@ -91,11 +92,13 @@ static func create_town_assault_payload(
 		return {}
 	var town_template: Dictionary = ContentService.get_town(String(town.get("town_id", "")))
 	var enemy_commander := _town_assault_enemy_commander_state(town)
+	var entrance := LevelRules.town_entrance(town)
 	var placement := {
 		"placement_id": "town_assault:%s" % town_placement_id,
 		"encounter_id": "encounter_town_assault",
-		"x": int(town.get("x", 0)),
-		"y": int(town.get("y", 0)),
+		"x": int(entrance.x),
+		"y": int(entrance.y),
+		"level": LevelRules.level_of(town),
 		"combat_seed": hash(
 			"%s:%s:%d:town_assault:%s"
 			% [session.scenario_id, session.launch_mode, session.day, town_placement_id]
@@ -140,6 +143,7 @@ static func create_resource_defense_payload(
 		"encounter_id": "encounter_resource_defense",
 		"x": int(node.get("x", 0)),
 		"y": int(node.get("y", 0)),
+		"level": LevelRules.level_of(node),
 		"combat_seed": hash(
 			"%s:%s:%d:resource_defense:%s"
 			% [session.scenario_id, session.launch_mode, session.day, resource_placement_id]
@@ -189,10 +193,11 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 	buckets["setup_payload_inputs"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	var battle = {
-		"position": {
+		"position": LevelRules.position({
 			"x": int(encounter_placement.get("x", OverworldRulesScript.hero_position(session).x)),
 			"y": int(encounter_placement.get("y", OverworldRulesScript.hero_position(session).y)),
-		},
+			"level": LevelRules.level_of(encounter_placement),
+		}),
 		"encounter_id": encounter_id,
 		"encounter_name": _battle_name(session, encounter, battle_context, encounter_placement),
 		"resolved_key": OverworldRulesScript.encounter_key(encounter_placement),
@@ -362,6 +367,8 @@ static func _synthetic_battle_encounter_placement(
 		"combat_seed": int(session.battle.get("combat_seed", 0)),
 		"battle_context": synthetic_context.duplicate(true),
 	}
+	if LevelRules.level_of(position) != 0:
+		synthetic["level"] = LevelRules.level_of(position)
 	if _is_resource_assault_context(synthetic_context):
 		synthetic["target_kind"] = "resource"
 		synthetic["target_placement_id"] = String(synthetic_context.get("resource_placement_id", ""))
@@ -395,7 +402,7 @@ static func _battle_context_town_placement_id(
 		position_y = int(position.get("y", 0))
 	var x := int(source.get("x", position_x))
 	var y := int(source.get("y", position_y))
-	return String(_find_town_at_position(session, x, y).get("town", {}).get("placement_id", ""))
+	return String(_find_town_at_position(session, x, y, LevelRules.level_of(source)).get("town", {}).get("placement_id", ""))
 
 static func _battle_context_resource_placement_id(context: Dictionary, raw_context: Variant) -> String:
 	var placement_id := String(context.get("resource_placement_id", ""))
@@ -461,16 +468,18 @@ static func _battle_context_target_hero_id(
 static func _find_town_at_position(
 	session: SessionStateStoreScript.SessionData,
 	x: int,
-	y: int
+	y: int,
+	level: int = 0
 ) -> Dictionary:
 	if session == null:
 		return {"index": -1, "town": {}}
 	var towns = session.overworld.get("towns", [])
 	for index in range(towns.size()):
 		var town = towns[index]
-		if not (town is Dictionary):
+		if not (town is Dictionary) or not LevelRules.on_level(town, level):
 			continue
-		if int(town.get("x", -9999)) == x and int(town.get("y", -9999)) == y:
+		var entrance := LevelRules.town_entrance(town)
+		if (int(town.get("x", -9999)) == x and int(town.get("y", -9999)) == y) or (int(entrance.x) == x and int(entrance.y) == y):
 			return {"index": index, "town": town}
 	return {"index": -1, "town": {}}
 
@@ -734,11 +743,11 @@ static func _sync_battle_context_anchors(
 				town["owner"] = "enemy"
 			towns[town_index] = town
 			session.overworld["towns"] = towns
-			session.battle["position"] = {"x": int(town.get("x", 0)), "y": int(town.get("y", 0))}
+			session.battle["position"] = LevelRules.town_entrance(town)
 		"resource_assault":
 			var node: Dictionary = OverworldRulesScript._find_resource_node_by_placement(session, String(context.get("resource_placement_id", ""))).get("node", {})
 			if not node.is_empty():
-				session.battle["position"] = {"x": int(node.get("x", 0)), "y": int(node.get("y", 0))}
+				session.battle["position"] = LevelRules.position(node)
 
 static func _normalized_battle_resolved_key(
 	session: SessionStateStoreScript.SessionData,
@@ -1202,10 +1211,11 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 	)
 	session.battle["terrain"] = String(session.battle.get("terrain", "plains"))
 	var battle_position = session.battle.get("position", {})
-	session.battle["position"] = {
+	session.battle["position"] = LevelRules.position({
 		"x": int(battle_position.get("x", OverworldRulesScript.hero_position(session).x)),
 		"y": int(battle_position.get("y", OverworldRulesScript.hero_position(session).y)),
-	}
+		"level": LevelRules.level_of(battle_position),
+	})
 	var encounter = ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
 	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var encounter_placement = _current_battle_encounter_placement(session)
@@ -3866,7 +3876,8 @@ static func _build_withdrawal_aftermath_preview(
 		session,
 		"player",
 		int(battle_position.get("x", 0)),
-		int(battle_position.get("y", 0))
+		int(battle_position.get("y", 0)),
+		LevelRules.level_of(battle_position)
 	)
 	if int(nearest_town_result.get("index", -1)) >= 0:
 		var town = nearest_town_result.get("town", {})
@@ -7409,7 +7420,8 @@ static func _build_collapse_aftermath_preview(
 			session,
 			"player",
 			int(battle_position.get("x", 0)),
-			int(battle_position.get("y", 0))
+			int(battle_position.get("y", 0)),
+			LevelRules.level_of(battle_position)
 		)
 		if int(nearest_town_result.get("index", -1)) >= 0:
 			target_town_id = String(nearest_town_result.get("town", {}).get("placement_id", ""))
@@ -7999,7 +8011,7 @@ static func _normalize_stack(stack: Variant) -> Dictionary:
 	var affiliation := String(stack.get("affiliation", unit.get("affiliation", "")))
 	if affiliation == "":
 		affiliation = "faction" if faction_id != "" else "neutral"
-	return {
+	var normalized := {
 		"battle_id": String(stack.get("battle_id", "%s_%s" % [String(stack.get("side", "stack")), unit_id])),
 		"side": String(stack.get("side", "player")),
 		"faction_id": faction_id,
@@ -8037,6 +8049,11 @@ static func _normalize_stack(stack: Variant) -> Dictionary:
 		"source_town_placement_id": String(stack.get("source_town_placement_id", "")),
 		"source_encounter_key": String(stack.get("source_encounter_key", "")),
 	}
+	# Surviving stacks return to their original army slots after disk resume.
+	var army_slot_index := int(stack.get("army_slot_index", -1))
+	if army_slot_index >= 0 and army_slot_index < HeroCommandRulesScript.ARMY_SLOT_COUNT:
+		normalized["army_slot_index"] = army_slot_index
+	return normalized
 
 static func _hex_board_descriptor() -> Dictionary:
 	return {

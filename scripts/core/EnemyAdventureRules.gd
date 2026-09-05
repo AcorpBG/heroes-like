@@ -6,6 +6,7 @@ const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
+const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 static var _path_distance_surface_cache: Dictionary = {}
 
@@ -534,7 +535,7 @@ static func artifact_target_valuation_breakdown(
 	if resolved_faction_id == "":
 		resolved_faction_id = String(config.get("faction_id", ""))
 	var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
-	var goal_distance := known_goal_distance if known_goal_distance >= 0 else _path_distance(session, origin_pos, [target_tile], "", resolved_faction_id)
+	var goal_distance := known_goal_distance if known_goal_distance >= 0 else _path_distance(session, origin_pos, [target_tile], "", resolved_faction_id, LevelRules.level_of(node))
 	if goal_distance >= 9999:
 		return {}
 	var roles := _normalize_string_array(artifact.get("roles", []))
@@ -565,7 +566,7 @@ static func artifact_target_valuation_breakdown(
 	var source_value: int = min(45, source_contexts.size() * 10 + source_context_tags.size() * 4)
 	var affinity_value: int = 32 if faction_match else 0
 	var set_context_value: int = 18 if set_id != "" else 0
-	var objective_value: int = int(preloaded_objective_value) if preloaded_objective_value is int else _objective_proximity_bonus(session, target_tile.x, target_tile.y)
+	var objective_value: int = int(preloaded_objective_value) if preloaded_objective_value is int else _objective_proximity_bonus(session, target_tile.x, target_tile.y, LevelRules.level_of(node))
 	var faction_bias: int = priority_target_bonus(config, placement_id)
 	var travel_cost: int = max(0, goal_distance - 1) * 3
 	var assignment_penalty: int = _assignment_penalty(session, "artifact", placement_id)
@@ -1114,7 +1115,7 @@ static func _pressure_host_reachable_from_raid(
 		Vector2i(int(reference_raid.get("x", 0)), int(reference_raid.get("y", 0))),
 		goal_tiles,
 		String(reference_raid.get("placement_id", "")),
-		faction_id
+		faction_id, LevelRules.level_of(reference_raid)
 	) < 9999
 
 static func _raid_has_active_player_battle_pressure_route(
@@ -1154,7 +1155,7 @@ static func _battle_pressure_floor_route_clearance_plan(
 	var best := {}
 	var best_score := -999999
 	for town_value in session.overworld.get("towns", []):
-		if not (town_value is Dictionary):
+		if not (town_value is Dictionary) or not LevelRules.same_level(town_value, raid):
 			continue
 		var town: Dictionary = town_value
 		if String(town.get("owner", "neutral")) != "player":
@@ -1165,7 +1166,7 @@ static func _battle_pressure_floor_route_clearance_plan(
 		var staging_tiles := _town_staging_tiles(session, town)
 		if staging_tiles.is_empty():
 			continue
-		if _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), faction_id) < 9999:
+		if _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid)) < 9999:
 			continue
 		var candidate := _battle_pressure_route_plan_for_town(
 			session,
@@ -1259,10 +1260,10 @@ static func _battle_pressure_route_guard_candidate(
 	var staging_tiles := _encounter_staging_tiles(session, route_guard)
 	if staging_tiles.is_empty():
 		return {}
-	var goal_distance := _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), faction_id)
+	var goal_distance := _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid))
 	if goal_distance >= 9999:
 		return {}
-	var goal_tile := _best_goal_tile(session, origin, staging_tiles, faction_id)
+	var goal_tile := _best_goal_tile(session, origin, staging_tiles, faction_id, LevelRules.level_of(raid))
 	var guard_tile := Vector2i(int(route_guard.get("x", 0)), int(route_guard.get("y", 0)))
 	var town_staging := _town_staging_tiles(session, town)
 	var town_gap := _min_manhattan_distance_to_tiles(guard_tile, town_staging)
@@ -1425,7 +1426,7 @@ static func _battle_pressure_route_frontier_candidate(
 			+ (active_count * 6) \
 			+ (gap_improvement * 14) \
 			- (route_distance * 3)
-		var target_id := "explore:%d:%d" % [tile.x, tile.y]
+		var target_id := exploration_target_id(tile, LevelRules.level_of(raid))
 		if best.is_empty() or score > best_score or (
 			score == best_score
 			and route_distance < int(best.get("goal_distance", 9999))
@@ -1525,7 +1526,7 @@ static func _explicit_objective_fallback_target_selection_plan(
 				origin,
 				_encounter_staging_tiles(session, guard),
 				String(raid.get("placement_id", "")),
-				faction_id
+				faction_id, LevelRules.level_of(raid)
 			) >= 9999:
 				continue
 		elif target_kind == "artifact":
@@ -1537,10 +1538,10 @@ static func _explicit_objective_fallback_target_selection_plan(
 				origin,
 				_encounter_staging_tiles(session, guard),
 				String(raid.get("placement_id", "")),
-				faction_id
+				faction_id, LevelRules.level_of(raid)
 			) >= 9999:
 				continue
-		var distance := _path_distance(session, origin, goal_tiles, String(raid.get("placement_id", "")), faction_id)
+		var distance := _path_distance(session, origin, goal_tiles, String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid))
 		var candidate := {
 			"target_kind": target_kind,
 			"target_placement_id": target_id,
@@ -1668,7 +1669,7 @@ static func _current_tile_resource_target_selection_plan(
 		return {}
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	for node_value in session.overworld.get("resource_nodes", []):
-		if not (node_value is Dictionary):
+		if not (node_value is Dictionary) or not LevelRules.same_level(node_value, raid):
 			continue
 		var node: Dictionary = node_value
 		if _resource_interaction_tile(node) != current:
@@ -1834,7 +1835,7 @@ static func _active_front_support_candidate(
 			target_x = int(node.get("x", 0))
 			target_y = int(node.get("y", 0))
 			goal_tiles = [Vector2i(target_x, target_y)]
-			objective_anchor = _objective_proximity_bonus(session, target_x, target_y) > 0
+			objective_anchor = _objective_proximity_bonus(session, target_x, target_y, _target_level(session, target_kind, target_id, faction_id)) > 0
 		"artifact":
 			var artifact_result := _find_artifact_by_placement(session, target_id)
 			if int(artifact_result.get("index", -1)) < 0:
@@ -1989,7 +1990,7 @@ static func ai_live_town_retake_target_selection_plan(
 	var current_placement_id := String(raid.get("placement_id", ""))
 	var best := {}
 	for town_value in session.overworld.get("towns", []):
-		if not (town_value is Dictionary):
+		if not (town_value is Dictionary) or not LevelRules.same_level(town_value, raid):
 			continue
 		var town: Dictionary = town_value
 		if String(town.get("owner", "neutral")) != "player":
@@ -2009,12 +2010,12 @@ static func ai_live_town_retake_target_selection_plan(
 		var staging_tiles := _town_staging_tiles(session, town)
 		var goal_distance := _path_distance_with_context(preloaded_path_context, origin_pos, staging_tiles) \
 			if not preloaded_path_context.is_empty() \
-			else _path_distance(session, origin_pos, staging_tiles, current_placement_id, faction_id)
+			else _path_distance(session, origin_pos, staging_tiles, current_placement_id, faction_id, LevelRules.level_of(raid))
 		if goal_distance >= 9999:
 			continue
 		var goal_tile := _best_goal_tile_with_path_context(preloaded_path_context, origin_pos, staging_tiles) \
 			if not preloaded_path_context.is_empty() \
-			else _best_goal_tile(session, origin_pos, staging_tiles, faction_id)
+			else _best_goal_tile(session, origin_pos, staging_tiles, faction_id, LevelRules.level_of(raid))
 		var objective_anchor := _town_is_objective_anchor(session, town_id)
 		var reason_codes := ["town_siege", "retake_front"]
 		if objective_anchor:
@@ -2090,12 +2091,12 @@ static func ai_post_capture_town_support_target_selection_plan(
 	var staging_tiles := _town_staging_tiles(session, town)
 	var goal_distance := _path_distance_with_context(preloaded_path_context, origin_pos, staging_tiles) \
 		if not preloaded_path_context.is_empty() \
-		else _path_distance(session, origin_pos, staging_tiles, String(raid.get("placement_id", "")), faction_id)
+		else _path_distance(session, origin_pos, staging_tiles, String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid))
 	if goal_distance >= 9999:
 		return {}
 	var goal_tile := _best_goal_tile_with_path_context(preloaded_path_context, origin_pos, staging_tiles) \
 		if not preloaded_path_context.is_empty() \
-		else _best_goal_tile(session, origin_pos, staging_tiles, faction_id)
+		else _best_goal_tile(session, origin_pos, staging_tiles, faction_id, LevelRules.level_of(raid))
 	var reason_codes := ["town_defense", "front_stabilization", "garrison_reinforced", "post_capture_support"]
 	for code in previous_reason_codes:
 		if code in ["town_expansion", "neutral_town_claim", "neutral_town_siege", "objective_front"] and code not in reason_codes:
@@ -3572,7 +3573,7 @@ static func _remove_enemy_player_hero_sighting(
 static func _normalize_enemy_scouted_target_records(value: Variant, current_day: int = 0) -> Array:
 	var normalized := []
 	if not (value is Array):
-		return normalized
+		return LevelRules.canonical_spatial_records(normalized)
 	for record_value in value:
 		if not (record_value is Dictionary):
 			continue
@@ -3592,6 +3593,7 @@ static func _normalize_enemy_scouted_target_records(value: Variant, current_day:
 				"target_label": String(record.get("target_label", target_id)),
 				"x": int(record.get("x", 0)),
 				"y": int(record.get("y", 0)),
+				"level": LevelRules.level_of(record),
 				"scouted_day": scouted_day,
 				"expires_day": expires_day,
 				"source_spell_id": String(record.get("source_spell_id", "")),
@@ -3609,12 +3611,12 @@ static func _normalize_enemy_scouted_target_records(value: Variant, current_day:
 	)
 	while normalized.size() > RAID_ADVENTURE_SCOUTING_MAX_TARGET_RECORDS:
 		normalized.pop_back()
-	return normalized
+	return LevelRules.canonical_spatial_records(normalized)
 
 static func _normalize_enemy_hero_sighting_records(value: Variant, current_day: int = 0) -> Array:
 	var normalized := []
 	if not (value is Array):
-		return normalized
+		return LevelRules.canonical_spatial_records(normalized)
 	for record_value in value:
 		if not (record_value is Dictionary):
 			continue
@@ -3632,6 +3634,7 @@ static func _normalize_enemy_hero_sighting_records(value: Variant, current_day: 
 				"hero_label": String(record.get("hero_label", hero_id)),
 				"x": int(record.get("x", 0)),
 				"y": int(record.get("y", 0)),
+				"level": LevelRules.level_of(record),
 				"army_strength": max(0, int(record.get("army_strength", 0))),
 				"seen_day": seen_day,
 				"expires_day": expires_day,
@@ -3648,7 +3651,7 @@ static func _normalize_enemy_hero_sighting_records(value: Variant, current_day: 
 	)
 	while normalized.size() > AI_HERO_SIGHTING_MAX_RECORDS:
 		normalized.pop_back()
-	return normalized
+	return LevelRules.canonical_spatial_records(normalized)
 
 static func _merge_enemy_hero_sighting_record_arrays(existing_value: Variant, records_value: Variant, current_day: int) -> Array:
 	var by_id := {}
@@ -3698,7 +3701,7 @@ static func _current_enemy_player_hero_sighting_records(
 	var profile: Dictionary = projection_profile if projection_profile is Dictionary else {}
 	profile["hero_source_projection_count"] = int(profile.get("hero_source_projection_count", 0)) + sources.size()
 	if sources.is_empty():
-		return records
+		return LevelRules.canonical_spatial_records(records)
 	for hero_value in _player_hero_snapshots_for_intercept(session):
 		if not (hero_value is Dictionary):
 			continue
@@ -3710,7 +3713,7 @@ static func _current_enemy_player_hero_sighting_records(
 		var best_source := {}
 		var best_distance := 9999
 		for source_value in sources:
-			if not (source_value is Dictionary):
+			if not (source_value is Dictionary) or not LevelRules.same_level(source_value, hero):
 				continue
 			profile["hero_source_comparison_count"] = int(profile.get("hero_source_comparison_count", 0)) + 1
 			var source: Dictionary = source_value
@@ -3728,6 +3731,7 @@ static func _current_enemy_player_hero_sighting_records(
 				"hero_label": String(hero.get("name", hero_id)),
 				"x": hero_tile.x,
 				"y": hero_tile.y,
+				"level": LevelRules.level_of(hero),
 				"army_strength": _known_player_hero_strength(hero),
 				"seen_day": int(session.day),
 				"expires_day": int(session.day) + AI_HERO_SIGHTING_MEMORY_DAYS,
@@ -3737,7 +3741,7 @@ static func _current_enemy_player_hero_sighting_records(
 				"state_policy": "ai_known_world_memory",
 			}
 		)
-	return records
+	return LevelRules.canonical_spatial_records(records)
 
 static func _enemy_hero_sighting_sources(
 	session: SessionStateStoreScript.SessionData,
@@ -3746,7 +3750,7 @@ static func _enemy_hero_sighting_sources(
 ) -> Array:
 	var sources := []
 	if session == null or faction_id == "":
-		return sources
+		return LevelRules.canonical_spatial_records(sources)
 	for town_value in session.overworld.get("towns", []):
 		if not (town_value is Dictionary):
 			continue
@@ -3761,6 +3765,7 @@ static func _enemy_hero_sighting_sources(
 			"id": String(town.get("placement_id", "")),
 			"x": int(town.get("x", 0)),
 			"y": int(town.get("y", 0)),
+			"level": LevelRules.level_of(town),
 			"radius": radius,
 		})
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
@@ -3773,6 +3778,7 @@ static func _enemy_hero_sighting_sources(
 			"id": String(encounter.get("placement_id", "")),
 			"x": int(encounter.get("x", 0)),
 			"y": int(encounter.get("y", 0)),
+			"level": LevelRules.level_of(encounter),
 			"radius": AI_HERO_RAID_SIGHT_RADIUS,
 		})
 	for node_value in session.overworld.get("resource_nodes", []):
@@ -3790,9 +3796,10 @@ static func _enemy_hero_sighting_sources(
 			"id": String(node.get("placement_id", "")),
 			"x": int(node.get("x", 0)),
 			"y": int(node.get("y", 0)),
+			"level": LevelRules.level_of(node),
 			"radius": max(AI_HERO_RESOURCE_SITE_MIN_SIGHT_RADIUS, site_radius),
 		})
-	return sources
+	return LevelRules.canonical_spatial_records(sources)
 
 static func _current_enemy_scouted_target_records(
 	session: SessionStateStoreScript.SessionData,
@@ -3854,11 +3861,11 @@ static func _current_enemy_visible_target_records_for_source(
 	var records := []
 	var radius: int = max(0, int(source.get("radius", 0)))
 	if session == null or faction_id == "" or radius <= 0:
-		return records
+		return LevelRules.canonical_spatial_records(records)
 	var origin := Vector2i(int(source.get("x", 0)), int(source.get("y", 0)))
 	var target_catalog: Array = preloaded_target_catalog if preloaded_target_catalog is Array else _enemy_visible_target_catalog(session, config, faction_id)
 	for target_value in target_catalog:
-		if not (target_value is Dictionary):
+		if not (target_value is Dictionary) or not LevelRules.same_level(target_value, source):
 			continue
 		var target: Dictionary = target_value
 		_append_visible_scout_record(
@@ -3873,7 +3880,7 @@ static func _current_enemy_visible_target_records_for_source(
 			radius,
 			int(session.day)
 		)
-	return records
+	return LevelRules.canonical_spatial_records(records)
 
 
 static func _enemy_visible_target_catalog(
@@ -3883,7 +3890,7 @@ static func _enemy_visible_target_catalog(
 ) -> Array:
 	var catalog := []
 	if session == null or faction_id == "":
-		return catalog
+		return LevelRules.canonical_spatial_records(catalog)
 	var objective_anchor_surface := _objective_anchor_surface(session)
 	var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", []) if objective_anchor_surface.get("tiles", []) is Array else []
 	for town_value in session.overworld.get("towns", []):
@@ -3897,7 +3904,8 @@ static func _enemy_visible_target_catalog(
 			"target_kind": "town",
 			"target_id": String(town.get("placement_id", "")),
 			"target_label": _town_name(town),
-			"target_tile": Vector2i(int(town.get("x", 0)), int(town.get("y", 0))),
+			"target_tile": _town_entrance_tile(town),
+			"level": LevelRules.level_of(town),
 			"priority": 180 if owner == "player" else 145,
 		})
 	for node_value in session.overworld.get("resource_nodes", []):
@@ -3912,6 +3920,7 @@ static func _enemy_visible_target_catalog(
 			"target_id": String(node.get("placement_id", "")),
 			"target_label": String(site.get("name", "Resource Site")),
 			"target_tile": Vector2i(int(node.get("x", 0)), int(node.get("y", 0))),
+			"level": LevelRules.level_of(node),
 			"priority": 120 + _resource_route_pressure_value(site),
 		})
 	for node_value in session.overworld.get("artifact_nodes", []):
@@ -3925,6 +3934,7 @@ static func _enemy_visible_target_catalog(
 			"target_id": String(node.get("placement_id", "")),
 			"target_label": ArtifactRulesScript.describe_artifact(String(node.get("artifact_id", ""))),
 			"target_tile": Vector2i(int(node.get("x", 0)), int(node.get("y", 0))),
+			"level": LevelRules.level_of(node),
 			"priority": _artifact_target_priority(session, node, objective_anchor_tiles),
 		})
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
@@ -3941,9 +3951,10 @@ static func _enemy_visible_target_catalog(
 			"target_id": String(encounter.get("placement_id", "")),
 			"target_label": _encounter_target_label(session, encounter, "Frontier Camp"),
 			"target_tile": Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))),
+			"level": LevelRules.level_of(encounter),
 			"priority": _encounter_target_priority(session, encounter, objective_anchor_tiles, objective_anchor_surface),
 		})
-	return catalog
+	return LevelRules.canonical_spatial_records(catalog)
 
 static func _append_visible_scout_record(
 	records: Array,
@@ -3968,6 +3979,7 @@ static func _append_visible_scout_record(
 		"target_label": target_label,
 		"x": target_tile.x,
 		"y": target_tile.y,
+		"level": LevelRules.level_of(source),
 		"scouted_day": current_day,
 		"expires_day": current_day + RAID_ADVENTURE_SCOUTING_MEMORY_DAYS,
 		"source_kind": String(source.get("kind", "")),
@@ -3992,7 +4004,7 @@ static func _known_player_hero_snapshot_for_ai(
 		if String(record.get("hero_id", "")) != hero_id:
 			continue
 		var current := hero.duplicate(true)
-		current["position"] = {"x": int(record.get("x", 0)), "y": int(record.get("y", 0))}
+		current["position"] = LevelRules.position(record)
 		current["known_army_strength"] = max(0, int(record.get("army_strength", 0)))
 		current["ai_sighting_confidence"] = "current"
 		current["ai_sighting_seen_day"] = int(record.get("seen_day", 0))
@@ -4001,7 +4013,7 @@ static func _known_player_hero_snapshot_for_ai(
 	if remembered.is_empty():
 		return {}
 	var recent := hero.duplicate(true)
-	recent["position"] = {"x": int(remembered.get("x", 0)), "y": int(remembered.get("y", 0))}
+	recent["position"] = LevelRules.position(remembered)
 	recent["known_army_strength"] = max(0, int(remembered.get("army_strength", 0)))
 	recent["name"] = String(remembered.get("hero_label", hero_id))
 	recent["ai_sighting_confidence"] = "recent"
@@ -4130,14 +4142,15 @@ static func _enemy_target_currently_visible(
 	faction_id: String,
 	target_x: int,
 	target_y: int,
-	preloaded_sources: Variant = null
+	preloaded_sources: Variant = null,
+	level: int = 0
 ) -> bool:
 	if session == null or faction_id == "":
 		return false
 	var target_tile := Vector2i(target_x, target_y)
 	var sources: Array = preloaded_sources if preloaded_sources is Array else _enemy_hero_sighting_sources(session, config, faction_id)
 	for source_value in sources:
-		if not (source_value is Dictionary):
+		if not (source_value is Dictionary) or not LevelRules.on_level(source_value, level):
 			continue
 		var source: Dictionary = source_value
 		var distance: int = abs(target_tile.x - int(source.get("x", 0))) + abs(target_tile.y - int(source.get("y", 0)))
@@ -4161,10 +4174,10 @@ static func _enemy_nonhero_target_known(
 	if not knowledge_snapshot.is_empty():
 		if session != null and faction_id != "" and target_kind != "" and target_id != "" and bool(knowledge_snapshot.get("scouted", {}).get(_enemy_scouted_target_key(target_kind, target_id), false)):
 			return true
-		return _enemy_target_currently_visible(session, config, faction_id, target_x, target_y, knowledge_snapshot.get("sources", []))
+		return _enemy_target_currently_visible(session, config, faction_id, target_x, target_y, knowledge_snapshot.get("sources", []), OverworldRulesScript.placement_level(session, target_id))
 	if _enemy_target_scouted(session, faction_id, target_kind, target_id):
 		return true
-	return _enemy_target_currently_visible(session, config, faction_id, target_x, target_y)
+	return _enemy_target_currently_visible(session, config, faction_id, target_x, target_y, null, OverworldRulesScript.placement_level(session, target_id))
 
 static func _enemy_target_knowledge_snapshot(session: SessionStateStoreScript.SessionData, config: Dictionary, faction_id: String) -> Dictionary:
 	if session == null or faction_id == "":
@@ -4214,6 +4227,8 @@ static func _raid_has_commander(raid: Dictionary) -> bool:
 	return commander_state is Dictionary and String(commander_state.get("roster_hero_id", "")) != ""
 
 static func _raid_tile_distance(a: Dictionary, b: Dictionary) -> int:
+	if not LevelRules.same_level(a, b):
+		return 9999
 	return abs(int(a.get("x", 0)) - int(b.get("x", 0))) + abs(int(a.get("y", 0)) - int(b.get("y", 0)))
 
 static func _redirect_understrength_raid_to_regroup(
@@ -4290,7 +4305,7 @@ static func _current_tile_contestable_resource_id(
 		return ""
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	for node_value in session.overworld.get("resource_nodes", []):
-		if not (node_value is Dictionary):
+		if not (node_value is Dictionary) or not LevelRules.same_level(node_value, raid):
 			continue
 		var node: Dictionary = node_value
 		if _resource_interaction_tile(node) != current:
@@ -4321,7 +4336,7 @@ static func _redirect_unreachable_raid_target(
 	var goal_tiles := _goal_tiles_from_raid(session, raid, faction_id)
 	var distance := _path_distance_with_context(preloaded_path_context, current, goal_tiles) \
 		if not preloaded_path_context.is_empty() \
-		else _path_distance(session, current, goal_tiles, String(raid.get("placement_id", "")), faction_id)
+		else _path_distance(session, current, goal_tiles, String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid))
 	if distance < 9999 or current in goal_tiles:
 		return raid
 	if (
@@ -4484,7 +4499,7 @@ static func _route_blocking_guard_target_for_tactical_pressure(
 	if int(town_result.get("index", -1)) < 0:
 		return {}
 	var town: Dictionary = town_result.get("town", {})
-	var town_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+	var town_tile := _town_entrance_tile(town)
 	var staging_tiles := _town_staging_tiles(session, town)
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
@@ -4493,7 +4508,7 @@ static func _route_blocking_guard_target_for_tactical_pressure(
 	var best_target_distance := 9999
 	var best_strength := 999999
 	for encounter_value in session.overworld.get("encounters", []):
-		if not (encounter_value is Dictionary):
+		if not (encounter_value is Dictionary) or not LevelRules.same_level(encounter_value, raid):
 			continue
 		var encounter: Dictionary = encounter_value
 		var placement_id := String(encounter.get("placement_id", ""))
@@ -4520,7 +4535,7 @@ static func _route_blocking_guard_target_for_tactical_pressure(
 				current,
 				guard_staging_tiles,
 				String(raid.get("placement_id", "")),
-				faction_id
+				faction_id, LevelRules.level_of(raid)
 			)
 		if route_distance >= 9999:
 			continue
@@ -4652,13 +4667,13 @@ static func _redirect_raid_to_nearby_exposed_hero(
 		if not (hero_value is Dictionary):
 			continue
 		var hero: Dictionary = _known_player_hero_snapshot_for_ai(session, faction_id, hero_value)
-		if hero.is_empty():
+		if hero.is_empty() or not LevelRules.same_level(hero, raid):
 			continue
 		var hero_id := String(hero.get("id", ""))
 		if hero_id == "" or _player_hero_sheltered_in_town(session, hero):
 			continue
 		var goal_tile := _player_hero_goal_tile(hero)
-		var distance: int = _hero_target_goal_distance(session, origin, goal_tile, faction_id)
+		var distance: int = _hero_target_goal_distance(session, origin, goal_tile, faction_id, LevelRules.level_of(raid))
 		if distance > RAID_OPPORTUNISTIC_HERO_INTERCEPT_MAX_DISTANCE:
 			continue
 		var probe := raid.duplicate(true)
@@ -4836,13 +4851,13 @@ static func _redirect_raid_away_from_nearby_player_threat(
 		if not (hero_value is Dictionary):
 			continue
 		var hero: Dictionary = _known_player_hero_snapshot_for_ai(session, faction_id, hero_value)
-		if hero.is_empty():
+		if hero.is_empty() or not LevelRules.same_level(hero, raid):
 			continue
 		var hero_id := String(hero.get("id", ""))
 		if hero_id == "" or _player_hero_sheltered_in_town(session, hero):
 			continue
 		var goal_tile := _player_hero_goal_tile(hero)
-		var distance: int = _hero_target_goal_distance(session, origin, goal_tile, faction_id)
+		var distance: int = _hero_target_goal_distance(session, origin, goal_tile, faction_id, LevelRules.level_of(raid))
 		if distance > RAID_NEARBY_PLAYER_THREAT_AVOIDANCE_RADIUS:
 			continue
 		var hero_strength: int = _known_player_hero_strength(hero)
@@ -4955,11 +4970,12 @@ static func _player_hero_sheltered_in_town(session: SessionStateStoreScript.Sess
 	var hero_x := int(hero_position.get("x", -1))
 	var hero_y := int(hero_position.get("y", -1))
 	for town_value in session.overworld.get("towns", []):
-		if not (town_value is Dictionary):
+		if not (town_value is Dictionary) or not LevelRules.same_level(town_value, hero):
 			continue
 		if String(town_value.get("owner", "neutral")) != "player":
 			continue
-		if int(town_value.get("x", -2)) == hero_x and int(town_value.get("y", -2)) == hero_y:
+		var entrance := LevelRules.town_entrance(town_value)
+		if int(entrance.x) == hero_x and int(entrance.y) == hero_y:
 			return true
 	return false
 
@@ -4986,7 +5002,7 @@ static func resource_arrival_ready_report(
 	var guard_strength := _encounter_guard_strength(guard) if not guard.is_empty() else 0
 	var current_tile := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var target_tile := _resource_interaction_tile(node)
-	var target_distance := _path_distance(session, current_tile, [target_tile], String(raid.get("placement_id", "")), faction_id)
+	var target_distance := _path_distance(session, current_tile, [target_tile], String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid))
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	var defending_owned_site := (
 		String(node.get("collected_by_faction_id", "")) == faction_id
@@ -5745,7 +5761,7 @@ static func _best_threatened_defense_town(
 	var best_score := -999999
 	var best_distance := 9999
 	for town_value in session.overworld.get("towns", []):
-		if not (town_value is Dictionary):
+		if not (town_value is Dictionary) or not LevelRules.same_level(town_value, raid):
 			continue
 		var town: Dictionary = town_value
 		if String(town.get("owner", "neutral")) != "enemy":
@@ -5762,7 +5778,7 @@ static func _best_threatened_defense_town(
 		var staging_tiles := _town_staging_tiles(session, town)
 		var distance := _path_distance_with_context(preloaded_path_context, current, staging_tiles) \
 			if not preloaded_path_context.is_empty() \
-			else _path_distance(session, current, staging_tiles, String(raid.get("placement_id", "")), faction_id)
+			else _path_distance(session, current, staging_tiles, String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid))
 		if distance >= 9999:
 			continue
 		var defense_need := _town_defense_commitment_need(town, front_state)
@@ -5776,7 +5792,7 @@ static func _best_threatened_defense_town(
 		var open_defense_gap: int = max(0, defense_need - current_defense - committed_defense)
 		if open_defense_gap <= 0:
 			continue
-		var town_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+		var town_tile := _town_entrance_tile(town)
 		var known_threat := _known_player_threat_position_for_ai(session, faction_id, town_tile)
 		var hero_distance: int = int(known_threat.get("distance", 9999))
 		var score := int(front_state.get("priority_bonus", 0))
@@ -5848,7 +5864,7 @@ static func _best_threatened_resource_defense(
 	var best_score := -999999
 	var best_distance := 9999
 	for node_value in session.overworld.get("resource_nodes", []):
-		if not (node_value is Dictionary):
+		if not (node_value is Dictionary) or not LevelRules.same_level(node_value, raid):
 			continue
 		var node: Dictionary = node_value
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
@@ -5863,7 +5879,7 @@ static func _best_threatened_resource_defense(
 			continue
 		var distance := _path_distance_with_context(preloaded_path_context, current, [target_tile]) \
 			if not preloaded_path_context.is_empty() \
-			else _path_distance(session, current, [target_tile], String(raid.get("placement_id", "")), faction_id)
+			else _path_distance(session, current, [target_tile], String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid))
 		if distance >= 9999:
 			continue
 		var defense_need := _resource_defense_commitment_need(site, front_state)
@@ -6039,17 +6055,17 @@ static func _nearest_regroup_town(
 	var best_reinforcement_covers_need := false
 	var strength_needed: int = max(0, desired_raid_strength(raid) - raid_strength(raid))
 	for town_value in session.overworld.get("towns", []):
-		if not (town_value is Dictionary):
+		if not (town_value is Dictionary) or not LevelRules.same_level(town_value, raid):
 			continue
 		var town: Dictionary = town_value
 		if String(town.get("owner", "neutral")) != "enemy":
 			continue
 		if _town_faction_id(town) != faction_id:
 			continue
-		var tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+		var tile := _town_entrance_tile(town)
 		var distance := _path_distance_with_context(preloaded_path_context, current, [tile]) \
 			if not preloaded_path_context.is_empty() \
-			else _path_distance(session, current, [tile], String(raid.get("placement_id", "")), faction_id)
+			else _path_distance(session, current, [tile], String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid))
 		if distance >= 9999:
 			continue
 		if distance < fallback_distance or (distance == fallback_distance and String(town.get("placement_id", "")) < String(fallback.get("placement_id", ""))):
@@ -7190,6 +7206,7 @@ static func _ai_hero_task_spawn_saved_plan_for_actor(
 		"spawned_by_faction_id": faction_id,
 		"x": int(spawn_point.get("x", 0)),
 		"y": int(spawn_point.get("y", 0)),
+		"level": LevelRules.level_of(spawn_point),
 		"enemy_commander_state": {"roster_hero_id": actor_id, "faction_id": faction_id},
 	}
 	var config := {"faction_id": faction_id}
@@ -8358,16 +8375,18 @@ static func choose_target(
 	commander_source: Variant = {},
 	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
+	if preloaded_path_context.is_empty():
+		preloaded_path_context = _path_distance_surface_context(session, "", String(config.get("faction_id", "")), LevelRules.level_of(origin))
 	var origin_pos = Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
 	var candidates = _target_candidates(session, config, origin_pos, false, preloaded_path_context)
 	if candidates.is_empty():
-		var exploration_plan := _no_known_target_exploration_plan(session, config, origin_pos, commander_source)
+		var exploration_plan := _no_known_target_exploration_plan(session, config, origin_pos, commander_source, preloaded_path_context)
 		if not exploration_plan.is_empty():
 			return exploration_plan
-		var frontier_sweep_plan := _no_known_target_frontier_sweep_plan(session, config, origin_pos, commander_source)
+		var frontier_sweep_plan := _no_known_target_frontier_sweep_plan(session, config, origin_pos, commander_source, preloaded_path_context)
 		if not frontier_sweep_plan.is_empty():
 			return frontier_sweep_plan
-		return _no_known_target_regroup_plan(session, config, origin_pos)
+		return _no_known_target_regroup_plan(session, config, origin_pos, int(preloaded_path_context.get("level", 0)))
 
 	var repeated_rival_memory := _normalized_commander_memory(commander_source)
 	var repeated_rival_kind := String(repeated_rival_memory.get("rival_kind", ""))
@@ -8406,6 +8425,11 @@ static func choose_target(
 			best = candidate
 	return best
 
+static func _commander_map_level(source: Variant) -> int:
+	if source is Dictionary and (source.has("position") or (source.has("x") and source.has("y"))):
+		return LevelRules.level_of(source)
+	return 0
+
 static func _no_known_target_exploration_plan(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
@@ -8435,22 +8459,22 @@ static func _no_known_target_exploration_plan(
 	)
 	var path_context := preloaded_path_context
 	if path_context.is_empty():
-		path_context = _path_distance_surface_context(session, "", faction_id)
+		path_context = _path_distance_surface_context(session, "", faction_id, _commander_map_level(commander_source))
 	for y in range(map_size.y):
 		for x in range(map_size.x):
 			var tile := Vector2i(x, y)
 			var direct_distance: int = abs(tile.x - origin_pos.x) + abs(tile.y - origin_pos.y)
 			if direct_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or direct_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE:
 				continue
-			if _enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y, sources):
+			if _enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y, sources, int(path_context.get("level", 0))):
 				continue
 			var route_distance := _path_distance_with_context(path_context, origin_pos, [tile])
 			if route_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or route_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE or route_distance >= 9999:
 				continue
-			var frontier_score := _enemy_exploration_frontier_score(sources, tile)
+			var frontier_score := _enemy_exploration_frontier_score(sources, tile, int(path_context.get("level", 0)))
 			var center_score := _enemy_exploration_center_score(map_size, tile)
 			var score: int = 280 + frontier_score + center_score - (route_distance * 7) - direct_distance
-			var target_id := "explore:%d:%d" % [tile.x, tile.y]
+			var target_id := exploration_target_id(tile, int(path_context.get("level", 0)))
 			if recent_target_lookup.has(target_id):
 				continue
 			if reserved_target_lookup.has(target_id):
@@ -8486,10 +8510,10 @@ static func _no_known_target_exploration_plan(
 				}
 	return best
 
-static func _enemy_exploration_frontier_score(sources: Array, tile: Vector2i) -> int:
+static func _enemy_exploration_frontier_score(sources: Array, tile: Vector2i, level: int = 0) -> int:
 	var best_gap := 9999
 	for source_value in sources:
-		if not (source_value is Dictionary):
+		if not (source_value is Dictionary) or not LevelRules.on_level(source_value, level):
 			continue
 		var source: Dictionary = source_value
 		var distance: int = abs(tile.x - int(source.get("x", 0))) + abs(tile.y - int(source.get("y", 0)))
@@ -8537,7 +8561,7 @@ static func _no_known_target_frontier_sweep_plan(
 	)
 	var path_context := preloaded_path_context
 	if path_context.is_empty():
-		path_context = _path_distance_surface_context(session, "", faction_id)
+		path_context = _path_distance_surface_context(session, "", faction_id, _commander_map_level(commander_source))
 	var step := 3 if max(map_size.x, map_size.y) >= 64 else 2
 	for y in range(0, map_size.y, step):
 		for x in range(0, map_size.x, step):
@@ -8545,7 +8569,7 @@ static func _no_known_target_frontier_sweep_plan(
 			var direct_distance: int = abs(tile.x - origin_pos.x) + abs(tile.y - origin_pos.y)
 			if direct_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or direct_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE:
 				continue
-			if _enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y, sources):
+			if _enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y, sources, int(path_context.get("level", 0))):
 				continue
 			var route_distance := _path_distance_with_context(path_context, origin_pos, [tile])
 			if route_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or route_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE or route_distance >= 9999:
@@ -8553,7 +8577,7 @@ static func _no_known_target_frontier_sweep_plan(
 			var center_score := _enemy_exploration_center_score(map_size, tile)
 			var distance_band_score: int = 18 - abs(route_distance - 8)
 			var score: int = 220 + center_score + distance_band_score - direct_distance
-			var target_id := "explore:%d:%d" % [tile.x, tile.y]
+			var target_id := exploration_target_id(tile, int(path_context.get("level", 0)))
 			if recent_target_lookup.has(target_id):
 				continue
 			if reserved_target_lookup.has(target_id):
@@ -8601,7 +8625,8 @@ static func _raid_recent_exploration_target_lookup(commander_source: Variant) ->
 static func _no_known_target_regroup_plan(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	origin_pos: Vector2i
+	origin_pos: Vector2i,
+	level: int = 0
 ) -> Dictionary:
 	if session == null:
 		return {}
@@ -8611,13 +8636,13 @@ static func _no_known_target_regroup_plan(
 	var best_town := {}
 	var best_distance := 9999
 	for town_value in session.overworld.get("towns", []):
-		if not (town_value is Dictionary):
+		if not (town_value is Dictionary) or not LevelRules.on_level(town_value, level):
 			continue
 		var town: Dictionary = town_value
 		if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
 			continue
-		var town_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
-		var distance := _path_distance(session, origin_pos, [town_tile], "", faction_id)
+		var town_tile := _town_entrance_tile(town)
+		var distance := _path_distance(session, origin_pos, [town_tile], "", faction_id, level)
 		if distance >= 9999:
 			continue
 		if (
@@ -9406,16 +9431,12 @@ static func _ai_hero_task_planner_candidates_from_origins(
 		descriptors = _target_candidate_descriptors(session, config, false)
 		profile["enumeration_count"] = int(profile.get("enumeration_count", 0)) + 1
 	profile["descriptor_count"] = descriptors.size()
-	var path_context := _path_distance_surface_context(
-		session,
-		"",
-		String(config.get("faction_id", ""))
-	)
 	var objective_anchor_surface := _objective_anchor_surface(session)
 	for origin_value in origins:
 		if not (origin_value is Dictionary):
 			continue
 		var origin: Dictionary = origin_value
+		var path_context := _path_distance_surface_context(session, "", String(config.get("faction_id", "")), LevelRules.level_of(origin))
 		var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
 		var origin_candidates := _target_candidates_from_descriptors(
 			session,
@@ -9428,7 +9449,7 @@ static func _ai_hero_task_planner_candidates_from_origins(
 		profile["projection_count"] = int(profile.get("projection_count", 0)) + 1
 		profile["projected_candidate_count"] = int(profile.get("projected_candidate_count", 0)) + origin_candidates.size()
 		if origin_candidates.is_empty():
-			var exploration_plan := _no_known_target_exploration_plan(session, config, origin_pos)
+			var exploration_plan := _no_known_target_exploration_plan(session, config, origin_pos, {}, path_context)
 			if not exploration_plan.is_empty():
 				var exploration_key := "%s:%s" % [
 					String(exploration_plan.get("target_kind", "")),
@@ -9489,13 +9510,14 @@ static func _ai_hero_task_planner_origins(
 		var x := int(town.get("x", 0))
 		var y := int(town.get("y", 0))
 		var objective_anchor := String(town.get("placement_id", "")) in objective_town_ids
-		var objective_proximity_bonus := _objective_proximity_bonus_from_tiles(objective_anchor_tiles, x, y)
-		seen_tiles["%d:%d" % [x, y]] = true
+		var objective_proximity_bonus := _objective_proximity_bonus_from_tiles(objective_anchor_tiles, x, y, LevelRules.level_of(town))
+		seen_tiles["%d:%d:%d" % [x, y, LevelRules.level_of(town)]] = true
 		origins.append({
 			"kind": "town",
 			"placement_id": String(town.get("placement_id", "")),
 			"x": x,
 			"y": y,
+			"level": LevelRules.level_of(town),
 			"priority": _town_strategic_priority_bonus(session, town, faction_id, objective_anchor, objective_proximity_bonus),
 		})
 	var spawn_points: Variant = config.get("spawn_points", [])
@@ -9507,7 +9529,7 @@ static func _ai_hero_task_planner_origins(
 			var spawn_point: Dictionary = spawn_value
 			var x := int(spawn_point.get("x", 0))
 			var y := int(spawn_point.get("y", 0))
-			var tile_key := "%d:%d" % [x, y]
+			var tile_key := "%d:%d:%d" % [x, y, LevelRules.level_of(spawn_point)]
 			if seen_tiles.has(tile_key):
 				continue
 			seen_tiles[tile_key] = true
@@ -9516,6 +9538,7 @@ static func _ai_hero_task_planner_origins(
 				"placement_id": "spawn:%d:%d:%d" % [x, y, index],
 				"x": x,
 				"y": y,
+				"level": LevelRules.level_of(spawn_point),
 				"priority": 0,
 			})
 	origins.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
@@ -9523,7 +9546,7 @@ static func _ai_hero_task_planner_origins(
 			return String(a.get("placement_id", "")) < String(b.get("placement_id", ""))
 		return int(a.get("priority", 0)) > int(b.get("priority", 0))
 	)
-	return origins
+	return LevelRules.canonical_spatial_records(origins)
 
 static func _ai_hero_task_planner_origin(
 	session: SessionStateStoreScript.SessionData,
@@ -9541,6 +9564,7 @@ static func _ai_hero_task_planner_origin(
 			"placement_id": String(town.get("placement_id", "")),
 			"x": int(town.get("x", 0)),
 			"y": int(town.get("y", 0)),
+			"level": LevelRules.level_of(town),
 			"priority": _town_strategic_priority_bonus(session, town, faction_id, _town_is_objective_anchor(session, String(town.get("placement_id", "")))),
 		}
 		if best.is_empty() or int(candidate.get("priority", 0)) > int(best.get("priority", 0)):
@@ -9623,7 +9647,7 @@ static func _ai_hero_task_planner_event(
 		"target_label": String(target.get("target_label", target_id)),
 		"target_x": int(target.get("target_x", 0)),
 		"target_y": int(target.get("target_y", 0)),
-		"visibility": _event_visibility(session, int(target.get("target_x", 0)), int(target.get("target_y", 0)), _ai_hero_task_public_importance(task)),
+		"visibility": _event_visibility(session, int(target.get("target_x", 0)), int(target.get("target_y", 0)), _ai_hero_task_public_importance(task), _target_level(session, target_kind, target_id, faction_id)),
 		"public_importance": _ai_hero_task_public_importance(task),
 		"summary": summary,
 		"reason_codes": reason_codes,
@@ -9791,7 +9815,7 @@ static func describe_contestation(session: SessionStateStoreScript.SessionData, 
 			continue
 		if String(node.get("collected_by_faction_id", "")) != faction_id:
 			continue
-		if public_only and not OverworldRulesScript.is_tile_visible(session, int(node.get("x", -1)), int(node.get("y", -1))):
+		if public_only and not OverworldRulesScript.is_tile_visible(session, int(node.get("x", -1)), int(node.get("y", -1)), LevelRules.level_of(node)):
 			continue
 		secured_sites += 1
 	for node in session.overworld.get("artifact_nodes", []):
@@ -9799,7 +9823,7 @@ static func describe_contestation(session: SessionStateStoreScript.SessionData, 
 			continue
 		if String(node.get("collected_by_faction_id", "")) != faction_id:
 			continue
-		if public_only and not OverworldRulesScript.is_tile_visible(session, int(node.get("x", -1)), int(node.get("y", -1))):
+		if public_only and not OverworldRulesScript.is_tile_visible(session, int(node.get("x", -1)), int(node.get("y", -1)), LevelRules.level_of(node)):
 			continue
 		seized_relics += 1
 	for encounter in session.overworld.get("encounters", []):
@@ -9809,7 +9833,7 @@ static func describe_contestation(session: SessionStateStoreScript.SessionData, 
 			continue
 		if String(encounter.get("contested_by_faction_id", "")) != faction_id:
 			continue
-		if public_only and not OverworldRulesScript.is_tile_visible(session, int(encounter.get("x", -1)), int(encounter.get("y", -1))):
+		if public_only and not OverworldRulesScript.is_tile_visible(session, int(encounter.get("x", -1)), int(encounter.get("y", -1)), LevelRules.level_of(encounter)):
 			continue
 		var label = _encounter_target_label(session, encounter, String(encounter.get("placement_id", "frontier camp")))
 		if label != "" and label not in contested_fronts:
@@ -10105,6 +10129,9 @@ static func _target_candidates_from_descriptors(
 		if not (descriptor_value is Dictionary):
 			continue
 		var descriptor: Dictionary = descriptor_value
+		var target: Dictionary = descriptor.get("town", descriptor.get("node", descriptor.get("encounter", descriptor.get("hero", {}))))
+		if not target.is_empty() and not LevelRules.on_level(target, int(path_context.get("level", 0))):
+			continue
 		match String(descriptor.get("family", "")):
 			"town":
 				_project_town_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context, objective_anchor_tiles)
@@ -10195,9 +10222,9 @@ static func _project_town_target_descriptor(
 	if goal_distance >= 9999:
 		return
 	var objective_proximity_bonus: int = (
-		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(town.get("x", 0)), int(town.get("y", 0)))
+		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(town.get("x", 0)), int(town.get("y", 0)), LevelRules.level_of(town))
 		if preloaded_objective_anchor_tiles is Array
-		else _objective_proximity_bonus(session, int(town.get("x", 0)), int(town.get("y", 0)))
+		else _objective_proximity_bonus(session, int(town.get("x", 0)), int(town.get("y", 0)), LevelRules.level_of(town))
 	)
 	var strategic_bonus = _town_strategic_priority_bonus(session, town, faction_id, objective_anchor, objective_proximity_bonus)
 	var reason_codes := ["town_expansion", "neutral_town_claim"] if neutral_expansion else ["town_siege"]
@@ -10319,9 +10346,9 @@ static func _project_resource_target_descriptor(
 	var anchor_distance := _path_distance_with_context(path_context, origin_pos, [anchor_tile])
 	var score_distance: int = anchor_distance if anchor_distance < 9999 else goal_distance
 	var objective_proximity_bonus: int = (
-		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(node.get("x", 0)), int(node.get("y", 0)))
+		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(node.get("x", 0)), int(node.get("y", 0)), LevelRules.level_of(node))
 		if preloaded_objective_anchor_tiles is Array
-		else _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)))
+		else _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)), LevelRules.level_of(node))
 	)
 	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id, score_distance, objective_proximity_bonus)
 	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "resource", placement_id)
@@ -10413,9 +10440,9 @@ static func _project_artifact_target_descriptor(
 		if guard_distance >= 9999:
 			return
 	var objective_proximity_bonus: int = (
-		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(node.get("x", 0)), int(node.get("y", 0)))
+		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(node.get("x", 0)), int(node.get("y", 0)), LevelRules.level_of(node))
 		if preloaded_objective_anchor_tiles is Array
-		else _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)))
+		else _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)), LevelRules.level_of(node))
 	)
 	var breakdown := artifact_target_valuation_breakdown(
 		session,
@@ -10660,7 +10687,7 @@ static func _delivery_town_candidate(
 	if int(town_result.get("index", -1)) < 0:
 		return {}
 	var town: Dictionary = town_result.get("town", {})
-	if String(town.get("owner", "neutral")) != "player":
+	if not LevelRules.same_level(town, node) or String(town.get("owner", "neutral")) != "player":
 		return {}
 	var objective_anchor := _town_is_objective_anchor(session, String(town.get("placement_id", "")))
 	if not _enemy_nonhero_target_known(
@@ -10675,10 +10702,10 @@ static func _delivery_town_candidate(
 	):
 		return {}
 	var staging_tiles = _town_staging_tiles(session, town)
-	var goal_distance = _path_distance(session, origin_pos, staging_tiles, "", faction_id)
+	var goal_distance = _path_distance(session, origin_pos, staging_tiles, "", faction_id, LevelRules.level_of(node))
 	if goal_distance >= 9999:
 		return {}
-	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles, faction_id)
+	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles, faction_id, LevelRules.level_of(node))
 	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
 	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
 	var capital_project: Dictionary = OverworldRulesScript.town_capital_project_state(town, session)
@@ -10733,10 +10760,10 @@ static func _delivery_hero_candidate(
 	if hero.is_empty():
 		return {}
 	hero = _known_player_hero_snapshot_for_ai(session, faction_id, hero)
-	if hero.is_empty():
+	if hero.is_empty() or not LevelRules.same_level(hero, node):
 		return {}
 	var goal_tile := _player_hero_goal_tile(hero)
-	var goal_distance = _hero_target_goal_distance(session, origin_pos, goal_tile, faction_id)
+	var goal_distance = _hero_target_goal_distance(session, origin_pos, goal_tile, faction_id, LevelRules.level_of(node))
 	if goal_distance >= 9999:
 		return {}
 	var priority = 195 + int(min(170.0, float(int(delivery_state.get("manifest_value", 0))) / 10.0))
@@ -10844,7 +10871,7 @@ static func _project_hero_target_descriptor(
 	if hero_id == "":
 		return
 	var goal_tile := _player_hero_goal_tile(hero)
-	var goal_distance: int = _hero_target_goal_distance(session, origin_pos, goal_tile, faction_id)
+	var goal_distance: int = _hero_target_goal_distance(session, origin_pos, goal_tile, faction_id, LevelRules.level_of(hero))
 	if goal_distance >= 9999:
 		return
 	var priority = 95
@@ -10899,14 +10926,15 @@ static func _hero_target_goal_distance(
 	session: SessionStateStoreScript.SessionData,
 	origin_pos: Vector2i,
 	goal_tile: Vector2i,
-	observer_faction_id: String = ""
+	observer_faction_id: String = "",
+	level: int = 0
 ) -> int:
-	var direct_distance: int = _path_distance(session, origin_pos, [goal_tile], "", observer_faction_id)
-	if direct_distance < 9999 and not _player_hero_tile_occupied(session, goal_tile):
+	var direct_distance: int = _path_distance(session, origin_pos, [goal_tile], "", observer_faction_id, level)
+	if direct_distance < 9999 and not _player_hero_tile_occupied(session, goal_tile, level):
 		return direct_distance
 
-	var occupied := _occupied_tiles(session, "")
-	if not occupied.has(_pos_key(goal_tile)) and not _player_hero_tile_occupied(session, goal_tile):
+	var occupied := _occupied_tiles(session, "", level)
+	if not occupied.has(_pos_key(goal_tile)) and not _player_hero_tile_occupied(session, goal_tile, level):
 		return direct_distance
 
 	var approach_tiles: Array = []
@@ -10915,13 +10943,13 @@ static func _hero_target_goal_distance(
 		var approach_tile: Vector2i = goal_tile + delta
 		if approach_tile.x < 0 or approach_tile.y < 0 or approach_tile.x >= map_size.x or approach_tile.y >= map_size.y:
 			continue
-		if OverworldRulesScript.tile_is_blocked(session, approach_tile.x, approach_tile.y):
+		if OverworldRulesScript.tile_is_blocked(session, approach_tile.x, approach_tile.y, level):
 			continue
 		if approach_tile != origin_pos and occupied.has(_pos_key(approach_tile)):
 			continue
 		approach_tiles.append(approach_tile)
 
-	var approach_distance: int = _path_distance(session, origin_pos, approach_tiles, "", observer_faction_id)
+	var approach_distance: int = _path_distance(session, origin_pos, approach_tiles, "", observer_faction_id, level)
 	if approach_distance >= 9999:
 		return direct_distance
 	return approach_distance + 1
@@ -10933,8 +10961,9 @@ static func _hero_target_goal_tiles(
 	ignore_placement_id: String = "",
 	observer_faction_id: String = ""
 ) -> Array:
-	var occupied := _occupied_tiles(session, ignore_placement_id)
-	if not occupied.has(_pos_key(goal_tile)) and not _player_hero_tile_occupied(session, goal_tile):
+	var level: int = OverworldRulesScript.placement_level(session, ignore_placement_id)
+	var occupied := _occupied_tiles(session, ignore_placement_id, level)
+	if not occupied.has(_pos_key(goal_tile)) and not _player_hero_tile_occupied(session, goal_tile, level):
 		return [goal_tile]
 	var approach_tiles: Array = []
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
@@ -10942,7 +10971,7 @@ static func _hero_target_goal_tiles(
 		var approach_tile: Vector2i = goal_tile + delta
 		if approach_tile.x < 0 or approach_tile.y < 0 or approach_tile.x >= map_size.x or approach_tile.y >= map_size.y:
 			continue
-		if OverworldRulesScript.tile_is_blocked(session, approach_tile.x, approach_tile.y):
+		if OverworldRulesScript.tile_is_blocked(session, approach_tile.x, approach_tile.y, level):
 			continue
 		if approach_tile != origin_pos and occupied.has(_pos_key(approach_tile)):
 			continue
@@ -11171,7 +11200,7 @@ static func neutral_encounter_object_valuation_breakdown(
 	var representation: Dictionary = neutral_metadata.get("representation", {}) if neutral_metadata.get("representation", {}) is Dictionary else {}
 	var target_tile := Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
 	var staging_tiles := _encounter_staging_tiles(session, encounter)
-	var goal_distance := _path_distance(session, origin_pos, staging_tiles, "", resolved_faction_id)
+	var goal_distance := _path_distance(session, origin_pos, staging_tiles, "", resolved_faction_id, LevelRules.level_of(encounter))
 	var objective_anchor: bool = bool(preloaded_objective_anchor) if preloaded_objective_anchor is bool else _encounter_is_objective_anchor(session, encounter)
 	var baseline_priority: int = int(preloaded_baseline_priority) if preloaded_baseline_priority is int else _encounter_target_priority(session, encounter)
 	var route_pressure_value := 0
@@ -11610,7 +11639,7 @@ static func commander_role_public_event(
 		"target_label": target_label,
 		"target_x": int(target_view.get("target_x", 0)),
 		"target_y": int(target_view.get("target_y", 0)),
-		"visibility": _event_visibility(session, int(target_view.get("target_x", 0)), int(target_view.get("target_y", 0)), String(target_view.get("public_importance", "medium"))),
+		"visibility": _event_visibility(session, int(target_view.get("target_x", 0)), int(target_view.get("target_y", 0)), String(target_view.get("public_importance", "medium")), _target_level(session, target_kind, target_id, faction_id)),
 		"public_importance": String(target_view.get("public_importance", "medium")),
 		"summary": summary,
 		"reason_codes": reason_codes,
@@ -11818,7 +11847,8 @@ static func ai_target_assignment_event(
 			session,
 			int(target.get("target_x", actor.get("goal_x", 0))),
 			int(target.get("target_y", actor.get("goal_y", 0))),
-			public_importance
+			public_importance,
+			_target_level(session, String(target.get("target_kind", "")), String(target.get("target_placement_id", "")), String(config.get("faction_id", actor.get("spawned_by_faction_id", ""))), _commander_map_level(actor))
 		)
 		if visibility == "hidden_debug":
 			options["visibility"] = "rumored"
@@ -11942,7 +11972,7 @@ static func build_ai_event_record(
 		public_reason = _public_reason_from_codes(reason_codes)
 	var debug_reason := String(options.get("debug_reason", target.get("target_debug_reason", public_reason)))
 	var importance := String(options.get("public_importance", target.get("target_public_importance", _default_public_importance(target_kind, reason_codes))))
-	var visibility := String(options.get("visibility", _event_visibility(session, target_x, target_y, importance)))
+	var visibility := String(options.get("visibility", _event_visibility(session, target_x, target_y, importance, _target_level(session, target_kind, target_id, faction_id, _commander_map_level(actor)))))
 	var summary := String(options.get("summary", ""))
 	if summary == "":
 		summary = _ai_event_summary(event_type, faction_label, actor_label, target_label, public_reason, String(options.get("summary_prefix", "")))
@@ -12002,7 +12032,7 @@ static func resource_target_score_breakdown(
 	var site_family := String(site.get("family", ""))
 	var label := String(site.get("name", "Resource Site"))
 	var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
-	var goal_distance := known_goal_distance if known_goal_distance >= 0 else _path_distance(session, origin_pos, [target_tile], "", resolved_faction_id)
+	var goal_distance := known_goal_distance if known_goal_distance >= 0 else _path_distance(session, origin_pos, [target_tile], "", resolved_faction_id, LevelRules.level_of(node))
 	var claim_value := _target_resource_value(_resource_site_claim_rewards(site))
 	var income_value := _target_resource_value(site.get("control_income", {}))
 	var strategy := enemy_strategy(config, resolved_faction_id)
@@ -12050,7 +12080,7 @@ static func resource_target_score_breakdown(
 		route_pressure_value = _resource_route_pressure_value(site)
 		town_enablement_value = _linked_player_town_bonus(session, node)
 		resource_affinity_value = _resource_affinity_value(claim_value, income_value, weighted_claim_value, weighted_income_value)
-		objective_value = int(preloaded_objective_value) if preloaded_objective_value is int else _objective_proximity_bonus(session, target_tile.x, target_tile.y)
+		objective_value = int(preloaded_objective_value) if preloaded_objective_value is int else _objective_proximity_bonus(session, target_tile.x, target_tile.y, LevelRules.level_of(node))
 		var target_weight := strategy_target_weight(config, resolved_faction_id, "resource", placement_id, site_family, false)
 		faction_bias = priority_target_bonus(config, placement_id) + int(round(max(0.0, target_weight - 1.0) * 50.0))
 		travel_cost = max(0, goal_distance - 1) * 3
@@ -12169,7 +12199,7 @@ static func _town_strategic_priority_bonus(
 	objective_anchor: bool = false,
 	preloaded_objective_proximity_bonus: Variant = null
 ) -> int:
-	var bonus: int = int(preloaded_objective_proximity_bonus) if preloaded_objective_proximity_bonus is int else _objective_proximity_bonus(session, int(town.get("x", 0)), int(town.get("y", 0)))
+	var bonus: int = int(preloaded_objective_proximity_bonus) if preloaded_objective_proximity_bonus is int else _objective_proximity_bonus(session, int(town.get("x", 0)), int(town.get("y", 0)), LevelRules.level_of(town))
 	match OverworldRulesScript.town_strategic_role(town):
 		"capital":
 			bonus += 80
@@ -12213,7 +12243,7 @@ static func _town_staging_tiles(session: SessionStateStoreScript.SessionData, to
 	]):
 		if tile_value is Vector2i:
 			var direct_tile: Vector2i = tile_value
-			_append_passable_town_staging_tile(options, seen, session, map_size, direct_tile)
+			_append_passable_town_staging_tile(options, seen, session, map_size, direct_tile, LevelRules.level_of(town))
 	var visit_tile = town.get("visit_tile", {})
 	if visit_tile is Dictionary and not visit_tile.is_empty():
 		_append_passable_town_staging_tile(
@@ -12221,7 +12251,8 @@ static func _town_staging_tiles(session: SessionStateStoreScript.SessionData, to
 			seen,
 			session,
 			map_size,
-			Vector2i(int(visit_tile.get("x", town_x)), int(visit_tile.get("y", town_y)))
+			Vector2i(int(visit_tile.get("x", town_x)), int(visit_tile.get("y", town_y))),
+			LevelRules.level_of(town)
 		)
 	var footprint_tiles := _town_payload_world_tiles(town, [
 		"package_body_tiles",
@@ -12234,9 +12265,9 @@ static func _town_staging_tiles(session: SessionStateStoreScript.SessionData, to
 			continue
 		var tile: Vector2i = tile_value
 		for delta in PATH_CARDINAL_DELTAS:
-			_append_passable_town_staging_tile(options, seen, session, map_size, tile + delta)
+			_append_passable_town_staging_tile(options, seen, session, map_size, tile + delta, LevelRules.level_of(town))
 	for delta in PATH_CARDINAL_DELTAS:
-		_append_passable_town_staging_tile(options, seen, session, map_size, Vector2i(town_x + delta.x, town_y + delta.y))
+		_append_passable_town_staging_tile(options, seen, session, map_size, Vector2i(town_x + delta.x, town_y + delta.y), LevelRules.level_of(town))
 	if options.is_empty():
 		options.append(Vector2i(town_x, town_y))
 	return options
@@ -12252,11 +12283,12 @@ static func _append_passable_town_staging_tile(
 	seen: Dictionary,
 	session: SessionStateStoreScript.SessionData,
 	map_size: Vector2i,
-	tile: Vector2i
+	tile: Vector2i,
+	level: int = 0
 ) -> void:
 	if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
 		return
-	if OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y):
+	if OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y, level):
 		return
 	var key := _pos_key(tile)
 	if seen.has(key):
@@ -12273,7 +12305,7 @@ static func raid_reached_town_battle_contact(
 		return false
 	var town_result := _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
 	var town: Dictionary = town_result.get("town", {}) if town_result.get("town", {}) is Dictionary else {}
-	if int(town_result.get("index", -1)) < 0 or town.is_empty():
+	if int(town_result.get("index", -1)) < 0 or town.is_empty() or not LevelRules.same_level(town, raid):
 		return false
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	for tile in _town_battle_contact_tiles(town):
@@ -12292,7 +12324,7 @@ static func raid_reached_regroup_contact(
 		return false
 	var town_result := _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
 	var town: Dictionary = town_result.get("town", {}) if town_result.get("town", {}) is Dictionary else {}
-	if int(town_result.get("index", -1)) < 0 or town.is_empty():
+	if int(town_result.get("index", -1)) < 0 or town.is_empty() or not LevelRules.same_level(town, raid):
 		return false
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	for tile in _town_staging_tiles(session, town):
@@ -12320,7 +12352,7 @@ static func _town_battle_contact_tiles(town: Dictionary) -> Array:
 	var visit_tile = town.get("visit_tile", {})
 	if visit_tile is Dictionary and not visit_tile.is_empty():
 		tiles.append(Vector2i(int(visit_tile.get("x", town.get("x", 0))), int(visit_tile.get("y", town.get("y", 0)))))
-	tiles.append(Vector2i(int(town.get("x", 0)), int(town.get("y", 0))))
+	tiles.append(_town_entrance_tile(town))
 	var unique_tiles := []
 	var seen := {}
 	for tile in tiles:
@@ -12336,7 +12368,7 @@ static func _town_battle_contact_tiles(town: Dictionary) -> Array:
 static func _encounter_staging_tiles(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> Array:
 	var options = []
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
-	var map_data = session.overworld.get("map", [])
+	var map_data = LevelRules.terrain_rows(session, LevelRules.level_of(encounter))
 	var encounter_x = int(encounter.get("x", 0))
 	var encounter_y = int(encounter.get("y", 0))
 	for delta in PATH_CARDINAL_DELTAS:
@@ -12344,7 +12376,7 @@ static func _encounter_staging_tiles(session: SessionStateStoreScript.SessionDat
 		var ny: int = encounter_y + delta.y
 		if nx < 0 or ny < 0 or nx >= map_size.x or ny >= map_size.y:
 			continue
-		if OverworldRulesScript.tile_is_blocked(session, nx, ny):
+		if OverworldRulesScript.tile_is_blocked(session, nx, ny, LevelRules.level_of(encounter)):
 			continue
 		options.append(Vector2i(nx, ny))
 	if _encounter_is_route_guard(encounter):
@@ -12380,7 +12412,7 @@ static func _resource_staging_tiles(session: SessionStateStoreScript.SessionData
 		var ny: int = node_y + delta.y
 		if nx < 0 or ny < 0 or nx >= map_size.x or ny >= map_size.y:
 			continue
-		if OverworldRulesScript.tile_is_blocked(session, nx, ny):
+		if OverworldRulesScript.tile_is_blocked(session, nx, ny, LevelRules.level_of(node)):
 			continue
 		options.append(Vector2i(nx, ny))
 	if options.is_empty():
@@ -12419,7 +12451,7 @@ static func _resource_target_priority(session: SessionStateStoreScript.SessionDa
 	if String(node.get("collected_by_faction_id", "")) == "player" and delivery_value > 0:
 		priority += 28 + int(min(95, float(delivery_value) / 10.0))
 	priority += _linked_player_town_bonus(session, node)
-	priority += _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)))
+	priority += _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)), LevelRules.level_of(node))
 	return priority
 
 static func _resource_scarcity_value(
@@ -14287,19 +14319,19 @@ static func _ai_hero_task_plan_from_saved_task(
 	if _ai_hero_task_live_target_reserved(session, faction_id, target_kind, target_id, current_placement_id, String(task.get("actor_id", ""))):
 		return {}
 	var target := _ai_hero_task_target_snapshot_for_plan(session, target_kind, target_id, faction_id)
-	if target.is_empty():
+	if target.is_empty() or _target_level(session, target_kind, target_id, faction_id, LevelRules.level_of(raid)) != LevelRules.level_of(raid):
 		return {}
 	var goal_tiles: Array = target.get("goal_tiles", []) if target.get("goal_tiles", []) is Array else []
 	if goal_tiles.is_empty():
 		return {}
 	var goal_distance := _path_distance_with_context(preloaded_path_context, origin_pos, goal_tiles) \
 		if preloaded_path_context is Dictionary \
-		else _path_distance(session, origin_pos, goal_tiles, current_placement_id, faction_id)
+		else _path_distance(session, origin_pos, goal_tiles, current_placement_id, faction_id, LevelRules.level_of(raid))
 	if goal_distance >= 9999:
 		return {}
 	var goal_tile: Vector2i = _best_goal_tile_with_path_context(preloaded_path_context, origin_pos, goal_tiles) \
 		if preloaded_path_context is Dictionary \
-		else _best_goal_tile(session, origin_pos, goal_tiles, faction_id)
+		else _best_goal_tile(session, origin_pos, goal_tiles, faction_id, LevelRules.level_of(raid))
 	var reason_codes := _normalize_string_array(task.get("priority_reason_codes", []))
 	if "saved_hero_task" not in reason_codes:
 		reason_codes.append("saved_hero_task")
@@ -14403,7 +14435,7 @@ static func _ai_hero_task_target_snapshot_for_plan(
 			if int(town_result.get("index", -1)) < 0:
 				return {}
 			var town: Dictionary = town_result.get("town", {})
-			var tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+			var tile := _town_entrance_tile(town)
 			return {
 				"target_label": "%s regroup" % _town_name(town),
 				"target_x": tile.x,
@@ -14483,11 +14515,23 @@ static func _guarded_target_label(session: SessionStateStoreScript.SessionData, 
 		return ArtifactRulesScript.describe_artifact(String(artifact_node.get("artifact_id", "")))
 	return ""
 
+static func exploration_target_id(tile: Vector2i, level: int = 0) -> String:
+	var target_id := "explore:%d:%d" % [tile.x, tile.y]
+	return target_id if level == 0 else target_id + ":%d" % level
+
+static func _exploration_target_level(target_id: String) -> int:
+	var parts := target_id.split(":")
+	return int(parts[3]) if parts.size() == 4 else 0
+
+static func _town_entrance_tile(town: Dictionary) -> Vector2i:
+	var tile := LevelRules.town_entrance(town)
+	return Vector2i(int(tile.x), int(tile.y))
+
 static func _exploration_target_tile_from_id(target_id: String) -> Vector2i:
 	if not target_id.begins_with("explore:"):
 		return Vector2i(-1, -1)
 	var parts := target_id.split(":")
-	if parts.size() != 3:
+	if parts.size() not in [3, 4]:
 		return Vector2i(-1, -1)
 	return Vector2i(int(parts[1]), int(parts[2]))
 
@@ -14525,7 +14569,7 @@ static func _ai_hero_task_live_plan_from_task(
 	var node: Dictionary = node_result.get("node", {})
 	var goal_tile := _resource_interaction_tile(node)
 	var faction_id := String(raid.get("spawned_by_faction_id", ""))
-	var goal_distance := _path_distance(session, origin_pos, [goal_tile], String(raid.get("placement_id", "")), faction_id)
+	var goal_distance := _path_distance(session, origin_pos, [goal_tile], String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid))
 	if goal_distance >= 9999:
 		return {}
 	var reason_codes := _normalize_string_array(task.get("priority_reason_codes", []))
@@ -15054,7 +15098,7 @@ static func _ai_hero_task_reconciled_explore_task(
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
 	if tile.x >= map_size.x or tile.y >= map_size.y:
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
-	if _enemy_target_currently_visible(session, {}, faction_id, tile.x, tile.y):
+	if _enemy_target_currently_visible(session, {}, faction_id, tile.x, tile.y, null, _exploration_target_level(target_id)):
 		return _ai_hero_task_with_lifecycle(task, "completed", "valid")
 	return task
 
@@ -16244,10 +16288,10 @@ static func _default_public_importance(target_kind: String, reason_codes: Array)
 		return "medium"
 	return "low"
 
-static func _event_visibility(session: SessionStateStoreScript.SessionData, x: int, y: int, public_importance: String) -> String:
-	if OverworldRulesScript.is_tile_visible(session, x, y):
+static func _event_visibility(session: SessionStateStoreScript.SessionData, x: int, y: int, public_importance: String, level: int = 0) -> String:
+	if OverworldRulesScript.is_tile_visible(session, x, y, level):
 		return "visible"
-	if OverworldRulesScript.is_tile_explored(session, x, y):
+	if OverworldRulesScript.is_tile_explored(session, x, y, level):
 		return "scouted"
 	if public_importance in ["critical", "high"]:
 		return "rumored"
@@ -16478,9 +16522,9 @@ static func _artifact_target_priority(
 	priority += max(0, int(bonuses.get("battle_initiative", 0))) * 16
 	priority += int(min(50, _target_resource_value(bonuses.get("daily_income", {})) / 80))
 	priority += (
-		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(node.get("x", 0)), int(node.get("y", 0)))
+		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(node.get("x", 0)), int(node.get("y", 0)), LevelRules.level_of(node))
 		if preloaded_objective_anchor_tiles is Array
-		else _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)))
+		else _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)), LevelRules.level_of(node))
 	)
 	return priority
 
@@ -16715,9 +16759,9 @@ static func _encounter_target_priority(
 	):
 		priority += 70
 	priority += (
-		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(encounter.get("x", 0)), int(encounter.get("y", 0)))
+		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(encounter.get("x", 0)), int(encounter.get("y", 0)), LevelRules.level_of(encounter))
 		if preloaded_objective_anchor_tiles is Array
-		else _objective_proximity_bonus(session, int(encounter.get("x", 0)), int(encounter.get("y", 0)))
+		else _objective_proximity_bonus(session, int(encounter.get("x", 0)), int(encounter.get("y", 0)), LevelRules.level_of(encounter))
 	)
 	return priority
 
@@ -16756,6 +16800,11 @@ static func _resource_affinity_value(claim_value: int, income_value: int, weight
 	var income_delta: int = max(0, weighted_income_value - income_value)
 	return int(min(70.0, (float(claim_delta) / 35.0) + (float(income_delta) / 18.0)))
 
+static func _objective_world_tile(placement: Dictionary, town: bool = false) -> Variant:
+	var point := LevelRules.town_entrance(placement) if town else LevelRules.position(placement)
+	var level := LevelRules.level_of(point)
+	return Vector2i(int(point.x), int(point.y)) if level == 0 else Vector3i(int(point.x), int(point.y), level)
+
 static func _objective_anchor_surface(
 	session: SessionStateStoreScript.SessionData,
 	preloaded_scenario: Variant = null
@@ -16791,16 +16840,16 @@ static func _objective_anchor_surface(
 			continue
 		var town: Dictionary = town_value
 		if String(town.get("placement_id", "")) in town_placement_ids:
-			tiles.append(Vector2i(int(town.get("x", 0)), int(town.get("y", 0))))
+			tiles.append(_objective_world_tile(town, true))
 	for encounter_value in session.overworld.get("encounters", []):
 		if encounter_value is Dictionary and _encounter_is_objective_anchor_from_surface(encounter_value, surface):
-			tiles.append(Vector2i(int(encounter_value.get("x", 0)), int(encounter_value.get("y", 0))))
+			tiles.append(_objective_world_tile(encounter_value))
 	return surface
 
-static func _objective_proximity_bonus(session: SessionStateStoreScript.SessionData, x: int, y: int) -> int:
+static func _objective_proximity_bonus(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = 0) -> int:
 	var best_distance = 9999
 	for town in session.overworld.get("towns", []):
-		if not (town is Dictionary):
+		if not (town is Dictionary) or not LevelRules.on_level(town, level):
 			continue
 		var placement_id = String(town.get("placement_id", ""))
 		if placement_id == "" or not _town_is_objective_anchor(session, placement_id):
@@ -16809,7 +16858,7 @@ static func _objective_proximity_bonus(session: SessionStateStoreScript.SessionD
 		if distance < best_distance:
 			best_distance = distance
 	for encounter in session.overworld.get("encounters", []):
-		if not (encounter is Dictionary):
+		if not (encounter is Dictionary) or not LevelRules.on_level(encounter, level):
 			continue
 		if not _encounter_is_objective_anchor(session, encounter):
 			continue
@@ -16826,14 +16875,14 @@ static func _objective_proximity_bonus(session: SessionStateStoreScript.SessionD
 		return 10
 	return 0
 
-static func _objective_proximity_bonus_from_tiles(anchor_tiles: Variant, x: int, y: int) -> int:
+static func _objective_proximity_bonus_from_tiles(anchor_tiles: Variant, x: int, y: int, level: int = 0) -> int:
 	var best_distance = 9999
 	if not (anchor_tiles is Array):
 		return 0
 	for tile_value in anchor_tiles:
-		if not (tile_value is Vector2i):
+		if not (tile_value is Vector2i or tile_value is Vector3i) or not LevelRules.on_level(tile_value, level):
 			continue
-		var tile: Vector2i = tile_value
+		var tile := Vector2i(tile_value.x, tile_value.y)
 		var distance: int = abs(x - tile.x) + abs(y - tile.y)
 		if distance < best_distance:
 			best_distance = distance
@@ -16916,11 +16965,12 @@ static func _best_goal_tile(
 	session: SessionStateStoreScript.SessionData,
 	origin_pos: Vector2i,
 	goal_tiles: Array,
-	observer_faction_id: String = ""
+	observer_faction_id: String = "",
+	level: int = 0
 ) -> Vector2i:
 	if goal_tiles.is_empty():
 		return origin_pos
-	var path_context := _path_distance_surface_context(session, "", observer_faction_id)
+	var path_context := _path_distance_surface_context(session, "", observer_faction_id, level)
 	return _best_goal_tile_with_path_context(path_context, origin_pos, goal_tiles)
 
 static func _best_goal_tile_with_path_context(
@@ -17025,7 +17075,7 @@ static func _tile_has_unresolved_route_pickup_blocker(
 		return false
 	var actor_id := String(raid.get("placement_id", ""))
 	for encounter_value in session.overworld.get("encounters", []):
-		if not (encounter_value is Dictionary):
+		if not (encounter_value is Dictionary) or not LevelRules.same_level(encounter_value, raid):
 			continue
 		var encounter: Dictionary = encounter_value
 		if String(encounter.get("placement_id", "")) == actor_id:
@@ -17328,6 +17378,8 @@ static func _resolve_arrived_target(
 	faction_id: String,
 	config: Dictionary = {}
 ) -> Dictionary:
+	if _target_level(session, String(raid.get("target_kind", "")), String(raid.get("target_placement_id", "")), "", LevelRules.level_of(raid)) != LevelRules.level_of(raid):
+		return {"encounter": raid, "state": state, "event_message": ""}
 	match String(raid.get("target_kind", "")):
 		"town":
 			var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
@@ -17439,7 +17491,7 @@ static func _resolve_hero_intercept_target(
 		retargeted["target_y"] = current_tile.y
 		retargeted["goal_x"] = current_tile.x
 		retargeted["goal_y"] = current_tile.y
-		retargeted["goal_distance"] = _hero_target_goal_distance(session, raid_tile, current_tile, faction_id)
+		retargeted["goal_distance"] = _hero_target_goal_distance(session, raid_tile, current_tile, faction_id, LevelRules.level_of(raid))
 		retargeted["arrived"] = int(retargeted.get("goal_distance", 9999)) == 0
 		var reason_codes := _normalize_string_array(retargeted.get("target_reason_codes", []))
 		for code in ["hero_reacquired", "current_sighting"]:
@@ -18716,8 +18768,8 @@ static func _blocked_route_resume_target_after_clear(
 	var staging_tiles := _town_staging_tiles(session, town)
 	if staging_tiles.is_empty():
 		return {}
-	var goal_tile := _best_goal_tile(session, origin, staging_tiles, faction_id)
-	var goal_distance := _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), faction_id)
+	var goal_tile := _best_goal_tile(session, origin, staging_tiles, faction_id, LevelRules.level_of(raid))
+	var goal_distance := _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid))
 	if goal_distance >= 9999:
 		return {}
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
@@ -19064,7 +19116,7 @@ static func _nearby_town_resupply_candidate(
 		var town: Dictionary = town_value
 		if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
 			continue
-		var tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+		var tile := _town_entrance_tile(town)
 		var distance: int = abs(tile.x - current.x) + abs(tile.y - current.y)
 		if distance > 1:
 			continue
@@ -19417,7 +19469,7 @@ static func _goal_tiles_from_raid(
 			var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(town_result.get("index", -1)) >= 0:
 				var town: Dictionary = town_result.get("town", {})
-				return [Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))]
+				return [_town_entrance_tile(town)]
 		"explore":
 			var explore_tile := _exploration_target_tile_from_id(String(raid.get("target_placement_id", "")))
 			if explore_tile.x >= 0 and explore_tile.y >= 0:
@@ -19570,13 +19622,14 @@ static func _path_distance(
 	start: Vector2i,
 	goal_tiles: Array,
 	ignore_placement_id: String,
-	observer_faction_id: String = ""
+	observer_faction_id: String = "",
+	level: int = -1
 ) -> int:
 	if goal_tiles.is_empty():
 		return 9999
 	if start in goal_tiles:
 		return 0
-	var path_context := _path_distance_surface_context(session, ignore_placement_id, observer_faction_id)
+	var path_context := _path_distance_surface_context(session, ignore_placement_id, observer_faction_id, level)
 	return _path_distance_with_context(path_context, start, goal_tiles)
 
 static func _path_distance_with_context(
@@ -19619,18 +19672,22 @@ static func _path_distance_with_context(
 static func _path_distance_surface_context(
 	session: SessionStateStoreScript.SessionData,
 	ignore_placement_id: String,
-	observer_faction_id: String
+	observer_faction_id: String,
+	level: int = -1
 ) -> Dictionary:
-	var cache_key := _path_distance_surface_cache_key(session, ignore_placement_id, observer_faction_id)
+	if level < 0:
+		level = OverworldRulesScript.placement_level(session, ignore_placement_id)
+	var cache_key := _path_distance_surface_cache_key(session, ignore_placement_id, observer_faction_id, level)
 	if cache_key != "" and _path_distance_surface_cache.has(cache_key):
 		return _path_distance_surface_cache[cache_key]
-	var encounter_blocked := _occupied_tiles(session, ignore_placement_id)
-	var resource_blocked := _overworld_body_blocked_tiles(session, ignore_placement_id, observer_faction_id)
-	var hero_blocked := _player_hero_blocked_tiles(session, observer_faction_id)
-	var terrain_blocked := _impassable_terrain_tiles(session)
+	var encounter_blocked := _occupied_tiles(session, ignore_placement_id, level)
+	var resource_blocked := _overworld_body_blocked_tiles(session, ignore_placement_id, observer_faction_id, level)
+	var hero_blocked := _player_hero_blocked_tiles(session, observer_faction_id, level)
+	var terrain_blocked := _impassable_terrain_tiles(session, level)
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
 	var context := {
 		"map_size": map_size,
+		"level": level,
 		"encounter_blocked": encounter_blocked,
 		"resource_blocked": resource_blocked,
 		"hero_blocked": hero_blocked,
@@ -19650,12 +19707,15 @@ static func _path_distance_surface_context(
 static func _path_distance_surface_cache_key(
 	session: SessionStateStoreScript.SessionData,
 	ignore_placement_id: String,
-	observer_faction_id: String
+	observer_faction_id: String,
+	level: int = -1
 ) -> String:
 	if session == null:
 		return ""
+	if level < 0:
+		level = OverworldRulesScript.placement_level(session, ignore_placement_id)
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
-	return "%s|%s|%d|%d|%d|%s|%s|%s|%s|%s" % [
+	var key := "%s|%s|%d|%d|%d|%s|%s|%s|%s|%s" % [
 		String(session.session_id),
 		String(session.scenario_id),
 		int(session.day),
@@ -19667,6 +19727,7 @@ static func _path_distance_surface_cache_key(
 		_path_distance_resource_fingerprint(session),
 		_path_distance_hero_fingerprint(session, observer_faction_id),
 	]
+	return key if level == 0 else key + "|level:%d" % level
 
 static func _path_distance_encounter_fingerprint(session: SessionStateStoreScript.SessionData, ignore_placement_id: String = "") -> String:
 	var resolved_lookup := {}
@@ -19692,6 +19753,8 @@ static func _path_distance_encounter_fingerprint(session: SessionStateStoreScrip
 		fingerprint = _fingerprint_mix(fingerprint, int(encounter.get("x", 0)))
 		fingerprint = _fingerprint_mix(fingerprint, int(encounter.get("y", 0)))
 		fingerprint = _fingerprint_mix(fingerprint, resolved_flag)
+		if LevelRules.level_of(encounter) != 0:
+			fingerprint = _fingerprint_mix(fingerprint, LevelRules.level_of(encounter))
 	return "%d:%d:%d" % [count, unresolved_count, fingerprint]
 
 static func _path_distance_resource_fingerprint(session: SessionStateStoreScript.SessionData) -> String:
@@ -19709,6 +19772,8 @@ static func _path_distance_resource_fingerprint(session: SessionStateStoreScript
 		fingerprint = _fingerprint_mix(fingerprint, int(node.get("x", 0)))
 		fingerprint = _fingerprint_mix(fingerprint, int(node.get("y", 0)))
 		fingerprint = _fingerprint_mix(fingerprint, collected_flag)
+		if LevelRules.level_of(node) != 0:
+			fingerprint = _fingerprint_mix(fingerprint, LevelRules.level_of(node))
 	return "%d:%d:%d" % [count, collected_count, fingerprint]
 
 static func _path_distance_hero_fingerprint(
@@ -19736,6 +19801,8 @@ static func _path_distance_hero_fingerprint(
 		fingerprint = _fingerprint_mix(fingerprint, int(position.get("y", -9999)))
 		fingerprint = _fingerprint_mix(fingerprint, sheltered_flag)
 		fingerprint = _fingerprint_mix(fingerprint, blocked_for_observer_flag)
+		if LevelRules.level_of(position) != 0:
+			fingerprint = _fingerprint_mix(fingerprint, LevelRules.level_of(position))
 	return "%d:%d:%d" % [count, sheltered_count, fingerprint]
 
 static func raid_reinforcement_route_distance(
@@ -19745,9 +19812,9 @@ static func raid_reinforcement_route_distance(
 	observer_faction_id: String = "",
 	phase_route_context_cache: Dictionary = {}
 ) -> int:
-	if session == null or support_town.is_empty() or raid.is_empty():
+	if session == null or support_town.is_empty() or raid.is_empty() or not LevelRules.same_level(support_town, raid):
 		return 9999
-	var start := Vector2i(int(support_town.get("x", 0)), int(support_town.get("y", 0)))
+	var start := _town_entrance_tile(support_town)
 	var goal := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var placement_id := String(raid.get("placement_id", ""))
 	var path_context = phase_route_context_cache.get(placement_id, null) if placement_id != "" else null
@@ -19887,11 +19954,11 @@ static func _path_distance_to_goal_index(
 				best_distance = candidate_distance
 	return best_distance
 
-static func _occupied_tiles(session: SessionStateStoreScript.SessionData, ignore_placement_id: String) -> Dictionary:
+static func _occupied_tiles(session: SessionStateStoreScript.SessionData, ignore_placement_id: String, level: int = 0) -> Dictionary:
 	var occupied = {}
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter in session.overworld.get("encounters", []):
-		if not (encounter is Dictionary):
+		if not (encounter is Dictionary) or not LevelRules.on_level(encounter, level):
 			continue
 		var placement_id = String(encounter.get("placement_id", ""))
 		if placement_id == ignore_placement_id:
@@ -19904,15 +19971,16 @@ static func _occupied_tiles(session: SessionStateStoreScript.SessionData, ignore
 static func _overworld_body_blocked_tiles(
 	session: SessionStateStoreScript.SessionData,
 	ignore_placement_id: String,
-	observer_faction_id: String = ""
+	observer_faction_id: String = "",
+	level: int = 0
 ) -> Dictionary:
-	var blocked: Dictionary = OverworldRulesScript._build_blocked_tile_index(session)
+	var blocked: Dictionary = OverworldRulesScript._build_blocked_tile_index(session, level)
 	for tile in _placement_body_tiles_for_ignore(session, ignore_placement_id):
 		if tile is Vector2i:
 			blocked.erase(_pos_key(tile))
 	if observer_faction_id != "":
 		for node_value in session.overworld.get("resource_nodes", []):
-			if not (node_value is Dictionary):
+			if not (node_value is Dictionary) or not LevelRules.on_level(node_value, level):
 				continue
 			var node: Dictionary = node_value
 			var visit_tile: Variant = node.get("visit_tile", {})
@@ -19941,13 +20009,14 @@ static func _placement_body_tiles_for_ignore(session: SessionStateStoreScript.Se
 
 static func _player_hero_blocked_tiles(
 	session: SessionStateStoreScript.SessionData,
-	observer_faction_id: String
+	observer_faction_id: String,
+	level: int = 0
 ) -> Dictionary:
 	var blocked := {}
 	if session == null or observer_faction_id == "":
 		return blocked
 	for hero_value in _player_hero_snapshots_for_intercept(session):
-		if not (hero_value is Dictionary):
+		if not (hero_value is Dictionary) or not LevelRules.on_level(hero_value, level):
 			continue
 		var hero: Dictionary = hero_value
 		if _player_hero_sheltered_in_town(session, hero):
@@ -19962,12 +20031,13 @@ static func _player_hero_blocked_tiles(
 
 static func _player_hero_tile_occupied(
 	session: SessionStateStoreScript.SessionData,
-	tile: Vector2i
+	tile: Vector2i,
+	level: int = 0
 ) -> bool:
 	if session == null:
 		return false
 	for hero_value in _player_hero_snapshots_for_intercept(session):
-		if not (hero_value is Dictionary):
+		if not (hero_value is Dictionary) or not LevelRules.on_level(hero_value, level):
 			continue
 		var hero: Dictionary = hero_value
 		if _player_hero_sheltered_in_town(session, hero):
@@ -19991,7 +20061,7 @@ static func _player_hero_currently_visible_to_enemy_faction(
 		return false
 	var tile := Vector2i(int(position.get("x", 0)), int(position.get("y", 0)))
 	for source_value in _enemy_hero_sighting_sources(session, {}, observer_faction_id):
-		if not (source_value is Dictionary):
+		if not (source_value is Dictionary) or not LevelRules.same_level(source_value, hero):
 			continue
 		var source: Dictionary = source_value
 		var distance: int = abs(tile.x - int(source.get("x", 0))) + abs(tile.y - int(source.get("y", 0)))
@@ -19999,9 +20069,9 @@ static func _player_hero_currently_visible_to_enemy_faction(
 			return true
 	return false
 
-static func _impassable_terrain_tiles(session: SessionStateStoreScript.SessionData) -> Dictionary:
+static func _impassable_terrain_tiles(session: SessionStateStoreScript.SessionData, level: int = 0) -> Dictionary:
 	var blocked = {}
-	var map_data = session.overworld.get("map", [])
+	var map_data = LevelRules.terrain_rows(session, level)
 	if not (map_data is Array):
 		return blocked
 	for y in range(map_data.size()):
@@ -20102,7 +20172,7 @@ static func _refresh_target(
 				var staging_tiles = _town_staging_tiles(session, town)
 				var goal_tile = _best_goal_tile_with_path_context(preloaded_path_context, origin, staging_tiles) \
 					if not preloaded_path_context.is_empty() \
-					else _best_goal_tile(session, origin, staging_tiles, observer_faction_id)
+					else _best_goal_tile(session, origin, staging_tiles, observer_faction_id, LevelRules.level_of(raid))
 				raid["target_label"] = _town_name(town)
 				raid["target_x"] = int(town.get("x", 0))
 				raid["target_y"] = int(town.get("y", 0))
@@ -20110,12 +20180,12 @@ static func _refresh_target(
 				raid["goal_y"] = goal_tile.y
 				raid["goal_distance"] = _path_distance_with_context(preloaded_path_context, origin, staging_tiles) \
 					if not preloaded_path_context.is_empty() \
-					else _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), observer_faction_id)
+					else _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), observer_faction_id, LevelRules.level_of(raid))
 		"regroup":
 			var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(town_result.get("index", -1)) >= 0:
 				var town = town_result.get("town", {})
-				var goal_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+				var goal_tile := _town_entrance_tile(town)
 				raid["target_label"] = "%s regroup" % _town_name(town)
 				raid["target_x"] = int(town.get("x", 0))
 				raid["target_y"] = int(town.get("y", 0))
@@ -20123,7 +20193,7 @@ static func _refresh_target(
 				raid["goal_y"] = goal_tile.y
 				raid["goal_distance"] = _path_distance_with_context(preloaded_path_context, origin, [goal_tile]) \
 					if not preloaded_path_context.is_empty() \
-					else _path_distance(session, origin, [goal_tile], String(raid.get("placement_id", "")), observer_faction_id)
+					else _path_distance(session, origin, [goal_tile], String(raid.get("placement_id", "")), observer_faction_id, LevelRules.level_of(raid))
 		"explore":
 			var goal_tile := _exploration_target_tile_from_id(String(raid.get("target_placement_id", "")))
 			if goal_tile.x < 0 or goal_tile.y < 0:
@@ -20137,7 +20207,7 @@ static func _refresh_target(
 			raid["goal_y"] = goal_tile.y
 			raid["goal_distance"] = _path_distance_with_context(preloaded_path_context, origin, [goal_tile]) \
 				if not preloaded_path_context.is_empty() \
-				else _path_distance(session, origin, [goal_tile], String(raid.get("placement_id", "")), observer_faction_id)
+				else _path_distance(session, origin, [goal_tile], String(raid.get("placement_id", "")), observer_faction_id, LevelRules.level_of(raid))
 		"resource":
 			var resource_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(resource_result.get("index", -1)) >= 0:
@@ -20148,7 +20218,7 @@ static func _refresh_target(
 					goal_tiles = _resource_staging_tiles(session, node)
 				var goal_tile := _best_goal_tile_with_path_context(preloaded_path_context, origin, goal_tiles) \
 					if not preloaded_path_context.is_empty() \
-					else _best_goal_tile(session, origin, goal_tiles, observer_faction_id)
+					else _best_goal_tile(session, origin, goal_tiles, observer_faction_id, LevelRules.level_of(raid))
 				raid["target_label"] = String(ContentService.get_resource_site(String(node.get("site_id", ""))).get("name", "Resource Site"))
 				raid["target_x"] = target_tile.x
 				raid["target_y"] = target_tile.y
@@ -20156,7 +20226,7 @@ static func _refresh_target(
 				raid["goal_y"] = goal_tile.y
 				raid["goal_distance"] = _path_distance_with_context(preloaded_path_context, origin, goal_tiles) \
 					if not preloaded_path_context.is_empty() \
-					else _path_distance(session, origin, goal_tiles, String(raid.get("placement_id", "")), observer_faction_id)
+					else _path_distance(session, origin, goal_tiles, String(raid.get("placement_id", "")), observer_faction_id, LevelRules.level_of(raid))
 		"artifact":
 			var artifact_result = _find_artifact_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(artifact_result.get("index", -1)) >= 0:
@@ -20169,7 +20239,7 @@ static func _refresh_target(
 				var artifact_goal_tiles := [Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))]
 				raid["goal_distance"] = _path_distance_with_context(preloaded_path_context, origin, artifact_goal_tiles) \
 					if not preloaded_path_context.is_empty() \
-					else _path_distance(session, origin, artifact_goal_tiles, String(raid.get("placement_id", "")), observer_faction_id)
+					else _path_distance(session, origin, artifact_goal_tiles, String(raid.get("placement_id", "")), observer_faction_id, LevelRules.level_of(raid))
 		"encounter":
 			var encounter_result = _find_encounter_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(encounter_result.get("index", -1)) >= 0:
@@ -20177,7 +20247,7 @@ static func _refresh_target(
 				var staging_tiles = _encounter_staging_tiles(session, placement)
 				var goal_tile = _best_goal_tile_with_path_context(preloaded_path_context, origin, staging_tiles) \
 					if not preloaded_path_context.is_empty() \
-					else _best_goal_tile(session, origin, staging_tiles, observer_faction_id)
+					else _best_goal_tile(session, origin, staging_tiles, observer_faction_id, LevelRules.level_of(raid))
 				raid["target_label"] = _encounter_target_label(session, placement, "Frontier Camp")
 				raid["target_x"] = int(placement.get("x", 0))
 				raid["target_y"] = int(placement.get("y", 0))
@@ -20185,7 +20255,7 @@ static func _refresh_target(
 				raid["goal_y"] = goal_tile.y
 				raid["goal_distance"] = _path_distance_with_context(preloaded_path_context, origin, staging_tiles) \
 					if not preloaded_path_context.is_empty() \
-					else _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), observer_faction_id)
+					else _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), observer_faction_id, LevelRules.level_of(raid))
 		"hero":
 			var hero_target_id := String(raid.get("target_placement_id", ""))
 			var hero_position := Vector2i(
@@ -20209,7 +20279,7 @@ static func _refresh_target(
 					origin,
 					[hero_position],
 					String(raid.get("placement_id", "")),
-					observer_faction_id
+					observer_faction_id, LevelRules.level_of(raid)
 				)
 	if String(raid.get("delivery_intercept_node_placement_id", "")) != "":
 		var delivery_context: Dictionary = OverworldRulesScript.delivery_interception_context_for_encounter(session, raid)
@@ -20220,10 +20290,27 @@ static func _refresh_target(
 			raid["target_label"] = String(delivery_context.get("pressure_label", raid.get("target_label", "")))
 	return raid
 
+static func _target_level(session: SessionStateStoreScript.SessionData, kind: String, target_id: String, faction_id: String = "", fallback: int = 0) -> int:
+	if kind == "explore":
+		return _exploration_target_level(target_id)
+	if kind == "hero":
+		var hero := _find_player_hero(session, target_id)
+		if faction_id != "":
+			hero = _known_player_hero_snapshot_for_ai(session, faction_id, hero)
+		return fallback if hero.is_empty() else LevelRules.level_of(hero)
+	if kind in ["town", "regroup", "resource", "artifact", "encounter"]:
+		return OverworldRulesScript.placement_level(session, target_id, fallback)
+	return fallback
+
 static func _raid_target_valid(session: SessionStateStoreScript.SessionData, raid: Dictionary) -> bool:
 	if _raid_target_points_to_self(raid):
 		return false
 	var target_kind = String(raid.get("target_kind", ""))
+	var target_id := String(raid.get("target_placement_id", ""))
+	if target_kind in ["town", "regroup", "resource", "artifact", "encounter", "explore"] and _target_level(session, target_kind, target_id, "", -1) != LevelRules.level_of(raid):
+		return false
+	if target_kind == "hero" and target_id != "" and not LevelRules.same_level(_known_player_hero_snapshot_for_ai(session, String(raid.get("spawned_by_faction_id", "")), _find_player_hero(session, target_id)), raid):
+		return false
 	var valid := false
 	match target_kind:
 		"town":
@@ -20285,10 +20372,10 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 					and not _known_player_hero_snapshot_for_ai(session, raid_faction, hero).is_empty()
 				)
 		"explore":
-			var target_id := String(raid.get("target_placement_id", ""))
-			var goal_tile := _exploration_target_tile_from_id(target_id)
+			var explore_target_id := String(raid.get("target_placement_id", ""))
+			var goal_tile := _exploration_target_tile_from_id(explore_target_id)
 			valid = (
-				target_id.begins_with("explore:")
+				explore_target_id.begins_with("explore:")
 				and goal_tile.x >= 0
 				and goal_tile.y >= 0
 				and _path_distance(
@@ -20827,7 +20914,7 @@ static func _raid_is_public(session: SessionStateStoreScript.SessionData, encoun
 			var town_result = _find_town_by_placement(session, String(encounter.get("target_placement_id", "")))
 			if int(town_result.get("index", -1)) >= 0 and String(town_result.get("town", {}).get("owner", "neutral")) == "player":
 				return true
-	if OverworldRulesScript.is_tile_visible(session, int(encounter.get("x", 0)), int(encounter.get("y", 0))):
+	if OverworldRulesScript.is_tile_visible(session, int(encounter.get("x", 0)), int(encounter.get("y", 0)), LevelRules.level_of(encounter)):
 		return true
 	return false
 

@@ -2,6 +2,7 @@ class_name HeroCommandRules
 extends RefCounted
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
@@ -503,7 +504,7 @@ static func recruit_hero_at_town(session: SessionStateStoreScript.SessionData, t
 		return {"ok": false, "message": "Insufficient resources to hire %s." % String(hero_template.get("name", hero_id))}
 
 	_spend_resources(session, cost)
-	var position := {"x": int(town.get("x", 0)), "y": int(town.get("y", 0))}
+	var position := OverworldLevelRulesScript.town_entrance(town)
 	var hero := build_hero_from_template(hero_template, position, {"id": "%s_army" % hero_id, "name": "Field Army", "stacks": []}, session)
 	var heroes = session.overworld.get("player_heroes", [])
 	if not (heroes is Array):
@@ -1174,11 +1175,11 @@ static func hero_count_from_overworld(overworld_state: Variant) -> int:
 		return 1
 	return 0
 
-static func closest_hero_target(session: SessionStateStoreScript.SessionData, origin: Vector2i = Vector2i.ZERO) -> Dictionary:
+static func closest_hero_target(session: SessionStateStoreScript.SessionData, origin: Vector2i = Vector2i.ZERO, level: int = 0) -> Dictionary:
 	normalize_session(session)
 	var best := {}
 	for hero in session.overworld.get("player_heroes", []):
-		if not (hero is Dictionary):
+		if not (hero is Dictionary) or not OverworldLevelRulesScript.on_level(hero, level):
 			continue
 		var position := _normalize_position(hero.get("position", {}))
 		var distance: int = abs(origin.x - int(position.get("x", 0))) + abs(origin.y - int(position.get("y", 0)))
@@ -1190,6 +1191,8 @@ static func closest_hero_target(session: SessionStateStoreScript.SessionData, or
 				"y": int(position.get("y", 0)),
 				"distance": distance,
 			}
+	if not best.is_empty() and level != 0:
+		best["level"] = level
 	return best
 
 static func hero_position_by_id(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
@@ -1208,6 +1211,7 @@ static func hero_positions(session: SessionStateStoreScript.SessionData) -> Arra
 					"name": String(hero.get("name", "Hero")),
 					"x": int(hero.get("position", {}).get("x", 0)),
 					"y": int(hero.get("position", {}).get("y", 0)),
+					"level": OverworldLevelRulesScript.level_of(hero),
 					"is_active": String(hero.get("id", "")) == String(session.overworld.get("active_hero_id", "")),
 				}
 			)
@@ -1274,11 +1278,7 @@ static func _hero_index_by_id(player_heroes: Array, hero_id: String) -> int:
 	return -1
 
 static func _normalize_position(value: Variant) -> Dictionary:
-	if value is Dictionary:
-		return {"x": int(value.get("x", 0)), "y": int(value.get("y", 0))}
-	if value is Vector2i:
-		return {"x": value.x, "y": value.y}
-	return {"x": 0, "y": 0}
+	return OverworldLevelRulesScript.position(value)
 
 static func _normalize_movement(value: Variant, movement_max: int) -> Dictionary:
 	var normalized := {"current": movement_max, "max": movement_max}
@@ -1365,7 +1365,7 @@ static func _stack_summary_from_array(stacks: Variant) -> String:
 	return ", ".join(parts) if not parts.is_empty() else "No troops"
 
 static func _hero_is_stationed_at_town(hero: Dictionary, town: Dictionary) -> bool:
-	return int(hero.get("position", {}).get("x", -1)) == int(town.get("x", -2)) and int(hero.get("position", {}).get("y", -1)) == int(town.get("y", -2))
+	return _normalize_position(hero.get("position", {})) == OverworldLevelRulesScript.town_entrance(town)
 
 static func _stationed_holder_ids(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
 	var holders := [HOLDER_GARRISON]

@@ -2,6 +2,7 @@ extends Control
 
 signal recenter_requested(tile: Vector2i)
 
+const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 
 const TERRAIN_COLORS := {
@@ -23,6 +24,7 @@ const TOWN_PLAYER_COLOR := Color("70b7dc")
 const TOWN_OTHER_COLOR := Color("d36c59")
 const KEYBOARD_CURSOR_COLOR := Color("fff4bd")
 
+var _level: int = 0
 var _session = null
 var _map_data: Array = []
 var _map_size := Vector2i.ONE
@@ -44,7 +46,8 @@ func _ready() -> void:
 
 func configure(session, map_data: Array, map_size: Vector2i, selected_tile: Vector2i, visible_bounds: Rect2i) -> void:
 	_session = session
-	_map_data = map_data
+	_level = LevelRules.view_level(session)
+	_map_data = LevelRules.terrain_rows(session, _level) if LevelRules.level_count(session) > 1 else map_data
 	_map_size = Vector2i(maxi(map_size.x, 1), maxi(map_size.y, 1))
 	_selected_tile = _clamped_tile(selected_tile)
 	if not _tile_in_bounds(_keyboard_tile):
@@ -137,11 +140,11 @@ func _field_rect() -> Rect2:
 
 
 func _tile_color(tile: Vector2i) -> Color:
-	if _session == null or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+	if _session == null or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 		return UNEXPLORED_COLOR
 	var terrain := _terrain_at(tile)
 	var color: Color = TERRAIN_COLORS.get(terrain, Color("59634e"))
-	if not OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y):
+	if not OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level):
 		color = color.darkened(0.24)
 	return color
 
@@ -162,10 +165,11 @@ func _draw_towns(field: Rect2, cell: Vector2) -> void:
 	if _session == null:
 		return
 	for value in _session.overworld.get("towns", []):
-		if not (value is Dictionary):
+		if not (value is Dictionary) or not LevelRules.on_level(value, _level):
 			continue
-		var tile := Vector2i(int(value.get("x", -1)), int(value.get("y", -1)))
-		if not _tile_in_bounds(tile) or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+		var entrance := LevelRules.town_entrance(value)
+		var tile := Vector2i(int(entrance.x), int(entrance.y))
+		if not _tile_in_bounds(tile) or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 			continue
 		var rect := _marker_rect(field, cell, tile, 0.62)
 		var color := TOWN_PLAYER_COLOR if String(value.get("owner", "neutral")) == "player" else TOWN_OTHER_COLOR
@@ -178,10 +182,10 @@ func _draw_heroes(field: Rect2, cell: Vector2) -> void:
 		return
 	var hero_tiles: Array[Vector2i] = []
 	var primary := OverworldRulesScript.hero_position(_session)
-	if _tile_in_bounds(primary):
+	if LevelRules.hero_level(_session) == _level and _tile_in_bounds(primary):
 		hero_tiles.append(primary)
-	for value in _session.overworld.get("heroes", []):
-		if not (value is Dictionary):
+	for value in _session.overworld.get("player_heroes", []):
+		if not (value is Dictionary) or not LevelRules.on_level(value, _level):
 			continue
 		var position = value.get("position", {})
 		if not (position is Dictionary):
@@ -190,7 +194,7 @@ func _draw_heroes(field: Rect2, cell: Vector2) -> void:
 		if _tile_in_bounds(tile) and tile not in hero_tiles:
 			hero_tiles.append(tile)
 	for tile in hero_tiles:
-		if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+		if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 			continue
 		var center := _tile_rect(field, cell, tile).get_center()
 		var radius := clampf(minf(cell.x, cell.y) * 0.34, 2.5, 6.0)
@@ -246,12 +250,13 @@ func validation_snapshot() -> Dictionary:
 	var visible_count := 0
 	for y in range(_map_size.y):
 		for x in range(_map_size.x):
-			if _session != null and OverworldRulesScript.is_tile_explored(_session, x, y):
+			if _session != null and OverworldRulesScript.is_tile_explored(_session, x, y, _level):
 				explored_count += 1
-			if _session != null and OverworldRulesScript.is_tile_visible(_session, x, y):
+			if _session != null and OverworldRulesScript.is_tile_visible(_session, x, y, _level):
 				visible_count += 1
 	var total_tiles := _map_size.x * _map_size.y
 	return {
+		"level": _level,
 		"map_size": {"x": _map_size.x, "y": _map_size.y},
 		"selected_tile": {"x": _selected_tile.x, "y": _selected_tile.y},
 		"keyboard_tile": {"x": _keyboard_tile.x, "y": _keyboard_tile.y},
@@ -281,8 +286,8 @@ func validation_snapshot() -> Dictionary:
 func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 	if not _tile_in_bounds(tile):
 		return {"valid": false}
-	var explored := _session != null and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y)
-	var visible := _session != null and OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
+	var explored := _session != null and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level)
+	var visible := _session != null and OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
 	var color := _tile_color(tile)
 	return {
 		"valid": true,

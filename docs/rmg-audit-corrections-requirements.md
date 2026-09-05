@@ -32,4 +32,4 @@ Non-goals: unrelated art/Town UI/balance/performance rewrites, copied foreign as
 
 ## Current evidence
 
-The entrance-boundary implementation and its limits are recorded in `docs/rmg-town-entrance-correction-report.md`. All 83 sampled native player starts now equal their main-town entrances; native object/terrain records and payload hashes/lengths are unchanged. The full correction goal is still active: level-aware runtime, distinct players/teams, native transit/water navigation, source-proven normal-water parity and integrated regressions remain required.
+The completed entrance-boundary and level-aware runtime children are recorded in `docs/rmg-town-entrance-correction-report.md` and `docs/rmg-level-aware-runtime-report.md`. All 83 sampled native player starts equal their main-town entrances; all 35 supported primary-hero entry/exit/return/save cases now pass, including two-level maps. Native object/terrain records and payload hashes/lengths are unchanged. The full correction goal remains active: distinct players/teams, native transit/water navigation, source-proven normal-water parity and integrated regressions remain required.

@@ -35,9 +35,11 @@ supersedes the blanket current completion claim below. Fresh unassisted native
 payloads match 23 of 24 retained selected owner cases; Medium normal-water seed
 10 differs, including private-state differences confirmed against a fresh
 executable run. Runtime start placement, two-level adoption and player-slot
-identity also have confirmed gaps. The entrance-boundary correction is tracked
-in `docs/rmg-town-entrance-correction-report.md`; it does not complete the level,
-player, transit or native-water work. The legacy Godot boundary report now passes
+identity also had confirmed gaps. The entrance-boundary and level-aware runtime
+corrections are completed in `docs/rmg-town-entrance-correction-report.md` and
+`docs/rmg-level-aware-runtime-report.md`: 83 exact starts, 35 supported live
+entry/exit/return/save cases and focused layer/AI/battle/fog checks pass. Player,
+native paired transit/water and native-water parity remain unfinished. The legacy Godot boundary report now passes
 the corrected authored-pool bank and type-107 assertions, then fails a later
 stale XLarge subtype-45 dwelling expectation. The full report is not passing.
 

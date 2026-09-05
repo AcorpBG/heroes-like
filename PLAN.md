@@ -24,10 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current owner goal: `bugfix-rmg-audit-corrections-20260905`; fix every finding from the completed audit, with heroes always starting at the owning town entrance. Entrance-boundary child completed; current child: `bugfix-rmg-level-aware-runtime-20260905`. Level, player/team, transit/water, native parity and integrated regression children remain required; a partial correction does not complete the goal.
+- Current owner goal: `bugfix-rmg-audit-corrections-20260905`; fix every finding from the completed audit, with heroes always starting at the owning town entrance. Entrance-boundary and level-aware runtime children completed; current child: `bugfix-rmg-player-team-identity-20260905`. Player/team, transit/water, native parity and integrated regression children remain required; a partial correction does not complete the goal.
 - Baseline audit: `audit-rmg-start-placement-and-h3maped-comparison-20260905`; 36 runtime requests, 83 generated starts, 23/24 exact retained owner payloads, fresh executable/private-state water mismatch, and confirmed start/level/opponent/transit adoption gaps. Audit evidence is not runtime fixes or parity completion.
-- Most recently completed owner-directed implementation slice: `performance-full-play-runtime-review-20260905`: indexed content and demand-shaped save bars, safe warning/dialog/cursor lifecycle and exact controller tile selection; matched Battle refresh -60.9%, Large purchase waiting -27.6%, ten-turn waiting -15.4%, with 78 complete state comparisons and both-platform checks. Campaign-driver/AT-SPI, Moonbite pacing and existing Town visual gaps remain documented.
-- Current package boundary: matching Linux and Windows release exports measure 248377692 bytes, 1622308 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+- Most recently completed owner-directed implementation slice: `bugfix-rmg-level-aware-runtime-20260905`: surface/underground terrain, spatial identity, interactions, AI, fog, UI and saves remain layer-specific; all 35 supported entrance cases and 49 focused checks per selected live case pass. Evidence: `docs/rmg-level-aware-runtime-report.md`.
+- Current package boundary: Linux and Windows release exports both measure 248396092 bytes, 1603908 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
 
 ## RMG Audit Corrections
 
@@ -49,13 +49,13 @@ Status: completed 2026-09-05. Exact main-town entrance starts, reserved suppleme
 
 id: `bugfix-rmg-level-aware-runtime-20260905`
 
-Status: in_progress. Preserve terrain/object/hero/town levels through runtime queries, rendering/input/minimap/vision, AI and saves; implement playable layer selection and compatibility. Validate seed-68 underground start, same-XY different-layer isolation, move/visit/vision/save/hero-switch and original one-level regressions. Owners: session bridge, Overworld/hero/AI rules, map/minimap/shell and persistence.
+Status: completed 2026-09-05. Level-aware terrain, occupancy/interactions, hero movement/stationing, map/minimap/fog, accessible layer selection, AI contexts and additive saves are implemented. All 35 supported sampled entrance cases pass; three representative two-level cases pass 49 live checks each at actual 2048×1079, and underground seed 68 passes at 1280×720. Native guard battle/save/terminal results and complete AI turns are deterministic; legacy authored transit, relevant regressions, repository, native selftests and both-platform packages pass. Source/evidence: `docs/rmg-level-aware-runtime-report.md`. Native paired transit, distinct player/team identity and normal-water parity remain separate required children.
 
 ### RMG Distinct Player And Team Identity
 
 id: `bugfix-rmg-player-team-identity-20260905`
 
-Status: pending. Preserve source player-slot/team identity independently of original faction; adopt distinct AI state, ownership and hero/town references. Validate six/eight-player repeated-faction generation, separate enemy turns/targets and save/resume. Owners: package service, bridge, enemy/hero/town/ownership rules.
+Status: in_progress. Preserve source player-slot/team identity independently of original faction; adopt distinct AI state, ownership and hero/town references. Validate six/eight-player repeated-faction generation, separate enemy turns/targets and save/resume. Owners: package service, bridge, enemy/hero/town/ownership rules. Selected after the completed level child; no player/team correction is claimed yet.
 
 ### RMG Native Transit And Water Traversal
 

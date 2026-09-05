@@ -5,6 +5,7 @@ signal tile_hovered(tile: Vector2i)
 signal spell_cast_presentation_blocking_changed(blocking: bool)
 
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
+const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacementRules.gd")
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
@@ -494,6 +495,7 @@ const SPELL_CAST_MAX_DURATION_MSEC := 700
 
 @export var large_map_visible_tile_span_override := 0.0
 
+var _level: int = 0
 var _session = null
 var _map_data: Array = []
 var _map_size := Vector2i.ONE
@@ -746,10 +748,14 @@ func set_map_state(
 	var previous_state_signature := _state_cache_signature
 	var previous_session_present := _session != null
 	_session = session
-	_map_data = map_data
+	_level = LevelRules.view_level(session)
+	_map_data = LevelRules.terrain_rows(session, _level) if LevelRules.level_count(session) > 1 else map_data
 	_map_size = Vector2i(max(map_size.x, 1), max(map_size.y, 1))
 	_hero_tile = OverworldRulesScript.hero_position(session) if session != null else Vector2i.ZERO
-	_sync_hero_movement_presentation(movement_presentation)
+	var viewing_hero_level := _level == LevelRules.hero_level(session)
+	if not viewing_hero_level:
+		_hero_tile = Vector2i(-1, -1)
+	_sync_hero_movement_presentation(movement_presentation if viewing_hero_level else {})
 	_sync_object_resolution_presentation(object_resolution_presentation)
 	_sync_route_blocked_presentation(route_blocked_presentation)
 	_movement_left = int(session.overworld.get("movement", {}).get("current", 0)) if session != null else 0
@@ -762,7 +768,7 @@ func set_map_state(
 	_sync_spell_cast_presentation(spell_cast_presentation)
 	var path_profile_start := _profile_begin("path_recompute")
 	var route_cache_reused := false
-	if _route_preview_enabled:
+	if _route_preview_enabled and viewing_hero_level:
 		route_cache_reused = _apply_selected_route_state(selected_route_state)
 		if not route_cache_reused:
 			_path_tiles = _build_path(_hero_tile, _selected_tile)
@@ -1210,7 +1216,7 @@ func _sync_object_focus_presentation(presentation: Dictionary) -> void:
 	var tile := Vector2i(int(tile_payload.get("x", -1)), int(tile_payload.get("y", -1)))
 	if tile != _selected_tile or tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
 		return
-	if not OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y):
+	if not OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level):
 		return
 	var live_identity := _object_focus_identity_at(tile)
 	if String(live_identity.get("object_kind", "")) != _object_focus_kind or String(live_identity.get("object_id", "")) != _object_focus_id:
@@ -1353,6 +1359,7 @@ func _session_static_signature_for(map_data: Array, terrain_layers: Dictionary) 
 	var roads = terrain_layers.get("roads", []) if terrain_layers is Dictionary else []
 	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, _map_size.x)
 	signature = _combine_cache_signature(signature, _map_size.y)
+	signature = _combine_cache_signature(signature, _level)
 	signature = _combine_cache_signature(signature, hash(str(_session.scenario_id) if _session != null else ""))
 	if _session != null:
 		var materialization = _session.flags.get("generated_random_map_materialization", {})
@@ -1366,7 +1373,7 @@ func _state_cache_signature_for(session) -> int:
 	if session == null:
 		return 0
 	var overworld = session.overworld
-	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, _fog_cache_signature(overworld.get("fog", {})))
+	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, _fog_cache_signature(OverworldRulesScript.fog_for_level(session, _level)))
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("towns", []), ["owner", "placement_id", "town_id"]))
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("resource_nodes", []), ["site_id", "placement_id", "collected", "collected_by_faction_id"]))
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("artifact_nodes", []), ["artifact_id", "placement_id", "collected"]))
@@ -1398,6 +1405,7 @@ func _roads_cache_signature(roads) -> int:
 			if tile_value is Dictionary:
 				signature = _combine_cache_signature(signature, int(tile_value.get("x", -1)))
 				signature = _combine_cache_signature(signature, int(tile_value.get("y", -1)))
+				signature = _combine_cache_signature(signature, int(tile_value.get("level", road_value.get("level", 0))))
 				signature = _combine_cache_signature(signature, hash(str(tile_value.get("h3maped_road_art_frame_id", ""))))
 				signature = _combine_cache_signature(signature, int(tile_value.get("h3maped_road_flip_a", 0)))
 				signature = _combine_cache_signature(signature, int(tile_value.get("h3maped_road_flip_b", 0)))
@@ -1460,6 +1468,7 @@ func _placement_array_cache_signature(values, fields: Array) -> int:
 		var fallback_y = position.get("y", -1) if position is Dictionary else -1
 		signature = _combine_cache_signature(signature, int(entry.get("x", fallback_x)))
 		signature = _combine_cache_signature(signature, int(entry.get("y", fallback_y)))
+		signature = _combine_cache_signature(signature, LevelRules.level_of(entry))
 		for field in fields:
 			signature = _combine_cache_signature(signature, hash(str(entry.get(str(field), ""))))
 	return signature
@@ -1771,7 +1780,7 @@ func _overworld_terrain_ambient_entries(board_rect: Rect2, visible_bounds: Rect2
 	for y in range(visible_bounds.position.y, visible_bounds.end.y):
 		for x in range(visible_bounds.position.x, visible_bounds.end.x):
 			var tile := Vector2i(x, y)
-			if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+			if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 				continue
 			var profile := _overworld_terrain_ambient_profile(tile)
 			if profile.is_empty():
@@ -1874,7 +1883,7 @@ func _draw_state_layer() -> void:
 			var tile = Vector2i(x, y)
 			var rect = _tile_rect(board_rect, tile)
 			tile_checks += 1
-			if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+			if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 				hidden_checks += 1
 			else:
 				object_presentations += _visible_object_presentation_count(tile)
@@ -1966,7 +1975,7 @@ func _draw_tile_terrain_surface(tile: Vector2i, rect: Rect2) -> void:
 	_draw_terrain_transitions(tile, rect, terrain)
 
 func _draw_tile_state_overlay(tile: Vector2i, rect: Rect2) -> void:
-	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 		_canvas_draw_rect(rect, UNEXPLORED_COLOR, true)
 		_draw_unexplored_shroud(tile, rect)
 		return
@@ -2036,7 +2045,7 @@ func _explored_fog_frontier_directions(tile: Vector2i) -> Array:
 		var neighbor: Vector2i = tile + checks[direction]
 		if neighbor.x < 0 or neighbor.y < 0 or neighbor.x >= _map_size.x or neighbor.y >= _map_size.y:
 			continue
-		if OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y):
+		if OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y, _level):
 			continue
 		directions.append(direction)
 	return directions
@@ -3485,9 +3494,9 @@ func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
 	_draw_tile_dynamic_icon(tile, rect)
 
 func _draw_tile_state_icon(tile: Vector2i, rect: Rect2) -> void:
-	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 		return
-	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
+	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
 	var remembered := not visible
 
 	var decorative_object := _decorative_object_at(tile)
@@ -3522,9 +3531,9 @@ func _draw_tile_state_icon(tile: Vector2i, rect: Rect2) -> void:
 			_draw_encounter_marker(rect, remembered, tile)
 
 func _draw_tile_dynamic_icon(tile: Vector2i, rect: Rect2) -> void:
-	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 		return
-	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
+	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
 	if visible and _has_hero_at(tile) and not (_hero_movement_active and tile == _hero_tile):
 		_draw_hero_marker(rect, tile)
 
@@ -6509,7 +6518,7 @@ func validation_authored_scenery_summary() -> Dictionary:
 			if not (body_value is Dictionary):
 				continue
 			var body_tile := Vector2i(int(body_value.get("x", -1)), int(body_value.get("y", -1)))
-			if OverworldRulesScript.tile_is_blocked(_session, body_tile.x, body_tile.y):
+			if OverworldRulesScript.tile_is_blocked(_session, body_tile.x, body_tile.y, _level):
 				blocked_count += 1
 		blocked_body_tile_count += blocked_count
 		entries.append({
@@ -6822,7 +6831,7 @@ func validation_terrain_ambient_summary() -> Dictionary:
 		if profile_id not in profile_ids:
 			profile_ids.append(profile_id)
 		all_contained = all_contained and bool(entry.get("contained", false))
-		all_explored = all_explored and bool(entry.get("explored", false)) and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y)
+		all_explored = all_explored and bool(entry.get("explored", false)) and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level)
 		identity_rows.append({
 			"x": tile.x,
 			"y": tile.y,
@@ -7291,8 +7300,8 @@ func _rect2i_payload(rect: Rect2i) -> Dictionary:
 	}
 
 func validation_tile_presentation(tile: Vector2i) -> Dictionary:
-	var explored := _session != null and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y)
-	var visible := _session != null and OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
+	var explored := _session != null and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level)
+	var visible := _session != null and OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
 	var has_town := explored and _has_town_at(tile)
 	var has_resource := explored and _has_resource_at(tile)
 	var has_artifact := explored and _has_artifact_at(tile)
@@ -7392,6 +7401,8 @@ func validation_town_presentation_profiles() -> Array:
 		if not (town_value is Dictionary):
 			continue
 		var town: Dictionary = town_value
+		if not LevelRules.on_level(town_value, _level):
+			continue
 		profiles.append(_town_presentation_payload_for_town(town, true))
 	return profiles
 
@@ -9286,8 +9297,8 @@ func _homm3_editor_restamp_tile_payload(
 ) -> Dictionary:
 	var tile := painted_tile + offset_from_painted_tile
 	var in_bounds := _tile_in_bounds(tile)
-	var explored := in_bounds and _session != null and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y)
-	var visible := in_bounds and _session != null and OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
+	var explored := in_bounds and _session != null and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level)
+	var visible := in_bounds and _session != null and OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
 	var terrain_payload := _terrain_visual_payload(tile, explored, visible) if in_bounds else {}
 	var expected_source_offset := painted_tile - tile
 	return {
@@ -9579,7 +9590,7 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 	var cardinal_keys: Array[String] = []
 	var corner_keys: Array[String] = []
 	var selection_kind := "interior"
-	if _session == null or not _tile_in_bounds(tile) or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+	if _session == null or not _tile_in_bounds(tile) or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 		return {
 			"selection_kind": selection_kind,
 			"mask_key": "",
@@ -9776,7 +9787,7 @@ func _homm3_relation_source_for_neighbor(tile: Vector2i, receiver_terrain: Strin
 	var neighbor := tile + offset
 	if direction == "" or not _tile_in_bounds(neighbor):
 		return {}
-	if _session == null or not OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y):
+	if _session == null or not OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y, _level):
 		return {}
 	var neighbor_terrain := _terrain_at(neighbor)
 	if neighbor_terrain == "":
@@ -9963,7 +9974,7 @@ func _terrain_generic_transition_payload(tile: Vector2i) -> Dictionary:
 		"source_terrain_ids": [],
 		"source_groups": [],
 	}
-	if _session == null or not _tile_in_bounds(tile) or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+	if _session == null or not _tile_in_bounds(tile) or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 		return payload
 	var cardinal_sources: Array = []
 	var corner_sources: Array = []
@@ -10001,7 +10012,7 @@ func _terrain_transition_source_for_neighbor(tile: Vector2i, receiver_terrain: S
 	var neighbor := tile + offset
 	if direction == "" or not _tile_in_bounds(neighbor):
 		return {}
-	if not OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y):
+	if not OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y, _level):
 		return {}
 	var neighbor_terrain := _terrain_at(neighbor)
 	if neighbor_terrain == "":
@@ -10044,7 +10055,7 @@ func _terrain_diagonal_transition_checks() -> Array:
 func _tile_has_explored_terrain_group(tile: Vector2i, terrain_group: String) -> bool:
 	if terrain_group == "" or _session == null or not _tile_in_bounds(tile):
 		return false
-	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 		return false
 	return _terrain_group(_terrain_at(tile)) == terrain_group
 
@@ -10189,6 +10200,7 @@ func _rebuild_road_tiles() -> void:
 	var roads = _terrain_layers.get("roads", [])
 	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, _map_size.x)
 	signature = _combine_cache_signature(signature, _map_size.y)
+	signature = _combine_cache_signature(signature, _level)
 	signature = _combine_cache_signature(signature, _roads_cache_signature(roads))
 	if not _validation_force_index_rebuild and signature == _road_index_signature:
 		_profile_add("road_index_skips", 1)
@@ -10215,6 +10227,8 @@ func _rebuild_road_tiles() -> void:
 			continue
 		for tile_value in tiles:
 			if not (tile_value is Dictionary):
+				continue
+			if int(tile_value.get("level", road.get("level", 0))) != _level:
 				continue
 			var tile := Vector2i(int(tile_value.get("x", -1)), int(tile_value.get("y", -1)))
 			if tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
@@ -10290,6 +10304,8 @@ func _rebuild_static_object_indexes() -> void:
 		if not (town_value is Dictionary):
 			continue
 		var town: Dictionary = town_value
+		if not LevelRules.on_level(town_value, _level):
+			continue
 		var entry := _town_entry_tile(town)
 		_towns_by_tile[_tile_key(entry)] = town
 		var origin := _town_footprint_origin_for_entry(entry)
@@ -10311,6 +10327,8 @@ func _rebuild_static_object_indexes() -> void:
 		if not (node_value is Dictionary):
 			continue
 		var node: Dictionary = node_value
+		if not LevelRules.on_level(node_value, _level):
+			continue
 		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 		var repeatable := bool(site.get("repeatable", false)) or String(site.get("family", "")) == "repeatable_service"
 		if bool(site.get("persistent_control", false)) or repeatable or not bool(node.get("collected", false)):
@@ -10319,12 +10337,16 @@ func _rebuild_static_object_indexes() -> void:
 		if not (node_value is Dictionary):
 			continue
 		var node: Dictionary = node_value
+		if not LevelRules.on_level(node_value, _level):
+			continue
 		if not bool(node.get("collected", false)):
 			_artifacts_by_tile[_tile_key(Vector2i(int(node.get("x", -1)), int(node.get("y", -1))))] = node
 	for encounter_value in _session.overworld.get("encounters", []):
 		if not (encounter_value is Dictionary):
 			continue
 		var encounter: Dictionary = encounter_value
+		if not LevelRules.on_level(encounter_value, _level):
+			continue
 		if OverworldRulesScript.is_encounter_resolved(_session, encounter):
 			continue
 		var key := _tile_key(Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1))))
@@ -10335,6 +10357,8 @@ func _rebuild_static_object_indexes() -> void:
 		if not (object_value is Dictionary):
 			continue
 		var object: Dictionary = object_value
+		if not LevelRules.on_level(object_value, _level):
+			continue
 		if not _is_decorative_object_placement(object):
 			if not _is_standalone_map_object_placement(object):
 				continue
@@ -10548,6 +10572,8 @@ func _rebuild_hero_index() -> void:
 		if not (hero_value is Dictionary):
 			continue
 		var hero: Dictionary = hero_value
+		if not LevelRules.on_level(hero_value, _level):
+			continue
 		var key := _tile_key(Vector2i(int(hero.get("x", -1)), int(hero.get("y", -1))))
 		var heroes: Array = _heroes_by_tile.get(key, [])
 		heroes.append(hero)
@@ -10559,6 +10585,7 @@ func _object_index_signature_for(session) -> int:
 	var overworld = session.overworld
 	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, _map_size.x)
 	signature = _combine_cache_signature(signature, _map_size.y)
+	signature = _combine_cache_signature(signature, _level)
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("towns", []), ["owner", "placement_id", "town_id"]))
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("resource_nodes", []), ["site_id", "placement_id", "collected", "collected_by_faction_id"]))
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("artifact_nodes", []), ["artifact_id", "placement_id", "collected", "collected_by_faction_id"]))
@@ -10588,7 +10615,7 @@ func _enemy_commander_presentation_signature(encounters: Variant) -> int:
 func _hero_index_signature_for(session) -> int:
 	if session == null:
 		return 0
-	return _placement_array_cache_signature(HeroCommandRulesScript.hero_positions(session), ["hero_id", "is_active"])
+	return _combine_cache_signature(_level, _placement_array_cache_signature(HeroCommandRulesScript.hero_positions(session), ["hero_id", "is_active"]))
 
 func _ensure_road_tile_payload(tile: Vector2i, overlay_id: String, road_id: String, role: String, source_tile: Dictionary = {}) -> void:
 	var key := _tile_key(tile)
@@ -11858,7 +11885,7 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 	if goal.x >= _map_size.x or goal.y >= _map_size.y:
 		_profile_path_recompute_details(detail_profile_enabled, start, goal, "goal_out_of_bounds", 0, 0, 0, 0)
 		return []
-	if OverworldRulesScript.tile_is_blocked(_session, goal.x, goal.y):
+	if OverworldRulesScript.tile_is_blocked(_session, goal.x, goal.y, _level):
 		_profile_path_recompute_details(detail_profile_enabled, start, goal, "goal_blocked", 0, 0, 1 if detail_profile_enabled else 0, 0)
 		return []
 	var queue: Array = [start]
@@ -11881,11 +11908,11 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 				continue
 			if detail_profile_enabled:
 				blocked_tile_lookup_count += 1
-			if OverworldRulesScript.tile_step_cuts_blocked_corner(_session, current, next):
+			if OverworldRulesScript.tile_step_cuts_blocked_corner(_session, current, next, _level):
 				continue
-			if OverworldRulesScript.tile_is_blocked(_session, next.x, next.y):
+			if OverworldRulesScript.tile_is_blocked(_session, next.x, next.y, _level):
 				continue
-			if next != goal and OverworldRulesScript.tile_has_route_interaction(_session, next.x, next.y):
+			if next != goal and OverworldRulesScript.tile_has_route_interaction(_session, next.x, next.y, _level):
 				continue
 			var key = _tile_key(next)
 			if visited.has(key):

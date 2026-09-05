@@ -1,6 +1,7 @@
 extends Control
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const AnimationCueCatalogScript = preload("res://scripts/core/AnimationCueCatalog.gd")
 const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
@@ -30,6 +31,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _top_strip_panel: PanelContainer = %TopStrip
 @onready var _minimap_panel: PanelContainer = %MinimapPanel
 @onready var _minimap: Control = %Minimap
+@onready var _map_level_button: Button = %MapLevelButton
 @onready var _status_chip_panel: PanelContainer = %StatusChip
 @onready var _resource_chip_panel: PanelContainer = %ResourceChip
 @onready var _cue_chip_panel: PanelContainer = %CueChip
@@ -360,6 +362,8 @@ func _ready() -> void:
 	_build_debug_overlay()
 	AppRouter.note_overworld_handoff_step("overworld_ready_debug_overlay_done")
 	_profile_log_enabled = _profile_log_env_enabled()
+	_map_level_button.pressed.connect(_on_map_level_pressed)
+	FrontierVisualKit.apply_button(_map_level_button, "secondary", 120.0, 24.0, 11)
 	_map_view.tile_pressed.connect(_on_map_tile_pressed)
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
 	var minimap_recenter_callable := Callable(self, "_on_minimap_recenter_requested")
@@ -1905,6 +1909,11 @@ func _on_close_drawers_pressed() -> void:
 	call_deferred("_configure_overworld_keyboard_focus", true)
 
 func _on_context_action_pressed(action_id: String) -> void:
+	if action_id == "focus_hero":
+		_focus_active_hero_from_roster()
+		return
+	if not _viewing_hero_level() and action_id != "visit_town":
+		return
 	var dispatch_started_usec := _debug_phase_begin("context_action_dispatch")
 	if action_id == "open_rendezvous":
 		_set_active_drawer("command")
@@ -2077,6 +2086,8 @@ func _on_rendezvous_transfer_pressed() -> void:
 	_refresh()
 
 func _on_spell_action_pressed(action_id: String) -> void:
+	if not _viewing_hero_level():
+		_set_view_level(LevelRules.hero_level(_session))
 	var result = {}
 	var spell_id := ""
 	if action_id.begins_with("cast_spell:"):
@@ -2099,6 +2110,14 @@ func _on_spell_action_pressed(action_id: String) -> void:
 	_record_spell_cast_presentation(result, spell_id)
 
 func _on_map_tile_pressed(tile: Vector2i) -> void:
+	if not _viewing_hero_level():
+		if _tile_in_bounds(tile):
+			_set_selected_tile(_selection_route_tile(tile))
+			if _is_selected_owned_town_target():
+				_visit_selected_town()
+			else:
+				_refresh_selected_route_preview("other_level_inspection")
+		return
 	var handler_started_usec := Time.get_ticks_usec()
 	if not _tile_in_bounds(tile):
 		return
@@ -2182,6 +2201,8 @@ func _visit_selected_town() -> bool:
 	return true
 
 func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
+	if not _viewing_hero_level():
+		return
 	var hero_pos_before := OverworldRules.hero_position(_session)
 	var debug_started := _debug_begin_path_command("move", hero_pos_before + Vector2i(dx, dy))
 	var movement_rules_started_usec := _debug_phase_begin("movement_rules")
@@ -2252,6 +2273,8 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 		_debug_finish_path_command()
 
 func _move_toward_selected_tile() -> void:
+	if not _viewing_hero_level():
+		return
 	var debug_started := _debug_begin_path_command("full_route_execute", _selected_tile)
 	var route_lookup_started_usec := _debug_phase_begin("route_execution_lookup")
 	var route_state := _ensure_selected_route_state("execution")
@@ -2409,7 +2432,7 @@ func _start_encounter() -> void:
 	_request_battle_entry("selected_encounter", false)
 
 func _render_state() -> void:
-	_map_data = _session.overworld.get("map", []) if _session.overworld.get("map", []) is Array else []
+	_map_data = LevelRules.terrain_rows(_session, LevelRules.view_level(_session))
 	_map_size = OverworldRules.derive_map_size(_session)
 	if _use_generated_town_return_first_frame_refresh():
 		_refresh_with_request(_make_refresh_request(
@@ -2634,13 +2657,39 @@ func _refresh_read_scope_and_map_state() -> void:
 	var read_scope_profile_start := _debug_refresh_profile_begin("refresh_read_scope_map_state")
 	OverworldRules.begin_normalized_read_scope(_session)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_read_scope_ready")
-	_map_data = _session.overworld.get("map", []) if _session.overworld.get("map", []) is Array else []
+	_map_data = LevelRules.terrain_rows(_session, LevelRules.view_level(_session))
 	_map_size = OverworldRules.derive_map_size(_session)
 	_ensure_selected_tile()
 	_invalidate_refresh_cache(true)
 	_debug_refresh_profile_end("refresh_read_scope_map_state", read_scope_profile_start)
 
+func _viewing_hero_level() -> bool:
+	return LevelRules.view_level(_session) == LevelRules.hero_level(_session)
+
+func _set_view_level(level: int) -> void:
+	if _session == null:
+		return
+	_session.overworld["view_level"] = clampi(level, 0, LevelRules.level_count(_session) - 1)
+	_hero_movement_presentation.clear()
+	_object_resolution_presentation.clear()
+	_route_blocked_presentation.clear()
+	_spell_cast_presentation.clear()
+	_object_focus_presentation.clear()
+	_invalidate_selected_route_state("map_level_changed")
+	_invalidate_refresh_cache()
+	_map_data = LevelRules.terrain_rows(_session, LevelRules.view_level(_session))
+
+func _on_map_level_pressed() -> void:
+	if _session == null or LevelRules.level_count(_session) < 2:
+		return
+	_set_view_level((LevelRules.view_level(_session) + 1) % LevelRules.level_count(_session))
+	_refresh()
+
 func _refresh_map_view() -> void:
+	_map_level_button.visible = LevelRules.level_count(_session) > 1
+	_map_level_button.text = "Surface" if LevelRules.view_level(_session) == 0 else "Underground"
+	_map_level_button.tooltip_text = "Viewing %s. Activate to view the other map level; no hero movement is spent." % _map_level_button.text.to_lower()
+	_map_level_button.accessibility_name = "%s map level. Switch level" % _map_level_button.text
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_start")
 	var set_map_state_profile_start := _profile_begin("refresh_set_map_state")
 	_map_view.set_map_state(
@@ -2770,7 +2819,7 @@ func _blocking_route_feedback_surface(tile: Vector2i) -> Dictionary:
 			"blocked_reason": "%s blocks travel." % _terrain_name_at(tile.x, tile.y),
 			"blocking_object": {},
 		}
-	if not OverworldRules.is_tile_visible(_session, tile.x, tile.y):
+	if not OverworldRules.is_tile_visible(_session, tile.x, tile.y, LevelRules.view_level(_session)):
 		return {
 			"event_id": "overworld_route_blocked",
 			"blocked_reason": "An unseen obstacle blocks travel.",
@@ -2846,7 +2895,7 @@ func _record_route_open_presentation(result: Dictionary, context_before: Diction
 	if live_node.is_empty() or int(live_node.get("response_last_day", -1)) != int(_session.day) or int(live_node.get("response_until_day", -1)) < int(_session.day):
 		return
 	var tile := Vector2i(int(live_node.get("x", -1)), int(live_node.get("y", -1)))
-	if not _tile_in_bounds(tile) or not OverworldRules.is_tile_visible(_session, tile.x, tile.y):
+	if not _tile_in_bounds(tile) or not OverworldRules.is_tile_visible(_session, tile.x, tile.y, LevelRules.view_level(_session)):
 		return
 	var site_id := String(live_node.get("site_id", "")).strip_edges()
 	var site := ContentService.get_resource_site(site_id)
@@ -2916,7 +2965,7 @@ func _record_route_closed_presentation(events: Array) -> void:
 	):
 		return
 	var tile := Vector2i(int(live_node.get("x", -1)), int(live_node.get("y", -1)))
-	if not _tile_in_bounds(tile) or not OverworldRules.is_tile_visible(_session, tile.x, tile.y):
+	if not _tile_in_bounds(tile) or not OverworldRules.is_tile_visible(_session, tile.x, tile.y, LevelRules.view_level(_session)):
 		return
 	var site_id := String(live_node.get("site_id", "")).strip_edges()
 	var site := ContentService.get_resource_site(site_id)
@@ -2981,7 +3030,7 @@ func _active_route_expiry_candidates() -> Array:
 		if site.is_empty() or not bool(OverworldRules._resource_site_response_state(_session, node, site).get("active", false)):
 			continue
 		var tile := Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))
-		if not _tile_in_bounds(tile) or not OverworldRules.is_tile_visible(_session, tile.x, tile.y):
+		if not _tile_in_bounds(tile) or not OverworldRules.is_tile_visible(_session, tile.x, tile.y, LevelRules.view_level(_session)):
 			continue
 		var matching_edges := []
 		for edge_value in active_edges:
@@ -3036,7 +3085,7 @@ func _record_route_expiry_presentation(candidates: Array) -> void:
 		if site.is_empty() or bool(OverworldRules._resource_site_response_state(_session, live_node, site).get("active", true)):
 			continue
 		var tile := Vector2i(int(live_node.get("x", -1)), int(live_node.get("y", -1)))
-		if not _tile_in_bounds(tile) or not OverworldRules.is_tile_visible(_session, tile.x, tile.y):
+		if not _tile_in_bounds(tile) or not OverworldRules.is_tile_visible(_session, tile.x, tile.y, LevelRules.view_level(_session)):
 			continue
 		var edge_still_active := false
 		for edge_value in OverworldRules.active_linked_transit_edges(_session):
@@ -3704,7 +3753,7 @@ func _record_selected_object_focus_presentation(input_source: String) -> void:
 	_object_focus_presentation = {}
 	if _session == null or input_source not in ["pointer", "controller_route_cursor"]:
 		return
-	if not _tile_in_bounds(_selected_tile) or not OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y):
+	if not _tile_in_bounds(_selected_tile) or not OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y, LevelRules.view_level(_session)):
 		return
 	if not _selected_guarded_site_presentation().is_empty():
 		return
@@ -4532,8 +4581,10 @@ func _rebuild_town_actions() -> void:
 		var town_name := String(town_data.get("name", town.get("placement_id", "Town"))).strip_edges()
 		var button := Button.new()
 		var placement_id := String(town.get("placement_id", ""))
-		var town_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
-		var is_selected := _selection_route_tile(_selected_tile) == town_tile
+		var entrance := LevelRules.town_entrance(town)
+		var town_tile := Vector2i(int(entrance.x), int(entrance.y))
+		var level := LevelRules.level_of(town)
+		var is_selected := LevelRules.view_level(_session) == level and _selection_route_tile(_selected_tile) == town_tile
 		button.name = "TownRoster_%s" % placement_id
 		button.text = ""
 		button.toggle_mode = true
@@ -4554,7 +4605,8 @@ func _rebuild_town_actions() -> void:
 		button.set_meta("selected", is_selected)
 		button.set_meta("x", town_tile.x)
 		button.set_meta("y", town_tile.y)
-		button.pressed.connect(_on_town_rail_pressed.bind(int(town.get("x", 0)), int(town.get("y", 0))))
+		button.set_meta("level", level)
+		button.pressed.connect(_on_town_rail_pressed.bind(town_tile.x, town_tile.y, level))
 		_town_actions.add_child(button)
 		displayed_town_count += 1
 	_town_roster_title_label.text = "Towns  %d" % displayed_town_count
@@ -4589,6 +4641,9 @@ func _on_hero_roster_pressed(hero_id: String) -> void:
 	_on_hero_action_pressed("switch_hero:%s" % hero_id)
 
 func _focus_active_hero_from_roster() -> void:
+	if not _viewing_hero_level():
+		_set_view_level(LevelRules.hero_level(_session))
+		_refresh()
 	var tile := OverworldRules.hero_position(_session)
 	_set_selected_tile(tile)
 	if _map_view.has_method("focus_on_tile"):
@@ -4609,11 +4664,14 @@ func _sync_roster_pressed_states() -> void:
 	for child in _town_actions.get_children():
 		if child is Button:
 			var button := child as Button
-			var town_selected := Vector2i(int(button.get_meta("x", -1)), int(button.get_meta("y", -1))) == selected
+			var town_selected := int(button.get_meta("level", 0)) == LevelRules.view_level(_session) and Vector2i(int(button.get_meta("x", -1)), int(button.get_meta("y", -1))) == selected
 			button.button_pressed = town_selected
 			button.set_meta("selected", town_selected)
 
-func _on_town_rail_pressed(x: int, y: int) -> void:
+func _on_town_rail_pressed(x: int, y: int, level: int = -1) -> void:
+	if level >= 0 and level != LevelRules.view_level(_session):
+		_set_view_level(level)
+		_refresh()
 	var tile := _selection_route_tile(Vector2i(x, y))
 	if not _tile_in_bounds(tile):
 		return
@@ -4789,6 +4847,8 @@ func _apply_resource_action_icon(button: Button, action: Dictionary) -> void:
 	button.expand_icon = true
 
 func _current_context_actions() -> Array:
+	if not _viewing_hero_level():
+		return [_current_primary_action()]
 	var context_actions_started_usec := _debug_phase_begin("context_actions_computation")
 	if _refresh_cache.has("context_actions"):
 		var cached_actions: Array = _refresh_cache["context_actions"]
@@ -4883,7 +4943,7 @@ func _is_selected_owned_town_visit_target() -> bool:
 func _is_selected_owned_town_target() -> bool:
 	if not _tile_in_bounds(_selected_tile):
 		return false
-	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
+	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y, LevelRules.view_level(_session)):
 		return false
 	var town := _town_at(_selected_tile.x, _selected_tile.y)
 	return not town.is_empty() and String(town.get("owner", "neutral")) == "player"
@@ -4921,6 +4981,10 @@ func _town_entry_handoff_surface() -> Dictionary:
 	}
 
 func _current_primary_action() -> Dictionary:
+	if not _viewing_hero_level():
+		if _is_selected_owned_town_target():
+			return {"id": "visit_town", "label": "Enter Town", "disabled": false}
+		return {"id": "focus_hero", "label": "Show Active Hero", "disabled": false}
 	var primary_action_started_usec := _debug_phase_begin("primary_action_computation")
 	if _refresh_cache.has("primary_action"):
 		var cached_action: Dictionary = _refresh_cache["primary_action"]
@@ -5032,11 +5096,7 @@ func _hero_actions_hero_signature(hero: Dictionary, index: int) -> Dictionary:
 	}
 
 func _hero_actions_position_signature(value: Variant) -> Dictionary:
-	if value is Dictionary:
-		return {"x": int(value.get("x", 0)), "y": int(value.get("y", 0))}
-	if value is Vector2i:
-		return {"x": value.x, "y": value.y}
-	return {"x": 0, "y": 0}
+	return LevelRules.position(value)
 
 func _hero_actions_movement_signature(value: Variant) -> Dictionary:
 	if value is Dictionary:
@@ -5764,6 +5824,8 @@ func _selected_tile_movement_action() -> Dictionary:
 	return {}
 
 func _selected_route_destination_actions() -> Array:
+	if not _viewing_hero_level():
+		return [_current_primary_action()]
 	var signature := _selected_route_destination_action_signature()
 	if _selected_route_destination_actions_cache_signature == signature:
 		_profile_add("selected_route_destination_action_cache_hits", 1)
@@ -6050,8 +6112,8 @@ func _selected_route_compact_decision_surface(
 		"next_step_terrain": next_step_terrain,
 		"next_step_line": next_step_line,
 		"remaining_steps_after_next": steps_after_next,
-		"visible": OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y),
-		"explored": OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y),
+		"visible": OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y, LevelRules.view_level(_session)),
+		"explored": OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y, LevelRules.view_level(_session)),
 		"terrain": _terrain_name_at(_selected_tile.x, _selected_tile.y),
 		"interception": {},
 		"interception_active": false,
@@ -6282,6 +6344,7 @@ func _selected_route_destination_interaction_surface() -> Dictionary:
 func _selected_route_destination_execution_descriptor(tile: Vector2i) -> Dictionary:
 	var descriptor := {
 		"kind": "open",
+		"level": LevelRules.view_level(_session),
 		"x": tile.x,
 		"y": tile.y,
 		"interaction_signature": _selected_route_destination_interaction_signature(tile),
@@ -6369,8 +6432,8 @@ func _selected_route_decision_surface() -> Dictionary:
 	var movement_current := int(movement.get("current", 0))
 	var movement_max := int(movement.get("max", movement_current))
 	var selected_is_hero := _selected_tile == hero_pos
-	var explored := OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y)
-	var visible := OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y)
+	var explored := OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y, LevelRules.view_level(_session))
+	var visible := OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y, LevelRules.view_level(_session))
 	var blocked := OverworldRules.tile_is_blocked(_session, _selected_tile.x, _selected_tile.y)
 	var selected_blocks_travel := blocked and not OverworldRules.tile_is_actionable_route_destination(_session, _selected_tile.x, _selected_tile.y)
 	var destination_name := _selected_tile_destination_name()
@@ -8183,9 +8246,9 @@ func _rail_tile_text() -> String:
 	var coords := "%d,%d" % [_selected_tile.x, _selected_tile.y]
 	var action_hint := _rail_action_hint()
 	var route_line := _selected_route_display_line()
-	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
+	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y, LevelRules.view_level(_session)):
 		return "Tile %s | Unexplored\n%s\nScout closer" % [coords, route_line]
-	if not OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y):
+	if not OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y, LevelRules.view_level(_session)):
 		var remembered_rail := _remembered_tile_rail_text(terrain, coords, action_hint)
 		if remembered_rail != "":
 			return "%s\n%s" % [remembered_rail, route_line]
@@ -8479,9 +8542,9 @@ func _describe_selected_tile() -> String:
 		}
 	else:
 		route_line = _route_decision_line(_selected_route_decision_surface())
-	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
+	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y, LevelRules.view_level(_session)):
 		return "Unexplored Frontier\nCoords %d,%d | Terrain unknown\n%s\nScouts have not charted this ground yet." % [_selected_tile.x, _selected_tile.y, route_line]
-	if not OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y):
+	if not OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y, LevelRules.view_level(_session)):
 		var remembered_text := _remembered_selected_tile_text(terrain)
 		if remembered_text != "":
 			return "%s\n%s" % [remembered_text, route_line]
@@ -8572,6 +8635,9 @@ func _update_map_tooltip() -> void:
 	})
 
 func _map_tooltip_text() -> String:
+	if not _viewing_hero_level():
+		var tile := _hovered_tile if _tile_in_bounds(_hovered_tile) else _selected_tile
+		return "%s\nSelect an owned town to enter it, or show the active hero to give movement orders." % _tile_visibility_tooltip(tile, "View")
 	if _tile_in_bounds(_hovered_tile) and _hovered_tile != _selected_tile:
 		return _tile_visibility_tooltip(_hovered_tile, "Hover")
 	var hero_pos = OverworldRules.hero_position(_session)
@@ -8616,10 +8682,10 @@ func _selected_route_simple_tooltip() -> String:
 	return "%s. Press Enter or Space to commit this route order." % line
 
 func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
-	if not OverworldRules.is_tile_explored(_session, tile.x, tile.y):
+	if not OverworldRules.is_tile_explored(_session, tile.x, tile.y, LevelRules.view_level(_session)):
 		return "%s %d,%d | Unexplored ground | Scout closer" % [prefix, tile.x, tile.y]
 	var terrain := _terrain_name_at(tile.x, tile.y)
-	if not OverworldRules.is_tile_visible(_session, tile.x, tile.y):
+	if not OverworldRules.is_tile_visible(_session, tile.x, tile.y, LevelRules.view_level(_session)):
 		return "%s %d,%d | Mapped %s | Out of scout net" % [prefix, tile.x, tile.y, terrain]
 	var hover_order := _hover_tile_order_cue(tile)
 	var town := _town_at(tile.x, tile.y)
@@ -8684,6 +8750,8 @@ func _append_hover_order_cue(text: String, hover_order: String) -> String:
 	return "%s | %s" % [text, hover_order]
 
 func _hover_tile_order_cue(tile: Vector2i) -> String:
+	if not _viewing_hero_level():
+		return "Map inspection only; the active hero is on the other level."
 	var movement = _session.overworld.get("movement", {})
 	var movement_line := "Move %d/%d" % [
 		int(movement.get("current", 0)),
@@ -8722,6 +8790,8 @@ func _selected_route_cache_for_map_view() -> Dictionary:
 	return _ensure_selected_route_state("map_view").duplicate(true)
 
 func _ensure_selected_route_state(requester: String = "shell") -> Dictionary:
+	if not _viewing_hero_level():
+		return {}
 	var signature := _selected_route_signature()
 	if not _selected_route_state.is_empty() and String(_selected_route_state.get("signature", "")) == signature:
 		_profile_add("selected_route_cache_hits", 1)
@@ -8840,7 +8910,8 @@ func _selected_route_action_surface_signature() -> String:
 		"route_action:min:v2",
 		_selected_route_session_signature(),
 		"active_hero:%s" % String(_session.overworld.get("active_hero_id", "")),
-		"hero:%d,%d" % [hero_pos.x, hero_pos.y],
+		"hero:%d,%d,%d" % [hero_pos.x, hero_pos.y, LevelRules.hero_level(_session)],
+		"view_level:%d" % LevelRules.view_level(_session),
 		"move:%d/%d" % [movement_current, movement_max],
 		"selected:%d,%d" % [_selected_tile.x, _selected_tile.y],
 		"route_gen:%d" % route_generation,
@@ -8993,6 +9064,7 @@ func _route_array_signature(values: Variant, fields: Array) -> int:
 		var y = int(entry.get("y", position.get("y", -1) if position is Dictionary else -1))
 		signature = _combine_selected_route_signature(signature, x)
 		signature = _combine_selected_route_signature(signature, y)
+		signature = _combine_selected_route_signature(signature, LevelRules.level_of(entry))
 		for field in fields:
 			signature = _combine_selected_route_signature(signature, hash(str(entry.get(str(field), ""))))
 	return signature
@@ -9001,6 +9073,8 @@ func _combine_selected_route_signature(signature: int, value: int) -> int:
 	return int(((signature * 16777619) + value + 1013904223) & 0x7fffffff)
 
 func _build_path(start: Vector2i, goal: Vector2i) -> Array:
+	if not _viewing_hero_level():
+		return []
 	var debug_timing_enabled := _debug_route_timing_active()
 	var debug_profile_start := _profile_begin("route_bfs") if debug_timing_enabled else 0
 	if not _tile_in_bounds(goal):
@@ -9084,6 +9158,8 @@ func _ensure_selected_tile() -> void:
 		_select_hero_tile()
 
 func _select_hero_tile() -> void:
+	if not _viewing_hero_level():
+		_set_view_level(LevelRules.hero_level(_session))
 	_set_selected_tile(OverworldRules.hero_position(_session))
 
 func _select_opening_route_target() -> bool:
@@ -9100,7 +9176,7 @@ func _select_opening_route_target() -> bool:
 		if not (town_value is Dictionary):
 			continue
 		var town: Dictionary = town_value
-		if String(town.get("owner", "neutral")) != "player":
+		if String(town.get("owner", "neutral")) != "player" or not LevelRules.on_level(town, LevelRules.hero_level(_session)):
 			continue
 		best = _prefer_opening_route_candidate(
 			best,
@@ -9130,7 +9206,7 @@ func _select_opening_route_target() -> bool:
 			)
 		)
 	for artifact_value in _session.overworld.get("artifact_nodes", []):
-		if not (artifact_value is Dictionary):
+		if not (artifact_value is Dictionary) or not LevelRules.on_level(artifact_value, LevelRules.hero_level(_session)):
 			continue
 		var artifact: Dictionary = artifact_value
 		if bool(artifact.get("collected", false)):
@@ -9156,7 +9232,7 @@ func _select_opening_route_target() -> bool:
 func _opening_route_candidate(hero_pos: Vector2i, target: Vector2i, priority: int, kind: String, stable_id: String) -> Dictionary:
 	if target == hero_pos or not _tile_in_bounds(target):
 		return {}
-	if not OverworldRules.is_tile_visible(_session, target.x, target.y):
+	if not OverworldRules.is_tile_visible(_session, target.x, target.y, LevelRules.view_level(_session)):
 		return {}
 	var path := _build_path(hero_pos, target)
 	if path.is_empty():
@@ -9217,7 +9293,7 @@ func _town_at(x: int, y: int) -> Dictionary:
 	if _refresh_cache.has(cache_key):
 		return _refresh_cache[cache_key]
 	for town in _session.overworld.get("towns", []):
-		if town is Dictionary and int(town.get("x", -1)) == x and int(town.get("y", -1)) == y:
+		if town is Dictionary and LevelRules.on_level(town, LevelRules.view_level(_session)) and LevelRules.town_entrance(town) == LevelRules.position({"x": x, "y": y, "level": LevelRules.view_level(_session)}):
 			_refresh_cache[cache_key] = town
 			return town
 	_refresh_cache[cache_key] = {}
@@ -9244,7 +9320,7 @@ func _active_resource_nodes() -> Array:
 		return _refresh_cache["active_resource_nodes"]
 	var nodes := []
 	for node in _session.overworld.get("resource_nodes", []):
-		if not (node is Dictionary):
+		if not (node is Dictionary) or not LevelRules.on_level(node, LevelRules.view_level(_session)):
 			continue
 		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 		if bool(site.get("persistent_control", false)) or not bool(node.get("collected", false)):
@@ -9342,7 +9418,7 @@ func _artifact_node_at(x: int, y: int) -> Dictionary:
 	if _refresh_cache.has(cache_key):
 		return _refresh_cache[cache_key]
 	for node in _session.overworld.get("artifact_nodes", []):
-		if node is Dictionary and not bool(node.get("collected", false)) and int(node.get("x", -1)) == x and int(node.get("y", -1)) == y:
+		if node is Dictionary and LevelRules.on_level(node, LevelRules.view_level(_session)) and not bool(node.get("collected", false)) and int(node.get("x", -1)) == x and int(node.get("y", -1)) == y:
 			_refresh_cache[cache_key] = node
 			return node
 	_refresh_cache[cache_key] = {}
@@ -9353,11 +9429,11 @@ func _encounter_at(x: int, y: int) -> Dictionary:
 	if _refresh_cache.has(cache_key):
 		return _refresh_cache[cache_key]
 	for encounter in _session.overworld.get("encounters", []):
-		if encounter is Dictionary and int(encounter.get("x", -1)) == x and int(encounter.get("y", -1)) == y:
+		if encounter is Dictionary and LevelRules.on_level(encounter, LevelRules.view_level(_session)) and int(encounter.get("x", -1)) == x and int(encounter.get("y", -1)) == y:
 			if not OverworldRules.is_encounter_resolved(_session, encounter):
 				_refresh_cache[cache_key] = encounter
 				return encounter
-	var guard_encounter := OverworldRules.guard_engagement_encounter_at_tile(_session, x, y)
+	var guard_encounter := OverworldRules.guard_engagement_encounter_at_tile(_session, x, y, LevelRules.view_level(_session))
 	if not guard_encounter.is_empty():
 		_refresh_cache[cache_key] = guard_encounter
 		return guard_encounter
@@ -9366,7 +9442,7 @@ func _encounter_at(x: int, y: int) -> Dictionary:
 
 func _rememberable_encounter_at(x: int, y: int) -> Dictionary:
 	for encounter in _session.overworld.get("encounters", []):
-		if not (encounter is Dictionary):
+		if not (encounter is Dictionary) or not LevelRules.on_level(encounter, LevelRules.view_level(_session)):
 			continue
 		if String(encounter.get("spawned_by_faction_id", "")) != "":
 			continue
@@ -9378,7 +9454,7 @@ func _rememberable_encounter_at(x: int, y: int) -> Dictionary:
 func _hero_entries_at(x: int, y: int) -> Array:
 	var entries = []
 	for entry in HeroCommandRules.hero_positions(_session):
-		if entry is Dictionary and int(entry.get("x", -1)) == x and int(entry.get("y", -1)) == y:
+		if entry is Dictionary and LevelRules.on_level(entry, LevelRules.view_level(_session)) and int(entry.get("x", -1)) == x and int(entry.get("y", -1)) == y:
 			entries.append(entry)
 	return entries
 
@@ -11999,7 +12075,7 @@ func _first_validation_safe_step(start: Vector2i) -> Vector2i:
 			continue
 		if OverworldRules.tile_is_blocked(_session, tile.x, tile.y):
 			continue
-		if not OverworldRules.is_tile_explored(_session, tile.x, tile.y):
+		if not OverworldRules.is_tile_explored(_session, tile.x, tile.y, LevelRules.view_level(_session)):
 			continue
 		if not _town_at(tile.x, tile.y).is_empty():
 			continue
@@ -12083,7 +12159,7 @@ func _validation_first_guard_engagement_on_path(path: Array) -> Dictionary:
 		if not (path[index] is Vector2i):
 			continue
 		var tile: Vector2i = path[index]
-		var guard_encounter := OverworldRules.guard_engagement_encounter_at_tile(_session, tile.x, tile.y)
+		var guard_encounter := OverworldRules.guard_engagement_encounter_at_tile(_session, tile.x, tile.y, LevelRules.view_level(_session))
 		if guard_encounter.is_empty():
 			continue
 		var target := guard_encounter.duplicate(true)

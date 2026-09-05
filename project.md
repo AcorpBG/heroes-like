@@ -72,6 +72,7 @@ Native extensions, external asset pipelines, or new storage layers may be added 
   influence damage rolls.
 - New map formats need load, validate, save, and migrate mechanisms before they become authoritative runtime content.
 - Generated heroes start at their owning main-town entrance, preserving its level. Package/runtime adapters must model legal entrance traversal without relocating the start or erasing recovered source object masks; the scenic doorway and click target use that same entrance authority.
+- Overworld locations are `(x,y,level)`; missing spatial levels in authored content and legacy saves mean surface zero. Hero experience `level` is distinct from `position.level`. The legacy `overworld.map` stays the surface authority; camera/hero layer selection never swaps it. Terrain, occupancy, interactions, AI and permanent exploration are queried per layer, with additive save fields and one-level compatibility.
 - Autoloads are for cross-cutting services, not hiding gameplay rules.
 - Prefer deterministic rule helpers and fixtureable data for tests and reports.
 - Public UI must not leak internal/debug score fields.
