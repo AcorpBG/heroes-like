@@ -2427,6 +2427,7 @@ static func advance_raids(
 		if bool(encounter.get("arrived", false)):
 			phase_started = _advance_profile_timer(profile_enabled)
 			var arrival_result = _resolve_arrived_target(session, encounter, state, faction_id, config)
+			_advance_profile_add_ms(profile, "arrival_target_resolution_ms", phase_started)
 			encounter = arrival_result.get("encounter", encounter)
 			state = arrival_result.get("state", state)
 			var event_message = String(arrival_result.get("event_message", ""))
@@ -2446,7 +2447,9 @@ static func advance_raids(
 				resolved_encounters = updated_resolved_encounters
 				encounters[index] = encounter
 				continue
+			var repair_started := _advance_profile_timer(profile_enabled)
 			var repair_result := _repair_live_raid_target_after_resolution(session, config, encounter, faction_id)
+			_advance_profile_add_ms(profile, "arrival_target_repair_ms", repair_started)
 			encounter = repair_result.get("encounter", encounter)
 			for repair_event_value in repair_result.get("ai_events", []):
 				if repair_event_value is Dictionary and not repair_event_value.is_empty():

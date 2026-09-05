@@ -632,17 +632,38 @@ func _on_confirm_build_pressed() -> void:
 	_commit_build_action(String(action.get("id", "")).trim_prefix("build:"))
 
 func _commit_build_action(action_id: String) -> void:
+	var profile_started := ProfileLogScript.begin_usec()
+	var phase_started := profile_started
+	var buckets := {}
 	_close_town_catalog(false)
 	var full_action_id := "build:%s" % action_id
 	var before := TownRules.town_action_consequence_signature(_session)
+	buckets["before_signature"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	var action := _validation_action_for_id(full_action_id)
+	buckets["action_lookup"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	var result := TownRules.build_active_town(_session, action_id)
+	buckets["rules"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_record_town_action_result("build", full_action_id, action, result, before)
+	buckets["recap"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_invalidate_active_town_entity_cache("build", ["town", "economy", "recruitment"])
 	if _handle_session_resolution():
 		return
 	_refresh()
+	buckets["refresh"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_record_town_action_presentation("build", full_action_id, action, result, before)
+	buckets["presentation"] = ProfileLogScript.elapsed_ms(phase_started)
+	# The existing "build" event times recap creation only. Keep it compatible,
+	# but expose the complete synchronous commit separately for live profiling.
+	ProfileLogScript.emit_general("town", "action", "build_commit", ProfileLogScript.elapsed_ms(profile_started), buckets, {
+		"action_id": full_action_id,
+		"result_ok": bool(result.get("ok", false)),
+		"excludes": "selection, confirmation eligibility query, subsequent animation frames",
+	}, _session)
 
 func _select_build_action(action_id: String) -> void:
 	var action := _build_action_for_id(action_id)
