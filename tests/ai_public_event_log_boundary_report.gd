@@ -67,7 +67,9 @@ func _run() -> void:
 	if _failed:
 		return
 	_assert_public_event(public_events, "ai_target_assigned", "river_free_company", ["persistent_income_denial", "recruit_denial"])
-	_assert_public_event(public_events, "ai_pressure_summary", "riverwatch_hold", ["town_siege", "objective_front"])
+	# The frozen pre-player-identity owner and current owner both select this
+	# recruit/income target; the old town-only expectation predates that policy.
+	_assert_public_event(public_events, "ai_pressure_summary", "river_free_company", ["persistent_income_denial", "recruit_denial"])
 	_assert_public_event(public_events, "ai_site_seized", "river_free_company", ["site_seized", "persistent_income_denial", "recruit_denial"])
 	_assert_no_public_event(public_events, "hidden_debug_target")
 	_assert_no_public_event(public_events, "report_only_score")

@@ -40109,7 +40109,7 @@ def validate_overworld_logistics_sites(errors: list[str]) -> None:
         "func _resource_site_strategic_value",
         "func _resource_site_pressure_value",
         "func _recruit_payload_value",
-        "_resource_node_contestable_by_faction(node, site, faction_id)",
+        "_resource_node_contestable_by_faction(node, site, faction_id, session)",
         "_resource_site_claim_rewards(site)",
         '"response_until_day"',
     ):
@@ -41158,7 +41158,7 @@ def validate_ai_known_world_memory_candidate_compatibility(errors: list[str]) ->
         'if owner != "player" and owner != "neutral":',
         '"target_kind": "town"',
         'for node_value in session.overworld.get("resource_nodes", []):',
-        "if not _resource_node_contestable_by_faction(node, site, faction_id):",
+        "if not _resource_node_contestable_by_faction(node, site, faction_id, session):",
         '"target_kind": "resource"',
         'for node_value in session.overworld.get("artifact_nodes", []):',
         'if bool(node.get("collected", false)):',

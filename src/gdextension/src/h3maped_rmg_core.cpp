@@ -43095,6 +43095,8 @@ static RuntimeMapPayloadProjection project_runtime_map_from_owned_final_payload(
 		return projection;
 	}
 	projection.player_slots = header.player_slots;
+	projection.team_count = header.team_count;
+	projection.player_team_assignments = header.player_team_assignments;
 	projection.applied = true;
 	return projection;
 }

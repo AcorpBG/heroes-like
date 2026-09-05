@@ -7,6 +7,7 @@ const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRu
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
+const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 static var _path_distance_surface_cache: Dictionary = {}
 
@@ -120,6 +121,7 @@ const COMMANDER_ROLE_PUBLIC_EVENT_KEYS := [
 	"sequence",
 	"event_type",
 	"faction_id",
+	"player_id",
 	"faction_label",
 	"actor_id",
 	"actor_label",
@@ -147,6 +149,7 @@ const AI_PUBLIC_EVENT_LOG_KEYS := [
 	"day",
 	"event_type",
 	"faction_id",
+	"player_id",
 	"faction_label",
 	"actor_label",
 	"target_kind",
@@ -305,6 +308,7 @@ const COMMANDER_ROLE_ADOPTION_PUBLIC_EVENT_KEYS := [
 	"sequence",
 	"event_type",
 	"faction_id",
+	"player_id",
 	"faction_label",
 	"actor_id",
 	"actor_label",
@@ -442,7 +446,7 @@ static func artifact_reward_valuation_report(
 ) -> Dictionary:
 	var resolved_faction_id := faction_id
 	if resolved_faction_id == "":
-		resolved_faction_id = String(config.get("faction_id", ""))
+		resolved_faction_id = PlayerRules.controller_id(config)
 	var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
 	var targets := []
 	var role_bucket_counts := {}
@@ -492,7 +496,8 @@ static func artifact_reward_valuation_report(
 		"schema": ARTIFACT_AI_VALUATION_SCHEMA,
 		"report_status": "artifact_reward_metadata_valued",
 		"scenario_id": String(session.scenario_id),
-		"faction_id": resolved_faction_id,
+		"faction_id": PlayerRules.faction_id(session, resolved_faction_id),
+		"player_id": String(PlayerRules.player(session, resolved_faction_id).get("player_id", "")),
 		"origin": {"x": origin_pos.x, "y": origin_pos.y},
 		"target_count": public_targets.size(),
 		"public_targets": public_targets,
@@ -533,7 +538,7 @@ static func artifact_target_valuation_breakdown(
 		return {}
 	var resolved_faction_id := faction_id
 	if resolved_faction_id == "":
-		resolved_faction_id = String(config.get("faction_id", ""))
+		resolved_faction_id = PlayerRules.controller_id(config)
 	var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
 	var goal_distance := known_goal_distance if known_goal_distance >= 0 else _path_distance(session, origin_pos, [target_tile], "", resolved_faction_id, LevelRules.level_of(node))
 	if goal_distance >= 9999:
@@ -557,7 +562,7 @@ static func artifact_target_valuation_breakdown(
 	var preferred_factions := _normalize_string_array(ai_hints.get("preferred_faction_ids", []))
 	var faction_match := (
 		resolved_faction_id != ""
-		and (resolved_faction_id in faction_affinity or resolved_faction_id in preferred_factions)
+		and (PlayerRules.faction_id(session, resolved_faction_id) in faction_affinity or PlayerRules.faction_id(session, resolved_faction_id) in preferred_factions)
 	)
 	var set_id := _artifact_set_id_from_record(artifact)
 	var base_value: int = int(preloaded_base_value) if preloaded_base_value is int else _artifact_target_priority(session, node)
@@ -680,6 +685,7 @@ const AI_HERO_TASK_PUBLIC_EVENT_KEYS := [
 	"sequence",
 	"event_type",
 	"faction_id",
+	"player_id",
 	"faction_label",
 	"actor_id",
 	"actor_label",
@@ -771,7 +777,7 @@ static func assign_target(
 	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	var previous_target := _current_target_snapshot(raid)
-	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var faction_id := PlayerRules.controller_id(config, PlayerRules.raid_controller_id(raid))
 	var had_memory := not commander_target_memory(raid.get("enemy_commander_state", {})).is_empty()
 	var task_record_for_assignment := {}
 	if _raid_target_valid(session, raid):
@@ -1623,7 +1629,7 @@ static func ai_active_front_support_target_selection_plan(
 ) -> Dictionary:
 	if session == null or raid.is_empty():
 		return {}
-	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var faction_id := PlayerRules.controller_id(config, PlayerRules.raid_controller_id(raid))
 	if faction_id == "":
 		return {}
 	var current_placement_id := String(raid.get("placement_id", ""))
@@ -1675,7 +1681,7 @@ static func _current_tile_resource_target_selection_plan(
 		if _resource_interaction_tile(node) != current:
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-		if site.is_empty() or not _resource_node_contestable_by_faction(node, site, faction_id):
+		if site.is_empty() or not _resource_node_contestable_by_faction(node, site, faction_id, session):
 			continue
 		if not _resource_guard_encounter_for_node(session, node, site).is_empty():
 			continue
@@ -1829,7 +1835,7 @@ static func _active_front_support_candidate(
 				return {}
 			var node: Dictionary = node_result.get("node", {})
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-			if not _resource_node_contestable_by_faction(node, site, faction_id):
+			if not _resource_node_contestable_by_faction(node, site, faction_id, session):
 				return {}
 			target_label = String(site.get("name", target_id))
 			target_x = int(node.get("x", 0))
@@ -1983,7 +1989,7 @@ static func ai_live_town_retake_target_selection_plan(
 ) -> Dictionary:
 	if session == null or raid.is_empty():
 		return {}
-	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var faction_id := PlayerRules.controller_id(config, PlayerRules.raid_controller_id(raid))
 	if faction_id == "":
 		return {}
 	var origin_pos := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
@@ -2001,7 +2007,7 @@ static func ai_live_town_retake_target_selection_plan(
 		var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
 		if not bool(front_state.get("active", false)):
 			continue
-		if String(front_state.get("faction_id", "")) != faction_id:
+		if PlayerRules.controller_id(front_state) != faction_id:
 			continue
 		if String(front_state.get("mode", "")) != "retake":
 			continue
@@ -2058,7 +2064,7 @@ static func ai_post_capture_town_support_target_selection_plan(
 ) -> Dictionary:
 	if session == null or raid.is_empty():
 		return {}
-	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var faction_id := PlayerRules.controller_id(config, PlayerRules.raid_controller_id(raid))
 	if faction_id == "" or String(raid.get("target_kind", "")) != "town":
 		return {}
 	var town_id := String(raid.get("target_placement_id", ""))
@@ -2081,7 +2087,7 @@ static func ai_post_capture_town_support_target_selection_plan(
 	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	var front_active := (
 		bool(front_state.get("active", false))
-		and String(front_state.get("faction_id", faction_id)) == faction_id
+		and PlayerRules.controller_id(front_state, faction_id) == faction_id
 		and String(front_state.get("mode", "")) in ["stabilizing", "defend", "retake"]
 	)
 	var recently_defended := int(town.get("ai_defense_until_day", 0)) >= int(session.day)
@@ -2144,7 +2150,8 @@ static func advance_raids(
 	var profile := {
 		"schema_id": "strategic_ai_advance_raids_profile_v1",
 		"label": String(options.get("profile_label", "advance_raids")),
-		"faction_id": faction_id,
+		"faction_id": PlayerRules.faction_id(session, faction_id),
+		"player_id": String(PlayerRules.player(session, faction_id).get("player_id", "")),
 		"only_placement_count": only_placement_ids.size(),
 		"active_raid_count": 0,
 		"phases_ms": {},
@@ -2659,7 +2666,7 @@ static func repair_active_raid_target_integrity(
 ) -> Dictionary:
 	if session == null or config.is_empty():
 		return {"repaired_count": 0, "events": []}
-	var faction_id := String(config.get("faction_id", ""))
+	var faction_id := PlayerRules.controller_id(config)
 	if faction_id == "":
 		return {"repaired_count": 0, "events": []}
 	var encounters = session.overworld.get("encounters", [])
@@ -3206,7 +3213,8 @@ static func _maybe_cast_raid_adventure_movement_spell(
 				String(updated_raid.get("target_label", "the front")),
 			],
 			"state_policy": "derived",
-			"faction_id": faction_id,
+			"faction_id": PlayerRules.faction_id(session, faction_id),
+			"player_id": String(PlayerRules.player(session, faction_id).get("player_id", "")),
 		}
 	)
 	return {"encounter": updated_raid, "movement_steps": steps, "events": [event]}
@@ -3309,7 +3317,8 @@ static func _maybe_cast_raid_adventure_scouting_spell(
 				String(cast_result.get("spell_name", spell_id)),
 			],
 			"state_policy": "derived",
-			"faction_id": faction_id,
+			"faction_id": PlayerRules.faction_id(session, faction_id),
+			"player_id": String(PlayerRules.player(session, faction_id).get("player_id", "")),
 		}
 	)
 	return {"encounter": updated_raid, "events": [event]}
@@ -3460,7 +3469,7 @@ static func refresh_enemy_known_world_memory(
 ) -> Dictionary:
 	if session == null or not (state is Dictionary):
 		return {"state": state, "sighting_count": 0}
-	var faction_id := String(state.get("faction_id", config.get("faction_id", "")))
+	var faction_id := PlayerRules.controller_id(state, PlayerRules.controller_id(config))
 	if faction_id == "":
 		return {"state": state, "sighting_count": 0}
 	var catalog_profile := {
@@ -3546,7 +3555,7 @@ static func _remove_enemy_player_hero_sighting(
 		return
 	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
 	for index in range(states.size()):
-		if not (states[index] is Dictionary) or String(states[index].get("faction_id", "")) != faction_id:
+		if not (states[index] is Dictionary) or PlayerRules.controller_id(states[index]) != faction_id:
 			continue
 		var state: Dictionary = states[index]
 		var memory := normalize_enemy_known_world_memory(state.get("known_world_memory", {}), int(session.day))
@@ -3677,7 +3686,7 @@ static func _sync_enemy_state_known_world_memory(
 		return
 	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
 	for index in range(states.size()):
-		if not (states[index] is Dictionary) or String(states[index].get("faction_id", "")) != faction_id:
+		if not (states[index] is Dictionary) or PlayerRules.controller_id(states[index]) != faction_id:
 			continue
 		var state: Dictionary = states[index]
 		var normalized := normalize_enemy_known_world_memory(memory, int(session.day))
@@ -3785,7 +3794,7 @@ static func _enemy_hero_sighting_sources(
 		if not (node_value is Dictionary):
 			continue
 		var node: Dictionary = node_value
-		if String(node.get("collected_by_faction_id", "")) != faction_id:
+		if PlayerRules.resource_controller_id(node) != faction_id:
 			continue
 		var site: Dictionary = ContentService.get_resource_site(String(node.get("site_id", "")))
 		var site_radius: int = max(0, int(site.get("vision_radius", 0)))
@@ -3913,7 +3922,7 @@ static func _enemy_visible_target_catalog(
 			continue
 		var node: Dictionary = node_value
 		var site: Dictionary = ContentService.get_resource_site(String(node.get("site_id", "")))
-		if not _resource_node_contestable_by_faction(node, site, faction_id):
+		if not _resource_node_contestable_by_faction(node, site, faction_id, session):
 			continue
 		catalog.append({
 			"target_kind": "resource",
@@ -4028,7 +4037,7 @@ static func _enemy_player_hero_sighting_record(
 	if session == null or faction_id == "" or hero_id == "":
 		return {}
 	for state_value in session.overworld.get("enemy_states", []):
-		if not (state_value is Dictionary) or String(state_value.get("faction_id", "")) != faction_id:
+		if not (state_value is Dictionary) or PlayerRules.controller_id(state_value) != faction_id:
 			continue
 		var memory := normalize_enemy_known_world_memory(state_value.get("known_world_memory", {}), int(session.day))
 		for record_value in memory.get("player_hero_sightings", []):
@@ -4051,13 +4060,13 @@ static func _merge_enemy_scouted_target_records(
 	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
 	var state_index := -1
 	for index in range(states.size()):
-		if states[index] is Dictionary and String(states[index].get("faction_id", "")) == faction_id:
+		if states[index] is Dictionary and PlayerRules.controller_id(states[index]) == faction_id:
 			state_index = index
 			break
 	if state_index < 0:
-		states.append({"faction_id": faction_id})
+		states.append(PlayerRules.identity_fields(session, faction_id))
 		state_index = states.size() - 1
-	var state: Dictionary = states[state_index] if states[state_index] is Dictionary else {"faction_id": faction_id}
+	var state: Dictionary = states[state_index] if states[state_index] is Dictionary else PlayerRules.identity_fields(session, faction_id)
 	var memory: Dictionary = state.get("known_world_memory", {}) if state.get("known_world_memory", {}) is Dictionary else {}
 	var existing: Array = memory.get("scouted_targets", []) if memory.get("scouted_targets", []) is Array else []
 	var merged := _merge_enemy_scouted_target_record_arrays(existing, records, int(session.day))
@@ -4114,7 +4123,7 @@ static func _enemy_target_scouted(
 		return false
 	var key := _enemy_scouted_target_key(target_kind, target_id)
 	for state_value in session.overworld.get("enemy_states", []):
-		if not (state_value is Dictionary) or String(state_value.get("faction_id", "")) != faction_id:
+		if not (state_value is Dictionary) or PlayerRules.controller_id(state_value) != faction_id:
 			continue
 		var memory: Dictionary = state_value.get("known_world_memory", {}) if state_value.get("known_world_memory", {}) is Dictionary else {}
 		for record_value in memory.get("scouted_targets", []):
@@ -4186,7 +4195,7 @@ static func _enemy_target_knowledge_snapshot(session: SessionStateStoreScript.Se
 	# capture or memory mutation. Preserve first-match expiry semantics exactly.
 	var scouted := {}
 	for state_value in session.overworld.get("enemy_states", []):
-		if not (state_value is Dictionary) or String(state_value.get("faction_id", "")) != faction_id:
+		if not (state_value is Dictionary) or PlayerRules.controller_id(state_value) != faction_id:
 			continue
 		var memory: Dictionary = state_value.get("known_world_memory", {}) if state_value.get("known_world_memory", {}) is Dictionary else {}
 		for record_value in memory.get("scouted_targets", []):
@@ -4311,7 +4320,7 @@ static func _current_tile_contestable_resource_id(
 		if _resource_interaction_tile(node) != current:
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-		if not site.is_empty() and _resource_node_contestable_by_faction(node, site, faction_id):
+		if not site.is_empty() and _resource_node_contestable_by_faction(node, site, faction_id, session):
 			return String(node.get("placement_id", ""))
 	return ""
 
@@ -4994,7 +5003,7 @@ static func resource_arrival_ready_report(
 	if int(node_result.get("index", -1)) < 0 or node.is_empty():
 		return {"ready": true, "reason": "target_missing"}
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-	if not _resource_node_contestable_by_faction(node, site, faction_id):
+	if not _resource_node_contestable_by_faction(node, site, faction_id, session):
 		return {"ready": true, "reason": "not_contestable"}
 	var host_strength := raid_strength(raid)
 	var desired_strength := desired_raid_strength(raid)
@@ -5005,7 +5014,7 @@ static func resource_arrival_ready_report(
 	var target_distance := _path_distance(session, current_tile, [target_tile], String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid))
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	var defending_owned_site := (
-		String(node.get("collected_by_faction_id", "")) == faction_id
+		PlayerRules.resource_controller_id(node) == faction_id
 		and ("site_defense" in reason_codes or "defend_front" in reason_codes or "front_stabilization" in reason_codes)
 	)
 	if guard_strength <= 0 and target_distance <= RAID_BASE_MOVEMENT_STEPS and (defending_owned_site or not raid_regroup_needed(raid, config, faction_id)):
@@ -5245,7 +5254,7 @@ static func commander_risk_tolerance_scale(raid: Dictionary, config: Dictionary 
 	elif last_outcome in ["field_victory", "assault_victory", "pursuit_victory", "rout_victory", "town_captured", "resource_secured", "artifact_secured"]:
 		scale -= 0.03
 	var strategy := config
-	var faction_id := String(config.get("faction_id", ""))
+	var faction_id := PlayerRules.controller_id(config)
 	if faction_id != "":
 		strategy = enemy_strategy(config, faction_id)
 	scale *= float(strategy_scalar(strategy, "risk", "commander_tolerance_scale", 1.0))
@@ -5771,7 +5780,7 @@ static func _best_threatened_defense_town(
 		var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
 		if not bool(front_state.get("active", false)):
 			continue
-		if String(front_state.get("faction_id", "")) != faction_id:
+		if PlayerRules.controller_id(front_state) != faction_id:
 			continue
 		if String(front_state.get("mode", "")) != "stabilizing":
 			continue
@@ -5870,7 +5879,7 @@ static func _best_threatened_resource_defense(
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if not _resource_site_is_persistent(site):
 			continue
-		if String(node.get("collected_by_faction_id", "")) != faction_id:
+		if PlayerRules.resource_controller_id(node) != faction_id:
 			continue
 		var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
 		var known_threat := _known_player_threat_position_for_ai(session, faction_id, target_tile)
@@ -5918,7 +5927,7 @@ static func _resource_defense_front_state(
 	var explicit := false
 	var priority_bonus := 0
 	var mode := ""
-	if String(front.get("faction_id", faction_id)) == faction_id:
+	if PlayerRules.controller_id(front, faction_id) == faction_id:
 		var state := String(front.get("state", ""))
 		explicit = bool(front.get("threatened_by_player", false)) or state in ["defend", "stabilizing", "threatened"]
 		explicit = explicit or int(front.get("defense_until_day", 0)) >= int(session.day)
@@ -6128,7 +6137,7 @@ static func normalize_raid_armies(session: SessionStateStoreScript.SessionData) 
 			normalized.append(encounter_value)
 			continue
 		var encounter = encounter_value
-		if String(encounter.get("spawned_by_faction_id", "")) != "":
+		if PlayerRules.raid_controller_id(encounter) != "":
 			var previous_army = encounter.get("enemy_army", {})
 			var previous_commander = encounter.get("enemy_commander_state", {})
 			encounter = ensure_raid_army(encounter, session, occupied_commander_ids)
@@ -6154,7 +6163,7 @@ static func normalize_all_commander_rosters(session: SessionStateStoreScript.Ses
 		var state = states[index]
 		if not (state is Dictionary):
 			continue
-		var faction_id := String(state.get("faction_id", ""))
+		var faction_id := PlayerRules.controller_id(state)
 		if faction_id == "":
 			continue
 		var normalized_roster = normalize_commander_roster(
@@ -6186,7 +6195,7 @@ static func normalize_commander_roster(
 	var active_map = _active_commander_map(session, faction_id)
 	var normalized := []
 	var session_day := int(session.day) if session != null else 0
-	for roster_hero_id in _faction_commander_ids(faction_id):
+	for roster_hero_id in _faction_commander_ids(PlayerRules.faction_id(session, faction_id)):
 		var existing = existing_map.get(roster_hero_id, {})
 		if not (existing is Dictionary):
 			existing = {}
@@ -6199,6 +6208,8 @@ static func normalize_commander_roster(
 			if not active_commander_state.is_empty()
 			else existing.get("commander_state", {})
 		)
+		commander_seed = commander_seed.duplicate(true)
+		commander_seed.merge(PlayerRules.identity_fields(session, faction_id), true)
 		var record := _normalized_commander_record(existing, commander_seed)
 		var target_memory := _normalized_commander_memory(existing, commander_seed)
 		var army_continuity := _normalized_commander_army_continuity(existing, commander_seed)
@@ -6253,7 +6264,7 @@ static func commander_roster_for_faction(
 	for state in session.overworld.get("enemy_states", []):
 		if not (state is Dictionary):
 			continue
-		if String(state.get("faction_id", "")) != faction_id:
+		if PlayerRules.controller_id(state) != faction_id:
 			continue
 		var roster = state.get("commander_roster", [])
 		return roster if roster is Array else []
@@ -6564,7 +6575,7 @@ static func apply_resolved_commander_aftermath(
 		return ""
 	for index in range(states.size()):
 		var state = states[index]
-		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+		if not (state is Dictionary) or PlayerRules.controller_id(state) != faction_id:
 			continue
 		var roster = normalize_commander_roster(session, faction_id, state.get("commander_roster", []))
 		for roster_index in range(roster.size()):
@@ -6662,7 +6673,7 @@ static func build_roster_commander_state(
 	var commander_state = {
 		"id": String(existing_state.get("id", "enemy_commander:%s:%s" % [faction_id, roster_hero_id])),
 		"roster_hero_id": roster_hero_id,
-		"faction_id": faction_id,
+		"faction_id": String(hero_template.get("faction_id", existing_state.get("faction_id", faction_id))),
 		"name": String(existing_state.get("name", hero_template.get("name", "Enemy Commander"))),
 		"archetype": String(existing_state.get("archetype", hero_template.get("archetype", ""))),
 		"identity_summary": String(
@@ -6679,6 +6690,8 @@ static func build_roster_commander_state(
 		"last_outcome": String(existing_state.get("last_outcome", record.get("last_outcome", ""))),
 		"artifacts": ArtifactRulesScript.normalize_hero_artifacts(artifacts_source),
 	}
+	if String(existing_state.get("player_id", "")) != "":
+		commander_state["player_id"] = String(existing_state.player_id)
 	commander_state = _normalize_enemy_progression(commander_state)
 	var with_metadata := _apply_commander_army_metadata(
 		_apply_commander_record_metadata(
@@ -6866,7 +6879,7 @@ static func sync_commander_state_to_roster(
 		return
 	for state_index in range(states.size()):
 		var state = states[state_index]
-		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+		if not (state is Dictionary) or PlayerRules.controller_id(state) != faction_id:
 			continue
 		var roster = normalize_commander_roster(session, faction_id, state.get("commander_roster", []))
 		for roster_index in range(roster.size()):
@@ -6950,7 +6963,7 @@ static func reinforce_commander_roster_army(
 		return 0
 	for state_index in range(states.size()):
 		var state = states[state_index]
-		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+		if not (state is Dictionary) or PlayerRules.controller_id(state) != faction_id:
 			continue
 		var roster = normalize_commander_roster(session, faction_id, state.get("commander_roster", []))
 		for roster_index in range(roster.size()):
@@ -7013,14 +7026,14 @@ static func ensure_raid_army(
 		return encounter
 	var encounter_id = String(encounter.get("encounter_id", encounter.get("id", "")))
 	var commander_state := {}
-	if String(encounter.get("spawned_by_faction_id", "")) != "" and not bool(encounter.get("commanderless_support_column", false)):
+	if PlayerRules.raid_controller_id(encounter) != "" and not bool(encounter.get("commanderless_support_column", false)):
 		commander_state = build_raid_commander_state(
 			encounter,
 			"",
 			"",
 			session,
 			occupied_commander_ids,
-			commander_roster_for_faction(session, String(encounter.get("spawned_by_faction_id", "")))
+			commander_roster_for_faction(session, PlayerRules.raid_controller_id(encounter))
 		)
 	var normalized_army = _normalize_army_payload(encounter.get("enemy_army", {}))
 	if normalized_army.is_empty():
@@ -7061,7 +7074,7 @@ static func occupied_raid_commander_ids(
 			continue
 		if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
 			continue
-		if faction_id != "" and String(encounter.get("spawned_by_faction_id", "")) != faction_id:
+		if faction_id != "" and PlayerRules.raid_controller_id(encounter) != faction_id:
 			continue
 		if exclude_placement_id != "" and String(encounter.get("placement_id", "")) == exclude_placement_id:
 			continue
@@ -7079,7 +7092,7 @@ static func select_raid_commander_roster_hero_id(
 ) -> String:
 	if faction_id == "":
 		return ""
-	var hero_ids: Array = _faction_commander_ids(faction_id)
+	var hero_ids: Array = _faction_commander_ids(PlayerRules.faction_id(session, faction_id))
 	if hero_ids.is_empty():
 		return ""
 	var occupied: Dictionary = occupied_commander_ids
@@ -7159,7 +7172,7 @@ static func _raid_commander_spawn_candidates(
 	var candidates := []
 	if faction_id == "":
 		return candidates
-	var hero_ids: Array = _faction_commander_ids(faction_id)
+	var hero_ids: Array = _faction_commander_ids(PlayerRules.faction_id(session, faction_id))
 	if hero_ids.is_empty():
 		return candidates
 	var occupied: Dictionary = occupied_commander_ids
@@ -7203,13 +7216,14 @@ static func _ai_hero_task_spawn_saved_plan_for_actor(
 	var probe_placement_id := "__spawn_saved_task_probe:%s" % actor_id
 	var probe_raid := {
 		"placement_id": probe_placement_id,
-		"spawned_by_faction_id": faction_id,
+		"spawned_by_faction_id": PlayerRules.faction_id(session, faction_id),
+		"spawned_by_player_id": String(PlayerRules.player(session, faction_id).get("player_id", "")),
 		"x": int(spawn_point.get("x", 0)),
 		"y": int(spawn_point.get("y", 0)),
 		"level": LevelRules.level_of(spawn_point),
-		"enemy_commander_state": {"roster_hero_id": actor_id, "faction_id": faction_id},
+		"enemy_commander_state": {"roster_hero_id": actor_id}.merged(PlayerRules.identity_fields(session, faction_id)),
 	}
-	var config := {"faction_id": faction_id}
+	var config := PlayerRules.identity_fields(session, faction_id)
 	var origin_pos := Vector2i(int(spawn_point.get("x", 0)), int(spawn_point.get("y", 0)))
 	var best := {}
 	var tasks: Array = preloaded_tasks if preloaded_tasks is Array else _ai_hero_task_live_tasks_for_faction(session, faction_id)
@@ -7260,7 +7274,9 @@ static func build_raid_commander_state(
 	var existing_state = encounter.get("enemy_commander_state", {})
 	if not (existing_state is Dictionary):
 		existing_state = {}
-	var resolved_faction_id: String = String(existing_state.get("faction_id", faction_id))
+	var resolved_faction_id: String = PlayerRules.raid_controller_id(encounter)
+	if resolved_faction_id == "":
+		resolved_faction_id = PlayerRules.controller_id(existing_state, faction_id)
 	if resolved_faction_id == "":
 		resolved_faction_id = String(encounter.get("spawned_by_faction_id", faction_id))
 	var resolved_roster_hero_id: String = String(existing_state.get("roster_hero_id", roster_hero_id))
@@ -7309,7 +7325,9 @@ static func build_raid_commander_state(
 		)
 	)
 	commander_state["roster_hero_id"] = resolved_roster_hero_id
-	commander_state["faction_id"] = resolved_faction_id
+	commander_state["faction_id"] = PlayerRules.faction_id(session, resolved_faction_id)
+	if not PlayerRules.player(session, resolved_faction_id).is_empty():
+		commander_state["player_id"] = resolved_faction_id
 	commander_state["name"] = String(
 		commander_state.get(
 			"name",
@@ -7412,7 +7430,7 @@ static func raid_display_name(encounter: Dictionary) -> String:
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	var encounter_name := String(encounter_template.get("name", encounter.get("placement_id", "Raid host")))
 	var commander_name := raid_commander_display_name(encounter)
-	if commander_name == "" or String(encounter.get("spawned_by_faction_id", "")) == "":
+	if commander_name == "" or PlayerRules.raid_controller_id(encounter) == "":
 		return encounter_name
 	return "%s's %s" % [commander_name, encounter_name]
 
@@ -7453,7 +7471,7 @@ static func _active_commander_map(
 			continue
 		if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
 			continue
-		if faction_id != "" and String(encounter.get("spawned_by_faction_id", "")) != faction_id:
+		if faction_id != "" and PlayerRules.raid_controller_id(encounter) != faction_id:
 			continue
 		var commander_state = encounter.get("enemy_commander_state", {})
 		if not (commander_state is Dictionary) or commander_state.is_empty():
@@ -7530,7 +7548,7 @@ static func _active_town_defender_entry(
 	var roster_hero_id := String(commander_state.get("roster_hero_id", town.get("ai_defender_roster_hero_id", "")))
 	if roster_hero_id == "":
 		return {}
-	var faction_id := String(town.get("ai_defended_by_faction_id", commander_state.get("faction_id", "")))
+	var faction_id := PlayerRules.defender_controller_id(town)
 	if faction_id == "":
 		faction_id = _town_faction_id(town)
 	if faction_filter != "" and faction_id != faction_filter:
@@ -7544,7 +7562,7 @@ static func _active_town_defender_entry(
 		return {}
 	if not bool(front_state.get("active", false)) or String(front_state.get("mode", "")) != "stabilizing":
 		return {}
-	if String(front_state.get("faction_id", "")) != "" and String(front_state.get("faction_id", "")) != faction_id:
+	if PlayerRules.controller_id(front_state) != "" and PlayerRules.controller_id(front_state) != faction_id:
 		return {}
 	var defense_until: int = max(
 		int(town.get("ai_defense_until_day", 0)),
@@ -7554,7 +7572,7 @@ static func _active_town_defender_entry(
 		return {}
 	var entry_state: Dictionary = commander_state.duplicate(true)
 	entry_state["roster_hero_id"] = roster_hero_id
-	entry_state["faction_id"] = faction_id
+	entry_state.merge(PlayerRules.identity_fields(session, faction_id), true)
 	return {
 		"placement_id": "town_defense:%s" % String(town.get("placement_id", "")),
 		"commander_state": entry_state,
@@ -7564,6 +7582,7 @@ static func _clear_town_defender_metadata(town: Dictionary) -> void:
 	town.erase("ai_defender_commander_state")
 	town.erase("ai_defender_roster_hero_id")
 	town.erase("ai_defended_by_faction_id")
+	town.erase("ai_defended_by_player_id")
 	town.erase("ai_defended_day")
 	town.erase("ai_defense_until_day")
 	town.erase("ai_defense_rating")
@@ -7610,13 +7629,13 @@ static func _active_resource_defender_entry(
 	var roster_hero_id := String(commander_state.get("roster_hero_id", node.get("ai_defender_roster_hero_id", "")))
 	if roster_hero_id == "":
 		return {}
-	var faction_id := String(node.get("ai_defended_by_faction_id", commander_state.get("faction_id", "")))
+	var faction_id := PlayerRules.defender_controller_id(node)
 	if faction_filter != "" and faction_id != faction_filter:
 		return {}
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 	if not _resource_site_is_persistent(site):
 		return {}
-	if faction_id == "" or String(node.get("collected_by_faction_id", "")) != faction_id:
+	if faction_id == "" or PlayerRules.resource_controller_id(node) != faction_id:
 		return {}
 	var front: Dictionary = node.get("front", {}) if node.get("front", {}) is Dictionary else {}
 	var raw_front_state := String(front.get("state", ""))
@@ -7630,7 +7649,7 @@ static func _active_resource_defender_entry(
 		return {}
 	var entry_state: Dictionary = commander_state.duplicate(true)
 	entry_state["roster_hero_id"] = roster_hero_id
-	entry_state["faction_id"] = faction_id
+	entry_state.merge(PlayerRules.identity_fields(session, faction_id), true)
 	return {
 		"placement_id": "resource_defense:%s" % String(node.get("placement_id", "")),
 		"commander_state": entry_state,
@@ -7641,6 +7660,7 @@ static func _clear_resource_defender_metadata(node: Dictionary) -> void:
 	node.erase("ai_defender_roster_hero_id")
 	node.erase("ai_defender_army")
 	node.erase("ai_defended_by_faction_id")
+	node.erase("ai_defended_by_player_id")
 	node.erase("ai_defended_day")
 	node.erase("ai_defense_until_day")
 	node.erase("ai_defense_rating")
@@ -8376,7 +8396,7 @@ static func choose_target(
 	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	if preloaded_path_context.is_empty():
-		preloaded_path_context = _path_distance_surface_context(session, "", String(config.get("faction_id", "")), LevelRules.level_of(origin))
+		preloaded_path_context = _path_distance_surface_context(session, "", PlayerRules.controller_id(config), LevelRules.level_of(origin))
 	var origin_pos = Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
 	var candidates = _target_candidates(session, config, origin_pos, false, preloaded_path_context)
 	if candidates.is_empty():
@@ -8439,7 +8459,7 @@ static func _no_known_target_exploration_plan(
 ) -> Dictionary:
 	if session == null:
 		return {}
-	var faction_id := String(config.get("faction_id", ""))
+	var faction_id := PlayerRules.controller_id(config)
 	if faction_id == "":
 		return {}
 	var sources := _enemy_hero_sighting_sources(session, config, faction_id)
@@ -8541,7 +8561,7 @@ static func _no_known_target_frontier_sweep_plan(
 ) -> Dictionary:
 	if session == null:
 		return {}
-	var faction_id := String(config.get("faction_id", ""))
+	var faction_id := PlayerRules.controller_id(config)
 	if faction_id == "":
 		return {}
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
@@ -8630,7 +8650,7 @@ static func _no_known_target_regroup_plan(
 ) -> Dictionary:
 	if session == null:
 		return {}
-	var faction_id := String(config.get("faction_id", ""))
+	var faction_id := PlayerRules.controller_id(config)
 	if faction_id == "":
 		return {}
 	var best_town := {}
@@ -8684,7 +8704,7 @@ static func ai_hero_task_live_target_selection_plan(
 ) -> Dictionary:
 	if session == null or raid.is_empty():
 		return {}
-	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var faction_id := PlayerRules.controller_id(config, PlayerRules.raid_controller_id(raid))
 	if faction_id == "":
 		return {}
 	var commander_state = raid.get("enemy_commander_state", {})
@@ -8764,7 +8784,7 @@ static func plan_enemy_hero_task_board(
 ) -> Dictionary:
 	if session == null or config.is_empty():
 		return {"state": state, "planned_count": 0, "task_count": 0}
-	var faction_id := String(config.get("faction_id", state.get("faction_id", "")))
+	var faction_id := PlayerRules.controller_id(config, PlayerRules.controller_id(state))
 	if faction_id == "":
 		return {"state": state, "planned_count": 0, "task_count": 0}
 	var working_state := state.duplicate(true) if not state.is_empty() else _ai_hero_task_enemy_state_for_faction(session, faction_id).duplicate(true)
@@ -8890,7 +8910,7 @@ static func ai_pressure_summary_target_from_task_board(
 			if not (task_value is Dictionary):
 				continue
 			var task: Dictionary = task_value
-			if String(task.get("owner_faction_id", faction_id)) != faction_id \
+			if PlayerRules.task_controller_id(task, faction_id) != faction_id \
 					or String(task.get("task_status", "")) != task_status:
 				continue
 			var target_kind := String(task.get("target_kind", ""))
@@ -9111,7 +9131,8 @@ static func _ai_hero_task_planner_task_from_candidate(
 	)
 	return {
 		"task_id": task_id,
-		"owner_faction_id": faction_id,
+		"owner_faction_id": PlayerRules.faction_id(session, faction_id),
+		"owner_player_id": String(PlayerRules.player(session, faction_id).get("player_id", "")),
 		"actor_kind": "commander_roster",
 		"actor_id": actor_id,
 		"source_kind": "commander_role_adapter",
@@ -9436,7 +9457,7 @@ static func _ai_hero_task_planner_candidates_from_origins(
 		if not (origin_value is Dictionary):
 			continue
 		var origin: Dictionary = origin_value
-		var path_context := _path_distance_surface_context(session, "", String(config.get("faction_id", "")), LevelRules.level_of(origin))
+		var path_context := _path_distance_surface_context(session, "", PlayerRules.controller_id(config), LevelRules.level_of(origin))
 		var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
 		var origin_candidates := _target_candidates_from_descriptors(
 			session,
@@ -9618,7 +9639,7 @@ static func _ai_hero_task_planner_event(
 		return {}
 	var target_kind := String(task.get("target_kind", ""))
 	var target_id := String(task.get("target_id", ""))
-	var faction_id := String(task.get("owner_faction_id", config.get("faction_id", "")))
+	var faction_id := PlayerRules.task_controller_id(task, PlayerRules.controller_id(config))
 	var target := _ai_hero_task_target_snapshot_for_plan(session, target_kind, target_id, faction_id)
 	if target.is_empty():
 		return {}
@@ -9638,7 +9659,8 @@ static func _ai_hero_task_planner_event(
 		"day": int(session.day),
 		"sequence": 0,
 		"event_type": "ai_commander_task_planned",
-		"faction_id": faction_id,
+		"faction_id": PlayerRules.faction_id(session, faction_id),
+		"player_id": String(PlayerRules.player(session, faction_id).get("player_id", "")),
 		"faction_label": String(config.get("label", faction_id)),
 		"actor_id": actor_id,
 		"actor_label": actor_label,
@@ -9665,14 +9687,14 @@ static func _ai_hero_task_write_enemy_state_for_faction(
 	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
 	for state_index in range(states.size()):
 		var state = states[state_index]
-		if state is Dictionary and String(state.get("faction_id", "")) == faction_id:
+		if state is Dictionary and PlayerRules.controller_id(state) == faction_id:
 			states[state_index] = replacement
 			session.overworld["enemy_states"] = states
 			return
 
 static func enemy_strategy(config: Dictionary, faction_id: String) -> Dictionary:
 	var strategy = _default_enemy_strategy()
-	var faction = ContentService.get_faction(faction_id)
+	var faction = ContentService.get_faction(String(config.get("faction_id", faction_id)))
 	if faction.get("enemy_strategy", {}) is Dictionary:
 		strategy = _merge_strategy_dict(strategy, faction.get("enemy_strategy", {}))
 	if config.get("strategy_overrides", {}) is Dictionary:
@@ -9813,7 +9835,7 @@ static func describe_contestation(session: SessionStateStoreScript.SessionData, 
 	for node in session.overworld.get("resource_nodes", []):
 		if not (node is Dictionary):
 			continue
-		if String(node.get("collected_by_faction_id", "")) != faction_id:
+		if PlayerRules.resource_controller_id(node) != faction_id:
 			continue
 		if public_only and not OverworldRulesScript.is_tile_visible(session, int(node.get("x", -1)), int(node.get("y", -1)), LevelRules.level_of(node)):
 			continue
@@ -9821,7 +9843,7 @@ static func describe_contestation(session: SessionStateStoreScript.SessionData, 
 	for node in session.overworld.get("artifact_nodes", []):
 		if not (node is Dictionary):
 			continue
-		if String(node.get("collected_by_faction_id", "")) != faction_id:
+		if PlayerRules.resource_controller_id(node) != faction_id:
 			continue
 		if public_only and not OverworldRulesScript.is_tile_visible(session, int(node.get("x", -1)), int(node.get("y", -1)), LevelRules.level_of(node)):
 			continue
@@ -9831,7 +9853,7 @@ static func describe_contestation(session: SessionStateStoreScript.SessionData, 
 			continue
 		if OverworldRulesScript.is_encounter_resolved(session, encounter):
 			continue
-		if String(encounter.get("contested_by_faction_id", "")) != faction_id:
+		if PlayerRules.contesting_controller_id(encounter) != faction_id:
 			continue
 		if public_only and not OverworldRulesScript.is_tile_visible(session, int(encounter.get("x", -1)), int(encounter.get("y", -1)), LevelRules.level_of(encounter)):
 			continue
@@ -9951,7 +9973,7 @@ static func _strategy_regroup_floor(
 ) -> Dictionary:
 	var resolved_faction_id := faction_id
 	if resolved_faction_id == "":
-		resolved_faction_id = String(config.get("faction_id", encounter.get("spawned_by_faction_id", "")))
+		resolved_faction_id = PlayerRules.controller_id(config, PlayerRules.raid_controller_id(encounter))
 	if resolved_faction_id == "" or config.is_empty():
 		return {"strategy_floor": base_floor, "strategy_multiplier": 1.0}
 	var strategy := enemy_strategy(config, resolved_faction_id)
@@ -10015,7 +10037,7 @@ static func _target_candidate_descriptors(
 ) -> Array:
 	var seen := {}
 	var descriptors := []
-	var faction_id = String(config.get("faction_id", ""))
+	var faction_id = PlayerRules.controller_id(config)
 	var knowledge_snapshot := {} if include_unscouted else _enemy_target_knowledge_snapshot(session, config, faction_id)
 	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var objective_anchor_surface := _objective_anchor_surface(session, scenario)
@@ -10115,7 +10137,7 @@ static func _target_candidates_from_descriptors(
 	preloaded_objective_anchor_surface: Variant = null
 ) -> Array:
 	var candidates := []
-	var faction_id := String(config.get("faction_id", ""))
+	var faction_id := PlayerRules.controller_id(config)
 	var objective_anchor_surface: Dictionary = (
 		preloaded_objective_anchor_surface
 		if preloaded_objective_anchor_surface is Dictionary
@@ -10170,6 +10192,8 @@ static func _append_town_target_descriptor(
 	var owner := String(town.get("owner", "neutral"))
 	var neutral_expansion := owner == "neutral"
 	if owner != "player" and not neutral_expansion:
+		return
+	if owner == "player" and PlayerRules.allied(session, faction_id, "player"):
 		return
 	var objective_anchor: bool = (
 		placement_id in preloaded_objective_anchor_surface.get("town_placement_ids", [])
@@ -10293,7 +10317,7 @@ static func _append_resource_target_descriptor(
 	var placement_id = String(node.get("placement_id", ""))
 	var seen_key = "resource:%s" % placement_id
 	var site = ContentService.get_resource_site(String(node.get("site_id", "")))
-	if placement_id == "" or seen.has(seen_key) or not _resource_node_contestable_by_faction(node, site, faction_id):
+	if placement_id == "" or seen.has(seen_key) or not _resource_node_contestable_by_faction(node, site, faction_id, session):
 		return
 	var goal_tile := _resource_interaction_tile(node)
 	var force_known := priority_target_bonus(config, placement_id) > 0 \
@@ -10622,6 +10646,8 @@ static func _append_delivery_interception_target_descriptors(
 	config: Dictionary,
 	faction_id: String
 ) -> void:
+	if PlayerRules.allied(session, faction_id, "player"):
+		return
 	for node_value in session.overworld.get("resource_nodes", []):
 		if not (node_value is Dictionary):
 			continue
@@ -10813,6 +10839,8 @@ static func _append_hero_target_descriptors(
 	config: Dictionary,
 	faction_id: String
 ) -> void:
+	if PlayerRules.allied(session, faction_id, "player"):
+		return
 	var seen_hero_ids := {}
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
 	for hero_value in session.overworld.get("player_heroes", []):
@@ -11043,7 +11071,7 @@ static func resource_pressure_report(
 ) -> Dictionary:
 	var resolved_faction_id := faction_id
 	if resolved_faction_id == "":
-		resolved_faction_id = String(config.get("faction_id", ""))
+		resolved_faction_id = PlayerRules.controller_id(config)
 	var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
 	var targets := []
 	for node_value in session.overworld.get("resource_nodes", []):
@@ -11064,7 +11092,8 @@ static func resource_pressure_report(
 		targets = targets.slice(0, limit)
 	return {
 		"scenario_id": String(session.scenario_id),
-		"faction_id": resolved_faction_id,
+		"faction_id": PlayerRules.faction_id(session, resolved_faction_id),
+		"player_id": String(PlayerRules.player(session, resolved_faction_id).get("player_id", "")),
 		"origin": {"x": origin_pos.x, "y": origin_pos.y},
 		"target_count": targets.size(),
 		"targets": targets,
@@ -11079,7 +11108,7 @@ static func resource_pressure_target_report(
 ) -> Dictionary:
 	var resolved_faction_id := faction_id
 	if resolved_faction_id == "":
-		resolved_faction_id = String(config.get("faction_id", ""))
+		resolved_faction_id = PlayerRules.controller_id(config)
 	var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
 	var node: Dictionary = {}
 	for node_value in session.overworld.get("resource_nodes", []):
@@ -11089,7 +11118,8 @@ static func resource_pressure_target_report(
 	if node.is_empty():
 		return {
 			"scenario_id": String(session.scenario_id),
-			"faction_id": resolved_faction_id,
+			"faction_id": PlayerRules.faction_id(session, resolved_faction_id),
+			"player_id": String(PlayerRules.player(session, resolved_faction_id).get("player_id", "")),
 			"origin": {"x": origin_pos.x, "y": origin_pos.y},
 			"placement_id": target_placement_id,
 			"target_found": false,
@@ -11107,7 +11137,8 @@ static func resource_pressure_target_report(
 	var ranked_index := ranked_ids.find(target_placement_id)
 	return {
 		"scenario_id": String(session.scenario_id),
-		"faction_id": resolved_faction_id,
+		"faction_id": PlayerRules.faction_id(session, resolved_faction_id),
+		"player_id": String(PlayerRules.player(session, resolved_faction_id).get("player_id", "")),
 		"origin": {"x": origin_pos.x, "y": origin_pos.y},
 		"placement_id": target_placement_id,
 		"target_found": true,
@@ -11127,7 +11158,7 @@ static func neutral_encounter_object_route_pressure_report(
 ) -> Dictionary:
 	var resolved_faction_id := faction_id
 	if resolved_faction_id == "":
-		resolved_faction_id = String(config.get("faction_id", ""))
+		resolved_faction_id = PlayerRules.controller_id(config)
 	var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
 	var targets := []
 	for encounter_value in session.overworld.get("encounters", []):
@@ -11156,7 +11187,8 @@ static func neutral_encounter_object_route_pressure_report(
 		"schema": "neutral_encounter_object_route_pressure_report_v1",
 		"mode": "tooling_report_internal_values_allowed",
 		"scenario_id": String(session.scenario_id),
-		"faction_id": resolved_faction_id,
+		"faction_id": PlayerRules.faction_id(session, resolved_faction_id),
+		"player_id": String(PlayerRules.player(session, resolved_faction_id).get("player_id", "")),
 		"origin": {"x": origin_pos.x, "y": origin_pos.y},
 		"target_count": targets.size(),
 		"targets": targets,
@@ -11176,7 +11208,7 @@ static func neutral_encounter_object_valuation_breakdown(
 	var placement_id := String(encounter.get("placement_id", ""))
 	var resolved_faction_id := faction_id
 	if resolved_faction_id == "":
-		resolved_faction_id = String(config.get("faction_id", ""))
+		resolved_faction_id = PlayerRules.controller_id(config)
 	var object_id := String(encounter.get("object_id", ""))
 	var object_record := ContentService.get_map_object(object_id) if object_id != "" else {}
 	var object_backed := object_id != "" and not object_record.is_empty()
@@ -11485,7 +11517,7 @@ static func commander_role_resource_target_view(
 		"front_id": commander_role_front_id(String(session.scenario_id), "resource", placement_id),
 		"origin_kind": "town",
 		"origin_id": commander_role_origin_id(String(session.scenario_id), faction_id),
-		"controller_id": String(node.get("collected_by_faction_id", "")),
+		"controller_id": PlayerRules.resource_controller_id(node),
 		"site_id": String(node.get("site_id", "")),
 		"site_family": String(site.get("family", "")),
 		"reason_codes": reason_codes,
@@ -11630,7 +11662,8 @@ static func commander_role_public_event(
 		"day": int(session.day),
 		"sequence": 0,
 		"event_type": "ai_commander_role_assigned",
-		"faction_id": faction_id,
+		"faction_id": PlayerRules.faction_id(session, faction_id),
+		"player_id": String(PlayerRules.player(session, faction_id).get("player_id", "")),
 		"faction_label": String(config.get("label", faction_id)),
 		"actor_id": actor_id,
 		"actor_label": actor_label,
@@ -11731,7 +11764,7 @@ static func ai_public_event_log_entry(event: Dictionary) -> Dictionary:
 		)
 	if summary == "" and target_label == "":
 		return {}
-	return {
+	var public_event := {
 		"day": int(event.get("day", 0)),
 		"event_type": event_type,
 		"faction_id": _public_event_log_text(String(event.get("faction_id", ""))),
@@ -11746,6 +11779,9 @@ static func ai_public_event_log_entry(event: Dictionary) -> Dictionary:
 		"reason_codes": reason_codes,
 		"public_reason": public_reason,
 	}
+	if String(event.get("player_id", "")) != "":
+		public_event["player_id"] = _public_event_log_text(String(event.player_id))
+	return public_event
 
 static func ai_public_event_log_boundary_report(events_value: Variant, limit: int = 6) -> Dictionary:
 	var source_count := 0
@@ -11842,13 +11878,13 @@ static func ai_target_assignment_event(
 		"state_policy": "derived",
 		"summary_prefix": "targets",
 	}
-	if String(actor.get("spawned_by_faction_id", "")) != "" and public_importance in ["medium", "high", "critical"]:
+	if PlayerRules.raid_controller_id(actor) != "" and public_importance in ["medium", "high", "critical"]:
 		var visibility := _event_visibility(
 			session,
 			int(target.get("target_x", actor.get("goal_x", 0))),
 			int(target.get("target_y", actor.get("goal_y", 0))),
 			public_importance,
-			_target_level(session, String(target.get("target_kind", "")), String(target.get("target_placement_id", "")), String(config.get("faction_id", actor.get("spawned_by_faction_id", ""))), _commander_map_level(actor))
+			_target_level(session, String(target.get("target_kind", "")), String(target.get("target_placement_id", "")), PlayerRules.controller_id(config, PlayerRules.raid_controller_id(actor)), _commander_map_level(actor))
 		)
 		if visibility == "hidden_debug":
 			options["visibility"] = "rumored"
@@ -11881,7 +11917,7 @@ static func ai_pressure_summary_event(
 				summary_target["target_reason_codes"] = ["persistent_income_denial"]
 				summary_target["target_public_importance"] = "high"
 	var actor := {
-		"placement_id": String(config.get("faction_id", "")),
+		"placement_id": PlayerRules.controller_id(config),
 		"name": String(config.get("label", config.get("faction_id", "Enemy"))),
 	}
 	return build_ai_event_record(
@@ -11955,7 +11991,7 @@ static func build_ai_event_record(
 	target: Dictionary,
 	options: Dictionary = {}
 ) -> Dictionary:
-	var faction_id := String(options.get("faction_id", config.get("faction_id", actor.get("spawned_by_faction_id", ""))))
+	var faction_id := PlayerRules.controller_id(options, PlayerRules.controller_id(config, PlayerRules.raid_controller_id(actor)))
 	var faction_label := String(options.get("faction_label", config.get("label", faction_id)))
 	var actor_id := String(options.get("actor_id", actor.get("placement_id", actor.get("id", ""))))
 	var actor_label := String(options.get("actor_label", _raid_name(actor) if actor.has("encounter_id") else actor.get("name", actor_id)))
@@ -11982,7 +12018,8 @@ static func build_ai_event_record(
 		"day": int(session.day),
 		"sequence": int(options.get("sequence", 0)),
 		"event_type": event_type,
-		"faction_id": faction_id,
+		"faction_id": PlayerRules.faction_id(session, faction_id),
+		"player_id": String(PlayerRules.player(session, faction_id).get("player_id", "")),
 		"faction_label": faction_label,
 		"actor_id": actor_id,
 		"actor_label": actor_label,
@@ -12025,7 +12062,7 @@ static func resource_target_score_breakdown(
 		return {}
 	var resolved_faction_id := faction_id
 	if resolved_faction_id == "":
-		resolved_faction_id = String(config.get("faction_id", ""))
+		resolved_faction_id = PlayerRules.controller_id(config)
 	var placement_id := String(node.get("placement_id", ""))
 	var site_id := String(node.get("site_id", ""))
 	var site := ContentService.get_resource_site(site_id)
@@ -12043,7 +12080,7 @@ static func resource_target_score_breakdown(
 	var recruit_payload_value := claim_recruit_value + weekly_recruit_value
 	var persistent := _resource_site_is_persistent(site)
 	var player_controlled := String(node.get("collected_by_faction_id", "")) == "player"
-	var contestable := placement_id != "" and _resource_node_contestable_by_faction(node, site, resolved_faction_id)
+	var contestable := placement_id != "" and _resource_node_contestable_by_faction(node, site, resolved_faction_id, session)
 
 	var base_value := 0
 	var persistent_income_value := 0
@@ -12115,7 +12152,7 @@ static func resource_target_score_breakdown(
 		"site_id": site_id,
 		"site_family": site_family,
 		"target_label": label,
-		"controller_id": String(node.get("collected_by_faction_id", "")),
+		"controller_id": PlayerRules.resource_controller_id(node),
 		"player_controlled": player_controlled,
 		"base_value": base_value,
 		"persistent_income_value": persistent_income_value,
@@ -12218,10 +12255,10 @@ static func _town_strategic_priority_bonus(
 	if bool(capital_project.get("vulnerable", false)):
 		bonus += 30
 	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
-	if bool(front_state.get("active", false)) and String(front_state.get("faction_id", "")) == faction_id:
+	if bool(front_state.get("active", false)) and PlayerRules.controller_id(front_state) == faction_id:
 		bonus += int(front_state.get("priority_bonus", 0))
 	var occupation_state: Dictionary = OverworldRulesScript.town_occupation_state(session, town)
-	if bool(occupation_state.get("active", false)) and String(occupation_state.get("faction_id", "")) == faction_id:
+	if bool(occupation_state.get("active", false)) and PlayerRules.controller_id(occupation_state) == faction_id:
 		bonus += int(occupation_state.get("target_bonus", 0))
 	if objective_anchor:
 		bonus += 20
@@ -12440,7 +12477,7 @@ static func _resource_target_priority(session: SessionStateStoreScript.SessionDa
 	var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 	if not OverworldRulesScript.resource_site_blocking_guard(session, node, site).is_empty():
 		return 0
-	if not _resource_node_contestable_by_faction(node, site, faction_id):
+	if not _resource_node_contestable_by_faction(node, site, faction_id, session):
 		return 0
 	var priority = 85 + int(min(110, _resource_site_strategic_value(site) / 120))
 	if _resource_site_is_persistent(site) and String(node.get("collected_by_faction_id", "")) == "player":
@@ -12505,7 +12542,7 @@ static func _resource_scarcity_stockpile(
 			if not (state_value is Dictionary):
 				continue
 			var state: Dictionary = state_value
-			if String(state.get("faction_id", "")) == faction_id:
+			if PlayerRules.controller_id(state) == faction_id:
 				var treasury: Dictionary = state.get("treasury", {}) if state.get("treasury", {}) is Dictionary else {}
 				return treasury
 	var player_resources: Dictionary = session.overworld.get("resources", {}) if session.overworld.get("resources", {}) is Dictionary else {}
@@ -12749,7 +12786,8 @@ static func commander_role_turn_snapshot(
 		"source_policy": "snapshot_derived",
 		"scenario_id": String(session.scenario_id),
 		"day": int(session.day),
-		"faction_id": faction_id,
+		"faction_id": PlayerRules.faction_id(session, faction_id),
+		"player_id": String(PlayerRules.player(session, faction_id).get("player_id", "")),
 		"faction_label": String(config.get("label", faction_id)),
 		"enemy_state": _turn_transcript_enemy_state_counts(session, faction_id),
 		"active_raids": _turn_transcript_active_raid_snapshots(session, faction_id),
@@ -13302,7 +13340,8 @@ static func ai_hero_task_candidate_from_role(
 	return {
 		"task_id": task_id,
 		"task_status": task_status,
-		"owner_faction_id": faction_id,
+		"owner_faction_id": PlayerRules.faction_id(session, faction_id),
+		"owner_player_id": String(PlayerRules.player(session, faction_id).get("player_id", "")),
 		"actor_kind": "commander_roster",
 		"actor_id": actor_id,
 		"actor_label": actor_label,
@@ -13372,7 +13411,7 @@ static func ai_hero_task_resource_target_snapshot(
 		"target_kind": "resource",
 		"target_id": target_id,
 		"target_label": String(site.get("name", target_id)),
-		"controller_id": String(node.get("collected_by_faction_id", "")),
+		"controller_id": PlayerRules.resource_controller_id(node),
 		"site_id": String(node.get("site_id", "")),
 		"x": int(node.get("x", 0)),
 		"y": int(node.get("y", 0)),
@@ -13432,7 +13471,7 @@ static func _ai_hero_task_reservation_arbitrates_status(status: String) -> bool:
 static func ai_hero_task_transition_from_arrival(retake_task: Dictionary, arrival: Dictionary) -> Dictionary:
 	var task_target := "%s:%s" % [String(retake_task.get("target_kind", "")), String(retake_task.get("target_id", ""))]
 	var arrival_target := "%s:%s" % [String(arrival.get("target_kind", "")), String(arrival.get("target_id", ""))]
-	var owner_faction_id := String(retake_task.get("owner_faction_id", ""))
+	var owner_faction_id := PlayerRules.task_controller_id(retake_task)
 	var controller_after := String(arrival.get("target_controller_after", ""))
 	var completed := (
 		String(retake_task.get("task_class", "")) == "retake_site"
@@ -13508,7 +13547,7 @@ static func ai_hero_task_public_event(
 		summary += " (%s)" % public_reason
 	summary += "."
 	var day := int(candidate_task.get("assigned_day", int(session.day) if session != null else 0))
-	var faction_id := String(candidate_task.get("owner_faction_id", config.get("faction_id", "")))
+	var faction_id := PlayerRules.task_controller_id(candidate_task, PlayerRules.controller_id(config))
 	var actor_id := String(candidate_task.get("actor_id", ""))
 	var target_id := String(candidate_task.get("target_id", ""))
 	return {
@@ -13516,7 +13555,8 @@ static func ai_hero_task_public_event(
 		"day": day,
 		"sequence": sequence,
 		"event_type": event_type,
-		"faction_id": faction_id,
+		"faction_id": PlayerRules.faction_id(session, faction_id),
+		"player_id": String(PlayerRules.player(session, faction_id).get("player_id", "")),
 		"faction_label": String(config.get("label", faction_id)),
 		"actor_id": actor_id,
 		"actor_label": actor_label,
@@ -13603,7 +13643,7 @@ static func ai_hero_task_actor_ownership_check(
 		if not (task_value is Dictionary):
 			continue
 		var task: Dictionary = task_value
-		if String(task.get("owner_faction_id", "")) != faction_id:
+		if PlayerRules.task_controller_id(task) != faction_id:
 			return {"ok": false, "error": "task owner mismatch for %s" % String(task.get("task_id", ""))}
 		if String(task.get("actor_kind", "")) != "commander_roster":
 			return {"ok": false, "error": "unsupported task actor kind %s" % String(task.get("actor_kind", ""))}
@@ -14168,7 +14208,7 @@ static func _ai_hero_task_live_resource_context(
 	if int(node_result.get("index", -1)) < 0:
 		return context
 	var node: Dictionary = node_result.get("node", {})
-	var controller_id := String(node.get("collected_by_faction_id", ""))
+	var controller_id := PlayerRules.resource_controller_id(node)
 	if controller_id == "player":
 		context["fixture_previous_controller"] = faction_id
 		context["fixture_threatened_by_player_front"] = true
@@ -14277,7 +14317,7 @@ static func ai_hero_task_saved_target_selection_plan(
 ) -> Dictionary:
 	if session == null or raid.is_empty():
 		return {}
-	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var faction_id := PlayerRules.controller_id(config, PlayerRules.raid_controller_id(raid))
 	var actor_id := _ai_hero_task_actor_id_from_raid(raid)
 	if faction_id == "" or actor_id == "":
 		return {}
@@ -14311,7 +14351,7 @@ static func _ai_hero_task_plan_from_saved_task(
 	current_placement_id: String,
 	preloaded_path_context: Variant = null
 ) -> Dictionary:
-	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var faction_id := PlayerRules.controller_id(config, PlayerRules.raid_controller_id(raid))
 	var target_kind := String(task.get("target_kind", ""))
 	var target_id := String(task.get("target_id", ""))
 	if target_kind == "" or target_id == "":
@@ -14568,7 +14608,7 @@ static func _ai_hero_task_live_plan_from_task(
 		return {}
 	var node: Dictionary = node_result.get("node", {})
 	var goal_tile := _resource_interaction_tile(node)
-	var faction_id := String(raid.get("spawned_by_faction_id", ""))
+	var faction_id := PlayerRules.raid_controller_id(raid)
 	var goal_distance := _path_distance(session, origin_pos, [goal_tile], String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid))
 	if goal_distance >= 9999:
 		return {}
@@ -14614,7 +14654,7 @@ static func _ai_hero_task_record_live_assignment(
 ) -> void:
 	if session == null or current_target.is_empty():
 		return
-	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var faction_id := PlayerRules.controller_id(config, PlayerRules.raid_controller_id(raid))
 	var actor_id := _ai_hero_task_actor_id_from_raid(raid)
 	if faction_id == "" or actor_id == "":
 		return
@@ -14645,7 +14685,7 @@ static func adopt_commander_role_from_task(
 	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
 	for state_index in range(states.size()):
 		var state = states[state_index]
-		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+		if not (state is Dictionary) or PlayerRules.controller_id(state) != faction_id:
 			continue
 		var roster := _adopt_commander_role_on_roster(
 			normalize_commander_roster(session, faction_id, state.get("commander_roster", [])),
@@ -14724,7 +14764,7 @@ static func _ai_hero_task_runtime_task_payload(
 	task: Dictionary,
 	actor_id: String
 ) -> Dictionary:
-	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var faction_id := PlayerRules.controller_id(config, PlayerRules.raid_controller_id(raid))
 	var target_kind := String(current_target.get("target_kind", task.get("target_kind", "")))
 	var target_id := String(current_target.get("target_placement_id", task.get("target_id", "")))
 	if faction_id == "" or actor_id == "" or target_kind == "" or target_id == "":
@@ -14753,7 +14793,8 @@ static func _ai_hero_task_runtime_task_payload(
 		)
 	var payload := {
 		"task_id": task_id,
-		"owner_faction_id": faction_id,
+		"owner_faction_id": PlayerRules.faction_id(session, faction_id),
+		"owner_player_id": String(PlayerRules.player(session, faction_id).get("player_id", "")),
 		"actor_kind": "commander_roster",
 		"actor_id": actor_id,
 		"source_kind": String(task.get("source_kind", "commander_role_adapter")),
@@ -14787,7 +14828,7 @@ static func _ai_hero_task_record_from_assignment(
 	current_target: Dictionary,
 	actor_id: String
 ) -> Dictionary:
-	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var faction_id := PlayerRules.controller_id(config, PlayerRules.raid_controller_id(raid))
 	var target_kind := String(current_target.get("target_kind", ""))
 	var target_id := String(current_target.get("target_placement_id", ""))
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", current_target.get("target_reason_codes", [])))
@@ -14820,7 +14861,8 @@ static func _ai_hero_task_record_from_assignment(
 	)
 	return {
 		"task_id": task_id,
-		"owner_faction_id": faction_id,
+		"owner_faction_id": PlayerRules.faction_id(session, faction_id),
+		"owner_player_id": String(PlayerRules.player(session, faction_id).get("player_id", "")),
 		"actor_kind": "commander_roster",
 		"actor_id": actor_id,
 		"source_kind": "saved_task_state",
@@ -14866,7 +14908,7 @@ static func _ai_hero_task_reconcile_live_tasks_for_faction(
 	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
 	for state_index in range(states.size()):
 		var state = states[state_index]
-		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+		if not (state is Dictionary) or PlayerRules.controller_id(state) != faction_id:
 			continue
 		var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
 		var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
@@ -14974,7 +15016,7 @@ static func _ai_hero_task_reconciled_resource_task(
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
 	var node: Dictionary = node_result.get("node", {})
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-	var controller_id := String(node.get("collected_by_faction_id", ""))
+	var controller_id := PlayerRules.resource_controller_id(node)
 	var task_class := String(task.get("task_class", ""))
 	if task_class == "defend_front":
 		if _resource_node_defensible_by_faction(node, site, faction_id, _normalize_string_array(task.get("priority_reason_codes", []))):
@@ -15032,7 +15074,7 @@ static func _ai_hero_task_reconciled_artifact_task(
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
 	var node: Dictionary = artifact_result.get("node", {})
 	if bool(node.get("collected", false)):
-		if String(node.get("collected_by_faction_id", "")) == faction_id:
+		if PlayerRules.resource_controller_id(node) == faction_id:
 			return _ai_hero_task_with_lifecycle(task, "completed", "valid")
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_resolved")
 	return task
@@ -15051,7 +15093,7 @@ static func _ai_hero_task_reconciled_encounter_task(
 	var encounter: Dictionary = encounter_result.get("encounter", {})
 	if OverworldRulesScript.is_encounter_resolved(session, encounter):
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_resolved")
-	if String(encounter.get("contested_by_faction_id", "")) == faction_id:
+	if PlayerRules.contesting_controller_id(encounter) == faction_id:
 		return _ai_hero_task_with_lifecycle(task, "completed", "valid")
 	return task
 
@@ -15124,7 +15166,7 @@ static func _ai_hero_task_upsert_live_task(
 	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
 	for state_index in range(states.size()):
 		var state = states[state_index]
-		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+		if not (state is Dictionary) or PlayerRules.controller_id(state) != faction_id:
 			continue
 		var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
 		var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
@@ -15190,7 +15232,7 @@ static func _ai_hero_task_finish_live_assignment(
 	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
 	for state_index in range(states.size()):
 		var state = states[state_index]
-		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+		if not (state is Dictionary) or PlayerRules.controller_id(state) != faction_id:
 			continue
 		var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
 		var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
@@ -15267,7 +15309,7 @@ static func _ai_hero_task_enemy_state_for_faction(session: SessionStateStoreScri
 	if session == null:
 		return {}
 	for state in session.overworld.get("enemy_states", []):
-		if state is Dictionary and String(state.get("faction_id", "")) == faction_id:
+		if state is Dictionary and PlayerRules.controller_id(state) == faction_id:
 			return state
 	return {}
 
@@ -15426,7 +15468,7 @@ static func _turn_transcript_role_proposal(
 static func _turn_transcript_enemy_state_counts(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
 	var state := {}
 	for state_value in session.overworld.get("enemy_states", []):
-		if state_value is Dictionary and String(state_value.get("faction_id", "")) == faction_id:
+		if state_value is Dictionary and PlayerRules.controller_id(state_value) == faction_id:
 			state = state_value
 			break
 	var roster: Array = state.get("commander_roster", [])
@@ -15548,7 +15590,7 @@ static func _turn_transcript_resource_controller_map(session: SessionStateStoreS
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		controllers[placement_id] = {
-			"controller_id": String(node.get("collected_by_faction_id", "")),
+			"controller_id": PlayerRules.resource_controller_id(node),
 			"target_label": String(site.get("name", placement_id)),
 			"x": int(node.get("x", 0)),
 			"y": int(node.get("y", 0)),
@@ -16748,7 +16790,7 @@ static func _encounter_target_priority(
 ) -> int:
 	if not (encounter is Dictionary):
 		return 0
-	if String(encounter.get("spawned_by_faction_id", "")) != "" or OverworldRulesScript.is_encounter_resolved(session, encounter):
+	if PlayerRules.raid_controller_id(encounter) != "" or OverworldRulesScript.is_encounter_resolved(session, encounter):
 		return 0
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	var priority = 95 + int(min(80, _target_resource_value(encounter_template.get("rewards", {})) / 130))
@@ -17019,7 +17061,7 @@ static func _resolve_opportunistic_route_objective(
 		if assigned_kind == "resource" and assigned_id == node_id:
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-		if site.is_empty() or not _resource_node_contestable_by_faction(node, site, faction_id):
+		if site.is_empty() or not _resource_node_contestable_by_faction(node, site, faction_id, session):
 			continue
 		if not _resource_guard_encounter_for_node(session, node, site).is_empty():
 			continue
@@ -17080,7 +17122,7 @@ static func _tile_has_unresolved_route_pickup_blocker(
 		var encounter: Dictionary = encounter_value
 		if String(encounter.get("placement_id", "")) == actor_id:
 			continue
-		if String(encounter.get("spawned_by_faction_id", "")) == faction_id:
+		if PlayerRules.raid_controller_id(encounter) == faction_id:
 			continue
 		if OverworldRulesScript.is_encounter_resolved(session, encounter):
 			continue
@@ -17102,7 +17144,7 @@ static func _secure_opportunistic_route_resource(
 	if node_index < 0 or node_index >= nodes.size():
 		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": []}
 	var previous_node: Dictionary = node.duplicate(true)
-	var previous_controller := String(node.get("collected_by_faction_id", ""))
+	var previous_controller := PlayerRules.resource_controller_id(node)
 	var route_node := node.duplicate(true)
 	var escorted_route := int(previous_node.get("response_until_day", 0)) >= session.day
 	var escort_strength: int = max(0, int(previous_node.get("response_security_rating", 0)))
@@ -17111,7 +17153,7 @@ static func _secure_opportunistic_route_resource(
 	if delivery_target_label == "":
 		delivery_target_label = "the front"
 	route_node["collected"] = true
-	route_node["collected_by_faction_id"] = faction_id
+	PlayerRules.set_resource_controller(route_node, session, faction_id)
 	route_node["collected_day"] = session.day
 	route_node["response_origin"] = ""
 	route_node["response_source_town_id"] = ""
@@ -17174,7 +17216,8 @@ static func _secure_opportunistic_route_resource(
 		route_node["artifact_reward_id"] = artifact_id
 		route_node["artifact_reward_table_id"] = String(artifact_reward.get("table_id", ""))
 		route_node["artifact_reward_source_key"] = String(artifact_reward.get("source_key", ""))
-		route_node["artifact_reward_claimed_by_faction_id"] = faction_id
+		route_node["artifact_reward_claimed_by_faction_id"] = PlayerRules.faction_id(session, faction_id)
+		route_node["artifact_reward_claimed_by_player_id"] = String(PlayerRules.player(session, faction_id).get("player_id", ""))
 		route_node["artifact_reward_claimed_day"] = session.day
 		nodes[node_index] = route_node
 		session.overworld["resource_nodes"] = nodes
@@ -17254,7 +17297,7 @@ static func _secure_opportunistic_route_resource(
 	}
 	var event := build_ai_event_record(
 		session,
-		config if not config.is_empty() else {"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		config if not config.is_empty() else PlayerRules.config_for_controller(session, faction_id),
 		"ai_site_seized",
 		updated_raid,
 		target,
@@ -17285,7 +17328,7 @@ static func _secure_opportunistic_route_artifact(
 		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": []}
 	var route_node := node.duplicate(true)
 	route_node["collected"] = true
-	route_node["collected_by_faction_id"] = faction_id
+	PlayerRules.set_resource_controller(route_node, session, faction_id)
 	route_node["collected_day"] = session.day
 	nodes[node_index] = route_node
 	session.overworld["artifact_nodes"] = nodes
@@ -17352,7 +17395,7 @@ static func _secure_opportunistic_route_artifact(
 	}
 	var event := build_ai_event_record(
 		session,
-		config if not config.is_empty() else {"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		config if not config.is_empty() else PlayerRules.config_for_controller(session, faction_id),
 		"ai_artifact_secured",
 		updated_raid,
 		target,
@@ -17647,13 +17690,13 @@ static func _secure_resource_target(
 	var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 	if not OverworldRulesScript.resource_site_blocking_guard(session, node, site).is_empty():
 		return {"encounter": raid, "state": state, "event_message": ""}
-	if not _resource_node_contestable_by_faction(node, site, faction_id):
-		if String(node.get("collected_by_faction_id", "")) == faction_id:
+	if not _resource_node_contestable_by_faction(node, site, faction_id, session):
+		if PlayerRules.resource_controller_id(node) == faction_id:
 			_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
 		return {"encounter": raid, "state": state, "event_message": ""}
 	var nodes = session.overworld.get("resource_nodes", [])
 	var previous_node: Dictionary = node.duplicate(true)
-	var previous_controller = String(node.get("collected_by_faction_id", ""))
+	var previous_controller = PlayerRules.resource_controller_id(node)
 	var escorted_route = int(previous_node.get("response_until_day", 0)) >= session.day
 	var escort_strength: int = max(0, int(previous_node.get("response_security_rating", 0)))
 	var delivery_value := _recruit_payload_value(previous_node.get("delivery_manifest", {}))
@@ -17661,7 +17704,7 @@ static func _secure_resource_target(
 	if delivery_target_label == "":
 		delivery_target_label = "the front"
 	node["collected"] = true
-	node["collected_by_faction_id"] = faction_id
+	PlayerRules.set_resource_controller(node, session, faction_id)
 	node["collected_day"] = session.day
 	node["response_origin"] = ""
 	node["response_source_town_id"] = ""
@@ -17724,7 +17767,8 @@ static func _secure_resource_target(
 		node["artifact_reward_id"] = artifact_id
 		node["artifact_reward_table_id"] = String(artifact_reward.get("table_id", ""))
 		node["artifact_reward_source_key"] = String(artifact_reward.get("source_key", ""))
-		node["artifact_reward_claimed_by_faction_id"] = faction_id
+		node["artifact_reward_claimed_by_faction_id"] = PlayerRules.faction_id(session, faction_id)
+		node["artifact_reward_claimed_by_player_id"] = String(PlayerRules.player(session, faction_id).get("player_id", ""))
 		node["artifact_reward_claimed_day"] = session.day
 		nodes[int(node_result.get("index", -1))] = node
 		session.overworld["resource_nodes"] = nodes
@@ -17790,7 +17834,7 @@ static func _secure_resource_target(
 	)
 	var event := build_ai_event_record(
 		session,
-		config if not config.is_empty() else {"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		config if not config.is_empty() else PlayerRules.config_for_controller(session, faction_id),
 		"ai_site_seized",
 		updated_raid,
 		{
@@ -17818,7 +17862,7 @@ static func _secure_resource_target(
 	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
 	var continuation := _continue_mobile_raid_after_field_objective(
 		session,
-		config if not config.is_empty() else {"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		config if not config.is_empty() else PlayerRules.config_for_controller(session, faction_id),
 		updated_raid,
 		state,
 		faction_id
@@ -17871,7 +17915,7 @@ static func _apply_resource_site_artifact_reward_to_raid(
 		source_tag,
 		site,
 		source_key,
-		faction_id,
+		PlayerRules.faction_id(session, faction_id),
 		ArtifactRulesScript.owned_artifact_ids(commander_state)
 	)
 	if not bool(selection.get("ok", false)):
@@ -18040,12 +18084,13 @@ static func _defend_resource_target(
 	var nodes = session.overworld.get("resource_nodes", [])
 	var front: Dictionary = node.get("front", {}) if node.get("front", {}) is Dictionary else {}
 	front["state"] = "defend"
-	front["faction_id"] = faction_id
+	front.merge(PlayerRules.identity_fields(session, faction_id), true)
 	front["last_defended_day"] = int(session.day)
 	front["defense_until_day"] = max(int(front.get("defense_until_day", 0)), int(session.day) + 3)
 	front["source"] = "strategic_ai_resource_defense"
 	node["front"] = front
-	node["ai_defended_by_faction_id"] = faction_id
+	node["ai_defended_by_faction_id"] = PlayerRules.faction_id(session, faction_id)
+	node["ai_defended_by_player_id"] = String(PlayerRules.player(session, faction_id).get("player_id", ""))
 	node["ai_defended_day"] = int(session.day)
 	node["ai_defense_until_day"] = max(int(node.get("ai_defense_until_day", 0)), int(session.day) + 3)
 	node["ai_defense_rating"] = max(int(node.get("ai_defense_rating", 0)), transferred_strength)
@@ -18105,7 +18150,7 @@ static func _defend_resource_target(
 	]
 	var event := build_ai_event_record(
 		session,
-		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		PlayerRules.config_for_controller(session, faction_id),
 		"ai_site_defended",
 		updated_raid,
 		{
@@ -18171,14 +18216,15 @@ static func _secure_neutral_town_target(
 		transferred_strength += _unit_strength_value(unit_id) * count
 	var front: Dictionary = captured_town.get("front", {}) if captured_town.get("front", {}) is Dictionary else {}
 	front["state"] = String(front.get("state", "stabilizing")) if String(front.get("state", "")) != "" else "stabilizing"
-	front["faction_id"] = faction_id
+	front.merge(PlayerRules.identity_fields(session, faction_id), true)
 	front["last_defended_day"] = int(session.day)
 	front["defense_until_day"] = max(int(front.get("defense_until_day", 0)), int(session.day) + 3)
 	front["stabilize_until_day"] = max(int(front.get("stabilize_until_day", 0)), int(session.day) + 3)
 	front["source"] = "strategic_ai_neutral_town_post_capture_garrison"
 	captured_town["front"] = front
 	captured_town["garrison"] = garrison
-	captured_town["ai_defended_by_faction_id"] = faction_id
+	captured_town["ai_defended_by_faction_id"] = PlayerRules.faction_id(session, faction_id)
+	captured_town["ai_defended_by_player_id"] = String(PlayerRules.player(session, faction_id).get("player_id", ""))
 	captured_town["ai_defended_day"] = int(session.day)
 	captured_town["ai_defense_until_day"] = max(int(captured_town.get("ai_defense_until_day", 0)), int(session.day) + 3)
 	captured_town["ai_defense_rating"] = max(int(captured_town.get("ai_defense_rating", 0)), _army_strength(garrison))
@@ -18225,7 +18271,7 @@ static func _secure_neutral_town_target(
 	var message := "%s claims %s for %s." % [
 		_raid_name(updated_raid),
 		town_label,
-		String(ContentService.get_faction(faction_id).get("name", faction_id)),
+		String(ContentService.get_faction(PlayerRules.faction_id(session, faction_id)).get("name", faction_id)),
 	]
 	if transferred_count > 0:
 		message = "%s %d unit%s stay behind to hold the new front." % [
@@ -18235,7 +18281,7 @@ static func _secure_neutral_town_target(
 		]
 	var event := build_ai_event_record(
 		session,
-		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		PlayerRules.config_for_controller(session, faction_id),
 		"ai_town_captured",
 		updated_raid,
 		{
@@ -18349,14 +18395,15 @@ static func _defend_town_target(
 
 	var front: Dictionary = town.get("front", {}) if town.get("front", {}) is Dictionary else {}
 	front["state"] = "defend"
-	front["faction_id"] = faction_id
+	front.merge(PlayerRules.identity_fields(session, faction_id), true)
 	front["last_defended_day"] = int(session.day)
 	front["defense_until_day"] = max(int(front.get("defense_until_day", 0)), int(session.day) + 3)
 	front["stabilize_until_day"] = max(int(front.get("stabilize_until_day", 0)), int(session.day) + 3)
 	front["source"] = "strategic_ai_town_defense_arrival"
 	town["front"] = front
 	town["garrison"] = garrison
-	town["ai_defended_by_faction_id"] = faction_id
+	town["ai_defended_by_faction_id"] = PlayerRules.faction_id(session, faction_id)
+	town["ai_defended_by_player_id"] = String(PlayerRules.player(session, faction_id).get("player_id", ""))
 	town["ai_defended_day"] = int(session.day)
 	town["ai_defense_until_day"] = max(int(town.get("ai_defense_until_day", 0)), int(session.day) + 3)
 	town["ai_defense_rating"] = max(int(town.get("ai_defense_rating", 0)), _army_strength(garrison))
@@ -18451,7 +18498,7 @@ static func _defend_town_target(
 	]
 	var event := build_ai_event_record(
 		session,
-		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		PlayerRules.config_for_controller(session, faction_id),
 		"ai_town_defended",
 		updated_raid,
 		{
@@ -18485,7 +18532,7 @@ static func _secure_artifact_target(
 		return {"encounter": raid, "state": state, "event_message": ""}
 	var nodes = session.overworld.get("artifact_nodes", [])
 	node["collected"] = true
-	node["collected_by_faction_id"] = faction_id
+	PlayerRules.set_resource_controller(node, session, faction_id)
 	node["collected_day"] = session.day
 	nodes[int(node_result.get("index", -1))] = node
 	session.overworld["artifact_nodes"] = nodes
@@ -18541,7 +18588,7 @@ static func _secure_artifact_target(
 		reason_codes.push_front("artifact_secured")
 	var event := build_ai_event_record(
 		session,
-		config if not config.is_empty() else {"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		config if not config.is_empty() else PlayerRules.config_for_controller(session, faction_id),
 		"ai_artifact_secured",
 		updated_raid,
 		{
@@ -18562,7 +18609,7 @@ static func _secure_artifact_target(
 	)
 	var continuation := _continue_mobile_raid_after_field_objective(
 		session,
-		config if not config.is_empty() else {"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		config if not config.is_empty() else PlayerRules.config_for_controller(session, faction_id),
 		updated_raid,
 		state,
 		faction_id
@@ -18593,8 +18640,9 @@ static func _contest_encounter_target(
 		return {"encounter": raid, "state": state, "event_message": ""}
 	if _encounter_is_objective_anchor(session, encounter_state):
 		var encounters = session.overworld.get("encounters", [])
-		var claimed_now = String(encounter_state.get("contested_by_faction_id", "")) != faction_id
-		encounter_state["contested_by_faction_id"] = faction_id
+		var claimed_now = PlayerRules.contesting_controller_id(encounter_state) != faction_id
+		encounter_state["contested_by_faction_id"] = PlayerRules.faction_id(session, faction_id)
+		encounter_state["contested_by_player_id"] = String(PlayerRules.player(session, faction_id).get("player_id", ""))
 		encounter_state["contested_day"] = session.day
 		encounters[int(encounter_result.get("index", -1))] = encounter_state
 		session.overworld["encounters"] = encounters
@@ -18614,7 +18662,7 @@ static func _contest_encounter_target(
 			]
 			var contest_event := build_ai_event_record(
 				session,
-				{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+				PlayerRules.config_for_controller(session, faction_id),
 				"ai_site_contested",
 				updated_raid,
 				{
@@ -18679,7 +18727,7 @@ static func _contest_encounter_target(
 		reason_codes.push_front("site_contested")
 	var event := build_ai_event_record(
 		session,
-		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		PlayerRules.config_for_controller(session, faction_id),
 		"ai_site_contested",
 		resolved_raid,
 		{
@@ -18841,7 +18889,7 @@ static func _guarded_claim_resume_target(
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 			if not _resource_guard_encounter_for_node(session, node, site).is_empty():
 				return {}
-			if not _resource_node_contestable_by_faction(node, site, faction_id):
+			if not _resource_node_contestable_by_faction(node, site, faction_id, session):
 				return {}
 			var tile := _resource_interaction_tile(node)
 			return {
@@ -18985,7 +19033,7 @@ static func _regroup_raid_at_town(
 		message = "%s regroups at %s but finds no spare garrison." % [_raid_name(raid), _town_name(town)]
 	var event := build_ai_event_record(
 		session,
-		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		PlayerRules.config_for_controller(session, faction_id),
 		"ai_raid_regrouped",
 		raid,
 		{
@@ -19151,7 +19199,7 @@ static func _town_resupply_reserve_strength(
 		var resolved_faction_id := faction_id
 		if resolved_faction_id == "":
 			resolved_faction_id = _town_faction_id(town)
-		if String(front_state.get("faction_id", resolved_faction_id)) == resolved_faction_id:
+		if PlayerRules.controller_id(front_state, resolved_faction_id) == resolved_faction_id:
 			reserve = max(reserve, _town_defense_commitment_need(town, front_state))
 	reserve = max(reserve, int(town.get("ai_defense_rating", 0)))
 	if String(OverworldRulesScript.town_strategic_role(town)) == "capital":
@@ -19169,7 +19217,7 @@ static func _resume_previous_target_after_regroup(
 	var resumed := raid.duplicate(true)
 	var resolved_faction_id := faction_id
 	if resolved_faction_id == "":
-		resolved_faction_id = String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+		resolved_faction_id = PlayerRules.controller_id(config, PlayerRules.raid_controller_id(raid))
 	var previous_kind := String(resumed.get("previous_target_kind", ""))
 	var previous_id := String(resumed.get("previous_target_placement_id", ""))
 	if previous_kind not in ["resource", "town", "artifact", "encounter", "hero"] or previous_id == "":
@@ -19308,7 +19356,7 @@ static func _mark_rebuild_pressure_request(
 		if not (states[index] is Dictionary):
 			continue
 		var state: Dictionary = states[index]
-		if String(state.get("faction_id", "")) != faction_id:
+		if PlayerRules.controller_id(state) != faction_id:
 			continue
 		var recent_target_ids := _normalize_string_array(
 			state.get("recent_rebuild_exploration_target_ids", [])
@@ -20264,7 +20312,7 @@ static func _refresh_target(
 			)
 			var hero := _find_player_hero(session, hero_target_id)
 			if not hero.is_empty():
-				var known_hero := _known_player_hero_snapshot_for_ai(session, String(raid.get("spawned_by_faction_id", "")), hero)
+				var known_hero := _known_player_hero_snapshot_for_ai(session, PlayerRules.raid_controller_id(raid), hero)
 				if not known_hero.is_empty():
 					hero_position = _player_hero_goal_tile(known_hero)
 			raid["target_label"] = _hero_label_for_target(session, hero_target_id)
@@ -20303,13 +20351,18 @@ static func _target_level(session: SessionStateStoreScript.SessionData, kind: St
 	return fallback
 
 static func _raid_target_valid(session: SessionStateStoreScript.SessionData, raid: Dictionary) -> bool:
+	if PlayerRules.allied(session, PlayerRules.raid_controller_id(raid), "player"):
+		if String(raid.get("target_kind", "")) == "hero":
+			return false
+		if String(raid.get("target_kind", "")) == "town" and String(_find_town_by_placement(session, String(raid.get("target_placement_id", ""))).get("town", {}).get("owner", "")) == "player":
+			return false
 	if _raid_target_points_to_self(raid):
 		return false
 	var target_kind = String(raid.get("target_kind", ""))
 	var target_id := String(raid.get("target_placement_id", ""))
 	if target_kind in ["town", "regroup", "resource", "artifact", "encounter", "explore"] and _target_level(session, target_kind, target_id, "", -1) != LevelRules.level_of(raid):
 		return false
-	if target_kind == "hero" and target_id != "" and not LevelRules.same_level(_known_player_hero_snapshot_for_ai(session, String(raid.get("spawned_by_faction_id", "")), _find_player_hero(session, target_id)), raid):
+	if target_kind == "hero" and target_id != "" and not LevelRules.same_level(_known_player_hero_snapshot_for_ai(session, PlayerRules.raid_controller_id(raid), _find_player_hero(session, target_id)), raid):
 		return false
 	var valid := false
 	match target_kind:
@@ -20323,7 +20376,7 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 				valid = String(town.get("owner", "neutral")) == "player" or (
 					"town_defense" in reason_codes
 					and String(town.get("owner", "neutral")) == "enemy"
-					and _town_faction_id(town) == String(raid.get("spawned_by_faction_id", ""))
+					and _town_faction_id(town) == PlayerRules.raid_controller_id(raid)
 				) or (
 					String(town.get("owner", "neutral")) == "neutral"
 					and ("town_expansion" in reason_codes or "neutral_town_claim" in reason_codes or "neutral_town_siege" in reason_codes)
@@ -20333,7 +20386,7 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 			valid = (
 				int(town_result.get("index", -1)) >= 0
 				and String(town_result.get("town", {}).get("owner", "neutral")) == "enemy"
-				and _town_faction_id(town_result.get("town", {})) == String(raid.get("spawned_by_faction_id", ""))
+				and _town_faction_id(town_result.get("town", {})) == PlayerRules.raid_controller_id(raid)
 			)
 		"resource":
 			var resource_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
@@ -20342,9 +20395,9 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 			var node: Dictionary = resource_result.get("node", {})
 			var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 			var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
-			var raid_faction := String(raid.get("spawned_by_faction_id", ""))
+			var raid_faction := PlayerRules.raid_controller_id(raid)
 			valid = (
-				_resource_node_contestable_by_faction(node, site, raid_faction)
+				_resource_node_contestable_by_faction(node, site, raid_faction, session)
 				or _resource_node_defensible_by_faction(node, site, raid_faction, reason_codes)
 			)
 		"artifact":
@@ -20358,14 +20411,14 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 				var encounter: Dictionary = encounter_result.get("encounter", {})
 				var resolved_encounters = session.overworld.get("resolved_encounters", [])
 				valid = not OverworldRulesScript.is_encounter_resolved(session, encounter) \
-					and not _encounter_is_pressure_host_candidate(encounter, String(raid.get("spawned_by_faction_id", "")), resolved_encounters)
+					and not _encounter_is_pressure_host_candidate(encounter, PlayerRules.raid_controller_id(raid), resolved_encounters)
 		"hero":
 			var hero_target_id := String(raid.get("target_placement_id", ""))
 			if hero_target_id == "":
 				valid = true
 			else:
 				var hero := _find_player_hero(session, hero_target_id)
-				var raid_faction := String(raid.get("spawned_by_faction_id", ""))
+				var raid_faction := PlayerRules.raid_controller_id(raid)
 				valid = (
 					not hero.is_empty()
 					and raid_faction != ""
@@ -20421,7 +20474,7 @@ static func _is_active_raid(encounter: Variant, faction_id: String, resolved_enc
 		return false
 	if bool(encounter.get("raid_retired_to_rebuild", false)):
 		return false
-	var raid_faction = String(encounter.get("spawned_by_faction_id", ""))
+	var raid_faction = PlayerRules.raid_controller_id(encounter)
 	if faction_id == "":
 		if raid_faction == "":
 			return false
@@ -20458,7 +20511,7 @@ static func _encounter_is_pressure_host_candidate(encounter: Variant, faction_id
 		return true
 	if resolved_encounters is Array and placement_id in resolved_encounters:
 		return false
-	if String(raid.get("spawned_by_faction_id", "")) != "":
+	if PlayerRules.raid_controller_id(raid) != "":
 		return true
 	if String(raid.get("difficulty", "")) == "pressure":
 		return true
@@ -20581,9 +20634,9 @@ static func _generated_object_guard_targets(encounter: Dictionary, target_kind: 
 static func _resource_site_is_persistent(site: Dictionary) -> bool:
 	return bool(site.get("persistent_control", false))
 
-static func _resource_node_contestable_by_faction(node: Dictionary, site: Dictionary, faction_id: String) -> bool:
+static func _resource_node_contestable_by_faction(node: Dictionary, site: Dictionary, faction_id: String, session: SessionStateStoreScript.SessionData = null) -> bool:
 	if _resource_site_is_persistent(site):
-		return String(node.get("collected_by_faction_id", "")) != faction_id
+		return not PlayerRules.allied(session, PlayerRules.resource_controller_id(node), faction_id)
 	return not bool(node.get("collected", false))
 
 static func _resource_defense_reason_active(reason_codes: Array) -> bool:
@@ -20594,7 +20647,7 @@ static func _resource_node_defensible_by_faction(node: Dictionary, site: Diction
 	return (
 		faction_id != ""
 		and _resource_site_is_persistent(site)
-		and String(node.get("collected_by_faction_id", "")) == faction_id
+		and PlayerRules.resource_controller_id(node) == faction_id
 		and _resource_defense_reason_active(reason_codes)
 	)
 
@@ -20756,11 +20809,7 @@ static func _town_name(town_state: Dictionary) -> String:
 	return String(town.get("name", town_state.get("town_id", "Town")))
 
 static func _town_faction_id(town_state: Dictionary) -> String:
-	var controller := String(town_state.get("controlling_faction_id", ""))
-	if String(town_state.get("owner", "neutral")) == "enemy" and controller != "":
-		return controller
-	var town = ContentService.get_town(String(town_state.get("town_id", "")))
-	return String(town.get("faction_id", ""))
+	return PlayerRules.town_controller_id(town_state)
 
 static func _describe_count_map(verb: String, counts: Dictionary) -> String:
 	if counts.is_empty():

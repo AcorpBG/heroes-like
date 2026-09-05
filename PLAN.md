@@ -24,10 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current owner goal: `bugfix-rmg-audit-corrections-20260905`; fix every finding from the completed audit, with heroes always starting at the owning town entrance. Entrance-boundary and level-aware runtime children completed; current child: `bugfix-rmg-player-team-identity-20260905`. Player/team, transit/water, native parity and integrated regression children remain required; a partial correction does not complete the goal.
+- Current owner goal: `bugfix-rmg-audit-corrections-20260905`; fix every finding from the completed audit, with heroes always starting at the owning town entrance. Entrance-boundary, level-aware runtime and player/team children completed; next child: `bugfix-rmg-native-transit-navigation-20260905`. Transit/water, native parity and integrated regression children remain required; a partial correction does not complete the goal.
 - Baseline audit: `audit-rmg-start-placement-and-h3maped-comparison-20260905`; 36 runtime requests, 83 generated starts, 23/24 exact retained owner payloads, fresh executable/private-state water mismatch, and confirmed start/level/opponent/transit adoption gaps. Audit evidence is not runtime fixes or parity completion.
-- Most recently completed owner-directed implementation slice: `bugfix-rmg-level-aware-runtime-20260905`: surface/underground terrain, spatial identity, interactions, AI, fog, UI and saves remain layer-specific; all 35 supported entrance cases and 49 focused checks per selected live case pass. Evidence: `docs/rmg-level-aware-runtime-report.md`.
-- Current package boundary: Linux and Windows release exports both measure 248396092 bytes, 1603908 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+- Most recently completed owner-directed implementation slice: `bugfix-rmg-player-team-identity-20260905`: distinct source players/teams, independent AI state/economy/ownership/commanders/tasks, capture/battle/save continuity and explicit old-save compatibility; 32 live checks per six/eight-player/team case and all 35 supported entrance cases pass. Evidence: `docs/rmg-player-team-identity-correction-report.md`.
+- Current package boundary: Linux and Windows release exports both measure 248408876 bytes, 1591124 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
 
 ## RMG Audit Corrections
 
@@ -55,7 +55,7 @@ Status: completed 2026-09-05. Level-aware terrain, occupancy/interactions, hero 
 
 id: `bugfix-rmg-player-team-identity-20260905`
 
-Status: in_progress. Preserve source player-slot/team identity independently of original faction; adopt distinct AI state, ownership and hero/town references. Validate six/eight-player repeated-faction generation, separate enemy turns/targets and save/resume. Owners: package service, bridge, enemy/hero/town/ownership rules. Selected after the completed level child; no player/team correction is claimed yet.
+Status: completed 2026-09-05. Source slots/teams persist independently of faction through packages, AI states/economies/towns/commanders/tasks, captures, battles and production saves. Six/eight-player FFA and explicit-team cases pass 32 checks each; repeated factions retain five/seven separate opponents. Legacy generated saves explicitly preserve pooled historical state without duplicated resources. All 35 supported entrance cases and both-platform native/export/startup/generated Town flows pass; native map records/payloads are unchanged. Source/evidence and independently reproduced unrelated legacy test failures: `docs/rmg-player-team-identity-correction-report.md`. Full transit/water/parity/integrated completion remains required.
 
 ### RMG Native Transit And Water Traversal
 

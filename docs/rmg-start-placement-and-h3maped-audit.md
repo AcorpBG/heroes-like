@@ -2,7 +2,7 @@
 
 Owner-directed audit, 2026-09-05. Status: completed, with confirmed correctness failures and open implementation gaps below. This is an audit, not a generator or gameplay correction.
 
-Implementation follow-up: the entrance-start and level-aware runtime children now correct findings 1–3 within their documented boundaries; see `rmg-town-entrance-correction-report.md` and `rmg-level-aware-runtime-report.md`. All 83 sampled starts and 35 supported primary-hero entrance/movement/save cases pass. The baseline measurements below remain historical evidence, not current failures after those fixes. Player/team identity, native paired transit/water, normal-water native parity and integrated regressions remain open.
+Implementation follow-up: the entrance-start, level-aware runtime and player/team children now correct findings 1–4 within their documented boundaries; see `rmg-town-entrance-correction-report.md`, `rmg-level-aware-runtime-report.md` and `rmg-player-team-identity-correction-report.md`. All 83 sampled starts and 35 supported primary-hero entrance/movement/save cases pass. Six/eight-player cases retain five/seven separate live opponents; source teams, ownership and save continuity have focused evidence. The baseline measurements below remain historical evidence, not current failures after those fixes. Native paired transit/water, normal-water native parity and integrated regressions remain open.
 
 ## Requirements and scope
 

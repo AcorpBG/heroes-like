@@ -3,6 +3,7 @@ extends RefCounted
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
+const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 
@@ -60,12 +61,28 @@ static func build_session_from_adoption(
 	var start := _primary_start(adoption)
 	var map_document: Variant = adoption.get("map_document", null)
 	var scenario_document: Variant = adoption.get("scenario_document", null)
+	var players := PlayerRules.from_slots(scenario_document.get_player_slots()) if scenario_document != null else []
+	var active_player_id := ""
+	for player in players:
+		if bool(player.get("human", false)):
+			active_player_id = String(player.get("player_id", ""))
+			break
 	var map_size := _map_size_from_document(map_document, metrics)
 	var terrain_layers := _terrain_layers_from_document(map_document)
 	var map_rows := _map_rows_from_document(map_document)
 	var hero_id_from_doc := _primary_hero_id(scenario_document, hero_id)
 	var hero_state := _hero_state(hero_id_from_doc, start, difficulty)
+	if active_player_id != "":
+		hero_state["player_id"] = active_player_id
 	var towns := _town_states_from_document(map_document)
+	for town in towns:
+		if String(town.get("owner", "neutral")) == "neutral":
+			continue
+		for player in players:
+			if int(player.get("slot", 0)) == int(town.get("owner_slot", -1)):
+				town["controlling_player_id"] = String(player.get("player_id", ""))
+				town["team_id"] = String(player.get("team_id", ""))
+				break
 	var resource_nodes := _resource_nodes_from_document(map_document)
 	var artifact_nodes := _artifact_nodes_from_document(map_document)
 	var encounters := _ensure_generated_guarded_reward_site_guards(
@@ -82,6 +99,10 @@ static func build_session_from_adoption(
 			package_source_object_ids.append(source_placement_id)
 			package_source_objects_by_id[source_placement_id] = source_object.duplicate(true)
 	var overworld_state := {
+		"players": players,
+		"active_player_id": active_player_id,
+		"player_identity_version": 1,
+		"player_identity_mode": "native_player_slots_v1",
 		"map": map_rows,
 		"map_size": map_size,
 		"terrain_layers": terrain_layers,
@@ -100,7 +121,7 @@ static func build_session_from_adoption(
 		"package_source_object_ids": package_source_object_ids,
 		"package_source_objects_by_id": package_source_objects_by_id,
 		"artifact_nodes": artifact_nodes,
-		"enemy_states": _enemy_states_from_document(scenario_document),
+		"enemy_states": PlayerRules.enemy_configs(players),
 		"map_package_ref": map_ref,
 		"scenario_package_ref": scenario_ref,
 		"native_random_map_package_session_adoption": boundary.duplicate(true),
@@ -1067,7 +1088,7 @@ static func _runtime_scenario_record_from_documents(
 		"player_slots": scenario_document.get_player_slots() if scenario_document.has_method("get_player_slots") else [],
 		"objectives": objectives,
 		"script_hooks": scenario_document.get_script_hooks() if scenario_document.has_method("get_script_hooks") else [],
-		"enemy_factions": scenario_document.get_enemy_factions() if scenario_document.has_method("get_enemy_factions") else [],
+		"enemy_factions": PlayerRules.enemy_configs(overworld_state.get("players", [])),
 		"native_generated_package": {
 			"schema_id": "aurelion_native_rmg_disk_package_runtime_record_v1",
 			"map_ref": overworld_state.get("map_package_ref", {}),
