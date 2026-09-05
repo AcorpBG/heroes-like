@@ -1,7 +1,5 @@
 {
-  "actionableNextTasks": [
-    "performance-large-town-build-and-end-turn-20260905"
-  ],
+  "actionableNextTasks": [],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
       {
@@ -1910,7 +1908,7 @@
     },
     "blockedReason": ""
   },
-  "active_slice": "performance-large-town-build-and-end-turn-20260905",
+  "active_slice": "",
   "blocker": "",
   "completedImplementationEvidence": [
     {
@@ -16537,16 +16535,38 @@
         "release_ready_claimed": false
       },
       "remainingWork": "Audit the expanded live catalog and select the next coherent production-content and original-art batch; broader production completion and release readiness remain open."
+    },
+    {
+      "id": "performance-large-town-build-and-end-turn-20260905-optimization",
+      "title": "Large Map Town Construction And End Turn Runtime Improvements",
+      "sliceId": "performance-large-town-build-and-end-turn-20260905",
+      "status": "completed",
+      "scope": "runtime_optimization_with_exact_state_and_platform_validation",
+      "validatedAt": "2026-09-05T10:14:03Z",
+      "artifacts": [
+        "docs/large-town-build-and-end-turn-performance-report.md",
+        ".artifacts/large_town_build_end_turn_20260905/verified_final/report.json",
+        ".artifacts/large_town_build_end_turn_20260905/regression/report.json",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/runtime_recheck_results.json",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/generated_large_town_explicit_save_surface_regression_headless_confirm.log",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/named_save_files_regression.log",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/repo.log",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/linux/report.json",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/windows/report.json",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/linux-generated-flow/live_validation_report.json",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/windows/generated-flow/live_validation_report.json"
+      ],
+      "result": "Implemented scoped construction queries, current-only action save copy and decision-local AI visibility reuse. Matched three-purchase waiting fell 55.399 to 14.743 s (73.4%); three full turns fell 36.170 to 25.565 s (29.3%). Twelve exact state trees, Town/turn/AI/save regressions, repo/diff and matching 248372668-byte Linux/Windows packages with generated Town entry pass. Host-sensitive legacy Save UI budgets and several-second simulation remain documented; no release-readiness claim."
     }
   ],
-  "currentNotes": "Profiling and instrumentation validated: construction confirmation 8.03-11.29 s versus 0.23-0.31 s core mutation; full End Turn 8.64-16.88 s. Repeated catalogs, forced save-summary scans and AI arrival/planning are measured bottlenecks. Twelve full session comparisons, Town/turn regressions, repo/diff and matching 248370060-byte Linux/Windows packages pass. No optimization implemented; owner direction needed before expanding profiling into fixes.",
+  "currentNotes": "Implemented scoped construction queries, current-only action save copy and decision-local AI visibility reuse. Matched three-purchase waiting fell 55.399 to 14.743 s (73.4%); three full turns fell 36.170 to 25.565 s (29.3%). Twelve exact state trees, Town/turn/AI/save regressions, repo/diff and matching 248372668-byte Linux/Windows packages with generated Town entry pass. Host-sensitive legacy Save UI budgets and several-second simulation remain documented; no release-readiness claim.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "performance-large-town-build-and-end-turn-20260905",
   "currentSliceId": "performance-large-town-build-and-end-turn-20260905",
-  "currentSliceNotes": "Profiling and instrumentation validated: construction confirmation 8.03-11.29 s versus 0.23-0.31 s core mutation; full End Turn 8.64-16.88 s. Repeated catalogs, forced save-summary scans and AI arrival/planning are measured bottlenecks. Twelve full session comparisons, Town/turn regressions, repo/diff and matching 248370060-byte Linux/Windows packages pass. No optimization implemented; owner direction needed before expanding profiling into fixes.",
-  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Implemented scoped construction queries, current-only action save copy and decision-local AI visibility reuse. Matched three-purchase waiting fell 55.399 to 14.743 s (73.4%); three full turns fell 36.170 to 25.565 s (29.3%). Twelve exact state trees, Town/turn/AI/save regressions, repo/diff and matching 248372668-byte Linux/Windows packages with generated Town entry pass. Host-sensitive legacy Save UI budgets and several-second simulation remain documented; no release-readiness claim.",
+  "currentSliceStatus": "completed",
   "currentSliceTitle": "Large Map Town Construction And End Turn",
-  "currentSliceUpdatedAt": "2026-09-05T09:29:32Z",
+  "currentSliceUpdatedAt": "2026-09-05T10:14:03Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21851,51 +21871,66 @@
       }
     }
   },
-  "guardrailNote": "Scope is visual rendering, measured runtime performance, and file-based saving. Preserve map output, gameplay, legacy saves, unrelated artifacts, and the package ceiling.",
+  "guardrailNote": "Preserve gameplay, AI policy, generated map output, save v9 and transactions, unrelated artifacts and the 250000000-byte platform package ceiling.",
   "lastValidation": {
-    "id": "performance-large-town-build-and-end-turn-20260905-profile",
-    "title": "Large Map Town Construction And End Turn Profiling",
+    "id": "performance-large-town-build-and-end-turn-20260905-optimization",
+    "title": "Large Map Town Construction And End Turn Runtime Improvements",
     "sliceId": "performance-large-town-build-and-end-turn-20260905",
     "status": "completed",
-    "scope": "profiling_tooling_only_no_runtime_optimization",
-    "validatedAt": "2026-09-05T09:29:32Z",
+    "scope": "runtime_optimization_with_exact_state_and_platform_validation",
+    "validatedAt": "2026-09-05T10:14:03Z",
     "artifacts": [
       "docs/large-town-build-and-end-turn-performance-report.md",
-      ".artifacts/large_town_build_end_turn_20260905/instrumented/report.json",
-      ".artifacts/large_town_build_end_turn_20260905/state_parity.json",
-      ".artifacts/large_town_build_end_turn_20260905/validation/repo.log",
-      ".artifacts/large_town_build_end_turn_20260905/validation/linux-final/report.json",
-      ".artifacts/large_town_build_end_turn_20260905/validation/windows-final/report.json"
+      ".artifacts/large_town_build_end_turn_20260905/verified_final/report.json",
+      ".artifacts/large_town_build_end_turn_20260905/regression/report.json",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/runtime_recheck_results.json",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/generated_large_town_explicit_save_surface_regression_headless_confirm.log",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/named_save_files_regression.log",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/repo.log",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/linux/report.json",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/windows/report.json",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/linux-generated-flow/live_validation_report.json",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/windows/generated-flow/live_validation_report.json"
     ],
-    "result": "Profiling and instrumentation validated: construction confirmation 8.03-11.29 s versus 0.23-0.31 s core mutation; full End Turn 8.64-16.88 s. Repeated catalogs, forced save-summary scans and AI arrival/planning are measured bottlenecks. Twelve full session comparisons, Town/turn regressions, repo/diff and matching 248370060-byte Linux/Windows packages pass. No optimization implemented; owner direction needed before expanding profiling into fixes."
+    "result": "Implemented scoped construction queries, current-only action save copy and decision-local AI visibility reuse. Matched three-purchase waiting fell 55.399 to 14.743 s (73.4%); three full turns fell 36.170 to 25.565 s (29.3%). Twelve exact state trees, Town/turn/AI/save regressions, repo/diff and matching 248372668-byte Linux/Windows packages with generated Town entry pass. Host-sensitive legacy Save UI budgets and several-second simulation remain documented; no release-readiness claim."
   },
   "latestEvidence": {
-    "id": "performance-large-town-build-and-end-turn-20260905-profile",
-    "title": "Large Map Town Construction And End Turn Profiling",
+    "id": "performance-large-town-build-and-end-turn-20260905-optimization",
+    "title": "Large Map Town Construction And End Turn Runtime Improvements",
     "sliceId": "performance-large-town-build-and-end-turn-20260905",
     "status": "completed",
-    "scope": "profiling_tooling_only_no_runtime_optimization",
-    "validatedAt": "2026-09-05T09:29:32Z",
+    "scope": "runtime_optimization_with_exact_state_and_platform_validation",
+    "validatedAt": "2026-09-05T10:14:03Z",
     "artifacts": [
       "docs/large-town-build-and-end-turn-performance-report.md",
-      ".artifacts/large_town_build_end_turn_20260905/instrumented/report.json",
-      ".artifacts/large_town_build_end_turn_20260905/state_parity.json",
-      ".artifacts/large_town_build_end_turn_20260905/validation/repo.log",
-      ".artifacts/large_town_build_end_turn_20260905/validation/linux-final/report.json",
-      ".artifacts/large_town_build_end_turn_20260905/validation/windows-final/report.json"
+      ".artifacts/large_town_build_end_turn_20260905/verified_final/report.json",
+      ".artifacts/large_town_build_end_turn_20260905/regression/report.json",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/runtime_recheck_results.json",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/generated_large_town_explicit_save_surface_regression_headless_confirm.log",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/named_save_files_regression.log",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/repo.log",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/linux/report.json",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/windows/report.json",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/linux-generated-flow/live_validation_report.json",
+      ".artifacts/large_town_build_end_turn_20260905/optimization_validation/windows/generated-flow/live_validation_report.json"
     ],
-    "result": "Profiling and instrumentation validated: construction confirmation 8.03-11.29 s versus 0.23-0.31 s core mutation; full End Turn 8.64-16.88 s. Repeated catalogs, forced save-summary scans and AI arrival/planning are measured bottlenecks. Twelve full session comparisons, Town/turn regressions, repo/diff and matching 248370060-byte Linux/Windows packages pass. No optimization implemented; owner direction needed before expanding profiling into fixes."
+    "result": "Implemented scoped construction queries, current-only action save copy and decision-local AI visibility reuse. Matched three-purchase waiting fell 55.399 to 14.743 s (73.4%); three full turns fell 36.170 to 25.565 s (29.3%). Twelve exact state trees, Town/turn/AI/save regressions, repo/diff and matching 248372668-byte Linux/Windows packages with generated Town entry pass. Host-sensitive legacy Save UI budgets and several-second simulation remain documented; no release-readiness claim."
   },
   "latestEvidenceArtifacts": [
     "docs/large-town-build-and-end-turn-performance-report.md",
-    ".artifacts/large_town_build_end_turn_20260905/instrumented/report.json",
-    ".artifacts/large_town_build_end_turn_20260905/state_parity.json",
-    ".artifacts/large_town_build_end_turn_20260905/validation/repo.log",
-    ".artifacts/large_town_build_end_turn_20260905/validation/linux-final/report.json",
-    ".artifacts/large_town_build_end_turn_20260905/validation/windows-final/report.json"
+    ".artifacts/large_town_build_end_turn_20260905/verified_final/report.json",
+    ".artifacts/large_town_build_end_turn_20260905/regression/report.json",
+    ".artifacts/large_town_build_end_turn_20260905/optimization_validation/runtime_recheck_results.json",
+    ".artifacts/large_town_build_end_turn_20260905/optimization_validation/generated_large_town_explicit_save_surface_regression_headless_confirm.log",
+    ".artifacts/large_town_build_end_turn_20260905/optimization_validation/named_save_files_regression.log",
+    ".artifacts/large_town_build_end_turn_20260905/optimization_validation/repo.log",
+    ".artifacts/large_town_build_end_turn_20260905/optimization_validation/linux/report.json",
+    ".artifacts/large_town_build_end_turn_20260905/optimization_validation/windows/report.json",
+    ".artifacts/large_town_build_end_turn_20260905/optimization_validation/linux-generated-flow/live_validation_report.json",
+    ".artifacts/large_town_build_end_turn_20260905/optimization_validation/windows/generated-flow/live_validation_report.json"
   ],
-  "latestEvidenceId": "performance-large-town-build-and-end-turn-20260905-profile",
-  "latestFinding": "Full building confirmation repeatedly builds catalogs and forces stored-save inspection; day-three End Turn has 4.411 s inside arrival resolution versus 39 ms target repair.",
+  "latestEvidenceId": "performance-large-town-build-and-end-turn-20260905-optimization",
+  "latestFinding": "Repeated construction catalogs and hidden stored-save inspections removed; AI visibility sources reused within read-only decisions, retaining exact saved states and enemy decisions.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -21957,15 +21992,15 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Do not turn the owner profiling request into gameplay/performance changes without approval. The selected profile tooling is validated; optimization is not complete.",
-  "notes": "Profiling and instrumentation validated: construction confirmation 8.03-11.29 s versus 0.23-0.31 s core mutation; full End Turn 8.64-16.88 s. Repeated catalogs, forced save-summary scans and AI arrival/planning are measured bottlenecks. Twelve full session comparisons, Town/turn regressions, repo/diff and matching 248370060-byte Linux/Windows packages pass. No optimization implemented; owner direction needed before expanding profiling into fixes.",
+  "nextActionGuardrailNote": "Select the next bounded owner-directed slice; completed local checks are not whole-game release certification.",
+  "notes": "Large-map construction and End Turn runtime optimizations are implemented and validated; exact state, save/recovery and both-platform package checks pass. Remaining simulation latency and host-sensitive legacy Save UI budgets are documented.",
   "plannedSlices": [
     {
       "id": "performance-large-town-build-and-end-turn-20260905",
       "title": "Large Map Town Construction And End Turn",
-      "status": "in_progress",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
-      "classification": "tooling_implementation_slice",
+      "classification": "implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "project.md",
@@ -21976,7 +22011,7 @@
         "docs/visual-performance-file-saves-report.md",
         "docs/large-town-build-and-end-turn-performance-report.md"
       ],
-      "purpose": "Profile complete Large-map building purchases and End Turn; identify concrete bottlenecks and apply behavior-preserving optimizations if approved.",
+      "purpose": "Profile and improve complete Large-map construction and End Turn latency without changing gameplay or save behavior.",
       "implementationTargets": [
         "scenes/town/TownShell.gd",
         "scripts/core/TownRules.gd",
@@ -21984,19 +22019,22 @@
         "scripts/core/EnemyTurnRules.gd",
         "scripts/core/EnemyAdventureRules.gd",
         "scenes/overworld/OverworldShell.gd",
-        "tests"
+        "tests",
+        "scripts/autoload/SaveService.gd"
       ],
       "completionCriteria": [
         "Deterministic live building/turn wall-time and bucket evidence",
         "Concrete source-backed root causes",
-        "For approved fixes: matched before/after state and decision parity with measured improvement",
+        "matched before/after state and decision parity with measured improvement",
         "Relevant runtime, repository, diff and both-platform package checks pass"
       ],
       "nonGoals": [
         "No RMG semantics, gameplay/AI-policy changes, visual redesign, schema migration, skipped autosaves, hidden-deferred stalls, unrelated cleanup, package-limit changes or release claims"
       ],
       "validationCommands": [
-        "python3 tests/large_town_build_end_turn_profile.py",
+        "python3 tests/large_town_build_end_turn_profile.py --label verified_final --detail --compare instrumented --require-improvement",
+        "python3 tests/large_town_turn_optimization_regression.py",
+        "python3 tests/named_save_files_regression.py",
         "python3 tests/validate_repo.py",
         "git diff --check",
         "python3 tests/packaging_linux_export_smoke.py",
@@ -22004,18 +22042,24 @@
       ],
       "createdAt": "2026-09-05T09:00:07Z",
       "startedAt": "2026-09-05T09:00:07Z",
-      "updatedAt": "2026-09-05T09:29:32Z",
-      "notes": "Profiling and instrumentation validated: construction confirmation 8.03-11.29 s versus 0.23-0.31 s core mutation; full End Turn 8.64-16.88 s. Repeated catalogs, forced save-summary scans and AI arrival/planning are measured bottlenecks. Twelve full session comparisons, Town/turn regressions, repo/diff and matching 248370060-byte Linux/Windows packages pass. No optimization implemented; owner direction needed before expanding profiling into fixes.",
+      "updatedAt": "2026-09-05T10:14:03Z",
+      "notes": "Implemented scoped construction queries, current-only action save copy and decision-local AI visibility reuse. Matched three-purchase waiting fell 55.399 to 14.743 s (73.4%); three full turns fell 36.170 to 25.565 s (29.3%). Twelve exact state trees, Town/turn/AI/save regressions, repo/diff and matching 248372668-byte Linux/Windows packages with generated Town entry pass. Host-sensitive legacy Save UI budgets and several-second simulation remain documented; no release-readiness claim.",
       "profilingStatus": "completed",
-      "optimizationStatus": "awaiting_owner_direction",
+      "optimizationStatus": "completed",
       "validationEvidence": [
         "docs/large-town-build-and-end-turn-performance-report.md",
-        ".artifacts/large_town_build_end_turn_20260905/instrumented/report.json",
-        ".artifacts/large_town_build_end_turn_20260905/state_parity.json",
-        ".artifacts/large_town_build_end_turn_20260905/validation/repo.log",
-        ".artifacts/large_town_build_end_turn_20260905/validation/linux-final/report.json",
-        ".artifacts/large_town_build_end_turn_20260905/validation/windows-final/report.json"
-      ]
+        ".artifacts/large_town_build_end_turn_20260905/verified_final/report.json",
+        ".artifacts/large_town_build_end_turn_20260905/regression/report.json",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/runtime_recheck_results.json",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/generated_large_town_explicit_save_surface_regression_headless_confirm.log",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/named_save_files_regression.log",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/repo.log",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/linux/report.json",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/windows/report.json",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/linux-generated-flow/live_validation_report.json",
+        ".artifacts/large_town_build_end_turn_20260905/optimization_validation/windows/generated-flow/live_validation_report.json"
+      ],
+      "completedAt": "2026-09-05T10:14:03Z"
     },
     {
       "id": "ux-visual-performance-file-saves-review-20260904",
@@ -109503,8 +109547,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Profiling is complete, but runtime construction and End Turn latency are not fixed.",
-  "remainingWork": "Owner confirmation to apply the source-backed optimizations; then matched before/after validation. Broader release work remains separate.",
+  "remainingGap": "This bounded performance slice is complete. End Turn still takes 6.36-11.20 s in the matched early-day Large case; legacy Save UI budgets remain host-sensitive.",
+  "remainingWork": "Select the next bounded owner-directed slice. Further late-game simulation performance and release-wide hardware/certification remain separate work.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -109935,7 +109979,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "large_town_build_end_turn_profiling",
+  "result": "large_town_build_end_turn_runtime_optimized",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -110036,9 +110080,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Profiling and instrumentation validated: construction confirmation 8.03-11.29 s versus 0.23-0.31 s core mutation; full End Turn 8.64-16.88 s. Repeated catalogs, forced save-summary scans and AI arrival/planning are measured bottlenecks. Twelve full session comparisons, Town/turn regressions, repo/diff and matching 248370060-byte Linux/Windows packages pass. No optimization implemented; owner direction needed before expanding profiling into fixes.",
+  "summary": "Implemented scoped construction queries, current-only action save copy and decision-local AI visibility reuse. Matched three-purchase waiting fell 55.399 to 14.743 s (73.4%); three full turns fell 36.170 to 25.565 s (29.3%). Twelve exact state trees, Town/turn/AI/save regressions, repo/diff and matching 248372668-byte Linux/Windows packages with generated Town entry pass. Host-sensitive legacy Save UI budgets and several-second simulation remain documented; no release-readiness claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-05T09:29:32Z",
+  "updatedAt": "2026-09-05T10:14:03Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

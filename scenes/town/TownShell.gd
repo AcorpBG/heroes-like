@@ -559,7 +559,7 @@ func _open_town_catalog(mode: String) -> void:
 	_build_plan_label.visible = mode == "build"
 	_confirm_build_button.visible = mode == "build"
 	if mode == "build":
-		var catalog := TownRules.get_build_catalog(_session)
+		var catalog := _read_build_catalog()
 		_town_catalog_title_label.text = "Construction Ledger"
 		_town_catalog_subtitle_label.text = "%d town works • standing, available, and locked plans" % catalog.size()
 		_rebuild_build_actions(catalog)
@@ -620,7 +620,8 @@ func _on_town_orders_toggle_pressed() -> void:
 	call_deferred("_configure_town_keyboard_focus", true)
 
 func _on_confirm_build_pressed() -> void:
-	var action := _selected_build_action()
+	var context := _prepare_build_read_context(_selected_build_action_id)
+	var action: Dictionary = context.get("selected", {})
 	if action.is_empty():
 		return
 	if bool(action.get("market_coverable", false)) and not bool(action.get("direct_affordable", false)):
@@ -629,18 +630,19 @@ func _on_confirm_build_pressed() -> void:
 		return
 	if bool(action.get("disabled", false)):
 		return
-	_commit_build_action(String(action.get("id", "")).trim_prefix("build:"))
+	_commit_build_action(String(action.get("id", "")).trim_prefix("build:"), context)
 
-func _commit_build_action(action_id: String) -> void:
+func _commit_build_action(action_id: String, prepared_context: Dictionary = {}) -> void:
 	var profile_started := ProfileLogScript.begin_usec()
 	var phase_started := profile_started
 	var buckets := {}
 	_close_town_catalog(false)
 	var full_action_id := "build:%s" % action_id
-	var before := TownRules.town_action_consequence_signature(_session)
+	var context := prepared_context if not prepared_context.is_empty() else _prepare_build_read_context(full_action_id)
+	var before: Dictionary = context.get("before", {})
 	buckets["before_signature"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
-	var action := _validation_action_for_id(full_action_id)
+	var action: Dictionary = context.get("action", {})
 	buckets["action_lookup"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	var result := TownRules.build_active_town(_session, action_id)
@@ -662,16 +664,43 @@ func _commit_build_action(action_id: String) -> void:
 	ProfileLogScript.emit_general("town", "action", "build_commit", ProfileLogScript.elapsed_ms(profile_started), buckets, {
 		"action_id": full_action_id,
 		"result_ok": bool(result.get("ok", false)),
-		"excludes": "selection, confirmation eligibility query, subsequent animation frames",
+		"excludes": "selection, confirmation preflight, subsequent animation frames",
 	}, _session)
 
 func _select_build_action(action_id: String) -> void:
-	var action := _build_action_for_id(action_id)
+	var catalog := _read_build_catalog()
+	var action := _build_action_for_id(action_id, catalog)
 	if action.is_empty():
 		return
 	_selected_build_action_id = action_id
-	_rebuild_build_actions(TownRules.get_build_actions(_session))
+	_rebuild_build_actions(catalog)
 	call_deferred("_configure_town_keyboard_focus", false)
+
+func _read_build_catalog() -> Array:
+	OverworldRules.begin_normalized_read_scope(_session)
+	TownRules.begin_read_scope(_session)
+	var catalog := TownRules.get_build_catalog(_session)
+	TownRules.end_read_scope(_session)
+	OverworldRules.end_normalized_read_scope(_session)
+	return catalog
+
+func _prepare_build_read_context(action_id: String) -> Dictionary:
+	# One synchronous, fresh preflight. Close both read scopes BEFORE the rule
+	# mutation; never reuse a cached confirmation from a previous UI event.
+	OverworldRules.begin_normalized_read_scope(_session)
+	TownRules.begin_read_scope(_session)
+	var catalog := TownRules.get_build_catalog(_session)
+	var selected := _build_action_for_id(action_id, catalog)
+	var before := TownRules.town_action_consequence_signature(_session)
+	var action := {}
+	for candidate in TownRules.get_build_actions(_session):
+		if String(candidate.get("id", "")) == action_id and not bool(candidate.get("disabled", false)):
+			action = candidate.duplicate(true)
+			action["lane"] = "build"
+			break
+	TownRules.end_read_scope(_session)
+	OverworldRules.end_normalized_read_scope(_session)
+	return {"selected": selected, "before": before, "action": action}
 
 func _on_recruit_action_pressed(action_id: String) -> void:
 	var full_action_id := "recruit:%s" % action_id
@@ -3725,13 +3754,13 @@ func _ensure_selected_build_action(actions: Array) -> void:
 		_selected_build_action_id = String(actions[0].get("id", ""))
 
 func _selected_build_action(actions_override: Variant = null) -> Dictionary:
-	var actions = actions_override if actions_override is Array else TownRules.get_build_catalog(_session)
+	var actions = actions_override if actions_override is Array else _read_build_catalog()
 	return _build_action_for_id(_selected_build_action_id, actions)
 
 func _build_action_for_id(action_id: String, actions_override: Variant = null) -> Dictionary:
 	if action_id == "":
 		return {}
-	var actions = actions_override if actions_override is Array else TownRules.get_build_catalog(_session)
+	var actions = actions_override if actions_override is Array else _read_build_catalog()
 	for action_value in actions:
 		if action_value is Dictionary and String(action_value.get("id", "")) == action_id:
 			return action_value
@@ -6036,8 +6065,8 @@ func _town_action_context_surface(dispatch_text: String = "") -> Dictionary:
 
 func _town_save_surface_for_context(force_surface: bool) -> Dictionary:
 	if force_surface:
-		_last_save_surface_profile = {"forced": true, "skipped_hidden": false, "mode": "context_full"}
-		return AppRouter.active_save_surface()
+		_last_save_surface_profile = {"forced": true, "skipped_hidden": false, "mode": "context_current"}
+		return SaveService.build_current_session_save_context(_session)
 	_last_save_surface_profile = {"forced": false, "skipped_hidden": true, "mode": "context_lazy_hidden"}
 	return {}
 

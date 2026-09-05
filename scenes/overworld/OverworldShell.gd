@@ -1294,6 +1294,10 @@ func _current_end_turn_warning() -> Dictionary:
 	var forecast_before: Variant = forecast_before_value.duplicate(true) \
 		if forecast_before_value is Dictionary or forecast_before_value is Array \
 		else forecast_before_value
+	# Scope entry may normalize a forecast after an external day/state change.
+	# Capture the original forecast first so warning inspection remains read-only.
+	OverworldRules.begin_normalized_read_scope(_session)
+	TownRules.begin_read_scope(_session)
 	var surface := _end_turn_confirmation_surface()
 	var risk_surface := OverworldRules.describe_command_risk_surfaces(_session)
 	var risk_data_value: Variant = risk_surface.get("forecast_data", {})
@@ -1336,6 +1340,8 @@ func _current_end_turn_warning() -> Dictionary:
 		_session.overworld[OverworldRules.COMMAND_RISK_FORECAST_KEY] = forecast_before
 	else:
 		_session.overworld.erase(OverworldRules.COMMAND_RISK_FORECAST_KEY)
+	TownRules.end_read_scope(_session)
+	OverworldRules.end_normalized_read_scope(_session)
 	return warning
 
 func _end_turn_confirmation_copy(warning: Dictionary) -> Dictionary:

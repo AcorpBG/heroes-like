@@ -2,6 +2,8 @@
 
 Owner request: profile Large-map building construction and End Turn because both remain too slow. Phase 6 slice: `performance-large-town-build-and-end-turn-20260905`.
 
+The active-goal continuation explicitly includes improving both latencies, preserving gameplay/save behavior, validating both platforms and committing/pushing the coherent fixes. Baseline profiling alone does not complete that objective.
+
 Measure an actual successful purchase through Town's construction ledger, not only town entry or view-model assembly. Include selection/confirmation, core mutation, refresh, integrated scene update and feedback. Measure full End Turn request/confirmation, simulation, autosave and usable refreshed UI. Separate the major buckets and name the hot functions.
 
 Use deterministic 108x108 generated sessions, beginning with `large-runtime-profile-10225`, Veilmourn/Orso, signature `7362cf00`, and representative subsequent build/turn states. Keep gameplay resources and build eligibility real; synthetic cases, if needed, must be explicitly labelled. Record hardware/engine, full wall time and meaningful command results; keep benchmarking isolated from exports and other heavy tests.
