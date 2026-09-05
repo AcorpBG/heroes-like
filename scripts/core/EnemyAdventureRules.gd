@@ -2425,9 +2425,11 @@ static func advance_raids(
 		_advance_profile_add_ms(profile, "post_move_grouping_ms", phase_started)
 
 		if bool(encounter.get("arrived", false)):
+			var arrival_kind := String(encounter.get("target_kind", "unknown"))
 			phase_started = _advance_profile_timer(profile_enabled)
 			var arrival_result = _resolve_arrived_target(session, encounter, state, faction_id, config)
 			_advance_profile_add_ms(profile, "arrival_target_resolution_ms", phase_started)
+			_advance_profile_add_ms(profile, "arrival_%s_resolution_ms" % arrival_kind, phase_started)
 			encounter = arrival_result.get("encounter", encounter)
 			state = arrival_result.get("state", state)
 			var event_message = String(arrival_result.get("event_message", ""))
@@ -4127,12 +4129,14 @@ static func _enemy_target_currently_visible(
 	config: Dictionary,
 	faction_id: String,
 	target_x: int,
-	target_y: int
+	target_y: int,
+	preloaded_sources: Variant = null
 ) -> bool:
 	if session == null or faction_id == "":
 		return false
 	var target_tile := Vector2i(target_x, target_y)
-	for source_value in _enemy_hero_sighting_sources(session, config, faction_id):
+	var sources: Array = preloaded_sources if preloaded_sources is Array else _enemy_hero_sighting_sources(session, config, faction_id)
+	for source_value in sources:
 		if not (source_value is Dictionary):
 			continue
 		var source: Dictionary = source_value
@@ -4149,13 +4153,36 @@ static func _enemy_nonhero_target_known(
 	target_id: String,
 	target_x: int,
 	target_y: int,
-	force_known: bool = false
+	force_known: bool = false,
+	knowledge_snapshot: Dictionary = {}
 ) -> bool:
 	if force_known:
 		return true
+	if not knowledge_snapshot.is_empty():
+		if session != null and faction_id != "" and target_kind != "" and target_id != "" and bool(knowledge_snapshot.get("scouted", {}).get(_enemy_scouted_target_key(target_kind, target_id), false)):
+			return true
+		return _enemy_target_currently_visible(session, config, faction_id, target_x, target_y, knowledge_snapshot.get("sources", []))
 	if _enemy_target_scouted(session, faction_id, target_kind, target_id):
 		return true
 	return _enemy_target_currently_visible(session, config, faction_id, target_x, target_y)
+
+static func _enemy_target_knowledge_snapshot(session: SessionStateStoreScript.SessionData, config: Dictionary, faction_id: String) -> Dictionary:
+	if session == null or faction_id == "":
+		return {}
+	# Local to one read-only target enumeration, never retained across movement,
+	# capture or memory mutation. Preserve first-match expiry semantics exactly.
+	var scouted := {}
+	for state_value in session.overworld.get("enemy_states", []):
+		if not (state_value is Dictionary) or String(state_value.get("faction_id", "")) != faction_id:
+			continue
+		var memory: Dictionary = state_value.get("known_world_memory", {}) if state_value.get("known_world_memory", {}) is Dictionary else {}
+		for record_value in memory.get("scouted_targets", []):
+			if not (record_value is Dictionary):
+				continue
+			var key := _enemy_scouted_target_key(String(record_value.get("target_kind", "")), String(record_value.get("target_id", "")))
+			if not scouted.has(key):
+				scouted[key] = int(record_value.get("expires_day", 0)) >= int(session.day)
+	return {"sources": _enemy_hero_sighting_sources(session, config, faction_id), "scouted": scouted}
 
 static func _enemy_scouted_target_key(target_kind: String, target_id: String) -> String:
 	return "%s:%s" % [target_kind, target_id]
@@ -8415,7 +8442,7 @@ static func _no_known_target_exploration_plan(
 			var direct_distance: int = abs(tile.x - origin_pos.x) + abs(tile.y - origin_pos.y)
 			if direct_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or direct_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE:
 				continue
-			if _enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y):
+			if _enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y, sources):
 				continue
 			var route_distance := _path_distance_with_context(path_context, origin_pos, [tile])
 			if route_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or route_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE or route_distance >= 9999:
@@ -8496,6 +8523,7 @@ static func _no_known_target_frontier_sweep_plan(
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
 	if map_size.x <= 0 or map_size.y <= 0:
 		return {}
+	var sources := _enemy_hero_sighting_sources(session, config, faction_id)
 	var best := {}
 	var best_score := -999999
 	var recent_target_lookup := _raid_recent_exploration_target_lookup(commander_source)
@@ -8517,7 +8545,7 @@ static func _no_known_target_frontier_sweep_plan(
 			var direct_distance: int = abs(tile.x - origin_pos.x) + abs(tile.y - origin_pos.y)
 			if direct_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or direct_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE:
 				continue
-			if _enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y):
+			if _enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y, sources):
 				continue
 			var route_distance := _path_distance_with_context(path_context, origin_pos, [tile])
 			if route_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or route_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE or route_distance >= 9999:
@@ -9964,27 +9992,28 @@ static func _target_candidate_descriptors(
 	var seen := {}
 	var descriptors := []
 	var faction_id = String(config.get("faction_id", ""))
+	var knowledge_snapshot := {} if include_unscouted else _enemy_target_knowledge_snapshot(session, config, faction_id)
 	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var objective_anchor_surface := _objective_anchor_surface(session, scenario)
 	var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", []) if objective_anchor_surface.get("tiles", []) is Array else []
 	var objective_town_ids: Array = objective_anchor_surface.get("town_placement_ids", []) if objective_anchor_surface.get("town_placement_ids", []) is Array else []
 	var siege_target_id = String(config.get("siege_target_placement_id", ""))
 	if siege_target_id != "":
-		_append_town_target_descriptor(session, descriptors, seen, siege_target_id, 320, config, faction_id, include_unscouted, objective_anchor_surface)
+		_append_town_target_descriptor(session, descriptors, seen, siege_target_id, 320, config, faction_id, include_unscouted, objective_anchor_surface, knowledge_snapshot)
 
 	var objectives = scenario.get("objectives", {})
 	if objectives is Dictionary:
 		for objective in objectives.get("defeat", []):
 			if objective is Dictionary and String(objective.get("type", "")) in ["town_owned_by_player", "town_not_owned_by_player"]:
-				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("placement_id", "")), 260, config, faction_id, include_unscouted, objective_anchor_surface)
+				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("placement_id", "")), 260, config, faction_id, include_unscouted, objective_anchor_surface, knowledge_snapshot)
 		for objective in objectives.get("victory", []):
 			if not (objective is Dictionary):
 				continue
 			var objective_type := String(objective.get("type", ""))
 			if objective_type in ["town_owned_by_player", "town_not_owned_by_player", "building_built_in_player_town", "hero_stationed_at_player_town"]:
-				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("placement_id", "")), 220, config, faction_id, include_unscouted, objective_anchor_surface)
+				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("placement_id", "")), 220, config, faction_id, include_unscouted, objective_anchor_surface, knowledge_snapshot)
 			elif objective_type == "reserve_delivery_completed" and String(objective.get("target_kind", "town")) == "town":
-				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("target_id", "")), 240, config, faction_id, include_unscouted, objective_anchor_surface)
+				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("target_id", "")), 240, config, faction_id, include_unscouted, objective_anchor_surface, knowledge_snapshot)
 
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary):
@@ -9996,7 +10025,7 @@ static func _target_candidate_descriptors(
 			base_priority += 50
 		if String(town.get("placement_id", "")) in objective_town_ids:
 			base_priority += 20
-		_append_town_target_descriptor(session, descriptors, seen, String(town.get("placement_id", "")), base_priority, config, faction_id, include_unscouted, objective_anchor_surface)
+		_append_town_target_descriptor(session, descriptors, seen, String(town.get("placement_id", "")), base_priority, config, faction_id, include_unscouted, objective_anchor_surface, knowledge_snapshot)
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary):
 			continue
@@ -10007,7 +10036,7 @@ static func _target_candidate_descriptors(
 			base_priority += 25
 		if String(town.get("placement_id", "")) in objective_town_ids:
 			base_priority += 45
-		_append_town_target_descriptor(session, descriptors, seen, String(town.get("placement_id", "")), base_priority, config, faction_id, include_unscouted, objective_anchor_surface)
+		_append_town_target_descriptor(session, descriptors, seen, String(town.get("placement_id", "")), base_priority, config, faction_id, include_unscouted, objective_anchor_surface, knowledge_snapshot)
 
 	for node in session.overworld.get("resource_nodes", []):
 		_append_resource_target_descriptor(
@@ -10017,7 +10046,8 @@ static func _target_candidate_descriptors(
 			node,
 			config,
 			faction_id,
-			include_unscouted
+			include_unscouted,
+			knowledge_snapshot
 		)
 
 	for node in session.overworld.get("artifact_nodes", []):
@@ -10029,7 +10059,8 @@ static func _target_candidate_descriptors(
 			_artifact_target_priority(session, node, objective_anchor_tiles),
 			config,
 			faction_id,
-			include_unscouted
+			include_unscouted,
+			knowledge_snapshot
 		)
 
 	for encounter in session.overworld.get("encounters", []):
@@ -10042,7 +10073,8 @@ static func _target_candidate_descriptors(
 			config,
 			faction_id,
 			include_unscouted,
-			objective_anchor_surface
+			objective_anchor_surface,
+			knowledge_snapshot
 		)
 
 	_append_delivery_interception_target_descriptors(session, descriptors, seen, config, faction_id)
@@ -10098,7 +10130,8 @@ static func _append_town_target_descriptor(
 	config: Dictionary,
 	faction_id: String,
 	include_unscouted: bool = false,
-	preloaded_objective_anchor_surface: Variant = null
+	preloaded_objective_anchor_surface: Variant = null,
+	knowledge_snapshot: Dictionary = {}
 ) -> void:
 	var seen_key = "town:%s" % placement_id
 	if placement_id == "" or seen.has(seen_key):
@@ -10125,7 +10158,8 @@ static func _append_town_target_descriptor(
 		placement_id,
 		int(town.get("x", 0)),
 		int(town.get("y", 0)),
-		force_known
+		force_known,
+		knowledge_snapshot
 	):
 		return
 
@@ -10224,7 +10258,8 @@ static func _append_resource_target_descriptor(
 	node: Variant,
 	config: Dictionary,
 	faction_id: String,
-	include_unscouted: bool = false
+	include_unscouted: bool = false,
+	knowledge_snapshot: Dictionary = {}
 ) -> void:
 	if not (node is Dictionary):
 		return
@@ -10244,7 +10279,8 @@ static func _append_resource_target_descriptor(
 		placement_id,
 		goal_tile.x,
 		goal_tile.y,
-		force_known
+		force_known,
+		knowledge_snapshot
 	):
 		return
 	seen[seen_key] = true
@@ -10320,7 +10356,8 @@ static func _append_artifact_target_descriptor(
 	priority: int,
 	config: Dictionary,
 	faction_id: String,
-	include_unscouted: bool = false
+	include_unscouted: bool = false,
+	knowledge_snapshot: Dictionary = {}
 ) -> void:
 	if not (node is Dictionary):
 		return
@@ -10339,7 +10376,8 @@ static func _append_artifact_target_descriptor(
 		placement_id,
 		goal_tile.x,
 		goal_tile.y,
-		force_known
+		force_known,
+		knowledge_snapshot
 	):
 		return
 	seen[seen_key] = true
@@ -10430,7 +10468,8 @@ static func _append_encounter_target_descriptor(
 	config: Dictionary,
 	faction_id: String,
 	include_unscouted: bool = false,
-	preloaded_objective_anchor_surface: Variant = null
+	preloaded_objective_anchor_surface: Variant = null,
+	knowledge_snapshot: Dictionary = {}
 ) -> void:
 	if not (encounter is Dictionary):
 		return
@@ -10457,7 +10496,8 @@ static func _append_encounter_target_descriptor(
 		placement_id,
 		int(encounter.get("x", 0)),
 		int(encounter.get("y", 0)),
-		priority_bonus > 0 or objective_anchor
+		priority_bonus > 0 or objective_anchor,
+		knowledge_snapshot
 	):
 		return
 	seen[seen_key] = true

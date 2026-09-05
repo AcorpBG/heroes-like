@@ -24,21 +24,21 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current owner-directed slice: `performance-large-town-build-and-end-turn-20260905` (in_progress). Profile complete Large-map building purchases and End Turn, identify their runtime costs, and validate any owner-approved optimizations without changing gameplay.
-- Most recently completed owner-directed implementation slice: `ux-visual-performance-file-saves-review-20260904`: pixel-verified town presentation, softer outlines and command rail, measured Large-map save improvement, and named-file saving/browsing with legacy compatibility.
-- Current package boundary: matching Linux and Windows release exports measure 248370060 bytes, 1629940 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+- No owner-directed slice is active; select the next bounded slice.
+- Most recently completed owner-directed implementation slice: `performance-large-town-build-and-end-turn-20260905`: measured Large-map construction waiting reduced 73.4% and End Turn waiting reduced 29.3%, with twelve exact state comparisons, town/turn/AI/save regressions and both-platform package checks passing.
+- Current package boundary: matching Linux and Windows release exports measure 248372668 bytes, 1627332 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
 
 ## Large Map Town Construction And End Turn
 
 id: `performance-large-town-build-and-end-turn-20260905`
 
-Status: in_progress. Profiling/tooling validated 2026-09-05: real purchases, three successive turns, twelve exact baseline session comparisons, runtime regressions and matching Linux/Windows packages. Findings: repeated construction catalogs, forced save-summary scans and expensive enemy arrival/planning. Optimization continuation awaits owner direction; no gameplay performance fix is implemented. Evidence: `docs/large-town-build-and-end-turn-performance-report.md`.
+Status: completed 2026-09-05. Construction shares fresh scoped reads and avoids stored-save inspection for current action copy; AI target/exploration visibility inputs are reused within each decision, and End Turn warnings share read calculations. Matched three-purchase waiting fell 55.399 → 14.743 seconds; three full End Turns fell 36.170 → 25.565 seconds. Twelve exact state trees, focused town/turn/AI/save regressions, repository/diff checks, and Linux/Windows export/generated-entry checks pass. Evidence: `docs/large-town-build-and-end-turn-performance-report.md`. Several-second simulation costs and host-sensitive legacy Save UI budgets remain; no universal latency or release-readiness claim.
 
 Requirements: `docs/large-town-build-and-end-turn-performance-requirements.md`, `docs/large-town-build-and-end-turn-performance-report.md`, `docs/large-generated-map-runtime-performance-report.md`, `docs/visual-performance-file-saves-report.md`, `project.md`, and `docs/lessons-learned.md`.
 
-Boundary: measure real construction selection/confirmation, rules, view refresh and feedback, plus End Turn confirmation, player economy, enemy decisions, autosave and refresh on deterministic 108x108 maps. Identify concrete hot functions and repeated work. Apply behavior-preserving optimizations only with owner approval; preserve build costs, choices, progression, AI decisions, map output and save version 9.
+Boundary: measure real construction selection/confirmation, rules, view refresh and feedback, plus End Turn confirmation, player economy, enemy decisions, autosave and refresh on deterministic 108x108 maps. Identify concrete hot functions and repeated work, then implement the active goal's behavior-preserving optimizations; preserve build costs, choices, progression, AI decisions, map output and save version 9.
 
-Completion: source-backed timing breakdown with reproducible Python-owned orchestration; if fixes are approved, matched before/after actions and exact state/decision checks, relevant town/turn/save regressions, repository/diff validation and matching Linux/Windows package smokes below 250000000 bytes. No report-only completion claim for an approved implementation scope.
+Completion: source-backed timing breakdown with reproducible Python-owned orchestration; runtime improvements with matched before/after actions and exact state/decision checks, relevant town/turn/save regressions, repository/diff validation and matching Linux/Windows package smokes below 250000000 bytes. No report-only completion claim.
 
 Non-goals: no RMG semantics/topology, AI policy/balance, art/UI redesign, schema migration, skipped autosaves, deferred-hidden work, unrelated cleanup, package-limit or release-readiness changes.
 

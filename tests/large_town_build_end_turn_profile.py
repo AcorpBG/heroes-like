@@ -48,6 +48,31 @@ def validate_measurements(report: dict) -> list[str]:
     return errors
 
 
+def compare_timings(report: dict, reference: dict) -> dict:
+    """Require meaningful aggregate improvement in matched control-ready actions.
+
+    Ratio budgets leave room for host noise but reject a return to the measured
+    repeated-query stalls. Use an instrumented control with usable_ms recorded.
+    """
+    totals = {}
+    for kind, limit in [("build", 0.60), ("end_turn", 0.85)]:
+        current = [row for row in report["rows"] if row["kind"] == kind]
+        control = [row for row in reference["rows"] if row["kind"] == kind]
+        if len(current) != 3 or len(control) != 3:
+            return {"ok": False, "error": "timing comparison needs three matching actions per kind"}
+        for a, b in zip(current, control):
+            if any(a.get(key) != b.get(key) for key in ["cycle", "action_id", "day", "day_before", "day_after"]):
+                return {"ok": False, "error": "timing comparison action identity changed"}
+        fields = ["ledger_open_ms", "selection_ms", "usable_ms"] if kind == "build" else ["wall_ms"]
+        if any(field not in row for row in current + control for field in fields):
+            return {"ok": False, "error": "use a control with full controls-ready timings"}
+        current_ms = sum(row[field] for row in current for field in fields)
+        control_ms = sum(row[field] for row in control for field in fields)
+        ratio = current_ms / control_ms if control_ms > 0 else 1.0
+        totals[kind] = {"current_ms": current_ms, "control_ms": control_ms, "ratio": ratio, "maximum_ratio": limit, "ok": ratio <= limit}
+    return {"ok": all(row["ok"] for row in totals.values()), "totals": totals}
+
+
 def town_probe_script() -> str:
     """Time inherited production methods; nested timings are inclusive.
 
@@ -67,7 +92,8 @@ func profile_add(name: String, started: int) -> void:
         ("_open_town_catalog", "mode: String", "mode", "void"),
         ("_select_build_action", "action_id: String", "action_id", "void"),
         ("_on_confirm_build_pressed", "", "", "void"),
-        ("_commit_build_action", "action_id: String", "action_id", "void"),
+        ("_commit_build_action", "action_id: String, prepared_context: Dictionary = {}", "action_id, prepared_context", "void"),
+        ("_prepare_build_read_context", "action_id: String", "action_id", "Dictionary"),
         ("_selected_build_action", "actions_override: Variant = null", "actions_override", "Dictionary"),
         ("_build_action_for_id", "action_id: String, actions_override: Variant = null", "action_id, actions_override", "Dictionary"),
         ("_rebuild_build_actions", "actions_override: Variant = null", "actions_override", "void"),
@@ -247,11 +273,14 @@ def main() -> int:
     parser.add_argument("--label", default="baseline")
     parser.add_argument("--detail", action="store_true", help="test-only method timing and read-only catalog comparison")
     parser.add_argument("--compare", help="compare all 12 complete session snapshots against a prior label")
+    parser.add_argument("--require-improvement", action="store_true", help="also enforce matched Town/turn aggregate improvement against --compare")
     args = parser.parse_args()
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789_-" for c in args.label):
         parser.error("label must contain lowercase letters, digits, underscores or hyphens")
     if args.compare and any(c not in "abcdefghijklmnopqrstuvwxyz0123456789_-" for c in args.compare):
         parser.error("comparison label must contain lowercase letters, digits, underscores or hyphens")
+    if args.require_improvement and not args.compare:
+        parser.error("--require-improvement requires --compare")
     output = ARTIFACTS / args.label
     output.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="run-", dir=ARTIFACTS) as temporary:
@@ -286,6 +315,12 @@ def main() -> int:
             if not report["state_comparison"]["ok"]:
                 report["ok"] = False
                 report["failures"].append("complete session snapshot comparison failed")
+            if args.require_improvement:
+                control = json.loads((ARTIFACTS / args.compare / "report.json").read_text())
+                report["timing_comparison"] = compare_timings(report, control)
+                if not report["timing_comparison"]["ok"]:
+                    report["ok"] = False
+                    report["failures"].append("matched Town/turn improvement budget failed")
         if any("SCRIPT ERROR" in line for line in lines):
             report["ok"] = False
             report["failures"].append("runtime script error")

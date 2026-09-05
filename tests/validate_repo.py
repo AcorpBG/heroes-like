@@ -32229,7 +32229,7 @@ def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
         'call_deferred("_configure_town_keyboard_focus", true)',
     ):
         ensure(token in shell_text, errors, f"TownShell.gd is missing building-complete publication/input ownership: {token}")
-    build_handler = re.search(r"func _commit_build_action\(action_id: String\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    build_handler = re.search(r"func _commit_build_action\(action_id: String(?:, prepared_context: Dictionary = \{\})?\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
     ensure(build_handler is not None, errors, "Could not isolate live Town build handler")
     if build_handler is not None:
         body = build_handler.group("body")

@@ -606,19 +606,25 @@ func latest_loadable_summary() -> Dictionary:
 func summary_recency_timestamp(summary: Dictionary) -> float:
 	return _summary_sort_timestamp(summary)
 
+func build_current_session_save_context(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	# Action tooltips consume current-session copy, not a list of stored saves.
+	# Use exactly the same copy builders without inspecting unrelated save files.
+	return build_in_session_save_surface(session, -1, {}, false)
+
 func build_in_session_save_surface(
 	session: SessionStateStoreScript.SessionData,
 	manual_slot: int = -1,
-	refresh_watch_context: Dictionary = {}
+	refresh_watch_context: Dictionary = {},
+	include_stored_summaries: bool = true
 ) -> Dictionary:
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
 	var selected_slot := _normalize_manual_slot(manual_slot if manual_slot > 0 else _selected_manual_slot)
 	var slot_started := ProfileLogScript.begin_usec()
-	var slot_summary := inspect_manual_slot(selected_slot)
+	var slot_summary := inspect_manual_slot(selected_slot) if include_stored_summaries else {}
 	buckets["inspect_selected_slot"] = ProfileLogScript.elapsed_ms(slot_started)
 	var latest_started := ProfileLogScript.begin_usec()
-	var latest_summary := latest_loadable_summary()
+	var latest_summary := latest_loadable_summary() if include_stored_summaries else {}
 	buckets["latest_loadable_summary"] = ProfileLogScript.elapsed_ms(latest_started)
 	var current_target := _resume_target_for_session(session)
 	var payload_started := ProfileLogScript.begin_usec()
@@ -665,6 +671,8 @@ func build_in_session_save_surface(
 	buckets["recap_surfaces"] = ProfileLogScript.elapsed_ms(recap_started)
 	TownRulesScript.end_read_scope(detached_live_session)
 	OverworldRulesScript.end_normalized_read_scope(detached_live_session)
+	if not include_stored_summaries:
+		return {"save_check": save_check, "current_save_recap": current_save_recap}
 	var stored_recap_started := ProfileLogScript.begin_usec()
 	var stored_recap_profile := {}
 	var slot_resume_recap := _describe_summary_resume_recap_with_context(slot_summary, stored_recap_profile)
