@@ -62,6 +62,7 @@ Native extensions, external asset pipelines, or new storage layers may be added 
 - Keep simulation/domain logic outside scene controllers.
 - Scene controllers render state and send intents; core rule scripts own gameplay decisions.
 - Authored content is immutable at runtime and referenced by stable ids.
+- `ContentService` owns derived id/art lookup indexes over borrowed immutable rows. Reloading content clears those indexes with the content cache; changing catalog membership or ids in place is not a runtime editing API. Editors and tests replacing content must use the cache/reset boundary, not mutate borrowed catalog structure.
 - Save data stores mutable state plus content references, not copied authored definitions.
 - Map/scenario persistence must separate authored/generated map assets from mutable session deltas; full map payload rewrites are not an acceptable long-term save model.
 - Save/load must remain explicit, versioned, and backward-aware.

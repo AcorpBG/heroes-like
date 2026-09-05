@@ -28,6 +28,9 @@ func _run() -> void:
 func _assert_partial_full_route_execution() -> bool:
 	PresentationAudio.validation_reset()
 	var session = _session_with_map(11, 3)
+	# Town vision is tested separately. This case must isolate the hero's newly
+	# traversed fog cells instead of starting inside the owned town's radius 5.
+	session.overworld["towns"] = []
 	session.overworld["fog"] = {}
 	var opened := await _open_shell(session)
 	var shell: Node = opened.get("shell", null)
@@ -49,9 +52,13 @@ func _assert_partial_full_route_execution() -> bool:
 		return _fail("Map route preview did not expose the same out-of-movement partition.", selection)
 	if not _assert_cartographic_route_visual(shell, session, selection, route_preview):
 		return false
+	# The fixture just opened the debug overlay and changed route copy. Finish
+	# their queued container resize before measuring movement-only invalidation.
+	await get_tree().process_frame
+	await get_tree().process_frame
 	var result: Dictionary = shell.call("validation_perform_primary_action")
 	var movement_start: Dictionary = _hero_movement_presentation(shell)
-	var start_cache: Dictionary = _render_cache(shell)
+	var action_cache: Dictionary = _render_cache(shell)
 	var expected_route: Array = [
 		{"x": 0, "y": 1},
 		{"x": 1, "y": 1},
@@ -75,7 +82,16 @@ func _assert_partial_full_route_execution() -> bool:
 		or float(movement_start.get("progress", -1.0)) != 0.0
 	):
 		return _fail("Full-route movement did not start one exact normal-mode locomotion replay.", movement_start)
-	await get_tree().create_timer(0.16).timeout
+	# The completed command can change HUD minimum sizes. Its first layout pass
+	# legitimately redraws a resized map; measure the animation after that pass,
+	# retaining an explicit single-resize bound rather than ignoring cache work.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var start_cache: Dictionary = _render_cache(shell)
+	var layout_generation_delta := int(start_cache.get("session_static_generation", -1)) - int(action_cache.get("session_static_generation", -1))
+	if layout_generation_delta < 0 or layout_generation_delta > 1 or (layout_generation_delta == 1 and String(start_cache.get("session_static_reason", "")) != "resized"):
+		return _fail("Command settlement rebuilt static content beyond its bounded layout resize.", {"action_cache": action_cache, "start_cache": start_cache})
+	await get_tree().create_timer(0.04).timeout
 	var movement_mid: Dictionary = _hero_movement_presentation(shell)
 	var mid_cache: Dictionary = _render_cache(shell)
 	var mid_progress: float = float(movement_mid.get("progress", 0.0))
@@ -96,7 +112,7 @@ func _assert_partial_full_route_execution() -> bool:
 		or int(mid_cache.get("state_generation", -1)) != int(start_cache.get("state_generation", -2))
 		or int(mid_cache.get("dynamic_generation", -1)) <= int(start_cache.get("dynamic_generation", -1))
 	):
-		return _fail("Normal-mode locomotion did not advance between exact route centers on only the dynamic layer.", {"start": movement_start, "mid": movement_mid})
+		return _fail("Normal-mode locomotion did not advance between exact route centers on only the dynamic layer.", {"start": movement_start, "mid": movement_mid, "start_cache": start_cache, "mid_cache": mid_cache})
 	await get_tree().create_timer(0.36).timeout
 	var movement_end: Dictionary = _hero_movement_presentation(shell)
 	if bool(movement_end.get("active", true)) or float(movement_end.get("progress", 0.0)) != 1.0 or movement_end.get("final_tile", {}) != {"x": 4, "y": 1}:

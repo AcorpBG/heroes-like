@@ -161,7 +161,9 @@ func _run_hotspot_matrix() -> Array:
 		var faction_id := String(faction_id_value)
 		var town_template := _first_town_for_faction(faction_id)
 		var catalog_ids := _catalog_ids(town_template)
-		var developing_count := mini(catalog_ids.size() - 1, maxi(1, ceili(float(catalog_ids.size()) * TownStageViewScript.DEVELOPMENT_SCENE_DEVELOPING_MIN_RATIO)))
+		# Development now adds individual integrated buildings to the same village
+		# base. Exercise empty/partial/full build sets, not the retired art tiers.
+		var developing_count := mini(catalog_ids.size() - 1, maxi(1, catalog_ids.size() / 2))
 		var built_by_stage := {
 			"village": _string_array(town_template.get("starting_building_ids", [])),
 			"developing": catalog_ids.slice(0, developing_count),
@@ -178,7 +180,7 @@ func _run_hotspot_matrix() -> Array:
 			var summary: Dictionary = fixture.validation_main_building_hotspot_summary()
 			var normalized: Rect2 = summary.get("normalized_rect", Rect2())
 			var exact := String(summary.get("faction_id", "")) == faction_id \
-				and String(summary.get("stage_id", "")) == stage_id \
+				and String(summary.get("stage_id", "")) == "village" \
 				and normalized.position.x >= 0.0 and normalized.position.y >= 0.0 \
 				and normalized.end.x <= 1.0 and normalized.end.y <= 1.0 \
 				and normalized.size.x > 0.0 and normalized.size.y > 0.0 \
@@ -186,7 +188,7 @@ func _run_hotspot_matrix() -> Array:
 				and bool(summary.get("contained", false))
 			if not exact:
 				_errors.append("Hotspot mapping failed for %s %s: %s" % [faction_id, stage_id, summary])
-			rows.append({"faction_id": faction_id, "stage_id": stage_id, "exact": exact, "normalized_rect": normalized, "destination_rect": summary.get("destination_rect", Rect2())})
+			rows.append({"faction_id": faction_id, "fixture_build_state": stage_id, "base_stage_id": summary.get("stage_id", ""), "exact": exact, "normalized_rect": normalized, "destination_rect": summary.get("destination_rect", Rect2())})
 	fixture.queue_free()
 	await get_tree().process_frame
 	return rows

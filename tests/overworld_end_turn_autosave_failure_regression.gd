@@ -574,8 +574,11 @@ func _stage_river_pass_victory(session: SessionStateStoreScript.SessionData) -> 
 	session.flags["pass_cleared"] = true
 	session.flags["mire_cleared"] = true
 	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
-	if "river_pass_reed_totemists" not in resolved:
-		resolved.append("river_pass_reed_totemists")
+	# This is an explicitly terminal persistence fixture, not a live play win.
+	# The authored River Pass victory also requires its post-capture counterstroke.
+	for placement in ["river_pass_ghoul_grove", "river_pass_hollow_mire", "river_pass_reed_totemists", "duskfen_counterstroke"]:
+		if placement not in resolved:
+			resolved.append(placement)
 	session.overworld["resolved_encounters"] = resolved
 
 

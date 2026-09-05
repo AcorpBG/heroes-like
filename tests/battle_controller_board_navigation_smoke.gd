@@ -1471,11 +1471,15 @@ func _validate_battle_focus_spell_tab_body_fit(shell: Control, session, width: i
 			or commander_label.autowrap_mode != TextServer.AUTOWRAP_OFF \
 			or not commander_label.clip_text \
 			or commander_label.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS \
-			or commander_label.get_line_count() != 2 \
-			or commander_label.get_visible_line_count() != 2:
+			or commander_label.get_line_count() != 1 \
+			or commander_label.get_visible_line_count() != 1:
 			return _fail_bool("Battle commander compact summary mismatch at %d percent scale for %s: text=%s expected=%s tooltip=%s expected_tooltip=%s wrap=%s clip=%s overrun=%s lines=%s/%s." % [SettingsService.ui_scale_percent(), commander_label.name, commander_label.text, expected_commander_visible, commander_label.tooltip_text, commander_full, commander_label.autowrap_mode, commander_label.clip_text, commander_label.text_overrun_behavior, commander_label.get_line_count(), commander_label.get_visible_line_count()])
 	var system_actions: HBoxContainer = shell.get_node("%SaveSlot").get_parent()
-	var system_controls: Array[Control] = [shell.get_node("%SaveSlot"), shell.get_node("%Save"), shell.get_node("%Settings"), shell.get_node("%Menu")]
+	# Named-file Save replaced the inline numbered-slot picker. Hidden controls
+	# retain stale rectangles but must not reserve space in the visible row.
+	if shell.get_node("%SaveSlot").is_visible_in_tree():
+		return _fail_bool("Legacy numbered save picker must stay hidden in named-file Battle UI.")
+	var system_controls: Array[Control] = [shell.get_node("%Save"), shell.get_node("%Settings"), shell.get_node("%Menu")]
 	var system_actions_rect := system_actions.get_global_rect()
 	var previous_system_right := system_actions_rect.position.x
 	for control in system_controls:
@@ -1651,7 +1655,9 @@ func _commander_visible_surface_for_test(full_text: String) -> String:
 	if lines.is_empty():
 		return full_text.strip_edges()
 	var first_line := lines[0]
-	return "%s\n+ %d more" % [first_line, lines.size() - 1] if lines.size() > 1 else first_line
+	# The shipped compact commander rail is one line with an inline hidden count;
+	# its complete copy remains in the tooltip. Do not require the retired second row.
+	return "%s  +%d" % [first_line, lines.size() - 1] if lines.size() > 1 else first_line
 
 func _timing_visible_lines_for_test(label: Label, timing_check: Dictionary) -> Array[String]:
 	var readiness := String(timing_check.get("readiness", "Review")).strip_edges()

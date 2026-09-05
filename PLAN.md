@@ -24,9 +24,23 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- No owner-directed slice is active; select the next bounded slice.
-- Most recently completed owner-directed implementation slice: `performance-large-town-build-and-end-turn-20260905`: measured Large-map construction waiting reduced 73.4% and End Turn waiting reduced 29.3%, with twelve exact state comparisons, town/turn/AI/save regressions and both-platform package checks passing.
-- Current package boundary: matching Linux and Windows release exports measure 248372668 bytes, 1627332 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+- No owner-directed slice remains in progress; select the next bounded slice from the measured gaps, not an automatic balance/art rewrite.
+- Most recently completed owner-directed implementation slice: `performance-full-play-runtime-review-20260905`: indexed content and demand-shaped save bars, safe warning/dialog/cursor lifecycle and exact controller tile selection; matched Battle refresh -60.9%, Large purchase waiting -27.6%, ten-turn waiting -15.4%, with 78 complete state comparisons and both-platform checks. Campaign-driver/AT-SPI, Moonbite pacing and existing Town visual gaps remain documented.
+- Current package boundary: matching Linux and Windows release exports measure 248376908 bytes, 1623092 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+
+## Full Play Runtime Review And Optimization
+
+id: `performance-full-play-runtime-review-20260905`
+
+Status: completed 2026-09-05. Runtime owners reviewed with depth/gaps stated; real authored victory/save-resume and extended Large Day-11 play profiled, campaign progression exercised. Implemented content/save-bar optimizations, read-only warning protection, renderer/dialog teardown and controller tile-selection correction. Focused runtime/input/repository/package gates pass; the broader sweep's one unchanged Moonbite balance failure and incomplete full-arc/AT-SPI evidence are explicit. See the report for controls and remaining hotspots; this is not release certification.
+
+Requirements/evidence: `docs/full-play-runtime-performance-requirements.md`, `docs/full-play-runtime-performance-report.md`, `docs/profile-jsonl-usage.md`, `docs/large-town-build-and-end-turn-performance-report.md`, `docs/large-generated-map-runtime-performance-report.md`, `project.md`, and `docs/lessons-learned.md`.
+
+Boundary: inspect all runtime subsystem/file ownership, then deeply review profiled hot paths and correctness-sensitive boundaries. Exercise boot/menu, authored scenario exploration/town/battles/outcome, campaign and save/resume, generated setup, extended Large-map movement/interactions/turns, presentation and shutdown. Rework redundant queries/copies/allocations or invalidation boundaries where measured; keep simulation and save authority intact. Correct the observed right-stick tile cursor versus town visual-body snapping boundary without changing pointer town entry or pathing rules. Update strategic docs only for durable architecture choices, tactical/requirements/evidence docs for this work.
+
+Completion: representative live scenario completed without injected victory/resource/army cheats; campaign/save/recovery routes and extended Large-map actions exercised; rendered evidence inspected; source-backed whole-runtime review coverage and honest gaps; measured before/after improvements with exact state/decision controls and focused regressions; repository/diff and Linux/Windows package/startup/generated-entry checks below 250000000 bytes; coherent commit/push verified. A review/report alone does not complete this implementation slice.
+
+Non-goals: no gameplay or AI-policy/balance changes, native generation semantics or unsupported parity claims, art/content redesign, save-schema migration, skipped autosaves, deferred-hidden stalls, unrelated artifact cleanup, package ceiling increases or whole-product release certification.
 
 ## Large Map Town Construction And End Turn
 

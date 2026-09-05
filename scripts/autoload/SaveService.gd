@@ -615,7 +615,8 @@ func build_in_session_save_surface(
 	session: SessionStateStoreScript.SessionData,
 	manual_slot: int = -1,
 	refresh_watch_context: Dictionary = {},
-	include_stored_summaries: bool = true
+	include_stored_summaries: bool = true,
+	include_stored_recaps: bool = true
 ) -> Dictionary:
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
@@ -675,9 +676,12 @@ func build_in_session_save_surface(
 		return {"save_check": save_check, "current_save_recap": current_save_recap}
 	var stored_recap_started := ProfileLogScript.begin_usec()
 	var stored_recap_profile := {}
-	var slot_resume_recap := _describe_summary_resume_recap_with_context(slot_summary, stored_recap_profile)
+	# Active-play save bars consume current copy and verified slot identity, but
+	# not stored resume recaps. Keep storage inspection authoritative without
+	# reconstructing old worlds for text the consumer never presents.
+	var slot_resume_recap := _describe_summary_resume_recap_with_context(slot_summary, stored_recap_profile) if include_stored_recaps else ""
 	var stored_recap_alias_reused := _summaries_share_storage_identity(slot_summary, latest_summary)
-	var latest_resume_recap := slot_resume_recap if stored_recap_alias_reused else _describe_summary_resume_recap_with_context(latest_summary, stored_recap_profile)
+	var latest_resume_recap := slot_resume_recap if stored_recap_alias_reused or not include_stored_recaps else _describe_summary_resume_recap_with_context(latest_summary, stored_recap_profile)
 	buckets["stored_resume_recaps"] = ProfileLogScript.elapsed_ms(stored_recap_started)
 	var result := {
 		"selected_slot": selected_slot,
@@ -709,6 +713,7 @@ func build_in_session_save_surface(
 		"detached_normalization_fallback": detached_normalization_fallback,
 		"detached_was_runtime_normalized": detached_was_runtime_normalized,
 		"stored_recap_alias_reused": stored_recap_alias_reused,
+		"stored_recaps_requested": include_stored_recaps,
 		"stored_recap_context_build_count": int(stored_recap_profile.get("context_build_count", 0)),
 		"stored_recap_context_reuse_count": int(stored_recap_profile.get("context_reuse_count", 0)),
 		"play_check_context_build_count": 1 if bool(recap_context.get("play_check_state_materialized", false)) else 0,

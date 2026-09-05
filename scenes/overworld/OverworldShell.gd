@@ -844,7 +844,9 @@ func _move_controller_route_cursor(direction: Vector2i, repeated: bool) -> Dicti
 	_controller_route_cursor_active = true
 	_opening_route_suggested = false
 	_opening_route_suggestion_kind = ""
-	_set_selected_tile(requested)
+	# A tile cursor must address every cell, including walkable ground underneath
+	# large town art. Visual-body snapping belongs to pointer/object selection.
+	_set_selected_tile(requested, false)
 	var changed := _selected_tile != before
 	if changed:
 		_validation_controller_route_step_count += 1
@@ -912,7 +914,7 @@ func _deactivate_controller_route_cursor(reset_to_hero: bool, refresh_preview: b
 	_cancel_controller_route_semantic()
 	if not reset_to_hero or _session == null:
 		return
-	_set_selected_tile(OverworldRules.hero_position(_session))
+	_set_selected_tile(OverworldRules.hero_position(_session), false)
 	_focus_camera_on_hero()
 	if refresh_preview:
 		_refresh_selected_route_preview("controller_route_cursor_canceled")
@@ -1279,7 +1281,7 @@ func _request_end_turn(show_dialog: bool = true) -> Dictionary:
 		_on_overworld_interaction_owner_opened()
 		_end_turn_confirmation_dialog.popup_centered(Vector2i(760, 300))
 		_focus_end_turn_cancel_after_popup()
-	var request_result := validation_end_turn_confirmation_snapshot()
+	var request_result := validation_end_turn_confirmation_snapshot(warning)
 	request_result["ok"] = true
 	request_result["confirmation_required"] = true
 	request_result["committed"] = false
@@ -1294,6 +1296,14 @@ func _current_end_turn_warning() -> Dictionary:
 	var forecast_before: Variant = forecast_before_value.duplicate(true) \
 		if forecast_before_value is Dictionary or forecast_before_value is Array \
 		else forecast_before_value
+	# Threat copy also normalizes AI knowledge records. Equal-label scouting
+	# records can be reordered by that normalizer's unstable sort. A read-only
+	# warning must not reorder live AI memory or invalidate its own stale guard.
+	var had_enemy_states := _session.overworld.has("enemy_states")
+	var enemy_states_value: Variant = _session.overworld.get("enemy_states", [])
+	var enemy_states_before: Variant = enemy_states_value.duplicate(true) \
+		if enemy_states_value is Dictionary or enemy_states_value is Array \
+		else enemy_states_value
 	# Scope entry may normalize a forecast after an external day/state change.
 	# Capture the original forecast first so warning inspection remains read-only.
 	OverworldRules.begin_normalized_read_scope(_session)
@@ -1340,6 +1350,10 @@ func _current_end_turn_warning() -> Dictionary:
 		_session.overworld[OverworldRules.COMMAND_RISK_FORECAST_KEY] = forecast_before
 	else:
 		_session.overworld.erase(OverworldRules.COMMAND_RISK_FORECAST_KEY)
+	if had_enemy_states:
+		_session.overworld["enemy_states"] = enemy_states_before
+	else:
+		_session.overworld.erase("enemy_states")
 	TownRules.end_read_scope(_session)
 	OverworldRules.end_normalized_read_scope(_session)
 	return warning
@@ -4370,7 +4384,7 @@ func _refresh_save_slot_picker(refresh_watch_context: Dictionary = {}) -> void:
 	if _save_slot_picker.get_item_count() <= 0:
 		return
 
-	var surface = AppRouter.active_save_surface(refresh_watch_context)
+	var surface = AppRouter.active_save_surface(refresh_watch_context, false)
 	if not refresh_watch_context.is_empty():
 		_profile_add("refresh_watch_observation_context_reuses", 1)
 	var selected_slot = SaveService.get_selected_manual_slot()
@@ -4398,7 +4412,9 @@ func _refresh_save_slot_picker(refresh_watch_context: Dictionary = {}) -> void:
 	save_tooltip_lines.append("Save opens the named-file browser. Existing files require confirmation before replacement.")
 	_save_status_label.text = _save_status_text(selected_slot, summary)
 	_save_status_label.tooltip_text = "\n".join(save_tooltip_lines)
-	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
+	_save_slot_picker.tooltip_text = String(summary.get("detail", ""))
+	if _save_slot_picker.tooltip_text == "":
+		_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = "Save"
 	_save_button.tooltip_text = "Create or replace a named expedition save file.\n%s" % save_check
 	if bool(_session.flags.get("editor_working_copy", false)):
@@ -9168,8 +9184,8 @@ func _prefer_opening_route_candidate(current: Dictionary, candidate: Dictionary)
 		return candidate if candidate_path_length < current_path_length else current
 	return candidate if String(candidate.get("stable_key", "")) < String(current.get("stable_key", "")) else current
 
-func _set_selected_tile(tile: Vector2i) -> void:
-	var route_tile := _selection_route_tile(tile)
+func _set_selected_tile(tile: Vector2i, resolve_visual_body: bool = true) -> void:
+	var route_tile := _selection_route_tile(tile) if resolve_visual_body else tile
 	if _selected_tile == route_tile:
 		return
 	_object_focus_presentation = {}
@@ -11480,8 +11496,10 @@ func validation_reset_end_turn_confirmation_state() -> Dictionary:
 	_validation_manual_save_route_attempt_count = 0
 	return validation_end_turn_confirmation_snapshot()
 
-func validation_end_turn_confirmation_snapshot() -> Dictionary:
-	var current_warning := _current_end_turn_warning() if _session != null and _session.scenario_id != "" else {}
+func validation_end_turn_confirmation_snapshot(prepared_warning: Dictionary = {}) -> Dictionary:
+	var current_warning := prepared_warning
+	if current_warning.is_empty() and _session != null and _session.scenario_id != "":
+		current_warning = _current_end_turn_warning()
 	var surface_value: Variant = current_warning.get("surface", {})
 	var surface: Dictionary = surface_value if surface_value is Dictionary else {}
 	var risk_surface_value: Variant = current_warning.get("risk_surface", {})

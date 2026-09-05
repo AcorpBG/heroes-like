@@ -762,7 +762,7 @@ func _on_quick_resolve_canceled() -> Dictionary:
 	_quick_resolve_confirmation_pending = false
 	_quick_resolve_confirmation_focus_origin = null
 	_validation_quick_resolve_confirmation_cancel_count += 1
-	_quick_resolve_confirmation_dialog.hide()
+	FrontierVisualKit.hide_exclusive_dialog(_quick_resolve_confirmation_dialog)
 	var result := {
 		"ok": true,
 		"canceled": true,
@@ -782,7 +782,7 @@ func _on_quick_resolve_confirmed() -> void:
 	_quick_resolve_confirmation_pending = false
 	_quick_resolve_confirmation_focus_origin = null
 	_validation_quick_resolve_confirmation_confirm_count += 1
-	_quick_resolve_confirmation_dialog.hide()
+	FrontierVisualKit.hide_exclusive_dialog(_quick_resolve_confirmation_dialog)
 	if not _battle_resolution_checkpoint_pending.is_empty():
 		_last_quick_resolve_confirmation_result = {
 			"ok": false,
@@ -947,7 +947,7 @@ func _on_withdrawal_confirmation_canceled() -> void:
 func _cancel_withdrawal_confirmation() -> Dictionary:
 	var action_id := _pending_withdrawal_action
 	var focus_origin := _withdrawal_focus_origin
-	_withdrawal_confirmation_dialog.hide()
+	FrontierVisualKit.hide_exclusive_dialog(_withdrawal_confirmation_dialog)
 	_pending_withdrawal_action = ""
 	_withdrawal_focus_origin = null
 	var result := {
@@ -965,7 +965,7 @@ func _on_withdrawal_confirmation_confirmed() -> Dictionary:
 	var action_id := _pending_withdrawal_action
 	var focus_origin := _withdrawal_focus_origin
 	var route_attempts_before := _validation_battle_resolution_attempt_count
-	_withdrawal_confirmation_dialog.hide()
+	FrontierVisualKit.hide_exclusive_dialog(_withdrawal_confirmation_dialog)
 	_pending_withdrawal_action = ""
 	_withdrawal_focus_origin = null
 	var availability := _withdrawal_action_availability(action_id)
@@ -2833,15 +2833,20 @@ func _refresh_save_slot_picker() -> void:
 	if _save_slot_picker.get_item_count() <= 0:
 		return
 
-	var surface := AppRouter.active_save_surface()
+	var surface := AppRouter.active_save_surface({}, false)
 	var selected_slot := SaveService.get_selected_manual_slot()
 	for index in range(_save_slot_picker.get_item_count()):
 		if _save_slot_picker.get_item_id(index) == selected_slot:
 			_save_slot_picker.select(index)
 			break
 
-	var summary_value: Variant = surface.get("slot_summary", SaveService.inspect_manual_slot(selected_slot))
+	var summary_value: Variant = surface.get("slot_summary")
 	var summary: Dictionary = summary_value if summary_value is Dictionary else SaveService.inspect_manual_slot(selected_slot)
+	# This summary was just inspected by SaveService and already owns its exact
+	# stored-state copy. Rebuilding it twice reconstructs old worlds per action.
+	var summary_detail := String(summary.get("detail", ""))
+	if summary_detail == "":
+		summary_detail = SaveService.describe_slot_details(summary)
 	var latest_context := String(surface.get("latest_context", "Latest ready save: none."))
 	var save_check := String(surface.get("save_check", ""))
 	var save_handoff := String(surface.get("save_handoff", ""))
@@ -2869,9 +2874,9 @@ func _refresh_save_slot_picker() -> void:
 		save_tooltip_lines.append("Saving now recap:\n%s" % current_save_recap)
 	if current_context != "":
 		save_tooltip_lines.append("Saving now: %s" % current_context)
-	save_tooltip_lines.append("Selected slot:\n%s" % SaveService.describe_slot_details(summary))
+	save_tooltip_lines.append("Selected slot:\n%s" % summary_detail)
 	_system_body_label.tooltip_text = "\n".join(save_tooltip_lines)
-	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
+	_save_slot_picker.tooltip_text = summary_detail
 	_save_button.text = "Save" if _compact_layout_active else String(surface.get("save_button_label", "Save Battle"))
 	_save_button.tooltip_text = _join_tooltip_sections([
 		"Create or replace a named file for the current battle.",
@@ -3221,7 +3226,7 @@ func validation_confirm_quick_resolve_confirmation() -> Dictionary:
 	return _last_quick_resolve_confirmation_result.duplicate(true)
 
 func validation_reset_quick_resolve_confirmation_state() -> void:
-	_quick_resolve_confirmation_dialog.hide()
+	FrontierVisualKit.hide_exclusive_dialog(_quick_resolve_confirmation_dialog)
 	_quick_resolve_confirmation_pending = false
 	_quick_resolve_confirmation_focus_origin = null
 	_last_quick_resolve_confirmation_result = {}

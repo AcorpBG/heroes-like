@@ -18816,10 +18816,10 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             "is_equal_approx(tabs.size.y, contained_tabs_height)",
             "_battle_background_authority(session) != authority_before",
         ))
-        ensure(all(index >= 0 for index in scale_fit_order) and list(scale_fit_order) == sorted(scale_fit_order), errors, "Battle 100/130-scale proof must preserve independent summaries, native two-line policy, system-row geometry, tab containment, then authority")
+        ensure(all(index >= 0 for index in scale_fit_order) and list(scale_fit_order) == sorted(scale_fit_order), errors, "Battle 100/130-scale proof must preserve independent summaries, native single-line policy, system-row geometry, tab containment, then authority")
         for required_token in (
-            "commander_label.get_line_count() != 2",
-            "commander_label.get_visible_line_count() != 2",
+            "commander_label.get_line_count() != 1",
+            "commander_label.get_visible_line_count() != 1",
             "control.get_parent() != system_actions",
             "control_rect.position.x + 0.01 < previous_system_right",
             "shell.get_global_rect().encloses(footer.get_global_rect())",
@@ -22908,7 +22908,7 @@ def validate_overworld_refresh_watch_context_reuse(errors: list[str]) -> None:
         "func _refresh_save_surface(refresh_watch_context: Dictionary = {}) -> int:",
         "_refresh_save_slot_picker(refresh_watch_context)",
         "func _refresh_save_slot_picker(refresh_watch_context: Dictionary = {}) -> void:",
-        "var surface = AppRouter.active_save_surface(refresh_watch_context)",
+        "var surface = AppRouter.active_save_surface(refresh_watch_context, false)",
         'if not refresh_watch_context.is_empty():\n\t\t_profile_add("refresh_watch_observation_context_reuses", 1)',
         "func _refresh_commitment_panel(refresh_watch_context: Dictionary = {}) -> void:",
         "OverworldRules.describe_commitment_board(_session, refresh_watch_context)",
@@ -22920,12 +22920,13 @@ def validate_overworld_refresh_watch_context_reuse(errors: list[str]) -> None:
         ensure(token in shell_text, errors, f"Shell refresh-watch consumer is missing token: {token}")
 
     router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")
-    router_match = re.search(r"func active_save_surface\(refresh_watch_context: Dictionary = \{\}\) -> Dictionary:(.*?)(?=\n\nfunc consume_menu_notice)", router_text, flags=re.DOTALL)
+    router_match = re.search(r"func active_save_surface\(refresh_watch_context: Dictionary = \{\}, include_stored_recaps: bool = true\) -> Dictionary:(.*?)(?=\n\nfunc consume_menu_notice)", router_text, flags=re.DOTALL)
     ensure(router_match is not None, errors, "AppRouter Save surface watch-context bridge could not be isolated")
     if router_match is not None:
         router_body = router_match.group(1)
-        ensure("SaveService.build_in_session_save_surface(null)" in router_body, errors, "No-session Save surface must retain its direct default path")
+        ensure("SaveService.build_in_session_save_surface(null, -1, refresh_watch_context, true, include_stored_recaps)" in router_body, errors, "No-session Save surface must retain selected-slot defaults and forward the explicit recap projection")
         ensure("SaveService.get_selected_manual_slot(),\n\t\trefresh_watch_context" in router_body, errors, "Playable Save surface must pass the request-local watch context exactly once")
+        ensure("refresh_watch_context,\n\t\ttrue,\n\t\tinclude_stored_recaps" in router_body, errors, "Playable Save surface must preserve stored-summary inspection when omitting unused recaps")
 
     save_text = SAVE_SERVICE_PATH.read_text(encoding="utf-8")
     save_surface_match = re.search(r"func build_in_session_save_surface\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nfunc _build_in_session_save_surface_direct_legacy)", save_text, flags=re.DOTALL)
@@ -46282,7 +46283,9 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
         'String(movement.get("visual_policy", "")) == "reduced_motion_fallback"',
         'movement_start.get("route_tiles", []) != expected_route',
         'int(movement_start.get("duration_ms", 0)) != 440',
-        'await get_tree().create_timer(0.16).timeout',
+        'await get_tree().create_timer(0.04).timeout',
+        'layout_generation_delta > 1',
+        'String(start_cache.get("session_static_reason", "")) != "resized"',
         'await get_tree().create_timer(0.36).timeout',
         'int(mid_cache.get("session_static_generation", -1))',
         'int(mid_cache.get("state_generation", -1))',
@@ -57537,7 +57540,7 @@ def validate_overworld_object_focus_cue_playback(errors: list[str]) -> None:
     ensure("session.overworld[" not in producer and "session.flags[" not in producer and "await " not in producer and "create_timer" not in producer and "create_tween" not in producer, errors, "Object-focus producer must remain synchronous and read-only")
     ensure(selected_setter.find("if _selected_tile == route_tile:") < selected_setter.find("_object_focus_presentation = {}") < selected_setter.find("_selected_tile = route_tile"), errors, "Actual selection changes must clear stale object focus before changing tile")
     ensure(pointer_handler.count('_record_selected_object_focus_presentation("pointer")') == 1 and pointer_handler.find('_debug_set_path_command_type("select_route")') < pointer_handler.find('_record_selected_object_focus_presentation("pointer")') < pointer_handler.find('_refresh_selected_route_preview("selected_route_changed")'), errors, "Pointer focus must publish only on the non-action route-selection branch before refresh")
-    ensure(controller_handler.count('_record_selected_object_focus_presentation("controller_route_cursor")') == 1 and controller_handler.find("_set_selected_tile(requested)") < controller_handler.find('_record_selected_object_focus_presentation("controller_route_cursor")') < controller_handler.find("_refresh_selected_route_preview"), errors, "Controller focus must publish after a changed selection and before refresh")
+    ensure(controller_handler.count('_record_selected_object_focus_presentation("controller_route_cursor")') == 1 and 0 <= controller_handler.find("_set_selected_tile(requested, false)") < controller_handler.find('_record_selected_object_focus_presentation("controller_route_cursor")') < controller_handler.find("_refresh_selected_route_preview"), errors, "Controller focus must publish after an exact tile selection and before refresh")
     ensure(refresh_map.find("_selected_guarded_site_presentation()") < refresh_map.find("_spell_cast_presentation") < refresh_map.find("_object_focus_presentation"), errors, "Map-state handoff must preserve guarded/spell argument ownership and append object focus")
     for forbidden_owner in ("validation_select_tile", "validation_click_tile", "_on_map_tile_hovered"):
         ensure("_record_selected_object_focus_presentation" not in function_block(shell_text, forbidden_owner), errors, f"Object focus must not be synthesized by {forbidden_owner}")
@@ -66057,7 +66060,8 @@ def validate_live_client_harness(errors: list[str]) -> None:
             'String(battle_snapshot.get("battle_context_town_placement_id", "")) == String(assaulted_town.get("placement_id", ""))',
             'var battle_resume := await _save_and_resume_battle_from_main_menu(',
             'var battle_resolution := await _play_battle_to_scene(',
-            'SCENARIO_OUTCOME_SCENE if resolving_outcome else OVERWORLD_SCENE,\n\t\tscenario_id == "river-pass"\n\t)',
+            'SCENARIO_OUTCOME_SCENE if resolving_outcome and scenario_id != "river-pass" else OVERWORLD_SCENE,\n\t\tscenario_id == "river-pass"\n\t)',
+            'battle_resolution = await _complete_river_pass_counterstroke(battle_resolution, "skirmish")',
             'var expected_locked_headcount := _expected_occupation_locked_recruit_total(',
             'actual_locked_headcount == expected_locked_headcount',
             'and locked_payload_headcount == actual_locked_headcount',
@@ -66075,9 +66079,9 @@ def validate_live_client_harness(errors: list[str]) -> None:
             "Skirmish town-battle validation must use exactly one interrupt-aware hostile-town route",
         )
         ensure(
-            skirmish_town_battle_body.count('scenario_id == "river-pass"') == 4,
+            skirmish_town_battle_body.count('scenario_id == "river-pass"') == 5,
             errors,
-            "Skirmish town-battle validation must use River Pass specialization only for refit/artifact routing and the two established Quick Resolve boundaries",
+            "Skirmish town-battle validation must preserve River Pass refit/artifact routing, two Quick Resolve boundaries and its required counterstroke",
         )
         support_claim_index = skirmish_town_battle_body.find('var free_company_claim := await _claim_overworld_validation_target(')
         resolving_branch_index = skirmish_town_battle_body.find("if resolving_outcome:")
@@ -66146,7 +66150,7 @@ def validate_live_client_harness(errors: list[str]) -> None:
         route_wait_tokens = (
             "await _settle_frames(6)",
             "var current_scene = get_tree().current_scene",
-            "if scene_path == BATTLE_SCENE and not SessionState.has_battle_state():",
+            "if scene_path == BATTLE_REPORT_SCENE or (scene_path == BATTLE_SCENE and not SessionState.has_battle_state()):",
             'current_scene.call("validation_battle_resolution_checkpoint_snapshot")',
             "var routed_scene = await _wait_for_scene(destination_scene, 10000)",
             '"Resolved battle did not complete its checkpointed scene route."',
@@ -75543,9 +75547,9 @@ def validate_generated_large_town_explicit_save_surface_regression(errors: list[
     build_body = save_service_text[build_start:build_end] if build_start >= 0 and build_end > build_start else ""
     build_order = [
         build_body.find("var stored_recap_profile := {}"),
-        build_body.find("var slot_resume_recap := _describe_summary_resume_recap_with_context(slot_summary, stored_recap_profile)"),
+        build_body.find('var slot_resume_recap := _describe_summary_resume_recap_with_context(slot_summary, stored_recap_profile) if include_stored_recaps else ""'),
         build_body.find("var stored_recap_alias_reused := _summaries_share_storage_identity(slot_summary, latest_summary)"),
-        build_body.find("var latest_resume_recap := slot_resume_recap if stored_recap_alias_reused else _describe_summary_resume_recap_with_context(latest_summary, stored_recap_profile)"),
+        build_body.find("var latest_resume_recap := slot_resume_recap if stored_recap_alias_reused or not include_stored_recaps else _describe_summary_resume_recap_with_context(latest_summary, stored_recap_profile)"),
         build_body.find('"stored_recap_context_build_count": int(stored_recap_profile.get("context_build_count", 0))'),
         build_body.find('"stored_recap_context_reuse_count": int(stored_recap_profile.get("context_reuse_count", 0))'),
     ]
@@ -78688,7 +78692,7 @@ def validate_shared_heraldic_hardware_cursor(errors: list[str]) -> None:
             setter_body = setter_match.group("body")
             ensure(setter_body.count("_sync_pointer_cursor()") == 1, errors, "High-contrast changes must synchronize the hardware cursor exactly once")
         sync_match = re.search(
-            r"static func _sync_pointer_cursor\(\) -> void:\n(?P<body>(?:\t.*\n)+?)\nstatic func validation_pointer_cursor_snapshot",
+            r"static func _sync_pointer_cursor\(\) -> void:\n(?P<body>(?:\t.*\n)+?)\nstatic func ",
             visual_kit_text,
         )
         ensure(sync_match is not None, errors, "FrontierVisualKit hardware cursor synchronizer could not be isolated")
