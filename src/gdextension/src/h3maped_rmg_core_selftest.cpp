@@ -4949,6 +4949,10 @@ int main() {
 				&& native_runtime_projection.height == 36
 				&& native_runtime_projection.level_count == 1
 				&& native_runtime_projection.tile_count == 36 * 36
+				&& native_runtime_projection.team_count
+						== generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.team_count
+				&& native_runtime_projection.player_team_assignments
+						== generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.player_team_assignments
 				&& native_runtime_projection.object_count
 						== generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count,
 			"native-owned final payload did not project after complete source-order assembly: "
@@ -9116,6 +9120,8 @@ int main() {
 					&& projection.applied
 					&& projection.blocked_reason.empty()
 					&& projection.tile_count == 41472
+					&& projection.team_count == workflow.final_header_writeout_0x4ac857_0x4ad206.team_count
+					&& projection.player_team_assignments == workflow.final_header_writeout_0x4ac857_0x4ad206.player_team_assignments
 					&& projection.object_count == expected_object_count,
 				"XLarge two-level seed-" + std::to_string(seed)
 						+ " workflow diverged from recovered final writeout or runtime projection")) {

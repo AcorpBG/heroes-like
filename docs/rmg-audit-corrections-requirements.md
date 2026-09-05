@@ -17,6 +17,8 @@ Owner direction, 2026-09-05: fix all issues in `docs/rmg-start-placement-and-h3m
 
 Native generation semantics and live Aurelion adoption are distinct owners. Entrance starts are an explicit product requirement, not an invented H3MapEd hero-runtime claim. Respect recovered exact masks; legal town interaction must be modeled by rules, not by erasing unrelated blockers. Existing authored one-level scenarios and saved progress remain compatible. If additive fields are insufficient, use an explicit versioned save migration with old/new round-trip coverage rather than silently changing save interpretation.
 
+Player-identity compatibility: new generated sessions retain source players/teams in additive version-1 fields. Already-played generated saves that pooled factions retain their actual historical ownership/economy under explicit `legacy_generated_faction_v0` interpretation, with old-bridge and production-save continuation coverage; do not fabricate missing history or clone pooled treasuries. Reconstructing lost per-player history and multi-human gameplay are not claimed by the one-human runtime correction.
+
 Concrete owners: `map_package_service.cpp`, recovered `h3maped_rmg_core.cpp`, package/session bridge, `OverworldRules.gd`, hero/player/AI rules, persistence and Overworld map/minimap/input owners. Python owns new tests and report orchestration; temporary engine adapters only invoke production paths and collect evidence.
 
 ## Validation and completion
@@ -32,4 +34,4 @@ Non-goals: unrelated art/Town UI/balance/performance rewrites, copied foreign as
 
 ## Current evidence
 
-The completed entrance-boundary and level-aware runtime children are recorded in `docs/rmg-town-entrance-correction-report.md` and `docs/rmg-level-aware-runtime-report.md`. All 83 sampled native player starts equal their main-town entrances; all 35 supported primary-hero entry/exit/return/save cases now pass, including two-level maps. Native object/terrain records and payload hashes/lengths are unchanged. The full correction goal remains active: distinct players/teams, native transit/water navigation, source-proven normal-water parity and integrated regressions remain required.
+The completed entrance-boundary, level-aware runtime and player/team children are recorded in `docs/rmg-town-entrance-correction-report.md`, `docs/rmg-level-aware-runtime-report.md` and `docs/rmg-player-team-identity-correction-report.md`. All 83 sampled native player starts equal their main-town entrances; all 35 supported primary-hero entry/exit/return/save cases pass, including two-level maps. Six/eight-player and explicit-team cases retain independent runtime opponents and pass capture/battle/production-save continuity. Native object/terrain records and payload hashes/lengths are unchanged. The full correction goal remains active: native transit/water navigation, source-proven normal-water parity and integrated regressions remain required.

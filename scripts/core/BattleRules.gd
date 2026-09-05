@@ -2,6 +2,7 @@ class_name BattleRules
 extends RefCounted
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
@@ -90,7 +91,6 @@ static func create_town_assault_payload(
 	var town: Dictionary = town_result.get("town", {})
 	if town.is_empty() or String(town.get("owner", "neutral")) != "enemy":
 		return {}
-	var town_template: Dictionary = ContentService.get_town(String(town.get("town_id", "")))
 	var enemy_commander := _town_assault_enemy_commander_state(town)
 	var entrance := LevelRules.town_entrance(town)
 	var placement := {
@@ -112,7 +112,8 @@ static func create_town_assault_payload(
 		"battle_context": {
 			"type": "town_assault",
 			"town_placement_id": town_placement_id,
-			"trigger_faction_id": String(town_template.get("faction_id", "")),
+			"trigger_faction_id": PlayerRules.faction_id(session, PlayerRules.town_controller_id(town)),
+			"trigger_player_id": String(town.get("controlling_player_id", "")),
 		},
 	}
 	return create_battle_payload(session, placement)
@@ -149,6 +150,7 @@ static func create_resource_defense_payload(
 			% [session.scenario_id, session.launch_mode, session.day, resource_placement_id]
 		),
 		"spawned_by_faction_id": faction_id,
+		"spawned_by_player_id": String(node.get("ai_defended_by_player_id", node.get("collected_by_player_id", ""))),
 		"target_kind": "resource",
 		"target_placement_id": resource_placement_id,
 		"target_label": String(site.get("name", resource_placement_id)),
@@ -160,6 +162,7 @@ static func create_resource_defense_payload(
 			"resource_site_id": String(node.get("site_id", "")),
 			"resource_site_name": String(site.get("name", resource_placement_id)),
 			"trigger_faction_id": faction_id,
+			"trigger_player_id": String(node.get("ai_defended_by_player_id", node.get("collected_by_player_id", ""))),
 		},
 	}
 	return create_battle_payload(session, placement)
@@ -369,6 +372,9 @@ static func _synthetic_battle_encounter_placement(
 	}
 	if LevelRules.level_of(position) != 0:
 		synthetic["level"] = LevelRules.level_of(position)
+	if String(synthetic_context.get("trigger_player_id", "")) != "":
+		synthetic["spawned_by_player_id"] = String(synthetic_context.trigger_player_id)
+		synthetic["spawned_by_faction_id"] = String(synthetic_context.get("trigger_faction_id", ""))
 	if _is_resource_assault_context(synthetic_context):
 		synthetic["target_kind"] = "resource"
 		synthetic["target_placement_id"] = String(synthetic_context.get("resource_placement_id", ""))
@@ -483,7 +489,38 @@ static func _find_town_at_position(
 			return {"index": index, "town": town}
 	return {"index": -1, "town": {}}
 
+static func _battle_context_controller_id(session: SessionStateStoreScript.SessionData, context: Dictionary, raw_context: Variant = {}) -> String:
+	var source: Dictionary = raw_context if raw_context is Dictionary else {}
+	var player_id := String(context.get("trigger_player_id", ""))
+	if player_id == "":
+		player_id = String(source.get("spawned_by_player_id", source.get("trigger_player_id", "")))
+	if player_id != "":
+		return player_id
+	if String(context.get("type", "")) == "town_assault":
+		var town: Dictionary = _find_town_by_placement(session, _battle_context_town_placement_id(session, context, source)).get("town", {})
+		if String(town.get("controlling_player_id", "")) != "":
+			return String(town.controlling_player_id)
+	if String(context.get("type", "")) == "resource_assault":
+		var node: Dictionary = OverworldRulesScript._find_resource_node_by_placement(session, _battle_context_resource_placement_id(context, source)).get("node", {})
+		var defender := PlayerRules.defender_controller_id(node)
+		if not PlayerRules.player(session, defender).is_empty():
+			return defender
+		if String(node.get("collected_by_player_id", "")) != "":
+			return String(node.collected_by_player_id)
+	return _battle_context_trigger_faction_id(session, context, source)
+
 static func _normalized_battle_context(session: SessionStateStoreScript.SessionData, raw_context: Variant) -> Dictionary:
+	var normalized := _normalized_battle_context_fields(session, raw_context)
+	var source: Dictionary = raw_context if raw_context is Dictionary else {}
+	var context: Dictionary = source.get("battle_context", source) if source.get("battle_context", source) is Dictionary else {}
+	var identity_context := normalized.merged(context, true)
+	var controller := _battle_context_controller_id(session, identity_context, source)
+	if not PlayerRules.player(session, controller).is_empty():
+		normalized["trigger_player_id"] = controller
+		normalized["trigger_faction_id"] = PlayerRules.faction_id(session, controller)
+	return normalized
+
+static func _normalized_battle_context_fields(session: SessionStateStoreScript.SessionData, raw_context: Variant) -> Dictionary:
 	var context = {}
 	if raw_context is Dictionary:
 		if raw_context.has("battle_context") and raw_context.get("battle_context", {}) is Dictionary:
@@ -3938,11 +3975,11 @@ static func _battle_enemy_faction_id(session: SessionStateStoreScript.SessionDat
 	var context = session.battle.get("context", {})
 	var faction_id := ""
 	if _is_town_defense_context(context) or _is_town_assault_context(context) or _is_resource_assault_context(context):
-		faction_id = String(context.get("trigger_faction_id", ""))
+		faction_id = _battle_context_controller_id(session, context)
 		if _enemy_state_exists(session, faction_id):
 			return faction_id
 	var encounter = _current_battle_encounter_placement(session)
-	faction_id = String(encounter.get("spawned_by_faction_id", ""))
+	faction_id = PlayerRules.raid_controller_id(encounter)
 	if _enemy_state_exists(session, faction_id):
 		return faction_id
 	faction_id = _side_faction_id(session.battle, "enemy")
@@ -3952,13 +3989,13 @@ static func _enemy_state_exists(session: SessionStateStoreScript.SessionData, fa
 	if session == null or faction_id == "":
 		return false
 	for state in session.overworld.get("enemy_states", []):
-		if state is Dictionary and String(state.get("faction_id", "")) == faction_id:
+		if state is Dictionary and PlayerRules.controller_id(state) == faction_id:
 			return true
 	return false
 
 static func _battle_enemy_label(session: SessionStateStoreScript.SessionData, faction_id: String) -> String:
 	if faction_id != "":
-		return String(ContentService.get_faction(faction_id).get("name", faction_id))
+		return String(ContentService.get_faction(PlayerRules.faction_id(session, faction_id)).get("name", faction_id))
 	if session == null or session.battle.is_empty():
 		return "The opposing host"
 	return String(session.battle.get("encounter_name", session.battle.get("encounter_id", "The opposing host")))
@@ -7590,7 +7627,7 @@ static func _adjust_enemy_pressure(session: SessionStateStoreScript.SessionData,
 		return 0
 	for index in range(states.size()):
 		var state = states[index]
-		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+		if not (state is Dictionary) or PlayerRules.controller_id(state) != faction_id:
 			continue
 		var current = max(0, int(state.get("pressure", 0)))
 		var updated = max(0, current + delta)
@@ -7612,7 +7649,7 @@ static func _add_enemy_treasury_resources(
 		return
 	for index in range(states.size()):
 		var state = states[index]
-		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+		if not (state is Dictionary) or PlayerRules.controller_id(state) != faction_id:
 			continue
 		var treasury = state.get("treasury", {}).duplicate(true) if state.get("treasury", {}) is Dictionary else {}
 		for resource_key_value in delta.keys():
@@ -11050,7 +11087,7 @@ static func _apply_battle_context_victory(session: SessionStateStoreScript.Sessi
 		return String(result.get("message", "")) if bool(result.get("ok", false)) else "%s is retaken." % String(context.get("resource_site_name", "The field site"))
 	if not _is_town_defense_context(context):
 		return ""
-	_set_enemy_siege_progress(session, String(context.get("trigger_faction_id", "")), 0)
+	_set_enemy_siege_progress(session, _battle_context_controller_id(session, context), 0)
 	var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
 	var message = "%s repels the assault." % (town_name if town_name != "" else "The town")
 	var recovery_message = _apply_town_defense_recovery(session, "victory")
@@ -11115,7 +11152,7 @@ static func _finalize_town_defense_loss(session: SessionStateStoreScript.Session
 	_capture_town_after_assault(session, String(context.get("town_placement_id", "")), enemy_survivors)
 	var recovery_message = _apply_town_defense_recovery(session, "loss")
 	_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
-	_set_enemy_siege_progress(session, String(context.get("trigger_faction_id", "")), 0)
+	_set_enemy_siege_progress(session, _battle_context_controller_id(session, context), 0)
 	var commander_aftermath := _station_enemy_commander_after_town_capture(
 		session,
 		String(context.get("town_placement_id", "")),
@@ -11264,7 +11301,7 @@ static func _stabilize_hostile_town_front(
 	if not _is_town_assault_context(context):
 		return ""
 	var town_placement_id := String(context.get("town_placement_id", ""))
-	var faction_id := String(context.get("trigger_faction_id", ""))
+	var faction_id := _battle_context_controller_id(session, context)
 	var result := OverworldRulesScript.stabilize_town_front(
 		session,
 		town_placement_id,
@@ -11313,7 +11350,7 @@ static func _capture_town_after_assault(session: SessionStateStoreScript.Session
 		session,
 		town_placement_id,
 		"enemy",
-		String(context.get("trigger_faction_id", "")),
+		_battle_context_controller_id(session, context),
 		"retaken town"
 	)
 	var town = transition.get("town", town_result.get("town", {}))
@@ -11451,7 +11488,7 @@ static func _set_enemy_siege_progress(session: SessionStateStoreScript.SessionDa
 		var state = states[index]
 		if not (state is Dictionary):
 			continue
-		if String(state.get("faction_id", "")) != faction_id:
+		if PlayerRules.controller_id(state) != faction_id:
 			continue
 		state["siege_progress"] = max(0, progress)
 		states[index] = state

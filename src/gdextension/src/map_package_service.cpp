@@ -1222,6 +1222,10 @@ Dictionary runtime_objects(
 			object["owner"] = slot == nullptr ? "neutral" : (slot->human ? "player" : "enemy");
 			object["owner_slot"] = slot == nullptr ? 0 : slot->color + 1;
 			object["player_slot"] = slot == nullptr ? 0 : slot->color + 1;
+			object["controlling_player_id"] = slot == nullptr ? String() : "player_" + String::num_int64(slot->color + 1);
+			object["team_id"] = slot == nullptr ? String() : (projection.team_count > 0
+					? "team_" + String::num_int64(projection.player_team_assignments[size_t(slot->color)])
+					: "player_" + String::num_int64(slot->color + 1));
 			object["player_type"] = slot == nullptr ? "neutral" : (slot->human ? "human" : "computer");
 			object["is_start_town"] = slot != nullptr;
 			object["start_anchor"] = slot != nullptr;
@@ -2976,6 +2980,13 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 		Dictionary player_slot;
 		player_slot["slot"] = slot.color + 1;
 		player_slot["color"] = slot.color;
+		player_slot["player_id"] = "player_" + String::num_int64(slot.color + 1);
+		// A zero team count is the recovered header's free-for-all form.
+		player_slot["team_id"] = projection.team_count > 0
+				? "team_" + String::num_int64(projection.player_team_assignments[size_t(slot.color)])
+				: String(player_slot["player_id"]);
+		player_slot["source_team_index"] = projection.team_count > 0
+				? int32_t(projection.player_team_assignments[size_t(slot.color)]) : -1;
 		player_slot["human"] = slot.human;
 		player_slot["computer"] = slot.computer;
 		player_slot["owner"] = slot.human ? "player" : "enemy";
@@ -2990,6 +3001,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 			start["owner"] = slot.human ? "player" : "enemy";
 			start["owner_slot"] = slot.color + 1;
 			start["player_slot"] = slot.color + 1;
+			start["player_id"] = player_slot["player_id"];
+			start["team_id"] = player_slot["team_id"];
 			start["player_type"] = slot.human ? "human" : "computer";
 			start["faction_id"] = configured_runtime_faction_id(&slot, normalized);
 			start["town_id"] = configured_runtime_town_id(&slot, normalized);

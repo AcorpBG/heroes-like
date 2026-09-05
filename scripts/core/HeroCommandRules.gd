@@ -91,6 +91,8 @@ static func normalize_session(
 	for index in range(normalized_heroes.size()):
 		var hero = normalized_heroes[index]
 		hero["is_primary"] = String(hero.get("id", "")) == resolved_primary_id
+		if String(session.overworld.get("active_player_id", "")) != "":
+			hero["player_id"] = String(session.overworld.active_player_id)
 		normalized_heroes[index] = hero
 
 	session.overworld["player_heroes"] = normalized_heroes
@@ -137,6 +139,8 @@ static func build_hero_from_template(
 	var movement_max := movement_max_for_hero(hero, movement_source)
 	hero["movement"] = {"current": movement_max, "max": movement_max}
 	hero["is_primary"] = false
+	if movement_source is SessionStateStoreScript.SessionData and String(movement_source.overworld.get("active_player_id", "")) != "":
+		hero["player_id"] = String(movement_source.overworld.active_player_id)
 	return hero
 
 static func movement_max_for_hero(hero_state: Dictionary, movement_source: Variant = null) -> int:

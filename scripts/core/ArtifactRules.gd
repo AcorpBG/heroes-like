@@ -97,6 +97,8 @@ static func build_artifact_nodes(placements: Variant, scenario_id: String = "") 
 		}
 		if placement.has("level"):
 			node["level"] = int(placement["level"])
+		if String(placement.get("collected_by_player_id", "")) != "":
+			node["collected_by_player_id"] = String(placement.collected_by_player_id)
 		if table_id != "":
 			node["artifact_reward_table_id"] = table_id
 			node["artifact_reward_source_key"] = source_key

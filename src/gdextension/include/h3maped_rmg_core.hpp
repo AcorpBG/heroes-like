@@ -4136,6 +4136,9 @@ struct RuntimeMapPayloadProjection {
 	std::vector<FinalObjectDefinitionRecord4ad3eb> object_definitions;
 	std::vector<RuntimeMapObjectProjection> objects;
 	std::vector<FinalHeaderPlayerSlot4ac857> player_slots;
+	// Copied from the owned final header, never reconstructed from factions.
+	int32_t team_count = 0;
+	std::array<uint8_t, 8> player_team_assignments {};
 };
 
 struct EndpointPointerRecord4a5e73 {
