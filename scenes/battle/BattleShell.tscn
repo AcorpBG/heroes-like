@@ -746,6 +746,7 @@ stretch_mode = 5
 title = "Quick Resolve Battle?"
 initial_position = 1
 exclusive = true
+dialog_hide_on_ok = false
 ok_button_text = "Resolve Battle"
 dialog_text = "Quick Resolve automatically plays the remaining battle.\n\nSurviving armies keep permanent casualties, commanders may use mana, and the final outcome applies normal victory, defeat, and objective consequences.\n\nThis cannot be undone."
 
@@ -753,6 +754,7 @@ dialog_text = "Quick Resolve automatically plays the remaining battle.\n\nSurviv
 title = "Confirm Withdrawal?"
 initial_position = 1
 exclusive = true
+dialog_hide_on_ok = false
 ok_button_text = "Confirm Withdrawal"
 dialog_text = "Confirm this army-wide battle exit order?"
 

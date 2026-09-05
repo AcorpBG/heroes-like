@@ -270,6 +270,23 @@ static func _sync_pointer_cursor() -> void:
 	Input.set_custom_mouse_cursor(_pointer_cursor_texture, Input.CURSOR_ARROW, POINTER_CURSOR_HOTSPOT)
 	_pointer_cursor_mode = "custom_standard"
 
+static func hide_exclusive_dialog(dialog: Window) -> void:
+	# Godot 4.6.2 restores embedded-parent accessibility focus before clearing
+	# exclusive_child in Window::set_visible(false). Release that link first so
+	# it cannot focus the removed subwindow; restore modality while still hidden.
+	var was_exclusive := dialog.exclusive
+	if was_exclusive and dialog.is_embedded():
+		dialog.exclusive = false
+	dialog.hide()
+	dialog.exclusive = was_exclusive
+
+static func release_runtime_resources() -> void:
+	# The script's static reference can otherwise outlive RenderingServer at exit.
+	# The application owner calls this while the scene tree/renderer still exist.
+	Input.set_custom_mouse_cursor(null, Input.CURSOR_ARROW)
+	_pointer_cursor_texture = null
+	_pointer_cursor_mode = "system_released"
+
 static func validation_pointer_cursor_snapshot() -> Dictionary:
 	return {
 		"asset_path": POINTER_CURSOR_PATH,

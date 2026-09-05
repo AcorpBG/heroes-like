@@ -4,6 +4,10 @@ Slice: `economy-town-development-save-resume-20260524-10184`
 
 Report schema: `town_development_save_resume_report_v1`
 
+## Current-content recheck — 2026-09-05
+
+The original 15-town evidence below is historical, not a current all-content completion claim. The full-play performance sweep checks today's 32 towns: all 32 preserve rare-build save/resume, Town resume targeting and same-day build guards; 31 complete the 30-day development budget. `town_moonbite_reedshrine` still lacks `building_mireclaw_moonbite_mirehorn_chain_pen` at the deadline. Its later days stall for affordability, including peatwax availability. The exact whole report is identical with the prior ordered lookup owner from `bd42b459` and the new index; this is a pre-existing balance gap, not a save or lookup regression. No cost/income change is made. Evidence and replay commands: [full-play review](full-play-runtime-performance-report.md), `domain_corrected` and `moonbite_control_final` under `.artifacts/full_play_runtime_20260905/`.
+
 ## Scope
 
 This slice adds a focused live Godot report for town-development save/resume continuity. It covers 15 authored towns and drives each case through live `OverworldRules.end_turn`, `OverworldRules.build_in_active_town`, `TownRules.get_build_actions`, and `SaveService` manual save/restore APIs.

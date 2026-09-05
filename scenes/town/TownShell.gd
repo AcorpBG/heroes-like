@@ -2820,10 +2820,13 @@ func _refresh_save_slot_picker(force_surface: bool = false, view_state: Dictiona
 		_menu_button.tooltip_text = "Return to the main menu after updating autosave."
 		return
 
-	var surface := AppRouter.active_save_surface()
+	var surface := AppRouter.active_save_surface({}, false)
 
-	var summary_value: Variant = surface.get("slot_summary", SaveService.inspect_manual_slot(selected_slot))
+	var summary_value: Variant = surface.get("slot_summary")
 	var summary: Dictionary = summary_value if summary_value is Dictionary else SaveService.inspect_manual_slot(selected_slot)
+	var summary_detail := String(summary.get("detail", ""))
+	if summary_detail == "":
+		summary_detail = SaveService.describe_slot_details(summary)
 	var latest_context := String(surface.get("latest_context", "Latest ready save: none."))
 	var save_check := String(surface.get("save_check", ""))
 	var save_handoff := String(surface.get("save_handoff", ""))
@@ -2844,9 +2847,9 @@ func _refresh_save_slot_picker(force_surface: bool = false, view_state: Dictiona
 		save_tooltip_lines.append("Saving now recap:\n%s" % current_save_recap)
 	if current_context != "":
 		save_tooltip_lines.append("Saving now: %s" % current_context)
-	save_tooltip_lines.append("Selected slot:\n%s" % SaveService.describe_slot_details(summary))
+	save_tooltip_lines.append("Selected slot:\n%s" % summary_detail)
 	_save_status_label.tooltip_text = "\n".join(save_tooltip_lines)
-	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
+	_save_slot_picker.tooltip_text = summary_detail
 	_save_button.text = String(surface.get("save_button_label", "Save Town"))
 	_save_button.tooltip_text = _join_tooltip_sections([
 		"Create or replace a named file for this town visit.",

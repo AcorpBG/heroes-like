@@ -260,8 +260,11 @@ func _stage_river_pass_victory(session) -> void:
 	var resolved = session.overworld.get("resolved_encounters", [])
 	if not (resolved is Array):
 		resolved = []
-	if "river_pass_reed_totemists" not in resolved:
-		resolved.append("river_pass_reed_totemists")
+	# Stage every current authored victory requirement before testing the commit
+	# boundary; this fixture is not normal-play campaign completion evidence.
+	for placement in ["river_pass_ghoul_grove", "river_pass_hollow_mire", "river_pass_reed_totemists", "duskfen_counterstroke"]:
+		if placement not in resolved:
+			resolved.append(placement)
 	session.overworld["resolved_encounters"] = resolved
 
 

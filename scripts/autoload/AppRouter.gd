@@ -4,6 +4,7 @@ extends Node
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
+const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 const MAIN_MENU_SCENE := "res://scenes/menus/MainMenu.tscn"
 const SCENARIO_OUTCOME_SCENE := "res://scenes/results/ScenarioOutcomeShell.tscn"
@@ -138,6 +139,7 @@ func _ready() -> void:
 		root_window.close_requested.connect(_on_root_window_close_requested)
 
 func _exit_tree() -> void:
+	FrontierVisualKit.release_runtime_resources()
 	var scene_tree := get_tree()
 	if scene_tree == null:
 		return
@@ -2036,13 +2038,15 @@ func active_manual_save_action(manual_slot: int = -1) -> Dictionary:
 	var session = SessionState.ensure_active_session() if SessionState.has_playable_session() else null
 	return SaveService.build_manual_save_action(session, selected_slot)
 
-func active_save_surface(refresh_watch_context: Dictionary = {}) -> Dictionary:
+func active_save_surface(refresh_watch_context: Dictionary = {}, include_stored_recaps: bool = true) -> Dictionary:
 	if not SessionState.has_playable_session():
-		return SaveService.build_in_session_save_surface(null)
+		return SaveService.build_in_session_save_surface(null, -1, refresh_watch_context, true, include_stored_recaps)
 	return SaveService.build_in_session_save_surface(
 		SessionState.ensure_active_session(),
 		SaveService.get_selected_manual_slot(),
-		refresh_watch_context
+		refresh_watch_context,
+		true,
+		include_stored_recaps
 	)
 
 func consume_menu_notice() -> String:

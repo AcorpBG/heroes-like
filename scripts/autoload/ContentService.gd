@@ -30,6 +30,7 @@ const BUILDING_CATEGORY_ICONS_PATH := "%s/building_category_icons.json" % CONTEN
 const CAMPAIGNS_PATH := "%s/campaigns.json" % CONTENT_DIR
 
 var _cache: Dictionary = {}
+var _lookup_indexes: Dictionary = {}
 var _generated_scenario_drafts: Dictionary = {}
 var _generated_terrain_layer_drafts: Dictionary = {}
 
@@ -38,6 +39,7 @@ func _ready() -> void:
 
 func clear_cache() -> void:
 	_cache.clear()
+	_lookup_indexes.clear()
 
 func clear_generated_scenario_drafts() -> void:
 	_generated_scenario_drafts.clear()
@@ -102,40 +104,16 @@ func get_hero(id: String) -> Dictionary:
 	return get_content_by_id(HEROES_PATH, id)
 
 func get_hero_art(id: String) -> Dictionary:
-	var raw := load_json(HERO_ART_PATH)
-	if raw.is_empty():
-		return {}
-	for item in _items_from_raw(raw):
-		if not (item is Dictionary):
-			continue
-		if String(item.get("hero_id", item.get("id", ""))) == id:
-			return item
-	return {}
+	return _indexed_content_row(HERO_ART_PATH, id, "items", "hero_id")
 
 func get_unit(id: String) -> Dictionary:
 	return get_content_by_id(UNITS_PATH, id)
 
 func get_unit_art(id: String) -> Dictionary:
-	var raw := load_json(UNIT_ART_PATH)
-	if raw.is_empty():
-		return {}
-	for item in _items_from_raw(raw):
-		if not (item is Dictionary):
-			continue
-		if String(item.get("unit_id", item.get("id", ""))) == id:
-			return item
-	return {}
+	return _indexed_content_row(UNIT_ART_PATH, id, "items", "unit_id")
 
 func get_unit_animation(id: String) -> Dictionary:
-	var raw := load_json(UNIT_ANIMATION_PATH)
-	if raw.is_empty():
-		return {}
-	for item in _items_from_raw(raw):
-		if not (item is Dictionary):
-			continue
-		if String(item.get("unit_id", item.get("id", ""))) == id:
-			return item
-	return {}
+	return _indexed_content_row(UNIT_ANIMATION_PATH, id, "items", "unit_id")
 
 func get_army_group(id: String) -> Dictionary:
 	return get_content_by_id(ARMY_GROUPS_PATH, id)
@@ -309,13 +287,32 @@ func get_encounter(id: String) -> Dictionary:
 	return get_content_by_id(ENCOUNTERS_PATH, id)
 
 func get_content_by_id(path: String, id: String, list_key: String = "items") -> Dictionary:
+	return _indexed_content_row(path, id, list_key, "id")
+
+func _indexed_content_row(path: String, id: String, list_key: String, id_field: String) -> Dictionary:
 	var raw := load_json(path)
 	if raw.is_empty():
 		return {}
-	for item in _items_from_raw(raw, list_key):
-		if String(item.get("id", "")) == id:
-			return item
-	return {}
+	var items := _items_from_raw(raw, list_key)
+	var path_indexes: Dictionary = _lookup_indexes.get(path, {})
+	var list_indexes: Dictionary = path_indexes.get(list_key, {})
+	var cached: Dictionary = list_indexes.get(id_field, {})
+	if cached.is_empty() or not is_same(cached.get("source"), items) or int(cached.get("count", -1)) != items.size():
+		# Authored ids/list membership are immutable between content-cache resets.
+		# Borrow rows, preserving reference identity and first-match ordering. The
+		# source guard also handles replaced fixture/editor arrays without stale ids.
+		var by_id := {}
+		for item in items:
+			if not (item is Dictionary):
+				continue
+			var item_id := String(item.get(id_field, item.get("id", "")))
+			if not by_id.has(item_id):
+				by_id[item_id] = item
+		cached = {"source": items, "count": items.size(), "by_id": by_id}
+		list_indexes[id_field] = cached
+		path_indexes[list_key] = list_indexes
+		_lookup_indexes[path] = path_indexes
+	return cached.get("by_id", {}).get(id, {})
 
 func _scenario_dependency_record_from_source(id: String, scenario: Dictionary, generated: bool) -> Dictionary:
 	var objectives = scenario.get("objectives", {})

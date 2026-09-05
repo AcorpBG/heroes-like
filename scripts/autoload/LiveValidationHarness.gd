@@ -13,6 +13,7 @@ const MAIN_MENU_SCENE := "res://scenes/menus/MainMenu.tscn"
 const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
 const BATTLE_SCENE := "res://scenes/battle/BattleShell.tscn"
+const BATTLE_REPORT_SCENE := "res://scenes/battle/BattleReportShell.tscn"
 const SCENARIO_OUTCOME_SCENE := "res://scenes/results/ScenarioOutcomeShell.tscn"
 const CampaignRulesScript = preload("res://scripts/core/CampaignRules.gd")
 const DEFAULT_BATTLE_SAVE_STEP_ID := "battle_saved"
@@ -92,6 +93,10 @@ func _ready() -> void:
 	call_deferred("_run_live_validation")
 
 func _run_live_validation() -> void:
+	var profile_resolution := OS.get_environment("HEROES_LIVE_PROFILE_RESOLUTION")
+	if profile_resolution != "":
+		SettingsService.set_presentation_mode("windowed")
+		SettingsService.set_presentation_resolution(profile_resolution)
 	_started_at_ms = Time.get_ticks_msec()
 	_output_dir = _resolve_output_dir(String(_config.get("output_dir", "")))
 	_ensure_output_dir()
@@ -971,13 +976,17 @@ func _execute_boot_to_skirmish_town_battle_flow() -> bool:
 	var battle_resolution := await _play_battle_to_scene(
 		battle,
 		"battle_progressed",
-		"outcome_entered" if resolving_outcome else "overworld_after_battle",
-		SCENARIO_OUTCOME_SCENE if resolving_outcome else OVERWORLD_SCENE,
+		"outcome_entered" if resolving_outcome and scenario_id != "river-pass" else "overworld_after_battle",
+		SCENARIO_OUTCOME_SCENE if resolving_outcome and scenario_id != "river-pass" else OVERWORLD_SCENE,
 		scenario_id == "river-pass"
 	)
 	if not bool(battle_resolution.get("ok", false)):
 		return false
 	if resolving_outcome:
+		if scenario_id == "river-pass":
+			battle_resolution = await _complete_river_pass_counterstroke(battle_resolution, "skirmish")
+			if not bool(battle_resolution.get("ok", false)):
+				return false
 		var resolved_ok := await _verify_outcome_route_and_followups(battle_resolution, manual_slot, "victory")
 		return resolved_ok
 
@@ -1340,11 +1349,12 @@ func _enter_live_skirmish_overworld() -> Dictionary:
 		return {"ok": false}
 	await _settle_frames(8)
 
+	# The shipped menu loads this browser only after opening its stage.
+	menu.call("validation_open_skirmish_stage")
+	await _settle_frames(4)
 	var menu_snapshot: Dictionary = menu.call("validation_snapshot")
 	if not _require(int(menu_snapshot.get("skirmish_count", 0)) > 0, "Main menu skirmish browser did not populate.", menu_snapshot):
 		return {"ok": false}
-	menu.call("validation_open_skirmish_stage")
-	await _settle_frames(4)
 	if not _require(
 		bool(menu.call("validation_select_skirmish", String(_config.get("scenario_id", "")))),
 		"Requested skirmish scenario is not available in the live menu.",
@@ -1560,6 +1570,9 @@ func _drive_campaign_chapter_to_victory_outcome(
 	)
 	if not bool(assault_resolution.get("ok", false)) or scenario_id != "river-pass":
 		return assault_resolution
+	return await _complete_river_pass_counterstroke(assault_resolution, step_prefix)
+
+func _complete_river_pass_counterstroke(assault_resolution: Dictionary, step_prefix: String) -> Dictionary:
 	var counterstroke_route := await _route_with_battle_interrupts(
 		assault_resolution.get("scene", null),
 		"encounter",
@@ -1915,6 +1928,14 @@ func _clear_campaign_encounter_to_scene(
 			"scene": overworld,
 		}
 	var battle_route := await _route_from_overworld_to_scene(overworld, "encounter", "", BATTLE_SCENE, placement_id)
+	# A routed End Turn can let another faction clear this guard before we arrive.
+	# Recheck the same authoritative predicate used above; never invent a battle
+	# or mark the placement resolved just to satisfy the driver.
+	if not bool(battle_route.get("ok", false)) and _encounter_placement_resolved(placement_id) and destination_scene == OVERWORLD_SCENE:
+		var current = get_tree().current_scene
+		if current != null and String(current.scene_file_path) == OVERWORLD_SCENE:
+			_capture_step(destination_step_id, {"already_resolved_during_route": placement_id, "route_history": battle_route.get("history", [])})
+			return {"ok": true, "scene": current}
 	if not _require(bool(battle_route.get("ok", false)), "Could not route into the campaign encounter objective.", battle_route):
 		return {"ok": false}
 	var battle = battle_route.get("scene", null)
@@ -2165,7 +2186,12 @@ func _route_with_battle_interrupts(
 ) -> Dictionary:
 	var current_overworld = overworld
 	var combined_history := []
-	for attempt_index in range(4):
+	# Current authored routes can require more than four distinct guard battles.
+	# Budget from live encounter ownership, and reject repeated interruptions so
+	# this remains a bounded play driver rather than retrying a stuck route.
+	var interruption_budget := maxi(4, SessionState.active_session.overworld.get("encounters", []).size() + 1)
+	var seen_interruptions := {}
+	for attempt_index in range(interruption_budget):
 		var route := await _route_from_overworld_to_scene(
 			current_overworld,
 			target_kind,
@@ -2191,6 +2217,8 @@ func _route_with_battle_interrupts(
 						route["history"] = combined_history
 						return route
 					battle_snapshot["route_history"] = combined_history.duplicate(true)
+					if not _record_distinct_route_interrupt(seen_interruptions):
+						return {"ok": false}
 					_capture_step("%s_interrupt_battle_entered_%d" % [step_prefix, int(attempt_index + 1)], battle_snapshot)
 					var interrupt_exit := await _play_battle_to_scene(
 						battle,
@@ -2208,6 +2236,8 @@ func _route_with_battle_interrupts(
 		if String(route.get("scene_path", "")) == BATTLE_SCENE and get_tree().current_scene != null:
 			var interrupt_battle = get_tree().current_scene
 			var interrupt_snapshot: Dictionary = interrupt_battle.call("validation_snapshot")
+			if not _record_distinct_route_interrupt(seen_interruptions):
+				return {"ok": false}
 			interrupt_snapshot["failed_route"] = route
 			interrupt_snapshot["route_history"] = combined_history.duplicate(true)
 			_capture_step("%s_interrupt_battle_entered_%d" % [step_prefix, int(attempt_index + 1)], interrupt_snapshot)
@@ -2234,6 +2264,14 @@ func _route_with_battle_interrupts(
 			"history": combined_history,
 		}
 	)
+
+func _record_distinct_route_interrupt(seen: Dictionary) -> bool:
+	var battle: Dictionary = SessionState.active_session.battle
+	var identity := "%s|%s|%s" % [String(battle.get("resolved_key", "")), String(battle.get("encounter_id", "")), JSON.stringify(battle.get("position", {}))]
+	if seen.has(identity):
+		return _fail("Route repeated the same battle instead of making progress.", {"battle_identity": identity})
+	seen[identity] = true
+	return true
 
 func _route_from_overworld_to_scene(
 	overworld,
@@ -3967,7 +4005,7 @@ func _play_battle_to_scene(
 		if current_scene == null:
 			continue
 		var scene_path := String(current_scene.scene_file_path)
-		if scene_path == BATTLE_SCENE and not SessionState.has_battle_state():
+		if scene_path == BATTLE_REPORT_SCENE or (scene_path == BATTLE_SCENE and not SessionState.has_battle_state()):
 			var resolution_snapshot: Dictionary = (
 				current_scene.call("validation_battle_resolution_checkpoint_snapshot")
 				if current_scene.has_method("validation_battle_resolution_checkpoint_snapshot")
@@ -4116,6 +4154,10 @@ func _begin_report() -> void:
 
 func _capture_step(step_id: String, payload: Dictionary) -> void:
 	var screenshot_path := _capture_screenshot(step_id)
+	# Optional performance controls are captured outside command timing. Keep the
+	# complete tree, not a subset that could conceal changed combat/AI decisions.
+	if OS.get_environment("HEROES_LIVE_PROFILE_CAPTURE_STATES") == "1" and SessionState.has_playable_session():
+		_write_json("%s/%s.session.json" % [_output_dir, step_id], SessionState.active_session.to_dict())
 	var steps: Array = _report.get("steps", [])
 	steps.append(
 		{
@@ -4145,15 +4187,42 @@ func _capture_screenshot(step_id: String) -> String:
 
 func _wait_for_scene(scene_path: String, timeout_ms: int):
 	var deadline := Time.get_ticks_msec() + timeout_ms
+	var acknowledged_reports := {}
 	while Time.get_ticks_msec() <= deadline:
 		var current := get_tree().current_scene
 		if current != null and String(current.scene_file_path) == scene_path:
+			_prepare_profile_session_identity(scene_path)
 			return current
+		if current != null and String(current.scene_file_path) == BATTLE_REPORT_SCENE and scene_path in [OVERWORLD_SCENE, SCENARIO_OUTCOME_SCENE]:
+			var instance_id := current.get_instance_id()
+			if not acknowledged_reports.has(instance_id):
+				acknowledged_reports[instance_id] = true
+				await _settle_frames(2)
+				_capture_step("battle_report_%03d" % _report.get("steps", []).size(), current.call("validation_snapshot"))
+				# Press the actual control: the validation convenience method defaults
+				# to skipping its save, which is not a faithful full-play profile.
+				current.get_node("%Continue").pressed.emit()
+				if not _require(bool(current.get("_last_continue_result").get("ok", false)), "Battle report Continue did not save and route.", current.get("_last_continue_result")):
+					return null
 		await get_tree().process_frame
 	var final_current := get_tree().current_scene
 	if final_current != null and String(final_current.scene_file_path) == scene_path:
+		_prepare_profile_session_identity(scene_path)
 		return final_current
 	return null
+
+func _prepare_profile_session_identity(scene_path: String) -> void:
+	var fixture_seed := OS.get_environment("HEROES_LIVE_PROFILE_SESSION_SEED")
+	if fixture_seed == "" or scene_path != OVERWORLD_SCENE or not SessionState.has_playable_session():
+		return
+	var session = SessionState.active_session
+	if bool(session.flags.get("generated_random_map", false)) or session.session_id.begins_with(fixture_seed + ":"):
+		return
+	# Fresh authored launches otherwise seed later combat from engine uptime.
+	# Stabilize that test input before any player action, never on save/resume or
+	# generated native sessions. All simulation and RNG algorithms remain live.
+	if session.day == 1 and session.battle.is_empty():
+		session.session_id = "%s:%s:%s" % [fixture_seed, session.launch_mode, session.scenario_id]
 
 func _settle_frames(frame_count: int) -> void:
 	for _frame in range(frame_count):
