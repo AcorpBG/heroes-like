@@ -101,12 +101,12 @@ func _run() -> void:
 	if FileAccess.file_exists(slot2_path):
 		_fail("Confirmed manual deletion left Manual Slot 2 on disk: %s." % JSON.stringify(manual_result))
 		return
-	if String(manual_result.get("selected_key_after", "")) != "manual:2" or not String(manual_result.get("notice", "")).contains("Manual Slot 2 was deleted"):
-		_fail("Manual deletion did not keep the empty slot selected with clear feedback: %s." % JSON.stringify(manual_result))
+	if String(manual_result.get("selected_key_after", "")) == "manual:2" or not String(manual_result.get("notice", "")).contains("Manual Slot 2 was deleted"):
+		_fail("Manual deletion did not remove the deleted file from selection with clear feedback: %s." % JSON.stringify(manual_result))
 		return
 	var manual_after: Dictionary = shell.call("validation_snapshot")
-	if bool(manual_after.get("save_delete_visible", true)) or bool(manual_after.get("save_delete_enabled", true)):
-		_fail("Empty Manual Slot 2 still exposed Delete Save: %s." % JSON.stringify(manual_after))
+	if String(manual_after.get("selected_save_key", "")) == "manual:2":
+		_fail("Deleted Manual Slot 2 is still selected: %s." % JSON.stringify(manual_after))
 		return
 	if int(manual_after.get("save_delete_confirm_count", -1)) != 1:
 		_fail("Delete Save confirmation did not execute exactly once: %s." % JSON.stringify(manual_after.get("save_delete_confirm_count", -1)))
@@ -148,7 +148,7 @@ func _run() -> void:
 		return
 	var autosave_after: Dictionary = shell.call("validation_snapshot")
 	var latest_after_autosave: Dictionary = autosave_after.get("latest_save_summary", {}) if autosave_after.get("latest_save_summary", {}) is Dictionary else {}
-	if String(autosave_after.get("selected_save_key", "")) != "autosave:autosave" or String(latest_after_autosave.get("slot_type", "")) != SaveService.SLOT_TYPE_MANUAL or not SaveService.can_load_summary(latest_after_autosave):
+	if String(autosave_after.get("selected_save_key", "")) == "autosave:autosave" or String(latest_after_autosave.get("slot_type", "")) != SaveService.SLOT_TYPE_MANUAL or not SaveService.can_load_summary(latest_after_autosave):
 		_fail("Autosave deletion did not refresh the empty selection and latest manual fallback: %s." % JSON.stringify(autosave_after))
 		return
 	var protected_after_autosave := protected_after_seed.duplicate(true)

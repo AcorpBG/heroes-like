@@ -119,7 +119,7 @@ func _run() -> void:
 		"overworld_drawer_joypad_confirm_exact": true,
 		"overworld_drawer_enter_confirm_exact": true,
 		"overworld_drawer_route_camera_debug_authority_exact": true,
-		"overworld_save_slot_popup_cancel_unchanged": true,
+		"overworld_file_browser_cancel_unchanged": true,
 		"overworld_settings_cancel_unchanged": true,
 		"overworld_end_turn_cancel_unchanged": true,
 		"overworld_no_drawer_cancel_route_exact": true,
@@ -463,8 +463,8 @@ func _exercise_town_cancel_ownership(
 ) -> bool:
 	var original_window_size := get_window().size
 	var cases := [
-		{"id": "unreadable_narrow_escape", "width": 960, "corrupt": true, "joypad": false, "day": 34},
-		{"id": "occupied_narrow_joypad", "width": 960, "corrupt": false, "joypad": true, "day": 32},
+		{"id": "unreadable_narrow_escape", "width": 900, "corrupt": true, "joypad": false, "day": 34},
+		{"id": "occupied_narrow_joypad", "width": 900, "corrupt": false, "joypad": true, "day": 32},
 		{"id": "occupied_wide_escape", "width": 1440, "corrupt": false, "joypad": false, "day": 31},
 		{"id": "unreadable_wide_joypad", "width": 1440, "corrupt": true, "joypad": true, "day": 33},
 	]
@@ -557,6 +557,14 @@ func _exercise_overworld_drawer_cancel_case(
 			or _file_state(_manual_slot_path(2)) != slot2_before \
 			or _overworld_drawer_authority_signature(shell, session) != drawer_authority \
 			or not _require_preserved_state(protected_states, session.to_dict(), campaign_before, settings_before, _manual_slot_path(2)):
+		var before_authority: Dictionary = JSON.parse_string(drawer_authority)
+		var after_authority: Dictionary = JSON.parse_string(_overworld_drawer_authority_signature(shell, session))
+		for key in before_authority:
+			if before_authority[key] != after_authority.get(key):
+				if before_authority[key] is Dictionary and after_authority.get(key) is Dictionary:
+					for subkey in before_authority[key]:
+						if before_authority[key][subkey] != after_authority[key].get(subkey):
+							print("MANUAL_CANCEL_AUTHORITY_DIFF ", key, ".", subkey, " before=", JSON.stringify(before_authority[key][subkey]), " after=", JSON.stringify(after_authority[key].get(subkey)))
 		return _fail_shell(shell, "Overworld physical overwrite cancel escaped %s drawer ownership: case=%s before=%s after=%s drawer=%s focus=%s." % [drawer, JSON.stringify(case), JSON.stringify(request_snapshot), JSON.stringify(after), JSON.stringify(after_drawer), String(focus_owner.name) if focus_owner != null else ""])
 	await _press_joypad_button(JOY_BUTTON_B)
 	var closed_drawer := _overworld_chrome_state(shell)
@@ -564,6 +572,11 @@ func _exercise_overworld_drawer_cancel_case(
 	if not _overworld_drawer_state_exact(closed_drawer, "") \
 			or _manual_dialog_transaction_state(after_fresh_back) != _manual_dialog_transaction_state(after) \
 			or _overworld_drawer_authority_signature(shell, session) != baseline_authority:
+		var expected: Dictionary = JSON.parse_string(baseline_authority)
+		var actual: Dictionary = JSON.parse_string(_overworld_drawer_authority_signature(shell, session))
+		for key in expected:
+			if expected[key] != actual.get(key):
+				print("MANUAL_BACK_AUTHORITY_DIFF ", key)
 		return _fail_shell(shell, "Fresh post-overwrite Back did not close only the %s drawer: dialog=%s chrome=%s." % [drawer, JSON.stringify(after_fresh_back), JSON.stringify(closed_drawer)])
 	var confirm_input := String(case.get("confirm", ""))
 	if confirm_input != "" and not await _exercise_overworld_drawer_confirm(shell, session, drawer, confirm_input, protected_states, campaign_before, settings_before):
@@ -652,22 +665,34 @@ func _exercise_overworld_neighbor_modal_owners(
 	var baseline_authority := _overworld_drawer_authority_signature(shell, session)
 
 	var command_state: Dictionary = shell.validation_open_command_drawer()
-	var picker: OptionButton = shell.get_node("%SaveSlot")
-	picker.grab_focus()
-	var command_authority := _overworld_drawer_authority_signature(shell, session)
-	picker.show_popup()
+	# Drawer opening defers a responsive layout pass. Compare modal authority
+	# only after that pre-existing layout operation has settled.
 	await _settle()
-	if not picker.get_popup().visible or not _overworld_drawer_state_exact(command_state, "command"):
-		return _fail_shell(shell, "Overworld SaveSlot neighbor fixture did not open above Command drawer.")
+	var save_button: Button = shell.get_node("%Save")
+	save_button.grab_focus()
+	var command_authority := _overworld_drawer_authority_signature(shell, session)
+	# Normal play now has a file browser, not a fixed-slot popup. Exercise that
+	# actual neighboring owner above Command; legacy overwrite coverage is above.
+	save_button.pressed.emit()
+	var file_dialog: ConfirmationDialog = shell.get_node("ManualSaveOverwriteDialog")
+	await _settle()
+	if not file_dialog.visible or not bool(file_dialog.get("_file_mode")) or not _overworld_drawer_state_exact(command_state, "command"):
+		return _fail_shell(shell, "Overworld file browser neighbor fixture did not open above Command drawer.")
 	await _press_joypad_button(JOY_BUTTON_B)
-	if picker.get_popup().visible \
+	if file_dialog.visible \
 			or not _overworld_drawer_state_exact(_overworld_chrome_state(shell), "command") \
 			or _overworld_drawer_authority_signature(shell, session) != command_authority:
-		return _fail_shell(shell, "Overworld SaveSlot popup cancel escaped into Command drawer ownership.")
+		var expected: Dictionary = JSON.parse_string(command_authority)
+		var actual: Dictionary = JSON.parse_string(_overworld_drawer_authority_signature(shell, session))
+		print("FILE_BROWSER_CANCEL_STATE visible=", file_dialog.visible, " chrome=", JSON.stringify(_overworld_chrome_state(shell)))
+		for key in expected:
+			if expected[key] != actual.get(key):
+				print("FILE_BROWSER_CANCEL_DIFF ", key, " before=", JSON.stringify(expected[key]), " after=", JSON.stringify(actual.get(key)))
+		return _fail_shell(shell, "Overworld file browser cancel escaped into Command drawer ownership.")
 	await _press_joypad_button(JOY_BUTTON_B)
 	if not _overworld_drawer_state_exact(_overworld_chrome_state(shell), "") \
 			or _overworld_drawer_authority_signature(shell, session) != baseline_authority:
-		return _fail_shell(shell, "Fresh Back did not close Command drawer after SaveSlot popup cancellation.")
+		return _fail_shell(shell, "Fresh Back did not close Command drawer after file browser cancellation.")
 
 	var frontier_state: Dictionary = shell.validation_open_frontier_drawer()
 	var settings_button: Button = shell.get_node("%Settings")
@@ -759,14 +784,16 @@ func _exercise_town_cancel_case(
 	layout_host.add_child(shell)
 	await _settle()
 	var snapshot: Dictionary = shell.validation_snapshot()
-	var expects_narrow := int(case.get("width", 1440)) < 1100
+	var expects_narrow := int(case.get("width", 1440)) < 960
 	if bool(snapshot.get("narrow_layout_active", not expects_narrow)) != expects_narrow:
 		return _fail_shell(shell, "Town cancel fixture did not enter its exact wide/narrow layout: %s." % JSON.stringify(case))
 	if expects_narrow:
-		var toggle: Dictionary = shell.validation_toggle_narrow_town_orders()
+		# The full-screen Town now uses the construction ledger, not the retired
+		# narrow sidebar toggle. Preserve its ownership beneath the save modal.
+		var toggle: Dictionary = shell.validation_open_town_catalog("build")
 		await _settle()
-		if not bool(toggle.get("ok", false)) or not bool(shell.validation_snapshot().get("narrow_orders_open", false)):
-			return _fail_shell(shell, "Town cancel fixture could not open narrow orders: %s." % JSON.stringify(case))
+		if not bool(toggle.get("open", false)):
+			return _fail_shell(shell, "Town cancel fixture could not open the construction ledger: %s." % JSON.stringify(case))
 	var save_button: Button = shell.get_node("%Save")
 	var dialog: ConfirmationDialog = shell.get_node("ManualSaveOverwriteDialog")
 	save_button.grab_focus()
@@ -800,12 +827,12 @@ func _exercise_town_cancel_case(
 			or _town_modal_authority_signature(shell, session) != authority_before \
 			or not _require_preserved_state(protected_states, session.to_dict(), campaign_before, settings_before, _manual_slot_path(2)):
 		return _fail_shell(shell, "Town physical cancel escaped modal ownership or changed authority: case=%s before=%s after=%s focus=%s." % [JSON.stringify(case), JSON.stringify(request_snapshot), JSON.stringify(after), String(focus_owner.name) if focus_owner != null else ""])
-	if bool(shell.validation_snapshot().get("narrow_orders_open", false)) != expects_narrow:
-		return _fail_shell(shell, "Town modal cancel also changed narrow-order ownership: %s." % JSON.stringify(case))
+	if bool(shell.validation_town_catalog_snapshot().get("open", false)) != expects_narrow:
+		return _fail_shell(shell, "Town modal cancel also changed ledger ownership: %s." % JSON.stringify(case))
 	if expects_narrow:
 		var post_modal_authority := _town_modal_authority_signature(shell, session)
 		await _press_joypad_button(JOY_BUTTON_B)
-		if bool(shell.validation_snapshot().get("narrow_orders_open", true)) \
+		if bool(shell.validation_town_catalog_snapshot().get("open", true)) \
 				or _town_modal_authority_signature(shell, session) != post_modal_authority:
 			return _fail_shell(shell, "Ordinary post-modal Town Back did not close narrow orders without leaving.")
 	elif String(case.get("id", "")) == "occupied_wide_escape":
@@ -1095,6 +1122,11 @@ func _overworld_drawer_authority_signature(shell, session) -> String:
 	var controller_routes: Dictionary = shell.validation_controller_route_cursor_snapshot()
 	controller_routes.erase("focus_owner")
 	var shell_snapshot: Dictionary = shell.validation_snapshot()
+	var map_view: Dictionary = shell_snapshot.get("map_viewport", {}).duplicate(true)
+	# A drawer/modal can invalidate presentation caches and advance animated
+	# terrain. Keep exact camera/route/geometry and session authority, not draw
+	# counters or cache generations (as the successful-save comparison does).
+	map_view.erase("render_cache")
 	return JSON.stringify({
 		"session": session.to_dict(),
 		"files": _capture_file_states(_tracked_paths()),
@@ -1105,7 +1137,7 @@ func _overworld_drawer_authority_signature(shell, session) -> String:
 		"app_route": AppRouter.validation_active_play_return_snapshot(),
 		"overworld_handoff": AppRouter.validation_latest_overworld_handoff_profile(),
 		"controller_routes": controller_routes,
-		"map_viewport": shell_snapshot.get("map_viewport", {}),
+		"map_viewport": map_view,
 		"debug_overlay": shell.validation_debug_overlay_snapshot(),
 		"placement_debug_overlay": shell.validation_placement_debug_overlay_snapshot(),
 	})
@@ -1162,11 +1194,35 @@ func _exclusive_route_authority_snapshot(shell, session, route_id: String) -> Di
 	var shell_profile: Dictionary = shell_snapshot.get("profile", {}).duplicate(true) if shell_snapshot.get("profile", {}) is Dictionary else {}
 	for profile_key in EXCLUSIVE_SNAPSHOT_OBSERVER_PROFILE_KEYS:
 		shell_profile.erase(profile_key)
+	if shell_profile.get("map_view") is Dictionary:
+		shell_profile["map_view"].erase("terrain_ambient_draws")
 	shell_snapshot["profile"] = shell_profile
-	if shell_snapshot.get("ambient_audio", {}) is Dictionary:
-		var ambient_audio: Dictionary = shell_snapshot.get("ambient_audio", {}).duplicate(true)
-		ambient_audio.erase("active_player_count")
-		shell_snapshot["ambient_audio"] = ambient_audio
+	# Time continues beneath an exclusive modal: terrain animation draws and
+	# audio crossfade interpolation are observations, not input mutations. Keep
+	# the actual layer/signature/record authority and all map geometry exact.
+	var map_view: Dictionary = shell_snapshot.get("map_viewport", {}).duplicate(true)
+	if map_view.get("render_cache") is Dictionary:
+		map_view["render_cache"].erase("terrain_ambient_generation")
+		if map_view["render_cache"].get("profile") is Dictionary:
+			map_view["render_cache"]["profile"].erase("terrain_ambient_draws")
+	if not map_view.is_empty():
+		shell_snapshot["map_viewport"] = map_view
+	for audio_key in ["ambient_audio", "music_audio"]:
+		if not (shell_snapshot.get(audio_key) is Dictionary):
+			continue
+		var audio: Dictionary = shell_snapshot[audio_key].duplicate(true)
+		for key in ["active_player_count", "outgoing_player_count", "outgoing_players", "transition", "transition_active"]:
+			audio.erase(key)
+		for player in audio.get("current_players", []):
+			player.erase("volume_db")
+		shell_snapshot[audio_key] = audio
+	if shell_snapshot.get("scenic_epilogue") is Dictionary:
+		var epilogue: Dictionary = shell_snapshot["scenic_epilogue"].duplicate(true)
+		epilogue.erase("ambient_phase")
+		for entry in epilogue.get("ambient_entries", []):
+			for key in ["alpha", "center", "bounds"]:
+				entry.erase(key)
+		shell_snapshot["scenic_epilogue"] = epilogue
 	var shell_route: Dictionary = shell.validation_active_play_return_snapshot()
 	var authority := {
 		"session": session.to_dict(),

@@ -4,6 +4,8 @@ Task: #10236
 Slice: `ux-overworld-town-proportion-and-environs-10236`  
 Date: 2026-09-04
 
+Review correction (2026-09-05): the original focused test used a guessed 1.25–1.55 Riverwatch aspect range, which could certify the previous town image and reject the intended land-set replacement (actual painted aspect 1.012605). Its screenshot/identity evidence is superseded by the pixel-verified captures in `docs/visual-performance-file-saves-report.md`. The aspect-preserving renderer and placement changes remain; the review verifies the actual imported image and softens the heavy outline.
+
 ## Result
 
 The distorted Ninefold starting-town presentation is corrected in live rendering. Town sprites now keep their painted alpha-bounds aspect ratio while fitting uniformly inside the existing 2.90-tile-wide by 3.72-tile-tall visual envelope. The logical 3x2 footprint, bottom-middle visit tile, click routing, blocking, ownership, and save version remain unchanged.

@@ -24,9 +24,26 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- No owner-directed implementation slice is currently active.
-- Most recently completed owner-directed implementation slice: `ux-overworld-town-proportion-and-environs-10236`, which preserves every town raster's painted aspect, replaces Riverwatch with an original transparent land-set identity, and places three path-safe raster blocker clusters inside the authored Ninefold starting reveal.
-- Current package boundary: matching Linux and Windows release exports measure 248360044 bytes, 1639956 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+- No owner-directed implementation slice is active. Select the next bounded owner request; this does not imply release readiness.
+- Most recently completed owner-directed implementation slice: `ux-visual-performance-file-saves-review-20260904`: pixel-verified town presentation, softer outlines and command rail, measured Large-map save improvement, and named-file saving/browsing with legacy compatibility.
+- Current package boundary: matching Linux and Windows release exports measure 248369356 bytes, 1630644 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+
+## Visual, Performance, And File Saves Review
+
+id: `ux-visual-performance-file-saves-review-20260904`
+
+Status: completed 2026-09-05. Current imported pixels and dual-resolution captures verified; measured Large-map snapshot/save write reduced from 4178 ms to 2037 ms; named-file creation/overwrite/browse/load/delete, all four live Save flows, legacy/recovery/input regressions, repository/diff validation and matching platform export/generated-map entry checks pass. Evidence: `docs/visual-performance-file-saves-report.md`. Large-map generation/AI and release-wide certification remain separate work.
+
+Requirements: `docs/visual-performance-file-saves-requirements.md`, `project.md`, `docs/lessons-learned.md`, `docs/large-generated-map-runtime-performance-report.md`, and `docs/overworld-town-proportion-and-environs-requirements.md`.
+
+Implementation boundary:
+- inspect prior captures against current manifest-backed art and correct stale imports or rendering defects; retain scenery-first composition and aspect-preserving town geometry;
+- profile the deterministic Large-map workflow before and after, removing redundant save/runtime work without changing map output or gameplay authority;
+- replace the visible three-slot limit with named save files, a creation/overwrite dialog, and a browsable load/delete flow; retain legacy slot files and transaction recovery.
+
+Completion criteria: visually inspect current 1920x1080 and 1280x720 captures; prove imported pixels match intended art; demonstrate measured Large-map improvement with identical scenario/signature and round-trip state; cover file creation beyond three saves, naming validation, overwrite/cancel, browsing, loading, deletion, legacy compatibility, and interrupted writes; pass relevant save/visual/runtime tests, repository/diff validation and both platform package checks below 250000000 bytes.
+
+Non-goals: no native generation semantics, topology/density/balance changes, copied art, package-limit increase, source/artifact cleanup, signing, publication, or whole-game completion claim.
 
 ## Overworld Town Proportion And Environs
 

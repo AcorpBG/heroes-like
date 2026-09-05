@@ -507,6 +507,7 @@ func _refresh() -> void:
 	call_deferred("_apply_responsive_layout")
 
 func _configure_save_slot_picker() -> void:
+	_save_slot_picker.hide()
 	_save_slot_picker.clear()
 	for slot in SaveService.get_manual_slot_ids():
 		_save_slot_picker.add_item("Manual %d" % int(slot), int(slot))
@@ -569,7 +570,7 @@ func _refresh_save_surface() -> void:
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = String(surface.get("save_button_label", "Save Outcome")) if _recap_expanded else "Save"
 	_save_button.tooltip_text = _join_tooltip_sections([
-		String(surface.get("save_button_tooltip", "Save the current outcome safely.")),
+		"Create or replace a named file for this outcome.",
 		String(outcome_save_check.get("tooltip_text", "")),
 		String(slot_check.get("tooltip_text", "")),
 		save_check,
@@ -1041,7 +1042,7 @@ func _perform_outcome_action(action_id: String) -> Dictionary:
 			_refresh()
 	return result
 
-func _on_save_pressed() -> Dictionary:
+func _on_save_pressed(legacy_slot: bool = false) -> Dictionary:
 	_sync_outcome_recovery_state(false, true)
 	var recovery_result: Dictionary = {}
 	if _outcome_recovery_pending:
@@ -1061,6 +1062,9 @@ func _on_save_pressed() -> Dictionary:
 		_validation_outcome_recovery_retry_success_count += 1
 		_last_action_message = ""
 		_refresh()
+	if not legacy_slot:
+		var opened: bool = _manual_save_overwrite_dialog.open_file_browser(_session, _commit_file_save)
+		return {"ok": opened, "saved": false, "pending": opened, "reason": "file_browser", "message": "Choose a save file."}
 	var action := AppRouter.active_manual_save_action()
 	if bool(action.get("disabled", true)):
 		_last_action_message = String(action.get("summary", "The outcome could not be saved."))
@@ -1072,8 +1076,11 @@ func _on_save_pressed() -> Dictionary:
 	var manual_result := _commit_manual_save(int(action.get("slot", SaveService.get_selected_manual_slot())))
 	return _outcome_recovery_shell_result(manual_result, bool(manual_result.get("ok", false)), false, recovery_result)
 
-func _commit_manual_save(manual_slot: int) -> Dictionary:
-	var result := AppRouter.save_active_session_to_manual_slot(manual_slot)
+func _commit_file_save(file_name: String, expected_sha256: String) -> Dictionary:
+	return _commit_manual_save(SaveService.get_selected_manual_slot(), file_name, expected_sha256)
+
+func _commit_manual_save(manual_slot: int, file_name: String = "", expected_sha256: String = "") -> Dictionary:
+	var result := AppRouter.save_active_session_to_file(file_name, expected_sha256) if file_name != "" else AppRouter.save_active_session_to_manual_slot(manual_slot)
 	_last_action_message = String(result.get("message", ""))
 	_refresh()
 	if bool(result.get("ok", false)):
@@ -1378,7 +1385,7 @@ func validation_save_to_selected_slot() -> Dictionary:
 	}
 
 func validation_request_save_outcome() -> Dictionary:
-	return _on_save_pressed()
+	return _on_save_pressed(true)
 
 func validation_request_outcome_new_session_confirmation(action_id: String) -> Dictionary:
 	return _request_outcome_new_session_confirmation(action_id, _outcome_action_button(action_id))
@@ -1574,7 +1581,7 @@ func _outcome_recovery_focus_owner_name() -> String:
 	return String(focus_owner.name) if focus_owner != null else ""
 
 func validation_request_manual_save() -> Dictionary:
-	_on_save_pressed()
+	_on_save_pressed(true)
 	return _manual_save_overwrite_dialog.validation_snapshot()
 
 func validation_confirm_manual_save_overwrite() -> Dictionary:

@@ -115,6 +115,8 @@ func _valid_success(save_result: Dictionary, manual_slot: int) -> bool:
 	if not (summary_value is Dictionary):
 		return false
 	var summary: Dictionary = summary_value
+	if String(summary.get("slot_type", "")) == SaveService.SLOT_TYPE_FILE:
+		return not String(summary.get("slot_id", "")).is_empty() and String(summary.get("path", "")) == String(save_result.get("path", ""))
 	return (
 		String(summary.get("slot_type", "")) == SaveService.SLOT_TYPE_MANUAL
 		and String(summary.get("slot_id", "")) == str(manual_slot)

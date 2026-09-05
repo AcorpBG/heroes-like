@@ -490,7 +490,7 @@ func _apply_responsive_layout() -> void:
 	_status_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
 	_status_label.tooltip_text = "%s\n%s" % [_status_label.text, _resource_label.full_summary_text()] if compact_layout else _status_label.text
 	_save_status_label.visible = not narrow_layout
-	_save_slot_picker.visible = not narrow_layout
+	_save_slot_picker.visible = false
 	_map_view.custom_minimum_size = Vector2(480.0, 300.0) if compact_layout else Vector2(640.0, 400.0)
 	_army_label.visible = false
 	_heroes_label.visible = false
@@ -1679,7 +1679,7 @@ func _end_turn_autosave_failure_result(rule_result: Dictionary) -> Dictionary:
 		"autosave_result": _last_end_turn_autosave_result.duplicate(true),
 	}
 
-func _on_save_pressed() -> Dictionary:
+func _on_save_pressed(legacy_slot: bool = false) -> Dictionary:
 	if _generated_opening_autosave_failure_pending and _generated_opening_autosave_authority_canonical():
 		_reconcile_generated_opening_autosave_recovery("save_preflight", {}, true)
 		_refresh()
@@ -1693,6 +1693,10 @@ func _on_save_pressed() -> Dictionary:
 		_reconcile_briefing_consumption_autosave_recovery("save_preflight", {}, true)
 		_refresh()
 	_validation_generated_opening_manual_fallback_count += 1
+	if not legacy_slot:
+		_on_overworld_interaction_owner_opened()
+		var opened: bool = _manual_save_overwrite_dialog.open_file_browser(_session, _commit_file_save)
+		return {"ok": opened, "saved": false, "pending": opened, "reason": "file_browser", "message": "Choose a save file."}
 	var action := AppRouter.active_manual_save_action()
 	if bool(action.get("disabled", true)):
 		_last_message = String(action.get("summary", "The expedition could not be saved."))
@@ -1715,14 +1719,17 @@ func _on_save_pressed() -> Dictionary:
 		}
 	return _commit_manual_save(int(action.get("slot", SaveService.get_selected_manual_slot())))
 
-func _commit_manual_save(manual_slot: int) -> Dictionary:
+func _commit_file_save(file_name: String, expected_sha256: String) -> Dictionary:
+	return _commit_manual_save(SaveService.get_selected_manual_slot(), file_name, expected_sha256)
+
+func _commit_manual_save(manual_slot: int, file_name: String = "", expected_sha256: String = "") -> Dictionary:
 	_validation_manual_save_attempt_count += 1
 	var briefing_checkpoint_pending := _briefing_consumption_autosave_failure_pending
 	var pre_save_game_state := String(_session.game_state)
 	var staged_pending_battle := _session.scenario_status == "in_progress" and not _session.battle.is_empty()
 	if staged_pending_battle:
 		_session.game_state = "battle"
-	var save_result: Dictionary = AppRouter.save_active_session_to_manual_slot(manual_slot)
+	var save_result: Dictionary = AppRouter.save_active_session_to_file(file_name, expected_sha256) if file_name != "" else AppRouter.save_active_session_to_manual_slot(manual_slot)
 	var save_ok := bool(save_result.get("ok", false))
 	_last_message = String(save_result.get("message", "")) if save_ok else (
 		BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
@@ -4302,6 +4309,7 @@ func _set_generated_opening_autosave_failure_surface() -> void:
 	_menu_button.tooltip_text = "Return to the main menu. The generated opening checkpoint is not yet protected."
 
 func _configure_save_slot_picker(refresh_now: bool = true) -> void:
+	_save_slot_picker.hide()
 	_save_slot_picker.clear()
 	for slot in SaveService.get_manual_slot_ids():
 		_save_slot_picker.add_item("M%d" % int(slot), int(slot))
@@ -4330,21 +4338,21 @@ func _use_generated_town_return_first_frame_refresh() -> bool:
 func _set_deferred_generated_save_status(text: String) -> void:
 	var save_ready := text.find("ready") >= 0
 	var selected_slot := SaveService.get_selected_manual_slot()
-	_save_status_label.text = text
+	_save_status_label.text = "Save files" if save_ready else text
 	_save_status_label.tooltip_text = "Generated map refresh keeps save summary inspection off first-frame and routine movement paths."
 	_save_slot_picker.tooltip_text = "Manual %d selected. Save details refresh when the save controls are used." % selected_slot
 	_save_button.text = "Save"
-	_save_button.tooltip_text = "Save the active expedition to the selected manual slot." if save_ready else "Save is available after the generated-map opening autosave settles."
+	_save_button.tooltip_text = "Create or replace a named expedition save file." if save_ready else "Save is available after the generated-map opening autosave settles."
 	_menu_button.text = "Main Menu"
 	_menu_button.tooltip_text = "Return to the main menu." if save_ready else "Return to the main menu after the generated-map opening autosave settles."
 
 func _set_town_return_compact_save_status() -> void:
 	var selected_slot := SaveService.get_selected_manual_slot()
-	_save_status_label.text = "Save: manual M%d ready" % selected_slot
+	_save_status_label.text = "Save files"
 	_save_status_label.tooltip_text = "Save details are refreshed when the save controls are used; town exit keeps save summaries off the first overworld frame."
 	_save_slot_picker.tooltip_text = "Manual %d selected. Save details are refreshed when the save controls are used." % selected_slot
 	_save_button.text = "Save"
-	_save_button.tooltip_text = "Save the active expedition to the selected manual slot."
+	_save_button.tooltip_text = "Create or replace a named expedition save file."
 	if bool(_session.flags.get("editor_working_copy", false)):
 		_menu_button.text = "Editor"
 		_menu_button.tooltip_text = "Return to the map editor and restore the Play Copy launch snapshot."
@@ -4365,7 +4373,7 @@ func _refresh_save_slot_picker(refresh_watch_context: Dictionary = {}) -> void:
 			_save_slot_picker.select(index)
 			break
 
-	var summary_value: Variant = surface.get("slot_summary", SaveService.inspect_manual_slot(selected_slot))
+	var summary_value: Variant = surface.get("slot_summary")
 	var summary: Dictionary = summary_value if summary_value is Dictionary else SaveService.inspect_manual_slot(selected_slot)
 	var latest_context := String(surface.get("latest_context", "Latest ready save: none."))
 	var current_context := String(surface.get("current_context", ""))
@@ -4381,15 +4389,12 @@ func _refresh_save_slot_picker(refresh_watch_context: Dictionary = {}) -> void:
 		save_tooltip_lines.append("Saving now recap:\n%s" % current_save_recap)
 	if current_context != "":
 		save_tooltip_lines.append("Saving now: %s" % current_context)
-	save_tooltip_lines.append("Selected slot:\n%s" % SaveService.describe_slot_details(summary))
+	save_tooltip_lines.append("Save opens the named-file browser. Existing files require confirmation before replacement.")
 	_save_status_label.text = _save_status_text(selected_slot, summary)
 	_save_status_label.tooltip_text = "\n".join(save_tooltip_lines)
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = "Save"
-	_save_button.tooltip_text = "%s\n%s" % [
-		String(surface.get("save_button_tooltip", "Save the active expedition.")),
-		save_check,
-	]
+	_save_button.tooltip_text = "Create or replace a named expedition save file.\n%s" % save_check
 	if bool(_session.flags.get("editor_working_copy", false)):
 		_menu_button.text = "Editor"
 		_menu_button.tooltip_text = "%s\n%s" % [
@@ -10855,7 +10860,7 @@ func validation_reconcile_briefing_consumption_autosave_recovery_direct() -> Dic
 	return result.duplicate(true)
 
 func validation_retry_generated_opening_autosave() -> Dictionary:
-	return _on_save_pressed()
+	return _on_save_pressed(true)
 
 func validation_retry_generated_opening_autosave_direct() -> Dictionary:
 	return _retry_generated_opening_autosave()
@@ -11359,7 +11364,7 @@ func validation_battle_entry_snapshot() -> Dictionary:
 	}
 
 func validation_request_manual_save() -> Dictionary:
-	_on_save_pressed()
+	_on_save_pressed(true)
 	return _manual_save_overwrite_dialog.validation_snapshot()
 
 func validation_confirm_manual_save_overwrite() -> Dictionary:
@@ -12573,14 +12578,7 @@ func _short_text(text: String, max_chars: int) -> String:
 	return "%s..." % normalized.left(max(1, max_chars - 3)).strip_edges()
 
 func _save_status_text(selected_slot: int, summary: Dictionary) -> String:
-	var status := "M%d" % selected_slot
-	if String(summary.get("validity", "missing")) == "missing":
-		return "%s empty" % status
-	if SaveService.can_load_summary(summary):
-		return "%s ready" % status
-	if bool(summary.get("valid", false)):
-		return "%s hold" % status
-	return "%s lock" % status
+	return "Save files"
 
 func _style_action_button(button: Button, width: float = 96.0, height: float = 30.0) -> void:
 	FrontierVisualKit.apply_button(button, "secondary", width, height, 13)
@@ -12635,7 +12633,10 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_clear_panel(_hero_panel)
 	FrontierVisualKit.apply_clear_panel(_event_panel)
 	FrontierVisualKit.apply_clear_panel(_action_panel)
-	FrontierVisualKit.apply_ornate_frame(_sidebar_shell_panel, UI_ART_SHARED_HUD_FRAME, "frame", 112, 8, Color(0.78, 0.76, 0.70, 0.94))
+	# A tall rail must not stretch a decorative square frame's center ornaments
+	# behind the roster and army labels. Keep the original wood texture subdued;
+	# portraits and the minimap retain their smaller ornamental frames.
+	FrontierVisualKit.apply_art_panel(_sidebar_shell_panel, UI_ART_OVERWORLD_WOOD_PANEL, "frame", 62, 8, Color(0.32, 0.34, 0.31, 1.0))
 	FrontierVisualKit.apply_clear_panel(_command_band_panel)
 	_command_spine.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 

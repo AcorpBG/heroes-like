@@ -14365,7 +14365,7 @@ def validate_save_management(errors: list[str]) -> None:
             "overworld_drawer_joypad_confirm_exact",
             "overworld_drawer_enter_confirm_exact",
             "overworld_drawer_route_camera_debug_authority_exact",
-            "overworld_save_slot_popup_cancel_unchanged",
+            "overworld_file_browser_cancel_unchanged",
             "overworld_settings_cancel_unchanged",
             "overworld_end_turn_cancel_unchanged",
             "overworld_no_drawer_cancel_route_exact",
@@ -14393,8 +14393,9 @@ def validate_save_management(errors: list[str]) -> None:
             '"hero_actions_cache_hits"',
             '"selected_route_cache_hits"',
             "shell_profile.erase(profile_key)",
-            'shell_snapshot.get("ambient_audio", {})',
-            'ambient_audio.erase("active_player_count")',
+            'for audio_key in ["ambient_audio", "music_audio"]:',
+            'for key in ["active_player_count", "outgoing_player_count", "outgoing_players", "transition", "transition_active"]:',
+            'player.erase("volume_db")',
             "EXCLUSIVE_BACKGROUND_CONTROLLER_MODAL_KEYS",
             '"available",\n\t"blocked_reason",\n\t"manual_overwrite_open",',
             "for controller_key in EXCLUSIVE_BACKGROUND_CONTROLLER_MODAL_KEYS:",
@@ -14519,9 +14520,10 @@ def validate_save_management(errors: list[str]) -> None:
             "Manual overwrite background authority must normalize exactly one nested generated-recovery request counter",
         )
         ensure(
-            overwrite_text.count('ambient_audio.erase("active_player_count")') == 1,
+            overwrite_text.count('for audio_key in ["ambient_audio", "music_audio"]:') == 1
+            and overwrite_text.count('player.erase("volume_db")') == 1,
             errors,
-            "Manual overwrite authority must normalize exactly one ephemeral ambient active-player counter",
+            "Manual overwrite authority must normalize live audio crossfade observations once while retaining layer and context authority",
         )
         ensure(
             overwrite_text.count('erase("manual_overwrite_visible")') == 2,
@@ -14553,7 +14555,7 @@ def validate_save_management(errors: list[str]) -> None:
             "func _on_root_window_input(event: InputEvent) -> void:",
             "_forwarding_root_physical_input := false",
             "not visible",
-            "or _pending_slot <= 0",
+            "or (_pending_slot <= 0 and not _file_mode)",
             "or _forwarding_root_physical_input",
             "or not (event is InputEventKey or event is InputEventJoypadButton)",
             "get_tree().root.set_input_as_handled()",
@@ -14561,7 +14563,7 @@ def validate_save_management(errors: list[str]) -> None:
             "if detached_event == null:",
             'call_deferred("_forward_root_physical_input", detached_event)',
             "func _forward_root_physical_input(event: InputEvent) -> void:",
-            "if not visible or _pending_slot <= 0 or _forwarding_root_physical_input:",
+            "if not visible or (_pending_slot <= 0 and not _file_mode) or _forwarding_root_physical_input:",
             "_forwarding_root_physical_input = true",
             "push_input(event)",
             "_forwarding_root_physical_input = false",
@@ -20487,7 +20489,7 @@ def validate_confirmation_dialog_visual_surfaces(errors: list[str]) -> None:
             'FrontierVisualKit.apply_confirmation_dialog(_new_session_confirmation_dialog, "danger")',
             'FrontierVisualKit.apply_confirmation_dialog(_manual_save_overwrite_dialog as ConfirmationDialog, "danger")',
         ),
-        "Manual Save": ('FrontierVisualKit.apply_confirmation_dialog(self, "danger")',),
+        "Manual Save": ('FrontierVisualKit.apply_confirmation_dialog(self, "danger")', 'FrontierVisualKit.apply_confirmation_dialog(self, "primary")'),
     }
     for owner, required_calls in expected_calls.items():
         owner_text = shell_paths[owner].read_text(encoding="utf-8")
@@ -30541,20 +30543,14 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
     ensure(save_status_block != "", errors, "OverworldShell.gd must retain the compact save-status helper")
     required_save_status_tokens = (
         "func _save_status_text(selected_slot: int, summary: Dictionary) -> String:",
-        'String(summary.get("validity", "missing")) == "missing"',
-        'return "%s empty" % status',
-        "SaveService.can_load_summary(summary)",
-        'return "%s ready" % status',
-        'bool(summary.get("valid", false))',
-        'return "%s hold" % status',
-        'return "%s lock" % status',
+        'return "Save files"',
     )
     for required_token in required_save_status_tokens:
         ensure(required_token in save_status_block, errors, f"Overworld compact save status is missing required distinct-state token: {required_token}")
     ensure(
         all(save_status_block.find(required_save_status_tokens[index]) < save_status_block.find(required_save_status_tokens[index + 1]) for index in range(len(required_save_status_tokens) - 1)),
         errors,
-        "Overworld compact save status must order missing, loadable, held, and locked states fail-closed",
+        "Overworld compact status must describe the named-file browser, not a hidden numbered slot",
     )
     ensure("latest_context" not in save_status_block and 'return "%s none"' not in save_status_block, errors, "Overworld selected-slot status must not hide empty or invalid state behind latest-save availability")
 
@@ -49406,8 +49402,8 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     ensure(all((silhouette_block, command_pennant_profile_block, command_pennant_draw_block, command_pennant_validation_block, town_sprite_block)), errors, "Could not isolate town/hero landmark readability production ownership")
     for token in (
         'const WORLD_SPRITE_SILHOUETTE_MODEL := "eight_direction_alpha_silhouette_outline"',
-        "const TOWN_SPRITE_SILHOUETTE_WIDTH_FACTOR := 0.010",
-        "const TOWN_SPRITE_SILHOUETTE_MIN_PX := 1.4",
+        "const TOWN_SPRITE_SILHOUETTE_WIDTH_FACTOR := 0.003",
+        "const TOWN_SPRITE_SILHOUETTE_MIN_PX := 0.55",
         "const HERO_SPRITE_SILHOUETTE_WIDTH_FACTOR := 0.024",
         "const HERO_SPRITE_SILHOUETTE_MIN_PX := 1.35",
         'const HERO_COMMAND_PENNANT_MODEL := "compact_player_command_flag"',
@@ -55379,7 +55375,7 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
         responsive.find("_status_label.clip_text = narrow_layout or large_scale_footer"),
         responsive.find('_status_label.tooltip_text = "%s\\n%s" % [_status_label.text, _resource_label.full_summary_text()] if compact_layout else _status_label.text'),
         responsive.find("_save_status_label.visible = not narrow_layout"),
-        responsive.find("_save_slot_picker.visible = not narrow_layout"),
+        responsive.find("_save_slot_picker.visible = false"),
     ]
     ensure(all(index >= 0 for index in required_source_order) and required_source_order == sorted(required_source_order), errors, "Overworld narrow Status clipping must precede its exact full tooltip and retain save-detail breakpoint ownership")
     ensure(responsive.count("_status_label.clip_text = narrow_layout or large_scale_footer") == 1, errors, "Overworld responsive layout must own exactly one narrow-or-130%-footer Status clipping assignment")
