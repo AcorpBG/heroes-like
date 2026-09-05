@@ -51,6 +51,7 @@ Locked stack for the current production foundation:
 - Rendering: 2D-first scenes and UI.
 - Authored content: JSON files under `content/` until a selected migration replaces specific domains.
 - Runtime saves: versioned JSON snapshots and campaign progression under `user://saves/` until a selected migration introduces asset-reference saves plus compact deltas.
+- Manual save UX is named-file based, not limited to numbered slots. Keep legacy slot files loadable, autosave separate, Linux/Windows filename identity consistent, and replacements transactionally verified with explicit overwrite consent.
 - Validation: Python repository checks plus focused runtime smoke coverage where engine execution is required.
 - Native extension candidate: Phase 2 map/scenario persistence may introduce a Godot GDExtension written in C++ for typed map documents, durable map packages, validation, save/load, and migration.
 

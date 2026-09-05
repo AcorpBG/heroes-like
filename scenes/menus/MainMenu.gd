@@ -2422,7 +2422,9 @@ func _refresh_support_bundle_surface() -> void:
 		_support_bundle_status_label.tooltip_text = "Local-only export status. Expedition saves and campaign progression are never included."
 
 func _rebuild_save_browser() -> void:
-	_save_summaries = SaveService.list_session_summaries()
+	# Normal browsing is file-based. Keep occupied legacy slots loadable, but do
+	# not advertise three empty slots as the limit of the save system.
+	_save_summaries = SaveService.list_session_summaries().filter(func(summary: Dictionary): return FileAccess.file_exists(String(summary.get("path", ""))))
 	_save_browser_loaded = true
 	_save_list.clear()
 

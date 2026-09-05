@@ -106,7 +106,7 @@ func _valid_result(load_result: Dictionary) -> bool:
 		and String(load_result.get("scenario_id", "")) != ""
 		and int(load_result.get("day", 0)) > 0
 		and String(load_result.get("continuity_cue", "")) != ""
-		and String(summary_identity.get("slot_type", "")) in [SaveService.SLOT_TYPE_MANUAL, SaveService.SLOT_TYPE_AUTOSAVE]
+		and String(summary_identity.get("slot_type", "")) in [SaveService.SLOT_TYPE_MANUAL, SaveService.SLOT_TYPE_AUTOSAVE, SaveService.SLOT_TYPE_FILE]
 		and String(summary_identity.get("slot_id", "")) != ""
 		and String(summary_identity.get("path", "")) != ""
 	)

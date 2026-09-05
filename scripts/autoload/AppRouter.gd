@@ -1954,7 +1954,7 @@ func _build_load_resumed_presentation(live_summary: Dictionary, session) -> Dict
 		or String(live_summary.get("scenario_id", "")) != session.scenario_id
 		or int(live_summary.get("day", -1)) != session.day
 		or String(live_summary.get("scenario_status", "")) != session.scenario_status
-		or String(summary_identity.get("slot_type", "")) not in [SaveService.SLOT_TYPE_MANUAL, SaveService.SLOT_TYPE_AUTOSAVE]
+		or String(summary_identity.get("slot_type", "")) not in [SaveService.SLOT_TYPE_MANUAL, SaveService.SLOT_TYPE_AUTOSAVE, SaveService.SLOT_TYPE_FILE]
 		or String(summary_identity.get("slot_id", "")) == ""
 		or String(summary_identity.get("path", "")) == ""
 		or int(summary_identity.get("payload_bytes", 0)) <= 0
@@ -2018,6 +2018,11 @@ func resume_latest_session() -> bool:
 
 func save_active_session_to_selected_manual_slot() -> Dictionary:
 	return save_active_session_to_manual_slot(SaveService.get_selected_manual_slot())
+
+func save_active_session_to_file(name: String, expected_sha256: String = "") -> Dictionary:
+	if not SessionState.has_playable_session():
+		return {"ok": false, "message": "No active expedition is available to save.", "summary": {}}
+	return SaveService.save_runtime_file_session(SessionState.ensure_active_session(), name, not expected_sha256.is_empty(), expected_sha256)
 
 func save_active_session_to_manual_slot(manual_slot: int) -> Dictionary:
 	if not SessionState.has_playable_session():

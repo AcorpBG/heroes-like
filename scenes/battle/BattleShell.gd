@@ -1172,9 +1172,12 @@ func _on_spell_action_pressed(action_id: String) -> void:
 		"routed": false,
 	}, true), _session)
 
-func _on_save_pressed() -> Dictionary:
+func _on_save_pressed(legacy_slot: bool = false) -> Dictionary:
 	if not _battle_resolution_checkpoint_pending.is_empty():
 		return _retry_battle_resolution_checkpoint()
+	if not legacy_slot:
+		var opened: bool = _manual_save_overwrite_dialog.open_file_browser(_session, _commit_file_save)
+		return {"ok": opened, "saved": false, "pending": opened, "reason": "file_browser", "message": "Choose a save file."}
 	var action := AppRouter.active_manual_save_action()
 	if bool(action.get("disabled", true)):
 		_last_message = String(action.get("summary", "The battle could not be saved."))
@@ -1185,12 +1188,15 @@ func _on_save_pressed() -> Dictionary:
 		return action
 	return _commit_manual_save(int(action.get("slot", SaveService.get_selected_manual_slot())))
 
-func _commit_manual_save(manual_slot: int) -> Dictionary:
+func _commit_file_save(file_name: String, expected_sha256: String) -> Dictionary:
+	return _commit_manual_save(SaveService.get_selected_manual_slot(), file_name, expected_sha256)
+
+func _commit_manual_save(manual_slot: int, file_name: String = "", expected_sha256: String = "") -> Dictionary:
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
 	var briefing_checkpoint_pending := _briefing_consumption_autosave_failure_pending
 	var save_started := ProfileLogScript.begin_usec()
-	var result := AppRouter.save_active_session_to_manual_slot(manual_slot)
+	var result := AppRouter.save_active_session_to_file(file_name, expected_sha256) if file_name != "" else AppRouter.save_active_session_to_manual_slot(manual_slot)
 	buckets["save"] = ProfileLogScript.elapsed_ms(save_started)
 	if briefing_checkpoint_pending and bool(result.get("ok", false)):
 		_briefing_consumption_autosave_failure_pending = false
@@ -1425,7 +1431,7 @@ func _apply_briefing_consumption_autosave_failure_surface(focus_save: bool = tru
 	_system_body_label.text = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
 	_system_body_label.tooltip_text = visible_surface
 	_save_button.text = "Save Battle"
-	_save_button.tooltip_text = "Save the shown tactical briefing checkpoint to the selected manual slot."
+	_save_button.tooltip_text = "Create a named save file for the shown tactical briefing checkpoint."
 	_save_button.disabled = false
 	if focus_save:
 		_save_button.call_deferred("grab_focus")
@@ -2818,6 +2824,7 @@ func _living_enemy_target_ids() -> Array:
 	return ids
 
 func _configure_save_slot_picker() -> void:
+	_save_slot_picker.hide()
 	_save_slot_picker.clear()
 	for slot in SaveService.get_manual_slot_ids():
 		_save_slot_picker.add_item("Manual %d" % int(slot), int(slot))
@@ -2867,7 +2874,7 @@ func _refresh_save_slot_picker() -> void:
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = "Save" if _compact_layout_active else String(surface.get("save_button_label", "Save Battle"))
 	_save_button.tooltip_text = _join_tooltip_sections([
-		String(surface.get("save_button_tooltip", "Save the active battle safely.")),
+		"Create or replace a named file for the current battle.",
 		save_check,
 		save_handoff,
 	])
@@ -3304,7 +3311,7 @@ func validation_reset_battle_resolution_checkpoint_state() -> void:
 		AppRouter.validation_reset_battle_resolution_checkpoint_state()
 
 func validation_retry_battle_resolution_save() -> Dictionary:
-	return _on_save_pressed()
+	return _on_save_pressed(true)
 
 func validation_battle_resolution_checkpoint_snapshot() -> Dictionary:
 	var pending_result := {}
@@ -3612,7 +3619,7 @@ func validation_save_to_selected_slot() -> Dictionary:
 	}
 
 func validation_request_manual_save() -> Dictionary:
-	_on_save_pressed()
+	_on_save_pressed(true)
 	return _manual_save_overwrite_dialog.validation_snapshot()
 
 func validation_confirm_manual_save_overwrite() -> Dictionary:

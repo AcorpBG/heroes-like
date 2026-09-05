@@ -806,22 +806,28 @@ func _on_specialty_action_pressed(action_id: String) -> void:
 	_refresh()
 	_record_town_action_presentation("specialty", action_id, action, result, before)
 
-func _on_save_pressed() -> void:
+func _on_save_pressed(legacy_slot: bool = false) -> Dictionary:
+	if not legacy_slot:
+		var opened: bool = _manual_save_overwrite_dialog.open_file_browser(_session, _commit_file_save)
+		return {"ok": opened, "saved": false, "pending": opened, "reason": "file_browser", "message": "Choose a save file."}
 	var action := AppRouter.active_manual_save_action()
 	if bool(action.get("disabled", true)):
 		_last_message = String(action.get("summary", "The town visit could not be saved."))
 		_refresh()
-		return
+		return action
 	if bool(action.get("requires_confirmation", false)):
 		_manual_save_overwrite_dialog.open_action(action)
-		return
-	_commit_manual_save(int(action.get("slot", SaveService.get_selected_manual_slot())))
+		return action
+	return _commit_manual_save(int(action.get("slot", SaveService.get_selected_manual_slot())))
 
-func _commit_manual_save(manual_slot: int) -> void:
+func _commit_file_save(file_name: String, expected_sha256: String) -> Dictionary:
+	return _commit_manual_save(SaveService.get_selected_manual_slot(), file_name, expected_sha256)
+
+func _commit_manual_save(manual_slot: int, file_name: String = "", expected_sha256: String = "") -> Dictionary:
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
 	var save_started := ProfileLogScript.begin_usec()
-	var result := AppRouter.save_active_session_to_manual_slot(manual_slot)
+	var result := AppRouter.save_active_session_to_file(file_name, expected_sha256) if file_name != "" else AppRouter.save_active_session_to_manual_slot(manual_slot)
 	buckets["save"] = ProfileLogScript.elapsed_ms(save_started)
 	_last_message = String(result.get("message", ""))
 	_last_action_recap = {}
@@ -837,6 +843,7 @@ func _commit_manual_save(manual_slot: int) -> void:
 		_save_written_cue_presenter.present(result, manual_slot)
 	buckets["save_surface_force"] = ProfileLogScript.elapsed_ms(save_surface_started)
 	ProfileLogScript.emit_general("town", "action", "save", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(false), _session)
+	return result
 
 func validation_save_written_cue_snapshot() -> Dictionary:
 	return _save_written_cue_presenter.validation_snapshot() if _save_written_cue_presenter != null else {}
@@ -2725,6 +2732,7 @@ func _invalidate_active_town_entity_cache(reason: String, scopes: Array = []) ->
 	}
 
 func _configure_save_slot_picker() -> void:
+	_save_slot_picker.hide()
 	_save_slot_picker.clear()
 	for slot in SaveService.get_manual_slot_ids():
 		_save_slot_picker.add_item("Manual %d" % int(slot), int(slot))
@@ -2751,7 +2759,7 @@ func _refresh_save_slot_picker(force_surface: bool = false, view_state: Dictiona
 		_save_status_label.tooltip_text = "Save details are refreshed when the save controls are used."
 		_save_slot_picker.tooltip_text = "Manual %d selected. Save details are refreshed when the save controls are used." % selected_slot
 		_save_button.text = "Save Town"
-		_save_button.tooltip_text = "Save the active town visit to the selected manual slot."
+		_save_button.tooltip_text = "Create or replace a named file for this town visit."
 		var lazy_departure: Dictionary = view_state.get("departure", {}) if view_state.get("departure", {}) is Dictionary else {}
 		if lazy_departure.is_empty():
 			lazy_departure = TownRules.town_departure_confirmation(_session)
@@ -2791,7 +2799,7 @@ func _refresh_save_slot_picker(force_surface: bool = false, view_state: Dictiona
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = String(surface.get("save_button_label", "Save Town"))
 	_save_button.tooltip_text = _join_tooltip_sections([
-		String(surface.get("save_button_tooltip", "Save the active town visit safely.")),
+		"Create or replace a named file for this town visit.",
 		save_handoff,
 		save_check,
 	])
@@ -3516,7 +3524,7 @@ func validation_save_to_selected_slot() -> Dictionary:
 	}
 
 func validation_request_manual_save() -> Dictionary:
-	_on_save_pressed()
+	_on_save_pressed(true)
 	return _manual_save_overwrite_dialog.validation_snapshot()
 
 func validation_confirm_manual_save_overwrite() -> Dictionary:

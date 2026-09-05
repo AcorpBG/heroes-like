@@ -97,17 +97,37 @@ func _town_profiles(shell: Node, map_view: Node) -> Dictionary:
 			"exact": exact,
 		})
 	var riverwatch: Dictionary = map_view.call("validation_town_sprite_scale_payload", TOWN_ASSET_ID)
-	var identity_exact := float(riverwatch.get("source_aspect", 0.0)) > 1.25 \
-		and float(riverwatch.get("source_aspect", 0.0)) < 1.55 \
-		and bool(riverwatch.get("town_aspect_preserved", false))
+	# Compare the actual manifest-resolved texture to the canonical PNG, not a
+	# guessed aspect range that can accidentally certify an older imported asset.
+	var canonical_path := "res://art/overworld/runtime/objects/towns/identity/town_riverwatch.png"
+	var canonical_image := Image.load_from_file(canonical_path)
+	var live_texture: Texture2D = map_view.call("_object_texture_for_asset", TOWN_ASSET_ID)
+	var live_image := live_texture.get_image() if live_texture != null else null
+	var imported_pixels_exact := canonical_image != null and live_image != null
+	if imported_pixels_exact:
+		canonical_image.convert(Image.FORMAT_RGBA8)
+		canonical_image.fix_alpha_edges()
+		live_image.convert(Image.FORMAT_RGBA8)
+		# The importer fixes RGB in transparent edge pixels; compare visible color
+		# and alpha, not irrelevant RGB beneath fully transparent pixels.
+		imported_pixels_exact = canonical_image.get_size() == live_image.get_size()
+		if imported_pixels_exact:
+			for y in range(canonical_image.get_height()):
+				for x in range(canonical_image.get_width()):
+					var expected := canonical_image.get_pixel(x, y)
+					var actual := live_image.get_pixel(x, y)
+					if not is_equal_approx(expected.a, actual.a) or (expected.a > 0.0 and not expected.is_equal_approx(actual)):
+						imported_pixels_exact = false
+	var identity_exact := imported_pixels_exact and bool(riverwatch.get("town_aspect_preserved", false))
 	if not all_exact:
 		_failures.append("one or more live town sprites lost painted aspect or envelope containment")
 	if not identity_exact:
-		_failures.append("Riverwatch is not using the expected broad land-set aspect")
+		_failures.append("Riverwatch loaded pixels differ from the canonical land-set raster")
 	return {
 		"profile_count": rows.size(),
 		"all_aspects_preserved": all_exact,
 		"riverwatch_landset_exact": identity_exact,
+		"imported_pixels_exact": imported_pixels_exact,
 		"riverwatch": riverwatch,
 		"rows": rows,
 	}

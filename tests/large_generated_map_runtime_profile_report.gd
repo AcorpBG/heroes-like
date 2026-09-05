@@ -112,6 +112,7 @@ func _run() -> void:
 	commands["explicit_save"] = _profile_explicit_save(session)
 	commands["end_turn"] = await _profile_end_turn(shell, session)
 	var save_round_trip := _validate_generated_save_round_trip(session)
+	commands["named_file_save"] = _profile_named_file_save(session)
 
 	var size := OverworldRules.derive_map_size(session)
 	var provenance: Dictionary = session.flags.get("generated_random_map_provenance", {}) if session.flags.get("generated_random_map_provenance", {}) is Dictionary else {}
@@ -300,7 +301,16 @@ func _profile_explicit_save(session) -> Dictionary:
 	}
 
 
-func _validate_generated_save_round_trip(session) -> Dictionary:
+func _profile_named_file_save(session) -> Dictionary:
+	var started := Time.get_ticks_usec()
+	var result: Dictionary = SaveService.save_runtime_file_session(session, "Large named profile")
+	var elapsed := _elapsed_ms(started)
+	var profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+	var restored := _validate_generated_save_round_trip(session, result.get("summary", {})) if bool(result.get("ok", false)) else {"ok": false}
+	return {"ok": bool(result.get("ok", false)) and bool(restored.get("ok", false)), "wall_ms": elapsed, "restore": restored, "profile": profile}
+
+
+func _validate_generated_save_round_trip(session, named_summary: Dictionary = {}) -> Dictionary:
 	var expected := {
 		"scenario_id": session.scenario_id,
 		"hero_id": session.hero_id,
@@ -314,7 +324,7 @@ func _validate_generated_save_round_trip(session) -> Dictionary:
 	}
 	ContentService.clear_generated_scenario_drafts()
 	var started := Time.get_ticks_usec()
-	var restored = SaveService.restore_autosave_session()
+	var restored = SaveService.restore_autosave_session() if named_summary.is_empty() else SaveService.restore_session_from_summary(named_summary)
 	var elapsed := _elapsed_ms(started)
 	if restored == null:
 		return {"ok": false, "wall_ms": elapsed, "reason": "restore_failed"}
@@ -331,6 +341,7 @@ func _validate_generated_save_round_trip(session) -> Dictionary:
 		and _array_size(restored.overworld.get("resource_nodes", [])) == expected["resource_count"]
 		and _array_size(restored.overworld.get("encounters", [])) == expected["encounter_count"]
 		and (restored_source_objects as Dictionary).size() == expected["source_object_count"]
+		and restored_source_objects == session.overworld.get("package_source_objects_by_id", {})
 		and flags_record_present
 		and overworld_record_present
 	)

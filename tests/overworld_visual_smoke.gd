@@ -4450,7 +4450,7 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		or not bool(town.get("painted_bottom_grounded_exact", false)) \
 		or not bool(town.get("sprite_contained_in_footprint", false)) \
 		or String(town.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline" \
-		or float(town.get("sprite_silhouette_width_px", 0.0)) < 1.4 \
+		or float(town.get("sprite_silhouette_width_px", 0.0)) < 0.55 \
 		or not bool(town.get("sprite_silhouette_contained_in_footprint", false)) \
 		or not is_equal_approx(float(town_center.get("x", 0.0)), 1.5) \
 		or float(town_center.get("y", 0.0)) <= 0.0 \

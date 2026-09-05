@@ -26,7 +26,7 @@ def main() -> int:
         return 2
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
     completed = subprocess.run(
-        [xvfb, "-a", "-s", "-screen 0 2200x1200x24", godot, "--path", str(ROOT), "--scene", SCENE],
+        [xvfb, "-a", "-s", "-screen 0 2200x1200x24", godot, "--path", str(ROOT), "--audio-driver", "Dummy", "--scene", SCENE],
         cwd=ROOT,
         env=os.environ.copy(),
         text=True,

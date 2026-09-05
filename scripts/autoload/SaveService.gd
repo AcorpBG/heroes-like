@@ -16,6 +16,8 @@ const SAVE_DIR := "user://saves"
 const SAVE_PREFIX := "slot"
 const MANUAL_SLOT_IDS := [1, 2, 3]
 const SLOT_TYPE_MANUAL := "manual"
+const SLOT_TYPE_FILE := "file"
+const NAMED_SAVE_SUFFIX := ".save.json"
 const SLOT_TYPE_AUTOSAVE := "autosave"
 const AUTOSAVE_FILE := "autosave.json"
 const PROGRESSION_FILE := "campaign_progression.json"
@@ -54,6 +56,77 @@ var _slot_summary_cache := {}
 var _summary_inspection_trace_enabled := false
 var _summary_inspection_trace_counts := {}
 var _last_runtime_save_profile := {}
+var _verified_save_receipts := {}
+
+# Named saves use the same versioned payload and transaction writer as legacy
+# slots. The basename is the identity; callers can never supply an arbitrary path.
+func save_file_identity(requested_name: String) -> Dictionary:
+	var name := requested_name.strip_edges()
+	if name.is_empty() or name.length() > 64 or name.to_utf8_buffer().size() > 200 or name.begins_with(".") or name.ends_with("."):
+		return {"ok": false, "message": "Use a save name of 1–64 characters, without a trailing period."}
+	for index in range(name.length()):
+		if name.unicode_at(index) < 32 or name.unicode_at(index) == 127 or name[index] in '<>:"/\\|?*':
+			return {"ok": false, "message": "Save names cannot contain control characters or <>:\"/\\|?*."}
+	var device := name.get_slice(".", 0).strip_edges().to_upper().replace("¹", "1").replace("²", "2").replace("³", "3")
+	if device in ["CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"]:
+		return {"ok": false, "message": "That name is reserved by Windows. Choose another name."}
+	var filename := name + NAMED_SAVE_SUFFIX
+	var directory := DirAccess.open(SAVE_DIR)
+	if directory != null:
+		# Windows identities are case-insensitive. Apply the same rule on Linux,
+		# including interrupted transactions, so a save cannot fork by casing.
+		for entry in directory.get_files():
+			var base := entry.trim_suffix(SAVE_TRANSACTION_CANDIDATE_SUFFIX).trim_suffix(SAVE_TRANSACTION_BACKUP_SUFFIX)
+			if base.to_lower() == filename.to_lower():
+				filename = base
+				name = filename.trim_suffix(NAMED_SAVE_SUFFIX)
+				break
+		for suffix in ["", SAVE_TRANSACTION_CANDIDATE_SUFFIX, SAVE_TRANSACTION_BACKUP_SUFFIX]:
+			if directory.is_link(filename + String(suffix)):
+				return {"ok": false, "message": "Linked save files are not supported."}
+	return {"ok": true, "slot_type": SLOT_TYPE_FILE, "slot_id": name, "name": name, "path": SAVE_DIR.path_join(filename)}
+
+func inspect_save_file(name: String) -> Dictionary:
+	var identity := save_file_identity(name)
+	if not bool(identity.get("ok", false)):
+		return {}
+	return _inspect_slot(SLOT_TYPE_FILE, String(identity.name), String(identity.path))
+
+func list_save_files() -> Array:
+	var names := {}
+	var directory := DirAccess.open(SAVE_DIR)
+	if directory == null:
+		return []
+	for filename in directory.get_files():
+		var base := filename.trim_suffix(SAVE_TRANSACTION_CANDIDATE_SUFFIX).trim_suffix(SAVE_TRANSACTION_BACKUP_SUFFIX)
+		if base.ends_with(NAMED_SAVE_SUFFIX):
+			names[base.trim_suffix(NAMED_SAVE_SUFFIX)] = true
+	var summaries := []
+	for name in names:
+		var summary := inspect_save_file(String(name))
+		if not summary.is_empty() and FileAccess.file_exists(String(summary.get("path", ""))):
+			summaries.append(summary)
+	summaries.sort_custom(func(a: Dictionary, b: Dictionary): return summary_recency_timestamp(a) > summary_recency_timestamp(b))
+	return summaries
+
+func build_file_save_action(name: String) -> Dictionary:
+	var identity := save_file_identity(name)
+	if not bool(identity.get("ok", false)):
+		return identity
+	var summary := inspect_save_file(String(identity.name))
+	var occupied := FileAccess.file_exists(String(identity.path))
+	identity["requires_confirmation"] = occupied
+	identity["expected_sha256"] = FileAccess.get_sha256(String(identity.path)) if occupied else ""
+	identity["summary"] = summary
+	return identity
+
+func save_runtime_file_session(session: SessionStateStoreScript.SessionData, name: String, overwrite: bool = false, expected_sha256: String = "") -> Dictionary:
+	var action := build_file_save_action(name)
+	if not bool(action.get("ok", false)):
+		return action
+	if bool(action.requires_confirmation) and (not overwrite or expected_sha256.is_empty() or expected_sha256 != String(action.expected_sha256)):
+		return {"ok": false, "message": "This file already exists or changed. Select it again and confirm replacement."}
+	return _save_runtime_session(session, SLOT_TYPE_FILE, 1, true, String(action.name))
 
 func validation_begin_summary_inspection_trace() -> void:
 	_summary_inspection_trace_enabled = true
@@ -81,6 +154,7 @@ func validation_summary_cache_snapshot() -> Dictionary:
 
 func validation_clear_summary_cache() -> void:
 	_slot_summary_cache.clear()
+	_verified_save_receipts.clear()
 
 func validation_transaction_artifact_paths(file_path: String) -> Dictionary:
 	return {
@@ -179,6 +253,8 @@ func refresh_summary(summary: Dictionary) -> Dictionary:
 		return {}
 	var slot_type := String(summary.get("slot_type", ""))
 	match slot_type:
+		SLOT_TYPE_FILE:
+			return inspect_save_file(String(summary.get("slot_id", "")))
 		SLOT_TYPE_AUTOSAVE:
 			return inspect_autosave()
 		SLOT_TYPE_MANUAL:
@@ -199,6 +275,8 @@ func build_delete_action(summary: Dictionary) -> Dictionary:
 	var path := String(identity.get("path", ""))
 	var occupied := path != "" and FileAccess.file_exists(path)
 	var slot_label := "Autosave" if String(identity.get("slot_type", "")) == SLOT_TYPE_AUTOSAVE else "Manual Slot %s" % String(identity.get("slot_id", ""))
+	if String(identity.get("slot_type", "")) == SLOT_TYPE_FILE:
+		slot_label = String(identity.get("slot_id", "")) + NAMED_SAVE_SUFFIX
 	var context := String(live_summary.get("scenario_name", "")).strip_edges()
 	if context == "":
 		context = "this unreadable save" if occupied else "this empty slot"
@@ -505,6 +583,7 @@ func list_session_summaries() -> Array:
 	var summaries := [inspect_autosave()]
 	for slot in MANUAL_SLOT_IDS:
 		summaries.append(inspect_manual_slot(int(slot)))
+	summaries.append_array(list_save_files())
 	return summaries
 
 func list_loadable_session_summaries() -> Array:
@@ -1480,6 +1559,9 @@ func _deletable_slot_identity(summary: Dictionary) -> Dictionary:
 		return {}
 	var slot_type := String(summary.get("slot_type", ""))
 	var slot_id := String(summary.get("slot_id", ""))
+	if slot_type == SLOT_TYPE_FILE:
+		var identity := save_file_identity(slot_id)
+		return identity if bool(identity.get("ok", false)) else {}
 	if slot_type == SLOT_TYPE_AUTOSAVE and slot_id == SLOT_TYPE_AUTOSAVE:
 		return {
 			"slot_type": SLOT_TYPE_AUTOSAVE,
@@ -1499,6 +1581,8 @@ func _deletable_slot_identity(summary: Dictionary) -> Dictionary:
 
 func _summary_for_slot_identity(identity: Dictionary) -> Dictionary:
 	match String(identity.get("slot_type", "")):
+		SLOT_TYPE_FILE:
+			return inspect_save_file(String(identity.get("slot_id", "")))
 		SLOT_TYPE_AUTOSAVE:
 			return inspect_autosave()
 		SLOT_TYPE_MANUAL:
@@ -1524,6 +1608,8 @@ func _save_payload(
 ) -> String:
 	var recovery_started := ProfileLogScript.begin_usec()
 	var recovery := _verified_cached_manual_save_recovery(file_path, slot_type)
+	if recovery.is_empty():
+		recovery = _verified_receipt_recovery(file_path)
 	var recovery_cache_hit := not recovery.is_empty()
 	if not recovery_cache_hit:
 		recovery = _recover_save_transaction(file_path)
@@ -1599,11 +1685,23 @@ func _verified_cached_manual_save_recovery(file_path: String, slot_type: String)
 		"retained_manual_name": String(summary.get("manual_slot_name", "")),
 	}
 
+func _verified_receipt_recovery(file_path: String) -> Dictionary:
+	if not _verified_save_receipts.has(file_path) or FileAccess.file_exists(_save_transaction_candidate_path(file_path)) or FileAccess.file_exists(_save_transaction_backup_path(file_path)):
+		return {}
+	var receipt: Dictionary = _verified_save_receipts[file_path]
+	# Hash actual bytes, not timestamps: same-size external edits must invalidate
+	# this shortcut. A matching file is exactly the last successfully committed save.
+	if not FileAccess.file_exists(file_path) or FileAccess.get_sha256(file_path) != String(receipt.get("sha256", "")):
+		_verified_save_receipts.erase(file_path)
+		return {}
+	return {"ok": true, "recovered": false, "live_valid": true, "reason": "verified_byte_receipt", "retained_manual_name": String(receipt.get("manual_name", ""))}
+
 func _save_runtime_session(
 	session: SessionStateStoreScript.SessionData,
 	slot_type: String,
 	slot: int = 1,
-	include_summary: bool = true
+	include_summary: bool = true,
+	save_file_name: String = ""
 ) -> Dictionary:
 	var profile := {
 		"slot_type": slot_type,
@@ -1680,7 +1778,11 @@ func _save_runtime_session(
 			profile["prepared_payload"] = true
 			profile["prepared_payload_reason"] = "normalized_detached_manual_session"
 		else:
-			payload_for_write = sanitized_session.to_dict()
+			# Restore returned a detached, normalized session. Transfer its owned
+			# branches just as manual saves do, instead of copying a Large map again.
+			payload_for_write = _owned_payload_from_normalized_detached_session(sanitized_session)
+			profile["prepared_payload"] = true
+			profile["prepared_payload_reason"] = "normalized_detached_autosave_session"
 
 	var path := ""
 	var summary := {}
@@ -1705,7 +1807,7 @@ func _save_runtime_session(
 			var write_to_dict_started := ProfileLogScript.begin_usec()
 			var autosave_payload := write_payload
 			_runtime_save_profile_bucket(profile, "write_to_dict", ProfileLogScript.elapsed_ms(write_to_dict_started))
-			path = _save_payload(autosave_payload, _autosave_path(), SLOT_TYPE_AUTOSAVE, saved_payload, profile)
+			path = _save_payload(autosave_payload, _autosave_path(), SLOT_TYPE_AUTOSAVE, saved_payload, profile, payload_is_prepared)
 			_runtime_save_profile_step(profile, "write_payload_done")
 			cache_slot_id = SLOT_TYPE_AUTOSAVE
 			if path != "" and include_summary:
@@ -1728,14 +1830,15 @@ func _save_runtime_session(
 			var write_to_dict_started := ProfileLogScript.begin_usec()
 			var manual_payload := write_payload
 			_runtime_save_profile_bucket(profile, "write_to_dict", ProfileLogScript.elapsed_ms(write_to_dict_started))
-			path = _save_payload(manual_payload, _slot_path(normalized_slot), SLOT_TYPE_MANUAL, saved_payload, profile, payload_is_prepared)
+			var target_path := SAVE_DIR.path_join(save_file_name + NAMED_SAVE_SUFFIX) if slot_type == SLOT_TYPE_FILE else _slot_path(normalized_slot)
+			path = _save_payload(manual_payload, target_path, slot_type, saved_payload, profile, payload_is_prepared)
 			_runtime_save_profile_step(profile, "write_payload_done")
-			cache_slot_id = str(normalized_slot)
+			cache_slot_id = save_file_name if slot_type == SLOT_TYPE_FILE else str(normalized_slot)
 			if path != "" and include_summary:
 				_selected_manual_slot = normalized_slot
 				_runtime_save_profile_step(profile, "summary_cache_store_start")
 				var summary_cache_started := ProfileLogScript.begin_usec()
-				_store_runtime_summary_cache(saved_payload, SLOT_TYPE_MANUAL, cache_slot_id, path, authoritative_resume_target, profile)
+				_store_runtime_summary_cache(saved_payload, slot_type, cache_slot_id, path, authoritative_resume_target, profile)
 				_runtime_save_profile_bucket(profile, "summary_cache", ProfileLogScript.elapsed_ms(summary_cache_started))
 				_runtime_save_profile_step(profile, "summary_cache_store_done")
 			elif path != "":
@@ -1743,7 +1846,7 @@ func _save_runtime_session(
 			if include_summary:
 				_runtime_save_profile_step(profile, "inspect_summary_start")
 				var inspect_started := ProfileLogScript.begin_usec()
-				summary = inspect_manual_slot(normalized_slot)
+				summary = inspect_save_file(save_file_name) if slot_type == SLOT_TYPE_FILE else inspect_manual_slot(normalized_slot)
 				_runtime_save_profile_bucket(profile, "inspect_summary", ProfileLogScript.elapsed_ms(inspect_started))
 				_runtime_save_profile_step(profile, "inspect_summary_done")
 
@@ -1757,6 +1860,7 @@ func _save_runtime_session(
 	if FileAccess.file_exists(path):
 		profile["written_bytes"] = FileAccess.get_size(path)
 		profile["path"] = path
+		_verified_save_receipts[path] = {"sha256": FileAccess.get_sha256(path), "manual_name": String(saved_payload.get(SAVE_METADATA_MANUAL_NAME_KEY, ""))}
 
 	var result := {
 		"ok": true,
@@ -2021,7 +2125,9 @@ func _save_raw_dictionary(
 	var stringify_started := ProfileLogScript.begin_usec()
 	# Runtime saves are machine-owned. Compact JSON avoids formatting and then
 	# parsing/writing several extra megabytes on object-dense generated maps.
-	var json_text := JSON.stringify(payload)
+	# Object key order is not part of the save schema. Avoid sorting every nested
+	# content record, but retain exact byte verification of the serialized result.
+	var json_text := JSON.stringify(payload, "", false)
 	_runtime_save_profile_bucket(profile, "stringify", ProfileLogScript.elapsed_ms(stringify_started))
 	var candidate_path := _save_transaction_candidate_path(file_path)
 	var backup_path := _save_transaction_backup_path(file_path)
@@ -2075,10 +2181,17 @@ func _save_raw_dictionary(
 		push_error("Unable to commit save candidate %s (error %d)." % [candidate_path, commit_error])
 		_rollback_save_transaction(file_path, candidate_path, backup_path, had_live)
 		return ""
-	var committed_read := _read_json_dictionary_unrecovered(file_path, false)
+	# The candidate has already parsed successfully. Byte-for-byte readback of
+	# the renamed file proves it is that exact validated JSON without parsing and
+	# allocating the entire map a second time. Rollback is unchanged on mismatch.
+	var committed_file := FileAccess.open(file_path, FileAccess.READ)
+	var committed_exact := false
+	if committed_file != null:
+		committed_exact = committed_file.get_as_text() == json_text
+		committed_file.close()
 	if not profile.is_empty():
-		profile["verification_parse_count"] = int(profile.get("verification_parse_count", 0)) + 1
-	if not bool(committed_read.get("ok", false)) or String(committed_read.get("text", "")) != json_text:
+		profile["verification_committed_readback_count"] = 1
+	if not committed_exact:
 		push_error("Committed save verification failed: %s" % file_path)
 		_rollback_save_transaction(file_path, candidate_path, backup_path, had_live)
 		return ""
@@ -2219,6 +2332,10 @@ func _save_transaction_payload_valid(file_path: String, raw: Dictionary) -> bool
 	var slot_type := ""
 	if file_path == _autosave_path():
 		slot_type = SLOT_TYPE_AUTOSAVE
+	elif file_path.get_base_dir() == SAVE_DIR and file_path.ends_with(NAMED_SAVE_SUFFIX):
+		var identity := save_file_identity(file_path.get_file().trim_suffix(NAMED_SAVE_SUFFIX))
+		if bool(identity.get("ok", false)) and String(identity.get("path", "")) == file_path:
+			slot_type = SLOT_TYPE_FILE
 	else:
 		for slot in MANUAL_SLOT_IDS:
 			if file_path == _slot_path(int(slot)):
@@ -2488,7 +2605,9 @@ func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dic
 	summary["warnings"] = structure_report.get("warnings", [])
 	summary["resume_target"] = _resume_target_from_payload_summary(raw_payload)
 	summary["loadable"] = summary["resume_target"] != "blocked"
-	if int(summary.get("payload_bytes", 0)) <= SUMMARY_INLINE_PAYLOAD_MAX_BYTES:
+	# Named-file libraries have no slot limit. Cache only their summaries, not an
+	# entire world per file; restore reads the selected file's current bytes.
+	if slot_type != SLOT_TYPE_FILE and int(summary.get("payload_bytes", 0)) <= SUMMARY_INLINE_PAYLOAD_MAX_BYTES:
 		summary["payload"] = raw_payload
 		summary["payload_deferred"] = false
 	else:
@@ -3048,6 +3167,8 @@ func _cached_slot_summary(slot_type: String, slot_id: String, file_path: String)
 		return {}
 	if int(cached.get("file_size", -1)) != int(signature.get("file_size", -1)):
 		return {}
+	if String(cached.get("named_file_sha256", "")) != String(signature.get("named_file_sha256", "")):
+		return {}
 	var summary = cached.get("summary", {})
 	return summary.duplicate(true) if summary is Dictionary else {}
 
@@ -3063,6 +3184,7 @@ func _store_slot_summary_cache(summary: Dictionary) -> void:
 		"file_path": file_path,
 		"modified_timestamp": int(signature.get("modified_timestamp", 0)),
 		"file_size": int(signature.get("file_size", -1)),
+		"named_file_sha256": String(signature.get("named_file_sha256", "")),
 		"summary": summary.duplicate(true),
 	}
 
@@ -3080,7 +3202,7 @@ func _store_runtime_summary_cache(
 	summary["modified_timestamp"] = FileAccess.get_modified_time(file_path) if FileAccess.file_exists(file_path) else 0
 	summary["payload_bytes"] = FileAccess.get_size(file_path) if FileAccess.file_exists(file_path) else 0
 	summary = _populate_summary_from_payload(summary, payload)
-	if int(summary.get("payload_bytes", 0)) <= SUMMARY_INLINE_PAYLOAD_MAX_BYTES:
+	if slot_type != SLOT_TYPE_FILE and int(summary.get("payload_bytes", 0)) <= SUMMARY_INLINE_PAYLOAD_MAX_BYTES:
 		summary["payload"] = payload.duplicate(true)
 		summary["payload_deferred"] = false
 	else:
@@ -3117,6 +3239,9 @@ func _slot_file_signature(file_path: String) -> Dictionary:
 		"exists": exists,
 		"modified_timestamp": FileAccess.get_modified_time(file_path) if exists else 0,
 		"file_size": FileAccess.get_size(file_path) if exists else -1,
+		# Named files may be copied or edited outside the game. A same-size edit
+		# within one filesystem timestamp tick must not return an old cached save.
+		"named_file_sha256": FileAccess.get_sha256(file_path) if exists and file_path.ends_with(NAMED_SAVE_SUFFIX) else "",
 	}
 
 func _summary_payload(summary: Dictionary) -> Dictionary:
@@ -3588,6 +3713,8 @@ func _first_meaningful_line(text: String, ignored_lines: Array = []) -> String:
 	return ""
 
 func _slot_label(summary: Dictionary) -> String:
+	if String(summary.get("slot_type", "")) == SLOT_TYPE_FILE:
+		return String(summary.get("slot_id", ""))
 	if String(summary.get("slot_type", "")) == SLOT_TYPE_AUTOSAVE:
 		return "Autosave"
 	var manual_name := String(summary.get("manual_slot_name", "")).strip_edges()
