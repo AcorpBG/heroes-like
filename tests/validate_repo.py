@@ -68542,9 +68542,9 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ensure(proxy_projection_block.find('spell_scroll_placement_ids[String(object.get("placement_id", ""))] = true') < proxy_projection_block.find('spell_scroll_placement_ids.has(String(node.get("placement_id", "")))') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)"), errors, "Native live Spell Scroll owner must correlate exact projection through package adoption before collection")
         ensure(proxy_projection_block.find('spell_scroll_presentation = await _validate_spell_scroll_presentation(session, scroll_node)') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)"), errors, "Native live Spell Scroll owner must validate the exact uncollected generated node presentation before collection")
         ensure(proxy_projection_block.find('var resource_nodes_before: Array = session.overworld.get("resource_nodes", []).duplicate(true)') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)") < proxy_projection_block.find('var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result'), errors, "Native live Spell Scroll owner must bracket real collection with detached authority and repeat rejection")
-        metadata_only_start = native_rmg_runtime_boundary_text.find("func _validate_medium_metadata_only_proxy_projection(")
-        metadata_only_end = native_rmg_runtime_boundary_text.find("func _validate_live_proxy_site_projection(", metadata_only_start)
-        metadata_only_block = native_rmg_runtime_boundary_text[metadata_only_start:metadata_only_end]
+        authored_pool_start = native_rmg_runtime_boundary_text.find("func _validate_medium_authored_pool_proxy_projection(")
+        authored_pool_end = native_rmg_runtime_boundary_text.find("func _validate_live_proxy_site_projection(", authored_pool_start)
+        authored_pool_block = native_rmg_runtime_boundary_text[authored_pool_start:authored_pool_end]
         for required_token in (
             '"placement_id": "native_h3maped_e76c8967_object_1110"',
             '"placement_id": "native_h3maped_e76c8967_object_1174"',
@@ -68553,31 +68553,31 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'if int(object.get("h3m_type_id", -1)) != 107 or int(object.get("h3m_subtype", -1)) != 0:',
             'int(actual.get("definition_index", -1)) != 117',
             'String(actual.get("def_name", "")) != "AVSwar20.def"',
-            'String(actual.get("kind", "")) != "h3m_object"',
-            'String(actual.get("native_kind", "")) != "h3m_object"',
-            'String(actual.get("catalog_id", "")) != ""',
+            'String(actual.get("kind", "")) != "resource_site"',
+            'String(actual.get("native_kind", "")) != "resource_site"',
+            'String(actual.get("catalog_id", "")) != "authored_pool_proxy_107_0_interactable_site"',
             'var source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {})',
             'source.get("package_body_tiles", []) != expected.get("body_tiles", [])',
             'source.get("package_visit_tiles", []) != expected.get("visit_tiles", [])',
-            'String(node.get("site_id", "")) == "site_reedscript_vow_shrine"',
-            'String(node.get("object_id", "")) == "object_reedscript_vow_shrine"',
-            'and live_catalog_row_count == 249',
+            '"site_id": "site_hilltop_signal_nest"',
+            '"object_id": "object_courier_change_post"',
+            'and live_catalog_row_count == 328',
             'and raw_rows_exact',
             'and source_rows_exact',
-            'and live_type_107_nodes.is_empty()',
+            'and live_rows_exact',
         ):
-            ensure(required_token in metadata_only_block, errors, f"Native metadata-only proxy focused owner is missing exact fail-closed authority: {required_token}")
+            ensure(required_token in authored_pool_block, errors, f"Native authored-pool proxy focused owner is missing exact authored-pool authority: {required_token}")
         ensure(
-            metadata_only_block.find('var expected_rows := [')
-            < metadata_only_block.find('for object_index in range(int(map_document.get_object_count())):')
-            < metadata_only_block.find('raw_rows.append({')
-            < metadata_only_block.find('service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})')
-            < metadata_only_block.find('build_session_from_adoption(adoption)')
-            < metadata_only_block.find('var source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {})')
-            < metadata_only_block.find('var live_type_107_nodes: Array = []')
-            < metadata_only_block.find('and live_type_107_nodes.is_empty()'),
+            authored_pool_block.find('var expected_rows := [')
+            < authored_pool_block.find('for object_index in range(int(map_document.get_object_count())):')
+            < authored_pool_block.find('raw_rows.append({')
+            < authored_pool_block.find('service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})')
+            < authored_pool_block.find('build_session_from_adoption(adoption)')
+            < authored_pool_block.find('var source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {})')
+            < authored_pool_block.find('var live_type_107_nodes: Array = []')
+            < authored_pool_block.find('and live_rows_exact'),
             errors,
-            "Native metadata-only proxy owner must prove raw package rows before adoption and zero live nodes afterward",
+            "Native authored-pool proxy owner must prove raw package rows before adoption and exact mapped live nodes afterward",
         )
         for forbidden_token in (
             "_collect_resource_node_result",
@@ -68591,8 +68591,8 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "route_vow",
             "hero",
         ):
-            ensure(forbidden_token not in metadata_only_block, errors, f"Native metadata-only proxy focused owner must remain read-only and must not invent semantics: {forbidden_token}")
-        ensure(native_rmg_runtime_boundary_text.count("_validate_medium_metadata_only_proxy_projection(") == 2, errors, "Medium metadata-only proxy projection must have one owner call and one definition")
+            ensure(forbidden_token not in authored_pool_block, errors, f"Native authored-pool proxy focused owner must remain read-only and must not invent semantics: {forbidden_token}")
+        ensure(native_rmg_runtime_boundary_text.count("_validate_medium_authored_pool_proxy_projection(") == 2, errors, "Medium authored-pool proxy projection must have one owner call and one definition")
         medium_dwelling_start = native_rmg_runtime_boundary_text.find("func _validate_medium_creature_generator_projection(")
         medium_dwelling_end = native_rmg_runtime_boundary_text.find("func _validate_xlarge_creature_generator_projection(", medium_dwelling_start)
         medium_dwelling_block = native_rmg_runtime_boundary_text[medium_dwelling_start:medium_dwelling_end]
@@ -68639,7 +68639,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ensure(native_rmg_runtime_boundary_text.count("_validate_medium_creature_generator_projection(") == 2, errors, "Medium Creature Generator projection must have one owner call and one definition")
         ensure(
             native_rmg_runtime_boundary_text.find('var medium := _generate_and_validate(')
-            < native_rmg_runtime_boundary_text.find('var medium_metadata_only_proxy_projection: Dictionary = _validate_medium_metadata_only_proxy_projection(')
+            < native_rmg_runtime_boundary_text.find('var medium_authored_pool_proxy_projection: Dictionary = _validate_medium_authored_pool_proxy_projection(')
             < native_rmg_runtime_boundary_text.find('var medium_creature_generator_projection: Dictionary = _validate_medium_creature_generator_projection(')
             < native_rmg_runtime_boundary_text.find('var medium_guard_projection := _validate_guard_control_projection('),
             errors,

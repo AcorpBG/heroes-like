@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only generated-start audit; Python owns orchestration and comparisons.
+"""Generated-start audit and entrance regressions, with Python orchestration.
 
 The temporary Godot adapter invokes production generation/adoption and dumps
 facts. Graph measurements below are diagnostics, never generation authority.
@@ -23,6 +23,8 @@ extends Node
 const Bridge = preload("res://scripts/persistence/NativeRandomMapPackageSessionBridge.gd")
 const Rules = preload("res://scripts/core/OverworldRules.gd")
 const Selection = preload("res://scripts/core/ScenarioSelectRules.gd")
+const Store = preload("res://scripts/core/SessionStateStore.gd")
+const MapView = preload("res://scenes/overworld/OverworldMapView.gd")
 func _ready() -> void:
 	call_deferred("run")
 func run() -> void:
@@ -79,6 +81,8 @@ func run() -> void:
 						runtime_blocked.append({"x": x, "y": y})
 			result["runtime_blocked"] = runtime_blocked
 			result["hero_tile_blocked"] = Rules.tile_is_blocked(session, pos.x, pos.y)
+			if OS.get_environment("HEROES_RMG_AUDIT_ENTRANCE") == "1":
+				result["entrance_actions"] = exercise_entrance(session, out.path_join(String(case.id) + "_session.json"))
 			if OS.get_environment("HEROES_RMG_AUDIT_RENDER") == "1":
 				var map_path := "user://audit_" + String(case.id) + ".amap"
 				var scenario_path := "user://audit_" + String(case.id) + ".ascenario"
@@ -113,6 +117,57 @@ func run() -> void:
 		file.close()
 		print("RMG_AUDIT_CASE " + JSON.stringify({"id": case.id, "ok": result.ok, "elapsed_ms": result.elapsed_ms, "error_code": result.error_code}))
 	get_tree().quit(0)
+
+func exercise_entrance(session, save_path: String) -> Dictionary:
+	var start := Rules.hero_position(session)
+	var entered: Dictionary = Rules._resolve_post_move_interaction(session)
+	Rules.clear_active_town_visit(session)
+	var away := {}
+	var returned := {}
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			var target := start + Vector2i(dx, dy)
+			if (dx == 0 and dy == 0) or Rules.tile_is_blocked(session, target.x, target.y) or Rules.tile_has_route_interaction(session, target.x, target.y) or Rules.tile_step_cuts_blocked_corner(session, start, target):
+				continue
+			away = Rules.try_move(session, dx, dy)
+			if bool(away.get("ok", false)) and Rules.hero_position(session) != start:
+				returned = Rules.try_move(session, -dx, -dy)
+				break
+		if not returned.is_empty():
+			break
+	var file := FileAccess.open(save_path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(session.to_dict()))
+	file.close()
+	var restored = Store.new_session_data()
+	restored.from_dict(JSON.parse_string(FileAccess.get_file_as_string(save_path)))
+	Rules.normalize_overworld_state(restored)
+	var restored_entry: Dictionary = Rules._resolve_post_move_interaction(restored)
+	var view = MapView.new()
+	var town_anchor_matches := true
+	for town in session.overworld.get("towns", []):
+		var visit: Dictionary = town.get("visit_tile", town)
+		town_anchor_matches = town_anchor_matches and view._town_entry_tile(town) == Vector2i(int(visit.x), int(visit.y))
+	view.free()
+	return {"initial_town_route": entered.get("route", ""), "exit_ok": bool(away.get("ok", false)) and not returned.is_empty(), "return_ok": bool(returned.get("ok", false)) and returned.get("route", "") == "town" and Rules.hero_position(session) == start, "restored_position": restored.overworld.hero_position, "restored_town_route": restored_entry.get("route", ""), "initial_result": entered, "exit_message": away.get("message", ""), "return_message": returned.get("message", ""), "town_visual_anchors_match": town_anchor_matches, "corner_controls": exercise_corner_contract()}
+
+func exercise_corner_contract() -> Dictionary:
+	var town := {"placement_id": "corner_town", "x": 1, "y": 1, "visit_tile": {"x": 1, "y": 1}, "package_block_tiles": [{"x": 1, "y": 1}, {"x": 2, "y": 1}]}
+	var obstacle := {"placement_id": "corner_rock", "kind": "decorative_obstacle", "package_block_tiles": [{"x": 1, "y": 2}]}
+	var fixture = Store.new_session_data("entrance_corner_controls", "", "", 1, {"map": [["grass", "grass", "grass"], ["grass", "grass", "grass"], ["grass", "grass", "grass"]], "map_size": {"width": 3, "height": 3}, "towns": [town], "map_objects": [obstacle]})
+	Rules.invalidate_spatial_lookup(fixture)
+	Rules._refresh_blocked_tile_index(fixture)
+	var opens: bool = not Rules.tile_step_cuts_blocked_corner(fixture, Vector2i(1, 1), Vector2i(2, 2))
+	var ingress: bool = not Rules.tile_step_cuts_blocked_corner(fixture, Vector2i(2, 2), Vector2i(1, 1))
+	var bodies_preserved: bool = Rules.tile_is_blocked(fixture, 1, 1) and Rules.tile_is_blocked(fixture, 2, 1) and Rules.tile_is_blocked(fixture, 1, 2)
+	fixture.overworld.map_objects.append({"placement_id": "overlapping_rock", "kind": "decorative_obstacle", "package_block_tiles": [{"x": 2, "y": 1}]})
+	Rules._refresh_blocked_tile_index(fixture)
+	var overlap_blocks: bool = Rules.tile_step_cuts_blocked_corner(fixture, Vector2i(1, 1), Vector2i(2, 2))
+	fixture.overworld.map_objects.pop_back()
+	fixture.overworld.towns[0].erase("visit_tile")
+	Rules.invalidate_spatial_lookup(fixture)
+	Rules._refresh_blocked_tile_index(fixture)
+	var ordinary_blocks: bool = Rules.tile_step_cuts_blocked_corner(fixture, Vector2i(1, 1), Vector2i(2, 2))
+	return {"doorway_egress": opens, "doorway_ingress": ingress, "bodies_preserved": bodies_preserved, "unrelated_overlap_blocks": overlap_blocks, "ordinary_corner_blocks": ordinary_blocks}
 '''
 
 
@@ -121,7 +176,7 @@ def point(value: dict) -> tuple[int, int, int]:
 
 
 def distances(start, width, height, blocked):
-    """Eight-way graph, same both-sides-blocked diagonal rule as runtime."""
+    """Fixed-body eight-way diagnostic; does not model town doorway passages."""
     result = {start: 0}
     queue = deque([start])
     while queue:
@@ -141,7 +196,7 @@ def distances(start, width, height, blocked):
 
 
 def analyze(raw):
-    row = {k: raw.get(k) for k in ("id", "ok", "error_code", "payload_fnv1a32", "elapsed_ms", "hero_position", "hero_id", "hero_tile_blocked", "hero_blocking_body_owners")}
+    row = {k: raw.get(k) for k in ("id", "ok", "error_code", "payload_fnv1a32", "elapsed_ms", "hero_position", "hero_id", "hero_tile_blocked", "hero_blocking_body_owners", "entrance_actions")}
     if not raw.get("ok"):
         return row
     size = raw["map_size"]
@@ -188,11 +243,41 @@ def matrix():
     return rows
 
 
+def entrance_failures(rows):
+    failures = []
+    for row in rows:
+        if not row["ok"]:
+            if row.get("error_code") != "native_rmg_monster_strength_unsupported":
+                failures.append({"id": row["id"], "reason": "generation_failed"})
+            continue
+        starts = row["starts"]
+        if not starts or any(tuple(s["town"]) != tuple(s["hero"]) or not s["town_binding_exists"] for s in starts):
+            failures.append({"id": row["id"], "reason": "native_entrance_contract"})
+        primary = next((s for s in starts if s["owner"] == "player"), None)
+        if primary is None:
+            failures.append({"id": row["id"], "reason": "primary_start_missing"})
+            continue
+        if point(row["hero_position"]) != tuple(primary["town"]):
+            failures.append({"id": row["id"], "reason": "live_entrance_or_level_lost"})
+        if any(o["family"] != "towns" for o in row["hero_blocking_body_owners"]):
+            failures.append({"id": row["id"], "reason": "non_town_body_on_start"})
+        actions = row.get("entrance_actions") or {}
+        if not actions.get("town_visual_anchors_match"):
+            failures.append({"id": row["id"], "reason": "town_visual_entrance_mismatch"})
+        if not (actions.get("initial_town_route") == "town" and actions.get("exit_ok") and actions.get("return_ok") and actions.get("restored_town_route") == "town" and point(actions["restored_position"]) == tuple(primary["town"])):
+            failures.append({"id": row["id"], "reason": "live_move_town_save_roundtrip", "actions": actions})
+        controls = actions.get("corner_controls", {})
+        if not all(controls.get(k) for k in ("doorway_egress", "doorway_ingress", "bodies_preserved", "unrelated_overlap_blocks", "ordinary_corner_blocks")):
+            failures.append({"id": row["id"], "reason": "town_corner_contract", "controls": controls})
+    return failures
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--label", default="matrix")
     parser.add_argument("--case", help="Comma-separated case IDs; default all sampled cases")
     parser.add_argument("--render", action="store_true")
+    parser.add_argument("--require-entrance-starts", action="store_true", help="Exercise live entry/exit/return/save and fail on any entrance/layer violation")
     parser.add_argument("--analyze-only", action="store_true")
     args = parser.parse_args()
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789_-" for c in args.label):
@@ -215,7 +300,7 @@ def main():
             script.write_text(PROBE)
             scene = work / "probe.tscn"
             scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="Audit" type="Node"]\nscript = ExtResource("1")\n' % script.relative_to(ROOT))
-            env = dict(os.environ, XDG_DATA_HOME=str(out / "data"), HEROES_RMG_AUDIT_OUTPUT=str(out), HEROES_RMG_AUDIT_RENDER="1" if args.render else "0", HEROES_PROFILE_LOG="0")
+            env = dict(os.environ, XDG_DATA_HOME=str(out / "data"), HEROES_RMG_AUDIT_OUTPUT=str(out), HEROES_RMG_AUDIT_RENDER="1" if args.render else "0", HEROES_RMG_AUDIT_ENTRANCE="1" if args.require_entrance_starts else "0", HEROES_PROFILE_LOG="0")
             cmd = [shutil.which("godot4") or "godot", "--path", str(ROOT), "--audio-driver", "Dummy", "--accessibility", "disabled", "--resolution", "1280x720", "res://" + str(scene.relative_to(ROOT))]
             cmd = ["dbus-run-session", "--", "xvfb-run", "-a"] + cmd if args.render else cmd + ["--headless"]
             with (out / "runtime.log").open("w") as log:
@@ -226,9 +311,12 @@ def main():
     rows = [analyze(json.loads((out / (c["id"] + ".json")).read_text())) for c in cases]
     errors = [line for line in (out / "runtime.log").read_text().splitlines() if line.startswith(("ERROR:", "SCRIPT ERROR:")) or "leaked" in line]
     report = {"audit_collected": not errors, "runtime_errors": errors, "revision": revision, "note": "Diagnostic graphs hold body masks fixed and open the town destination. They do not simulate guard battles, removable objects, transit or legal interaction approach. Not H3MapEd parity or a full town-access proof.", "cases": rows}
+    if args.require_entrance_starts:
+        report["entrance_failures"] = entrance_failures(rows)
+        report["entrance_regression_ok"] = not report["entrance_failures"]
     (out / "summary.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"audit_collected": report["audit_collected"], "cases": len(rows), "generated": sum(bool(r["ok"]) for r in rows), "output": str(out)}))
-    return 0 if report["audit_collected"] else 1
+    return 0 if report["audit_collected"] and report.get("entrance_regression_ok", True) else 1
 
 
 if __name__ == "__main__":
