@@ -1,5 +1,6 @@
 """Audit measurement regressions, not assertions that known game defects pass."""
 import importlib.util
+import copy
 import json
 from pathlib import Path
 import sys
@@ -33,6 +34,23 @@ class StartAuditTests(unittest.TestCase):
 
     def test_failed_case_is_evidence_not_crash(self):
         self.assertFalse(audit.analyze({"id": "unsupported", "ok": False, "error_code": "unsupported"})["ok"])
+
+    def test_entrance_checks_reject_relocation_flattening_and_other_bodies(self):
+        row = {"id": "fixture", "ok": True, "starts": [{"owner": "player", "town": [1, 2, 1], "hero": [1, 2, 1], "town_binding_exists": True}], "hero_position": {"x": 1, "y": 2, "level": 1}, "hero_blocking_body_owners": [{"family": "towns"}], "entrance_actions": {"initial_town_route": "town", "exit_ok": True, "return_ok": True, "restored_town_route": "town", "restored_position": {"x": 1, "y": 2, "level": 1}, "corner_controls": {k: True for k in ("doorway_egress", "doorway_ingress", "bodies_preserved", "unrelated_overlap_blocks", "ordinary_corner_blocks")}}}
+        row["entrance_actions"]["town_visual_anchors_match"] = True
+        self.assertEqual([], audit.entrance_failures([row]))
+        wrong_anchor = copy.deepcopy(row)
+        wrong_anchor["entrance_actions"]["town_visual_anchors_match"] = False
+        self.assertIn("town_visual_entrance_mismatch", [f["reason"] for f in audit.entrance_failures([wrong_anchor])])
+        moved = copy.deepcopy(row)
+        moved["starts"][0]["hero"][0] = 3
+        self.assertIn("native_entrance_contract", [f["reason"] for f in audit.entrance_failures([moved])])
+        flattened = copy.deepcopy(row)
+        flattened["hero_position"].pop("level")
+        self.assertIn("live_entrance_or_level_lost", [f["reason"] for f in audit.entrance_failures([flattened])])
+        guarded = copy.deepcopy(row)
+        guarded["hero_blocking_body_owners"].append({"family": "encounters"})
+        self.assertIn("non_town_body_on_start", [f["reason"] for f in audit.entrance_failures([guarded])])
 
     def test_byte_compare_detects_truncation_and_mutation(self):
         self.assertTrue(retained.compare_bytes(b"abc", b"abc")["exact"])

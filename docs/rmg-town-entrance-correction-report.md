@@ -1,0 +1,30 @@
+# RMG town entrance correction
+
+Owner direction: fix every finding in `rmg-start-placement-and-h3maped-audit.md`, and always start the hero at the owning town entrance. This report covers the completed first implementation child only, `bugfix-rmg-town-entrance-starts-20260905`. It is not completion of the full correction goal or native source parity.
+
+Source chain: `project.md` → RMG audit correction parent/children in `PLAN.md` → `rmg-audit-corrections-requirements.md` and the baseline audit → implementation below → evidence under `.artifacts/rmg_start_audit_20260905/`.
+
+## Live changes
+
+- `map_package_service.cpp::runtime_start_tile_for_slot` now requires the native main-town coordinate to match an actual projected town action tile. It returns that exact `(x,y,level)` with radius zero. The nearest/off-road search is gone; unresolved town entrances fail with `native_rmg_main_town_entrance_missing`. Recovered core generation, object coordinates, masks, roads and terrain are unchanged.
+- `NativeRandomMapPackageSessionBridge.gd::_primary_start` starts a new session at the town's visit square, including when an older package still carries an off-road start hint. This does not teleport heroes when resuming an existing session save. Supplemental economy support now reserves heroes and town entrances and searches outward from the actual doorway; it cannot put a support cache/guard on that square. The separate level child must make these searches and reservations level-specific.
+- `OverworldRules.gd::tile_step_cuts_blocked_corner` models a town doorway's diagonal ingress/egress. An exclusively owned town-wall side may border the passage; unrelated/overlapping bodies and impassable terrain remain blocking. Block-index membership and all source masks remain intact. Town normalization retains level and start metadata, without claiming full runtime level support.
+- `OverworldMapView.gd::_town_entry_tile` anchors the original town raster, selection footprint and visitor presentation at `visit_tile`, with the existing authored-coordinate fallback. The native source image anchor can be two squares to the right of the actual entrance; drawing there made a logically correct hero still appear beside the town. No art was regenerated or stretched.
+
+## Evidence and remaining failures
+
+`entrance_matrix/summary.json`: 36 requests, 35 generated, one expected unsupported-strength refusal. All **83** player start contracts equal their bound native town entrances. Comparing every generated case with baseline `matrix/` yields exact equality for complete projected objects, terrain layers, payload hash and payload length. This is unchanged native output, not a new H3MapEd parity claim.
+
+The strict live matrix deliberately exits 1: `matrix_36_2_land`, `matrix_72_2_land`, `small_seed68` and `xlarge_seed77` still fail live entry/movement or level isolation. Existing surface and underground objects are still combined by the runtime. These failures remain required work under the level child; they are not normalized away or excluded from full-goal acceptance.
+
+`entrance_visual_final/{ordinal95,medium_seed10}` passes exact start, immediate town interaction, legal exit, return-to-town, serialized session restoration and all five doorway/overlap controls. Both production package disk round trips and briefing autosaves succeed, with no engine errors. Both 1280×720 screenshots were visually inspected: the hero stands at the painted gate, the command says Visit Town, and the legitimate nearby guard remains visible away from the starting square. The seed-165429308 movement is `(31,10)` → `(32,11)` → `(31,10)`.
+
+`entrance_town_click.log`: the existing authored town footprint test passes real route movement, entry/body selection, exact town opening and unchanged movement/town authority. The new Python regression classifier rejects displaced starts, lost levels, foreign blockers and mismatched visual anchors; ten Python tests pass. `entrance_repo_final.log` reports repository validation passed, and `git diff --check` passes.
+
+The legacy end-to-end boundary report now asserts current original authored-pool mappings for bank type 16/subtype 6 and type 107/subtype 0, retaining exact native placement/body/visit assertions. It passes those sections and the ordinal-95 entrance/movement check, then still exits 1 at the later XLarge dwelling check: two type-17/subtype-45 placements now resolve to `object_noonshard_prism_aviary` and `object_last_memory_mooring`, but the historical test expects raw unmapped records and excludes them from its claim loop. This remaining regression correction is tracked under the integrated child; the complete legacy report is **not passing**. Evidence: `entrance_boundary_2.log`.
+
+Linux and Windows Debug/Release extension builds succeeded. `entrance_linux_package.log` and `entrance_windows_package_final.log` pass release export/startup checks, both PCKs **248,377,692 bytes**, below the unchanged 250,000,000-byte limit. `entrance_linux_generated/live_validation_report.json` and the Windows package generated-flow report pass setup → Overworld → owned Town entry. Windows execution uses Wine, not native Windows GPU certification.
+
+`entrance_one_level_final/summary.json`: all **21 one-level cases pass**, including all four sizes and three water shapes, seed-165429308, repeated seed-10, three/six/eight players and supported monster-strength controls. All 55 native starts in this subset equal their entrances; each primary hero passes actual initial town interaction, exit, return, session restoration, doorway/overlap controls and all-town visual-anchor equality. Zero runtime errors. This validates starts, not full water traversal or complete opponent identity.
+
+`entrance_linux_selftest.log` and `entrance_windows_selftest.log`: both native selftests finish with `h3maped_rmg_core_selftest: ok`, exit 0. First-child checks are complete. Broader level/player/transit/water/parity work and the legacy dwelling regression remain open. The next selected child is the level-aware runtime, not another evidence-only pass.

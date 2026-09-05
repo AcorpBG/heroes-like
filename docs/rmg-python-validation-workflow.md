@@ -35,8 +35,11 @@ supersedes the blanket current completion claim below. Fresh unassisted native
 payloads match 23 of 24 retained selected owner cases; Medium normal-water seed
 10 differs, including private-state differences confirmed against a fresh
 executable run. Runtime start placement, two-level adoption and player-slot
-identity also have confirmed gaps. The legacy Godot boundary report currently
-fails its stale raw creature-bank expectation after authored-pool adoption.
+identity also have confirmed gaps. The entrance-boundary correction is tracked
+in `docs/rmg-town-entrance-correction-report.md`; it does not complete the level,
+player, transit or native-water work. The legacy Godot boundary report now passes
+the corrected authored-pool bank and type-107 assertions, then fails a later
+stale XLarge subtype-45 dwelling expectation. The full report is not passing.
 
 Generation remains exposed through `MapPackageService`; this audit did not
 change support gates or generation rules. Passing config normalization, native

@@ -205,9 +205,8 @@ static func _primary_start(adoption: Dictionary) -> Dictionary:
 		var start_towns: Array = start_contract.get("player_start_towns", []) if start_contract.get("player_start_towns", []) is Array else []
 		for town_value in start_towns:
 			if town_value is Dictionary and String(town_value.get("owner", "")) == "player":
-				var hero_start_tile: Dictionary = town_value.get("hero_start_tile", town_value.get("runtime_start_tile", {})) if town_value.get("hero_start_tile", town_value.get("runtime_start_tile", {})) is Dictionary else {}
-				if not hero_start_tile.is_empty():
-					return {"x": int(hero_start_tile.get("x", town_value.get("x", 0))), "y": int(hero_start_tile.get("y", town_value.get("y", 0)))}
+				# Old packages may retain an off-road hero_start_tile. A new session
+				# always starts at the authoritative town entrance, never that hint.
 				var visit_tile: Dictionary = town_value.get("visit_tile", {}) if town_value.get("visit_tile", {}) is Dictionary else {}
 				if not visit_tile.is_empty():
 					return {"x": int(visit_tile.get("x", town_value.get("x", 0))), "y": int(visit_tile.get("y", town_value.get("y", 0)))}
@@ -649,14 +648,12 @@ static func _ensure_generated_town_source_route_support(session: SessionStateSto
 		var required_resource_ids := _generated_town_required_source_ids(town)
 		if required_resource_ids.is_empty():
 			continue
-		var support_tile := start_tile if _generated_source_route_start_tile_usable(session, start_tile) else Vector2i(-1, -1)
-		if support_tile == Vector2i(-1, -1) and _generated_source_route_start_tile_usable(session, start_tile):
-			support_tile = start_tile
+		var support_tile := start_tile if _generated_source_tile_available(session, start_tile) else Vector2i(-1, -1)
 		if support_tile == Vector2i(-1, -1):
 			support_tile = _generated_town_source_support_tile(session, start_tile, 0)
 		if support_tile == Vector2i(-1, -1):
 			support_tile = _existing_generated_town_support_tile(session, town)
-		if support_tile == Vector2i(-1, -1):
+		if support_tile == Vector2i(-1, -1) or _generated_source_tile_reserved(session, support_tile):
 			continue
 		var node := _supplemental_generated_town_source_node(town, "required_sources", support_tile)
 		if node.is_empty():
@@ -806,6 +803,8 @@ static func _generated_town_source_support_tile(
 	return candidates[source_index % candidates.size()]
 
 static func _generated_source_tile_available(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
+	if _generated_source_tile_reserved(session, tile):
+		return false
 	if OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y):
 		return false
 	if OverworldRulesScript.tile_has_route_interaction(session, tile.x, tile.y):
@@ -819,6 +818,8 @@ static func _generated_source_tile_available(session: SessionStateStoreScript.Se
 	return true
 
 static func _generated_source_tile_stackable(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
+	if _generated_source_tile_reserved(session, tile):
+		return false
 	for node_value in session.overworld.get("resource_nodes", []):
 		if not (node_value is Dictionary):
 			continue
@@ -829,6 +830,21 @@ static func _generated_source_tile_stackable(session: SessionStateStoreScript.Se
 		if int(visit_tile.get("x", -9999)) == tile.x and int(visit_tile.get("y", -9999)) == tile.y:
 			return true
 	return not OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y)
+
+static func _generated_source_tile_reserved(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
+	# Support caches are additional Aurelion economy content, not native source
+	# placements. They must never displace a hero or occupy a town's doorway.
+	if OverworldRulesScript.hero_position(session) == tile:
+		return true
+	for hero in session.overworld.get("player_heroes", []):
+		if hero is Dictionary:
+			var position: Dictionary = hero.get("position", {})
+			if Vector2i(int(position.get("x", -1)), int(position.get("y", -1))) == tile:
+				return true
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and _generated_source_target_tile(town) == tile:
+			return true
+	return false
 
 static func _generated_source_target_tile(node: Dictionary) -> Vector2i:
 	for key in ["visit_tile", "primary_tile", "action_tile"]:
@@ -843,6 +859,11 @@ static func _generated_source_target_tile(node: Dictionary) -> Vector2i:
 	return Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
 
 static func _generated_town_source_start_tile(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Vector2i:
+	# Begin the support search at the actual doorway. The live town passage rule
+	# handles its wall sides; do not jump to a disconnected off-road component.
+	var entrance: Dictionary = town.get("visit_tile", {}) if town.get("visit_tile", {}) is Dictionary else {}
+	if not entrance.is_empty():
+		return Vector2i(int(entrance.get("x", 0)), int(entrance.get("y", 0)))
 	for key in ["hero_start_tile", "runtime_start_tile"]:
 		var tile: Dictionary = town.get(key, {}) if town.get(key, {}) is Dictionary else {}
 		if not tile.is_empty():

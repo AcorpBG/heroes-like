@@ -24,9 +24,56 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed owner-directed audit: `audit-rmg-start-placement-and-h3maped-comparison-20260905`; 36 runtime requests, 83 generated starts, 23/24 exact retained owner payloads, fresh executable/private-state water mismatch, and confirmed start/level/opponent/transit adoption gaps. Audit findings are not runtime fixes or parity completion; no slice is active. Select a bounded correction from `docs/rmg-start-placement-and-h3maped-audit.md` before implementing.
+- Current owner goal: `bugfix-rmg-audit-corrections-20260905`; fix every finding from the completed audit, with heroes always starting at the owning town entrance. Entrance-boundary child completed; current child: `bugfix-rmg-level-aware-runtime-20260905`. Level, player/team, transit/water, native parity and integrated regression children remain required; a partial correction does not complete the goal.
+- Baseline audit: `audit-rmg-start-placement-and-h3maped-comparison-20260905`; 36 runtime requests, 83 generated starts, 23/24 exact retained owner payloads, fresh executable/private-state water mismatch, and confirmed start/level/opponent/transit adoption gaps. Audit evidence is not runtime fixes or parity completion.
 - Most recently completed owner-directed implementation slice: `performance-full-play-runtime-review-20260905`: indexed content and demand-shaped save bars, safe warning/dialog/cursor lifecycle and exact controller tile selection; matched Battle refresh -60.9%, Large purchase waiting -27.6%, ten-turn waiting -15.4%, with 78 complete state comparisons and both-platform checks. Campaign-driver/AT-SPI, Moonbite pacing and existing Town visual gaps remain documented.
-- Current package boundary: matching Linux and Windows release exports measure 248376908 bytes, 1623092 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+- Current package boundary: matching Linux and Windows release exports measure 248377692 bytes, 1622308 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+
+## RMG Audit Corrections
+
+id: `bugfix-rmg-audit-corrections-20260905`
+
+Status: in_progress. Phase 6 owner-directed implementation parent reviewing the Phase 3 native boundary; successor to the exact-mask runtime start correction and completed September audit.
+
+Requirements: `docs/rmg-audit-corrections-requirements.md`, `docs/rmg-start-placement-and-h3maped-audit.md`, `docs/lessons-learned.md`, `docs/h3maped-rmg-end-to-end-behavior.md`, `docs/rmg-python-validation-workflow.md` and the authored-object-pool requirements.
+
+Completion: all children below implemented, with actual runtime/adoption behavior, recovered native phase/private-state and final payload comparisons, integrated live/save/AI regressions, inspected visuals, repository checks and Linux/Windows builds/packages. No audit-only, disabled-feature or gate-only substitute. Preserve original content, recovered masks, determinism, old saves and the package ceiling; no unrelated cleanup.
+
+### RMG Town Entrance Starts
+
+id: `bugfix-rmg-town-entrance-starts-20260905`
+
+Status: completed 2026-09-05. Exact main-town entrance starts, reserved supplemental support placement, legal doorway ingress/egress and aligned town/visitor raster anchor are implemented without source-mask removal. All 83 sampled package starts equal entrances, all 21 one-level live move/enter/return/save cases pass, and native payload hashes/lengths, objects and terrain remain unchanged. Both platforms build/selftest/export and enter generated Overworld/Town. Evidence: `docs/rmg-town-entrance-correction-report.md`. Full two-level live completion requires the level child; broader legacy dwelling and native water failures remain explicit.
+
+### RMG Level-Aware Runtime
+
+id: `bugfix-rmg-level-aware-runtime-20260905`
+
+Status: in_progress. Preserve terrain/object/hero/town levels through runtime queries, rendering/input/minimap/vision, AI and saves; implement playable layer selection and compatibility. Validate seed-68 underground start, same-XY different-layer isolation, move/visit/vision/save/hero-switch and original one-level regressions. Owners: session bridge, Overworld/hero/AI rules, map/minimap/shell and persistence.
+
+### RMG Distinct Player And Team Identity
+
+id: `bugfix-rmg-player-team-identity-20260905`
+
+Status: pending. Preserve source player-slot/team identity independently of original faction; adopt distinct AI state, ownership and hero/town references. Validate six/eight-player repeated-faction generation, separate enemy turns/targets and save/resume. Owners: package service, bridge, enemy/hero/town/ownership rules.
+
+### RMG Native Transit And Water Traversal
+
+id: `bugfix-rmg-native-transit-navigation-20260905`
+
+Status: pending. Adopt authoritative native connection endpoints through original content and layer-aware travel, AI and persistence. Verify cave/long-distance links plus representative water/Islands traversal and correct demonstrated missing behavior; do not replace native connections with local-offset stand-ins. Owners: native projection/source relation records, bridge, transit/pathing/interaction/AI/render owners.
+
+### RMG Normal Water Native Parity
+
+id: `bugfix-rmg-normal-water-private-state-20260905`
+
+Status: pending. Isolate the recovered function/input mutation causing Medium normal-water seed-10 divergence after `0x4a4c8e` and before `0x49eb8d`; implement only from exact source/private-state proof. Owners: recovered core and named mine/reward/guard/connection owners, source recovery evidence. Validate matching private checkpoints and final bytes, land controls, all 24 retained cases and both native platforms; no final-delta tuning.
+
+### RMG Integrated Correctness Regressions
+
+id: `bugfix-rmg-audit-integrated-regressions-20260905`
+
+Status: pending. Correct stale raw-bank expectations against the current authored-pool registry without losing exact placement assertions; enforce all correction requirements through actual generated/live/save/AI flows, inspected visuals, repository and Linux/Windows package smokes. Python owns new coverage. Parent completes only after this integrated evidence supports every required outcome.
 
 ## RMG Starting Heroes And H3MapEd Comparison Audit
 

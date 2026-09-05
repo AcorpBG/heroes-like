@@ -2424,7 +2424,29 @@ static func tile_step_cuts_blocked_corner(session: SessionStateStoreScript.Sessi
 		return false
 	var side_a := Vector2i(from_tile.x + dx, from_tile.y)
 	var side_b := Vector2i(from_tile.x, from_tile.y + dy)
-	return tile_is_blocked(session, side_a.x, side_a.y) and tile_is_blocked(session, side_b.x, side_b.y)
+	if not tile_is_blocked(session, side_a.x, side_a.y) or not tile_is_blocked(session, side_b.x, side_b.y):
+		return false
+	# A doorway is an interaction endpoint within the town's exact source body.
+	# Its own wall can border a legal diagonal ingress/egress; unrelated bodies
+	# and impassable terrain still close the corner. Destination blocking is
+	# checked independently by the movement/interaction rules.
+	var blocked := _blocked_tile_index(session)
+	var lookup := _spatial_lookup_index(session)
+	var towns: Array = session.overworld.get("towns", [])
+	for endpoint in [from_tile, to_tile]:
+		var town_index := int(lookup.get("town_by_tile", {}).get(_tile_key(endpoint), -1))
+		if town_index < 0 or town_index >= towns.size():
+			continue
+		var town: Dictionary = towns[town_index]
+		var entrance: Dictionary = town.get("visit_tile", {}) if town.get("visit_tile", {}) is Dictionary else {}
+		if entrance.is_empty() or not _position_matches(entrance, endpoint):
+			continue
+		var placement_id := String(town.get("placement_id", ""))
+		for side in [side_a, side_b]:
+			var owner: Variant = blocked.get(_tile_key(side), true)
+			if owner is String and owner == placement_id and terrain_id_is_passable(_terrain_id_at(session, side.x, side.y)):
+				return false
+	return true
 
 static func _tile_blocks_route_step(session: SessionStateStoreScript.SessionData, tile: Vector2i, is_destination: bool) -> bool:
 	if not tile_is_blocked(session, tile.x, tile.y):
@@ -2818,7 +2840,13 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 	for town_value in session.overworld.get("towns", []):
 		if not (town_value is Dictionary):
 			continue
-		_append_generated_body_tiles_to_blocked_index(index, town_value, true)
+		# Nonempty strings retain exclusive town-wall ownership for doorway
+		# corner checks. Membership remains the authoritative blocking bit.
+		# Any overlapping town or non-town body replaces this token with true.
+		var town_id := String(town_value.get("placement_id", ""))
+		for tile in _generated_body_tiles_for_placement(town_value, true):
+			var key := _tile_key(tile)
+			index[key] = town_id if town_id != "" and not index.has(key) else true
 	for encounter_value in session.overworld.get("encounters", []):
 		if not (encounter_value is Dictionary):
 			continue
@@ -5890,6 +5918,9 @@ static func _normalize_towns(towns: Array, current_day: int = -1) -> Array:
 static func _copy_town_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
 	for key in [
 		"owner_slot",
+		"level",
+		"hero_start_tile",
+		"runtime_start_tile",
 		"player_slot",
 		"player_type",
 		"team_id",

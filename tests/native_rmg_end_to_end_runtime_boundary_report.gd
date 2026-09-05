@@ -163,12 +163,12 @@ func _run() -> void:
 	if not bool(medium.get("ok", false)):
 		_fail("Medium public generation boundary failed: %s" % JSON.stringify(medium))
 		return
-	var medium_metadata_only_proxy_projection: Dictionary = _validate_medium_metadata_only_proxy_projection(
+	var medium_authored_pool_proxy_projection: Dictionary = _validate_medium_authored_pool_proxy_projection(
 		service,
 		medium.get("generated", {})
 	)
-	if not bool(medium_metadata_only_proxy_projection.get("ok", false)):
-		_fail("Medium metadata-only proxy fail-closed projection failed: %s" % JSON.stringify(medium_metadata_only_proxy_projection))
+	if not bool(medium_authored_pool_proxy_projection.get("ok", false)):
+		_fail("Medium authored-pool proxy projection failed: %s" % JSON.stringify(medium_authored_pool_proxy_projection))
 		return
 	var medium_creature_generator_projection: Dictionary = _validate_medium_creature_generator_projection(service, medium.get("generated", {}))
 	if not bool(medium_creature_generator_projection.get("ok", false)):
@@ -204,11 +204,12 @@ func _run() -> void:
 			or int(ordinal_95_player_start.get("x", -1)) != 31 \
 			or int(ordinal_95_player_start.get("y", -1)) != 10 \
 			or ordinal_95_runtime_start.is_empty() \
-			or (int(ordinal_95_runtime_start.get("x", -1)) == 31 and int(ordinal_95_runtime_start.get("y", -1)) == 10) \
-			or int(ordinal_95_runtime_start.get("selection_package_road_reachable_steps", -1)) <= 0 \
+			or int(ordinal_95_runtime_start.get("x", -1)) != 31 \
+			or int(ordinal_95_runtime_start.get("y", -1)) != 10 \
+			or int(ordinal_95_runtime_start.get("selection_radius_from_town_coordinate", -1)) != 0 \
 			or ordinal_95_hero_position != {"x": int(ordinal_95_runtime_start.get("x", -1)), "y": int(ordinal_95_runtime_start.get("y", -1))} \
 			or not bool(ordinal_95_player_move.get("ok", false)):
-		_fail("Medium ordinal 95 did not preserve its payload/town anchor while moving the runtime start: %s" % JSON.stringify(ordinal_95_player_start))
+		_fail("Medium ordinal 95 did not start at its exact town entrance with a legal exit: %s" % JSON.stringify(ordinal_95_player_start))
 		return
 	var xlarge := _generate_and_validate(
 		service,
@@ -239,7 +240,7 @@ func _run() -> void:
 		"zero_road_projection": zero_road_projection,
 		"live_proxy_projection": live_proxy_projection,
 		"medium": medium.get("summary", {}),
-		"medium_metadata_only_proxy_projection": medium_metadata_only_proxy_projection,
+		"medium_authored_pool_proxy_projection": medium_authored_pool_proxy_projection,
 		"medium_creature_generator_projection": medium_creature_generator_projection,
 		"medium_guard_projection": medium_guard_projection,
 		"medium_guard_live_behavior": medium_guard_live_behavior,
@@ -255,13 +256,15 @@ func _run() -> void:
 	})])
 	get_tree().quit(0)
 
-func _validate_medium_metadata_only_proxy_projection(service: Variant, generated: Dictionary) -> Dictionary:
+func _validate_medium_authored_pool_proxy_projection(service: Variant, generated: Dictionary) -> Dictionary:
 	var map_document: Variant = generated.get("map_document", null)
 	if map_document == null:
 		return {"ok": false, "reason": "missing_medium_map_document"}
 	var expected_rows := [
 		{
 			"index": 1110,
+			"object_id": "object_hilltop_signal_nest",
+			"site_id": "site_hilltop_signal_nest",
 			"placement_id": "native_h3maped_e76c8967_object_1110",
 			"primary_tile": {"x": 29, "y": 6, "level": 0},
 			"body_tiles": [
@@ -274,6 +277,8 @@ func _validate_medium_metadata_only_proxy_projection(service: Variant, generated
 		},
 		{
 			"index": 1174,
+			"object_id": "object_courier_change_post",
+			"site_id": "site_courier_change_post",
 			"placement_id": "native_h3maped_e76c8967_object_1174",
 			"primary_tile": {"x": 6, "y": 21, "level": 0},
 			"body_tiles": [
@@ -319,11 +324,11 @@ func _validate_medium_metadata_only_proxy_projection(service: Variant, generated
 					or actual.get("visit_tiles", []) != expected.get("visit_tiles", []) \
 					or int(actual.get("definition_index", -1)) != 117 \
 					or String(actual.get("def_name", "")) != "AVSwar20.def" \
-					or String(actual.get("kind", "")) != "h3m_object" \
-					or String(actual.get("native_kind", "")) != "h3m_object" \
-					or String(actual.get("catalog_id", "")) != "" \
-					or String(actual.get("object_id", "")) != "" \
-					or String(actual.get("site_id", "")) != "":
+					or String(actual.get("kind", "")) != "resource_site" \
+					or String(actual.get("native_kind", "")) != "resource_site" \
+					or String(actual.get("catalog_id", "")) != "authored_pool_proxy_107_0_interactable_site" \
+					or String(actual.get("object_id", "")) != String(expected.get("object_id", "")) \
+					or String(actual.get("site_id", "")) != String(expected.get("site_id", "")):
 				raw_rows_exact = false
 				break
 	var adoption: Dictionary = service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})
@@ -339,8 +344,10 @@ func _validate_medium_metadata_only_proxy_projection(service: Variant, generated
 				or int(source.get("h3m_subtype", -1)) != 0 \
 				or int(source.get("h3m_definition_index", -1)) != 117 \
 				or String(source.get("h3m_def_name", "")) != "AVSwar20.def" \
-				or String(source.get("kind", "")) != "h3m_object" \
-				or String(source.get("homm3_re_reward_object_catalog_id", "")) != "" \
+				or String(source.get("kind", "")) != "resource_site" \
+				or String(source.get("homm3_re_reward_object_catalog_id", "")) != "authored_pool_proxy_107_0_interactable_site" \
+				or String(source.get("object_id", "")) != String(expected.get("object_id", "")) \
+				or String(source.get("site_id", "")) != String(expected.get("site_id", "")) \
 				or source.get("primary_tile", {}) != expected.get("primary_tile", {}) \
 				or source.get("package_body_tiles", []) != expected.get("body_tiles", []) \
 				or source.get("package_visit_tiles", []) != expected.get("visit_tiles", []):
@@ -353,18 +360,24 @@ func _validate_medium_metadata_only_proxy_projection(service: Variant, generated
 			continue
 		var node: Dictionary = node_value
 		var source: Dictionary = source_objects.get(String(node.get("placement_id", "")), {}) if source_objects.get(String(node.get("placement_id", "")), {}) is Dictionary else {}
-		if int(source.get("h3m_type_id", -1)) == 107 \
-				or String(node.get("site_id", "")) == "site_reedscript_vow_shrine" \
-				or String(node.get("object_id", "")) == "object_reedscript_vow_shrine":
+		if int(source.get("h3m_type_id", -1)) == 107 and int(source.get("h3m_subtype", -1)) == 0:
 			live_type_107_nodes.append(node.duplicate(true))
+	var live_rows_exact := live_type_107_nodes.size() == expected_rows.size()
+	if live_rows_exact:
+		for row_index in range(expected_rows.size()):
+			var actual: Dictionary = live_type_107_nodes[row_index]
+			var expected: Dictionary = expected_rows[row_index]
+			for key in ["placement_id", "object_id", "site_id"]:
+				live_rows_exact = live_rows_exact and actual.get(key, "") == expected.get(key, "")
+			live_rows_exact = live_rows_exact and actual.get("package_body_tiles", []) == expected.body_tiles and actual.get("package_visit_tiles", []) == expected.visit_tiles
 	return {
 		"ok": String(generated.get("final_payload_fnv1a32", "")) == "e76c8967" \
 				and int(generated.get("final_payload_byte_count", -1)) == 79333 \
 				and int(map_document.get_object_count()) == 1326 \
-				and live_catalog_row_count == 249 \
+				and live_catalog_row_count == 328 \
 				and raw_rows_exact \
 				and source_rows_exact \
-				and live_type_107_nodes.is_empty(),
+				and live_rows_exact,
 		"payload_hash": generated.get("final_payload_fnv1a32", ""),
 		"payload_bytes": generated.get("final_payload_byte_count", -1),
 		"object_count": map_document.get_object_count(),
@@ -373,6 +386,7 @@ func _validate_medium_metadata_only_proxy_projection(service: Variant, generated
 		"raw_rows_exact": raw_rows_exact,
 		"source_rows_exact": source_rows_exact,
 		"live_type_107_node_count": live_type_107_nodes.size(),
+		"live_rows_exact": live_rows_exact,
 	}
 
 func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
@@ -483,10 +497,11 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 					creature_bank_rows_exact = false
 			elif subtype == 6:
 				if String(object.get("placement_id", "")) != "native_h3maped_457dba6b_object_0258" \
-						or String(object.get("kind", "")) != "h3m_object" \
-						or String(object.get("object_id", "")) != "" \
-						or String(object.get("site_id", "")) != "" \
-						or String(object.get("homm3_re_reward_object_catalog_id", "")) != "" \
+						or String(object.get("kind", "")) != "resource_site" \
+						or String(object.get("object_id", "")) != "object_chainboom_fort" \
+						or String(object.get("site_id", "")) != "site_chainboom_fort" \
+						or String(object.get("native_authored_pool_id", "")) != "guarded_reward" \
+						or String(object.get("homm3_re_reward_object_catalog_id", "")) != "authored_pool_proxy_16_6_guarded_reward" \
 						or object.get("primary_tile", {}) != {"x": 14, "y": 16, "level": 0} \
 						or object.get("package_body_tiles", []) != [{"x": 13, "y": 16, "level": 0}] \
 						or object.get("package_visit_tiles", []) != [{"x": 13, "y": 16, "level": 0}]:
@@ -2011,6 +2026,9 @@ func _generate_and_validate(
 				or int(town.get("owner_slot", 0)) != int(start.get("owner_slot", -1)) \
 				or hero_start.is_empty() \
 				or hero_start != runtime_start \
+				or int(runtime_start.get("x", -1)) != int(start.get("x", -2)) \
+				or int(runtime_start.get("y", -1)) != int(start.get("y", -2)) \
+				or int(runtime_start.get("level", -1)) != int(start.get("level", -2)) \
 				or not runtime_start_usable:
 			start_bindings_ok = false
 	var ok := bool(generated.get("ok", false)) \
@@ -2058,22 +2076,16 @@ func _runtime_start_tile_is_usable(map_document: Variant, tile: Dictionary) -> b
 	var terrain_code := int(terrain_values[y * int(map_document.get_width()) + x]) & 0x3f
 	if terrain_code == 8 or terrain_code == 9:
 		return false
-	var roads: Array = terrain_layers.get("roads", []) if terrain_layers.get("roads", []) is Array else []
-	for road_value in roads:
-		if not (road_value is Dictionary):
-			continue
-		var road_tiles: Array = road_value.get("tiles", []) if road_value.get("tiles", []) is Array else []
-		for road_tile_value in road_tiles:
-			if road_tile_value is Dictionary and int(road_tile_value.get("x", -2)) == x and int(road_tile_value.get("y", -2)) == y and int(road_tile_value.get("level", -2)) == level:
-				return false
+	# Town entrance is an actionable endpoint inside its exact body. Roads and
+	# the town's source wall must not cause a nearest-safe-tile relocation.
 	for object_index in range(int(map_document.get_object_count())):
 		var object: Dictionary = map_document.get_object_by_index(object_index)
-		for field in ["package_block_tiles", "package_visit_tiles"]:
-			var cells: Array = object.get(field, []) if object.get(field, []) is Array else []
-			for cell_value in cells:
-				if cell_value is Dictionary and int(cell_value.get("x", -2)) == x and int(cell_value.get("y", -2)) == y and int(cell_value.get("level", -2)) == level:
-					return false
-	return String(tile.get("selection_source", "")) != ""
+		if String(object.get("kind", "")) != "town":
+			continue
+		for cell in object.get("package_visit_tiles", []):
+			if cell is Dictionary and int(cell.get("x", -2)) == x and int(cell.get("y", -2)) == y and int(cell.get("level", -2)) == level:
+				return String(tile.get("selection_source", "")) == "h3maped_main_town_entrance_runtime_start" and not bool(tile.get("selection_removed_removable_start_block_mask", true))
+	return false
 
 func _player_owned_start(start_contract: Dictionary) -> Dictionary:
 	var starts: Array = start_contract.get("player_starts", []) if start_contract.get("player_starts", []) is Array else []

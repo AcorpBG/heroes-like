@@ -11403,6 +11403,11 @@ func town_footprint_selection(tile: Vector2i) -> Dictionary:
 	}.duplicate(true)
 
 func _town_entry_tile(town: Dictionary) -> Vector2i:
+	# Generated town x/y is the source image anchor, not its visit square.
+	# Keep the raster doorway, selection footprint and visitor on one authority.
+	var visit: Dictionary = town.get("visit_tile", {}) if town.get("visit_tile", {}) is Dictionary else {}
+	if not visit.is_empty():
+		return Vector2i(int(visit.get("x", -1)), int(visit.get("y", -1)))
 	return Vector2i(int(town.get("x", -1)), int(town.get("y", -1)))
 
 func _town_footprint_origin_for_entry(entry: Vector2i) -> Vector2i:
