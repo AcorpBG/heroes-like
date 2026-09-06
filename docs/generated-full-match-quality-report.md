@@ -2,7 +2,8 @@
 
 2026-09-06. Active Phase 6 parent `quality-generated-full-match-20260906`,
 playthrough child `quality-generated-full-match-playthrough-20260906` remains
-in progress; current implementation child is the measured responsiveness work.
+in progress and is the current implementation child. Measured responsiveness
+improvements remain a validated checkpoint, not a completed full-match child.
 Requirements:
 `docs/generated-full-match-quality-requirements.md`. This is an implementation
 checkpoint, **not completion of the child, full matches, or release readiness**.
@@ -36,6 +37,90 @@ invalidate occupancy when a pickup is consumed; it does not erase other bodies.
 No generator, masks, placement, balance, battle RNG, resources, art or save-schema
 changes were used to correct these defects. The focused run uses ordinary
 starting forces and real scene actions, not forced combat outcomes.
+
+### Exact targets versus scenic footprints
+
+A fifth production defect caused the later Medium Day-54 loop. In the unchanged
+recorded save, artifact `native_h3maped_93c0f05a_object_1285`
+(`artifact_waymark_compass`, 18,55,0) overlaps the scenic rectangle of resource
+1289 (actual entrance 18,56,0). Artifact 1305 (`artifact_trailsinger_boots`,
+12,49,0) similarly overlaps resource 1306 (entrance 11,50,0). Both resources
+are persistent, already controlled sites. Neither owns the artifact's actual
+interaction tile. The view projected the pointer correctly, but
+`OverworldShell._selection_route_tile` and `_resource_node_at` resolved scenery
+before the exact target, redirecting movement and descriptors to the resource.
+
+Selection now queries exact targets in the existing level-aware domain index and
+the active hero tile before scenic shortcuts. The opt-in exact query excludes
+guard control zones and town art anchors; default movement queries are unchanged.
+Resource entrances use the domain interaction index, including generated support
+sites without an authored scenic descriptor. Resource visual fallback cannot
+claim another live target. Owned-town
+body-click opening additionally requires that selection really resolved to that
+town's entrance. No placement, source mask, pathing rule or asset changed.
+
+Evidence below is under `.artifacts/generated_full_match_quality_20260906/`:
+
+- `exact_targets_before_02`: unchanged production code fails exactly three
+  pointer/route/descriptor checks, with zero engine errors. Input save SHA-256:
+  `f571ab1a10696e0411f417c666d1a91bf6ba9363ad757cfc54491d8efd3c10d7`.
+- `exact_targets_boundary_02` and `exact_targets_boundary_1080`: **39 checks
+  pass each** at rendered 1280x720 and 1920x1080, zero engine errors. Both settled
+  final collection captures were opened and visually inspected. Fog, scenery
+  and command controls remain present; the army overflow display remains wrong.
+  The earlier dual-resolution `exact_targets_controls` reports
+  passed 32 checks before the additional boundary cases. Actual projected
+  mouse press/release events collect both artifacts, then save/resume every
+  serialized gameplay field through production services. All terrain and source
+  placement geometry remain equal. Detached controls cover consumed targets,
+  cache invalidation, underground selection, encounters and reserve/active heroes
+  without changing the live match. Seven added checks retain guard-zone movement,
+  town-anchor/entrance distinctions and support-site ownership.
+- `exact_target_arrival_02`: all **23 original guarded-opening checks pass**,
+  including arrival's enabled Enter Battle, real victory/report and cache reward.
+  The first refinement dropped the resource descriptor for a generated cache
+  lacking authored scenery and consequently auto-entered battle. Its failed
+  `exact_target_arrival` report and `exact_target_arrival_diagnosis` identified
+  that regression; using authoritative resource visit tiles corrected it without
+  changing the original test's gameplay assertions. An intermediate Dictionary/
+  Vector3i comparison also failed parsing and was corrected before this rerun.
+- `exact_target_arrival_body_final`: **26 checks pass**, adding an actual generated
+  town body click, exact entrance routing and preserved movement. The initial
+  extra check used the native source image anchor, outside the runtime clickable
+  body; it was corrected to the view's actual body tile, not a production change.
+  `exact_target_town_body_final` also passes the unchanged six-cell authored town
+  footprint report, including all five body cells and entrance/arrival behavior.
+- `.artifacts/full_play_runtime_20260905/exact_target_domains`: movement-input
+  ownership, complete-route movement and fog reports pass. The keyboard smoke
+  fails its retired fixed-slot Save expectation, also reproduced rendered in
+  `exact_target_focus_rendered`. Controller A opens the actual named-file browser
+  with filename focus; the test expects an immediate slot overwrite dialog.
+  `_on_save_pressed` and the shared save dialog are unchanged from `a8c4a81f`.
+  Named-file behavior is specified in `docs/visual-performance-file-saves-report.md`.
+  This old test is not suppressed or represented as passing.
+- `exact_target_final_domains` in that same full-play evidence root reruns all
+  three movement/input/fog reports successfully after the final boundary fixes.
+- `exact_target_named_saves_final`: the existing current named-file regression
+  passes all four shipping Save routes, nine independent files, physical Enter,
+  Escape/controller Back, transactional and overwrite-consent checks. Only the
+  temporary script's screenshot output path was redirected to this fresh evidence
+  directory. Initial attempts failed in the host's missing desktop bus and then
+  the removed historical screenshot directory; both failures are retained.
+  Its intentional same-size corrupt-file probe emits the expected invalid-JSON
+  error; no script error occurs.
+- `exact_target_linux_final`, `exact_target_windows_final` and
+  `exact_target_linux_generated_final`: exports, startup and actual generated-map/Town
+  entry pass; Windows runtime checks use Wine, not native hardware. Both PCKs
+  contain **248438424 bytes**, leaving 1561576 bytes below the unchanged ceiling.
+  Actual export/boot/generated-flow commands return zero with successful reports;
+  two outer execution handles subsequently reported 143 after their completion
+  output, not an engine/package failure. The completed logs/reports are retained.
+- `exact_target_validate_repo_final.log`: repository validation passes. Nine
+  Python full-match acceptance/checkpoint tests pass; `git diff --check` passes.
+
+The runner now records revision and runtime source hashes at **launch**, not at
+the end of an hours-long run; dirty runtime changes are separately fingerprinted.
+This improves evidence provenance only and does not alter its gameplay policy.
 
 ## Fresh validation
 
@@ -139,10 +224,17 @@ Subsequent legal continuations moved beyond that area. `medium_match_07` reached
 Day 54, after owning three towns and then losing two, but failed its fourteen-day
 no-progress gate. It repeatedly targeted artifacts while arriving at controlled
 resource-site actions, spending movement before reaching hostile towns. The
-driver/placement routing cause remains to be isolated; the failed report is
-retained, not called a completed match. `large_match_05` continues after capturing
-enemy Mireclaw town 2169 and neutral town 2178. Neither is an accepted terminal
-match. Their prefixes include actual development, battles and save checkpoints.
+production scenic-footprint routing cause is now corrected above; the failed
+report is retained, not called a completed match. `medium_match_08` restored its
+exact recorded Day-54 autosave and reached Day 69 beyond the loop.
+`large_match_05`, after capturing enemy Mireclaw town 2169 and neutral town 2178,
+was deliberately superseded to load the validated routing correction, not stopped
+for an observation timeout. `large_match_06` restored its exact recorded Day-37
+autosave (SHA-256 `82448ac96ee05b7d26cf1ff7f04ebe9424e207fd1b0c6303af1a2a9877cd88b9`)
+and reached Day 43. Neither continuation is an accepted terminal match. They
+loaded the initial selection fix, before the final guard/support-site/anchor
+refinements; their launch source hashes identify that difference exactly.
+Their prefixes include actual development, battles and save checkpoints.
 The driver now invests in available recruitment buildings, checks visible portal
 guards, targets legal guard-zone edges and backtracks through visited entrances.
 These are test-policy improvements, not production AI/balance fixes.
@@ -168,6 +260,19 @@ not controlled before/after benchmark results. Subsequent controlled actual Town
 orders and complete End Turns now show behavior-preserving improvements in
 `docs/generated-full-match-performance-report.md`; those limited measurements do
 not establish whole-match responsiveness.
+
+The Day-54 screenshots expose another real correctness defect: the formation bar
+shows seven empty slots and zero troops while the saved army contains **18 stacks
+and 970 troops**. `OverworldRules.recruit_in_active_town` appends a new unit type
+without enforcing the existing seven-stack limit. `HeroCommandRules.army_slot_snapshot`
+rejects oversized armies with `capacity_valid=false` and no slots; `ArmyStackBar`
+renders that response as empty instead of showing the error. Additional reward
+append paths must also be checked. This is not troop loss in the save, and no
+army or recruitment fix is claimed here. These long runs remain diagnostic until
+the capacity/rule/display inconsistency is resolved; oversized armies must not
+silently certify legitimate full-match acceptance. The next correction must
+preserve existing saved troops, costs, recruitment reserves and rewards rather
+than truncating armies or changing the seven-slot rule.
 The inspected Veilmourn Town still has detached-looking building sprites and
 stray footer resource text; the presentation child remains pending.
 

@@ -2575,7 +2575,7 @@ static func terrain_id_is_passable(terrain_id: String) -> bool:
 		return bool(biome.get("passable", true))
 	return true
 
-static func tile_has_route_interaction(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
+static func tile_has_route_interaction(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1, exact_target_only: bool = false) -> bool:
 	if session == null:
 		return false
 	var capture_enabled := bool(_pathing_debug_profile.get("capture_enabled", false))
@@ -2585,13 +2585,16 @@ static func tile_has_route_interaction(session: SessionStateStoreScript.SessionD
 	var tile := Vector2i(x, y)
 	level = OverworldLevelRulesScript.query_level(session, level)
 	var lookup_index := _spatial_lookup_index(session, level)
-	if int(_find_guard_engagement_at_tile(session, x, y, level).get("index", -1)) >= 0:
+	# Selection ownership excludes surrounding guard zones and town art anchors.
+	# Existing movement callers retain their full interaction/approach semantics.
+	if not exact_target_only and int(_find_guard_engagement_at_tile(session, x, y, level).get("index", -1)) >= 0:
 		return true
 	var towns = session.overworld.get("towns", [])
 	var town_by_tile: Dictionary = lookup_index.get("town_by_tile", {}) if lookup_index.get("town_by_tile", {}) is Dictionary else {}
 	var town_index := int(town_by_tile.get(_tile_key(tile), -1))
 	if towns is Array and town_index >= 0 and town_index < towns.size() and towns[town_index] is Dictionary:
-		return true
+		if not exact_target_only or OverworldLevelRulesScript.town_entrance(towns[town_index]) == OverworldLevelRulesScript.position({"x": x, "y": y, "level": level}):
+			return true
 	var resource_nodes = session.overworld.get("resource_nodes", [])
 	for node_index in _spatial_lookup_entries(lookup_index, "resource_by_interaction_tile", tile):
 		var index := int(node_index)
@@ -2627,6 +2630,18 @@ static func tile_has_route_interaction(session: SessionStateStoreScript.SessionD
 
 static func tile_is_actionable_route_destination(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	return tile_has_route_interaction(session, x, y, level)
+
+static func resource_node_interaction_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
+	if session == null:
+		return {}
+	var nodes = session.overworld.get("resource_nodes", [])
+	var lookup_index := _spatial_lookup_index(session, level)
+	for node_index in _spatial_lookup_entries(lookup_index, "resource_by_interaction_tile", Vector2i(x, y)):
+		var index := int(node_index)
+		var node = nodes[index] if nodes is Array and index >= 0 and index < nodes.size() else {}
+		if node is Dictionary and resource_node_is_present(node, ContentService.get_resource_site(String(node.get("site_id", "")))):
+			return node
+	return {}
 
 static func tile_step_cuts_blocked_corner(session: SessionStateStoreScript.SessionData, from_tile: Vector2i, to_tile: Vector2i, level: int = -1) -> bool:
 	var dx := to_tile.x - from_tile.x
