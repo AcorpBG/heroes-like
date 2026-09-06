@@ -24,16 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current owner goal: `bugfix-rmg-audit-corrections-20260905`; fix every finding from the completed audit, with heroes always starting at the owning town entrance. Entrance-boundary, level-aware runtime, player/team, native-transit and selected normal-water parity children completed; current child: `bugfix-rmg-audit-integrated-regressions-20260905`. Integrated regressions remain required; a partial correction does not complete the goal.
+- Completed owner goal: `bugfix-rmg-audit-corrections-20260905`; all six corrective/integrated children now satisfy the audited requirements, including heroes at their owning town entrances. No implementation slice is active; further scope awaits owner selection. Completion is bounded by the documented sample/configuration limits, not full H3MapEd or release parity.
 - Baseline audit: `audit-rmg-start-placement-and-h3maped-comparison-20260905`; 36 runtime requests, 83 generated starts, 23/24 exact retained owner payloads, fresh executable/private-state water mismatch, and confirmed start/level/opponent/transit adoption gaps. Audit evidence is not runtime fixes or parity completion.
-- Most recently completed implementation slice: `bugfix-rmg-normal-water-private-state-20260905`: removed a future-state polygon endpoint preload duplicated by the actual producer, preserving its source processed marker. Fresh same-run private grids/full bytes, ordered calls/RNG, all 24 retained payloads, 85 exact entrance starts/36 supported live cases and both-platform packages pass. Evidence and sample limits: `docs/rmg-normal-water-correction-report.md`.
+- Most recently completed slice: `bugfix-rmg-audit-integrated-regressions-20260905`: current authored-pool expectations, permanent water/entrance/private-state coverage and reusable 18-report RMG suite. All 18 runtime reports, 26 Python tests, 85 exact starts/36 supported live cases, player/team/cave/Islands checks, repository and both-platform packages pass. Evidence and limits: `docs/rmg-audit-integrated-correction-report.md`.
 - Current package boundary: Linux and Windows release exports both measure 248438264 bytes, 1561736 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
 
 ## RMG Audit Corrections
 
 id: `bugfix-rmg-audit-corrections-20260905`
 
-Status: in_progress. Phase 6 owner-directed implementation parent reviewing the Phase 3 native boundary; successor to the exact-mask runtime start correction and completed September audit.
+Status: completed 2026-09-06. All six children below are implemented/validated against the audited requirements. Source-linked native fixes, live adoption/save/AI behavior, integrated tests, inspected visuals and both-platform packages have real evidence in `docs/rmg-audit-integrated-correction-report.md`. This Phase 6 parent reviews the Phase 3 native boundary; it does not certify every seed, allocator history, native private buffer or the whole game.
 
 Requirements: `docs/rmg-audit-corrections-requirements.md`, `docs/rmg-start-placement-and-h3maped-audit.md`, `docs/lessons-learned.md`, `docs/h3maped-rmg-end-to-end-behavior.md`, `docs/rmg-python-validation-workflow.md` and the authored-object-pool requirements.
 
@@ -73,7 +73,7 @@ Status: completed 2026-09-06. Removed the future-state polygon endpoint preload 
 
 id: `bugfix-rmg-audit-integrated-regressions-20260905`
 
-Status: in_progress. Finish stale authored-pool expectations, including XLarge subtype-45 dwellings, without losing exact placement assertions; permanently include normal-water seed 10 and enforce all correction requirements through actual generated/live/save/AI flows, inspected visuals, repository and Linux/Windows package smokes. Python owns new coverage. Parent completes only after this integrated evidence supports every required outcome.
+Status: completed 2026-09-06. Stale XLarge subtype-45/raw-pool expectations now require distinct original identities and exact source masks; the water case and strict private joins are permanent Python coverage. All 18 integrated runtime reports, 26 Python tests, 85 exact entrance starts/36 supported live cases, independent players/teams, eight cave ends, six Islands town journeys with real raid battle, repository and both-platform package flows pass. Inspected visuals and explicit limits: `docs/rmg-audit-integrated-correction-report.md`. No further production generation/gameplay change in this validation child.
 
 ## RMG Starting Heroes And H3MapEd Comparison Audit
 
@@ -12402,7 +12402,7 @@ Goal: translate HoMM-style random-map structure into original content and system
 
 Current boundary:
 - The September audit's normal-water mismatch is corrected with source-proven endpoint production and fresh private/writeout joins; all 24 selected retained payloads now match. Evidence: `docs/rmg-normal-water-correction-report.md`; this is not arbitrary-seed or all-phase parity.
-- Displaced/blocked starts, level flattening, faction-keyed opponent merging and native transit adoption have corrective implementation/evidence in the Phase 6 audit children above. Integrated regressions remain active; generation parity and playable adoption are separate claims.
+- Displaced/blocked starts, level flattening, faction-keyed opponent merging and native transit adoption have completed corrective/integrated evidence in the Phase 6 audit children above. Generation parity and playable adoption remain separate, explicitly sampled claims.
 - The H3MapEd recovery ledger is prerequisite evidence and source ownership, not permission to claim arbitrary H3MapEd configuration parity.
 - Player-facing generated-skirmish controls now adopt the same 24-workflow boundary instead of retaining the older Small/Medium surface-land fence.
 - Evidence and exact follow-up owners: `docs/rmg-start-placement-and-h3maped-audit.md`. Unsupported configurations/allocator histories must remain fail-closed; selected matrix evidence must not be presented as whole-H3MapEd parity.
