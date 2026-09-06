@@ -581,6 +581,8 @@ var _state_cache_reason := "uninitialized"
 var _dynamic_layer_reason := "uninitialized"
 var _frame_layer_reason := "uninitialized"
 var _object_index_signature := 0
+var _scenery_index_signature := 0
+var _scenery_index_valid := false
 var _hero_index_signature := 0
 var _road_index_signature := 0
 var _validation_force_index_rebuild := false
@@ -1374,6 +1376,7 @@ func _state_cache_signature_for(session) -> int:
 		return 0
 	var overworld = session.overworld
 	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, _fog_cache_signature(OverworldRulesScript.fog_for_level(session, _level)))
+	signature = _combine_cache_signature(signature, _scenery_index_signature)
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("towns", []), ["owner", "placement_id", "town_id"]))
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("resource_nodes", []), ["site_id", "placement_id", "collected", "collected_by_faction_id"]))
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("artifact_nodes", []), ["artifact_id", "placement_id", "collected"]))
@@ -10244,7 +10247,7 @@ func _rebuild_road_tiles() -> void:
 
 func _rebuild_object_indexes() -> void:
 	var profile_start := _profile_begin("object_index")
-	var static_signature := _object_index_signature_for(_session)
+	var static_signature := _combine_cache_signature(_object_index_signature_for(_session), _scenery_index_signature_for(_session))
 	var hero_signature := _hero_index_signature_for(_session)
 	var rebuilt_static := false
 	var rebuilt_heroes := false
@@ -10260,10 +10263,12 @@ func _rebuild_object_indexes() -> void:
 		_standalone_map_objects_by_tile.clear()
 		_heroes_by_tile.clear()
 		_object_index_signature = 0
+		_scenery_index_signature = 0
+		_scenery_index_valid = false
 		_hero_index_signature = 0
 		_profile_end("object_index", profile_start, {"rebuilt_static": true, "rebuilt_heroes": true})
 		return
-	if _validation_force_index_rebuild or static_signature != _object_index_signature:
+	if _validation_force_index_rebuild or not _scenery_index_valid or static_signature != _object_index_signature:
 		_object_index_signature = static_signature
 		_rebuild_static_object_indexes()
 		rebuilt_static = true
@@ -10297,9 +10302,6 @@ func _rebuild_static_object_indexes() -> void:
 	_artifacts_by_tile.clear()
 	_encounters_by_tile.clear()
 	_rememberable_encounters_by_tile.clear()
-	_decorative_objects_by_tile.clear()
-	_generated_decorative_bodies_by_tile.clear()
-	_standalone_map_objects_by_tile.clear()
 	for town_value in _session.overworld.get("towns", []):
 		if not (town_value is Dictionary):
 			continue
@@ -10352,6 +10354,19 @@ func _rebuild_static_object_indexes() -> void:
 		_encounters_by_tile[key] = encounter
 		if String(encounter.get("spawned_by_faction_id", "")) == "":
 			_rememberable_encounters_by_tile[key] = encounter
+	# Claims and moving encounters invalidate the live interaction indexes above,
+	# not thousands of unchanged painted body records. This view-local cache
+	# includes every input consumed below, including complete nested body masks.
+	var scenery_signature := _scenery_index_signature_for(_session)
+	if not _validation_force_index_rebuild and _scenery_index_valid and scenery_signature == _scenery_index_signature:
+		_profile_add("scenery_index_skips", 1)
+		return
+	_scenery_index_signature = scenery_signature
+	_scenery_index_valid = true
+	_decorative_objects_by_tile.clear()
+	_generated_decorative_bodies_by_tile.clear()
+	_standalone_map_objects_by_tile.clear()
+	_profile_add("scenery_index_rebuilds", 1)
 	for object_value in _session.overworld.get("map_objects", []):
 		if not (object_value is Dictionary):
 			continue
@@ -10593,6 +10608,20 @@ func _object_index_signature_for(session) -> int:
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("map_objects", []), ["object_id", "placement_id", "kind", "runtime_object_role"]))
 	return _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("resolved_encounters", []), ["placement_id", "encounter_id", "id"]))
 
+func _scenery_index_signature_for(session) -> int:
+	if session == null:
+		return 0
+	# Hash full ordered values, not just ids/counts: generated body presentation
+	# retains source metadata and resolves original raster members by terrain.
+	# A replacement session must not retain dictionaries borrowed from its owner.
+	return hash([
+		session.get_instance_id(), _map_size, _level, _map_data,
+		session.overworld.get("map_objects", []),
+		_map_object_asset_ids, _decorative_object_asset_ids,
+		_generated_decorative_blocker_asset_ids_by_biome,
+		_generated_decorative_blocker_fallback_asset_ids,
+	])
+
 func _enemy_commander_presentation_signature(encounters: Variant) -> int:
 	var signature := CACHE_SIGNATURE_SEED
 	if not (encounters is Array):
@@ -10719,6 +10748,8 @@ func _road_tile_payload(tile: Vector2i) -> Dictionary:
 	return _road_tiles.get(_tile_key(tile), {})
 
 func _load_overworld_art_manifest() -> void:
+	_scenery_index_valid = false
+	_invalidate_state_cache("art_manifest_reloaded")
 	_overworld_art_manifest.clear()
 	_terrain_raster_base_v2_paths.clear()
 	_object_asset_paths.clear()

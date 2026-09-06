@@ -16617,14 +16617,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Validated generated same-map Retry Skirmish, readable outcome title, visible failure feedback and bounded Details/navigation: 128 checks per resolution, existing outcome input/recovery and named-save controls, 12 Python tests, repository/diff and Linux/Windows packages/generated entry pass. Continue live Medium11 on its recorded launch commit; Day32 and 655/655 legal army observations are not terminal completion. Town building integration and broader quality acceptance remain open.",
+  "currentNotes": "Scenery-index reuse is implemented and validated against exact old-owner payloads and real Medium/Large collection commands; package parity and existing sprite/movement/fog regressions pass. Full-input hashing adds documented cold-load overhead. Medium11 continues on its original preloaded runtime; Day64 is nonterminal. The goal and children remain in progress, with stale owned-hero movement text, Town building integration and broader quality acceptance unfinished.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "quality-generated-full-match-playthrough-20260906",
-  "currentSliceId": "quality-generated-full-match-playthrough-20260906",
-  "currentSliceNotes": "Driver-only Town-priority optimization validated: 69 exact target/state/eligibility controls pass, discarded encounter approaches 15 to zero, real no-ready-Town field selection unchanged. 47 claim-progress and 12 Python checks plus repository/diff pass. Production digest 863dbeb0855ab377f32d0792c93df5d80ca219bf3b4ae1c5caf948ba33a159de retains validated Linux/Windows export/startup/generated-entry coverage. Medium11 remains live on its launch driver: Day54 checkpoint, 1190 legal capacity observations, 39 battles, no runtime errors or terminal outcome. Continue the same match; no game-speed, completed-match or child-completion claim. Town-art scope and superseded export/environment cleanup approval remain outstanding.",
+  "currentSlice": "performance-generated-full-match-actions-20260906",
+  "currentSliceId": "performance-generated-full-match-actions-20260906",
+  "currentSliceNotes": "Validated scenery-index reuse: 95 exact old-owner index/state/invalidation checks per real Medium/Large save, six matched rendered collection pairs, zero decorative rebuild calls instead of 753/1953 and byte-identical inspected captures. Summed waiting falls 12.4%/33.6% in those two commands; cold-load/hash overhead and concurrent-match limits remain explicit. Seven existing sprite/movement/fog/generated-map reports, consumed-site collision, 12 Python tests, repository/diff and fresh Linux/Windows export/startup/generated-entry checks pass. Both PCKs 248454200 bytes. No art, native, placement, rules or save changes. Medium11 remains live on its original launch owners; Day64 checkpoint has 1558 legal capacity observations and 46 battles, not a terminal outcome. Child/goal stay in progress; stale roster movement text and Town integration remain open.",
   "currentSliceStatus": "in_progress",
-  "currentSliceTitle": "Complete Generated Matches And Correctness",
-  "currentSliceUpdatedAt": "2026-09-06T21:42:03Z",
+  "currentSliceTitle": "Full-Match Responsiveness",
+  "currentSliceUpdatedAt": "2026-09-06T22:25:40Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22203,7 +22203,8 @@
         "python3 tests/generated_town_order_profile.py --label <fresh> --save <exact-real-save> --compare <control>",
         "python3 tests/town_order_read_scope_regression.py --label <fresh>",
         "python3 tests/generated_end_turn_profile.py --label <fresh> --save <exact-real-save> --compare <control>",
-        "python3 tests/ai_town_support_radius_regression.py --label <fresh> --save <exact-real-save>"
+        "python3 tests/ai_town_support_radius_regression.py --label <fresh> --save <exact-real-save>",
+        "python3 tests/overworld_scenery_index_regression.py --label <fresh> --save <exact-real-save>"
       ],
       "id": "performance-generated-full-match-actions-20260906",
       "title": "Full-Match Responsiveness",
@@ -22220,23 +22221,25 @@
         "tests/generated_town_order_profile.py",
         "scripts/core/OverworldRules.gd: exact logistics support-radius read without full site enumeration",
         "scripts/core/EnemyAdventureRules.gd: resource scoring consumes the exact radius projection",
-        "tests/ai_town_support_radius_regression.py"
+        "tests/ai_town_support_radius_regression.py",
+        "scenes/overworld/OverworldMapView.gd: scenery indexes independent of live interaction updates with complete input invalidation",
+        "tests/overworld_scenery_index_regression.py: exact old-owner indexes, state and rendered movement controls"
       ],
       "completionCriteria": [
         "Name dominant measured hotspots",
         "Improve full actions with matched complete-state/decision controls",
         "Full-match and focused cache/performance/platform regressions"
       ],
-      "updatedAt": "2026-09-06T14:28:59Z",
+      "updatedAt": "2026-09-06T22:25:40Z",
       "startedAt": "2026-09-06T13:44:06Z",
-      "notes": "Validated responsiveness checkpoint: actual rendered Large Town recruitment waiting 46.9% lower (headless repeat 49.6%); complete real End Turns 23.0% and 24.2% lower on the same recorded Day-20 save, with exact four-state controls. Town read scopes and exact AI support-radius projection preserve rules, scoring, recaps, autosaves and save v9. Six-faction scope checks, 289 AI radius/candidate checks, nine Town feedback reports plus final artifact rerun, five AI reports, repository and Linux/Windows startup/generated Town packages pass. Prior Medium Day 54 failed the no-progress diagnostic; older runs do not establish accepted terminal coverage. Full matches and presentation remain incomplete; prior four gameplay fixes and unrelated legacy failures retain their separate evidence.",
+      "notes": "Validated scenery-index reuse: 95 exact old-owner index/state/invalidation checks per real Medium/Large save, six matched rendered collection pairs, zero decorative rebuild calls instead of 753/1953 and byte-identical inspected captures. Summed waiting falls 12.4%/33.6% in those two commands; cold-load/hash overhead and concurrent-match limits remain explicit. Seven existing sprite/movement/fog/generated-map reports, consumed-site collision, 12 Python tests, repository/diff and fresh Linux/Windows export/startup/generated-entry checks pass. Both PCKs 248454200 bytes. No art, native, placement, rules or save changes. Medium11 remains live on its original launch owners; Day64 checkpoint has 1558 legal capacity observations and 46 battles, not a terminal outcome. Child/goal stay in progress; stale roster movement text and Town integration remain open.",
       "validation": {
         "id": "performance-generated-full-match-orders-radius-20260906",
         "sliceId": "performance-generated-full-match-actions-20260906",
-        "title": "Matched Town order and AI resource-scoring responsiveness",
+        "title": "Matched Town order, AI resource-scoring and scenery-index responsiveness",
         "status": "in_progress",
         "scope": "validated_performance_checkpoint_not_complete_matches_or_goal_completion",
-        "validatedAt": "2026-09-06T14:28:59Z",
+        "validatedAt": "2026-09-06T22:25:40Z",
         "artifacts": [
           "docs/generated-full-match-performance-report.md",
           "docs/generated-full-match-quality-report.md",
@@ -22258,9 +22261,24 @@
           ".artifacts/generated_full_match_quality_20260906/order_windows_export/report.json",
           ".artifacts/generated_full_match_quality_20260906/order_linux_generated/live_validation_report.json",
           ".artifacts/generated_full_match_quality_20260906/medium_match_07/report.json",
-          ".artifacts/full_play_runtime_20260905/radius_ai_domains/report.json"
+          ".artifacts/full_play_runtime_20260905/radius_ai_domains/report.json",
+          ".artifacts/generated_full_match_quality_20260906/scenery_index_before/report.json",
+          ".artifacts/generated_full_match_quality_20260906/scenery_index_medium_release/report.json",
+          ".artifacts/generated_full_match_quality_20260906/scenery_index_large_release/report.json",
+          ".artifacts/generated_full_match_quality_20260906/scenery_movement_medium/report.json",
+          ".artifacts/generated_full_match_quality_20260906/scenery_movement_medium_02/report.json",
+          ".artifacts/generated_full_match_quality_20260906/scenery_movement_medium_03/report.json",
+          ".artifacts/generated_full_match_quality_20260906/scenery_movement_large_02/report.json",
+          ".artifacts/generated_full_match_quality_20260906/scenery_movement_large_03/report.json",
+          ".artifacts/generated_full_match_quality_20260906/scenery_movement_large_04/report.json",
+          ".artifacts/full_play_runtime_20260905/scenery_existing_release_02/report.json",
+          ".artifacts/generated_full_match_quality_20260906/scenery_consumed_release_02/report.json",
+          ".artifacts/generated_full_match_quality_20260906/scenery_linux_release/report.json",
+          ".artifacts/generated_full_match_quality_20260906/scenery_linux_release/generated-entry/live_validation_report.json",
+          ".artifacts/generated_full_match_quality_20260906/scenery_windows_release/report.json",
+          ".artifacts/generated_full_match_quality_20260906/scenery_windows_release/generated-flow/live_validation_report.json"
         ],
-        "result": "Validated responsiveness checkpoint: actual rendered Large Town recruitment waiting 46.9% lower (headless repeat 49.6%); complete real End Turns 23.0% and 24.2% lower on the same recorded Day-20 save, with exact four-state controls. Town read scopes and exact AI support-radius projection preserve rules, scoring, recaps, autosaves and save v9. Six-faction scope checks, 289 AI radius/candidate checks, nine Town feedback reports plus final artifact rerun, five AI reports, repository and Linux/Windows startup/generated Town packages pass. Medium Day 54 failed the no-progress diagnostic; Large continues. Full matches and presentation remain incomplete; prior four gameplay fixes and unrelated legacy failures retain their separate evidence."
+        "result": "Earlier matched Town recruitment (46.9% rendered) and End Turn (23.0%/24.2%) improvements retain their complete-state evidence. New view-local scenery reuse passes 95 old-owner index/state/invalidation checks per recorded Medium/Large save, six rendered collection pairs with exact full states/indexes and inspected identical PNGs, seven existing sprite/movement/fog/generated-map reports, 25 real collection/collision/save checks, 12 Python tests and repository/diff checks. Three-pair summed command waiting is 12.4%/33.6% lower for the two selected claims; cold-load/hash overhead and concurrent-machine limits are explicit, not whole-game acceptance. Fresh Linux/Windows exports/startup/generated entry pass with PCKs 248454200 bytes. No native, art, placement, rules or save changes. Large08 has a legal Day14 defeat; original-owner Medium11 remains nonterminal at the Day64 checkpoint. Goal/children remain in progress; stale movement label, Town integration and prior unrelated legacy limits remain open."
       }
     },
     {
@@ -111090,9 +111108,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Full-match quality remains in progress. Capacity and scripted reward retention, exact-target/guard selection, Town command/footer and generated outcome retry/layout corrections have focused runtime and platform evidence. Large08 completed a legal defeat after enemy-town conquest; Medium11 remains nonterminal. Latest driver-only Town-priority support passes 69 exact target/state controls, 47 claim-progress checks and 12 Python acceptance tests without changing production. Complete Medium coverage, full responsiveness acceptance and scene-matched Town buildings remain unfinished; checkpoints and diagnostic prefixes are not release certification.",
+  "summary": "Full-match quality remains in progress. Latest production scenery-index reuse preserves exact old-owner payloads/state and inspected images: 95 checks per saved map size, six real collection pairs, seven domain reports, collision/save controls and both-platform packages pass. Two selected commands show 12.4%/33.6% lower summed waiting; cold-load/hash overhead and measurement limits remain explicit. Earlier capacity/reward, guard selection, command/footer, outcome and Town/AI responsiveness checkpoints retain their own evidence. Large08 completed a legal defeat after conquest; Medium11 remains nonterminal on its launch owners. Complete Medium coverage, full responsiveness acceptance, stale movement text and scene-matched Town buildings remain unfinished; this is not release certification.",
   "taskId": "10236",
-  "updatedAt": "2026-09-06T21:42:03Z",
+  "updatedAt": "2026-09-06T22:25:40Z",
   "validation": {
     "id": "quality-generated-ai-army-capacity-20260906",
     "sliceId": "quality-generated-full-match-playthrough-20260906",
