@@ -2599,7 +2599,7 @@ static func tile_has_route_interaction(session: SessionStateStoreScript.SessionD
 		if not (node is Dictionary):
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-		if not NativeTransit.is_native(node) and not bool(site.get("persistent_control", false)) and bool(node.get("collected", false)):
+		if not resource_node_is_present(node, site):
 			continue
 		return true
 	var artifact_nodes = session.overworld.get("artifact_nodes", [])
@@ -3164,6 +3164,10 @@ static func _map_object_blocks_body_tiles(map_object: Dictionary) -> bool:
 	return not bool(map_object.get("passable", true))
 
 static func _resource_node_blocks_body_tiles(node: Dictionary, map_object: Dictionary) -> bool:
+	# Source masks describe the original placement, not its consumed lifetime.
+	# Keep them immutable while removing occupancy with the vanished pickup.
+	if not resource_node_is_present(node):
+		return false
 	if node.get("package_block_tiles", null) is Array:
 		return not _world_tiles_from_payload_array(node.get("package_block_tiles", [])).is_empty()
 	if map_object.is_empty():
@@ -6340,7 +6344,7 @@ static func _find_context_resource_node(session: SessionStateStoreScript.Session
 		return {"index": -1, "node": {}}
 	var node = node_result.get("node", {})
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-	if NativeTransit.is_native(node) or _resource_site_is_persistent(site) or _resource_site_is_repeatable(site) or not bool(node.get("collected", false)):
+	if resource_node_is_present(node, site):
 		return node_result
 	return {"index": -1, "node": {}}
 
@@ -6465,6 +6469,15 @@ static func _find_artifact_node_by_descriptor(session: SessionStateStoreScript.S
 
 static func _resource_site_is_persistent(site: Dictionary) -> bool:
 	return bool(site.get("persistent_control", false))
+
+static func resource_node_is_present(node: Dictionary, site: Dictionary = {}) -> bool:
+	# Shared by collision, route/context queries and the map renderer. Ownership
+	# and cooldowns do not consume a permanent service or a native passage.
+	if not bool(node.get("collected", false)) or NativeTransit.is_native(node):
+		return true
+	if site.is_empty():
+		site = ContentService.get_resource_site(String(node.get("site_id", "")))
+	return _resource_site_is_persistent(site) or _resource_site_is_repeatable(site)
 
 static func _resource_node_matches_controller(node: Dictionary, controller_id: String) -> bool:
 	return PlayerRules.resource_controller_id(node) == controller_id

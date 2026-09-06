@@ -30,6 +30,14 @@ First reproduce and identify exact runtime owners for blockers. Add a failing
 focused regression before each correction, then replay the affected path. A
 driver correction alone is support work, not a gameplay fix or goal completion.
 
+The reproduced Medium seed-10 (50,48) stall requires a consumed-site lifecycle
+correction: a collected cache no longer rendered or actionable must not leave an
+invisible collision body. Use the existing site presence rules for collision,
+rendering and interaction; retain persistent/repeatable sites and native transit.
+Do not edit recovered package masks or remove overlapping scenery/other actors.
+Prove live collection invalidates cached occupancy, backtracking and save/resume
+work, rewards cannot repeat, and authored permanent body rules remain intact.
+
 Capture full action latency including rules/AI, autosave, refresh, animations and
 input re-enablement. Use the same seed, commands, conditions and instrumentation
 for comparisons; preserve complete state and decision/RNG equivalence for

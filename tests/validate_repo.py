@@ -57712,7 +57712,9 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
     context_lookup_start = overworld_rules_text.find("static func _find_context_resource_node")
     context_lookup_end = overworld_rules_text.find("\nstatic func ", context_lookup_start + 1)
     context_lookup = overworld_rules_text[context_lookup_start:context_lookup_end]
-    ensure('_resource_site_is_persistent(site) or _resource_site_is_repeatable(site) or not bool(node.get("collected", false))' in context_lookup, errors, "Active context must retain collected repeatable services for exact cooldown and revisit authority")
+    presence_block = gdscript_function_block(overworld_rules_text, "resource_node_is_present")
+    ensure('not bool(node.get("collected", false)) or NativeTransit.is_native(node)' in presence_block and '_resource_site_is_persistent(site) or _resource_site_is_repeatable(site)' in presence_block, errors, "Shared site presence must retain uncollected, persistent, repeatable and native-transit placements")
+    ensure('resource_node_is_present(node, site)' in context_lookup, errors, "Active context must use shared presence for exact cooldown and revisit authority")
     ensure("session.overworld[" not in context_lookup and "node[" not in context_lookup, errors, "Repeatable context retention must not mutate node or session authority")
 
     for required_token in (
@@ -57784,8 +57786,15 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
     ensure(dynamic_draw_block.count("_draw_guarded_site_presentation(board_rect)") == 1, errors, "Guarded-site context must draw exactly once on the dynamic layer")
     ensure("_draw_guarded_site_presentation" not in gdscript_function_block(map_view_text, "_draw_session_static_layer") and "_draw_guarded_site_presentation" not in gdscript_function_block(map_view_text, "_draw_state_layer") and "_draw_guarded_site_presentation" not in gdscript_function_block(map_view_text, "_draw_frame_layer"), errors, "Guarded-site context must not draw on static, state, or frame layers")
     index_block = gdscript_function_block(map_view_text, "_rebuild_static_object_indexes")
-    ensure('var repeatable := bool(site.get("repeatable", false)) or String(site.get("family", "")) == "repeatable_service"' in index_block, errors, "Map object indexing must derive the exact authored repeatable service contract")
-    ensure('bool(site.get("persistent_control", false)) or repeatable or not bool(node.get("collected", false))' in index_block, errors, "Collected repeatable services must remain live while one-time collected resources stay excluded")
+    repeatable_block = gdscript_function_block(overworld_rules_text, "_resource_site_is_repeatable")
+    ensure('bool(site.get("repeatable", false)) or String(site.get("family", "")) == "repeatable_service"' in repeatable_block, errors, "Shared site presence must derive the exact authored repeatable service contract")
+    ensure('OverworldRulesScript.resource_node_is_present(node, site)' in index_block, errors, "Map object indexing must retain repeatable services and exclude consumed pickups through shared presence")
+    for owner, name, call in (
+        (overworld_rules_text, '_resource_node_blocks_body_tiles', 'resource_node_is_present(node)'),
+        (overworld_rules_text, 'tile_has_route_interaction', 'resource_node_is_present(node, site)'),
+        (shell_text, '_active_resource_nodes', 'OverworldRules.resource_node_is_present(node, site)'),
+    ):
+        ensure(call in gdscript_function_block(owner, name), errors, f"{name} must share site presence without retaining invisible consumed bodies or losing repeatable actions")
 
     for required_token in (
         'const REPORT_ID := "OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT"',

@@ -10,6 +10,7 @@ from pathlib import Path
 import resource
 import signal
 import subprocess
+import sys
 import tempfile
 from time import monotonic
 
@@ -160,7 +161,11 @@ func town_orders() -> void:
 		for attempt in range(12 if lane == "recruit" else 1):
 			var catalog: Dictionary = scene.validation_action_catalog()
 			var selected := ""
-			for action in catalog.get(lane, []):
+			var choices: Array = catalog.get(lane, []).duplicate()
+			if lane == "build":
+				# Invest in ordinary recruitment access before optional services.
+				choices.sort_custom(func(a,b):return String(a.id) < String(b.id) if build_priority(a) == build_priority(b) else build_priority(a) < build_priority(b))
+			for action in choices:
 				if not bool(action.get("disabled",true)) and not used.has(String(action.id)):
 					selected = String(action.id)
 					break
@@ -179,8 +184,41 @@ func town_orders() -> void:
 	await resolve_routes()
 	record("town_exit",started,{"ok":leave.get("ok",false)})
 
+func build_priority(action: Dictionary) -> int:
+	var id := String(action.get("id","")).trim_prefix("build:")
+	var building: Dictionary = ContentService.get_building(id)
+	if String(building.get("unlock_unit_id","")) != "":
+		return 0
+	if id == "building_market_square":
+		return 1
+	return 2
+
 func known(row: Dictionary) -> bool:
-	return Levels.on_level(row,Levels.hero_level(session)) and OverworldRules.is_tile_visible(session,int(row.get("x",-1)),int(row.get("y",-1)))
+	if not Levels.on_level(row,Levels.hero_level(session)):
+		return false
+	if OverworldRules.is_tile_visible(session,int(row.get("x",-1)),int(row.get("y",-1))):
+		return true
+	if row.has("encounter_id"):
+		return OverworldRules._guard_engagement_world_tiles(row).any(func(tile):return OverworldRules.is_tile_visible(session,tile.x,tile.y))
+	return false
+
+func guard_approach(encounter: Dictionary) -> Vector2i:
+	# The planner stops on the first combat square; the center of a 3x3 guard
+	# zone is not directly routable through its other interaction squares.
+	var origin := OverworldRules.hero_position(session)
+	var best := Vector2i(-1,-1)
+	var best_distance := 1000000
+	var tiles: Array = OverworldRules._guard_engagement_world_tiles(encounter)
+	if tiles.is_empty():
+		tiles = [Vector2i(int(encounter.x),int(encounter.y))]
+	for tile in tiles:
+		if not OverworldRules.is_tile_visible(session,tile.x,tile.y):
+			continue
+		var path: Array = get_tree().current_scene._build_path(origin,tile)
+		if not path.is_empty() and path.size() < best_distance and path.all(func(point):return OverworldRules.is_tile_visible(session,point.x,point.y)):
+			best = tile
+			best_distance = path.size()
+	return best
 
 func choose_target() -> Dictionary:
 	var scene = get_tree().current_scene
@@ -196,6 +234,15 @@ func choose_target() -> Dictionary:
 			# Native town x/y is the art anchor, not its legal visit square.
 			var entry: Dictionary = target.get("visit_tile", target)
 			var tile := Vector2i(int(entry.x),int(entry.y))
+			if kind == "encounter":
+				tile = guard_approach(target)
+				if tile.x < 0:
+					continue
+			# A resource/portal can occupy a visible guard's engagement square.
+			# Apply the same risk check as for clicking the guard itself.
+			var guard: Dictionary = OverworldRules.guard_engagement_encounter_at_tile(session,tile.x,tile.y)
+			if not guard.is_empty() and known(guard) and power(OverworldRules._encounter_army_payload(guard).get("stacks",[])) > player_power() * 0.70:
+				continue
 			var distance := origin.distance_to(tile)
 			var score := distance
 			if kind == "encounter":
@@ -257,19 +304,20 @@ func choose_target() -> Dictionary:
 		var path: Array = scene._build_path(origin,target.tile)
 		if not path.is_empty() and path.all(func(tile):return OverworldRules.is_tile_visible(session,tile.x,tile.y)):
 			return target
-	# The live planner stops at interactions, including already-owned mines.
-	# Such a site may be the legal stepping stone out of a narrow pocket; it
-	# must remain navigable even though there is nothing left to collect there.
+	# The live planner stops at interactions, including owned mines and signs.
+	# Backtrack through any reachable visited entrance, not only adjacent ones:
+	# a depleted pocket can have its exit several open tiles away.
 	var waypoints := []
 	for node in session.overworld.get("resource_nodes",[]):
-		if not known(node) or String(node.get("collected_by_faction_id","")) != "player":
+		if not known(node) or (String(node.get("collected_by_faction_id","")) != "player" and not read_signs.has(String(node.get("placement_id","")))):
 			continue
 		var entry: Dictionary = node.get("visit_tile",node)
 		var tile := Vector2i(int(entry.x),int(entry.y))
 		var id := "waypoint:" + String(node.get("placement_id",""))
-		if tile == origin or origin.distance_to(tile) > 1.5 or int(failed_targets.get(id,0)) >= session.day:
+		if tile == origin or int(failed_targets.get(id,0)) >= session.day:
 			continue
-		if not scene._build_path(origin,tile).is_empty():
+		var path: Array = scene._build_path(origin,tile)
+		if not path.is_empty() and path.all(func(point):return OverworldRules.is_tile_visible(session,point.x,point.y)):
 			waypoints.append({"id":id,"kind":"waypoint","tile":tile,"score":int(waypoint_visits.get(id,0))})
 	waypoints.sort_custom(func(a,b):return a.id < b.id if a.score == b.score else a.score < b.score)
 	if not waypoints.is_empty():
@@ -335,22 +383,45 @@ func run_match() -> void:
 	get_tree().current_scene = null
 	out = OS.get_environment("HEROES_FULL_MATCH_OUTPUT")
 	cfg = JSON.parse_string(OS.get_environment("HEROES_FULL_MATCH_CONFIG"))
-	action_file = FileAccess.open(out.path_join("actions.jsonl"),FileAccess.WRITE)
+	var action_path := out.path_join("actions.jsonl")
+	action_file = FileAccess.open(action_path,FileAccess.READ_WRITE if FileAccess.file_exists(action_path) else FileAccess.WRITE)
+	action_file.seek_end()
 	SettingsService.set_presentation_mode("windowed")
 	SettingsService.set_presentation_resolution(OS.get_environment("HEROES_FULL_MATCH_RESOLUTION"))
 	var started := Time.get_ticks_usec()
-	var config: Dictionary = Setup.build_random_map_player_config(cfg.seed,"translated_rmg_template_042_v1","translated_rmg_profile_042_v1",cfg.players,"land",false,cfg.size,Setup.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,cfg.faction,cfg.hero)
-	var setup: Dictionary = Setup.build_random_map_skirmish_setup_with_retry(config,"normal",Setup.RANDOM_MAP_PLAYER_RETRY_POLICY)
-	if not bool(setup.get("ok",false)):
-		print("GENERATED_FULL_MATCH_REPORT " + JSON.stringify({"ok":false,"failures":["setup failed"],"setup":setup}))
-		get_tree().quit(1)
-		return
-	session = SessionState.set_active_session(Setup.start_random_map_skirmish_session_from_setup(setup))
-	AppRouter.go_to_overworld()
-	await resolve_routes()
-	record("setup",started,{"seed":cfg.seed,"size":cfg.size,"players":cfg.players})
-	await screenshot("opening")
-	await checkpoint("opening",1)
+	if cfg.has("resume"):
+		var resume: Dictionary = cfg.resume
+		var payload: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(out.path_join("resume.json")))
+		session = SessionState.restore_session(payload)
+		for key in ["saved_at_unix","save_slot_type","saved_from_game_state","saved_from_scenario_status","saved_from_launch_mode"]:
+			payload.erase(key)
+		if session == null or JSON.parse_string(JSON.stringify(session.to_dict())) != payload:
+			print("GENERATED_FULL_MATCH_REPORT "+JSON.stringify({"ok":false,"failures":["resume checkpoint gameplay state mismatch"]}))
+			get_tree().quit(1)
+			return
+		counts = resume.counts
+		checkpoint_labels = resume.checkpoint_labels
+		checkpoint_count = checkpoint_labels.size()
+		serial = int(resume.serial)
+		last_progress_day = int(resume.last_progress_day)
+		read_signs = resume.read_signs
+		last_town_day = resume.last_town_day
+		AppRouter.resume_active_session()
+		await resolve_routes()
+		record("resume_segment",started,{"source":resume.source,"save_sha256":resume.save_sha256})
+	else:
+		var config: Dictionary = Setup.build_random_map_player_config(cfg.seed,"translated_rmg_template_042_v1","translated_rmg_profile_042_v1",cfg.players,"land",false,cfg.size,Setup.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,cfg.faction,cfg.hero)
+		var setup: Dictionary = Setup.build_random_map_skirmish_setup_with_retry(config,"normal",Setup.RANDOM_MAP_PLAYER_RETRY_POLICY)
+		if not bool(setup.get("ok",false)):
+			print("GENERATED_FULL_MATCH_REPORT " + JSON.stringify({"ok":false,"failures":["setup failed"],"setup":setup}))
+			get_tree().quit(1)
+			return
+		session = SessionState.set_active_session(Setup.start_random_map_skirmish_session_from_setup(setup))
+		AppRouter.go_to_overworld()
+		await resolve_routes()
+		record("setup",started,{"seed":cfg.seed,"size":cfg.size,"players":cfg.players,"retry_status":setup.get("retry_status",{}),"retry_attempts":setup.get("retry_attempts",[])})
+		await screenshot("opening")
+		await checkpoint("opening",1)
 	while session.scenario_status == "in_progress" and failures.is_empty() and session.day <= int(cfg.max_days):
 		var day_start: int = session.day
 		for order in range(24):
@@ -421,6 +492,55 @@ def acceptance_failures(report: dict) -> list[str]:
     return failures
 
 
+def resume_prefix(source: Path, case: dict, autosave: bool = False) -> tuple[bytes, list[dict], dict]:
+    """Continue a recorded real checkpoint, never splice in synthetic progress."""
+    saved = (source/'data/godot/app_userdata/heroes-like/saves'/('autosave.json' if autosave else 'slot2.json')).read_bytes()
+    state = json.loads(saved)
+    rows = [json.loads(line) for line in (source/'actions.jsonl').read_text().splitlines()]
+    setup = next(row['result'] for row in rows if row['kind'] == 'setup')
+    if any(setup.get(key) != case[key] for key in ['seed', 'size', 'players']):
+        raise ValueError('resume setup does not match selected case')
+    if state.get('difficulty') != 'normal' or case.get('hero') and state.get('hero_id') != case['hero']:
+        raise ValueError('resume difficulty or hero does not match selected case')
+    players = [p for p in state['overworld'].get('players', []) if p.get('human')]
+    if len(players) != 1 or players[0].get('faction_id') != case['faction']:
+        raise ValueError('resume player faction does not match selected case')
+    if autosave:
+        matches = [i for i, row in enumerate(rows) if row['kind'] == 'end_turn' and row['result'].get('ok') and row['state']['day'] == state['day'] and row['state']['status'] == state['scenario_status'] and row['state']['resources'] == state['overworld']['resources'] and row['state']['hero']['x'] == state['overworld']['hero_position']['x'] and row['state']['hero']['y'] == state['overworld']['hero_position']['y']]
+    else:
+        matches = [i for i, row in enumerate(rows) if row['kind'] == 'save_resume' and row['result'].get('label') == 'mid_match' and row['state']['day'] == state['day'] and row['result'].get('complete_state_equal')]
+    if not matches or state['scenario_status'] != 'in_progress':
+        raise ValueError('no recorded exact nonterminal checkpoint for this save')
+    rows = rows[:matches[-1]+1]
+    boundary = f'"serial":{rows[-1]["serial"]}'
+    prefix_log = []
+    for line in (source/'runtime.log').read_text().splitlines():
+        prefix_log.append(line)
+        if line.startswith('GENERATED_FULL_MATCH_ACTION ') and boundary in line.replace(' ', ''):
+            break
+    else:
+        raise ValueError('checkpoint lacks a matching runtime log record')
+    if any(line.startswith(('ERROR:', 'SCRIPT ERROR:')) or 'leaked' in line for line in prefix_log):
+        raise ValueError('resume prefix contains runtime errors')
+    counts, labels, towns, signs = {}, [], {}, {}
+    nodes = {n['placement_id']: n for n in state['overworld']['resource_nodes']}
+    sites = {n['id']: n for n in json.loads((ROOT/'content/resource_sites.json').read_text())['items']}
+    for row in rows:
+        kind, result = row['kind'], row['result']
+        counts[kind] = counts.get(kind, 0)+1
+        if kind == 'save_resume':
+            labels.append(result['label'])
+        if kind == 'target_town' and result.get('routed'):
+            towns[result['id']] = row['state']['day']
+        if kind == 'target_resource':
+            node = nodes.get(result.get('id'), {})
+            site = sites.get(node.get('site_id'), {})
+            if site.get('batch003_role') == 'sign_waypoint' or site.get('batch004_role') == 'route_waypoint':
+                signs[result['id']] = True
+    metadata = {'source':source.name, 'source_checkpoint':'end_turn_autosave' if autosave else 'mid_match_save', 'save_sha256':hashlib.sha256(saved).hexdigest(), 'counts':counts, 'checkpoint_labels':labels, 'serial':rows[-1]['serial'], 'last_progress_day':state['day'], 'last_town_day':towns, 'read_signs':signs}
+    return saved, rows, metadata
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--case', choices=CASES, required=True)
@@ -430,12 +550,33 @@ def main() -> int:
     parser.add_argument('--rendered', action='store_true')
     parser.add_argument('--resolution', choices=['1280x720', '1920x1080'], default='1280x720')
     parser.add_argument('--accessibility', choices=['auto', 'disabled'], default='disabled')
+    parser.add_argument('--resume-run', help='Continue the latest recorded mid-match save from an existing output label')
+    parser.add_argument('--resume-autosave', action='store_true', help='Resume an exact recorded End Turn autosave instead of the selected mid-match slot')
+    parser.add_argument('--background', action='store_true', help='Launch a supervised test runner outside the execution tool session lifetime; prints its PID and output location')
     args = parser.parse_args()
     if not args.label or any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789_-' for c in args.label):
         parser.error('label must be a fresh lowercase slug')
+    if args.resume_autosave and not args.resume_run:
+        parser.error('--resume-autosave requires --resume-run')
     out = OUTPUT / args.label
+    if args.background:
+        if out.exists():
+            parser.error('output label already exists')
+        OUTPUT.mkdir(parents=True, exist_ok=True)
+        launcher_log = OUTPUT/(args.label+'.launcher.log')
+        with launcher_log.open('x') as log:
+            process = subprocess.Popen([sys.executable,'-B',str(Path(__file__).resolve())]+[arg for arg in sys.argv[1:] if arg != '--background'],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+        print(json.dumps({'pid':process.pid,'output':str(out),'launcher_log':str(launcher_log)}),flush=True)
+        return 0
     out.mkdir(parents=True, exist_ok=False)
     cfg = dict(CASES[args.case], max_days=args.max_days)
+    if args.resume_run:
+        if any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789_-' for c in args.resume_run):
+            parser.error('resume label must be a lowercase slug')
+        saved, prefix, metadata = resume_prefix(OUTPUT/args.resume_run, cfg, args.resume_autosave)
+        (out/'resume.json').write_bytes(saved)
+        (out/'actions.jsonl').write_text(''.join(json.dumps(row)+'\n' for row in prefix))
+        cfg['resume'] = metadata
     env = dict(os.environ, XDG_DATA_HOME=str(out/'data'), HEROES_FULL_MATCH_OUTPUT=str(out), HEROES_FULL_MATCH_CONFIG=json.dumps(cfg), HEROES_FULL_MATCH_RESOLUTION=args.resolution, HEROES_PROFILE_LOG='1', HEROES_STRATEGIC_AI_PROFILE='1')
     started = monotonic()
     with tempfile.TemporaryDirectory(prefix='driver-', dir=OUTPUT) as temporary:
