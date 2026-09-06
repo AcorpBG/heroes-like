@@ -68669,7 +68669,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             < xlarge_dwelling_block.find('"subtype": 50, "placement_id": "native_h3maped_33610c0a_object_2661"')
             < xlarge_dwelling_block.find('if int(object.get("h3m_type_id", -1)) != 17:')
             < xlarge_dwelling_block.find('if subtype in [30, 29, 15, 6, 68, 26, 40, 50]:')
-            < xlarge_dwelling_block.find('elif String(object.get("kind", "")) != "h3m_object"')
+            < xlarge_dwelling_block.find('elif subtype == 45:')
             < xlarge_dwelling_block.find('service.generate_random_map(_config("homm3_extra_large", 144, 2, "normal_water", "77"),')
             < xlarge_dwelling_block.find('repeat_type17_authority == type17_authority')
             < xlarge_dwelling_block.find('service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})')
@@ -68677,8 +68677,20 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             < xlarge_dwelling_block.find('and ordered_subtypes == [30, 29, 15, 15, 6, 45, 68, 26, 40, 45, 68, 50]')
             < xlarge_dwelling_block.find('and bool(interaction.get("ok", false))'),
             errors,
-            "XLarge Lizard/Elf/Unicorn/Imp/Centaur/Harpy/Pit/Pegasus owner must preserve exact ordered rows/masks, keep only subtype 45 raw, compare a fresh repeat, adopt, and exercise exactly both subtype-15 and subtype-68 rows plus subtypes 30, 29, 6, 26, 40, and 50",
+            "XLarge dwelling owner must preserve exact ordered rows/masks, validate subtype 45 through the authored pool, compare a fresh repeat, adopt, and exercise the ten exact-catalog dwellings without mutating unrelated pool dwellings",
         )
+        for required_token in (
+            '"object_id": "object_noonshard_prism_aviary"',
+            '"object_id": "object_last_memory_mooring"',
+            '"selection_token": "c43f0d7b"',
+            '"selection_token": "32e87d71"',
+            '"authored_pool_proxy_17_45_neutral_dwelling"',
+            'object.get("package_body_tiles", []) != expected.get("body_tiles", [])',
+            'object.get("package_visit_tiles", []) != [{"x": expected.x, "y": expected.y, "level": expected.level}]',
+            'not bool(object.get("native_authored_pool_source_placement_unchanged", false))',
+            'not bool(object.get("native_authored_pool_final_payload_unchanged", false))',
+        ):
+            ensure(required_token in xlarge_dwelling_block, errors, f"XLarge authored-pool dwelling regression must retain {required_token}")
         for required_token in (
             'object.get("body_tiles", []) != expected.get("body_tiles", [])',
             'object.get("action_tiles", []) != []',

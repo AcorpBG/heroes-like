@@ -1167,11 +1167,11 @@ func _validate_xlarge_creature_generator_projection(service: Variant, generated:
 		{"subtype": 15, "placement_id": "native_h3maped_33610c0a_object_2015", "x": 5, "y": 93, "level": 0, "body_tiles": [{"x": 4, "y": 93, "level": 0}, {"x": 5, "y": 93, "level": 0}]},
 		{"subtype": 15, "placement_id": "native_h3maped_33610c0a_object_2026", "x": 20, "y": 94, "level": 0, "body_tiles": [{"x": 19, "y": 94, "level": 0}, {"x": 20, "y": 94, "level": 0}]},
 		{"subtype": 6, "placement_id": "native_h3maped_33610c0a_object_2085", "x": 118, "y": 86, "level": 0, "body_tiles": [{"x": 117, "y": 86, "level": 0}, {"x": 118, "y": 86, "level": 0}]},
-		{"subtype": 45, "placement_id": "native_h3maped_33610c0a_object_2124", "x": 118, "y": 106, "level": 0, "body_tiles": [{"x": 117, "y": 106, "level": 0}, {"x": 118, "y": 106, "level": 0}]},
+		{"subtype": 45, "placement_id": "native_h3maped_33610c0a_object_2124", "x": 118, "y": 106, "level": 0, "body_tiles": [{"x": 117, "y": 106, "level": 0}, {"x": 118, "y": 106, "level": 0}], "object_id": "object_noonshard_prism_aviary", "site_id": "site_noonshard_prism_aviary", "selection_token": "c43f0d7b"},
 		{"subtype": 68, "placement_id": "native_h3maped_33610c0a_object_2169", "x": 125, "y": 119, "level": 0, "body_tiles": [{"x": 124, "y": 119, "level": 0}, {"x": 125, "y": 119, "level": 0}]},
 		{"subtype": 26, "placement_id": "native_h3maped_33610c0a_object_2206", "x": 86, "y": 63, "level": 1, "body_tiles": [{"x": 85, "y": 63, "level": 1}, {"x": 86, "y": 63, "level": 1}]},
 		{"subtype": 40, "placement_id": "native_h3maped_33610c0a_object_2458", "x": 128, "y": 28, "level": 0, "body_tiles": [{"x": 127, "y": 28, "level": 0}, {"x": 128, "y": 28, "level": 0}]},
-		{"subtype": 45, "placement_id": "native_h3maped_33610c0a_object_2614", "x": 16, "y": 42, "level": 0, "body_tiles": [{"x": 15, "y": 42, "level": 0}, {"x": 16, "y": 42, "level": 0}]},
+		{"subtype": 45, "placement_id": "native_h3maped_33610c0a_object_2614", "x": 16, "y": 42, "level": 0, "body_tiles": [{"x": 15, "y": 42, "level": 0}, {"x": 16, "y": 42, "level": 0}], "object_id": "object_last_memory_mooring", "site_id": "site_last_memory_mooring", "selection_token": "32e87d71"},
 		{"subtype": 68, "placement_id": "native_h3maped_33610c0a_object_2626", "x": 13, "y": 51, "level": 0, "body_tiles": [{"x": 12, "y": 51, "level": 0}, {"x": 13, "y": 51, "level": 0}]},
 		{"subtype": 50, "placement_id": "native_h3maped_33610c0a_object_2661", "x": 23, "y": 52, "level": 0, "body_tiles": [{"x": 22, "y": 52, "level": 0}, {"x": 23, "y": 52, "level": 0}]},
 	]
@@ -1209,13 +1209,24 @@ func _validate_xlarge_creature_generator_projection(service: Variant, generated:
 					or String(object.get("homm3_re_reward_object_catalog_id", "")) != String(expected_dwelling.get("catalog_id", "")) \
 					or not _live_proxy_provenance_exact(object):
 				rows_exact = false
-		elif String(object.get("kind", "")) != "h3m_object" \
-				or String(object.get("object_id", "")) != "" \
-				or String(object.get("native_proxy_object_id", "")) != "" \
-				or String(object.get("site_id", "")) != "" \
-				or int(object.get("homm3_re_object_source_row", -1)) != -1 \
-				or String(object.get("homm3_re_object_def_ref", "")) != "" \
-				or String(object.get("homm3_re_reward_object_catalog_id", "")) != "":
+		elif subtype == 45:
+			# This formerly raw source type now selects from the authored pool.
+			# Keep its exact source position/masks above and distinct stable ids.
+			if String(object.get("kind", "")) != "neutral_dwelling" \
+					or String(object.get("object_id", "")) != String(expected.get("object_id", "")) \
+					or String(object.get("native_proxy_object_id", "")) != String(expected.get("object_id", "")) \
+					or String(object.get("site_id", "")) != String(expected.get("site_id", "")) \
+					or String(object.get("native_authored_pool_id", "")) != "neutral_dwelling" \
+					or String(object.get("native_authored_pool_selection_mode", "")) != "stable_source_ordinal_pool_index" \
+					or String(object.get("native_authored_pool_selection_token", "")) != String(expected.get("selection_token", "")) \
+					or String(object.get("homm3_re_reward_object_catalog_id", "")) != "authored_pool_proxy_17_45_neutral_dwelling" \
+					or String(object.get("homm3_re_object_def_ref", "")) != "AVGtree0.def" \
+					or not bool(object.get("native_authored_pool_source_placement_unchanged", false)) \
+					or not bool(object.get("native_authored_pool_final_payload_unchanged", false)) \
+					or object.get("package_body_tiles", []) != expected.get("body_tiles", []) \
+					or object.get("package_visit_tiles", []) != [{"x": expected.x, "y": expected.y, "level": expected.level}]:
+				rows_exact = false
+		else:
 			rows_exact = false
 	var repeat: Dictionary = service.generate_random_map(_config("homm3_extra_large", 144, 2, "normal_water", "77"), {"startup_path": "xlarge_creature_generator_projection_repeat"})
 	var repeat_map: Variant = repeat.get("map_document", null)
@@ -1276,6 +1287,11 @@ func _validate_creature_generator_interaction(adoption: Dictionary, expected_sub
 		if int(source.get("h3m_type_id", -1)) != 17:
 			continue
 		var subtype := int(source.get("h3m_subtype", -1))
+		# This helper claims the enumerated exact-catalog dwellings only.
+		# Authored-pool subtype 45 is checked by the projection/pool reports;
+		# it must remain untouched by these ten claims (unrelated_nodes_exact).
+		if subtype == 45 and String(source.get("native_authored_pool_id", "")) == "neutral_dwelling" and not expected_subtypes.has(subtype):
+			continue
 		var expected: Dictionary = CREATURE_GENERATOR_ROWS.get(subtype, {}) if CREATURE_GENERATOR_ROWS.get(subtype, {}) is Dictionary else {}
 		if expected.is_empty():
 			return {"ok": false, "reason": "unexpected_creature_generator_subtype", "subtype": subtype}

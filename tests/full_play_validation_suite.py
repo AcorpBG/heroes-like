@@ -39,6 +39,26 @@ SCENES = [
     "town_screen_layout_and_dialog_controls_report",
 ]
 RENDERED_SCENES = ["active_play_keyboard_focus_smoke", "custom_mouse_cursor_runtime_report"]
+RMG_SCENES = [
+    "native_rmg_end_to_end_runtime_boundary_report",
+    "native_random_map_homm3_re_object_table_proxy_report",
+    "random_map_object_pool_value_weighting_report",
+    "overworld_map_object_sprite_asset_report",
+    "overworld_decorative_sprite_asset_report",
+    "battle_quick_resolve_runtime_report",
+    "post_battle_report_runtime_report",
+    "battle_deterministic_rng_state_report",
+    "overworld_gameplay_movement_input_ownership_regression",
+    "overworld_full_route_movement_regression",
+    "fog_of_war_homm_style_regression",
+    "save_transactional_commit_regression",
+    "save_summary_deferred_payload_report",
+    "ai_known_world_memory_report",
+    "ai_hero_task_live_turn_execution_report",
+    "ai_hero_task_state_normalizer_preservation_report",
+    "ai_raid_movement_path_plan_reuse_regression",
+    "ai_raid_assault_grouping_report",
+]
 # These existing tests deliberately make the authoritative writer fail and
 # assert rollback/retry/route safety. Only their exact domain issue is expected;
 # a failed test marker, any script error or any other native error still fails.
@@ -54,17 +74,21 @@ EXPECTED_INJECTED_ISSUES = {
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--label", required=True)
-    parser.add_argument("--only", nargs="+", choices=SCENES + RENDERED_SCENES)
+    parser.add_argument("--only", nargs="+", choices=SCENES + RENDERED_SCENES + RMG_SCENES)
+    parser.add_argument("--rmg", action="store_true", help="Run the integrated native/adoption/content/AI correction regressions.")
     parser.add_argument("--rendered", action="store_true")
     parser.add_argument("--accessibility", choices=["auto", "disabled"], default="auto", help="Record explicitly if isolating an engine AT-SPI backend failure; production defaults never change.")
     parser.add_argument("--timeout", type=int, default=900, help="Per-case seconds; full catalog/scene matrices exceed four minutes.")
     args = parser.parse_args()
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789_-" for c in args.label):
         parser.error("invalid label")
+    selected = args.only or (RMG_SCENES if args.rmg else RENDERED_SCENES if args.rendered else SCENES)
+    for name in selected:
+        if not all((ROOT / "tests" / (name + suffix)).is_file() for suffix in (".gd", ".tscn")):
+            parser.error("missing runtime test source or scene: " + name)
     out = OUTPUT / args.label
     out.mkdir(parents=True, exist_ok=False)
     rows = []
-    selected = args.only or (RENDERED_SCENES if args.rendered else SCENES)
     for name in selected:
         source = (ROOT / "tests" / (name + ".gd")).read_text()
         match = re.search(r'const REPORT_ID\s*:?=\s*"([^"]+)"', source)

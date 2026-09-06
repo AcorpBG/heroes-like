@@ -46,9 +46,13 @@ adjacency are implemented with focused evidence in
 `docs/rmg-native-transit-correction-report.md`; its final endpoint/journey,
 regression and both-platform package checks pass. The expanded water-correction
 matrix passes 85 exact entrance starts and 36 supported live cases; both platform
-packages pass. The integrated regression child remains unfinished. The legacy Godot boundary report now passes
-the corrected authored-pool bank and type-107 assertions, then fails a later
-stale XLarge subtype-45 dwelling expectation. The full report is not passing.
+packages pass. The integrated regression child is completed in
+`docs/rmg-audit-integrated-correction-report.md`: the full native boundary now
+passes current bank/type-107/subtype-45 authored-pool expectations with exact
+source masks preserved. All 18 reports selected by
+`python3 tests/full_play_validation_suite.py --rmg --label <fresh> --accessibility disabled`
+pass, alongside 26 Python unit tests and fresh player/transit/save/package checks.
+This does not certify arbitrary configurations or every object's full gameplay.
 
 Generation remains exposed through `MapPackageService`; this audit did not
 change support gates or generation rules. Passing config normalization, native

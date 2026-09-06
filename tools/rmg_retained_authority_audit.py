@@ -56,7 +56,7 @@ def compare_bytes(native, owner):
     return {"exact": native == owner, "native_bytes": len(native), "owner_bytes": len(owner), "first_mismatch": mismatch, "native_sha256": hashlib.sha256(native).hexdigest(), "owner_sha256": hashlib.sha256(owner).hexdigest()}
 
 
-def compare_private_grid(native_log, owner_ledger):
+def compare_private_grid(native_log, owner_ledger, joins=None):
     """Join explicit caller PCs; merge overlapping dumps without losing cell 0."""
     phases = {}
     for line in native_log.read_text().splitlines():
@@ -68,15 +68,25 @@ def compare_private_grid(native_log, owner_ledger):
                 raise ValueError("multiple invocations need an explicit call-order join")
             cells[index] = fields
     owners = json.loads(owner_ledger.read_text())
-    joins = {"0x004a8c25": ("after_0x4a8260_0x4a8c25", "ebx"), "0x004a8c2c": ("after_0x4a4c8e_0x4a8c2c", "ebx"), "0x0049eb8d": ("after_0x49a1ef_0x4ac83d", "ecx")}
+    explicit_joins = joins is not None
+    if joins is None:
+        joins = {"0x004a8c25": ("after_0x4a8260_0x4a8c25", "ebx"), "0x004a8c2c": ("after_0x4a4c8e_0x4a8c2c", "ebx"), "0x0049eb8d": ("after_0x49a1ef_0x4ac83d", "ecx")}
     rows = []
+    seen = set()
     for event in owners["events"]:
+        if explicit_joins and event["address"] not in joins:
+            continue  # Explicitly scoped grid joins may share a writeout ledger.
+        if event["address"] in seen:
+            raise ValueError("repeated owner checkpoint requires an explicit call-order join")
+        seen.add(event["address"])
         phase, register = joins[event["address"]]
         memory, _, conflicts = build_memory_maps(event["memory_lines"])
         if conflicts:
             raise ValueError(str(conflicts))
         generator = event["registers"][register]
         base, width, height, levels = [memory[generator + offset] for offset in (20, 24, 28, 32)]
+        if base == 0 or min(width, height, levels) <= 0:
+            raise ValueError("owner grid pointer and dimensions must be nonzero")
         cell_count = width * height * levels
         cells = phases[phase]
         if set(cells) != set(range(cell_count)):
@@ -91,6 +101,8 @@ def compare_private_grid(native_log, owner_ledger):
                     mismatch[key] = mismatch.get(key, 0) + 1
                     first.setdefault(key, {"cell": i, "native": native, "owner": owner})
         rows.append({"owner_pc": event["address"], "native_phase": phase, "cells": cell_count, "words_per_cell": 8, "mismatch_counts": mismatch, "first_mismatch": first, "exact": not mismatch})
+    if explicit_joins and seen != set(joins):
+        raise ValueError("requested owner private-state checkpoints missing")
     if not rows:
         raise ValueError("no private-state checkpoints")
     return {"native_log": str(native_log), "owner_ledger": str(owner_ledger), "owner_ui_options": owners.get("ui_options"), "note": "Only +0x10 through +0x2c compared. Pointer/object-vector contents and other phases are not certified. Historical profile joins remain explicit in the audit report.", "checkpoints": rows}
@@ -102,15 +114,30 @@ def main():
     parser.add_argument("--analyze-only", action="store_true")
     parser.add_argument("--private-log", type=Path)
     parser.add_argument("--owner-ledger", type=Path)
+    parser.add_argument("--private-join", action="append", default=[], metavar="PC:PHASE:REGISTER", help="Explicit caller joins; every requested checkpoint must occur exactly once. Other owner events are not certified.")
     args = parser.parse_args()
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789_-" for c in args.label):
         parser.error("unsafe label")
     out = ROOT / ".artifacts/rmg_start_audit_20260905" / args.label
-    if args.private_log or args.owner_ledger:
+    if args.private_log or args.owner_ledger or args.private_join:
         if not args.private_log or not args.owner_ledger:
             parser.error("private comparison requires both --private-log and --owner-ledger")
         out.mkdir(parents=True, exist_ok=False)
-        report = compare_private_grid(args.private_log, args.owner_ledger)
+        joins = None
+        if args.private_join:
+            joins = {}
+            for value in args.private_join:
+                parts = value.split(":")
+                if (
+                    len(parts) != 3
+                    or not re.fullmatch(r"0x[0-9a-f]{8}", parts[0])
+                    or not parts[1]
+                    or parts[2] not in ("eax", "ebx", "ecx", "edx", "esi", "edi", "ebp")
+                    or parts[0] in joins
+                ):
+                    parser.error("private joins require a unique PC:PHASE:REGISTER")
+                joins[parts[0]] = (parts[1], parts[2])
+        report = compare_private_grid(args.private_log, args.owner_ledger, joins)
         (out / "summary.json").write_text(json.dumps(report, indent=2) + "\n")
         print(json.dumps(report))
         return 0 if all(r["exact"] for r in report["checkpoints"]) else 1

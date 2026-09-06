@@ -1,20 +1,47 @@
 """Audit measurement regressions, not assertions that known game defects pass."""
 import importlib.util
+import contextlib
 import copy
+import io
 import json
 from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location("audit", Path(__file__).resolve().parents[1] / "tools/rmg_start_placement_audit.py")
 audit = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(audit)
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 import rmg_retained_authority_audit as retained
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import full_play_validation_suite as suite
 
 
 class StartAuditTests(unittest.TestCase):
+    def test_integrated_runtime_suite_has_existing_unique_scenes(self):
+        self.assertEqual(18, len(suite.RMG_SCENES))
+        self.assertEqual(len(suite.RMG_SCENES), len(set(suite.RMG_SCENES)))
+        for name in suite.RMG_SCENES:
+            for suffix in (".gd", ".tscn"):
+                self.assertTrue((suite.ROOT / "tests" / (name + suffix)).is_file())
+
+    def test_bad_runtime_selection_fails_before_launch_or_artifacts(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with (
+                patch.object(suite, "OUTPUT", Path(directory)),
+                patch.object(suite, "RMG_SCENES", ["missing_rmg_scene"]),
+                patch.object(sys, "argv", ["suite", "--rmg", "--label", "bad"]),
+                patch.object(suite.subprocess, "run") as launch,
+                contextlib.redirect_stderr(io.StringIO()),
+            ):
+                with self.assertRaises(SystemExit) as failure:
+                    suite.main()
+                self.assertEqual(2, failure.exception.code)
+                launch.assert_not_called()
+            self.assertEqual([], list(Path(directory).iterdir()))
+
     def test_diagonal_both_sides_blocked(self):
         self.assertNotIn((1, 1, 0), audit.distances((0, 0, 0), 2, 2, {(1, 0, 0), (0, 1, 0)}))
 
@@ -31,6 +58,10 @@ class StartAuditTests(unittest.TestCase):
         rows = audit.matrix()
         self.assertEqual(len(rows), len({r["id"] for r in rows}))
         self.assertEqual(24, sum(r["id"].startswith("matrix_") for r in rows))
+
+    def test_exact_normal_water_regression_is_in_default_live_matrix(self):
+        row = next(r for r in audit.matrix() if r["id"] == "medium_water_seed10")
+        self.assertEqual(row, audit.case("medium_water_seed10", 72, 1, "normal_water", 10))
 
     def test_failed_case_is_evidence_not_crash(self):
         self.assertFalse(audit.analyze({"id": "unsupported", "ok": False, "error_code": "unsupported"})["ok"])
@@ -79,6 +110,23 @@ class StartAuditTests(unittest.TestCase):
             data = {"events": [{"address": "0x0049eb8d", "registers": {"ecx": 100}, "memory_lines": memory}]}
             ledger.write_text(json.dumps(data))
             self.assertTrue(retained.compare_private_grid(log, ledger)["checkpoints"][0]["exact"])
+            joins = {"0x0049eb8d": ("after_0x49a1ef_0x4ac83d", "ecx")}
+            data["events"].append({"address": "0x004ad3de"})
+            ledger.write_text(json.dumps(data))
+            self.assertTrue(retained.compare_private_grid(log, ledger, joins)["checkpoints"][0]["exact"])
+            with self.assertRaises(ValueError):
+                retained.compare_private_grid(log, ledger, {**joins, "0x004ac778": ("missing", "esi")})
+            data["events"].append(copy.deepcopy(data["events"][0]))
+            ledger.write_text(json.dumps(data))
+            with self.assertRaises(ValueError):
+                retained.compare_private_grid(log, ledger, joins)
+            data["events"] = data["events"][:1]
+            ledger.write_text(json.dumps(data))
+            memory[0]["words"][1] = 0
+            ledger.write_text(json.dumps(data))
+            with self.assertRaises(ValueError):
+                retained.compare_private_grid(log, ledger, joins)
+            memory[0]["words"][1] = 1
             memory[1]["words"].pop()
             ledger.write_text(json.dumps(data))
             with self.assertRaises(KeyError):

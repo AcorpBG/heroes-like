@@ -507,7 +507,7 @@ def case(case_id, size, levels, water, seed, players=2, strength="weak"):
 
 def matrix():
     rows = [case(f"matrix_{size}_{levels}_{water}", size, levels, water, 1) for size in (36, 72, 108, 144) for levels in (1, 2) for water in ("land", "normal_water", "islands")]
-    rows += [case("ordinal95", 72, 1, "land", 165429308, 4), case("medium_seed10", 72, 1, "land", 10), case("small_seed68", 36, 2, "land", 68), case("xlarge_seed77", 144, 2, "normal_water", 77)]
+    rows += [case("ordinal95", 72, 1, "land", 165429308, 4), case("medium_seed10", 72, 1, "land", 10), case("medium_water_seed10", 72, 1, "normal_water", 10), case("small_seed68", 36, 2, "land", 68), case("xlarge_seed77", 144, 2, "normal_water", 77)]
     rows += [case(f"players_{n}", 72, 1, "land", 10, n) for n in (3, 6, 8)]
     rows += [case(f"strength_{s}", 36, 1, "land", 1, 2, s) for s in ("normal", "strong", "random", "impossible")]
     rows.append(case("medium_seed10_repeat", 72, 1, "land", 10))
