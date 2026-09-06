@@ -26,7 +26,7 @@ def legacy_queries() -> str:
         original, replacement = (
             ("{} if include_unscouted else _enemy_target_knowledge_snapshot(session, config, faction_id)", "{}")
             if name == "_target_candidate_descriptors" else
-            ("_enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y, sources)", "_enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y)")
+            ("_enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y, sources, int(path_context.get(\"level\", 0)))", "_enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y, null, int(path_context.get(\"level\", 0)))")
         )
         if body.count(original) != 1:
             raise ValueError(f"{name}: cannot isolate the optimized input for a distinct reference query")

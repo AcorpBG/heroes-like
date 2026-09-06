@@ -24,11 +24,11 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active owner goal: `quality-generated-full-match-20260906`; current child `quality-generated-full-match-playthrough-20260906` establishes complete Medium/Large matches and fixes demonstrated correctness blockers. Responsiveness and presentation children follow measured live evidence. See `docs/generated-full-match-quality-requirements.md`; neither tracker completion nor a bounded match certifies release readiness.
+- Active owner goal: `quality-generated-full-match-20260906`; current implementation child `performance-generated-full-match-actions-20260906` follows the live Large action profiles. The playthrough child remains in progress: Medium Day 54 failed its no-progress diagnostic; Large continues. No terminal completion is claimed. Presentation follows. See `docs/generated-full-match-quality-requirements.md`; neither tracker completion nor a bounded match certifies release readiness.
 - Completed prior goal: `bugfix-rmg-audit-corrections-20260905`; all six corrective/integrated children satisfy the audited requirements within their documented sample/configuration limits, not full H3MapEd or release parity.
 - Baseline audit: `audit-rmg-start-placement-and-h3maped-comparison-20260905`; 36 runtime requests, 83 generated starts, 23/24 exact retained owner payloads, fresh executable/private-state water mismatch, and confirmed start/level/opponent/transit adoption gaps. Audit evidence is not runtime fixes or parity completion.
 - Most recently completed slice: `bugfix-rmg-audit-integrated-regressions-20260905`: current authored-pool expectations, permanent water/entrance/private-state coverage and reusable 18-report RMG suite. All 18 runtime reports, 26 Python tests, 85 exact starts/36 supported live cases, player/team/cave/Islands checks, repository and both-platform packages pass. Evidence and limits: `docs/rmg-audit-integrated-correction-report.md`.
-- Current package boundary: Linux and Windows release exports both measure 248439144 bytes, 1560856 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+- Current package boundary: Linux and Windows release exports both measure 248438472 bytes, 1561528 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
 
 ## Generated Full-Match Quality
 
@@ -56,9 +56,9 @@ Completion: both sizes reach a legitimate recorded terminal outcome, real mid-ma
 
 id: `performance-generated-full-match-actions-20260906`
 
-Status: pending. Child of `quality-generated-full-match-20260906`; follows the first representative match/profile baseline.
+Status: in_progress 2026-09-06. Child of `quality-generated-full-match-20260906`; live Medium/Large partial matches provide the first profile baseline while complete matches continue.
 
-Targets: the measured dominant action owners in `EnemyTurnRules`, `EnemyAdventureRules`, `OverworldRules`, `SessionStateStore`, `SaveService`, and scene refresh/query boundaries. Name selected hotspots before editing; preserve exact gameplay/AI/RNG/save results. Completion: meaningful matched before/after improvement in the selected slow full actions, complete-state controls and cache invalidation tests, no hidden deferred work or omitted saves, successful full matches and required platform/repository checks. Use the complete-match runner, existing profile comparison/optimization regressions and affected domain reports.
+Targets: isolate `TownShell` recruitment/order preflight and repeated consequence/recap reads using an exact recorded Large save and actual button handlers; retain full recaps, rules, freshness and input-ready latency. End Turn profiling identifies resource scoring repeatedly building full Town logistics solely to read support radius: add an exact lightweight projection from the existing authoritative logistics plan in `OverworldRules`, consumed by `EnemyAdventureRules`, without changing radius, target scores or AI policy. Other dominant measured owners remain `EnemyTurnRules`, `SessionStateStore` and `SaveService`. Completion: meaningful matched before/after improvement in selected slow full actions, complete-state controls and freshness tests, no hidden deferred work or omitted saves, successful full matches and required platform/repository checks. Use the complete-match runner, `tests/generated_town_order_profile.py`, `tests/town_order_read_scope_regression.py`, `tests/generated_end_turn_profile.py`, `tests/ai_town_support_radius_regression.py`, existing profile comparison/optimization regressions and affected domain reports. Evidence: `docs/generated-full-match-performance-report.md`.
 
 ### Full-Match Presentation Corrections
 

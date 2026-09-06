@@ -47,6 +47,28 @@ lookup microbenchmark. No skipped autosaves, removed opponents or hidden deferre
 stalls. Retain the existing command/turn performance guardrails while explicitly
 reporting any remaining player-visible multi-second delays.
 
+The selected responsiveness work starts with the real Large Day-20 save: repeated
+Town order preflight, recap and presentation reads must share calculations only
+within synchronous read scopes closed before mutation. Compare complete saved
+states and recap text against the original button handlers, test fresh/stale
+affordability across all six factions, and retain existing action-feedback flows.
+Use `tests/generated_town_order_profile.py` and
+`tests/town_order_read_scope_regression.py`; `tests/generated_end_turn_profile.py`
+then separates full End Turn/AI phases from the same recorded save. Benchmark
+pauses may target only verified isolated test engines and must resume them on
+exit; paused full-match timings are not uncontaminated performance measurements.
+If the prior optimization fixture predates level-aware AI visibility, update
+only its old-method reference call to retain the current level while disabling
+the optional sight-source cache; do not change AI decisions or native semantics.
+
+End Turn's resource-target scorer needs a town's support radius, not its full
+linked-site logistics report. A lightweight radius projection must retain the
+same plan/default/invalid-controller semantics and immediately reflect changed
+towns. Verify it against the original complete logistics read and linked-town
+bonus across factions, radius boundaries, ties, captures and real Large targets
+using `tests/ai_town_support_radius_regression.py`. Complete End Turn serialized
+states, including AI choices and autosaves, must still match the recorded control.
+
 ## Presentation and compatibility
 
 Inspect early/developed towns, Overworld and battle/outcome screens at 1280x720
