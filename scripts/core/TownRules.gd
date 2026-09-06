@@ -1054,6 +1054,11 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 		var unit_cost: Dictionary = OverworldRulesScript.town_recruit_cost(session, town, unit_id)
 		var direct_affordable_count: int = min(available, _max_affordable_count(session, unit_cost))
 		var market_affordable_count := _max_market_affordable_count(session, town, resources, unit_cost, available)
+		var admission: Dictionary = HeroCommandRulesScript.army_addition_plan(session.overworld.get("army", {}).get("stacks", []), {unit_id: 1})
+		var capacity_ok := bool(admission.get("ok", false))
+		if not capacity_ok:
+			direct_affordable_count = 0
+			market_affordable_count = 0
 		var direct_recruit_cost := _multiply_resource_cost(unit_cost, direct_affordable_count)
 		var recruit_impact_line := _recruit_choice_impact_line(unit_id, direct_affordable_count, available)
 		var market_summary := ""
@@ -1068,6 +1073,8 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 		var shortfall_summary := ""
 		if market_affordable_count <= 0:
 			shortfall_summary = _cost_shortfall_line(OverworldRulesScript.town_cost_readiness(town, resources, unit_cost, int(session.day)))
+		if not capacity_ok:
+			shortfall_summary = String(admission.get("message", "Formation full."))
 		var summary_lines := [
 			"%s %s x%d | %s | Weekly +%d | Cost %s" % [
 				tier_label,

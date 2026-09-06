@@ -52,6 +52,36 @@ Generated support-site visit tiles remain authoritative without an authored
 scenic object descriptor. Recheck the real guarded opening arrival/primary-action
 flow as well as both artifact collections.
 
+### Army capacity and non-destructive recovery
+
+Normal paid recruitment, unit transfers, site rewards and reinforcement delivery
+must not create an eighth army stack. Use the existing `HeroCommandRules` seven-
+slot authority, with one shared admission/merge plan before costs, reserves,
+source troops or claim state change. Matching units may reinforce an existing
+stack, including split formations, but each incoming unit is granted only once.
+Rejected actions must explain capacity and leave all resources/troops/rewards
+intact. Cached Town offers must agree with execution and refresh after transfers.
+
+Older oversized armies must keep every saved troop. Show their real total,
+occupied slots and explicit excess details instead of an empty formation. Keep
+slot editing fail-closed for oversized holders; make the existing Town per-unit
+transfers usable for reducing excess without overflowing a destination. Preserve
+save version 9, movement, identities and recruitment prices. Tests must include
+the unchanged recorded 18-stack/970-troop save, normal seven-stack admissions,
+split-stack reinforcement, rejected-action atomicity, live UI and save/resume.
+Deliveries and scripted reinforcement grants require separate explicit capacity
+and reward-preservation coverage before this defect is called fully resolved;
+no silently dropped rewards, new unlimited carry-reserve rule or truncated saves.
+Existing Town Log & Logistics owns per-unit transfers; instructions must name that
+actual dialog. Icons and troop counts must not overlap in the compact army row.
+AI recruitment, site grants, roster reinforcement and raid/garrison handoffs also
+require capacity-safe admission before consuming money, source troops or claims.
+One-shot scenario hooks must retain earned reinforcement eligibility if full;
+marking a hook fired and discarding its grant is not a correction. Preserve current
+ownership/capture semantics and document the exact retention mechanism before
+implementing it. Full-match acceptance must retain capacity observations across
+all resumed segments and reject any overflow or unobserved historical segment.
+
 Capture full action latency including rules/AI, autosave, refresh, animations and
 input re-enablement. Use the same seed, commands, conditions and instrumentation
 for comparisons; preserve complete state and decision/RNG equivalence for

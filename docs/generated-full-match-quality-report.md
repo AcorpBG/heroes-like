@@ -261,22 +261,87 @@ orders and complete End Turns now show behavior-preserving improvements in
 `docs/generated-full-match-performance-report.md`; those limited measurements do
 not establish whole-match responsiveness.
 
-The Day-54 screenshots expose another real correctness defect: the formation bar
-shows seven empty slots and zero troops while the saved army contains **18 stacks
-and 970 troops**. `OverworldRules.recruit_in_active_town` appends a new unit type
-without enforcing the existing seven-stack limit. `HeroCommandRules.army_slot_snapshot`
-rejects oversized armies with `capacity_valid=false` and no slots; `ArmyStackBar`
-renders that response as empty instead of showing the error. Additional reward
-append paths must also be checked. This is not troop loss in the save, and no
-army or recruitment fix is claimed here. These long runs remain diagnostic until
-the capacity/rule/display inconsistency is resolved; oversized armies must not
-silently certify legitimate full-match acceptance. The next correction must
-preserve existing saved troops, costs, recruitment reserves and rewards rather
-than truncating armies or changing the seven-slot rule.
+The Day-54 army defect now has a validated player-side correction below. The older
+Medium/Large continuations remain diagnostic: their saved armies already exceed
+the seven-slot rule, including AI holders. Latest observed progress was Medium
+Day 84 and Large Day 52, not terminal success or uncontaminated timing evidence.
 The inspected Veilmourn Town still has detached-looking building sprites and
 stray footer resource text; the presentation child remains pending.
 
-Next: establish competent legal Medium/Large exploration/conquest through real
+### Player army admission and non-destructive overflow recovery
+
+The unchanged Day-54 save contains **18 stacks / 970 troops**. Paid recruitment,
+per-unit transfers and site claims appended new unit types without the existing
+seven-slot check. The snapshot rejected the oversized army with no slots/count;
+the bar displayed seven empty slots and zero troops. Separately,
+`OverworldRules._add_army_stack` added each incoming grant to every matching split
+stack and stripped formation metadata. A grant of four to stacks of two and three
+became thirteen instead of nine.
+
+`HeroCommandRules.army_addition_plan` now plans a complete manifest without
+mutating its input. Paid recruitment, Town/field transfers and site claims reject
+before costs, reserves, source troops or claim state change. New stacks get a free
+formation index; matching units reinforce one existing stack, not every split.
+Town offers report capacity and refresh after transfers. Hero/Town convoys retain
+their existing saved manifest and receipt while a destination is full, then arrive
+once when room exists; no new reserve inventory or save-schema field is introduced.
+
+Legacy overflow keeps all troops. The bar shows the actual total, seven occupied
+slots, excess counts and a focused tooltip listing the excess. Positional editing
+remains disabled for oversized holders. The existing **Town Log & Logistics →
+Transfers** controls can reduce excess legally; valid formations then regain
+positional splits/merges. Icons now sit above readable counts rather than behind
+them. No troop truncation, content, price, map, RNG, balance or save-version change.
+
+Evidence root: `.artifacts/generated_full_match_quality_20260906/`.
+
+- `army_capacity_reference_01`: **10 expected failed checks**, zero engine
+  errors, replaying unchanged `HeroCommandRules`/`OverworldRules` from `c8d05faf`
+  on the same isolated fixtures. This is an old-owner control with current shared
+  dependencies, not a complete old build. Save SHA-256 is the recorded
+  `f571ab1a10696e0411f417c666d1a91bf6ba9363ad757cfc54491d8efd3c10d7`.
+- `army_capacity_complete_720` and `army_capacity_complete_1080`: **63 checks
+  pass each**, zero runtime errors; source hashes are recorded. Exact save/restore,
+  atomic rejected actions, slot-index recovery, matching/split grants, successful
+  site claims, hero/Town convoy waiting/one-time arrival and actual keyboard Town
+  transfer/split all pass. Synthetic controls are isolated from the unchanged
+  saved match; they are not full-match gameplay evidence.
+- The final Overworld, overflow Town and recovered Town captures at 1280x720 and
+  1920x1080 were opened and inspected. Army counts/icons and recovery instructions
+  are legible; the dialog scrolls to transfers without losing input. Existing
+  Town footer/background composition defects remain visible and unresolved.
+- `tests/generated_full_match_quality.py` now observes hero, garrison, encounter
+  and commander-roster capacity. Every action/continuation must have observations;
+  transient excess or missing old observations fail acceptance. Eleven Python
+  acceptance/resume tests pass (`army_capacity_acceptance_tests.log`). This
+  validation supports the correction; it is not itself a gameplay fix.
+- `army_capacity_domains_02` under `.artifacts/full_play_runtime_20260905/`
+  passes Town transfer feedback, recruitment playback, elder-wild site claims and
+  transactional saves. `army_capacity_town_dialogs` passes current five-dialog
+  Town routing and field rendezvous transfers. The historical army-bar report
+  still opens retired `ManagementTabs`; the historical recruitment-surface report
+  expects inline tier buttons before opening Muster. Their failures are retained,
+  not suppressed or called passing; current dialog/keyboard coverage above passes.
+- `army_capacity_scope_final` reruns read-scope equivalence/freshness across six
+  factions and 29 catalog samples with no errors.
+- `army_capacity_validate_repo_final.log`: repository validation passes.
+  `army_capacity_linux_final`, `army_capacity_windows_final` and
+  `army_capacity_linux_generated`: exports/startup and generated Overworld/Town
+  entry pass, with **248442920-byte** PCKs on both platforms (1557080 bytes spare).
+  Actual processes exit zero. Windows evidence uses Wine, not native hardware.
+
+The defect is **not fully closed**. The same saved Medium observer reports Town
+0950 with 14 stacks, Town 0951 with nine, and two enemy raids/roster armies with
+eleven. The retained Large Day-37 save also has nine in enemy Town 2170.
+`EnemyTurnRules._recruit_town_forces` and `_apply_reinforcement_to_raid`, and
+`EnemyAdventureRules.reinforce_commander_roster_army`, site grants and Town/raid
+handoffs still append without capacity protection. `ScenarioScriptRules` marks
+one-shot hooks fired before applying unbounded army/garrison grants; 106 authored
+reinforcement hooks need reward-preserving behavior, not silent rejection. These
+owners are unchanged in this checkpoint and remain explicit next implementation.
+
+Next: close AI/script admission without losing rewards, then establish competent
+legal Medium/Large exploration/conquest through real
 terminal outcomes and terminal save/resume, continue measured full-action
 optimization and address the recorded Town/Overworld presentation gaps.
 Keep all three children and the parent honest; individual fixes and package

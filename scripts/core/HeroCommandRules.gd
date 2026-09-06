@@ -547,6 +547,7 @@ static func get_town_transfer_actions(session: SessionStateStoreScript.SessionDa
 				var count := int(stack.get("count", 0))
 				if unit_id == "" or count <= 0:
 					continue
+				var admission := army_addition_plan(_holder_stacks(session, town, target_holder), {unit_id: 1})
 				for amount_token in _transfer_amount_tokens(count):
 					var amount_label := _transfer_amount_label(amount_token, count)
 					var unit_name := String(ContentService.get_unit(unit_id).get("name", unit_id))
@@ -554,11 +555,42 @@ static func get_town_transfer_actions(session: SessionStateStoreScript.SessionDa
 						{
 							"id": "transfer:%s:%s:%s:%s" % [source_holder, target_holder, unit_id, amount_token],
 							"label": "Move %s %s" % [amount_label, unit_name],
-							"summary": "%s -> %s" % [_holder_label(session, town, source_holder), _holder_label(session, town, target_holder)],
-							"disabled": false,
+							"summary": "%s -> %s%s" % [_holder_label(session, town, source_holder), _holder_label(session, town, target_holder), " | " + String(admission.get("message", "")) if not bool(admission.get("ok", false)) else ""],
+							"disabled": not bool(admission.get("ok", false)),
 						}
 					)
 	return actions
+
+static func army_addition_plan(stacks_value: Variant, additions: Dictionary) -> Dictionary:
+	# Plan before charging, consuming rewards or removing source troops. A
+	# rejected manifest must never discard troops, including legacy excess.
+	var stacks: Array = stacks_value.duplicate(true) if stacks_value is Array else []
+	var occupied := _valid_stack_count(stacks)
+	if occupied <= ARMY_SLOT_COUNT:
+		stacks = _slotted_stacks(stacks)
+	var unit_ids := additions.keys()
+	unit_ids.sort()
+	for unit_id_value in unit_ids:
+		var unit_id := String(unit_id_value)
+		var amount := maxi(0, int(additions.get(unit_id_value, 0)))
+		if unit_id == "" or amount == 0:
+			continue
+		var matching := -1
+		for index in range(stacks.size()):
+			if stacks[index] is Dictionary and String(stacks[index].get("unit_id", "")) == unit_id and int(stacks[index].get("count", 0)) > 0:
+				matching = index
+				break
+		if matching >= 0:
+			stacks[matching]["count"] = int(stacks[matching].get("count", 0)) + amount
+			continue
+		if occupied >= ARMY_SLOT_COUNT:
+			return {"ok": false, "reason": "army_capacity", "message": "All seven army slots are occupied. Transfer or merge troops before adding a new unit type."}
+		var claimed := {}
+		for stack in stacks:
+			claimed[int(stack.get(ARMY_SLOT_INDEX_KEY, -1))] = true
+		stacks.append({"unit_id": unit_id, "count": amount, ARMY_SLOT_INDEX_KEY: _first_open_army_slot(claimed)})
+		occupied += 1
+	return {"ok": true, "stacks": stacks}
 
 static func army_slot_snapshot(
 	session: SessionStateStoreScript.SessionData,
@@ -571,16 +603,18 @@ static func army_slot_snapshot(
 	if not _army_slot_holder_is_available(session, town, holder_id):
 		return {}
 	var holder_stacks := _holder_stacks(session, town, holder_id)
-	if _valid_stack_count(holder_stacks) > ARMY_SLOT_COUNT:
-		return {
-			"model": "authoritative_seven_slot_army_bar",
-			"holder_id": holder_id,
-			"holder_label": _holder_label(session, town, holder_id),
-			"slot_count": ARMY_SLOT_COUNT,
-			"capacity_valid": false,
-			"message": "This army exceeds the seven-stack formation capacity.",
-			"slots": [],
-		}
+	var occupied_count := _valid_stack_count(holder_stacks)
+	var overflow_stacks := []
+	var troop_count := 0
+	var valid_index := 0
+	for stack in holder_stacks:
+		if not (stack is Dictionary) or String(stack.get("unit_id", "")) == "" or int(stack.get("count", 0)) <= 0:
+			continue
+		troop_count += int(stack.get("count", 0))
+		if valid_index >= ARMY_SLOT_COUNT:
+			var unit_id := String(stack.get("unit_id", ""))
+			overflow_stacks.append({"unit_id": unit_id, "unit_name": String(ContentService.get_unit(unit_id).get("name", unit_id)), "count": int(stack.get("count", 0))})
+		valid_index += 1
 	var stacks := _slotted_stacks(holder_stacks)
 	var by_slot := {}
 	for stack_value in stacks:
@@ -589,7 +623,6 @@ static func army_slot_snapshot(
 		var stack: Dictionary = stack_value
 		by_slot[int(stack.get(ARMY_SLOT_INDEX_KEY, -1))] = stack
 	var slots := []
-	var troop_count := 0
 	for slot_index in range(ARMY_SLOT_COUNT):
 		var stack: Dictionary = by_slot.get(slot_index, {})
 		var unit_id := String(stack.get("unit_id", ""))
@@ -603,7 +636,6 @@ static func army_slot_snapshot(
 			continue
 		var unit := ContentService.get_unit(unit_id)
 		var art := ContentService.get_unit_art(unit_id)
-		troop_count += count
 		slots.append({
 			"slot_index": slot_index,
 			"occupied": true,
@@ -621,8 +653,11 @@ static func army_slot_snapshot(
 		"holder_id": holder_id,
 		"holder_label": _holder_label(session, town, holder_id),
 		"slot_count": ARMY_SLOT_COUNT,
-		"capacity_valid": true,
-		"occupied_slot_count": stacks.size(),
+		"capacity_valid": occupied_count <= ARMY_SLOT_COUNT,
+		"occupied_slot_count": occupied_count,
+		"overflow_stack_count": overflow_stacks.size(),
+		"overflow_stacks": overflow_stacks,
+		"message": "%d stacks exceed the seven-slot limit. Open Town Log & Logistics and use Transfers to reduce this army; no troops were removed." % occupied_count if occupied_count > ARMY_SLOT_COUNT else "",
 		"troop_count": troop_count,
 		"slots": slots,
 	}
@@ -871,19 +906,15 @@ static func transfer_field_stack(
 	if transfer_count <= 0:
 		return {"ok": false, "message": "No troops are available for transfer."}
 
+	var admission := army_addition_plan(_holder_stacks(session, {}, target_hero_id), {unit_id: transfer_count})
+	if not bool(admission.get("ok", false)):
+		return admission
 	source_stack["count"] = available - transfer_count
 	if int(source_stack.get("count", 0)) > 0:
 		source_stacks[source_index] = source_stack
 	else:
 		source_stacks.remove_at(source_index)
-	var target_stacks := _holder_stacks(session, {}, target_hero_id)
-	var target_index := _stack_index_by_unit(target_stacks, unit_id)
-	if target_index >= 0:
-		var target_stack: Dictionary = target_stacks[target_index]
-		target_stack["count"] = int(target_stack.get("count", 0)) + transfer_count
-		target_stacks[target_index] = target_stack
-	else:
-		target_stacks.append({"unit_id": unit_id, "count": transfer_count})
+	var target_stacks: Array = admission.get("stacks", [])
 
 	_set_holder_stacks(session, {}, source_hero_id, source_stacks)
 	_set_holder_stacks(session, {}, target_hero_id, target_stacks)
@@ -1042,20 +1073,16 @@ static func transfer_town_stack(
 	if transfer_count <= 0:
 		return {"ok": false, "message": "No troops are available for transfer."}
 
+	var admission := army_addition_plan(_holder_stacks(session, town, target_holder), {unit_id: transfer_count})
+	if not bool(admission.get("ok", false)):
+		return admission
 	source_stack["count"] = available - transfer_count
 	if int(source_stack.get("count", 0)) > 0:
 		source_stacks[source_index] = source_stack
 	else:
 		source_stacks.remove_at(source_index)
 
-	var target_stacks := _holder_stacks(session, town, target_holder)
-	var target_index := _stack_index_by_unit(target_stacks, unit_id)
-	if target_index >= 0:
-		var target_stack = target_stacks[target_index]
-		target_stack["count"] = int(target_stack.get("count", 0)) + transfer_count
-		target_stacks[target_index] = target_stack
-	else:
-		target_stacks.append({"unit_id": unit_id, "count": transfer_count})
+	var target_stacks: Array = admission.get("stacks", [])
 
 	_set_holder_stacks(session, town, source_holder, source_stacks)
 	_set_holder_stacks(session, town, target_holder, target_stacks)
@@ -1433,6 +1460,7 @@ static func _append_field_transfer_actions(actions: Array, source: Dictionary, t
 			continue
 		var unit_name := String(ContentService.get_unit(unit_id).get("name", unit_id))
 		var seen_transfer_counts := {}
+		var admission := army_addition_plan(target.get("army", {}).get("stacks", []), {unit_id: 1})
 		for amount_token_value in _transfer_amount_tokens(count):
 			var amount_token := String(amount_token_value)
 			var transfer_count := _resolve_transfer_amount(amount_token, count)
@@ -1454,6 +1482,8 @@ static func _append_field_transfer_actions(actions: Array, source: Dictionary, t
 				"unit_id": unit_id,
 				"amount_token": amount_token,
 				"transfer_count": transfer_count,
+				"disabled": not bool(admission.get("ok", false)),
+				"disabled_reason": String(admission.get("message", "")),
 			})
 
 static func _append_field_artifact_transfer_actions(actions: Array, source: Dictionary, target: Dictionary) -> void:

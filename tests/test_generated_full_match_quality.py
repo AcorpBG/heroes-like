@@ -5,13 +5,14 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from generated_full_match_quality import acceptance_failures, resume_prefix
+from generated_full_match_quality import acceptance_failures, army_capacity_trace, resume_prefix
 
 
 class FullMatchAcceptanceTests(unittest.TestCase):
     def valid(self):
         return {'ok': True, 'returncode': 0, 'runtime_errors': [], 'failures': [],
-                'final': {'status': 'victory', 'scene': 'res://scenes/results/ScenarioOutcomeShell.tscn'},
+                'final': {'status': 'victory', 'scene': 'res://scenes/results/ScenarioOutcomeShell.tscn','army_capacity': {'ok': True}},
+                'army_capacity_trace': {'complete': True, 'violation_count': 0},
                 'checkpoint_labels': ['opening', 'mid_match', 'terminal'],
                 'counts': {key: 1 for key in ['town_build', 'town_recruit', 'battle', 'battle_report', 'end_turn', 'target_explore']}}
 
@@ -52,6 +53,27 @@ class FullMatchAcceptanceTests(unittest.TestCase):
         before = copy.deepcopy(report)
         acceptance_failures(report)
         self.assertEqual(report, before)
+
+    def test_overflow_or_missing_capacity_history_rejects_terminal_success(self):
+        for trace in [{}, {'complete': False}, {'complete': True, 'violation_count': 1}]:
+            report = self.valid()
+            report['army_capacity_trace'] = trace
+            self.assertTrue(acceptance_failures(report))
+
+    def test_capacity_trace_keeps_prior_segment_gaps_and_transient_overflow(self):
+        good = {'serial':1,'state':{'army_capacity':{'ok':True,'holders_checked':3,'violations':[]}}}
+        bad = {'serial':2,'state':{'army_capacity':{'ok':False,'holders_checked':3,'violations':[{'id':'town:test','stack_count':9}]}}}
+        before = copy.deepcopy([good,bad])
+        trace = army_capacity_trace([good,bad,good])
+        self.assertTrue(trace['complete'])
+        self.assertEqual(trace['violation_count'],1)
+        self.assertEqual(trace['examples'][0]['id'],'town:test')
+        self.assertFalse(army_capacity_trace([{},good])['complete'])
+        self.assertFalse(army_capacity_trace([])['complete'])
+        inconsistent = copy.deepcopy(good)
+        inconsistent['state']['army_capacity']['ok'] = False
+        self.assertFalse(army_capacity_trace([inconsistent])['complete'])
+        self.assertEqual([good,bad],before)
 
     def test_resume_preserves_only_observed_checkpoint_prefix(self):
         with tempfile.TemporaryDirectory() as temporary:
