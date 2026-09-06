@@ -893,3 +893,64 @@ Medium11 continues on its launch commit `983594db` and original driver hash;
 its preloaded owners do not validate these subsequent outcome changes. At the
 Day-32 checkpoint it has 655/655 legal army observations, 27 actual battles and
 five owned towns; it remains nonterminal, not a newly accepted complete match.
+
+### Claim progress observation in the full-match driver
+
+Medium11's real action trace records Trailsinger Boots at serial 855 on Day 40,
+Waystone Caches at 857–858 and three more at 875–877 on Day 41. Its Day-41 End
+Turn record (860) nevertheless retains `last_progress_day: 38`. The matching
+autosave SHA-256 was
+`0514da917da4c800e0cb4c0549ad7b0d367b792c3626223d25281d80be2e0ce8`.
+The read-only continuation validator accepted that exact saved-file/history
+boundary and all 860 capacity observations. This identifies a driver observation
+bug, not failed gameplay collection: `perform_target` previously counted only
+new exploration, resolved encounters or scene routing. Successful claims on
+already explored ground could falsely approach its no-progress deadline.
+
+The Python-owned driver now snapshots category-scoped resource/artifact placement
+ids with authoritative `collected` and player-collector state. A newly claimed
+identity, including an enemy-held mine reclaimed through ordinary rules, updates
+the progress day. Repeated visits, changed visit dates, income, movement, rejected
+claims and enemy claims do not. This state is local observation around one order;
+there is no new save field, policy score, reward, carrying capacity or cached
+eligibility. The existing 14-day diagnostic horizon, terminal/capacity acceptance
+and exact continuation history remain unchanged.
+
+Evidence under `.artifacts/generated_full_match_quality_20260906/`:
+
+- `claim_progress_before/report.json`: after extracting the original condition
+  unchanged into the testable helper, four real-claim checks fail; zero engine
+  errors. This is the reproduced missing observation, not an engine parse failure.
+- `claim_progress_after/report.json` and final `claim_progress_final/report.json`:
+  **47 checks pass** each, zero engine errors.
+  The probe compiles the complete driver and calls actual resource/artifact claim
+  rules in explicit isolated fixtures. It covers new/equal-count/category-scoped
+  identities, duplicate artifact inventory, mine reclaim, rejected/repeated/enemy
+  claims, read-only observations, existing exploration/battle/route criteria and
+  a still-expired genuine stall. These fixtures are not accepted match actions.
+- All **12** Python acceptance/continuation tests, `python3 tests/validate_repo.py`
+  and `git diff --check` pass. New driver SHA-256:
+  `fa1696b95b531a18a1ce7db341ac3468e93df0a43f4ccb5fef3a3959c608a632`.
+
+Production source digest remains
+`863dbeb0855ab377f32d0792c93df5d80ca219bf3b4ae1c5caf948ba33a159de`.
+The existing `outcome_linux_release_final` and `outcome_windows_release_final`
+export/startup/generated-entry reports still apply to that unchanged runtime;
+both PCKs were 248453080 bytes. No duplicate exports were created for this
+driver-only repair. Windows coverage remains Wine, not physical hardware.
+
+Medium11 was not paused, restarted, reloaded or given the new driver. At the
+Day-42 observation it has 905/905 legal capacity observations, 30 battles, no
+engine errors and no terminal outcome. It keeps launch commit `983594db` and
+driver `a235d8abf65f97001d75a32247e6c10510708475f60d52a11ed85f03055a5abc`.
+It subsequently completes its real Day-43 mid-match save/resume (serial 908),
+with unchanged complete serialized state and 908/908 legal capacity observations.
+That exact slot-2 SHA-256 is
+`553ceb3ea972412cd72341ff627fa73c6864f9bcbfb6cc428923ebec5712de59`;
+the read-only continuation validator accepts it without resetting progress Day 42.
+`medium_match_11/day_043.png` was opened and inspected at 1280x720: active hero,
+owned roster, army slots and footer remain visible without control clipping.
+This is current Overworld evidence, not new Town-art or full-match acceptance.
+The gameplay/presentation/performance children and parent goal remain in progress.
+Town scene-matched art scope and removal of superseded test exports/environments
+still await owner approval; caches, source saves and unrelated artifacts remain.

@@ -373,11 +373,27 @@ func choose_target() -> Dictionary:
 		return waypoints[0]
 	return {}
 
+func target_progress_state() -> Dictionary:
+	# Observe earned object identities, not rewards, movement or visit dates.
+	# Repeated services and already-owned mines must not keep a stalled run alive.
+	var claimed := {}
+	for bucket in ["resource_nodes", "artifact_nodes"]:
+		for node in session.overworld.get(bucket, []):
+			var id := String(node.get("placement_id", ""))
+			if id != "" and bool(node.get("collected", false)) and String(node.get("collected_by_faction_id", "")) == "player":
+				claimed[bucket + ":" + id] = true
+	return {"explored":int(session.overworld.get("fog",{}).get("explored_count",0)),"resolved":session.overworld.get("resolved_encounters",[]).size(),"claimed":claimed}
+
+func record_target_progress(before: Dictionary, routed: bool) -> void:
+	var after := target_progress_state()
+	var newly_claimed: bool = after.claimed.keys().any(func(id): return not before.claimed.has(id))
+	if int(after.explored) > int(before.explored) or int(after.resolved) > int(before.resolved) or newly_claimed or routed:
+		last_progress_day = session.day
+
 func perform_target(target: Dictionary) -> void:
 	var scene = get_tree().current_scene
 	var origin := OverworldRules.hero_position(session)
-	var explored_before := int(session.overworld.get("fog",{}).get("explored_count",0))
-	var resolved_before: int = session.overworld.get("resolved_encounters",[]).size()
+	var progress_before := target_progress_state()
 	var started := Time.get_ticks_usec()
 	if bool(target.get("remote",false)):
 		scene._on_town_rail_pressed(target.tile.x,target.tile.y,Levels.hero_level(session))
@@ -409,8 +425,7 @@ func perform_target(target: Dictionary) -> void:
 	if target.kind == "waypoint":
 		waypoint_visits[target.id] = serial
 	var routed := not scene_path().ends_with("OverworldShell.tscn")
-	if int(session.overworld.get("fog",{}).get("explored_count",0)) > explored_before or session.overworld.get("resolved_encounters",[]).size() > resolved_before or routed:
-		last_progress_day = session.day
+	record_target_progress(progress_before, routed)
 	if not moved and not routed:
 		failed_targets[target.id] = session.day
 	if not moved or routed or OverworldRules.hero_position(session) == target.tile:
