@@ -67,13 +67,36 @@ func power(stacks: Variant) -> int:
 func player_power() -> int:
 	return power(Heroes.active_hero(session).get("army", {}).get("stacks", []))
 
+func capacity_snapshot() -> Dictionary:
+	# Observation only: never truncate or normalize an oversized match army.
+	var holders := []
+	for hero in session.overworld.get("player_heroes", []):
+		holders.append({"id":"hero:"+String(hero.get("id","")),"stacks":hero.get("army",{}).get("stacks",[])})
+	for town in session.overworld.get("towns", []):
+		holders.append({"id":"town:"+String(town.get("placement_id","")),"stacks":town.get("garrison",[])})
+	for encounter in session.overworld.get("encounters", []):
+		if not bool(encounter.get("resolved",false)) and encounter.has("enemy_army"):
+			holders.append({"id":"encounter:"+String(encounter.get("placement_id","")),"stacks":encounter.enemy_army.get("stacks",[])})
+	for enemy in session.overworld.get("enemy_states", []):
+		for commander in enemy.get("commander_roster", []):
+			holders.append({"id":"commander:%s:%s" % [String(enemy.get("player_id",enemy.get("faction_id",""))),String(commander.get("roster_hero_id",""))],"stacks":commander.get("army_continuity",{}).get("stacks",[])})
+	var violations := []
+	for holder in holders:
+		var occupied := 0
+		for stack in holder.stacks:
+			if stack is Dictionary and String(stack.get("unit_id",""))!="" and int(stack.get("count",0))>0:
+				occupied += 1
+		if occupied>Heroes.ARMY_SLOT_COUNT:
+			violations.append({"id":holder.id,"stack_count":occupied})
+	return {"ok":violations.is_empty(),"holders_checked":holders.size(),"violations":violations}
+
 func compact_state() -> Dictionary:
 	var pos := OverworldRules.hero_position(session)
 	var towns := []
 	for town in session.overworld.get("towns", []):
 		# Report may inspect full state; the action policy below uses explored targets only.
 		towns.append({"id": town.get("placement_id", ""), "owner": town.get("owner", ""), "built": town.get("built_buildings", [])})
-	return {"day": session.day, "status": session.scenario_status, "scene": scene_path(), "hero": {"x":pos.x,"y":pos.y,"level":Levels.hero_level(session)}, "movement":session.overworld.get("movement", {}), "army_power":player_power(), "resources":session.overworld.get("resources", {}), "towns":towns}
+	return {"day": session.day, "status": session.scenario_status, "scene": scene_path(), "hero": {"x":pos.x,"y":pos.y,"level":Levels.hero_level(session)}, "movement":session.overworld.get("movement", {}), "army_power":player_power(), "army_capacity":capacity_snapshot(), "resources":session.overworld.get("resources", {}), "towns":towns}
 
 func record(kind: String, started: int, result: Dictionary = {}) -> void:
 	serial += 1
@@ -425,6 +448,10 @@ func run_match() -> void:
 	while session.scenario_status == "in_progress" and failures.is_empty() and session.day <= int(cfg.max_days):
 		var day_start: int = session.day
 		for order in range(24):
+			var capacity := capacity_snapshot()
+			if not capacity.ok:
+				failures.append("army capacity violated: "+JSON.stringify(capacity.violations))
+				break
 			if not failures.is_empty() or session.scenario_status != "in_progress":
 				break
 			if scene_path().ends_with("TownShell.tscn"):
@@ -489,7 +516,25 @@ def acceptance_failures(report: dict) -> list[str]:
             failures.append(f'{kind} coverage missing')
     if not any(counts.get(kind, 0) > 0 for kind in ['target_resource', 'target_artifact', 'target_explore']):
         failures.append('exploration/collection coverage missing')
+    capacity = report.get('army_capacity_trace', {})
+    if not capacity.get('complete'):
+        failures.append('complete-match army capacity observations missing')
+    if capacity.get('violation_count', 0) > 0 or final.get('army_capacity', {}).get('ok') is not True:
+        failures.append('oversized army invalidates full-match acceptance')
     return failures
+
+
+def army_capacity_trace(rows: list[dict]) -> dict:
+    observed = 0
+    violations = []
+    for row in rows:
+        capacity = row.get('state', {}).get('army_capacity', {})
+        if (capacity.get('holders_checked', 0) > 0 and isinstance(capacity.get('violations'), list)
+                and capacity.get('ok') is (not capacity['violations'])):
+            observed += 1
+            violations.extend({'serial': row.get('serial'), **item} for item in capacity['violations'])
+    return {'complete': bool(rows) and observed == len(rows), 'observed_actions': observed,
+            'total_actions': len(rows), 'violation_count': len(violations), 'examples': violations[:10]}
 
 
 def resume_prefix(source: Path, case: dict, autosave: bool = False) -> tuple[bytes, list[dict], dict]:
@@ -613,6 +658,8 @@ def main() -> int:
     profile = out/'data/godot/app_userdata/heroes-like/debug/heroes_profile.jsonl'
     records = [json.loads(line) for line in profile.read_text().splitlines() if line.strip()] if profile.exists() else []
     report.update(returncode=returncode, runtime_errors=errors, wall_s=monotonic()-started, peak_child_rss_kib=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss, config=cfg, rendered=args.rendered, resolution=args.resolution, accessibility=args.accessibility, revision=revision, driver_sha256=provenance['driver_sha256'], runtime_source_tree_sha256=source_digest, launch_provenance=str(out/'launch_provenance.json'), profile_summary=summarize(records))
+    actions = out/'actions.jsonl'
+    report['army_capacity_trace'] = army_capacity_trace([json.loads(line) for line in actions.read_text().splitlines() if line.strip()] if actions.exists() else [])
     report['acceptance_failures'] = acceptance_failures(report)
     report['ok'] = not report['acceptance_failures']
     (out/'report.json').write_text(json.dumps(report,indent=2)+'\n')

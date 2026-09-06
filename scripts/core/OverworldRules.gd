@@ -1323,6 +1323,11 @@ static func _collect_resource_node_result(
 		if _resource_site_is_persistent(site):
 			return {"ok": false, "message": "This site is already under your control."}
 		return {"ok": false, "message": "This site has already been gathered."}
+	var admission := HeroCommandRulesScript.army_addition_plan(session.overworld.get("army", {}).get("stacks", []), _resource_site_claim_recruits(site))
+	if not bool(admission.get("ok", false)):
+		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
+		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
+		return admission
 	var visit_cost := _resource_site_visit_cost(site)
 	if not _can_afford(session, visit_cost):
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
@@ -2190,24 +2195,17 @@ static func recruit_in_active_town(session: SessionStateStoreScript.SessionData,
 		}
 
 	var recruit_cost := _multiply_cost(adjusted_unit_cost, recruit_count)
+	var army = session.overworld.get("army", {})
+	var admission := HeroCommandRulesScript.army_addition_plan(army.get("stacks", []), {unit_id: recruit_count})
+	if not bool(admission.get("ok", false)):
+		return admission
 	_spend_resources(session, recruit_cost)
 	recruits[unit_id] = available_count - recruit_count
 	town["available_recruits"] = recruits
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
 
-	var army = session.overworld.get("army", {})
-	var stacks = army.get("stacks", [])
-	var merged := false
-	for index in range(stacks.size()):
-		var stack = stacks[index]
-		if stack is Dictionary and String(stack.get("unit_id", "")) == unit_id:
-			stack["count"] = int(stack.get("count", 0)) + recruit_count
-			stacks[index] = stack
-			merged = true
-			break
-	if not merged:
-		stacks.append({"unit_id": unit_id, "count": recruit_count})
+	var stacks: Array = admission.get("stacks", [])
 	army["stacks"] = stacks
 	session.overworld["army"] = army
 	var field_total := _army_unit_count(stacks, unit_id)
@@ -5969,11 +5967,13 @@ static func get_context_actions(session: SessionStateStoreScript.SessionData) ->
 					actions.append({"id": "native_transit:" + target_id, "label": "Travel: %s %d,%d" % ["Below" if tile.z > 0 else "Surface", tile.x, tile.y], "summary": "Travel to this connected destination." if bool(check.get("ok", false)) else String(check.get("message", "Passage unavailable.")), "disabled": not bool(check.get("ok", false))})
 			elif _resource_node_claimable_by_player(node, site, session):
 				var collection_resource_id := resource_site_primary_stockpile_resource_id(site)
+				var admission: Dictionary = HeroCommandRulesScript.army_addition_plan(session.overworld.get("army", {}).get("stacks", []), _resource_site_claim_recruits(site))
 				actions.append(
 					{
 						"id": "collect_resource",
 						"label": _resource_site_action_label(node, site),
-						"summary": _context_action_summary(session, "collect_resource", context),
+						"summary": _context_action_summary(session, "collect_resource", context) if bool(admission.get("ok", false)) else String(admission.get("message", "")),
+						"disabled": not bool(admission.get("ok", false)),
 						"resource_id": collection_resource_id,
 						"resource_icon_path": resource_icon_path(collection_resource_id),
 					}
@@ -8790,16 +8790,11 @@ static func _grant_site_claim_recruits(session: SessionStateStoreScript.SessionD
 	if not (recruits is Dictionary) or recruits.is_empty():
 		return ""
 	var hero = session.overworld.get("hero", {})
-	var army := _normalize_army_state(hero.get("army", {}))
-	var unit_ids := []
-	for unit_id_value in recruits.keys():
-		unit_ids.append(String(unit_id_value))
-	unit_ids.sort()
-	for unit_id in unit_ids:
-		var count = max(0, int(recruits.get(unit_id, 0)))
-		if unit_id == "" or count <= 0:
-			continue
-		army["stacks"] = _add_army_stack(army.get("stacks", []), unit_id, count)
+	var army: Dictionary = hero.get("army", {}).duplicate(true)
+	var admission: Dictionary = HeroCommandRulesScript.army_addition_plan(army.get("stacks", []), recruits)
+	if not bool(admission.get("ok", false)):
+		return String(admission.get("message", ""))
+	army["stacks"] = admission.get("stacks", [])
 	hero["army"] = army
 	session.overworld["hero"] = hero
 	session.overworld["army"] = army
@@ -9022,6 +9017,12 @@ static func _advance_player_reserve_deliveries(session: SessionStateStoreScript.
 		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 		var interception_state: Dictionary = _resource_site_delivery_interception(session, node, site)
 		if bool(interception_state.get("blocks_delivery", false)):
+			continue
+		var admission := _delivery_army_admission(session, delivery_state)
+		if not bool(admission.get("ok", false)):
+			# Keep the existing convoy manifest and receipt untouched. The army may
+			# fill after dispatch; waiting is not a failed/lost delivery.
+			messages.append("%s convoy waits for army space at %s." % [String(site.get("name", "The route")), String(delivery_state.get("target_label", "its destination"))])
 			continue
 		var message = _resolve_player_reserve_delivery(session, site, delivery_state, node)
 		node = _clear_resource_site_delivery(node)
@@ -9248,6 +9249,21 @@ static func apply_delivery_interception_outcome(
 			]
 			return result
 
+static func _delivery_army_admission(session: SessionStateStoreScript.SessionData, delivery_state: Dictionary) -> Dictionary:
+	var target_id := String(delivery_state.get("target_id", ""))
+	var stacks := []
+	if String(delivery_state.get("target_kind", "")) == "hero":
+		var hero := HeroCommandRulesScript.hero_by_id(session, target_id)
+		if hero.is_empty():
+			return {"ok": true} # Existing return/loss rules own missing targets.
+		stacks = hero.get("army", {}).get("stacks", [])
+	elif String(delivery_state.get("target_kind", "")) == "town":
+		var town: Dictionary = _find_town_by_placement(session, target_id).get("town", {})
+		if town.is_empty() or String(town.get("owner", "neutral")) != "player":
+			return {"ok": true}
+		stacks = town.get("garrison", [])
+	return HeroCommandRulesScript.army_addition_plan(stacks, delivery_state.get("manifest", {}))
+
 static func _deliver_reinforcements_to_hero(
 	session: SessionStateStoreScript.SessionData,
 	hero_id: String,
@@ -9260,12 +9276,11 @@ static func _deliver_reinforcements_to_hero(
 		var hero = heroes[index]
 		if not (hero is Dictionary) or String(hero.get("id", "")) != hero_id:
 			continue
-		var army = _normalize_army_state(hero.get("army", {}))
-		var unit_ids = manifest.keys()
-		unit_ids.sort()
-		for unit_id_value in unit_ids:
-			var unit_id := String(unit_id_value)
-			army["stacks"] = _add_army_stack(army.get("stacks", []), unit_id, int(manifest.get(unit_id_value, 0)))
+		var army: Dictionary = hero.get("army", {}).duplicate(true)
+		var admission := HeroCommandRulesScript.army_addition_plan(army.get("stacks", []), manifest)
+		if not bool(admission.get("ok", false)):
+			return false
+		army["stacks"] = admission.get("stacks", [])
 		hero["army"] = army
 		heroes[index] = hero
 		session.overworld["player_heroes"] = heroes
@@ -9288,12 +9303,10 @@ static func _deliver_reinforcements_to_town(
 	if String(town.get("owner", "neutral")) != "player":
 		return false
 	var garrison = town.get("garrison", [])
-	var unit_ids := manifest.keys()
-	unit_ids.sort()
-	for unit_id_value in unit_ids:
-		var unit_id := String(unit_id_value)
-		garrison = _add_army_stack(garrison, unit_id, int(manifest.get(unit_id_value, 0)))
-	town["garrison"] = garrison
+	var admission := HeroCommandRulesScript.army_addition_plan(garrison, manifest)
+	if not bool(admission.get("ok", false)):
+		return false
+	town["garrison"] = admission.get("stacks", [])
 	var towns = session.overworld.get("towns", [])
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
@@ -9414,11 +9427,10 @@ static func _add_army_stack(stacks: Variant, unit_id: String, amount: int) -> Ar
 		for stack_value in stacks:
 			if not (stack_value is Dictionary):
 				continue
-			var stack = {
-				"unit_id": String(stack_value.get("unit_id", "")),
-				"count": max(0, int(stack_value.get("count", 0))),
-			}
-			if stack["unit_id"] == unit_id:
+			var stack: Dictionary = stack_value.duplicate(true)
+			stack["unit_id"] = String(stack.get("unit_id", ""))
+			stack["count"] = max(0, int(stack.get("count", 0)))
+			if not added and stack["unit_id"] == unit_id:
 				stack["count"] = int(stack.get("count", 0)) + max(0, amount)
 				added = true
 			if stack["unit_id"] != "" and int(stack.get("count", 0)) > 0:

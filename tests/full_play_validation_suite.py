@@ -37,6 +37,12 @@ SCENES = [
     "settings_transactional_persistence_regression",
     "generated_large_town_explicit_save_surface_regression",
     "town_screen_layout_and_dialog_controls_report",
+    "army_stack_management_bar_runtime_report",
+    "hero_field_rendezvous_army_transfer_report",
+    "town_army_transfer_completion_feedback_report",
+    "town_recruitment_ui_surface_report",
+    "town_recruitment_cue_playback_report",
+    "four_elder_wild_recruitment_sanctuaries_smoke",
 ]
 RENDERED_SCENES = ["active_play_keyboard_focus_smoke", "custom_mouse_cursor_runtime_report"]
 RMG_SCENES = [
@@ -91,8 +97,14 @@ def main() -> int:
     rows = []
     for name in selected:
         source = (ROOT / "tests" / (name + ".gd")).read_text()
-        match = re.search(r'const REPORT_ID\s*:?=\s*"([^"]+)"', source)
-        explicit_markers = {"town_development_save_resume_report": "TOWN_DEVELOPMENT_SAVE_RESUME_REPORT", "town_screen_layout_and_dialog_controls_report": "TOWN_SCREEN_LAYOUT_AND_DIALOG_CONTROLS_REPORT"}
+        match = re.search(r'const (?:BATCH_)?REPORT_ID\s*:?=\s*"([^"]+)"', source)
+        explicit_markers = {
+            "town_development_save_resume_report": "TOWN_DEVELOPMENT_SAVE_RESUME_REPORT",
+            "town_screen_layout_and_dialog_controls_report": "TOWN_SCREEN_LAYOUT_AND_DIALOG_CONTROLS_REPORT",
+            "town_army_transfer_completion_feedback_report": "TOWN_ARMY_TRANSFER_COMPLETION_FEEDBACK_REPORT",
+            "town_recruitment_ui_surface_report": "TOWN_RECRUITMENT_UI_SURFACE_REPORT",
+            "town_recruitment_cue_playback_report": "TOWN_RECRUITMENT_CUE_PLAYBACK_REPORT",
+        }
         marker = match.group(1) if match else explicit_markers.get(name, "")
         if not marker or marker not in source:
             raise ValueError("No authoritative completion marker for " + name)

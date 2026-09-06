@@ -21,6 +21,7 @@ var _selected_holder_id := ""
 var _selected_slot_index := -1
 var _amount_token := "all"
 var _status_label: Label
+var _mode_row: HBoxContainer
 var _holders_box: VBoxContainer
 var _mode_buttons: Dictionary = {}
 var _slot_buttons: Dictionary = {}
@@ -106,6 +107,7 @@ func _build_static_surface() -> void:
 	_holders_box.add_theme_constant_override("separation", 5)
 	add_child(_holders_box)
 	var mode_row := HBoxContainer.new()
+	_mode_row = mode_row
 	mode_row.name = "ArmyModeRow"
 	mode_row.add_theme_constant_override("separation", 4)
 	for definition in [
@@ -144,6 +146,7 @@ func _rebuild_holder_rows() -> void:
 			continue
 		var holder: Dictionary = holder_value
 		var holder_id := String(holder.get("holder_id", ""))
+		var capacity_valid := bool(holder.get("capacity_valid", true))
 		var row_box := VBoxContainer.new()
 		row_box.add_theme_constant_override("separation", 2)
 		var label := Label.new()
@@ -157,13 +160,27 @@ func _rebuild_holder_rows() -> void:
 		for slot_index in range(SLOT_COUNT):
 			var slot: Dictionary = slots[slot_index] if slot_index < slots.size() and slots[slot_index] is Dictionary else {"slot_index": slot_index, "occupied": false, "holder_id": holder_id}
 			var button := _make_slot_button(holder_id, slot_index, slot)
+			button.disabled = button.disabled or not capacity_valid
 			slots_row.add_child(button)
 			_slot_buttons[_slot_key(holder_id, slot_index)] = button
 		row_box.add_child(slots_row)
+		if not capacity_valid:
+			var warning := Label.new()
+			warning.name = "ArmyOverflowWarning"
+			warning.text = "%d stacks / 7 · %d excess\nTown Log → Transfers" % [int(holder.get("occupied_slot_count", 0)), int(holder.get("overflow_stack_count", 0))]
+			warning.add_theme_font_size_override("font_size", 12)
+			warning.tooltip_text = String(holder.get("message", ""))
+			for stack in holder.get("overflow_stacks", []):
+				warning.tooltip_text += "\n%s × %d" % [String(stack.get("unit_name", stack.get("unit_id", ""))), int(stack.get("count", 0))]
+			warning.focus_mode = Control.FOCUS_ALL
+			row_box.add_child(warning)
 		_holders_box.add_child(row_box)
 	_update_mode_styles()
 	_update_status()
 	_update_slot_styles()
+	var has_valid_holder := _holders.any(func(holder): return holder is Dictionary and bool(holder.get("capacity_valid", true)))
+	_mode_row.visible = has_valid_holder
+	_status_label.visible = has_valid_holder
 
 func _make_slot_button(holder_id: String, slot_index: int, slot: Dictionary) -> Button:
 	var button := Button.new()
@@ -174,6 +191,9 @@ func _make_slot_button(holder_id: String, slot_index: int, slot: Dictionary) -> 
 	button.expand_icon = true
 	button.add_theme_constant_override("icon_max_width", 16 if _compact_mode else 22)
 	button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
+	button.add_theme_font_size_override("font_size", 12)
+	button.add_theme_color_override("font_disabled_color", Color(0.84, 0.82, 0.74))
 	button.add_theme_stylebox_override("normal", _slot_style(SLOT_FILL, SLOT_BORDER, 1))
 	button.add_theme_stylebox_override("hover", _slot_style(SLOT_HOVER_FILL, SLOT_HOVER_BORDER, 2))
 	button.add_theme_stylebox_override("pressed", _slot_style(SLOT_HOVER_FILL, SLOT_HOVER_BORDER, 2))
@@ -276,6 +296,8 @@ func _selected_slot_still_valid() -> bool:
 	for holder_value in _holders:
 		if not (holder_value is Dictionary) or String(holder_value.get("holder_id", "")) != _selected_holder_id:
 			continue
+		if not bool(holder_value.get("capacity_valid", true)):
+			return false
 		var slots: Array = holder_value.get("slots", []) if holder_value.get("slots", []) is Array else []
 		return _selected_slot_index < slots.size() and slots[_selected_slot_index] is Dictionary and bool(slots[_selected_slot_index].get("occupied", false))
 	return false
