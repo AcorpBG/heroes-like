@@ -146,9 +146,24 @@ Medium `medium_match_07` stopped legitimately as a **failed diagnostic**, not a
 terminal outcome, at Day 54: fourteen days without exploration/interaction
 progress. Its actions repeatedly revisit artifact targets but land on controlled
 resource-site actions; the remaining movement is insufficient to reach the chosen
-hostile town. The placement/driver routing cause still needs isolation. Large
-`large_match_05` continues. Do not count the failed Medium run or controlled
-three-turn fixture as completed-match acceptance.
+hostile town. Subsequent source-backed exact-target and guard-approach corrections
+are documented in `docs/generated-full-match-quality-report.md`; the failed
+prefix remains diagnostic, not retroactive acceptance. Large `large_match_08`
+has since completed a legal Day-14 defeat after enemy-town conquest, 15 battles
+and 201/201 legal capacity observations. Medium `medium_match_11` remains live
+on its recorded launch owners; neither a live prefix nor the controlled
+three-turn fixture establishes complete-match responsiveness.
+
+Full-match wall time also includes Python-owned driver's synchronous GDScript
+policy work. The recorded Medium Day-43 Town choice computed 15 unused encounter
+approaches before returning its already-prioritized owned Town (about 28 seconds
+in the isolated comparison). This is test-policy overhead, not player movement
+latency or idle rendering performance. Driver-only removal and exact-state
+controls belong to the gameplay report; do not attribute that gain to the game
+or use the concurrently running match's FPS as an uncontaminated renderer score.
+The later outcome checkpoint's unchanged-runtime Linux/Windows export and
+generated-entry evidence is also identified there; the platform figures above
+describe this earlier responsiveness checkpoint, not the newest package.
 
 Complete Medium/Large terminal outcomes, selected presentation corrections and
 final both-platform validation remain requirements of the parent goal. See

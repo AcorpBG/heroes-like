@@ -954,3 +954,71 @@ This is current Overworld evidence, not new Town-art or full-match acceptance.
 The gameplay/presentation/performance children and parent goal remain in progress.
 Town scene-matched art scope and removal of superseded test exports/environments
 still await owner approval; caches, source saves and unrelated artifacts remain.
+
+### Preserve Town priority without discarded driver path searches
+
+The driver's existing `choose_target` returns the first eligible owned Town
+before ranked field candidates, but previously computed every known encounter's
+approach paths before reaching that return. On Medium11's unchanged Day-43
+slot-2 save, these 15 unused approach computations took about 28 seconds.
+`owned_town_management_target` now checks that same priority first, preserving
+catalog order, visibility/level, day/failure cooldowns and the existing guard-risk
+condition. Ordinary field candidate order, scoring, live intent and path/risk
+rules are unchanged. This corrects test orchestration, not a gameplay delay;
+Medium11 retains its preloaded launch driver and was not restarted or hotpatched.
+
+Evidence under `.artifacts/generated_full_match_quality_20260906/`:
+
+- `town_priority_before_03/report.json`: the exact prior driver from `db66974e`
+  selects Town `native_h3maped_93c0f05a_object_0950` at `(43,40)` in both copies;
+  its only failed check is the 15 discarded encounter approaches. All target,
+  complete serialized-state, bookkeeping and eligibility controls pass.
+- `town_priority_after/report.json`: 57 checks pass with no engine errors.
+  Final expanded `town_priority_final_02/report.json` passes **69 checks**, exit
+  0, no runtime errors and unchanged source save. Ready-Town selection is 0.168
+  ms with zero approach calls versus the reference's 28401.877 ms and 15 calls.
+  When all owned Towns are marked managed in the isolated driver history, the
+  unchanged real field catalog selects native portal placement `..._0961` at
+  `(39,30)` with the same complete target: both methods still perform 15 approach
+  calls and take about 28 seconds. That field-search cost has not been removed.
+  These are method timings while the separate match runs, not uncontaminated
+  game-action or renderer benchmarks.
+- Explicit detached catalogs cover already-managed, failed, foreign, wrong-level,
+  unseen and strongly guarded Towns, ordinary field fallback and retained intent.
+  The guard fixture exercises the production risk predicate. These controlled
+  inputs are not accepted match actions or edits to the original save.
+- `claim_progress_town_priority/report.json`: **47** real claim/driver controls
+  pass, zero engine errors. All **12** Python acceptance tests, repository
+  validation and `git diff --check` pass.
+
+The reference driver SHA-256 is
+`fa1696b95b531a18a1ce7db341ac3468e93df0a43f4ccb5fef3a3959c608a632`;
+the current driver is
+`7ab98279b847e4b28f74eeecc577cbcc254e6a05ea086614213b769d89beda25`.
+The source save retains SHA-256
+`553ceb3ea972412cd72341ff627fa73c6864f9bcbfb6cc428923ebec5712de59`.
+Production digest remains
+`863dbeb0855ab377f32d0792c93df5d80ca219bf3b4ae1c5caf948ba33a159de`;
+the already-passing `outcome_linux_release_final` and
+`outcome_windows_release_final` export/startup/generated-entry reports apply to
+that unchanged runtime, with both PCKs 248453080 bytes. No duplicate exports or
+new physical-Windows claims accompany this driver-only checkpoint.
+
+Failed fixture attempts remain explicit: the first probe attached its scene to
+the wrong parent; the next omitted `kind: guard` from its isolated guard record.
+Both were corrected before the accepted baseline. The first expanded final
+engine printed 69 passing checks, but its launcher exited with signal 143 before
+saving a final report; it is not accepted. The unchanged assertions subsequently
+pass under a fresh detached supervisor. The new runner handles TERM through its
+existing protected child cleanup. Only that failed test's unused temporary
+scripts/save copy (about 7.3 MB) were removed after verifying no process references;
+its runtime log, original source save and all unrelated retained files remain.
+
+`medium_match_11/observed_day053.png` was captured from the actual running window
+and opened at 1280x720: fog/minimap, owned roster, all seven army slots and the
+command/system footer remain visible without control overlap. This is a late
+Overworld observation, not Town-art acceptance. The Day-54 checkpoint has
+1190/1190 legal army-capacity observations, 39 battles, progress Day 53, zero
+runtime errors and no terminal outcome. The goal and all three children remain
+in progress; Town-art scope and superseded export/environment cleanup approval
+remain outstanding.
