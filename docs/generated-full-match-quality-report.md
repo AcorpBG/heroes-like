@@ -692,3 +692,97 @@ cleanup path. `command_layout_feedback_pause.json` records the exact interval an
 PIDs. The older group-pause helper correctly rejected their nonleader wrappers.
 Concurrent tests and this pause contaminate their wall timings; retain profile
 data as hotspot observations, **not** a matched performance improvement claim.
+
+### Medium guard approach and legal driver policy
+
+The exact unchanged Medium10 Day-35 autosave (SHA-256
+`196604fa63145f683f36af4d00f9828a028ef5d63550fabc9ae46f321df5bcbf`)
+exposes two separate causes, not an immobile hero or a generation defect:
+
+- Resource `native_h3maped_93c0f05a_object_1324`, Glassbound Eyrie at
+  (16,50), entrance (15,50), grants **two different unit types**. The seven-slot
+  army correctly rejects it. The test driver repeatedly preferred this nearby
+  unclaimable reward, then abandoned partial longer journeys each day.
+- Guard `generated_guarded_reward_native_h3maped_93c0f05a_object_1261`
+  has a legal approach at (33,57). `OverworldShell._selection_route_tile`
+  redirected that tile through the resource's scenic rectangle to (34,58).
+  The ordinary route cannot cross surrounding guard interactions to reach that
+  interior destination. `_resource_node_at` also gave the approach an unrelated
+  resource descriptor. An ordinary northward move off the Eyrie worked: the
+  capacity rejection did not trap the hero.
+
+`OverworldShell` now preserves active same-level guard approaches before scenic
+shortcuts and uses the existing encounter descriptor. This is separate from
+exact-anchor ownership; exact resource entrances and Town-anchor shortcuts remain
+intact. Resolved guards and other levels release selection priority. No native
+code, terrain, placement, masks, movement/combat rules, troops or save schema
+changed. This corrects the earlier overly broad assumption in the exact-target
+section that surrounding guard squares never need their own selection priority.
+
+The Python-owned match driver now checks the existing current army admission and
+visit-cost authority before choosing recruit rewards, retains a target id across
+partial travel only after fresh knowledge/risk/availability/path checks, and
+spends earned specialties through normal Town actions. It never claims or hides
+the rejected reward, adds capacity or injects experience. Moving target positions
+come from today's known record, not retained coordinates. Checkpoint records now
+include an exact saved-file hash and driver no-progress/cooldown/intent state;
+continuation uses production saved-generated registration. Older incomplete
+checkpoint histories are rejected rather than resetting the fourteen-day guard.
+These driver changes support playthrough coverage; they are not gameplay fixes
+or a completed match.
+
+Evidence under `.artifacts/generated_full_match_quality_20260906/`:
+
+- `medium_policy_guard_before`: unchanged runtime/driver fails precisely the
+  infeasible-target, guard-click redirect and descriptor checks; no engine error.
+- `medium_guard_route_release`: **40 checks pass**, zero engine errors, source
+  save unchanged. Actual projected pointer selects (33,57), ordinary travel
+  pauses at (24,49), and the next normal End Turn plus retained target reaches
+  battle. Real Quick Resolve and casualty Continue clear that exact guard, retain
+  all 661 player troops, and award normal rewards. Town actions then spend four
+  earned choices (three saved plus one earned from this battle), perform seven
+  normal paid matching-stack recruitments, and save/resume every gameplay field.
+  Terrain/source placement/mask geometry stays equal and all armies remain legal.
+  Detached controls cover two required free slots, full matching-stack admission,
+  changed-army freshness, hidden-target rejection and refreshed moving-target
+  coordinates; they do not modify the live saved game.
+  `medium_guard_route_complete_driver` repeats all 40 checks while also compiling
+  the entire unused full-match entry with project autoloads present. A standalone
+  `--check-only` attempt could not resolve autoload `SaveService`; that invocation
+  is not a valid project-runtime compile check and is not counted as passing.
+- `guard_priority_exact_controls`: **44 checks pass**, including two real artifact
+  collections/save-resume, guard resolution/cache invalidation, level boundaries,
+  exact resource/support entrances, Town anchors and source geometry.
+- `guard_priority_arrival`: all **26** existing generated opening/guard/reward,
+  Town-body, roster and primary-action checks pass.
+- `guard_priority_battle_handoff`: animated exit, normal Quick Resolve/report and
+  genuine-unavailable failure controls pass. The three movement-input/full-route/
+  fog reports in `.artifacts/full_play_runtime_20260905/guard_approach_domains`
+  pass without suppressed runtime errors.
+- **12 Python acceptance tests pass**, including exact-file mutation and missing
+  driver-history rejection; repository validation and `git diff --check` pass.
+- `guard_route_linux_final`, `guard_route_windows_final` and
+  `guard_route_linux_entry` pass exports/startup and actual packaged generated
+  Overworld/Town entry. Both PCKs are **248450296 bytes**, 1549704 below the ceiling.
+  Windows evidence uses Wine, not physical Windows hardware. The unchanged
+  Windows smoke assertions ran with two separate fresh disposable `/dev/shm`
+  prefixes, releasing the completed startup prefix before creating the generated
+  prefix. Only those test-owned temporary prefixes were removed; packages and
+  reports are retained. This avoids retaining another multi-gigabyte Wine copy.
+
+The final approach-selected, guard-resolved and developed-Town screenshots were
+opened and inspected at 1280x720. The approach order, route, hero arrival, fog,
+roster and controls are visible without clipping/overlap. Existing floating Town
+building art remains visibly unfinished; this correction does not claim to fix it.
+An initial probe incorrectly expected an empty disabled primary action to contain
+a `disabled` key; later admission controls incorrectly treated the two-unit Eyrie
+reward as one type, including one probe parse error. Those failed diagnostic
+attempts remain retained and are not product defects or passing evidence.
+
+Validated runtime source-tree SHA-256:
+`7de32bf57bcd8b0cda4dd4d4fd77f436e6ef6130b3b31e4fe48842159294bfd6`.
+Final driver SHA-256:
+`a235d8abf65f97001d75a32247e6c10510708475f60d52a11ed85f03055a5abc`.
+Medium10 remains failed/nonterminal; Large08 remains its previously audited legal
+defeat. Next is a fresh Medium11, not promotion of this isolated Day-35 replay.
+Overall goal, full-match acceptance and broader presentation stay in progress.

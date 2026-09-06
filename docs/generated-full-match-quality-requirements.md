@@ -30,6 +30,20 @@ First reproduce and identify exact runtime owners for blockers. Add a failing
 focused regression before each correction, then replay the affected path. A
 driver correction alone is support work, not a gameplay fix or goal completion.
 
+Medium10 driver-policy correction: a known recruit-reward site that the current
+army cannot claim must not repeatedly displace feasible exploration or combat.
+Use the existing claim-admission authority, including fitting/matching-stack
+controls and changed-army freshness; do not mark the real site collected, hide it
+or remove troops. Retain a legal visible target across partial travel, refreshing
+its live position/availability after a turn, instead of oscillating toward nearer
+failed sites. Verify the observed stop is a driver defect, not an unhandled live
+movement/pathing failure, before changing the policy. Use ordinary Town specialty
+actions for earned choices. Preserve no-progress history and complete checkpoint
+provenance on continuation; an old partial snapshot lacking adequate proof is a
+reason to start fresh, not reset or relax terminal acceptance. Driver-only work
+does not require re-exporting identical production files, but must identify the
+unchanged validated runtime/package hash and preserve Linux/Windows parity.
+
 Existing Town recruitment-surface validation must open the real Muster modal
 before observing recruit buttons. A closed lazy dialog's synthetic action
 snapshot is not proof of visible UI. Python-owned invocation may adapt that
@@ -52,8 +66,14 @@ body-to-entrance selection where no other interaction owns the tile. Prove both
 recorded artifacts can actually be collected through pointer input, guards and
 save/resume, plus encounter/entrance, level and stale-cache controls. Do not move
 objects, alter masks or hide legitimate sites to avoid the overlap.
-Guard control zones and town art anchors are not exact object positions; retain
-their existing movement semantics without letting them preempt scenic shortcuts.
+Guard control zones and town art anchors are not exact object positions. The
+Medium10 saved-state reproduction corrects an earlier overly broad shortcut
+assumption: an active same-level guard approach must remain directly selectable
+even underneath resource scenery, otherwise a reachable combat square redirects
+to an unreachable interior entrance. Keep the approach distinct from the guard's
+anchor, use the existing encounter descriptor, preserve exact resource entrances,
+and release priority on resolution/level change. Do not change movement masks or
+combat triggers. Town art anchors still use their normal entrance shortcut.
 Generated support-site visit tiles remain authoritative without an authored
 scenic object descriptor. Recheck the real guarded opening arrival/primary-action
 flow as well as both artifact collections.

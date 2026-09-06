@@ -9413,7 +9413,7 @@ func _resource_node_at(x: int, y: int) -> Dictionary:
 	# A scenic rectangle is not the owner of an artifact, guard, entrance or
 	# commander on a different actual interaction tile. Keep descriptors and
 	# labels consistent with the same exact-tile priority used by selection.
-	if _tile_has_exact_selection_target(tile):
+	if _tile_has_exact_selection_target(tile) or _tile_has_guard_approach_selection(tile):
 		_refresh_cache[cache_key] = {}
 		return {}
 	for node in _active_resource_nodes():
@@ -9444,6 +9444,15 @@ func _selection_route_tile(tile: Vector2i) -> Vector2i:
 			"object": true, "object_kind": "exact_tile",
 		})
 		return tile
+	# Combat approaches are not the guard's anchor, but must still be clickable.
+	# A scenic shortcut into the guarded interior can be unreachable because the
+	# route correctly stops at this first engagement square.
+	if _tile_has_guard_approach_selection(tile):
+		_debug_phase_end("tile_object_selection_resolution", selection_started_usec, {
+			"raw": _debug_tile_payload(tile), "resolved": _debug_tile_payload(tile),
+			"object": true, "object_kind": "guard_approach",
+		})
+		return tile
 	var town_selection := _town_footprint_selection(tile)
 	if not town_selection.is_empty():
 		var town_entry: Vector2i = town_selection.get("entry_tile", tile) if town_selection.get("entry_tile", tile) is Vector2i else tile
@@ -9468,6 +9477,9 @@ func _selection_route_tile(tile: Vector2i) -> Vector2i:
 		"placement_id": String(node.get("placement_id", "")),
 	})
 	return resolved
+
+func _tile_has_guard_approach_selection(tile: Vector2i) -> bool:
+	return _session != null and not OverworldRules.guard_engagement_encounter_at_tile(_session, tile.x, tile.y, LevelRules.view_level(_session)).is_empty()
 
 func _tile_has_exact_selection_target(tile: Vector2i) -> bool:
 	if _session == null:

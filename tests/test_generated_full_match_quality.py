@@ -1,5 +1,6 @@
 """Complete-match acceptance must never promote a partial driver run."""
 import copy
+import hashlib
 import json
 from pathlib import Path
 import tempfile
@@ -84,6 +85,8 @@ class FullMatchAcceptanceTests(unittest.TestCase):
             self.assertEqual(metadata['counts'], {'setup': 1, 'save_resume': 2})
             self.assertEqual(metadata['checkpoint_labels'], ['opening', 'mid_match'])
             self.assertNotIn('battle', metadata['counts'])
+            self.assertEqual(metadata['last_progress_day'], 5)
+            self.assertEqual(metadata['active_target'], {'id': 'still_travelling'})
 
     def test_resume_rejects_unproven_checkpoint_or_different_setup(self):
         for change in ['config', 'day', 'terminal', 'error', 'missing_log']:
@@ -110,6 +113,8 @@ class FullMatchAcceptanceTests(unittest.TestCase):
             state['overworld'].update(hero_position={'x':3,'y':4},resources={'gold':100})
             save_path.write_text(json.dumps(state))
             row = {'serial':5,'kind':'end_turn','result':{'ok':True},'state':{'day':8,'status':'in_progress','hero':{'x':3,'y':4},'resources':{'gold':100}}}
+            row['result']['save_sha256'] = hashlib.sha256(save_path.read_bytes()).hexdigest()
+            row['driver_state'] = self.driver_state()
             with (source/'actions.jsonl').open('a') as log:
                 log.write(json.dumps(row)+'\n')
             with (source/'runtime.log').open('a') as log:
@@ -129,9 +134,39 @@ class FullMatchAcceptanceTests(unittest.TestCase):
                 {'serial':2, 'kind':'save_resume', 'result':{'label':'opening','complete_state_equal':True}, 'state':{'day':1}},
                 {'serial':3, 'kind':'save_resume', 'result':{'label':'mid_match','complete_state_equal':True}, 'state':{'day':8}},
                 {'serial':4, 'kind':'battle', 'result':{}, 'state':{'day':9}}]
+        rows[2]['result']['save_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
+        rows[2]['driver_state'] = self.driver_state()
         (source/'actions.jsonl').write_text(''.join(json.dumps(row)+'\n' for row in rows))
         (source/'runtime.log').write_text(''.join('GENERATED_FULL_MATCH_ACTION '+json.dumps(row)+'\n' for row in rows))
         return source, case
+
+    def driver_state(self):
+        return dict(version=1, last_progress_day=5, failed_targets={'blocked':8},
+                    last_town_day={}, read_signs={}, waypoint_visits={},
+                    active_target={'id':'still_travelling'})
+
+    def test_resume_rejects_missing_history_and_unrecorded_save_mutation(self):
+        for mutation in ['no_history', 'no_hash', 'missing_cooldowns', 'future_progress', 'army']:
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
+                source, case = self.resume_fixture(Path(temporary))
+                path = source/'actions.jsonl'
+                rows = [json.loads(line) for line in path.read_text().splitlines()]
+                if mutation == 'no_history':
+                    rows[2].pop('driver_state')
+                elif mutation == 'no_hash':
+                    rows[2]['result'].pop('save_sha256')
+                elif mutation == 'missing_cooldowns':
+                    rows[2]['driver_state'].pop('failed_targets')
+                elif mutation == 'future_progress':
+                    rows[2]['driver_state']['last_progress_day'] = 9
+                else:
+                    save = source/'data/godot/app_userdata/heroes-like/saves/slot2.json'
+                    value = json.loads(save.read_text())
+                    value['overworld']['army'] = {'stacks':[{'unit_id':'ember_archer','count':999}]}
+                    save.write_text(json.dumps(value))
+                path.write_text(''.join(json.dumps(row)+'\n' for row in rows))
+                with self.assertRaises(ValueError):
+                    resume_prefix(source, case)
 
 
 if __name__ == '__main__':
