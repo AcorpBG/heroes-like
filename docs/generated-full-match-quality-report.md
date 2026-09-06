@@ -786,3 +786,110 @@ Final driver SHA-256:
 Medium10 remains failed/nonterminal; Large08 remains its previously audited legal
 defeat. Next is a fresh Medium11, not promotion of this isolated Day-35 replay.
 Overall goal, full-match acceptance and broader presentation stay in progress.
+
+### Generated outcome identity, same-map retry and bounded feedback
+
+Selected under `ux-generated-full-match-presentation-20260906`, with requirements
+recorded before implementation. The unmodified Large08 terminal/opening saves
+reproduce four failures: the heading exposes the internal native scenario id,
+has no full-name tooltip or intentional ellipsis, and confirmed Retry Skirmish
+fails to start. `outcome_flow_before_02/report.json` records those failures with
+zero engine errors. This is the actual previously audited defeat, not a newly
+fabricated outcome.
+
+Root cause: `ScenarioRules.perform_outcome_action` passed
+`native_h3maped_c2520619_skirmish` to the authored-skirmish selector. That runtime
+record has no authored availability entry. Generated retry now loads the original
+`.amap`/`.ascenario` pair from the saved package boundary, validates both package
+hashes, document identities and scenario-to-map reference, then passes those same
+already-checked documents through `NativeRandomMapPackageSessionBridge` and the
+shared generated-startup finalizer. It verifies the original starting hero and
+faction before activating the fresh session. No regeneration, replacement seed,
+default-faction fallback, generator/native edits or save/package schema change.
+Missing, changed and legacy-without-boundary cases stay on the complete outcome
+with a visible explanation and unchanged session/save/progression authority.
+
+The heading uses a legitimate custom scenario name or the existing map-browser
+package-stem display rule: this case is **Defeat | Fallow Lantern Fen**, not its
+internal id. Stored records/ids stay unchanged. A single-line native ellipsis and
+full tooltip keep long names bounded. Failed-action feedback is shown only when
+needed. Banner and sidebar minimum-size changes now refit their edge layout after
+wrapped text receives its real width; otherwise failed retry or expanded Details
+could push the emblem/commands or Save/Menu/Close/Guide below the viewport.
+
+Focused evidence lives in `.artifacts/generated_full_match_quality_20260906/`:
+
+- `outcome_flow_720_final_03`: **128 checks pass**, zero runtime errors. It loads
+  the complete saved defeat through production restore/router, checks collapsed
+  focus, title/Details/navigation bounds, confirms/cancels the actual retry, enters
+  the real fresh Overworld and compares map, hero position/army, towns, resources,
+  artifacts, players, original hero and difficulty with the recorded Day-1 save.
+  Four separate unavailable/mismatched/legacy fixtures preserve complete state;
+  authored-name and custom long-name controls are isolated from match evidence.
+  Original terminal/manual saves and campaign progression are unchanged.
+- `outcome_flow_1080_final_03`: the same **128 checks pass**, source files
+  unchanged, zero runtime errors and process exit 0. Final 720/1080 outcome,
+  Details, long-title and unavailable-package views were opened and inspected;
+  navigation stays visible and the scenic background remains dominant.
+  Earlier 93-check reports lacked expanded-Details/navigation assertions and
+  are not final acceptance. One intervening 1080 run printed passing assertions
+  but its supervisor ended with signal 143 before writing a final report; it is
+  not accepted. A fresh detached supervisor ran the unchanged test and its
+  existing 300-second timeout to a complete successful report.
+- `.artifacts/full_play_runtime_20260905/outcome_input_release_final`: all three
+  existing outcome confirmation, normal-entry/tab focus and autosave recovery
+  reports pass. Twelve full-match Python acceptance tests pass.
+- `.artifacts/full_play_runtime_20260905/outcome_campaign_release_final`: all
+  four campaign completion atomicity, replay preservation, fail-closed storage
+  and generated-opening autosave failure/retry reports pass.
+- `outcome_linux_release_final` and `outcome_windows_release_final`: standard
+  export/startup checks pass; Linux's real rendered packaged generated entry and
+  Windows's fresh-prefix packaged generated entry both reach Overworld and Town
+  without runtime errors. Both PCKs are **248453080 bytes**, **1546920** below the
+  unchanged ceiling. Windows uses Wine, not physical Windows hardware. Native
+  code/libraries and package content rules are unchanged. Repository validation
+  passes after its obsolete status-tooltip token is updated to require the full
+  error text and actual minimum-size refit owners; `git diff --check` passes.
+
+The original source save hashes remain
+`f628774c1beb18b2cd6d127e683572f9fa1a38505de77e36b42763745df1e8d2`
+(terminal) and
+`d2b4a0ef45521f768a6e0b8f23878c5f7e16a92838250068df05fff1f3cd31a9`
+(opening). Package files remain
+`145f8af5931ab879da58dfd3b1980fa718b997cc400a1e7ece8108b791031050`
+(`large-fallow-lantern-fen-4587a983.amap`) and
+`b2ac6048139e01c9974c65a28cae2480be94c97be625527c9cb9707949e2d419`
+(`.ascenario`). Runtime source-tree SHA-256:
+`863dbeb0855ab377f32d0792c93df5d80ca219bf3b4ae1c5caf948ba33a159de`.
+
+Validation compatibility is explicit: the Python-owned existing-report runner
+sets logical canvas size as well as OS-window size for old viewport fixtures;
+opens actual Details for the legacy expanded-recap matrix; and invokes the
+existing explicit fixed-slot compatibility API for its occupied-slot checks.
+All original consent, physical cancel/confirm, focus, stale-source, route,
+byte/state and progression assertions remain. Those fixed-slot checks are not
+claimed as the current named-file Save UI: `outcome_named_saves_final` separately
+passes real Save buttons and named-file storage/consent for Overworld, Town,
+Battle and Outcome (nine files, zero failures). Only exact deliberately injected
+outcome/return autosave domain errors are expected by the report runner.
+
+Failed attempts are retained honestly: one probe parse fixture was corrected;
+immediate same-frame test confirmation was changed to wait for the visible
+dialog; a wrapped-title variant collapsed its measured height; first feedback
+and Details variants exposed real layout overflow. The named-file test first hit
+the known Linux AccessKit backend abort and then an obsolete screenshot path;
+fresh isolated accessibility-disabled/current-path runs preserve its assertions.
+The first disposable Linux export hid installed templates behind XDG isolation;
+the next headless generated entry completed but emitted two engine Window signal
+disconnect errors. Neither is accepted as a passing full-platform run.
+
+Only disposable save copies created by this turn's four completed failed probes
+were removed (about 120 MB); their source saves, reports and screenshots remain.
+New package binaries/prefixes use fresh `/dev/shm` directories and are removed
+after validation; existing retained packages, caches and unrelated artifacts
+are untouched. This checkpoint does not finish Town building-art integration,
+the complete Medium match, broader recap copy or full-game release acceptance.
+Medium11 continues on its launch commit `983594db` and original driver hash;
+its preloaded owners do not validate these subsequent outcome changes. At the
+Day-32 checkpoint it has 655/655 legal army observations, 27 actual battles and
+five owned towns; it remains nonterminal, not a newly accepted complete match.

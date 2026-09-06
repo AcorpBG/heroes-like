@@ -26607,7 +26607,10 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
         '_recap_details_button.text = "Close" if _recap_expanded else "Details"',
         "var visible_status_line := (",
         "else (next_step_summary if next_step_summary != \"\" else (action_cue_summary if action_cue_summary != \"\" else \"Review the outcome, then choose the next step.\"))",
-        "_action_status_label.tooltip_text = \"\\n\".join(action_status_lines + [follow_up_tooltip, retry_tooltip]).strip_edges()",
+        "_action_status_label.tooltip_text = \"\\n\".join([_last_action_message] + action_status_lines + [follow_up_tooltip, retry_tooltip]).strip_edges()",
+        '_action_status_label.get_parent().get_parent().visible = _last_action_message != ""',
+        '_banner.minimum_size_changed.connect(_apply_responsive_layout)',
+        '_sidebar_shell.minimum_size_changed.connect(_apply_responsive_layout)',
         "var visible_action_hint := action_cue_summary if action_cue_summary != \"\" else (next_play_action_summary if next_play_action_summary != \"\" else visible_status_line)",
         "_actions_hint_label.tooltip_text = \"\\n\".join(action_status_lines + [follow_up_tooltip, retry_tooltip, action_cue_summary, visible_action_hint]).strip_edges()",
     ):

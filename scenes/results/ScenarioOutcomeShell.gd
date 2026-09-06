@@ -166,6 +166,10 @@ func _ready() -> void:
 	_configure_outcome_new_session_confirmation()
 	resized.connect(_apply_responsive_layout)
 	_content_box.resized.connect(_apply_responsive_layout)
+	# Wrapped feedback initially measures before its final column width. Refit
+	# when that minimum settles so a failed retry cannot push commands offscreen.
+	_banner.minimum_size_changed.connect(_apply_responsive_layout)
+	_sidebar_shell.minimum_size_changed.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
@@ -428,6 +432,7 @@ func _refresh() -> void:
 	_apply_result_palette(status)
 	_sync_scenic_epilogue(status)
 	_header_label.text = String(_model.get("header", "Scenario Outcome"))
+	_header_label.tooltip_text = _header_label.text
 	_set_compact_label(_summary_label, String(_model.get("summary", "Scenario resolution recorded.")), 2)
 	_mode_label.text = String(_model.get("mode_summary", ""))
 	_result_badge_label.text = _result_status_label(status)
@@ -493,7 +498,8 @@ func _refresh() -> void:
 		1,
 		156
 	)
-	_action_status_label.tooltip_text = "\n".join(action_status_lines + [follow_up_tooltip, retry_tooltip]).strip_edges()
+	_action_status_label.get_parent().get_parent().visible = _last_action_message != ""
+	_action_status_label.tooltip_text = "\n".join([_last_action_message] + action_status_lines + [follow_up_tooltip, retry_tooltip]).strip_edges()
 	var visible_action_hint := action_cue_summary if action_cue_summary != "" else (next_play_action_summary if next_play_action_summary != "" else visible_status_line)
 	_set_compact_label(
 		_actions_hint_label,
