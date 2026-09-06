@@ -2447,6 +2447,9 @@ func _render_state() -> void:
 			"generated_town_return_first_frame",
 			[
 				REFRESH_PHASE_MAP_VIEW,
+				# This is a newly instantiated shell, not the existing field UI.
+				# Populate owned hero/town navigation even on the compact return.
+				REFRESH_PHASE_HERO_ACTIONS,
 				REFRESH_PHASE_STATUS_SURFACES,
 				REFRESH_PHASE_SAVE_SURFACE,
 			],
@@ -4830,6 +4833,28 @@ func _refresh_generated_town_return_action_surface() -> void:
 
 func _refresh_selected_route_action_surface() -> void:
 	var route_action_started := _debug_refresh_profile_begin("refresh_route_destination_action")
+	# A route preview is no longer a travel order once it reaches the hero.
+	# Keep authoritative current-tile interactions (especially guards over sites
+	# and owned-town entrances) instead of caching an empty No Route action.
+	if _viewing_hero_level() and _selected_tile == OverworldRules.hero_position(_session):
+		var current_actions := _current_context_actions()
+		if not current_actions.is_empty():
+			var current_primary := _first_enabled_action(current_actions)
+			_refresh_cache["primary_action"] = current_primary
+			_refresh_primary_action_button(current_primary)
+			_render_context_action_buttons(current_actions, current_primary, "Select a tile for orders")
+			var current_profile := {
+				"status": "used",
+				"destination_only": false,
+				"current_tile_interaction": true,
+				"broad_context_actions_skipped": false,
+				"hero_actions_skipped": true,
+				"action_count": current_actions.size(),
+				"primary_action_id": String(current_primary.get("id", "")),
+			}
+			_validation_profile["last_route_destination_only_action_path"] = current_profile
+			_debug_refresh_profile_end("refresh_route_destination_action", route_action_started, current_profile)
+			return
 	var actions := _selected_route_destination_actions()
 	var primary_action := _first_enabled_action(actions)
 	_refresh_cache["context_actions"] = actions

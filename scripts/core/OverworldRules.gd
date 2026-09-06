@@ -7225,8 +7225,11 @@ static func _resource_site_guard_targets_node(guard: Dictionary, node: Dictionar
 	var site_id := String(site.get("id", node.get("site_id", "")))
 	var target_placement_id := String(guard.get("target_placement_id", ""))
 	var target_id := String(guard.get("target_id", ""))
-	if target_placement_id != "" and target_placement_id == node_placement_id:
-		return true
+	# An explicit placement scopes this guard to one instance. Falling through
+	# to its shared site id made guards at every other generated town continue
+	# to lock the reward even after this site's own guard had been defeated.
+	if target_placement_id != "":
+		return target_placement_id == node_placement_id
 	if target_id != "" and target_id in [node_placement_id, site_id]:
 		return true
 	return false
