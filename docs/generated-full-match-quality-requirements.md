@@ -173,6 +173,25 @@ overlays. Prove ordinary build and save/resume do not change, with real generate
 opening saves and inspected 1280x720/1920x1080 captures. This corrects overlay
 ownership, not the still-unfinished building/art integration requirement.
 
+The Town command rail must show a short readable active-hero identity without
+letting multi-line descriptive prose crowd the scene. Retain full hero details
+in its tooltip and keep commander/specialty actions accessible. Empty-state copy
+must wrap or ellipsize within its actual available width, never clip a word with
+no indication. The Overworld save-status label must sit inside the system frame's
+safe content inset, remain distinguishable from adjacent buttons and preserve
+normal Save/End Turn/Settings/Menu actions plus save/load/error feedback. Check
+both generated opening fixtures at both supported resolutions and retain every
+serialized gameplay field through layout and dialog-only interactions.
+
+The first Town entry must show pending specialty choices and stationed-commander
+actions immediately, without requiring a build, purchase or tab refresh. Consume
+the existing full entity view's cached command rows even when presentation is
+minimal; keep hidden management lanes lazy. Verify empty and populated controls,
+keyboard activation through the existing handlers, refreshed choices/identity,
+full save/resume and bounded two-resolution layout. Explicitly isolated test
+fixtures may grant experience through the existing progression authority and
+pay normal tavern hire costs; these are UI controls, not accepted full matches.
+
 Native generation semantics are not selected for change. Follow
 `docs/lessons-learned.md` if a failure reaches that boundary: name the unrecovered
 function/state proof and create a properly scoped recovery child before changing

@@ -1043,7 +1043,7 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	buckets["header_outlook"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
 	_hero_portrait.set_hero_id(_live_player_hero_id())
-	_set_compact_label(_hero_label, String(view_state.get("hero_text", "")), 2)
+	_refresh_command_identity(String(view_state.get("hero_text", "")))
 	_set_compact_label(_production_overview_label, String(view_state.get("production_visible_text", "")), 4)
 	_production_overview_label.tooltip_text = String(view_state.get("production_tooltip_text", ""))
 	_set_compact_label(_heroes_label, String(view_state.get("heroes_text", "")), 2)
@@ -1364,8 +1364,11 @@ func _town_keyboard_focus_surfaces() -> Array:
 			return [_build_actions, _confirm_build_button]
 
 func _rebuild_current_action_surfaces(view_state: Dictionary, minimal: bool) -> void:
+	# These rows belong to the persistent command rail, not a lazy management
+	# lane. The full cached view already owns them, including on first entry.
+	_rebuild_hero_actions(view_state.get("hero_actions", []))
+	_rebuild_specialty_actions(view_state.get("specialty_actions", []))
 	if not minimal:
-		_rebuild_hero_actions(view_state.get("hero_actions", []))
 		if _town_catalog_is_open() and _town_catalog_mode == "build":
 			_rebuild_build_actions(view_state.get("build_actions", []))
 		_rebuild_market_actions(view_state.get("market_actions", []))
@@ -1375,7 +1378,6 @@ func _rebuild_current_action_surfaces(view_state: Dictionary, minimal: bool) -> 
 		_rebuild_transfer_actions(view_state.get("transfer_actions", []))
 		_rebuild_response_actions(view_state.get("response_actions", []))
 		_rebuild_study_actions(view_state.get("study_actions", []))
-		_rebuild_specialty_actions(view_state.get("specialty_actions", []))
 		_rebuild_artifact_actions(view_state.get("artifact_actions", []))
 		return
 	var lanes := _current_town_tab_lanes()
@@ -6002,11 +6004,23 @@ func _normalize_string_array(value: Variant) -> Array[String]:
 
 func _make_placeholder_label(text: String) -> Label:
 	var label := FrontierVisualKit.placeholder_label(text)
-	label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.clip_text = true
+	label.max_lines_visible = 2
+	label.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
 	label.custom_minimum_size = Vector2(188.0, 24.0)
 	label.tooltip_text = text
 	return label
+
+func _refresh_command_identity(full_text: String) -> void:
+	# Faction identity is already in the Town header. Keep this rail readable;
+	# the complete role, command and readiness description remains available.
+	var hero: Dictionary = _session.overworld.get("hero", {})
+	_hero_label.text = "%s\nLevel %d · XP %d/%d" % [
+		String(hero.get("name", "Commander")), int(hero.get("level", 1)),
+		int(hero.get("experience", 0)), int(hero.get("next_level_experience", 250)),
+	]
+	_hero_label.tooltip_text = full_text
 
 func _unit_id_for_recruit_action(action: Dictionary) -> String:
 	var unit_id := String(action.get("unit_id", "")).strip_edges()

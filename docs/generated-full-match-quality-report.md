@@ -2,12 +2,13 @@
 
 2026-09-06. Active Phase 6 parent `quality-generated-full-match-20260906`,
 playthrough child `quality-generated-full-match-playthrough-20260906` remains
-in progress. The Town overlay checkpoint below is validated; fresh terminal
-matches are next. Measured responsiveness improvements remain a validated
-checkpoint, not a completed full-match child.
+in progress. Town overlay and command/footer checkpoints below are validated.
+Large08 reached a legitimate Day-14 defeat after enemy-town conquest; Medium10
+stopped on Day 35 without an outcome and remains diagnostic. Measured
+responsiveness improvements are a checkpoint, not a completed full-match child.
 Requirements:
 `docs/generated-full-match-quality-requirements.md`. This is an implementation
-checkpoint, **not completion of the child, full matches, or release readiness**.
+checkpoint, **not completion of the child, both match sizes, or release readiness**.
 
 ## Gameplay corrections
 
@@ -567,3 +568,127 @@ text is truncated; the Overworld save-status footer clips. Removing duplicate
 overlays does **not** solve those defects or certify Town art integration. The
 presentation child, full matches and overall goal remain in progress. No new
 matched responsiveness claim is made from these concurrent validation runs.
+
+### Compact commands/footer and first-entry choices
+
+`TownShell` now displays name plus level/XP in two lines, keeping the complete
+authoritative hero description in its tooltip. Empty command labels wrap or
+ellipsize instead of cutting words without an indication. The Overworld system
+frame's decorative chevrons extended beyond its old content inset: horizontal
+padding is now 20 pixels, and save status has a 76-pixel minimum. Failure copy is
+the concise **Save failed**, retaining the complete explanation and retry action
+in the existing tooltips. Save storage, feedback publication and rules are unchanged.
+
+Large08's developed Town also exposed earned choices missing on initial entry.
+`TownShell._refresh(true)` already obtains the full cached entity view, but
+`_rebuild_current_action_surfaces` skipped both command rows when presentation
+was minimal. It now creates commander/specialty controls from those existing
+rows on every refresh. Hidden Build/Muster dialogs stay lazy; no new progression,
+cache lifetime, rule, art or save-schema change was needed.
+
+Evidence under `.artifacts/generated_full_match_quality_20260906/`:
+
+- `command_layout_before_02`: seven reproduced text/frame failures; the first
+  attempt did not exercise hydrated empty-state labels and is not the complete
+  reproduction. `command_layout_verified_720` and `_1080`: **58 checks each pass**
+  on actual Medium10/Large08 opening saves restored through the production save
+  loader. Cover real named-save dialog opening, failure feedback, ordinary paid
+  construction, complete-state read-only observations and responsive bounds.
+- `command_entry_reference_verified`: the exact `19ebe521` Town script/scene in
+  a disposable control reproduces ten missing-command failures, with zero engine
+  errors. Current `command_entry_verified_720`/`_1080` pass **124 checks each**:
+  actual first-entry controls, two stationed commanders, three offered choices,
+  Enter-key selection, exactly one consumed choice/rank gain, switching away and
+  back, closed-dialog laziness and complete save/resume. Fixtures explicitly award
+  XP through progression and pay the normal hire through the real Town handler;
+  they are UI tests, not full-match evidence. Source saves are unchanged.
+- `command_entry_art_preserved_720`/`_1080`: the final expanded test passes
+  **148 checks each**, retaining the same keyboard/save controls and verifying
+  all built IDs survive in the scenic payload and their visible plot mappings
+  across entry, choice, commander changes and resume. Final images were inspected;
+  this guards building presence, not the quality of scene integration.
+- Earlier command-test attempts bypassed scenario restoration, observed a copied
+  session instead of the live one, or bypassed the UI cache-invalidation handler.
+  They remain failed fixture attempts. The final test requires the production
+  restore path and object identity with the actual Town session; it does not hide
+  assertion failures or alter production data to accommodate them.
+- Final command/Overworld/Town captures at both resolutions were opened and
+  inspected. The command rows, five dialogs and navigation fit; the scenic
+  building sprites still visibly float over Veilmourn water. This is **not**
+  seamless-building-art acceptance.
+- `command_entry_named_saves/named_save_files_report.json`: existing real named-
+  file tests pass storage, overwrite consent, rollback, external-edit detection,
+  keyboard input and all four Save routes. Only fresh artifact paths and the
+  recorded validation-only accessibility/backend wrapper differ.
+- `command_entry_linux_verified`, `command_entry_windows_verified` and
+  `command_entry_linux_entry_verified`: serial exports, startup and generated
+  Overworld/Town entry pass. Both PCKs are **248450328 bytes**, **1549672 bytes**
+  below the unchanged 250000000-byte ceiling. Windows runtime is Wine, not native
+  hardware certification. Runtime source SHA256:
+  `a54cc1ef6d49efb4797cea408b9ec5d5e77dd566a140842b0982a558a9c625cd`.
+- `command_entry_acceptance.log`: all eleven Python acceptance/checkpoint tests
+  pass. `command_entry_validate_final.log` and `git diff --check` pass.
+
+The six existing reports in
+`.artifacts/full_play_runtime_20260905/command_layout_domains_final/report.json`
+all pass: Town dialog/hotspot matrix, field transfers, 42 live Muster tiers,
+generated-opening save failure/retry, save-written and load-resumed feedback.
+The Python runner retains the original assertions. Its old save-retry fixture
+needed generated identity normalized before the baseline snapshot; the same
+failure was reproduced on `19ebe521` in `command_save_failure_baseline`. The load
+cue report now observes the actual scene-change/first-drawn-frame boundary instead
+of assuming a 260-ms reduced-motion cue survives three arbitrarily slow frames.
+Original cue activity, copy/layout, once-only publication, input, bytes/state and
+expiry checks remain; no production duration was extended. Earlier concurrent
+and serial failures are retained, not reported as passing.
+
+### Current terminal-match audit
+
+Both runs below launched on clean `19ebe521`, runtime SHA256
+`b5491122615a0b0491028a9c4c462713da126a210ca96746015a8fd016249eae`,
+driver SHA256 `3ccdad0ba3feb986c5de2d02529886379bd390fdd99aa1184c83cc3a81a21229`.
+AppRouter preloads the relevant PackedScenes, so later UI-only working-tree edits
+did not replace their launch owners. Both are now stopped, not live monitors.
+
+- **Large08: legitimate defeat, accepted bounded Large terminal coverage.**
+  Seed `large-runtime-profile-10225`, Large 108x108, four players, normal,
+  Veilmourn/Orso, rendered 1920x1080. Day 14, 201 actions, 15 shipped Quick Resolve
+  battles and 15 casualty reports, 13 builds, 24 recruitments, eight studies and
+  13 End Turns. All 201 capacity observations pass. Opening, Day-8 mid-match and
+  terminal save/resume preserve every serialized field. At action 189 the real
+  battle captured enemy Mireclaw town `native_h3maped_c2520619_object_2169`;
+  this is an enemy-to-player ownership transition, not a screenshot counter or
+  merely a neutral claim. The driver then reclaimed a hostile site, defeated
+  raid `player_3_raid_5`, and lost to `player_3_raid_6` through real battle/report
+  routing. Terminal slot3 and the inspected `final.png` show
+  `ScenarioOutcomeShell`, defeat, no primary army and “The primary commander is
+  defeated.” No force-outcome, surrender or turn-limit defeat was injected. The
+  policy filters visible targets by the existing coarse army-strength estimate
+  before attacking; that estimate does not guarantee a combat win. This is not
+  tactical/manual coverage, balance approval or exhaustive Large endgame coverage.
+- **Medium10: failed diagnostic, not terminal coverage.** Seed `10`, Medium,
+  two players, normal Embercourt/Lyra, rendered 1280x720. Day 35, 608 actions,
+  three owned towns, 61 builds, 113 recruitments, 47 studies and 11 battles/reports.
+  All 608 capacity observations pass; no engine error was logged. It stopped on
+  the fourteen-day no-exploration/interaction-progress guard, still in Overworld
+  with army strength 13347. The final history repeatedly revisits troop-reward
+  site `native_h3maped_93c0f05a_object_1324` despite seven occupied slots, then
+  follows a moving raid with the remaining movement. Costs/capacity rejection are
+  working; the driver does not yet avoid this known-infeasible reward and keep a
+  coherent long route. Diagnose its policy with the exact saved state before any
+  gameplay change. A legal matching-checkpoint continuation or fresh complete run
+  is still required; do not weaken the no-progress acceptance guard.
+
+Large08 `town_day_014.png` was inspected: 16 built buildings, Spell Tier 4 and
+three pending specialties on the old UI. The new command fix addresses that
+availability defect. The outcome title still leaks/clips the raw generated
+scenario id, and Town scene-matched building layers remain unfinished. The driver
+also did not spend earned specialties; that is a legal-policy coverage limitation,
+not justification to rewrite the accepted action history.
+
+The two engines were individually identity/ancestry-verified and paused for
+119 seconds during a cue-timing isolation attempt, then resumed in a guaranteed
+cleanup path. `command_layout_feedback_pause.json` records the exact interval and
+PIDs. The older group-pause helper correctly rejected their nonleader wrappers.
+Concurrent tests and this pause contaminate their wall timings; retain profile
+data as hotspot observations, **not** a matched performance improvement claim.

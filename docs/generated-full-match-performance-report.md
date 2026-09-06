@@ -5,6 +5,14 @@ Phase 6 child `performance-generated-full-match-actions-20260906`, under
 `docs/generated-full-match-quality-requirements.md`. **In progress**, not complete
 matches, game-wide performance approval or release readiness.
 
+Latest coverage boundary: Large08 reached a real Day-14 defeat after conquest;
+Medium10 stopped nonterminal on Day 35. Their 201/608 action capacity traces pass,
+but both ran alongside validation and were identity-checked/paused for 119 seconds
+during cue isolation (`command_layout_feedback_pause.json`). These profiles are
+hotspot observations, not clean comparison timings. The command/footer checkpoint
+does not make a new performance claim or change the matched results below.
+See `docs/generated-full-match-quality-report.md` for terminal evidence and limits.
+
 ## Town orders: implemented
 
 Actual Large Day-20 recruitment clicks, not merely the validation wrapper, took
