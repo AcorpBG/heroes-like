@@ -38,6 +38,7 @@ var failed_targets := {}
 var last_town_day := {}
 var read_signs := {}
 var waypoint_visits := {}
+var active_target := {}
 var action_file: FileAccess
 var checkpoint_count := 0
 var checkpoint_labels := []
@@ -107,6 +108,8 @@ func record(kind: String, started: int, result: Dictionary = {}) -> void:
 	serial += 1
 	counts[kind] = int(counts.get(kind, 0)) + 1
 	var row := {"serial":serial,"kind":kind,"wall_ms":float(Time.get_ticks_usec()-started)/1000.0,"result":result,"state":compact_state()}
+	if kind in ["save_resume", "end_turn"]:
+		row["driver_state"] = {"version":1,"last_progress_day":last_progress_day,"failed_targets":failed_targets,"last_town_day":last_town_day,"read_signs":read_signs,"waypoint_visits":waypoint_visits,"active_target":active_target}
 	action_file.store_line(JSON.stringify(row))
 	action_file.flush()
 	print("GENERATED_FULL_MATCH_ACTION " + JSON.stringify({"serial":serial,"kind":kind,"day":session.day,"wall_ms":row.wall_ms,"result":result}))
@@ -172,7 +175,7 @@ func checkpoint(label: String, slot: int) -> void:
 	await resolve_routes()
 	checkpoint_count += 1
 	checkpoint_labels.append(label)
-	record("save_resume",started,{"label":label,"complete_state_equal":equal,"slot":slot})
+	record("save_resume",started,{"label":label,"complete_state_equal":equal,"slot":slot,"save_sha256":FileAccess.get_sha256(path)})
 
 func town_orders() -> void:
 	var scene = get_tree().current_scene
@@ -184,9 +187,9 @@ func town_orders() -> void:
 		if session.day >= 14:
 			counts["developed_town_capture"] = 1
 	# The shipped catalog determines eligibility and normal costs. Never inject stock.
-	for lane in ["build", "recruit", "study"]:
+	for lane in ["specialty", "build", "recruit", "study"]:
 		var used := {}
-		for attempt in range(12 if lane == "recruit" else 1):
+		for attempt in range(12 if lane in ["recruit", "specialty"] else 1):
 			var catalog: Dictionary = scene.validation_action_catalog()
 			var selected := ""
 			var choices: Array = catalog.get(lane, []).duplicate()
@@ -199,7 +202,8 @@ func town_orders() -> void:
 					break
 			if selected == "":
 				break
-			used[selected] = true
+			if lane != "specialty":
+				used[selected] = true
 			var started := Time.get_ticks_usec()
 			var result: Dictionary = scene.validation_perform_town_action(selected)
 			await settle()
@@ -248,6 +252,23 @@ func guard_approach(encounter: Dictionary) -> Vector2i:
 			best_distance = path.size()
 	return best
 
+func resource_claim_feasible(node: Dictionary) -> bool:
+	# The same admission/cost authority as the live claim control. Re-read every
+	# selection: a later merge, transfer or reward can change eligibility.
+	if Transit.is_native(node):
+		return true
+	var site: Dictionary = ContentService.get_resource_site(String(node.get("site_id","")))
+	return bool(Heroes.army_addition_plan(session.overworld.get("army",{}).get("stacks",[]),OverworldRules._resource_site_claim_recruits(site)).get("ok",false)) and OverworldRules._can_afford(session,OverworldRules._resource_site_visit_cost(site))
+
+func target_precedes(a: Dictionary, b: Dictionary) -> bool:
+	# Intent is only an id, never a stale position or a bypass of today's
+	# visibility, availability, risk, admission and legal-path checks.
+	var a_current: bool = a.id == active_target.get("id","")
+	var b_current: bool = b.id == active_target.get("id","")
+	if a_current != b_current:
+		return a_current
+	return a.id < b.id if is_equal_approx(a.score,b.score) else a.score < b.score
+
 func choose_target() -> Dictionary:
 	var scene = get_tree().current_scene
 	var origin := OverworldRules.hero_position(session)
@@ -290,12 +311,12 @@ func choose_target() -> Dictionary:
 					score -= 10.0
 			elif kind == "resource":
 				var site: Dictionary = ContentService.get_resource_site(String(target.get("site_id","")))
-				if read_signs.has(id):
+				if read_signs.has(id) or not resource_claim_feasible(target):
 					continue
 				if bool(site.get("persistent_control",false)):
 					score -= 4.0
 			candidates.append({"id":id,"kind":kind,"tile":tile,"score":score,"record":target})
-	candidates.sort_custom(func(a,b):return a.id < b.id if is_equal_approx(a.score,b.score) else a.score < b.score)
+	candidates.sort_custom(target_precedes)
 	for candidate in candidates:
 		if candidate.tile == origin:
 			return candidate
@@ -325,7 +346,7 @@ func choose_target() -> Dictionary:
 					unknown += 1
 			if unknown > 0:
 				frontier.append({"id":"explore:%d:%d"%[x,y],"kind":"explore","tile":tile,"score":origin.distance_to(tile)-float(unknown)})
-	frontier.sort_custom(func(a,b):return a.id < b.id if is_equal_approx(a.score,b.score) else a.score < b.score)
+	frontier.sort_custom(target_precedes)
 	for target in frontier:
 		if int(failed_targets.get(target.id,0)) >= session.day:
 			continue
@@ -369,6 +390,7 @@ func perform_target(target: Dictionary) -> void:
 			failures.append("owned-town roster/primary order did not open Town")
 		return
 	# Actual pointer selection/activation path, not the omniscient validation BFS.
+	active_target = {"id":target.id,"kind":target.kind}
 	scene._on_map_tile_pressed(target.tile)
 	await resolve_routes()
 	if scene_path().ends_with("OverworldShell.tscn") and OverworldRules.hero_position(session) == origin:
@@ -391,6 +413,8 @@ func perform_target(target: Dictionary) -> void:
 		last_progress_day = session.day
 	if not moved and not routed:
 		failed_targets[target.id] = session.day
+	if not moved or routed or OverworldRules.hero_position(session) == target.tile:
+		active_target.clear()
 	if target.kind == "resource":
 		var node: Dictionary = target.get("record",{})
 		if Transit.is_native(node) and moved:
@@ -420,7 +444,12 @@ func run_match() -> void:
 	if cfg.has("resume"):
 		var resume: Dictionary = cfg.resume
 		var payload: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(out.path_join("resume.json")))
-		session = SessionState.restore_session(payload)
+		# Use production load admission, including saved generated-scenario
+		# registration, then observe the actual active instance returned by it.
+		var copy_path := SaveService.save_session(payload,1)
+		session = SaveService.restore_manual_session(1) if copy_path != "" else null
+		if session != null:
+			session = SessionState.set_active_session(session)
 		for key in ["saved_at_unix","save_slot_type","saved_from_game_state","saved_from_scenario_status","saved_from_launch_mode"]:
 			payload.erase(key)
 		if session == null or JSON.parse_string(JSON.stringify(session.to_dict())) != payload:
@@ -434,6 +463,9 @@ func run_match() -> void:
 		last_progress_day = int(resume.last_progress_day)
 		read_signs = resume.read_signs
 		last_town_day = resume.last_town_day
+		failed_targets = resume.failed_targets
+		waypoint_visits = resume.waypoint_visits
+		active_target = resume.active_target
 		AppRouter.resume_active_session()
 		await resolve_routes()
 		record("resume_segment",started,{"source":resume.source,"save_sha256":resume.save_sha256})
@@ -478,7 +510,7 @@ func run_match() -> void:
 		if bool(turn.get("confirmation_required",false)):
 			turn = get_tree().current_scene._on_end_turn_confirmation_confirmed()
 		await resolve_routes()
-		record("end_turn",started,{"ok":turn.get("ok",false)})
+		record("end_turn",started,{"ok":turn.get("ok",false),"save_sha256":FileAccess.get_sha256(SaveService._autosave_path())})
 		if not bool(turn.get("ok",false)) or session.day == day_start and session.scenario_status == "in_progress":
 			failures.append("End Turn failed to advance")
 		if session.day in [8,22,43] and session.scenario_status == "in_progress":
@@ -562,6 +594,16 @@ def resume_prefix(source: Path, case: dict, autosave: bool = False) -> tuple[byt
     if not matches or state['scenario_status'] != 'in_progress':
         raise ValueError('no recorded exact nonterminal checkpoint for this save')
     rows = rows[:matches[-1]+1]
+    saved_hash = hashlib.sha256(saved).hexdigest()
+    driver_state = rows[-1].get('driver_state', {})
+    if rows[-1]['result'].get('save_sha256') != saved_hash:
+        raise ValueError('checkpoint lacks exact saved-file hash; start a fresh match')
+    if (driver_state.get('version') != 1
+            or type(driver_state.get('last_progress_day')) is not int
+            or not 1 <= driver_state['last_progress_day'] <= state['day']
+            or any(not isinstance(driver_state.get(key), dict) for key in
+                   ['failed_targets', 'last_town_day', 'read_signs', 'waypoint_visits', 'active_target'])):
+        raise ValueError('checkpoint lacks complete driver/no-progress state; start a fresh match')
     boundary = f'"serial":{rows[-1]["serial"]}'
     prefix_log = []
     for line in (source/'runtime.log').read_text().splitlines():
@@ -572,22 +614,13 @@ def resume_prefix(source: Path, case: dict, autosave: bool = False) -> tuple[byt
         raise ValueError('checkpoint lacks a matching runtime log record')
     if any(line.startswith(('ERROR:', 'SCRIPT ERROR:')) or 'leaked' in line for line in prefix_log):
         raise ValueError('resume prefix contains runtime errors')
-    counts, labels, towns, signs = {}, [], {}, {}
-    nodes = {n['placement_id']: n for n in state['overworld']['resource_nodes']}
-    sites = {n['id']: n for n in json.loads((ROOT/'content/resource_sites.json').read_text())['items']}
+    counts, labels = {}, []
     for row in rows:
         kind, result = row['kind'], row['result']
         counts[kind] = counts.get(kind, 0)+1
         if kind == 'save_resume':
             labels.append(result['label'])
-        if kind == 'target_town' and result.get('routed'):
-            towns[result['id']] = row['state']['day']
-        if kind == 'target_resource':
-            node = nodes.get(result.get('id'), {})
-            site = sites.get(node.get('site_id'), {})
-            if site.get('batch003_role') == 'sign_waypoint' or site.get('batch004_role') == 'route_waypoint':
-                signs[result['id']] = True
-    metadata = {'source':source.name, 'source_checkpoint':'end_turn_autosave' if autosave else 'mid_match_save', 'save_sha256':hashlib.sha256(saved).hexdigest(), 'counts':counts, 'checkpoint_labels':labels, 'serial':rows[-1]['serial'], 'last_progress_day':state['day'], 'last_town_day':towns, 'read_signs':signs}
+    metadata = {'source':source.name, 'source_checkpoint':'end_turn_autosave' if autosave else 'mid_match_save', 'save_sha256':saved_hash, 'counts':counts, 'checkpoint_labels':labels, 'serial':rows[-1]['serial'], **driver_state}
     return saved, rows, metadata
 
 

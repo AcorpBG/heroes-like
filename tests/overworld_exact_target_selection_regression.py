@@ -101,7 +101,18 @@ func isolated_selection_controls() -> void:
 	reset_probe(probe,fixture)
 	check(OverworldRules.tile_has_route_interaction(fixture,18,55),"ordinary route rules must preserve guard control zones")
 	check(not probe._tile_has_exact_selection_target(tile),"guard control zone must not impersonate exact guard position")
-	check(probe._selection_route_tile(tile)==entrance,"guard control zone alone must preserve scenic shortcut")
+	check(probe._selection_route_tile(tile)==tile,"reachable guard approach must precede scenic shortcut")
+	check(probe._resource_node_at(tile.x,tile.y).is_empty(),"scenery must not own guard approach descriptor")
+	check(probe._selected_route_destination_execution_descriptor(tile).get("kind","")=="encounter","guard approach must resolve through encounter descriptor")
+	fixture.overworld.view_level = 1
+	reset_probe(probe,fixture)
+	check(not probe._tile_has_guard_approach_selection(tile),"surface guard approach leaked onto other level")
+	fixture.overworld.view_level = 0
+	fixture.overworld.resolved_encounters = [enemy.placement_id]
+	reset_probe(probe,fixture)
+	check(probe._selection_route_tile(tile)==entrance,"resolved guard approach must release scenic shortcut")
+	check(probe._resource_node_at(tile.x,tile.y).get("placement_id","")==node.placement_id,"resolved guard approach descriptor cache did not release scenery")
+	fixture.overworld.resolved_encounters = []
 	enemy.x = 18
 	enemy.y = 55
 	fixture.overworld.resolved_encounters = [enemy.placement_id]
