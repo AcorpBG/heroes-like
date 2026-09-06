@@ -16617,14 +16617,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Scenery-index reuse is implemented and validated against exact old-owner payloads and real Medium/Large collection commands; package parity and existing sprite/movement/fog regressions pass. Full-input hashing adds documented cold-load overhead. Medium11 continues on its original preloaded runtime; Day64 is nonterminal. The goal and children remain in progress, with stale owned-hero movement text, Town building integration and broader quality acceptance unfinished.",
+  "currentNotes": "Commander/status/stockpile freshness, visible generated movement/position and roster-focus preservation are validated and implemented. The goal/children stay in progress: the exact Medium continuation exposed a missing live evaluator for its native-package defeat_generated_rivals objective. Correct that runtime gap next, not the map or outcome state. Town integration remains open; no art/native/rules/save changes in this UI checkpoint.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-generated-full-match-actions-20260906",
-  "currentSliceId": "performance-generated-full-match-actions-20260906",
-  "currentSliceNotes": "Validated scenery-index reuse: 95 exact old-owner index/state/invalidation checks per real Medium/Large save, six matched rendered collection pairs, zero decorative rebuild calls instead of 753/1953 and byte-identical inspected captures. Summed waiting falls 12.4%/33.6% in those two commands; cold-load/hash overhead and concurrent-match limits remain explicit. Seven existing sprite/movement/fog/generated-map reports, consumed-site collision, 12 Python tests, repository/diff and fresh Linux/Windows export/startup/generated-entry checks pass. Both PCKs 248454200 bytes. No art, native, placement, rules or save changes. Medium11 remains live on its original launch owners; Day64 checkpoint has 1558 legal capacity observations and 46 battles, not a terminal outcome. Child/goal stay in progress; stale roster movement text and Town integration remain open.",
+  "currentSlice": "ux-generated-full-match-presentation-20260906",
+  "currentSliceId": "ux-generated-full-match-presentation-20260906",
+  "currentSliceNotes": "Validated live commander/status/stockpile refresh and retained roster focus: 769 real Medium/Large/authored old-owner state, pointer/keyboard/controller, exhaustion, complete save, font-fit and roster-boundary checks; dual-resolution captures inspected. Affected domain reports and current Overworld stockpile/army cases pass; two unrelated old Town fixture failures remain explicit. Repository, 12 Python tests, diff, Linux/Windows exports/startup/generated entry pass; matching PCKs 248456120 bytes. No art/native/rules/save changes. Original Medium11 timed out Day67; exact autosave/history continuation exposed unsupported defeat_generated_rivals evaluation despite all Towns and resolved encounters on Day93. Correct runtime objective interpretation next; do not force a terminal state. Town integration and full-match quality remain in progress.",
   "currentSliceStatus": "in_progress",
-  "currentSliceTitle": "Full-Match Responsiveness",
-  "currentSliceUpdatedAt": "2026-09-06T22:25:40Z",
+  "currentSliceTitle": "Full-Match Presentation Corrections",
+  "currentSliceUpdatedAt": "2026-09-06T23:25:52Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21931,68 +21931,71 @@
   },
   "guardrailNote": "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification.",
   "lastValidation": {
-    "id": "quality-generated-outcome-retry-and-layout-20260906",
+    "id": "quality-generated-live-commander-refresh-20260906",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "scope": "validated_outcome_runtime_checkpoint_not_overall_quality_completion",
-    "validatedAt": "2026-09-06T20:18:27Z",
-    "runtimeSourceTreeSha256": "863dbeb0855ab377f32d0792c93df5d80ca219bf3b4ae1c5caf948ba33a159de",
+    "scope": "validated_commander_ui_checkpoint_not_full_goal_completion",
+    "validatedAt": "2026-09-06T23:25:52Z",
+    "runtimeSourceTreeSha256": "483403630f1ea7b1eecbb68059cd1ea0cd9f657974d7e6c5c7acd029769933cd",
     "artifacts": [
       "docs/generated-full-match-quality-report.md",
-      ".artifacts/generated_full_match_quality_20260906/outcome_flow_before_02/report.json",
-      ".artifacts/generated_full_match_quality_20260906/outcome_flow_720_final_03/report.json",
-      ".artifacts/generated_full_match_quality_20260906/outcome_flow_1080_final_03/report.json",
-      ".artifacts/generated_full_match_quality_20260906/outcome_linux_release_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/outcome_windows_release_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/outcome_linux_release_final/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/outcome_named_saves_final/named_save_files_report.json",
-      ".artifacts/full_play_runtime_20260905/outcome_input_release_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/outcome_validate_repo_final_02.log"
+      ".artifacts/generated_full_match_quality_20260906/commander_medium_720_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_medium_1080_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_large_720_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_large_1080_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_authored_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_existing_02/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_stockpile_overworld/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_army_overworld/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_linux_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_windows_isolated_final/report.json"
     ],
-    "result": "Validated generated same-map Retry Skirmish, readable outcome title, visible failure feedback and bounded Details/navigation: 128 checks per resolution, existing outcome input/recovery and named-save controls, 12 Python tests, repository/diff and Linux/Windows packages/generated entry pass. Continue live Medium11 on its recorded launch commit; Day32 and 655/655 legal army observations are not terminal completion. Town building integration and broader quality acceptance remain open.",
+    "result": "Validated live commander/status/stockpile refresh and retained roster focus: 769 real Medium/Large/authored old-owner state, pointer/keyboard/controller, exhaustion, complete save, font-fit and roster-boundary checks; dual-resolution captures inspected. Affected domain reports and current Overworld stockpile/army cases pass; two unrelated old Town fixture failures remain explicit. Repository, 12 Python tests, diff, Linux/Windows exports/startup/generated entry pass; matching PCKs 248456120 bytes. No art/native/rules/save changes. Original Medium11 timed out Day67; exact autosave/history continuation exposed unsupported defeat_generated_rivals evaluation despite all Towns and resolved encounters on Day93. Correct runtime objective interpretation next; do not force a terminal state. Town integration and full-match quality remain in progress.",
     "remainingWork": [
-      "Complete live Medium11 without changing its recorded launch/runtime/history or weakening terminal acceptance",
-      "Scene-matched Town building integration and broader recap presentation",
-      "Full-match responsiveness acceptance; physical Windows hardware remains unverified"
+      "Implement and validate missing generated rival-objective evaluation without forced outcomes or map changes",
+      "Complete legitimate Medium outcome with preserved provenance/history; retain bounded Large defeat evidence",
+      "Scene-matched Town building integration and full-match responsiveness acceptance; physical Windows unverified"
     ]
   },
   "latestEvidence": {
-    "id": "quality-generated-outcome-retry-and-layout-20260906",
+    "id": "quality-generated-live-commander-refresh-20260906",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "scope": "validated_outcome_runtime_checkpoint_not_overall_quality_completion",
-    "validatedAt": "2026-09-06T20:18:27Z",
-    "runtimeSourceTreeSha256": "863dbeb0855ab377f32d0792c93df5d80ca219bf3b4ae1c5caf948ba33a159de",
+    "scope": "validated_commander_ui_checkpoint_not_full_goal_completion",
+    "validatedAt": "2026-09-06T23:25:52Z",
+    "runtimeSourceTreeSha256": "483403630f1ea7b1eecbb68059cd1ea0cd9f657974d7e6c5c7acd029769933cd",
     "artifacts": [
       "docs/generated-full-match-quality-report.md",
-      ".artifacts/generated_full_match_quality_20260906/outcome_flow_before_02/report.json",
-      ".artifacts/generated_full_match_quality_20260906/outcome_flow_720_final_03/report.json",
-      ".artifacts/generated_full_match_quality_20260906/outcome_flow_1080_final_03/report.json",
-      ".artifacts/generated_full_match_quality_20260906/outcome_linux_release_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/outcome_windows_release_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/outcome_linux_release_final/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/outcome_named_saves_final/named_save_files_report.json",
-      ".artifacts/full_play_runtime_20260905/outcome_input_release_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/outcome_validate_repo_final_02.log"
+      ".artifacts/generated_full_match_quality_20260906/commander_medium_720_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_medium_1080_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_large_720_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_large_1080_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_authored_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_existing_02/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_stockpile_overworld/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_army_overworld/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_linux_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_windows_isolated_final/report.json"
     ],
-    "result": "Validated generated same-map Retry Skirmish, readable outcome title, visible failure feedback and bounded Details/navigation: 128 checks per resolution, existing outcome input/recovery and named-save controls, 12 Python tests, repository/diff and Linux/Windows packages/generated entry pass. Continue live Medium11 on its recorded launch commit; Day32 and 655/655 legal army observations are not terminal completion. Town building integration and broader quality acceptance remain open.",
+    "result": "Validated live commander/status/stockpile refresh and retained roster focus: 769 real Medium/Large/authored old-owner state, pointer/keyboard/controller, exhaustion, complete save, font-fit and roster-boundary checks; dual-resolution captures inspected. Affected domain reports and current Overworld stockpile/army cases pass; two unrelated old Town fixture failures remain explicit. Repository, 12 Python tests, diff, Linux/Windows exports/startup/generated entry pass; matching PCKs 248456120 bytes. No art/native/rules/save changes. Original Medium11 timed out Day67; exact autosave/history continuation exposed unsupported defeat_generated_rivals evaluation despite all Towns and resolved encounters on Day93. Correct runtime objective interpretation next; do not force a terminal state. Town integration and full-match quality remain in progress.",
     "remainingWork": [
-      "Complete live Medium11 without changing its recorded launch/runtime/history or weakening terminal acceptance",
-      "Scene-matched Town building integration and broader recap presentation",
-      "Full-match responsiveness acceptance; physical Windows hardware remains unverified"
+      "Implement and validate missing generated rival-objective evaluation without forced outcomes or map changes",
+      "Complete legitimate Medium outcome with preserved provenance/history; retain bounded Large defeat evidence",
+      "Scene-matched Town building integration and full-match responsiveness acceptance; physical Windows unverified"
     ]
   },
   "latestEvidenceArtifacts": [
     "docs/generated-full-match-quality-report.md",
-    ".artifacts/generated_full_match_quality_20260906/outcome_flow_before_02/report.json",
-    ".artifacts/generated_full_match_quality_20260906/outcome_flow_720_final_03/report.json",
-    ".artifacts/generated_full_match_quality_20260906/outcome_flow_1080_final_03/report.json",
-    ".artifacts/generated_full_match_quality_20260906/outcome_linux_release_final/report.json",
-    ".artifacts/generated_full_match_quality_20260906/outcome_windows_release_final/report.json",
-    ".artifacts/generated_full_match_quality_20260906/outcome_linux_release_final/generated-entry/live_validation_report.json",
-    ".artifacts/generated_full_match_quality_20260906/outcome_named_saves_final/named_save_files_report.json",
-    ".artifacts/full_play_runtime_20260905/outcome_input_release_final/report.json",
-    ".artifacts/generated_full_match_quality_20260906/outcome_validate_repo_final_02.log"
+    ".artifacts/generated_full_match_quality_20260906/commander_medium_720_final/report.json",
+    ".artifacts/generated_full_match_quality_20260906/commander_medium_1080_final/report.json",
+    ".artifacts/generated_full_match_quality_20260906/commander_large_720_final/report.json",
+    ".artifacts/generated_full_match_quality_20260906/commander_large_1080_final/report.json",
+    ".artifacts/generated_full_match_quality_20260906/commander_authored_final/report.json",
+    ".artifacts/generated_full_match_quality_20260906/commander_existing_02/report.json",
+    ".artifacts/generated_full_match_quality_20260906/commander_stockpile_overworld/report.json",
+    ".artifacts/generated_full_match_quality_20260906/commander_army_overworld/report.json",
+    ".artifacts/generated_full_match_quality_20260906/commander_linux_final/report.json",
+    ".artifacts/generated_full_match_quality_20260906/commander_windows_isolated_final/report.json"
   ],
   "latestEvidenceId": "quality-command-entry-footer-and-large-outcome-20260906",
   "latestFinding": "Validated UI checkpoint: compact two-line Town identity/full tooltip, wrapped or ellipsized empty labels, framed Overworld save status with intact failure/retry copy, and first-entry cached commander/specialty buttons. 58 layout plus 148 command/keyboard/building-presence/save checks per resolution pass, final images inspected. Six existing Town/transfer/Muster/save-feedback reports, four real named-save routes, eleven Python checks, repository/diff and serial Linux/Windows startup/generated Town exports pass; both PCKs 248450328 bytes. Large08 reached legitimate Day-14 defeat after enemy-town conquest with 201/201 valid capacity observations and three complete-state save/resumes. Medium10 stopped nonterminal Day35 on a repeated infeasible-reward/partial-route driver loop, with 608/608 valid capacity observations; it is failed diagnostic evidence. Overall goal and all children remain in progress.",
@@ -22174,7 +22177,7 @@
       ],
       "updatedAt": "2026-09-06T21:42:03Z",
       "startedAt": "2026-09-06T12:03:26Z",
-      "notes": "Driver-only Town-priority optimization validated: 69 exact target/state/eligibility controls pass, discarded encounter approaches 15 to zero, real no-ready-Town field selection unchanged. 47 claim-progress and 12 Python checks plus repository/diff pass. Production digest 863dbeb0855ab377f32d0792c93df5d80ca219bf3b4ae1c5caf948ba33a159de retains validated Linux/Windows export/startup/generated-entry coverage. Medium11 remains live on its launch driver: Day54 checkpoint, 1190 legal capacity observations, 39 battles, no runtime errors or terminal outcome. Continue the same match; no game-speed, completed-match or child-completion claim. Town-art scope and superseded export/environment cleanup approval remain outstanding.",
+      "notes": "Prior Town-priority/claim-progress driver controls remain validated, not gameplay speedups. Original Medium11 actually timed out after 10800 seconds on Day67 with 1635/1635 valid capacity observations. The exact Day67 autosave and 1613-action history prefix continue under recorded e17a4480 runtime/driver provenance; no reset or forced result. Read-only Day93 evidence now exposes the missing ScenarioRules evaluator for native-package objective kind defeat_generated_rivals: all seven Towns owned and all 73 encounters resolved, but no victory/defeat arrays are evaluated. Next reproduce and correct that missing runtime objective interpretation with authoritative controller/team and surviving-force checks; no native topology, balance shortcut or forced status. Large08 retains a legal bounded defeat after conquest. Complete Medium acceptance, Town-art scope and broader full-match quality remain open.",
       "remainingWork": "Complete fresh legal Medium/Large matches with full capacity history, real terminal outcomes and exact mid-match/terminal save-resume; finish selected measured responsiveness and presentation acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
     },
     {
@@ -22311,7 +22314,8 @@
         "python3 tests/full_play_validation_suite.py --label <fresh> --accessibility disabled --only generated_opening_autosave_failure_retry_regression active_play_save_written_cue_playback_report active_play_load_resumed_cue_playback_report",
         "python3 tests/generated_outcome_flow_regression.py --label <fresh> --save <Large08-terminal-save> --opening <Large08-opening-save> --resolution <1280x720|1920x1080>",
         "python3 tests/full_play_validation_suite.py --label <fresh> --accessibility disabled --only scenario_outcome_new_session_confirmation_safe_cancel_regression scenario_outcome_normal_entry_focus_regression application_scenario_outcome_autosave_failure_recovery_regression",
-        "python3 tests/named_save_files_regression.py"
+        "python3 tests/named_save_files_regression.py",
+        "python3 tests/overworld_live_commander_refresh_regression.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -22334,16 +22338,18 @@
         "scripts/core/ScenarioSelectRules.gd: existing package session restart if the generated retry fails",
         "tests/generated_outcome_flow_regression.py: real terminal save, display, confirm/cancel and fresh same-map setup",
         "tests/validate_repo.py: truthful bounded feedback and wrapped-minimum layout expectations",
-        "tests/full_play_validation_suite.py: preserve existing outcome input/storage assertions on the current expanded and legacy-compatible surfaces"
+        "tests/full_play_validation_suite.py: preserve existing outcome input/storage assertions on the current expanded and legacy-compatible surfaces",
+        "scenes/overworld/OverworldShell.gd: fresh primary commander/status/stockpile and roster tooltip surfaces without hidden-panel rebuilds",
+        "tests/overworld_live_commander_refresh_regression.py: real old-owner state, input, focus, save and two-resolution visual controls"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-06T20:18:27Z",
+      "updatedAt": "2026-09-06T23:25:52Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated generated same-map Retry Skirmish, readable outcome title, visible failure feedback and bounded Details/navigation: 128 checks per resolution, existing outcome input/recovery and named-save controls, 12 Python tests, repository/diff and Linux/Windows packages/generated entry pass. Continue live Medium11 on its recorded launch commit; Day32 and 655/655 legal army observations are not terminal completion. Town building integration and broader quality acceptance remain open."
+      "notes": "Validated live commander/status/stockpile refresh and retained roster focus: 769 real Medium/Large/authored old-owner state, pointer/keyboard/controller, exhaustion, complete save, font-fit and roster-boundary checks; dual-resolution captures inspected. Affected domain reports and current Overworld stockpile/army cases pass; two unrelated old Town fixture failures remain explicit. Repository, 12 Python tests, diff, Linux/Windows exports/startup/generated entry pass; matching PCKs 248456120 bytes. No art/native/rules/save changes. Original Medium11 timed out Day67; exact autosave/history continuation exposed unsupported defeat_generated_rivals evaluation despite all Towns and resolved encounters on Day93. Correct runtime objective interpretation next; do not force a terminal state. Town integration and full-match quality remain in progress."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111108,9 +111114,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Full-match quality remains in progress. Latest production scenery-index reuse preserves exact old-owner payloads/state and inspected images: 95 checks per saved map size, six real collection pairs, seven domain reports, collision/save controls and both-platform packages pass. Two selected commands show 12.4%/33.6% lower summed waiting; cold-load/hash overhead and measurement limits remain explicit. Earlier capacity/reward, guard selection, command/footer, outcome and Town/AI responsiveness checkpoints retain their own evidence. Large08 completed a legal defeat after conquest; Medium11 remains nonterminal on its launch owners. Complete Medium coverage, full responsiveness acceptance, stale movement text and scene-matched Town buildings remain unfinished; this is not release certification.",
+  "summary": "Validated live commander/status/stockpile refresh and retained roster focus: 769 real Medium/Large/authored old-owner state, pointer/keyboard/controller, exhaustion, complete save, font-fit and roster-boundary checks; dual-resolution captures inspected. Affected domain reports and current Overworld stockpile/army cases pass; two unrelated old Town fixture failures remain explicit. Repository, 12 Python tests, diff, Linux/Windows exports/startup/generated entry pass; matching PCKs 248456120 bytes. No art/native/rules/save changes. Original Medium11 timed out Day67; exact autosave/history continuation exposed unsupported defeat_generated_rivals evaluation despite all Towns and resolved encounters on Day93. Correct runtime objective interpretation next; do not force a terminal state. Town integration and full-match quality remain in progress.",
   "taskId": "10236",
-  "updatedAt": "2026-09-06T22:25:40Z",
+  "updatedAt": "2026-09-06T23:25:52Z",
   "validation": {
     "id": "quality-generated-ai-army-capacity-20260906",
     "sliceId": "quality-generated-full-match-playthrough-20260906",

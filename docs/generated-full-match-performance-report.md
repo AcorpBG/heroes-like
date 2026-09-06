@@ -285,3 +285,22 @@ Complete Medium/Large terminal outcomes, selected presentation corrections and
 final both-platform validation remain requirements of the parent goal. See
 `docs/generated-full-match-quality-report.md` for gameplay fixes and explicitly
 retained unrelated legacy failures.
+
+## Commander refresh follow-up
+
+The scenery comparison exposed stale player-visible movement/stockpile text and
+full-refresh roster focus loss. `OverworldShell` now refreshes those small current
+surfaces on route-only requests, preserves unchanged roster/army-control nodes,
+and shares one detailed forecast across authored status/readiness tooltips.
+Generated compact movement still skips detailed forecasts and hidden panels.
+Exact prior-shell gameplay/save, actual input, focus and visible-text tests are
+recorded in the gameplay report. No standalone HUD or whole-game timing gain is
+claimed from this correction; the independent live match and validation workers
+ran concurrently. Its fresh Linux/Windows PCKs are 248456120 bytes.
+
+The original Medium11 did not complete: its actual three-hour supervision limit
+ended nonterminal on Day 67. Its hash/history-verified normal autosave continuation
+is separate provenance, not a timing reset or accepted outcome. Read-only Day-93
+inspection found the generated objective kind has no live evaluator, despite all
+Town ownership and encounter resolution. That runtime correctness gap, not a
+longer timeout or forced defeat, is the next issue to reproduce and correct.

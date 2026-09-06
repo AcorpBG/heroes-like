@@ -214,6 +214,30 @@ placement, masks, art, manifest contents, gameplay or saves to make reuse succee
 
 ## Presentation and compatibility
 
+Route-only refreshes must not leave always-visible commander movement, current
+position, army or resource text at the values from scene entry. Update these
+small primary surfaces and existing owned-roster tooltips from current authority
+after normal movement/collection, retaining the compact generated-map path and
+the existing authored hero/forecast presentation. Do not recreate navigation
+buttons, steal focus, open drawers or rebuild hidden management panels merely to
+refresh text. Reuse common display construction with ordinary full refreshes so
+entry, movement, hero switching, Town return and End Turn cannot diverge.
+The saved-case input regression also reproduces focus loss when full keyboard/
+controller refreshes recreate roster buttons. Retain owned hero/Town buttons by
+stable identity, update their current presentation and ordering, and remove only
+records no longer owned/present. Town callbacks must resolve current entrances;
+never retain stale bound coordinates or duplicate pressed-signal connections.
+Validate real Medium/Large saves against the exact previous shell, with complete
+state equality, unchanged source files, actual pointer/keyboard/controller input,
+read-only selection, exhausted movement and complete save/resume. Inspect both
+supported resolutions and retain existing owned-roster, movement/fog and platform
+checks. Keep explicit detached edge fixtures separate from accepted match play;
+this does not close the unresolved Town-building integration requirement.
+Movement must also fit visibly, not merely occur in the underlying label string:
+separate the generated commander name/movement lines and keep generated footer
+day/position/movement within its existing compact bounds. Preserve full tooltips
+and measure actual font line widths/heights at both supported resolutions.
+
 Inspect early/developed towns, Overworld and battle/outcome screens at 1280x720
 and 1920x1080. Reproduce and fix the existing stray Town resource text, crowded
 footer controls and building/background composition defects where current code
