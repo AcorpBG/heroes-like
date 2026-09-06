@@ -76,6 +76,13 @@ Existing Town Log & Logistics owns per-unit transfers; instructions must name th
 actual dialog. Icons and troop counts must not overlap in the compact army row.
 AI recruitment, site grants, roster reinforcement and raid/garrison handoffs also
 require capacity-safe admission before consuming money, source troops or claims.
+Whole-army consolidation/defense handoffs are atomic; an incompatible destination
+must not consume any donor stacks or retire its commander. Resupply can accept
+only fitting stacks and must retain rejected source stacks. Current-tile,
+ordinary, explicit-objective and saved/live task selection must not repeatedly
+assign a recruit claim or owned-town handoff that the same army cannot execute.
+Retain fitting controls and deterministic generated-turn complete-state replays;
+these rule-level controls do not replace terminal-match acceptance.
 One-shot scenario hooks must retain earned reinforcement eligibility if full;
 marking a hook fired and discarding its grant is not a correction. Preserve current
 ownership/capture semantics and document the exact retention mechanism before

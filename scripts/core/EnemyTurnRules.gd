@@ -2007,8 +2007,12 @@ static func _recruit_town_forces(
 				else:
 					rebuild_batches += 1
 		else:
-			town["garrison"] = _add_stack(town.get("garrison", []), unit_id, recruit_count)
-			garrisoned = true
+			var admission: Dictionary = HeroCommandRulesScript.army_addition_plan(town.get("garrison", []), {unit_id: recruit_count})
+			if bool(admission.get("ok", false)):
+				town["garrison"] = admission.get("stacks", [])
+				garrisoned = true
+			else:
+				applied_count = 0
 		if applied_count <= 0:
 			continue
 		town["available_recruits"] = _consume_recruits(town.get("available_recruits", {}), unit_id, applied_count)
@@ -3256,9 +3260,12 @@ static func _apply_reinforcement_to_raid(session: SessionStateStoreScript.Sessio
 	var encounter = encounters[encounter_index]
 	if not (encounter is Dictionary):
 		return 0
-	encounter = EnemyAdventureRulesScript.ensure_raid_army(encounter)
+	encounter = EnemyAdventureRulesScript.ensure_raid_army(encounter.duplicate(true))
 	var army = encounter.get("enemy_army", {})
-	army["stacks"] = _add_stack(army.get("stacks", []), unit_id, count)
+	var admission: Dictionary = HeroCommandRulesScript.army_addition_plan(army.get("stacks", []), {unit_id: count})
+	if not bool(admission.get("ok", false)):
+		return 0
+	army["stacks"] = admission.get("stacks", [])
 	encounter["enemy_army"] = army
 	var commander_state = encounter.get("enemy_commander_state", {})
 	if commander_state is Dictionary and not commander_state.is_empty():

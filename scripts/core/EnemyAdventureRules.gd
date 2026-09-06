@@ -4,6 +4,7 @@ extends RefCounted
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
+const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
@@ -782,6 +783,8 @@ static func assign_target(
 	var faction_id := PlayerRules.controller_id(config, PlayerRules.raid_controller_id(raid))
 	var had_memory := not commander_target_memory(raid.get("enemy_commander_state", {})).is_empty()
 	var task_record_for_assignment := {}
+	if not _target_army_admission_possible(session, raid, String(raid.get("target_kind", "")), String(raid.get("target_placement_id", ""))):
+		raid = _clear_regroup_target(raid.duplicate(true))
 	if _raid_target_valid(session, raid):
 		raid = _refresh_target(session, raid, faction_id, preloaded_path_context)
 		raid = _maybe_preempt_for_battle_pressure_floor(session, config, raid, faction_id)
@@ -1522,6 +1525,8 @@ static func _explicit_objective_fallback_target_selection_plan(
 		if view.is_empty():
 			continue
 		var target_kind := String(view.get("target_kind", ""))
+		if not _target_army_admission_possible(session, raid, target_kind, target_id):
+			continue
 		var target_tile := Vector2i(int(view.get("target_x", 0)), int(view.get("target_y", 0)))
 		var goal_tiles: Array = view.get("goal_tiles", [target_tile]) if view.get("goal_tiles", [target_tile]) is Array else [target_tile]
 		if target_kind == "resource":
@@ -1686,6 +1691,8 @@ static func _current_tile_resource_target_selection_plan(
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if site.is_empty() or not _resource_node_contestable_by_faction(node, site, faction_id, session):
+			continue
+		if not bool(_raid_site_recruit_admission(raid, site).get("ok", false)):
 			continue
 		if not _resource_guard_encounter_for_node(session, node, site).is_empty():
 			continue
@@ -2079,6 +2086,8 @@ static func ai_post_capture_town_support_target_selection_plan(
 		return {}
 	var town: Dictionary = town_result.get("town", {})
 	if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+		return {}
+	if not _target_army_admission_possible(session, raid, "town", town_id):
 		return {}
 	var previous_reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	var had_capture_intent := false
@@ -2868,8 +2877,11 @@ static func group_nearby_raids_for_town_assault(
 	var donor_has_commander := _raid_has_commander(donor)
 	var donor_strength := raid_strength(donor)
 	var before_strength := raid_strength(leader)
+	var merged_army := _merged_raid_army_payload(leader, donor)
+	if merged_army.is_empty():
+		return {"encounter": leader, "grouped": false, "events": []}
 	leader = ensure_raid_army(leader, session)
-	leader["enemy_army"] = _merged_raid_army_payload(leader, donor)
+	leader["enemy_army"] = merged_army
 	leader["grouped_support_count"] = max(0, int(leader.get("grouped_support_count", 0))) + 1
 	leader["grouped_support_strength"] = max(0, int(leader.get("grouped_support_strength", 0))) + donor_strength
 	if donor_has_commander:
@@ -3119,6 +3131,8 @@ static func _best_nearby_assault_support_raid_index(
 		if String(donor.get("target_placement_id", "")) != town_id:
 			continue
 		if _raid_tile_distance(leader, donor) > max_group_distance:
+			continue
+		if _merged_raid_army_payload(leader, donor).is_empty():
 			continue
 		var donor_strength := raid_strength(donor)
 		if _raid_has_commander(donor):
@@ -4234,24 +4248,64 @@ static func _enemy_scouted_target_key(target_kind: String, target_id: String) ->
 	return "%s:%s" % [target_kind, target_id]
 
 static func _merged_raid_army_payload(leader: Dictionary, donor: Dictionary) -> Dictionary:
-	var leader_army := _normalize_army_payload(leader.get("enemy_army", {}))
-	var donor_army := _normalize_army_payload(donor.get("enemy_army", {}))
-	if donor_army.is_empty():
-		donor_army = _base_enemy_army(String(donor.get("encounter_id", donor.get("id", ""))))
-	var merged_stacks: Array = leader_army.get("stacks", []).duplicate(true) if leader_army.has("stacks") else []
-	for stack_value in donor_army.get("stacks", []):
-		if not (stack_value is Dictionary):
-			continue
-		merged_stacks = _add_army_stack(
-			merged_stacks,
-			String(stack_value.get("unit_id", "")),
-			max(0, int(stack_value.get("count", 0)))
-		)
+	var leader_army := _raid_reinforcement_army(leader)
+	var donor_army := _raid_reinforcement_army(donor)
+	var admission := _army_merge_admission(leader_army.get("stacks", []), donor_army.get("stacks", []))
+	if not bool(admission.get("ok", false)):
+		return {}
 	return {
 		"id": String(leader_army.get("id", leader.get("encounter_id", leader.get("id", "raid")))),
 		"name": String(leader_army.get("name", "Raid Host")),
-		"stacks": merged_stacks,
+		"stacks": admission.get("stacks", []),
 	}
+
+static func _raid_reinforcement_army(raid: Dictionary) -> Dictionary:
+	var army := _normalize_army_payload(raid.get("enemy_army", {}))
+	if army.is_empty() and not bool(raid.get("commanderless_support_column", false)):
+		# Match ensure_raid_army's restored-commander precedence. Admission must
+		# never replace saved troops with the encounter's starter composition.
+		army = _normalize_army_payload({
+			"id": String(raid.get("encounter_id", raid.get("id", ""))),
+			"name": "Raid Host",
+			"stacks": commander_army_continuity(raid.get("enemy_commander_state", {})).get("stacks", []),
+		})
+	if army.is_empty():
+		army = _base_enemy_army(String(raid.get("encounter_id", raid.get("id", ""))))
+	return army
+
+static func _army_merge_admission(destination: Array, source: Array) -> Dictionary:
+	# A whole-host handoff is atomic. Preserve source ordering and never retire
+	# its commander until every stack has an accepted destination.
+	var planned := destination.duplicate(true)
+	for stack in source:
+		if not (stack is Dictionary):
+			continue
+		var unit_id := String(stack.get("unit_id", ""))
+		var admission: Dictionary = HeroCommandRulesScript.army_addition_plan(planned, {unit_id: int(stack.get("count", 0))})
+		if not bool(admission.get("ok", false)):
+			return admission
+		planned = admission.get("stacks", [])
+	return {"ok": true, "stacks": planned}
+
+static func _raid_site_recruit_admission(raid: Dictionary, site: Dictionary) -> Dictionary:
+	var recruits := _resource_site_claim_recruits(site)
+	if recruits.is_empty():
+		return {"ok": true}
+	return HeroCommandRulesScript.army_addition_plan(_raid_reinforcement_army(raid).get("stacks", []), recruits)
+
+static func _target_army_admission_possible(session: SessionStateStoreScript.SessionData, raid: Dictionary, kind: String, target_id: String) -> bool:
+	# Feasibility only: leave strategic priorities, prices and source ownership
+	# unchanged. Existing held-site defense grants no new claim recruits.
+	if kind == "resource":
+		var node: Dictionary = _find_resource_by_placement(session, target_id).get("node", {})
+		if PlayerRules.resource_controller_id(node) == PlayerRules.raid_controller_id(raid):
+			return true
+		return bool(_raid_site_recruit_admission(raid, ContentService.get_resource_site(String(node.get("site_id", "")))).get("ok", false))
+	if kind == "town":
+		var town: Dictionary = _find_town_by_placement(session, target_id).get("town", {})
+		if String(town.get("owner", "")) == "enemy" and _town_faction_id(town) == PlayerRules.raid_controller_id(raid):
+			return bool(_army_merge_admission(town.get("garrison", []), _raid_reinforcement_army(raid).get("stacks", [])).get("ok", false))
+	return true
 
 static func _raid_has_commander(raid: Dictionary) -> bool:
 	if bool(raid.get("commanderless_support_column", false)):
@@ -4344,7 +4398,7 @@ static func _current_tile_contestable_resource_id(
 		if _resource_interaction_tile(node) != current:
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-		if not site.is_empty() and _resource_node_contestable_by_faction(node, site, faction_id, session):
+		if not site.is_empty() and _resource_node_contestable_by_faction(node, site, faction_id, session) and bool(_raid_site_recruit_admission(raid, site).get("ok", false)):
 			return String(node.get("placement_id", ""))
 	return ""
 
@@ -5731,7 +5785,7 @@ static func _redirect_raid_to_threatened_town_defense(
 	)
 	if current_is_town_defense:
 		var refreshed_defense := _refresh_target(session, raid, faction_id, preloaded_path_context)
-		if int(refreshed_defense.get("goal_distance", 9999)) >= 9999:
+		if int(refreshed_defense.get("goal_distance", 9999)) >= 9999 or not _target_army_admission_possible(session, raid, "town", String(raid.get("target_placement_id", ""))):
 			raid = _release_unreachable_town_defense_assignment(session, config, refreshed_defense, preloaded_path_context)
 		else:
 			raid = refreshed_defense
@@ -5808,6 +5862,8 @@ static func _best_threatened_defense_town(
 		if PlayerRules.controller_id(front_state) != faction_id:
 			continue
 		if String(front_state.get("mode", "")) != "stabilizing":
+			continue
+		if not _target_army_admission_possible(session, raid, "town", String(town.get("placement_id", ""))):
 			continue
 		var staging_tiles := _town_staging_tiles(session, town)
 		var distance := _path_distance_with_context(preloaded_path_context, current, staging_tiles) \
@@ -7020,7 +7076,10 @@ static func reinforce_commander_roster_army(
 				return 0
 			var per_unit_strength: int = max(1, _unit_strength_value(unit_id))
 			var accepted: int = min(count, max(1, int(ceili(float(rebuild_need) / float(per_unit_strength)))))
-			var reinforced_stacks: Array = _add_army_stack(continuity_stacks, unit_id, accepted)
+			var admission: Dictionary = HeroCommandRulesScript.army_addition_plan(continuity_stacks, {unit_id: accepted})
+			if not bool(admission.get("ok", false)):
+				return 0
+			var reinforced_stacks: Array = admission.get("stacks", [])
 			var updated_state := sync_commander_army_continuity(
 				commander_state,
 				{"stacks": reinforced_stacks},
@@ -8424,6 +8483,10 @@ static func choose_target(
 		preloaded_path_context = _path_distance_surface_context(session, "", PlayerRules.controller_id(config), LevelRules.level_of(origin))
 	var origin_pos = Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
 	var candidates = _target_candidates(session, config, origin_pos, false, preloaded_path_context)
+	if commander_source is Dictionary and (commander_source.has("enemy_army") or commander_source.has("enemy_commander_state")):
+		candidates = candidates.filter(func(candidate: Dictionary) -> bool:
+			return _target_army_admission_possible(session, commander_source, String(candidate.get("target_kind", "")), String(candidate.get("target_placement_id", "")))
+		)
 	if candidates.is_empty():
 		var exploration_plan := _no_known_target_exploration_plan(session, config, origin_pos, commander_source, preloaded_path_context)
 		if not exploration_plan.is_empty():
@@ -14391,6 +14454,8 @@ static func _ai_hero_task_plan_from_saved_task(
 	var target_id := String(task.get("target_id", ""))
 	if target_kind == "" or target_id == "":
 		return {}
+	if not _target_army_admission_possible(session, raid, target_kind, target_id):
+		return {}
 	if _ai_hero_task_live_target_reserved(session, faction_id, target_kind, target_id, current_placement_id, String(task.get("actor_id", ""))):
 		return {}
 	var target := _ai_hero_task_target_snapshot_for_plan(session, target_kind, target_id, faction_id)
@@ -14641,6 +14706,8 @@ static func _ai_hero_task_live_plan_from_task(
 	origin_pos: Vector2i
 ) -> Dictionary:
 	var target_id := String(task.get("target_id", ""))
+	if not _target_army_admission_possible(session, raid, "resource", target_id):
+		return {}
 	var node_result := _find_resource_by_placement(session, target_id)
 	if int(node_result.get("index", -1)) < 0:
 		return {}
@@ -17181,6 +17248,8 @@ static func _secure_opportunistic_route_resource(
 	var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
 	if node_index < 0 or node_index >= nodes.size():
 		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": []}
+	if not bool(_raid_site_recruit_admission(raid, site).get("ok", false)):
+		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": [], "capacity_blocked": true}
 	var previous_node: Dictionary = node.duplicate(true)
 	var previous_controller := PlayerRules.resource_controller_id(node)
 	var route_node := node.duplicate(true)
@@ -17775,6 +17844,8 @@ static func _secure_resource_target(
 		if PlayerRules.resource_controller_id(node) == faction_id:
 			_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
 		return {"encounter": raid, "state": state, "event_message": ""}
+	if not bool(_raid_site_recruit_admission(raid, site).get("ok", false)):
+		return {"encounter": raid, "state": state, "event_message": "", "capacity_blocked": true}
 	var nodes = session.overworld.get("resource_nodes", [])
 	var previous_node: Dictionary = node.duplicate(true)
 	var previous_controller = PlayerRules.resource_controller_id(node)
@@ -18027,10 +18098,11 @@ static func _apply_resource_site_claim_recruits_to_raid(
 	var recruits := _resource_site_claim_recruits(site)
 	if session == null or faction_id == "" or raid.is_empty() or recruits.is_empty():
 		return {"raid": raid, "applied": false, "recruits": {}}
+	var admission := _raid_site_recruit_admission(raid, site)
+	if not bool(admission.get("ok", false)):
+		return {"raid": raid, "applied": false, "recruits": {}, "reason": "army_capacity"}
 	var updated_raid := raid.duplicate(true)
-	var army: Dictionary = _normalize_army_payload(updated_raid.get("enemy_army", {}))
-	if army.is_empty():
-		army = _base_enemy_army(String(updated_raid.get("encounter_id", updated_raid.get("id", ""))))
+	var army := _raid_reinforcement_army(updated_raid)
 	if army.is_empty():
 		army = {
 			"id": String(updated_raid.get("encounter_id", updated_raid.get("id", "raid"))),
@@ -18045,10 +18117,10 @@ static func _apply_resource_site_claim_recruits_to_raid(
 		var count: int = max(0, int(recruits.get(unit_id_value, 0)))
 		if unit_id == "" or count <= 0:
 			continue
-		army["stacks"] = _add_army_stack(army.get("stacks", []), unit_id, count)
 		applied[unit_id] = count
 	if applied.is_empty():
 		return {"raid": raid, "applied": false, "recruits": {}}
+	army["stacks"] = admission.get("stacks", [])
 	updated_raid["enemy_army"] = army
 	updated_raid["last_site_claim_recruits"] = applied
 	updated_raid["last_site_claim_recruits_day"] = int(session.day)
@@ -18264,6 +18336,9 @@ static func _secure_neutral_town_target(
 		return {"encounter": raid, "state": state, "event_message": ""}
 	if String(town.get("owner", "neutral")) != "neutral" or _town_garrison_strength(town) > 0:
 		return {"encounter": raid, "state": state, "event_message": ""}
+	var admission := _army_merge_admission(town.get("garrison", []), _raid_reinforcement_army(raid).get("stacks", []))
+	if not bool(admission.get("ok", false)):
+		return {"encounter": raid, "state": state, "event_message": "", "capacity_blocked": true}
 	var transition: Dictionary = OverworldRulesScript.transition_town_control(
 		session,
 		String(town.get("placement_id", "")),
@@ -18281,8 +18356,8 @@ static func _secure_neutral_town_target(
 		raid,
 		COMMANDER_OUTCOME_TOWN_CAPTURED
 	)
-	var army := _normalize_army_payload(updated_raid.get("enemy_army", {}))
-	var garrison: Array = captured_town.get("garrison", []).duplicate(true) if captured_town.get("garrison", []) is Array else []
+	var army := _raid_reinforcement_army(updated_raid)
+	var garrison: Array = admission.get("stacks", [])
 	var transferred_count := 0
 	var transferred_strength := 0
 	for stack_value in army.get("stacks", []):
@@ -18292,7 +18367,6 @@ static func _secure_neutral_town_target(
 		var count: int = max(0, int(stack_value.get("count", 0)))
 		if unit_id == "" or count <= 0:
 			continue
-		garrison = _add_army_stack(garrison, unit_id, count)
 		transferred_count += count
 		transferred_strength += _unit_strength_value(unit_id) * count
 	var front: Dictionary = captured_town.get("front", {}) if captured_town.get("front", {}) is Dictionary else {}
@@ -18459,8 +18533,12 @@ static func _defend_town_target(
 	if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
 		return {"encounter": raid, "state": state, "event_message": ""}
 
-	var army := _normalize_army_payload(raid.get("enemy_army", {}))
+	var army := _raid_reinforcement_army(raid)
 	var garrison: Array = town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else []
+	var admission := _army_merge_admission(garrison, army.get("stacks", []))
+	if not bool(admission.get("ok", false)):
+		return {"encounter": raid, "state": state, "event_message": "", "capacity_blocked": true}
+	garrison = admission.get("stacks", [])
 	var transferred_count := 0
 	var transferred_strength := 0
 	for stack_value in army.get("stacks", []):
@@ -18470,7 +18548,6 @@ static func _defend_town_target(
 		var count: int = max(0, int(stack_value.get("count", 0)))
 		if unit_id == "" or count <= 0:
 			continue
-		garrison = _add_army_stack(garrison, unit_id, count)
 		transferred_count += count
 		transferred_strength += _unit_strength_value(unit_id) * count
 
@@ -19476,9 +19553,7 @@ static func _transfer_town_garrison_to_raid(
 	if not (garrison_value is Array):
 		return {"raid": raid, "transferred_count": 0, "transferred_strength": 0}
 	var garrison: Array = garrison_value
-	var army: Dictionary = _normalize_army_payload(raid.get("enemy_army", {}))
-	if army.is_empty():
-		army = _base_enemy_army(String(raid.get("encounter_id", raid.get("id", ""))))
+	var army := _raid_reinforcement_army(raid)
 	if army.is_empty():
 		army = {"id": String(raid.get("encounter_id", "raid")), "name": "Raid Host", "stacks": []}
 
@@ -19504,14 +19579,23 @@ static func _transfer_town_garrison_to_raid(
 			else:
 				take = mini(count, max(1, int(ceil(float(remaining_strength) / float(unit_strength)))))
 		if take > 0:
-			army["stacks"] = _add_army_stack(army.get("stacks", []), unit_id, take)
+			var admission: Dictionary = HeroCommandRulesScript.army_addition_plan(army.get("stacks", []), {unit_id: take})
+			if bool(admission.get("ok", false)):
+				army["stacks"] = admission.get("stacks", [])
+			else:
+				take = 0
+		if take > 0:
 			transferred_count += take
 			var strength_delta: int = unit_strength * take
 			transferred_strength += strength_delta
 			remaining_strength = max(0, remaining_strength - strength_delta)
 		var left: int = count - take
 		if left > 0:
-			new_garrison.append({"unit_id": unit_id, "count": left})
+			var retained: Dictionary = stack_value.duplicate(true)
+			retained["count"] = left
+			new_garrison.append(retained)
+	if transferred_count <= 0:
+		return {"raid": raid, "transferred_count": 0, "transferred_strength": 0}
 	town["garrison"] = new_garrison
 	towns[town_index] = town
 	session.overworld["towns"] = towns
@@ -20594,6 +20678,8 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 		return false
 	var target_kind = String(raid.get("target_kind", ""))
 	var target_id := String(raid.get("target_placement_id", ""))
+	if not _target_army_admission_possible(session, raid, target_kind, target_id):
+		return false
 	if _target_level(session, target_kind, target_id, PlayerRules.raid_controller_id(raid), LevelRules.level_of(raid)) != LevelRules.level_of(raid):
 		var path_context := _path_context_for_raid_target(session, raid, PlayerRules.raid_controller_id(raid))
 		if _path_distance_with_context(path_context, Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0))), _goal_tiles_from_raid(session, raid, PlayerRules.raid_controller_id(raid))) >= 9999:
