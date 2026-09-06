@@ -9,6 +9,9 @@ const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemL
 const ArmyStackBarScript = preload("res://scenes/shared/ArmyStackBar.gd")
 
 const UI_ART_OVERWORLD_RESOURCE_BAR := "res://art/ui/runtime/overworld/resource_bar.png"
+var _native_destination_dialog: ConfirmationDialog
+var _native_destination_picker: OptionButton
+var _native_destination_actions: Array = []
 const UI_ART_OVERWORLD_SIDEBAR_FRAME := "res://art/ui/runtime/overworld/sidebar_frame.png"
 const UI_ART_OVERWORLD_PARCHMENT_PANEL := "res://art/ui/runtime/overworld/parchment_panel.png"
 const UI_ART_OVERWORLD_WOOD_PANEL := "res://art/ui/runtime/overworld/wood_panel.png"
@@ -529,6 +532,7 @@ func _input(event: InputEvent) -> void:
 		(_active_play_settings_dialog != null and _active_play_settings_dialog.is_open())
 		or (_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible)
 		or (_end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible)
+		or (_native_destination_dialog != null and _native_destination_dialog.visible)
 	)
 	if modal_owner_open:
 		if event is InputEventJoypadMotion and int(event.axis) in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
@@ -827,6 +831,8 @@ func _overworld_gameplay_movement_blocked_reason() -> String:
 		return "save_confirmation_open"
 	if _end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible:
 		return "end_turn_confirmation_open"
+	if _native_destination_dialog != null and _native_destination_dialog.visible:
+		return "native_destination_dialog_open"
 	if _end_turn_commit_in_progress:
 		return "end_turn_committing"
 	# F3/F4 are persistent, mouse-filter-ignoring observation layers. They must
@@ -1943,6 +1949,7 @@ func _on_context_action_pressed(action_id: String) -> void:
 		resources_before = _duplicate_dictionary(_session.overworld.get("resources", {}))
 	var route_response_context: Dictionary = _cached_active_context().duplicate(true) if action_id == "site_response" else {}
 	var result = OverworldRules.perform_context_action(_session, action_id)
+	_sync_native_transit_presentation(result)
 	if result.is_empty():
 		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id, "empty_result": true})
 		return
@@ -1953,7 +1960,7 @@ func _on_context_action_pressed(action_id: String) -> void:
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
 	_last_turn_resolution_text = ""
-	_record_result_feedback(_feedback_kind_for_context_action(action_id), result, String(action_id).capitalize())
+	_record_result_feedback("move" if result.has("native_transit") or bool(result.get("native_transit_choice_required", false)) else _feedback_kind_for_context_action(action_id), result, String(action_id).capitalize())
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
@@ -2211,6 +2218,7 @@ func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
 	_handle_move_result(result, preserve_selection, debug_started)
 
 func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_started: bool) -> void:
+	_sync_native_transit_presentation(result)
 	var route := String(result.get("route", ""))
 	_last_route_execution = {}
 	if result.has("route_execution"):
@@ -2711,8 +2719,74 @@ func _refresh_map_view() -> void:
 	_profile_end("refresh_set_map_state", set_map_state_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_done")
 
+func _sync_native_transit_presentation(result: Dictionary) -> void:
+	if bool(result.get("native_transit_choice_required", false)):
+		call_deferred("_open_native_destination_dialog")
+	if bool(result.get("ok", false)) and result.has("native_transit"):
+		_set_view_level(LevelRules.hero_level(_session))
+		_select_hero_tile()
+
+func _open_native_destination_dialog() -> void:
+	if _session == null or not is_inside_tree():
+		return
+	_native_destination_actions = OverworldRules.get_context_actions(_session).filter(func(action): return String(action.get("id", "")).begins_with("native_transit:"))
+	if _native_destination_actions.size() < 2:
+		return
+	if _native_destination_dialog == null:
+		_native_destination_dialog = ConfirmationDialog.new()
+		_native_destination_dialog.title = "Choose Passage Destination"
+		_native_destination_dialog.ok_button_text = "Travel"
+		add_child(_native_destination_dialog)
+		FrontierVisualKit.apply_confirmation_dialog(_native_destination_dialog)
+		var content := VBoxContainer.new()
+		content.custom_minimum_size = Vector2(420.0, 86.0)
+		content.add_theme_constant_override("separation", 12)
+		var instruction := Label.new()
+		# Fixed short lines avoid a wrapping Label computing a screen-tall
+		# minimum height while the hidden dialog has no negotiated width yet.
+		instruction.text = "Choose a connected exit.\nOccupied exits cannot be used."
+		FrontierVisualKit.apply_label(instruction, "body", 16)
+		content.add_child(instruction)
+		_native_destination_picker = OptionButton.new()
+		_native_destination_picker.tooltip_text = "Passage destination"
+		FrontierVisualKit.apply_option_button(_native_destination_picker, "secondary", 400.0, 38.0, 16)
+		content.add_child(_native_destination_picker)
+		_native_destination_dialog.add_child(content)
+		_native_destination_picker.item_selected.connect(_on_native_destination_selected)
+		_native_destination_dialog.confirmed.connect(_on_native_destination_confirmed)
+		_native_destination_dialog.canceled.connect(_on_native_destination_canceled)
+	_native_destination_picker.clear()
+	var first_available := -1
+	for index in range(_native_destination_actions.size()):
+		var action: Dictionary = _native_destination_actions[index]
+		_native_destination_picker.add_item(String(action.get("label", "Passage")), index)
+		_native_destination_picker.set_item_disabled(index, bool(action.get("disabled", false)))
+		_native_destination_picker.set_item_tooltip(index, String(action.get("summary", "")))
+		if first_available < 0 and not bool(action.get("disabled", false)):
+			first_available = index
+	_native_destination_picker.select(first_available)
+	_native_destination_dialog.get_ok_button().disabled = first_available < 0
+	_native_destination_dialog.exclusive = true
+	_on_overworld_interaction_owner_opened()
+	_native_destination_dialog.popup_centered(Vector2i(500, 220))
+	_native_destination_picker.grab_focus()
+
+func _on_native_destination_selected(index: int) -> void:
+	_native_destination_dialog.get_ok_button().disabled = index < 0 or index >= _native_destination_actions.size() or bool(_native_destination_actions[index].get("disabled", false))
+
+func _on_native_destination_confirmed() -> void:
+	var index := _native_destination_picker.selected
+	FrontierVisualKit.hide_exclusive_dialog(_native_destination_dialog)
+	if index >= 0 and index < _native_destination_actions.size() and not bool(_native_destination_actions[index].get("disabled", false)):
+		_on_context_action_pressed(String(_native_destination_actions[index].get("id", "")))
+	call_deferred("_configure_overworld_keyboard_focus", true)
+
+func _on_native_destination_canceled() -> void:
+	FrontierVisualKit.hide_exclusive_dialog(_native_destination_dialog)
+	call_deferred("_configure_overworld_keyboard_focus", true)
+
 func _record_hero_movement_presentation(result: Dictionary, route: String) -> void:
-	if not bool(result.get("ok", false)) or route != "":
+	if not bool(result.get("ok", false)) or route != "" or result.has("native_transit"):
 		return
 	var route_execution: Dictionary = result.get("route_execution", {}) if result.get("route_execution", {}) is Dictionary else {}
 	var route_tiles: Array = route_execution.get("reachable_tiles", []) if route_execution.get("reachable_tiles", []) is Array else []

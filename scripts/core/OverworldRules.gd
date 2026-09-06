@@ -3,6 +3,7 @@ extends RefCounted
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
+const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
@@ -274,6 +275,7 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 	if not session.overworld.has("terrain_layers") or not (session.overworld.get("terrain_layers") is Dictionary) or session.overworld.get("terrain_layers", {}).is_empty():
 		session.overworld["terrain_layers"] = ContentService.get_terrain_layers_for_scenario(session.scenario_id)
 	_normalize_generated_runtime_materialization(session, scenario)
+	NativeTransit.normalize_legacy_session(session)
 	if not session.overworld.has("hero_position") or not (session.overworld.get("hero_position") is Dictionary):
 		session.overworld["hero_position"] = scenario.get("start", {"x": 0, "y": 0})
 	_refresh_blocked_tile_index(session)
@@ -582,6 +584,125 @@ static func route_movement_preview(
 		"destination_tile": _route_tile_payload(destination_tile),
 	}
 
+static func native_passage_travel_check(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_position: Vector3i, actor_id: String, target_id: String = "") -> Dictionary:
+	var resolved := NativeTransit.resolve(session.overworld.get("resource_nodes", []), node, target_id)
+	if not bool(resolved.get("ok", false)):
+		if bool(resolved.get("native_transit_choice_required", false)):
+			if actor_position != NativeTransit.point(NativeTransit.link_of(node).get("entry")):
+				return {"ok": false, "message": "Move to the passage entrance first."}
+			var source_safety := _native_passage_endpoint_safety(session, node, actor_id)
+			if not bool(source_safety.get("ok", false)):
+				return source_safety
+		return resolved
+	if actor_position != resolved.entry:
+		return {"ok": false, "message": "Move to the passage entrance first."}
+	for endpoint in [node, resolved.peer]:
+		var safety := _native_passage_endpoint_safety(session, endpoint, actor_id)
+		if not bool(safety.get("ok", false)):
+			return safety
+	return resolved
+
+static func _native_passage_endpoint_safety(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_id: String) -> Dictionary:
+	var tile := NativeTransit.point(NativeTransit.link_of(node).get("entry"))
+	var local := Vector2i(tile.x, tile.y)
+	var id := String(node.get("placement_id", ""))
+	if tile.z < 0 or tile.z >= OverworldLevelRulesScript.level_count(session) or not terrain_id_is_passable(_terrain_id_at(session, tile.x, tile.y, tile.z)):
+		return {"ok": false, "message": "The passage destination is impassable."}
+	var blocked: Variant = _blocked_tile_index(session, tile.z).get(_tile_key(local), false)
+	if blocked is bool and blocked and actor_id != "":
+		# A moving AI army may itself cover the doorway. Re-evaluate without
+		# only that actor, preserving every other overlapping source body.
+		blocked = _build_blocked_tile_index(session, tile.z, actor_id).get(_tile_key(local), false)
+	if not (blocked is bool and not blocked) and not (blocked is String and blocked == id):
+		return {"ok": false, "message": "Another object blocks the passage entrance."}
+	var guard := _find_guard_engagement_at_tile(session, tile.x, tile.y, tile.z)
+	if int(guard.get("index", -1)) >= 0 and String(guard.get("encounter", {}).get("placement_id", "")) != actor_id:
+		return {"ok": false, "message": "Clear the guard before using this passage."}
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary) or String(encounter.get("placement_id", "")) == actor_id or is_encounter_resolved(session, encounter):
+			continue
+		if NativeTransit.point(encounter) == tile:
+			return {"ok": false, "message": "An army occupies the passage entrance."}
+	for hero in session.overworld.get("player_heroes", []):
+		if hero is Dictionary and String(hero.get("id", "")) != actor_id and NativeTransit.point(hero.get("position")) == tile:
+			return {"ok": false, "message": "A hero occupies the passage entrance."}
+	var lookup := _spatial_lookup_index(session, tile.z)
+	if lookup.get("town_by_tile", {}).has(_tile_key(local)):
+		return {"ok": false, "message": "A town occupies the passage entrance."}
+	for index in _spatial_lookup_entries(lookup, "resource_by_interaction_tile", local):
+		var other: Dictionary = session.overworld.resource_nodes[int(index)]
+		if String(other.get("placement_id", "")) != id:
+			return {"ok": false, "message": "Another site occupies the passage entrance."}
+	for index in _spatial_lookup_entries(lookup, "artifact_by_tile", local):
+		if not bool(session.overworld.artifact_nodes[int(index)].get("collected", false)):
+			return {"ok": false, "message": "Recover the artifact at the passage entrance first."}
+	return {"ok": true}
+
+static func _native_arrival_credits(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var stored: Variant = session.overworld.get("native_transit_pending_arrival", {})
+	if not (stored is Dictionary):
+		return {}
+	# Accept the initial single-actor additive shape when resuming an earlier
+	# session. Independent heroes must not overwrite or consume each other's
+	# already-paid approach. Reads do not mutate the session.
+	if stored.has("hero_id"):
+		var legacy := {}
+		legacy[String(stored.get("hero_id", ""))] = stored
+		return legacy
+	return stored
+
+static func travel_native_passage(session: SessionStateStoreScript.SessionData, node: Dictionary, movement_cost: int = 1, target_id: String = "") -> Dictionary:
+	movement_cost = clampi(movement_cost, 0, 1)
+	var actor_id := String(session.overworld.get("active_hero_id", ""))
+	var actor_position := NativeTransit.point(session.overworld.get("hero_position"))
+	var check := native_passage_travel_check(session, node, actor_position, actor_id, target_id)
+	if not bool(check.get("ok", false)):
+		if bool(check.get("native_transit_choice_required", false)):
+			if movement_cost == 0:
+				# The approach step was already paid. Persist only this actor's
+				# current entrance/day credit so a deferred choice survives saving,
+				# without gifting another hero or tomorrow's return a free jump.
+				var credits := _native_arrival_credits(session).duplicate(false)
+				credits[actor_id] = {"hero_id": actor_id, "placement_id": String(node.get("placement_id", "")), "day": session.day, "entry": NativeTransit.link_of(node).get("entry", {}).duplicate(true)}
+				session.overworld["native_transit_pending_arrival"] = credits
+			# Arriving and requesting a destination is a successful interaction,
+			# not failed movement after the hero has already spent the approach.
+			check["ok"] = true
+		elif movement_cost == 0 and actor_position == NativeTransit.point(NativeTransit.link_of(node).get("entry")):
+			# An arrival-only/stranded endpoint or a temporarily occupied exit
+			# does not undo a legal, already-paid walk to this entrance. Keep
+			# explicit Travel requests rejected, and never mask bad contracts.
+			var contract_error := NativeTransit.contract_error(node, NativeTransit.nodes_by_id(session.overworld.get("resource_nodes", [])))
+			if contract_error == "" and bool(_native_passage_endpoint_safety(session, node, actor_id).get("ok", false)) and String(check.get("error", "")) in ["", "native_passage_has_no_exit"]:
+				check["ok"] = true
+				check["native_transit_unavailable"] = true
+		return check
+	var credits := _native_arrival_credits(session).duplicate(false)
+	var pending: Dictionary = credits.get(actor_id, {}) if credits.get(actor_id, {}) is Dictionary else {}
+	if target_id != "" and String(pending.get("hero_id", "")) == actor_id and String(pending.get("placement_id", "")) == String(node.get("placement_id", "")) and int(pending.get("day", -1)) == session.day and NativeTransit.point(pending.get("entry")) == actor_position:
+		movement_cost = 0
+	# Arrival has already spent the approach step. A deliberate return from the
+	# entrance spends one step, so neither route previews nor zero-move heroes
+	# gain a free loop. This is live game movement, not a generator RNG rule.
+	var movement: Dictionary = session.overworld.get("movement", {})
+	if int(movement.get("current", 0)) < movement_cost:
+		return {"ok": false, "message": "No movement left to use the passage today."}
+	movement["current"] = int(movement.get("current", 0)) - movement_cost
+	session.overworld["movement"] = movement
+	credits.erase(actor_id)
+	if credits.is_empty():
+		session.overworld.erase("native_transit_pending_arrival")
+	else:
+		session.overworld["native_transit_pending_arrival"] = credits
+	var destination: Vector3i = check.exit
+	_set_active_hero_position(session, Vector2i(destination.x, destination.y), destination.z)
+	session.overworld["view_level"] = destination.z
+	clear_active_town_visit(session)
+	HeroCommandRulesScript.commit_active_hero(session)
+	_reveal_current_fog_sources(session)
+	_mark_runtime_normalized(session)
+	return {"ok": true, "message": "Travelled through the passage to %s (%d,%d)." % ["the underground" if destination.z > 0 else "the surface", destination.x, destination.y], "native_transit": check.link.duplicate(true), "movement_cost": movement_cost}
+
 static func active_linked_transit_edges(session: SessionStateStoreScript.SessionData, level: int = -1) -> Array:
 	var edges := []
 	if session == null:
@@ -595,6 +716,8 @@ static func active_linked_transit_edges(session: SessionStateStoreScript.Session
 		if not (node_value is Dictionary) or not OverworldLevelRulesScript.on_level(node_value, level):
 			continue
 		var node: Dictionary = node_value
+		if NativeTransit.is_native(node):
+			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if String(site.get("family", "")) != "transit_object":
 			continue
@@ -840,6 +963,11 @@ static func try_move_along_route(
 	var route := String(interaction_result.get("route", ""))
 	if route != "":
 		result["route"] = route
+	if interaction_result.has("native_transit"):
+		result["native_transit"] = interaction_result.native_transit.duplicate(true)
+	if bool(interaction_result.get("native_transit_choice_required", false)):
+		result["native_transit_choice_required"] = true
+		result["destinations"] = interaction_result.get("destinations", []).duplicate(true)
 	result["route_steps"] = _route_tile_payloads(path.slice(1, reachable_steps + 1))
 	var route_execution := preview.duplicate(true)
 	route_execution["reached_destination"] = reached_destination
@@ -1125,7 +1253,8 @@ static func collect_active_resource(session: SessionStateStoreScript.SessionData
 static func _collect_resource_node_result(
 	session: SessionStateStoreScript.SessionData,
 	node_result: Dictionary,
-	refresh_fog_after_action: bool = true
+	refresh_fog_after_action: bool = true,
+	native_transit_cost: int = 1
 ) -> Dictionary:
 	var collect_started_usec := _rules_profile_timer()
 	_rules_profile_count("resource_collect_count")
@@ -1136,6 +1265,8 @@ static func _collect_resource_node_result(
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
 		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 		return {"ok": false, "message": "This site has no authored payload."}
+	if NativeTransit.is_native(node):
+		return travel_native_passage(session, node, native_transit_cost)
 	if (
 		String(site.get("batch003_role", "")) == "sign_waypoint"
 		or String(site.get("batch004_role", "")) == "route_waypoint"
@@ -1516,6 +1647,16 @@ static func _collect_artifact_node_result(
 static func perform_context_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	if session == null:
 		return {}
+	if action_id.begins_with("native_transit:"):
+		normalize_overworld_state_for_runtime(session)
+		# Some source portal descriptors have a two-cell body with their
+		# action tile one column west of the visual anchor. Use the same
+		# authoritative interaction lookup as the ordinary context action.
+		var resource := _find_context_resource_node(session)
+		var node: Dictionary = resource.get("node", {})
+		if int(resource.get("index", -1)) < 0 or not NativeTransit.is_native(node):
+			return {"ok": false, "message": "Move to the passage entrance first."}
+		return travel_native_passage(session, node, 1, action_id.trim_prefix("native_transit:"))
 	if action_id == "collect_resource":
 		return collect_active_resource(session)
 	if action_id == "collect_artifact":
@@ -1580,6 +1721,8 @@ static func _resolve_post_move_interaction(session: SessionStateStoreScript.Sess
 
 	var resource_result := _find_context_resource_node(session)
 	if int(resource_result.get("index", -1)) >= 0:
+		if NativeTransit.is_native(resource_result.get("node", {})):
+			return _collect_resource_node_result(session, resource_result, true, 0)
 		var result := collect_active_resource(session)
 		return {
 			"ok": true,
@@ -1623,7 +1766,7 @@ static func _resolve_destination_descriptor_interaction(
 			var resource_result := _find_resource_node_by_placement(session, String(descriptor.get("placement_id", "")))
 			if int(resource_result.get("index", -1)) < 0:
 				return {"ok": false, "message": "No resource site here.", "route": ""}
-			return _collect_resource_node_result(session, resource_result, false)
+			return _collect_resource_node_result(session, resource_result, false, 0)
 		"artifact":
 			var artifact_result := _find_artifact_node_by_descriptor(session, descriptor)
 			if int(artifact_result.get("index", -1)) < 0:
@@ -2456,7 +2599,7 @@ static func tile_has_route_interaction(session: SessionStateStoreScript.SessionD
 		if not (node is Dictionary):
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-		if not bool(site.get("persistent_control", false)) and bool(node.get("collected", false)):
+		if not NativeTransit.is_native(node) and not bool(site.get("persistent_control", false)) and bool(node.get("collected", false)):
 			continue
 		return true
 	var artifact_nodes = session.overworld.get("artifact_nodes", [])
@@ -2489,6 +2632,10 @@ static func tile_step_cuts_blocked_corner(session: SessionStateStoreScript.Sessi
 	var dx := to_tile.x - from_tile.x
 	var dy := to_tile.y - from_tile.y
 	if abs(dx) != 1 or abs(dy) != 1:
+		return false
+	if NativeTransit.uses_native_adjacency(session):
+		# Native RMG connectivity includes diagonal rock corridors. The move
+		# owner still validates the destination's terrain, body and interaction.
 		return false
 	var side_a := Vector2i(from_tile.x + dx, from_tile.y)
 	var side_b := Vector2i(from_tile.x, from_tile.y + dy)
@@ -2924,7 +3071,7 @@ static func _spatial_lookup_entries(index: Dictionary, name: String, tile: Vecto
 	var table: Dictionary = index.get(name, {}) if index.get(name, {}) is Dictionary else {}
 	return table.get(_tile_key(tile), []) if table.get(_tile_key(tile), []) is Array else []
 
-static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionData, level: int = -1) -> Dictionary:
+static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionData, level: int = -1, ignore_actor_id: String = "") -> Dictionary:
 	var index := {}
 	if session == null:
 		return index
@@ -2945,6 +3092,8 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 		if not (encounter_value is Dictionary):
 			continue
 		var encounter: Dictionary = encounter_value
+		if ignore_actor_id != "" and String(encounter.get("placement_id", "")) == ignore_actor_id:
+			continue
 		if not OverworldLevelRulesScript.on_level(encounter, level) or is_encounter_resolved(session, encounter):
 			continue
 		_append_generated_body_tiles_to_blocked_index(index, encounter, bool(encounter.get("blocking_body", true)))
@@ -2969,7 +3118,9 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 			continue
 		for body_tile in _map_object_world_body_tiles(map_object, node):
 			if body_tile is Vector2i:
-				index[_tile_key(body_tile)] = true
+				var key := _tile_key(body_tile)
+				var id := String(node.get("placement_id", ""))
+				index[key] = id if NativeTransit.is_native(node) and id != "" and not index.has(key) else true
 	return index
 
 static func _append_generated_body_tiles_to_blocked_index(index: Dictionary, placement: Dictionary, blocks_body: bool) -> void:
@@ -5782,7 +5933,14 @@ static func get_context_actions(session: SessionStateStoreScript.SessionData) ->
 		"resource":
 			var node = context.get("node", {})
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-			if _resource_node_claimable_by_player(node, site, session):
+			if NativeTransit.is_native(node) and NativeTransit.destinations(node).size() > 1:
+				actions.append({"id": "collect_resource", "label": "Choose Destination", "summary": "Choose which connected passage exit to use."})
+				for destination in NativeTransit.destinations(node):
+					var tile := NativeTransit.point(destination.get("exit"))
+					var target_id := String(destination.get("target_placement_id", ""))
+					var check := native_passage_travel_check(session, node, NativeTransit.point(session.overworld.get("hero_position")), String(session.overworld.get("active_hero_id", "")), target_id)
+					actions.append({"id": "native_transit:" + target_id, "label": "Travel: %s %d,%d" % ["Below" if tile.z > 0 else "Surface", tile.x, tile.y], "summary": "Travel to this connected destination." if bool(check.get("ok", false)) else String(check.get("message", "Passage unavailable.")), "disabled": not bool(check.get("ok", false))})
+			elif _resource_node_claimable_by_player(node, site, session):
 				var collection_resource_id := resource_site_primary_stockpile_resource_id(site)
 				actions.append(
 					{
@@ -6095,6 +6253,9 @@ static func _normalize_resource_nodes(nodes: Array) -> Array:
 
 static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
 	for key in [
+		"native_transit",
+		"h3m_type_id",
+		"h3m_subtype",
 		"collected_by_player_id",
 		"level",
 		"content_batch_id",
@@ -6179,7 +6340,7 @@ static func _find_context_resource_node(session: SessionStateStoreScript.Session
 		return {"index": -1, "node": {}}
 	var node = node_result.get("node", {})
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-	if _resource_site_is_persistent(site) or _resource_site_is_repeatable(site) or not bool(node.get("collected", false)):
+	if NativeTransit.is_native(node) or _resource_site_is_persistent(site) or _resource_site_is_repeatable(site) or not bool(node.get("collected", false)):
 		return node_result
 	return {"index": -1, "node": {}}
 
@@ -6342,6 +6503,8 @@ static func _resource_node_claimable_by_player(
 	site: Dictionary,
 	session: SessionStateStoreScript.SessionData = null
 ) -> bool:
+	if NativeTransit.is_native(node):
+		return true
 	if session != null:
 		var guard_encounter := _resource_site_guard_encounter(session, node, site)
 		if _resource_site_guard_blocks_node(guard_encounter, node):
@@ -6804,6 +6967,11 @@ static func _recruit_source_why_line(site: Dictionary) -> String:
 	return "Why: Capture %s." % ", ".join(reasons)
 
 static func _resource_site_action_label(node: Dictionary, site: Dictionary) -> String:
+	if NativeTransit.is_native(node):
+		var link := NativeTransit.link_of(node)
+		if String(link.get("kind", "")) == "paired_cave":
+			return "Travel Underground" if int(link.get("exit", {}).get("level", 0)) > 0 else "Travel to Surface"
+		return "Travel Through Portal" if not NativeTransit.destinations(node).is_empty() else "Inspect Portal"
 	var authored_label := String(site.get("action_label", ""))
 	if authored_label != "":
 		return authored_label
@@ -8451,6 +8619,12 @@ static func _resource_site_response_action(
 	}
 
 static func _resource_site_context_summary(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> String:
+	if NativeTransit.is_native(node):
+		var resolved := NativeTransit.resolve(session.overworld.get("resource_nodes", []), node)
+		if not bool(resolved.get("ok", false)):
+			return String(resolved.get("message", "This passage is unavailable."))
+		var exit: Vector3i = resolved.exit
+		return "Paired passage to %s (%d,%d). Travel through the entrance; no claim, toll or repair is required." % ["the underground" if exit.z > 0 else "the surface", exit.x, exit.y]
 	var parts := []
 	var surface := describe_resource_site_surface(session, node, site)
 	if surface != "":
@@ -12366,8 +12540,8 @@ static func _town_garrison_headcount(town: Dictionary) -> int:
 static func _town_requires_assault(town: Dictionary) -> bool:
 	return String(town.get("owner", "neutral")) == "enemy" and _town_garrison_headcount(town) > 0
 
-static func _set_active_hero_position(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> void:
-	var position := OverworldLevelRulesScript.moved_position(session.overworld.get("hero_position", {}), tile)
+static func _set_active_hero_position(session: SessionStateStoreScript.SessionData, tile: Vector2i, level: int = -1) -> void:
+	var position := OverworldLevelRulesScript.moved_position(session.overworld.get("hero_position", {}), tile, level)
 	session.overworld["hero_position"] = position.duplicate(true)
 	var active_hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
 	active_hero["position"] = position.duplicate(true)
@@ -13408,6 +13582,8 @@ static func _context_action_briefing(session: SessionStateStoreScript.SessionDat
 			return "Claim %s now to secure a foothold and unlock local command options." % _town_name(town)
 		"collect_resource":
 			var node = context.get("node", {})
+			if NativeTransit.is_native(node):
+				return "Use the paired passage. Costs 1 movement when already at its entrance; approaching it includes travel. The destination must be clear."
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 			return "Secure %s now to %s." % [
 				String(site.get("name", "this site")),

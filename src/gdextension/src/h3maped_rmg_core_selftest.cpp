@@ -8648,6 +8648,85 @@ int main() {
 				"Small two-level normal-water seed-69 workflow diverged from recovered synthetic-owner allocator state or final writeout")) {
 			return 1;
 		}
+		H3MapedRmgWorkflowConfig cave_config = seed69_config;
+		cave_config.seed = 68U;
+		cave_config.water_mode = "land";
+		cave_config.setup_object_0x44 = 0;
+		cave_config.same_run_payload_authority_profile_known = false;
+		cave_config.same_run_payload_authority_profile.clear();
+		auto cave_workflow = run_h3maped_rmg_entry_to_writeout_workflow(cave_config);
+		const auto caves = project_runtime_map_from_native_owned_final_payload(cave_workflow);
+		// Fresh owner stops after both 0x4a6cf2 commits establish these exact
+		// pairs. The link comes from private record keys, never a nearest-pair
+		// search over the final map or the original artwork's local offsets.
+		const std::array<std::array<int32_t, 4>, 4> expected_cave_pairs {{
+			{{226, 227, 13, 5}}, {{230, 231, 13, 26}},
+			{{232, 233, 35, 14}}, {{235, 236, 24, 8}},
+		}};
+		bool pairs_exact = caves.applied && caves.objects.size() > 236U;
+		int cave_ends = 0;
+		for (const auto &object : caves.objects) {
+			if (object.type_id == 103) {
+				++cave_ends;
+			}
+		}
+		for (const auto &pair : expected_cave_pairs) {
+			if (!pairs_exact) {
+				break;
+			}
+			const auto &first = caves.objects[size_t(pair[0])];
+			const auto &second = caves.objects[size_t(pair[1])];
+			pairs_exact = first.type_id == 103 && second.type_id == 103
+					&& first.cross_level_peer_serialized_index_0x4a6cf2 == pair[1]
+					&& second.cross_level_peer_serialized_index_0x4a6cf2 == pair[0]
+					&& first.x == pair[2] && second.x == pair[2]
+					&& first.y == pair[3] && second.y == pair[3]
+					&& first.level != second.level;
+		}
+		if (!require(pairs_exact && cave_ends == 8,
+				"Small seed-68 runtime cave links lost the exact 0x4a6cf2 committed pairs")) {
+			return 1;
+		}
+		const auto original_payload = cave_workflow.final_payload_writeout_0x4ad1e3.payload_bytes;
+		cave_workflow.generator_object_private_state.object_records_0xec4_ecc[
+				size_t(caves.objects[226].source_vector_index)].cross_level_peer_object_key_0x4a6cf2 = 0U;
+		const auto missing_pair = project_runtime_map_from_native_owned_final_payload(cave_workflow);
+		if (!require(!missing_pair.applied
+					&& missing_pair.blocked_reason == "runtime_projection_cave_committed_peer_missing"
+					&& original_payload == cave_workflow.final_payload_writeout_0x4ad1e3.payload_bytes,
+				"Missing cave commit sidecar must fail adoption without rewriting native payload bytes")) {
+			return 1;
+		}
+		H3MapedRmgWorkflowConfig portal_config = cave_config;
+		portal_config.size_class = "medium";
+		portal_config.width = 72;
+		portal_config.height = 72;
+		portal_config.level_count = 1;
+		portal_config.seed = 10U;
+		auto portal_workflow = run_h3maped_rmg_entry_to_writeout_workflow(portal_config);
+		const auto portals = project_runtime_map_from_native_owned_final_payload(portal_workflow);
+		// Fresh 0x4a772c/0x4a781c owner stops join these two actual commits to
+		// the same selected +0x308 descriptor, at the exact source anchors.
+		if (!require(portals.applied && portals.objects.size() > 961U
+					&& portals.objects[959].type_id == 45 && portals.objects[961].type_id == 45
+					&& portals.objects[959].x == 59 && portals.objects[959].y == 46
+					&& portals.objects[961].x == 39 && portals.objects[961].y == 30
+					&& portals.objects[959].monolith_source_group_0x4a7605_known
+					&& portals.objects[961].monolith_source_group_0x4a7605_known
+					&& portals.objects[959].monolith_destination_serialized_indices_0x4a7605 == std::vector<int32_t>{961}
+					&& portals.objects[961].monolith_destination_serialized_indices_0x4a7605 == std::vector<int32_t>{959},
+				"Medium seed-10 runtime portals lost the exact committed descriptor-group identity")) {
+			return 1;
+		}
+		const auto portal_payload = portal_workflow.final_payload_writeout_0x4ad1e3.payload_bytes;
+		portal_workflow.generator_object_private_state.monolith_two_way_output_object_keys_14d0.pop_back();
+		const auto missing_portal_key = project_runtime_map_from_native_owned_final_payload(portal_workflow);
+		if (!require(!missing_portal_key.applied
+					&& missing_portal_key.blocked_reason == "runtime_projection_portal_committed_output_key_missing"
+					&& portal_payload == portal_workflow.final_payload_writeout_0x4ad1e3.payload_bytes,
+				"Missing portal output key must fail adoption without rewriting native payload bytes")) {
+			return 1;
+		}
 	}
 
 	{

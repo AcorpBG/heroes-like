@@ -18956,9 +18956,17 @@ static ConnectionCrossLevelPairResult4a6cf2 connection_cross_level_pair_0x4a6cf2
 		result.base_object_commit_count += 1;
 		return true;
 	};
+	const size_t first_gate_index = state.object_records_0xec4_ecc.size();
 	if (!commit_gate(selected.source) || !commit_gate(selected.target)) {
 		return result;
 	}
+	// Preserve the actual commit relationship for Aurelion adoption. The source
+	// copies the chosen XY and substitutes the other relation's level before
+	// 0x4a700f; it does not search for a nearby gate after final writeout.
+	ObjectRecordReference4a54a7 &first_gate = state.object_records_0xec4_ecc[first_gate_index];
+	ObjectRecordReference4a54a7 &second_gate = state.object_records_0xec4_ecc[first_gate_index + 1U];
+	first_gate.cross_level_peer_object_key_0x4a6cf2 = second_gate.object_record_key;
+	second_gate.cross_level_peer_object_key_0x4a6cf2 = first_gate.object_record_key;
 
 	const int32_t endpoint_x = selected.source.x - selected_descriptor.descriptor_source_cell_x_0x2c;
 	const int32_t endpoint_y = selected.source.y - selected_descriptor.descriptor_source_cell_y_0x30;
@@ -43101,6 +43109,146 @@ static RuntimeMapPayloadProjection project_runtime_map_from_owned_final_payload(
 	return projection;
 }
 
+static RuntimeMapPayloadProjection attach_owned_monolith_transit_groups(
+		RuntimeMapPayloadProjection projection,
+		const H3MapedRmgWorkflowResult &workflow) {
+	if (!projection.applied) {
+		return projection;
+	}
+	const auto &state = workflow.generator_object_private_state;
+	const auto &serialized = workflow.final_object_writeout_0x4ad309_0x4ad3eb.serialized_object_records;
+	const auto &private_objects = state.object_records_0xec4_ecc;
+	const auto &entrances = state.monolith_one_way_entrance_descriptor_entries_2e8_2ec;
+	const auto &exits = state.monolith_one_way_exit_descriptor_entries_2f8_2fc;
+	const auto &two_way = state.monolith_two_way_descriptor_entries_308_30c;
+	for (auto &object : projection.objects) {
+		if (object.type_id < 43 || object.type_id > 45) {
+			continue;
+		}
+		auto reject = [&](const char *reason) {
+			projection.applied = false;
+			projection.blocked_reason = reason;
+		};
+		if (!state.monolith_one_way_entrance_descriptor_vector_2e8_2ec_source_owned
+				|| !state.monolith_one_way_exit_descriptor_vector_2f8_2fc_source_owned
+				|| !state.monolith_two_way_descriptor_vector_308_30c_source_owned
+				|| entrances.size() != exits.size()) {
+			reject("runtime_projection_portal_source_lanes_missing");
+			return projection;
+		}
+		if (object.source_vector_index < 0
+				|| size_t(object.source_vector_index) >= private_objects.size()) {
+			reject("runtime_projection_portal_source_record_missing");
+			return projection;
+		}
+		const auto &source = private_objects[size_t(object.source_vector_index)];
+		const auto &keys = object.type_id == 45
+				? state.monolith_two_way_output_object_keys_14d0
+				: state.monolith_paired_output_object_keys_14c0;
+		if (source.object_record_key != serialized[size_t(object.serialized_index)].object_record_key
+				|| std::count(keys.begin(), keys.end(), source.object_record_key) != 1) {
+			reject("runtime_projection_portal_committed_output_key_missing");
+			return projection;
+		}
+		const auto &lane = object.type_id == 45 ? two_way : (object.type_id == 43 ? entrances : exits);
+		int32_t matched = -1;
+		for (size_t index = 0; index < lane.size(); ++index) {
+			const auto descriptor = source_object_descriptor_from_generator_entry_0x49db76(lane[index]);
+			if (descriptor.source_key_0x00 == source.descriptor_source_key_0x00
+					&& lane[index].descriptor_type_0x1c == object.type_id
+					&& lane[index].descriptor_source_field_0x20 == object.subtype) {
+				if (matched >= 0) {
+					reject("runtime_projection_portal_descriptor_lane_ambiguous");
+					return projection;
+				}
+				matched = int32_t(index);
+			}
+		}
+		if (matched < 0) {
+			reject("runtime_projection_portal_descriptor_lane_missing");
+			return projection;
+		}
+		// The two paired lanes must encode the same source subtype. This also
+		// permits exact type/subtype reconstruction for pre-sidecar packages.
+		if (object.type_id != 45
+				&& (entrances[size_t(matched)].descriptor_type_0x1c != 43
+						|| exits[size_t(matched)].descriptor_type_0x1c != 44
+						|| entrances[size_t(matched)].descriptor_source_field_0x20 != object.subtype
+						|| exits[size_t(matched)].descriptor_source_field_0x20 != object.subtype)) {
+			reject("runtime_projection_portal_paired_lane_identity_mismatch");
+			return projection;
+		}
+		object.monolith_source_group_0x4a7605_known = true;
+		if (object.type_id == 44) {
+			continue; // A committed one-way exit is not an entrance.
+		}
+		const auto &destination_entry = object.type_id == 45 ? lane[size_t(matched)] : exits[size_t(matched)];
+		const auto destination_descriptor = source_object_descriptor_from_generator_entry_0x49db76(destination_entry);
+		for (const auto &peer : projection.objects) {
+			if (peer.serialized_index == object.serialized_index
+					|| peer.type_id != (object.type_id == 45 ? 45 : 44)
+					|| peer.subtype != object.subtype
+					|| peer.source_vector_index < 0
+					|| size_t(peer.source_vector_index) >= private_objects.size()) {
+				continue;
+			}
+			const auto &peer_source = private_objects[size_t(peer.source_vector_index)];
+			if (peer_source.descriptor_source_key_0x00 == destination_descriptor.source_key_0x00
+					&& std::count(keys.begin(), keys.end(), peer_source.object_record_key) == 1) {
+				object.monolith_destination_serialized_indices_0x4a7605.push_back(peer.serialized_index);
+			}
+		}
+	}
+	return projection;
+}
+
+static RuntimeMapPayloadProjection attach_owned_cross_level_transit_pairs(
+		RuntimeMapPayloadProjection projection,
+		const H3MapedRmgWorkflowResult &workflow) {
+	if (!projection.applied) {
+		return projection;
+	}
+	const auto &serialized = workflow.final_object_writeout_0x4ad309_0x4ad3eb.serialized_object_records;
+	const auto &private_objects = workflow.generator_object_private_state.object_records_0xec4_ecc;
+	std::map<uint32_t, int32_t> serialized_by_key;
+	for (size_t index = 0; index < serialized.size(); ++index) {
+		serialized_by_key.emplace(serialized[index].object_record_key, int32_t(index));
+	}
+	for (auto &object : projection.objects) {
+		if (object.type_id != 103) {
+			continue;
+		}
+		auto reject = [&](const char *reason) {
+			projection.applied = false;
+			projection.blocked_reason = reason;
+		};
+		if (object.source_vector_index < 0
+				|| size_t(object.source_vector_index) >= private_objects.size()) {
+			reject("runtime_projection_cave_source_record_missing");
+			return projection;
+		}
+		const auto &source = private_objects[size_t(object.source_vector_index)];
+		const auto peer_index = serialized_by_key.find(source.cross_level_peer_object_key_0x4a6cf2);
+		if (source.object_record_key != serialized[size_t(object.serialized_index)].object_record_key
+				|| source.cross_level_peer_object_key_0x4a6cf2 == 0U
+				|| peer_index == serialized_by_key.end()) {
+			reject("runtime_projection_cave_committed_peer_missing");
+			return projection;
+		}
+		const auto &peer = projection.objects[size_t(peer_index->second)];
+		if (peer.source_vector_index < 0 || size_t(peer.source_vector_index) >= private_objects.size()
+				|| peer.type_id != 103 || peer.x != object.x || peer.y != object.y
+				|| peer.level == object.level
+				|| private_objects[size_t(peer.source_vector_index)].cross_level_peer_object_key_0x4a6cf2
+						!= source.object_record_key) {
+			reject("runtime_projection_cave_commit_pair_inconsistent");
+			return projection;
+		}
+		object.cross_level_peer_serialized_index_0x4a6cf2 = peer_index->second;
+	}
+	return attach_owned_monolith_transit_groups(std::move(projection), workflow);
+}
+
 RuntimeMapPayloadProjection project_runtime_map_from_parity_owned_final_payload(
 		bool workflow_complete,
 		bool final_payload_owned,
@@ -43122,14 +43270,14 @@ RuntimeMapPayloadProjection project_runtime_map_from_parity_owned_final_payload(
 
 RuntimeMapPayloadProjection project_runtime_map_from_parity_owned_final_payload(
 		const H3MapedRmgWorkflowResult &workflow) {
-	return project_runtime_map_from_parity_owned_final_payload(
+	return attach_owned_cross_level_transit_pairs(project_runtime_map_from_parity_owned_final_payload(
 			workflow.status == "complete",
 			workflow.final_payload_owned,
 			workflow.final_writeout_complete,
 			workflow.final_header_writeout_0x4ac857_0x4ad206,
 			workflow.final_tile_writeout_0x49b2b6,
 			workflow.final_object_writeout_0x4ad309_0x4ad3eb,
-			workflow.final_payload_writeout_0x4ad1e3);
+			workflow.final_payload_writeout_0x4ad1e3), workflow);
 }
 
 RuntimeMapPayloadProjection project_runtime_map_from_native_owned_final_payload(
@@ -43142,7 +43290,7 @@ RuntimeMapPayloadProjection project_runtime_map_from_native_owned_final_payload(
 					|| (workflow.status == "blocked"
 							&& (workflow.blocked_reason == "same_run_payload_authority_missing_recovered_profile_metadata"
 									|| workflow.blocked_reason == "full_final_payload_same_run_compare_pending_after_ordered_payload_assembly")));
-	return project_runtime_map_from_owned_final_payload(
+	return attach_owned_cross_level_transit_pairs(project_runtime_map_from_owned_final_payload(
 			reached_native_final_assembly,
 			workflow.final_payload_owned,
 			workflow.final_writeout_complete,
@@ -43150,7 +43298,7 @@ RuntimeMapPayloadProjection project_runtime_map_from_native_owned_final_payload(
 			workflow.final_tile_writeout_0x49b2b6,
 			workflow.final_object_writeout_0x4ad309_0x4ad3eb,
 			workflow.final_payload_writeout_0x4ad1e3,
-			false);
+			false), workflow);
 }
 
 std::vector<BoundaryCycleInput4a2777> boundary_cycles_from_source_handoffs_4a2777(const std::vector<BoundarySourceCycleHandoff4a2777> &handoffs) {
