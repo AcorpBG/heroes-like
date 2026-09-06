@@ -1185,6 +1185,61 @@ Dictionary runtime_objects(
 		}
 		object["blocking_body"] = !source.body_tiles.empty();
 		apply_runtime_live_proxy_entry(object, live_proxy);
+		if (source.cross_level_peer_serialized_index_0x4a6cf2 >= 0) {
+			const auto &peer = projection.objects[size_t(source.cross_level_peer_serialized_index_0x4a6cf2)];
+			if (source.action_tiles.size() != 1U || peer.action_tiles.size() != 1U) {
+				Dictionary failure;
+				failure["code"] = "native_cave_pair_action_tile_shape_invalid";
+				failure["serialized_index"] = source.serialized_index;
+				failures.append(failure);
+			} else {
+				Dictionary transit;
+				transit["schema_version"] = 1;
+				transit["kind"] = "paired_cave";
+				transit["source_function"] = "0x4a6cf2";
+				transit["group_id"] = "native_cave_" + runtime_placement_id(map_id, std::min(source.serialized_index, peer.serialized_index));
+				transit["source_placement_id"] = runtime_placement_id(map_id, source.serialized_index);
+				transit["target_placement_id"] = runtime_placement_id(map_id, peer.serialized_index);
+				transit["entry"] = runtime_tile_points(source.action_tiles)[0];
+				transit["exit"] = runtime_tile_points(peer.action_tiles)[0];
+				transit["one_way"] = false;
+				object["native_transit"] = transit;
+			}
+		}
+		if (source.monolith_source_group_0x4a7605_known) {
+			if (source.action_tiles.size() != 1U) {
+				Dictionary failure;
+				failure["code"] = "native_portal_action_tile_shape_invalid";
+				failure["serialized_index"] = source.serialized_index;
+				failures.append(failure);
+			} else {
+				Dictionary transit;
+				transit["schema_version"] = 1;
+				transit["kind"] = source.type_id == 45 ? "two_way_portal" : (source.type_id == 43 ? "one_way_entrance" : "one_way_exit");
+				transit["source_function"] = "0x4a7605";
+				transit["group_id"] = "native_portal_" + map_id + (source.type_id == 45 ? "_two_way_" : "_one_way_") + String::num_int64(source.subtype);
+				transit["source_placement_id"] = runtime_placement_id(map_id, source.serialized_index);
+				transit["entry"] = runtime_tile_points(source.action_tiles)[0];
+				transit["one_way"] = source.type_id != 45;
+				Array destinations;
+				for (int32_t peer_index : source.monolith_destination_serialized_indices_0x4a7605) {
+					const auto &peer = projection.objects[size_t(peer_index)];
+					if (peer.action_tiles.size() != 1U) {
+						Dictionary failure;
+						failure["code"] = "native_portal_destination_action_tile_shape_invalid";
+						failure["serialized_index"] = peer.serialized_index;
+						failures.append(failure);
+						continue;
+					}
+					Dictionary destination;
+					destination["target_placement_id"] = runtime_placement_id(map_id, peer.serialized_index);
+					destination["exit"] = runtime_tile_points(peer.action_tiles)[0];
+					destinations.append(destination);
+				}
+				transit["destinations"] = destinations;
+				object["native_transit"] = transit;
+			}
+		}
 		const String source_type_key = String::num_int64(source.type_id);
 		String resolution_status = String(object.get("native_authored_pool_resolution_status", ""));
 		if (resolution_status.is_empty()) {

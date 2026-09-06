@@ -2400,6 +2400,9 @@ struct ObjectRecordReference4a54a7 {
 	bool final_payload_optional_fields_0x3c_0x40_known = false;
 	int32_t final_payload_field_0x3c = -1;
 	uint32_t final_payload_field_0x40 = 0U;
+	// Runtime adoption sidecar for the two actual commits at 0x4a6fbc/0x4a700f.
+	// Never serialized into the recovered H3M payload or used by generation.
+	uint32_t cross_level_peer_object_key_0x4a6cf2 = 0U;
 };
 
 struct RewardGuardCandidateRecord4a9f1c {
@@ -4112,6 +4115,11 @@ struct RuntimeMapObjectProjection {
 	std::array<uint8_t, 6> action_mask_bytes {};
 	std::vector<RuntimeMapTilePoint> body_tiles;
 	std::vector<RuntimeMapTilePoint> action_tiles;
+	int32_t cross_level_peer_serialized_index_0x4a6cf2 = -1;
+	// Additive live connectivity, joined from the actual committed output keys
+	// and source descriptor lanes. Not part of the native H3M payload.
+	bool monolith_source_group_0x4a7605_known = false;
+	std::vector<int32_t> monolith_destination_serialized_indices_0x4a7605;
 };
 
 struct RuntimeMapPayloadProjection {

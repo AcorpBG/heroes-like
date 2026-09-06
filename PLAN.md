@@ -24,10 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current owner goal: `bugfix-rmg-audit-corrections-20260905`; fix every finding from the completed audit, with heroes always starting at the owning town entrance. Entrance-boundary, level-aware runtime and player/team children completed; next child: `bugfix-rmg-native-transit-navigation-20260905`. Transit/water, native parity and integrated regression children remain required; a partial correction does not complete the goal.
+- Current owner goal: `bugfix-rmg-audit-corrections-20260905`; fix every finding from the completed audit, with heroes always starting at the owning town entrance. Entrance-boundary, level-aware runtime, player/team and native-transit children completed; current child: `bugfix-rmg-normal-water-private-state-20260905`. Native parity and integrated regression children remain required; a partial correction does not complete the goal.
 - Baseline audit: `audit-rmg-start-placement-and-h3maped-comparison-20260905`; 36 runtime requests, 83 generated starts, 23/24 exact retained owner payloads, fresh executable/private-state water mismatch, and confirmed start/level/opponent/transit adoption gaps. Audit evidence is not runtime fixes or parity completion.
-- Most recently completed owner-directed implementation slice: `bugfix-rmg-player-team-identity-20260905`: distinct source players/teams, independent AI state/economy/ownership/commanders/tasks, capture/battle/save continuity and explicit old-save compatibility; 32 live checks per six/eight-player/team case and all 35 supported entrance cases pass. Evidence: `docs/rmg-player-team-identity-correction-report.md`.
-- Current package boundary: Linux and Windows release exports both measure 248408876 bytes, 1591124 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+- Most recently completed owner-directed implementation slice: `bugfix-rmg-native-transit-navigation-20260905`: exact source cave/portal links, shared native player/AI adjacency, safe travel/choice/save continuation and physical field-battle context. Continuous underground/Islands journeys, all 50 Large portal ends/65 trips, 35 supported entrance cases, relevant regressions and both-platform packages pass. Evidence and remaining parity limits: `docs/rmg-native-transit-correction-report.md`.
+- Current package boundary: Linux and Windows release exports both measure 248438264 bytes, 1561736 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
 
 ## RMG Audit Corrections
 
@@ -61,13 +61,13 @@ Status: completed 2026-09-05. Source slots/teams persist independently of factio
 
 id: `bugfix-rmg-native-transit-navigation-20260905`
 
-Status: pending. Adopt authoritative native connection endpoints through original content and layer-aware travel, AI and persistence. Verify cave/long-distance links plus representative water/Islands traversal and correct demonstrated missing behavior; do not replace native connections with local-offset stand-ins. Owners: native projection/source relation records, bridge, transit/pathing/interaction/AI/render owners.
+Status: completed 2026-09-06. Source-owned cave/portal links, safe player/AI travel, compact destination choice and saves are implemented. Native adjacency preserves original seed-68 rock-side diagonal connections proven by private state and byte-exact payload; destination masks and authored movement rules remain intact. Real underground/Islands journeys, turn-spawned field battle with unchanged remote towns, all 50 Large ends/65 trips, 35 supported entrance cases, relevant regressions, inspected 2048x1079/1280x720 visuals and both-platform packages pass. Evidence, post-neutral-guard journey limits and separate unresolved normal-water/Large source comparisons: `docs/rmg-native-transit-correction-report.md`.
 
 ### RMG Normal Water Native Parity
 
 id: `bugfix-rmg-normal-water-private-state-20260905`
 
-Status: pending. Isolate the recovered function/input mutation causing Medium normal-water seed-10 divergence after `0x4a4c8e` and before `0x49eb8d`; implement only from exact source/private-state proof. Owners: recovered core and named mine/reward/guard/connection owners, source recovery evidence. Validate matching private checkpoints and final bytes, land controls, all 24 retained cases and both native platforms; no final-delta tuning.
+Status: in_progress. Isolate the recovered function/input mutation causing Medium normal-water seed-10 divergence after `0x4a4c8e` and before `0x49eb8d`; implement only from exact source/private-state proof. Owners: recovered core and named mine/reward/guard/connection owners, source recovery evidence. Validate matching private checkpoints and final bytes, land controls, all 24 retained cases and both native platforms; no final-delta tuning.
 
 ### RMG Integrated Correctness Regressions
 

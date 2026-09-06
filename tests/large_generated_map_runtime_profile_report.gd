@@ -7,11 +7,23 @@ const SIZE_CLASS_ID := "homm3_large"
 const FACTION_ID := "faction_veilmourn"
 const HERO_ID := "hero_veilmourn_orso_nightchart"
 const PROFILE_ENV := "HEROES_PROFILE_LOG"
-const EXPECTED_MATERIALIZED_SIGNATURE := "7362cf00"
+# Player/team and native transit sidecars change the package fingerprint, not
+# the source map identity. The retained 2,961 source objects/terrain are checked
+# by tools/rmg_native_transit_validation.py --portal-case large_profile.
+const EXPECTED_MATERIALIZED_SIGNATURE := "79238f15"
+const EXPECTED_NATIVE_MAP_HASH := "fnv1a32:c2520619"
 const COMMAND_LIMIT_MS := 5000.0
 const END_TURN_LIMIT_MS := 15000.0
-
 var _previous_profile_env := ""
+
+func _profile_identity_error(session, materialized_signature: String) -> String:
+	if materialized_signature != EXPECTED_MATERIALIZED_SIGNATURE:
+		return "deterministic materialized signature changed: %s" % materialized_signature
+	var provenance: Dictionary = session.flags.get("generated_random_map_provenance", {})
+	var native_hash := String(provenance.get("map_ref", {}).get("map_hash", ""))
+	if native_hash != EXPECTED_NATIVE_MAP_HASH:
+		return "native map/player identity changed: %s" % native_hash
+	return ""
 
 
 func _ready() -> void:
@@ -155,8 +167,9 @@ func _run() -> void:
 			command_summary[command_id]["confirm_ms"] = command.get("confirm_ms", 0.0)
 	print("%s_STAGE commands %s" % [REPORT_ID, JSON.stringify(command_summary)])
 	var failures := []
-	if materialized_signature != EXPECTED_MATERIALIZED_SIGNATURE:
-		failures.append("deterministic materialized signature changed: %s" % materialized_signature)
+	var identity_error := _profile_identity_error(session, materialized_signature)
+	if identity_error != "":
+		failures.append(identity_error)
 	for command_id_value in commands.keys():
 		var command_id := String(command_id_value)
 		var command: Dictionary = commands[command_id] if commands[command_id] is Dictionary else {}

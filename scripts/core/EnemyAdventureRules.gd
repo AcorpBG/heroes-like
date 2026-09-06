@@ -7,9 +7,11 @@ const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRu
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
+const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 static var _path_distance_surface_cache: Dictionary = {}
+static var _native_navigation_surface_cache: Dictionary = {}
 
 const COMMANDER_STATUS_AVAILABLE := "available"
 const COMMANDER_STATUS_ACTIVE := "active"
@@ -1680,6 +1682,8 @@ static func _current_tile_resource_target_selection_plan(
 		var node: Dictionary = node_value
 		if _resource_interaction_tile(node) != current:
 			continue
+		if NativeTransit.is_native(node) and String(raid.get("native_transit_last_exit_id", "")) == String(node.get("placement_id", "")):
+			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if site.is_empty() or not _resource_node_contestable_by_faction(node, site, faction_id, session):
 			continue
@@ -2277,7 +2281,8 @@ static func advance_raids(
 			current,
 			goal_tiles,
 			String(encounter.get("placement_id", "")),
-			faction_id
+			faction_id,
+			_target_level(session, String(encounter.get("target_kind", "")), String(encounter.get("target_placement_id", "")), faction_id, LevelRules.level_of(encounter))
 		)
 		var goal_distance := int(movement_path_plan.get("goal_distance", 9999))
 		if raid_reached_regroup_contact(session, encounter):
@@ -2311,21 +2316,39 @@ static func advance_raids(
 					current,
 					goal_tiles,
 					String(encounter.get("placement_id", "")),
-					faction_id
+					faction_id,
+					_target_level(session, String(encounter.get("target_kind", "")), String(encounter.get("target_placement_id", "")), faction_id, LevelRules.level_of(encounter))
 				)
 			goal_distance = int(movement_path_plan.get("goal_distance", 9999))
 			_advance_profile_add_ms(profile, "step_path_plan_ms", phase_started)
 			if goal_distance <= 0 or goal_distance >= 9999:
 				break
 			var next_step: Vector2i = movement_path_plan.get("next_step", current)
-			if next_step == current:
+			var passage: Dictionary = movement_path_plan.get("native_transit", {})
+			if next_step == current and passage.is_empty():
 				break
+			var passage_node := {}
+			if not passage.is_empty():
+				passage_node = _find_resource_by_placement(session, String(passage.source_placement_id)).get("node", {})
+				var passage_check: Dictionary = OverworldRulesScript.native_passage_travel_check(session, passage_node, NativeTransit.point(passage.entry), String(encounter.get("placement_id", "")), String(passage.target_placement_id))
+				if not bool(passage_check.get("ok", false)):
+					break
 			encounter["x"] = next_step.x
 			encounter["y"] = next_step.y
 			current = next_step
 			encounters[index] = encounter
 			session.overworld["encounters"] = encounters
 			OverworldRulesScript.invalidate_spatial_lookup(session)
+			if not passage.is_empty():
+				encounter["native_transit_target_exit_id"] = String(passage.target_placement_id)
+				var travelled := _secure_native_passage_target(session, encounter, state, faction_id, passage_node, true)
+				encounter = travelled.get("encounter", encounter)
+				if not travelled.has("native_transit"):
+					break
+				current = Vector2i(int(encounter.x), int(encounter.y))
+				encounters[index] = encounter
+				session.overworld["encounters"] = encounters
+				event_messages.append(String(travelled.get("event_message", "")))
 			if raid_reached_town_battle_contact(session, encounter, faction_id):
 				encounter["arrived"] = true
 				encounter["goal_distance"] = 0
@@ -2378,14 +2401,15 @@ static func advance_raids(
 			current,
 			goal_tiles,
 			String(encounter.get("placement_id", "")),
-			faction_id
+			faction_id,
+			_target_level(session, String(encounter.get("target_kind", "")), String(encounter.get("target_placement_id", "")), faction_id, LevelRules.level_of(encounter))
 		)
 		goal_distance = int(movement_path_plan.get("goal_distance", 9999))
 		if raid_reached_town_battle_contact(session, encounter, faction_id):
 			goal_distance = 0
 		if raid_reached_regroup_contact(session, encounter):
 			goal_distance = 0
-		encounter["goal_distance"] = 0 if goal_distance == 9999 and current in goal_tiles else goal_distance
+		encounter["goal_distance"] = 0 if goal_distance == 9999 and current in goal_tiles and _target_level(session, String(encounter.get("target_kind", "")), String(encounter.get("target_placement_id", "")), faction_id, LevelRules.level_of(encounter)) == LevelRules.level_of(encounter) else goal_distance
 		encounter["arrived"] = (
 			int(encounter.get("goal_distance", 9999)) <= 1
 			if String(encounter.get("target_kind", "")) == "hero"
@@ -4343,10 +4367,11 @@ static func _redirect_unreachable_raid_target(
 	var target_kind := String(raid.get("target_kind", ""))
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var goal_tiles := _goal_tiles_from_raid(session, raid, faction_id)
+	preloaded_path_context = _path_context_for_raid_target(session, raid, faction_id, preloaded_path_context)
 	var distance := _path_distance_with_context(preloaded_path_context, current, goal_tiles) \
 		if not preloaded_path_context.is_empty() \
 		else _path_distance(session, current, goal_tiles, String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid))
-	if distance < 9999 or current in goal_tiles:
+	if distance < 9999 or (current in goal_tiles and int(preloaded_path_context.get("goal_level", 0)) == LevelRules.level_of(raid)):
 		return raid
 	if (
 		target_kind != "town"
@@ -10152,8 +10177,10 @@ static func _target_candidates_from_descriptors(
 			continue
 		var descriptor: Dictionary = descriptor_value
 		var target: Dictionary = descriptor.get("town", descriptor.get("node", descriptor.get("encounter", descriptor.get("hero", {}))))
-		if not target.is_empty() and not LevelRules.on_level(target, int(path_context.get("level", 0))):
+		if not target.is_empty() and not LevelRules.on_level(target, int(path_context.get("level", 0))) and not path_context.has("native_navigation"):
 			continue
+		path_context = path_context.duplicate(false)
+		path_context["goal_level"] = LevelRules.level_of(target) if not target.is_empty() else int(path_context.get("level", 0))
 		match String(descriptor.get("family", "")):
 			"town":
 				_project_town_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context, objective_anchor_tiles)
@@ -10166,7 +10193,7 @@ static func _target_candidates_from_descriptors(
 			"delivery":
 				_project_delivery_interception_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id)
 			"hero":
-				_project_hero_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id)
+				_project_hero_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context)
 	return candidates
 
 
@@ -10360,6 +10387,10 @@ static func _project_resource_target_descriptor(
 	var goal_tile: Vector2i = descriptor.get("goal_tile", Vector2i.ZERO)
 	var goal_distance = _path_distance_with_context(path_context, origin_pos, [goal_tile])
 	if goal_distance >= 9999:
+		return
+	if NativeTransit.is_native(node) and goal_distance == 0:
+		# Arrival on a gate is not a new resource claim or an instruction to
+		# immediately bounce back to the previous level.
 		return
 	var guard := _resource_guard_encounter_for_node(session, node, site)
 	if not guard.is_empty():
@@ -10891,7 +10922,8 @@ static func _project_hero_target_descriptor(
 	descriptor: Dictionary,
 	origin_pos: Vector2i,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	path_context: Dictionary = {}
 ) -> void:
 	var hero: Dictionary = descriptor.get("hero", {}) if descriptor.get("hero", {}) is Dictionary else {}
 	var active_hero_id := String(descriptor.get("active_hero_id", ""))
@@ -10899,7 +10931,7 @@ static func _project_hero_target_descriptor(
 	if hero_id == "":
 		return
 	var goal_tile := _player_hero_goal_tile(hero)
-	var goal_distance: int = _hero_target_goal_distance(session, origin_pos, goal_tile, faction_id, LevelRules.level_of(hero))
+	var goal_distance: int = _hero_target_goal_distance(session, origin_pos, goal_tile, faction_id, LevelRules.level_of(hero), path_context)
 	if goal_distance >= 9999:
 		return
 	var priority = 95
@@ -10913,7 +10945,7 @@ static func _project_hero_target_descriptor(
 	elif army_strength <= 180:
 		priority += 14
 	for town in session.overworld.get("towns", []):
-		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy":
+		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy" or not LevelRules.same_level(town, hero):
 			continue
 		var distance: int = abs(goal_tile.x - int(town.get("x", 0))) + abs(goal_tile.y - int(town.get("y", 0)))
 		if distance > 6:
@@ -10955,9 +10987,10 @@ static func _hero_target_goal_distance(
 	origin_pos: Vector2i,
 	goal_tile: Vector2i,
 	observer_faction_id: String = "",
-	level: int = 0
+	level: int = 0,
+	path_context: Dictionary = {}
 ) -> int:
-	var direct_distance: int = _path_distance(session, origin_pos, [goal_tile], "", observer_faction_id, level)
+	var direct_distance: int = _path_distance_with_context(path_context, origin_pos, [goal_tile]) if not path_context.is_empty() else _path_distance(session, origin_pos, [goal_tile], "", observer_faction_id, level)
 	if direct_distance < 9999 and not _player_hero_tile_occupied(session, goal_tile, level):
 		return direct_distance
 
@@ -10977,7 +11010,7 @@ static func _hero_target_goal_distance(
 			continue
 		approach_tiles.append(approach_tile)
 
-	var approach_distance: int = _path_distance(session, origin_pos, approach_tiles, "", observer_faction_id, level)
+	var approach_distance: int = _path_distance_with_context(path_context, origin_pos, approach_tiles) if not path_context.is_empty() else _path_distance(session, origin_pos, approach_tiles, "", observer_faction_id, level)
 	if approach_distance >= 9999:
 		return direct_distance
 	return approach_distance + 1
@@ -10987,9 +11020,11 @@ static func _hero_target_goal_tiles(
 	origin_pos: Vector2i,
 	goal_tile: Vector2i,
 	ignore_placement_id: String = "",
-	observer_faction_id: String = ""
+	observer_faction_id: String = "",
+	goal_level: int = -1
 ) -> Array:
-	var level: int = OverworldRulesScript.placement_level(session, ignore_placement_id)
+	var origin_level: int = OverworldRulesScript.placement_level(session, ignore_placement_id)
+	var level: int = goal_level if goal_level >= 0 else origin_level
 	var occupied := _occupied_tiles(session, ignore_placement_id, level)
 	if not occupied.has(_pos_key(goal_tile)) and not _player_hero_tile_occupied(session, goal_tile, level):
 		return [goal_tile]
@@ -11003,7 +11038,7 @@ static func _hero_target_goal_tiles(
 			continue
 		if approach_tile != origin_pos and occupied.has(_pos_key(approach_tile)):
 			continue
-		if _path_distance(session, origin_pos, [approach_tile], ignore_placement_id, observer_faction_id) >= 9999:
+		if _path_distance(session, origin_pos, [approach_tile], ignore_placement_id, observer_faction_id, origin_level, level) >= 9999:
 			continue
 		approach_tiles.append(approach_tile)
 	return approach_tiles
@@ -14359,8 +14394,11 @@ static func _ai_hero_task_plan_from_saved_task(
 	if _ai_hero_task_live_target_reserved(session, faction_id, target_kind, target_id, current_placement_id, String(task.get("actor_id", ""))):
 		return {}
 	var target := _ai_hero_task_target_snapshot_for_plan(session, target_kind, target_id, faction_id)
-	if target.is_empty() or _target_level(session, target_kind, target_id, faction_id, LevelRules.level_of(raid)) != LevelRules.level_of(raid):
+	if target.is_empty():
 		return {}
+	var saved_context: Dictionary = _path_distance_surface_context(session, current_placement_id, faction_id, LevelRules.level_of(raid)) if not (preloaded_path_context is Dictionary) else preloaded_path_context.duplicate(false)
+	saved_context["goal_level"] = _target_level(session, target_kind, target_id, faction_id, LevelRules.level_of(raid))
+	preloaded_path_context = saved_context
 	var goal_tiles: Array = target.get("goal_tiles", []) if target.get("goal_tiles", []) is Array else []
 	if goal_tiles.is_empty():
 		return {}
@@ -17055,7 +17093,7 @@ static func _resolve_opportunistic_route_objective(
 		if not (node_value is Dictionary):
 			continue
 		var node: Dictionary = node_value
-		if _resource_interaction_tile(node) != current:
+		if NativeTransit.is_native(node) or not LevelRules.on_level(node, LevelRules.level_of(raid)) or _resource_interaction_tile(node) != current:
 			continue
 		var node_id := String(node.get("placement_id", ""))
 		if assigned_kind == "resource" and assigned_id == node_id:
@@ -17072,7 +17110,7 @@ static func _resolve_opportunistic_route_objective(
 		if not (node_value is Dictionary):
 			continue
 		var node: Dictionary = node_value
-		if Vector2i(int(node.get("x", 0)), int(node.get("y", 0))) != current:
+		if not LevelRules.on_level(node, LevelRules.level_of(raid)) or Vector2i(int(node.get("x", 0)), int(node.get("y", 0))) != current:
 			continue
 		var node_id := String(node.get("placement_id", ""))
 		if assigned_kind == "artifact" and assigned_id == node_id:
@@ -17446,6 +17484,8 @@ static func _resolve_arrived_target(
 		"resource":
 			var node_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
 			var node: Dictionary = node_result.get("node", {})
+			if NativeTransit.is_native(node):
+				return _secure_native_passage_target(session, raid, state, faction_id, node)
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 			if _resource_node_defensible_by_faction(node, site, faction_id, _normalize_string_array(raid.get("target_reason_codes", []))):
 				return _defend_resource_target(session, raid, state, faction_id)
@@ -17676,6 +17716,45 @@ static func _resolve_exploration_target(
 		"ai_event": event,
 	}
 
+static func _secure_native_passage_target(session: SessionStateStoreScript.SessionData, raid: Dictionary, state: Dictionary, faction_id: String, node: Dictionary, preserve_target: bool = false) -> Dictionary:
+	var selected_exit := String(raid.get("native_transit_target_exit_id", ""))
+	var check: Dictionary = OverworldRulesScript.native_passage_travel_check(session, node, NativeTransit.point(raid), String(raid.get("placement_id", "")), selected_exit)
+	if selected_exit == "" and bool(check.get("native_transit_choice_required", false)):
+		# An explicitly planned destination is never silently replaced. For an
+		# exploratory gate visit, committed source order is deterministic and
+		# every candidate still goes through the shared occupancy/guard rules.
+		for destination in NativeTransit.destinations(node):
+			var candidate: Dictionary = OverworldRulesScript.native_passage_travel_check(session, node, NativeTransit.point(raid), String(raid.get("placement_id", "")), String(destination.get("target_placement_id", "")))
+			if bool(candidate.get("ok", false)):
+				check = candidate
+				break
+	if not bool(check.get("ok", false)):
+		return {"encounter": raid, "state": state, "event_message": "", "native_transit_error": String(check.get("message", ""))}
+	var updated := raid.duplicate(true)
+	var destination: Vector3i = check.exit
+	updated["x"] = destination.x
+	updated["y"] = destination.y
+	if destination.z == 0:
+		updated.erase("level")
+	else:
+		updated["level"] = destination.z
+	updated["native_transit_last_exit_id"] = String(check.link.target_placement_id)
+	updated.erase("native_transit_target_exit_id")
+	if not preserve_target:
+		_ai_hero_task_finish_live_assignment(session, faction_id, updated, "completed", "valid")
+		updated = _clear_regroup_target(updated)
+	var encounters: Array = session.overworld.get("encounters", [])
+	for index in range(encounters.size()):
+		if String(encounters[index].get("placement_id", "")) == String(updated.get("placement_id", "")):
+			encounters[index] = updated
+			break
+	session.overworld["encounters"] = encounters
+	OverworldRulesScript.invalidate_spatial_lookup(session)
+	OverworldRulesScript._refresh_blocked_tile_index(session)
+	_path_distance_surface_cache.clear()
+	_native_navigation_surface_cache.clear()
+	return {"encounter": updated, "state": state, "event_message": "%s travelled through a passage to %s." % [_raid_name(updated), "the underground" if destination.z > 0 else "the surface"], "native_transit": check.link.duplicate(true)}
+
 static func _secure_resource_target(
 	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
@@ -17687,6 +17766,8 @@ static func _secure_resource_target(
 	var node = node_result.get("node", {})
 	if int(node_result.get("index", -1)) < 0:
 		return {"encounter": raid, "state": state, "event_message": ""}
+	if NativeTransit.is_native(node):
+		return _secure_native_passage_target(session, raid, state, faction_id, node)
 	var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 	if not OverworldRulesScript.resource_site_blocking_guard(session, node, site).is_empty():
 		return {"encounter": raid, "state": state, "event_message": ""}
@@ -19543,7 +19624,8 @@ static func _goal_tiles_from_raid(
 				Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0))),
 				hero_tile,
 				String(raid.get("placement_id", "")),
-				observer_faction_id
+				observer_faction_id,
+				_target_level(session, "hero", String(raid.get("target_placement_id", "")), observer_faction_id, LevelRules.level_of(raid))
 			)
 	return [Vector2i(int(raid.get("goal_x", int(raid.get("x", 0)))), int(raid.get("goal_y", int(raid.get("y", 0)))))]
 
@@ -19567,7 +19649,8 @@ static func _path_plan_toward(
 	start: Vector2i,
 	goal_tiles: Array,
 	ignore_placement_id: String,
-	observer_faction_id: String = ""
+	observer_faction_id: String = "",
+	goal_level: int = -1
 ) -> Dictionary:
 	var unreachable := {
 		"goal_distance": 9999,
@@ -19578,6 +19661,12 @@ static func _path_plan_toward(
 	if goal_tiles.is_empty():
 		return unreachable
 	var path_context := _path_distance_surface_context(session, ignore_placement_id, observer_faction_id)
+	var actor: Dictionary = _find_encounter_by_placement(session, ignore_placement_id).get("encounter", {})
+	var destination_level := goal_level if goal_level >= 0 else _target_level(session, String(actor.get("target_kind", "")), String(actor.get("target_placement_id", "")), observer_faction_id, int(path_context.get("level", 0)))
+	if path_context.has("native_navigation"):
+		return _native_navigation_plan(path_context, start, goal_tiles, destination_level)
+	if destination_level != int(path_context.get("level", 0)):
+		return unreachable
 	var map_size: Vector2i = path_context.get("map_size", OverworldRulesScript.derive_map_size(session))
 	var encounter_blocked: Dictionary = path_context.get("encounter_blocked_indices", {})
 	var resource_blocked: Dictionary = path_context.get("resource_blocked_indices", {})
@@ -19671,13 +19760,17 @@ static func _path_distance(
 	goal_tiles: Array,
 	ignore_placement_id: String,
 	observer_faction_id: String = "",
-	level: int = -1
+	level: int = -1,
+	goal_level: int = -1
 ) -> int:
 	if goal_tiles.is_empty():
 		return 9999
-	if start in goal_tiles:
+	if start in goal_tiles and (goal_level < 0 or goal_level == (level if level >= 0 else OverworldRulesScript.placement_level(session, ignore_placement_id))):
 		return 0
 	var path_context := _path_distance_surface_context(session, ignore_placement_id, observer_faction_id, level)
+	if goal_level >= 0:
+		path_context = path_context.duplicate(false)
+		path_context["goal_level"] = goal_level
 	return _path_distance_with_context(path_context, start, goal_tiles)
 
 static func _path_distance_with_context(
@@ -19686,6 +19779,13 @@ static func _path_distance_with_context(
 	goal_tiles: Array
 ) -> int:
 	if goal_tiles.is_empty():
+		return 9999
+	var goal_level := int(path_context.get("goal_level", path_context.get("level", 0)))
+	if start in goal_tiles and goal_level == int(path_context.get("level", 0)):
+		return 0
+	if path_context.has("native_navigation"):
+		return int(_native_navigation_plan(path_context, start, goal_tiles, goal_level).get("goal_distance", 9999))
+	if goal_level != int(path_context.get("level", 0)):
 		return 9999
 	if start in goal_tiles:
 		return 0
@@ -19718,6 +19818,130 @@ static func _path_distance_with_context(
 	return best_distance
 
 static func _path_distance_surface_context(
+	session: SessionStateStoreScript.SessionData,
+	ignore_placement_id: String,
+	observer_faction_id: String,
+	level: int = -1
+) -> Dictionary:
+	var context := _local_path_distance_surface_context(session, ignore_placement_id, observer_faction_id, level)
+	var navigation := _native_navigation_surface(session, ignore_placement_id, observer_faction_id)
+	if navigation.is_empty():
+		return context
+	var extended := context.duplicate(false)
+	extended["native_navigation"] = navigation
+	return extended
+
+static func _native_navigation_surface(session: SessionStateStoreScript.SessionData, actor_id: String, observer: String) -> Dictionary:
+	var key := _path_distance_surface_cache_key(session, actor_id, observer, 0)
+	if _native_navigation_surface_cache.has(key):
+		return _native_navigation_surface_cache[key]
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	var native_nodes := []
+	for node in nodes:
+		if node is Dictionary and NativeTransit.is_native(node):
+			native_nodes.append(node)
+	var navigation := {}
+	if not native_nodes.is_empty() or NativeTransit.uses_native_adjacency(session):
+		var errors := NativeTransit.validate(nodes)
+		if not errors.is_empty():
+			# Invalid native contracts never become guessed local-offset paths.
+			navigation = {"ok": false, "error": "invalid_native_navigation_contracts", "errors": errors}
+		else:
+			var size: Vector2i = OverworldRulesScript.derive_map_size(session)
+			var levels := LevelRules.level_count(session)
+			var surfaces := []
+			var mask := PackedByteArray()
+			for spatial_level in range(levels):
+				var surface := _local_path_distance_surface_context(session, actor_id, observer, spatial_level)
+				surfaces.append(surface)
+				mask.append_array(_blocked_tile_mask(size.x * size.y, surface.encounter_blocked_indices, surface.resource_blocked_indices, surface.hero_blocked_indices, surface.terrain_blocked_indices))
+			var safe := {}
+			for node in native_nodes:
+				if bool(OverworldRulesScript._native_passage_endpoint_safety(session, node, actor_id).get("ok", false)):
+					safe[String(node.get("placement_id", ""))] = true
+			var links := []
+			for node in native_nodes:
+				var id := String(node.get("placement_id", ""))
+				if not safe.has(id):
+					continue
+				for destination in NativeTransit.destinations(node):
+					if not safe.has(String(destination.get("target_placement_id", ""))):
+						continue
+					var entry := NativeTransit.point(NativeTransit.link_of(node).get("entry"))
+					var exit := NativeTransit.point(destination.get("exit"))
+					var entry_index := NativeTransit.navigation_index(entry, size, levels)
+					var exit_index := NativeTransit.navigation_index(exit, size, levels)
+					if entry_index >= 0 and exit_index >= 0 and mask[entry_index] == 0 and mask[exit_index] == 0:
+						links.append({"entry": LevelRules.position(entry), "exit": LevelRules.position(exit), "source_placement_id": id, "target_placement_id": destination.target_placement_id})
+			navigation = {"ok": true, "map_size": size, "level_count": levels, "surfaces": surfaces, "blocked": mask, "links": links, "fields": {}, "native_adjacency": NativeTransit.uses_native_adjacency(session)}
+	if _native_navigation_surface_cache.size() >= 32:
+		_native_navigation_surface_cache.clear()
+	_native_navigation_surface_cache[key] = navigation
+	return navigation
+
+static func _native_navigation_plan(context: Dictionary, start: Vector2i, goals: Array, goal_level: int) -> Dictionary:
+	var unreachable := {"goal_distance": 9999, "next_step": start, "next_goal_distance": 9999, "goal_field_count": 0}
+	var navigation: Dictionary = context.get("native_navigation", {})
+	if not bool(navigation.get("ok", false)) or goal_level < 0 or goal_level >= int(navigation.get("level_count", 0)):
+		return unreachable
+	var size: Vector2i = navigation.map_size
+	var origin := Vector3i(start.x, start.y, int(context.get("level", 0)))
+	var start_index := NativeTransit.navigation_index(origin, size, int(navigation.level_count))
+	if start_index < 0:
+		return unreachable
+	if goal_level == origin.z and start in goals:
+		return {"goal_distance": 0, "next_step": start, "next_goal_distance": 0, "goal_field_count": 0}
+	var fields: Dictionary = navigation.fields
+	if not fields.has(start_index):
+		# Bound per-actor fields as it moves. One search covers every endpoint
+		# and goal on both levels, not one full walking search per portal.
+		if fields.size() >= 8:
+			fields.clear()
+		fields[start_index] = NativeTransit.navigation_field(size, int(navigation.level_count), navigation.blocked, navigation.links, origin, bool(navigation.get("native_adjacency", false)))
+	var field: Dictionary = fields[start_index]
+	if not bool(field.get("ok", false)):
+		return unreachable
+	var best := 9999
+	var best_index := -1
+	var terminal_step := Vector2i(-1, -1)
+	var surface: Dictionary = navigation.surfaces[goal_level]
+	var area := size.x * size.y
+	for goal in goals:
+		if not (goal is Vector2i):
+			continue
+		var local_index := _tile_index(goal, size)
+		if local_index < 0 or surface.encounter_blocked_indices.has(local_index) or surface.hero_blocked_indices.has(local_index) or surface.terrain_blocked_indices.has(local_index):
+			continue
+		var goal_index := goal_level * area + local_index
+		var distance := int(field.distances[goal_index])
+		if navigation.blocked[goal_index] == 0:
+			if distance >= 0 and distance < best:
+				best = distance
+				best_index = goal_index
+				terminal_step = Vector2i(-1, -1)
+			continue
+		# Preserve the existing AI terminal-object rule; blocked goal bodies
+		# may be approached, but never become through-route cells.
+		for delta in PATH_MOVEMENT_DELTAS:
+			var neighbor := _tile_index(goal + delta, size)
+			if neighbor < 0 or (not bool(navigation.get("native_adjacency", false)) and _path_step_cuts_blocked_corner_index(neighbor, local_index, size, surface.encounter_blocked_indices, surface.resource_blocked_indices, surface.hero_blocked_indices, surface.terrain_blocked_indices)):
+				continue
+			var global_neighbor := goal_level * area + neighbor
+			var neighbor_distance := int(field.distances[global_neighbor])
+			if neighbor_distance >= 0 and neighbor_distance + 1 < best:
+				best = neighbor_distance + 1
+				best_index = global_neighbor
+				terminal_step = goal if global_neighbor == start_index else Vector2i(-1, -1)
+	if best_index < 0:
+		return unreachable
+	var first := NativeTransit.navigation_point(int(field.first_steps[best_index]), size)
+	var result := {"goal_distance": best, "next_step": terminal_step if terminal_step.x >= 0 else Vector2i(first.x, first.y), "next_goal_distance": maxi(0, best - 1), "goal_field_count": 1}
+	var link_index := int(field.first_links[best_index])
+	if link_index >= 0:
+		result["native_transit"] = navigation.links[link_index]
+	return result
+
+static func _local_path_distance_surface_context(
 	session: SessionStateStoreScript.SessionData,
 	ignore_placement_id: String,
 	observer_faction_id: String,
@@ -20022,10 +20246,12 @@ static func _overworld_body_blocked_tiles(
 	observer_faction_id: String = "",
 	level: int = 0
 ) -> Dictionary:
-	var blocked: Dictionary = OverworldRulesScript._build_blocked_tile_index(session, level)
-	for tile in _placement_body_tiles_for_ignore(session, ignore_placement_id):
-		if tile is Vector2i:
-			blocked.erase(_pos_key(tile))
+	var ignore_army: bool = not _find_encounter_by_placement(session, ignore_placement_id).get("encounter", {}).is_empty()
+	var blocked: Dictionary = OverworldRulesScript._build_blocked_tile_index(session, level, ignore_placement_id if ignore_army else "")
+	if not ignore_army:
+		for tile in _placement_body_tiles_for_ignore(session, ignore_placement_id):
+			if tile is Vector2i:
+				blocked.erase(_pos_key(tile))
 	if observer_faction_id != "":
 		for node_value in session.overworld.get("resource_nodes", []):
 			if not (node_value is Dictionary) or not LevelRules.on_level(node_value, level):
@@ -20033,7 +20259,9 @@ static func _overworld_body_blocked_tiles(
 			var node: Dictionary = node_value
 			var visit_tile: Variant = node.get("visit_tile", {})
 			if visit_tile is Dictionary and not visit_tile.is_empty():
-				blocked.erase(_pos_key(Vector2i(int(visit_tile.get("x", -1)), int(visit_tile.get("y", -1)))))
+				var key := _pos_key(Vector2i(int(visit_tile.get("x", -1)), int(visit_tile.get("y", -1))))
+				if not NativeTransit.is_native(node) or (blocked.get(key) is String and blocked.get(key) == String(node.get("placement_id", ""))):
+					blocked.erase(key)
 	return blocked
 
 static func _placement_body_tiles_for_ignore(session: SessionStateStoreScript.SessionData, ignore_placement_id: String) -> Array:
@@ -20211,6 +20439,7 @@ static func _refresh_target(
 ) -> Dictionary:
 	if _raid_target_points_to_self(raid) or _raid_target_points_to_pressure_host(session, raid, observer_faction_id):
 		return _clear_regroup_target(raid)
+	preloaded_path_context = _path_context_for_raid_target(session, raid, observer_faction_id, preloaded_path_context)
 	var origin = Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	match String(raid.get("target_kind", "")):
 		"town":
@@ -20350,6 +20579,11 @@ static func _target_level(session: SessionStateStoreScript.SessionData, kind: St
 		return OverworldRulesScript.placement_level(session, target_id, fallback)
 	return fallback
 
+static func _path_context_for_raid_target(session: SessionStateStoreScript.SessionData, raid: Dictionary, observer: String, context: Dictionary = {}) -> Dictionary:
+	var result := _path_distance_surface_context(session, String(raid.get("placement_id", "")), observer, LevelRules.level_of(raid)) if context.is_empty() else context.duplicate(false)
+	result["goal_level"] = _target_level(session, String(raid.get("target_kind", "")), String(raid.get("target_placement_id", "")), observer, LevelRules.level_of(raid))
+	return result
+
 static func _raid_target_valid(session: SessionStateStoreScript.SessionData, raid: Dictionary) -> bool:
 	if PlayerRules.allied(session, PlayerRules.raid_controller_id(raid), "player"):
 		if String(raid.get("target_kind", "")) == "hero":
@@ -20360,10 +20594,10 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 		return false
 	var target_kind = String(raid.get("target_kind", ""))
 	var target_id := String(raid.get("target_placement_id", ""))
-	if target_kind in ["town", "regroup", "resource", "artifact", "encounter", "explore"] and _target_level(session, target_kind, target_id, "", -1) != LevelRules.level_of(raid):
-		return false
-	if target_kind == "hero" and target_id != "" and not LevelRules.same_level(_known_player_hero_snapshot_for_ai(session, PlayerRules.raid_controller_id(raid), _find_player_hero(session, target_id)), raid):
-		return false
+	if _target_level(session, target_kind, target_id, PlayerRules.raid_controller_id(raid), LevelRules.level_of(raid)) != LevelRules.level_of(raid):
+		var path_context := _path_context_for_raid_target(session, raid, PlayerRules.raid_controller_id(raid))
+		if _path_distance_with_context(path_context, Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0))), _goal_tiles_from_raid(session, raid, PlayerRules.raid_controller_id(raid))) >= 9999:
+			return false
 	var valid := false
 	match target_kind:
 		"town":
@@ -20435,7 +20669,8 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 					session,
 					Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0))),
 					[goal_tile],
-					String(raid.get("placement_id", ""))
+					String(raid.get("placement_id", "")),
+					PlayerRules.raid_controller_id(raid), LevelRules.level_of(raid), _exploration_target_level(explore_target_id)
 				) < 9999
 			)
 		_:
@@ -20635,6 +20870,8 @@ static func _resource_site_is_persistent(site: Dictionary) -> bool:
 	return bool(site.get("persistent_control", false))
 
 static func _resource_node_contestable_by_faction(node: Dictionary, site: Dictionary, faction_id: String, session: SessionStateStoreScript.SessionData = null) -> bool:
+	if NativeTransit.is_native(node):
+		return not NativeTransit.destinations(node).is_empty()
 	if _resource_site_is_persistent(site):
 		return not PlayerRules.allied(session, PlayerRules.resource_controller_id(node), faction_id)
 	return not bool(node.get("collected", false))
@@ -20645,6 +20882,8 @@ static func _resource_defense_reason_active(reason_codes: Array) -> bool:
 
 static func _resource_node_defensible_by_faction(node: Dictionary, site: Dictionary, faction_id: String, reason_codes: Array) -> bool:
 	return (
+		not NativeTransit.is_native(node)
+		and
 		faction_id != ""
 		and _resource_site_is_persistent(site)
 		and PlayerRules.resource_controller_id(node) == faction_id

@@ -532,6 +532,12 @@ static func _normalized_battle_context_fields(session: SessionStateStoreScript.S
 		var placement = raw_context
 		if String(placement.get("spawned_by_faction_id", "")) != "" and String(placement.get("target_kind", "")) == "town":
 			var target_town = _find_town_by_placement(session, String(placement.get("target_placement_id", ""))).get("town", {})
+			# A strategic town target is not a siege. Field contact with a
+			# marching raid must use the active hero's army, not a remote town's
+			# garrison. Real siege owners supply an explicit context; retain
+			# legacy inference only at this town's actual position/entrance.
+			var contact_town: Dictionary = _find_town_at_position(session, int(placement.get("x", -9999)), int(placement.get("y", -9999)), LevelRules.level_of(placement)).get("town", {})
+			var at_target_town := not contact_town.is_empty() and String(contact_town.get("placement_id", "")) == String(target_town.get("placement_id", ""))
 			var target_owner := String(target_town.get("owner", "neutral"))
 			var target_reason_codes := _normalize_string_array(placement.get("target_reason_codes", []))
 			var neutral_expansion := target_owner == "neutral" and (
@@ -539,7 +545,7 @@ static func _normalized_battle_context_fields(session: SessionStateStoreScript.S
 				or "neutral_town_claim" in target_reason_codes
 				or "neutral_town_siege" in target_reason_codes
 			)
-			if not target_town.is_empty() and (target_owner == "player" or neutral_expansion):
+			if at_target_town and (target_owner == "player" or neutral_expansion):
 				context = {
 					"type": "town_defense",
 					"town_placement_id": String(target_town.get("placement_id", placement.get("target_placement_id", ""))),

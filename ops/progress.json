@@ -1,54 +1,9 @@
 {
   "actionableNextTasks": [
     {
-      "id": "bugfix-rmg-native-transit-navigation-20260905",
-      "title": "RMG Native Transit And Water Traversal",
-      "status": "pending",
-      "phase": "phase-6-production-alpha-layer",
-      "parentId": "bugfix-rmg-audit-corrections-20260905",
-      "parentSliceId": "bugfix-rmg-audit-corrections-20260905",
-      "classification": "implementation_slice",
-      "source": "PLAN.md",
-      "sourceDocs": [
-        "project.md",
-        "PLAN.md",
-        "docs/rmg-audit-corrections-requirements.md",
-        "docs/rmg-start-placement-and-h3maped-audit.md",
-        "docs/lessons-learned.md",
-        "docs/h3maped-rmg-end-to-end-behavior.md",
-        "docs/rmg-python-validation-workflow.md"
-      ],
-      "implementationTargets": [
-        "src/gdextension/src/h3maped_rmg_core.cpp",
-        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
-        "scripts/core/OverworldRules.gd"
-      ],
-      "validationCommands": [
-        "python3 -m unittest discover -s tests -p test_rmg_start_placement_audit.py",
-        "python3 tools/rmg_start_placement_audit.py --label corrections_matrix",
-        "python3 tools/rmg_retained_authority_audit.py --label corrections_retained",
-        "bin/h3maped_rmg_core_selftest",
-        "WINEPREFIX=/root/dev/heroes-like/.artifacts/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
-        "python3 tests/validate_repo.py",
-        "python3 tests/packaging_linux_export_smoke.py",
-        "python3 tests/packaging_windows_export_smoke.py",
-        "git diff --check"
-      ],
-      "completionCriteria": [
-        "Implement all assigned requirements from docs/rmg-audit-corrections-requirements.md with live behavior and source-backed evidence",
-        "Preserve exact native masks, determinism, original content and save compatibility",
-        "Pass focused and integrated regressions, repository checks and both platform build/package validation; no gate-only completion"
-      ],
-      "nonGoals": [
-        "Unrelated art/UI/balance/cleanup, heuristic native changes, disabled-feature substitution or release certification"
-      ],
-      "createdAt": "2026-09-05T18:28:40Z",
-      "updatedAt": "2026-09-05T18:28:40Z"
-    },
-    {
       "id": "bugfix-rmg-normal-water-private-state-20260905",
       "title": "RMG Normal Water Native Parity",
-      "status": "pending",
+      "status": "in_progress",
       "phase": "phase-6-production-alpha-layer",
       "parentId": "bugfix-rmg-audit-corrections-20260905",
       "parentSliceId": "bugfix-rmg-audit-corrections-20260905",
@@ -87,7 +42,9 @@
         "Unrelated art/UI/balance/cleanup, heuristic native changes, disabled-feature substitution or release certification"
       ],
       "createdAt": "2026-09-05T18:28:40Z",
-      "updatedAt": "2026-09-05T18:28:40Z"
+      "updatedAt": "2026-09-06T02:36:51Z",
+      "startedAt": "2026-09-06T02:36:51Z",
+      "notes": "Freeze Medium normal-water seed10 post4a4c8e to pre49eb8d window. Compare exact original/native private checkpoints at the materialization, relation scan, mine and reward owners before any generation edit; final payload mismatch remains unfixed."
     },
     {
       "id": "bugfix-rmg-audit-integrated-regressions-20260905",
@@ -2044,7 +2001,7 @@
     },
     "blockedReason": ""
   },
-  "active_slice": "bugfix-rmg-player-team-identity-20260905",
+  "active_slice": "bugfix-rmg-native-transit-navigation-20260905",
   "blocker": "",
   "completedImplementationEvidence": [
     {
@@ -16747,14 +16704,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Implemented source player/team projection and independent runtime AI states, economies, ownership, commanders, tasks, captures, battle aftermath and production saves. All 32 focused checks pass in six/eight-player FFA and explicit-team cases; legacy pooled saves continue without fabricated history. Expanded matrix: all 83 starts and 35 live entrance/save cases pass, native objects/terrain/payloads unchanged. Both platform native builds/selftests/exports/startup/generated Town flows, six runtime regressions, 14 Python tests and repo validation pass; PCKs 248408876 bytes each. Visuals inspected and runtime hashes match. Baseline-identical retake and town-development failures disclosed in docs/rmg-player-team-identity-correction-report.md. Parent transit/water/parity/integrated goal remains active.",
+  "currentNotes": "Freeze Medium normal-water seed10 post4a4c8e to pre49eb8d window. Compare exact original/native private checkpoints at the materialization, relation scan, mine and reward owners before any generation edit; final payload mismatch remains unfixed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "bugfix-rmg-player-team-identity-20260905",
-  "currentSliceId": "bugfix-rmg-player-team-identity-20260905",
-  "currentSliceNotes": "Implemented source player/team projection and independent runtime AI states, economies, ownership, commanders, tasks, captures, battle aftermath and production saves. All 32 focused checks pass in six/eight-player FFA and explicit-team cases; legacy pooled saves continue without fabricated history. Expanded matrix: all 83 starts and 35 live entrance/save cases pass, native objects/terrain/payloads unchanged. Both platform native builds/selftests/exports/startup/generated Town flows, six runtime regressions, 14 Python tests and repo validation pass; PCKs 248408876 bytes each. Visuals inspected and runtime hashes match. Baseline-identical retake and town-development failures disclosed in docs/rmg-player-team-identity-correction-report.md. Parent transit/water/parity/integrated goal remains active.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "RMG Distinct Player And Team Identity",
-  "currentSliceUpdatedAt": "2026-09-05T21:49:07Z",
+  "currentSlice": "bugfix-rmg-normal-water-private-state-20260905",
+  "currentSliceId": "bugfix-rmg-normal-water-private-state-20260905",
+  "currentSliceNotes": "Freeze Medium normal-water seed10 post4a4c8e to pre49eb8d window. Compare exact original/native private checkpoints at the materialization, relation scan, mine and reward owners before any generation edit; final payload mismatch remains unfixed.",
+  "currentSliceStatus": "in_progress",
+  "currentSliceTitle": "RMG Normal Water Native Parity",
+  "currentSliceUpdatedAt": "2026-09-05T23:08:34Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22059,28 +22016,37 @@
       }
     }
   },
-  "guardrailNote": "Hero entrance is authoritative. Preserve native masks and source-order proof, all exposed levels, player identity, saves and both platforms; no narrower gate-only substitute.",
+  "guardrailNote": "Continue the active native transit implementation and remaining source-parity/integrated children. Preserve source masks, actual endpoint relations, original art, save compatibility and both platforms; no gate-only substitute.",
   "lastValidation": {
-    "id": "bugfix-rmg-player-team-identity-20260905-validation",
-    "sliceId": "bugfix-rmg-player-team-identity-20260905",
-    "title": "RMG Distinct Player And Team Identity",
+    "id": "bugfix-rmg-native-transit-navigation-20260905-validation",
+    "sliceId": "bugfix-rmg-native-transit-navigation-20260905",
+    "title": "RMG Native Transit And Water Traversal",
     "status": "completed",
-    "scope": "player_team_runtime_correction_not_full_native_parity_or_goal_completion",
-    "validatedAt": "2026-09-05T21:49:07Z",
+    "scope": "native_transit_and_adjacency_adoption_not_full_native_parity_or_parent_completion",
+    "validatedAt": "2026-09-06T02:37:38Z",
     "artifacts": [
-      "docs/rmg-player-team-identity-correction-report.md",
-      ".artifacts/rmg_start_audit_20260905/players_commit_validation/report.json",
-      ".artifacts/rmg_start_audit_20260905/players_all_entrances/summary.json",
-      ".artifacts/rmg_start_audit_20260905/players_rendered_2048/summary.json",
-      ".artifacts/rmg_start_audit_20260905/players_level_regression_1280/summary.json",
-      ".artifacts/rmg_start_audit_20260905/players_retake_baseline/report.json",
-      ".artifacts/full_play_runtime_20260905/rmg_players_commit/report.json",
-      ".artifacts/rmg_start_audit_20260905/players_repo_completed.log",
-      ".artifacts/packaging_linux_export_smoke/report.json",
-      ".artifacts/packaging_windows_export_smoke/report.json",
-      ".artifacts/rmg_start_audit_20260905/players_linux_generated_commit/live_validation_report.json"
+      "docs/rmg-native-transit-correction-report.md",
+      ".artifacts/rmg_start_audit_20260905/transit_caves_native_adjacency_journey/report.json",
+      ".artifacts/rmg_start_audit_20260905/transit_native_adjacency_caves_1280/report.json",
+      ".artifacts/rmg_start_audit_20260905/transit_islands_adjacency_field_contact/report.json",
+      ".artifacts/rmg_start_audit_20260905/transit_adjacency_large_all_2048/report.json",
+      ".artifacts/rmg_start_audit_20260905/transit_adjacency_portal_1280/report.json",
+      ".artifacts/rmg_start_audit_20260905/transit_adjacency_six_ends/report.json",
+      ".artifacts/rmg_start_audit_20260905/transit_adjacency_islands_ends/report.json",
+      ".artifacts/rmg_start_audit_20260905/transit_adjacency_player_regressions/report.json",
+      ".artifacts/rmg_start_audit_20260905/transit_adjacency_profile_control/report.json",
+      ".artifacts/rmg_start_audit_20260905/transit_adjacency_packages_linux/report.json",
+      ".artifacts/rmg_start_audit_20260905/transit_adjacency_packages_windows/report.json",
+      ".artifacts/rmg_start_audit_20260905/transit_adjacency_all_entrances/summary.json",
+      ".artifacts/rmg_start_audit_20260905/transit_adjacency_retained/summary.json",
+      ".artifacts/rmg_start_audit_20260905/transit_adjacency_linux_generated/live_validation_report.json",
+      ".artifacts/rmg_start_audit_20260905/transit_adjacency_final_repo.log",
+      ".artifacts/rmg_start_audit_20260905/transit_final_linux_selftest.log",
+      ".artifacts/rmg_start_audit_20260905/transit_final_windows_selftest.log",
+      ".artifacts/full_play_runtime_20260905/rmg_transit_adjacency_regressions/report.json",
+      ".artifacts/large_town_build_end_turn_20260905/rmg_transit_adjacency_measured/report.json"
     ],
-    "result": "Implemented source player/team projection and independent runtime AI states, economies, ownership, commanders, tasks, captures, battle aftermath and production saves. All 32 focused checks pass in six/eight-player FFA and explicit-team cases; legacy pooled saves continue without fabricated history. Expanded matrix: all 83 starts and 35 live entrance/save cases pass, native objects/terrain/payloads unchanged. Both platform native builds/selftests/exports/startup/generated Town flows, six runtime regressions, 14 Python tests and repo validation pass; PCKs 248408876 bytes each. Visuals inspected and runtime hashes match. Baseline-identical retake and town-development failures disclosed in docs/rmg-player-team-identity-correction-report.md. Parent transit/water/parity/integrated goal remains active."
+    "result": "Exact source cave/portal groups, safe hero/AI travel, destination choice and additive saves implemented. Original seed68 private diagonal predecessor and byte-exact payload prove native adjacency without mask changes. Underground/Islands continuous journeys and real turn-spawned field battle preserve remote towns. All 50 Large ends/65 trips, 35 supported entrance cases, 11 runtime regressions, 23 Python tests, repository and both-platform native/package checks pass; inspected 2048x1079/1280x720 visuals. Both PCKs 248438264 bytes. Isolated Large profile: purchases 2714/2572/2769 ms, turns 5473/7691/9717 ms. Retained native comparison remains 23/24; normal-water mismatch and integrated child are not completed. Host disk exhaustion on first Windows attempt recovered by removing only this run's two disposable older Wine prefixes; final retry passes. Full limits and failed evidence retained in source report."
   },
   "latestEvidence": {
     "id": "bugfix-rmg-player-team-identity-20260905-validation",
@@ -22375,7 +22341,7 @@
     {
       "id": "bugfix-rmg-native-transit-navigation-20260905",
       "title": "RMG Native Transit And Water Traversal",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "parentId": "bugfix-rmg-audit-corrections-20260905",
       "parentSliceId": "bugfix-rmg-audit-corrections-20260905",
@@ -22388,39 +22354,72 @@
         "docs/rmg-start-placement-and-h3maped-audit.md",
         "docs/lessons-learned.md",
         "docs/h3maped-rmg-end-to-end-behavior.md",
-        "docs/rmg-python-validation-workflow.md"
+        "docs/rmg-python-validation-workflow.md",
+        "docs/rmg-native-transit-correction-report.md"
       ],
       "implementationTargets": [
+        "src/gdextension/include/h3maped_rmg_core.hpp",
         "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/src/map_package_service.cpp",
         "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
-        "scripts/core/OverworldRules.gd"
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/OverworldLevelRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/HeroCommandRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tools/rmg_native_transit_validation.py",
+        "scripts/core/NativeTransitRules.gd",
+        "tests/test_rmg_native_transit_validation.py",
+        "tests/large_generated_map_runtime_profile_report.gd",
+        "tests/large_town_build_end_turn_profile.py",
+        "tests/full_play_large_session_profile.py",
+        "scripts/core/BattleRules.gd",
+        "tests/validate_repo.py"
       ],
       "validationCommands": [
+        "python3 tools/rmg_native_transit_validation.py --label transit_final --render --resolution 2048x1079 --legacy-session .artifacts/rmg_start_audit_20260905/players_level_regression_1280/small_seed68_session.json --baseline-case .artifacts/rmg_start_audit_20260905/players_all_entrances/small_seed68.json",
+        "python3 tools/rmg_native_transit_validation.py --label transit_portals_large_final --portal-case large_seed1 --render --resolution 2048x1079 --baseline-case .artifacts/rmg_start_audit_20260905/players_all_entrances/matrix_108_1_land.json",
+        "python3 tools/rmg_native_transit_validation.py --label transit_portals_smaller_final --portal-case large_seed1 --representatives-only --render --resolution 1280x720 --baseline-case .artifacts/rmg_start_audit_20260905/players_all_entrances/matrix_108_1_land.json",
+        "python3 tools/rmg_native_transit_validation.py --label transit_portals_six_final --portal-case players_6 --baseline-case .artifacts/rmg_start_audit_20260905/players_all_entrances/players_6.json",
+        "python3 tools/rmg_native_transit_validation.py --label transit_portals_islands_final --portal-case small_islands --baseline-case .artifacts/rmg_start_audit_20260905/players_all_entrances/matrix_36_1_islands.json",
+        "python3 -m unittest discover -s tests -p test_rmg_native_transit_validation.py",
+        "python3 tools/rmg_player_identity_validation.py --label transit_player_regression",
         "python3 -m unittest discover -s tests -p test_rmg_start_placement_audit.py",
         "python3 tools/rmg_start_placement_audit.py --label corrections_matrix",
         "python3 tools/rmg_retained_authority_audit.py --label corrections_retained",
         "bin/h3maped_rmg_core_selftest",
-        "WINEPREFIX=/root/dev/heroes-like/.artifacts/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
+        "WINEPREFIX=/root/dev/heroes-like/.artifacts/packaging_windows_export_smoke/wine-prefix WINEARCH=win64 WINEDEBUG=-all /usr/lib/wine/wine64 bin/h3maped_rmg_core_selftest.exe",
         "python3 tests/validate_repo.py",
         "python3 tests/packaging_linux_export_smoke.py",
         "python3 tests/packaging_windows_export_smoke.py",
-        "git diff --check"
+        "git diff --check",
+        "python3 tools/rmg_native_transit_validation.py --label transit_profile_native_control --portal-case large_profile --representatives-only --baseline-session .artifacts/large_town_build_end_turn_20260905/verified_final/day_1_before_build.json",
+        "python3 tests/large_town_build_end_turn_profile.py --label rmg_transit_profile_final --detail",
+        "python3 tools/rmg_native_transit_validation.py --label transit_islands_journey_final --portal-case small_islands --journey-only --baseline-case .artifacts/rmg_start_audit_20260905/players_all_entrances/matrix_36_1_islands.json",
+        "python3 tools/rmg_native_transit_validation.py --label transit_caves_journey_final --journey-only --baseline-case .artifacts/rmg_start_audit_20260905/players_all_entrances/small_seed68.json"
       ],
       "completionCriteria": [
-        "Implement all assigned requirements from docs/rmg-audit-corrections-requirements.md with live behavior and source-backed evidence",
-        "Preserve exact native masks, determinism, original content and save compatibility",
-        "Pass focused and integrated regressions, repository checks and both platform build/package validation; no gate-only completion"
+        "Preserve source-proven native endpoint pairs and directionality through original-content packages and saves without changing RNG, terrain, placement or masks",
+        "Prove real cross-level/long-distance hero travel, pathing, AI use, occupancy, vision and production save continuation; preserve exact legacy authored transit behavior",
+        "Investigate and correct demonstrated water/Islands navigation gaps within recovered source/product rules, not offset/nearest-object heuristics or disabled modes",
+        "Pass focused runtime and native-object/payload controls, relevant regressions and both-platform builds/selftests/packages, inspect rendered evidence, and retain the separate normal-water parity boundary"
       ],
       "nonGoals": [
         "Unrelated art/UI/balance/cleanup, heuristic native changes, disabled-feature substitution or release certification"
       ],
       "createdAt": "2026-09-05T18:28:40Z",
-      "updatedAt": "2026-09-05T18:28:40Z"
+      "updatedAt": "2026-09-06T02:37:38Z",
+      "startedAt": "2026-09-05T21:55:27Z",
+      "notes": "Source-linked cave/portal travel and native adjacency implemented; continuous underground/Islands journeys, physical field battle, all 50 Large ends/65 trips, all 35 supported entrances, focused/runtime/native/package checks and inspected visuals pass. Both PCKs 248438264 bytes. Normal-water parity and integrated children remain required; docs/rmg-native-transit-correction-report.md records evidence and limits.",
+      "completedAt": "2026-09-06T02:36:50Z"
     },
     {
       "id": "bugfix-rmg-normal-water-private-state-20260905",
       "title": "RMG Normal Water Native Parity",
-      "status": "pending",
+      "status": "in_progress",
       "phase": "phase-6-production-alpha-layer",
       "parentId": "bugfix-rmg-audit-corrections-20260905",
       "parentSliceId": "bugfix-rmg-audit-corrections-20260905",
@@ -22459,7 +22458,9 @@
         "Unrelated art/UI/balance/cleanup, heuristic native changes, disabled-feature substitution or release certification"
       ],
       "createdAt": "2026-09-05T18:28:40Z",
-      "updatedAt": "2026-09-05T18:28:40Z"
+      "updatedAt": "2026-09-06T02:36:51Z",
+      "startedAt": "2026-09-06T02:36:51Z",
+      "notes": "Freeze Medium normal-water seed10 post4a4c8e to pre49eb8d window. Compare exact original/native private checkpoints at the materialization, relation scan, mine and reward owners before any generation edit; final payload mismatch remains unfixed."
     },
     {
       "id": "bugfix-rmg-audit-integrated-regressions-20260905",
@@ -110861,7 +110862,7 @@
   ],
   "summary": "Owner authorized correction of every September RMG audit finding. Entrance starts and level-aware runtime children are implemented and validated. Distinct player/team identity is current; native paired transit/water traversal, source-proven normal-water parity and integrated regressions remain required. Full correction goal is in progress, not complete.",
   "taskId": "10236",
-  "updatedAt": "2026-09-05T21:49:37Z",
+  "updatedAt": "2026-09-06T02:37:38Z",
   "validation": {
     "id": "audit-rmg-start-placement-and-h3maped-comparison-20260905-audit",
     "title": "RMG Starting Heroes And H3MapEd Comparison Audit",

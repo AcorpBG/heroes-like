@@ -168,6 +168,7 @@ Exit criteria:
 - Object definitions, footprints, terrain/passability/action masks, per-zone/global limits, value bands, density rules, and deterministic validation are implemented as reusable generator data rather than one-off placement heuristics.
 - Performance is acceptable for supported sizes without the current XL island candidate-scoring bottleneck, and unsupported exact byte/art parity gaps are explicitly reported.
 - Native package/session adoption remains gated behind validators, fixture comparisons, generated-map inspection reports, and save/replay boundary checks.
+- Live native-package navigation must preserve source-owned levels, explicit passage connections and diagonal adjacency without rewriting recovered destination masks; authored-map movement policy remains separate.
 
 ### Phase 4 — Headless AI Agent Balance Harness
 
@@ -216,7 +217,7 @@ The strategic focus is now to turn the validated systems foundation into a coher
 
 Near-term work should prioritize player-readable improvements to live loops: deeper faction economy identity, better combat feel and balance, stronger strategic AI decisions, clearer UX, authored rare-source breadth and guard pressure, campaign flow hardening, packaging hardening, and balance harness depth. Owner direction has now selected bounded campaign/content implementation; each campaign slice still needs live flow and progression proof rather than a breadth-only claim.
 
-Random map generation remains strategically important. The exposed native scope spans Small through Extra Large, land/normal-water/Islands, and one/two levels, but generation parity and playable package/session adoption are separate release requirements. The source-backed audit and correction evidence (`docs/rmg-start-placement-and-h3maped-audit.md`) invalidate the blanket completed-matrix claim: corrected entrance, level and player-identity boundaries do not resolve the remaining normal-water native divergence or paired-transit/water gameplay gaps. Correct and validate those boundaries before certifying the matrix; unsupported configurations and allocator histories must fail closed, and no selected matrix establishes whole-H3MapEd parity.
+Random map generation remains strategically important. The exposed native scope spans Small through Extra Large, land/normal-water/Islands, and one/two levels, but generation parity and playable package/session adoption are separate release requirements. The source-backed audit and correction evidence (`docs/rmg-start-placement-and-h3maped-audit.md`) invalidate the blanket completed-matrix claim: corrected entrance, level, player-identity and native-transit boundaries do not resolve the remaining normal-water native divergence or certify all water-map gameplay. Correct and validate the remaining native and integrated boundaries before certifying the matrix; unsupported configurations and allocator histories must fail closed, and no selected matrix establishes whole-H3MapEd parity.
 
 ## Non-Goals
 

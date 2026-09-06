@@ -28,7 +28,7 @@ matrix and rejects unsupported shapes/strengths. That allowlist is not a
 per-request proof of current parity or correct live adoption; see the audit
 status below.
 
-## Current Validation Status — 2026-09-05
+## Current Validation Status — 2026-09-06
 
 The owner-directed audit in `docs/rmg-start-placement-and-h3maped-audit.md`
 supersedes the blanket current completion claim below. Fresh unassisted native
@@ -38,8 +38,13 @@ executable run. Runtime start placement, two-level adoption and player-slot
 identity also had confirmed gaps. The entrance-boundary and level-aware runtime
 corrections are completed in `docs/rmg-town-entrance-correction-report.md` and
 `docs/rmg-level-aware-runtime-report.md`: 83 exact starts, 35 supported live
-entry/exit/return/save cases and focused layer/AI/battle/fog checks pass. Player,
-native paired transit/water and native-water parity remain unfinished. The legacy Godot boundary report now passes
+entry/exit/return/save cases and focused layer/AI/battle/fog checks pass. Distinct
+player/team identity is also completed in `docs/rmg-player-team-identity-correction-report.md`.
+Native cave/portal travel, strategic navigation and generated-map diagonal
+adjacency are implemented with focused evidence in
+`docs/rmg-native-transit-correction-report.md`; its final endpoint/journey,
+regression and both-platform package checks pass. The separate native-water
+parity and integrated regression children remain unfinished. The legacy Godot boundary report now passes
 the corrected authored-pool bank and type-107 assertions, then fails a later
 stale XLarge subtype-45 dwelling expectation. The full report is not passing.
 
@@ -49,6 +54,26 @@ selftests or package startup is not playable adoption or all-phase parity.
 Python-owned `tools/rmg_start_placement_audit.py` and
 `tools/rmg_retained_authority_audit.py` record these boundaries, with sample
 limits and expected failing comparisons explicit in the audit report.
+
+### Explicit runtime transit validation
+
+`tools/rmg_native_transit_validation.py` is Python-owned orchestration that
+**does launch Godot** for real package/adoption/movement/AI/save/UI checks.
+It is not a replacement for the no-Godot native/private-state workflow above.
+Keep native comparisons separate, and keep runtime/native/tool sources frozen
+through each runtime run; its report rejects changed inputs.
+
+Use a fresh `--label` for each run. Default coverage is all eight seed-68 cave
+ends; `--legacy-session` tests a retained pre-sidecar save, and `--baseline-case`
+requires immutable source objects, terrain and native payload identity unchanged.
+`--portal-case large_seed1` covers all 50 ends and 65 directed trips, including
+multi-hero paid choices. `--render --resolution 2048x1079` (or `1280x720`) captures
+the real chooser/destination; inspect the images as well as bounds assertions.
+`--representatives-only` explicitly covers role/cardinality examples, not every
+endpoint. `--journey-only` exercises post-neutral-guard walks from actual town
+starts through passages, turns and production saves. Small Islands deliberately
+contacts a real turn-spawned raid to test field battle/overworld handoff; these
+journeys are not full naval or battle-balance certification.
 
 ## Historical Completion Record — 2026-07-19
 

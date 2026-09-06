@@ -179,8 +179,9 @@ func _run() -> void:
 		return
 	session = SessionState.set_active_session(ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup))
 	var signature := String(session.flags.get("generated_random_map_materialization", {}).get("materialized_map_signature", setup.get("generated_identity", {}).get("materialized_map_signature", "")))
-	if signature != EXPECTED_MATERIALIZED_SIGNATURE:
-		_fail("Large materialization changed: " + signature)
+	var identity_error := _profile_identity_error(session, signature)
+	if identity_error != "":
+		_fail(identity_error)
 		return
 	AppRouter.go_to_overworld()
 	await resolve_routes()

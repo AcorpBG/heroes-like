@@ -20478,6 +20478,7 @@ def validate_confirmation_dialog_visual_surfaces(errors: list[str]) -> None:
         "Overworld": (
             'FrontierVisualKit.apply_confirmation_dialog(_end_turn_confirmation_dialog, "primary")',
             'FrontierVisualKit.apply_confirmation_dialog(_manual_save_overwrite_dialog as ConfirmationDialog, "danger")',
+            'FrontierVisualKit.apply_confirmation_dialog(_native_destination_dialog)',
         ),
         "Battle": (
             'FrontierVisualKit.apply_confirmation_dialog(_quick_resolve_confirmation_dialog, "primary")',
