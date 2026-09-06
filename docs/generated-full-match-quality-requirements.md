@@ -44,6 +44,18 @@ reason to start fresh, not reset or relax terminal acceptance. Driver-only work
 does not require re-exporting identical production files, but must identify the
 unchanged validated runtime/package hash and preserve Linux/Windows parity.
 
+No-progress observation must include actual first resource/artifact claims even
+when their tiles were already explored. Compare stable category/placement ids
+with authoritative `collected` and player-collector state before/after the order;
+do not infer success from movement, result prose, income, spending or revisiting
+an already claimed site. Reclaiming an enemy-held persistent site is a real
+control change; rejected claims and unchanged repeat visits are not progress.
+Keep the existing exploration, resolved-battle and scene-route observations,
+14-day diagnostic horizon, terminal acceptance and saved driver history. Prove
+the condition with real claim-rule mutations and negative controls. Existing
+running tests keep their launch driver; never rewrite their action history or
+reset their no-progress clocks to adopt this repair.
+
 Existing Town recruitment-surface validation must open the real Muster modal
 before observing recruit buttons. A closed lazy dialog's synthetic action
 snapshot is not proof of visible UI. Python-owned invocation may adapt that
