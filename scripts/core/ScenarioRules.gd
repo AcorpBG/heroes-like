@@ -787,8 +787,13 @@ static func build_outcome_model(session: SessionStateStoreScript.SessionData) ->
 	var scenario := scenario_record_for_session(session)
 	var launch_mode := SessionStateStoreScript.normalize_launch_mode(session.launch_mode)
 	var status_label := String(session.scenario_status).capitalize()
+	var display_name := String(scenario.get("name", "")).strip_edges()
+	if bool(session.flags.get("generated_random_map", false)) and (display_name == "" or display_name == session.scenario_id):
+		display_name = _scenario_select_rules().generated_skirmish_display_name(session)
+	elif display_name == "":
+		display_name = session.scenario_id
 	var model := {
-		"header": "%s | %s" % [status_label, String(scenario.get("name", session.scenario_id))],
+		"header": "%s | %s" % [status_label, display_name],
 		"summary": session.scenario_summary if session.scenario_summary != "" else "Scenario resolution recorded.",
 		"mode_summary": "%s | %s | Day %d" % [
 			_scenario_select_rules().launch_mode_label(launch_mode),
@@ -865,6 +870,8 @@ static func perform_outcome_action(session: SessionStateStoreScript.SessionData,
 		return {"ok": true, "route": "overworld", "message": ""}
 
 	if action_id.begins_with("skirmish_start:"):
+		if bool(session.flags.get("generated_random_map", false)) and action_id == "skirmish_start:" + session.scenario_id:
+			return _scenario_select_rules().restart_generated_skirmish_session(session)
 		var skirmish_session: SessionStateStoreScript.SessionData = _scenario_select_rules().start_skirmish_session(action_id.trim_prefix("skirmish_start:"), session.difficulty)
 		if skirmish_session.scenario_id == "":
 			return {"ok": false, "route": "stay", "message": "The requested skirmish could not be started."}
@@ -903,11 +910,14 @@ static func _merge_result_messages(result: Dictionary, prefix_message: String) -
 	return merged
 
 static func _build_skirmish_outcome_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	var retry_summary := "Launch this authored scenario again at %s difficulty." % _scenario_select_rules().difficulty_label(session.difficulty)
+	if bool(session.flags.get("generated_random_map", false)):
+		retry_summary = "Restart this same generated map with the original faction and hero at %s difficulty." % _scenario_select_rules().difficulty_label(session.difficulty)
 	return [
 		{
 			"id": "skirmish_start:%s" % session.scenario_id,
 			"label": "Retry Skirmish",
-			"summary": "Launch this authored scenario again at %s difficulty." % _scenario_select_rules().difficulty_label(session.difficulty),
+			"summary": retry_summary,
 			"disabled": false,
 		},
 		{

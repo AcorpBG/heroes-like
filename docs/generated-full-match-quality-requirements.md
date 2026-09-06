@@ -212,6 +212,21 @@ full save/resume and bounded two-resolution layout. Explicitly isolated test
 fixtures may grant experience through the existing progression authority and
 pay normal tavern hire costs; these are UI controls, not accepted full matches.
 
+Outcome presentation must not show a generated runtime id as the scenario title.
+Use an existing legitimate display name where present, otherwise a short clear
+generated-realm label; keep internal identity and stored package references
+unchanged. Long authored names must wrap or ellipsize intentionally with the full
+title available, without expanding the banner over scenery or clipping controls.
+Reproduce the real Large terminal save and inspect both supported resolutions.
+The offered Retry Skirmish action must genuinely start a fresh same-map/setup
+game after the existing confirmation, or explain an unavailable source while
+preserving the outcome. Audit this through actual UI routing rather than assuming
+that authored-scenario startup accepts native generated ids. A confirmed defect
+may use existing generated/package session startup authority, but must not alter
+RNG/topology, faction/hero/difficulty choices, save versions, terminal save bytes,
+campaign progress or cancel/stale-request/rollback semantics. Missing packages
+must not silently create a different map or default-faction game.
+
 Native generation semantics are not selected for change. Follow
 `docs/lessons-learned.md` if a failure reaches that boundary: name the unrecovered
 function/state proof and create a properly scoped recovery child before changing

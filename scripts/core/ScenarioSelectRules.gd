@@ -1222,6 +1222,64 @@ static func start_random_map_skirmish_session_with_retry(
 static func start_random_map_skirmish_session_from_setup(setup: Dictionary) -> SessionStateStoreScript.SessionData:
 	return _start_random_map_skirmish_session_from_setup(setup)
 
+static func generated_skirmish_display_name(session: SessionStateStoreScript.SessionData) -> String:
+	var map_ref: Dictionary = session.flags.get("map_package_ref", {})
+	var stem := String(map_ref.get("package_id", "")).get_file().get_basename()
+	if stem == "" or stem.begins_with("native_h3maped"):
+		return "Generated Realm"
+	return _title_from_package_stem(stem)
+
+static func restart_generated_skirmish_session(source: SessionStateStoreScript.SessionData) -> Dictionary:
+	var unavailable := {"ok": false, "route": "stay", "message": "The original generated map packages are unavailable or have changed. Your completed game is unchanged; return to the menu to choose another map."}
+	if source == null or not bool(source.flags.get("generated_random_map", false)):
+		return unavailable
+	var boundary_value: Variant = source.overworld.get("native_random_map_package_session_adoption", {})
+	if not (boundary_value is Dictionary) or boundary_value.is_empty():
+		return unavailable
+	var boundary: Dictionary = boundary_value.duplicate(true)
+	var map_path := String(boundary.get("map_package_path", ""))
+	var scenario_path := String(boundary.get("scenario_package_path", ""))
+	if not FileAccess.file_exists(map_path) or not FileAccess.file_exists(scenario_path):
+		return unavailable
+	var service: Variant = _native_map_package_service()
+	if service == null:
+		return unavailable
+	# Validate the exact loaded documents that will be adopted, never regenerate a
+	# replacement seed or reload an unchecked package after this identity check.
+	var map_load: Dictionary = service.load_map_package(map_path)
+	var scenario_load: Dictionary = service.load_scenario_package(scenario_path)
+	if not bool(map_load.get("ok", false)) or not bool(scenario_load.get("ok", false)):
+		return unavailable
+	var map_ref: Dictionary = map_load.get("map_ref", {})
+	var scenario_ref: Dictionary = scenario_load.get("scenario_ref", {})
+	var map_keys := ["package_hash", "map_id", "map_hash", "source_kind"]
+	var scenario_keys := ["package_hash", "scenario_id", "scenario_hash"]
+	if not _maps_folder_package_ref_matches(source.flags.get("map_package_ref", {}), map_ref, map_keys) \
+			or not _maps_folder_package_ref_matches(boundary.get("map_package_ref", {}), map_ref, map_keys) \
+			or not _maps_folder_package_ref_matches(source.flags.get("scenario_package_ref", {}), scenario_ref, scenario_keys) \
+			or not _maps_folder_package_ref_matches(boundary.get("scenario_package_ref", {}), scenario_ref, scenario_keys) \
+			or not _maps_folder_package_ref_matches(scenario_ref.get("map_ref", {}), map_ref, map_keys) \
+			or String(scenario_ref.get("scenario_id", "")) != source.scenario_id:
+		return unavailable
+	var original: Dictionary = ScenarioRulesScript.scenario_record_for_session(source)
+	var hero_id := String(original.get("starting_hero_id", original.get("hero_id", "")))
+	var faction_id := String(original.get("player_faction_id", ""))
+	if hero_id == "" or faction_id == "":
+		return unavailable
+	var bridge := NativeRandomMapPackageSessionBridgeScript.new()
+	var fresh: SessionStateStoreScript.SessionData = bridge.build_session_from_loaded_packages(
+		map_load, scenario_load, boundary, source.difficulty, {"hero_id": hero_id}
+	)
+	var fresh_record: Dictionary = ScenarioRulesScript.scenario_record_for_session(fresh)
+	if fresh.scenario_id != source.scenario_id or fresh.hero_id != hero_id \
+			or String(fresh_record.get("player_faction_id", "")) != faction_id:
+		return unavailable
+	var setup := {}
+	for key in ["provenance", "replay_metadata", "validation", "retry_status"]:
+		setup[key] = source.flags.get("generated_random_map_" + key, {}).duplicate(true)
+	_finish_random_map_skirmish_startup(fresh, setup, true)
+	return {"ok": true, "route": "overworld", "message": ""}
+
 static func _start_random_map_skirmish_session_from_setup(setup: Dictionary) -> SessionStateStoreScript.SessionData:
 	if not bool(setup.get("ok", false)):
 		push_warning(String(setup.get("failure_handoff", "Generated skirmish setup failed validation.")))
@@ -1263,14 +1321,17 @@ static func _start_random_map_skirmish_session_from_setup(setup: Dictionary) -> 
 				},
 			}
 		)
+	return _finish_random_map_skirmish_startup(session, setup, not package_startup.is_empty())
+
+static func _finish_random_map_skirmish_startup(session: SessionStateStoreScript.SessionData, setup: Dictionary, package_backed: bool) -> SessionStateStoreScript.SessionData:
 	if session.scenario_id == "":
 		return session
 	session.flags["generated_random_map_provenance"] = setup.get("provenance", {})
 	session.flags["generated_random_map_replay_metadata"] = setup.get("replay_metadata", {})
 	session.flags["generated_random_map_validation"] = setup.get("validation", {})
 	session.flags["generated_random_map_retry_status"] = setup.get("retry_status", {})
-	session.flags["generated_random_map_boundary"]["adoption_path"] = "native_rmg_generated_package_saved_loaded_from_disk" if not package_startup.is_empty() else "legacy_skirmish_session_only_no_authored_browser_or_campaign"
-	session.flags["generated_random_map_boundary"]["content_service_generated_draft"] = false if not package_startup.is_empty() else ContentService.has_generated_scenario_draft(session.scenario_id)
+	session.flags["generated_random_map_boundary"]["adoption_path"] = "native_rmg_generated_package_saved_loaded_from_disk" if package_backed else "legacy_skirmish_session_only_no_authored_browser_or_campaign"
+	session.flags["generated_random_map_boundary"]["content_service_generated_draft"] = false if package_backed else ContentService.has_generated_scenario_draft(session.scenario_id)
 	session.overworld["generated_random_map_provenance"] = setup.get("provenance", {})
 	session.overworld["generated_random_map_replay_metadata"] = setup.get("replay_metadata", {})
 	session.overworld["generated_random_map_validation"] = setup.get("validation", {})

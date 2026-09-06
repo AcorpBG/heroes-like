@@ -33,6 +33,9 @@ SCENES = [
     "campaign_completion_persistence_atomicity_regression",
     "campaign_replay_progress_preservation_regression",
     "campaign_progression_semantic_storage_fail_closed_regression",
+    "scenario_outcome_new_session_confirmation_safe_cancel_regression",
+    "scenario_outcome_normal_entry_focus_regression",
+    "application_scenario_outcome_autosave_failure_recovery_regression",
     "town_development_save_resume_report",
     "runtime_audio_cache_fallback_report",
     "music_audio_runtime_report",
@@ -63,7 +66,7 @@ SCRIPTED_REWARD_SCENES = [
     "uncrowned_circuit_campaign_smoke",
 ]
 # These reports observe an actual drawn frame, not a headless timing surrogate.
-REQUIRES_RENDERED = {"final_nine_faction_campaigns_smoke", "active_play_load_resumed_cue_playback_report"}
+REQUIRES_RENDERED = {"final_nine_faction_campaigns_smoke", "active_play_load_resumed_cue_playback_report", "scenario_outcome_new_session_confirmation_safe_cancel_regression", "scenario_outcome_normal_entry_focus_regression"}
 RMG_SCENES = [
     "native_rmg_end_to_end_runtime_boundary_report",
     "native_random_map_homm3_re_object_table_proxy_report",
@@ -90,6 +93,9 @@ RMG_SCENES = [
 # assert rollback/retry/route safety. Only their exact domain issue is expected;
 # a failed test marker, any script error or any other native error still fails.
 EXPECTED_INJECTED_ISSUES = {
+    "application_scenario_outcome_autosave_failure_recovery_regression": ("ERROR: scenario_outcome_autosave_failed:", "ERROR: active_play_return_autosave_failed:"),
+    "scenario_outcome_normal_entry_focus_regression": "ERROR: scenario_outcome_autosave_failed:",
+    "scenario_outcome_new_session_confirmation_safe_cancel_regression": "ERROR: scenario_outcome_autosave_failed:",
     "generated_opening_autosave_failure_retry_regression": ("ERROR: generated_opening_autosave_failed:", "ERROR: end_turn_autosave_failed:"),
     "application_battle_entry_autosave_failure_regression": "ERROR: battle_entry_autosave_failed:",
     "battle_resolution_autosave_failure_route_safety_regression": "ERROR: battle_resolution_autosave_failed:",
@@ -116,6 +122,36 @@ def report_scene(name: str, source: str, out: Path):
     elif name == "active_play_load_resumed_cue_playback_report":
         anchor = '\tvar action_result: Dictionary = menu.call("validation_resume_selected_save")\n\tawait _settle()\n'
         setup = '\tvar action_result: Dictionary = menu.call("validation_resume_selected_save")\n\tawait get_tree().scene_changed\n\tawait RenderingServer.frame_post_draw\n'
+    elif name in {"scenario_outcome_new_session_confirmation_safe_cancel_regression", "scenario_outcome_normal_entry_focus_regression"}:
+        # The old fixtures resize the OS window but leave the newer fixed
+        # logical canvas at 1920x1080. Exercise their intended exact viewport,
+        # preserving every physical input, geometry and state assertion.
+        anchor = source
+        setup, count = re.subn(r'(\tget_window\(\)\.size = ([^\n]+)\n)', r'\1\tget_window().content_scale_size = \2\n', source)
+        expected = 3 if "safe_cancel" in name else 4
+        if count != expected:
+            raise ValueError(name + ": viewport setup changed; review the adapter")
+        if name == "scenario_outcome_normal_entry_focus_regression":
+            # This legacy matrix exercises the expanded recap/save panel. Open
+            # the real Details control before its unchanged tab/copy assertions.
+            # The generated outcome probe separately checks collapsed entry.
+            surface_anchor = '\tframe.add_child(shell)\n\treturn shell\n'
+            if setup.count(surface_anchor) != 1:
+                raise ValueError(name + ": expanded outcome setup changed")
+            setup = setup.replace(surface_anchor, '\tframe.add_child(shell)\n\tshell._on_recap_details_pressed()\n\tshell._refresh()\n\tshell._configure_outcome_keyboard_focus(true)\n\treturn shell\n')
+        # Fixed-slot overwrite is now an explicit compatibility API, not the
+        # player Save button (which opens named files). Keep these legacy
+        # byte/focus/modal-ownership controls; named_save_files_regression.py
+        # separately exercises the real Save buttons and named-file consent.
+        if "safe_cancel" in name:
+            save_anchor = '\tsave_button.pressed.emit()\n'
+            save_setup = '\tshell.validation_request_manual_save()\n'
+        else:
+            save_anchor = '\tawait _press_action("ui_accept")\n\tawait _settle()\n\tvar dialog: ConfirmationDialog = shell.get_node("ManualSaveOverwriteDialog")\n'
+            save_setup = '\tshell.validation_request_manual_save()\n\tawait _settle()\n\tvar dialog: ConfirmationDialog = shell.get_node("ManualSaveOverwriteDialog")\n'
+        if setup.count(save_anchor) != 1:
+            raise ValueError(name + ": legacy fixed-slot entry changed")
+        setup = setup.replace(save_anchor, save_setup)
     else:
         yield "res://tests/" + name + ".tscn"
         return
