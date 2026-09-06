@@ -55,9 +55,14 @@ func settle() -> void:
 	for frame in range(6):
 		await get_tree().process_frame
 	var started := Time.get_ticks_msec()
-	while scene_path().ends_with("TownShell.tscn") and get_tree().current_scene._town_action_input_blocker.visible:
+	while true:
+		var scene = get_tree().current_scene
+		var town_busy: bool = scene != null and scene_path().ends_with("TownShell.tscn") and scene._town_action_input_blocker.visible
+		var battle_busy: bool = scene != null and scene_path().ends_with("BattleShell.tscn") and scene._battle_exit_handoff_in_progress
+		if not town_busy and not battle_busy:
+			break
 		if Time.get_ticks_msec() - started > 30000:
-			failures.append("town action input blocker did not clear")
+			failures.append("battle exit handoff did not finish" if battle_busy else "town action input blocker did not clear")
 			break
 		await get_tree().process_frame
 

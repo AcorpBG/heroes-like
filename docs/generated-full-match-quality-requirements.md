@@ -30,6 +30,12 @@ First reproduce and identify exact runtime owners for blockers. Add a failing
 focused regression before each correction, then replay the affected path. A
 driver correction alone is support work, not a gameplay fix or goal completion.
 
+Existing Town recruitment-surface validation must open the real Muster modal
+before observing recruit buttons. A closed lazy dialog's synthetic action
+snapshot is not proof of visible UI. Python-owned invocation may adapt that
+setup, while preserving all original tier, affordability, portrait and tooltip
+assertions and explicitly requiring a visible modal.
+
 The reproduced Medium seed-10 (50,48) stall requires a consumed-site lifecycle
 correction: a collected cache no longer rendered or actionable must not leave an
 invisible collision body. Use the existing site presence rules for collision,
@@ -156,6 +162,16 @@ footer controls and building/background composition defects where current code
 confirms them. Preserve scenery, action dialogs, hover/focus/click alignment,
 input navigation and authoritative construction/save progression. Use current
 original assets; no procedural art substitutes or unscoped art regeneration.
+
+The recorded Town footer's apparent resource zeros are actually the standalone
+stage's district-count strip drawn underneath TownShell navigation. When the
+shell owns external overlays, the stage must not draw that strip or its duplicate
+town title/count header. Keep district/garrison/action-count information in the
+existing Log dialog; the top identity/resources, five action icons and footer
+navigation remain authoritative. Standalone stage previews retain their own
+overlays. Prove ordinary build and save/resume do not change, with real generated
+opening saves and inspected 1280x720/1920x1080 captures. This corrects overlay
+ownership, not the still-unfinished building/art integration requirement.
 
 Native generation semantics are not selected for change. Follow
 `docs/lessons-learned.md` if a failure reaches that boundary: name the unrecovered

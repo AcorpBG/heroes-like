@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import json
 import os
+from pathlib import Path
 import re
 import subprocess
+import tempfile
 from time import monotonic
 
 from full_play_runtime_profile import ROOT, OUTPUT
@@ -92,6 +95,30 @@ EXPECTED_INJECTED_ISSUES = {
 }
 
 
+@contextmanager
+def report_scene(name: str, source: str, out: Path):
+    """Adapt the legacy surface setup, never its gameplay/UI assertions."""
+    if name != "town_recruitment_ui_surface_report":
+        yield "res://tests/" + name + ".tscn"
+        return
+    anchor = '\tshell.call("validation_force_refresh")\n\tawait get_tree().process_frame\n'
+    if source.count(anchor) != 1:
+        raise ValueError("Recruitment report setup changed; review the real-modal adapter")
+    setup = anchor + '''\tshell.call("_open_town_catalog", "muster")
+\tawait get_tree().process_frame
+\tvar modal: Dictionary = shell.call("validation_town_catalog_snapshot")
+\tif not bool(modal.get("open", false)) or modal.get("mode", "") != "muster" or not bool(modal.get("muster_grid_visible", false)):
+\t\terrors.append("Real Muster modal is not visible for recruitment surface validation.")
+'''
+    with tempfile.TemporaryDirectory(prefix="real-muster-", dir=out) as temporary:
+        work = Path(temporary)
+        script = work / "probe.gd"
+        script.write_text(source.replace(anchor, setup, 1))
+        scene = work / "probe.tscn"
+        scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="RealMusterSurface" type="Node"]\nscript = ExtResource("1")\n' % script.relative_to(ROOT))
+        yield "res://" + str(scene.relative_to(ROOT))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--label", required=True)
@@ -129,7 +156,8 @@ def main() -> int:
         command = ["godot4", "--path", str(ROOT), "--audio-driver", "Dummy", "--accessibility", args.accessibility, "res://tests/" + name + ".tscn"]
         rendered = args.rendered or name in REQUIRES_RENDERED
         command = ["dbus-run-session", "--", "xvfb-run", "-a", "-s", "-screen 0 2200x1200x24"] + command if rendered else command + ["--headless"]
-        with (out / (name + ".log")).open("w") as log:
+        with report_scene(name, source, out) as scene_path, (out / (name + ".log")).open("w") as log:
+            command = [scene_path if token == "res://tests/" + name + ".tscn" else token for token in command]
             process = subprocess.run(["timeout", str(args.timeout) + "s"] + command, cwd=ROOT, env=env, stdout=log, stderr=subprocess.STDOUT, timeout=args.timeout + 20)
         lines = (out / (name + ".log")).read_text().splitlines()
         errors = [line for line in lines if line.startswith(("ERROR:", "SCRIPT ERROR:")) or "leaked" in line]

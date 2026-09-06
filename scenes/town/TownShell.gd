@@ -582,6 +582,7 @@ func _open_town_catalog(mode: String) -> void:
 		var actions := _logistics_tab_actions()
 		_town_catalog_title_label.text = "Town Log & Logistics"
 		_town_catalog_subtitle_label.text = "%d active order%s • garrison, artifacts, hires, transfers, and frontier responses" % [actions.size(), "" if actions.size() == 1 else "s"]
+		_town_catalog_subtitle_label.text += "\n%s" % String(_town_stage_view.call("settlement_summary_text"))
 		_rebuild_tavern_actions(TownRules.get_tavern_actions(_session))
 		_rebuild_transfer_actions(TownRules.get_transfer_actions(_session))
 		_rebuild_response_actions(TownRules.get_response_actions(_session))

@@ -2,8 +2,9 @@
 
 2026-09-06. Active Phase 6 parent `quality-generated-full-match-20260906`,
 playthrough child `quality-generated-full-match-playthrough-20260906` remains
-in progress and is the current implementation child. Measured responsiveness
-improvements remain a validated checkpoint, not a completed full-match child.
+in progress. The Town overlay checkpoint below is validated; fresh terminal
+matches are next. Measured responsiveness improvements remain a validated
+checkpoint, not a completed full-match child.
 Requirements:
 `docs/generated-full-match-quality-requirements.md`. This is an implementation
 checkpoint, **not completion of the child, full matches, or release readiness**.
@@ -492,3 +493,77 @@ terminal outcomes and terminal save/resume, continue measured full-action
 optimization and address the recorded Town/Overworld presentation gaps.
 Keep all three children and the parent honest; individual fixes and package
 success do not establish complete-match or product readiness.
+
+### Battle-transition driver repair and Town overlay ownership
+
+Medium09 stopped on Day 4; Large07 stopped on Day 6. Both supervisors exited and
+neither run reached a terminal outcome. The six-frame driver settle returned
+while `BattleShell._battle_exit_handoff_in_progress` was still true after a real
+battle resolution. Medium reissued Quick Resolve against an already resolved
+battle; Large attempted confirmation on a subsequently freed scene. This is a
+driver timing defect, not evidence that production battle resolution failed.
+The driver now waits for the authoritative handoff flag, bounded by its existing
+30-second failure timeout. Production animation, autosave, casualty report,
+Quick Resolve and battle rules are unchanged. Their opening saves remain valid
+focused fixtures, but no matching later full-match checkpoint supports resuming
+those diagnostic prefixes. Fresh Medium10/Large08 runs are required.
+
+The generated Town captures also reproduced a real production composition bug:
+`TownStageView._draw` painted its standalone district strip behind TownShell's
+footer. At 1280x720 its local rectangle was `(16,614,620,36)`, exposing detached
+district numbers between navigation buttons. Its standalone heading duplicated
+the compact Town header across the scenic center. These are drawn UI, not baked
+art or resource balances. Both now obey the existing external-overlay ownership
+flag. Standalone previews keep their original summaries; TownShell's existing
+Log & Logistics modal displays the same production district/garrison/action
+counts. Status plaques, stores, five dialogs, build hotspots and navigation stay.
+No art, placement manifest, gameplay rule or save-schema change was made.
+
+Evidence under `.artifacts/generated_full_match_quality_20260906/`:
+
+- `match_route_before_01` reproduces the premature route; `match_route_after_02`
+  and `match_route_town_final` pass real animated exit/report, ordinary Quick
+  Resolve/report and genuinely unavailable-action controls, with zero engine
+  errors. The latter control must still fail the driver. Early fixture/type
+  comparison mistakes remain failed harness attempts, not gameplay results.
+- `town_overlay_before_720_02` fails 16 of 58 original ownership/Log checks on
+  unchanged production, with zero engine errors. The earlier first attempt used
+  the wrong unique node name and is not the production reproduction.
+- `town_overlay_final_720` and `town_overlay_final_1080`: **64 checks each pass**,
+  zero engine errors, using the real Medium09/Large07 opening saves. Cover actual
+  footer containment/non-overlap, hidden standalone overlays, all five district
+  values retained in a read-only Log, standalone geometry/data, one ordinary
+  affordable build and complete production save/resume. Final `after_build.png`
+  and `after_build_log.png` at both resolutions were opened and inspected: no
+  stray district numbers, duplicate middle heading or clipped Log summary.
+  These are opening/one-build captures, not mature-town acceptance.
+- `town_overlay_validate_02.log` passes repository validation after its exact
+  geometry contract was updated to require conditional ownership; the earlier
+  unconditional-geometry assertion failure was retained. `town_overlay_acceptance.log`
+  passes all eleven Python full-match acceptance/checkpoint tests.
+- `town_overlay_linux_verified`, `town_overlay_windows_verified` and
+  `town_overlay_linux_entry_verified` pass serial exports, startup and actual
+  generated Overworld/Town entry. PCKs both **248450632 bytes**, **1549368 bytes**
+  below the unchanged ceiling. Windows execution is Wine, not native hardware.
+
+In `.artifacts/full_play_runtime_20260905/town_overlay_domains_final`, the existing
+dialog/hotspot and field-transfer reports pass. The historical recruitment test
+previously read synthetic labels from a closed lazy modal: all 42 tier checks
+failed despite the real buttons already containing tiers. The Python runner now
+opens Muster before the original assertions and explicitly checks modal state.
+`town_overlay_muster_verified` passes all six factions/42 tier controls with zero
+engine errors; no original tier, affordability, portrait or tooltip assertion was
+removed. An intermediate adapter used the wrong snapshot key (`visible` instead
+of `open`), failed only its six added modal checks, and is not accepted evidence.
+
+Final runtime source-tree SHA-256:
+`b5491122615a0b0491028a9c4c462713da126a210ca96746015a8fd016249eae`.
+Driver SHA-256:
+`3ccdad0ba3feb986c5de2d02529886379bd390fdd99aa1184c83cc3a81a21229`.
+
+Still visibly unfinished: individual Town sprites read as separate icons, most
+obviously Veilmourn's warm buildings/market floating over water; command-sidebar
+text is truncated; the Overworld save-status footer clips. Removing duplicate
+overlays does **not** solve those defects or certify Town art integration. The
+presentation child, full matches and overall goal remain in progress. No new
+matched responsiveness claim is made from these concurrent validation runs.
