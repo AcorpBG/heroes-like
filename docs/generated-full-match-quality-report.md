@@ -1062,3 +1062,136 @@ It is still nonterminal on its original preloaded runtime/driver, not silently
 upgraded or restarted for this optimization. Large08's legitimate Day-14 defeat
 remains the accepted bounded Large outcome. Complete Medium coverage, full-match
 responsiveness and scene-matched Town buildings remain unfinished.
+
+## Live commander and navigation refresh — 2026-09-06
+
+The scenery checkpoint's real Medium/Large captures exposed a separate UI defect.
+`OverworldShell._refresh_selected_route_preview` requests the map/context-route
+phases without the full status phase. That route updated the map and readiness
+but not the always-visible hero/status/stockpile or owned-roster tooltips. Against
+the exact shell at `e17a4480`, the recorded Medium Day-43 Waystone Cache command
+moves `(35,32)` to `(48,29)` and spends movement from 26 to 13, while the old hero
+label still says `Move 26/26`. Large08's Day-8 Lens House at `(40,74)` exercises
+the adjacent-click variant. These are ordinary feasible commands from unchanged
+source saves, not injected coordinates or rewards.
+
+The same physical keyboard/controller controls reproduce a second defect: full
+refreshes queued every owned roster button for deletion, losing keyboard focus.
+The correction keeps buttons by hero/placement identity, updates their current
+art, text, ordering, ownership and pressed state, and removes only absent records.
+Town callbacks look up their current owned entrance instead of retaining bound
+coordinates. Army controls similarly retain an unchanged complete holder view;
+actual stack, holder or active-hero changes still reconfigure it.
+
+The route-only pass now updates the primary commander/status/stockpile, army and
+existing hero tooltips without expanding to the full hidden-panel refresh. Full
+and incremental refreshes share the same formatting helpers. Generated compact
+play skips detailed forecasts; authored/open-drawer play shares one same-state
+forecast between the live status and existing readiness/handoff tooltips.
+No gameplay, generation, art, placement, save version or rules changed.
+
+`tests/overworld_live_commander_refresh_regression.py` is Python-owned and compares
+complete serialized old/current gameplay after actual pointer collection,
+configured movement keys, physical controller axes, natural movement exhaustion
+and a rejected zero-movement attempt. Complete save/restore compares parsed JSON
+without excluding fields; original file hashes and the tested shell hash must
+remain unchanged. Membership/order/ownership/entrance boundary mutations are
+explicitly detached fixtures after the real commands/save checks; they are never
+saved, captured as gameplay or counted as terminal-match progress.
+
+Initial current-state checks passed but visual inspection found that a long hero
+name could still ellipsize movement at 720p. The generated card now uses separate
+name/movement lines and the existing footer uses three compact day/position/
+movement lines. Real font widths/heights must fit; fresh strings alone do not
+establish visible correctness. Full names remain in tooltips. Final Medium
+720/1080 reports each pass 165 checks; both Large reports pass 161. Their new
+captures were opened and inspected, including legible movement, bounded footer,
+seven army slots, owned roster, fog/minimap and available controls. The ordinary
+River Pass authored control passes 117 checks and its capture was inspected:
+the existing mana-first visible card remains unchanged while its complete tooltip,
+movement forecast and roster are current. All five final reports total **769
+checks**, exit normally with no engine errors, and preserve their source files.
+Artifacts are under `.artifacts/generated_full_match_quality_20260906/`:
+`commander_medium_720_final`, `commander_medium_1080_final`,
+`commander_large_720_final`, `commander_large_1080_final`,
+`commander_authored_final`. The 12 Python full-match acceptance tests,
+`python3 tests/validate_repo.py` and `git diff --check` also pass. Source-structure
+checks retain their ordering/forbidden-full-refresh assertions while recognizing
+the extracted shared formatter and same-state forecast argument.
+
+Fresh `commander_linux_final` and `commander_windows_isolated_final` release
+exports/startup/generated-map/Town entry pass, with both PCKs **248456120 bytes**,
+**1543880 bytes** below the unchanged 250000000-byte ceiling. Windows is Wine,
+not physical Windows/GPU evidence. Production digest is
+`483403630f1ea7b1eecbb68059cd1ea0cd9f657974d7e6c5c7acd029769933cd`; tested shell
+SHA-256 is `3d794c43dcc70578041cfcead1e96db9cce6cea601a95ffe91ce57b4aff30c96`.
+Final Linux/Windows binaries and prefixes were disposable RAM-backed validation
+outputs; original maps, saves, older artifacts and caches remain intact.
+
+`commander_existing_02` passes the existing owned-roster/vision, physical movement
+ownership, full-route movement, fog, field army transfer and End Turn confirmation
+reports. Roster evidence is redirected to this fresh directory; assertions are
+unchanged. It also retains two **failing** older Town fixtures: the resource-menu
+test expects an 80-pixel menu where the current unchanged Town header gives it
+92 pixels, and the army report clicks the now-hidden Town bar without opening
+its actual dialog. Neither failure is suppressed or counted as a suite pass.
+`commander_stockpile_viewport` still fails that Town width after correcting only
+its old logical-viewport setup. `commander_stockpile_overworld` and
+`commander_army_overworld` run the original affected Overworld cases at their
+actual requested logical viewports, preserving all their assertions; both pass.
+The latter retains direct rules, complete save and battle-order checks as well.
+Town production code did not change in this checkpoint.
+
+The first existing-roster launcher and initial Windows launcher ended with signal
+15 after printing successful domain reports. Neither is accepted as completed
+validation without a normal supervisor exit and aggregate report. Repeating with
+isolated child process groups produces normal final results. The inactive fresh
+failed Windows prefix/export directory alone was removed after a process-reference
+check (1669091416 logical bytes); no old evidence or caches were deleted. Earlier
+probe failures also retain their actual causes: inferred GDScript variable types,
+using arrow navigation instead of configured hero keys, assuming adjacent clicks
+only select, serializing independently created authored session identities,
+JSON key ordering, and normalizing only part of a detached extra-hero fixture.
+The corrected test restores one common payload, uses actual configured inputs,
+fully normalizes fixtures before observation, and compares complete state.
+
+### Medium11 supervision boundary and exact continuation
+
+The previously live original `medium_match_11` actually ended at its 10800-second
+supervision limit: return code 124, 10800.62 seconds, Day 67, final action 1635,
+1635/1635 valid army observations, zero engine errors and **no terminal outcome**.
+Its generic missing-final-marker acceptance failures are not evidence of illegal
+armies or absent historical battles/builds. This remains a failed diagnostic
+prefix, not an accepted Medium match.
+
+Before launching `medium_match_11_continuation_01`, the unchanged continuation
+checker verified the latest normal Day-67 autosave (7554019 bytes, SHA-256
+`c0ac52b668425f01afc88d2ec1a19884704601294b477ed11f223978d81e7f98`) against
+recorded successful End Turn action 1613 and complete driver history. All 1613
+capacity observations and exact setup/faction/hero/difficulty checks pass. The
+22 later original actions are not spliced into the continued history; continuation
+replays from that real save. It preserves `last_progress_day=66`, active resource
+target `native_h3maped_93c0f05a_object_0966`, failed targets, Town-day history,
+waypoint visits and original limits. There is no regenerated map, injected state,
+forced defeat or reset of no-progress history.
+
+The new launch records commit `e17a448021be9728c08cd4b48079825d888797e9`, production
+digest `548b7bfc61eb325e6de2837368414c27e27244ced9414c60bf57d207050af379` and driver
+hash `7ab98279b847e4b28f74eeecc577cbcc254e6a05ea086614213b769d89beda25`.
+It is not silently upgraded to this new commander UI while running. It has
+independently progressed beyond Day 91, but a real outcome is still required.
+Large08's bounded legal defeat remains valid; full-match quality and integrated
+Town-building art remain open. The heroes-progress workflow keeps the selected
+presentation child and parent in progress rather than closing them on this fix.
+
+A subsequent read-only Day-93 audit identifies a concrete next runtime gap:
+`src/gdextension/src/map_package_service.cpp:3107` writes objective kind
+`defeat_generated_rivals`, preserved in the saved runtime scenario record.
+`ScenarioRules.evaluate_session` only evaluates `victory`/`defeat` arrays and has
+no handler for this kind. The unchanged Day-93 save owns all seven Towns and all
+73 encounters are in `resolved_encounters`; its rival roster has no active field
+placements, yet status remains `in_progress`. This is not evidence that taking
+one arbitrary Town or changing a status field would be a valid correction. The
+next correctness work must reproduce the exact missing objective evaluation,
+preserve controller/team identity and actual surviving forces, and route a real
+outcome/save through normal authority without altering generated-map semantics.

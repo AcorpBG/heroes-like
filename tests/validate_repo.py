@@ -34097,7 +34097,7 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         )
 
     route_readiness_match = re.search(
-        r"func _refresh_selected_route_readiness_surfaces\(\) -> void:\n(?P<body>.*?)(?=\nfunc _refresh_context_tile_surface)",
+        r"func _refresh_selected_route_readiness_surfaces\(end_turn_forecast_surface: Dictionary = \{\}\) -> void:\n(?P<body>.*?)(?=\nfunc _refresh_context_tile_surface)",
         overworld_text,
         re.S,
     )
@@ -34107,7 +34107,7 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         generated_guard = "if _generated_initial_open_pending() or _use_generated_compact_refresh():"
         generated_guard_index = route_readiness_body.find(generated_guard)
         generated_return_index = route_readiness_body.find("\n\t\treturn", generated_guard_index)
-        readiness_index = route_readiness_body.find("var readiness_surface := _field_readiness_surface()")
+        readiness_index = route_readiness_body.find("var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface)")
         objective_index = route_readiness_body.find("_objective_brief_label.tooltip_text = _join_tooltip_sections([", readiness_index)
         event_gate = "if _field_feed_is_idle() and _action_feedback.is_empty():"
         event_gate_index = route_readiness_body.find(event_gate, objective_index)
@@ -34116,9 +34116,9 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         event_context_index = route_readiness_body.find("var action_context_surface := _action_context_surface(event_surface, readiness_surface)", event_readiness_index)
         event_render_index = route_readiness_body.find("_set_rail_text(", event_context_index)
         end_turn_index = route_readiness_body.find("var end_turn_check := _end_turn_confirmation_surface(readiness_surface)", event_render_index)
-        drawer_index = route_readiness_body.find("_refresh_drawer_handoff_cues(readiness_surface)", end_turn_index)
+        drawer_index = route_readiness_body.find("_refresh_drawer_handoff_cues(readiness_surface, end_turn_forecast_surface)", end_turn_index)
         ensure(
-            route_readiness_body.count("_field_readiness_surface()") == 1
+            route_readiness_body.count("_field_readiness_surface({}, end_turn_forecast_surface)") == 1
             and -1 < generated_guard_index < generated_return_index < readiness_index < objective_index
             < event_gate_index < event_source_index < event_readiness_index < event_context_index < event_render_index
             < end_turn_index < drawer_index,
@@ -34183,17 +34183,17 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
     if refresh_match is not None:
         refresh_body = refresh_match.group("body")
         action_index = refresh_body.find("_refresh_selected_route_action_surface()")
-        readiness_index = refresh_body.find("_refresh_selected_route_readiness_surfaces()")
+        readiness_index = refresh_body.find("_refresh_selected_route_readiness_surfaces(route_forecast)")
         cue_index = refresh_body.find("_refresh_map_cue_surface()")
         context_index = refresh_body.find("_refresh_context_tile_surface()")
         ensure(
-            refresh_body.count("_refresh_selected_route_readiness_surfaces()") == 1
+            refresh_body.count("_refresh_selected_route_readiness_surfaces(route_forecast)") == 1
             and 0 <= action_index < readiness_index < cue_index < context_index,
             errors,
             "Incremental route refresh must update cached action, rendered readiness, MapCue, then context tile exactly once in order",
         )
         route_cue_branch_match = re.search(
-            r"elif _refresh_request_has_phase\(request, REFRESH_PHASE_CONTEXT_ROUTE\):\n\s*_refresh_selected_route_readiness_surfaces\(\)\n\s*_refresh_map_cue_surface\(\)\n(?P<body>.*?)(?=\n\s*OverworldRules.end_normalized_read_scope)",
+            r"elif _refresh_request_has_phase\(request, REFRESH_PHASE_CONTEXT_ROUTE\):\n\s*var route_forecast := _refresh_live_route_status\(\)\n\s*_refresh_selected_route_readiness_surfaces\(route_forecast\)\n\s*_refresh_map_cue_surface\(\)\n(?P<body>.*?)(?=\n\s*OverworldRules.end_normalized_read_scope)",
             refresh_body,
             re.S,
         )
@@ -37863,7 +37863,7 @@ def validate_overworld_hero_card_mana_first_view(errors: list[str]) -> None:
     )
     ensure(full_match is not None and visible_match is not None and focused_match is not None, errors, "Overworld hero card must isolate exact full-tooltip, visible mana-first, and focused live contracts")
     ensure(shell_text.count("func _hero_card_visible_text()") == 1, errors, "OverworldShell must own exactly one visible hero-card formatter")
-    ensure('_set_rail_text(_hero_label, hero_text, _hero_card_visible_text(), 2)' in shell_text, errors, "Overworld hero rail must pair the prior full tooltip with the mana-first visible summary")
+    ensure('_set_rail_text(_hero_label, _hero_card_text(), _hero_card_visible_text(), 2)' in shell_text, errors, "Overworld hero rail must pair the prior full tooltip with the mana-first visible summary")
     ensure('_set_rail_text(_hero_label, hero_text, hero_text, 2)' not in shell_text, errors, "Overworld hero rail must not duplicate movement in the first view and adjacent command row")
     if full_match is not None:
         full_body = full_match.group("body")

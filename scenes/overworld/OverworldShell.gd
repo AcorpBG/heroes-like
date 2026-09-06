@@ -286,6 +286,8 @@ var _debug_last_command_snapshot: Dictionary = {}
 var _profile_log_enabled := false
 var _refresh_dirty_phases: Dictionary = {}
 var _refresh_request_sequence := 0
+var _army_management_holders: Array = []
+var _army_management_initialized := false
 var _compact_town_return_save_surface_pending := false
 var _last_save_surface_compact_reason := ""
 var _controller_move_axis := Vector2.ZERO
@@ -2060,7 +2062,12 @@ func _on_army_slot_operation_requested(
 func _refresh_army_management() -> void:
 	var active_hero_id := String(_session.overworld.get("active_hero_id", ""))
 	var active_hero := HeroCommandRules.army_slot_snapshot(_session, {}, active_hero_id)
-	_army_management.configure([active_hero] if not active_hero.is_empty() else [], not active_hero.is_empty())
+	var holders: Array = [active_hero] if not active_hero.is_empty() else []
+	if _army_management_initialized and holders == _army_management_holders:
+		return
+	_army_management_holders = holders.duplicate(true)
+	_army_management_initialized = true
+	_army_management.configure(holders, not active_hero.is_empty())
 
 func _on_rendezvous_order_selected(index: int) -> void:
 	if index < 0 or index >= _rendezvous_orders.item_count:
@@ -2510,7 +2517,8 @@ func _refresh_with_request(request: Dictionary) -> void:
 	if _refresh_request_has_phase(request, REFRESH_PHASE_STATUS_SURFACES):
 		compact_generated = _refresh_status_surfaces(generated_surface_start, refresh_watch_context)
 	elif _refresh_request_has_phase(request, REFRESH_PHASE_CONTEXT_ROUTE):
-		_refresh_selected_route_readiness_surfaces()
+		var route_forecast := _refresh_live_route_status()
+		_refresh_selected_route_readiness_surfaces(route_forecast)
 		_refresh_map_cue_surface()
 		_refresh_context_tile_surface()
 		_validation_profile["last_route_tooltip_context_drawers"] = {
@@ -3960,17 +3968,14 @@ func _refresh_status_surfaces(generated_surface_start: int, preloaded_refresh_wa
 	var status_forecast := _status_forecast_surface(end_turn_forecast_surface)
 	_status_label.tooltip_text = String(status_forecast.get("tooltip_text", ""))
 	_status_label.text = _compact_text(String(status_forecast.get("visible_text", "")), 1, 64, false)
-	var resource_text := OverworldRules.describe_resources(_session)
-	_resource_label.sync_stockpile(_session.overworld.get("resources", {}), resource_text, resource_text)
+	_refresh_resource_stockpile()
 	_refresh_map_cue_surface()
 	_debug_refresh_profile_end("refresh_header_objective_status_resources", header_profile_start)
 	var commitment_profile_start := _debug_refresh_profile_begin("refresh_commitment_rail")
 	_refresh_commitment_panel(refresh_watch_context)
 	_debug_refresh_profile_end("refresh_commitment_rail", commitment_profile_start)
 	var hero_rail_profile_start := _debug_refresh_profile_begin("refresh_hero_rail")
-	var hero_text := _hero_card_text()
-	_hero_portrait.set_hero_id(_live_player_hero_id())
-	_set_rail_text(_hero_label, hero_text, _hero_card_visible_text(), 2)
+	_refresh_commander_card(false)
 	_debug_refresh_profile_end("refresh_hero_rail", hero_rail_profile_start)
 	var army_rail_profile_start := _debug_refresh_profile_begin("refresh_army_rail")
 	var army_text := OverworldRules.describe_army(_session)
@@ -4052,10 +4057,10 @@ func _refresh_map_cue_surface() -> void:
 		return
 	_map_cue_label.tooltip_text = _map_cue_tooltip()
 
-func _refresh_selected_route_readiness_surfaces() -> void:
+func _refresh_selected_route_readiness_surfaces(end_turn_forecast_surface: Dictionary = {}) -> void:
 	if _generated_initial_open_pending() or _use_generated_compact_refresh():
 		return
-	var readiness_surface := _field_readiness_surface()
+	var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface)
 	_objective_brief_label.tooltip_text = _join_tooltip_sections([
 		OverworldRules.describe_objective_stakes_board(_session),
 		String(readiness_surface.get("tooltip_text", "")),
@@ -4090,7 +4095,7 @@ func _refresh_selected_route_readiness_surfaces() -> void:
 	var end_turn_tooltip := String(end_turn_check.get("tooltip_text", "")).strip_edges()
 	if end_turn_tooltip != "":
 		_end_turn_button.tooltip_text = end_turn_tooltip
-	_refresh_drawer_handoff_cues(readiness_surface)
+	_refresh_drawer_handoff_cues(readiness_surface, end_turn_forecast_surface)
 
 func _set_objective_brief_text(full_text: String, full_tooltip: String) -> void:
 	_objective_brief_label.text = full_text
@@ -4117,31 +4122,81 @@ func _refresh_tooltip_context_drawer_surfaces(
 	_sync_context_drawers(field_readiness, end_turn_forecast_surface, objective_header_surfaces)
 	_debug_refresh_profile_end("refresh_tooltip_context_drawers", tooltip_context_profile_start)
 
-func _refresh_generated_opening_surfaces() -> void:
-	var scenario = ContentService.get_scenario_readonly(_session.scenario_id)
+func _refresh_commander_card(compact: bool) -> void:
+	_hero_portrait.set_hero_id(_live_player_hero_id())
+	if compact:
+		var hero: Dictionary = _session.overworld.get("hero", {})
+		var movement: Dictionary = _session.overworld.get("movement", {})
+		var summary := "%s\nMove %d/%d" % [
+			String(hero.get("name", "Commander")),
+			int(movement.get("current", 0)),
+			int(movement.get("max", movement.get("current", 0))),
+		]
+		_set_rail_text(_hero_label, summary, summary, 2)
+	else:
+		_set_rail_text(_hero_label, _hero_card_text(), _hero_card_visible_text(), 2)
+
+func _refresh_resource_stockpile() -> void:
+	var summary := OverworldRules.describe_resources(_session)
+	_resource_label.sync_stockpile(_session.overworld.get("resources", {}), summary, summary)
+
+func _refresh_generated_commander_status() -> void:
 	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
 	var movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
 	var hero_pos := OverworldRules.hero_position(_session)
-	var hero_name := String(hero.get("name", "Commander"))
-	var opening_pending := _generated_initial_open_pending()
 	var move_line := "Move %d/%d" % [
 		int(movement.get("current", 0)),
 		int(movement.get("max", movement.get("current", 0))),
 	]
-	var resource_line := OverworldRules.describe_resources(_session)
+	_status_label.text = "Day %d\nPos %d,%d\n%s" % [_session.day, hero_pos.x, hero_pos.y, move_line]
+	_status_label.tooltip_text = "%s | %s. Detailed readiness is available from the command/frontier drawers." % [String(hero.get("name", "Commander")), _status_label.text]
+	_refresh_commander_card(true)
+
+func _refresh_live_route_status() -> Dictionary:
+	# Route execution can spend movement and claim resources/army rewards without
+	# requesting a full status pass. Keep the primary HUD truthful, not the hidden
+	# management panels. Existing navigation nodes retain identity and focus.
+	var compact := _generated_initial_open_pending() or _use_generated_compact_refresh()
+	var forecast: Dictionary = {}
+	if compact:
+		_refresh_generated_commander_status()
+		_set_rail_text(_army_label, "Army ready", "Army ready", 1)
+	else:
+		_refresh_commander_card(false)
+		# Share this same-state forecast with the following readiness/tooltips pass.
+		forecast = OverworldRules.describe_end_turn_forecast_surfaces(_session)
+		var status := _status_forecast_surface(forecast)
+		_status_label.text = _compact_text(String(status.get("visible_text", "")), 1, 64, false)
+		_status_label.tooltip_text = String(status.get("tooltip_text", ""))
+		var army_text := OverworldRules.describe_army(_session)
+		_set_rail_text(_army_label, army_text, _rail_prefixed_summary("Army", army_text), 1)
+	_refresh_resource_stockpile()
+	_refresh_army_management()
+	var actions := _cached_hero_actions()
+	for button in _hero_actions.get_children():
+		if not (button is Button):
+			continue
+		var id := "switch_hero:%s" % String(button.get_meta("hero_id", ""))
+		for action in actions:
+			if action is Dictionary and String(action.get("id", "")) == id:
+				button.tooltip_text = _hero_roster_tooltip(action)
+				break
+	return forecast
+
+func _refresh_generated_opening_surfaces() -> void:
+	var scenario = ContentService.get_scenario_readonly(_session.scenario_id)
+	var opening_pending := _generated_initial_open_pending()
 	var generated_name := String(scenario.get("name", "Generated Map"))
 	_header_label.text = "Generated Realm"
 	_header_label.tooltip_text = generated_name
 	_objective_brief_label.text = "Generated map opening" if opening_pending else "Generated map objective"
 	_objective_brief_label.tooltip_text = "Detailed objective and readiness surfaces are available from command/frontier drawers; routine generated-map movement keeps the live frame compact."
-	_status_label.text = "Day %d | Pos %d,%d | %s" % [_session.day, hero_pos.x, hero_pos.y, move_line]
-	_status_label.tooltip_text = "Generated map is playable; compact live refresh avoids rebuilding detailed rails on every movement."
-	_resource_label.sync_stockpile(_session.overworld.get("resources", {}), resource_line, resource_line)
+	_refresh_generated_commander_status()
+	_refresh_resource_stockpile()
 	_map_cue_label.text = "Opening generated map" if opening_pending else _map_cue_text()
 	_map_cue_label.tooltip_text = GENERATED_COMPACT_MAP_CUE_TOOLTIP
 	_commitment_label.text = ""
 	_commitment_label.tooltip_text = ""
-	_set_rail_text(_hero_label, "%s | %s" % [hero_name, move_line], "%s | %s" % [hero_name, move_line], 2)
 	_set_rail_text(_army_label, "Army ready", "Army ready", 1)
 	_refresh_army_management()
 	_set_rail_text(_heroes_label, "Command ready", "Command ready", 1)
@@ -4598,9 +4653,7 @@ func _set_collapsed_frontier_indicator(end_turn_forecast_surface: Dictionary = {
 	_frontier_indicator_label.tooltip_text = "%s\n\nOpen Frontier for objectives, threat watch, and next-day risk." % forecast_text
 
 func _rebuild_hero_actions() -> void:
-	for child in _hero_actions.get_children():
-		child.queue_free()
-
+	var retained: Array = []
 	var player_hero_ids := {}
 	for hero_value in _session.overworld.get("player_heroes", []):
 		if hero_value is Dictionary:
@@ -4619,7 +4672,11 @@ func _rebuild_hero_actions() -> void:
 		var hero := HeroCommandRules.hero_by_id(_session, hero_id)
 		var hero_name := String(hero.get("name", action.get("label", hero_id))).trim_prefix("Command ").strip_edges()
 		var is_active := hero_id == String(_session.overworld.get("active_hero_id", ""))
-		var button := Button.new()
+		var button := _existing_roster_button(_hero_actions, "hero_id", hero_id)
+		if button == null:
+			button = Button.new()
+			button.pressed.connect(_on_hero_roster_pressed.bind(hero_id))
+			_hero_actions.add_child(button)
 		button.name = "HeroRoster_%s" % hero_id
 		button.text = ""
 		button.toggle_mode = true
@@ -4627,11 +4684,7 @@ func _rebuild_hero_actions() -> void:
 		button.focus_mode = Control.FOCUS_ALL
 		button.accessibility_name = "%s hero %s" % ["Active" if is_active else "Select", hero_name]
 		button.accessibility_description = "Center this commander on the map." if is_active else "Make this commander active and center the map on them."
-		var switch_check := _hero_switch_check_surface(action)
-		button.tooltip_text = _join_tooltip_sections([
-			String(action.get("summary", "")),
-			String(switch_check.get("tooltip_text", "")),
-		])
+		button.tooltip_text = _hero_roster_tooltip(action)
 		_style_roster_icon_button(button, "primary" if is_active else "secondary")
 		var art := ContentService.get_hero_art(hero_id)
 		var portrait_path := String(art.get("portrait", ""))
@@ -4642,14 +4695,33 @@ func _rebuild_hero_actions() -> void:
 		button.set_meta("visual_model", "ornamental_art_card")
 		button.set_meta("art_path", portrait_path)
 		button.set_meta("active", is_active)
-		button.pressed.connect(_on_hero_roster_pressed.bind(hero_id))
-		_hero_actions.add_child(button)
+		retained.append(button)
 		displayed_hero_count += 1
+	_reconcile_roster_buttons(_hero_actions, retained)
 	_hero_roster_title_label.text = "Heroes  %d" % displayed_hero_count
 
+func _existing_roster_button(container: Container, identity_key: String, identity: String) -> Button:
+	for child in container.get_children():
+		if child is Button and not child.is_queued_for_deletion() and String(child.get_meta(identity_key, "")) == identity:
+			return child
+	return null
+
+func _reconcile_roster_buttons(container: Container, retained: Array) -> void:
+	for child in container.get_children():
+		if child not in retained:
+			container.remove_child(child)
+			child.queue_free()
+	for index in range(retained.size()):
+		container.move_child(retained[index], index)
+
+func _hero_roster_tooltip(action: Dictionary) -> String:
+	return _join_tooltip_sections([
+		String(action.get("summary", "")),
+		String(_hero_switch_check_surface(action).get("tooltip_text", "")),
+	])
+
 func _rebuild_town_actions() -> void:
-	for child in _town_actions.get_children():
-		child.queue_free()
+	var retained: Array = []
 	var displayed_town_count := 0
 	for value in _session.overworld.get("towns", []):
 		if not (value is Dictionary) or String(value.get("owner", "neutral")) != "player":
@@ -4657,8 +4729,12 @@ func _rebuild_town_actions() -> void:
 		var town: Dictionary = value
 		var town_data := ContentService.get_town(String(town.get("town_id", "")))
 		var town_name := String(town_data.get("name", town.get("placement_id", "Town"))).strip_edges()
-		var button := Button.new()
 		var placement_id := String(town.get("placement_id", ""))
+		var button := _existing_roster_button(_town_actions, "town_placement_id", placement_id)
+		if button == null:
+			button = Button.new()
+			button.pressed.connect(_on_town_roster_pressed.bind(placement_id))
+			_town_actions.add_child(button)
 		var entrance := LevelRules.town_entrance(town)
 		var town_tile := Vector2i(int(entrance.x), int(entrance.y))
 		var level := LevelRules.level_of(town)
@@ -4684,10 +4760,17 @@ func _rebuild_town_actions() -> void:
 		button.set_meta("x", town_tile.x)
 		button.set_meta("y", town_tile.y)
 		button.set_meta("level", level)
-		button.pressed.connect(_on_town_rail_pressed.bind(town_tile.x, town_tile.y, level))
-		_town_actions.add_child(button)
+		retained.append(button)
 		displayed_town_count += 1
+	_reconcile_roster_buttons(_town_actions, retained)
 	_town_roster_title_label.text = "Towns  %d" % displayed_town_count
+
+func _on_town_roster_pressed(placement_id: String) -> void:
+	for town in _session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("placement_id", "")) == placement_id and String(town.get("owner", "")) == "player":
+			var entrance := LevelRules.town_entrance(town)
+			_on_town_rail_pressed(int(entrance.x), int(entrance.y), LevelRules.level_of(town))
+			return
 
 func _style_roster_icon_button(button: Button, role: String) -> void:
 	FrontierVisualKit.apply_button(button, role, 86.0, 66.0, 11)
