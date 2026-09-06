@@ -16621,10 +16621,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "quality-generated-full-match-playthrough-20260906",
   "currentSliceId": "quality-generated-full-match-playthrough-20260906",
-  "currentSliceNotes": "Validated scripted reward checkpoint: whole-manifest seven-slot admission and bounded source-owned earned-grant retention, fixed original hero/town/controller, once-only other effects and exact save/resume. 40 focused checks, 63 player and 55 AI controls, 95-check Medium/Large deterministic opening replays, affected campaign reports, 11 acceptance tests, repository and both-platform packages pass. No accepted complete matches yet; older overflow runs remain diagnostic only.",
+  "currentSliceNotes": "Medium09 and Large07 terminated on a reproduced battle-exit driver timing defect, not terminal outcomes. Real animated/ordinary/unavailable route controls now pass without changing production battle behavior. Next execution: fresh Medium10 and Large08 with fixed driver and validated Town overlay code; no unmatched autosave continuation or accepted complete-match claim.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Complete Generated Matches And Correctness",
-  "currentSliceUpdatedAt": "2026-09-06T17:25:24Z",
+  "currentSliceUpdatedAt": "2026-09-06T18:00:23Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21931,81 +21931,88 @@
   },
   "guardrailNote": "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification.",
   "lastValidation": {
-    "id": "quality-scripted-earned-reinforcements-20260906",
-    "sliceId": "quality-generated-full-match-playthrough-20260906",
-    "title": "Capacity-safe scripted earned-reinforcement retention",
+    "id": "quality-town-overlay-and-match-handoff-20260906",
+    "sliceId": "ux-generated-full-match-presentation-20260906",
+    "title": "Town overlay ownership and real battle handoff validation",
     "status": "in_progress",
-    "scope": "validated_scripted_reward_checkpoint_not_complete_matches",
-    "validatedAt": "2026-09-06T17:25:24Z",
+    "scope": "validated_ui_checkpoint_not_complete_presentation_or_matches",
+    "validatedAt": "2026-09-06T18:00:23Z",
     "artifacts": [
       "docs/generated-full-match-quality-report.md",
       "docs/generated-full-match-quality-requirements.md",
-      "tests/scripted_reinforcement_retention_regression.py",
-      ".artifacts/generated_full_match_quality_20260906/scripted_reward_before_02/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_reward_verified_01/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_player_capacity_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_ai_capacity_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_generated_medium_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_generated_large_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_linux_verified_serial/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_windows_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_linux_entry_verified/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_acceptance_verified.log",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_validate_verified.log",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_validate_handoff.log",
-      ".artifacts/full_play_runtime_20260905/scripted_rewards_campaigns_verified/report.json"
+      "tests/town_overlay_ownership_regression.py",
+      "tests/generated_full_match_route_regression.py",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_before_720_02/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_final_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/match_route_town_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_linux_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_windows_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_linux_entry_verified/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_acceptance.log",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_validate_02.log",
+      ".artifacts/full_play_runtime_20260905/town_overlay_domains_final/report.json",
+      ".artifacts/full_play_runtime_20260905/town_overlay_muster_verified/report.json"
     ],
-    "result": "Validated scripted reward checkpoint: whole-manifest seven-slot admission and bounded source-owned earned-grant retention, fixed original hero/town/controller, once-only other effects and exact save/resume. 40 focused checks, 63 player and 55 AI controls, 95-check Medium/Large deterministic opening replays, affected campaign reports, 11 acceptance tests, repository and both-platform packages pass. No accepted complete matches yet; older overflow runs remain diagnostic only.",
-    "remainingWork": "Complete fresh legal Medium/Large matches with full capacity history, real terminal outcomes and exact mid-match/terminal save-resume; finish selected measured responsiveness and presentation acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
+    "result": "Validated Town overlay checkpoint: no stray district numbers or duplicated scenic heading; existing Log retains counts and standalone previews retain geometry. 64 checks at each resolution, inspected images, 18 hotspot cases/five dialogs, transfer and 42 real Muster tier controls, eleven Python checks, repository and Linux/Windows exports/startup/generated Town entry pass (248450632-byte PCKs). Battle-exit driver timing controls pass; Medium09/Large07 are failed diagnostic runs, not terminal outcomes. Full-match and broader presentation acceptance remain open.",
+    "remainingWork": [
+      "Fresh legitimate Medium10/Large08 terminal matches, conquest and mid-match/terminal save-resume",
+      "Building/base-art integration, truncated command labels and Overworld save footer",
+      "Complete-match responsiveness and final dual-resolution presentation acceptance",
+      "Native Windows hardware certification remains unavailable; current runtime evidence uses Wine"
+    ]
   },
   "latestEvidence": {
-    "id": "quality-scripted-earned-reinforcements-20260906",
-    "sliceId": "quality-generated-full-match-playthrough-20260906",
-    "title": "Capacity-safe scripted earned-reinforcement retention",
+    "id": "quality-town-overlay-and-match-handoff-20260906",
+    "sliceId": "ux-generated-full-match-presentation-20260906",
+    "title": "Town overlay ownership and real battle handoff validation",
     "status": "in_progress",
-    "scope": "validated_scripted_reward_checkpoint_not_complete_matches",
-    "validatedAt": "2026-09-06T17:25:24Z",
+    "scope": "validated_ui_checkpoint_not_complete_presentation_or_matches",
+    "validatedAt": "2026-09-06T18:00:23Z",
     "artifacts": [
       "docs/generated-full-match-quality-report.md",
       "docs/generated-full-match-quality-requirements.md",
-      "tests/scripted_reinforcement_retention_regression.py",
-      ".artifacts/generated_full_match_quality_20260906/scripted_reward_before_02/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_reward_verified_01/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_player_capacity_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_ai_capacity_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_generated_medium_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_generated_large_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_linux_verified_serial/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_windows_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_linux_entry_verified/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_acceptance_verified.log",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_validate_verified.log",
-      ".artifacts/generated_full_match_quality_20260906/scripted_rewards_validate_handoff.log",
-      ".artifacts/full_play_runtime_20260905/scripted_rewards_campaigns_verified/report.json"
+      "tests/town_overlay_ownership_regression.py",
+      "tests/generated_full_match_route_regression.py",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_before_720_02/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_final_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/match_route_town_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_linux_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_windows_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_linux_entry_verified/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_acceptance.log",
+      ".artifacts/generated_full_match_quality_20260906/town_overlay_validate_02.log",
+      ".artifacts/full_play_runtime_20260905/town_overlay_domains_final/report.json",
+      ".artifacts/full_play_runtime_20260905/town_overlay_muster_verified/report.json"
     ],
-    "result": "Validated scripted reward checkpoint: whole-manifest seven-slot admission and bounded source-owned earned-grant retention, fixed original hero/town/controller, once-only other effects and exact save/resume. 40 focused checks, 63 player and 55 AI controls, 95-check Medium/Large deterministic opening replays, affected campaign reports, 11 acceptance tests, repository and both-platform packages pass. No accepted complete matches yet; older overflow runs remain diagnostic only.",
-    "remainingWork": "Complete fresh legal Medium/Large matches with full capacity history, real terminal outcomes and exact mid-match/terminal save-resume; finish selected measured responsiveness and presentation acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
+    "result": "Validated Town overlay checkpoint: no stray district numbers or duplicated scenic heading; existing Log retains counts and standalone previews retain geometry. 64 checks at each resolution, inspected images, 18 hotspot cases/five dialogs, transfer and 42 real Muster tier controls, eleven Python checks, repository and Linux/Windows exports/startup/generated Town entry pass (248450632-byte PCKs). Battle-exit driver timing controls pass; Medium09/Large07 are failed diagnostic runs, not terminal outcomes. Full-match and broader presentation acceptance remain open.",
+    "remainingWork": [
+      "Fresh legitimate Medium10/Large08 terminal matches, conquest and mid-match/terminal save-resume",
+      "Building/base-art integration, truncated command labels and Overworld save footer",
+      "Complete-match responsiveness and final dual-resolution presentation acceptance",
+      "Native Windows hardware certification remains unavailable; current runtime evidence uses Wine"
+    ]
   },
   "latestEvidenceArtifacts": [
     "docs/generated-full-match-quality-report.md",
     "docs/generated-full-match-quality-requirements.md",
-    "tests/scripted_reinforcement_retention_regression.py",
-    ".artifacts/generated_full_match_quality_20260906/scripted_reward_before_02/report.json",
-    ".artifacts/generated_full_match_quality_20260906/scripted_reward_verified_01/report.json",
-    ".artifacts/generated_full_match_quality_20260906/scripted_rewards_player_capacity_verified/report.json",
-    ".artifacts/generated_full_match_quality_20260906/scripted_rewards_ai_capacity_verified/report.json",
-    ".artifacts/generated_full_match_quality_20260906/scripted_rewards_generated_medium_verified/report.json",
-    ".artifacts/generated_full_match_quality_20260906/scripted_rewards_generated_large_verified/report.json",
-    ".artifacts/generated_full_match_quality_20260906/scripted_rewards_linux_verified_serial/report.json",
-    ".artifacts/generated_full_match_quality_20260906/scripted_rewards_windows_verified/report.json",
-    ".artifacts/generated_full_match_quality_20260906/scripted_rewards_linux_entry_verified/live_validation_report.json",
-    ".artifacts/generated_full_match_quality_20260906/scripted_rewards_acceptance_verified.log",
-    ".artifacts/generated_full_match_quality_20260906/scripted_rewards_validate_verified.log",
-    ".artifacts/generated_full_match_quality_20260906/scripted_rewards_validate_handoff.log",
-    ".artifacts/full_play_runtime_20260905/scripted_rewards_campaigns_verified/report.json"
+    "tests/town_overlay_ownership_regression.py",
+    "tests/generated_full_match_route_regression.py",
+    ".artifacts/generated_full_match_quality_20260906/town_overlay_before_720_02/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_overlay_final_720/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_overlay_final_1080/report.json",
+    ".artifacts/generated_full_match_quality_20260906/match_route_town_final/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_overlay_linux_verified/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_overlay_windows_verified/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_overlay_linux_entry_verified/live_validation_report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_overlay_acceptance.log",
+    ".artifacts/generated_full_match_quality_20260906/town_overlay_validate_02.log",
+    ".artifacts/full_play_runtime_20260905/town_overlay_domains_final/report.json",
+    ".artifacts/full_play_runtime_20260905/town_overlay_muster_verified/report.json"
   ],
-  "latestEvidenceId": "quality-scripted-earned-reinforcements-20260906",
-  "latestFinding": "Validated scripted reward checkpoint: whole-manifest seven-slot admission and bounded source-owned earned-grant retention, fixed original hero/town/controller, once-only other effects and exact save/resume. 40 focused checks, 63 player and 55 AI controls, 95-check Medium/Large deterministic opening replays, affected campaign reports, 11 acceptance tests, repository and both-platform packages pass. No accepted complete matches yet; older overflow runs remain diagnostic only.",
+  "latestEvidenceId": "quality-town-overlay-and-match-handoff-20260906",
+  "latestFinding": "Validated Town overlay checkpoint: no stray district numbers or duplicated scenic heading; existing Log retains counts and standalone previews retain geometry. 64 checks at each resolution, inspected images, 18 hotspot cases/five dialogs, transfer and 42 real Muster tier controls, eleven Python checks, repository and Linux/Windows exports/startup/generated Town entry pass (248450632-byte PCKs). Battle-exit driver timing controls pass; Medium09/Large07 are failed diagnostic runs, not terminal outcomes. Full-match and broader presentation acceptance remain open.",
   "metrics": {
     "audit_only": false,
     "runtime_behavior_changed": true,
@@ -22096,9 +22103,9 @@
         "Complete Medium/Large matches, measured full-action improvements and inspected presentation corrections",
         "Focused/repository/platform validation and coherent commit/push; hardware limits explicit"
       ],
-      "updatedAt": "2026-09-06T17:25:24Z",
+      "updatedAt": "2026-09-06T18:00:23Z",
       "startedAt": "2026-09-06T12:03:26Z",
-      "notes": "Validated scripted reward checkpoint: whole-manifest seven-slot admission and bounded source-owned earned-grant retention, fixed original hero/town/controller, once-only other effects and exact save/resume. 40 focused checks, 63 player and 55 AI controls, 95-check Medium/Large deterministic opening replays, affected campaign reports, 11 acceptance tests, repository and both-platform packages pass. No accepted complete matches yet; older overflow runs remain diagnostic only.",
+      "notes": "Validated Town overlay checkpoint: no stray district numbers or duplicated scenic heading; existing Log retains counts and standalone previews retain geometry. 64 checks at each resolution, inspected images, 18 hotspot cases/five dialogs, transfer and 42 real Muster tier controls, eleven Python checks, repository and Linux/Windows exports/startup/generated Town entry pass (248450632-byte PCKs). Battle-exit driver timing controls pass; Medium09/Large07 are failed diagnostic runs, not terminal outcomes. Full-match and broader presentation acceptance remain open.",
       "remainingWork": "Complete fresh legal Medium/Large matches with full capacity history, real terminal outcomes and exact mid-match/terminal save-resume; finish selected measured responsiveness and presentation acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
     },
     {
@@ -22136,7 +22143,8 @@
         "python3 tests/ai_army_capacity_regression.py --label <fresh> --generated-case large",
         "python3 tests/full_play_validation_suite.py --label <fresh> --only ai_town_defense_retask_report ai_planned_task_recruitment_prep_report ai_raid_assault_grouping_report ai_hero_task_live_turn_execution_report ai_known_world_memory_report",
         "python3 tests/scripted_reinforcement_retention_regression.py --label <fresh>",
-        "python3 tests/full_play_validation_suite.py --label <fresh> --scripted-rewards --accessibility disabled"
+        "python3 tests/full_play_validation_suite.py --label <fresh> --scripted-rewards --accessibility disabled",
+        "python3 tests/generated_full_match_route_regression.py --label <fresh>"
       ],
       "id": "quality-generated-full-match-playthrough-20260906",
       "title": "Complete Generated Matches And Correctness",
@@ -22166,16 +22174,17 @@
         "tests/test_generated_full_match_quality.py: historical capacity acceptance",
         "tests/ai_army_capacity_regression.py",
         "tests/scripted_reinforcement_retention_regression.py",
-        "tests/validate_repo.py: scripted reinforcement admission/retention authority assertions only"
+        "tests/validate_repo.py: scripted reinforcement admission/retention authority assertions only",
+        "tests/generated_full_match_route_regression.py: real battle handoff driver timing"
       ],
       "completionCriteria": [
         "Complete legitimate Medium/Large matches, including one conquest",
         "Normal gameplay, mid-match/terminal saves and actual outcomes",
         "Fix reproduced blocking runtime defects with regressions; driver-only progress is not gameplay completion"
       ],
-      "updatedAt": "2026-09-06T17:25:24Z",
+      "updatedAt": "2026-09-06T17:59:34Z",
       "startedAt": "2026-09-06T12:03:26Z",
-      "notes": "Validated scripted reward checkpoint: whole-manifest seven-slot admission and bounded source-owned earned-grant retention, fixed original hero/town/controller, once-only other effects and exact save/resume. 40 focused checks, 63 player and 55 AI controls, 95-check Medium/Large deterministic opening replays, affected campaign reports, 11 acceptance tests, repository and both-platform packages pass. No accepted complete matches yet; older overflow runs remain diagnostic only.",
+      "notes": "Medium09 and Large07 terminated on a reproduced battle-exit driver timing defect, not terminal outcomes. Real animated/ordinary/unavailable route controls now pass without changing production battle behavior. Next execution: fresh Medium10 and Large08 with fixed driver and validated Town overlay code; no unmatched autosave continuation or accepted complete-match claim.",
       "remainingWork": "Complete fresh legal Medium/Large matches with full capacity history, real terminal outcomes and exact mid-match/terminal save-resume; finish selected measured responsiveness and presentation acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
     },
     {
@@ -22230,7 +22239,7 @@
       ],
       "updatedAt": "2026-09-06T14:28:59Z",
       "startedAt": "2026-09-06T13:44:06Z",
-      "notes": "Validated responsiveness checkpoint: actual rendered Large Town recruitment waiting 46.9% lower (headless repeat 49.6%); complete real End Turns 23.0% and 24.2% lower on the same recorded Day-20 save, with exact four-state controls. Town read scopes and exact AI support-radius projection preserve rules, scoring, recaps, autosaves and save v9. Six-faction scope checks, 289 AI radius/candidate checks, nine Town feedback reports plus final artifact rerun, five AI reports, repository and Linux/Windows startup/generated Town packages pass. Medium Day 54 failed the no-progress diagnostic; Large continues. Full matches and presentation remain incomplete; prior four gameplay fixes and unrelated legacy failures retain their separate evidence.",
+      "notes": "Validated responsiveness checkpoint: actual rendered Large Town recruitment waiting 46.9% lower (headless repeat 49.6%); complete real End Turns 23.0% and 24.2% lower on the same recorded Day-20 save, with exact four-state controls. Town read scopes and exact AI support-radius projection preserve rules, scoring, recaps, autosaves and save v9. Six-faction scope checks, 289 AI radius/candidate checks, nine Town feedback reports plus final artifact rerun, five AI reports, repository and Linux/Windows startup/generated Town packages pass. Prior Medium Day 54 failed the no-progress diagnostic; older runs do not establish accepted terminal coverage. Full matches and presentation remain incomplete; prior four gameplay fixes and unrelated legacy failures retain their separate evidence.",
       "validation": {
         "id": "performance-generated-full-match-orders-radius-20260906",
         "sliceId": "performance-generated-full-match-actions-20260906",
@@ -22265,7 +22274,7 @@
       }
     },
     {
-      "status": "pending",
+      "status": "in_progress",
       "phase": "phase-6-production-alpha-layer",
       "source": "PLAN.md",
       "sourceDocs": [
@@ -22285,7 +22294,9 @@
         "python3 tests/validate_repo.py",
         "git diff --check",
         "python3 tests/packaging_linux_export_smoke.py",
-        "python3 tests/packaging_windows_export_smoke.py"
+        "python3 tests/packaging_windows_export_smoke.py",
+        "python3 tests/town_overlay_ownership_regression.py --label <fresh> --save <generated-opening-save> --resolution <1280x720|1920x1080>",
+        "python3 tests/full_play_validation_suite.py --label <fresh> --rendered --accessibility disabled --only town_screen_layout_and_dialog_controls_report hero_field_rendezvous_army_transfer_report town_recruitment_ui_surface_report"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -22295,13 +22306,19 @@
         "scenes/town/TownShell.gd",
         "scenes/town/TownStageView.gd",
         "scenes/overworld/OverworldShell.gd",
-        "tests"
+        "tests",
+        "tests/town_overlay_ownership_regression.py: actual generated Town overlay/build/save controls",
+        "tests/validate_repo.py: conditional standalone overlay geometry and Log ownership",
+        "tests/full_play_validation_suite.py: open the actual Muster dialog before existing surface assertions"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
-      ]
+      ],
+      "updatedAt": "2026-09-06T17:59:33Z",
+      "startedAt": "2026-09-06T17:43:52Z",
+      "notes": "Validated Town overlay checkpoint: district numbers and duplicate header no longer paint behind shell controls; original summaries remain in Log and standalone previews. 64 checks per resolution, inspected captures, dialog/hotspot and transfer reports, 42 real Muster tier controls, repository and both-platform packages pass. Floating building integration, truncated command text and Overworld save footer remain unfinished."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111068,7 +111085,7 @@
   ],
   "summary": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "taskId": "10236",
-  "updatedAt": "2026-09-06T17:25:24Z",
+  "updatedAt": "2026-09-06T18:00:23Z",
   "validation": {
     "id": "quality-generated-ai-army-capacity-20260906",
     "sliceId": "quality-generated-full-match-playthrough-20260906",

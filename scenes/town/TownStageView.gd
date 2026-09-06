@@ -359,10 +359,10 @@ func _draw() -> void:
 		_draw_scenic_ambient_light(scene_rect)
 		_draw_integrated_buildings(scene_rect)
 	_draw_status_plaques(scene_rect)
-	_draw_district_strip(scene_rect)
 	if not _external_command_overlay:
+		_draw_district_strip(scene_rect)
 		_draw_command_markers(scene_rect)
-	_draw_header(scene_rect)
+		_draw_header(scene_rect)
 	_draw_town_action_presentation(scene_rect)
 
 func present_town_action(presentation: Dictionary) -> Dictionary:
@@ -1859,9 +1859,10 @@ func validation_scenic_overlay_summary() -> Dictionary:
 	var status_payloads := _status_plaque_payloads()
 	var status_rects := _status_plaque_rects(scene_rect, status_payloads.size())
 	var district_payloads := _district_strip_payloads()
-	var district_strip_rect := _district_strip_rect(scene_rect)
-	var district_rects := _district_card_rects(district_strip_rect, district_payloads.size())
-	var contained := scene_rect.encloses(district_strip_rect)
+	var district_visible := not _external_command_overlay
+	var district_strip_rect := _district_strip_rect(scene_rect) if district_visible else Rect2()
+	var district_rects := _district_card_rects(district_strip_rect, district_payloads.size()) if district_visible else []
+	var contained := not district_visible or scene_rect.encloses(district_strip_rect)
 	var status_district_nonoverlap := true
 	for rect_value in status_rects:
 		if not (rect_value is Rect2) or not scene_rect.encloses(rect_value):
@@ -1884,6 +1885,7 @@ func validation_scenic_overlay_summary() -> Dictionary:
 		"status_rects": status_rects.duplicate(true),
 		"status_count": status_payloads.size(),
 		"district_payloads": district_payloads.duplicate(true),
+		"district_strip_visible": district_visible,
 		"district_strip_rect": district_strip_rect,
 		"district_rects": district_rects.duplicate(true),
 		"district_count": district_payloads.size(),
@@ -1950,6 +1952,14 @@ func validation_command_watch_summary() -> Dictionary:
 		"payload_authority": "existing_town_command_marker_calculations",
 	}
 
+func settlement_summary_text() -> String:
+	# TownShell owns the header/footer. Keep the standalone stage summaries
+	# available in its existing Log dialog instead of painting behind controls.
+	var districts := []
+	for payload in _district_strip_payloads():
+		districts.append("%s %d" % [String(payload.get("label", "")), int(payload.get("value", 0))])
+	return "%s\nDistricts: %s" % [_header_action_count_text(), " | ".join(districts)]
+
 func validation_header_action_count_summary() -> Dictionary:
 	var scene_rect := _town_scene_rect()
 	var max_width := maxf(0.0, scene_rect.size.x - 36.0)
@@ -1959,6 +1969,7 @@ func validation_header_action_count_summary() -> Dictionary:
 	var rendered_text := _fit_stage_header_text(full_text, max_width, 13)
 	var font = get_theme_default_font()
 	return {
+		"visible": not _external_command_overlay,
 		"title_full_text": title_full_text,
 		"title_rendered_text": title_rendered_text,
 		"title_full_width": font.get_string_size(title_full_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 20).x if font != null else 0.0,

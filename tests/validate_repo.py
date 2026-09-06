@@ -33240,12 +33240,19 @@ def validate_town_scenic_overlay_glass_integration(errors: list[str]) -> None:
         "var status_payloads := _status_plaque_payloads()",
         "var status_rects := _status_plaque_rects(scene_rect, status_payloads.size())",
         "var district_payloads := _district_strip_payloads()",
-        "var district_strip_rect := _district_strip_rect(scene_rect)",
-        "var district_rects := _district_card_rects(district_strip_rect, district_payloads.size())",
-        "var contained := scene_rect.encloses(district_strip_rect)",
+        "var district_visible := not _external_command_overlay",
+        "var district_strip_rect := _district_strip_rect(scene_rect) if district_visible else Rect2()",
+        "var district_rects := _district_card_rects(district_strip_rect, district_payloads.size()) if district_visible else []",
+        "var contained := not district_visible or scene_rect.encloses(district_strip_rect)",
         "return {",
     ))
     ensure(all(index >= 0 for index in summary_order) and list(summary_order) == sorted(summary_order), errors, "Town scenic-overlay summary must consume the exact production payload and geometry builders in order")
+    draw_body = gdscript_function_block(stage_text, "_draw")
+    ensure('if not _external_command_overlay:\n\t\t_draw_district_strip(scene_rect)\n\t\t_draw_command_markers(scene_rect)\n\t\t_draw_header(scene_rect)' in draw_body, errors, "TownShell must own its scenic header/footer without duplicate standalone overlays")
+    ensure('"district_strip_visible": district_visible' in summary_body, errors, "Town overlay observation must report actual district visibility")
+    summary_text = gdscript_function_block(stage_text, "settlement_summary_text")
+    ensure('_district_strip_payloads()' in summary_text and '_header_action_count_text()' in summary_text, errors, "Town Log summary must retain production district and garrison/action counts")
+    ensure('call("settlement_summary_text")' in gdscript_function_block(TOWN_SCRIPT_PATH.read_text(), "_open_town_catalog"), errors, "Town Log must expose the summaries removed from the scenic surface")
     for forbidden_token in ("await ", "Timer", "queue_redraw", "set_town_state", "TownRules", "OverworldRules", "session.", "sort(", "erase("):
         ensure(forbidden_token not in summary_body, errors, f"Town scenic-overlay summary must remain detached observation only: {forbidden_token}")
 

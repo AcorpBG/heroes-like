@@ -28,7 +28,7 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 - Completed prior goal: `bugfix-rmg-audit-corrections-20260905`; all six corrective/integrated children satisfy the audited requirements within their documented sample/configuration limits, not full H3MapEd or release parity.
 - Baseline audit: `audit-rmg-start-placement-and-h3maped-comparison-20260905`; 36 runtime requests, 83 generated starts, 23/24 exact retained owner payloads, fresh executable/private-state water mismatch, and confirmed start/level/opponent/transit adoption gaps. Audit evidence is not runtime fixes or parity completion.
 - Most recently completed slice: `bugfix-rmg-audit-integrated-regressions-20260905`: current authored-pool expectations, permanent water/entrance/private-state coverage and reusable 18-report RMG suite. All 18 runtime reports, 26 Python tests, 85 exact starts/36 supported live cases, player/team/cave/Islands checks, repository and both-platform packages pass. Evidence and limits: `docs/rmg-audit-integrated-correction-report.md`.
-- Current package boundary: Linux and Windows release exports both measure 248450520 bytes, 1549480 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+- Current package boundary: Linux and Windows release exports both measure 248450632 bytes, 1549368 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
 
 ## Generated Full-Match Quality
 
@@ -58,6 +58,8 @@ Scripted-reward checkpoint: `ScenarioScriptRules` retains blocked army/garrison 
 
 Completion: both sizes reach a legitimate recorded terminal outcome, real mid-match and terminal save/resume pass, at least one run exercises conquest rather than deliberate surrender/suicide, and demonstrated blocking runtime defects are corrected with focused regressions. Timeouts, driver deadlocks, early disposable defeats and harness-only progress do not establish complete-match quality. Commands: `python3 tests/generated_full_match_quality.py --case medium --label <fresh>`, the corresponding `--case large` run, focused new Python/runtime tests, `python3 tests/validate_repo.py`, `git diff --check`, both platform export smokes and packaged generated-entry flows. Source requirements and forbidden scope: parent requirements above.
 
+Validated driver repair: Medium09 and Large07 stopped during battle-exit presentation because the driver reissued Quick Resolve after six frames, before the authoritative exit handoff finished. `tests/generated_full_match_route_regression.py` reproduces that timing error through the real BattleShell handoff/report and passes animated, ordinary Quick Resolve and genuine-unavailable controls after the wait correction. Animation, autosave, casualty acknowledgement and failure detection remain intact; no production battle code changed. This support repair is not a gameplay fix or completed match. Next: fresh Medium10 and Large08, not acceptance of diagnostic prefixes or unmatched autosave continuation.
+
 ### Full-Match Responsiveness
 
 id: `performance-generated-full-match-actions-20260906`
@@ -70,9 +72,15 @@ Targets: isolate `TownShell` recruitment/order preflight and repeated consequenc
 
 id: `ux-generated-full-match-presentation-20260906`
 
-Status: pending. Child of `quality-generated-full-match-20260906`.
+Status: in_progress 2026-09-06. Child of `quality-generated-full-match-20260906`.
 
 Targets: `TownShell`, `TownStageView` and Overworld footer/command layout. Reproduce the reported stray Town resource numbers, crowded footers and building/base-art integration defects on current code; correct demonstrated composition/routing issues using existing original assets. Completion: early/developed Town and active Overworld captures inspected at 1280x720 and 1920x1080, no selected clipping/stray-label regressions, preserved five dialogs/build hotspots/input/save behavior, and focused Town/Overworld/repository/platform checks. Art replacement or gameplay changes require separately specified owner scope, not visual approximations.
+
+Selected Town overlay correction: the stray footer numbers are the standalone stage's district-count strip underneath navigation. Suppress the stage-owned strip and duplicate title when TownShell owns external overlays; retain their information in the existing Log dialog and keep standalone previews unchanged. Add `tests/town_overlay_ownership_regression.py` with actual generated opening saves, both resolutions, normal build/save controls and inspected captures, plus the existing dialog/hotspot suite. No asset replacement, plot/layout-manifest edits, gameplay rules or save-schema changes in this correction; broader building integration and Overworld footer acceptance remain unfinished.
+
+Validated overlay checkpoint: 64 actual generated Town checks pass at each supported resolution, including standalone geometry, normal construction, read-only Log and complete save/resume. Final captures were inspected. Existing dialog/hotspot and field-transfer reports, all 42 real Muster tier controls, repository validation and serial Linux/Windows exports/startup/generated Town entry pass. Source-backed evidence and remaining floating-building/command-label/Overworld footer defects: `docs/generated-full-match-quality-report.md`. Keep this child in progress until its broader visual acceptance is real.
+
+Validation compatibility: update `tests/validate_repo.py` to require the actual conditional overlay geometry/ownership. The Python-owned `tests/full_play_validation_suite.py` must open the real Muster dialog before the existing recruitment-surface report snapshots buttons; its closed-modal synthetic action labels are not visible UI. Keep the original tier, affordability, portrait and tooltip assertions unchanged and verify the modal is visible. This supporting repair does not change recruitment behavior.
 
 ## RMG Audit Corrections
 
