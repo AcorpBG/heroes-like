@@ -1,4 +1,4 @@
-# Generated full-match quality: first corrections
+# Generated full-match quality: gameplay corrections
 
 2026-09-06. Active Phase 6 parent `quality-generated-full-match-20260906`,
 current child `quality-generated-full-match-playthrough-20260906`. Requirements:
@@ -7,13 +7,14 @@ checkpoint, **not completion of the child, full matches, or release readiness**.
 
 ## Gameplay corrections
 
-Three failures were reproduced before their production fixes:
+Four failures were reproduced before their production fixes:
 
 | Failure | Runtime owner and correction | Live proof |
 | --- | --- | --- |
 | Visit Town disappeared after selecting the current town in the roster; arriving at a guard left a disabled Select Site button | `OverworldShell._refresh_selected_route_action_surface` now uses authoritative current-tile actions when there is an interaction, retaining the compact destination path elsewhere | Roster selection keeps Visit Town; walking to the guard offers Enter Battle; repeated refresh preserves it; actual Town/Battle scenes open |
 | A defeated cache guard did not unlock its reward | `OverworldRules._resource_site_guard_targets_node` now treats an explicit placement ID as authoritative, without falling through to the shared site-type ID | The actual guard loses through shipped Quick Resolve, the casualty report continues, and the cache can be claimed while other caches' guards remain unresolved; legacy type-only links still work |
 | Owned hero/town navigation disappeared after leaving Town | The compact generated Town-return refresh now initializes the hero/town action phase on the newly instantiated shell | The return immediately contains one owned hero and one owned town with focusable controls |
+| A collected, invisible cache trapped the hero at a waypost | `OverworldRules.resource_node_is_present` now owns consumed-site presence for collision, context, route interactions and map/selection indexes | A normal two-day visit collects the cache once, visits the waypost, backtracks and restores the exact save; permanent, repeatable, transit and overlapping scenery bodies remain |
 
 Exact generated reproduction: Medium, seed `10`, two players, normal difficulty,
 Embercourt/default Lyra. Town `native_h3maped_93c0f05a_object_0950` has its native
@@ -23,6 +24,13 @@ source cache/guard at (41,41). The guard is
 Before the guard-link fix, unresolved guards for towns 0951–0956 also matched
 that cache because they share `site_generated_town_required_source_cache`.
 
+The fourth defect explains the actual Day-21 Medium stall at (50,48): Waystone
+Cache `native_h3maped_93c0f05a_object_1055` at (49,49), collected on Day 6, was no
+longer rendered/actionable but its original `package_block_tiles` still entered
+the occupancy index. This was the only exit from Reed-Knot Waypost 1054. The fix
+leaves source masks immutable and lets the existing before/after topology facts
+invalidate occupancy when a pickup is consumed; it does not erase other bodies.
+
 No generator, masks, placement, balance, battle RNG, resources, art or save-schema
 changes were used to correct these defects. The focused run uses ordinary
 starting forces and real scene actions, not forced combat outcomes.
@@ -30,6 +38,41 @@ starting forces and real scene actions, not forced combat outcomes.
 ## Fresh validation
 
 Evidence root: `.artifacts/generated_full_match_quality_20260906/`.
+
+Latest consumed-site checkpoint (after the first three fixes in `74492703`):
+
+- `stall_diagnosis_01` restores the real stalled Day-21 save; `consumed_before`
+  reproduces invisible collision and failed backtracking through normal play.
+- `consumed_overlap_final`: **25/25 checks pass**, zero engine errors, actual
+  generated opening and collection/save/backtrack flow. Explicit isolated unit
+  controls preserve overlapping scenery, repeatable services and native transit;
+  they are not mutations of the live match. Terrain/source masks remain equal.
+- `consumed_exact_720` and `consumed_exact_1080`: **20/20 checks pass** in each
+  rendered run. Both final screenshots were visually inspected. They replay the
+  unmodified recorded Day-1 opening (SHA256
+  `f0112262145c2494fdd2031103e3ea8f89fc4490629bdf044ad753a4badd3251`). The later
+  headless test adds the pure lifecycle/overlap controls. No art was replaced.
+- `presence_arrival_recheck`: all previous **23 gameplay checks pass** again.
+  Nine Python acceptance/checkpoint tests pass. Resuming requires a recorded
+  matching normal setup/checkpoint, error-free action prefix and exact full
+  serialized gameplay restoration; no future actions count toward coverage.
+- `presence_domain_regressions`: interaction-confirmation optimization passes.
+  Three unchanged older reports fail: object occupancy expects a 10-cell/15-cell
+  sawmill while current uncollected authored content has a 6-cell/6-cell mask;
+  six-repeatable-services has old Ninefold counts and recovery assertions; the
+  profile-log test expects a skipped recap while the current path builds one.
+  These failures are retained, not suppressed or presented as passing. The
+  focused new live and lifecycle checks pass; the whole legacy suite is not green.
+- `presence_validate_repo_verified.log`: repository validation passes. Its
+  presence contracts now check the shared helper and each caller, preserving
+  persistent/repeatable/transit checks instead of requiring duplicated source.
+- `presence_linux_export`, `presence_windows_export`, and
+  `presence_linux_generated`: exports/startup/generated-map/Town flows pass.
+  Both PCKs are **248439144 bytes**, below 250000000; Windows uses Wine.
+  `git diff --check` passes.
+
+Earlier three-fix checkpoint evidence (not a claim these entire batches were
+regenerated for the fourth fix):
 
 - `arrival_before`: reproducible missing town/guard primary actions.
 - `guard_identity_before`: real victory followed by a wrongly locked reward.
@@ -87,8 +130,32 @@ reached a real Day-5 defeat and terminal save/resume but failed acceptance becau
 it had neither a mid-match checkpoint nor recruitment coverage. **None is an
 accepted complete match.** Follow-up driver work recognizes owned-site waypoints,
 avoids re-reading signs/portal shuttling, and retains the same legal movement
-rules. The latest Medium run still stopped at (50,48), Day 21; further diagnosis
-must separate the driver's target policy from an actual legal-route defect.
+rules. The original Day-21 route defect is now diagnosed and fixed as described
+above.
+
+Subsequent legal continuations have moved beyond that area. `medium_match_07`
+reached Day 33 with three owned towns and a real growing army; `large_match_05`
+reached Day 15 after capturing enemy Mireclaw town 2169 and clearing guards. Both
+were still running at this checkpoint, **not accepted terminal matches**. Their
+prefixes include the actual opening, development, battles and save checkpoints.
+The driver now invests in available recruitment buildings, checks visible portal
+guards, targets legal guard-zone edges and backtracks through visited entrances.
+These are test-policy improvements, not production AI/balance fixes.
+
+Long-run orchestration can resume exact recorded End Turn autosaves and run under
+a detached Python supervisor with its own timeout. An execution-tool wrapper
+previously terminated while leaving its engine running; that exact task-owned
+engine was identified and stopped. Superseded partial runs remain failed/partial,
+not successful matches. The live supervisor PIDs and action logs are operational
+evidence only; terminal reports are still required.
+
+One concurrent fresh seed-10 setup failed package JSON loading and normal retry
+selected a different seed (`consumed_after_720`). The provenance records the
+failure and retry, not exact-seed success. Simultaneous same-name package writing
+is a suspected race, not a proven native-generation defect; no native tuning or
+retry change was made. Exact visual controls restore the recorded opening and
+serial fresh-generation controls independently pass. Package-write concurrency
+needs separate focused reproduction before any correction or determinism claim.
 
 Large observations include multi-second builds and roughly ten-second turns;
 some runs overlapped validation processes, so these are responsiveness warnings,

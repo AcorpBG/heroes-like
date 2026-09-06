@@ -16617,11 +16617,11 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Three reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards and owned roster after Town return. Focused dual-resolution, required content, repository and Linux/Windows package checks pass. Full-match coverage, controlled responsiveness gains and presentation corrections remain incomplete.",
+  "currentNotes": "Four reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards, owned roster after Town return and invisible consumed-resource collision. Latest 25-check lifecycle and 23-check arrival regressions, inspected dual-resolution captures, repository and Linux/Windows packages pass. Full terminal matches, controlled responsiveness gains and presentation corrections remain incomplete; retained legacy report failures are documented.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "quality-generated-full-match-playthrough-20260906",
   "currentSliceId": "quality-generated-full-match-playthrough-20260906",
-  "currentSliceNotes": "Three runtime fixes validated: current-tile town/guard actions, placement-scoped guard rewards and owned roster after Town return. 23 live checks pass at both resolutions, 26 required content smokes and repository/platform checks pass; complete Medium/Large outcomes still unproven. See docs/generated-full-match-quality-report.md.",
+  "currentSliceNotes": "Fourth gameplay defect corrected: collected invisible cache no longer retains collision; 25 focused checks and prior 23-check arrival flow pass, dual-resolution captures inspected, Linux/Windows packages pass at 248439144 bytes. Full Medium/Large terminal coverage still running; performance/presentation remain pending. See source-backed quality report and retained legacy test failures.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Complete Generated Matches And Correctness",
   "currentSliceUpdatedAt": "2026-09-06T12:55:42Z",
@@ -21931,69 +21931,64 @@
   },
   "guardrailNote": "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification.",
   "lastValidation": {
-    "id": "quality-generated-full-match-first-corrections-20260906",
+    "id": "quality-generated-full-match-consumed-site-20260906",
     "sliceId": "quality-generated-full-match-playthrough-20260906",
-    "title": "First full-match gameplay corrections",
+    "title": "Consumed-site lifecycle correction",
     "status": "in_progress",
-    "scope": "three_validated_gameplay_fixes_not_complete_match_or_goal_completion",
-    "validatedAt": "2026-09-06T12:55:42Z",
+    "scope": "four_gameplay_corrections_not_complete_match_or_goal_completion",
+    "validatedAt": "2026-09-06T13:40:17Z",
     "artifacts": [
       "docs/generated-full-match-quality-report.md",
-      ".artifacts/generated_full_match_quality_20260906/arrival_final_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/arrival_final_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/route_regressions/report.json",
-      ".artifacts/generated_full_match_quality_20260906/required_content_smokes_dbus/report.json",
-      ".artifacts/generated_full_match_quality_20260906/required_content_smokes_corrected/report.json",
-      ".artifacts/generated_full_match_quality_20260906/medium_match_03/report.json",
-      ".artifacts/generated_full_match_quality_20260906/large_match_02/report.json",
-      ".artifacts/generated_full_match_quality_20260906/linux_export/report.json",
-      ".artifacts/generated_full_match_quality_20260906/windows_export/report.json",
-      ".artifacts/generated_full_match_quality_20260906/linux_generated/live_validation_report.json"
+      ".artifacts/generated_full_match_quality_20260906/consumed_before/report.json",
+      ".artifacts/generated_full_match_quality_20260906/consumed_overlap_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/consumed_exact_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/consumed_exact_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_arrival_recheck/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_domain_regressions/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_validate_repo_verified.log",
+      ".artifacts/generated_full_match_quality_20260906/presence_linux_export/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_windows_export/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_linux_generated/live_validation_report.json"
     ],
-    "result": "Three reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards and owned roster after Town return. Focused dual-resolution, required content, repository and Linux/Windows package checks pass. Full-match coverage, controlled responsiveness gains and presentation corrections remain incomplete. The unchanged legacy Small guard-path report fails no_reachable_hostile_town. Medium attempts stall at Days 18/21; Large Day-5 defeat is rejected for missing development/recruitment coverage."
+    "result": "Four reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards, owned roster after Town return and invisible consumed-resource collision. Latest 25-check lifecycle and 23-check arrival regressions, inspected dual-resolution captures, repository and Linux/Windows packages pass. Full terminal matches, controlled responsiveness gains and presentation corrections remain incomplete; retained legacy report failures are documented."
   },
   "latestEvidence": {
-    "id": "bugfix-rmg-audit-integrated-regressions-20260905-validation",
-    "sliceId": "bugfix-rmg-audit-integrated-regressions-20260905",
-    "title": "RMG Integrated Correctness Regressions",
-    "status": "completed",
-    "scope": "six_audit_corrections_integrated_with_explicit_sample_limits_not_whole_rmg_or_release_certification",
-    "validatedAt": "2026-09-06T03:43:52Z",
+    "id": "quality-generated-full-match-consumed-site-20260906",
+    "sliceId": "quality-generated-full-match-playthrough-20260906",
+    "title": "Consumed-site lifecycle correction",
+    "status": "in_progress",
+    "scope": "four_gameplay_corrections_not_complete_match_or_goal_completion",
+    "validatedAt": "2026-09-06T13:40:17Z",
     "artifacts": [
-      "docs/rmg-audit-integrated-correction-report.md",
-      "docs/rmg-normal-water-correction-report.md",
-      ".artifacts/full_play_runtime_20260905/rmg_audit_integrated_complete/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_all_entrances/summary.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_players/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_caves/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_islands_journey_confirmed/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_water_same_run_private/summary.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_water_outer_private/summary.json",
-      ".artifacts/rmg_start_audit_20260905/water_source_flags_retained/summary.json",
-      ".artifacts/rmg_start_audit_20260905/water_final_rendered_1280/summary.json",
-      ".artifacts/rmg_start_audit_20260905/water_final_rendered_2048/summary.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_packages_linux/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_packages_windows/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_linux_generated/live_validation_report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_tools_repo.log"
+      "docs/generated-full-match-quality-report.md",
+      ".artifacts/generated_full_match_quality_20260906/consumed_before/report.json",
+      ".artifacts/generated_full_match_quality_20260906/consumed_overlap_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/consumed_exact_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/consumed_exact_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_arrival_recheck/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_domain_regressions/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_validate_repo_verified.log",
+      ".artifacts/generated_full_match_quality_20260906/presence_linux_export/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_windows_export/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_linux_generated/live_validation_report.json"
     ],
-    "result": "Corrected legacy authored-pool dwelling/validator expectations with exact identities and source masks, added permanent water/default matrix and strict private joins plus reusable --rmg suite. Final 18/18 runtime reports, 26 Python tests, 85 exact starts/36 supported live cases, three 32-check player/team cases, eight cave ends and six Islands journeys with real raid/save handoff pass. All six water grids/24 retained payloads exact; native code unchanged since validated water commit. Both final packages/generated Town flows pass at 248438264 bytes; screenshots inspected. Evidence: docs/rmg-audit-integrated-correction-report.md."
+    "result": "Four reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards, owned roster after Town return and invisible consumed-resource collision. Latest 25-check lifecycle and 23-check arrival regressions, inspected dual-resolution captures, repository and Linux/Windows packages pass. Full terminal matches, controlled responsiveness gains and presentation corrections remain incomplete; retained legacy report failures are documented."
   },
   "latestEvidenceArtifacts": [
     "docs/generated-full-match-quality-report.md",
-    ".artifacts/generated_full_match_quality_20260906/arrival_final_720/report.json",
-    ".artifacts/generated_full_match_quality_20260906/arrival_final_1080/report.json",
-    ".artifacts/generated_full_match_quality_20260906/route_regressions/report.json",
-    ".artifacts/generated_full_match_quality_20260906/required_content_smokes_dbus/report.json",
-    ".artifacts/generated_full_match_quality_20260906/required_content_smokes_corrected/report.json",
-    ".artifacts/generated_full_match_quality_20260906/medium_match_03/report.json",
-    ".artifacts/generated_full_match_quality_20260906/large_match_02/report.json",
-    ".artifacts/generated_full_match_quality_20260906/linux_export/report.json",
-    ".artifacts/generated_full_match_quality_20260906/windows_export/report.json",
-    ".artifacts/generated_full_match_quality_20260906/linux_generated/live_validation_report.json"
+    ".artifacts/generated_full_match_quality_20260906/consumed_before/report.json",
+    ".artifacts/generated_full_match_quality_20260906/consumed_overlap_final/report.json",
+    ".artifacts/generated_full_match_quality_20260906/consumed_exact_720/report.json",
+    ".artifacts/generated_full_match_quality_20260906/consumed_exact_1080/report.json",
+    ".artifacts/generated_full_match_quality_20260906/presence_arrival_recheck/report.json",
+    ".artifacts/generated_full_match_quality_20260906/presence_domain_regressions/report.json",
+    ".artifacts/generated_full_match_quality_20260906/presence_validate_repo_verified.log",
+    ".artifacts/generated_full_match_quality_20260906/presence_linux_export/report.json",
+    ".artifacts/generated_full_match_quality_20260906/presence_windows_export/report.json",
+    ".artifacts/generated_full_match_quality_20260906/presence_linux_generated/live_validation_report.json"
   ],
-  "latestEvidenceId": "quality-generated-full-match-first-corrections-20260906",
-  "latestFinding": "Three reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards and owned roster after Town return. Focused dual-resolution, required content, repository and Linux/Windows package checks pass. Full-match coverage, controlled responsiveness gains and presentation corrections remain incomplete.",
+  "latestEvidenceId": "quality-generated-full-match-consumed-site-20260906",
+  "latestFinding": "Four reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards, owned roster after Town return and invisible consumed-resource collision. Latest 25-check lifecycle and 23-check arrival regressions, inspected dual-resolution captures, repository and Linux/Windows packages pass. Full terminal matches, controlled responsiveness gains and presentation corrections remain incomplete; retained legacy report failures are documented.",
   "metrics": {
     "audit_only": false,
     "runtime_behavior_changed": true,
@@ -22001,19 +21996,21 @@
     "native_rmg_changed_in_current_slice": false,
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": true,
-    "runtime_defects_fixed": 3,
+    "runtime_defects_fixed": 4,
     "focused_live_checks_per_resolution": 23,
     "focused_rendered_resolutions": 2,
     "existing_route_regressions_passed": 5,
-    "unresolved_additional_legacy_reports": 1,
-    "python_tests_passed": 6,
+    "unresolved_additional_legacy_reports": 4,
+    "python_tests_passed": 9,
     "required_content_smokes_passed": 26,
     "accepted_complete_medium_matches": 0,
     "accepted_complete_large_matches": 0,
     "controlled_responsiveness_gain_proven": false,
-    "linux_pck_bytes": 248438632,
-    "windows_pck_bytes": 248438632,
-    "full_match_quality_goal_completed": false
+    "linux_pck_bytes": 248439144,
+    "windows_pck_bytes": 248439144,
+    "full_match_quality_goal_completed": false,
+    "consumed_site_focused_checks": 25,
+    "consumed_site_rendered_checks_per_resolution": 20
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification.",
@@ -22094,11 +22091,13 @@
       "implementationTargets": [
         "tests/generated_full_match_quality.py",
         "tests/overworld_arrival_action_regression.py",
+        "tests/overworld_consumed_site_collision_regression.py",
         "tests/*_smoke.gd: required consolidated reports with stale catalog/Charterless witness assertions only",
         "scripts/core/ScenarioSelectRules.gd",
         "scripts/core/OverworldRules.gd",
         "scripts/core/TownRules.gd",
         "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd: consumed resource presence only",
         "scenes/battle",
         "scripts/core/SessionStateStore.gd",
         "scripts/autoload/SaveService.gd"
@@ -22108,9 +22107,9 @@
         "Normal gameplay, mid-match/terminal saves and actual outcomes",
         "Fix reproduced blocking runtime defects with regressions; driver-only progress is not gameplay completion"
       ],
-      "updatedAt": "2026-09-06T12:48:58Z",
+      "updatedAt": "2026-09-06T13:39:02Z",
       "startedAt": "2026-09-06T12:03:26Z",
-      "notes": "Three runtime fixes validated: current-tile town/guard actions, placement-scoped guard rewards and owned roster after Town return. 23 live checks pass at both resolutions, 26 required content smokes and repository/platform checks pass; complete Medium/Large outcomes still unproven. See docs/generated-full-match-quality-report.md."
+      "notes": "Fourth gameplay defect corrected: collected invisible cache no longer retains collision; 25 focused checks and prior 23-check arrival flow pass, dual-resolution captures inspected, Linux/Windows packages pass at 248439144 bytes. Full Medium/Large terminal coverage still running; performance/presentation remain pending. See source-backed quality report and retained legacy test failures."
     },
     {
       "status": "pending",
@@ -110316,7 +110315,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Fresh complete Medium/Large matches, matched full-action improvements and corrected visual defects remain unproven. Prior raw non-RMG artifacts were removed under owner retention policy.",
-  "remainingWork": "Complete competent legal Medium/Large playthroughs including conquest; distinguish driver stalls from gameplay defects, then implement measured responsiveness and selected presentation corrections. Legacy Small guard-path report remains unresolved; do not change generation rules to satisfy it.",
+  "remainingWork": "Complete legitimate Medium/Large terminal playthroughs; current continuations have conquests but no accepted outcome yet. Then implement matched responsiveness and selected presentation corrections. Retained legacy reports and suspected concurrent package-write race require explicit diagnosis, not generation tuning.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -110854,7 +110853,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "rmg_audit_corrections_completed_with_documented_sample_limits",
+  "result": "four_gameplay_corrections_validated_full_match_goal_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -110955,30 +110954,30 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Three reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards and owned roster after Town return. Focused dual-resolution, required content, repository and Linux/Windows package checks pass. Full-match coverage, controlled responsiveness gains and presentation corrections remain incomplete.",
+  "summary": "Four reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards, owned roster after Town return and invisible consumed-resource collision. Latest 25-check lifecycle and 23-check arrival regressions, inspected dual-resolution captures, repository and Linux/Windows packages pass. Full terminal matches, controlled responsiveness gains and presentation corrections remain incomplete; retained legacy report failures are documented.",
   "taskId": "10236",
-  "updatedAt": "2026-09-06T12:55:42Z",
+  "updatedAt": "2026-09-06T13:39:02Z",
   "validation": {
-    "id": "quality-generated-full-match-first-corrections-20260906",
+    "id": "quality-generated-full-match-consumed-site-20260906",
     "sliceId": "quality-generated-full-match-playthrough-20260906",
-    "title": "First full-match gameplay corrections",
+    "title": "Consumed-site lifecycle correction",
     "status": "in_progress",
-    "scope": "three_validated_gameplay_fixes_not_complete_match_or_goal_completion",
-    "validatedAt": "2026-09-06T12:55:42Z",
+    "scope": "four_gameplay_corrections_not_complete_match_or_goal_completion",
+    "validatedAt": "2026-09-06T13:40:17Z",
     "artifacts": [
       "docs/generated-full-match-quality-report.md",
-      ".artifacts/generated_full_match_quality_20260906/arrival_final_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/arrival_final_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/route_regressions/report.json",
-      ".artifacts/generated_full_match_quality_20260906/required_content_smokes_dbus/report.json",
-      ".artifacts/generated_full_match_quality_20260906/required_content_smokes_corrected/report.json",
-      ".artifacts/generated_full_match_quality_20260906/medium_match_03/report.json",
-      ".artifacts/generated_full_match_quality_20260906/large_match_02/report.json",
-      ".artifacts/generated_full_match_quality_20260906/linux_export/report.json",
-      ".artifacts/generated_full_match_quality_20260906/windows_export/report.json",
-      ".artifacts/generated_full_match_quality_20260906/linux_generated/live_validation_report.json"
+      ".artifacts/generated_full_match_quality_20260906/consumed_before/report.json",
+      ".artifacts/generated_full_match_quality_20260906/consumed_overlap_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/consumed_exact_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/consumed_exact_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_arrival_recheck/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_domain_regressions/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_validate_repo_verified.log",
+      ".artifacts/generated_full_match_quality_20260906/presence_linux_export/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_windows_export/report.json",
+      ".artifacts/generated_full_match_quality_20260906/presence_linux_generated/live_validation_report.json"
     ],
-    "result": "Three reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards and owned roster after Town return. Focused dual-resolution, required content, repository and Linux/Windows package checks pass. Full-match coverage, controlled responsiveness gains and presentation corrections remain incomplete. The unchanged legacy Small guard-path report fails no_reachable_hostile_town. Medium attempts stall at Days 18/21; Large Day-5 defeat is rejected for missing development/recruitment coverage."
+    "result": "Four reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards, owned roster after Town return and invisible consumed-resource collision. Latest 25-check lifecycle and 23-check arrival regressions, inspected dual-resolution captures, repository and Linux/Windows packages pass. Full terminal matches, controlled responsiveness gains and presentation corrections remain incomplete; retained legacy report failures are documented."
   },
   "validationHistory": [
     {

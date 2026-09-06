@@ -10330,8 +10330,7 @@ func _rebuild_static_object_indexes() -> void:
 		if not LevelRules.on_level(node_value, _level):
 			continue
 		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
-		var repeatable := bool(site.get("repeatable", false)) or String(site.get("family", "")) == "repeatable_service"
-		if bool(site.get("persistent_control", false)) or repeatable or not bool(node.get("collected", false)):
+		if OverworldRulesScript.resource_node_is_present(node, site):
 			_resources_by_tile[_tile_key(Vector2i(int(node.get("x", -1)), int(node.get("y", -1))))] = node
 	for node_value in _session.overworld.get("artifact_nodes", []):
 		if not (node_value is Dictionary):
@@ -11738,7 +11737,7 @@ func _collect_town_placement_debug_tiles(town: Dictionary, blocker_index: Dictio
 
 func _collect_resource_placement_debug_tiles(node: Dictionary, blocker_index: Dictionary, interactable_index: Dictionary, records: Array) -> void:
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-	if not bool(site.get("persistent_control", false)) and bool(node.get("collected", false)):
+	if not OverworldRulesScript.resource_node_is_present(node, site):
 		return
 	var placement_id := String(node.get("placement_id", ""))
 	var surface := OverworldRulesScript.overworld_object_placement_pathing_surface(_session, placement_id)

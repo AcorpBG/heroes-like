@@ -9422,7 +9422,7 @@ func _active_resource_nodes() -> Array:
 		if not (node is Dictionary) or not LevelRules.on_level(node, LevelRules.view_level(_session)):
 			continue
 		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
-		if bool(site.get("persistent_control", false)) or not bool(node.get("collected", false)):
+		if OverworldRules.resource_node_is_present(node, site):
 			nodes.append(node)
 	_refresh_cache["active_resource_nodes"] = nodes
 	return nodes
