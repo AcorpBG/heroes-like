@@ -269,9 +269,28 @@ func target_precedes(a: Dictionary, b: Dictionary) -> bool:
 		return a_current
 	return a.id < b.id if is_equal_approx(a.score,b.score) else a.score < b.score
 
+func owned_town_management_target() -> Dictionary:
+	# This has always outranked field targets. Decide it before constructing
+	# encounter approaches that would immediately be discarded by that return.
+	for target in get_tree().current_scene._validation_targets("town"):
+		var id := String(target.get("placement_id", ""))
+		if String(target.get("owner", "")) != "player" or int(last_town_day.get(id, 0)) >= session.day or int(failed_targets.get(id, 0)) >= session.day or not known(target):
+			continue
+		var entry: Dictionary = target.get("visit_tile", target)
+		var tile := Vector2i(int(entry.x), int(entry.y))
+		# Preserve even the original guard-risk condition on remote management.
+		var guard: Dictionary = OverworldRules.guard_engagement_encounter_at_tile(session, tile.x, tile.y)
+		if not guard.is_empty() and known(guard) and power(OverworldRules._encounter_army_payload(guard).get("stacks", [])) > player_power() * 0.70:
+			continue
+		return {"id":id,"kind":"town","tile":tile,"remote":true}
+	return {}
+
 func choose_target() -> Dictionary:
 	var scene = get_tree().current_scene
 	var origin := OverworldRules.hero_position(session)
+	var managed_town := owned_town_management_target()
+	if not managed_town.is_empty():
+		return managed_town
 	var candidates := []
 	for kind in ["resource","artifact","encounter","town"]:
 		for target in scene._validation_targets(kind):
@@ -301,10 +320,7 @@ func choose_target() -> Dictionary:
 				score += 8.0
 			elif kind == "town":
 				if String(target.get("owner","")) == "player":
-					if int(last_town_day.get(id,0)) >= session.day:
-						continue
-					# The live owned-town roster supports remote management.
-					return {"id":id,"kind":"town","tile":tile,"remote":true}
+					continue
 				else:
 					if session.day < 8 or power(target.get("garrison",[])) > player_power() * 0.70:
 						continue

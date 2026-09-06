@@ -16621,10 +16621,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "quality-generated-full-match-playthrough-20260906",
   "currentSliceId": "quality-generated-full-match-playthrough-20260906",
-  "currentSliceNotes": "Driver-only claim-progress correction validated: four reproduced failures then 47 real claim/observation checks pass, 12 Python acceptance tests and repository/diff pass. No runtime changes; production digest 863dbeb0855ab377f32d0792c93df5d80ca219bf3b4ae1c5caf948ba33a159de retains validated Linux/Windows package coverage. Medium11 remains live on its original driver: Day42, 905 legal capacity observations, 30 battles, no terminal result. Continue that same process; do not rewrite history or reset progress. Town art scope and cleanup approval remain outstanding.",
+  "currentSliceNotes": "Driver-only Town-priority optimization validated: 69 exact target/state/eligibility controls pass, discarded encounter approaches 15 to zero, real no-ready-Town field selection unchanged. 47 claim-progress and 12 Python checks plus repository/diff pass. Production digest 863dbeb0855ab377f32d0792c93df5d80ca219bf3b4ae1c5caf948ba33a159de retains validated Linux/Windows export/startup/generated-entry coverage. Medium11 remains live on its launch driver: Day54 checkpoint, 1190 legal capacity observations, 39 battles, no runtime errors or terminal outcome. Continue the same match; no game-speed, completed-match or child-completion claim. Town-art scope and superseded export/environment cleanup approval remain outstanding.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Complete Generated Matches And Correctness",
-  "currentSliceUpdatedAt": "2026-09-06T20:53:13Z",
+  "currentSliceUpdatedAt": "2026-09-06T21:42:03Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22130,6 +22130,7 @@
         "python3 tests/generated_full_match_route_regression.py --label <fresh>",
         "python3 tests/generated_full_match_target_policy_regression.py --label <fresh> --save <Medium10-autosave>",
         "python3 tests/generated_full_match_progress_regression.py --label <fresh>",
+        "python3 tests/generated_full_match_town_priority_regression.py --label <fresh> --save <Medium11-Day43-slot2>",
         "python3 -B -m unittest discover -s tests -p test_generated_full_match_quality.py"
       ],
       "id": "quality-generated-full-match-playthrough-20260906",
@@ -22163,16 +22164,17 @@
         "tests/validate_repo.py: scripted reinforcement admission/retention authority assertions only",
         "tests/generated_full_match_route_regression.py: real battle handoff driver timing",
         "tests/generated_full_match_target_policy_regression.py: exact saved target selection and live route controls",
-        "tests/generated_full_match_progress_regression.py: authoritative resource/artifact claim progress and unchanged repeat-visit controls"
+        "tests/generated_full_match_progress_regression.py: authoritative resource/artifact claim progress and unchanged repeat-visit controls",
+        "tests/generated_full_match_town_priority_regression.py: exact owned-town priority with no unused encounter path construction"
       ],
       "completionCriteria": [
         "Complete legitimate Medium/Large matches, including one conquest",
         "Normal gameplay, mid-match/terminal saves and actual outcomes",
         "Fix reproduced blocking runtime defects with regressions; driver-only progress is not gameplay completion"
       ],
-      "updatedAt": "2026-09-06T20:53:13Z",
+      "updatedAt": "2026-09-06T21:42:03Z",
       "startedAt": "2026-09-06T12:03:26Z",
-      "notes": "Driver-only claim-progress correction validated: four reproduced failures then 47 real claim/observation checks pass, 12 Python acceptance tests and repository/diff pass. No runtime changes; production digest 863dbeb0855ab377f32d0792c93df5d80ca219bf3b4ae1c5caf948ba33a159de retains validated Linux/Windows package coverage. Medium11 remains live on its original driver: Day42, 905 legal capacity observations, 30 battles, no terminal result. Continue that same process; do not rewrite history or reset progress. Town art scope and cleanup approval remain outstanding.",
+      "notes": "Driver-only Town-priority optimization validated: 69 exact target/state/eligibility controls pass, discarded encounter approaches 15 to zero, real no-ready-Town field selection unchanged. 47 claim-progress and 12 Python checks plus repository/diff pass. Production digest 863dbeb0855ab377f32d0792c93df5d80ca219bf3b4ae1c5caf948ba33a159de retains validated Linux/Windows export/startup/generated-entry coverage. Medium11 remains live on its launch driver: Day54 checkpoint, 1190 legal capacity observations, 39 battles, no runtime errors or terminal outcome. Continue the same match; no game-speed, completed-match or child-completion claim. Town-art scope and superseded export/environment cleanup approval remain outstanding.",
       "remainingWork": "Complete fresh legal Medium/Large matches with full capacity history, real terminal outcomes and exact mid-match/terminal save-resume; finish selected measured responsiveness and presentation acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
     },
     {
@@ -111088,9 +111090,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
+  "summary": "Full-match quality remains in progress. Capacity and scripted reward retention, exact-target/guard selection, Town command/footer and generated outcome retry/layout corrections have focused runtime and platform evidence. Large08 completed a legal defeat after enemy-town conquest; Medium11 remains nonterminal. Latest driver-only Town-priority support passes 69 exact target/state controls, 47 claim-progress checks and 12 Python acceptance tests without changing production. Complete Medium coverage, full responsiveness acceptance and scene-matched Town buildings remain unfinished; checkpoints and diagnostic prefixes are not release certification.",
   "taskId": "10236",
-  "updatedAt": "2026-09-06T20:53:13Z",
+  "updatedAt": "2026-09-06T21:42:03Z",
   "validation": {
     "id": "quality-generated-ai-army-capacity-20260906",
     "sliceId": "quality-generated-full-match-playthrough-20260906",

@@ -56,6 +56,17 @@ the condition with real claim-rule mutations and negative controls. Existing
 running tests keep their launch driver; never rewrite their action history or
 reset their no-progress clocks to adopt this repair.
 
+The full-match driver's existing owned-Town management priority may be checked
+before computing unrelated encounter approaches, but must select exactly the
+same catalog-first eligible town. Preserve current visibility/level, failed-target
+and managed-day cooldowns and the original guard-risk check, even for remote
+management. When no town qualifies, ordinary target order, scores, retained
+intent and failure bookkeeping must remain identical. Prove complete targets
+and serialized game state against the prior driver on a recorded real save;
+use explicit ineligible inputs for boundary controls. Removed test-policy work
+is not a runtime game-performance improvement. Do not restart a live match or
+rewrite its history to adopt this optimization.
+
 Existing Town recruitment-surface validation must open the real Muster modal
 before observing recruit buttons. A closed lazy dialog's synthetic action
 snapshot is not proof of visible UI. Python-owned invocation may adapt that
