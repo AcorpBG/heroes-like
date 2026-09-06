@@ -24,9 +24,9 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current owner goal: `bugfix-rmg-audit-corrections-20260905`; fix every finding from the completed audit, with heroes always starting at the owning town entrance. Entrance-boundary, level-aware runtime, player/team and native-transit children completed; current child: `bugfix-rmg-normal-water-private-state-20260905`. Native parity and integrated regression children remain required; a partial correction does not complete the goal.
+- Current owner goal: `bugfix-rmg-audit-corrections-20260905`; fix every finding from the completed audit, with heroes always starting at the owning town entrance. Entrance-boundary, level-aware runtime, player/team, native-transit and selected normal-water parity children completed; current child: `bugfix-rmg-audit-integrated-regressions-20260905`. Integrated regressions remain required; a partial correction does not complete the goal.
 - Baseline audit: `audit-rmg-start-placement-and-h3maped-comparison-20260905`; 36 runtime requests, 83 generated starts, 23/24 exact retained owner payloads, fresh executable/private-state water mismatch, and confirmed start/level/opponent/transit adoption gaps. Audit evidence is not runtime fixes or parity completion.
-- Most recently completed owner-directed implementation slice: `bugfix-rmg-native-transit-navigation-20260905`: exact source cave/portal links, shared native player/AI adjacency, safe travel/choice/save continuation and physical field-battle context. Continuous underground/Islands journeys, all 50 Large portal ends/65 trips, 35 supported entrance cases, relevant regressions and both-platform packages pass. Evidence and remaining parity limits: `docs/rmg-native-transit-correction-report.md`.
+- Most recently completed implementation slice: `bugfix-rmg-normal-water-private-state-20260905`: removed a future-state polygon endpoint preload duplicated by the actual producer, preserving its source processed marker. Fresh same-run private grids/full bytes, ordered calls/RNG, all 24 retained payloads, 85 exact entrance starts/36 supported live cases and both-platform packages pass. Evidence and sample limits: `docs/rmg-normal-water-correction-report.md`.
 - Current package boundary: Linux and Windows release exports both measure 248438264 bytes, 1561736 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
 
 ## RMG Audit Corrections
@@ -67,13 +67,13 @@ Status: completed 2026-09-06. Source-owned cave/portal links, safe player/AI tra
 
 id: `bugfix-rmg-normal-water-private-state-20260905`
 
-Status: in_progress. Isolate the recovered function/input mutation causing Medium normal-water seed-10 divergence after `0x4a4c8e` and before `0x49eb8d`; implement only from exact source/private-state proof. Owners: recovered core and named mine/reward/guard/connection owners, source recovery evidence. Validate matching private checkpoints and final bytes, land controls, all 24 retained cases and both native platforms; no final-delta tuning.
+Status: completed 2026-09-06. Removed the future-state polygon endpoint preload duplicated by `0x4a3710`, preserving actual producer/allocator fields and the source processed marker. Final code matches fresh original private grids, 71 connection results/39 RNG states and all 72,924 writeout bytes; all 24 retained payloads are exact. Both-platform builds/selftests/packages, 36 supported entrance cases/85 exact starts, live battle/save/AI controls and inspected 1280x720/2048x1079 visuals pass. Source/evidence: `docs/rmg-normal-water-correction-report.md`. No heuristic topology, final-delta tuning or arbitrary-seed parity claim.
 
 ### RMG Integrated Correctness Regressions
 
 id: `bugfix-rmg-audit-integrated-regressions-20260905`
 
-Status: pending. Correct stale raw-bank expectations against the current authored-pool registry without losing exact placement assertions; enforce all correction requirements through actual generated/live/save/AI flows, inspected visuals, repository and Linux/Windows package smokes. Python owns new coverage. Parent completes only after this integrated evidence supports every required outcome.
+Status: in_progress. Finish stale authored-pool expectations, including XLarge subtype-45 dwellings, without losing exact placement assertions; permanently include normal-water seed 10 and enforce all correction requirements through actual generated/live/save/AI flows, inspected visuals, repository and Linux/Windows package smokes. Python owns new coverage. Parent completes only after this integrated evidence supports every required outcome.
 
 ## RMG Starting Heroes And H3MapEd Comparison Audit
 
@@ -12401,8 +12401,8 @@ State: foundation evidence is broad but not product completion. Completed implem
 Goal: translate HoMM-style random-map structure into original content and systems.
 
 Current boundary:
-- The 2026-09-05 audit supersedes the blanket current 24-workflow completion claim: 23 of 24 freshly generated selected payloads match retained owner bytes; Medium normal-water seed 10 differs, confirmed by fresh executable/private-state evidence.
-- The exposed package/session surface has confirmed displaced/blocked starts, level flattening and faction-keyed opponent merging. Generation parity and playable adoption need separate corrections/certification; this audit does not change runtime support gates.
+- The September audit's normal-water mismatch is corrected with source-proven endpoint production and fresh private/writeout joins; all 24 selected retained payloads now match. Evidence: `docs/rmg-normal-water-correction-report.md`; this is not arbitrary-seed or all-phase parity.
+- Displaced/blocked starts, level flattening, faction-keyed opponent merging and native transit adoption have corrective implementation/evidence in the Phase 6 audit children above. Integrated regressions remain active; generation parity and playable adoption are separate claims.
 - The H3MapEd recovery ledger is prerequisite evidence and source ownership, not permission to claim arbitrary H3MapEd configuration parity.
 - Player-facing generated-skirmish controls now adopt the same 24-workflow boundary instead of retaining the older Small/Medium surface-land fence.
 - Evidence and exact follow-up owners: `docs/rmg-start-placement-and-h3maped-audit.md`. Unsupported configurations/allocator histories must remain fail-closed; selected matrix evidence must not be presented as whole-H3MapEd parity.

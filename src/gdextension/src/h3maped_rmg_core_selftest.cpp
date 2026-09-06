@@ -8719,6 +8719,39 @@ int main() {
 			return 1;
 		}
 		const auto portal_payload = portal_workflow.final_payload_writeout_0x4ad1e3.payload_bytes;
+		H3MapedRmgWorkflowConfig normal_water_config = portal_config;
+		normal_water_config.water_mode = "normal_water";
+		normal_water_config.setup_object_0x44 = 1;
+		const auto normal_water_workflow = run_h3maped_rmg_entry_to_writeout_workflow(normal_water_config);
+		const auto &normal_water_owners = normal_water_workflow.generator_object_private_state.relation_owner_vectors_10e4_10e8;
+		// Fresh owner 0x4a7bfa/0x4a7c09 calls and pointed +0xc8/+0xcc
+		// records: each polygon endpoint occurs once and has zero guard.
+		// A cached later-phase suffix used to be appended before the real
+		// 0x4a3710 producer, duplicating 10/17 and consuming extra RNG draws.
+		const std::array<std::vector<int32_t>, 2> expected_water_targets {{
+			{4, 7, 10, 17}, {4, 8, 10, 19, 20},
+		}};
+		bool water_endpoints_exact = normal_water_owners.size() == 22U;
+		for (size_t owner_index = 0; water_endpoints_exact && owner_index < expected_water_targets.size(); ++owner_index) {
+			const auto &records = normal_water_owners[owner_index].source_endpoint_records_0xc8_0xcc;
+			water_endpoints_exact = records.size() == expected_water_targets[owner_index].size();
+			for (size_t index = 0; water_endpoints_exact && index < records.size(); ++index) {
+				water_endpoints_exact = records[index].target_relation_owner_vector_index_0x00 == expected_water_targets[owner_index][index]
+						&& (index < 2U || (records[index].guard_value == 0 && records[index].wide));
+			}
+		}
+		if (water_endpoints_exact) {
+			const auto &synthetic = normal_water_owners[10].source_endpoint_records_0xc8_0xcc;
+			water_endpoints_exact = synthetic.size() == 4U
+					&& synthetic[0].target_relation_owner_vector_index_0x00 == 17
+					&& synthetic[1].target_relation_owner_vector_index_0x00 == 20
+					&& synthetic[0].control_dword_0x08 == 0x00010001U
+					&& synthetic[1].control_dword_0x08 == 0x00010001U;
+		}
+		if (!require(water_endpoints_exact,
+				"Normal-water source endpoint vector duplicated polygon records or misread their zero guard")) {
+			return 1;
+		}
 		portal_workflow.generator_object_private_state.monolith_two_way_output_object_keys_14d0.pop_back();
 		const auto missing_portal_key = project_runtime_map_from_native_owned_final_payload(portal_workflow);
 		if (!require(!missing_portal_key.applied

@@ -52,7 +52,7 @@ R7 recovery status:
 - Ordered replay phases recovered: `18`.
 - Recovery manifest: `7` checkpoints, `49` frontier summaries, `178` recovered functions.
 - Native behavior changed by the R7 recovery artifacts alone: `false`.
-- Current native implementation: the 2026-09-05 audit found one selected normal-water mismatch and runtime start/level/player adoption gaps. The fixed recovery inventory above is not a native completion claim; see `docs/rmg-start-placement-and-h3maped-audit.md`.
+- Current native implementation: the September audit's selected normal-water endpoint-producer mismatch and runtime start/level/player/transit gaps now have source-backed corrective slices. Integrated regressions remain active. The fixed recovery inventory above is not a native completion claim; see `docs/rmg-start-placement-and-h3maped-audit.md` and its linked correction reports.
 
 ## Recovery Status Labels
 
@@ -505,8 +505,8 @@ Before native output can be called parity:
 Current native status, by the recovery ledger:
 
 - H3MapEd fixed recovery ledger: complete.
-- Native parity: September audit comparisons are exact for 23 of 24 selected retained full-payload cases. Medium normal-water seed 10 differs; fresh owner grids first show a mismatch between post-`0x4a4c8e` and pre-`0x49eb8d`. Full details and unproven buffers are in the audit report, not inferred from final-map deltas.
-- Public `MapPackageService` implements authority-independent payload projection and paired map/scenario packages. Live session adoption remains exposed but has confirmed starting-tile, level and opponent-identity defects; successful serialization/export is not playable adoption.
+- Native parity: all 24 selected retained full-payload cases now match. The Medium normal-water seed-10 correction removes a future-state endpoint preload duplicated by the real `0x4a3710` producer, preserving the source processed marker. Fresh same-run private/writeout and ordered connection/RNG evidence is in `docs/rmg-normal-water-correction-report.md`; no final-map-delta tuning or arbitrary-seed claim.
+- Public `MapPackageService` implements authority-independent payload projection and paired map/scenario packages. Starting-tile, level, opponent-identity and transit adoption corrections pass their documented live/save/AI checks; the expanded matrix has 85 exact starts and 36 supported live entrance cases. Integrated regressions remain required, and successful serialization/export alone is not playable adoption.
 - Unsupported shapes, strengths, and broader H3MapEd configuration or allocator histories must fail closed rather than being inferred. This audit changed no runtime gates, native phases or gameplay rules.
 
 ## Invalid Work Patterns
