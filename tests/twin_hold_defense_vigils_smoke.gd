@@ -70,12 +70,13 @@ func _run_case(view: Control, case: Dictionary) -> void:
 	var availability: Dictionary = scenario.get("selection", {}).get("availability", {})
 	var session: SessionStateStoreScript.SessionData = ScenarioFactory.create_session(scenario_id, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
 	OverworldRules.normalize_overworld_state(session)
-	var direct_lead := not bool(availability.get("campaign", true)) and bool(availability.get("skirmish", false)) and String(session.hero_id) == String(case.get("hero_id", "")) and String(scenario.get("player_faction_id", "")) == String(case.get("faction_id", "")) and String(scenario.get("player_army_id", "")) == String(case.get("army_id", ""))
+	var campaign_chapter := scenario_id == "blackgauge-double-assay"
+	var direct_lead := bool(availability.get("campaign", not campaign_chapter)) == campaign_chapter and bool(availability.get("skirmish", false)) and String(session.hero_id) == String(case.get("hero_id", "")) and String(scenario.get("player_faction_id", "")) == String(case.get("faction_id", "")) and String(scenario.get("player_army_id", "")) == String(case.get("army_id", ""))
 	_expect(direct_lead, "%s did not launch its exact captain, faction, and four-stack company." % scenario_id)
 	var map_size: Dictionary = scenario.get("map_size", {})
 	var towns: Array = session.overworld.get("towns", [])
 	var twin_holds := towns.size() == 2 and towns.all(func(town): return town is Dictionary and String(town.get("owner", "")) == "player")
-	_expect(int(map_size.get("width", 0)) == 13 and int(map_size.get("height", 0)) == 8 and twin_holds and scenario.get("resource_nodes", []).size() == 8 and scenario.get("artifact_nodes", []).size() == 1 and scenario.get("encounters", []).size() == 3 and scenario.get("script_hooks", []).size() == 6, "%s lost its 13x8 twin-hold composition." % scenario_id)
+	_expect(int(map_size.get("width", 0)) == 13 and int(map_size.get("height", 0)) == 8 and twin_holds and scenario.get("resource_nodes", []).size() == 8 and scenario.get("artifact_nodes", []).size() == 1 and scenario.get("encounters", []).size() == 3 and scenario.get("script_hooks", []).size() == (7 if campaign_chapter else 6), "%s lost its 13x8 twin-hold composition." % scenario_id)
 	var day_victories: Array = scenario.get("objectives", {}).get("victory", []).filter(func(row): return row is Dictionary and String(row.get("type", "")) == "day_at_least" and int(row.get("day", 0)) == 12)
 	_expect(day_victories.size() == 1 and scenario.get("objectives", {}).get("victory", []).size() == 6 and scenario.get("objectives", {}).get("defeat", []).size() == 5, "%s lost its Day-12 hold objective contract." % scenario_id)
 

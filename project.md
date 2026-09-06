@@ -211,13 +211,13 @@ Exit criteria:
 
 ## Current Strategic Focus
 
-Current phase: Phase 5 — Playable Alpha Baseline.
+Current execution phase: Phase 6 — Production Alpha Layer, while closing the remaining Phase 5 playable-alpha quality requirements.
 
 The strategic focus is now to turn the validated systems foundation into a coherent playable alpha that can be played repeatedly without developer interpretation. Economy/town development, save/load, generated-art loading, strict Small generated package adoption, active scenario source routes, battle presentation foundations, and strategic AI foundations all have meaningful evidence, but they are not product-completion claims.
 
-Near-term work should prioritize player-readable improvements to live loops: deeper faction economy identity, better combat feel and balance, stronger strategic AI decisions, clearer UX, authored rare-source breadth and guard pressure, campaign flow hardening, packaging hardening, and balance harness depth. Owner direction has now selected bounded campaign/content implementation; each campaign slice still needs live flow and progression proof rather than a breadth-only claim.
+Near-term work should prioritize coherent complete matches: reliable exploration, development, battles and outcomes; responsive full actions; clear scenery-first UI; save/resume; and platform validation. Additional breadth is subordinate to demonstrated end-to-end play quality. Each selected slice needs live behavior and progression proof rather than a content-count or tracker-completion claim.
 
-Random map generation remains strategically important. The exposed native scope spans Small through Extra Large, land/normal-water/Islands, and one/two levels, but generation parity and playable package/session adoption are separate release requirements. The source-backed audit and correction evidence (`docs/rmg-start-placement-and-h3maped-audit.md`) invalidate the blanket completed-matrix claim: corrected entrance, level, player-identity and native-transit boundaries do not resolve the remaining normal-water native divergence or certify all water-map gameplay. Correct and validate the remaining native and integrated boundaries before certifying the matrix; unsupported configurations and allocator histories must fail closed, and no selected matrix establishes whole-H3MapEd parity.
+Random map generation remains strategically important. The exposed native scope spans Small through Extra Large, land/normal-water/Islands, and one/two levels, but generation parity and playable package/session adoption are separate release requirements. The source-backed audit/corrections (`docs/rmg-audit-integrated-correction-report.md`) establish bounded entrance, level, player-identity, transit and normal-water behavior; they do not certify full matches, arbitrary seeds, all allocator/private-state histories or whole-H3MapEd parity. Unsupported configurations must continue to fail closed.
 
 ## Non-Goals
 

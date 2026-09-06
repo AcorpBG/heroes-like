@@ -24,10 +24,49 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Completed owner goal: `bugfix-rmg-audit-corrections-20260905`; all six corrective/integrated children now satisfy the audited requirements, including heroes at their owning town entrances. No implementation slice is active; further scope awaits owner selection. Completion is bounded by the documented sample/configuration limits, not full H3MapEd or release parity.
+- Active owner goal: `quality-generated-full-match-20260906`; current child `quality-generated-full-match-playthrough-20260906` establishes complete Medium/Large matches and fixes demonstrated correctness blockers. Responsiveness and presentation children follow measured live evidence. See `docs/generated-full-match-quality-requirements.md`; neither tracker completion nor a bounded match certifies release readiness.
+- Completed prior goal: `bugfix-rmg-audit-corrections-20260905`; all six corrective/integrated children satisfy the audited requirements within their documented sample/configuration limits, not full H3MapEd or release parity.
 - Baseline audit: `audit-rmg-start-placement-and-h3maped-comparison-20260905`; 36 runtime requests, 83 generated starts, 23/24 exact retained owner payloads, fresh executable/private-state water mismatch, and confirmed start/level/opponent/transit adoption gaps. Audit evidence is not runtime fixes or parity completion.
 - Most recently completed slice: `bugfix-rmg-audit-integrated-regressions-20260905`: current authored-pool expectations, permanent water/entrance/private-state coverage and reusable 18-report RMG suite. All 18 runtime reports, 26 Python tests, 85 exact starts/36 supported live cases, player/team/cave/Islands checks, repository and both-platform packages pass. Evidence and limits: `docs/rmg-audit-integrated-correction-report.md`.
-- Current package boundary: Linux and Windows release exports both measure 248438264 bytes, 1561736 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+- Current package boundary: Linux and Windows release exports both measure 248438632 bytes, 1561368 bytes below the unchanged 250000000-byte ceiling; generated source masters remain excluded from both packages.
+
+## Generated Full-Match Quality
+
+id: `quality-generated-full-match-20260906`
+
+Status: in_progress 2026-09-06. Owner-directed Phase 6 implementation goal, closing playable-alpha quality gaps. Requirements: `docs/generated-full-match-quality-requirements.md`, `docs/full-play-runtime-performance-report.md`, `docs/rmg-audit-integrated-correction-report.md`, `project.md`, and `docs/lessons-learned.md`.
+
+Completion: all three children implemented and validated; legitimate complete Medium/Large generated matches with isolated saves and actual outcome routing; measured behavior-preserving responsiveness improvements; corrected selected Town/Overworld presentation defects with inspected dual-resolution captures; focused regressions, repository/diff checks, Linux/Windows exports/startup/map entry below 250000000 bytes; coherent commits pushed. Real Windows hardware and exhaustive seed/faction coverage must remain explicit limits when unavailable.
+
+Non-goals: no new content breadth, native RMG semantics/topology/density/RNG tuning, balance shortcuts, forced victories/defeats, skipped simulation/autosaves, save-schema migration, art regeneration, unrelated cleanup or release certification. Keep fresh evidence compact; full per-action world dumps and duplicate Wine prefixes are not the default.
+
+### Complete Generated Matches And Correctness
+
+id: `quality-generated-full-match-playthrough-20260906`
+
+Status: in_progress 2026-09-06. First child of `quality-generated-full-match-20260906`.
+
+Checkpoint: current-tile primary actions, placement-scoped guard rewards and owned roster initialization after Town return are corrected with live regressions and both-platform packages. Full matches remain incomplete; evidence and explicit legacy-test/driver limits: `docs/generated-full-match-quality-report.md`.
+
+Targets: Python-owned complete-match orchestration reusing scene/router validation entry points; `ScenarioSelectRules`, `OverworldRules`, `TownRules`, battle/report/outcome and save owners only where a reproduced match failure identifies a defect. Start with reproducible Medium and Large configurations, normal resources/armies and a win-seeking legal policy; preserve fog knowledge, costs, guards, AI and battle consequences. Maintain the required historical content smokes against current catalog/Charterless Compact contracts where fresh regeneration exposes stale assertions; do not relax gameplay assertions or manufacture reports.
+
+Completion: both sizes reach a legitimate recorded terminal outcome, real mid-match and terminal save/resume pass, at least one run exercises conquest rather than deliberate surrender/suicide, and demonstrated blocking runtime defects are corrected with focused regressions. Timeouts, driver deadlocks, early disposable defeats and harness-only progress do not establish complete-match quality. Commands: `python3 tests/generated_full_match_quality.py --case medium --label <fresh>`, the corresponding `--case large` run, focused new Python/runtime tests, `python3 tests/validate_repo.py`, `git diff --check`, both platform export smokes and packaged generated-entry flows. Source requirements and forbidden scope: parent requirements above.
+
+### Full-Match Responsiveness
+
+id: `performance-generated-full-match-actions-20260906`
+
+Status: pending. Child of `quality-generated-full-match-20260906`; follows the first representative match/profile baseline.
+
+Targets: the measured dominant action owners in `EnemyTurnRules`, `EnemyAdventureRules`, `OverworldRules`, `SessionStateStore`, `SaveService`, and scene refresh/query boundaries. Name selected hotspots before editing; preserve exact gameplay/AI/RNG/save results. Completion: meaningful matched before/after improvement in the selected slow full actions, complete-state controls and cache invalidation tests, no hidden deferred work or omitted saves, successful full matches and required platform/repository checks. Use the complete-match runner, existing profile comparison/optimization regressions and affected domain reports.
+
+### Full-Match Presentation Corrections
+
+id: `ux-generated-full-match-presentation-20260906`
+
+Status: pending. Child of `quality-generated-full-match-20260906`.
+
+Targets: `TownShell`, `TownStageView` and Overworld footer/command layout. Reproduce the reported stray Town resource numbers, crowded footers and building/base-art integration defects on current code; correct demonstrated composition/routing issues using existing original assets. Completion: early/developed Town and active Overworld captures inspected at 1280x720 and 1920x1080, no selected clipping/stray-label regressions, preserved five dialogs/build hotspots/input/save behavior, and focused Town/Overworld/repository/platform checks. Art replacement or gameplay changes require separately specified owner scope, not visual approximations.
 
 ## RMG Audit Corrections
 

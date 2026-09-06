@@ -31,9 +31,9 @@ func _ready() -> void:
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT_DIR))
 	ContentService.clear_cache()
-	_expect(ContentService.get_content_ids(ContentService.UNITS_PATH).size() == 154, "Expanded unit catalog must contain exactly 154 units.")
+	_expect(ContentService.get_content_ids(ContentService.UNITS_PATH).size() == 160, "Current unit catalog must contain exactly 160 units.")
 	_expect(ContentService.get_content_ids(ContentService.BUILDINGS_PATH).size() == 160, "Expanded building catalog must contain exactly 160 buildings.")
-	_expect(ContentService.get_content_ids(ContentService.SCENARIOS_PATH).size() == 227, "Expanded scenario catalog must contain exactly 227 scenarios.")
+	_expect(ContentService.get_content_ids(ContentService.SCENARIOS_PATH).size() == 299, "Current scenario catalog must contain exactly 299 scenarios.")
 	for case_value in CASES:
 		await _run_case(case_value)
 	var contact_sheet_exact := _write_contact_sheet(ProjectSettings.globalize_path(CONTACT_SHEET_PATH))

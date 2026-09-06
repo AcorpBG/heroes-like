@@ -1,5 +1,11 @@
 {
-  "actionableNextTasks": [],
+  "actionableNextTasks": [
+    {
+      "id": "quality-generated-full-match-playthrough-20260906",
+      "status": "in_progress",
+      "title": "Complete Generated Matches And Correctness"
+    }
+  ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
       {
@@ -1908,7 +1914,7 @@
     },
     "blockedReason": ""
   },
-  "active_slice": "",
+  "active_slice": "quality-generated-full-match-playthrough-20260906",
   "blocker": "",
   "completedImplementationEvidence": [
     {
@@ -16611,14 +16617,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Corrected legacy authored-pool dwelling/validator expectations with exact identities and source masks, added permanent water/default matrix and strict private joins plus reusable --rmg suite. Final 18/18 runtime reports, 26 Python tests, 85 exact starts/36 supported live cases, three 32-check player/team cases, eight cave ends and six Islands journeys with real raid/save handoff pass. All six water grids/24 retained payloads exact; native code unchanged since validated water commit. Both final packages/generated Town flows pass at 248438264 bytes; screenshots inspected. Evidence: docs/rmg-audit-integrated-correction-report.md.",
+  "currentNotes": "Three reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards and owned roster after Town return. Focused dual-resolution, required content, repository and Linux/Windows package checks pass. Full-match coverage, controlled responsiveness gains and presentation corrections remain incomplete.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "bugfix-rmg-audit-integrated-regressions-20260905",
-  "currentSliceId": "bugfix-rmg-audit-integrated-regressions-20260905",
-  "currentSliceNotes": "Corrected legacy authored-pool dwelling/validator expectations with exact identities and source masks, added permanent water/default matrix and strict private joins plus reusable --rmg suite. Final 18/18 runtime reports, 26 Python tests, 85 exact starts/36 supported live cases, three 32-check player/team cases, eight cave ends and six Islands journeys with real raid/save handoff pass. All six water grids/24 retained payloads exact; native code unchanged since validated water commit. Both final packages/generated Town flows pass at 248438264 bytes; screenshots inspected. Evidence: docs/rmg-audit-integrated-correction-report.md.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "RMG Integrated Correctness Regressions",
-  "currentSliceUpdatedAt": "2026-09-06T03:43:52Z",
+  "currentSlice": "quality-generated-full-match-playthrough-20260906",
+  "currentSliceId": "quality-generated-full-match-playthrough-20260906",
+  "currentSliceNotes": "Three runtime fixes validated: current-tile town/guard actions, placement-scoped guard rewards and owned roster after Town return. 23 live checks pass at both resolutions, 26 required content smokes and repository/platform checks pass; complete Medium/Large outcomes still unproven. See docs/generated-full-match-quality-report.md.",
+  "currentSliceStatus": "in_progress",
+  "currentSliceTitle": "Complete Generated Matches And Correctness",
+  "currentSliceUpdatedAt": "2026-09-06T12:55:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21923,33 +21929,28 @@
       }
     }
   },
-  "guardrailNote": "The owner-directed audit-correction goal and all six children are completed within documented sample limits. No active slice is selected; do not infer a new implementation goal or whole-game release readiness.",
+  "guardrailNote": "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification.",
   "lastValidation": {
-    "id": "bugfix-rmg-audit-integrated-regressions-20260905-validation",
-    "sliceId": "bugfix-rmg-audit-integrated-regressions-20260905",
-    "title": "RMG Integrated Correctness Regressions",
-    "status": "completed",
-    "scope": "six_audit_corrections_integrated_with_explicit_sample_limits_not_whole_rmg_or_release_certification",
-    "validatedAt": "2026-09-06T03:43:52Z",
+    "id": "quality-generated-full-match-first-corrections-20260906",
+    "sliceId": "quality-generated-full-match-playthrough-20260906",
+    "title": "First full-match gameplay corrections",
+    "status": "in_progress",
+    "scope": "three_validated_gameplay_fixes_not_complete_match_or_goal_completion",
+    "validatedAt": "2026-09-06T12:55:42Z",
     "artifacts": [
-      "docs/rmg-audit-integrated-correction-report.md",
-      "docs/rmg-normal-water-correction-report.md",
-      ".artifacts/full_play_runtime_20260905/rmg_audit_integrated_complete/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_all_entrances/summary.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_players/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_caves/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_islands_journey_confirmed/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_water_same_run_private/summary.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_water_outer_private/summary.json",
-      ".artifacts/rmg_start_audit_20260905/water_source_flags_retained/summary.json",
-      ".artifacts/rmg_start_audit_20260905/water_final_rendered_1280/summary.json",
-      ".artifacts/rmg_start_audit_20260905/water_final_rendered_2048/summary.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_packages_linux/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_packages_windows/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_linux_generated/live_validation_report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_tools_repo.log"
+      "docs/generated-full-match-quality-report.md",
+      ".artifacts/generated_full_match_quality_20260906/arrival_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/arrival_final_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/route_regressions/report.json",
+      ".artifacts/generated_full_match_quality_20260906/required_content_smokes_dbus/report.json",
+      ".artifacts/generated_full_match_quality_20260906/required_content_smokes_corrected/report.json",
+      ".artifacts/generated_full_match_quality_20260906/medium_match_03/report.json",
+      ".artifacts/generated_full_match_quality_20260906/large_match_02/report.json",
+      ".artifacts/generated_full_match_quality_20260906/linux_export/report.json",
+      ".artifacts/generated_full_match_quality_20260906/windows_export/report.json",
+      ".artifacts/generated_full_match_quality_20260906/linux_generated/live_validation_report.json"
     ],
-    "result": "Corrected legacy authored-pool dwelling/validator expectations with exact identities and source masks, added permanent water/default matrix and strict private joins plus reusable --rmg suite. Final 18/18 runtime reports, 26 Python tests, 85 exact starts/36 supported live cases, three 32-check player/team cases, eight cave ends and six Islands journeys with real raid/save handoff pass. All six water grids/24 retained payloads exact; native code unchanged since validated water commit. Both final packages/generated Town flows pass at 248438264 bytes; screenshots inspected. Evidence: docs/rmg-audit-integrated-correction-report.md."
+    "result": "Three reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards and owned roster after Town return. Focused dual-resolution, required content, repository and Linux/Windows package checks pass. Full-match coverage, controlled responsiveness gains and presentation corrections remain incomplete. The unchanged legacy Small guard-path report fails no_reachable_hostile_town. Medium attempts stall at Days 18/21; Large Day-5 defeat is rejected for missing development/recruitment coverage."
   },
   "latestEvidence": {
     "id": "bugfix-rmg-audit-integrated-regressions-20260905-validation",
@@ -21979,51 +21980,218 @@
     "result": "Corrected legacy authored-pool dwelling/validator expectations with exact identities and source masks, added permanent water/default matrix and strict private joins plus reusable --rmg suite. Final 18/18 runtime reports, 26 Python tests, 85 exact starts/36 supported live cases, three 32-check player/team cases, eight cave ends and six Islands journeys with real raid/save handoff pass. All six water grids/24 retained payloads exact; native code unchanged since validated water commit. Both final packages/generated Town flows pass at 248438264 bytes; screenshots inspected. Evidence: docs/rmg-audit-integrated-correction-report.md."
   },
   "latestEvidenceArtifacts": [
-    "docs/rmg-audit-integrated-correction-report.md",
-    "docs/rmg-normal-water-correction-report.md",
-    ".artifacts/full_play_runtime_20260905/rmg_audit_integrated_complete/report.json",
-    ".artifacts/rmg_start_audit_20260905/integrated_final_all_entrances/summary.json",
-    ".artifacts/rmg_start_audit_20260905/integrated_final_players/report.json",
-    ".artifacts/rmg_start_audit_20260905/integrated_final_caves/report.json",
-    ".artifacts/rmg_start_audit_20260905/integrated_final_islands_journey_confirmed/report.json",
-    ".artifacts/rmg_start_audit_20260905/integrated_water_same_run_private/summary.json",
-    ".artifacts/rmg_start_audit_20260905/integrated_water_outer_private/summary.json",
-    ".artifacts/rmg_start_audit_20260905/water_source_flags_retained/summary.json",
-    ".artifacts/rmg_start_audit_20260905/water_final_rendered_1280/summary.json",
-    ".artifacts/rmg_start_audit_20260905/water_final_rendered_2048/summary.json",
-    ".artifacts/rmg_start_audit_20260905/integrated_final_packages_linux/report.json",
-    ".artifacts/rmg_start_audit_20260905/integrated_final_packages_windows/report.json",
-    ".artifacts/rmg_start_audit_20260905/integrated_final_linux_generated/live_validation_report.json",
-    ".artifacts/rmg_start_audit_20260905/integrated_tools_repo.log"
+    "docs/generated-full-match-quality-report.md",
+    ".artifacts/generated_full_match_quality_20260906/arrival_final_720/report.json",
+    ".artifacts/generated_full_match_quality_20260906/arrival_final_1080/report.json",
+    ".artifacts/generated_full_match_quality_20260906/route_regressions/report.json",
+    ".artifacts/generated_full_match_quality_20260906/required_content_smokes_dbus/report.json",
+    ".artifacts/generated_full_match_quality_20260906/required_content_smokes_corrected/report.json",
+    ".artifacts/generated_full_match_quality_20260906/medium_match_03/report.json",
+    ".artifacts/generated_full_match_quality_20260906/large_match_02/report.json",
+    ".artifacts/generated_full_match_quality_20260906/linux_export/report.json",
+    ".artifacts/generated_full_match_quality_20260906/windows_export/report.json",
+    ".artifacts/generated_full_match_quality_20260906/linux_generated/live_validation_report.json"
   ],
-  "latestEvidenceId": "bugfix-rmg-audit-integrated-regressions-20260905-validation",
-  "latestFinding": "Corrected legacy authored-pool dwelling/validator expectations with exact identities and source masks, added permanent water/default matrix and strict private joins plus reusable --rmg suite. Final 18/18 runtime reports, 26 Python tests, 85 exact starts/36 supported live cases, three 32-check player/team cases, eight cave ends and six Islands journeys with real raid/save handoff pass. All six water grids/24 retained payloads exact; native code unchanged since validated water commit. Both final packages/generated Town flows pass at 248438264 bytes; screenshots inspected. Evidence: docs/rmg-audit-integrated-correction-report.md.",
+  "latestEvidenceId": "quality-generated-full-match-first-corrections-20260906",
+  "latestFinding": "Three reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards and owned roster after Town return. Focused dual-resolution, required content, repository and Linux/Windows package checks pass. Full-match coverage, controlled responsiveness gains and presentation corrections remain incomplete.",
   "metrics": {
     "audit_only": false,
     "runtime_behavior_changed": true,
     "source_backed_behavior_progress": true,
+    "native_rmg_changed_in_current_slice": false,
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": true,
-    "sampled_runtime_requests": 37,
-    "generated_runtime_cases": 36,
-    "expected_unsupported_cases": 1,
-    "sampled_player_starts": 85,
-    "off_town_entrance_starts": 0,
-    "retained_owner_cases": 24,
-    "exact_retained_owner_cases": 24,
-    "fresh_owner_water_private_and_payload_exact": true,
-    "python_tests_passed": 26,
-    "legacy_runtime_boundary_report_passed": true,
-    "linux_pck_bytes": 248438264,
-    "windows_pck_bytes": 248438264,
-    "integrated_runtime_reports_passed": 18,
-    "audit_correction_children_completed": 6,
-    "audit_correction_goal_completed": true
+    "runtime_defects_fixed": 3,
+    "focused_live_checks_per_resolution": 23,
+    "focused_rendered_resolutions": 2,
+    "existing_route_regressions_passed": 5,
+    "unresolved_additional_legacy_reports": 1,
+    "python_tests_passed": 6,
+    "required_content_smokes_passed": 26,
+    "accepted_complete_medium_matches": 0,
+    "accepted_complete_large_matches": 0,
+    "controlled_responsiveness_gain_proven": false,
+    "linux_pck_bytes": 248438632,
+    "windows_pck_bytes": 248438632,
+    "full_match_quality_goal_completed": false
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "The owner-directed audit-correction goal and all six children are completed within documented sample limits. No active slice is selected; do not infer a new implementation goal or whole-game release readiness.",
-  "notes": "All six required correction children implemented and validated. Heroes start at exact owning town entrances; live levels/player teams/native passages and source adjacency persist through rules/AI/saves; source-proven normal-water endpoint duplication corrected. Full selected native/writeout/live/pool/regression/platform evidence is in docs/rmg-audit-integrated-correction-report.md. Completion is bounded to audited requirements, not arbitrary-seed/private-buffer/full-H3MapEd or release certification.",
+  "nextActionGuardrailNote": "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification.",
+  "notes": "Three reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards and owned roster after Town return. Focused dual-resolution, required content, repository and Linux/Windows package checks pass. Full-match coverage, controlled responsiveness gains and presentation corrections remain incomplete.",
   "plannedSlices": [
+    {
+      "status": "in_progress",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/generated-full-match-quality-requirements.md",
+        "docs/full-play-runtime-performance-report.md",
+        "docs/rmg-audit-integrated-correction-report.md",
+        "docs/lessons-learned.md"
+      ],
+      "createdAt": "2026-09-06T12:03:25Z",
+      "nonGoals": [
+        "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification."
+      ],
+      "validationCommands": [
+        "python3 tests/generated_full_match_quality.py --case medium --label <fresh>",
+        "python3 tests/generated_full_match_quality.py --case large --label <fresh>",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py"
+      ],
+      "id": "quality-generated-full-match-20260906",
+      "title": "Generated Full-Match Quality",
+      "classification": "parent_implementation_goal",
+      "childSliceIds": [
+        "quality-generated-full-match-playthrough-20260906",
+        "performance-generated-full-match-actions-20260906",
+        "ux-generated-full-match-presentation-20260906"
+      ],
+      "implementationTargets": [
+        "scripts",
+        "scenes",
+        "tests"
+      ],
+      "completionCriteria": [
+        "All three children implemented and validated per requirements",
+        "Complete Medium/Large matches, measured full-action improvements and inspected presentation corrections",
+        "Focused/repository/platform validation and coherent commit/push; hardware limits explicit"
+      ],
+      "updatedAt": "2026-09-06T12:03:26Z",
+      "startedAt": "2026-09-06T12:03:26Z",
+      "notes": "Owner-selected full-match quality goal with three required children."
+    },
+    {
+      "status": "in_progress",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/generated-full-match-quality-requirements.md",
+        "docs/full-play-runtime-performance-report.md",
+        "docs/rmg-audit-integrated-correction-report.md",
+        "docs/lessons-learned.md"
+      ],
+      "createdAt": "2026-09-06T12:03:25Z",
+      "nonGoals": [
+        "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification."
+      ],
+      "validationCommands": [
+        "python3 tests/generated_full_match_quality.py --case medium --label <fresh>",
+        "python3 tests/generated_full_match_quality.py --case large --label <fresh>",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py"
+      ],
+      "id": "quality-generated-full-match-playthrough-20260906",
+      "title": "Complete Generated Matches And Correctness",
+      "classification": "implementation_slice",
+      "parentSliceId": "quality-generated-full-match-20260906",
+      "implementationTargets": [
+        "tests/generated_full_match_quality.py",
+        "tests/overworld_arrival_action_regression.py",
+        "tests/*_smoke.gd: required consolidated reports with stale catalog/Charterless witness assertions only",
+        "scripts/core/ScenarioSelectRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/TownRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/battle",
+        "scripts/core/SessionStateStore.gd",
+        "scripts/autoload/SaveService.gd"
+      ],
+      "completionCriteria": [
+        "Complete legitimate Medium/Large matches, including one conquest",
+        "Normal gameplay, mid-match/terminal saves and actual outcomes",
+        "Fix reproduced blocking runtime defects with regressions; driver-only progress is not gameplay completion"
+      ],
+      "updatedAt": "2026-09-06T12:48:58Z",
+      "startedAt": "2026-09-06T12:03:26Z",
+      "notes": "Three runtime fixes validated: current-tile town/guard actions, placement-scoped guard rewards and owned roster after Town return. 23 live checks pass at both resolutions, 26 required content smokes and repository/platform checks pass; complete Medium/Large outcomes still unproven. See docs/generated-full-match-quality-report.md."
+    },
+    {
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/generated-full-match-quality-requirements.md",
+        "docs/full-play-runtime-performance-report.md",
+        "docs/rmg-audit-integrated-correction-report.md",
+        "docs/lessons-learned.md"
+      ],
+      "createdAt": "2026-09-06T12:03:25Z",
+      "nonGoals": [
+        "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification."
+      ],
+      "validationCommands": [
+        "python3 tests/generated_full_match_quality.py --case medium --label <fresh>",
+        "python3 tests/generated_full_match_quality.py --case large --label <fresh>",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py"
+      ],
+      "id": "performance-generated-full-match-actions-20260906",
+      "title": "Full-Match Responsiveness",
+      "classification": "implementation_slice",
+      "parentSliceId": "quality-generated-full-match-20260906",
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scripts/autoload/SaveService.gd",
+        "scripts/core/SessionStateStore.gd",
+        "scenes"
+      ],
+      "completionCriteria": [
+        "Name dominant measured hotspots",
+        "Improve full actions with matched complete-state/decision controls",
+        "Full-match and focused cache/performance/platform regressions"
+      ]
+    },
+    {
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/generated-full-match-quality-requirements.md",
+        "docs/full-play-runtime-performance-report.md",
+        "docs/rmg-audit-integrated-correction-report.md",
+        "docs/lessons-learned.md"
+      ],
+      "createdAt": "2026-09-06T12:03:25Z",
+      "nonGoals": [
+        "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification."
+      ],
+      "validationCommands": [
+        "python3 tests/generated_full_match_quality.py --case medium --label <fresh>",
+        "python3 tests/generated_full_match_quality.py --case large --label <fresh>",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py"
+      ],
+      "id": "ux-generated-full-match-presentation-20260906",
+      "title": "Full-Match Presentation Corrections",
+      "classification": "implementation_slice",
+      "parentSliceId": "quality-generated-full-match-20260906",
+      "implementationTargets": [
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownStageView.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests"
+      ],
+      "completionCriteria": [
+        "Reproduce and correct stray Town resources, footer crowding and building integration defects",
+        "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
+        "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
+      ]
+    },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
       "title": "RMG Audit Corrections",
@@ -110147,8 +110315,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "No required correction remains within this owner-directed audited boundary. Arbitrary-seed/allocator-history/private-buffer parity, unsupported configurations and whole-game release certification are not claimed; exact limits are in docs/rmg-audit-integrated-correction-report.md.",
-  "remainingWork": "Await owner selection of a new goal. Do not relabel broader Phase 3 or Phase 6 obligations as completed by this bounded audit-correction parent.",
+  "remainingGap": "Fresh complete Medium/Large matches, matched full-action improvements and corrected visual defects remain unproven. Prior raw non-RMG artifacts were removed under owner retention policy.",
+  "remainingWork": "Complete competent legal Medium/Large playthroughs including conquest; distinguish driver stalls from gameplay defects, then implement measured responsiveness and selected presentation corrections. Legacy Small guard-path report remains unresolved; do not change generation rules to satisfy it.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -110787,35 +110955,30 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "All six required correction children implemented and validated. Heroes start at exact owning town entrances; live levels/player teams/native passages and source adjacency persist through rules/AI/saves; source-proven normal-water endpoint duplication corrected. Full selected native/writeout/live/pool/regression/platform evidence is in docs/rmg-audit-integrated-correction-report.md. Completion is bounded to audited requirements, not arbitrary-seed/private-buffer/full-H3MapEd or release certification.",
+  "summary": "Three reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards and owned roster after Town return. Focused dual-resolution, required content, repository and Linux/Windows package checks pass. Full-match coverage, controlled responsiveness gains and presentation corrections remain incomplete.",
   "taskId": "10236",
-  "updatedAt": "2026-09-06T03:43:52Z",
+  "updatedAt": "2026-09-06T12:55:42Z",
   "validation": {
-    "id": "bugfix-rmg-audit-integrated-regressions-20260905-validation",
-    "sliceId": "bugfix-rmg-audit-integrated-regressions-20260905",
-    "title": "RMG Integrated Correctness Regressions",
-    "status": "completed",
-    "scope": "six_audit_corrections_integrated_with_explicit_sample_limits_not_whole_rmg_or_release_certification",
-    "validatedAt": "2026-09-06T03:43:52Z",
+    "id": "quality-generated-full-match-first-corrections-20260906",
+    "sliceId": "quality-generated-full-match-playthrough-20260906",
+    "title": "First full-match gameplay corrections",
+    "status": "in_progress",
+    "scope": "three_validated_gameplay_fixes_not_complete_match_or_goal_completion",
+    "validatedAt": "2026-09-06T12:55:42Z",
     "artifacts": [
-      "docs/rmg-audit-integrated-correction-report.md",
-      "docs/rmg-normal-water-correction-report.md",
-      ".artifacts/full_play_runtime_20260905/rmg_audit_integrated_complete/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_all_entrances/summary.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_players/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_caves/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_islands_journey_confirmed/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_water_same_run_private/summary.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_water_outer_private/summary.json",
-      ".artifacts/rmg_start_audit_20260905/water_source_flags_retained/summary.json",
-      ".artifacts/rmg_start_audit_20260905/water_final_rendered_1280/summary.json",
-      ".artifacts/rmg_start_audit_20260905/water_final_rendered_2048/summary.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_packages_linux/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_packages_windows/report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_final_linux_generated/live_validation_report.json",
-      ".artifacts/rmg_start_audit_20260905/integrated_tools_repo.log"
+      "docs/generated-full-match-quality-report.md",
+      ".artifacts/generated_full_match_quality_20260906/arrival_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/arrival_final_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/route_regressions/report.json",
+      ".artifacts/generated_full_match_quality_20260906/required_content_smokes_dbus/report.json",
+      ".artifacts/generated_full_match_quality_20260906/required_content_smokes_corrected/report.json",
+      ".artifacts/generated_full_match_quality_20260906/medium_match_03/report.json",
+      ".artifacts/generated_full_match_quality_20260906/large_match_02/report.json",
+      ".artifacts/generated_full_match_quality_20260906/linux_export/report.json",
+      ".artifacts/generated_full_match_quality_20260906/windows_export/report.json",
+      ".artifacts/generated_full_match_quality_20260906/linux_generated/live_validation_report.json"
     ],
-    "result": "Corrected legacy authored-pool dwelling/validator expectations with exact identities and source masks, added permanent water/default matrix and strict private joins plus reusable --rmg suite. Final 18/18 runtime reports, 26 Python tests, 85 exact starts/36 supported live cases, three 32-check player/team cases, eight cave ends and six Islands journeys with real raid/save handoff pass. All six water grids/24 retained payloads exact; native code unchanged since validated water commit. Both final packages/generated Town flows pass at 248438264 bytes; screenshots inspected. Evidence: docs/rmg-audit-integrated-correction-report.md."
+    "result": "Three reproduced gameplay defects corrected: current-tile Town/Battle orders, placement-scoped guard rewards and owned roster after Town return. Focused dual-resolution, required content, repository and Linux/Windows package checks pass. Full-match coverage, controlled responsiveness gains and presentation corrections remain incomplete. The unchanged legacy Small guard-path report fails no_reachable_hostile_town. Medium attempts stall at Days 18/21; Large Day-5 defeat is rejected for missing development/recruitment coverage."
   },
   "validationHistory": [
     {
