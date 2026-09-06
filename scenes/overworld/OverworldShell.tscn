@@ -818,9 +818,9 @@ layout_mode = 2
 
 [node name="SystemPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 8
+theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 8
+theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 5
 
 [node name="SystemBox" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad"]
@@ -829,8 +829,10 @@ theme_override_constants/separation = 6
 
 [node name="SaveStatus" type="Label" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(62, 0)
+custom_minimum_size = Vector2(76, 0)
 layout_mode = 2
+clip_text = true
+text_overrun_behavior = 4
 text = "M1 none"
 
 [node name="EndTurn" type="Button" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox"]

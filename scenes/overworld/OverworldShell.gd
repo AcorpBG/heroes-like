@@ -4448,7 +4448,7 @@ func _surface_generated_opening_autosave_failure(save_result: Dictionary) -> voi
 		)
 
 func _set_generated_opening_autosave_failure_surface() -> void:
-	_save_status_label.text = "Save: opening autosave failed"
+	_save_status_label.text = "Save failed"
 	_save_status_label.tooltip_text = GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE
 	_save_button.text = "Save"
 	_save_button.tooltip_text = GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE

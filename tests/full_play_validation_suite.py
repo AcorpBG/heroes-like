@@ -39,6 +39,9 @@ SCENES = [
     "overworld_ambient_audio_runtime_report",
     "settings_transactional_persistence_regression",
     "generated_large_town_explicit_save_surface_regression",
+    "generated_opening_autosave_failure_retry_regression",
+    "active_play_save_written_cue_playback_report",
+    "active_play_load_resumed_cue_playback_report",
     "town_screen_layout_and_dialog_controls_report",
     "army_stack_management_bar_runtime_report",
     "hero_field_rendezvous_army_transfer_report",
@@ -59,8 +62,8 @@ SCRIPTED_REWARD_SCENES = [
     "final_nine_faction_campaigns_smoke",
     "uncrowned_circuit_campaign_smoke",
 ]
-# This existing report unconditionally awaits RenderingServer.frame_post_draw.
-REQUIRES_RENDERED = {"final_nine_faction_campaigns_smoke"}
+# These reports observe an actual drawn frame, not a headless timing surrogate.
+REQUIRES_RENDERED = {"final_nine_faction_campaigns_smoke", "active_play_load_resumed_cue_playback_report"}
 RMG_SCENES = [
     "native_rmg_end_to_end_runtime_boundary_report",
     "native_random_map_homm3_re_object_table_proxy_report",
@@ -87,6 +90,7 @@ RMG_SCENES = [
 # assert rollback/retry/route safety. Only their exact domain issue is expected;
 # a failed test marker, any script error or any other native error still fails.
 EXPECTED_INJECTED_ISSUES = {
+    "generated_opening_autosave_failure_retry_regression": ("ERROR: generated_opening_autosave_failed:", "ERROR: end_turn_autosave_failed:"),
     "application_battle_entry_autosave_failure_regression": "ERROR: battle_entry_autosave_failed:",
     "battle_resolution_autosave_failure_route_safety_regression": "ERROR: battle_resolution_autosave_failed:",
     "overworld_end_turn_autosave_failure_regression": "ERROR: end_turn_autosave_failed:",
@@ -98,24 +102,31 @@ EXPECTED_INJECTED_ISSUES = {
 @contextmanager
 def report_scene(name: str, source: str, out: Path):
     """Adapt the legacy surface setup, never its gameplay/UI assertions."""
-    if name != "town_recruitment_ui_surface_report":
-        yield "res://tests/" + name + ".tscn"
-        return
-    anchor = '\tshell.call("validation_force_refresh")\n\tawait get_tree().process_frame\n'
-    if source.count(anchor) != 1:
-        raise ValueError("Recruitment report setup changed; review the real-modal adapter")
-    setup = anchor + '''\tshell.call("_open_town_catalog", "muster")
+    if name == "town_recruitment_ui_surface_report":
+        anchor = '\tshell.call("validation_force_refresh")\n\tawait get_tree().process_frame\n'
+        setup = anchor + '''\tshell.call("_open_town_catalog", "muster")
 \tawait get_tree().process_frame
 \tvar modal: Dictionary = shell.call("validation_town_catalog_snapshot")
 \tif not bool(modal.get("open", false)) or modal.get("mode", "") != "muster" or not bool(modal.get("muster_grid_visible", false)):
 \t\terrors.append("Real Muster modal is not visible for recruitment surface validation.")
 '''
-    with tempfile.TemporaryDirectory(prefix="real-muster-", dir=out) as temporary:
+    elif name == "generated_opening_autosave_failure_retry_regression":
+        anchor = '\tsession.flags["generated_random_map"] = true\n'
+        setup = anchor + '\tOverworldRules.normalize_overworld_state(session)\n'
+    elif name == "active_play_load_resumed_cue_playback_report":
+        anchor = '\tvar action_result: Dictionary = menu.call("validation_resume_selected_save")\n\tawait _settle()\n'
+        setup = '\tvar action_result: Dictionary = menu.call("validation_resume_selected_save")\n\tawait get_tree().scene_changed\n\tawait RenderingServer.frame_post_draw\n'
+    else:
+        yield "res://tests/" + name + ".tscn"
+        return
+    if source.count(anchor) != 1:
+        raise ValueError(name + ": report setup changed; review the live-surface adapter")
+    with tempfile.TemporaryDirectory(prefix="live-surface-", dir=out) as temporary:
         work = Path(temporary)
         script = work / "probe.gd"
         script.write_text(source.replace(anchor, setup, 1))
         scene = work / "probe.tscn"
-        scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="RealMusterSurface" type="Node"]\nscript = ExtResource("1")\n' % script.relative_to(ROOT))
+        scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="LiveSurface" type="Node"]\nscript = ExtResource("1")\n' % script.relative_to(ROOT))
         yield "res://" + str(scene.relative_to(ROOT))
 
 
