@@ -197,6 +197,21 @@ bonus across factions, radius boundaries, ties, captures and real Large targets
 using `tests/ai_town_support_radius_regression.py`. Complete End Turn serialized
 states, including AI choices and autosaves, must still match the recorded control.
 
+Overworld scenery-index reuse must not rebuild unchanged decorative/standalone
+objects when a town, resource, artifact or encounter changes. The cache belongs
+to the view only: identify every input used to construct those records, including
+session identity, dimensions, view level, terrain rows, complete ordered map-object
+payloads and relevant manifest mappings. Null/reset, session replacement, changed
+body masks/order/metadata/terrain/level/assets and forced reference rebuilds must
+refresh correctly. Compare every indexed payload against the prior uncached
+owner, including generated-body overlap/source ids and raster assignments; equal
+counts alone are insufficient. Preserve complete serialized game state, original
+save files, ordinary collection/collision/fog behavior and rendered appearance.
+Use real Medium/Large saved cases plus explicitly separate boundary fixtures;
+measure cold and changed-interaction refreshes and real usable commands without
+claiming microbench timings as whole-game improvement. Do not modify generation,
+placement, masks, art, manifest contents, gameplay or saves to make reuse succeed.
+
 ## Presentation and compatibility
 
 Inspect early/developed towns, Overworld and battle/outcome screens at 1280x720

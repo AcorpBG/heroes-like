@@ -1022,3 +1022,43 @@ Overworld observation, not Town-art acceptance. The Day-54 checkpoint has
 runtime errors and no terminal outcome. The goal and all three children remain
 in progress; Town-art scope and superseded export/environment cleanup approval
 remain outstanding.
+
+## Scenery refresh checkpoint — 2026-09-06
+
+The selected responsiveness child now changes production `OverworldMapView`:
+resource claims and other live interaction changes reuse unchanged decorative
+and standalone scenery indexes. Complete construction inputs, manifest reload,
+state-layer redraw and session/reset boundaries remain authoritative. No art,
+placement, native map generation, gameplay rules or save fields change. Root
+cause, exact source/save hashes, cold-load overhead and validation are in
+`docs/generated-full-match-performance-report.md`, "Overworld scenery-index
+reuse"; this is an actual renderer correction, not driver speed attributed to
+the game.
+
+The exact old/current owner comparison passes 95 checks on each real Medium and
+Large save. Three matched ordinary rendered collection commands per size preserve
+complete final states and indexes, with zero decorative rebuild calls instead of
+753/1953. Summed command waiting is 12.4%/33.6% lower in these particular repeated
+cases; the live match continues concurrently, so these are not whole-game or
+isolated-machine results. Inspected before/collected captures are byte-identical
+between owners. They also expose a pre-existing stale movement amount in the
+owned-hero label, retained here as the next narrow UI refresh defect. This does
+not satisfy Town-building integration or broader presentation acceptance.
+
+Fresh Linux/Windows exports, startup and packaged generated-map/Town entry pass;
+both PCKs are 248454200 bytes, 1545800 bytes below the unchanged ceiling. Temporary
+exports and test environments used RAM and were disposed after validation, while
+reports/screenshots and all older artifacts/caches remain. Windows is Wine-only.
+The final seven-report sprite/movement/fog/generated-map suite, all 25 real
+collection/collision/save checks, 12 Python acceptance tests, repository validation
+and diff checks pass. The earlier suite-launcher argument mistakes are recorded
+explicitly in the performance report, not counted as completed validation.
+The heroes-progress workflow selected and scoped this renderer checkpoint; it
+does not mark the parent or children complete.
+
+At the independently observed Day-64 checkpoint, live `medium_match_11` has
+1558/1558 valid army-capacity observations, 46 battles and zero runtime errors.
+It is still nonterminal on its original preloaded runtime/driver, not silently
+upgraded or restarted for this optimization. Large08's legitimate Day-14 defeat
+remains the accepted bounded Large outcome. Complete Medium coverage, full-match
+responsiveness and scene-matched Town buildings remain unfinished.

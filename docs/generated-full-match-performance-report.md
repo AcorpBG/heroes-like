@@ -5,7 +5,7 @@ Phase 6 child `performance-generated-full-match-actions-20260906`, under
 `docs/generated-full-match-quality-requirements.md`. **In progress**, not complete
 matches, game-wide performance approval or release readiness.
 
-Latest coverage boundary: Large08 reached a real Day-14 defeat after conquest;
+Earlier command/footer coverage boundary: Large08 reached a real Day-14 defeat after conquest;
 Medium10 stopped nonterminal on Day 35. Their 201/608 action capacity traces pass,
 but both ran alongside validation and were identity-checked/paused for 119 seconds
 during cue isolation (`command_layout_feedback_pause.json`). These profiles are
@@ -139,6 +139,122 @@ excluded. Windows execution is Wine, not physical Windows/GPU certification.
 No native library or generated-map semantics changed. Repository validation and
 `git diff --check` pass; prior unrelated legacy failures remain documented in the
 gameplay report and are not reclassified as successes.
+
+## Overworld scenery-index reuse: implemented
+
+`OverworldMapView._rebuild_static_object_indexes` rebuilt all generated decorative
+body records whenever resource claims, Town control or encounters changed. Live
+Medium11 click profiles spent about 340 ms in object-index construction. The
+unchanged recorded Medium Day-43 save contains 753 decorative placements producing
+2380 body cells; Large08's Day-8 save has 1953 placements and 6309 cells. These
+painted cells do not change merely because the player claims a resource.
+
+The view now retains its three scenery indexes independently of the live Town,
+resource, artifact and encounter indexes. Its signature includes session identity,
+map dimensions, view level, terrain, complete ordered object records and the
+relevant art mappings. Changed scenery invalidates the drawn state layer too;
+manifest reload explicitly invalidates even unchanged asset ids. Null/reset,
+replacement sessions and forced rebuilds remain supported. The original body
+construction loop, source ids, overlap ordering, masks and raster choices are
+unchanged. This does not add a session/save cache, alter art or modify generation,
+pathing, interaction rules, AI or saves.
+
+`tests/overworld_scenery_index_regression.py` compares all ten complete index
+dictionaries against the exact old owner from `ddd8d6ad`, not merely counts or
+screenshots. Explicit boundary mutations are detached renderer fixtures, not
+actions in an accepted match. Final `scenery_index_medium_release` and
+`scenery_index_large_release` each pass **95 checks**, exit 0, zero engine errors
+and unchanged source saves. Coverage includes ordinary interaction state,
+complete object metadata, terrain, masks, overlap, placement order, manifest
+candidate order and reload, standalone mappings, dimensions, level switching,
+forced rebuilds, session replacement and null/reset. The original-owner baseline
+`scenery_index_before` fails 15 of its 64 checks, exposing wasted rebuilds and
+partial-input invalidation. It is retained as a failing diagnostic.
+
+Selected final `set_map_state` timings, milliseconds; single headless comparisons,
+not full input latency:
+
+| Saved case / update | Old owner | Current owner |
+| --- | ---: | ---: |
+| Medium resource claim | 160.397 | 22.642 |
+| Medium Town control | 158.093 | 23.479 |
+| Medium encounter resolution | 153.119 | 22.796 |
+| Medium artifact claim | 151.333 | 24.791 |
+| Large resource claim | 444.025 | 53.899 |
+| Large Town control | 425.811 | 56.294 |
+| Large encounter resolution | 423.390 | 54.842 |
+| Large artifact claim | 427.709 | 52.682 |
+
+All eight interaction updates make zero decorative-body construction calls,
+versus 753/1953 before. Full-input hashing has a cost: unchanged Medium refresh is
+16.430 vs 10.312 ms, Large 39.341 vs 34.046 ms; cold Medium load is 147.195 vs
+110.943 ms, Large 458.791 vs 336.448 ms. This is an interaction-refresh optimization,
+not a cold-load or idle-rendering improvement.
+
+Rendered controls use ordinary `OverworldShell` pointer-selection/activation
+handlers, real visible unguarded claims and settled presentation at 1280x720 with
+reduced motion. Both variants restore the same unmodified save. Medium travels
+from `(35,32)` to Waystone Cache `native_h3maped_93c0f05a_object_1154` at `(48,29)`;
+Large travels from `(41,74)` to Aetherglass Lens House
+`native_h3maped_c2520619_object_2308` at `(40,74)`. No coordinates, movement,
+resources, fog or battle results are injected. Complete resulting state and all
+ten indexes match the old owner; the optimized view makes zero body rebuilds.
+
+Three sequential matched rendered pairs per size (`scenery_movement_medium`,
+`_medium_02`, `_medium_03`; `_large_02`, `_large_03`, `_large_04`) pass, with no
+engine errors or changed source saves. Full usable-command p50 is **1443 to
+1295 ms** on Medium and **1646 to 1058 ms** on Large. Summed waiting across the
+three pairs is **12.4%** and **33.6%** lower respectively. These are two specific
+resource commands, always reference then current, while the independent live
+Medium match continues. They are not randomized-order, isolated-machine or
+whole-game benchmarks; no idle FPS, cold-entry or complete-match speedup is
+claimed. The repeated no-capture runs avoid storing redundant images.
+
+The retained `scenery_movement_medium` and `scenery_movement_large_02` before and
+collected PNGs are byte-identical between owners. Collected views were opened and
+visually inspected at both sizes: scenery, fog/minimap, all seven army slots and
+the command/system footer are unchanged and remain visible. One existing defect
+is now explicit: the owned-hero movement label still displays the opening amount
+(26/26 Medium, 15/15 Large) after actual movement becomes 13/26 and 14/15. It
+appears in both owners, is not fixed here and needs a separate UI refresh change.
+The first Large movement fixture found no eligible hardcoded pickup; it failed
+without actions. Adding the existing, visible and claim-feasible Lens House to
+the test's candidate list permits the accepted real-action comparison; no game
+content or selection rules changed.
+
+Source save hashes remain Medium
+`553ceb3ea972412cd72341ff627fa73c6864f9bcbfb6cc428923ebec5712de59`
+and Large `f30453a639d1bae75839292979f05a71b626fb952a20e6eacd0422a9a625545d`.
+Old/current view SHA-256:
+`dad5b56e605f3965b67448510b3af6e1218e31bb2c132a47835073f5dbf719db` /
+`2cffb1dcdbafbd7481ab55f27b19193c076358db8f50ad039c7c9f942a5c4533`.
+Current production digest is
+`548b7bfc61eb325e6de2837368414c27e27244ced9414c60bf57d207050af379`.
+
+Fresh `scenery_linux_release` and `scenery_windows_release` pass export, native
+sidecar and startup checks, plus real packaged generated-map/Town entry
+(`generated-entry` and `generated-flow`). Both PCKs are **248454200 bytes**, with
+**1545800 bytes** remaining below the unchanged ceiling. Windows execution uses
+Wine, not physical Windows. The established checkers/assertions were unchanged;
+fresh binaries and isolated user data/Wine prefixes were disposable in RAM under
+disk pressure. Logs, reports and visual evidence remain; no older artifacts or
+caches were deleted. Identical PNGs from this checkpoint share disk blocks while
+retaining all eight filenames and exact bytes.
+
+Existing regression evidence is
+`.artifacts/full_play_runtime_20260905/scenery_existing_release_02/report.json`:
+**7/7 pass** (distinct map objects, decorative sprites, placeholder-art resolution,
+movement input ownership, full-route movement, fog and generated-map profile),
+with zero runtime errors. `scenery_consumed_release_02/report.json` passes all
+**25** actual collection/collision/save checks, including overlapping scenery,
+permanent sites and retained native transit bodies. All **12** full-match Python
+acceptance tests, `python3 tests/validate_repo.py` and `git diff --check` pass.
+No existing domain assertions were relaxed. The disposable suite launcher first
+rejected two names outside its allowlist; its next invocation mistakenly repeated
+`--only` and ran just the last report. Neither is treated as seven-report evidence.
+The final launcher supplies one `--only` list and retains the complete passing
+seven-row report; only temporary user-data locations differ from established
+checks. The initial, separately passing collection check is also retained.
 
 ## Current limits
 
