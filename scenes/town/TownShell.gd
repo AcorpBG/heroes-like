@@ -702,10 +702,30 @@ func _prepare_build_read_context(action_id: String) -> Dictionary:
 	OverworldRules.end_normalized_read_scope(_session)
 	return {"selected": selected, "before": before, "action": action}
 
+func _prepare_order_read_context(action_id: String) -> Dictionary:
+	# The signature and catalog share many town/world reads. Their cache lives
+	# only for this synchronous preflight and MUST end before the order mutates.
+	OverworldRules.begin_normalized_read_scope(_session)
+	TownRules.begin_read_scope(_session)
+	var before := TownRules.town_action_consequence_signature(_session)
+	var action := _validation_action_for_id(action_id)
+	TownRules.end_read_scope(_session)
+	OverworldRules.end_normalized_read_scope(_session)
+	return {"before": before, "action": action}
+
+func _read_action_consequence_signature() -> Dictionary:
+	OverworldRules.begin_normalized_read_scope(_session)
+	TownRules.begin_read_scope(_session)
+	var signature := TownRules.town_action_consequence_signature(_session)
+	TownRules.end_read_scope(_session)
+	OverworldRules.end_normalized_read_scope(_session)
+	return signature
+
 func _on_recruit_action_pressed(action_id: String) -> void:
 	var full_action_id := "recruit:%s" % action_id
-	var before := TownRules.town_action_consequence_signature(_session)
-	var action := _validation_action_for_id(full_action_id)
+	var context := _prepare_order_read_context(full_action_id)
+	var before: Dictionary = context.before
+	var action: Dictionary = context.action
 	var result := TownRules.recruit_active_town(_session, action_id)
 	_record_town_action_result("recruit", full_action_id, action, result, before)
 	_invalidate_active_town_entity_cache("recruit", ["town", "economy", "hero_army"])
@@ -715,8 +735,9 @@ func _on_recruit_action_pressed(action_id: String) -> void:
 	_record_town_action_presentation("recruit", full_action_id, action, result, before)
 
 func _on_market_action_pressed(action_id: String) -> void:
-	var before := TownRules.town_action_consequence_signature(_session)
-	var action := _validation_action_for_id(action_id)
+	var context := _prepare_order_read_context(action_id)
+	var before: Dictionary = context.before
+	var action: Dictionary = context.action
 	var result := TownRules.perform_market_action(_session, action_id)
 	if result.is_empty():
 		return
@@ -728,8 +749,9 @@ func _on_market_action_pressed(action_id: String) -> void:
 	_record_town_action_presentation("market", action_id, action, result, before)
 
 func _on_hero_action_pressed(action_id: String) -> void:
-	var before := TownRules.town_action_consequence_signature(_session)
-	var action := _validation_action_for_id(action_id)
+	var context := _prepare_order_read_context(action_id)
+	var before: Dictionary = context.before
+	var action: Dictionary = context.action
 	var result := {}
 	if action_id.begins_with("switch_hero:"):
 		result = TownRules.switch_active_hero_at_town(_session, action_id.trim_prefix("switch_hero:"))
@@ -742,9 +764,10 @@ func _on_hero_action_pressed(action_id: String) -> void:
 	_refresh()
 
 func _on_tavern_action_pressed(action_id: String) -> void:
-	var before := TownRules.town_action_consequence_signature(_session)
+	var context := _prepare_order_read_context(action_id)
+	var before: Dictionary = context.before
 	before["player_hero_ids"] = _town_player_hero_ids()
-	var action := _validation_action_for_id(action_id)
+	var action: Dictionary = context.action
 	var result := {}
 	if action_id.begins_with("hire_hero:"):
 		result = TownRules.hire_hero_at_active_town(_session, action_id.trim_prefix("hire_hero:"))
@@ -758,9 +781,10 @@ func _on_tavern_action_pressed(action_id: String) -> void:
 	_record_town_action_presentation("tavern", action_id, action, result, before)
 
 func _on_transfer_action_pressed(action_id: String) -> void:
-	var before := TownRules.town_action_consequence_signature(_session)
+	var context := _prepare_order_read_context(action_id)
+	var before: Dictionary = context.before
 	before["transfer"] = _town_transfer_holder_snapshot(action_id)
-	var action := _validation_action_for_id(action_id)
+	var action: Dictionary = context.action
 	var result := TownRules.transfer_in_active_town(_session, action_id)
 	if result.is_empty():
 		return
@@ -804,8 +828,9 @@ func _refresh_army_management(town: Dictionary) -> void:
 	_army_management.configure(holders, not holders.is_empty())
 
 func _on_response_action_pressed(action_id: String) -> void:
-	var before := TownRules.town_action_consequence_signature(_session)
-	var action := _validation_action_for_id(action_id)
+	var context := _prepare_order_read_context(action_id)
+	var before: Dictionary = context.before
+	var action: Dictionary = context.action
 	var result := TownRules.perform_response_action(_session, action_id)
 	if result.is_empty():
 		return
@@ -818,9 +843,10 @@ func _on_response_action_pressed(action_id: String) -> void:
 
 func _on_study_action_pressed(action_id: String) -> void:
 	var full_action_id := "learn_spell:%s" % action_id
-	var before := TownRules.town_action_consequence_signature(_session)
+	var context := _prepare_order_read_context(full_action_id)
+	var before: Dictionary = context.before
 	before["known_spell_ids"] = _town_active_known_spell_ids()
-	var action := _validation_action_for_id(full_action_id)
+	var action: Dictionary = context.action
 	var result := TownRules.learn_spell_at_active_town(_session, action_id)
 	_record_town_action_result("order", full_action_id, action, result, before)
 	_invalidate_active_town_entity_cache("study", ["active_hero", "spells"])
@@ -830,10 +856,11 @@ func _on_study_action_pressed(action_id: String) -> void:
 	_record_town_action_presentation("study", full_action_id, action, result, before)
 
 func _on_artifact_action_pressed(action_id: String) -> void:
-	var before := TownRules.town_action_consequence_signature(_session)
+	var context := _prepare_order_read_context(action_id)
+	var before: Dictionary = context.before
 	var hero_before: Dictionary = _session.overworld.get("hero", {}).duplicate(true) if _session.overworld.get("hero", {}) is Dictionary else {}
 	before["hero_artifacts"] = ArtifactRules.normalize_hero_artifacts(hero_before.get("artifacts", {}))
-	var action := _validation_action_for_id(action_id)
+	var action: Dictionary = context.action
 	var result := TownRules.manage_artifact_at_active_town(_session, action_id)
 	_record_town_action_result("order", action_id, action, result, before)
 	_invalidate_active_town_entity_cache("artifact", ["active_hero", "artifacts"])
@@ -843,9 +870,10 @@ func _on_artifact_action_pressed(action_id: String) -> void:
 	_record_town_artifact_presentation(action_id, action, result, before)
 
 func _on_specialty_action_pressed(action_id: String) -> void:
-	var before := TownRules.town_action_consequence_signature(_session)
+	var context := _prepare_order_read_context(action_id)
+	var before: Dictionary = context.before
 	before["hero_progression"] = HeroProgressionRules.ensure_hero_progression(_session.overworld.get("hero", {})).duplicate(true)
-	var action := _validation_action_for_id(action_id)
+	var action: Dictionary = context.action
 	var result := {}
 	if action_id.begins_with("choose_specialty:"):
 		result = TownRules.choose_specialty_at_active_town(_session, action_id.trim_prefix("choose_specialty:"))
@@ -5391,7 +5419,11 @@ func _record_town_action_result(
 ) -> void:
 	var profile_started := ProfileLogScript.begin_usec()
 	_last_message = String(result.get("message", ""))
+	OverworldRules.begin_normalized_read_scope(_session)
+	TownRules.begin_read_scope(_session)
 	_last_action_recap = TownRules.build_town_action_recap(_session, lane, action_id, action, result, before)
+	TownRules.end_read_scope(_session)
+	OverworldRules.end_normalized_read_scope(_session)
 	if bool(_last_action_recap.get("active", false)):
 		_session.flags["last_town_action_recap"] = _last_action_recap.duplicate(true)
 	if not result.is_empty() and not bool(result.get("ok", false)):
@@ -5419,7 +5451,7 @@ func _record_town_action_presentation(
 		return
 	if _town_stage_view == null or not _town_stage_view.has_method("present_town_action"):
 		return
-	var after := TownRules.town_action_consequence_signature(_session)
+	var after := _read_action_consequence_signature()
 	if lane == "study":
 		after["known_spell_ids"] = _town_active_known_spell_ids()
 	elif lane == "tavern":
@@ -5724,7 +5756,7 @@ func _record_town_artifact_presentation(
 	var hero_after: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
 	var before_artifacts: Dictionary = before.get("hero_artifacts", {}) if before.get("hero_artifacts", {}) is Dictionary else {}
 	var hero_before := {"artifacts": before_artifacts.duplicate(true)}
-	var after := TownRules.town_action_consequence_signature(_session)
+	var after := _read_action_consequence_signature()
 	var event_id := ""
 	var artifact_action_kind := ""
 	var artifact_id := ""

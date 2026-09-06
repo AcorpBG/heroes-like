@@ -16561,9 +16561,9 @@ static func _linked_player_town_bonus(session: SessionStateStoreScript.SessionDa
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
 			continue
-		var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
+		var support_radius: int = OverworldRulesScript.town_logistics_support_radius(session, town)
 		var distance: int = abs(int(node.get("x", 0)) - int(town.get("x", 0))) + abs(int(node.get("y", 0)) - int(town.get("y", 0)))
-		if distance > int(logistics.get("support_radius", 0)):
+		if distance > support_radius:
 			continue
 		if distance < best_distance:
 			best_distance = distance

@@ -5230,6 +5230,14 @@ static func town_capital_project_state(town: Dictionary, session: SessionStateSt
 	_town_read_scope_cache_store(cache_key, result)
 	return result
 
+static func town_logistics_support_radius(session: SessionStateStoreScript.SessionData, town: Dictionary) -> int:
+	# Exact projection of _town_logistics_state: scoring a nearby resource does
+	# not need to enumerate every linked site, threat, escort and delivery.
+	# Read the live plan each time; no state survives a capture or plan change.
+	if session == null or town.is_empty() or _town_controller_id(town) == "":
+		return 0
+	return int(_town_logistics_plan(town).get("support_radius", 0))
+
 static func town_logistics_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	var cache_key := _town_read_scope_cache_key(session, "logistics", town)
 	if _town_read_scope_cache_has(cache_key):

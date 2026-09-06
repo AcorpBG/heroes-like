@@ -1,7 +1,9 @@
 # Generated full-match quality: gameplay corrections
 
 2026-09-06. Active Phase 6 parent `quality-generated-full-match-20260906`,
-current child `quality-generated-full-match-playthrough-20260906`. Requirements:
+playthrough child `quality-generated-full-match-playthrough-20260906` remains
+in progress; current implementation child is the measured responsiveness work.
+Requirements:
 `docs/generated-full-match-quality-requirements.md`. This is an implementation
 checkpoint, **not completion of the child, full matches, or release readiness**.
 
@@ -133,11 +135,14 @@ avoids re-reading signs/portal shuttling, and retains the same legal movement
 rules. The original Day-21 route defect is now diagnosed and fixed as described
 above.
 
-Subsequent legal continuations have moved beyond that area. `medium_match_07`
-reached Day 33 with three owned towns and a real growing army; `large_match_05`
-reached Day 15 after capturing enemy Mireclaw town 2169 and clearing guards. Both
-were still running at this checkpoint, **not accepted terminal matches**. Their
-prefixes include the actual opening, development, battles and save checkpoints.
+Subsequent legal continuations moved beyond that area. `medium_match_07` reached
+Day 54, after owning three towns and then losing two, but failed its fourteen-day
+no-progress gate. It repeatedly targeted artifacts while arriving at controlled
+resource-site actions, spending movement before reaching hostile towns. The
+driver/placement routing cause remains to be isolated; the failed report is
+retained, not called a completed match. `large_match_05` continues after capturing
+enemy Mireclaw town 2169 and neutral town 2178. Neither is an accepted terminal
+match. Their prefixes include actual development, battles and save checkpoints.
 The driver now invests in available recruitment buildings, checks visible portal
 guards, targets legal guard-zone edges and backtracks through visited entrances.
 These are test-policy improvements, not production AI/balance fixes.
@@ -159,12 +164,15 @@ needs separate focused reproduction before any correction or determinism claim.
 
 Large observations include multi-second builds and roughly ten-second turns;
 some runs overlapped validation processes, so these are responsiveness warnings,
-not controlled before/after benchmark results. No optimization gain is claimed.
+not controlled before/after benchmark results. Subsequent controlled actual Town
+orders and complete End Turns now show behavior-preserving improvements in
+`docs/generated-full-match-performance-report.md`; those limited measurements do
+not establish whole-match responsiveness.
 The inspected Veilmourn Town still has detached-looking building sprites and
 stray footer resource text; the presentation child remains pending.
 
 Next: establish competent legal Medium/Large exploration/conquest through real
-terminal outcomes and terminal save/resume, then select the dominant measured
-full-action hotspots and address the recorded Town/Overworld presentation gaps.
+terminal outcomes and terminal save/resume, continue measured full-action
+optimization and address the recorded Town/Overworld presentation gaps.
 Keep all three children and the parent honest; individual fixes and package
 success do not establish complete-match or product readiness.
