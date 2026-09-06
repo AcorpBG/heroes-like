@@ -333,14 +333,85 @@ Evidence root: `.artifacts/generated_full_match_quality_20260906/`.
 The defect is **not fully closed**. The same saved Medium observer reports Town
 0950 with 14 stacks, Town 0951 with nine, and two enemy raids/roster armies with
 eleven. The retained Large Day-37 save also has nine in enemy Town 2170.
-`EnemyTurnRules._recruit_town_forces` and `_apply_reinforcement_to_raid`, and
-`EnemyAdventureRules.reinforce_commander_roster_army`, site grants and Town/raid
-handoffs still append without capacity protection. `ScenarioScriptRules` marks
-one-shot hooks fired before applying unbounded army/garrison grants; 106 authored
-reinforcement hooks need reward-preserving behavior, not silent rejection. These
-owners are unchanged in this checkpoint and remain explicit next implementation.
+At that player-only checkpoint, `EnemyTurnRules` recruitment and
+`EnemyAdventureRules` roster/site/Town/raid handoffs still appended without
+capacity protection. The following AI checkpoint corrects those owners without
+rewriting older oversized saves. `ScenarioScriptRules` still marks one-shot hooks
+fired before unbounded army/garrison grants; 106 authored reinforcement hooks need
+reward-preserving behavior, not silent rejection.
 
-Next: close AI/script admission without losing rewards, then establish competent
+### AI army admissions and feasible orders
+
+The unchanged `e8f4db7d` AI reproduced **16 failures in 17 checks**:
+an eighth paid stack spent treasury/reserves, direct and opportunistic site claims
+consumed rewards, and whole-host transfers could retire a donor while overflowing
+the recipient. The first matching-unit control passed. Evidence:
+`ai_army_capacity_before_01` under the same generated-full-match evidence root.
+
+`EnemyTurnRules._recruit_town_forces` and `_apply_reinforcement_to_raid` now
+preflight the shared `HeroCommandRules.army_addition_plan` before purchase/commit.
+`EnemyAdventureRules.reinforce_commander_roster_army` and both site claim owners
+do the same before claim/spoils/roster mutation. Consolidation, town defense and
+empty-neutral-town capture plan whole-host transfers before ownership/commander
+changes. Resupply transfers fitting stacks only, retaining rejected source troops
+and their slot metadata. No price, target score, map, art, balance or save-version
+change; old excess is not truncated or converted into a new carrying reserve.
+The admission army resolver retains saved commander continuity when an explicit
+raid army has not yet been populated, matching restoration precedence instead of
+substituting the encounter's starter troops. Claims, handoffs and selection use
+that same resolution.
+
+Current target validation, current-tile claims, ordinary/explicit selection,
+saved/live tasks and threatened/post-capture town defense use the same admission
+feasibility. Grouping skips incompatible donors and can select another fitting
+one. Held-site defense, which grants no new claim recruits, remains available.
+
+Evidence:
+
+- `ai_army_capacity_expanded_02`: **46 focused checks pass**, zero engine errors.
+  Tests cover complete-state rejection, real commander retention, matching paid
+  and roster recruitment, exact site grants, atomic handoff rejection after a
+  fitting prefix, fitting town defense/capture, partial resupply and target
+  selection. `ai_army_capacity_after_01` first passed the original 17 checks.
+  Initial selection/probe iterations with parse errors are retained as failed
+  attempts, not counted as behavior passes.
+- `ai_army_capacity_continuity_before`: four added checks reproduce starter-army
+  substitution, incompatible consolidation and lost saved troops on the first AI
+  correction, without engine errors. The final 55 focused checks include these
+  controls plus continuity-only resupply, town defense/capture and target choices.
+- `ai_army_capacity_verified_medium` and `ai_army_capacity_verified_large`:
+  **95 checks pass each**, including those 55 focused checks and two ordinary
+  seven-turn replays from the same freshly
+  generated opening, all serialized state equal after every turn. The production
+  match capacity observer checks heroes, garrisons, encounters and commander
+  rosters, with zero violations. Seeds/configurations match the representative
+  Medium/Large cases above. No injected armies, removed opponents or forced
+  outcomes. These are rule-level early turns, explicitly **not terminal matches**.
+  Large rule-call timings reached 7.42 seconds under concurrent test load; no
+  timing comparison or full-action improvement is claimed from this correctness
+  test. Earlier 86/90/93-check iterations remain historical evidence only.
+- `ai_army_capacity_domains_verified` in `.artifacts/full_play_runtime_20260905/`:
+  all five existing town-defense, recruitment-preparation, assault-grouping,
+  live-task execution and known-world-memory reports pass without engine errors.
+  The Python suite now accepts the two newly selected defense/preparation reports
+  directly; no historical assertions were removed or weakened.
+- `ai_army_capacity_validate_repo_verified.log`: repository validation passes.
+  `ai_army_capacity_acceptance_verified.log` records eleven passing Python
+  full-match acceptance/resume tests; `git diff --check` passes.
+- `ai_army_capacity_linux_verified` and `ai_army_capacity_windows_verified`:
+  export and startup checks pass, including Windows generated Overworld/Town
+  entry under Wine. `ai_army_capacity_linux_entry_verified` passes that generated
+  entry flow from the Linux export too. All processes exit zero. Both PCKs are
+  **248446360 bytes**, 1553640 below the decimal 250 MB ceiling.
+  Windows-native hardware testing remains unproven. No visual layout was changed
+  by this AI checkpoint; the previously inspected presentation gaps remain open.
+
+The older `medium_match_08` and `large_match_06` subsequently exhausted their
+7200-second observation windows without terminal reports. Their oversized-army
+prefixes cannot become accepted full matches by resuming them or truncating their
+troops. Fresh legal matches remain required after scripted rewards are safe.
+
+Next: close scripted admission without losing earned rewards, then establish competent
 legal Medium/Large exploration/conquest through real
 terminal outcomes and terminal save/resume, continue measured full-action
 optimization and address the recorded Town/Overworld presentation gaps.

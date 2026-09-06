@@ -16617,14 +16617,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Validated player army-capacity checkpoint: shared atomic paid recruitment, Town/field transfer and site admissions; hero/Town convoys retain waiting manifests; legacy 18-stack/970-troop display and keyboard recovery preserve every troop. 63 checks per rendered resolution, six current domain reports, six-faction/29-sample read-scope checks, 11 Python tests, repository and both-platform packages pass. AI/script capacity remains unresolved; older Medium Day 84 and Large Day 52 runs are diagnostic, not accepted matches. Existing Town presentation and legacy-test limits remain explicit.",
+  "currentNotes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "quality-generated-full-match-playthrough-20260906",
   "currentSliceId": "quality-generated-full-match-playthrough-20260906",
-  "currentSliceNotes": "Validated player army-capacity checkpoint: shared atomic paid recruitment, Town/field transfer and site admissions; hero/Town convoys retain waiting manifests; legacy 18-stack/970-troop display and keyboard recovery preserve every troop. 63 checks per rendered resolution, six current domain reports, six-faction/29-sample read-scope checks, 11 Python tests, repository and both-platform packages pass. AI/script capacity remains unresolved; older Medium Day 84 and Large Day 52 runs are diagnostic, not accepted matches. Existing Town presentation and legacy-test limits remain explicit.",
+  "currentSliceNotes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Complete Generated Matches And Correctness",
-  "currentSliceUpdatedAt": "2026-09-06T16:18:34Z",
+  "currentSliceUpdatedAt": "2026-09-06T16:57:46Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21931,78 +21931,72 @@
   },
   "guardrailNote": "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification.",
   "lastValidation": {
-    "id": "quality-generated-player-army-capacity-20260906",
+    "id": "quality-generated-ai-army-capacity-20260906",
     "sliceId": "quality-generated-full-match-playthrough-20260906",
-    "title": "Player army admissions and non-destructive legacy recovery",
+    "title": "AI army admissions and troop-preserving handoffs",
     "status": "in_progress",
-    "scope": "validated_player_checkpoint_not_ai_script_capacity_closure_or_complete_matches",
-    "validatedAt": "2026-09-06T16:18:34Z",
+    "scope": "validated_ai_checkpoint_not_script_reward_closure_or_complete_matches",
+    "validatedAt": "2026-09-06T16:57:46Z",
     "artifacts": [
       "docs/generated-full-match-quality-report.md",
       "docs/generated-full-match-quality-requirements.md",
-      "tests/army_capacity_regression.py",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_reference_01/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_complete_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_complete_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_scope_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_acceptance_tests.log",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_validate_repo_final.log",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_linux_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_windows_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_linux_generated/live_validation_report.json",
-      ".artifacts/full_play_runtime_20260905/army_capacity_domains_01/report.json",
-      ".artifacts/full_play_runtime_20260905/army_capacity_domains_02/report.json",
-      ".artifacts/full_play_runtime_20260905/army_capacity_town_dialogs/report.json"
+      "tests/ai_army_capacity_regression.py",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_before_01/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_continuity_before/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_verified_medium/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_verified_large/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_linux_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_windows_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_validate_repo_verified.log",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_acceptance_verified.log",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_linux_entry_verified/live_validation_report.json",
+      ".artifacts/full_play_runtime_20260905/ai_army_capacity_domains_verified/report.json"
     ],
-    "result": "Validated player army-capacity checkpoint: shared atomic paid recruitment, Town/field transfer and site admissions; hero/Town convoys retain waiting manifests; legacy 18-stack/970-troop display and keyboard recovery preserve every troop. 63 checks per rendered resolution, six current domain reports, six-faction/29-sample read-scope checks, 11 Python tests, repository and both-platform packages pass. AI/script capacity remains unresolved; older Medium Day 84 and Large Day 52 runs are diagnostic, not accepted matches. Existing Town presentation and legacy-test limits remain explicit.",
-    "remainingWork": "Implement capacity-safe AI paid recruitment, roster/site reinforcements and raid/garrison handoffs, preserving unaccepted source troops and costs. Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed. Then complete legal Medium/Large terminal matches with full capacity history and save/resume; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
+    "result": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
+    "remainingWork": "Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed, preserving fixed recipients and ownership semantics across save/resume. Then complete legal Medium/Large terminal matches with full capacity history; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
   },
   "latestEvidence": {
-    "id": "quality-generated-player-army-capacity-20260906",
+    "id": "quality-generated-ai-army-capacity-20260906",
     "sliceId": "quality-generated-full-match-playthrough-20260906",
-    "title": "Player army admissions and non-destructive legacy recovery",
+    "title": "AI army admissions and troop-preserving handoffs",
     "status": "in_progress",
-    "scope": "validated_player_checkpoint_not_ai_script_capacity_closure_or_complete_matches",
-    "validatedAt": "2026-09-06T16:18:34Z",
+    "scope": "validated_ai_checkpoint_not_script_reward_closure_or_complete_matches",
+    "validatedAt": "2026-09-06T16:57:46Z",
     "artifacts": [
       "docs/generated-full-match-quality-report.md",
       "docs/generated-full-match-quality-requirements.md",
-      "tests/army_capacity_regression.py",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_reference_01/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_complete_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_complete_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_scope_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_acceptance_tests.log",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_validate_repo_final.log",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_linux_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_windows_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_linux_generated/live_validation_report.json",
-      ".artifacts/full_play_runtime_20260905/army_capacity_domains_01/report.json",
-      ".artifacts/full_play_runtime_20260905/army_capacity_domains_02/report.json",
-      ".artifacts/full_play_runtime_20260905/army_capacity_town_dialogs/report.json"
+      "tests/ai_army_capacity_regression.py",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_before_01/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_continuity_before/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_verified_medium/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_verified_large/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_linux_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_windows_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_validate_repo_verified.log",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_acceptance_verified.log",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_linux_entry_verified/live_validation_report.json",
+      ".artifacts/full_play_runtime_20260905/ai_army_capacity_domains_verified/report.json"
     ],
-    "result": "Validated player army-capacity checkpoint: shared atomic paid recruitment, Town/field transfer and site admissions; hero/Town convoys retain waiting manifests; legacy 18-stack/970-troop display and keyboard recovery preserve every troop. 63 checks per rendered resolution, six current domain reports, six-faction/29-sample read-scope checks, 11 Python tests, repository and both-platform packages pass. AI/script capacity remains unresolved; older Medium Day 84 and Large Day 52 runs are diagnostic, not accepted matches. Existing Town presentation and legacy-test limits remain explicit.",
-    "remainingWork": "Implement capacity-safe AI paid recruitment, roster/site reinforcements and raid/garrison handoffs, preserving unaccepted source troops and costs. Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed. Then complete legal Medium/Large terminal matches with full capacity history and save/resume; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
+    "result": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
+    "remainingWork": "Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed, preserving fixed recipients and ownership semantics across save/resume. Then complete legal Medium/Large terminal matches with full capacity history; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
   },
   "latestEvidenceArtifacts": [
     "docs/generated-full-match-quality-report.md",
     "docs/generated-full-match-quality-requirements.md",
-    "tests/army_capacity_regression.py",
-    ".artifacts/generated_full_match_quality_20260906/army_capacity_reference_01/report.json",
-    ".artifacts/generated_full_match_quality_20260906/army_capacity_complete_720/report.json",
-    ".artifacts/generated_full_match_quality_20260906/army_capacity_complete_1080/report.json",
-    ".artifacts/generated_full_match_quality_20260906/army_capacity_scope_final/report.json",
-    ".artifacts/generated_full_match_quality_20260906/army_capacity_acceptance_tests.log",
-    ".artifacts/generated_full_match_quality_20260906/army_capacity_validate_repo_final.log",
-    ".artifacts/generated_full_match_quality_20260906/army_capacity_linux_final/report.json",
-    ".artifacts/generated_full_match_quality_20260906/army_capacity_windows_final/report.json",
-    ".artifacts/generated_full_match_quality_20260906/army_capacity_linux_generated/live_validation_report.json",
-    ".artifacts/full_play_runtime_20260905/army_capacity_domains_01/report.json",
-    ".artifacts/full_play_runtime_20260905/army_capacity_domains_02/report.json",
-    ".artifacts/full_play_runtime_20260905/army_capacity_town_dialogs/report.json"
+    "tests/ai_army_capacity_regression.py",
+    ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_before_01/report.json",
+    ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_continuity_before/report.json",
+    ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_verified_medium/report.json",
+    ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_verified_large/report.json",
+    ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_linux_verified/report.json",
+    ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_windows_verified/report.json",
+    ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_validate_repo_verified.log",
+    ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_acceptance_verified.log",
+    ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_linux_entry_verified/live_validation_report.json",
+    ".artifacts/full_play_runtime_20260905/ai_army_capacity_domains_verified/report.json"
   ],
-  "latestEvidenceId": "quality-generated-player-army-capacity-20260906",
-  "latestFinding": "Validated player army-capacity checkpoint: shared atomic paid recruitment, Town/field transfer and site admissions; hero/Town convoys retain waiting manifests; legacy 18-stack/970-troop display and keyboard recovery preserve every troop. 63 checks per rendered resolution, six current domain reports, six-faction/29-sample read-scope checks, 11 Python tests, repository and both-platform packages pass. AI/script capacity remains unresolved; older Medium Day 84 and Large Day 52 runs are diagnostic, not accepted matches. Existing Town presentation and legacy-test limits remain explicit.",
+  "latestEvidenceId": "quality-generated-ai-army-capacity-20260906",
+  "latestFinding": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "metrics": {
     "audit_only": false,
     "runtime_behavior_changed": true,
@@ -22048,7 +22042,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification.",
-  "notes": "Fifth gameplay correction validated: exact artifact/encounter/entrance selection takes priority over adjacent scenic footprints, with authoritative generated support-site visits and unchanged guard-zone movement/town body shortcuts. 39 checks at each rendered resolution, 26 generated opening checks, authored town body, three movement/input/fog reports, current named saves, nine Python tests, repository and both-platform packages pass. Prior measured Town/End Turn speedups remain valid. Medium Day 69 and Large Day 43 are diagnostic continuations, not accepted matches; recruitment can exceed seven stacks and show an empty formation. Five unrelated legacy reports remain unresolved.",
+  "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
       "status": "in_progress",
@@ -22093,10 +22087,10 @@
         "Complete Medium/Large matches, measured full-action improvements and inspected presentation corrections",
         "Focused/repository/platform validation and coherent commit/push; hardware limits explicit"
       ],
-      "updatedAt": "2026-09-06T16:18:34Z",
+      "updatedAt": "2026-09-06T16:57:46Z",
       "startedAt": "2026-09-06T12:03:26Z",
-      "notes": "Validated player army-capacity checkpoint: shared atomic paid recruitment, Town/field transfer and site admissions; hero/Town convoys retain waiting manifests; legacy 18-stack/970-troop display and keyboard recovery preserve every troop. 63 checks per rendered resolution, six current domain reports, six-faction/29-sample read-scope checks, 11 Python tests, repository and both-platform packages pass. AI/script capacity remains unresolved; older Medium Day 84 and Large Day 52 runs are diagnostic, not accepted matches. Existing Town presentation and legacy-test limits remain explicit.",
-      "remainingWork": "Implement capacity-safe AI paid recruitment, roster/site reinforcements and raid/garrison handoffs, preserving unaccepted source troops and costs. Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed. Then complete legal Medium/Large terminal matches with full capacity history and save/resume; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
+      "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
+      "remainingWork": "Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed, preserving fixed recipients and ownership semantics across save/resume. Then complete legal Medium/Large terminal matches with full capacity history; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
     },
     {
       "status": "in_progress",
@@ -22127,7 +22121,11 @@
         "python3 -B -m unittest discover -s tests -p test_generated_full_match_quality.py",
         "python3 tests/army_capacity_regression.py --label <fresh> --save <recorded-day54-save> --rendered --resolution <1280x720|1920x1080>",
         "python3 tests/town_order_read_scope_regression.py --label <fresh>",
-        "python3 tests/full_play_validation_suite.py --label <fresh> --rendered --accessibility disabled --only town_screen_layout_and_dialog_controls_report hero_field_rendezvous_army_transfer_report"
+        "python3 tests/full_play_validation_suite.py --label <fresh> --rendered --accessibility disabled --only town_screen_layout_and_dialog_controls_report hero_field_rendezvous_army_transfer_report",
+        "python3 tests/ai_army_capacity_regression.py --label <fresh>",
+        "python3 tests/ai_army_capacity_regression.py --label <fresh> --generated-case medium",
+        "python3 tests/ai_army_capacity_regression.py --label <fresh> --generated-case large",
+        "python3 tests/full_play_validation_suite.py --label <fresh> --only ai_town_defense_retask_report ai_planned_task_recruitment_prep_report ai_raid_assault_grouping_report ai_hero_task_live_turn_execution_report ai_known_world_memory_report"
       ],
       "id": "quality-generated-full-match-playthrough-20260906",
       "title": "Complete Generated Matches And Correctness",
@@ -22154,17 +22152,18 @@
         "scripts/core/EnemyTurnRules.gd: army recruitment and raid admission",
         "scripts/core/EnemyAdventureRules.gd: roster/site reinforcement and troop-preserving army handoffs",
         "tests/full_play_validation_suite.py: affected report invocation",
-        "tests/test_generated_full_match_quality.py: historical capacity acceptance"
+        "tests/test_generated_full_match_quality.py: historical capacity acceptance",
+        "tests/ai_army_capacity_regression.py"
       ],
       "completionCriteria": [
         "Complete legitimate Medium/Large matches, including one conquest",
         "Normal gameplay, mid-match/terminal saves and actual outcomes",
         "Fix reproduced blocking runtime defects with regressions; driver-only progress is not gameplay completion"
       ],
-      "updatedAt": "2026-09-06T16:18:34Z",
+      "updatedAt": "2026-09-06T16:57:46Z",
       "startedAt": "2026-09-06T12:03:26Z",
-      "notes": "Validated player army-capacity checkpoint: shared atomic paid recruitment, Town/field transfer and site admissions; hero/Town convoys retain waiting manifests; legacy 18-stack/970-troop display and keyboard recovery preserve every troop. 63 checks per rendered resolution, six current domain reports, six-faction/29-sample read-scope checks, 11 Python tests, repository and both-platform packages pass. AI/script capacity remains unresolved; older Medium Day 84 and Large Day 52 runs are diagnostic, not accepted matches. Existing Town presentation and legacy-test limits remain explicit.",
-      "remainingWork": "Implement capacity-safe AI paid recruitment, roster/site reinforcements and raid/garrison handoffs, preserving unaccepted source troops and costs. Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed. Then complete legal Medium/Large terminal matches with full capacity history and save/resume; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
+      "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
+      "remainingWork": "Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed, preserving fixed recipients and ownership semantics across save/resume. Then complete legal Medium/Large terminal matches with full capacity history; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
     },
     {
       "status": "in_progress",
@@ -110414,8 +110413,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "AI/script capacity, accepted full matches and selected presentation remain incomplete; no release acceptance.",
-  "remainingWork": "Implement capacity-safe AI paid recruitment, roster/site reinforcements and raid/garrison handoffs, preserving unaccepted source troops and costs. Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed. Then complete legal Medium/Large terminal matches with full capacity history and save/resume; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification.",
+  "remainingGap": "Scripted reward capacity/retention, accepted full matches and selected presentation/responsiveness remain incomplete; no release acceptance.",
+  "remainingWork": "Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed, preserving fixed recipients and ownership semantics across save/resume. Then complete legal Medium/Large terminal matches with full capacity history; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -110953,7 +110952,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "player_army_capacity_corrected_full_match_goal_in_progress",
+  "result": "ai_army_capacity_corrected_full_match_goal_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -111054,35 +111053,33 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Validated player army-capacity checkpoint: shared atomic paid recruitment, Town/field transfer and site admissions; hero/Town convoys retain waiting manifests; legacy 18-stack/970-troop display and keyboard recovery preserve every troop. 63 checks per rendered resolution, six current domain reports, six-faction/29-sample read-scope checks, 11 Python tests, repository and both-platform packages pass. AI/script capacity remains unresolved; older Medium Day 84 and Large Day 52 runs are diagnostic, not accepted matches. Existing Town presentation and legacy-test limits remain explicit.",
+  "summary": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "taskId": "10236",
-  "updatedAt": "2026-09-06T16:18:34Z",
+  "updatedAt": "2026-09-06T16:57:46Z",
   "validation": {
-    "id": "quality-generated-player-army-capacity-20260906",
+    "id": "quality-generated-ai-army-capacity-20260906",
     "sliceId": "quality-generated-full-match-playthrough-20260906",
-    "title": "Player army admissions and non-destructive legacy recovery",
+    "title": "AI army admissions and troop-preserving handoffs",
     "status": "in_progress",
-    "scope": "validated_player_checkpoint_not_ai_script_capacity_closure_or_complete_matches",
-    "validatedAt": "2026-09-06T16:18:34Z",
+    "scope": "validated_ai_checkpoint_not_script_reward_closure_or_complete_matches",
+    "validatedAt": "2026-09-06T16:57:46Z",
     "artifacts": [
       "docs/generated-full-match-quality-report.md",
       "docs/generated-full-match-quality-requirements.md",
-      "tests/army_capacity_regression.py",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_reference_01/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_complete_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_complete_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_scope_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_acceptance_tests.log",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_validate_repo_final.log",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_linux_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_windows_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_linux_generated/live_validation_report.json",
-      ".artifacts/full_play_runtime_20260905/army_capacity_domains_01/report.json",
-      ".artifacts/full_play_runtime_20260905/army_capacity_domains_02/report.json",
-      ".artifacts/full_play_runtime_20260905/army_capacity_town_dialogs/report.json"
+      "tests/ai_army_capacity_regression.py",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_before_01/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_continuity_before/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_verified_medium/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_verified_large/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_linux_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_windows_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_validate_repo_verified.log",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_acceptance_verified.log",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_linux_entry_verified/live_validation_report.json",
+      ".artifacts/full_play_runtime_20260905/ai_army_capacity_domains_verified/report.json"
     ],
-    "result": "Validated player army-capacity checkpoint: shared atomic paid recruitment, Town/field transfer and site admissions; hero/Town convoys retain waiting manifests; legacy 18-stack/970-troop display and keyboard recovery preserve every troop. 63 checks per rendered resolution, six current domain reports, six-faction/29-sample read-scope checks, 11 Python tests, repository and both-platform packages pass. AI/script capacity remains unresolved; older Medium Day 84 and Large Day 52 runs are diagnostic, not accepted matches. Existing Town presentation and legacy-test limits remain explicit.",
-    "remainingWork": "Implement capacity-safe AI paid recruitment, roster/site reinforcements and raid/garrison handoffs, preserving unaccepted source troops and costs. Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed. Then complete legal Medium/Large terminal matches with full capacity history and save/resume; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
+    "result": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
+    "remainingWork": "Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed, preserving fixed recipients and ownership semantics across save/resume. Then complete legal Medium/Large terminal matches with full capacity history; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
   },
   "validationHistory": [
     {
@@ -124985,31 +124982,29 @@
     }
   ],
   "validationResults": {
-    "id": "quality-generated-player-army-capacity-20260906",
+    "id": "quality-generated-ai-army-capacity-20260906",
     "sliceId": "quality-generated-full-match-playthrough-20260906",
-    "title": "Player army admissions and non-destructive legacy recovery",
+    "title": "AI army admissions and troop-preserving handoffs",
     "status": "in_progress",
-    "scope": "validated_player_checkpoint_not_ai_script_capacity_closure_or_complete_matches",
-    "validatedAt": "2026-09-06T16:18:34Z",
+    "scope": "validated_ai_checkpoint_not_script_reward_closure_or_complete_matches",
+    "validatedAt": "2026-09-06T16:57:46Z",
     "artifacts": [
       "docs/generated-full-match-quality-report.md",
       "docs/generated-full-match-quality-requirements.md",
-      "tests/army_capacity_regression.py",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_reference_01/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_complete_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_complete_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_scope_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_acceptance_tests.log",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_validate_repo_final.log",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_linux_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_windows_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/army_capacity_linux_generated/live_validation_report.json",
-      ".artifacts/full_play_runtime_20260905/army_capacity_domains_01/report.json",
-      ".artifacts/full_play_runtime_20260905/army_capacity_domains_02/report.json",
-      ".artifacts/full_play_runtime_20260905/army_capacity_town_dialogs/report.json"
+      "tests/ai_army_capacity_regression.py",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_before_01/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_continuity_before/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_verified_medium/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_verified_large/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_linux_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_windows_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_validate_repo_verified.log",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_acceptance_verified.log",
+      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_linux_entry_verified/live_validation_report.json",
+      ".artifacts/full_play_runtime_20260905/ai_army_capacity_domains_verified/report.json"
     ],
-    "result": "Validated player army-capacity checkpoint: shared atomic paid recruitment, Town/field transfer and site admissions; hero/Town convoys retain waiting manifests; legacy 18-stack/970-troop display and keyboard recovery preserve every troop. 63 checks per rendered resolution, six current domain reports, six-faction/29-sample read-scope checks, 11 Python tests, repository and both-platform packages pass. AI/script capacity remains unresolved; older Medium Day 84 and Large Day 52 runs are diagnostic, not accepted matches. Existing Town presentation and legacy-test limits remain explicit.",
-    "remainingWork": "Implement capacity-safe AI paid recruitment, roster/site reinforcements and raid/garrison handoffs, preserving unaccepted source troops and costs. Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed. Then complete legal Medium/Large terminal matches with full capacity history and save/resume; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
+    "result": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
+    "remainingWork": "Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed, preserving fixed recipients and ownership semantics across save/resume. Then complete legal Medium/Large terminal matches with full capacity history; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
   },
   "blockedReason": null,
   "currentBlocker": "",

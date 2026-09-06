@@ -60,6 +60,8 @@ RMG_SCENES = [
     "save_transactional_commit_regression",
     "save_summary_deferred_payload_report",
     "ai_known_world_memory_report",
+    "ai_town_defense_retask_report",
+    "ai_planned_task_recruitment_prep_report",
     "ai_hero_task_live_turn_execution_report",
     "ai_hero_task_state_normalizer_preservation_report",
     "ai_raid_movement_path_plan_reuse_regression",
