@@ -6,8 +6,10 @@ const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
 const EnemyTurnRulesScript = preload("res://scripts/core/EnemyTurnRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
+const PlayerIdentityRulesScript = preload("res://scripts/core/PlayerIdentityRules.gd")
 
 const SCRIPT_STATE_KEY := "scenario_script_state"
+const PENDING_REINFORCEMENTS_KEY := "pending_reinforcements"
 const MAX_CHAIN_REACTIONS := 16
 const EVENT_LOG_LIMIT := 24
 
@@ -64,15 +66,19 @@ static func process_hooks(session: SessionStateStoreScript.SessionData) -> Dicti
 
 	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var hooks = _sorted_hooks(scenario.get("script_hooks", []))
-	if hooks.is_empty():
-		return {"fired_ids": [], "messages": [], "message": ""}
-
 	var state: Dictionary = session.overworld.get(SCRIPT_STATE_KEY, {})
 	var fired_hook_ids: Array = state.get("fired_hook_ids", [])
 	var fired_ids = []
 	var messages = []
 	var processed_this_pass = {}
 	var iteration_count = 0
+	# Earned grants are independent of transient hook conditions. Retry only
+	# records present on entry; repeatable hooks cannot accumulate a backlog or
+	# refire in the same evaluation that delivers their previous invocation.
+	var retry_result := _retry_pending_reinforcements(session)
+	messages.append_array(retry_result.get("messages", []))
+	for hook_id in retry_result.get("hook_ids", []):
+		processed_this_pass[hook_id] = true
 
 	while iteration_count < MAX_CHAIN_REACTIONS:
 		var fired_this_iteration = false
@@ -91,7 +97,7 @@ static func process_hooks(session: SessionStateStoreScript.SessionData) -> Dicti
 			if bool(hook.get("once", true)) and hook_id not in fired_hook_ids:
 				fired_hook_ids.append(hook_id)
 
-			var effect_result = _apply_effects(session, hook.get("effects", []))
+			var effect_result = _apply_effects(session, hook.get("effects", []), hook_id)
 			var hook_messages: Array = effect_result.get("messages", [])
 			if not hook_messages.is_empty():
 				messages.append_array(hook_messages)
@@ -190,21 +196,28 @@ static func _condition_met(session: SessionStateStoreScript.SessionData, conditi
 		_:
 			return false
 
-static func _apply_effects(session: SessionStateStoreScript.SessionData, effects: Variant) -> Dictionary:
+static func _apply_effects(session: SessionStateStoreScript.SessionData, effects: Variant, hook_id: String = "") -> Dictionary:
 	var messages = []
+	var waiting_messages = []
 	if not (effects is Array):
 		return {"messages": messages}
 
-	for effect in effects:
+	for effect_index in range(effects.size()):
+		var effect = effects[effect_index]
 		if not (effect is Dictionary):
 			continue
 		var result = _apply_effect(session, effect)
 		if result is Dictionary:
+			if String(result.get("reason", "")) == "army_capacity" and hook_id != "":
+				waiting_messages.append(_retain_reinforcement(session, hook_id, effect_index, effect, result.get("units", {})))
 			for message_value in result.get("messages", []):
 				var message = String(message_value)
 				if message != "":
 					messages.append(message)
 
+	# Clarify after the authored narrative that troops are earned but not yet
+	# in an army. Other effects and hook-fired chain semantics remain once-only.
+	messages.append_array(waiting_messages)
 	return {"messages": messages}
 
 static func _apply_effect(session: SessionStateStoreScript.SessionData, effect: Dictionary) -> Dictionary:
@@ -280,11 +293,14 @@ static func describe_recent_events(session: SessionStateStoreScript.SessionData,
 		return ""
 	var state: Dictionary = session.overworld.get(SCRIPT_STATE_KEY, {})
 	var event_log = state.get("event_log", [])
-	if not (event_log is Array) or event_log.is_empty():
-		return ""
+	if not (event_log is Array):
+		event_log = []
 	var count = clamp(limit, 1, EVENT_LOG_LIMIT)
 	var start_index = max(0, event_log.size() - count)
 	var parts = []
+	var pending = state.get(PENDING_REINFORCEMENTS_KEY, {})
+	if pending is Dictionary and not pending.is_empty():
+		parts.append("%d earned reinforcement grant(s) wait for their original army or garrison to have room." % pending.size())
 	for index in range(start_index, event_log.size()):
 		var entry = event_log[index]
 		if not (entry is Dictionary):
@@ -454,6 +470,91 @@ static func _town_add_recruits(session: SessionStateStoreScript.SessionData, pla
 		}
 	return {"messages": []}
 
+static func _hero_controller(session: SessionStateStoreScript.SessionData, hero: Dictionary) -> String:
+	var controller := String(hero.get("player_id", ""))
+	if controller == "":
+		controller = String(session.overworld.get("active_player_id", ""))
+	return controller if controller != "" else "player"
+
+static func _retain_reinforcement(session: SessionStateStoreScript.SessionData, hook_id: String, effect_index: int, effect: Dictionary, units: Dictionary) -> String:
+	var kind := String(effect.get("type", ""))
+	var record := {"hook_id": hook_id, "effect_index": effect_index, "kind": kind, "units": units.duplicate(true), "earned_day": session.day}
+	var label := "the original army"
+	if kind == "add_army_units":
+		var hero := HeroCommandRulesScript.active_hero(session)
+		record["recipient_id"] = String(hero.get("id", ""))
+		record["controller_id"] = _hero_controller(session, hero)
+		label = String(hero.get("name", label))
+	elif kind == "town_add_garrison":
+		var town: Dictionary = _find_town_result(session, String(effect.get("placement_id", ""))).get("town", {})
+		record["recipient_id"] = String(town.get("placement_id", ""))
+		record["controller_id"] = PlayerIdentityRulesScript.town_controller_id(town)
+		record["owner"] = String(town.get("owner", "neutral"))
+		label = _town_name(town) if _placement_is_visible(session, town) else "the original town"
+	var state: Dictionary = session.overworld.get(SCRIPT_STATE_KEY, {})
+	var pending: Dictionary = state.get(PENDING_REINFORCEMENTS_KEY, {})
+	var key := "%s:%d" % [hook_id, effect_index]
+	if not pending.has(key):
+		pending[key] = record
+	state[PENDING_REINFORCEMENTS_KEY] = pending
+	session.overworld[SCRIPT_STATE_KEY] = state
+	return "Earned reinforcements (%s) wait for space in %s's seven army slots; transfer or merge troops to receive them." % [_describe_recruits(units), label]
+
+static func _retry_pending_reinforcements(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var state: Dictionary = session.overworld.get(SCRIPT_STATE_KEY, {})
+	var pending = state.get(PENDING_REINFORCEMENTS_KEY, {})
+	var messages := []
+	var hook_ids := []
+	if not (pending is Dictionary) or pending.is_empty():
+		return {"messages": messages, "hook_ids": hook_ids}
+	var keys: Array = pending.keys()
+	keys.sort()
+	for key in keys:
+		var record = pending[key]
+		if not (record is Dictionary):
+			continue
+		hook_ids.append(String(record.get("hook_id", "")))
+		var recipient_id := String(record.get("recipient_id", ""))
+		var units = record.get("units", {})
+		if recipient_id == "" or not (units is Dictionary) or units.is_empty() or not record.has("controller_id"):
+			continue
+		# Preserve, but do not materialize, an unrecognized saved grant. Never
+		# silently drop part of an earned manifest if its content is unavailable.
+		var valid_units := true
+		for unit_id in units:
+			if int(units[unit_id]) <= 0 or ContentService.get_unit(String(unit_id)).is_empty():
+				valid_units = false
+				break
+		if not valid_units:
+			continue
+		var delivered := false
+		match String(record.get("kind", "")):
+			"add_army_units":
+				var hero := HeroCommandRulesScript.hero_by_id(session, recipient_id)
+				if hero.is_empty() or _hero_controller(session, hero) != String(record.controller_id):
+					continue
+				var admission := HeroCommandRulesScript.army_addition_plan(hero.get("army", {}).get("stacks", []), units)
+				if bool(admission.get("ok", false)):
+					HeroCommandRulesScript._set_holder_stacks(session, {}, recipient_id, admission.get("stacks", []))
+					delivered = true
+			"town_add_garrison":
+				var town: Dictionary = _find_town_result(session, recipient_id).get("town", {})
+				if town.is_empty() or PlayerIdentityRulesScript.town_controller_id(town) != String(record.controller_id) or String(town.get("owner", "neutral")) != String(record.get("owner", "")):
+					continue
+				delivered = bool(_town_add_garrison(session, recipient_id, units).get("ok", false))
+		if not delivered:
+			continue
+		pending.erase(key)
+		var message := "Waiting reinforcements (%s), earned on day %d, have joined their original army or garrison." % [_describe_recruits(units), int(record.get("earned_day", session.day))]
+		messages.append(message)
+		_append_event_log(session, String(record.get("hook_id", "")), [message])
+	if pending.is_empty():
+		state.erase(PENDING_REINFORCEMENTS_KEY)
+	else:
+		state[PENDING_REINFORCEMENTS_KEY] = pending
+	session.overworld[SCRIPT_STATE_KEY] = state
+	return {"messages": messages, "hook_ids": hook_ids}
+
 static func _town_add_garrison(session: SessionStateStoreScript.SessionData, placement_id: String, garrison: Variant) -> Dictionary:
 	var town_result = _find_town_result(session, placement_id)
 	if int(town_result.get("index", -1)) < 0 or not (garrison is Dictionary):
@@ -464,18 +565,27 @@ static func _town_add_garrison(session: SessionStateStoreScript.SessionData, pla
 	var stacks = town.get("garrison", [])
 	var unit_ids = garrison.keys()
 	unit_ids.sort()
+	var added := {}
 	for unit_id_value in unit_ids:
 		var unit_id := String(unit_id_value)
-		stacks = _overworld_rules()._add_army_stack(stacks, unit_id, int(garrison.get(unit_id_value, 0)))
+		var count := maxi(0, int(garrison.get(unit_id_value, 0)))
+		if unit_id != "" and count > 0 and not ContentService.get_unit(unit_id).is_empty():
+			added[unit_id] = count
+	if added.is_empty():
+		return {"messages": []}
+	var admission := HeroCommandRulesScript.army_addition_plan(stacks, added)
+	if not bool(admission.get("ok", false)):
+		return {"ok": false, "reason": "army_capacity", "units": added, "messages": []}
+	stacks = admission.get("stacks", [])
 	town["garrison"] = stacks
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
 
-	var summary = _describe_recruits(garrison)
+	var summary = _describe_recruits(added)
 	if summary != "":
 		var town_label = _town_name(town) if _placement_is_visible(session, town) else "A town beyond current scouting"
-		return {"messages": ["%s garrisons %s." % [town_label, summary]]}
-	return {"messages": []}
+		return {"ok": true, "messages": ["%s garrisons %s." % [town_label, summary]]}
+	return {"ok": true, "messages": []}
 
 static func _add_army_units(session: SessionStateStoreScript.SessionData, units: Variant) -> Dictionary:
 	if session == null or not (units is Dictionary) or units.is_empty():
@@ -492,10 +602,13 @@ static func _add_army_units(session: SessionStateStoreScript.SessionData, units:
 		var count: int = max(0, int(units.get(unit_id_value, 0)))
 		if unit_id == "" or count <= 0 or ContentService.get_unit(unit_id).is_empty():
 			continue
-		stacks = _overworld_rules()._add_army_stack(stacks, unit_id, count)
 		added[unit_id] = count
 	if added.is_empty():
 		return {"messages": []}
+	var admission := HeroCommandRulesScript.army_addition_plan(stacks, added)
+	if not bool(admission.get("ok", false)):
+		return {"ok": false, "reason": "army_capacity", "units": added, "messages": []}
+	stacks = admission.get("stacks", [])
 	army["stacks"] = stacks
 	session.overworld["army"] = army
 	var hero: Dictionary = session.overworld.get("hero", {}).duplicate(true) if session.overworld.get("hero", {}) is Dictionary else {}

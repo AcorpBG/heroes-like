@@ -89,6 +89,34 @@ ownership/capture semantics and document the exact retention mechanism before
 implementing it. Full-match acceptance must retain capacity observations across
 all resumed segments and reject any overflow or unobserved historical segment.
 
+Scripted retention mechanism (selected before implementation):
+
+- Keep `fired_hook_ids` and all non-reinforcement effects' existing once/ordering
+  semantics. A capacity-blocked grant creates one `pending_reinforcements` entry
+  per hook/effect index inside the existing `scenario_script_state`; it records
+  the validated earned unit manifest, day, original hero/town id and controller
+  (and town owner). This is unclaimed source eligibility, not army inventory:
+  it grants no strength, movement, transfer, sale or combat participation.
+- Retry previously pending grants once at the start of ordinary hook evaluation,
+  using the same seven-slot admission authority. Deliver the complete manifest
+  exactly once to its original recipient, including a non-active owned hero.
+  Do not re-evaluate transient earning conditions or repeat flags/resources/
+  recruits/spawns/messages from the hook. Keep unmet grants saved unchanged.
+- Missing recipients or changed town/hero ownership suspend that source grant;
+  never create an actor or give it to a replacement/current commander or captor.
+  Original-recipient/control restoration can make it eligible again. Grants
+  that fit immediately retain existing ownership semantics. Existing fired hooks
+  without pending records stay fired and must not receive retroactive rewards.
+- All 106 currently authored reinforcement hooks are one-shot. For the existing
+  generic repeatable-hook facility, at most one outstanding invocation per hook
+  is allowed: do not accumulate repeated grants while a previous grant waits,
+  or fire the same hook again in the pass that delivers its pending reward.
+- Store the optional key only while grants wait; no save-version bump or default
+  snapshot churn. Explain waiting/delivery through existing event messages and
+  the recent-events surface, without a new screen or per-frame mutation/retry.
+  Prove complete-state save/resume, fixed recipients/control, unchanged unrelated
+  effects, fitting/split grants, bounded repeat handling and legacy no-regrant.
+
 Capture full action latency including rules/AI, autosave, refresh, animations and
 input re-enablement. Use the same seed, commands, conditions and instrumentation
 for comparisons; preserve complete state and decision/RNG equivalence for

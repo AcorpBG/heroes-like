@@ -45,6 +45,19 @@ SCENES = [
     "four_elder_wild_recruitment_sanctuaries_smoke",
 ]
 RENDERED_SCENES = ["active_play_keyboard_focus_smoke", "custom_mouse_cursor_runtime_report"]
+SCRIPTED_REWARD_SCENES = [
+    "stonewake_watch_chapter_one_sequential_viability_report",
+    "reedbarrow_ferry_chapter_two_sequential_viability_report",
+    "reedbarrow_ferry_murkward_veteran_garrison_report",
+    "battle_causeway_reed_camp_production_line_report",
+    "charterless_compact_campaign_smoke",
+    "six_sealed_companies_campaign_smoke",
+    "wild_atlas_accord_campaign_smoke",
+    "final_nine_faction_campaigns_smoke",
+    "uncrowned_circuit_campaign_smoke",
+]
+# This existing report unconditionally awaits RenderingServer.frame_post_draw.
+REQUIRES_RENDERED = {"final_nine_faction_campaigns_smoke"}
 RMG_SCENES = [
     "native_rmg_end_to_end_runtime_boundary_report",
     "native_random_map_homm3_re_object_table_proxy_report",
@@ -82,7 +95,8 @@ EXPECTED_INJECTED_ISSUES = {
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--label", required=True)
-    parser.add_argument("--only", nargs="+", choices=SCENES + RENDERED_SCENES + RMG_SCENES)
+    parser.add_argument("--only", nargs="+", choices=SCENES + RENDERED_SCENES + RMG_SCENES + SCRIPTED_REWARD_SCENES)
+    parser.add_argument("--scripted-rewards", action="store_true", help="Run affected authored reward/campaign reports, rendering where the existing report requires it.")
     parser.add_argument("--rmg", action="store_true", help="Run the integrated native/adoption/content/AI correction regressions.")
     parser.add_argument("--rendered", action="store_true")
     parser.add_argument("--accessibility", choices=["auto", "disabled"], default="auto", help="Record explicitly if isolating an engine AT-SPI backend failure; production defaults never change.")
@@ -90,7 +104,7 @@ def main() -> int:
     args = parser.parse_args()
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789_-" for c in args.label):
         parser.error("invalid label")
-    selected = args.only or (RMG_SCENES if args.rmg else RENDERED_SCENES if args.rendered else SCENES)
+    selected = args.only or (SCRIPTED_REWARD_SCENES if args.scripted_rewards else RMG_SCENES if args.rmg else RENDERED_SCENES if args.rendered else SCENES)
     for name in selected:
         if not all((ROOT / "tests" / (name + suffix)).is_file() for suffix in (".gd", ".tscn")):
             parser.error("missing runtime test source or scene: " + name)
@@ -113,7 +127,8 @@ def main() -> int:
         env = dict(os.environ, XDG_DATA_HOME=str(out / (name + "_data")))
         started = monotonic()
         command = ["godot4", "--path", str(ROOT), "--audio-driver", "Dummy", "--accessibility", args.accessibility, "res://tests/" + name + ".tscn"]
-        command = ["dbus-run-session", "--", "xvfb-run", "-a", "-s", "-screen 0 2200x1200x24"] + command if args.rendered else command + ["--headless"]
+        rendered = args.rendered or name in REQUIRES_RENDERED
+        command = ["dbus-run-session", "--", "xvfb-run", "-a", "-s", "-screen 0 2200x1200x24"] + command if rendered else command + ["--headless"]
         with (out / (name + ".log")).open("w") as log:
             process = subprocess.run(["timeout", str(args.timeout) + "s"] + command, cwd=ROOT, env=env, stdout=log, stderr=subprocess.STDOUT, timeout=args.timeout + 20)
         lines = (out / (name + ".log")).read_text().splitlines()
@@ -127,7 +142,7 @@ def main() -> int:
                 completed = True
             elif line.startswith(marker + " {"):
                 completed = bool(json.loads(line[len(marker) + 1:]).get("ok", False))
-        row = {"test": name, "ok": process.returncode == 0 and completed and not errors, "returncode": process.returncode, "completion_marker": completed, "runtime_errors": errors, "expected_injected_issues": expected_issues, "wall_s": round(monotonic() - started, 3)}
+        row = {"test": name, "ok": process.returncode == 0 and completed and not errors, "returncode": process.returncode, "completion_marker": completed, "runtime_errors": errors, "expected_injected_issues": expected_issues, "rendered": rendered, "wall_s": round(monotonic() - started, 3)}
         rows.append(row)
         print(json.dumps(row), flush=True)
         (out / "report.json").write_text(json.dumps({"ok": len(rows) == len(selected) and all(r["ok"] for r in rows), "completed": len(rows), "requested": len(selected), "rendered": args.rendered, "accessibility": args.accessibility, "rows": rows}, indent=2) + "\n")
