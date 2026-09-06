@@ -28737,36 +28737,6 @@ static const std::array<std::vector<ReadyOrNotNormalWaterSourceBaseEndpoint4a3db
 	return records;
 }
 
-static const std::array<std::vector<ReadyOrNotNormalWaterSourceBaseEndpoint4a3dbc>, 22> &ready_or_not_medium_seed10_normal_water_polygon_source_base_endpoints_4a3dbc() {
-	// Exact polygon-produced suffix at 0x4a8c15. Bit 16 is already set on
-	// synthetic-to-synthetic records in the recovered private state.
-	static const std::array<std::vector<ReadyOrNotNormalWaterSourceBaseEndpoint4a3dbc>, 22> records = { {
-		{ { 10, 0x00000001U }, { 17, 0x00000001U } },
-		{ { 10, 0x00000001U }, { 19, 0x00000001U }, { 20, 0x00000001U } },
-		{ { 11, 0x00000001U }, { 21, 0x00000001U } },
-		{ { 12, 0x00000001U }, { 13, 0x00000001U }, { 14, 0x00000001U }, { 19, 0x00000001U } },
-		{},
-		{ { 11, 0x00000001U }, { 14, 0x00000001U }, { 15, 0x00000001U } },
-		{ { 14, 0x00000001U }, { 19, 0x00000001U } },
-		{ { 16, 0x00000001U }, { 17, 0x00000001U } },
-		{ { 18, 0x00000001U }, { 20, 0x00000001U } },
-		{},
-		{ { 17, 0x00010001U }, { 20, 0x00010001U }, { 0, 0x00000001U }, { 1, 0x00000001U } },
-		{ { 15, 0x00010001U }, { 21, 0x00010001U }, { 2, 0x00000001U }, { 5, 0x00000001U } },
-		{ { 13, 0x00010001U }, { 18, 0x00010001U }, { 19, 0x00010001U }, { 3, 0x00000001U } },
-		{ { 12, 0x00010001U }, { 14, 0x00010001U }, { 15, 0x00010001U }, { 3, 0x00000001U } },
-		{ { 13, 0x00010001U }, { 15, 0x00010001U }, { 3, 0x00000001U }, { 5, 0x00000001U }, { 6, 0x00000001U } },
-		{ { 11, 0x00010001U }, { 13, 0x00010001U }, { 14, 0x00010001U }, { 21, 0x00010001U }, { 5, 0x00000001U } },
-		{ { 17, 0x00010001U }, { 21, 0x00010001U }, { 7, 0x00000001U } },
-		{ { 10, 0x00010001U }, { 16, 0x00010001U }, { 0, 0x00000001U }, { 7, 0x00000001U } },
-		{ { 12, 0x00010001U }, { 19, 0x00010001U }, { 20, 0x00010001U }, { 8, 0x00000001U } },
-		{ { 12, 0x00010001U }, { 18, 0x00010001U }, { 1, 0x00000001U }, { 3, 0x00000001U }, { 6, 0x00000001U } },
-		{ { 10, 0x00010001U }, { 18, 0x00010001U }, { 1, 0x00000001U }, { 8, 0x00000001U } },
-		{ { 11, 0x00010001U }, { 15, 0x00010001U }, { 16, 0x00010001U }, { 2, 0x00000001U } }
-	} };
-	return records;
-}
-
 static const std::array<ReadyOrNotNormalWaterSyntheticSourceRecord4a3dbc, 12> &ready_or_not_medium_seed10_normal_water_synthetic_source_records_4a3dbc() {
 	// H3MapEd 0x4a3dc8 -> 0x4ccb64 stack arguments and dereferenced
 	// 0x49b452 source records for Medium seed 10 one-level normal water.
@@ -32515,7 +32485,10 @@ static bool append_relation_owner_adjacency_pair_0x4ae166(
 	endpoint.target_source_zone_id = target.source_zone_id;
 	endpoint.guard_value = 0;
 	endpoint.wide = true;
-	endpoint.control_dword_0x08 = 0x00000001U;
+	// This is the same source +0xc4 container record as the adjacency above.
+	// 0x4a3840 sets byte +0x0a for polygon-intersection links; retain that
+	// processed marker as well as +0x08 wide in the connection view.
+	endpoint.control_dword_0x08 = 0x00000001U | (set_flag_0x66 ? 0x00010000U : 0U);
 	source.source_endpoint_vector_0xc8_0xcc_present = true;
 	source.source_endpoint_vector_0xc8_0xcc_contents_known = true;
 	source.source_endpoint_vector_0xc8_0xcc_count_known = true;
@@ -33497,10 +33470,9 @@ static void append_synthetic_relation_owners_4a3a03(
 	}
 }
 
-static bool apply_ready_or_not_medium_seed10_normal_water_source_base_endpoints_4a3dbc(
+static bool apply_ready_or_not_medium_seed10_normal_water_source_owner_reuse_4a3dbc(
 		std::vector<GeneratorRelationOwnerState4a218c> &relation_owners) {
 	const auto &explicit_records = ready_or_not_medium_seed10_normal_water_explicit_source_base_endpoints_4a3dbc();
-	const auto &polygon_records = ready_or_not_medium_seed10_normal_water_polygon_source_base_endpoints_4a3dbc();
 	const auto &synthetic_records = ready_or_not_medium_seed10_normal_water_synthetic_source_records_4a3dbc();
 	if (relation_owners.size() != explicit_records.size()) {
 		return false;
@@ -33539,27 +33511,11 @@ static bool apply_ready_or_not_medium_seed10_normal_water_source_base_endpoints_
 		owner.monster_town_choice_0x08 = source.reused_owner_dword_0x08;
 	}
 
-	for (int32_t owner_index = 0; owner_index < int32_t(relation_owners.size()); ++owner_index) {
-		GeneratorRelationOwnerState4a218c &owner = relation_owners[size_t(owner_index)];
-		for (const ReadyOrNotNormalWaterSourceBaseEndpoint4a3dbc &source : polygon_records[size_t(owner_index)]) {
-			GeneratorSourceEndpointRecordState4a1f3b record;
-			record.target_relation_owner_vector_index_0x00 = source.target_source_index_0x00;
-			record.source_link_index = 0;
-			record.owner_runtime_zone_index = owner.runtime_zone_index;
-			record.owner_source_zone_id = owner.source_zone_id;
-			record.target_runtime_zone_index = relation_owners[size_t(source.target_source_index_0x00)].runtime_zone_index;
-			record.target_source_zone_id = relation_owners[size_t(source.target_source_index_0x00)].source_zone_id;
-			record.source_endpoint = 72;
-			record.target_source_endpoint = 72;
-			record.guard_value = 3;
-			record.wide = true;
-			record.border_guard = false;
-			record.reciprocal = false;
-			record.control_dword_0x08 = source.control_dword_0x08;
-			owner.source_endpoint_records_0xc8_0xcc.push_back(record);
-		}
-		owner.source_endpoint_vector_0xc8_0xcc_count = int32_t(owner.source_endpoint_records_0xc8_0xcc.size());
-	}
+	// Do not preload a later 0x4a8c15 polygon endpoint snapshot here.
+	// The source 0x4a3710/0x4ae166 producer below appends those records once
+	// with a zero guard. Preloading them without the corresponding adjacency
+	// state made 0x4a79a3 visit duplicate endpoints and consume extra RNG.
+	// Keep only the independently recovered allocator reuse fields above.
 	return true;
 }
 
@@ -33694,7 +33650,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 	}
 	if (water_mode_code == 1
 			&& ready_or_not_source_footprints_recovered_4a3a03
-			&& !apply_ready_or_not_medium_seed10_normal_water_source_base_endpoints_4a3dbc(
+			&& !apply_ready_or_not_medium_seed10_normal_water_source_owner_reuse_4a3dbc(
 					result.relation_owner_vectors_after_source_append_0x4a3dbc)) {
 		result.source_blocked = true;
 		result.source_footprints.blocked = true;

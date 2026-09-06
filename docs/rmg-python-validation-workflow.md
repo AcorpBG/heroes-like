@@ -31,10 +31,11 @@ status below.
 ## Current Validation Status — 2026-09-06
 
 The owner-directed audit in `docs/rmg-start-placement-and-h3maped-audit.md`
-supersedes the blanket current completion claim below. Fresh unassisted native
-payloads match 23 of 24 retained selected owner cases; Medium normal-water seed
-10 differs, including private-state differences confirmed against a fresh
-executable run. Runtime start placement, two-level adoption and player-slot
+supersedes the blanket current completion claim below. Its Medium normal-water
+seed-10 endpoint-producer fault is now corrected: fresh private/writeout joins
+and all 24 retained payloads match on unassisted native code. Evidence and
+explicit sample limits: `docs/rmg-normal-water-correction-report.md`.
+Runtime start placement, two-level adoption and player-slot
 identity also had confirmed gaps. The entrance-boundary and level-aware runtime
 corrections are completed in `docs/rmg-town-entrance-correction-report.md` and
 `docs/rmg-level-aware-runtime-report.md`: 83 exact starts, 35 supported live
@@ -43,8 +44,9 @@ player/team identity is also completed in `docs/rmg-player-team-identity-correct
 Native cave/portal travel, strategic navigation and generated-map diagonal
 adjacency are implemented with focused evidence in
 `docs/rmg-native-transit-correction-report.md`; its final endpoint/journey,
-regression and both-platform package checks pass. The separate native-water
-parity and integrated regression children remain unfinished. The legacy Godot boundary report now passes
+regression and both-platform package checks pass. The expanded water-correction
+matrix passes 85 exact entrance starts and 36 supported live cases; both platform
+packages pass. The integrated regression child remains unfinished. The legacy Godot boundary report now passes
 the corrected authored-pool bank and type-107 assertions, then fails a later
 stale XLarge subtype-45 dwelling expectation. The full report is not passing.
 
