@@ -38,6 +38,20 @@ Do not edit recovered package masks or remove overlapping scenery/other actors.
 Prove live collection invalidates cached occupancy, backtracking and save/resume
 work, rewards cannot repeat, and authored permanent body rules remain intact.
 
+The Medium Day-54 continuation exposes scenic resource footprints redirecting
+clicks on adjacent real artifacts. Exact live interaction tiles must retain
+selection/route ownership before visual Town/resource footprint shortcuts;
+selection, labels and execution descriptors must agree. Preserve ordinary scenic
+body-to-entrance selection where no other interaction owns the tile. Prove both
+recorded artifacts can actually be collected through pointer input, guards and
+save/resume, plus encounter/entrance, level and stale-cache controls. Do not move
+objects, alter masks or hide legitimate sites to avoid the overlap.
+Guard control zones and town art anchors are not exact object positions; retain
+their existing movement semantics without letting them preempt scenic shortcuts.
+Generated support-site visit tiles remain authoritative without an authored
+scenic object descriptor. Recheck the real guarded opening arrival/primary-action
+flow as well as both artifact collections.
+
 Capture full action latency including rules/AI, autosave, refresh, animations and
 input re-enablement. Use the same seed, commands, conditions and instrumentation
 for comparisons; preserve complete state and decision/RNG equivalence for

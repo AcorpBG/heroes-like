@@ -578,6 +578,14 @@ def main() -> int:
         (out/'actions.jsonl').write_text(''.join(json.dumps(row)+'\n' for row in prefix))
         cfg['resume'] = metadata
     env = dict(os.environ, XDG_DATA_HOME=str(out/'data'), HEROES_FULL_MATCH_OUTPUT=str(out), HEROES_FULL_MATCH_CONFIG=json.dumps(cfg), HEROES_FULL_MATCH_RESOLUTION=args.resolution, HEROES_PROFILE_LOG='1', HEROES_STRATEGIC_AI_PROFILE='1')
+    # Capture launch provenance now, not after hours of play while the working
+    # tree may have changed. This is evidence only, never game-state injection.
+    revision = subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+    source_paths = sorted(set(ROOT.glob('scripts/**/*.gd')) | set(ROOT.glob('scenes/**/*.gd')) | set(ROOT.glob('scenes/**/*.tscn')) | set(ROOT.glob('content/*.json')) | {ROOT/'project.godot'})
+    source_hashes = {str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in source_paths}
+    source_digest = hashlib.sha256(json.dumps(source_hashes,sort_keys=True).encode()).hexdigest()
+    provenance = {'revision':revision,'driver_sha256':hashlib.sha256(SCRIPT.encode()).hexdigest(),'runtime_source_tree_sha256':source_digest,'runtime_source_sha256':source_hashes}
+    (out/'launch_provenance.json').write_text(json.dumps(provenance,indent=2)+'\n')
     started = monotonic()
     with tempfile.TemporaryDirectory(prefix='driver-', dir=OUTPUT) as temporary:
         work = Path(temporary)
@@ -604,7 +612,7 @@ def main() -> int:
     errors = [line for line in lines if line.startswith(('ERROR:','SCRIPT ERROR:')) or 'leaked' in line]
     profile = out/'data/godot/app_userdata/heroes-like/debug/heroes_profile.jsonl'
     records = [json.loads(line) for line in profile.read_text().splitlines() if line.strip()] if profile.exists() else []
-    report.update(returncode=returncode, runtime_errors=errors, wall_s=monotonic()-started, peak_child_rss_kib=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss, config=cfg, rendered=args.rendered, resolution=args.resolution, accessibility=args.accessibility, revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(), driver_sha256=hashlib.sha256(SCRIPT.encode()).hexdigest(), profile_summary=summarize(records))
+    report.update(returncode=returncode, runtime_errors=errors, wall_s=monotonic()-started, peak_child_rss_kib=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss, config=cfg, rendered=args.rendered, resolution=args.resolution, accessibility=args.accessibility, revision=revision, driver_sha256=provenance['driver_sha256'], runtime_source_tree_sha256=source_digest, launch_provenance=str(out/'launch_provenance.json'), profile_summary=summarize(records))
     report['acceptance_failures'] = acceptance_failures(report)
     report['ok'] = not report['acceptance_failures']
     (out/'report.json').write_text(json.dumps(report,indent=2)+'\n')

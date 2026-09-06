@@ -61,6 +61,19 @@ func run() -> void:
 				checks["town_return_owned_roster"] = int(roster.get("hero_count",0)) == 1 and int(roster.get("town_count",0)) == 1 and bool(roster.get("all_focusable",false))
 				evidence["town_return_roster"] = {"heroes":roster.get("hero_count",0),"towns":roster.get("town_count",0)}
 				await capture("town_return_roster")
+		# Generated art is grounded at the visit tile, not the source image anchor.
+		# Use an actual live body tile from the view's authoritative footprint.
+		var body_tile := origin + Vector2i(0,-1)
+		checks["generated_body_routes_to_entrance"] = shell._town_footprint_selection(body_tile).get("entry_tile",Vector2i(-1,-1)) == origin and shell._selection_route_tile(body_tile) == origin
+		var movement_before: Dictionary = session.overworld.movement.duplicate(true)
+		shell._on_map_tile_pressed(body_tile)
+		await settle()
+		checks["generated_body_opens_town"] = get_tree().current_scene.scene_file_path.ends_with("TownShell.tscn")
+		checks["generated_body_preserves_movement"] = OverworldRules.hero_position(session) == origin and session.overworld.movement == movement_before
+		if checks.generated_body_opens_town:
+			get_tree().current_scene.validation_leave_town()
+			await settle()
+		shell = get_tree().current_scene
 		var target := Vector2i(41,41)
 		var guard: Dictionary = OverworldRules.guard_engagement_encounter_at_tile(session,target.x,target.y)
 		checks["exact_guard"] = String(guard.get("placement_id","")) == "h3maped_small_rare_source_guard_h3maped_small_town_source_support_native_h3maped_93c0f05a_object_0950_required_sources"

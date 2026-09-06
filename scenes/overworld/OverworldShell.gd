@@ -2141,6 +2141,7 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 		not town_footprint_selection.is_empty()
 		and not bool(town_footprint_selection.get("is_entry_tile", false))
 		and String(town_footprint_selection.get("owner", "neutral")) == "player"
+		and route_tile == town_footprint_selection.get("entry_tile", tile)
 	):
 		_set_selected_tile(route_tile)
 		_debug_set_path_command_type("open_town_from_footprint")
@@ -9403,10 +9404,18 @@ func _resource_node_at(x: int, y: int) -> Dictionary:
 	if _refresh_cache.has(cache_key):
 		return _refresh_cache[cache_key]
 	var tile := Vector2i(x, y)
-	for node in _active_resource_nodes():
-		if _resource_node_matches_interaction_tile(node, tile):
-			_refresh_cache[cache_key] = node
-			return node
+	# Generated support sites can have authoritative visit tiles without an
+	# authored scenic object descriptor. Use the domain index for exact ownership.
+	var exact_node := OverworldRules.resource_node_interaction_at_tile(_session, x, y, LevelRules.view_level(_session))
+	if not exact_node.is_empty():
+		_refresh_cache[cache_key] = exact_node
+		return exact_node
+	# A scenic rectangle is not the owner of an artifact, guard, entrance or
+	# commander on a different actual interaction tile. Keep descriptors and
+	# labels consistent with the same exact-tile priority used by selection.
+	if _tile_has_exact_selection_target(tile):
+		_refresh_cache[cache_key] = {}
+		return {}
 	for node in _active_resource_nodes():
 		if _resource_node_contains_visual_tile(node, tile):
 			_refresh_cache[cache_key] = node
@@ -9429,6 +9438,12 @@ func _active_resource_nodes() -> Array:
 
 func _selection_route_tile(tile: Vector2i) -> Vector2i:
 	var selection_started_usec := _debug_phase_begin("tile_object_selection_resolution")
+	if _tile_has_exact_selection_target(tile):
+		_debug_phase_end("tile_object_selection_resolution", selection_started_usec, {
+			"raw": _debug_tile_payload(tile), "resolved": _debug_tile_payload(tile),
+			"object": true, "object_kind": "exact_tile",
+		})
+		return tile
 	var town_selection := _town_footprint_selection(tile)
 	if not town_selection.is_empty():
 		var town_entry: Vector2i = town_selection.get("entry_tile", tile) if town_selection.get("entry_tile", tile) is Vector2i else tile
@@ -9453,6 +9468,16 @@ func _selection_route_tile(tile: Vector2i) -> Vector2i:
 		"placement_id": String(node.get("placement_id", "")),
 	})
 	return resolved
+
+func _tile_has_exact_selection_target(tile: Vector2i) -> bool:
+	if _session == null:
+		return false
+	var level := LevelRules.view_level(_session)
+	if level == LevelRules.hero_level(_session) and tile == OverworldRules.hero_position(_session):
+		return true
+	# Domain spatial indexes include current guards and unconsumed objects,
+	# preserve levels, and are invalidated by the existing mutation boundary.
+	return OverworldRules.tile_has_route_interaction(_session, tile.x, tile.y, level, true)
 
 func _town_footprint_selection(tile: Vector2i) -> Dictionary:
 	if _map_view == null or not _map_view.has_method("town_footprint_selection"):
