@@ -336,9 +336,9 @@ eleven. The retained Large Day-37 save also has nine in enemy Town 2170.
 At that player-only checkpoint, `EnemyTurnRules` recruitment and
 `EnemyAdventureRules` roster/site/Town/raid handoffs still appended without
 capacity protection. The following AI checkpoint corrects those owners without
-rewriting older oversized saves. `ScenarioScriptRules` still marks one-shot hooks
-fired before unbounded army/garrison grants; 106 authored reinforcement hooks need
-reward-preserving behavior, not silent rejection.
+rewriting older oversized saves. At that checkpoint, `ScenarioScriptRules` still
+marked one-shot hooks fired before unbounded army/garrison grants; 106 authored
+reinforcement hooks needed reward-preserving behavior, not silent rejection.
 
 ### AI army admissions and feasible orders
 
@@ -409,9 +409,84 @@ Evidence:
 The older `medium_match_08` and `large_match_06` subsequently exhausted their
 7200-second observation windows without terminal reports. Their oversized-army
 prefixes cannot become accepted full matches by resuming them or truncating their
-troops. Fresh legal matches remain required after scripted rewards are safe.
+troops. Fresh legal matches remain required.
 
-Next: close scripted admission without losing earned rewards, then establish competent
+### Scripted earned-reinforcement retention
+
+The `8aa89d20` script owner reproduced **13 failures in 28 checks** without
+engine errors (`scripted_reward_before_02`). Authored Stonewake survivors and
+Causeway's veteran garrison could create an eighth stack. Simply rejecting the
+addition would lose an earned grant because `process_hooks` records the once-only
+hook before applying its effects. All 106 current authored reinforcement hooks
+are one-shot (104 field-army, two garrison effects).
+
+`ScenarioScriptRules._add_army_units` and `_town_add_garrison` now preflight the
+whole validated manifest through `HeroCommandRules.army_addition_plan`, before
+changing troops. A blocked hook effect stores optional `pending_reinforcements`
+inside existing script state, keyed by hook/effect index and fixed to its earned
+hero/town and controller (plus town owner). Normal hook evaluation retries
+existing pending grants once. It does not recheck transient earning conditions,
+refire narrative/flags/resources/recruit-reserves/spawns, select a replacement
+recipient, create actors, or let a captor receive the original grant. Successful
+delivery consumes that pending record exactly once; the empty optional key is
+removed. Non-active heroes retain their own grant without changing active mirrors.
+
+Unknown saved unit content suspends the complete grant instead of materializing
+an invalid stack or discarding a partial manifest. Existing fired hooks without a
+pending record remain fired; old armies are never truncated. The generic
+repeatable-hook facility allows at most one outstanding invocation per hook and
+cannot refire during its delivery pass. These are saved source-owned entitlements,
+not extra army inventory. Existing event messages/recent-event tooltips explain
+waiting and delivery. Save version **9**, authored rewards, capture rules, maps,
+balance and art are unchanged. The exact mechanism was specified in the parent
+requirements and tracked before implementation.
+
+Evidence under `.artifacts/generated_full_match_quality_20260906/`:
+
+- `scripted_reward_verified_01`: **40 checks pass**, zero engine errors. Includes
+  the real authored hooks, complete-state save/resume, unchanged blocked retries,
+  changed transient conditions, non-active/missing/foreign heroes, missing towns,
+  controller and owner changes independently, matching split stacks, atomic
+  multi-unit grants, once-only flags/resources/spawns/chains, unknown saved units,
+  bounded repeatable hooks and no retroactive rewards. Production script SHA-256:
+  `f3aafd02234ae36d3297ef510cf9dcf1f8527123220b124af350d40cc827fa7c`.
+- `scripted_rewards_player_capacity_verified`: **63 checks pass**, preserving the
+  actual legacy save and explicitly rejecting its overflow history for match
+  acceptance. `scripted_rewards_ai_capacity_verified`: **55 checks pass**.
+- `scripted_rewards_generated_medium_verified` and
+  `scripted_rewards_generated_large_verified`: **95 checks each**, including two
+  normal seven-turn replays from each representative generated opening with
+  complete-state equality and zero capacity violations. These are early-turn
+  rule controls, **not complete matches or matched performance measurements**.
+- `scripted_rewards_acceptance_verified.log`: eleven Python acceptance/resume
+  tests pass. `scripted_rewards_validate_verified.log`: repository validation
+  passes; `git diff --check` passes.
+- `scripted_rewards_linux_verified_serial`, `scripted_rewards_windows_verified`
+  and `scripted_rewards_linux_entry_verified`: exports, startup and generated
+  Overworld/Town entry pass, including Wine's Windows execution. Both PCKs are
+  **248450520 bytes**, **1549480** below the decimal 250 MB ceiling. This does
+  not certify Windows-native hardware.
+
+The nine affected Stonewake/Reedbarrow/Causeway and campaign reports pass on the
+final production owner (headless controls plus the final-nine report's required
+rendered run). They are now invocable through
+`python3 tests/full_play_validation_suite.py --scripted-rewards --accessibility disabled --label <fresh>`.
+The consolidated nine-report rerun passes in
+`.artifacts/full_play_runtime_20260905/scripted_rewards_campaigns_verified/report.json`.
+No historical gameplay assertions were
+weakened. Rendering uses the already-documented validation-only AT-SPI isolation;
+production accessibility defaults are unchanged.
+
+Failed attempts remain explicit: the first disposable test had an incorrect
+draft-registration call; a later repeatable fixture lacked required registry
+metadata. Those harness failures were corrected, not counted as behavior passes.
+The original final-nine headless invocation was terminated at its unconditional
+`frame_post_draw` wait, then passed with rendering. Parallel Linux/Windows export
+hit their shared Godot `/tmp/tmpproject.binary`; the failed Linux package is not
+accepted. The serialized Linux rerun and Windows package both pass and match in
+size. Export errors were not suppressed or ignored.
+
+Next: establish competent
 legal Medium/Large exploration/conquest through real
 terminal outcomes and terminal save/resume, continue measured full-action
 optimization and address the recorded Town/Overworld presentation gaps.

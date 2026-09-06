@@ -13934,7 +13934,10 @@ def validate_content(errors: list[str]) -> None:
         "static func _town_add_garrison(session: SessionStateStoreScript.SessionData, placement_id: String, garrison: Variant) -> Dictionary:",
         "var unit_ids = garrison.keys()",
         "unit_ids.sort()",
-        "stacks = _overworld_rules()._add_army_stack(stacks, unit_id, int(garrison.get(unit_id_value, 0)))",
+        "var admission := HeroCommandRulesScript.army_addition_plan(stacks, added)",
+        'if not bool(admission.get("ok", false)):',
+        'return {"ok": false, "reason": "army_capacity", "units": added, "messages": []}',
+        'stacks = admission.get("stacks", [])',
         'town["garrison"] = stacks',
         'session.overworld["towns"] = towns',
     )
@@ -13943,7 +13946,7 @@ def validate_content(errors: list[str]) -> None:
     ensure(
         min(causeway_garrison_runtime_positions) >= 0 and causeway_garrison_runtime_positions == sorted(causeway_garrison_runtime_positions),
         errors,
-        "ScenarioScriptRules must apply authored garrison additions through sorted canonical army-stack merging and live town state",
+        "ScenarioScriptRules must admit the complete sorted garrison grant before committing live town state",
     )
     for forbidden_token in ('town["garrison"] = garrison', 'session.overworld["towns"].append', "unit_ids.shuffle"):
         ensure(forbidden_token not in causeway_garrison_runtime_source, errors, f"Scenario garrison additions must not bypass canonical merging via {forbidden_token}")
@@ -77923,14 +77926,28 @@ def validate_scenario_script_active_army_reinforcements(errors: list[str]) -> No
         'unit_ids.sort()',
         'ContentService.get_unit(unit_id).is_empty()',
         'var count: int = max(0, int(units.get(unit_id_value, 0)))',
-        'stacks = _overworld_rules()._add_army_stack(stacks, unit_id, count)',
+        'var admission := HeroCommandRulesScript.army_addition_plan(stacks, added)',
+        'if not bool(admission.get("ok", false)):',
+        'return {"ok": false, "reason": "army_capacity", "units": added, "messages": []}',
         'session.overworld["army"] = army',
         'hero["army"] = army.duplicate(true)',
         'HeroCommandRulesScript.commit_active_hero(session)',
         '"Field reinforcements join the active army (%s)." % summary',
     ):
         ensure(token in body, errors, f"ScenarioScriptRules active-army reinforcement is missing fail-closed authority token: {token}")
-    ensure(body.find("unit_ids.sort()") < body.find("_add_army_stack") < body.find('session.overworld["army"] = army') < body.find("commit_active_hero"), errors, "ScenarioScriptRules active-army reinforcement must apply sorted valid units before synchronizing active hero mirrors")
+    ensure(body.find("unit_ids.sort()") < body.find("army_addition_plan") < body.find('"reason": "army_capacity"') < body.find('session.overworld["army"] = army') < body.find("commit_active_hero"), errors, "ScenarioScriptRules active-army reinforcement must admit all sorted valid units before synchronizing active hero mirrors")
+    ensure("_add_army_stack" not in body, errors, "Scripted active-army grants must not bypass shared capacity admission")
+    for token in (
+        'const PENDING_REINFORCEMENTS_KEY := "pending_reinforcements"',
+        '_retry_pending_reinforcements(session)',
+        'processed_this_pass[hook_id] = true',
+        '_retain_reinforcement(session, hook_id, effect_index, effect, result.get("units", {}))',
+        'HeroCommandRulesScript.hero_by_id(session, recipient_id)',
+        'PlayerIdentityRulesScript.town_controller_id(town) != String(record.controller_id)',
+        'state.erase(PENDING_REINFORCEMENTS_KEY)',
+    ):
+        ensure(token in text, errors, f"Scripted grants must retain source-owned fixed-recipient eligibility: {token}")
+    ensure((ROOT / "tests/scripted_reinforcement_retention_regression.py").exists(), errors, "Scripted reinforcement save/recipient/idempotence regression is missing")
     for forbidden in ('session.battle', 'session.scenario_status', 'resolved_encounters', 'quick_resolve', 'session.save'):
         ensure(forbidden not in body, errors, f"ScenarioScriptRules active-army reinforcement must not mutate battle, scenario, or save authority: {forbidden}")
 
