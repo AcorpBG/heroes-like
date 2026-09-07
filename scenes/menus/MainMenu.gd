@@ -3376,6 +3376,10 @@ func _finalize_stage_accessibility() -> void:
 	call_deferred("_refresh_stage_accessibility")
 
 func _refresh_stage_accessibility() -> void:
+	# Deferred stage updates can outlive the menu's scene-tree membership during
+	# launch. get_tree() itself reports an engine error on a detached node.
+	if not is_inside_tree():
+		return
 	var tree := get_tree()
 	if tree == null:
 		return

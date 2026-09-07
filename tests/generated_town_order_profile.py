@@ -176,6 +176,7 @@ def main() -> int:
     saved = args.save.read_bytes()
     json.loads(saved)  # Fail before launching if a concurrently written file is incomplete.
     (out/'input_save.json').write_bytes(saved)
+    runtime_sources = {name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in ['scripts/core/OverworldRules.gd','scripts/core/TownRules.gd','scripts/autoload/ContentService.gd','scenes/menus/MainMenu.gd']}
     signal.signal(signal.SIGTERM, stop_requested)
     paused = pause_drivers(args.pause_driver)
     started = monotonic()
@@ -204,6 +205,7 @@ def main() -> int:
     report = reports[-1] if reports else {'ok':False,'failures':['missing report']}
     report.update(save_sha256=hashlib.sha256(saved).hexdigest(),town_source_sha256=hashlib.sha256(town_source).hexdigest(),reference_town_revision=args.reference_town_revision,rendered=args.rendered,host=platform.platform(),returncode=returncode,wall_seconds=monotonic()-started,paused_engine_pids=paused,runtime_errors=[line for line in lines if line.startswith(('ERROR:','SCRIPT ERROR:')) or 'leaked' in line])
     report['latency'] = latency_summary(report.get('rows',[]))
+    report['runtime_source_sha256'] = runtime_sources
     if args.compare:
         reference = json.loads((args.compare/'report.json').read_text())
         states = sorted(out.glob('state_*.json'))

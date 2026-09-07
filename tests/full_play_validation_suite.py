@@ -51,6 +51,9 @@ SCENES = [
     "town_army_transfer_completion_feedback_report",
     "town_recruitment_ui_surface_report",
     "town_recruitment_cue_playback_report",
+    "town_route_response_dispatch_feedback_report",
+    "town_capital_project_identity_runtime_report",
+    "town_development_runtime_balance_report",
     "four_elder_wild_recruitment_sanctuaries_smoke",
 ]
 RENDERED_SCENES = ["active_play_keyboard_focus_smoke", "custom_mouse_cursor_runtime_report"]
@@ -194,6 +197,8 @@ def main() -> int:
             "town_army_transfer_completion_feedback_report": "TOWN_ARMY_TRANSFER_COMPLETION_FEEDBACK_REPORT",
             "town_recruitment_ui_surface_report": "TOWN_RECRUITMENT_UI_SURFACE_REPORT",
             "town_recruitment_cue_playback_report": "TOWN_RECRUITMENT_CUE_PLAYBACK_REPORT",
+            "town_route_response_dispatch_feedback_report": "TOWN_ROUTE_RESPONSE_DISPATCH_FEEDBACK_REPORT",
+            "town_development_runtime_balance_report": "TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT",
         }
         marker = match.group(1) if match else explicit_markers.get(name, "")
         if not marker or marker not in source:
