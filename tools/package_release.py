@@ -23,6 +23,7 @@ from typing import BinaryIO
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 from compact_export_pck import compact_export
+from prepare_lossless_texture_imports import prepare as prepare_lossless_imports
 
 DEFAULT_OUTPUT_DIR = ROOT / ".artifacts" / "release"
 DEFAULT_SOURCE_DATE_EPOCH = 315532800
@@ -449,6 +450,7 @@ def build_windows_installer_helper(destination: Path) -> None:
 
 
 def export_platform(spec: PlatformSpec, export_dir: Path, godot: str) -> None:
+    prepare_lossless_imports(ROOT, godot)
     if export_dir.exists():
         shutil.rmtree(export_dir)
     export_dir.mkdir(parents=True)

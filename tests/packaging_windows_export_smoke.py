@@ -14,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 from compact_export_pck import compact_export
+from prepare_lossless_texture_imports import prepare as prepare_lossless_imports
 
 ARTIFACT_DIR = Path(
     os.environ.get(
@@ -1281,6 +1282,7 @@ def pck_terrain_payload_summary() -> dict:
 
 def main() -> int:
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
+    texture_imports = prepare_lossless_imports(ROOT, "godot", ARTIFACT_DIR / "lossless-imports.json")
     if EXPORT_DIR.exists():
         shutil.rmtree(EXPORT_DIR)
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
@@ -1563,6 +1565,7 @@ def main() -> int:
     ok = export_ok and runtime_ok and generated_runtime_ok
 
     report = {
+        "lossless_texture_imports": {k: v for k, v in texture_imports.items() if k != "rows"},
         "schema_id": SCHEMA_ID,
         "report_id": REPORT_ID,
         "generated_at": utc_now(),

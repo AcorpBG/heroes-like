@@ -202,15 +202,16 @@ class CompactPackTests(unittest.TestCase):
             out = self.path.parent / spec.platform_id
             def fake_export(command):
                 (out / "heroes-like.pck").write_bytes(self.original)
-            with self.subTest(platform=spec.platform_id), mock.patch.object(package_release, "run", side_effect=fake_export):
+            with self.subTest(platform=spec.platform_id), mock.patch.object(package_release, "prepare_lossless_imports") as prepare, mock.patch.object(package_release, "run", side_effect=fake_export):
                 package_release.export_platform(spec, out, "test-godot")
+                prepare.assert_called_once_with(package_release.ROOT, "test-godot")
                 self.assertLess((out / "heroes-like.pck").stat().st_size, len(self.original))
 
     def test_production_builder_stops_on_invalid_pack(self):
         out = self.path.parent / "bad-export"
         def fake_export(command):
             (out / "heroes-like.pck").write_bytes(b"bad exported pack")
-        with mock.patch.object(package_release, "run", side_effect=fake_export):
+        with mock.patch.object(package_release, "prepare_lossless_imports"), mock.patch.object(package_release, "run", side_effect=fake_export):
             with self.assertRaises(ValueError):
                 package_release.export_platform(package_release.PLATFORMS[0], out, "test-godot")
         self.assertEqual((out / "heroes-like.pck").read_bytes(), b"bad exported pack")

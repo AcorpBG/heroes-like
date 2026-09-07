@@ -867,3 +867,99 @@ regressions have no such warning. No audio owner changed in this caption fix;
 the quick-exit lifetime cause is not established here and needs a separate
 reproduction/correction, not a blanket clean-shutdown claim. This checkpoint
 does not close all-faction art, remaining Overworld repairs or the parent goal.
+
+## Verified lossless-import headroom prerequisite
+
+The 249674052-byte caption package left only 325948 bytes for the remaining
+approved art. Godot 4.6.2 defaults its lossless WebP effort to 25 and its shared
+compression method to 2. Its texture-import fingerprint includes VRAM formats,
+not this WebP effort. Simply changing a setting would leave existing imports at
+the old encoding. Sources: [setting defaults](https://github.com/godotengine/godot/blob/4.6.2-stable/servers/rendering/rendering_server.cpp#L3695),
+[lossless encoder and exact transparent RGB](https://github.com/godotengine/godot/blob/4.6.2-stable/modules/webp/webp_common.cpp#L45),
+and [import settings fingerprint](https://github.com/godotengine/godot/blob/4.6.2-stable/editor/import/resource_importer_texture.cpp#L1014).
+
+`project.godot` now selects lossless factor 100; the shared method remains 2 so
+lossy imports are not changed. `tools/prepare_lossless_texture_imports.py` stages
+ordinary editor imports of the actual exported lossless PNG set at identical
+resource paths in a disposable project. It preserves source/option hashes and
+compares the complete original/candidate texture header plus real Godot-decoded
+format, dimensions, every mipmap and all pixel bytes, including transparent RGB.
+Only verified CTEX/MD5 cache outputs are atomically published, with rollback on a
+failed write. Source rasters/options, provenance and unrelated caches stay intact.
+The production release builder and both platform smokes call the same helper.
+
+An exact source/options/output/metadata/engine/settings stamp plus retained decode
+proof skips unchanged imports. Missing input metadata uses the normal editor
+bootstrap; because that scan may also rebuild other caches, all pending outputs
+then get fresh default-factor-25 baselines. Fresh or intentionally changed inputs
+are compared against that default import, not an unrelated old asset. Unknown
+engine/remap/options, mismatched pixels, concurrent changes and failed imports
+stop preparation. The `.godot/lossless-import.lock` is never stolen; after an
+interrupted helper, verify no owning process remains before removing that one
+empty lock directory. No broad cache purge is required.
+
+Evidence under `.artifacts/generated_full_match_quality_20260906/`:
+
+- `lossless_sample2/report.json`: two actual assets pass complete engine decode
+  comparisons, saving 36618 imported bytes. Gantry retains nine mip levels.
+- `lossless_all/report.json`: all 2260 selected assets covered, with 2258 additional
+  reimports saving 8328140 bytes in 103.35 seconds. `lossless_texture_proofs.json`
+  retains the full combined exact-source/import/output/pixel proof.
+- Unchanged full-workspace preparation takes 9.58–19.50 seconds in the platform
+  runs, with 2260 cache hits and no reimport. This hashes the selected inputs and
+  outputs; it is a build-time prerequisite, not a gameplay speed claim.
+- `lossless_first_import2/report.json`: real empty-cache and missing-metadata
+  imports, two cache hits, and a deliberate mip-option change on a disposable
+  copy all pass against fresh default imports. Both original rasters stay intact.
+- `lossless_package_proof.json`: all 5166 PCK members checked. All 2260 verified
+  texture encodings are present; 2255 members differ from the baseline exported
+  after the initial sample, while 2911 remain byte-identical. Every non-texture
+  member is unchanged, including scripts, native/package metadata and content.
+  Linux/Windows match for all 5165 members other than platform `project.binary`.
+  Both PCKs are **241309204 bytes**, with **8690796 bytes of headroom**. The full
+  comparison saves 8328304 bytes; versus the previous caption checkpoint the
+  reduction is 8364848 bytes. These are PCK sizes, not archive/install totals.
+- `lossless_town/report.json`: 855 real Large Day-8 save/input/resource/re-entry
+  checks pass at 1280x720, 1920x1080 and 2048x1079. `lossless_overworld720` and
+  `lossless_overworld1080` pass 643 checks each with complete save equality.
+  Town and Overworld captures were inspected at both supported sizes. Independent
+  Town captures differ slightly around animated scenic lighting; they are not
+  claimed pixel-identical. The asset/mipmap comparison is exact, without masks.
+- `lossless_linux/report.json` and its `generated-entry` report pass startup and
+  19 steps/eight normal daily builds. The final 1080p constructed-Town capture was
+  inspected. `lossless_windows/report.json` and `generated-flow` pass startup and
+  23 steps/ten normal daily builds, using headless Wine, not physical Windows/GPU.
+  This pair has no engine/leak errors; the earlier quick-exit Ogg warning remains
+  a separate unresolved observation, not a claimed audio fix.
+- Nineteen helper/package unit tests, twenty compactor tests, seventeen release
+  artifact checks and nine release-pipeline tests pass. Existing Town layout and
+  all-town building-progression reports pass at
+  `.artifacts/full_play_runtime_20260905/lossless_town_existing/report.json`.
+  Map-object sprites, decorative sprites, permanent fog and movement-input reports
+  pass at `.artifacts/full_play_runtime_20260905/lossless_overworld_existing2/report.json`.
+  `lossless_repo_final.log` records repository validation; diff checks pass.
+
+Reproduce with `python3 -B tools/prepare_lossless_texture_imports.py --report
+<fresh.json>`, `python3 -B tests/lossless_texture_clean_import_regression.py
+--output <fresh-directory>`, `python3 -B -m unittest discover -s tests -p
+test_lossless_texture_imports.py`, and `python3 -B
+tests/lossless_texture_package_regression.py <before-linux.pck> <after-linux.pck>
+<after-windows.pck> --proofs <retained-proof.json> --output <fresh.json>`.
+Use the normal Town/Overworld commands above and both established packaging
+smokes; no special runtime or custom export template is required.
+
+Retained failed/support attempts are not passes: the editor-script API experiment
+leaked editor-only objects, so production uses ordinary isolated `--import`
+instead. The first decode probe used a nonexistent static hash helper and failed
+before publication. The first clean-import control exposed the bootstrap-baseline
+classification gap corrected above. An initial Linux wrapper loaded the smoke
+module before setting its report directory; the genuine passing default-directory
+report was retained verbatim under `lossless_linux`. Its supervisor exited 143
+after the completed Linux flow and before recording the row/launching Windows;
+the Linux terminal report/log was independently verified, and Windows ran as a
+separate successful process. That partial batch is not called a six-job pass.
+The first extra Overworld command requested an unregistered lava report and
+stopped at argument parsing, before any scene ran.
+
+This closes the measured package-headroom prerequisite, not the remaining Town
+building/upgrade/faction paintings, Overworld cutout repairs or the overall goal.

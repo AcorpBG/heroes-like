@@ -52,7 +52,11 @@
         "python3 -B tests/town_scene_layer_regression.py --memory-growth --save <Large08 earned Day-8 slot2> --developed-save <Large08 terminal slot3> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
         "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-export-binary> --pack <same-export.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --memory-growth --save <Large08 earned Day-8 slot2> --developed-save <Large08 terminal slot3> --resolution 1280x720 --label <fresh>",
         "python3 -B -m unittest discover -s tests -p test_packaged_town_scene_layer_probe.py",
-        "python3 -B tests/town_stockpile_text_fit_regression.py --save <Large08 earned Day-8 slot2> --label <fresh> [--authored]"
+        "python3 -B tests/town_stockpile_text_fit_regression.py --save <Large08 earned Day-8 slot2> --label <fresh> [--authored]",
+        "python3 -B tools/prepare_lossless_texture_imports.py --report <fresh-report.json>",
+        "python3 -B tests/lossless_texture_clean_import_regression.py --output <fresh-directory>",
+        "python3 -B -m unittest discover -s tests -p test_lossless_texture_imports.py",
+        "python3 -B tests/lossless_texture_package_regression.py <before-linux.pck> <after-linux.pck> <after-windows.pck> --proofs <retained-proof.json> --output <fresh-report.json>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -105,16 +109,19 @@
         "scripts/autoload/LiveValidationHarness.gd: explicit restricted-path SHA256-checked Python Town-probe bootstrap; no normal-game execution or embedded test logic",
         "tests/packaged_town_scene_layer_regression.py and test_packaged_town_scene_layer_probe.py: actual isolated release binary, immutable pack and complete paid/input/save assertions, bootstrap rejection controls and headless-only screenshot omission",
         "scenes/town/TownShell.tscn and tests/town_stockpile_text_fit_regression.py: after immutable art acceptance, opt Town into existing width fitting and a local legible read-only popup theme; preserve nine-resource input/save behavior at three resolutions",
-        "tests/validate_repo.py: require explicit Town and Overworld scene opt-ins and legible popup themes, preserving the shared false default and all ledger ownership checks"
+        "tests/validate_repo.py: require explicit Town and Overworld scene opt-ins and legible popup themes, preserving the shared false default and all ledger ownership checks",
+        "project.godot and tools/prepare_lossless_texture_imports.py: stronger built-in lossless compression and bounded verified reimport; preserve source/import options and every decoded pixel/mipmap, no lossy changes or cache deletion",
+        "tools/package_release.py and both platform export smokes: shared verified import preparation, actual smaller packages and generated Town gameplay",
+        "tests/test_lossless_texture_imports.py and tests/lossless_texture_package_regression.py: complete engine-decoded image/cache/member preservation, failure/rollback controls, inspected dual-resolution evidence"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T23:04:23Z",
+      "updatedAt": "2026-09-07T23:46:46Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Town caption/theme checkpoint validated: 856 unchanged authored checks and 855 actual Large-save checks pass across three inspected resolutions; legacy Town/Overworld and Town layout/progression reports pass. Repository assertions now require both explicit scene opt-ins, retaining shared default/ownership. Fresh Linux/Windows export/generated Town flows pass at 249674052 bytes, with inspected 1080p Linux capture. A separate Windows Main Menu quick-exit Ogg object warning is recorded without claiming its cause fixed. All-faction art, package headroom and full goal remain open."
+      "notes": "Lossless headroom prerequisite validated: 2260 exact decoded texture proofs; both PCKs 241309204 bytes with 8690796 bytes headroom; 5166-member preservation, Linux/Windows construction, first-import/input/save tests and inspected captures pass. Remaining faction/building/upgrade art and Overworld repairs stay in progress; prior audio warning is not declared fixed."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16732,7 +16739,7 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Town caption/theme checkpoint validated: 856 unchanged authored checks and 855 actual Large-save checks pass across three inspected resolutions; legacy Town/Overworld and Town layout/progression reports pass. Repository assertions now require both explicit scene opt-ins, retaining shared default/ownership. Fresh Linux/Windows export/generated Town flows pass at 249674052 bytes, with inspected 1080p Linux capture. A separate Windows Main Menu quick-exit Ogg object warning is recorded without claiming its cause fixed. All-faction art, package headroom and full goal remain open.",
+  "currentSliceNotes": "Lossless headroom prerequisite validated: 2260 exact decoded texture proofs; both PCKs 241309204 bytes with 8690796 bytes headroom; 5166-member preservation, Linux/Windows construction, first-import/input/save tests and inspected captures pass. Remaining faction/building/upgrade art and Overworld repairs stay in progress; prior audio warning is not declared fixed.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Presentation Corrections",
   "currentSliceUpdatedAt": "2026-09-07T23:05:23Z",
@@ -22523,7 +22530,11 @@
         "python3 -B tests/town_scene_layer_regression.py --memory-growth --save <Large08 earned Day-8 slot2> --developed-save <Large08 terminal slot3> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
         "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-export-binary> --pack <same-export.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --memory-growth --save <Large08 earned Day-8 slot2> --developed-save <Large08 terminal slot3> --resolution 1280x720 --label <fresh>",
         "python3 -B -m unittest discover -s tests -p test_packaged_town_scene_layer_probe.py",
-        "python3 -B tests/town_stockpile_text_fit_regression.py --save <Large08 earned Day-8 slot2> --label <fresh> [--authored]"
+        "python3 -B tests/town_stockpile_text_fit_regression.py --save <Large08 earned Day-8 slot2> --label <fresh> [--authored]",
+        "python3 -B tools/prepare_lossless_texture_imports.py --report <fresh-report.json>",
+        "python3 -B tests/lossless_texture_clean_import_regression.py --output <fresh-directory>",
+        "python3 -B -m unittest discover -s tests -p test_lossless_texture_imports.py",
+        "python3 -B tests/lossless_texture_package_regression.py <before-linux.pck> <after-linux.pck> <after-windows.pck> --proofs <retained-proof.json> --output <fresh-report.json>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -22576,16 +22587,19 @@
         "scripts/autoload/LiveValidationHarness.gd: explicit restricted-path SHA256-checked Python Town-probe bootstrap; no normal-game execution or embedded test logic",
         "tests/packaged_town_scene_layer_regression.py and test_packaged_town_scene_layer_probe.py: actual isolated release binary, immutable pack and complete paid/input/save assertions, bootstrap rejection controls and headless-only screenshot omission",
         "scenes/town/TownShell.tscn and tests/town_stockpile_text_fit_regression.py: after immutable art acceptance, opt Town into existing width fitting and a local legible read-only popup theme; preserve nine-resource input/save behavior at three resolutions",
-        "tests/validate_repo.py: require explicit Town and Overworld scene opt-ins and legible popup themes, preserving the shared false default and all ledger ownership checks"
+        "tests/validate_repo.py: require explicit Town and Overworld scene opt-ins and legible popup themes, preserving the shared false default and all ledger ownership checks",
+        "project.godot and tools/prepare_lossless_texture_imports.py: stronger built-in lossless compression and bounded verified reimport; preserve source/import options and every decoded pixel/mipmap, no lossy changes or cache deletion",
+        "tools/package_release.py and both platform export smokes: shared verified import preparation, actual smaller packages and generated Town gameplay",
+        "tests/test_lossless_texture_imports.py and tests/lossless_texture_package_regression.py: complete engine-decoded image/cache/member preservation, failure/rollback controls, inspected dual-resolution evidence"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T23:04:23Z",
+      "updatedAt": "2026-09-07T23:46:46Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Town caption/theme checkpoint validated: 856 unchanged authored checks and 855 actual Large-save checks pass across three inspected resolutions; legacy Town/Overworld and Town layout/progression reports pass. Repository assertions now require both explicit scene opt-ins, retaining shared default/ownership. Fresh Linux/Windows export/generated Town flows pass at 249674052 bytes, with inspected 1080p Linux capture. A separate Windows Main Menu quick-exit Ogg object warning is recorded without claiming its cause fixed. All-faction art, package headroom and full goal remain open."
+      "notes": "Lossless headroom prerequisite validated: 2260 exact decoded texture proofs; both PCKs 241309204 bytes with 8690796 bytes headroom; 5166-member preservation, Linux/Windows construction, first-import/input/save tests and inspected captures pass. Remaining faction/building/upgrade art and Overworld repairs stay in progress; prior audio warning is not declared fixed."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111350,36 +111364,35 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Validated fifteen Bellwake scene layers plus Town stockpile readability: defense/memory source and exact-save Linux/Windows checks pass; the caption fix passes 856 authored and 855 real Large-save checks at three inspected sizes, existing Town/Overworld reports, repository validation and fresh platform generated-Town smokes. Both current PCKs are 249674052 bytes. Full presentation remains in progress: other buildings/upgrades/factions, Overworld repairs, limited package headroom and a separate Windows Main Menu quick-exit Ogg-object warning remain.",
+  "summary": "Validated lossless-import headroom prerequisite after the fifteen Bellwake layers and Town caption fixes: all 2260 selected raster imports retain exact decoded pixels/mipmaps, and all 5166 PCK members satisfy encoding-only preservation. Both platform packages are 241309204 bytes, with 8690796 bytes of headroom; normal generated Town flows, actual saved Town/Overworld input/state checks, existing reports and repository tests pass. Full presentation remains in progress for remaining buildings/upgrades/factions and Overworld repairs. The earlier Windows quick-exit Ogg warning is not reproduced in this pair, not declared fixed.",
   "taskId": "10236",
-  "updatedAt": "2026-09-07T23:04:24Z",
+  "updatedAt": "2026-09-07T23:47:55Z",
   "validation": {
-    "id": "quality-town-caption-20260907",
+    "id": "quality-lossless-import-headroom-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T23:05:23Z",
-    "scope": "Validated Town-local caption/theme checkpoint after the Bellwake defense/memory art checkpoint; not full presentation completion.",
-    "result": "Validated fifteen Bellwake scene layers plus Town stockpile readability: defense/memory source and exact-save Linux/Windows checks pass; the caption fix passes 856 authored and 855 real Large-save checks at three inspected sizes, existing Town/Overworld reports, repository validation and fresh platform generated-Town smokes. Both current PCKs are 249674052 bytes. Full presentation remains in progress: other buildings/upgrades/factions, Overworld repairs, limited package headroom and a separate Windows Main Menu quick-exit Ogg-object warning remain.",
+    "validatedAt": "2026-09-07T23:45:25Z",
+    "scope": "Validated original-pixel-preserving package prerequisite for remaining approved art; not full presentation or release completion.",
+    "result": "All 2260 selected PNG imports retain exact headers/decoded pixels/mipmaps. Both 241309204-byte PCKs pass startup and generated Town construction; all 5166 members are verified and 5165 match across platforms except project.binary. Real first-import/changed-option controls, 65 Python packaging/helper tests, 855 Town and 643-per-resolution Overworld checks, six existing Town/Overworld reports and repository/diff pass. Captures inspected. Remaining art and prior audio/physical Windows/legacy limits stay explicit.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
-      ".artifacts/generated_full_match_quality_20260906/town_defense_detached_final_batch.json",
-      ".artifacts/generated_full_match_quality_20260906/town_memory_final_pack_linux/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_memory_final_pack_windows/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_stockpile_before3_authored/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_stockpile_after_authored/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_stockpile_after_generated/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_stockpile_after_generated/1920x1080_ledger.png",
-      ".artifacts/generated_full_match_quality_20260906/town_stockpile_legacy_after/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_stockpile_overworld_after/report.json",
-      ".artifacts/full_play_runtime_20260905/town_stockpile_existing/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_stockpile_repo_final.log",
-      ".artifacts/generated_full_match_quality_20260906/town_caption_package_batch.json",
-      ".artifacts/generated_full_match_quality_20260906/town_stockpile_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_stockpile_linux/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_stockpile_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_stockpile_windows/generated-flow/live_validation_report.json"
+      ".artifacts/generated_full_match_quality_20260906/lossless_sample2/report.json",
+      ".artifacts/generated_full_match_quality_20260906/lossless_all/report.json",
+      ".artifacts/generated_full_match_quality_20260906/lossless_texture_proofs.json",
+      ".artifacts/generated_full_match_quality_20260906/lossless_first_import2/report.json",
+      ".artifacts/generated_full_match_quality_20260906/lossless_package_proof.json",
+      ".artifacts/generated_full_match_quality_20260906/lossless_town/report.json",
+      ".artifacts/generated_full_match_quality_20260906/lossless_overworld720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/lossless_overworld1080/report.json",
+      ".artifacts/full_play_runtime_20260905/lossless_town_existing/report.json",
+      ".artifacts/full_play_runtime_20260905/lossless_overworld_existing2/report.json",
+      ".artifacts/generated_full_match_quality_20260906/lossless_repo_final.log",
+      ".artifacts/generated_full_match_quality_20260906/lossless_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/lossless_linux/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/lossless_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/lossless_windows/generated-flow/live_validation_report.json"
     ],
-    "remainingWork": "Continue remaining Town buildings/upgrades/factions and demonstrated Overworld repairs, with only 325948 bytes of PCK headroom. Reproduce the separate Windows Main Menu quick-exit Ogg lifetime warning before claiming clean shutdown. Preserve legitimate match/performance evidence and explicit physical Windows and legacy keyboard/Moonbite limits. Full goal remains active."
+    "remainingWork": "Continue remaining approved Town buildings/upgrades/factions and demonstrated Overworld repairs with 8690796 bytes of verified PCK headroom. The earlier Windows Main Menu quick-exit Ogg warning was not reproduced here; establish its cause before claiming a lifetime fix. Preserve legitimate match/performance evidence and explicit physical Windows and legacy keyboard/Moonbite limits. Full goal remains active."
   },
   "validationHistory": [
     {
