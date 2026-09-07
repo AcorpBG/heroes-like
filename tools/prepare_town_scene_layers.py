@@ -45,6 +45,21 @@ BRIEFS = {
         'scene_bounds':[1210,570,350,350*1024/1536], 'ground_anchor':[1395,780],
         'grounding':'Long mirror-lined hull and working slip attach to the foreground-right quay along its receding plank direction; the shore-end shelter sits below the gate. Keep the complete cradle inside the cover crop and clear of bottom navigation.',
     },
+    'building_veilmourn_salt_counting_house': {
+        'source_sha256':'5245eb438fb32cee3d432e09a511602239b2382eabd036ad9aa95ed055b4e19f',
+        'scene_bounds':[530,515,245,245*1024/1536], 'ground_anchor':[650,660],
+        'grounding':'Twin-roof salt treasury extends the left working quay below Salvage Ledger, with the receiving stair toward the Market and the side pier toward Bell Harbor. Preserve the main tower and existing entrances.',
+    },
+    'building_veilmourn_mourner_pilot_guild': {
+        'source_sha256':'6b056be68c19e4ad943a63ee9ed49697d6f53c8d31db5439f8a0dd3e9dae6888',
+        'scene_bounds':[1300,500,270,180], 'ground_anchor':[1450,660],
+        'grounding':'Pilot lookout and skiff attach to the right quay below the old oratory plot and behind the foreground Drydock. Preserve the lookout silhouette and its painted information target through later waterfront growth.',
+    },
+    'building_veilmourn_saltwake_factor': {
+        'source_sha256':'08f638373513e882b5d9676c98c652368fb1c91977377d7e97c46406af80b879',
+        'scene_bounds':[640,585,280,280*1024/1536], 'ground_anchor':[795,760],
+        'grounding':'Broad receiving warehouse extends the salt treasury quay seaward below Bell Harbor; its covered loading bays remain distinct from the older Mistgate plot and leave the buoy channel and bottom controls clear.',
+    },
 }
 
 def digest(path):
@@ -96,7 +111,7 @@ def main():
         'processing':'Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.',
         'rights':'Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.',
         'catalog_icons':'Unchanged; these exact-faction scene layers are not shared catalog replacements.',
-        'migration_scope':'Bellwake Bell Harbor and Wayfarers Hall starting structures plus normally constructed Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange and Mirror Drydock; remaining catalog-based scene art is explicitly not accepted by this migration.',
+        'migration_scope':'Bellwake Bell Harbor and Wayfarers Hall starting structures plus normally constructed Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange, Mirror Drydock, Salt Counting House, Mourner Pilot Guild and Saltwake Factor; remaining catalog-based scene art is explicitly not accepted by this migration.',
         'missing_declared_layer_policy':'validation_failure_no_catalog_or_procedural_fallback',
         'factions':{FACTION:layers},
     }

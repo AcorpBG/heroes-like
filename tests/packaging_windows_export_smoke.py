@@ -1474,7 +1474,7 @@ def main() -> int:
         "--live-validation-generated-faction=faction_veilmourn",
         "--live-validation-generated-hero=hero_veilmourn_orso_nightchart",
         "--live-validation-town-building=building_market_square",
-        "--live-validation-town-building-sequence=building_market_square,building_veilmourn_fog_signal_buoys,building_veilmourn_salvage_ledger,building_veilmourn_ransom_exchange,building_veilmourn_mirror_drydock",
+        "--live-validation-town-building-sequence=building_market_square,building_veilmourn_fog_signal_buoys,building_veilmourn_salvage_ledger,building_veilmourn_ransom_exchange,building_veilmourn_mirror_drydock,building_veilmourn_salt_counting_house,building_veilmourn_mourner_pilot_guild,building_veilmourn_saltwake_factor",
         f"--live-validation-output={wine_z_path(GENERATED_FLOW_OUTPUT_DIR)}",
     ]
     generated_runtime_result = (
@@ -1526,7 +1526,7 @@ def main() -> int:
         and generated_flow_report.get("generated_faction_id") == "faction_veilmourn"
         and generated_flow_report.get("generated_hero_id") == "hero_veilmourn_orso_nightchart"
         and generated_flow_report.get("town_building_id") == "building_market_square"
-        and generated_flow_report.get("town_building_sequence") == ["building_market_square", "building_veilmourn_fog_signal_buoys", "building_veilmourn_salvage_ledger", "building_veilmourn_ransom_exchange", "building_veilmourn_mirror_drydock"]
+        and generated_flow_report.get("town_building_sequence") == ["building_market_square", "building_veilmourn_fog_signal_buoys", "building_veilmourn_salvage_ledger", "building_veilmourn_ransom_exchange", "building_veilmourn_mirror_drydock", "building_veilmourn_salt_counting_house", "building_veilmourn_mourner_pilot_guild", "building_veilmourn_saltwake_factor"]
         and generated_step_ids == [
             "generated_map_setup",
             "generated_overworld_entered",
@@ -1541,6 +1541,12 @@ def main() -> int:
             "generated_town_building_information_building_veilmourn_ransom_exchange",
             "generated_town_building_constructed_building_veilmourn_mirror_drydock",
             "generated_town_building_information_building_veilmourn_mirror_drydock",
+            "generated_town_building_constructed_building_veilmourn_salt_counting_house",
+            "generated_town_building_information_building_veilmourn_salt_counting_house",
+            "generated_town_building_constructed_building_veilmourn_mourner_pilot_guild",
+            "generated_town_building_information_building_veilmourn_mourner_pilot_guild",
+            "generated_town_building_constructed_building_veilmourn_saltwake_factor",
+            "generated_town_building_information_building_veilmourn_saltwake_factor",
         ]
     )
     generated_runtime_ok = (

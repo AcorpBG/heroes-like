@@ -20,7 +20,7 @@
   "processing": "Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.",
   "rights": "Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.",
   "catalog_icons": "Unchanged; these exact-faction scene layers are not shared catalog replacements.",
-  "migration_scope": "Bellwake Bell Harbor and Wayfarers Hall starting structures plus normally constructed Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange and Mirror Drydock; remaining catalog-based scene art is explicitly not accepted by this migration.",
+  "migration_scope": "Bellwake Bell Harbor and Wayfarers Hall starting structures plus normally constructed Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange, Mirror Drydock, Salt Counting House, Mourner Pilot Guild and Saltwake Factor; remaining catalog-based scene art is explicitly not accepted by this migration.",
   "missing_declared_layer_policy": "validation_failure_no_catalog_or_procedural_fallback",
   "factions": {
     "faction_veilmourn": {
@@ -330,6 +330,138 @@
         "grounding": "Long mirror-lined hull and working slip attach to the foreground-right quay along its receding plank direction; the shore-end shelter sits below the gate. Keep the complete cradle inside the cover crop and clear of bottom navigation.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_mirror_drydock.prompt.txt",
         "prompt_sha256": "ef663a07f843f2fcb9af0e9efde112bf6c0c536ca02aee8fff22880545723b51",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
+      },
+      "building_veilmourn_salt_counting_house": {
+        "asset_id": "faction_veilmourn_building_veilmourn_salt_counting_house",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_salt_counting_house.png",
+        "source_sha256": "5245eb438fb32cee3d432e09a511602239b2382eabd036ad9aa95ed055b4e19f",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          9,
+          1516,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_salt_counting_house.png",
+        "trimmed_sha256": "5b661db63eae2fddeb374a6981be22b4856328385c18376b168e62fbaabc55e8",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_salt_counting_house.png",
+        "runtime_sha256": "d7d4d30e2bf79f93070acc787c8f299db20b57480b1e8c2c6feea0f6f32302b8",
+        "runtime_size": [
+          512,
+          343
+        ],
+        "normalized_rect": [
+          0.33125,
+          0.5738172743055555,
+          0.15113118489583333,
+          0.17988642939814817
+        ],
+        "ground_anchor": [
+          0.40625,
+          0.7333333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Twin-roof salt treasury extends the left working quay below Salvage Ledger, with the receiving stair toward the Market and the side pier toward Bell Harbor. Preserve the main tower and existing entrances.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_salt_counting_house.prompt.txt",
+        "prompt_sha256": "9d74888b4970e5a9c033687b07a736af5d67b2ff72a1a95e21ed5761ab19120a",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
+      },
+      "building_veilmourn_mourner_pilot_guild": {
+        "asset_id": "faction_veilmourn_building_veilmourn_mourner_pilot_guild",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_mourner_pilot_guild.png",
+        "source_sha256": "6b056be68c19e4ad943a63ee9ed49697d6f53c8d31db5439f8a0dd3e9dae6888",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1514,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_mourner_pilot_guild.png",
+        "trimmed_sha256": "2a87b86635c62b31db3d1ed09d1b65b98a5f00b453cc2e8ded6734e0f29ca0b4",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_mourner_pilot_guild.png",
+        "runtime_sha256": "97c327a2ee230de785a432bb2882743ec5d21bc620cf1bdf920725ba74ea21f2",
+        "runtime_size": [
+          512,
+          346
+        ],
+        "normalized_rect": [
+          0.8125,
+          0.5555555555555556,
+          0.1663330078125,
+          0.2
+        ],
+        "ground_anchor": [
+          0.90625,
+          0.7333333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Pilot lookout and skiff attach to the right quay below the old oratory plot and behind the foreground Drydock. Preserve the lookout silhouette and its painted information target through later waterfront growth.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_mourner_pilot_guild.prompt.txt",
+        "prompt_sha256": "72c498bb6b4a1e4e36e439febf0dc3e514e256a0bc093ff40c22dbed80632b33",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
+      },
+      "building_veilmourn_saltwake_factor": {
+        "asset_id": "faction_veilmourn_building_veilmourn_saltwake_factor",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_saltwake_factor.png",
+        "source_sha256": "08f638373513e882b5d9676c98c652368fb1c91977377d7e97c46406af80b879",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          29,
+          1522,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_saltwake_factor.png",
+        "trimmed_sha256": "85be65f2615c872fa4959ac88c9a47ad95f6593c9b15a983549a12fe2cbbb7bf",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_saltwake_factor.png",
+        "runtime_sha256": "ad46dcc516fee6c767e98f384ce7d3e81ddfaaa5019dad96ea78e0b486b1f0c9",
+        "runtime_size": [
+          512,
+          335
+        ],
+        "normalized_rect": [
+          0.4,
+          0.6558738425925926,
+          0.1734049479166667,
+          0.2015335648148148
+        ],
+        "ground_anchor": [
+          0.496875,
+          0.8444444444444444
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Broad receiving warehouse extends the salt treasury quay seaward below Bell Harbor; its covered loading bays remain distinct from the older Mistgate plot and leave the buoy channel and bottom controls clear.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_saltwake_factor.prompt.txt",
+        "prompt_sha256": "bdb313b0b63dc975d168e6be4abd142e5f90bccdff5e2111c1488bf6ea2fc98b",
         "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
       }
     }
