@@ -2,8 +2,10 @@
 
 Phase 6 child `performance-generated-full-match-actions-20260906`, under
 `quality-generated-full-match-20260906`. Requirements:
-`docs/generated-full-match-quality-requirements.md`. **In progress**; completed
-match evidence is not game-wide performance approval or release readiness.
+`docs/generated-full-match-quality-requirements.md`. **Completed for the selected
+responsiveness criteria** on 2026-09-07; the final audit is below. Earlier
+in-progress checkpoint notes remain historical. This is not game-wide latency
+approval, presentation completion or release readiness.
 
 Earlier command/footer coverage boundary: Large08 reached a real Day-14 defeat after conquest;
 Medium10 stopped nonterminal on Day 35. Their 201/608 action capacity traces pass,
@@ -1175,3 +1177,69 @@ Decompress for legacy raw-JSON readers. No checkpoint content, screenshots,
 actual input saves, caches, RMG evidence or unrelated artifacts were deleted.
 Large remains multi-second and broader responsiveness/presentation acceptance
 remains open despite passing this bounded combined improvement gate.
+
+## 2026-09-07 responsiveness completion audit
+
+This closes already implemented work against the original PLAN criteria, not
+because a report exists and not by treating the blocked art requirement as done.
+No production source changed during this audit. Current game revision is
+`4d171105a2793eb18e0201bc47c348912c3d8942`; the only production changes since the
+previous `85599aae` full-play/platform checkpoint are the validated stockpile
+scene/component. Core, native, art and content files are unchanged.
+
+Fresh `generated_end_turn_compact_pair.py` runs use the exact pre-path reference
+`65fb7fcb6ccd5f9bb017c185c82e161e7216ad87`, replacing all six changed production
+scripts/scenes, not a selected subset. Runs are serial on Linux/X11 Godot 4.6.2,
+llvmpipe LLVM 20.1.2, with no competing test engine; the actual-handler driver,
+full simulation, saves and usable-control boundary are unchanged.
+
+| Evidence under the full-match artifact root | Before p50 / max ms | Current p50 / max ms | Before / current sum ms | Less waiting |
+| --- | ---: | ---: | ---: | ---: |
+| `closure_endturn_large_4d171105` (1920x1080) | 8846.637 / 9551.420 | 7377.901 / 7501.516 | 27011.903 / 21738.812 | 19.5% |
+| `closure_endturn_medium_4d171105` (1280x720) | 3485.196 / 3642.629 | 2848.275 / 2999.894 | 10559.343 / 8624.894 | 18.3% |
+
+Both unchanged 15% gates pass; each compares four complete state trees, identical
+days/backend and unchanged source/save bytes, with zero runtime errors. Full
+gzip state snapshots, source hashes and captures remain retained. Final captures
+were inspected: current fog, roster, movement and fitting resource controls are
+intact; the known art defects remain. These repeat measurements validate existing
+improvements, not an additional speed gain from this audit.
+
+The other original completion criteria were checked against real evidence:
+
+- Dominant owners and matched full-action improvement: inspected the current
+  Town synchronous read-scope/support-radius owners and the retained
+  `logistics_town_large_release` / `logistics_town_medium_release` reports.
+  Their four states/actions/recaps/save/backend comparisons all pass; measured
+  recruitment improvement is 51.5% / 20.5%. The serial stored-recap full-loop
+  pair reduces total save-surface work 68.2%, without promising faster combat.
+- Freshness and complete decisions/state: retained logistics scope reports pass
+  1264 Large / 1201 Medium checks, including six-faction and nested/stale-source
+  controls; recap reports pass 542 / 544. Eighteen final commander/domain reports
+  pass. Re-ran the existing comparator over the actual retained raw full-play
+  states and profiles for `commander_entry_full_play_isolated` and
+  `recap_cache_full_play_after`: all 50 full state trees per pair and ordered
+  action identities match, both reference/current flows completed, and both
+  reference logs and current runs have no runtime errors. No fields were omitted.
+- Complete matches and platforms: re-read the accepted Medium11 continuation03
+  and Large08 reports (earned Day97 victory / legal Day14 defeat, capacity
+  histories complete, zero acceptance failures). Their documented multi-version
+  provenance is unchanged. Current-source `stockpile_fit_linux_release` and
+  `stockpile_fit_windows_recovered` reports pass at 248466896-byte PCKs; these
+  existing export/generated-entry results are reused, not reported as new
+  exports. Windows is Wine execution, not hardware certification. All 31 Python
+  acceptance/native-reference/preflight tests pass again.
+
+Final `python3 -B tests/validate_repo.py`, JSON parsing, referenced-artifact
+existence checks and `git diff --check` pass. The repository log is retained at
+`.artifacts/generated_full_match_quality_20260906/responsiveness_closure_repo.log`.
+The heroes-progress PLAN dry-run finds no missing slices; its current/next query
+selects blocked presentation, with playthrough and responsiveness completed.
+
+The performance child is complete for these defined selected-action criteria.
+Large p50 remains about 7.4 seconds, cold save surfaces can approach one second,
+and the historical Moonbite deadline is an unchanged balance limit, not a passed
+development gate. Further latency reduction, exhaustive configurations and
+hardware certification are not claimed. The full-match parent is still unfinished:
+Town scene-matched building art and Overworld cutout/terrain quality require the
+pending owner art-scope decision. This audit must not be called a new game fix.

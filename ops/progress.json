@@ -1,7 +1,7 @@
 {
   "actionableNextTasks": [
     {
-      "status": "in_progress",
+      "status": "blocked",
       "phase": "phase-6-production-alpha-layer",
       "source": "PLAN.md",
       "sourceDocs": [
@@ -69,9 +69,9 @@
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T05:15:08Z",
+      "updatedAt": "2026-09-07T05:40:24Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated Overworld stockpile checkpoint: actual-font/width fitting uses the existing Stores menu when needed; Overworld-only opaque popup text makes read-only amounts legible. Four actual Medium/Large resolution cases pass 643 checks each with exact nine-resource values/icons/tooltips, pointer/keyboard/focus, resize/font/content behavior and complete state/save equality. Town defaults and all art/gameplay/native/save authority remain unchanged. Linux and Windows export/startup/generated Overworld-Town entry pass at 248466896 bytes per PCK; Windows via Wine. Failed disk/cache attempts are excluded and documented. Remaining legacy/input/repository evidence and finalization are recorded in the quality report. Town integration and sprite/terrain issues remain open; derived transparency repair still awaits owner approval. Parent and presentation remain active, not release-ready."
+      "notes": "Town art-scope decision remains missing. Bellwake exact Bell Harbor/Wayfarers Hall icons and water plots do not match the village perspective/lighting; proper seamless per-building growth needs approved original scene-matched layers and deliberate plots. Overworld cutout repair remains separately unapproved. Responsiveness criteria are now validated complete using current-source full-turn and retained full-loop/state controls; this does not close the parent or grant art permission. No new production or art change in this audit."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -1983,7 +1983,7 @@
     "blockedReason": ""
   },
   "active_slice": "ux-generated-full-match-presentation-20260906",
-  "blocker": "",
+  "blocker": "Town seamless integration requires owner approval to create scene-matched original per-faction building layers and deliberate plots; current exact catalog icons cannot satisfy the scene-perspective/lighting requirement. Overworld derived cutout repair remains separately unapproved.",
   "completedImplementationEvidence": [
     {
       "id": "ux-overworld-town-proportion-and-environs-20260904",
@@ -16685,14 +16685,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Validated Overworld stockpile checkpoint: actual-width fitting uses the existing Stores menu when needed and Overworld-only opaque text keeps all nine read-only amounts legible. Four real Medium/Large resolution cases pass 643 checks each with exact rows/icons/tooltips, input/focus, resize/font/content and complete state/autosave equality. Two existing authored menu cases, four unchanged input/fog/End Turn reports, repository and 31 Python tests pass. Linux/Windows startup/generated-entry packages pass at 248466896 bytes each; Windows via Wine. Failed disk/cache attempts are excluded; the damaged UID index was preserved/rebuilt and selected goal-owned evidence losslessly compressed. Town defaults and art/native/gameplay/save authority remain unchanged. Town integration, prop/terrain quality and remaining multi-second Large turns stay open; sprite processing still awaits owner approval. Parent and child remain active.",
+  "currentNotes": "Responsiveness completion audit validates already implemented changes, not a new runtime fix: current 4d171105 serial End Turns improve cumulative waiting 19.5% Large / 18.3% Medium against exact 65fb7fcb, with eight complete states equal and both 15% gates passed. Retained Town orders improve 51.5% / 20.5%; complete-loop save-surface work improves 68.2%. Both raw full-play comparisons were recomputed with 50 equal full states each and both controls complete. Freshness/domain, legitimate terminal matches, current-source platform reports, repository and 31 Python tests satisfy the selected criteria. The performance child is completed; the full goal is not. Town/Overworld presentation requires the still-missing owner art-scope approval. No source/art/layout changes were made in this audit; Large remains about 7.4 seconds and hardware/exhaustive latency are not certified.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Validated Overworld stockpile checkpoint: actual-font/width fitting uses the existing Stores menu when needed; Overworld-only opaque popup text makes read-only amounts legible. Four actual Medium/Large resolution cases pass 643 checks each with exact nine-resource values/icons/tooltips, pointer/keyboard/focus, resize/font/content behavior and complete state/save equality. Town defaults and all art/gameplay/native/save authority remain unchanged. Linux and Windows export/startup/generated Overworld-Town entry pass at 248466896 bytes per PCK; Windows via Wine. Failed disk/cache attempts are excluded and documented. Remaining legacy/input/repository evidence and finalization are recorded in the quality report. Town integration and sprite/terrain issues remain open; derived transparency repair still awaits owner approval. Parent and presentation remain active, not release-ready.",
-  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Town art-scope decision remains missing. Bellwake exact Bell Harbor/Wayfarers Hall icons and water plots do not match the village perspective/lighting; proper seamless per-building growth needs approved original scene-matched layers and deliberate plots. Overworld cutout repair remains separately unapproved. Responsiveness criteria are now validated complete using current-source full-turn and retained full-loop/state controls; this does not close the parent or grant art permission. No new production or art change in this audit.",
+  "currentSliceStatus": "blocked",
   "currentSliceTitle": "Full-Match Presentation Corrections",
-  "currentSliceUpdatedAt": "2026-09-07T04:13:02Z",
+  "currentSliceUpdatedAt": "2026-09-07T05:40:24Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22181,8 +22181,8 @@
       ],
       "updatedAt": "2026-09-07T00:12:12Z",
       "startedAt": "2026-09-06T12:03:26Z",
-      "notes": "Generated native rival-objective interpretation implemented without package/save mutation or forced results. Final-owner Medium11 exact continuation reaches earned Day97 victory with 2426/2426 valid actions and complete terminal save/resume; Large08 retains legal Day14 defeat after conquest. 272 focused dual-resolution checks, 128 actual Large outcome/retry checks, ten domain reports, 15 Python tests, repo/diff and Linux/Windows exports/generated entry pass. PCKs 248462048 bytes. Playthrough child complete; current-build responsiveness and Town integration remain open; parent goal is not complete.",
-      "remainingWork": "Measure current complete player-action timings on retained Medium/Large states, separating driver planning and validation overhead; implement only demonstrated remaining runtime bottlenecks; Finish selected Town-building/base-art integration within authorized scope; art-regeneration approval remains outstanding; Preserve physical-Windows, exhaustive seed/faction, native-parity and release-readiness limits"
+      "notes": "Legitimate Medium victory and Large defeat are complete; the selected responsiveness child now also meets its original measured full-action/state/freshness/platform criteria. Fresh current-4d171105 full End Turns improve 19.5% Large / 18.3% Medium with eight equal complete states. This audit changes no game behavior. Presentation remains blocked on owner approval for scene-matched Town building layers and the separately pending Overworld cutout repair; the parent goal is unfinished.",
+      "remainingWork": "Obtain explicit art-scope approval, then correct and visually validate selected Town building/base-art integration and Overworld cutout/terrain defects while preserving gameplay, saves and package limits. Large multi-second turns, exhaustive seed/faction coverage, native parity and physical-Windows/release readiness remain explicit limits."
     },
     {
       "status": "completed",
@@ -22311,7 +22311,7 @@
       }
     },
     {
-      "status": "in_progress",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "source": "PLAN.md",
       "sourceDocs": [
@@ -22401,45 +22401,42 @@
         "Improve full actions with matched complete-state/decision controls",
         "Full-match and focused cache/performance/platform regressions"
       ],
-      "updatedAt": "2026-09-07T05:14:45Z",
+      "updatedAt": "2026-09-07T05:40:23Z",
       "startedAt": "2026-09-06T13:44:06Z",
-      "notes": "Fresh serial exact-revision combined End Turn controls compare 65fb7fcb with 85599aae across all four changed production owners. Large cumulative waiting improves 19.7%, Medium 20.3%; both unchanged 15% gates pass, eight complete states equal, no runtime errors. Large p50 remains 7369ms. This validates committed optimizations, not a speed gain from the subsequent stockpile UI fix or whole-game acceptance. Normalization-cache hypothesis disproved; no cache/rules/native/save change. Seven exact-revision preflight tests pass. Continue measured remaining responsiveness and presentation work; full goal stays active.",
+      "notes": "Original selected-action criteria satisfied by implemented runtime behavior and current-source closure audit: matched Town recruitment 51.5% Large / 20.5% Medium less waiting, complete-loop save-surface work 68.2% lower with 50 equal full states, and fresh serial current-4d171105 full End Turns 19.5% Large / 18.3% Medium lower against exact 65fb7fcb with eight equal complete states. All six production differences included; no skipped AI/saves or runtime errors. Both retained full-play comparisons were recomputed over actual states, 50 equal per pair and both controls complete. Six-faction freshness/domain, legitimate terminal matches, current-source Linux/Windows packages, repository and Python evidence satisfy remaining criteria. No new runtime change or speed gain from this audit. Large p50 remains 7378ms; parent/Town/art scope remains unfinished.",
       "validation": {
-        "id": "performance-generated-full-match-commander-entry-20260907",
+        "id": "performance-generated-full-match-criteria-closure-20260907",
         "sliceId": "performance-generated-full-match-actions-20260906",
-        "title": "Exact selected commander entry with unchanged full-roster and saved-state behavior",
-        "status": "in_progress",
-        "scope": "validated_runtime_checkpoint_not_child_or_goal_completion",
-        "validatedAt": "2026-09-07T03:46:15Z",
+        "title": "Current-source responsiveness criteria completion audit",
+        "status": "completed",
+        "scope": "selected_responsiveness_child_not_parent_or_release_completion",
+        "validatedAt": "2026-09-07T05:38:50Z",
         "artifacts": [
           "docs/generated-full-match-performance-report.md",
-          ".artifacts/generated_full_match_quality_20260906/task_reads_large_diagnostic/report.json",
-          ".artifacts/generated_full_match_quality_20260906/roster_callers_large_diagnostic/report.json",
-          ".artifacts/generated_full_match_quality_20260906/commander_entry_positive_control/report.json",
-          ".artifacts/generated_full_match_quality_20260906/commander_entry_positive_control_aligned/report.json",
-          ".artifacts/generated_full_match_quality_20260906/commander_entry_large_verified/report.json",
-          ".artifacts/generated_full_match_quality_20260906/commander_entry_medium_verified/report.json",
-          ".artifacts/generated_full_match_quality_20260906/commander_entry_path_large/report.json",
-          ".artifacts/generated_full_match_quality_20260906/commander_entry_large_before/report.json",
-          ".artifacts/generated_full_match_quality_20260906/commander_entry_large_compared/report.json",
-          ".artifacts/generated_full_match_quality_20260906/commander_entry_medium_before/report.json",
-          ".artifacts/generated_full_match_quality_20260906/commander_entry_medium_compared/report.json",
-          ".artifacts/full_play_runtime_20260905/commander_entry_domains/report.json",
-          ".artifacts/full_play_runtime_20260905/commander_entry_full_play_isolated/report.json",
+          "docs/generated-full-match-quality-report.md",
+          ".artifacts/generated_full_match_quality_20260906/closure_endturn_large_4d171105/comparison.json",
+          ".artifacts/generated_full_match_quality_20260906/closure_endturn_medium_4d171105/comparison.json",
+          ".artifacts/generated_full_match_quality_20260906/logistics_town_large_release/report.json",
+          ".artifacts/generated_full_match_quality_20260906/logistics_town_medium_release/report.json",
+          ".artifacts/generated_full_match_quality_20260906/logistics_scope_large_verified/report.json",
+          ".artifacts/generated_full_match_quality_20260906/logistics_scope_medium_verified/report.json",
+          ".artifacts/generated_full_match_quality_20260906/recap_cache_large_content_verified/report.json",
+          ".artifacts/generated_full_match_quality_20260906/recap_cache_medium_content_verified/report.json",
+          ".artifacts/generated_full_match_quality_20260906/medium_match_11_continuation_03/report.json",
+          ".artifacts/generated_full_match_quality_20260906/large_match_08/report.json",
+          ".artifacts/generated_full_match_quality_20260906/stockpile_fit_linux_release/report.json",
+          ".artifacts/generated_full_match_quality_20260906/stockpile_fit_windows_recovered/report.json",
           ".artifacts/full_play_runtime_20260905/commander_entry_full_play_isolated/matched_control_report.json",
-          ".artifacts/rmg_start_audit_20260905/commander_entry_native_caves/report.json",
-          ".artifacts/rmg_start_audit_20260905/commander_entry_native_large_portals/report.json",
-          ".artifacts/generated_full_match_quality_20260906/commander_entry_linux_release/report.json",
-          ".artifacts/generated_full_match_quality_20260906/commander_entry_linux_release/generated-entry/live_validation_report.json",
-          ".artifacts/generated_full_match_quality_20260906/commander_entry_windows_release/report.json",
-          ".artifacts/generated_full_match_quality_20260906/commander_entry_windows_release/generated-flow/live_validation_report.json"
+          ".artifacts/full_play_runtime_20260905/recap_cache_full_play_after/matched_control_report.json",
+          ".artifacts/full_play_runtime_20260905/commander_entry_domains/report.json"
         ],
-        "result": "Validated exact single-entry commander projection: 1447 Large/1286 Medium original-owner checks, 1023 path controls, 18 domains, 51-step full play with all 50 states equal, native journeys and Linux/Windows startup/generated-entry packages pass. Serial full-turn waiting improves 6.8% Large and 15.9% Medium in one pair; Medium passes the unchanged 15% gate, Large remains below target and multi-second. Every returned/saved field, AI policy, cache lifetime, native geometry and full autosave remain unchanged. Both PCKs are 248465456 bytes; final Linux captures inspected. Remaining Large AI/full-save and Town/prop/terrain work, Moonbite deadline and release/physical-Windows limits stay open; parent and child remain in progress.",
-        "remainingWork": "Large complete End Turns remain multi-second and this pair misses the unchanged 15% improvement gate; Medium clears that gate in one pair, not a whole-game/hardware acceptance claim. Continue measured AI task/target preparation and full-save latency work with exact decisions/state and full transactional saves. Town integration, prop-edge/terrain defects, the pre-existing Moonbite deadline and broader release/physical-Windows certification remain open."
-      }
+        "result": "Responsiveness completion audit validates already implemented changes, not a new runtime fix: current 4d171105 serial End Turns improve cumulative waiting 19.5% Large / 18.3% Medium against exact 65fb7fcb, with eight complete states equal and both 15% gates passed. Retained Town orders improve 51.5% / 20.5%; complete-loop save-surface work improves 68.2%. Both raw full-play comparisons were recomputed with 50 equal full states each and both controls complete. Freshness/domain, legitimate terminal matches, current-source platform reports, repository and 31 Python tests satisfy the selected criteria. The performance child is completed; the full goal is not. Town/Overworld presentation requires the still-missing owner art-scope approval. No source/art/layout changes were made in this audit; Large remains about 7.4 seconds and hardware/exhaustive latency are not certified.",
+        "remainingWork": "Parent goal still requires scene-matched Town buildings and corrected Overworld cutouts/terrain presentation; owner approval to expand art scope is missing. Large turns remain multi-second, cold save surfaces and the unchanged Moonbite balance deadline remain explicit limits, not passed universal latency/development or physical-Windows gates."
+      },
+      "completedAt": "2026-09-07T05:40:23Z"
     },
     {
-      "status": "in_progress",
+      "status": "blocked",
       "phase": "phase-6-production-alpha-layer",
       "source": "PLAN.md",
       "sourceDocs": [
@@ -22507,9 +22504,9 @@
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T05:15:08Z",
+      "updatedAt": "2026-09-07T05:40:24Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated Overworld stockpile checkpoint: actual-font/width fitting uses the existing Stores menu when needed; Overworld-only opaque popup text makes read-only amounts legible. Four actual Medium/Large resolution cases pass 643 checks each with exact nine-resource values/icons/tooltips, pointer/keyboard/focus, resize/font/content behavior and complete state/save equality. Town defaults and all art/gameplay/native/save authority remain unchanged. Linux and Windows export/startup/generated Overworld-Town entry pass at 248466896 bytes per PCK; Windows via Wine. Failed disk/cache attempts are excluded and documented. Remaining legacy/input/repository evidence and finalization are recorded in the quality report. Town integration and sprite/terrain issues remain open; derived transparency repair still awaits owner approval. Parent and presentation remain active, not release-ready."
+      "notes": "Town art-scope decision remains missing. Bellwake exact Bell Harbor/Wayfarers Hall icons and water plots do not match the village perspective/lighting; proper seamless per-building growth needs approved original scene-matched layers and deliberate plots. Overworld cutout repair remains separately unapproved. Responsiveness criteria are now validated complete using current-source full-turn and retained full-loop/state controls; this does not close the parent or grant art permission. No new production or art change in this audit."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111274,38 +111271,37 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Validated stockpile readability checkpoint: actual-font width fitting and legible Overworld-only read-only menu text; four 643-check saved-map cases, existing input/menu reports, repository and both platforms pass. Combined committed End Turn controls separately improve waiting 19.7% Large / 20.3% Medium with eight complete equal states; Large still multi-second. Town/prop/terrain presentation and broader release work remain open; sprite processing awaits owner approval. No whole-goal completion or art/native/gameplay/save changes.",
+  "summary": "Complete-match correctness and selected measured responsiveness criteria are implemented and validated; parent goal remains unfinished. Fresh current-build End Turn controls pass the unchanged 15% gate at 19.5% Large / 18.3% Medium less waiting, with full states unchanged. Latest game implementation is stockpile readability 4d171105; the new completion audit changes no game behavior. Scene-matched Town art and Overworld cutout repairs remain blocked on owner approval; no release-ready or universal latency claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-07T05:15:08Z",
+  "updatedAt": "2026-09-07T05:40:24Z",
   "validation": {
-    "id": "ux-generated-full-match-stockpile-readability-20260907",
-    "sliceId": "ux-generated-full-match-presentation-20260906",
-    "title": "Fitting Overworld stockpile summaries and readable native popup amounts",
-    "status": "in_progress",
-    "scope": "validated_runtime_checkpoint_not_child_or_goal_completion",
-    "validatedAt": "2026-09-07T05:16:23Z",
+    "id": "performance-generated-full-match-criteria-closure-20260907",
+    "sliceId": "performance-generated-full-match-actions-20260906",
+    "title": "Current-source responsiveness criteria completion audit",
+    "status": "completed",
+    "scope": "selected_responsiveness_child_not_parent_or_release_completion",
+    "validatedAt": "2026-09-07T05:38:50Z",
     "artifacts": [
-      "docs/generated-full-match-quality-report.md",
       "docs/generated-full-match-performance-report.md",
-      ".artifacts/generated_full_match_quality_20260906/stockpile_fit_large_positive_aligned/report.json",
-      ".artifacts/generated_full_match_quality_20260906/stockpile_readable_large_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/stockpile_readable_medium_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/stockpile_readable_large_720_recovered/report.json",
-      ".artifacts/generated_full_match_quality_20260906/stockpile_readable_medium_1080_recovered/report.json",
-      ".artifacts/generated_full_match_quality_20260906/stockpile_readable_legacy_recovered/report.json",
-      ".artifacts/generated_full_match_quality_20260906/stockpile_existing_final/report.json",
+      "docs/generated-full-match-quality-report.md",
+      ".artifacts/generated_full_match_quality_20260906/closure_endturn_large_4d171105/comparison.json",
+      ".artifacts/generated_full_match_quality_20260906/closure_endturn_medium_4d171105/comparison.json",
+      ".artifacts/generated_full_match_quality_20260906/logistics_town_large_release/report.json",
+      ".artifacts/generated_full_match_quality_20260906/logistics_town_medium_release/report.json",
+      ".artifacts/generated_full_match_quality_20260906/logistics_scope_large_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/logistics_scope_medium_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/recap_cache_large_content_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/recap_cache_medium_content_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/medium_match_11_continuation_03/report.json",
+      ".artifacts/generated_full_match_quality_20260906/large_match_08/report.json",
       ".artifacts/generated_full_match_quality_20260906/stockpile_fit_linux_release/report.json",
-      ".artifacts/generated_full_match_quality_20260906/stockpile_fit_linux_release/generated-entry/live_validation_report.json.gz",
       ".artifacts/generated_full_match_quality_20260906/stockpile_fit_windows_recovered/report.json",
-      ".artifacts/generated_full_match_quality_20260906/stockpile_fit_windows_recovered/generated-flow/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/stockpile_uid_cache_recovery/editor.log",
-      ".artifacts/generated_full_match_quality_20260906/stockpile_repo_final.log",
-      ".artifacts/generated_full_match_quality_20260906/stockpile_preflight_unit_tests.log",
-      ".artifacts/generated_full_match_quality_20260906/combined_optimizations_large_verified/comparison.json",
-      ".artifacts/generated_full_match_quality_20260906/combined_optimizations_medium_verified/comparison.json"
+      ".artifacts/full_play_runtime_20260905/commander_entry_full_play_isolated/matched_control_report.json",
+      ".artifacts/full_play_runtime_20260905/recap_cache_full_play_after/matched_control_report.json",
+      ".artifacts/full_play_runtime_20260905/commander_entry_domains/report.json"
     ],
-    "result": "Validated Overworld stockpile checkpoint: actual-width fitting uses the existing Stores menu when needed and Overworld-only opaque text keeps all nine read-only amounts legible. Four real Medium/Large resolution cases pass 643 checks each with exact rows/icons/tooltips, input/focus, resize/font/content and complete state/autosave equality. Two existing authored menu cases, four unchanged input/fog/End Turn reports, repository and 31 Python tests pass. Linux/Windows startup/generated-entry packages pass at 248466896 bytes each; Windows via Wine. Failed disk/cache attempts are excluded; the damaged UID index was preserved/rebuilt and selected goal-owned evidence losslessly compressed. Town defaults and art/native/gameplay/save authority remain unchanged. Town integration, prop/terrain quality and remaining multi-second Large turns stay open; sprite processing still awaits owner approval. Parent and child remain active.",
-    "remainingWork": "Town building/base-art integration, baked-in prop dividers and terrain seams remain open; derived transparency/crop processing awaits owner approval. Combined committed optimizations clear the bounded 15% full-turn improvement gate on both sizes, but Large remains multi-second. Broader responsiveness, Moonbite deadline and release/physical-Windows acceptance remain unresolved; full goal stays active."
+    "result": "Responsiveness completion audit validates already implemented changes, not a new runtime fix: current 4d171105 serial End Turns improve cumulative waiting 19.5% Large / 18.3% Medium against exact 65fb7fcb, with eight complete states equal and both 15% gates passed. Retained Town orders improve 51.5% / 20.5%; complete-loop save-surface work improves 68.2%. Both raw full-play comparisons were recomputed with 50 equal full states each and both controls complete. Freshness/domain, legitimate terminal matches, current-source platform reports, repository and 31 Python tests satisfy the selected criteria. The performance child is completed; the full goal is not. Town/Overworld presentation requires the still-missing owner art-scope approval. No source/art/layout changes were made in this audit; Large remains about 7.4 seconds and hardware/exhaustive latency are not certified.",
+    "remainingWork": "Parent goal still requires scene-matched Town buildings and corrected Overworld cutouts/terrain presentation; owner approval to expand art scope is missing. Large turns remain multi-second, cold save surfaces and the unchanged Moonbite balance deadline remain explicit limits, not passed universal latency/development or physical-Windows gates."
   },
   "validationHistory": [
     {
