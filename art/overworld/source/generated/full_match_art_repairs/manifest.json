@@ -1,0 +1,22 @@
+{
+  "schema_id": "original_raster_cutout_repair_v1",
+  "status": "validated_exact_wreck_quay_cutout_not_full_presentation_completion",
+  "owner_approval": "2026-09-07: You have approval resume the goal; scene-matched Town layers and Overworld cutout repairs",
+  "asset_id": "mapobj_wreck_quay",
+  "object_id": "object_wreck_quay",
+  "input": "res://art/overworld/source/generated/full_match_art_repairs/mapobj_wreck_quay_before.png",
+  "input_sha256": "2cb4c2e0105631e389573a667c26250865e8af32c28344dd8124b2f1f04babad",
+  "original_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+  "processing_tool": "tools/repair_wreck_quay_cutout.py",
+  "processing": "Keep original 512x512 canvas; clear the known sheet divider outside [108,120,402,390]; analytically unmatte magenta contamination with partial alpha, without drawing/replacing the original building or shoreline.",
+  "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wreck_quay.png",
+  "runtime_sha256": "30683c62a83d442fcdf999f39a6d49a3b7d97221e3131e8779bc99e1b8b7c377",
+  "trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_wreck_quay-trimmed.png",
+  "originality": "Original project-generated source pixels; no external game art, generated geometry or copied copyrighted game pixels.",
+  "generation_attempts": [
+    {"tool": "built_in_image_gen", "model": "not_exposed", "candidate": "exec-e8f3feb8-94ba-4bf4-8405-c15bc862b135.png", "decision": "rejected: colored edge contamination; never imported"},
+    {"tool": "built_in_image_gen", "model": "not_exposed", "candidate": "exec-a58f7d9f-5982-47d1-a6e8-6149ec5f76a1.png", "decision": "rejected: RGB painted checkerboard instead of alpha; never imported"},
+    {"tool": "built_in_image_gen", "model": "not_exposed", "candidate": "exec-ebb8b2cf-f193-44fa-b68f-87c932d8b6c9.png", "decision": "rejected: RGB painted checkerboard instead of alpha; never imported"}
+  ],
+  "source_docs": ["docs/worldbuilding-foundation.md#6-the-veil-coast", "docs/factions-content-bible.md#veilmourn-armada", "docs/generated-full-match-quality-requirements.md#approved-art-continuation--2026-09-07"]
+}

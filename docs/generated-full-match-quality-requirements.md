@@ -4,6 +4,31 @@ Owner direction, 2026-09-06: improve complete-match player-facing quality after
 the source/runtime review rated the current game a playable alpha, not a release
 candidate. Phase 6 parent: `quality-generated-full-match-20260906`.
 
+## Approved art continuation — 2026-09-07
+
+The owner explicitly approved scene-matched per-faction Town building layers and
+Overworld cutout repairs and requested resuming the full goal. This supersedes
+the approval-pending/existing-assets-only boundary for these exact corrections,
+not for unrelated art, gameplay, native generation or save changes.
+
+Preserve original village backdrops and all built-id/upgrade visibility. Scene
+layers must match the faction panorama's camera, lighting, materials and grounded
+placement; catalog/info icons remain separate. Manifest lookup is by exact faction
+and building identity, with deliberate source-space bounds shared by rendering
+and hit testing. Missing declared layers must fail validation, not fall back to
+geometry or an unrelated asset. Begin with the reproduced Bellwake defects, but
+do not claim all-faction integration from a two-building correction.
+
+Repair Wreck Quay's baked-in sheet divider and contaminated transparent edges
+through original raster editing or approved derived processing. Preserve its
+identity, location, footprint, interaction and determinism. Retain original
+masters, exact prompts, output hashes and derived trim/runtime provenance.
+Require failing-before image/render regression, inspected representative gameplay
+at 1280x720 and 1920x1080, unchanged full state/saves and relevant existing sprite,
+fog, input and Town tests. Repository/diff checks and both-platform export/startup/
+generated-entry evidence must pass under the unchanged 250000000-byte ceiling.
+Source masters are not packaged; no caches or unrelated evidence may be deleted.
+
 ## Acceptance and truthful play
 
 - Complete reproducible Medium and Large generated matches through ordinary

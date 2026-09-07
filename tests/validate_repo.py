@@ -44117,6 +44117,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         source_trimmed_path = res_path_to_disk(str(entry.get("source_trimmed", "")))
         ensure(runtime_path.exists(), errors, f"Overworld object art asset {asset_id} references missing runtime texture {entry.get('path')}")
         ensure(source_trimmed_path.exists(), errors, f"Overworld object art asset {asset_id} references missing trimmed source texture {entry.get('source_trimmed')}")
+        if asset_id == "mapobj_wreck_quay" and runtime_path.exists():
+            repair_spec = importlib.util.spec_from_file_location("wreck_quay_cutout_validation", ROOT / "tools" / "repair_wreck_quay_cutout.py")
+            repair_module = importlib.util.module_from_spec(repair_spec)
+            repair_spec.loader.exec_module(repair_module)
+            repair_report = repair_module.inspect_image(runtime_path)
+            ensure(repair_report["ok"], errors, f"Wreck Quay must not expose its old sprite-sheet divider/magenta matte: {repair_report['errors']}")
+            ensure(hashlib.sha256(runtime_path.read_bytes()).hexdigest() == entry.get("runtime_sha256"), errors, "Wreck Quay runtime must match its approved processing provenance")
+            repair_manifest_path = res_path_to_disk(str(entry.get("source_processing_manifest", "")))
+            ensure(repair_manifest_path.is_file(), errors, "Wreck Quay must name its original-raster processing manifest")
         if runtime_path.exists():
             width, height = png_size(runtime_path)
             source_model = str(entry.get("source_model", ""))
