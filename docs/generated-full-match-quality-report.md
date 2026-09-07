@@ -1533,3 +1533,17 @@ repair remains unapproved too. No production, asset or layout change was made
 in this investigation; no new runtime/platform pass is claimed. The latest
 validated implementation remains `4d171105`, not a new Town fix. PLAN/tracker
 record this presentation blocker while leaving the overall goal active.
+
+## 2026-09-07 approved art continuation
+
+The owner approved the requested Town layers and Overworld cutout processing;
+the approval blocker above is superseded and presentation is in progress.
+Wreck Quay's original raster is now repaired without changing native placement,
+transit identity, pathing masks or saved state. Failing-before/dual-resolution
+renderer checks, original-pixel/provenance tests, existing sprite/movement/fog
+reports, repository validation and fresh Linux/Windows package flows pass.
+Both PCKs measure 248468784 bytes. Exact source path, processing, rejected
+generation attempts, final captures and commands are documented in
+`docs/generated-full-match-art-repair-report.md`. Town building candidates remain
+outside runtime pending grounded scene/interaction validation; neither the
+presentation child nor the full goal is complete.

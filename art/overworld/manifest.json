@@ -5901,6 +5901,8 @@
     },
     "mapobj_wreck_quay": {
       "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wreck_quay.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/full_match_art_repairs/manifest.json",
+      "runtime_sha256": "30683c62a83d442fcdf999f39a6d49a3b7d97221e3131e8779bc99e1b8b7c377",
       "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_wreck_quay-trimmed.png",
       "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
       "source_model": "built_in_image_gen_chroma_key_split",

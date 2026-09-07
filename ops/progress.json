@@ -1,7 +1,7 @@
 {
   "actionableNextTasks": [
     {
-      "status": "blocked",
+      "status": "in_progress",
       "phase": "phase-6-production-alpha-layer",
       "source": "PLAN.md",
       "sourceDocs": [
@@ -10,7 +10,9 @@
         "docs/full-play-runtime-performance-report.md",
         "docs/rmg-audit-integrated-correction-report.md",
         "docs/lessons-learned.md",
-        "docs/generated-full-match-quality-report.md"
+        "docs/generated-full-match-quality-report.md",
+        "docs/generated-full-match-art-repair-report.md",
+        "docs/town-integrated-building-progression-requirements.md"
       ],
       "createdAt": "2026-09-06T12:03:25Z",
       "nonGoals": [
@@ -62,16 +64,19 @@
         "art/overworld/runtime/objects/map_objects/distinct/mapobj_wreck_quay.png and matching generated/trimmed provenance: baked-in divider correction requires owner-approved processing scope before edits",
         "tests/overworld_sprite_edge_diagnostic.py: diagnostic-only resolved texture and sampling captures; failing-before pixel/render acceptance still required after approval",
         "scenes/shared/ResourceStockpileMenu.gd and scenes/overworld/OverworldShell.tscn: opt-in actual-width summary fitting through the existing Stores menu, preserving Town defaults",
-        "tests/overworld_stockpile_text_fit_regression.py: failing-before actual Large font-fit, Medium/Large popup input/state/save controls and resize/font/content boundaries"
+        "tests/overworld_stockpile_text_fit_regression.py: failing-before actual Large font-fit, Medium/Large popup input/state/save controls and resize/font/content boundaries",
+        "tools/repair_wreck_quay_cutout.py: hash-locked original-raster divider/chroma-alpha processing",
+        "tests/overworld_wreck_quay_repair_regression.py and tests/test_wreck_quay_cutout.py: failing-before decoded texture, exact preserved pixels/identity/state and dual-resolution gameplay",
+        "art/overworld/source/generated/full_match_art_repairs/: preserved original source, prompts, rejected generation records and accepted processing provenance"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T05:40:24Z",
+      "updatedAt": "2026-09-07T12:45:46Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Town art-scope decision remains missing. Bellwake exact Bell Harbor/Wayfarers Hall icons and water plots do not match the village perspective/lighting; proper seamless per-building growth needs approved original scene-matched layers and deliberate plots. Overworld cutout repair remains separately unapproved. Responsiveness criteria are now validated complete using current-source full-turn and retained full-loop/state controls; this does not close the parent or grant art permission. No new production or art change in this audit."
+      "notes": "Approved art continuation: Wreck Quay repaired through original-raster divider removal and chroma unmatting, preserving identity/footprint/gameplay/saves. Original renderer fails 1238 divider and 6122 matte pixels; imported correction passes 11 checks at both resolutions, five Python tests, existing sprite/movement/fog reports, repository and fresh Linux/Windows package/generated-entry checks. Town Bell Harbor/Wayfarers Hall candidates are unaccepted and unregistered pending grounded in-scene validation. Presentation and full goal remain in progress."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -1983,7 +1988,7 @@
     "blockedReason": ""
   },
   "active_slice": "ux-generated-full-match-presentation-20260906",
-  "blocker": "Town seamless integration requires owner approval to create scene-matched original per-faction building layers and deliberate plots; current exact catalog icons cannot satisfy the scene-perspective/lighting requirement. Overworld derived cutout repair remains separately unapproved.",
+  "blocker": "",
   "completedImplementationEvidence": [
     {
       "id": "ux-overworld-town-proportion-and-environs-20260904",
@@ -16685,14 +16690,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Responsiveness completion audit validates already implemented changes, not a new runtime fix: current 4d171105 serial End Turns improve cumulative waiting 19.5% Large / 18.3% Medium against exact 65fb7fcb, with eight complete states equal and both 15% gates passed. Retained Town orders improve 51.5% / 20.5%; complete-loop save-surface work improves 68.2%. Both raw full-play comparisons were recomputed with 50 equal full states each and both controls complete. Freshness/domain, legitimate terminal matches, current-source platform reports, repository and 31 Python tests satisfy the selected criteria. The performance child is completed; the full goal is not. Town/Overworld presentation requires the still-missing owner art-scope approval. No source/art/layout changes were made in this audit; Large remains about 7.4 seconds and hardware/exhaustive latency are not certified.",
+  "currentNotes": "Approved art continuation implemented the exact Wreck Quay cutout repair: removed original sheet-divider pixels and recovered magenta-key alpha without drawing substitute geometry. Original rendered asset fails 1238 divider/6122 matte pixels; imported correction passes 14 checks at 1280x720 and 1920x1080, with full session/input save unchanged and exact transit identity, one-cell native blocking mask and 3x2 visual footprint. Five Python tests preserve original pixels/provenance; existing distinct/decorative/movement/fog reports and repository validation pass. Fresh Linux/Windows export/startup/generated-entry flows pass at 248468784-byte PCKs; Windows via Wine. Town scene candidates are generated but not accepted or registered; presentation and full goal remain in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Town art-scope decision remains missing. Bellwake exact Bell Harbor/Wayfarers Hall icons and water plots do not match the village perspective/lighting; proper seamless per-building growth needs approved original scene-matched layers and deliberate plots. Overworld cutout repair remains separately unapproved. Responsiveness criteria are now validated complete using current-source full-turn and retained full-loop/state controls; this does not close the parent or grant art permission. No new production or art change in this audit.",
-  "currentSliceStatus": "blocked",
+  "currentSliceNotes": "Approved art continuation: Wreck Quay repaired through original-raster divider removal and chroma unmatting, preserving identity/footprint/gameplay/saves. Original renderer fails 1238 divider and 6122 matte pixels; imported correction passes 11 checks at both resolutions, five Python tests, existing sprite/movement/fog reports, repository and fresh Linux/Windows package/generated-entry checks. Town Bell Harbor/Wayfarers Hall candidates are unaccepted and unregistered pending grounded in-scene validation. Presentation and full goal remain in progress.",
+  "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Presentation Corrections",
-  "currentSliceUpdatedAt": "2026-09-07T05:40:24Z",
+  "currentSliceUpdatedAt": "2026-09-07T12:47:50Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22179,10 +22184,10 @@
         "Complete Medium/Large matches, measured full-action improvements and inspected presentation corrections",
         "Focused/repository/platform validation and coherent commit/push; hardware limits explicit"
       ],
-      "updatedAt": "2026-09-07T00:12:12Z",
+      "updatedAt": "2026-09-07T12:45:46Z",
       "startedAt": "2026-09-06T12:03:26Z",
-      "notes": "Legitimate Medium victory and Large defeat are complete; the selected responsiveness child now also meets its original measured full-action/state/freshness/platform criteria. Fresh current-4d171105 full End Turns improve 19.5% Large / 18.3% Medium with eight equal complete states. This audit changes no game behavior. Presentation remains blocked on owner approval for scene-matched Town building layers and the separately pending Overworld cutout repair; the parent goal is unfinished.",
-      "remainingWork": "Obtain explicit art-scope approval, then correct and visually validate selected Town building/base-art integration and Overworld cutout/terrain defects while preserving gameplay, saves and package limits. Large multi-second turns, exhaustive seed/faction coverage, native parity and physical-Windows/release readiness remain explicit limits."
+      "notes": "Owner art scope approved and implementation resumed. Wreck Quay original-raster divider/matte correction passes failing-before and actual native-map dual-resolution checks, exact state/identity, five Python tests, existing sprite/movement/fog reports, repository and fresh Linux/Windows package flows. Per-faction Town layer integration and broader selected sprite defects remain unfinished; candidate generation is not Town implementation.",
+      "remainingWork": "Accept and integrate scene-matched per-faction Town building layers with grounded plots, exact built-id/upgrade/info/click authority and dual-resolution live construction/save proof; correct remaining reproduced sprite/terrain defects. No further art-scope approval is pending for these agreed corrections; full goal remains unfinished."
     },
     {
       "status": "completed",
@@ -22436,7 +22441,7 @@
       "completedAt": "2026-09-07T05:40:23Z"
     },
     {
-      "status": "blocked",
+      "status": "in_progress",
       "phase": "phase-6-production-alpha-layer",
       "source": "PLAN.md",
       "sourceDocs": [
@@ -22445,7 +22450,9 @@
         "docs/full-play-runtime-performance-report.md",
         "docs/rmg-audit-integrated-correction-report.md",
         "docs/lessons-learned.md",
-        "docs/generated-full-match-quality-report.md"
+        "docs/generated-full-match-quality-report.md",
+        "docs/generated-full-match-art-repair-report.md",
+        "docs/town-integrated-building-progression-requirements.md"
       ],
       "createdAt": "2026-09-06T12:03:25Z",
       "nonGoals": [
@@ -22497,16 +22504,19 @@
         "art/overworld/runtime/objects/map_objects/distinct/mapobj_wreck_quay.png and matching generated/trimmed provenance: baked-in divider correction requires owner-approved processing scope before edits",
         "tests/overworld_sprite_edge_diagnostic.py: diagnostic-only resolved texture and sampling captures; failing-before pixel/render acceptance still required after approval",
         "scenes/shared/ResourceStockpileMenu.gd and scenes/overworld/OverworldShell.tscn: opt-in actual-width summary fitting through the existing Stores menu, preserving Town defaults",
-        "tests/overworld_stockpile_text_fit_regression.py: failing-before actual Large font-fit, Medium/Large popup input/state/save controls and resize/font/content boundaries"
+        "tests/overworld_stockpile_text_fit_regression.py: failing-before actual Large font-fit, Medium/Large popup input/state/save controls and resize/font/content boundaries",
+        "tools/repair_wreck_quay_cutout.py: hash-locked original-raster divider/chroma-alpha processing",
+        "tests/overworld_wreck_quay_repair_regression.py and tests/test_wreck_quay_cutout.py: failing-before decoded texture, exact preserved pixels/identity/state and dual-resolution gameplay",
+        "art/overworld/source/generated/full_match_art_repairs/: preserved original source, prompts, rejected generation records and accepted processing provenance"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T05:40:24Z",
+      "updatedAt": "2026-09-07T12:45:46Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Town art-scope decision remains missing. Bellwake exact Bell Harbor/Wayfarers Hall icons and water plots do not match the village perspective/lighting; proper seamless per-building growth needs approved original scene-matched layers and deliberate plots. Overworld cutout repair remains separately unapproved. Responsiveness criteria are now validated complete using current-source full-turn and retained full-loop/state controls; this does not close the parent or grant art permission. No new production or art change in this audit."
+      "notes": "Approved art continuation: Wreck Quay repaired through original-raster divider removal and chroma unmatting, preserving identity/footprint/gameplay/saves. Original renderer fails 1238 divider and 6122 matte pixels; imported correction passes 11 checks at both resolutions, five Python tests, existing sprite/movement/fog reports, repository and fresh Linux/Windows package/generated-entry checks. Town Bell Harbor/Wayfarers Hall candidates are unaccepted and unregistered pending grounded in-scene validation. Presentation and full goal remain in progress."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111271,37 +111281,29 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Complete-match correctness and selected measured responsiveness criteria are implemented and validated; parent goal remains unfinished. Fresh current-build End Turn controls pass the unchanged 15% gate at 19.5% Large / 18.3% Medium less waiting, with full states unchanged. Latest game implementation is stockpile readability 4d171105; the new completion audit changes no game behavior. Scene-matched Town art and Overworld cutout repairs remain blocked on owner approval; no release-ready or universal latency claim.",
+  "summary": "Approved art continuation implemented the exact Wreck Quay cutout repair: removed original sheet-divider pixels and recovered magenta-key alpha without drawing substitute geometry. Original rendered asset fails 1238 divider/6122 matte pixels; imported correction passes 14 checks at 1280x720 and 1920x1080, with full session/input save unchanged and exact transit identity, one-cell native blocking mask and 3x2 visual footprint. Five Python tests preserve original pixels/provenance; existing distinct/decorative/movement/fog reports and repository validation pass. Fresh Linux/Windows export/startup/generated-entry flows pass at 248468784-byte PCKs; Windows via Wine. Town scene candidates are generated but not accepted or registered; presentation and full goal remain in progress.",
   "taskId": "10236",
-  "updatedAt": "2026-09-07T05:40:24Z",
+  "updatedAt": "2026-09-07T12:45:47Z",
   "validation": {
-    "id": "performance-generated-full-match-criteria-closure-20260907",
-    "sliceId": "performance-generated-full-match-actions-20260906",
-    "title": "Current-source responsiveness criteria completion audit",
-    "status": "completed",
-    "scope": "selected_responsiveness_child_not_parent_or_release_completion",
-    "validatedAt": "2026-09-07T05:38:50Z",
+    "id": "ux-generated-full-match-wreck-quay-art-repair-20260907",
+    "sliceId": "ux-generated-full-match-presentation-20260906",
+    "title": "Original Wreck Quay divider and matte repair",
+    "status": "in_progress",
+    "scope": "validated_single_asset_checkpoint_not_presentation_or_goal_completion",
+    "validatedAt": "2026-09-07T12:47:50Z",
     "artifacts": [
-      "docs/generated-full-match-performance-report.md",
-      "docs/generated-full-match-quality-report.md",
-      ".artifacts/generated_full_match_quality_20260906/closure_endturn_large_4d171105/comparison.json",
-      ".artifacts/generated_full_match_quality_20260906/closure_endturn_medium_4d171105/comparison.json",
-      ".artifacts/generated_full_match_quality_20260906/logistics_town_large_release/report.json",
-      ".artifacts/generated_full_match_quality_20260906/logistics_town_medium_release/report.json",
-      ".artifacts/generated_full_match_quality_20260906/logistics_scope_large_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/logistics_scope_medium_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/recap_cache_large_content_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/recap_cache_medium_content_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/medium_match_11_continuation_03/report.json",
-      ".artifacts/generated_full_match_quality_20260906/large_match_08/report.json",
-      ".artifacts/generated_full_match_quality_20260906/stockpile_fit_linux_release/report.json",
-      ".artifacts/generated_full_match_quality_20260906/stockpile_fit_windows_recovered/report.json",
-      ".artifacts/full_play_runtime_20260905/commander_entry_full_play_isolated/matched_control_report.json",
-      ".artifacts/full_play_runtime_20260905/recap_cache_full_play_after/matched_control_report.json",
-      ".artifacts/full_play_runtime_20260905/commander_entry_domains/report.json"
+      "docs/generated-full-match-art-repair-report.md",
+      "art/overworld/source/generated/full_match_art_repairs/manifest.json",
+      ".artifacts/generated_full_match_quality_20260906/wreck_quay_before/report.json",
+      ".artifacts/generated_full_match_quality_20260906/wreck_quay_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/wreck_quay_final_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/wreck_quay_linux_release/report.json",
+      ".artifacts/generated_full_match_quality_20260906/wreck_quay_windows_release/report.json",
+      ".artifacts/full_play_runtime_20260905/wreck_quay_existing/report.json",
+      ".artifacts/generated_full_match_quality_20260906/wreck_quay_commit_repo.log"
     ],
-    "result": "Responsiveness completion audit validates already implemented changes, not a new runtime fix: current 4d171105 serial End Turns improve cumulative waiting 19.5% Large / 18.3% Medium against exact 65fb7fcb, with eight complete states equal and both 15% gates passed. Retained Town orders improve 51.5% / 20.5%; complete-loop save-surface work improves 68.2%. Both raw full-play comparisons were recomputed with 50 equal full states each and both controls complete. Freshness/domain, legitimate terminal matches, current-source platform reports, repository and 31 Python tests satisfy the selected criteria. The performance child is completed; the full goal is not. Town/Overworld presentation requires the still-missing owner art-scope approval. No source/art/layout changes were made in this audit; Large remains about 7.4 seconds and hardware/exhaustive latency are not certified.",
-    "remainingWork": "Parent goal still requires scene-matched Town buildings and corrected Overworld cutouts/terrain presentation; owner approval to expand art scope is missing. Large turns remain multi-second, cold save surfaces and the unchanged Moonbite balance deadline remain explicit limits, not passed universal latency/development or physical-Windows gates."
+    "result": "Approved art continuation implemented the exact Wreck Quay cutout repair: removed original sheet-divider pixels and recovered magenta-key alpha without drawing substitute geometry. Original rendered asset fails 1238 divider/6122 matte pixels; imported correction passes 14 checks at 1280x720 and 1920x1080, with full session/input save unchanged and exact transit identity, one-cell native blocking mask and 3x2 visual footprint. Five Python tests preserve original pixels/provenance; existing distinct/decorative/movement/fog reports and repository validation pass. Fresh Linux/Windows export/startup/generated-entry flows pass at 248468784-byte PCKs; Windows via Wine. Town scene candidates are generated but not accepted or registered; presentation and full goal remain in progress.",
+    "remainingWork": "Accept and integrate scene-matched per-faction Town building layers with grounded plots, exact built-id/upgrade/info/click authority and dual-resolution live construction/save proof; correct remaining reproduced sprite/terrain defects. No further art-scope approval is pending for these agreed corrections; full goal remains unfinished."
   },
   "validationHistory": [
     {
