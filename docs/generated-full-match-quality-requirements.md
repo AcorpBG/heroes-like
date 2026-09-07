@@ -35,6 +35,34 @@ the destination scene; preserve ordinary in-Town focus restoration without
 delaying departure. Validate immediate close/departure through the same packaged
 successive-day building flow and retain failing-before callback errors.
 
+## Export-only art-package headroom
+
+The accepted harbor layers leave only 127328 bytes under the existing package
+ceiling. Restore measured headroom through Python-owned export tooling, not lower
+image quality, discarded content, a new engine format or a raised limit. Source
+JSON remains readable and untouched. In newly exported standard standalone Godot
+v3 PCKs, compact only JSON under `content/` and runtime art manifests by removing
+the four JSON whitespace bytes outside quoted strings. Preserve every remaining
+token byte, number spelling, escape, key/array order and parsed value. Do not
+minify native generated map/save files, rewrite object data, or reinterpret source
+semantics. All non-JSON payloads, resource names/order and engine versions remain
+identical; only payload offsets, JSON lengths/digests and directory position change.
+
+Reject unknown versions/flags, encryption, sparse bundles, removals/deltas,
+embedded executables, unsafe/duplicate names, overlapping/out-of-range payloads,
+invalid JSON or digest mismatch. Verify the full temporary result against the
+original before an atomic same-directory replacement; an error leaves the original
+export intact. The operation must be deterministic and idempotent. The release
+builder and both platform smokes must use this same function before manifests,
+size checks and actual startup/generated Town construction. Preserve the ordinary
+direct Godot export as an unmodified raw export, not a falsely compacted result.
+
+Tests must compare every exported member, including exact raster/script bytes
+and lexical JSON tokens, cover corruption/failed-write preservation, and load the
+result through real Linux/Windows runtimes. Keep source/native/save hashes and
+complete existing construction behavior unchanged. This packaging prerequisite
+does not close the remaining faction/building art requirement.
+
 ## Acceptance and truthful play
 
 - Complete reproducible Medium and Large generated matches through ordinary

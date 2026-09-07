@@ -13,6 +13,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+from compact_export_pck import compact_export
+
 ARTIFACT_DIR = Path(
     os.environ.get(
         "HEROES_PACKAGING_LINUX_ARTIFACT_DIR",
@@ -1222,6 +1225,12 @@ def main() -> int:
         str(BINARY_PATH),
     ]
     export_result = run_command(export_command, EXPORT_TIMEOUT_SECONDS, FATAL_EXPORT_PATTERNS)
+    compaction = {"ok": False, "error": "Export did not complete"}
+    if export_result["returncode"] == 0 and not export_result["timed_out"]:
+        try:
+            compaction = compact_export(PCK_PATH)
+        except (OSError, ValueError) as exc:
+            compaction = {"ok": False, "error": str(exc)}
     binary = file_summary(BINARY_PATH, MIN_BINARY_BYTES)
     pck = file_summary(PCK_PATH, MIN_PCK_BYTES)
     header = elf_header_summary()
@@ -1230,6 +1239,7 @@ def main() -> int:
     export_fatal_matches = list(export_result.get("output_summary", {}).get("fatal_pattern_matches", []))
     export_ok = (
         export_result["returncode"] == 0
+        and compaction["ok"]
         and not export_result["timed_out"]
         and not export_fatal_matches
         and bool(binary["exists"])
@@ -1314,6 +1324,7 @@ def main() -> int:
         "export_binary": export_result,
         "binary": binary,
         "pck": pck,
+        "pck_json_compaction": compaction,
         "elf_header": header,
         "linux_native_libraries": libraries,
         "terrain_pck_payload": terrain_payload,

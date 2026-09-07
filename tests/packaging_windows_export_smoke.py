@@ -12,6 +12,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+from compact_export_pck import compact_export
+
 ARTIFACT_DIR = Path(
     os.environ.get(
         "HEROES_PACKAGING_WINDOWS_ARTIFACT_DIR",
@@ -1301,6 +1304,12 @@ def main() -> int:
         str(EXE_PATH),
     ]
     export_result = run_command(export_command, EXPORT_TIMEOUT_SECONDS)
+    compaction = {"ok": False, "error": "Export did not complete"}
+    if export_result["returncode"] == 0 and not export_result["timed_out"]:
+        try:
+            compaction = compact_export(PCK_PATH)
+        except (OSError, ValueError) as exc:
+            compaction = {"ok": False, "error": str(exc)}
     exe = file_summary(EXE_PATH, MIN_EXE_BYTES)
     pck = file_summary(PCK_PATH, MIN_PCK_BYTES)
     header = exe_header_summary()
@@ -1309,6 +1318,7 @@ def main() -> int:
     fatal_matches = list(export_result.get("output_summary", {}).get("fatal_pattern_matches", []))
     export_ok = (
         export_result["returncode"] == 0
+        and compaction["ok"]
         and not export_result["timed_out"]
         and not fatal_matches
         and bool(exe["exists"])
@@ -1567,6 +1577,7 @@ def main() -> int:
         "export_binary": export_result,
         "exe": exe,
         "pck": pck,
+        "pck_json_compaction": compaction,
         "exe_header": header,
         "windows_native_dlls": dlls,
         "terrain_pck_payload": terrain_payload,
