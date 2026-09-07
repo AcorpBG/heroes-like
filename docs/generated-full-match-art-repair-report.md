@@ -544,12 +544,99 @@ All commands use `python3 -B`; source masters, caches, saves, reports and RMG
 evidence are retained. No new gameplay/performance claim is made. This accepts
 two more layers, not the full presentation child or parent goal.
 
+## Validated salt-trade / pilot scene-layer continuation
+
+The actual Large08 terminal Bellwake has Salt Counting House, Mourner Pilot Guild
+and Saltwake Factor built. All three resolved exact catalog images through
+`TownStageView`, but their steep miniature perspective and isolated bases did
+not match the village waterfront. No missing purchase, rule or cover transform
+was found. The normal source regression now has an opt-in `--salt-growth` sequence:
+Market Day 1, Counting House Day 2, Fog Buoys Day 3, Salvage Ledger Day 4, Pilot
+Guild Day 5 and Saltwake Factor Day 6. Previous Harbor/Exchange sequences remain
+available; the same real End Turn, construction and save routes are reused.
+
+Failing-before evidence is `town_salt_before_720/report.json`: 2230 assertions,
+exactly nine scene-path/save-re-entry/developed-view failures for the three new
+identities, no engine errors, unchanged input and terminal saves/runtime owners.
+All six days of normal costs, prerequisites, daily limits and full save/resume
+pass. Final baseline treasury is 4060 gold, 15 wood, 7 ore and zero rare resources;
+no resources, buildings or terminal outcomes were injected into this live path.
+The separate developed-16 composition remains explicitly a detached view fixture.
+
+Three original 1536x1024 RGBA masters now have exact-faction mappings, original
+prompts/hashes and alpha-margin/512px/mipmap derivatives. Counting House and
+Saltwake Factor extend the left working quay; the Guild lookout and skiff join
+the right waterfront behind the later Drydock. The initial Guild height and
+Factor/Mistgate conflict were rejected; the next Guild/Oratory conflict was also
+rejected. Sparse 720p and actual developed-16 wide previews were inspected before
+registration. Original outputs, prompts and all composition attempts remain in
+`town_salt_candidates_20260907/`; accepted source identities, curation and rollback
+are in `art/towns/source/generated/scene_layers/README.md`.
+
+The village, seven prior complete scene-art records/rasters, catalog/info icons,
+building rules/layout catalog and Town controllers/hotspots are unchanged. The
+166-file asset/runtime-owner comparison against the previous commit has no drift.
+Only the existing exact-faction art pipeline/manifest and focused tests change.
+
+Validation (all paths relative to the goal artifact directory):
+
+- Eleven strict art, 20 export compaction, 17 release-artifact and nine release
+  pipeline Python tests pass (57 total); the strict mapping test failed before
+  registration. Repository and diff checks pass.
+- Existing rendered Town layout and progression reports pass in
+  `.artifacts/full_play_runtime_20260905/town_salt_existing/`, retaining all five
+  dialogs, 18 main-building cases, two layouts, 32 towns and 179 plot mappings.
+  These functional counts are not all-faction visual acceptance.
+- `town_salt_linux/report.json` and `town_salt_windows/report.json` pass both
+  exports, binary/native checks, startup, source exclusion and package limits.
+  Both PCKs are 248145628 bytes, leaving 1854372 below the unchanged ceiling.
+  Export-only compaction removes 3130848 bytes from 251276476-byte raw packs;
+  all 5156 members are verified, with all 5105 non-JSON payloads byte-preserved.
+- The Linux `generated-entry` and Windows `generated-flow` live reports pass
+  19 steps each: setup/Overworld/Town and eight real daily builds with information.
+  Earlier Market/Fog/Ledger/Exchange/Drydock coverage remains; the three new
+  buildings extend the same opt-in harness on Days 6-8. No new runtime entry point.
+  New gameplay payloads match across platforms; the only new UI difference is
+  a 0.0001px formatted Factor button height, with alignment passing on both.
+  Linux's exported Day-8 1920x1080 Town capture has been visually inspected.
+  Windows is headless Wine, not physical Windows/GPU certification; package
+  entry fixtures are not additional legitimate full-match outcomes.
+- `town_salt_final2_720`, `town_salt_final_2048` and `town_salt_final_1080` each
+  pass 4476/4476 source checks with zero engine errors and unchanged input/terminal
+  saves/runtime owners. Normal paid construction, both overlap owners,
+  painted/transparent clicks, keyboard/controller, full save/re-entry and
+  developed-16 visibility pass. All five growth gameplay records in each run
+  exactly match the failing-before run. Normal and developed captures at all
+  three resolutions were visually inspected, together with Counting House,
+  Ledger, Guild and Factor information captures. The 1080p Factor information
+  retains its exact 1750 gold/1 wood/1 ore cost, two prerequisites and 170-gold
+  daily contribution. No clipped navigation or new dialog overlap was observed.
+  The detached developed view still exposes five old catalog-based buildings;
+  this is not full-town visual acceptance.
+
+The first source pass `town_salt_final_720` completed 4474 checks with three
+related test-point failures: its old Salvage Ledger facade point was now covered
+by the visibly foreground Counting House, correctly opening Counting House
+information and restoring its focus. All new-building and cost/save checks passed;
+there were no engine errors. The probe now explicitly proves that foreground
+treasury owns the overlap, then clicks the Ledger's still-exposed roof. No runtime
+input priority, prior art/placement or gameplay changes conceal this test failure.
+
+Reproduce with `python3 -B tests/town_scene_layer_regression.py --salt-growth
+--save <Large08-slot1.json> --developed-save <Large08-slot3.json> --label <fresh>
+--resolution <1280x720|1920x1080|2048x1079>` and the existing Town/platform commands
+above. Fresh package binaries/Wine installations are disposed by the retained
+launcher; all saves, reports, screenshots, original art, caches and RMG evidence
+are preserved. This is three further layers, not full presentation acceptance.
+
 ## Remaining acceptance
 
 Extend scene-matched art beyond the two starting structures and constructed
 Bellwake Market Square, Fog Buoys, Salvage Ledger, Ransom Exchange and Mirror
-Drydock to the remaining
-faction/building plots and upgrades.
+Drydock, Salt Counting House, Mourner Pilot Guild and Saltwake Factor to the
+remaining faction/building plots and upgrades. The actual developed Bellwake
+view still needs Harpoon Gantry, Obituary Vault, Mistgate Slip, Bell Chain Watch
+and Wake Oratory replacements; retain those legitimate identities and behavior.
 Require inspected sparse, mid-development and developed scenes, exact
 built-id/input/save ownership and
 both-platform packages within the ceiling for each accepted packet. Other

@@ -76,7 +76,20 @@ func inspect_scene_layers(ids: Array = ["building_veilmourn_bell_harbor", "build
 		if shell._town_catalog_is_open(): shell._close_town_catalog(false)
 		# Use an opaque body point outside the main-building overlap for actual pointer input.
 		var body := Vector2(0.62,0.36) if id=="building_veilmourn_bell_harbor" else Vector2(0.55,0.60)
+		if id=="building_veilmourn_salvage_ledger" and stage.validation_building_hotspot_summary("building_veilmourn_salt_counting_house").get("visible",false):
+			# The treasury is visibly in front of the Ledger's lower facade.
+			# Prove the foreground painting owns that overlap, then click the
+			# still-exposed Ledger roof; never give a hidden rear pixel priority.
+			var overlap: Vector2 = button.get_global_transform_with_canvas()*(body*button.size)
+			var treasury = stage._building_hotspots["building_veilmourn_salt_counting_house"]
+			check(treasury._has_point(treasury.get_global_transform_with_canvas().affine_inverse()*overlap),"Ledger overlap is not painted by foreground treasury")
+			await layer_click(overlap)
+			var foreground: Dictionary = shell.validation_building_information_snapshot("building_veilmourn_salt_counting_house")
+			check(presses[0]==0 and foreground.open and foreground.mode=="building_info" and foreground.title==foreground.expected_title,"foreground treasury did not own its visible Ledger overlap")
+			shell._close_town_catalog(false)
+			body=Vector2(0.55,0.25)
 		if id=="building_veilmourn_fog_signal_buoys": body=Vector2(0.55,0.82) # Central floating hull, not the open bell-frame gap.
+		if id=="building_veilmourn_mourner_pilot_guild": body=Vector2(0.32,0.35) # Lookout remains exposed behind later waterfront buildings.
 		check(button._has_point(body*button.size),"authored pointer test point is not painted: "+id)
 		if not button._has_point(body*button.size):
 			button.pressed.disconnect(observe)
@@ -187,12 +200,12 @@ SCRIPT = SCRIPT.replace('await inspect("after_build")', 'await inspect("after_bu
 HARBOR_GROWTH = r'''
 func inspect_harbor_growth() -> void:
 	var placement: String = TownRules.get_active_town(session).placement_id
-	for id in ["building_veilmourn_fog_signal_buoys", "building_veilmourn_salvage_ledger"]:
+	var previous_id := "building_market_square"
+	for id in __GROWTH_IDS__:
 		print("HARBOR_GROWTH_BEGIN "+id+" "+str(Time.get_ticks_msec()))
 		var shell = get_tree().current_scene
 		check(not shell.get_node("%TownStage").validation_building_hotspot_summary(id).visible,"unbuilt growth layer is visible: "+id)
 		var day_before: int = session.day
-		var previous_id := "building_market_square" if id=="building_veilmourn_fog_signal_buoys" else "building_veilmourn_fog_signal_buoys"
 		var prior_info: Dictionary=shell.validation_activate_building_information(previous_id)
 		check(prior_info.open,"immediate departure control did not open existing building information")
 		shell._on_town_catalog_close_pressed()
@@ -244,6 +257,7 @@ func inspect_harbor_growth() -> void:
 		get_viewport().get_texture().get_image().save_png(out.path_join(id+"_saved.png"))
 		rows.append({"label":"ordinary_harbor_growth","building_id":id,"day":session.day,"cost":cost,"expected_resources":expected,"actual_resources":session.overworld.resources.duplicate(true),"complete_saved_state_equal":true})
 		print("HARBOR_GROWTH_SAVED "+id+" "+str(Time.get_ticks_msec()))
+		previous_id = id
 	if OS.get_environment("TOWN_HARBOR_DEVELOPED_SAVE") != "":
 		await inspect_developed_harbor_composition()
 func inspect_developed_harbor_composition() -> void:
@@ -258,7 +272,7 @@ func inspect_developed_harbor_composition() -> void:
 	stage.set_precomputed_town_state(session,view)
 	await settle()
 	check(normalized(stage._town.built_buildings)==normalized(actual.built_buildings),"developed composition changed the actual terminal built ids")
-	await inspect_scene_layers(["building_veilmourn_fog_signal_buoys","building_veilmourn_salvage_ledger"])
+	await inspect_scene_layers(__INSPECTION_IDS__)
 	await RenderingServer.frame_post_draw
 	get_viewport().get_texture().get_image().save_png(out.path_join("developed_built_id_fixture.png"))
 	check(normalized(session.to_dict())==before,"detached developed composition changed the live session")
@@ -273,9 +287,10 @@ def main():
     parser.add_argument('--resolution', choices=['1280x720', '1920x1080', '2048x1079'], required=True)
     parser.add_argument('--harbor-growth', action='store_true', help='Build Fog Buoys and Salvage Ledger after Market across real confirmed End Turns')
     parser.add_argument('--exchange-growth', action='store_true', help='Build Ransom Exchange and Mirror Drydock after Market across real confirmed End Turns')
+    parser.add_argument('--salt-growth', action='store_true', help='Build Counting House, Fog Buoys, Ledger, Pilot Guild and Saltwake Factor after Market across real confirmed End Turns')
     parser.add_argument('--developed-save', type=Path, help='Exact terminal built-id composition fixture; never resumed as a live match')
     args = parser.parse_args()
-    if args.harbor_growth and args.exchange_growth:
+    if sum((args.harbor_growth, args.exchange_growth, args.salt_growth)) > 1:
         parser.error('select one normal construction sequence per run')
     if not args.label or any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789_-' for c in args.label):
         parser.error('fresh lowercase label required')
@@ -289,10 +304,16 @@ def main():
     out = OUTPUT / args.label
     out.mkdir(exist_ok=False)
     script_text = SCRIPT
-    if args.harbor_growth or args.exchange_growth:
-        growth = HARBOR_GROWTH
+    growth_enabled = args.harbor_growth or args.exchange_growth or args.salt_growth
+    sequence = 'salt' if args.salt_growth else 'exchange' if args.exchange_growth else 'harbor' if args.harbor_growth else 'market'
+    if growth_enabled:
+        ids = ['building_veilmourn_fog_signal_buoys', 'building_veilmourn_salvage_ledger']
         if args.exchange_growth:
-            growth = growth.replace('building_veilmourn_fog_signal_buoys', 'building_veilmourn_ransom_exchange').replace('building_veilmourn_salvage_ledger', 'building_veilmourn_mirror_drydock').replace('ordinary_harbor_growth', 'ordinary_exchange_growth')
+            ids = ['building_veilmourn_ransom_exchange', 'building_veilmourn_mirror_drydock']
+        if args.salt_growth:
+            ids = ['building_veilmourn_salt_counting_house', 'building_veilmourn_fog_signal_buoys', 'building_veilmourn_salvage_ledger', 'building_veilmourn_mourner_pilot_guild', 'building_veilmourn_saltwake_factor']
+        inspection_ids = [id for id in ids if id not in ('building_veilmourn_fog_signal_buoys', 'building_veilmourn_salvage_ledger')] if args.salt_growth else ids
+        growth = HARBOR_GROWTH.replace('__GROWTH_IDS__', json.dumps(ids)).replace('__INSPECTION_IDS__', json.dumps(inspection_ids)).replace('ordinary_harbor_growth', 'ordinary_'+sequence+'_growth')
         script_text = SCRIPT.replace('await inspect_market_constructed()', 'await inspect_market_constructed()\n\t\tawait inspect_harbor_growth()') + growth
     if args.resolution == '2048x1079':
         script_text = script_text.replace('SettingsService.set_presentation_resolution(OS.get_environment("TOWN_OVERLAY_RESOLUTION"))', 'get_window().content_scale_size = Vector2i(2048,1079)\n\tget_window().size = Vector2i(2048,1079)')
@@ -307,7 +328,7 @@ def main():
         if developed:
             env['TOWN_HARBOR_DEVELOPED_SAVE'] = str(developed)
         with (out / 'runtime.log').open('w') as log:
-            code = run_probe(command, env, log, timeout_seconds=600 if args.harbor_growth or args.exchange_growth else 300)
+            code = run_probe(command, env, log, timeout_seconds=900 if args.salt_growth else 600 if growth_enabled else 300)
     lines = (out / 'runtime.log').read_text().splitlines()
     marker = 'TOWN_OVERLAY_OWNERSHIP '
     reports = [json.loads(line[len(marker):]) for line in lines if line.startswith(marker)]
@@ -316,7 +337,7 @@ def main():
                   runtime_errors=[s for s in lines if s.startswith(('ERROR:', 'SCRIPT ERROR:')) or 'leaked' in s])
     report['source_hashes'] = source_hashes
     report['developed_save_sha256'] = developed_hash
-    report['construction_sequence'] = 'exchange' if args.exchange_growth else 'harbor' if args.harbor_growth else 'market'
+    report['construction_sequence'] = sequence
     report['developed_save_unchanged'] = not developed or hashlib.sha256(developed.read_bytes()).hexdigest()==developed_hash
     report['executed_probe_sha256'] = hashlib.sha256(script_text.encode()).hexdigest()
     report['source_unchanged'] = all(hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==sha for path,sha in source_hashes.items())

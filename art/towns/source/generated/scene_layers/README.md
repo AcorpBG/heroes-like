@@ -152,3 +152,57 @@ checks at each of 1280x720, 1920x1080 and 2048x1079. Linux and Windows/Wine expo
 pass the existing generated Town flow extended to five real daily purchases;
 both PCKs are 247312024 bytes. The art-repair report records evidence and limits.
 Remaining buildings, upgrades and factions are not accepted by this packet.
+
+## Salt trade and pilot guild continuation
+
+Three original built-in imagegen RGBA outputs are retained unchanged, alongside
+their verbatim prompts. Generation date: 2026-09-07; model/version not exposed.
+
+- Salt Counting House: `exec-0c18599c-2e6f-46e7-9978-cf7c41a462a2.png`, SHA256
+  `5245eb438fb32cee3d432e09a511602239b2382eabd036ad9aa95ed055b4e19f`.
+- Mourner Pilot Guild: `exec-916be8ae-0308-4d19-ad88-c873a735b108.png`, SHA256
+  `6b056be68c19e4ad943a63ee9ed49697d6f53c8d31db5439f8a0dd3e9dae6888`.
+- Saltwake Factor: `exec-1ef162a1-f0bf-470e-ab8e-272eeae65fec.png`, SHA256
+  `08f638373513e882b5d9676c98c652368fb1c91977377d7e97c46406af80b879`.
+
+All three use only the original village panorama (camera, light and waterfront)
+and accepted Salvage Ledger master (materials and real alpha) as image inputs.
+Brief sources: worldbuilding foundation Veil Coast / Visual Identity and faction
+bible Veilmourn Home Region / Visual Language / Economy / Town Building Identity;
+the exact authored buildings in `content/buildings.json` retain their names,
+costs, prerequisites and effects. No third-party game imagery or copied pixels.
+No human pixel painting, background extraction or geometric synthesis was used.
+
+The treasury has paired roof chambers, scales and salt jars; the pilot guild has
+a lookout, chart porch and masked skiff; the broad factor warehouse has covered
+receiving bays and a lifting wheel. The original village and seven accepted
+layers remain unchanged. First preview placement was rejected because the Guild
+floated above the right waterfront and the Factor conflicted with the old
+Mistgate foreground. The second Guild plot collided with the old Wake Oratory.
+Accepted full-source framing is `[530,515,245,163.3333333333]`,
+`[1300,500,270,180]` and `[640,585,280,186.6666666667]`, respectively.
+The salt buildings extend the left working quay; the Guild joins the right
+waterfront behind the later Drydock while leaving its lookout exposed.
+
+Sparse 1280x720 and actual developed-16 2048x1079 detached-view previews were
+inspected in `town_salt_candidates_20260907/` under the goal artifact directory.
+These view fixtures are not evidence of normal paid construction. Curation:
+accept these three source candidates; readability 4, faction identity 4,
+scene consistency 4, feasibility 4, originality 5. The source/trimmed/runtime
+pipeline still crops only fully transparent margins and downsamples to 512px
+with original alpha, aspect and mipmaps. The manifest locks every path, prompt,
+hash, trim, normalized bound and depth anchor. Runtime sizes: 512x343, 512x346
+and 512x335. Separate catalog/info icons remain unchanged.
+
+Normal six-day purchase, input/save and developed-view checks pass 4476 assertions
+at each of three inspected resolutions (1280x720, 1920x1080, 2048x1079), preserving
+the exact original saves and purchase records. Fifty-seven focused Python tests,
+existing Town layout/progression and Linux/Windows 19-step/eight-day packaged
+construction checks pass. Both PCKs are 248145628 bytes; Windows uses headless
+Wine, not physical hardware. The old Ledger facade test point correctly belongs
+to the foreground treasury; the probe now proves both that overlap and the
+exposed Ledger roof rather than changing runtime input priority. Source-backed
+failures and accepted screenshots are recorded in the art-repair report.
+Rollback comprises these three source/prompt/trim/runtime/import additions and
+their pipeline/manifest/test changes, without gameplay or save migration.
+Ten layers are not complete Bellwake, upgrade or all-faction acceptance.

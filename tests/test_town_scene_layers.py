@@ -24,6 +24,7 @@ def validate_scene_layers(payload=None):
     require(bool(payload.get('owner_approval')) and bool(payload.get('rights')), 'Missing art approval/rights')
     require(payload.get('generation',{}).get('tool')=='built_in_image_gen', 'Missing generated art provenance')
     factions = payload.get('factions', {})
+    require(set(factions.get('faction_veilmourn',{})) >= {'building_veilmourn_salt_counting_house','building_veilmourn_mourner_pilot_guild','building_veilmourn_saltwake_factor'}, 'Missing accepted Bellwake salt/pilot scene mapping')
     require(set(factions.get('faction_veilmourn',{})) >= {'building_veilmourn_bell_harbor','building_wayfarers_hall','building_market_square','building_veilmourn_fog_signal_buoys','building_veilmourn_salvage_ledger','building_veilmourn_ransom_exchange','building_veilmourn_mirror_drydock'}, 'Missing accepted Bellwake scene mapping')
     paths = set()
     hashes = set()
@@ -103,6 +104,12 @@ class TownSceneLayersTests(unittest.TestCase):
     def test_missing_raster_is_rejected(self):
         self.payload['factions']['faction_veilmourn']['building_wayfarers_hall']['runtime_path']='res://missing-town-scene.png'
         self.assertTrue(any('Missing runtime scene raster' in e for e in validate_scene_layers(self.payload)))
+    def test_missing_salt_pilot_mappings_are_rejected(self):
+        for building in ('building_veilmourn_salt_counting_house','building_veilmourn_mourner_pilot_guild','building_veilmourn_saltwake_factor'):
+            with self.subTest(building=building):
+                payload=copy.deepcopy(self.payload)
+                payload['factions']['faction_veilmourn'].pop(building, None)
+                self.assertIn('Missing accepted Bellwake salt/pilot scene mapping',validate_scene_layers(payload))
     def test_square_stretch_is_rejected(self):
         self.payload['factions']['faction_veilmourn']['building_wayfarers_hall']['normalized_rect']=[0.5,0.3,0.18,0.32]
         self.assertTrue(any('Stretched/square' in e for e in validate_scene_layers(self.payload)))

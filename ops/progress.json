@@ -46,7 +46,8 @@
         "python3 -B tests/packaging_release_candidate_pipeline_test.py",
         "python3 -B tests/export_pck_json_regression.py <raw-export.pck> <compacted-export.pck> --output <fresh>",
         "python3 -B tests/packaging_release_artifact_verification_test.py",
-        "python3 -B tests/town_scene_layer_regression.py --exchange-growth --developed-save <Large08-slot3.json> --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>"
+        "python3 -B tests/town_scene_layer_regression.py --exchange-growth --developed-save <Large08-slot3.json> --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>",
+        "python3 -B tests/town_scene_layer_regression.py --salt-growth --developed-save <Large08 terminal slot3> --save <Large08 opening slot1> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -90,16 +91,18 @@
         "tests/test_compact_export_pck.py and both platform export smokes: corruption/atomicity/token/all-member preservation and real compacted-pack gameplay",
         "tests/export_pck_json_regression.py: real Godot parser equivalence for every exported JSON member before/after compaction",
         "tools/prepare_town_scene_layers.py, exact-faction scene manifest and original source/trimmed/runtime art: Bellwake Ransom Exchange and Mirror Drydock grounded layers, preserving five accepted layers and village",
-        "tests/town_scene_layer_regression.py and tests/test_town_scene_layers.py: normal three-day Market/Ransom/Mirror construction, strict mappings, input/save and developed-16 composition; both platform packaged five-day construction validation"
+        "tests/town_scene_layer_regression.py and tests/test_town_scene_layers.py: normal three-day Market/Ransom/Mirror construction, strict mappings, input/save and developed-16 composition; both platform packaged five-day construction validation",
+        "tools/prepare_town_scene_layers.py and exact-faction original scene art: Salt Counting House, Mourner Pilot Guild and Saltwake Factor; preserve seven accepted layers/village/catalog icons",
+        "tests/town_scene_layer_regression.py and strict art tests: ordinary six-day salt/pilot purchases, input/save and developed-16 composition; both-platform packaged construction"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T18:27:22Z",
+      "updatedAt": "2026-09-07T19:57:31Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open."
+      "notes": "Validated three original Salt Counting House/Pilot Guild/Saltwake Factor scene layers: 4476 checks at each of three inspected resolutions, 57 Python tests, existing Town reports and Linux/Windows 19-step paid-construction flows pass. Both PCKs 248145628 bytes; 1854372 bytes headroom. Ten Bellwake layers accepted, not complete town/faction/upgrade or Overworld art; full goal remains active. Windows headless Wine and legacy keyboard/Moonbite limits remain explicit."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16717,7 +16720,7 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
+  "currentSliceNotes": "Validated three original Salt Counting House/Pilot Guild/Saltwake Factor scene layers: 4476 checks at each of three inspected resolutions, 57 Python tests, existing Town reports and Linux/Windows 19-step paid-construction flows pass. Both PCKs 248145628 bytes; 1854372 bytes headroom. Ten Bellwake layers accepted, not complete town/faction/upgrade or Overworld art; full goal remains active. Windows headless Wine and legacy keyboard/Moonbite limits remain explicit.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Presentation Corrections",
   "currentSliceUpdatedAt": "2026-09-07T18:27:23Z",
@@ -22027,79 +22030,82 @@
   },
   "guardrailNote": "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification.",
   "lastValidation": {
-    "id": "quality-town-exchange-drydock-art-20260907",
+    "id": "quality-town-salt-pilot-art-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T18:27:23Z",
-    "scope": "Validated two additional Bellwake scene-matched layers with real construction/input/save and inspected dual-platform packages; not full presentation completion.",
-    "result": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
+    "validatedAt": "2026-09-07T19:58:52Z",
+    "scope": "Validated three additional Bellwake scene-matched layers with real construction/input/save and inspected dual-platform packages; not full presentation completion.",
+    "result": "Validated Bellwake Salt Counting House, Mourner Pilot Guild and Saltwake Factor original scene layers: 4476 checks at each of 1280x720, 1920x1080 and 2048x1079; 57 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 19-step eight-day construction flows pass. Both PCKs are 248145628 bytes with 1854372 bytes headroom. Village, prior seven layers, catalog icons, rules and saves unchanged. Ten layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
       "content/town_building_scene_art_manifest.json",
       "art/towns/source/generated/scene_layers/README.md",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_before_720/runtime.log",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/building_veilmourn_mirror_drydock_saved.png",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/developed_built_id_fixture.png",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/building_veilmourn_mirror_drydock_saved.png",
-      ".artifacts/full_play_runtime_20260905/town_exchange_existing/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/generated_town_building_constructed_building_veilmourn_mirror_drydock.png",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/generated-flow/live_validation_report.json"
+      ".artifacts/generated_full_match_quality_20260906/town_salt_before_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final2_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final2_720/building_veilmourn_saltwake_factor_saved.png",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_2048/developed_built_id_fixture.png",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_1080/building_veilmourn_saltwake_factor_saved.png",
+      ".artifacts/full_play_runtime_20260905/town_salt_existing/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_linux/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_linux/generated-entry/generated_town_building_constructed_building_veilmourn_saltwake_factor.png",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_windows/generated-flow/live_validation_report.json"
     ],
-    "remainingWork": "Continue remaining detached developed Bellwake buildings, upgrade plots and other factions with 2687976-byte PCK headroom; continue demonstrated Overworld prop-edge/terrain presentation corrections. Preserve legitimate match/performance evidence, physical Windows and legacy keyboard/Moonbite limits. Full goal remains active."
+    "remainingWork": "Continue the five remaining old catalog-based buildings in the actual developed Bellwake view, then remaining upgrade plots and other factions with 1854372-byte PCK headroom; continue demonstrated Overworld prop-edge/terrain presentation corrections. Preserve legitimate match/performance evidence, physical Windows and legacy keyboard/Moonbite limits. Full goal remains active."
   },
   "latestEvidence": {
-    "id": "quality-town-exchange-drydock-art-20260907",
+    "id": "quality-town-salt-pilot-art-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T18:27:23Z",
-    "scope": "Validated two additional Bellwake scene-matched layers with real construction/input/save and inspected dual-platform packages; not full presentation completion.",
-    "result": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
+    "validatedAt": "2026-09-07T19:58:52Z",
+    "scope": "Validated three additional Bellwake scene-matched layers with real construction/input/save and inspected dual-platform packages; not full presentation completion.",
+    "result": "Validated Bellwake Salt Counting House, Mourner Pilot Guild and Saltwake Factor original scene layers: 4476 checks at each of 1280x720, 1920x1080 and 2048x1079; 57 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 19-step eight-day construction flows pass. Both PCKs are 248145628 bytes with 1854372 bytes headroom. Village, prior seven layers, catalog icons, rules and saves unchanged. Ten layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
       "content/town_building_scene_art_manifest.json",
       "art/towns/source/generated/scene_layers/README.md",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_before_720/runtime.log",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/building_veilmourn_mirror_drydock_saved.png",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/developed_built_id_fixture.png",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/building_veilmourn_mirror_drydock_saved.png",
-      ".artifacts/full_play_runtime_20260905/town_exchange_existing/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/generated_town_building_constructed_building_veilmourn_mirror_drydock.png",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/generated-flow/live_validation_report.json"
+      ".artifacts/generated_full_match_quality_20260906/town_salt_before_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final2_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final2_720/building_veilmourn_saltwake_factor_saved.png",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_2048/developed_built_id_fixture.png",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_1080/building_veilmourn_saltwake_factor_saved.png",
+      ".artifacts/full_play_runtime_20260905/town_salt_existing/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_linux/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_linux/generated-entry/generated_town_building_constructed_building_veilmourn_saltwake_factor.png",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_windows/generated-flow/live_validation_report.json"
     ],
-    "remainingWork": "Continue remaining detached developed Bellwake buildings, upgrade plots and other factions with 2687976-byte PCK headroom; continue demonstrated Overworld prop-edge/terrain presentation corrections. Preserve legitimate match/performance evidence, physical Windows and legacy keyboard/Moonbite limits. Full goal remains active."
+    "remainingWork": "Continue the five remaining old catalog-based buildings in the actual developed Bellwake view, then remaining upgrade plots and other factions with 1854372-byte PCK headroom; continue demonstrated Overworld prop-edge/terrain presentation corrections. Preserve legitimate match/performance evidence, physical Windows and legacy keyboard/Moonbite limits. Full goal remains active."
   },
   "latestEvidenceArtifacts": [
     "docs/generated-full-match-art-repair-report.md",
     "content/town_building_scene_art_manifest.json",
     "art/towns/source/generated/scene_layers/README.md",
-    ".artifacts/generated_full_match_quality_20260906/town_exchange_before_720/runtime.log",
-    ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/building_veilmourn_mirror_drydock_saved.png",
-    ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/developed_built_id_fixture.png",
-    ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/building_veilmourn_mirror_drydock_saved.png",
-    ".artifacts/full_play_runtime_20260905/town_exchange_existing/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/live_validation_report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/generated_town_building_constructed_building_veilmourn_mirror_drydock.png",
-    ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/generated-flow/live_validation_report.json"
+    ".artifacts/generated_full_match_quality_20260906/town_salt_before_720/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_salt_final_720/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_salt_final2_720/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_salt_final2_720/building_veilmourn_saltwake_factor_saved.png",
+    ".artifacts/generated_full_match_quality_20260906/town_salt_final_2048/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_salt_final_2048/developed_built_id_fixture.png",
+    ".artifacts/generated_full_match_quality_20260906/town_salt_final_1080/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_salt_final_1080/building_veilmourn_saltwake_factor_saved.png",
+    ".artifacts/full_play_runtime_20260905/town_salt_existing/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_salt_linux/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_salt_linux/generated-entry/live_validation_report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_salt_linux/generated-entry/generated_town_building_constructed_building_veilmourn_saltwake_factor.png",
+    ".artifacts/generated_full_match_quality_20260906/town_salt_windows/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_salt_windows/generated-flow/live_validation_report.json"
   ],
-  "latestEvidenceId": "quality-town-exchange-drydock-art-20260907",
-  "latestFinding": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
+  "latestEvidenceId": "quality-town-salt-pilot-art-20260907",
+  "latestFinding": "Validated Bellwake Salt Counting House, Mourner Pilot Guild and Saltwake Factor original scene layers: 4476 checks at each of 1280x720, 1920x1080 and 2048x1079; 57 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 19-step eight-day construction flows pass. Both PCKs are 248145628 bytes with 1854372 bytes headroom. Village, prior seven layers, catalog icons, rules and saves unchanged. Ten layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
   "metrics": {
     "audit_only": false,
     "runtime_behavior_changed": true,
@@ -22499,7 +22505,8 @@
         "python3 -B tests/packaging_release_candidate_pipeline_test.py",
         "python3 -B tests/export_pck_json_regression.py <raw-export.pck> <compacted-export.pck> --output <fresh>",
         "python3 -B tests/packaging_release_artifact_verification_test.py",
-        "python3 -B tests/town_scene_layer_regression.py --exchange-growth --developed-save <Large08-slot3.json> --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>"
+        "python3 -B tests/town_scene_layer_regression.py --exchange-growth --developed-save <Large08-slot3.json> --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>",
+        "python3 -B tests/town_scene_layer_regression.py --salt-growth --developed-save <Large08 terminal slot3> --save <Large08 opening slot1> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -22543,16 +22550,18 @@
         "tests/test_compact_export_pck.py and both platform export smokes: corruption/atomicity/token/all-member preservation and real compacted-pack gameplay",
         "tests/export_pck_json_regression.py: real Godot parser equivalence for every exported JSON member before/after compaction",
         "tools/prepare_town_scene_layers.py, exact-faction scene manifest and original source/trimmed/runtime art: Bellwake Ransom Exchange and Mirror Drydock grounded layers, preserving five accepted layers and village",
-        "tests/town_scene_layer_regression.py and tests/test_town_scene_layers.py: normal three-day Market/Ransom/Mirror construction, strict mappings, input/save and developed-16 composition; both platform packaged five-day construction validation"
+        "tests/town_scene_layer_regression.py and tests/test_town_scene_layers.py: normal three-day Market/Ransom/Mirror construction, strict mappings, input/save and developed-16 composition; both platform packaged five-day construction validation",
+        "tools/prepare_town_scene_layers.py and exact-faction original scene art: Salt Counting House, Mourner Pilot Guild and Saltwake Factor; preserve seven accepted layers/village/catalog icons",
+        "tests/town_scene_layer_regression.py and strict art tests: ordinary six-day salt/pilot purchases, input/save and developed-16 composition; both-platform packaged construction"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T18:27:22Z",
+      "updatedAt": "2026-09-07T19:57:31Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open."
+      "notes": "Validated three original Salt Counting House/Pilot Guild/Saltwake Factor scene layers: 4476 checks at each of three inspected resolutions, 57 Python tests, existing Town reports and Linux/Windows 19-step paid-construction flows pass. Both PCKs 248145628 bytes; 1854372 bytes headroom. Ten Bellwake layers accepted, not complete town/faction/upgrade or Overworld art; full goal remains active. Windows headless Wine and legacy keyboard/Moonbite limits remain explicit."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111317,35 +111326,36 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
+  "summary": "Validated Bellwake Salt Counting House, Mourner Pilot Guild and Saltwake Factor original scene layers: 4476 checks at each of 1280x720, 1920x1080 and 2048x1079; 57 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 19-step eight-day construction flows pass. Both PCKs are 248145628 bytes with 1854372 bytes headroom. Village, prior seven layers, catalog icons, rules and saves unchanged. Ten layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
   "taskId": "10236",
-  "updatedAt": "2026-09-07T18:27:23Z",
+  "updatedAt": "2026-09-07T19:58:52Z",
   "validation": {
-    "id": "quality-town-exchange-drydock-art-20260907",
+    "id": "quality-town-salt-pilot-art-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T18:27:23Z",
-    "scope": "Validated two additional Bellwake scene-matched layers with real construction/input/save and inspected dual-platform packages; not full presentation completion.",
-    "result": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
+    "validatedAt": "2026-09-07T19:58:52Z",
+    "scope": "Validated three additional Bellwake scene-matched layers with real construction/input/save and inspected dual-platform packages; not full presentation completion.",
+    "result": "Validated Bellwake Salt Counting House, Mourner Pilot Guild and Saltwake Factor original scene layers: 4476 checks at each of 1280x720, 1920x1080 and 2048x1079; 57 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 19-step eight-day construction flows pass. Both PCKs are 248145628 bytes with 1854372 bytes headroom. Village, prior seven layers, catalog icons, rules and saves unchanged. Ten layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
       "content/town_building_scene_art_manifest.json",
       "art/towns/source/generated/scene_layers/README.md",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_before_720/runtime.log",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/building_veilmourn_mirror_drydock_saved.png",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/developed_built_id_fixture.png",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/building_veilmourn_mirror_drydock_saved.png",
-      ".artifacts/full_play_runtime_20260905/town_exchange_existing/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/generated_town_building_constructed_building_veilmourn_mirror_drydock.png",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/generated-flow/live_validation_report.json"
+      ".artifacts/generated_full_match_quality_20260906/town_salt_before_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final2_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final2_720/building_veilmourn_saltwake_factor_saved.png",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_2048/developed_built_id_fixture.png",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_final_1080/building_veilmourn_saltwake_factor_saved.png",
+      ".artifacts/full_play_runtime_20260905/town_salt_existing/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_linux/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_linux/generated-entry/generated_town_building_constructed_building_veilmourn_saltwake_factor.png",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_salt_windows/generated-flow/live_validation_report.json"
     ],
-    "remainingWork": "Continue remaining detached developed Bellwake buildings, upgrade plots and other factions with 2687976-byte PCK headroom; continue demonstrated Overworld prop-edge/terrain presentation corrections. Preserve legitimate match/performance evidence, physical Windows and legacy keyboard/Moonbite limits. Full goal remains active."
+    "remainingWork": "Continue the five remaining old catalog-based buildings in the actual developed Bellwake view, then remaining upgrade plots and other factions with 1854372-byte PCK headroom; continue demonstrated Overworld prop-edge/terrain presentation corrections. Preserve legitimate match/performance evidence, physical Windows and legacy keyboard/Moonbite limits. Full goal remains active."
   },
   "validationHistory": [
     {
