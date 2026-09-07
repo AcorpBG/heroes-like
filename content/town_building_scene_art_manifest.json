@@ -1,0 +1,115 @@
+{
+  "schema_id": "town_building_scene_art_v1",
+  "source_size": [
+    1600,
+    900
+  ],
+  "source_docs": [
+    "docs/generated-full-match-quality-requirements.md",
+    "docs/town-integrated-building-progression-requirements.md",
+    "docs/generated-full-match-art-repair-report.md"
+  ],
+  "owner_approval": "2026-09-07: owner approved scene-matched Town layers and resuming full-match quality.",
+  "generation": {
+    "tool": "built_in_image_gen",
+    "model": "not_exposed",
+    "date": "2026-09-07",
+    "references": "Original Veilmourn village panorama and exact original catalog icons; no copyrighted game references."
+  },
+  "processing_tool": "tools/prepare_town_scene_layers.py",
+  "processing": "Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.",
+  "rights": "Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.",
+  "catalog_icons": "Unchanged; these exact-faction scene layers are not shared catalog replacements.",
+  "migration_scope": "Two Bellwake starting structures only; remaining catalog-based scene art is explicitly not accepted by this migration.",
+  "missing_declared_layer_policy": "validation_failure_no_catalog_or_procedural_fallback",
+  "factions": {
+    "faction_veilmourn": {
+      "building_veilmourn_bell_harbor": {
+        "asset_id": "faction_veilmourn_building_veilmourn_bell_harbor",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_bell_harbor.png",
+        "source_sha256": "8da88597e30bd95d3ae5d172e100ffd34c85c644cb002a1bded726a38cc0e97d",
+        "source_size": [
+          1295,
+          1214
+        ],
+        "trim_box": [
+          0,
+          9,
+          1294,
+          1214
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_bell_harbor.png",
+        "trimmed_sha256": "bc27b0ebe8d472a93ea08744612b28311141a84376cb927c759860af28fb64ac",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_bell_harbor.png",
+        "runtime_sha256": "e0d2431746b0c7c779da805cef48e62f0ac37ad62bf377a3cd66811b470944d5",
+        "runtime_size": [
+          512,
+          477
+        ],
+        "normalized_rect": [
+          0.43125,
+          0.43580450302031853,
+          0.19984555984555985,
+          0.3308621636463482
+        ],
+        "ground_anchor": [
+          0.53125,
+          0.7222222222222222
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Left gangway joins the existing main quay; wet pilings descend into the central harbor. Preserve the open navigation water.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_bell_harbor.prompt.txt",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
+      },
+      "building_wayfarers_hall": {
+        "asset_id": "faction_veilmourn_building_wayfarers_hall",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_wayfarers_hall.png",
+        "source_sha256": "a42efba0e557456853265365df4000c223df86c6b22085e4eab30d6c1394d5f5",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          41,
+          0,
+          1526,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_wayfarers_hall.png",
+        "trimmed_sha256": "047c34b7d3194137dd1d89b0e54c87a16977c82c1c66806c425e73b66d6d4a11",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_wayfarers_hall.png",
+        "runtime_sha256": "10dd806963528a714c81693337177b996f1ded9e329d4ac16d695355527210b5",
+        "runtime_size": [
+          512,
+          353
+        ],
+        "normalized_rect": [
+          0.59713134765625,
+          0.36666666666666664,
+          0.23565673828125,
+          0.28888888888888886
+        ],
+        "ground_anchor": [
+          0.7125,
+          0.6133333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Lodge occupies the middle-distance right shore, behind the foreground gate and quay. Its covered stair opens toward the bell docks.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_wayfarers_hall.prompt.txt",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
+      }
+    }
+  }
+}

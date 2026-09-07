@@ -46,6 +46,7 @@ SCENES = [
     "active_play_save_written_cue_playback_report",
     "active_play_load_resumed_cue_playback_report",
     "town_screen_layout_and_dialog_controls_report",
+    "town_building_skyline_progression_report",
     "army_stack_management_bar_runtime_report",
     "hero_field_rendezvous_army_transfer_report",
     "town_army_transfer_completion_feedback_report",
@@ -225,6 +226,7 @@ def main() -> int:
         explicit_markers = {
             "town_development_save_resume_report": "TOWN_DEVELOPMENT_SAVE_RESUME_REPORT",
             "town_screen_layout_and_dialog_controls_report": "TOWN_SCREEN_LAYOUT_AND_DIALOG_CONTROLS_REPORT",
+            "town_building_skyline_progression_report": "TOWN_INTEGRATED_BUILDING_PROGRESSION_REPORT",
             "town_army_transfer_completion_feedback_report": "TOWN_ARMY_TRANSFER_COMPLETION_FEEDBACK_REPORT",
             "town_recruitment_ui_surface_report": "TOWN_RECRUITMENT_UI_SURFACE_REPORT",
             "town_recruitment_cue_playback_report": "TOWN_RECRUITMENT_CUE_PLAYBACK_REPORT",
