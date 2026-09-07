@@ -19907,8 +19907,15 @@ static func _path_distance_surface_context(
 	observer_faction_id: String,
 	level: int = -1
 ) -> Dictionary:
-	var context := _local_path_distance_surface_context(session, ignore_placement_id, observer_faction_id, level)
-	var navigation := _native_navigation_surface(session, ignore_placement_id, observer_faction_id)
+	if level < 0:
+		level = OverworldRulesScript.placement_level(session, ignore_placement_id)
+	# These synchronous reads do not mutate gameplay state. Compute the same
+	# base identity once for this request, then preserve each level's exact key.
+	# Nothing survives this call beyond the existing independently keyed caches.
+	var base_key := _path_distance_surface_cache_key(session, ignore_placement_id, observer_faction_id, 0)
+	var actor_blocked_indexes := {}
+	var context := _local_path_distance_surface_context_for_key(session, ignore_placement_id, observer_faction_id, level, _path_distance_level_cache_key(base_key, level), actor_blocked_indexes)
+	var navigation := _native_navigation_surface_for_key(session, ignore_placement_id, observer_faction_id, base_key, actor_blocked_indexes)
 	if navigation.is_empty():
 		return context
 	var extended := context.duplicate(false)
@@ -19917,6 +19924,9 @@ static func _path_distance_surface_context(
 
 static func _native_navigation_surface(session: SessionStateStoreScript.SessionData, actor_id: String, observer: String) -> Dictionary:
 	var key := _path_distance_surface_cache_key(session, actor_id, observer, 0)
+	return _native_navigation_surface_for_key(session, actor_id, observer, key)
+
+static func _native_navigation_surface_for_key(session: SessionStateStoreScript.SessionData, actor_id: String, observer: String, key: String, preloaded_actor_blocked_indexes: Variant = null) -> Dictionary:
 	if _native_navigation_surface_cache.has(key):
 		return _native_navigation_surface_cache[key]
 	var nodes: Array = session.overworld.get("resource_nodes", [])
@@ -19926,6 +19936,7 @@ static func _native_navigation_surface(session: SessionStateStoreScript.SessionD
 			native_nodes.append(node)
 	var navigation := {}
 	if not native_nodes.is_empty() or NativeTransit.uses_native_adjacency(session):
+		var actor_blocked_indexes: Dictionary = preloaded_actor_blocked_indexes if preloaded_actor_blocked_indexes is Dictionary else {}
 		var errors := NativeTransit.validate(nodes)
 		if not errors.is_empty():
 			# Invalid native contracts never become guessed local-offset paths.
@@ -19936,12 +19947,12 @@ static func _native_navigation_surface(session: SessionStateStoreScript.SessionD
 			var surfaces := []
 			var mask := PackedByteArray()
 			for spatial_level in range(levels):
-				var surface := _local_path_distance_surface_context(session, actor_id, observer, spatial_level)
+				var surface := _local_path_distance_surface_context_for_key(session, actor_id, observer, spatial_level, _path_distance_level_cache_key(key, spatial_level), actor_blocked_indexes)
 				surfaces.append(surface)
 				mask.append_array(_blocked_tile_mask(size.x * size.y, surface.encounter_blocked_indices, surface.resource_blocked_indices, surface.hero_blocked_indices, surface.terrain_blocked_indices))
 			var safe := {}
 			for node in native_nodes:
-				if bool(OverworldRulesScript._native_passage_endpoint_safety(session, node, actor_id).get("ok", false)):
+				if bool(OverworldRulesScript._native_passage_endpoint_safety(session, node, actor_id, actor_blocked_indexes).get("ok", false)):
 					safe[String(node.get("placement_id", ""))] = true
 			var links := []
 			for node in native_nodes:
@@ -20034,10 +20045,20 @@ static func _local_path_distance_surface_context(
 	if level < 0:
 		level = OverworldRulesScript.placement_level(session, ignore_placement_id)
 	var cache_key := _path_distance_surface_cache_key(session, ignore_placement_id, observer_faction_id, level)
+	return _local_path_distance_surface_context_for_key(session, ignore_placement_id, observer_faction_id, level, cache_key)
+
+static func _local_path_distance_surface_context_for_key(
+	session: SessionStateStoreScript.SessionData,
+	ignore_placement_id: String,
+	observer_faction_id: String,
+	level: int,
+	cache_key: String,
+	actor_blocked_indexes: Variant = null
+) -> Dictionary:
 	if cache_key != "" and _path_distance_surface_cache.has(cache_key):
 		return _path_distance_surface_cache[cache_key]
 	var encounter_blocked := _occupied_tiles(session, ignore_placement_id, level)
-	var resource_blocked := _overworld_body_blocked_tiles(session, ignore_placement_id, observer_faction_id, level)
+	var resource_blocked := _overworld_body_blocked_tiles(session, ignore_placement_id, observer_faction_id, level, actor_blocked_indexes)
 	var hero_blocked := _player_hero_blocked_tiles(session, observer_faction_id, level)
 	var terrain_blocked := _impassable_terrain_tiles(session, level)
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
@@ -20083,7 +20104,10 @@ static func _path_distance_surface_cache_key(
 		_path_distance_resource_fingerprint(session),
 		_path_distance_hero_fingerprint(session, observer_faction_id),
 	]
-	return key if level == 0 else key + "|level:%d" % level
+	return _path_distance_level_cache_key(key, level)
+
+static func _path_distance_level_cache_key(base_key: String, level: int) -> String:
+	return base_key if level == 0 or base_key == "" else base_key + "|level:%d" % level
 
 static func _path_distance_encounter_fingerprint(session: SessionStateStoreScript.SessionData, ignore_placement_id: String = "") -> String:
 	var resolved_lookup := {}
@@ -20328,10 +20352,16 @@ static func _overworld_body_blocked_tiles(
 	session: SessionStateStoreScript.SessionData,
 	ignore_placement_id: String,
 	observer_faction_id: String = "",
-	level: int = 0
+	level: int = 0,
+	actor_blocked_indexes: Variant = null
 ) -> Dictionary:
 	var ignore_army: bool = not _find_encounter_by_placement(session, ignore_placement_id).get("encounter", {}).is_empty()
 	var blocked: Dictionary = OverworldRulesScript._build_blocked_tile_index(session, level, ignore_placement_id if ignore_army else "")
+	if actor_blocked_indexes is Dictionary:
+		# Endpoint safety needs strict occupancy, before the AI movement surface
+		# removes the actor's body or observer-visible interaction doorways.
+		# The request owns this copy; it is never retained in a path cache.
+		actor_blocked_indexes[level] = blocked.duplicate(false)
 	if not ignore_army:
 		for tile in _placement_body_tiles_for_ignore(session, ignore_placement_id):
 			if tile is Vector2i:
@@ -20431,6 +20461,9 @@ static func _player_hero_currently_visible_to_enemy_faction(
 
 static func _impassable_terrain_tiles(session: SessionStateStoreScript.SessionData, level: int = 0) -> Dictionary:
 	var blocked = {}
+	# Terrain definitions are stable during this synchronous scan, not between
+	# scans. Resolve each raw id once through the same authoritative rule.
+	var impassable_by_id := {}
 	var map_data = LevelRules.terrain_rows(session, level)
 	if not (map_data is Array):
 		return blocked
@@ -20440,7 +20473,9 @@ static func _impassable_terrain_tiles(session: SessionStateStoreScript.SessionDa
 			continue
 		for x in range(row.size()):
 			var terrain_id := String(row[x])
-			var impassable: bool = not OverworldRulesScript.terrain_id_is_passable(terrain_id)
+			if not impassable_by_id.has(terrain_id):
+				impassable_by_id[terrain_id] = not OverworldRulesScript.terrain_id_is_passable(terrain_id)
+			var impassable: bool = impassable_by_id[terrain_id]
 			if impassable:
 				blocked[_pos_key(Vector2i(x, y))] = true
 	return blocked

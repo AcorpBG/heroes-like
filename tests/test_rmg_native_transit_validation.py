@@ -12,6 +12,36 @@ SPEC.loader.exec_module(MODULE)
 
 
 class NativeTransitValidationTests(unittest.TestCase):
+    def test_current_source_reference_keeps_all_existing_sidecars(self):
+        obj = {"placement_id":"gate", "x":4, "package_block_tiles":[{"x":4,"y":3}],
+               "native_transit":{"entry":{"x":4,"y":5},"destinations":[{"target_placement_id":"exit"}]},
+               "controlling_player_id":"player_2", "team_id":"team_2"}
+        reference = {"gate":copy.deepcopy(obj)}
+        self.assertEqual(MODULE.source_objects_for_retained_session([obj],reference),reference)
+        for key in obj:
+            changed = copy.deepcopy(obj)
+            changed[key] = "changed" if key != "placement_id" else "other"
+            with self.subTest(key=key):
+                self.assertNotEqual(MODULE.source_objects_for_retained_session([changed],reference),reference)
+
+    def test_legacy_source_reference_only_omits_absent_additive_fields(self):
+        obj = {"placement_id":"gate", "faction_id":"faction_embercourt", "x":4,
+               "native_transit":{"entry":{"x":4,"y":5}}, "controlling_player_id":"player_2", "team_id":"team_2"}
+        reference = {"gate":{k:v for k,v in obj.items() if k not in {"native_transit","controlling_player_id","team_id"}}}
+        self.assertEqual(MODULE.source_objects_for_retained_session([obj],reference),reference)
+        for key in ("faction_id","x","new_unrecognized_source_field"):
+            changed = dict(obj,**{key:"unexpected"})
+            with self.subTest(key=key):
+                self.assertNotEqual(MODULE.source_objects_for_retained_session([changed],reference),reference)
+
+    def test_mixed_reference_preserves_each_records_actual_sidecars(self):
+        source = [{"placement_id":"old","x":1,"native_transit":{"target":"new"}},
+                  {"placement_id":"new","x":2,"native_transit":{"target":"old"}}]
+        reference = {"old":{"placement_id":"old","x":1}, "new":copy.deepcopy(source[1])}
+        self.assertEqual(MODULE.source_objects_for_retained_session(source,reference),reference)
+        source[1]["native_transit"]["target"] = "wrong"
+        self.assertNotEqual(MODULE.source_objects_for_retained_session(source,reference),reference)
+
     def good_report(self):
         return {"checks": dict.fromkeys(MODULE.GLOBAL_CHECKS, True), "trips": [
             {"placement_id": str(i), "checks": dict.fromkeys(MODULE.TRIP_CHECKS, True)}

@@ -503,3 +503,203 @@ plus the packaged 1920x1080 Town entry, preserve controls and current statistics
 They still show the detached building sprites clearly. Seamless Town integration,
 the Moonbite content limit and broader action/End-Turn responsiveness remain open.
 The Phase 6 performance child and parent goal are not completed by this checkpoint.
+
+## Request-local AI path preparation — 2026-09-07
+
+Child `performance-generated-full-match-actions-20260906` remains in progress.
+This checkpoint removes repeated reads in `EnemyAdventureRules.gd` and
+`OverworldRules._native_passage_endpoint_safety`. It does not change pathing,
+native generation, terrain rules, AI policy, art, balance, save schema or the save
+writer. The original complete Medium victory/Large defeat evidence is unchanged.
+
+### Measured cause and implementation
+
+One path-context request computed identical world fingerprints twice on a warm
+hit, three times for a cold one-level native map, and four for two levels. It now
+computes the same base key once and derives the unchanged level suffix. Existing
+cache keys, capacities and lifetimes remain unchanged; direct private entry
+points still compute their own fresh identities. There is no new cross-request
+fingerprint cache.
+
+The old Large terrain scan repeatedly resolved the same terrain definitions for
+all 11664 cells, taking roughly 47–55 ms. A scan-local dictionary now calls the
+same authoritative passability rule once per raw terrain id. The result is
+discarded on return; aliases, unknown ids and future separate scans retain their
+original behavior. The actual three-turn diagnostic sees eight terrain ids per
+scan. Query-level timings are explanatory, not full-action performance claims.
+
+The same Large save has 24 native portals. Real End Turns perform 340/440/336
+entrance safety checks; the middle turn spent 771.043 ms in that inclusive owner
+and 1363.493 ms in 43 total blocker-index builds. Some safety checks rebuilt the
+strict actor-excluded index already computed by the local AI path surface.
+That exact index is now copied **before** any observer-specific doorway/body
+removal and shared by level only within the synchronous request. If the local
+surface was cached, the safety check builds its own strict index lazily. It is
+not stored in either path cache. Guard, terrain, army, hero, town, resource and
+artifact rejection logic remains unchanged; direct callers without the optional
+request-owned indexes retain an independent calculation. In particular, the
+doorway-cleared movement mask is never accepted as an entrance safety mask.
+
+### Complete rendered End Turns
+
+Both pairs execute three ordinary End Turns from unchanged actual saves, including
+confirmation, AI, full autosaves, scene settlement and usable controls. All four
+complete session JSON trees match each original control with no excluded gameplay
+fields. State capture and screenshots are outside the timed interval. Runs were
+serial without another test engine; Godot 4.6.2, Linux, X11, llvmpipe LLVM 20.1.2,
+actual 1280x720 and accessibility disabled. This is one three-action sample per
+size, not hardware certification or a confidence interval.
+
+| Case | Before p50 / p95-max (ms) | Current p50 / p95-max (ms) | Before / current total (ms) |
+| --- | ---: | ---: | ---: |
+| Large Day 8–11 | 8784.296 / 9239.056 | 7830.387 / 7890.240 | 26321.787 / 23012.062 |
+| Medium Day 43–46 | 3531.854 / 3719.006 | 3340.381 / 3610.815 | 10510.694 / 10185.168 |
+
+Large total waiting falls **12.6%**; Medium's **3.1%** difference is not accepted as
+a meaningful speed improvement. **Both runs miss the harness's unchanged 15%
+full-action speed gate and therefore have `ok: false` / supervisor exit 1**, even
+though their engines exit zero, all gameplay-state comparisons pass and no
+runtime errors occur. These failed performance gates are retained, not relabeled
+as passes. The earlier fingerprint/terrain-only Large version improved 8.6% and
+also failed that gate. The current Large rule work still takes 4.26–4.84 seconds,
+autosave 1.60–2.39 seconds, plus callback preparation and scene/input settlement.
+Responsiveness acceptance is unfinished; do not describe End Turn as fixed.
+
+All `path_keys_*` labels below are under
+`.artifacts/generated_full_match_quality_20260906/` unless another root is given:
+
+- `path_keys_turn_large_before` → `path_keys_turn_large_shared_after`.
+- `path_keys_turn_medium_rendered_before` → `path_keys_turn_medium_after`.
+- `path_keys_turn_large_after`: intermediate 8.6% result.
+- `path_keys_turn_large_diagnostic` and `path_keys_turn_large_endpoint_diagnostic`:
+  instrumented actual turns, each with all four complete states equal. Diagnostic
+  counters run in disposable plain projects sharing art/imports, never in shipped
+  scripts. Their timings are not rendered speed evidence.
+- `path_keys_turn_medium_before`: older headless control, not mixed into the
+  rendered timing pair. The first requested 1920x1080 Medium control was clamped
+  by the small virtual display to **1280x720**; its actual backend is recorded and
+  that is the resolution used above. The runner now provides a larger virtual
+  display and fails if actual rendered dimensions differ from the request.
+
+Inputs retain the exact Day-8/Day-43 hashes documented in the preceding section.
+Original owners are commit `65fb7fcb6ccd5f9bb017c185c82e161e7216ad87`.
+Current `EnemyAdventureRules.gd` SHA256:
+`36c93abf4a7c081834103aefe99b38bee426c1b347a5b92f584806dab968f0e5`;
+current `OverworldRules.gd` SHA256:
+`6588c9c6b1e7216c337df8cff7d3d06291682ca72d4c2cc9707ebe0225c39c09`.
+`SaveService.gd` remains unchanged at
+`a19fe021dcfbf6bcf3cd3a251d467c3e9540404431ae6d8efe0d7de4529da95f`.
+
+### Correctness and integration evidence
+
+`tests/ai_path_context_read_regression.py` loads complete independent old/current
+AI and Overworld owners. Both real Medium and Large cases pass **1023 checks**
+(`path_keys_shared_medium_verified`, `path_keys_shared_large_verified`), including
+six authored factions; cold/warm/direct reads; actor/controller/day/consumption/
+army/hero changes; exact cache keys, every mask/link/field and complete state;
+all catalog terrain ids, aliases, unknown ids, malformed rows and later scans;
+reciprocal two-level travel; an actor occupying a doorway; overlapping blockers;
+and invalid contracts. Positive counts prove one fingerprint per request and at
+most one strict actor-excluded index per level. The doorway fixture reduces three
+old index constructions to two while preserving both accepted travel and rejected
+overlap. No new strict index appears in the cached output.
+
+`path_keys_probe_before` reproduces 60 duplicate-fingerprint failures on original
+code with no gameplay mismatches. An intermediate expanded test populated only
+the current fixture's cross-level distance cache, causing four comparison failures
+(`path_keys_probe_after`). Correcting that test to populate each independent
+owner's own context produces the passing final proof; it was not a runtime bug.
+
+Thirteen existing AI/path/movement/fog/End-Turn/transactional-save reports pass in
+`.artifacts/full_play_runtime_20260905/path_keys_domains/report.json`. Expected
+autosave-failure injections remain explicitly classified by their existing exact
+prefixes, not suppressed as arbitrary engine errors. Under
+`.artifacts/rmg_start_audit_20260905/`, `path_keys_native_caves` passes all eight
+reciprocal trips, source-adjacency/player/AI/safety/save checks and inspected
+surface/underground captures.
+
+The first `path_keys_native_large_portals` report passes gameplay but fails its
+legacy source-comparison helper: the helper stripped `native_transit` from new
+objects even when current saved source rows contained it. Direct comparison
+finds **no differences in any complete source object**; terrain and map/player
+identity also match. The helper now omits additive identity/transit fields only
+when absent from that particular historical reference. Current saved sidecars
+must match in full. Three new current/legacy/mixed/mutated-reference tests retain
+all older assertions; twelve transit-validation Python tests pass. The original
+failed report remains retained. This is validation compatibility, not a native
+generation or transit-contract change.
+
+The fresh `path_keys_native_large_portals_verified` report passes all three source
+controls, 24 valid portal records, both present portal-shape representatives
+(`45:1`, `43:2`), real AI approaches/advance, exact travel and production saves.
+This is explicitly representative-shape gameplay coverage, not every portal
+endpoint/destination journey. No source changed during validation.
+
+`path_keys_turn_large_final_diagnostic` preserves all four complete states and
+exactly the same 340/440/336 safety calls. Strict blocker-index constructions fall
+from 21/43/25 to 19/25/17. Counts establish eliminated repetition without omitted
+checks. Its headless timings overlap platform validation and cannot pass the
+rendered speed gate, regardless of its numeric ratio. The runner now records
+`functional_ok` and the speed gate separately and refuses instrumented speed
+acceptance; it does not lower the unchanged 0.85 maximum ratio.
+
+`.artifacts/full_play_runtime_20260905/path_keys_full_play` passes all 51 authored
+menu/movement/Town/tactical-battle/Quick-Resolve/casualty/victory/save/resume
+checkpoints with zero runtime errors. `matched_control_report.json` compares all
+50 complete session trees against `logistics_full_play_release`, all equal, plus
+the same 17 battle refresh, seven battle entry, ten Town refresh, three End Turn
+and 37 movement identities. Functional suites and exports ran concurrently;
+these full-play timing ratios are not accepted speed evidence. Its recorded HEAD
+is the pre-commit base; the tested runtime owners are the hashes above, unchanged
+through final platform validation. Inspected casualty and resumed-victory images
+retain the correct losses, surviving armies, results and usable controls.
+
+`path_keys_linux_release` and `path_keys_windows_release` pass fresh exports,
+startup and generated-map-to-owned-Town entry, including the Windows native DLL
+under Wine. Both PCKs are **248463808 bytes**, **1536192 bytes** below the unchanged
+250000000-byte ceiling. The existing package checkers run unchanged through the
+RAM-backed disposable-output wrapper; retained reports/screenshots remain on disk.
+Only that wrapper's own temporary outputs were removed. Windows Wine/headless
+entry is not physical Windows/GPU certification. The inspected packaged Linux
+1920x1080 Town still visibly has detached building sprites: Town integration is
+not fixed by this checkpoint.
+
+The 12 full-match Python acceptance tests and 12 transit-validation tests pass.
+`path_keys_validate_repo.log` and `path_keys_validate_repo_final_source.log` pass
+repository validation. `path_keys_validate_repo_tracking_final.log` also passes
+after checkpoint tracking is updated; PLAN synchronization reports zero missing
+slice ids, the active queue remains one in-progress child, and `git diff --check`
+passes. The performance child and parent remain explicitly in progress.
+
+`path_keys_medium_1080_verified` passes three actual rendered turns at
+**1920x1080**, with the same four complete states as the 1280x720 control. Its
+backend mismatch correctly prevents a speed claim. The final 1280x720 Large and
+1920x1080 Medium captures were visually inspected: commands, roster and minimap
+remain available and unclipped. Hard terrain seams and thin rectangular artifacts
+around some Medium-map props still warrant presentation investigation; this is
+not visual-polish acceptance.
+
+Reproduction commands (fresh labels, exact saves listed above):
+
+```text
+python3 -B tests/ai_path_context_read_regression.py --label <fresh> --save <medium-or-large-save> --require-key-once
+python3 -B tests/generated_end_turn_profile.py --label <fresh> --save <exact-save> --rendered --compare <matching-control>
+python3 -B tests/generated_end_turn_profile.py --label <fresh> --save <large-save> --instrument-ai-path-reads --compare <control>
+python3 -B tools/rmg_native_transit_validation.py --label <fresh> --render --resolution 1280x720
+python3 -B tools/rmg_native_transit_validation.py --label <fresh> --portal-case large_profile --representatives-only --baseline-session <large-save>
+python3 -B tests/full_play_runtime_profile.py --label <fresh> --flow skirmish --resolution 1280x720 --accessibility disabled
+python3 -B tests/full_play_profile_compare.py <full-play-control> <full-play-current> --expected-states 50
+python3 -B tests/validate_repo.py
+python3 -B tests/packaging_linux_export_smoke.py
+python3 -B tests/packaging_windows_export_smoke.py
+git diff --check
+```
+
+Next measured candidates remain complete End Turn AI/save work and repeated saved
+resume-recap reads. This full-play run records 137 in-session save-surface builds,
+47.558 seconds inclusive, including 34.422 seconds in stored resume recaps. Those
+are cumulative nested UI timings, not one action or a claim that save writes take
+that long. Any next optimization must preserve every displayed value, external
+file freshness, normalization, transaction safety and complete saves. The broader
+goal, 15% End Turn gate, seamless Town integration, known Moonbite development
+deadline and release/hardware certification remain open.

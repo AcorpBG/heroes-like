@@ -1085,6 +1085,15 @@ def journey_failures(report, require_islands_chain=False):
     return failed
 
 
+def source_objects_for_retained_session(objects, old_objects):
+    """Only omit additive fields absent from the actual historical reference."""
+    additive = {"native_transit", "controlling_player_id", "team_id"}
+    return {obj["placement_id"]: {
+        key: value for key, value in obj.items()
+        if key not in additive or key in old_objects.get(obj["placement_id"], {})
+    } for obj in objects}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--label", required=True)
@@ -1170,10 +1179,10 @@ def main():
         overworld = previous.get("overworld", {})
         provenance = previous.get("flags", {}).get("generated_random_map_provenance", {})
         old_objects = overworld.get("package_source_objects_by_id", {})
-        # The retained performance save predates the completed player/team
-        # child. Its source rows lack those two additive ownership fields.
+        # Older references lack additive identity/transit sidecars. Current
+        # references contain them and must compare their complete values.
         # No faction, object id, placement, mask or source field is ignored.
-        current_objects = {obj["placement_id"]: {k: v for k, v in obj.items() if k != "native_transit" and not (k in ("controlling_player_id", "team_id") and k not in old_objects.get(obj["placement_id"], {}))} for obj in raw.get("objects", [])}
+        current_objects = source_objects_for_retained_session(raw.get("objects", []), old_objects)
         controls = {"source_objects_unchanged_except_identity_and_transit_sidecars": bool(old_objects) and current_objects == old_objects,
                     "terrain_unchanged": raw.get("terrain") == overworld.get("terrain_layers"),
                     "native_map_and_player_identity_unchanged": raw.get("native_map_hash") == provenance.get("map_ref", {}).get("map_hash")}
