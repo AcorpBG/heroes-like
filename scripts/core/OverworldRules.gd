@@ -425,7 +425,9 @@ static func _town_read_scope_cache_key(
 		or String(session.session_id) != _normalized_read_scope_session_id
 	):
 		return ""
-	return "%s|%s|%s" % [kind, JSON.stringify(town).sha256_text(), extra]
+	# Nested save-summary reads can inspect a different snapshot with the same
+	# persisted session id and town but different sites, threats or current day.
+	return "%d|%s|%s|%s" % [session.get_instance_id(), kind, JSON.stringify(town).sha256_text(), extra]
 
 static func _town_read_scope_cache_has(key: String) -> bool:
 	if key == "" or not _normalized_read_scope_cache.has(key):
@@ -5252,12 +5254,7 @@ static func town_logistics_support_radius(session: SessionStateStoreScript.Sessi
 	return int(_town_logistics_plan(town).get("support_radius", 0))
 
 static func town_logistics_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	var cache_key := _town_read_scope_cache_key(session, "logistics", town)
-	if _town_read_scope_cache_has(cache_key):
-		return _town_read_scope_cache_get(cache_key)
-	var result := _town_logistics_state(session, town)
-	_town_read_scope_cache_store(cache_key, result)
-	return result
+	return _town_logistics_state(session, town)
 
 static func town_recovery_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	var cache_key := _town_read_scope_cache_key(session, "recovery", town)
@@ -9620,6 +9617,18 @@ static func _town_pressure_output(
 	return max(0, pressure)
 
 static func _town_logistics_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	# Internal development/recovery/front reads must share the same calculation
+	# as public UI reads. The existing synchronous scope owns its lifetime; rules
+	# outside that scope still calculate from live state on every call. The full
+	# town key distinguishes projected building previews from the current town.
+	var cache_key := _town_read_scope_cache_key(session, "logistics", town)
+	if _town_read_scope_cache_has(cache_key):
+		return _town_read_scope_cache_get(cache_key)
+	var result := _compute_town_logistics_state(session, town)
+	_town_read_scope_cache_store(cache_key, result)
+	return result
+
+static func _compute_town_logistics_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	var empty_state := _empty_town_logistics_state()
 	if session == null or town.is_empty():
 		return empty_state

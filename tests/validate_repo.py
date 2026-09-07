@@ -16126,9 +16126,9 @@ def validate_campaign_browser(errors: list[str]) -> None:
     if refresh_stage_accessibility_match is not None:
         refresh_stage_accessibility_body = refresh_stage_accessibility_match.group("body")
         refresh_stage_accessibility_tokens = (
+            "if not is_inside_tree():\n\t\treturn",
             "var tree := get_tree()",
-            "if tree == null:",
-            "return",
+            "if tree == null:\n\t\treturn",
             "await tree.process_frame",
             "if is_inside_tree() and _stage_dock_is_open():",
             "UiAccessibility.refresh_tree(_stage_dock_panel)",

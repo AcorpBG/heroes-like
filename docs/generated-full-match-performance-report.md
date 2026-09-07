@@ -270,7 +270,7 @@ The final launcher supplies one `--only` list and retains the complete passing
 seven-row report; only temporary user-data locations differ from established
 checks. The initial, separately passing collection check is also retained.
 
-## Current limits
+## Limits at the earlier scenery checkpoint
 
 Medium `medium_match_07` stopped legitimately as a **failed diagnostic**, not a
 terminal outcome, at Day 54: fourteen days without exploration/interaction
@@ -279,9 +279,9 @@ resource-site actions; the remaining movement is insufficient to reach the chose
 hostile town. Subsequent source-backed exact-target and guard-approach corrections
 are documented in `docs/generated-full-match-quality-report.md`; the failed
 prefix remains diagnostic, not retroactive acceptance. Large `large_match_08`
-has since completed a legal Day-14 defeat after enemy-town conquest, 15 battles
-and 201/201 legal capacity observations. Medium `medium_match_11` remains live
-on its recorded launch owners; neither a live prefix nor the controlled
+had completed a legal Day-14 defeat after enemy-town conquest, 15 battles
+and 201/201 legal capacity observations. Medium `medium_match_11` was still live
+on its recorded launch owners; neither that live prefix nor the controlled
 three-turn fixture establishes complete-match responsiveness.
 
 Full-match wall time also includes Python-owned driver's synchronous GDScript
@@ -296,7 +296,7 @@ generated-entry evidence is also identified there; the platform figures above
 describe this earlier responsiveness checkpoint, not the newest package.
 
 Complete Medium/Large terminal outcomes, selected presentation corrections and
-final both-platform validation remain requirements of the parent goal. See
+final both-platform validation are requirements of the parent goal. See
 `docs/generated-full-match-quality-report.md` for gameplay fixes and explicitly
 retained unrelated legacy failures.
 
@@ -315,6 +315,191 @@ ran concurrently. Its fresh Linux/Windows PCKs are 248456120 bytes.
 The original Medium11 did not complete: its actual three-hour supervision limit
 ended nonterminal on Day 67. Its hash/history-verified normal autosave continuation
 is separate provenance, not a timing reset or accepted outcome. Read-only Day-93
-inspection found the generated objective kind has no live evaluator, despite all
-Town ownership and encounter resolution. That runtime correctness gap, not a
-longer timeout or forced defeat, is the next issue to reproduce and correct.
+inspection found the generated objective kind had no live evaluator, despite all
+Town ownership and encounter resolution. Commit `f7db06e8` subsequently corrected
+that runtime interpretation. Exact-checkpoint Medium continuation now reaches
+earned Day-97 victory and complete terminal save/resume; the playthrough child
+is completed. Its proof and limits remain in the gameplay report, not a new
+whole-game performance claim.
+
+## Shared internal logistics reads — 2026-09-07
+
+Current child: `performance-generated-full-match-actions-20260906`, still
+in progress. Production changes are confined to `OverworldRules.gd` and the
+demonstrated menu lifecycle error described below. No art, native generation,
+content, balance, save version, action ordering or autosave policy changes.
+
+### Root cause and behavior
+
+`TownShell` already bounds preflight, recap, refresh and presentation reads with
+synchronous scopes. However, `town_logistics_state` cached only its public
+entry. Internal development, recovery and front calculations called
+`_town_logistics_state` directly, repeatedly enumerating all resource sites.
+The same cache now belongs to that shared private entry. Its full-town key
+separates projected building previews and now includes runtime object identity
+to separate live and historical snapshots sharing a persisted session id.
+Cache results remain detached;
+the cache is discarded at the same scope boundary. No scope crosses a gameplay
+mutation or gains a longer lifetime. Unscoped rules still calculate from current
+state on every call. The extracted `_compute_town_logistics_state` calculation
+body is byte-identical to the old private calculation at `f7db06e8`.
+
+The rendered Large Day-8 baseline's first recruit spent 572.748 ms constructing
+the recap, 591.132 ms constructing presentation consequences and 1188.074 ms
+refreshing Town. On the final owner those inclusive readings are 103.524,
+106.265 and 556.880 ms. These nested buckets explain the fix; they must not be summed as
+independent full-action latency.
+
+### Matched current-build actions
+
+All timings below used Godot 4.6.2 on Linux 6.8.0-111-generic. Town captures are
+1280x720 rendered llvmpipe with accessibility explicitly disabled; End Turn is
+headless CPU/rules/save/scene settlement, not a rendered frame-latency result.
+These action benchmarks ran serially without another validation engine. Three
+ordinary actions per case include callback completion, animation/input blocker
+settlement and usable controls; policy selection and full-state serialization
+are outside that timed interval. Every before/after case preserves all four
+complete session JSON trees, action/day identity and the exact source save.
+Recruitment also preserves every recap field.
+
+| Case | Before p50 / p95-max (ms) | After p50 / p95-max (ms) | Before / after total (ms) |
+| --- | ---: | ---: | ---: |
+| Large Day-8 recruitment | 3950.583 / 4024.117 | 1914.935 / 1931.266 | 11853.324 / 5752.976 |
+| Medium Day-43 recruitment | 1497.282 / 1513.505 | 1180.369 / 1193.005 | 4412.622 / 3508.756 |
+| Large Day-8 three End Turns | 8675.236 / 8886.774 | 8603.749 / 8767.143 | 25758.310 / 25303.556 |
+
+The selected final recruitment totals improve **51.5% Large / 20.5% Medium**. This is
+one matched three-action sample per size, not a broad hardware confidence
+interval. End Turn is effectively unchanged; its 1.8% aggregate difference is
+not a meaningful speed claim. The Large baseline still spends roughly 5.2–6.3
+seconds in actual turn rules and 1.6–2.4 seconds in autosave. Those owners and
+broader loop responsiveness remain open; nothing was deferred or skipped.
+
+Retained evidence under `.artifacts/generated_full_match_quality_20260906/`:
+
+- `loop_refresh_town_large_before` → `logistics_town_large_release`.
+- `logistics_town_medium_before` → `logistics_town_medium_release`.
+- `loop_refresh_turn_large_before` → `logistics_turn_large_release`.
+- Each case has `report.json`, exact `input_save.json`, four complete state
+  files and runtime/profile logs. Rendered Town cases also have inspected
+  `town_before.png` / `town_after.png` captures.
+
+Large input is the actual `large_match_08` Day-8 slot2, SHA256
+`f30453a639d1bae75839292979f05a71b626fb952a20e6eacd0422a9a625545d`;
+Medium is actual `medium_match_11` Day-43 slot2, SHA256
+`553ceb3ea972412cd72341ff627fa73c6864f9bcbfb6cc428923ebec5712de59`.
+Both full-match histories remain unchanged. Baselines use production tree
+`e354b91fbee615d76bdbe5a0dcc92655a8cbb8859f2074d7b4ea11e4f3af1ec1`
+at `f7db06e8`. Final tested production tree is
+`70f0652f3f1dd209e79066f0f4825b40e90a23ffec7e56130e45078f8c8b452e`;
+current `OverworldRules.gd` SHA256 is
+`06f1c8a85df48e4ece35238b9cfb925f4d4d9d42f6f30fc8758f9c19b3610363`.
+The tree uses the complete-match runner's sorted runtime source/content hashing
+method. TownShell itself is unchanged; its per-run script hash alone does not
+identify the changed core owner. The final Town profiler also captures relevant
+core/menu owner hashes at launch. Earlier `*_after` timing pairs used intermediate
+tree `e619bd7d0b26e617cf5ba96106f2c70222fbb6186e4e549d6707cf0dc8f73325`
+before the historical-snapshot identity guard (53.9%/17.9% recruit improvements).
+Those intermediate results remain retained, not substituted for final-owner
+measurements.
+
+### Focused proof and discovered menu error
+
+`tests/town_logistics_read_scope_regression.py` extracts the exact old calculation
+from `f7db06e8`, rather than comparing two aliases of the new cached calculation.
+The old code fails seven positive private-cache-use checks while all full result
+comparisons pass (`logistics_scope_before_02`). Strengthened tests then reproduce
+twelve stale-result failures for a historical snapshot with the same session id
+and town but changed linked-site ownership (`logistics_nested_before`). Runtime
+object identity in scope keys corrects that collision without changing saves.
+Final code passes 1264 checks with real Large and 1201 with real Medium
+(`logistics_scope_large_verified`, `logistics_scope_medium_verified`), each
+including six-faction authored controls, detached results, projected-town keys,
+actual linked-site controller changes, escort expiry, nested historical reads,
+outer-scope preservation/reset and same-id restored-object replacement. The original
+failed probe (`logistics_scope_before`) had an incorrect test-only static call
+to `SessionData.from_dict`; it was stopped and retained, then repaired before
+the valid failing production control. It is not evidence of a game parse error.
+`logistics_order_scopes_release` also passes the existing six-faction, 29-action
+preflight/freshness/success/rejection scope report.
+
+The rendered authored full-play baseline reaches all 51 gameplay checkpoints,
+including victory and resume, but **fails validation** with
+`MainMenu._refresh_stage_accessibility: get_tree / data.tree is null` during
+launch. A deferred callback can start after the menu leaves the tree; testing
+the returned tree for null is too late because `get_tree()` already logs an
+engine error. The menu now checks membership before that call and retains the
+existing post-frame membership check and all live accessibility refreshes.
+`tests/menu_stage_accessibility_lifecycle_regression.py` reproduces two original
+errors and passes after the correction, covering before-entry, live settings
+focus, removal during the frame wait and a deferred call after removal.
+Artifacts: `logistics_menu_before` and `logistics_menu_after`.
+
+The repository source assertion now explicitly requires both ordered guards,
+instead of matching the first bare `return`; none of its hierarchy/refresh/frame
+requirements were removed. The initial failed repository log is retained as
+`logistics_validate_repo.log`; `logistics_validate_repo_02.log` passes. The suite
+launcher adds three existing Town response/capital/development reports without
+altering their assertions. Twelve complete-match Python acceptance tests pass.
+
+### Integrated validation and retained limits
+
+The final `logistics_full_play_release` run under
+`.artifacts/full_play_runtime_20260905/` passes all 51 authored menu/Overworld/
+Town/tactical-battle/Quick-Resolve/casualty/outcome/save/resume checkpoints with
+zero runtime errors. Its `matched_control_report.json` compares **50 complete
+session trees** against the pre-change run, all equal, plus all ordered identities
+for 17 battle refreshes, seven battle entries, ten Town refreshes, three End Turns
+and 37 movement events. The first Main Menu checkpoint has no active session.
+The earlier `logistics_full_play_after` comparator mistakenly requested 51 state
+files; its failed count assertion is retained alongside the corrected 50-state
+comparison. Neither final nor intermediate full-play timing ratios are accepted
+performance gains: independent functional suites/export checks ran concurrently.
+The isolated action measurements above are the performance evidence.
+
+Eight existing focused reports pass on final code in `logistics_domains_release`:
+Town layout/five dialogs, recruitment UI, recruitment cue, route-response dispatch,
+capital identity, live AI task execution, End Turn confirmation and deferred save
+summary payloads. The earlier complete ten-report sweep
+`logistics_domains_isolated` is **8/10**, not all-pass. Both failures are the known
+Moonbite Reedshrine 30-turn development deadline. All 32 Town rare-build
+save/resumes, same-day guards and resume targets pass; 31/32 meet the deadline.
+The separate development matrix passes all 224 seven-tier recruit cases but
+fails that same town deadline. Its source owner during the long save matrix was
+the intermediate cache implementation; final-owner proof for the failing cases
+is independent below, not a claim that the entire long matrix was rerun.
+
+`tests/town_logistics_legacy_balance_control.py` runs the unchanged Moonbite case
+with the exact `f7db06e8` Overworld owner and final owner in disposable plain
+projects, sharing existing art/imports/native libraries. Every consumer resolves
+the selected owner at the real resource path; this is not a subclass whose
+nested calls accidentally use current rules. `logistics_balance_owner_control`
+and `logistics_development_owner_control` both produce identical complete old/new
+reports, with preserved successful save/recruitment guards and the original
+deadline failure. These controls establish a pre-existing content-budget limit,
+**not** a passing development gate or permission to change balance. The old
+diagnostic artifact is no longer present at its recorded path; current controls
+replace reliance on its historical documentation.
+
+The first ten-report supervisor (`logistics_domains_after`) exited 143 before a
+final report while its test engine remained active. That exact orphaned process
+group was stopped and the failed log retained. The suite was rerun with
+`setsid --wait`; the isolated results above are authoritative. No test assertion
+or runtime-error filter was relaxed to accept that attempt. A Python discovery
+attempt with an absent `test_full_play*.py` pattern ran zero tests; it is not
+test evidence. The actual complete-match acceptance module passes 12 tests.
+
+Fresh `logistics_linux_release` and `logistics_windows_release` exports/startup/
+generated-map-to-Town entry pass, including Windows native DLL loading under
+Wine. Both PCKs are **248460992 bytes**, **1539008 bytes** below the unchanged
+250000000-byte ceiling. The established package checkers run unchanged through
+the retained RAM-backed disposable-export wrapper; only its own temporary files
+are removed. Windows generated entry is headless Wine, not physical Windows/GPU
+certification. Final repository validation is in
+`logistics_validate_repo_release.log`; `git diff --check` also passes.
+
+Inspected final 1280x720 Town captures, battle casualties and resumed outcome,
+plus the packaged 1920x1080 Town entry, preserve controls and current statistics.
+They still show the detached building sprites clearly. Seamless Town integration,
+the Moonbite content limit and broader action/End-Turn responsiveness remain open.
+The Phase 6 performance child and parent goal are not completed by this checkpoint.
