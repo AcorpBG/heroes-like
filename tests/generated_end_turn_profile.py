@@ -83,7 +83,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--label', required=True)
     parser.add_argument('--save', type=Path, required=True)
-    parser.add_argument('--compare', type=Path)
+    parser.add_argument('--compare', type=Path, help='Prior run directory containing report.json and state_*.json')
     parser.add_argument('--require-improvement', action='store_true')
     parser.add_argument('--pause-driver', action='append', default=[])
     parser.add_argument('--rendered', action='store_true')
@@ -97,6 +97,8 @@ def main():
         parser.error('--require-improvement requires --compare')
     if args.instrument_ai_path_reads and args.require_improvement:
         parser.error('instrumented diagnostics cannot establish full-action speed')
+    if args.compare and not (args.compare/'report.json').is_file():
+        parser.error('--compare must be a prior run directory containing report.json')
     out = OUTPUT/args.label
     out.mkdir(parents=True, exist_ok=False)
     saved = args.save.read_bytes()
