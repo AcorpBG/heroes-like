@@ -30,6 +30,40 @@ First reproduce and identify exact runtime owners for blockers. Add a failing
 focused regression before each correction, then replay the affected path. A
 driver correction alone is support work, not a gameplay fix or goal completion.
 
+### Generated rival objective interpretation
+
+Native package production writes objective kind `defeat_generated_rivals` with
+the description "Defeat every rival commander." The current runtime's
+array-only evaluator must not ignore that contract. Provide derived runtime
+objective definitions shared by evaluation, event dependencies and player-facing
+progress; keep authored array objectives, original package bytes and both saved
+runtime-record copies unchanged. The map is not to be regenerated or changed to
+fit an easier objective, and victory must use ordinary `_complete_session` and
+router/autosave behavior rather than a test-set terminal status.
+
+Use existing explicit player/controller/team identity and its legacy
+compatibility path. Same-faction opponents remain distinct; allies are not
+rivals. When the native record contains original player slots, reject dropped
+controllers or changed faction/team/human identities instead of interpreting
+corrupt ownership as conquest. Towns that sustain a rival and actual unresolved field/defender armies
+prevent completion, irrespective of fog or map level. Resolved/retired forces,
+unclaimed neutral guards and undeployed catalog roster entries must not be
+mistaken for an active rival. Missing/inconsistent controller records must not
+produce an accidental victory. Existing human battle-defeat behavior and
+authored campaigns remain unchanged; no new deadline, starting-town-only loss,
+free recruitment, army deletion or balance rule belongs to this correction.
+
+Reproduce the unmodified completed-conquest Medium save before implementation,
+then prove a normal command recognizes its earned outcome. A fresh generated
+opening with a live rival must remain in progress. Add separate explicit boundary
+fixtures for multiple/same-faction players, alliances, hidden/other-level hosts,
+remaining Town/site defenders, stale/resolved records, malformed identity and
+already terminal saves. Verify full and event-scoped evaluation agree, read-only
+progress leaves complete state intact, and normal conquest/battle handoffs retain
+the casualty report before outcome. Preserve all checkpoint bytes and complete
+driver history when continuing the actual match after the validated correction;
+record both runtime versions, not a fictitious single-version run.
+
 Medium10 driver-policy correction: a known recruit-reward site that the current
 army cannot claim must not repeatedly displace feasible exploration or combat.
 Use the existing claim-admission authority, including fitting/matching-stack

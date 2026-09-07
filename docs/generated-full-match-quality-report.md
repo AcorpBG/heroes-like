@@ -1,14 +1,17 @@
 # Generated full-match quality: gameplay corrections
 
 2026-09-06. Active Phase 6 parent `quality-generated-full-match-20260906`,
-playthrough child `quality-generated-full-match-playthrough-20260906` remains
-in progress. Town overlay and command/footer checkpoints below are validated.
-Large08 reached a legitimate Day-14 defeat after enemy-town conquest; Medium10
-stopped on Day 35 without an outcome and remains diagnostic. Measured
+playthrough child `quality-generated-full-match-playthrough-20260906` completed
+on 2026-09-07. Responsiveness/presentation children and the parent remain in
+progress. Town overlay and command/footer checkpoints below are validated.
+Large08 reached a legitimate Day-14 defeat after enemy-town conquest. The exact
+Medium11 continuation now reaches a legitimate Day-97 victory and complete
+terminal save/resume after the generated-objective correction documented below.
+Medium10's Day-35 stop remains diagnostic. Measured
 responsiveness improvements are a checkpoint, not a completed full-match child.
 Requirements:
 `docs/generated-full-match-quality-requirements.md`. This is an implementation
-checkpoint, **not completion of the child, both match sizes, or release readiness**.
+checkpoint, **not completion of the overall quality goal or release readiness**.
 
 ## Gameplay corrections
 
@@ -1195,3 +1198,150 @@ one arbitrary Town or changing a status field would be a valid correction. The
 next correctness work must reproduce the exact missing objective evaluation,
 preserve controller/team identity and actual surviving forces, and route a real
 outcome/save through normal authority without altering generated-map semantics.
+
+## Generated rival objective correction — 2026-09-07
+
+The selected playthrough slice now implements the existing native package's
+objective contract. `map_package_service.cpp:3107` and the batch-export mirror
+`rmg_native_batch_export_cli.cpp:2462` write `kind=defeat_generated_rivals` and
+"Defeat every rival commander." Previously `ScenarioRules` only consumed
+`victory`/`defeat` arrays: evaluation, progress and cached event dependencies all
+saw **zero objectives**, even after complete conquest. This was a missing runtime
+interpreter, not unrecovered generation behavior or insufficient object density.
+
+`GeneratedScenarioObjectiveRules.gd` supplies a derived objective view;
+`ScenarioRules` shares it across evaluation, labels, progress, outcome text and
+event dependencies. Overworld objective consumers use the same authority.
+Neither original package nor either saved runtime-record copy is amended.
+Completion uses existing `_complete_session`, battle-report, router and autosave
+boundaries. Explicit authored arrays and existing human battle defeat retain
+their rules; no one-Town objective, deadline or forced terminal state was added.
+
+Presence follows controller and team identity. Rival Towns, unresolved pressure
+hosts and currently active persistent-site defenders count on every map level,
+including hidden terrain. Resolved/retired hosts, neutral guards and undeployed
+recruitment-catalog commanders do not count as surviving rivals. The explicit
+legacy distinct-faction mode remains supported, without attempting to recover
+already-pooled same-faction ownership. Malformed ownership fails closed; modern
+native player slots also catch a missing rival row or a changed team. These are
+read-only derived rules, not alterations to units, ownership or AI production.
+
+### Exact stopped checkpoint and earned outcome
+
+After proving the missing evaluator, the verified engine process group of
+`medium_match_11_continuation_01` was intentionally terminated, leaving its
+supervisor to finalize the diagnostic. This was **not a timeout or legitimate
+defeat**: return -15, 3783.945 seconds, Day 97, last action 2421, 2421/2421 valid
+army observations, zero engine errors, no terminal outcome. No owner process,
+cache, old artifact or checkpoint was removed. The Day-97 autosave is 7580274
+bytes, SHA-256
+`1734cf2274e00eb763b94db4f814f4ffc73e30bb9377a9225b36bcc3780e0fcc`.
+
+The unchanged continuation checker matches this autosave to successful End Turn
+2407 and all 2407 prior action/capacity observations. It carries the original
+setup, limits, failed targets, Town history, active waypoint and no-progress
+history; 14 later unsaved diagnostic actions are not spliced into the replay.
+The original native map and scenario identities remain
+`native_h3maped_93c0f05a` / `native_h3maped_93c0f05a_skirmish`, map/scenario hashes
+`fnv1a32:93c0f05a` / `fnv1a32:bb3b3535`, and package hashes
+`fnv1a32:d6872b2e` / `fnv1a32:84ea62d7`. It is still Medium seed 10, two players,
+Embercourt/Lyra, normal difficulty.
+
+`medium_match_11_continuation_02` accepts that exact checkpoint through production
+load admission and reaches **Victory | Moon Field Fen**, Day 97. Ordinary map
+movement toward waypoint `native_h3maped_93c0f05a_object_0967` at action 2425
+recognizes the already-earned conquest; no test sets victory. Action 2426 saves
+and restores every serialized field in the terminal state. All seven Towns are
+owned and all 73 encounter records resolved. Full retained history: 66 battles
+and 66 casualty reports, 137 builds, 517 recruits, 78 studies, 13 specialty
+actions, 96 End Turns, five complete save/resume checkpoints and 2426/2426 valid
+army observations. Return 0, no runtime errors or acceptance failures.
+
+Its 400.656-second continuation launched at HEAD `55bcede77f3bba9afe1813c26820c1f2b0ef32de`
+with the uncommitted correction's production digest
+`6b839f7bac84e4546bc979c2b5817859ec0d4db274fd98d48dbc26e6bd34e59d` and unchanged
+driver SHA `7ab98279b847e4b28f74eeecc577cbcc254e6a05ea086614213b769d89beda25`.
+Terminal slot3 SHA is
+`bed8063794172338d2026da906ae8795e117761d4761dc389a877fc3586c96f1`.
+Its actual 1280x720 `final.png` was inspected: readable victory title and intact
+compact navigation. This is a multi-version, checkpoint-proven continuation,
+not a fictitious single-build uninterrupted playthrough. The final immutable-slot
+guard was added afterward and requires its separately recorded rerun.
+
+Final-owner `medium_match_11_continuation_03` repeats the exact same admitted
+checkpoint and driver, at production digest
+`e354b91fbee615d76bdbe5a0dcc92655a8cbb8859f2074d7b4ea11e4f3af1ec1`.
+It independently passes with the same 2426 actions, earned Day-97 victory,
+complete saves and zero errors, in 389.111 seconds. Its 7581308-byte terminal
+slot3 SHA is
+`93f674edcb0ef1221f02776f818da762dd6b923c3dcde5d0ed28d095b44d83cf`.
+After removing only the five SaveService envelope fields, **every serialized
+gameplay field equals continuation 02**. The original match history is not counted
+twice. Its actual final screenshot was also inspected. Large08's separate
+legitimate defeat after conquest remains the accepted Large match, not a synthetic
+or deliberate loss.
+
+### Focused reproduction and validation
+
+`tests/generated_rival_objective_regression.py` first ran against unchanged
+`ScenarioRules.gd` SHA
+`85ad3f9625bf849d95a43dc6320f1b3fbe5989d10d62641833018f4191cbacf9`.
+`rival_objective_before` records nine checks, four expected failures, zero engine
+errors and an unchanged input save: zero victory objectives, no earned objective
+progress and no completion. The correction passes those same assertions.
+
+The expanded runner includes controller/team and original-slot corruption,
+remaining Town/host/site-defense cases, neutral/retired/expired/legacy controls,
+read-only full-state comparisons, full/event evaluation agreement, original
+record preservation, fresh native Medium opening and terminal save/load. Restore
+correctly stages a report-free terminal save as `game_state=outcome`; this is the
+existing SaveService admission behavior, not a schema change. Earlier failing
+test reports retained the exact field difference rather than masking it.
+
+A clearly labelled **detached fixture** reactivates one retained real raid with
+both armies unchanged. Actual Quick Resolve defeats that last host; the casualty
+report appears before outcome, survives autosave/load, and its real Continue
+button acknowledges it and opens victory. This controlled boundary fixture is
+not counted as a completed generated match or substituted for Medium11/Large08.
+Evidence lives below `.artifacts/generated_full_match_quality_20260906/`.
+
+Final results at the final production digest:
+
+- `rival_objective_release_720` and `rival_objective_release_1080`: 136 checks
+  each, zero failures/errors, unchanged source saves and production sources.
+  Both original packages remain byte-identical through evaluation, fresh
+  generation and save/load: `.amap` SHA
+  `a92b32e15c82356586470740624a54b9f03a7076225e0fabe082ab65b99c3886`;
+  `.ascenario` SHA
+  `bd136c436abea91e48ca5822e7d3261c6ef4b229a43da3e4a3dab28550fd2ccf`.
+  Final 1280x720/1920x1080 casualty/outcome screenshots were inspected; title,
+  counters, Continue and outcome navigation remain readable/in bounds.
+- `rival_large_outcome_isolated`: all 128 existing actual Large08 terminal
+  save, outcome, same-map fresh retry, missing-package/changed-hash, safe-cancel
+  and layout checks pass, with unchanged retained saves and no engine
+  errors. The actual defeat screenshot was inspected. The first
+  `rival_large_outcome_final` launcher ended with 143 before a final report;
+  it is retained as failed evidence, not counted as a pass. The isolated
+  supervisor rerun changes no game or test assertion.
+- Ten unchanged domain reports in `.artifacts/full_play_runtime_20260905/rival_existing_final/`
+  cover authored event dependencies, casualty report, battle/outcome save-failure
+  safety, campaign completion/replay, outcome focus and AI commander/live-task/
+  Town defense. All pass; only the reports' explicit injected writer failures
+  are expected. RAM-backed disposable user storage and the established logical
+  viewport adapter do not relax assertions.
+- `python3 tests/validate_repo.py`, all 12 full-match acceptance and three player
+  identity Python tests, and `git diff --check` pass.
+- `rival_linux_final` and `rival_windows_final`: fresh release export/startup,
+  native libraries, package contents and generated Overworld/Town entry pass.
+  Both PCKs are **248462048 bytes**, 1537952 below the unchanged 250000000 ceiling.
+  Fresh binaries and Wine prefixes were disposable; reports are retained.
+  Windows was exercised under Wine, not physical Windows hardware.
+
+These results complete the playthrough/correctness child within its stated
+representative-case limits. The heroes-progress workflow selects the still-active
+responsiveness child next. The parent goal is **not completed**: whole-loop
+current-build response-time acceptance and the selected Town-building/base-art
+integration remain open. No art regeneration was authorized or substituted with
+a procedural approximation; no native-source parity or release-certification
+claim follows from this correction. Existing unrelated untracked retention files
+and reports are outside the commit.
