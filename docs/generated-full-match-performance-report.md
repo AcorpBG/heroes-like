@@ -991,3 +991,136 @@ This checkpoint removes demonstrated redundant runtime work, but the unchanged
 remaining AI task/target preparation and full-save latency; retain the Town/
 prop/terrain defects, pre-existing Moonbite deadline and hardware/release limits
 as open requirements, not completed work.
+
+## Exact single-entry commander projection — 2026-09-07
+
+Selected within the same in-progress responsiveness child. Two diagnostics on
+the unchanged Large Day-8 save (`task_reads_large_diagnostic` and
+`roster_callers_large_diagnostic`) preserve all four complete states against the
+blocker-mask reference. Full commander normalization runs 218–263 times per turn;
+111–129 calls come from `build_raid_commander_state`, which consumes only one
+entry. Those calls account for 593–686 ms of inclusive instrumented time per
+turn. Task/target preparation and path-context work remain substantial; resource
+score calculation alone is not the dominant remaining owner. These headless
+diagnostics explain work, not rendered player-facing speed, and overlapping
+inclusive timings must not be summed.
+
+`EnemyAdventureRules.gd` now shares the unchanged roster-entry normalization body
+between complete rosters and an exact single-entry projection used by raid
+construction. The projection first verifies the same faction catalog membership.
+Raw roster duplicates, active raid/Town/resource precedence, recovery deadlines,
+record/role/memory/progression/mana/artifact/army fields and controller identity
+retain their original calculation. Automatic commander selection still evaluates
+the complete roster. Every read observes current inputs; no retained cache,
+mutation omission or cross-action reuse is added. AI policy, action ordering,
+native generation, occupancy, content/art and save schema/writer are unchanged.
+
+The only changed production owner is EnemyAdventureRules: reference commit
+`597ea8503c42ca59ad2954c4748bc8a48ac06b1e`, source SHA256
+`36c93abf4a7c081834103aefe99b38bee426c1b347a5b92f584806dab968f0e5`;
+current source SHA256
+`073737993044e139a05d60e0956e09a1da484b73c51611a5e14b064985457637`.
+Other production owners remain at the blocker-mask checkpoint. The unchanged
+real Large and Medium save identities are recorded in every focused/turn report.
+
+`tests/ai_commander_entry_projection_regression.py` loads complete independent
+original/current owners, not inherited static-method substitutes. It compares
+complete rosters, projected entries, raid commanders, caller inputs and every
+session value. Coverage includes every faction hero, unknown/automatic/null
+cases, duplicate/malformed rosters, live fallback, recovery expiry, content reload,
+active/defender mutation and precedence, resolved raids, same-faction opponent
+controllers, and every actual saved AI hero/raid. Session snapshots deeply detach
+all mutable fields; whole-state equality is not replaced with selected-field checks.
+
+`commander_entry_positive_control` reproduces 398 expected redundant-work failures
+plus one fixture failure: the synthetic Town defender lacked the enemy-state
+record required by the existing front authority. Restoring that legitimate fixture
+record yields `commander_entry_positive_control_aligned`: 1160 checks, 316 expected
+work failures and zero unexpected/engine errors before the runtime edit. All old/
+current output comparisons already pass. Both attempts remain retained.
+`commander_entry_large_verified` passes **1447 checks** and
+`commander_entry_medium_verified` **1286**, without engine errors. A real saved
+Embercourt raid candidate now builds two commander states rather than twelve
+(one normalized selected entry plus the existing raid seed), with identical output.
+
+### Serial rendered complete turns
+
+Three real End Turn handlers per row, including full autosaves and usable input.
+Runs are serial, without other test engines, on Linux/X11 Godot 4.6.2 and llvmpipe
+LLVM 20.1.2. Captures/state serialization remain outside action timers. Evidence
+root: `.artifacts/generated_full_match_quality_20260906/`.
+
+| Run | Resolution | p50 ms | p95 / max ms | Sum ms |
+| --- | --- | ---: | ---: | ---: |
+| `commander_entry_large_before` | 1920x1080 | 7768.994 | 8078.772 | 23108.479 |
+| `commander_entry_large_compared` | 1920x1080 | 7332.438 | 7377.353 | 21530.795 |
+| `commander_entry_medium_before` | 1280x720 | 3372.734 | 3556.278 | 10271.240 |
+| `commander_entry_medium_compared` | 1280x720 | 2870.381 | 2941.390 | 8633.250 |
+
+Large cumulative waiting improves **6.8%** in this pair, still missing the required
+15% gate (`ok:false`, `functional_ok:true`). Medium improves **15.9%**, passing
+that unchanged gate in this pair. All four complete states, day sequences, input
+save identities and backends match per size; both engines exit cleanly without
+runtime errors. This is not a multi-machine or whole-game responsiveness claim.
+Large turns remain multi-second and this child remains in progress.
+
+Both final `turn_after.png` captures were visually inspected. Fog/minimap, owned
+rosters, current movement and input controls remain intact. Medium prop-edge
+rectangles/hard terrain seams and the Large truncated footer persist; no visual
+improvement or presentation acceptance is claimed here.
+
+### Integrated validation
+
+`commander_entry_path_large` passes the existing **1023** complete original path/
+mask/link/freshness checks. Under `.artifacts/full_play_runtime_20260905/`,
+`commander_entry_domains` passes all **18** requested reports: movement/input,
+full routes, fog, AI memory/defense/task/recruitment/raid behavior, save transactions,
+End Turn failure recovery, casualties, commander role state/adoption/transcripts,
+spawn selection and emergency commander fit. Only six deliberately injected
+`end_turn_autosave_failed` messages are expected; no unexpected runtime errors.
+The Python suite now admits the five existing commander reports without changing
+their assertions. The emergency-fit harness uses its original `status:pass` plus
+exact subsystem identity instead of an absent `ok` field; all other markers and
+exit/error checks remain unchanged.
+
+`commander_entry_full_play_isolated` completes all **51** rendered menu-to-victory/
+resume checkpoints. Its `matched_control_report.json` compares every one of the
+**50** full state trees and ordered action identities to `blocker_masks_full_play`.
+This run overlaps functional domain/native validation; retained profile values
+are **not** a new matched full-loop speed claim. The first
+`commander_entry_full_play` launcher exited 143 while its detached child was still
+running. The exact owned orphan process group was stopped and the logs/partial
+captures retained; no completed-play claim is made for that attempt. The fresh
+session-isolated run above exits normally with zero runtime errors. The resumed
+victory capture at 1280x720 was visually inspected.
+
+Under `.artifacts/rmg_start_audit_20260905/`, `commander_entry_native_caves` passes
+eight reciprocal journeys with 20 travel/AI/occupancy/save/fog checks per journey;
+its underground 1280x720 capture was inspected. `commander_entry_native_large_portals`
+passes the two representative shapes (`45:1`, `43:2`), seven gameplay/save checks
+per shape, native contract validation and the retained Large baseline-source
+comparison. No native source changes occur during either run. This is bounded
+journey coverage, not exhaustive endpoint or H3MapEd parity certification.
+
+`commander_entry_linux_release` and `commander_entry_windows_release` pass the
+established export, native-library, startup and packaged generated-map/Town-entry
+checks. Both PCKs measure **248465456 bytes**, 1534544 below the unchanged
+250000000-byte ceiling; source/development art stays excluded. The unchanged
+RAM-backed wrapper removes only its new disposable exports/Wine prefixes, not
+retained evidence or unrelated files. Windows execution is via Wine, not physical
+Windows/GPU certification. The Linux generated Town capture at 1920x1080 was
+visually inspected: detached-looking buildings remain an open presentation issue.
+
+Repository validation, **24** Python acceptance/native-reference tests, PLAN sync/
+queue checks and `git diff --check` pass. Reproduce focused controls with
+`python3 -B tests/ai_commander_entry_projection_regression.py --label <fresh> --save <actual-save> --require-projection`;
+path controls with `tests/ai_path_context_read_regression.py --require-key-once`;
+serial turns with `tests/generated_end_turn_profile.py --rendered --compare <reference-directory> --require-improvement`;
+full play/state comparisons and the 18 named domains with `tests/full_play_*`;
+native journeys with `tools/rmg_native_transit_validation.py`; and the established
+Linux/Windows export smokes. All output labels must be fresh.
+
+Keep parent and responsiveness child in progress. Remaining work includes Large
+AI task/target preparation and full-save latency, the selected Town/prop/terrain
+presentation defects, the pre-existing Moonbite deadline and broader release/
+hardware acceptance. The Medium speed result does not close those requirements.

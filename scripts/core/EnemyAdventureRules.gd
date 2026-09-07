@@ -6264,6 +6264,27 @@ static func normalize_commander_roster(
 	faction_id: String,
 	roster_value: Variant
 ) -> Array:
+	return _normalize_commander_roster_entries(session, faction_id, roster_value)
+
+static func _normalize_commander_roster_entry(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_value: Variant,
+	roster_hero_id: String
+) -> Dictionary:
+	# Raid construction consumes one entry. Keep its exact catalog membership
+	# and normalization without rebuilding every unrelated faction commander.
+	if roster_hero_id == "" or roster_hero_id not in _faction_commander_ids(PlayerRules.faction_id(session, faction_id)):
+		return {}
+	var entries := _normalize_commander_roster_entries(session, faction_id, roster_value, [roster_hero_id])
+	return entries[0]
+
+static func _normalize_commander_roster_entries(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_value: Variant,
+	selected_hero_ids: Variant = null
+) -> Array:
 	var existing_map: Dictionary = {}
 	if roster_value is Array:
 		for entry_value in roster_value:
@@ -6276,7 +6297,8 @@ static func normalize_commander_roster(
 	var active_map = _active_commander_map(session, faction_id)
 	var normalized := []
 	var session_day := int(session.day) if session != null else 0
-	for roster_hero_id in _faction_commander_ids(PlayerRules.faction_id(session, faction_id)):
+	var hero_ids: Array = selected_hero_ids if selected_hero_ids is Array else _faction_commander_ids(PlayerRules.faction_id(session, faction_id))
+	for roster_hero_id in hero_ids:
 		var existing = existing_map.get(roster_hero_id, {})
 		if not (existing is Dictionary):
 			existing = {}
@@ -7379,12 +7401,12 @@ static func build_raid_commander_state(
 	var encounter_commander = encounter_template.get("enemy_commander", {})
 	if not (encounter_commander is Dictionary):
 		encounter_commander = {}
-	var normalized_roster = normalize_commander_roster(
+	var roster_entry := _normalize_commander_roster_entry(
 		session,
 		resolved_faction_id,
-		commander_roster if commander_roster is Array else commander_roster_for_faction(session, resolved_faction_id)
+		commander_roster if commander_roster is Array else commander_roster_for_faction(session, resolved_faction_id),
+		resolved_roster_hero_id
 	)
-	var roster_entry := _commander_roster_entry(normalized_roster, resolved_roster_hero_id)
 	var roster_commander_state = roster_entry.get("commander_state", {})
 	if not (roster_commander_state is Dictionary):
 		roster_commander_state = {}
