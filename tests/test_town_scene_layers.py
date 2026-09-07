@@ -24,7 +24,7 @@ def validate_scene_layers(payload=None):
     require(bool(payload.get('owner_approval')) and bool(payload.get('rights')), 'Missing art approval/rights')
     require(payload.get('generation',{}).get('tool')=='built_in_image_gen', 'Missing generated art provenance')
     factions = payload.get('factions', {})
-    require(set(factions.get('faction_veilmourn',{})) >= {'building_veilmourn_bell_harbor','building_wayfarers_hall'}, 'Missing accepted Bellwake scene mapping')
+    require(set(factions.get('faction_veilmourn',{})) >= {'building_veilmourn_bell_harbor','building_wayfarers_hall','building_market_square'}, 'Missing accepted Bellwake scene mapping')
     paths = set()
     hashes = set()
     catalogs = json.loads((ROOT/'content/town_building_scene_layouts.json').read_text())['factions']
@@ -66,7 +66,9 @@ def validate_scene_layers(payload=None):
             require(row.get('runtime_sha256') not in hashes, 'Duplicate scene painting: '+label)
             paths.add(row.get('runtime_path')); hashes.add(row.get('runtime_sha256'))
             prompt = ROOT / row.get('prompt_path','').removeprefix('res://')
-            require(prompt.is_file() and 'Input image 1:' in prompt.read_text(), 'Missing exact generation prompt: '+label)
+            require(prompt.is_file() and 'image 1' in prompt.read_text().lower(), 'Missing exact generation prompt: '+label)
+            if prompt.is_file():
+                require(hashlib.sha256(prompt.read_bytes()).hexdigest()==row.get('prompt_sha256'), 'Changed generation prompt: '+label)
     return errors
 
 class TownSceneLayersTests(unittest.TestCase):
@@ -77,6 +79,12 @@ class TownSceneLayersTests(unittest.TestCase):
     def test_missing_mapping_is_rejected(self):
         del self.payload['factions']['faction_veilmourn']['building_wayfarers_hall']
         self.assertIn('Missing accepted Bellwake scene mapping', validate_scene_layers(self.payload))
+    def test_missing_constructible_market_mapping_is_rejected(self):
+        del self.payload['factions']['faction_veilmourn']['building_market_square']
+        self.assertIn('Missing accepted Bellwake scene mapping', validate_scene_layers(self.payload))
+    def test_changed_prompt_is_rejected(self):
+        self.payload['factions']['faction_veilmourn']['building_market_square']['prompt_sha256']='0'*64
+        self.assertTrue(any('Changed generation prompt' in e for e in validate_scene_layers(self.payload)))
     def test_catalog_icon_cannot_impersonate_scene_layer(self):
         self.payload['factions']['faction_veilmourn']['building_wayfarers_hall']['runtime_path']='res://art/towns/runtime/buildings/building_wayfarers_hall.png'
         self.assertTrue(any('Wrong exact runtime path' in e for e in validate_scene_layers(self.payload)))

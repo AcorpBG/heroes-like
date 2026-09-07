@@ -40,3 +40,37 @@ Rollback: revert the coherent art/manifest/renderer/hotspot change together.
 No save migration or gameplay/data rollback is needed. Remaining Town buildings
 and other factions require their own inspected scene-matched art; this first
 packet does not accept the old catalog-icon placement of those structures.
+
+## Constructible Market Square continuation
+
+The additional `faction_veilmourn/building_market_square.png` master is the
+unaltered built-in imagegen output `exec-4df482d8-1bf8-46b6-bde9-819a72f7fcf9.png`,
+SHA256 `9afc680fe3311278da44f54c069854764ef3f17d2f9020e32925a1b4b27aafe1`.
+Its adjacent prompt is verbatim. The original village and the accepted original
+Wayfarers Hall master were style/transparency references; no external game art
+was supplied. Prompt hashes are now recorded for all scene layers.
+
+Three earlier output candidates were rejected: each returned opaque RGB with a
+painted checkerboard; the first also clipped its ramp. Neither extraction attempt
+fixed transparency. A fresh render from the original references produced real
+RGBA. Rejected images and prompts remain in the goal-owned
+`town_market_candidates_20260907/` evidence directory, not the runtime manifest.
+
+The accepted composition uses a low trading arcade, cargo, hanging balance scales,
+small amber lamps, wet black timber and supporting pilings. It joins the
+foreground-left waterfront below the main tower; the central harbor and tower
+door remain clear. The original water-plot placement was rejected. Source-space
+framing is `[200,560,375,250]` before transparent-margin trim; final normalized
+bounds and ground-depth anchor are authoritative in the manifest. Same curation
+rubric: readability 4, faction identity 4, scene consistency 4, feasibility 4,
+originality 5. Live paid-build/input/save checks pass at three resolutions;
+Linux and Windows/Wine packages also construct the Market and load its exact
+scene asset. Source-backed evidence and platform limits are recorded in
+`docs/generated-full-match-art-repair-report.md` (Market checkpoint).
+
+Only alpha-margin crop, aspect-preserving 512px Lanczos downsampling and metadata
+stripping produce the derivatives. No painted pixels or backgrounds are replaced
+by processing. The imported 512x338 layer uses mipmaps; the unchanged generic
+catalog/info icon remains available to other factions. The earlier two scenic
+runtime raster hashes are unchanged. This is an existing 1000-gold Market Square,
+not a new building, discount, construction shortcut or whole-faction completion.

@@ -35,7 +35,10 @@
         "python3 tests/named_save_files_regression.py",
         "python3 tests/overworld_live_commander_refresh_regression.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>",
         "python3 -B tests/overworld_sprite_edge_diagnostic.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>",
-        "python3 -B tests/overworld_stockpile_text_fit_regression.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>"
+        "python3 -B tests/overworld_stockpile_text_fit_regression.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>",
+        "python3 -B -m unittest discover -s tests -p test_town_scene_layers.py",
+        "python3 -B tests/town_scene_layer_regression.py --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>",
+        "python3 -B tests/full_play_validation_suite.py --label <fresh> --rendered --accessibility disabled --only town_screen_layout_and_dialog_controls_report town_building_skyline_progression_report"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -70,16 +73,18 @@
         "art/overworld/source/generated/full_match_art_repairs/: preserved original source, prompts, rejected generation records and accepted processing provenance",
         "content/town_building_scene_art_manifest.json and tools/prepare_town_scene_layers.py: approved Bellwake source/trimmed/runtime layers with exact faction/building ownership",
         "scenes/town/TownStageView.gd and TownBuildingHotspot.gd: non-square scene-layer projection and transparent pointer ownership, preserving catalog icons and normal Town routes",
-        "tests/town_scene_layer_regression.py and tests/test_town_scene_layers.py: exact assets, alpha-aware input, construction/save and dual-resolution evidence"
+        "tests/town_scene_layer_regression.py and tests/test_town_scene_layers.py: exact assets, alpha-aware input, construction/save and dual-resolution evidence",
+        "scripts/autoload/LiveValidationHarness.gd: opt-in packaged generated-Town ledger build and exact scene-layer/info checks; inert in normal gameplay",
+        "tests/packaging_windows_export_smoke.py: require normal Market construction and information after generated Town entry"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T12:45:46Z",
+      "updatedAt": "2026-09-07T16:26:35Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Bellwake Bell Harbor and faction-specific Wayfarers Hall now use scene-matched original layers and alpha-aware accessible hotspots. Three inspected resolutions pass 824 checks each; six Python tests, Town layout/all-32-town progression, repository and Linux/Windows generated-entry packages pass at 249083376 bytes. Legacy named-slot keyboard and Moonbite 30-turn development failures remain explicit; all 32 save/resume cases pass. Market Square and remaining constructible/faction art remain unfinished; parent and presentation stay in progress."
+      "notes": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16697,10 +16702,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Bellwake Bell Harbor and faction-specific Wayfarers Hall now use scene-matched original layers and alpha-aware accessible hotspots. Three inspected resolutions pass 824 checks each; six Python tests, Town layout/all-32-town progression, repository and Linux/Windows generated-entry packages pass at 249083376 bytes. Legacy named-slot keyboard and Moonbite 30-turn development failures remain explicit; all 32 save/resume cases pass. Market Square and remaining constructible/faction art remain unfinished; parent and presentation stay in progress.",
+  "currentSliceNotes": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Presentation Corrections",
-  "currentSliceUpdatedAt": "2026-09-07T15:38:19Z",
+  "currentSliceUpdatedAt": "2026-09-07T16:26:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22007,61 +22012,70 @@
   },
   "guardrailNote": "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification.",
   "lastValidation": {
-    "id": "quality-bellwake-starting-building-scene-layers-20260907",
+    "id": "quality-bellwake-constructed-market-scene-layer-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T15:38:19Z",
-    "scope": "Two scene-matched Bellwake starting buildings, exact manifest/provenance and alpha-aware input; no gameplay/save/native changes.",
-    "result": "Bellwake Bell Harbor and faction-specific Wayfarers Hall now use scene-matched original layers and alpha-aware accessible hotspots. Three inspected resolutions pass 824 checks each; six Python tests, Town layout/all-32-town progression, repository and Linux/Windows generated-entry packages pass at 249083376 bytes. Legacy named-slot keyboard and Moonbite 30-turn development failures remain explicit; all 32 save/resume cases pass. Market Square and remaining constructible/faction art remain unfinished; parent and presentation stay in progress. Wreck Quay remains corrected; these are starting-building assets, not a complete construction-art or release claim.",
+    "validatedAt": "2026-09-07T16:26:12Z",
+    "scope": "Existing Bellwake Market Square scene art after normal paid construction; exact asset/provenance, alpha-aware input and save/re-entry; no gameplay, catalog, backdrop or native changes.",
+    "result": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_controls_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_controls_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_controls_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_scene_layers_repo_final.log",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_linux_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_linux_final/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_windows_final/report.json",
-      ".artifacts/full_play_runtime_20260905/town_scene_layers_existing_v2/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_before_02/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_final_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_final_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_harness_repo.log",
+      ".artifacts/generated_full_match_quality_20260906/town_market_repo_final.log",
+      ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/generated-flow/live_validation_report.json",
+      ".artifacts/full_play_runtime_20260905/town_market_existing/report.json",
       ".artifacts/full_play_runtime_20260905/town_scene_save_headless/report.json"
     ],
-    "remainingWork": "Complete scene-matched construction art across remaining faction/building plots and upgrades, starting with the actual post-build floating Bellwake Market Square; inspect sparse/developed states and preserve exact input/save/progression ownership. Continue remaining reproduced Overworld prop-edge/terrain corrections. Preserve package ceiling and explicit legacy keyboard/Moonbite limits. Selected playthrough and responsiveness children are complete; multi-second waits and physical Windows/hardware breadth are not release certification."
+    "remainingWork": "Extend the approved scene-matched pipeline beyond Bellwake's two starting buildings and constructed Market Square to remaining faction/building plots and upgrades, with sparse/developed input/save and visual acceptance. Continue remaining reproduced Overworld prop-edge/terrain corrections. Keep the package ceiling and explicit legacy keyboard/Moonbite limits. Playthrough and selected responsiveness children are complete; physical Windows/hardware breadth and release readiness remain unproven."
   },
   "latestEvidence": {
-    "id": "quality-bellwake-starting-building-scene-layers-20260907",
+    "id": "quality-bellwake-constructed-market-scene-layer-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T15:38:19Z",
-    "scope": "Two scene-matched Bellwake starting buildings, exact manifest/provenance and alpha-aware input; no gameplay/save/native changes.",
-    "result": "Bellwake Bell Harbor and faction-specific Wayfarers Hall now use scene-matched original layers and alpha-aware accessible hotspots. Three inspected resolutions pass 824 checks each; six Python tests, Town layout/all-32-town progression, repository and Linux/Windows generated-entry packages pass at 249083376 bytes. Legacy named-slot keyboard and Moonbite 30-turn development failures remain explicit; all 32 save/resume cases pass. Market Square and remaining constructible/faction art remain unfinished; parent and presentation stay in progress. Wreck Quay remains corrected; these are starting-building assets, not a complete construction-art or release claim.",
+    "validatedAt": "2026-09-07T16:26:12Z",
+    "scope": "Existing Bellwake Market Square scene art after normal paid construction; exact asset/provenance, alpha-aware input and save/re-entry; no gameplay, catalog, backdrop or native changes.",
+    "result": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_controls_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_controls_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_controls_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_scene_layers_repo_final.log",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_linux_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_linux_final/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_windows_final/report.json",
-      ".artifacts/full_play_runtime_20260905/town_scene_layers_existing_v2/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_before_02/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_final_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_final_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_harness_repo.log",
+      ".artifacts/generated_full_match_quality_20260906/town_market_repo_final.log",
+      ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/generated-flow/live_validation_report.json",
+      ".artifacts/full_play_runtime_20260905/town_market_existing/report.json",
       ".artifacts/full_play_runtime_20260905/town_scene_save_headless/report.json"
     ],
-    "remainingWork": "Complete scene-matched construction art across remaining faction/building plots and upgrades, starting with the actual post-build floating Bellwake Market Square; inspect sparse/developed states and preserve exact input/save/progression ownership. Continue remaining reproduced Overworld prop-edge/terrain corrections. Preserve package ceiling and explicit legacy keyboard/Moonbite limits. Selected playthrough and responsiveness children are complete; multi-second waits and physical Windows/hardware breadth are not release certification."
+    "remainingWork": "Extend the approved scene-matched pipeline beyond Bellwake's two starting buildings and constructed Market Square to remaining faction/building plots and upgrades, with sparse/developed input/save and visual acceptance. Continue remaining reproduced Overworld prop-edge/terrain corrections. Keep the package ceiling and explicit legacy keyboard/Moonbite limits. Playthrough and selected responsiveness children are complete; physical Windows/hardware breadth and release readiness remain unproven."
   },
   "latestEvidenceArtifacts": [
     "docs/generated-full-match-art-repair-report.md",
-    ".artifacts/generated_full_match_quality_20260906/town_layers_controls_720/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_layers_controls_1080/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_layers_controls_2048/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_scene_layers_repo_final.log",
-    ".artifacts/generated_full_match_quality_20260906/town_layers_linux_final/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_layers_linux_final/generated-entry/live_validation_report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_layers_windows_final/report.json",
-    ".artifacts/full_play_runtime_20260905/town_scene_layers_existing_v2/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_market_before_02/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_market_final_720/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_market_final_1080/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_market_final_2048/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_market_harness_repo.log",
+    ".artifacts/generated_full_match_quality_20260906/town_market_repo_final.log",
+    ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/generated-entry/live_validation_report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/generated-flow/live_validation_report.json",
+    ".artifacts/full_play_runtime_20260905/town_market_existing/report.json",
     ".artifacts/full_play_runtime_20260905/town_scene_save_headless/report.json"
   ],
-  "latestEvidenceId": "quality-bellwake-starting-building-scene-layers-20260907",
-  "latestFinding": "Bellwake Bell Harbor and faction-specific Wayfarers Hall now use scene-matched original layers and alpha-aware accessible hotspots. Three inspected resolutions pass 824 checks each; six Python tests, Town layout/all-32-town progression, repository and Linux/Windows generated-entry packages pass at 249083376 bytes. Legacy named-slot keyboard and Moonbite 30-turn development failures remain explicit; all 32 save/resume cases pass. Market Square and remaining constructible/faction art remain unfinished; parent and presentation stay in progress. Wreck Quay remains corrected; these are starting-building assets, not a complete construction-art or release claim.",
+  "latestEvidenceId": "quality-bellwake-constructed-market-scene-layer-20260907",
+  "latestFinding": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
   "metrics": {
     "audit_only": false,
     "runtime_behavior_changed": true,
@@ -22159,9 +22173,9 @@
         "Complete Medium/Large matches, measured full-action improvements and inspected presentation corrections",
         "Focused/repository/platform validation and coherent commit/push; hardware limits explicit"
       ],
-      "updatedAt": "2026-09-07T12:45:46Z",
+      "updatedAt": "2026-09-07T16:25:34Z",
       "startedAt": "2026-09-06T12:03:26Z",
-      "notes": "Owner art scope approved and implementation resumed. Wreck Quay original-raster divider/matte correction passes failing-before and actual native-map dual-resolution checks, exact state/identity, five Python tests, existing sprite/movement/fog reports, repository and fresh Linux/Windows package flows. Per-faction Town layer integration and broader selected sprite defects remain unfinished; candidate generation is not Town implementation.",
+      "notes": "Legitimate Medium victory/Large defeat and selected responsiveness children are complete. Approved art checkpoints now include Wreck Quay and three Bellwake layers, including normally constructed Market Square, with source/input/save and both-platform package evidence. Remaining faction/building/upgrade integration and Overworld presentation acceptance are unfinished; not release certification.",
       "remainingWork": "Accept and integrate scene-matched per-faction Town building layers with grounded plots, exact built-id/upgrade/info/click authority and dual-resolution live construction/save proof; correct remaining reproduced sprite/terrain defects. No further art-scope approval is pending for these agreed corrections; full goal remains unfinished."
     },
     {
@@ -22450,7 +22464,10 @@
         "python3 tests/named_save_files_regression.py",
         "python3 tests/overworld_live_commander_refresh_regression.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>",
         "python3 -B tests/overworld_sprite_edge_diagnostic.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>",
-        "python3 -B tests/overworld_stockpile_text_fit_regression.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>"
+        "python3 -B tests/overworld_stockpile_text_fit_regression.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>",
+        "python3 -B -m unittest discover -s tests -p test_town_scene_layers.py",
+        "python3 -B tests/town_scene_layer_regression.py --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>",
+        "python3 -B tests/full_play_validation_suite.py --label <fresh> --rendered --accessibility disabled --only town_screen_layout_and_dialog_controls_report town_building_skyline_progression_report"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -22485,16 +22502,18 @@
         "art/overworld/source/generated/full_match_art_repairs/: preserved original source, prompts, rejected generation records and accepted processing provenance",
         "content/town_building_scene_art_manifest.json and tools/prepare_town_scene_layers.py: approved Bellwake source/trimmed/runtime layers with exact faction/building ownership",
         "scenes/town/TownStageView.gd and TownBuildingHotspot.gd: non-square scene-layer projection and transparent pointer ownership, preserving catalog icons and normal Town routes",
-        "tests/town_scene_layer_regression.py and tests/test_town_scene_layers.py: exact assets, alpha-aware input, construction/save and dual-resolution evidence"
+        "tests/town_scene_layer_regression.py and tests/test_town_scene_layers.py: exact assets, alpha-aware input, construction/save and dual-resolution evidence",
+        "scripts/autoload/LiveValidationHarness.gd: opt-in packaged generated-Town ledger build and exact scene-layer/info checks; inert in normal gameplay",
+        "tests/packaging_windows_export_smoke.py: require normal Market construction and information after generated Town entry"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T15:37:05Z",
+      "updatedAt": "2026-09-07T16:26:35Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Bellwake Bell Harbor and faction-specific Wayfarers Hall now use scene-matched original layers and alpha-aware accessible hotspots. Three inspected resolutions pass 824 checks each; six Python tests, Town layout/all-32-town progression, repository and Linux/Windows generated-entry packages pass at 249083376 bytes. Legacy named-slot keyboard and Moonbite 30-turn development failures remain explicit; all 32 save/resume cases pass. Market Square and remaining constructible/faction art remain unfinished; parent and presentation stay in progress."
+      "notes": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -110619,8 +110638,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Scene-matched construction art and remaining Town/Overworld presentation acceptance are unfinished; no full-goal or release completion.",
-  "remainingWork": "Complete scene-matched construction art across remaining faction/building plots and upgrades, starting with the actual post-build floating Bellwake Market Square; inspect sparse/developed states and preserve exact input/save/progression ownership. Continue remaining reproduced Overworld prop-edge/terrain corrections. Preserve package ceiling and explicit legacy keyboard/Moonbite limits. Selected playthrough and responsiveness children are complete; multi-second waits and physical Windows/hardware breadth are not release certification.",
+  "remainingGap": "Remaining faction/building construction art and Town/Overworld presentation acceptance are unfinished; no full-goal or release completion.",
+  "remainingWork": "Extend the approved scene-matched pipeline beyond Bellwake's two starting buildings and constructed Market Square to remaining faction/building plots and upgrades, with sparse/developed input/save and visual acceptance. Continue remaining reproduced Overworld prop-edge/terrain corrections. Keep the package ceiling and explicit legacy keyboard/Moonbite limits. Playthrough and selected responsiveness children are complete; physical Windows/hardware breadth and release readiness remain unproven.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -111259,29 +111278,32 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Bellwake Bell Harbor and faction-specific Wayfarers Hall now use scene-matched original layers and alpha-aware accessible hotspots. Three inspected resolutions pass 824 checks each; six Python tests, Town layout/all-32-town progression, repository and Linux/Windows generated-entry packages pass at 249083376 bytes. Legacy named-slot keyboard and Moonbite 30-turn development failures remain explicit; all 32 save/resume cases pass. Market Square and remaining constructible/faction art remain unfinished; parent and presentation stay in progress. Wreck Quay remains corrected; these are starting-building assets, not a complete construction-art or release claim.",
+  "summary": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
   "taskId": "10236",
-  "updatedAt": "2026-09-07T15:37:05Z",
+  "updatedAt": "2026-09-07T16:26:35Z",
   "validation": {
-    "id": "quality-bellwake-starting-building-scene-layers-20260907",
+    "id": "quality-bellwake-constructed-market-scene-layer-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T15:38:19Z",
-    "scope": "Two scene-matched Bellwake starting buildings, exact manifest/provenance and alpha-aware input; no gameplay/save/native changes.",
-    "result": "Bellwake Bell Harbor and faction-specific Wayfarers Hall now use scene-matched original layers and alpha-aware accessible hotspots. Three inspected resolutions pass 824 checks each; six Python tests, Town layout/all-32-town progression, repository and Linux/Windows generated-entry packages pass at 249083376 bytes. Legacy named-slot keyboard and Moonbite 30-turn development failures remain explicit; all 32 save/resume cases pass. Market Square and remaining constructible/faction art remain unfinished; parent and presentation stay in progress. Wreck Quay remains corrected; these are starting-building assets, not a complete construction-art or release claim.",
+    "validatedAt": "2026-09-07T16:26:12Z",
+    "scope": "Existing Bellwake Market Square scene art after normal paid construction; exact asset/provenance, alpha-aware input and save/re-entry; no gameplay, catalog, backdrop or native changes.",
+    "result": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_controls_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_controls_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_controls_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_scene_layers_repo_final.log",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_linux_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_linux_final/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_layers_windows_final/report.json",
-      ".artifacts/full_play_runtime_20260905/town_scene_layers_existing_v2/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_before_02/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_final_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_final_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_harness_repo.log",
+      ".artifacts/generated_full_match_quality_20260906/town_market_repo_final.log",
+      ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/generated-flow/live_validation_report.json",
+      ".artifacts/full_play_runtime_20260905/town_market_existing/report.json",
       ".artifacts/full_play_runtime_20260905/town_scene_save_headless/report.json"
     ],
-    "remainingWork": "Complete scene-matched construction art across remaining faction/building plots and upgrades, starting with the actual post-build floating Bellwake Market Square; inspect sparse/developed states and preserve exact input/save/progression ownership. Continue remaining reproduced Overworld prop-edge/terrain corrections. Preserve package ceiling and explicit legacy keyboard/Moonbite limits. Selected playthrough and responsiveness children are complete; multi-second waits and physical Windows/hardware breadth are not release certification."
+    "remainingWork": "Extend the approved scene-matched pipeline beyond Bellwake's two starting buildings and constructed Market Square to remaining faction/building plots and upgrades, with sparse/developed input/save and visual acceptance. Continue remaining reproduced Overworld prop-edge/terrain corrections. Keep the package ceiling and explicit legacy keyboard/Moonbite limits. Playthrough and selected responsiveness children are complete; physical Windows/hardware breadth and release readiness remain unproven."
   },
   "validationHistory": [
     {

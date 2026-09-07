@@ -153,8 +153,8 @@ errors or leaked resources occur. The Large08 opening save SHA256 is
 A separate detached built-id fixture exercises absent/present Hall art and input.
 These two structures are starting buildings, not purchasable Bellwake orders;
 the fixture does not pretend to construct them legally or change the catalog.
-Actual paid construction uses the offered Market Square. Its post-build capture
-still shows an unsuitable floating catalog icon: this is the next concrete art
+Actual paid construction uses the offered Market Square. At that checkpoint its
+post-build capture still showed an unsuitable floating catalog icon: the next art
 target, not an accepted seamless construction result. Opening, information,
 absent/present and post-build captures were visually inspected for the repaired
 layers and preserved controls; the remaining icon is explicitly not accepted.
@@ -225,12 +225,79 @@ All-faction, per-building integration and other reproduced prop-edge defects
 remain part of the full goal. This two-starting-building checkpoint is not a
 complete seamless construction-art solution for every Town or a release claim.
 
+## Validated Bellwake paid-construction Market checkpoint
+
+The actual Large08 opening save offers `building_market_square` for 1000 gold.
+Its old scene presentation was the shared square catalog icon at a detached
+water plot. It now resolves a dedicated original Veilmourn trading-quay layer,
+grounded on the foreground-left waterfront. The existing catalog/info icon,
+250-gold daily income, build prerequisites, one-build-per-day rule, saves,
+village backdrop and both earlier accepted scene rasters are unchanged.
+
+The original RGBA master and verbatim prompt are retained beside the earlier
+scene sources; the README records generation identities and curation. Three
+opaque checkerboard outputs were inspected and rejected. A fresh render from
+the original village and accepted original Hall master produced real alpha.
+Only transparent-margin crop, aspect-preserving Lanczos downsampling and metadata
+stripping produce the imported 512x338 mipmapped raster. The disconnected central
+water placement was rejected; accepted framing is `[200,560,375,250]` before trim.
+The small ramp is a boat-loading ramp, not a claimed connection to a land street.
+
+- Generated master SHA256: `9afc680fe3311278da44f54c069854764ef3f17d2f9020e32925a1b4b27aafe1`.
+- Verbatim prompt SHA256: `91f3c68f06972033f5771d8cb83e9e72f90856fff44195e39b680961d60404cd`.
+- Runtime SHA256: `78f91a231c276218d8ab3db96ff01f5a92b60edadda47aaeaee2e255498ea2de`.
+- Three-layer manifest SHA256: `e975fc8a05023975649de31e8755df09c2bc252e9798c4b8122cc13341ac96a0`.
+
+`town_market_before_02` fails exactly the two Market scene-resolution/re-entry
+assertions out of 840 checks, with no engine errors or changed input save.
+`town_market_final_720`, `town_market_final_1080` and `town_market_final_2048`
+each pass **1213 checks**: actual paid construction, normal costs/daily limit,
+three exact layers, painted/transparent pointer ownership, keyboard/controller
+information, complete save equality and actual Town re-entry. Source and input
+hashes remain unchanged during each run. The 1080/2048 Python launchers included
+the subsequently removed optional export mode, but their executed source-mode
+GDScript is identical to the final test at those resolutions; reports preserve
+both hashes. The final 720 launcher SHA256 is
+`51eb4db25589cb4fe01b339cf7591d1b28a1e29bc0b21d792a1ce9e98eaf9aa1`.
+Opening/build/information and saved re-entry captures were visually inspected;
+the Market joins the quay and does not cover the main tower door or controls.
+
+Release templates forbid external scene/path overrides. `town_market_linux_layers`
+and `town_market_linux_02_layers` retain those two failed probe launches, not
+asset failures. The unsupported mode was removed. The existing opt-in
+`LiveValidationHarness` generated-Town flow now accepts
+`--live-validation-town-building=building_market_square`. The Python Windows
+package check requires both new constructed/information steps. The flow uses
+the existing ledger select/confirm controls, checks normal resource deductions
+and daily state, loads the exact manifest-backed non-square texture, and opens
+the aligned read-only information hotspot. It is inert in normal gameplay.
+
+`town_market_linux_03` and `town_market_windows_final` pass export/startup/native
+library checks and generated-map/Town entry plus the new construction and info
+steps. Both PCKs are **249356964 bytes**, **643036 bytes below** the ceiling;
+source masters remain excluded. Linux's actual 1920x1080 packaged construction
+and information captures were visually inspected. Windows is headless Wine:
+it verifies the exported resource and gameplay paths, not rendered Windows/GPU
+quality. The generated package flow's existing hero-positioning visit fixture
+is smoke coverage, never additional legitimate full-match evidence.
+Temporary exports/Wine installations are removed after the checks, retaining
+reports and screenshots; no caches or project evidence are removed.
+
+Eight Python asset/provenance tests pass. `town_market_existing` under
+`.artifacts/full_play_runtime_20260905/` passes existing Town layout/dialog and
+all-32-town/179-catalog progression reports. Repository validation passes in
+`town_market_harness_repo.log`; final documentation/tracker validation is retained
+as `town_market_repo_final.log`. The two previously documented legacy keyboard
+and Moonbite development limits remain unmodified and are not claimed green.
+Reproduce with the commands above and the three `town_scene_layer_regression`
+resolutions; the established package wrapper now also requests Market construction.
+
 ## Remaining acceptance
 
-Extend scene-matched art from the two starting structures to actual constructible
-buildings, beginning with the reproduced Bellwake Market Square, and then the
-remaining faction/building plots and upgrades. Require inspected sparse,
-mid-development and developed scenes, exact built-id/input/save ownership and
+Extend scene-matched art beyond the two starting structures and constructed
+Bellwake Market Square to the remaining faction/building plots and upgrades.
+Require inspected sparse, mid-development and developed scenes, exact
+built-id/input/save ownership and
 both-platform packages within the ceiling for each accepted packet. Other
 reproduced Overworld prop-edge/terrain defects and all-faction visual acceptance
 remain open. Preserve the two explicit legacy validation limits above. The

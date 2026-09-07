@@ -1463,6 +1463,7 @@ def main() -> int:
         "--live-validation-generated-seed=windows-first-run-10184",
         "--live-validation-generated-faction=faction_veilmourn",
         "--live-validation-generated-hero=hero_veilmourn_orso_nightchart",
+        "--live-validation-town-building=building_market_square",
         f"--live-validation-output={wine_z_path(GENERATED_FLOW_OUTPUT_DIR)}",
     ]
     generated_runtime_result = (
@@ -1513,10 +1514,13 @@ def main() -> int:
         and generated_flow_report.get("flow") == "boot_to_generated_skirmish_town"
         and generated_flow_report.get("generated_faction_id") == "faction_veilmourn"
         and generated_flow_report.get("generated_hero_id") == "hero_veilmourn_orso_nightchart"
+        and generated_flow_report.get("town_building_id") == "building_market_square"
         and generated_step_ids == [
             "generated_map_setup",
             "generated_overworld_entered",
             "generated_player_town_entered",
+            "generated_town_building_constructed",
+            "generated_town_building_information",
         ]
     )
     generated_runtime_ok = (
