@@ -75,6 +75,33 @@ result through real Linux/Windows runtimes. Keep source/native/save hashes and
 complete existing construction behavior unchanged. This packaging prerequisite
 does not close the remaining faction/building art requirement.
 
+### Lossless texture import headroom prerequisite
+
+The later Town-caption package is 249674052 bytes, leaving only 325948 bytes.
+For the remaining approved art, stronger compression may use Godot's existing
+lossless WebP import setting, not a new image format or a lossy quality change.
+Keep source masters, trimmed/runtime rasters, provenance, per-resource import
+options, decoded pixels (including transparent RGB), dimensions, image formats
+and every mipmap unchanged. Do not change the global method if it affects lossy
+textures, remove content, resize images, clear caches or raise the package cap.
+
+Existing caches need explicit bounded reimport: the engine's texture import
+settings fingerprint does not include WebP strength. A Python-owned helper must
+use the normal editor importer, verify the complete affected set, and make
+subsequent unchanged runs cheap. Fresh/changed resources must not bypass that
+verification. Unknown formats, import errors or unequal decoded images must
+fail validation, not silently count as successful optimization. Preserve original
+cached outputs for rollback of an unsuccessful reimport; no broad cache deletion.
+Integrate the helper into the common release and both platform smoke workflows.
+
+Require a representative actual-engine experiment before broad reimport, focused
+invalid/stale/changed-cache tests, engine-decoded full-image/mipmap equality for
+all affected resources and package member preservation. Measure actual exported
+savings and import time; both platform packages must use the same assets and
+pass normal startup/generated Town construction. Inspect 1280x720 and 1920x1080
+Town/Overworld captures, run repository/diff and established packaging tests.
+This prerequisite is not acceptance of unfinished faction/building art.
+
 ## Acceptance and truthful play
 
 - Complete reproducible Medium and Large generated matches through ordinary
