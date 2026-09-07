@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scenes/town/TownShell.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/town/TownStageView.gd" id="2"]
@@ -8,6 +8,9 @@
 [ext_resource type="Script" path="res://scenes/ui/HeroPortraitView.gd" id="6_hero_portrait"]
 [ext_resource type="Script" path="res://scenes/shared/ResourceStockpileMenu.gd" id="7_resource_stockpile_menu"]
 [ext_resource type="Script" path="res://scenes/shared/ArmyStackBar.gd" id="8_army_stack_bar"]
+
+[sub_resource type="Theme" id="Theme_stockpile_readonly"]
+PopupMenu/colors/font_disabled_color = Color(0.94, 0.9, 0.81, 1)
 
 [node name="TownShell" type="Control"]
 layout_mode = 3
@@ -145,6 +148,7 @@ theme_override_constants/margin_bottom = 0
 [node name="Resources" type="MenuButton" parent="ContentMargin/Content/Banner/BannerPad/TopBar/ResourceChip/ResourcePad"]
 unique_name_in_owner = true
 layout_mode = 2
+theme = SubResource("Theme_stockpile_readonly")
 focus_mode = 2
 vertical_alignment = 1
 flat = true
@@ -152,6 +156,7 @@ alignment = 0
 clip_text = true
 text = "Gold 0 | Wood 0 | Ore 0"
 script = ExtResource("7_resource_stockpile_menu")
+fit_summary_to_width = true
 
 [node name="MainRow" type="HBoxContainer" parent="ContentMargin/Content"]
 layout_mode = 2
