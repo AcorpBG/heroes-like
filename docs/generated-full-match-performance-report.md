@@ -703,3 +703,165 @@ that long. Any next optimization must preserve every displayed value, external
 file freshness, normalization, transaction safety and complete saves. The broader
 goal, 15% End Turn gate, seamless Town integration, known Moonbite development
 deadline and release/hardware certification remain open.
+
+## Verified stored-summary recap reuse — 2026-09-07
+
+Current child: `performance-generated-full-match-actions-20260906`, still in
+progress. This is a SaveService presentation-read optimization, not faster AI,
+a different save format, omitted normalization or a completed quality goal.
+
+### Cause and bounded implementation
+
+The clean, serial rendered `recap_cache_full_play_before` control completes all
+51 menu-to-victory/manual-save/resume steps on `cdda0ba6`. Its 137 save-surface
+builds spend 47.521 seconds inclusive, including 34.662 seconds reconstructing
+stored resume recaps. This is cumulative UI work, not one save-write delay.
+The existing slot cache retains inspected summaries but repeatedly normalizes
+their unchanged worlds and rebuilds risk/progress context for the same text.
+
+`SaveService.gd` now retains derived recap text privately on that existing cache
+entry. Reuse requires complete equality with its inspected summary, the same
+file-signature verification already used by summary reads, and the current
+`ContentService` revision. Reloading authored content or registering/removing/
+clearing transient drafts changes the revision. Replacing, invalidating or
+clearing the slot entry drops the derived value. No extra world copy or new
+unbounded cache is retained. Public summary dictionaries and saved payloads are
+unchanged; named/large deferred summaries keep the old early-return path without
+an extra file hash. Changed or uncached caller dictionaries still perform the
+original full calculation and cannot contaminate the canonical entry.
+
+The existing signature policy is unchanged: existence, modified time and size
+for legacy slots, plus actual-byte SHA256 for named saves. This does not claim
+to fix same-size/same-timestamp external edits of legacy slot files, nor the
+pre-existing distinction between runtime-created and disk-created summary detail.
+The writer, recovery/rollback, full saves, live recap reads, gameplay state,
+native generation, art and save schema are untouched.
+
+### Focused control development
+
+`tests/save_stored_recap_regression.py` loads complete independent old/current
+SaveService scripts; wrappers only count context materialization. The first
+control mixed a runtime-created old summary with a disk-created current summary
+even though both scripts were identical. That invalid oracle is retained as
+`recap_cache_probe_before`, not attributed to a runtime regression. Aligning both
+owners on the same cold disk inspection leaves only 38 expected redundant-work
+failures (`recap_cache_probe_before_aligned`); all text/state comparisons pass.
+
+The first implementation leaves one test count wrong after discarding a corrupt
+candidate: recovery correctly preserves the exact live file and its valid cache,
+so reuse is appropriate. The corrected assertion additionally proves unchanged
+live bytes. That intermediate report remains `recap_cache_probe_after`. The
+subsequent real Medium check passes 522 checks with exact public recap/surface
+and full-state equality. Final coverage adds a genuinely changed authored
+objective label and requires the visible next decision to change and restore.
+
+The strengthened probe's first launch (`recap_cache_large_final`) had a missing
+explicit type in test-only GDScript. Its verified isolated engine was stopped,
+the declaration corrected, and the failed report retained. Final focused runs
+`recap_cache_large_content_verified` and `recap_cache_medium_content_verified`
+pass 542 and 544 checks respectively, with no runtime errors. They include six
+factions, detached Town/Battle/Outcome states, complete live save surfaces,
+changed payloads, reset/replacement/deletion, genuine content-label changes,
+transient draft changes, same-size named-file edits, transaction artifacts and
+the actual Large Day-8/Medium Day-43 saves. These detached display fixtures are
+not claimed as played battles or generated terminal outcomes.
+
+### Matched rendered full play
+
+`recap_cache_full_play_before` and `recap_cache_full_play_after` under
+`.artifacts/full_play_runtime_20260905/` are serial, uncontended test-engine runs:
+Godot 4.6.2, Linux/X11 software rendering, 1280x720, accessibility disabled,
+identical deterministic session identity, legal actions and instrumentation.
+Both complete all 51 checkpoints; `matched_control_report.json` proves all 50
+complete session trees and all ordered movement/battle/Town/turn identities equal.
+Neither log has script/native errors or leaked-RID messages.
+
+| Measured span | Before | After |
+| --- | ---: | ---: |
+| Save-surface reads | 137 | 137 |
+| Stored contexts constructed | 181 | 20, plus 161 exact text reuses |
+| Stored recap work, cumulative | 34661.679 ms | 3842.586 ms |
+| Whole save-surface work, cumulative | 47520.904 ms | 15098.184 ms |
+| Save-surface p50 / p95 / maximum | 347.829 / 772.401 / 976.977 ms | 59.290 / 405.168 / 1004.818 ms |
+| Complete scripted flow duration | 309261 ms | 270769 ms |
+
+Stored recap work drops 88.9%; total save-surface work drops 68.2%. The complete
+flow is 12.4% shorter in this one pair, including the same animations, saves,
+capture points and scene waits. This is not a hardware-independent percentage or
+statistical confidence claim. Nested spans must not be summed as wall time.
+The worst cold save-surface read remains about one second. Other equal-identity
+events are essentially unchanged: movement -2.0%, battle refresh/entry, Town
+refresh and End Turn roughly +1.0–1.1%. This optimization helps summary-heavy
+menu/outcome reads; it does not establish faster movement, battles or Large AI.
+
+Final production sources throughout the after/full-domain runs:
+`SaveService.gd` SHA256 `036bed3c5bf3f857d7ba36814b854d8e6007370985fe19c36062e95f90a9d2bf`;
+`ContentService.gd` `dd7dbd54f0806fa1ff6f4553fe1bb8bc2d93619789fe1b38c1b934b60ac73932`.
+The before owner's hashes are recorded by the focused reports. Both full-play
+reports name the pre-commit HEAD `cdda0ba6`; only the after uses these changed
+source hashes. No runtime source changed during either run.
+
+### Integrated validation and remaining work
+
+Ten affected save/transaction/failure-route/campaign/casualty domain reports pass
+in `recap_cache_domains/report.json`; the exact expected injected write-failure
+messages remain classified separately from unexpected errors. The existing
+generated-Large explicit-save matrix also passes in
+`recap_cache_large_surface_verified/report.json`. Its initial failure is retained
+in `recap_cache_large_surface_before`: the old test incorrectly treated the two
+new derived-text fields as immutable storage authority. The Python suite adapter
+validates their shape, excludes only those fields from four canonical-authority
+snapshots, and retains every original summary/file/session/transaction assertion.
+Its distinct-slot case now requires exactly one context build, three context
+consumers and one text-cache hit. No counter is fabricated and no gameplay/save
+assertion is waived. The complete old-owner focused tests independently compare
+the actual derived text, not merely its shape.
+
+`recap_cache_large_turns` (1920x1080) and `recap_cache_medium_turns` (1280x720)
+under `.artifacts/generated_full_match_quality_20260906/` pass three ordinary
+turns, full autosaves and all four exact saved states against retained controls.
+They ran alongside package checks and are **functional**, not isolated speed
+evidence; the Large reference is also a different resolution. Their optional
+15% speed gates remain false. Do not replace the outstanding End Turn target
+with this checkpoint's menu gain. The existing content-index regression passes
+all 2828 row identities/reset controls in `content_lookup/recap_cache_final`.
+
+The original named-file UI regression passes all four live Save routes, more than
+three independent files, Unicode/case identity, overwrite/cancel/recovery and
+main-menu restore in `recap_cache_named_files_dbus`. Its one logged invalid-save
+JSON error is the deliberate same-size corruption at
+`tests/named_save_files_regression.py:62`; no other engine/script/RID errors occur.
+The first attempt, `recap_cache_named_files`, aborts in the host's AccessKit
+initialization without a session bus. Repeating the unchanged assertions under
+`dbus-run-session` succeeds with the default accessibility backend. Only artifact
+paths were redirected to fresh directories; old evidence was not overwritten.
+
+Linux and Windows release smokes (`recap_cache_linux_release` /
+`recap_cache_windows_release`) pass exports, native-library loading, startup and
+packaged generated-map/Town entry. Both PCKs are **248464928 bytes**, leaving
+1535072 bytes below the unchanged 250000000-byte ceiling. The established
+checkers ran through the existing RAM-backed wrapper; only their newly owned
+temporary exports/Wine prefixes were removed. Reports/captures and prior evidence
+remain. Windows execution is Wine, not physical Windows/GPU certification.
+
+Inspected captures: full-play `outcome_resumed` and
+`main_menu_after_battle_return` at 1280x720; both named-save dialogs at 1280x720
+and 1920x1080; both actual generated `turn_after` views; packaged
+`generated_player_town_entered` at 1920x1080. Save controls remain usable with
+the same text. Existing Town buildings still look detached over water, and
+Overworld prop-edge rectangles/terrain seams remain; this is not art acceptance.
+
+Repository validation, 12 Python acceptance tests, PLAN sync/queue checks and
+`git diff --check` pass. Reproduce the focused checks with
+`python3 -B tests/save_stored_recap_regression.py --label <fresh> --save <actual-save> --require-reuse`;
+the full loop and comparison with `tests/full_play_runtime_profile.py` and
+`tests/full_play_profile_compare.py --expected-states 50`; the eleven existing
+reports with `tests/full_play_validation_suite.py`; generated turns with
+`tests/generated_end_turn_profile.py --rendered --compare <retained-control>`;
+and both established `tests/packaging_*_export_smoke.py` checks.
+
+This is a validated runtime checkpoint. The performance child and parent goal
+remain in progress: Large AI/full-save latency, the unmet End Turn speed gate,
+Town integration, prop/terrain presentation, the known Moonbite deadline and
+broader release/hardware limits remain open. Continue measured complete-action
+work without skipping simulation, normalization or transactional saves.

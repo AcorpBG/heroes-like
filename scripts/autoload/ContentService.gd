@@ -33,6 +33,7 @@ var _cache: Dictionary = {}
 var _lookup_indexes: Dictionary = {}
 var _generated_scenario_drafts: Dictionary = {}
 var _generated_terrain_layer_drafts: Dictionary = {}
+var _content_revision := 0
 
 func _ready() -> void:
 	_validate_content()
@@ -40,10 +41,15 @@ func _ready() -> void:
 func clear_cache() -> void:
 	_cache.clear()
 	_lookup_indexes.clear()
+	_content_revision += 1
+
+func get_content_revision() -> int:
+	return _content_revision
 
 func clear_generated_scenario_drafts() -> void:
 	_generated_scenario_drafts.clear()
 	_generated_terrain_layer_drafts.clear()
+	_content_revision += 1
 
 func load_json(path: String) -> Dictionary:
 	if path in _cache:
@@ -272,6 +278,7 @@ func register_generated_scenario_draft(scenario_record: Dictionary, terrain_laye
 	terrain_copy["scenario_id"] = scenario_id
 	terrain_copy["draft_source"] = "generated_random_map_transient_registry"
 	_generated_terrain_layer_drafts[scenario_id] = terrain_copy
+	_content_revision += 1
 	return {
 		"ok": true,
 		"scenario_id": scenario_id,
@@ -282,6 +289,7 @@ func register_generated_scenario_draft(scenario_record: Dictionary, terrain_laye
 func unregister_generated_scenario_draft(id: String) -> void:
 	_generated_scenario_drafts.erase(id)
 	_generated_terrain_layer_drafts.erase(id)
+	_content_revision += 1
 
 func get_encounter(id: String) -> Dictionary:
 	return get_content_by_id(ENCOUNTERS_PATH, id)

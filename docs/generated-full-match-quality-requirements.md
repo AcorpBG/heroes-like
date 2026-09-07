@@ -244,6 +244,15 @@ unsafe overlaps and invalid native contracts. Record full rendered turn timings
 separately from instrumented diagnostics; missing a speed target remains an open
 performance limit, even when every behavior regression passes.
 
+Stored resume recaps may reuse derived text only for the exact inspected summary
+and unchanged authoritative content. Retain the existing slot cache's file
+freshness checks; invalidate derived text on content/draft reload and cache
+replacement/reset/deletion. Changed or uncached caller dictionaries must use the
+original calculation without mutating the caller or live state. Keep public
+summary dictionaries, save payloads, full normalization and transactional writes
+unchanged. Compare every recap against the complete original SaveService owner
+and measure real full-loop actions, not just warm lookup speed.
+
 Overworld scenery-index reuse must not rebuild unchanged decorative/standalone
 objects when a town, resource, artifact or encounter changes. The cache belongs
 to the view only: identify every input used to construct those records, including

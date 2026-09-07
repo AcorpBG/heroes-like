@@ -716,6 +716,7 @@ func build_in_session_save_surface(
 		"stored_recaps_requested": include_stored_recaps,
 		"stored_recap_context_build_count": int(stored_recap_profile.get("context_build_count", 0)),
 		"stored_recap_context_reuse_count": int(stored_recap_profile.get("context_reuse_count", 0)),
+		"stored_recap_text_cache_hits": int(stored_recap_profile.get("text_cache_hits", 0)),
 		"play_check_context_build_count": 1 if bool(recap_context.get("play_check_state_materialized", false)) else 0,
 		"play_check_context_reuse_count": 1 if bool(recap_context.get("play_check_state_materialized", false)) else 0,
 		"play_check_context_direct_fallback_count": int(recap_context.get("play_check_direct_fallback_count", 0)),
@@ -1192,6 +1193,21 @@ func _describe_summary_resume_recap_with_context(summary: Dictionary, profile: D
 		return ""
 	if not can_load_summary(summary):
 		return "Saved state: %s" % String(summary.get("status_text", "This save cannot be resumed."))
+	# Only exact copies of an existing, file-verified summary can reuse text.
+	# The derived value belongs to that cache entry, never to caller/save data.
+	var cached := {}
+	var inline_payload = summary.get("payload", {})
+	if inline_payload is Dictionary and not inline_payload.is_empty():
+		cached = _cached_slot_summary_entry(
+			String(summary.get("slot_type", "")),
+			String(summary.get("slot_id", "")),
+			String(summary.get("path", ""))
+		)
+	if cached.get("summary", {}) != summary:
+		cached = {}
+	if cached.has("resume_recap") and int(cached.get("recap_content_revision", -1)) == ContentService.get_content_revision():
+		profile["text_cache_hits"] = int(profile.get("text_cache_hits", 0)) + 1
+		return String(cached.resume_recap)
 	var session := _session_from_payload(_summary_payload(summary))
 	if session == null or session.scenario_id == "":
 		return "Saved state: This save cannot be inspected."
@@ -1204,6 +1220,9 @@ func _describe_summary_resume_recap_with_context(summary: Dictionary, profile: D
 	OverworldRulesScript.end_normalized_read_scope(session)
 	profile["context_build_count"] = int(profile.get("context_build_count", 0)) + 1
 	profile["context_reuse_count"] = int(profile.get("context_reuse_count", 0)) + 3
+	if not cached.is_empty():
+		cached["resume_recap"] = result
+		cached["recap_content_revision"] = ContentService.get_content_revision()
 	return result
 
 func _describe_summary_resume_recap_direct_legacy(summary: Dictionary) -> String:
@@ -3167,6 +3186,11 @@ func _finalize_and_cache_summary(summary: Dictionary) -> Dictionary:
 	return finalized
 
 func _cached_slot_summary(slot_type: String, slot_id: String, file_path: String) -> Dictionary:
+	var cached := _cached_slot_summary_entry(slot_type, slot_id, file_path)
+	var summary = cached.get("summary", {})
+	return summary.duplicate(true) if summary is Dictionary else {}
+
+func _cached_slot_summary_entry(slot_type: String, slot_id: String, file_path: String) -> Dictionary:
 	var key := _summary_cache_key(slot_type, slot_id, file_path)
 	if not _slot_summary_cache.has(key):
 		return {}
@@ -3182,8 +3206,7 @@ func _cached_slot_summary(slot_type: String, slot_id: String, file_path: String)
 		return {}
 	if String(cached.get("named_file_sha256", "")) != String(signature.get("named_file_sha256", "")):
 		return {}
-	var summary = cached.get("summary", {})
-	return summary.duplicate(true) if summary is Dictionary else {}
+	return cached
 
 func _store_slot_summary_cache(summary: Dictionary) -> void:
 	var slot_type := String(summary.get("slot_type", ""))
