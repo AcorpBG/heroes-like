@@ -3136,10 +3136,21 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 		var node: Dictionary = node_value
 		if not OverworldLevelRulesScript.on_level(node, level):
 			continue
-		var map_object := _map_object_for_resource_node(node)
-		if not _resource_node_blocks_body_tiles(node, map_object):
-			continue
-		for body_tile in _map_object_world_body_tiles(map_object, node):
+		var body_tiles: Array
+		var package_mask: Variant = node.get("package_block_tiles", null)
+		if package_mask is Array:
+			# Package masks already override authored geometry, including an
+			# explicitly empty mask. Preserve presence and decode only once;
+			# resolving a content definition cannot affect this branch.
+			if not resource_node_is_present(node):
+				continue
+			body_tiles = _world_tiles_from_payload_array(package_mask)
+		else:
+			var map_object := _map_object_for_resource_node(node)
+			if not _resource_node_blocks_body_tiles(node, map_object):
+				continue
+			body_tiles = _map_object_world_body_tiles(map_object, node)
+		for body_tile in body_tiles:
 			if body_tile is Vector2i:
 				var key := _tile_key(body_tile)
 				var id := String(node.get("placement_id", ""))

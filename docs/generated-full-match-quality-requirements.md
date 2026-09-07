@@ -244,6 +244,16 @@ unsafe overlaps and invalid native contracts. Record full rendered turn timings
 separately from instrumented diagnostics; missing a speed target remains an open
 performance limit, even when every behavior regression passes.
 
+Blocker construction may bypass unused content lookup when the placement already
+provides an array-valued authoritative package mask. Preserve the existing
+presence rule, decoded tile values/order, empty-mask meaning, native ownership
+tokens and overlap behavior; absent/non-array masks retain their original
+content-backed resolution. No mask, placement, save or cache-lifetime changes.
+Compare the complete pre-change owner over authored mappings, malformed masks,
+consumption/persistence, levels/actors and the real Medium/Large saves using
+`tests/overworld_blocked_mask_regression.py`. Count eliminated work separately
+from serial rendered whole-turn timings, and retain full-state/path controls.
+
 Stored resume recaps may reuse derived text only for the exact inspected summary
 and unchanged authoritative content. Retain the existing slot cache's file
 freshness checks; invalidate derived text on content/draft reload and cache

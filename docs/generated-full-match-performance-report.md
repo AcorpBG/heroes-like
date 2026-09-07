@@ -865,3 +865,129 @@ remain in progress: Large AI/full-save latency, the unmet End Turn speed gate,
 Town integration, prop/terrain presentation, the known Moonbite deadline and
 broader release/hardware limits remain open. Continue measured complete-action
 work without skipping simulation, normalization or transactional saves.
+
+## Direct authoritative blocker-mask reads — 2026-09-07
+
+Selected within the same in-progress responsiveness child. The remaining Large
+profile attributes roughly 0.5–0.8 seconds per turn to constructing occupancy
+indexes. `_build_blocked_tile_index` resolved each resource's content definition
+before `_resource_node_blocks_body_tiles` checked its package mask; nonempty
+masks were then decoded again by `_map_object_world_body_tiles`. In the actual
+Large Day-8 save, all 670 resource placements have array-valued package masks.
+Content definitions cannot affect that branch of the original calculation.
+
+The runtime now checks the same authoritative presence rule and decodes that
+mask once. Missing/non-array masks retain the original content-backed path.
+Empty/malformed arrays, consumed versus persistent sites, native ownership
+tokens, overlaps, actor/level filtering, tile values and insertion order are
+unchanged. No cache or new retained state is introduced. No source mask, map
+placement, native generation/link, gameplay, art, save schema or writer changes.
+
+Reference: commit `34396ac4029725dc8f66e23324986e908a9a5e15`, OverworldRules SHA256
+`6588c9c6b1e7216c337df8cff7d3d06291682ca72d4c2cc9707ebe0225c39c09`.
+Current OverworldRules:
+`8a7738f064982bbfb287936962641aa41602069064aaefd503b22f1db14acbdf`.
+It is the only changed production owner; all other runtime hashes remain at the
+stored-recap checkpoint. The exact Large and Medium save hashes are retained in
+every focused/turn report, unchanged from their actual match checkpoints.
+
+`tests/overworld_blocked_mask_regression.py` loads complete independent original
+and current scripts. `blocker_masks_positive_control` has 128 expected work-count
+failures with identical old/current owners; every state, tile and ownership
+comparison already passes. `blocker_masks_large_verified` and
+`blocker_masks_medium_verified` each pass **1484 checks**, with no engine errors.
+Coverage includes six factions, all 422 current map-object definitions via direct
+and site fallback lookup, all 377 resource-site definitions plus two missing-id
+controls, explicit empty/invalid/negative/duplicate masks, consumed/permanent/
+repeatable states, immediate mask mutation, native/town/scenery/actor overlaps,
+resolved armies, levels and complete real saved sessions. Fixtures are detached
+tests, not modifications to live generated packages.
+
+In the measured Large surface scan, original/current results contain the same
+7458 tile entries: content resolutions fall **670 to zero**, payload decodes
+3376 to 2729, and authoritative presence checks stay 670. Wrapper timings
+42.780 to 31.892 ms explain the removed work only; they are not whole-action
+speed evidence. The unchanged complete path-owner regression additionally
+passes 1023 checks in `blocker_masks_path_large`, including masks, links, selected
+fields/steps, cache freshness, reciprocal levels and occupied/invalid passages.
+
+### Rendered complete turns
+
+Serial, uncontended test-engine runs on the same Linux/X11 Godot 4.6.2 software
+renderer (llvmpipe LLVM 20.1.2), three real turns per row, complete autosave and
+usable controls included. Captures and state serialization are outside timers.
+Evidence root: `.artifacts/generated_full_match_quality_20260906/`.
+
+| Run | Resolution | p50 ms | p95 / max ms | Sum ms |
+| --- | --- | ---: | ---: | ---: |
+| `blocker_masks_large_before` | 1920x1080 | 8087.349 | 8205.566 | 23921.683 |
+| `blocker_masks_large_compared` | 1920x1080 | 7785.031 | 7903.969 | 23149.008 |
+| `blocker_masks_medium_before` | 1280x720 | 3380.725 | 3535.384 | 10285.964 |
+| `blocker_masks_medium_compared` | 1280x720 | 3380.028 | 3623.837 | 10213.014 |
+
+Large cumulative waiting decreases **3.2%** in this pair; Medium's 0.7% is not a
+meaningful improvement. All four complete state trees match per size, along with
+day sequence, input-save identity and rendering backend. Both processes exit
+cleanly with zero runtime errors. **Both reports intentionally remain `ok:false`
+because the required 15% speed gate is unmet; `functional_ok:true` is separate.**
+This is a small runtime optimization, not completion of the End Turn objective.
+
+The initial `blocker_masks_large_after` / `blocker_masks_medium_after` invocations
+incorrectly supplied a report filename to the directory-valued `--compare`
+option. Their game runs finished but Python comparison failed before report
+creation; logs/captures/states remain retained and are not the accepted pair.
+The profiler now documents and rejects an invalid comparison directory before
+launch or output creation. The same invalid invocation exits 2 immediately;
+corrected fresh runs above preserve all original timing/state gate assertions.
+
+Both final `turn_after.png` images were visually inspected. Fog/minimap, owned
+roster, current movement and bottom commands remain usable. The Medium prop-edge
+black rectangles and hard terrain seams, and Large footer truncation, remain
+visible pre-existing presentation defects; no visual improvement is claimed.
+
+### Integrated validation
+
+`blocker_masks_domains/report.json` under
+`.artifacts/full_play_runtime_20260905/` passes all 13 requested movement/input,
+complete-route, fog, AI memory/defense/task/recruitment/raid, transactional-save,
+End Turn failure-recovery and casualty reports. Only the six deliberately
+injected `end_turn_autosave_failed` messages are expected; no unexpected runtime
+errors occur. `blocker_masks_full_play` completes all 51 rendered menu-to-victory/
+resume checkpoints. Its `matched_control_report.json` proves all 50 complete
+saved states and ordered action identities equal to `recap_cache_full_play_after`.
+It ran alongside domain/native validation: profile output is retained, but this
+run is **functional evidence, not a new matched full-loop speed claim**.
+
+Under `.artifacts/rmg_start_audit_20260905/`, `blocker_masks_native_caves` passes
+eight reciprocal journeys, exact AI destinations, real approaches, occupancy
+rejections, source geometry and production-save/fog checks. The underground
+1280x720 capture was inspected. `blocker_masks_native_large_portals` passes both
+representative shapes (`45:1`, `43:2`), seven gameplay/save checks per shape,
+native contract validation and the recorded Large baseline-source comparison.
+Representative coverage is not a claim of every possible endpoint journey;
+no native source changes occurred during either run.
+
+Both release smokes, `blocker_masks_linux_release` and
+`blocker_masks_windows_release`, pass export, native library load, startup and
+packaged generated-map/Town entry. PCKs are **248464880 bytes** on both platforms,
+1535120 below the unchanged 250000000-byte ceiling, with source/development art
+excluded. The established RAM-backed wrapper removes only its new temporary
+exports/Wine prefixes; retained evidence and unrelated files remain untouched.
+Windows execution uses Wine and is not physical Windows/GPU certification.
+The full-play `outcome_resumed` and Linux packaged `generated_player_town_entered`
+captures were inspected; the latter still exposes detached-looking Town buildings.
+
+Repository validation, 24 Python acceptance/native-reference tests, PLAN sync/
+queue checks and `git diff --check` pass. Reproduce the new focused test with
+`python3 -B tests/overworld_blocked_mask_regression.py --label <fresh> --save <actual-save> --require-mask-reuse`;
+path controls with `tests/ai_path_context_read_regression.py --require-key-once`;
+complete turns with `tests/generated_end_turn_profile.py --rendered --compare <run-directory> --require-improvement`;
+the 13 domains and full play with the existing `tests/full_play_*` runners;
+native journeys with `tools/rmg_native_transit_validation.py`; and the unchanged
+Linux/Windows export checkers. All labels/output paths must be fresh.
+
+This checkpoint removes demonstrated redundant runtime work, but the unchanged
+15% full-turn gate remains unmet. Keep the child and parent in progress. Next:
+remaining AI task/target preparation and full-save latency; retain the Town/
+prop/terrain defects, pre-existing Moonbite deadline and hardware/release limits
+as open requirements, not completed work.
