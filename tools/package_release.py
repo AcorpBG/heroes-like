@@ -21,6 +21,9 @@ from typing import BinaryIO
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+from compact_export_pck import compact_export
+
 DEFAULT_OUTPUT_DIR = ROOT / ".artifacts" / "release"
 DEFAULT_SOURCE_DATE_EPOCH = 315532800
 PRODUCT_ID = "heroes-like"
@@ -452,6 +455,9 @@ def export_platform(spec: PlatformSpec, export_dir: Path, godot: str) -> None:
     run(
         [godot, "--headless", "--path", str(ROOT), "--export-release", spec.preset, str(export_dir / spec.binary_name)]
     )
+    # Keep authored JSON readable; compact only the freshly exported payload
+    # before release manifests/signatures are computed for either platform.
+    compact_export(export_dir / f"{PRODUCT_ID}.pck")
 
 
 def validate_platform_files(spec: PlatformSpec, export_dir: Path, version: str) -> list[Path]:

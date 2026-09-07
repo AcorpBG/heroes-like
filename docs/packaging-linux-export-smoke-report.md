@@ -20,6 +20,11 @@ godot --headless --path . --export-release "Linux Release" .artifacts/packaging_
 - The runner verifies the exported executable exists, is larger than the minimum binary-size floor, has executable permission bits, and has an ELF x86_64 header.
 - The runner verifies `.artifacts/packaging_linux_export_smoke/export/heroes-like.pck` exists and is larger than the minimum package-size floor.
 - The runner requires the release PCK to remain at or below the explicit 250 MB ceiling.
+- Before inventory, size and boot checks, the runner uses the same verified
+  `tools/compact_export_pck.py` operation as the production release builder.
+  It removes only exported JSON formatting; source files and all non-JSON payload
+  bytes remain untouched. The report retains `pck_json_compaction` integrity and
+  size evidence. A raw direct Godot export has not yet passed this step.
 - The runner builds an exact inventory from repository `art/*/source/**/*.import` metadata, then parses the exported PCK directory and requires both the development source-art metadata and imported source textures to be absent. Repository source files are preserved; runtime assets remain packaged and retain their existing resource identities.
 - The runner verifies `libaurelion_map_persistence.linux.template_release.x86_64.so` is present beside the exported executable.
 - The runner starts the exported binary with:
@@ -51,5 +56,11 @@ Latest source-art-exclusion result on 2026-08-24:
 - `heroes-like.pck`: 215251188 bytes, down from the 764036400-byte pre-slice release PCK.
 - Exact PCK directory inspection found zero development source-art metadata entries and zero corresponding imported source textures; required runtime terrain/artifact identities remained present.
 - `libaurelion_map_persistence.linux.template_release.x86_64.so`: exported beside the executable.
+
+Validated 2026-09-07 art-headroom checkpoint: `town_pack_linux` under the generated
+full-match quality artifact directory passes with a 246744064-byte compacted PCK,
+including the separate rendered generated Town flow and three successive-day
+builds. Full member/parser preservation and inspected captures are recorded in
+`docs/generated-full-match-art-repair-report.md` (export-only headroom).
 
 Future release packaging still needs clean-machine validation on Linux and Windows, native Windows hardware certification, native minidump/symbol policy, code signing, package signing, and release-channel packaging. Bounded abnormal-exit recovery into the local support bundle is now covered separately.

@@ -20,6 +20,11 @@ godot --headless --path . --export-release "Windows Release" .artifacts/packagin
 - The runner verifies the exported executable exists, is larger than the minimum binary-size floor, and has Windows `MZ` plus `PE` headers.
 - The runner verifies `.artifacts/packaging_windows_export_smoke/export/heroes-like.pck` exists and is larger than the minimum package-size floor.
 - The runner requires the release PCK to remain at or below the explicit 250 MB ceiling.
+- Before inventory, size and Wine checks, the runner uses the same verified
+  `tools/compact_export_pck.py` operation as the production release builder.
+  It removes only exported JSON formatting; source files and all non-JSON payload
+  bytes remain untouched. `pck_json_compaction` records full-member verification
+  and size evidence. A direct Godot export remains an uncompacted raw export.
 - The runner builds an exact inventory from repository `art/*/source/**/*.import` metadata, then parses the exported PCK directory and requires both the development source-art metadata and imported source textures to be absent. Repository source files are preserved; runtime assets remain packaged and retain their existing resource identities.
 - The runner verifies `aurelion_map_persistence.windows.template_release.x86_64.dll` is present beside the exported executable.
 - The runner removes and recreates `.artifacts/packaging_windows_export_smoke/wine-prefix`, then launches the exported executable headlessly with dummy audio and the compatibility renderer.
@@ -56,5 +61,11 @@ Latest source-art-exclusion result on 2026-08-24:
 - `heroes-like.pck`: 215251188 bytes, down from the 764036400-byte pre-slice release PCK.
 - Exact PCK directory inspection found zero development source-art metadata entries and zero corresponding imported source textures; required runtime terrain/artifact identities remained present.
 - The Windows release GDExtension DLL was exported and observed at runtime; Godot, Boot, MainMenu, and native-DLL markers were all present.
+
+Validated 2026-09-07 art-headroom checkpoint: `town_pack_windows` under the generated
+full-match quality artifact directory passes with a 246744064-byte compacted PCK.
+Fresh Wine startup and the nine-step generated Town flow load all three normally
+constructed layers across Days 1-3 with zero runtime errors. Evidence and limits:
+`docs/generated-full-match-art-repair-report.md` (export-only headroom).
 
 The v2 gate additionally requires a successful isolated Wine boot. Future release packaging still needs clean native Windows execution, clean-machine validation, settings persistence verification under native Windows packaged binaries, controller and hardware validation, native minidump/symbol policy, code signing, and release-channel packaging. Bounded abnormal-exit recovery into the local support bundle is now covered separately.

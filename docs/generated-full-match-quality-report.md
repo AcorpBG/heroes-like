@@ -32,6 +32,13 @@ commands and limitations: `docs/generated-full-match-art-repair-report.md`.
 These five Bellwake assets and the earlier Wreck Quay repair do not close the
 remaining constructible-building/all-faction presentation requirement.
 
+Subsequent packaging prerequisite: export-only JSON whitespace compaction now
+restores 3255936 bytes of art headroom, with both PCKs at 246744064 bytes. All
+5146 members are verified, 5095 non-JSON members remain byte-identical, and Godot
+parses all 51 JSON members identically. Both packaged three-day Town flows pass;
+the inspected Linux Day-3 image is pixel-identical. No new art, gameplay change
+or speed gain is claimed. Continue the remaining faction/building integration.
+
 ## Gameplay corrections
 
 Four failures were reproduced before their production fixes:

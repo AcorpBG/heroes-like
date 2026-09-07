@@ -386,6 +386,70 @@ established package wrapper now requests Market, Fog Buoys and Salvage Ledger
 in sequence. This accepts two more constructed layers and the demonstrated
 modal lifetime fix, not the remaining faction/upgrade art or full quality goal.
 
+## Validated export-only art headroom prerequisite
+
+The five Bellwake layers left only 127328 bytes below the package ceiling.
+Inspection of the actual export found only 2674 duplicate payload bytes, but
+about 3.1 MB of unnecessary JSON formatting. No images were regenerated,
+recompressed, downscaled, removed or substituted to recover this space.
+
+`tools/compact_export_pck.py` now compacts newly exported JSON through the existing
+Python release builder and both platform smokes, before manifest/size/startup
+checks. It removes only space, tab, CR and LF outside JSON strings, preserving
+all other token bytes, key/array order, escapes and number spellings. Readable
+repository JSON is untouched. All 5095 non-JSON pack members, including every
+imported raster, script and resource remap, remain byte-identical.
+
+The container remains a plain standalone Godot 4.6 v3 PCK. Offset, length and MD5
+handling follows the official [PCK writer](https://github.com/godotengine/godot/blob/4.6-stable/core/io/pck_packer.cpp)
+and [reader](https://github.com/godotengine/godot/blob/4.6-stable/core/io/file_access_pack.cpp).
+Unknown engine/format/flags, encryption, sparse/embedded packs, deltas/removals,
+unsafe/duplicate names, overlaps, corrupt digests and invalid JSON fail closed.
+Every temporary output member is verified against the original before atomic
+same-directory replacement. Direct Godot exports remain raw; the shared Python
+release/export workflows perform this additional validated step. No engine,
+native map format, gameplay, save or source-art change is involved.
+
+Evidence under `.artifacts/generated_full_match_quality_20260906/`:
+
+- `town_pack_compaction_first.json`: all **5146 members** verified. PCK size
+  decreases from **249872672 to 246744064 bytes**, saving **3128608 bytes** and
+  restoring **3255936 bytes** below the unchanged 250000000-byte ceiling.
+- `town_pack_godot_equivalence/report.json`: both actual PCKs load in Godot and
+  all **51 JSON members** parse identically, with zero runtime errors. Original
+  and compacted pack hashes are retained, and both files remain unchanged during
+  the check. Repeating compaction leaves the complete result byte-identical;
+  compacted SHA256 is `bba0471c150ba7b1cce28abd0adb398f47b121b9f035dec51725d0c76bc8972f`.
+- `town_pack_unit_tests.log`: **20 tests pass**, including independent byte-scan
+  and parsed-value comparisons, malformed inputs, deterministic/idempotent output,
+  atomic failure preservation, concurrent changes and both release-builder paths.
+  Existing artifact-verification **17 tests** and release-pipeline **9 tests**
+  pass in `town_pack_artifact_tests.log` and `town_pack_pipeline_tests.log`.
+- `town_pack_linux` and `town_pack_windows`: both compacted exports pass native
+  library startup and the nine-step generated-map/Town flow, including normal
+  Market/Buoys/Ledger builds on Days 1-3 and exact loaded art. Both final PCKs are
+  **246744064 bytes**; no runtime errors. Windows remains headless Wine, not
+  physical Windows graphics/input certification.
+- Linux's final 1920x1080 constructed Town was visually inspected and is
+  pixel-identical to the retained `town_harbor_linux_final` Day-3 capture. All
+  three construction payloads match that pre-compaction run exactly. The opening
+  capture differs by 53 channel bytes and is not claimed bit-identical.
+- Repository validation passes in `town_pack_repo.log`; final docs/tracker
+  validation is retained in `town_pack_repo_final.log`. `git diff --check` passes.
+
+Reproduce: run `tests/test_compact_export_pck.py`, the two existing release test
+scripts above, and the established platform package wrapper with fresh labels.
+For independent parser proof, retain a raw `godot4 --headless --path .
+--export-pack 'Linux Release' <temporary>/before.pck`, copy it to `after.pck`,
+run `tools/compact_export_pck.py <temporary>/after.pck`, then
+`tests/export_pck_json_regression.py <before.pck> <after.pck> --output <fresh>`.
+Only this turn's disposable exports and temporary Wine installations are removed;
+all reports/captures, caches, saves, source art and RMG evidence stay retained.
+
+This is production tooling required to ship further scene layers, not additional
+art acceptance or a new speed claim. Continue the remaining developed Bellwake
+plots, upgrades and other factions with the restored but still finite headroom.
+
 ## Remaining acceptance
 
 Extend scene-matched art beyond the two starting structures and constructed
