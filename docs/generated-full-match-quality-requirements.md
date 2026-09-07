@@ -231,6 +231,19 @@ bonus across factions, radius boundaries, ties, captures and real Large targets
 using `tests/ai_town_support_radius_regression.py`. Complete End Turn serialized
 states, including AI choices and autosaves, must still match the recorded control.
 
+AI path preparation may share an unchanged fingerprint and authoritative terrain
+passability reads only inside the same synchronous calculation. Native entrance
+safety may share the exact actor-excluded blocker index built in that request,
+per level, but never the movement index after doorway removal. Preserve original
+keys, cache lifetime, every source mask, guard/overlap rejection, native links,
+adjacency and selected path fields. Direct callers and later requests must remain
+fresh. `tests/ai_path_context_read_regression.py` must compare complete original
+owners and state, including real Medium/Large saves, terrain aliases, cold/warm
+queries, changed actors/controllers/days/positions/consumption, two-level travel,
+unsafe overlaps and invalid native contracts. Record full rendered turn timings
+separately from instrumented diagnostics; missing a speed target remains an open
+performance limit, even when every behavior regression passes.
+
 Overworld scenery-index reuse must not rebuild unchanged decorative/standalone
 objects when a town, resource, artifact or encounter changes. The cache belongs
 to the view only: identify every input used to construct those records, including

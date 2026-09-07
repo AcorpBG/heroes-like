@@ -604,7 +604,7 @@ static func native_passage_travel_check(session: SessionStateStoreScript.Session
 			return safety
 	return resolved
 
-static func _native_passage_endpoint_safety(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_id: String) -> Dictionary:
+static func _native_passage_endpoint_safety(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_id: String, actor_blocked_indexes: Variant = null) -> Dictionary:
 	var tile := NativeTransit.point(NativeTransit.link_of(node).get("entry"))
 	var local := Vector2i(tile.x, tile.y)
 	var id := String(node.get("placement_id", ""))
@@ -614,7 +614,15 @@ static func _native_passage_endpoint_safety(session: SessionStateStoreScript.Ses
 	if blocked is bool and blocked and actor_id != "":
 		# A moving AI army may itself cover the doorway. Re-evaluate without
 		# only that actor, preserving every other overlapping source body.
-		blocked = _build_blocked_tile_index(session, tile.z, actor_id).get(_tile_key(local), false)
+		# AI path construction may supply the exact strict actor-excluded index
+		# for this synchronous request. Never substitute its doorway-cleared
+		# movement mask. Direct callers retain a fresh independent calculation.
+		if actor_blocked_indexes is Dictionary:
+			if not actor_blocked_indexes.has(tile.z):
+				actor_blocked_indexes[tile.z] = _build_blocked_tile_index(session, tile.z, actor_id)
+			blocked = actor_blocked_indexes[tile.z].get(_tile_key(local), false)
+		else:
+			blocked = _build_blocked_tile_index(session, tile.z, actor_id).get(_tile_key(local), false)
 	if not (blocked is bool and not blocked) and not (blocked is String and blocked == id):
 		return {"ok": false, "message": "Another object blocks the passage entrance."}
 	var guard := _find_guard_engagement_at_tile(session, tile.x, tile.y, tile.z)

@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import shutil
 import signal
 import tempfile
 from time import monotonic
@@ -16,12 +17,17 @@ BODY = r'''
 func capture_state(label: String) -> void:
 	var file := FileAccess.open(out.path_join(label+".json"),FileAccess.WRITE)
 	file.store_string(JSON.stringify(session.to_dict()))
+func capture_view(label: String) -> void:
+	if DisplayServer.get_name() == "headless":
+		return
+	await RenderingServer.frame_post_draw
+	get_viewport().get_texture().get_image().save_png(out.path_join(label+".png"))
 func run_match() -> void:
 	get_tree().current_scene = null
 	out = OS.get_environment("TURN_PROFILE_OUTPUT")
 	action_file = FileAccess.open(out.path_join("actions.jsonl"),FileAccess.WRITE)
 	SettingsService.set_presentation_mode("windowed")
-	SettingsService.set_presentation_resolution("1280x720")
+	SettingsService.set_presentation_resolution(OS.get_environment("TURN_PROFILE_RESOLUTION"))
 	var saved: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(out.path_join("input_save.json")))
 	session = SessionState.restore_session(saved)
 	for key in ["saved_at_unix","save_slot_type","saved_from_game_state","saved_from_scenario_status","saved_from_launch_mode"]:
@@ -30,7 +36,12 @@ func run_match() -> void:
 		failures.append("restore changed full gameplay state")
 	AppRouter.resume_active_session()
 	await resolve_routes()
+	if DisplayServer.get_name() != "headless":
+		var dimensions := OS.get_environment("TURN_PROFILE_RESOLUTION").split("x")
+		if get_viewport().get_visible_rect().size != Vector2(float(dimensions[0]),float(dimensions[1])):
+			failures.append("actual viewport differs from requested resolution")
 	capture_state("state_00")
+	await capture_view("turn_before")
 	var rows := []
 	for index in range(3):
 		if not scene_path().ends_with("OverworldShell.tscn") or session.scenario_status != "in_progress":
@@ -38,6 +49,13 @@ func run_match() -> void:
 			break
 		var shell = get_tree().current_scene
 		var day_before: int = session.day
+		var diagnostic_owner: Variant = null
+		var diagnostic_overworld: Variant = null
+		if OS.get_environment("TURN_PROFILE_PATH_READS")=="1":
+			diagnostic_owner = load("res://scripts/core/EnemyAdventureRules.gd")
+			diagnostic_owner.measured_reads.clear()
+			diagnostic_overworld = load("res://scripts/core/OverworldRules.gd")
+			diagnostic_overworld.measured_reads.clear()
 		var started := Time.get_ticks_usec()
 		var result: Dictionary = shell._request_end_turn(false)
 		if bool(result.get("confirmation_required",false)):
@@ -51,8 +69,12 @@ func run_match() -> void:
 		if enemy_profile.is_empty():
 			failures.append("missing real AI phase profile")
 		rows.append({"day_before":day_before,"day_after":session.day,"ok":result.get("ok",false),"callback_ms":callback_ms,"usable_ms":usable_ms,"enemy_turn_profile":enemy_profile})
+		if diagnostic_owner != null:
+			rows[-1]["diagnostic_path_reads"] = diagnostic_owner.measured_reads.duplicate(true)
+			rows[-1]["diagnostic_overworld_reads"] = diagnostic_overworld.measured_reads.duplicate(true)
 		capture_state("state_%02d" % (index+1))
-	print("GENERATED_END_TURN_PROFILE "+JSON.stringify({"ok":failures.is_empty() and rows.size()==3,"failures":failures,"rows":rows,"battle_counts":counts}))
+	await capture_view("turn_after")
+	print("GENERATED_END_TURN_PROFILE "+JSON.stringify({"ok":failures.is_empty() and rows.size()==3,"failures":failures,"rows":rows,"battle_counts":counts,"backend":{"display":DisplayServer.get_name(),"engine":Engine.get_version_info().string,"os":OS.get_name(),"renderer":RenderingServer.get_video_adapter_name(),"viewport":str(get_viewport().get_visible_rect().size)}}))
 	get_tree().quit(0 if failures.is_empty() else 1)
 '''
 
@@ -64,12 +86,17 @@ def main():
     parser.add_argument('--compare', type=Path)
     parser.add_argument('--require-improvement', action='store_true')
     parser.add_argument('--pause-driver', action='append', default=[])
+    parser.add_argument('--rendered', action='store_true')
+    parser.add_argument('--resolution', choices=['1280x720','1920x1080'], default='1280x720')
+    parser.add_argument('--instrument-ai-path-reads', action='store_true', help='Diagnostic counters only; cannot pass a speed gate')
     args = parser.parse_args()
     for label in [args.label]+args.pause_driver:
         if not label or any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789_-' for c in label):
             parser.error('labels must be lowercase slugs')
     if args.require_improvement and not args.compare:
         parser.error('--require-improvement requires --compare')
+    if args.instrument_ai_path_reads and args.require_improvement:
+        parser.error('instrumented diagnostics cannot establish full-action speed')
     out = OUTPUT/args.label
     out.mkdir(parents=True, exist_ok=False)
     saved = args.save.read_bytes()
@@ -82,29 +109,54 @@ def main():
     try:
         with tempfile.TemporaryDirectory(prefix='turn-profile-',dir=OUTPUT) as temporary:
             work = Path(temporary)
+            project = ROOT
+            if args.instrument_ai_path_reads:
+                project = work/'project'
+                project.mkdir()
+                for name in ['project.godot','.godot','art','bin','content','scenes','src']:
+                    (project/name).symlink_to(ROOT/name,target_is_directory=(ROOT/name).is_dir())
+                shutil.copytree(ROOT/'scripts',project/'scripts')
+                owner_path = 'scripts/core/EnemyAdventureRules.gd'
+                source = (ROOT/owner_path).read_text()
+                sources[owner_path] = hashlib.sha256(source.encode()).hexdigest()
+                from ai_path_context_read_regression import instrument
+                source = 'class_name EnemyAdventureRules\n'+instrument(source)
+                overworld_path = 'scripts/core/OverworldRules.gd'
+                overworld = (ROOT/overworld_path).read_text()
+                (project/overworld_path).write_text('class_name OverworldRules\n'+instrument(overworld,methods=['_native_passage_endpoint_safety','_build_blocked_tile_index'],terrain=False))
+                (project/owner_path).write_text(source)
+                work = project
             (work/'probe.gd').write_text(MATCH_SCRIPT[:MATCH_SCRIPT.index('func run_match()')]+BODY)
             scene = work/'probe.tscn'
-            scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="Turns" type="Node"]\nscript = ExtResource("1")\n' % (work/'probe.gd').relative_to(ROOT))
-            env = dict(os.environ,XDG_DATA_HOME=str(out/'data'),TURN_PROFILE_OUTPUT=str(out),HEROES_PROFILE_LOG='1',HEROES_STRATEGIC_AI_PROFILE='1')
+            scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="Turns" type="Node"]\nscript = ExtResource("1")\n' % (work/'probe.gd').relative_to(project))
+            env = dict(os.environ,XDG_DATA_HOME=str(out/'data'),TURN_PROFILE_OUTPUT=str(out),TURN_PROFILE_RESOLUTION=args.resolution,TURN_PROFILE_PATH_READS='1' if args.instrument_ai_path_reads else '0',HEROES_PROFILE_LOG='1',HEROES_STRATEGIC_AI_PROFILE='1')
+            command = ['godot4','--path',str(project),'--audio-driver','Dummy','--accessibility','disabled','res://'+str(scene.relative_to(project))]
+            command = ['xvfb-run','-a','-s','-screen 0 2200x1200x24']+command if args.rendered else command[:1]+['--headless']+command[1:]
             with (out/'runtime.log').open('w') as log:
-                code = run_probe(['godot4','--headless','--path',str(ROOT),'--audio-driver','Dummy','--accessibility','disabled','res://'+str(scene.relative_to(ROOT))],env,log)
+                code = run_probe(command,env,log)
     finally:
         resume_drivers(paused)
     lines = (out/'runtime.log').read_text().splitlines()
     marker = 'GENERATED_END_TURN_PROFILE '
     reports = [json.loads(line[len(marker):]) for line in lines if line.startswith(marker)]
     report = reports[-1] if reports else {'ok':False,'failures':['missing report']}
-    report.update(returncode=code,save_sha256=hashlib.sha256(saved).hexdigest(),source_sha256=sources,paused_engine_pids=paused,wall_seconds=monotonic()-started,runtime_errors=[line for line in lines if line.startswith(('ERROR:','SCRIPT ERROR:')) or 'leaked' in line])
+    report.update(returncode=code,save_sha256=hashlib.sha256(saved).hexdigest(),source_sha256=sources,instrumented=args.instrument_ai_path_reads,paused_engine_pids=paused,wall_seconds=monotonic()-started,runtime_errors=[line for line in lines if line.startswith(('ERROR:','SCRIPT ERROR:')) or 'leaked' in line])
     report['latency'] = latency_summary(report.get('rows',[]))
     if args.compare:
         reference = json.loads((args.compare/'report.json').read_text())
         parity = {p.name:json.loads(p.read_text())==json.loads((args.compare/p.name).read_text()) for p in sorted(out.glob('state_*.json'))}
         days_equal = [(r['day_before'],r['day_after']) for r in report.get('rows',[])] == [(r['day_before'],r['day_after']) for r in reference.get('rows',[])]
-        report['comparison'] = {'reference':str(args.compare),'states':parity,'same_days':days_equal,'same_save':report['save_sha256']==reference['save_sha256'],'usable_ratio':report['latency'].get('total_ms',1)/max(1,reference['latency'].get('total_ms',1))}
+        same_backend = report.get('backend',{}) == reference.get('backend',{})
+        # Older controls did not record the backend and are headless only;
+        # they can prove state equality but cannot pass a new speed gate.
+        report['comparison'] = {'reference':str(args.compare),'states':parity,'same_days':days_equal,'same_save':report['save_sha256']==reference['save_sha256'],'same_backend':same_backend,'usable_ratio':report['latency'].get('total_ms',1)/max(1,reference['latency'].get('total_ms',1))}
         report['ok'] = report['ok'] and reference.get('ok',False) and len(parity)==4 and all(parity.values()) and days_equal and report['comparison']['same_save']
-        if args.require_improvement:
-            report['ok'] = report['ok'] and report['comparison']['usable_ratio'] <= 0.85
+        report['performance_gate'] = {'required':args.require_improvement,'maximum_usable_ratio':0.85,'passed':same_backend and not args.instrument_ai_path_reads and not reference.get('instrumented',False) and report['comparison']['usable_ratio'] <= 0.85}
     report['ok'] = bool(report['ok']) and code==0 and not report['runtime_errors']
+    report['functional_ok'] = report['ok']
+    if args.require_improvement and not report['performance_gate']['passed']:
+        report['ok'] = False
+        report['failures'].append('complete-action 15% improvement gate not met; see functional_ok and comparison')
     (out/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({key:value for key,value in report.items() if key!='rows'}))
     return 0 if report['ok'] else 1
