@@ -9,6 +9,7 @@ const FLOW_BOOT_TO_CAMPAIGN_DEFEAT_OUTCOME := "boot_to_campaign_defeat_outcome"
 const FLOW_BOOT_TO_CAMPAIGN_FULL_ARC := "boot_to_campaign_full_arc"
 const FLOW_BOOT_TO_SKIRMISH_STRATEGIC_SOAK := "boot_to_skirmish_strategic_soak"
 const FLOW_BOOT_TO_GENERATED_SKIRMISH_TOWN := "boot_to_generated_skirmish_town"
+const FLOW_PYTHON_TOWN_SCENE_PROBE := "python_town_scene_probe"
 const MAIN_MENU_SCENE := "res://scenes/menus/MainMenu.tscn"
 const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
@@ -90,7 +91,39 @@ func _ready() -> void:
 	_enabled = bool(_config.get("enabled", false))
 	if not _enabled:
 		return
+	if String(_config.get("flow", "")) == FLOW_PYTHON_TOWN_SCENE_PROBE:
+		call_deferred("_run_python_town_scene_probe")
+		return
 	call_deferred("_run_live_validation")
+
+func _run_python_town_scene_probe() -> void:
+	# Release templates disallow CLI scene overrides. This explicit, hash-locked
+	# bootstrap keeps the actual test/driver Python-owned and outside the PCK.
+	var path := String(_config.get("town_probe_path", ""))
+	var expected := String(_config.get("town_probe_sha256", ""))
+	var relative := path.trim_prefix("res://")
+	var parts := relative.split("/", false)
+	var valid := path.begins_with("res://") and parts.size() == 2 and parts[0].begins_with("_town_scene_probe_") and parts[0].is_valid_identifier() and parts[1] == "probe.gd" and path == "res://" + parts[0] + "/probe.gd"
+	if not valid or expected.length() != 64 or not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != expected:
+		push_error("Town validation probe path/hash rejected.")
+		get_tree().quit(1)
+		return
+	var menu = await _wait_for_scene(MAIN_MENU_SCENE, 10000)
+	if menu == null:
+		push_error("Town validation probe did not reach normal Main Menu startup.")
+		get_tree().quit(1)
+		return
+	var script = load(path) as Script
+	if script == null or not script.can_instantiate() or script.get_instance_base_type() != "Node":
+		push_error("Town validation probe is not an instantiable Node script.")
+		get_tree().quit(1)
+		return
+	get_tree().current_scene = null
+	menu.queue_free()
+	await get_tree().process_frame
+	var probe := Node.new()
+	probe.set_script(script)
+	get_tree().root.add_child(probe)
 
 func _run_live_validation() -> void:
 	var profile_resolution := OS.get_environment("HEROES_LIVE_PROFILE_RESOLUTION")
@@ -4185,6 +4218,12 @@ func _parse_user_args(args: Array) -> Dictionary:
 			continue
 		if arg.begins_with("--live-validation-town-building="):
 			config["town_building_id"] = arg.trim_prefix("--live-validation-town-building=")
+			continue
+		if arg.begins_with("--live-validation-town-probe-path="):
+			config["town_probe_path"] = arg.trim_prefix("--live-validation-town-probe-path=")
+			continue
+		if arg.begins_with("--live-validation-town-probe-sha256="):
+			config["town_probe_sha256"] = arg.trim_prefix("--live-validation-town-probe-sha256=")
 			continue
 		if arg.begins_with("--live-validation-town-building-sequence="):
 			config["town_building_sequence"] = Array(arg.trim_prefix("--live-validation-town-building-sequence=").split(",", false))

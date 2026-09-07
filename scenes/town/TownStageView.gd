@@ -1554,8 +1554,9 @@ func _sync_building_hotspots() -> void:
 		var building_name := String(building.get("name", building_id))
 		var description := String(building.get("description", ""))
 		button.tooltip_text = "%s\n%s\nOpen building information." % [building_name, description]
-		button.accessibility_name = "%s building" % building_name
-		button.accessibility_description = "%s Press to open building information." % description
+		# Registration may already have assigned an automatic node-name label.
+		# Mark the catalog identity as authored so focus/visibility scans retain it.
+		UiAccessibility.describe_control(button, "%s building" % building_name, "%s Press to open building information." % description)
 		button.position = destination_rect.position
 		button.size = destination_rect.size
 		button.painted_mask = null

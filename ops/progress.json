@@ -47,7 +47,12 @@
         "python3 -B tests/export_pck_json_regression.py <raw-export.pck> <compacted-export.pck> --output <fresh>",
         "python3 -B tests/packaging_release_artifact_verification_test.py",
         "python3 -B tests/town_scene_layer_regression.py --exchange-growth --developed-save <Large08-slot3.json> --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>",
-        "python3 -B tests/town_scene_layer_regression.py --salt-growth --developed-save <Large08 terminal slot3> --save <Large08 opening slot1> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>"
+        "python3 -B tests/town_scene_layer_regression.py --salt-growth --developed-save <Large08 terminal slot3> --save <Large08 opening slot1> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
+        "python3 -B tests/town_scene_layer_regression.py --defense-growth --save <Large08 opening slot1> --developed-save <Large08 terminal slot3> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
+        "python3 -B tests/town_scene_layer_regression.py --memory-growth --save <Large08 earned Day-8 slot2> --developed-save <Large08 terminal slot3> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
+        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-export-binary> --pack <same-export.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --memory-growth --save <Large08 earned Day-8 slot2> --developed-save <Large08 terminal slot3> --resolution 1280x720 --label <fresh>",
+        "python3 -B -m unittest discover -s tests -p test_packaged_town_scene_layer_probe.py",
+        "python3 -B tests/town_stockpile_text_fit_regression.py --save <Large08 earned Day-8 slot2> --label <fresh> [--authored]"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -93,16 +98,22 @@
         "tools/prepare_town_scene_layers.py, exact-faction scene manifest and original source/trimmed/runtime art: Bellwake Ransom Exchange and Mirror Drydock grounded layers, preserving five accepted layers and village",
         "tests/town_scene_layer_regression.py and tests/test_town_scene_layers.py: normal three-day Market/Ransom/Mirror construction, strict mappings, input/save and developed-16 composition; both platform packaged five-day construction validation",
         "tools/prepare_town_scene_layers.py and exact-faction original scene art: Salt Counting House, Mourner Pilot Guild and Saltwake Factor; preserve seven accepted layers/village/catalog icons",
-        "tests/town_scene_layer_regression.py and strict art tests: ordinary six-day salt/pilot purchases, input/save and developed-16 composition; both-platform packaged construction"
+        "tests/town_scene_layer_regression.py and strict art tests: ordinary six-day salt/pilot purchases, input/save and developed-16 composition; both-platform packaged construction",
+        "tools/prepare_town_scene_layers.py and exact-faction source/trim/runtime art: Harpoon Gantry, Bell-Chain Watch, Obituary Vault, Wake Oratory and Mistgate Slip; preserve ten accepted layers and original village",
+        "tests/town_scene_layer_regression.py and strict art tests: normal opening defense and exact Day-8 memory purchases, input/save and developed-16 composition; both-platform packaged construction",
+        "scenes/town/TownStageView.gd: retain exact authored building accessibility labels via UiAccessibility.describe_control",
+        "scripts/autoload/LiveValidationHarness.gd: explicit restricted-path SHA256-checked Python Town-probe bootstrap; no normal-game execution or embedded test logic",
+        "tests/packaged_town_scene_layer_regression.py and test_packaged_town_scene_layer_probe.py: actual isolated release binary, immutable pack and complete paid/input/save assertions, bootstrap rejection controls and headless-only screenshot omission",
+        "scenes/town/TownShell.tscn and tests/town_stockpile_text_fit_regression.py: after immutable art acceptance, opt Town into existing width fitting and a local legible read-only popup theme; preserve nine-resource input/save behavior at three resolutions"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T19:57:31Z",
+      "updatedAt": "2026-09-07T22:43:19Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated three original Salt Counting House/Pilot Guild/Saltwake Factor scene layers: 4476 checks at each of three inspected resolutions, 57 Python tests, existing Town reports and Linux/Windows 19-step paid-construction flows pass. Both PCKs 248145628 bytes; 1854372 bytes headroom. Ten Bellwake layers accepted, not complete town/faction/upgrade or Overworld art; full goal remains active. Windows headless Wine and legacy keyboard/Moonbite limits remain explicit."
+      "notes": "Defense/memory checkpoint validated: six source runs pass 9003/8474 checks at three inspected resolutions; Linux and Windows exact-save probes each pass 8474 checks plus five bootstrap controls, exact paid rows, unchanged saves/export bytes and no engine errors. Both PCKs 249673796 bytes; normal ten-day construction smokes, 62 Python tests and repository checks pass. Immutable batch is complete. Next: Town-only caption fit/read-only popup theme; all-faction art and full goal remain open."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16720,7 +16731,7 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Validated three original Salt Counting House/Pilot Guild/Saltwake Factor scene layers: 4476 checks at each of three inspected resolutions, 57 Python tests, existing Town reports and Linux/Windows 19-step paid-construction flows pass. Both PCKs 248145628 bytes; 1854372 bytes headroom. Ten Bellwake layers accepted, not complete town/faction/upgrade or Overworld art; full goal remains active. Windows headless Wine and legacy keyboard/Moonbite limits remain explicit.",
+  "currentSliceNotes": "Defense/memory checkpoint validated: six source runs pass 9003/8474 checks at three inspected resolutions; Linux and Windows exact-save probes each pass 8474 checks plus five bootstrap controls, exact paid rows, unchanged saves/export bytes and no engine errors. Both PCKs 249673796 bytes; normal ten-day construction smokes, 62 Python tests and repository checks pass. Immutable batch is complete. Next: Town-only caption fit/read-only popup theme; all-faction art and full goal remain open.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Presentation Corrections",
   "currentSliceUpdatedAt": "2026-09-07T18:27:23Z",
@@ -22506,7 +22517,12 @@
         "python3 -B tests/export_pck_json_regression.py <raw-export.pck> <compacted-export.pck> --output <fresh>",
         "python3 -B tests/packaging_release_artifact_verification_test.py",
         "python3 -B tests/town_scene_layer_regression.py --exchange-growth --developed-save <Large08-slot3.json> --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>",
-        "python3 -B tests/town_scene_layer_regression.py --salt-growth --developed-save <Large08 terminal slot3> --save <Large08 opening slot1> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>"
+        "python3 -B tests/town_scene_layer_regression.py --salt-growth --developed-save <Large08 terminal slot3> --save <Large08 opening slot1> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
+        "python3 -B tests/town_scene_layer_regression.py --defense-growth --save <Large08 opening slot1> --developed-save <Large08 terminal slot3> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
+        "python3 -B tests/town_scene_layer_regression.py --memory-growth --save <Large08 earned Day-8 slot2> --developed-save <Large08 terminal slot3> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
+        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-export-binary> --pack <same-export.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --memory-growth --save <Large08 earned Day-8 slot2> --developed-save <Large08 terminal slot3> --resolution 1280x720 --label <fresh>",
+        "python3 -B -m unittest discover -s tests -p test_packaged_town_scene_layer_probe.py",
+        "python3 -B tests/town_stockpile_text_fit_regression.py --save <Large08 earned Day-8 slot2> --label <fresh> [--authored]"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -22552,16 +22568,22 @@
         "tools/prepare_town_scene_layers.py, exact-faction scene manifest and original source/trimmed/runtime art: Bellwake Ransom Exchange and Mirror Drydock grounded layers, preserving five accepted layers and village",
         "tests/town_scene_layer_regression.py and tests/test_town_scene_layers.py: normal three-day Market/Ransom/Mirror construction, strict mappings, input/save and developed-16 composition; both platform packaged five-day construction validation",
         "tools/prepare_town_scene_layers.py and exact-faction original scene art: Salt Counting House, Mourner Pilot Guild and Saltwake Factor; preserve seven accepted layers/village/catalog icons",
-        "tests/town_scene_layer_regression.py and strict art tests: ordinary six-day salt/pilot purchases, input/save and developed-16 composition; both-platform packaged construction"
+        "tests/town_scene_layer_regression.py and strict art tests: ordinary six-day salt/pilot purchases, input/save and developed-16 composition; both-platform packaged construction",
+        "tools/prepare_town_scene_layers.py and exact-faction source/trim/runtime art: Harpoon Gantry, Bell-Chain Watch, Obituary Vault, Wake Oratory and Mistgate Slip; preserve ten accepted layers and original village",
+        "tests/town_scene_layer_regression.py and strict art tests: normal opening defense and exact Day-8 memory purchases, input/save and developed-16 composition; both-platform packaged construction",
+        "scenes/town/TownStageView.gd: retain exact authored building accessibility labels via UiAccessibility.describe_control",
+        "scripts/autoload/LiveValidationHarness.gd: explicit restricted-path SHA256-checked Python Town-probe bootstrap; no normal-game execution or embedded test logic",
+        "tests/packaged_town_scene_layer_regression.py and test_packaged_town_scene_layer_probe.py: actual isolated release binary, immutable pack and complete paid/input/save assertions, bootstrap rejection controls and headless-only screenshot omission",
+        "scenes/town/TownShell.tscn and tests/town_stockpile_text_fit_regression.py: after immutable art acceptance, opt Town into existing width fitting and a local legible read-only popup theme; preserve nine-resource input/save behavior at three resolutions"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T19:57:31Z",
+      "updatedAt": "2026-09-07T22:43:19Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated three original Salt Counting House/Pilot Guild/Saltwake Factor scene layers: 4476 checks at each of three inspected resolutions, 57 Python tests, existing Town reports and Linux/Windows 19-step paid-construction flows pass. Both PCKs 248145628 bytes; 1854372 bytes headroom. Ten Bellwake layers accepted, not complete town/faction/upgrade or Overworld art; full goal remains active. Windows headless Wine and legacy keyboard/Moonbite limits remain explicit."
+      "notes": "Defense/memory checkpoint validated: six source runs pass 9003/8474 checks at three inspected resolutions; Linux and Windows exact-save probes each pass 8474 checks plus five bootstrap controls, exact paid rows, unchanged saves/export bytes and no engine errors. Both PCKs 249673796 bytes; normal ten-day construction smokes, 62 Python tests and repository checks pass. Immutable batch is complete. Next: Town-only caption fit/read-only popup theme; all-faction art and full goal remain open."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111328,7 +111350,7 @@
   ],
   "summary": "Validated Bellwake Salt Counting House, Mourner Pilot Guild and Saltwake Factor original scene layers: 4476 checks at each of 1280x720, 1920x1080 and 2048x1079; 57 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 19-step eight-day construction flows pass. Both PCKs are 248145628 bytes with 1854372 bytes headroom. Village, prior seven layers, catalog icons, rules and saves unchanged. Ten layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
   "taskId": "10236",
-  "updatedAt": "2026-09-07T19:58:52Z",
+  "updatedAt": "2026-09-07T22:43:20Z",
   "validation": {
     "id": "quality-town-salt-pilot-art-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",

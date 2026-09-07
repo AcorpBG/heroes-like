@@ -20,7 +20,7 @@
   "processing": "Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.",
   "rights": "Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.",
   "catalog_icons": "Unchanged; these exact-faction scene layers are not shared catalog replacements.",
-  "migration_scope": "Bellwake Bell Harbor and Wayfarers Hall starting structures plus normally constructed Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange, Mirror Drydock, Salt Counting House, Mourner Pilot Guild and Saltwake Factor; remaining catalog-based scene art is explicitly not accepted by this migration.",
+  "migration_scope": "Fifteen Bellwake scene layers: Bell Harbor, Wayfarers Hall, Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange, Mirror Drydock, Salt Counting House, Mourner Pilot Guild, Saltwake Factor, Harpoon Gantry, Bell-Chain Watch, Obituary Vault, Wake Oratory and Mistgate Slip. Other buildings/upgrades/factions remain unaccepted; five defense/memory rows explicitly record text-only generation inputs.",
   "missing_declared_layer_policy": "validation_failure_no_catalog_or_procedural_fallback",
   "factions": {
     "faction_veilmourn": {
@@ -463,6 +463,231 @@
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_saltwake_factor.prompt.txt",
         "prompt_sha256": "bdb313b0b63dc975d168e6be4abd142e5f90bccdff5e2111c1488bf6ea2fc98b",
         "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
+      },
+      "building_veilmourn_harpoon_gantry": {
+        "asset_id": "faction_veilmourn_building_veilmourn_harpoon_gantry",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_harpoon_gantry.png",
+        "source_sha256": "c12da98f94bfc64eb26e654396e87964dd647991b3172cdc928d4f52dfa7f63b",
+        "source_size": [
+          1254,
+          1254
+        ],
+        "trim_box": [
+          0,
+          1,
+          1242,
+          1254
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_harpoon_gantry.png",
+        "trimmed_sha256": "880e81995f0e4dcb59f386d4cac9d8b5dcba492609a833155cecb5f15806eb41",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_harpoon_gantry.png",
+        "runtime_sha256": "e723c891e9a4ae3adb88f0c73835e6ed83a1daf2d43211ff04aa7272e028c943",
+        "runtime_size": [
+          508,
+          512
+        ],
+        "normalized_rect": [
+          0.034375,
+          0.6002215133794081,
+          0.1547547846889952,
+          0.27755626439836967
+        ],
+        "ground_anchor": [
+          0.1125,
+          0.8666666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Harpoon training platform rises from the foreground-left quay below the tower, with pilings joining the waterfront and exposed launchers over the harbor. Keep the complete base above navigation.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_harpoon_gantry.prompt.txt",
+        "prompt_sha256": "4601b652cd9877b1410844061a2937761974f4f5e9d6c9b878851485a29ca04a",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.",
+        "reference_inputs": []
+      },
+      "building_veilmourn_bell_chain_watch": {
+        "asset_id": "faction_veilmourn_building_veilmourn_bell_chain_watch",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_bell_chain_watch.png",
+        "source_sha256": "f1d58aab18cb5e1b40fdad3789deeeaa95cc390d75aff8ecb9a77c639dcad620",
+        "source_size": [
+          1254,
+          1254
+        ],
+        "trim_box": [
+          21,
+          0,
+          1236,
+          1254
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_bell_chain_watch.png",
+        "trimmed_sha256": "c65d230df7f45a56b927ec3edbe8fd2f671e7c0fad14712c3118e35aa6e00e7f",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_bell_chain_watch.png",
+        "runtime_sha256": "97289f1e65f1000c645a9f15a74fe9726282d84c410b626e01a973eca25d340e",
+        "runtime_size": [
+          496,
+          512
+        ],
+        "normalized_rect": [
+          0.18969796650717705,
+          0.5666666666666667,
+          0.12716806220095694,
+          0.23333333333333334
+        ],
+        "ground_anchor": [
+          0.25625,
+          0.7833333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Narrow signal post sits on the left working quay behind the Market, leaving its three-bell frame exposed above the arcade and the main tower unobstructed.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_bell_chain_watch.prompt.txt",
+        "prompt_sha256": "22f99e355aa432460b6302675e2bc6c09384f70411f22d6d7e14f8b462b87b8e",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.",
+        "reference_inputs": []
+      },
+      "building_veilmourn_obituary_vault": {
+        "asset_id": "faction_veilmourn_building_veilmourn_obituary_vault",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_obituary_vault.png",
+        "source_sha256": "deffa6c894ad6d79d157c2e27dd81805621227dd9a017877d339767cd47c0d93",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          4,
+          1522,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_obituary_vault.png",
+        "trimmed_sha256": "d45ebf26a2594687c97a4cb5b82f77a694d082f74a9811cf701aaf3e58da2a54",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_obituary_vault.png",
+        "runtime_sha256": "2d5e9f7ffe09abcbad5f5eae8737ec67b1e11af887389b9972d0e54d4eaea12c",
+        "runtime_size": [
+          512,
+          343
+        ],
+        "normalized_rect": [
+          0.1875,
+          0.6951822916666667,
+          0.15792236328125,
+          0.18815104166666666
+        ],
+        "ground_anchor": [
+          0.271875,
+          0.8722222222222222
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Low memory archive continues the foreground-left trading quay, with stone entry steps facing its approach and pilings meeting the harbor below the Market; leave bottom navigation clear.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_obituary_vault.prompt.txt",
+        "prompt_sha256": "cacc75b7a76c38ef0514ee53712987a02cba9f936dbdef95c0ae8e2e37e0e095",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.",
+        "reference_inputs": []
+      },
+      "building_veilmourn_wake_oratory": {
+        "asset_id": "faction_veilmourn_building_veilmourn_wake_oratory",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_wake_oratory.png",
+        "source_sha256": "296dc225d56ed1c226a14b6575e5e0e370c3e8dc5ee8ebf5ea6b07860c74cccf",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1520,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_wake_oratory.png",
+        "trimmed_sha256": "d00ae92a8eb7aa848e6ba2c90ee988aa0a79c310809fd037a80b0a3bb4e358cb",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_wake_oratory.png",
+        "runtime_sha256": "5764fd792203b6b867f98a0f704eb93fc0e37e64e64f9388aec8e811a1652b02",
+        "runtime_size": [
+          512,
+          345
+        ],
+        "normalized_rect": [
+          0.81875,
+          0.46111111111111114,
+          0.1669921875,
+          0.2
+        ],
+        "ground_anchor": [
+          0.9,
+          0.65
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Open bell-rite pavilion joins the right shoreline behind the Pilot Guild and Drydock; its pitched canopy remains exposed without hovering above the quay or covering commands.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_wake_oratory.prompt.txt",
+        "prompt_sha256": "aafab9eacc8c38e7505c687aba6cc389922703c4028c0ef80e47c4883a4161d3",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.",
+        "reference_inputs": []
+      },
+      "building_veilmourn_mistgate_slip": {
+        "asset_id": "faction_veilmourn_building_veilmourn_mistgate_slip",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_mistgate_slip.png",
+        "source_sha256": "d9931a2a94030e9d5dde2f39d300e0586389c1ec99741f56f9cf9e9f981e6674",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          10,
+          1492,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_mistgate_slip.png",
+        "trimmed_sha256": "a556b3682843bafc3c2c4e1cd28427f2def3f999a295bc711340a8eaf8b4bca3",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_mistgate_slip.png",
+        "runtime_sha256": "efd0002bd9ba95c82967e6b42d36894749b70a67fa44b571197d5f0769fc728a",
+        "runtime_size": [
+          512,
+          348
+        ],
+        "normalized_rect": [
+          0.615625,
+          0.6908420138888889,
+          0.163916015625,
+          0.198046875
+        ],
+        "ground_anchor": [
+          0.696875,
+          0.8777777777777778
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Mirror-lined boarding slip attaches to the foreground-right quay beside the Drydock, with its walkway directed toward shore and the main channel kept open beside the buoys.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_mistgate_slip.prompt.txt",
+        "prompt_sha256": "388a97a760d951c1c0cb082413fea1c2ad43387c4e820eb055e42dd3e17e5c8f",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.",
+        "reference_inputs": []
       }
     }
   }

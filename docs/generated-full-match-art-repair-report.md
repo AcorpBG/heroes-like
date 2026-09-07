@@ -629,14 +629,143 @@ above. Fresh package binaries/Wine installations are disposed by the retained
 launcher; all saves, reports, screenshots, original art, caches and RMG evidence
 are preserved. This is three further layers, not full presentation acceptance.
 
+## Defense / memory integration — validated checkpoint
+
+Five remaining catalog dioramas in the actual Large08 developed Bellwake view
+now resolve through exact-faction original scene layers: Harpoon Gantry,
+Bell-Chain Watch, Obituary Vault, Wake Oratory and Mistgate Slip. The prior ten
+manifest rows and their source/prompt/runtime files are unchanged. The village,
+catalog/info icons, built ids, costs, prerequisites and save schema are unchanged.
+Original built-in imagegen outputs, exact prompts, rejected checkerboard outputs,
+accepted second placements and alpha-margin/512px/mipmap provenance are recorded
+in `art/towns/source/generated/scene_layers/README.md` and the scene manifest.
+No new generated geometry or procedural/background-extraction approximation is
+used. This is fifteen accepted source paintings, not all-faction acceptance.
+
+The source probe adds ordinary opening defense purchases (Market then Fog Buoys,
+Watch, Ransom Exchange, Drydock and Gantry over Days 1–6), and memory purchases
+from the exact retained nonterminal Day-8 save (Vault, Oratory and Slip on
+Days 9–11). Rare resources and prerequisite buildings in the latter come from
+actual prior play, not injected funds. The terminal Day-14 built-id composition
+is only a detached UI model; it is not resumed as a match or presented as paid
+construction. Its shell and stage agree on built ids, initialize through the
+ordinary ledger read and retain complete model/live-state comparisons.
+
+Input inspection exposed a real accessibility defect: automatic node-name
+metadata could overwrite authored building names during a later focus scan.
+`TownStageView` now uses the existing `UiAccessibility.describe_control` API,
+which clears that automatic metadata. Exact names are checked after an explicit
+accessibility scan and after focus restoration. Painted/transparent clicks,
+keyboard/controller activation, separate catalog icons and prior-layer
+foreground ownership remain covered. The old Market counter click is correctly
+owned by the foreground Vault; the probe proves that overlap, then clicks the
+still-exposed Market canopy. No input-priority bypass is introduced.
+
+Official release templates reject CLI scene/path overrides. The existing
+opt-in `LiveValidationHarness` now permits a restricted export-local Python
+probe only with the explicit flow and matching SHA256, after ordinary Main Menu
+startup. Normal startup is inert. `tests/packaged_town_scene_layer_regression.py`
+uses the real isolated release binary and unchanged adjacent PCK; no editor
+substitution, resource overlay pack or loose game scripts. All assertions remain
+Python-owned. Windows removes only paired rendering/capture operations and
+retains gameplay, real input, exact identity and complete save checks. Wrong
+paths, hashes and script base types have explicit negative controls.
+
+Evidence so far (relative to the goal artifact directory):
+
+- `town_defense_before2_720` and `town_memory_before_720` reproduce the missing
+  exact scene mappings while retaining normal purchase/save behavior. Earlier
+  attempts with omitted prerequisites, unpainted/occluded click coordinates,
+  mismatched detached shell/stage models and unsupported release overrides
+  remain rejected evidence, not gameplay regressions or accepted test passes.
+- `town_memory_final_720/report.json` passes all 8474 checks with no runtime
+  errors, unchanged input/terminal saves and runtime owners. All three complete
+  paid-growth records equal the failing-before control. Normal saved Town and
+  developed composition captures were visually inspected at 1280x720; the five
+  new waterfront structures remain grounded and the edge controls usable.
+- `town_defense_final_1280x720/report.json` passes all 9003 checks with no
+  runtime errors and unchanged input/terminal saves/runtime owners. All five
+  complete successive-day defense-growth records equal the failing-before
+  control; Market's separate normal purchase, exact costs, daily limit and
+  complete save/re-entry also pass. Its developed-view capture was inspected.
+- `town_memory_final2_1920x1080/report.json` passes all 8474 checks, with three
+  complete paid-growth records equal to the same failing-before control and
+  unchanged source/input/terminal saves. The normal saved Town, developed view
+  and Vault information captures were inspected at original resolution: all
+  five new structures are grounded, and the building dialog's costs, prerequisites
+  and effects remain readable. This inspection also exposes the separate
+  pre-existing wide Town stockpile-caption clipping described below; it must not
+  be mistaken for full-screen visual acceptance.
+- `town_defense_final_1920x1080/report.json` passes all 9003 checks, preserving
+  exact sources/input/terminal saves and all five complete paid-growth records
+  from the failing-before control. Its developed composition was inspected at
+  original resolution; the existing three-resource caption happens to fit this
+  opening-defense stockpile, unlike the rare-resource memory case.
+- `town_memory_final_2048x1079/report.json` and
+  `town_defense_final_2048x1079/report.json` pass 8474 and 9003 checks respectively,
+  with zero runtime errors and unchanged source/input/terminal saves. Complete
+  paid-growth rows equal the same failing-before controls. Both developed-view
+  captures and the normally saved Slip capture were inspected at original
+  resolution: waterfront layers, information targets and edge navigation remain
+  coherent; the separate wide resource-caption defect is still visible.
+- Thirteen strict art, three packaged-probe, twenty PCK compaction, seventeen
+  release-artifact and nine release-pipeline Python tests pass (62 total).
+  `town_defense_repo02.log` records a passing repository check. Existing Town
+  layout/progression reports are retained under
+  `.artifacts/full_play_runtime_20260905/town_defense_existing/`.
+- `town_memory_final_pack_linux/report.json` and `packaged-report.json` pass
+  all 8474 exact-save checks and all five bootstrap controls, with zero runtime
+  errors, unchanged input/terminal saves and unchanged export bytes. Its three
+  complete paid-growth rows equal the failing-before source control. The saved
+  Slip and developed-view captures were visually inspected at 1280x720. The
+  isolated official Linux PCK SHA256 is
+  `8e9089dd501694fec489aedc2f88da4219b48d76b7a2af13cdff0a5f87458a5c`.
+- `town_memory_final_pack_windows/report.json` and `packaged-report.json` pass
+  the same 8474 exact-save assertions and five bootstrap controls. Complete paid
+  rows equal the failing-before control, and all saved inputs and export bytes
+  remain unchanged with no engine errors. The official Windows PCK SHA256 is
+  `308a2b2c7b6f0618c33351e9af49304f0755b75dedaaea23a29c2711e8065db0`.
+  This is headless Wine, with only paired frame/capture operations omitted;
+  inspected visual evidence comes from the source and Linux rendered runs.
+- `town_defense_linux3/report.json` and `town_defense_windows2/report.json`
+  pass official export/startup and package checks. Both PCKs are 249673796 bytes,
+  leaving 326204 bytes below the unchanged ceiling. Compaction verifies all
+  5166 members, preserving all 5115 non-JSON payloads. The Linux generated-entry
+  and Windows generated-flow reports each pass 23 steps and ten daily builds,
+  including Watch and Gantry construction/information. Windows is headless Wine,
+  not physical Windows/GPU certification. Its first checker still expected
+  eight buildings although the launcher built ten; the expectation was corrected
+  and the entire official smoke rerun successfully, not retroactively relabeled.
+  Independent payload comparison finds all 5166 member names identical between
+  retained Linux/Windows packs; only `project.binary` differs. All 204 protected
+  content/script/Town-layer members are byte-identical between platforms.
+
+The first batch supervisor terminated with status 143 after the accepted 720p
+defense run, leaving the following 1080p engine without its report collector.
+That orphan was explicitly stopped after verifying the collector was gone;
+`town_memory_final_1920x1080` is interrupted evidence, not an accepted pass.
+The replacement batch has its own detached process session and uses the fresh
+`town_memory_final2_1920x1080` label, preserving the original logs and captures.
+
+All six source-resolution runs and both exact Day-8 packaged flows now pass.
+The detached serial batch is terminal, with six successful results in
+`town_defense_detached_final_batch.json`; its temporary Wine installation was
+disposed after validation. This accepts this five-layer checkpoint, not full
+Town/art scope or the parent goal. The separate caption correction follows.
+Reproduce with `tests/town_scene_layer_regression.py --defense-growth` using
+Large08 slot1, or `--memory-growth` using its slot2; both use slot3 only as
+`--developed-save`, a fresh `--label` and the supported `--resolution`.
+The packaged wrapper additionally requires isolated matching `--binary/--pack`,
+`--platform`, `--bootstrap-controls`, and a fresh `--wine-prefix` for Windows.
+
 ## Remaining acceptance
 
 Extend scene-matched art beyond the two starting structures and constructed
 Bellwake Market Square, Fog Buoys, Salvage Ledger, Ransom Exchange and Mirror
 Drydock, Salt Counting House, Mourner Pilot Guild and Saltwake Factor to the
-remaining faction/building plots and upgrades. The actual developed Bellwake
-view still needs Harpoon Gantry, Obituary Vault, Mistgate Slip, Bell Chain Watch
-and Wake Oratory replacements; retain those legitimate identities and behavior.
+remaining faction/building plots and upgrades. Harpoon Gantry, Obituary Vault,
+Mistgate Slip, Bell-Chain Watch and Wake Oratory now have original scene layers,
+with complete source/package acceptance recorded above.
 Require inspected sparse, mid-development and developed scenes, exact
 built-id/input/save ownership and
 both-platform packages within the ceiling for each accepted packet. Other
@@ -644,3 +773,32 @@ reproduced Overworld prop-edge/terrain defects and all-faction visual acceptance
 remain open. Preserve the two explicit legacy validation limits above. The
 Wreck Quay and Bellwake evidence accepts only these repaired assets, not the
 remaining art scope or the overall goal.
+
+The 1080p memory-growth captures show a clipped resource-caption fragment in
+Town's top-right menu (`Gold 8490 | Wood 11 | Ore 2 | Aeth...`, clipped rather than
+intentional ellipsis). `TownShell._apply_responsive_layout` selects summary mode
+on wide viewports while this menu retains the shared default
+`fit_summary_to_width = false`. The earlier Overworld-only correction deliberately
+did not change that Town default. The full ledger remains available; this is a
+caption/layout defect, not missing resources. After the immutable art validation
+batch, select a narrow Town opt-in/real-font-width and popup-input correction,
+preserving every ledger amount, input route, layout bound and saved field. Do not
+claim that the current wide captures have no remaining HUD clipping.
+
+`town_stockpile_before3_authored/report.json` is the clean failing-before UI
+control: 856 checks, exactly eight expected caption/read-only-text failures,
+zero engine errors and unchanged sources/input save. It projects only the real
+Day-8 resource amounts into the existing small River Pass Town fixture, not a
+generated-match continuation or paid-growth proof. The wide caption measures
+756px in a 222px button; all nine resource rows, original icons/tooltips, popup
+containment, pointer/keyboard/focus, compact scene bounds and full live-state and
+save/re-entry comparisons pass. The popup screenshot also confirms dark disabled
+text; the selected fix includes a Town-local opaque text theme matching the
+existing Overworld ledger, without enabling its read-only entries.
+
+The two earlier caption probes compared a detached setup object after
+`SessionState.set_active_session` had copied it. Resolving the actual active Town
+model removed their spurious `/game_state` comparison failure; no gameplay code
+changed. These earlier reports are retained, not accepted as clean controls.
+The production caption/theme change and real generated-save/platform validation
+remain pending until the immutable art batch finishes.

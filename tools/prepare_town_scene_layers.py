@@ -60,6 +60,31 @@ BRIEFS = {
         'scene_bounds':[640,585,280,280*1024/1536], 'ground_anchor':[795,760],
         'grounding':'Broad receiving warehouse extends the salt treasury quay seaward below Bell Harbor; its covered loading bays remain distinct from the older Mistgate plot and leave the buoy channel and bottom controls clear.',
     },
+    'building_veilmourn_harpoon_gantry': {
+        'source_sha256':'c12da98f94bfc64eb26e654396e87964dd647991b3172cdc928d4f52dfa7f63b',
+        'scene_bounds':[55,540,250,250], 'ground_anchor':[180,780], 'reference_inputs':[],
+        'grounding':'Harpoon training platform rises from the foreground-left quay below the tower, with pilings joining the waterfront and exposed launchers over the harbor. Keep the complete base above navigation.',
+    },
+    'building_veilmourn_bell_chain_watch': {
+        'source_sha256':'f1d58aab18cb5e1b40fdad3789deeeaa95cc390d75aff8ecb9a77c639dcad620',
+        'scene_bounds':[300,510,210,210], 'ground_anchor':[410,705], 'reference_inputs':[],
+        'grounding':'Narrow signal post sits on the left working quay behind the Market, leaving its three-bell frame exposed above the arcade and the main tower unobstructed.',
+    },
+    'building_veilmourn_obituary_vault': {
+        'source_sha256':'deffa6c894ad6d79d157c2e27dd81805621227dd9a017877d339767cd47c0d93',
+        'scene_bounds':[300,625,255,170], 'ground_anchor':[435,785], 'reference_inputs':[],
+        'grounding':'Low memory archive continues the foreground-left trading quay, with stone entry steps facing its approach and pilings meeting the harbor below the Market; leave bottom navigation clear.',
+    },
+    'building_veilmourn_wake_oratory': {
+        'source_sha256':'296dc225d56ed1c226a14b6575e5e0e370c3e8dc5ee8ebf5ea6b07860c74cccf',
+        'scene_bounds':[1310,415,270,180], 'ground_anchor':[1440,585], 'reference_inputs':[],
+        'grounding':'Open bell-rite pavilion joins the right shoreline behind the Pilot Guild and Drydock; its pitched canopy remains exposed without hovering above the quay or covering commands.',
+    },
+    'building_veilmourn_mistgate_slip': {
+        'source_sha256':'d9931a2a94030e9d5dde2f39d300e0586389c1ec99741f56f9cf9e9f981e6674',
+        'scene_bounds':[985,620,270,180], 'ground_anchor':[1115,790], 'reference_inputs':[],
+        'grounding':'Mirror-lined boarding slip attaches to the foreground-right quay beside the Drydock, with its walkway directed toward shore and the main channel kept open beside the buoys.',
+    },
 }
 
 def digest(path):
@@ -102,6 +127,8 @@ def main():
             'prompt_sha256':digest(source.with_suffix('.prompt.txt')),
             'curation':'Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.',
         }
+        if 'reference_inputs' in brief:
+            layers[building_id]['reference_inputs'] = brief['reference_inputs']
     payload = {
         'schema_id':'town_building_scene_art_v1', 'source_size':[1600,900],
         'source_docs':['docs/generated-full-match-quality-requirements.md','docs/town-integrated-building-progression-requirements.md','docs/generated-full-match-art-repair-report.md'],
@@ -111,7 +138,7 @@ def main():
         'processing':'Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.',
         'rights':'Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.',
         'catalog_icons':'Unchanged; these exact-faction scene layers are not shared catalog replacements.',
-        'migration_scope':'Bellwake Bell Harbor and Wayfarers Hall starting structures plus normally constructed Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange, Mirror Drydock, Salt Counting House, Mourner Pilot Guild and Saltwake Factor; remaining catalog-based scene art is explicitly not accepted by this migration.',
+        'migration_scope':'Fifteen Bellwake scene layers: Bell Harbor, Wayfarers Hall, Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange, Mirror Drydock, Salt Counting House, Mourner Pilot Guild, Saltwake Factor, Harpoon Gantry, Bell-Chain Watch, Obituary Vault, Wake Oratory and Mistgate Slip. Other buildings/upgrades/factions remain unaccepted; five defense/memory rows explicitly record text-only generation inputs.',
         'missing_declared_layer_policy':'validation_failure_no_catalog_or_procedural_fallback',
         'factions':{FACTION:layers},
     }

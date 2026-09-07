@@ -206,3 +206,53 @@ failures and accepted screenshots are recorded in the art-repair report.
 Rollback comprises these three source/prompt/trim/runtime/import additions and
 their pipeline/manifest/test changes, without gameplay or save migration.
 Ten layers are not complete Bellwake, upgrade or all-faction acceptance.
+
+## Defense and memory continuation
+
+Five original built-in imagegen outputs (2026-09-07; model/version not exposed)
+address the remaining old catalog dioramas in the retained developed-16 Bellwake
+view. Their production names below own adjacent exact `.prompt.txt` files; the
+manifest locks source, prompt, alpha trim, runtime hashes and normalized plots.
+
+| Building | Original output | Source SHA256 |
+| --- | --- | --- |
+| Harpoon Gantry | `exec-b03d08d9-769e-4c8f-8baf-2abf7ebd1efe.png` | `c12da98f94bfc64eb26e654396e87964dd647991b3172cdc928d4f52dfa7f63b` |
+| Bell-Chain Watch | `exec-b3f346c2-f2a6-496b-8db9-067dccab27e0.png` | `f1d58aab18cb5e1b40fdad3789deeeaa95cc390d75aff8ecb9a77c639dcad620` |
+| Obituary Vault | `exec-905b36fb-846a-46ee-84f6-722f1683760d.png` | `deffa6c894ad6d79d157c2e27dd81805621227dd9a017877d339767cd47c0d93` |
+| Wake Oratory | `exec-9313808f-26b6-4eba-b8d7-0cbb8a9726ca.png` | `296dc225d56ed1c226a14b6575e5e0e370c3e8dc5ee8ebf5ea6b07860c74cccf` |
+| Mistgate Slip | `exec-9413f820-ca0f-48e7-81ea-41444dfff237.png` | `d9931a2a94030e9d5dde2f39d300e0586389c1ec99741f56f9cf9e9f981e6674` |
+
+Brief sources: worldbuilding foundation Veil Coast / Visual Identity Guide;
+faction bible Veilmourn Home Region / Visual Language / unit ladder / Town
+Building Identity; exact authored buildings in `content/buildings.json`.
+The first reference-image Gantry/Watch candidates and a Gantry alpha-edit attempt
+were rejected: all three were RGB with painted checkerboards, not transparent
+art. The accepted five are fresh text-only generations, with no input images;
+their rows explicitly record `reference_inputs: []`. Existing village and Ledger
+art informed the reviewed brief and comparison, but were not image inputs to
+these accepted calls. No third-party game pixels, human pixel painting, background
+extraction, geometric synthesis or palette modulation was used.
+
+Gantry/Watch masters are 1254x1254 RGBA; the other three are 1536x1024 RGBA.
+Original outputs and rejected candidates remain in
+`town_defense_memory_candidates_20260907/` under the goal artifact directory.
+The first developed placement was rejected for low Gantry/Vault bases crowding
+navigation and a floating Oratory. The second inspected 2048x1079 developed-16
+and 1280x720 intermediate-11 compositions lift the foreground bases and seat
+the Oratory behind the Pilot Guild. Gantry and Watch form the left defensive
+quay; the Vault fronts the Market; the mirror-lined Slip joins the right quay.
+Curation: accept these five sources/second placements; readability 4, faction
+identity 4, consistency 4, feasibility 4, originality 5. These detached view
+fixtures are not paid-construction or completed-match evidence.
+
+The existing pipeline crops only fully transparent outer margins, preserves
+alpha/aspect and creates 512px-max mipmapped runtime derivatives. Previous ten
+layers, village and catalog/info icons remain unchanged. Normal opening defense
+purchases and earned Day-8 memory purchases, full save/input, existing Town tests
+and both-platform packages pass for this checkpoint: 9003 defense / 8474 memory
+checks at each of three inspected resolutions, plus 8474 exact-save checks in
+each official Linux/Windows pack and five bootstrap controls per platform.
+Windows is headless Wine; full results and remaining limits are in the report.
+Rollback: the five new source/prompt/trim/runtime/import additions and their exact
+pipeline/manifest/test records; no gameplay or save migration. Remaining faction,
+upgrade and higher-tier Bellwake art is not accepted by these five layers.

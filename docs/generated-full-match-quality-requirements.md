@@ -29,6 +29,18 @@ fog, input and Town tests. Repository/diff checks and both-platform export/start
 generated-entry evidence must pass under the unchanged 250000000-byte ceiling.
 Source masters are not packaged; no caches or unrelated evidence may be deleted.
 
+The existing opt-in live-validation autoload may bootstrap the Python-owned Town
+probe for official release templates that forbid CLI scene/path overrides. This
+must require the explicit `python_town_scene_probe` flow, a reserved export-local
+`res://_town_scene_probe_<identifier>/probe.gd` path and its exact SHA256 before
+loading an instantiable Node script, after normal Main Menu startup. Probe-path
+arguments alone must not activate it. No packaged game scripts, art or PCK bytes
+may be overridden; the isolated loose file is only the test driver. Prove inert
+normal startup and rejected traversal, mismatched hash and wrong base type on
+both platforms. All test actions/assertions remain Python-owned; headless Windows
+may omit only paired frame/image-capture operations, with every gameplay, input,
+identity and save assertion retained and Linux rendered evidence inspected.
+
 The normal close-information/leave-Town sequence must also cancel stale deferred
 focus restoration safely. Do not query a detached scene tree or steal focus in
 the destination scene; preserve ordinary in-Town focus restoration without
@@ -361,6 +373,20 @@ Overworld-only opaque text theme while preserving disabled rows. Verify actual
 pointer/keyboard menu open, Escape
 focus return, complete state/save equality and inspected Medium/Large captures
 at 1280x720/1920x1080. Sprite transparency repair still needs separate approval.
+
+The subsequent Town capture exposes the same clipped-caption defect in Town's
+fixed-width header at 1920x1080. Select a Town-only opt-in to the existing
+font/available-width fitting behavior after the immutable art-validation batch;
+the earlier Overworld-only change remains separate. Preserve the shared default,
+full tooltip, all nine ordered resource values/icons, header/scene bounds and
+ordinary popup/input/focus/save behavior. The same captures show read-only amounts
+dimmed almost into their popup background: use a Town-local opaque text theme
+matching the established Overworld ledger while retaining disabled item behavior.
+Test actual widths and pointer/keyboard
+opening at 1280x720, 1920x1080 and 2048x1079, with genuine generated-save coverage
+and clearly separate authored UI fixtures. No gameplay, art or layout expansion.
+Use `tests/town_stockpile_text_fit_regression.py`, existing Town/stockpile checks,
+repository/diff validation and both-platform generated Town package flows.
 
 Diagnose rectangular prop edges against the actual resolved raster before
 changing sampling or outlines. The 2026-09-07 Medium Wreck Quay investigation
