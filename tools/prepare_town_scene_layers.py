@@ -20,6 +20,11 @@ BRIEFS = {
         'scene_bounds':[945,330,390,260], 'ground_anchor':[1140,552],
         'grounding':'Lodge occupies the middle-distance right shore, behind the foreground gate and quay. Its covered stair opens toward the bell docks.',
     },
+    'building_market_square': {
+        'source_sha256':'9afc680fe3311278da44f54c069854764ef3f17d2f9020e32925a1b4b27aafe1',
+        'scene_bounds':[200,560,375,250], 'ground_anchor':[390,755],
+        'grounding':'Low trading arcade attaches to the foreground-left quay below the main tower; wet pilings and boat-loading ramp continue its working waterfront. Preserve the tower door, central water and accepted bell docks.',
+    },
 }
 
 def digest(path):
@@ -59,18 +64,19 @@ def main():
             'modulate':[1,1,1,1], 'hit_alpha_threshold':0.25,
             'grounding':brief['grounding'],
             'prompt_path':f'res://art/towns/source/generated/scene_layers/{FACTION}/{building_id}.prompt.txt',
+            'prompt_sha256':digest(source.with_suffix('.prompt.txt')),
             'curation':'Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.',
         }
     payload = {
         'schema_id':'town_building_scene_art_v1', 'source_size':[1600,900],
         'source_docs':['docs/generated-full-match-quality-requirements.md','docs/town-integrated-building-progression-requirements.md','docs/generated-full-match-art-repair-report.md'],
         'owner_approval':'2026-09-07: owner approved scene-matched Town layers and resuming full-match quality.',
-        'generation':{'tool':'built_in_image_gen','model':'not_exposed','date':'2026-09-07','references':'Original Veilmourn village panorama and exact original catalog icons; no copyrighted game references.'},
+        'generation':{'tool':'built_in_image_gen','model':'not_exposed','date':'2026-09-07','references':'Original Veilmourn village panorama, original catalog icons and accepted original scene-layer masters; exact inputs are described in each hash-locked prompt. No copyrighted game references.'},
         'processing_tool':'tools/prepare_town_scene_layers.py',
         'processing':'Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.',
         'rights':'Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.',
         'catalog_icons':'Unchanged; these exact-faction scene layers are not shared catalog replacements.',
-        'migration_scope':'Two Bellwake starting structures only; remaining catalog-based scene art is explicitly not accepted by this migration.',
+        'migration_scope':'Bellwake Bell Harbor and Wayfarers Hall starting structures plus the normally constructed Market Square; remaining catalog-based scene art is explicitly not accepted by this migration.',
         'missing_declared_layer_policy':'validation_failure_no_catalog_or_procedural_fallback',
         'factions':{FACTION:layers},
     }

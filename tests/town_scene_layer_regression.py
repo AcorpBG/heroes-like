@@ -33,15 +33,17 @@ func layer_controller(button_index: int) -> void:
 		Input.parse_input_event(event)
 		await get_tree().process_frame
 	await settle()
-func inspect_scene_layers() -> void:
+func inspect_scene_layers(ids: Array = ["building_veilmourn_bell_harbor", "building_wayfarers_hall"]) -> void:
 	var shell = get_tree().current_scene
 	var stage = shell.get_node("%TownStage")
 	var before: Dictionary = normalized(session.to_dict())
 	var rows: Array = stage.validation_town_building_progression_summary().texture_rows
-	for id in ["building_veilmourn_bell_harbor", "building_wayfarers_hall"]:
+	for id in ids:
 		var matches: Array = rows.filter(func(row): return row.building_id == id)
 		var expected := "res://art/towns/runtime/scene_layers/faction_veilmourn/%s.png" % id
 		check(matches.size()==1 and matches[0].texture_path==expected,"scenery still resolves catalog icon rather than exact Veilmourn layer: "+id)
+		if matches.size()!=1 or matches[0].texture_path!=expected:
+			continue # A missing layer is already a failure, not valid alpha/input evidence.
 		var summary: Dictionary = stage.validation_building_hotspot_summary(id)
 		check(summary.aligned and summary.visible and summary.focus_mode==Control.FOCUS_ALL,"scene layer focus/crop alignment: "+id)
 		check(summary.accessibility_name.contains(ContentService.get_building(id).name),"missing exact building accessible name: "+id)
@@ -112,6 +114,29 @@ func inspect_scene_layers() -> void:
 	stage._building_scene_art_manifest=manifest
 	check(stage._town_building_texture("building_wayfarers_hall").resource_path.contains("scene_layers/faction_veilmourn"),"negative asset cache poisoned restored exact mapping")
 	check(normalized(session.to_dict())==before,"scene asset inspection mutated gameplay")
+func inspect_market_unbuilt() -> void:
+	var town: Dictionary = TownRules.get_active_town(session)
+	check(not "building_market_square" in town.built_buildings,"real opening already has the Market Square")
+	check(not get_tree().current_scene.get_node("%TownStage").validation_building_hotspot_summary("building_market_square").visible,"unbuilt market is visible/clickable")
+func inspect_market_constructed() -> void:
+	var before: Dictionary = normalized(session.to_dict())
+	var town: Dictionary = TownRules.get_active_town(session)
+	check("building_market_square" in town.built_buildings,"real offered paid build was not Market Square")
+	check(int(town.last_build_day)==int(session.day),"market did not consume the normal daily build")
+	var enabled: Array = TownRules.get_build_actions(session).filter(func(a):return not a.get("disabled",true) and String(a.id).begins_with("build:"))
+	check(enabled.is_empty(),"same-day market build incorrectly leaves construction enabled")
+	await inspect_scene_layers(["building_market_square"])
+	check(normalized(session.to_dict())==before,"post-build market information changed gameplay")
+	var path: String = SaveService.save_session(session.to_dict(),3)
+	session=SessionState.restore_session(SaveService.load_session(3))
+	check(path!="" and normalized(session.to_dict())==before,"constructed market changed complete save/resume")
+	AppRouter.go_to_town()
+	await settle()
+	var stage = get_tree().current_scene.get_node("%TownStage")
+	check(stage.validation_building_hotspot_summary("building_market_square").visible,"constructed market disappeared on real saved Town re-entry")
+	check(stage._town_building_texture_path("building_market_square")=="res://art/towns/runtime/scene_layers/faction_veilmourn/building_market_square.png","saved market re-entry lost exact scenic art")
+	await RenderingServer.frame_post_draw
+	get_viewport().get_texture().get_image().save_png(out.path_join("market_saved_reentry.png"))
 func layer_visibility_fixture() -> void:
 	# These two structures are authored starting buildings, not purchasable orders.
 	# Detached built-id visibility boundary only; normal paid construction is tested above.
@@ -145,10 +170,11 @@ func layer_visibility_fixture() -> void:
 	rows.append({"label":"detached_starting_building_visibility_not_construction","built_ids":TownRules.get_active_town(fixture).built_buildings,"save_unchanged":normalized(restored.to_dict())==normalized(fixture.to_dict())})
 '''
 
-SCRIPT = overlay.SCRIPT.replace('await inspect("opening")', 'await inspect("opening")\n\tawait inspect_scene_layers()') + EXTRA
+SCRIPT = overlay.SCRIPT.replace('await inspect("opening")', 'await inspect("opening")\n\tawait inspect_scene_layers()\n\tawait inspect_market_unbuilt()') + EXTRA
 SCRIPT = SCRIPT.replace('print("TOWN_OVERLAY_OWNERSHIP "', 'await layer_visibility_fixture()\n\tprint("TOWN_OVERLAY_OWNERSHIP "')
 SCRIPT = SCRIPT.replace('get_tree().current_scene._commit_build_action(building_id)', 'var paid_before: Dictionary = normalized(session.overworld.resources)\n\t\tvar cost: Dictionary = offered[0].cost\n\t\tget_tree().current_scene._commit_build_action(building_id)')
 SCRIPT = SCRIPT.replace('await inspect("after_build")', 'for resource in cost:\n\t\t\tcheck(int(session.overworld.resources[resource])==int(paid_before[resource])-int(cost[resource]),"ordinary construction resource cost changed: "+resource)\n\t\tawait inspect("after_build")')
+SCRIPT = SCRIPT.replace('await inspect("after_build")', 'await inspect("after_build")\n\t\tawait inspect_market_constructed()')
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)

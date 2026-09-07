@@ -15,18 +15,19 @@ Requirements:
 `docs/generated-full-match-quality-requirements.md`. This is an implementation
 checkpoint, **not completion of the overall quality goal or release readiness**.
 
-Latest approved-art checkpoint: Bellwake's Bell Harbor and faction-specific
-Wayfarers Hall now use scene-matched original layers and painted-pixel hotspots,
-not square catalog icons. Frozen-source reports pass 824 checks at each of
-1280x720, 1920x1080 and 2048x1079; screenshots were inspected. Town layout and
-all-32-town integrated progression, repository and Linux/Windows generated-entry
-packages pass, both PCKs 249083376 bytes. The unchanged legacy named-slot keyboard
-expectation and Moonbite 30-turn development failure remain explicit; all 32
-save/resume cases pass. The ordinary post-build Market Square still floats as
-an unsuitable catalog icon and is the next art target. Full provenance, commands
-and limitations: `docs/generated-full-match-art-repair-report.md`. Neither the
-two starting structures nor the earlier Wreck Quay repair closes the remaining
-constructible-building/all-faction presentation requirement.
+Latest approved-art checkpoint: Bellwake's normally constructed Market Square
+now joins Bell Harbor and faction-specific Wayfarers Hall as an original
+scene-matched layer with painted-pixel hotspots. Three resolutions pass 1213
+checks each, including paid construction, information/input and full save/re-entry;
+screenshots were inspected. Town layout/all-32-town progression, repository and
+Linux/Windows package checks pass. Both PCKs are 249356964 bytes and the exported
+games now construct the Market and load its exact scene asset, not merely enter
+an unbuilt Town. Windows execution is headless Wine, not GPU certification.
+The unchanged legacy named-slot keyboard expectation and Moonbite 30-turn
+development failure remain explicit; their 32 save/resume cases pass. Provenance,
+commands and limitations: `docs/generated-full-match-art-repair-report.md`.
+These three Bellwake assets and the earlier Wreck Quay repair do not close the
+remaining constructible-building/all-faction presentation requirement.
 
 ## Gameplay corrections
 

@@ -226,7 +226,58 @@ func _execute_boot_to_generated_skirmish_town_flow() -> bool:
 	if not _require(String(town_snapshot.get("game_state", "")) == "town", "Generated player Town did not hold town game state.", town_snapshot):
 		return false
 	_capture_step("generated_player_town_entered", town_snapshot)
+	var building_id := String(_config.get("town_building_id", ""))
+	if building_id != "" and not await _validate_generated_town_construction(town, building_id):
+		return false
 	_log("Packaged generated-map first-run validation completed successfully.")
+	return true
+
+func _validate_generated_town_construction(town: Node, building_id: String) -> bool:
+	# Opt-in packaged-resource check; use the same ledger select/confirm controls.
+	# Full save, alpha hit testing and keyboard/controller coverage lives in the
+	# Python-owned town_scene_layer_regression, not a replacement release scene.
+	var session = SessionState.ensure_active_session()
+	var active_town := TownRules.get_active_town(session)
+	var stage = town.get_node("%TownStage")
+	var layer: Dictionary = stage.call("_town_scene_layer", building_id)
+	if not _require(not layer.is_empty() and building_id not in active_town.get("built_buildings", []), "Packaged construction needs an unbuilt exact scene-layer mapping.", {"building_id": building_id, "layer": layer}):
+		return false
+	var actions: Array = TownRules.get_build_actions(session).filter(func(action): return String(action.get("id", "")) == "build:" + building_id and not bool(action.get("disabled", true)))
+	if not _require(actions.size() == 1, "Requested packaged construction is not normally available.", {"building_id": building_id}):
+		return false
+	var cost: Dictionary = actions[0].get("cost", {}).duplicate(true)
+	var resources_before: Dictionary = session.overworld.get("resources", {}).duplicate(true)
+	var selected: Dictionary = town.call("validation_select_build_plan", building_id)
+	if not _require(bool(selected.get("ok", false)) and bool(selected.get("state_unchanged", false)), "Packaged ledger selection changed state or selected the wrong building.", selected):
+		return false
+	var committed: Dictionary = town.call("validation_confirm_build_plan")
+	if not _require(bool(committed.get("ok", false)), "Packaged ledger confirmation did not construct the building.", committed):
+		return false
+	await _settle_frames(6)
+	session = SessionState.ensure_active_session()
+	active_town = TownRules.get_active_town(session)
+	var expected_resources := resources_before.duplicate(true)
+	for resource in cost:
+		expected_resources[resource] = int(expected_resources.get(resource, 0)) - int(cost[resource])
+	if not _require(building_id in active_town.get("built_buildings", []) and int(active_town.get("last_build_day", -1)) == session.day and session.overworld.get("resources", {}) == expected_resources, "Packaged construction did not preserve normal cost and daily state.", {"cost": cost, "resources": session.overworld.get("resources", {})}):
+		return false
+	var texture: Texture2D = stage.call("_town_building_texture", building_id)
+	var expected_size: Array = layer.get("runtime_size", [])
+	var hotspot: Dictionary = stage.call("validation_building_hotspot_summary", building_id)
+	var texture_ok := texture != null and texture.resource_path == String(layer.get("runtime_path", "")) and expected_size.size() == 2
+	if texture_ok:
+		texture_ok = texture.get_size() == Vector2(float(expected_size[0]), float(expected_size[1]))
+	if not _require(texture_ok and bool(hotspot.get("visible", false)) and bool(hotspot.get("aligned", false)), "Packaged construction lost the exact loaded scene layer or aligned hotspot.", {"layer": layer, "hotspot": hotspot}):
+		return false
+	town.call("_on_town_catalog_close_pressed")
+	await _settle_frames(3)
+	_capture_step("generated_town_building_constructed", {"building_id": building_id, "texture_path": texture.resource_path, "texture_size": texture.get_size(), "cost": cost, "resources_before": resources_before, "resources_after": expected_resources, "hotspot": hotspot})
+	var before_info: Dictionary = session.to_dict().duplicate(true)
+	var info: Dictionary = town.call("validation_activate_building_information", building_id)
+	await _settle_frames(3)
+	if not _require(bool(info.get("open", false)) and bool(info.get("surface_visible", false)) and bool(info.get("icon_loaded", false)) and String(info.get("title", "")) == String(info.get("expected_title", "")) and session.to_dict() == before_info, "Packaged built-building hotspot did not open read-only information.", info):
+		return false
+	_capture_step("generated_town_building_information", info)
 	return true
 
 func _execute_boot_to_skirmish_defeat_outcome_flow() -> bool:
@@ -4066,6 +4117,7 @@ func _parse_user_args(args: Array) -> Dictionary:
 		"generated_seed": "windows-first-run-10184",
 		"generated_faction_id": "faction_veilmourn",
 		"generated_hero_id": "hero_veilmourn_orso_nightchart",
+		"town_building_id": "",
 		"manual_slot": 2,
 		"output_dir": "",
 	}
@@ -4104,6 +4156,9 @@ func _parse_user_args(args: Array) -> Dictionary:
 			config["enabled"] = true
 			config["generated_hero_id"] = arg.trim_prefix("--live-validation-generated-hero=")
 			continue
+		if arg.begins_with("--live-validation-town-building="):
+			config["town_building_id"] = arg.trim_prefix("--live-validation-town-building=")
+			continue
 		if arg.begins_with("--live-validation-manual-slot="):
 			config["enabled"] = true
 			config["manual_slot"] = int(arg.trim_prefix("--live-validation-manual-slot="))
@@ -4139,6 +4194,7 @@ func _begin_report() -> void:
 		"generated_seed": String(_config.get("generated_seed", "")),
 		"generated_faction_id": String(_config.get("generated_faction_id", "")),
 		"generated_hero_id": String(_config.get("generated_hero_id", "")),
+		"town_building_id": String(_config.get("town_building_id", "")),
 		"manual_slot": int(_config.get("manual_slot", 0)),
 		"output_dir": _output_dir,
 		"display": OS.get_environment("DISPLAY"),
