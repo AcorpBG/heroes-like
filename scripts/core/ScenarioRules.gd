@@ -7,6 +7,7 @@ const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
+const GeneratedObjectives = preload("res://scripts/core/GeneratedScenarioObjectiveRules.gd")
 
 static var _scenario_dependency_metadata_cache: Dictionary = {}
 
@@ -58,7 +59,7 @@ static func evaluate_session(session: SessionStateStoreScript.SessionData) -> Di
 	var scenario := scenario_record_for_session(session)
 	var script_result: Dictionary = _scenario_script_rules().process_hooks(session)
 	var script_message := String(script_result.get("message", ""))
-	var objectives = scenario.get("objectives", {})
+	var objectives = objective_definitions(scenario)
 	if not (objectives is Dictionary):
 		return {"status": "in_progress", "message": script_message}
 
@@ -85,6 +86,12 @@ static func evaluate_session(session: SessionStateStoreScript.SessionData) -> Di
 			)
 
 	return {"status": "in_progress", "message": script_message}
+
+static func objective_definitions(scenario: Dictionary) -> Variant:
+	return GeneratedObjectives.definitions(scenario)
+
+static func objectives_for_session(session: SessionStateStoreScript.SessionData) -> Variant:
+	return objective_definitions(scenario_record_for_session(session))
 
 static func evaluate_session_for_event(session: SessionStateStoreScript.SessionData, event_facts: Dictionary = {}) -> Dictionary:
 	normalize_scenario_state(session)
@@ -205,7 +212,13 @@ static func _scenario_dependency_metadata_for_session(session: SessionStateStore
 			"cache_hit": false,
 			"signature": "",
 		}
-	var dependency_record: Dictionary = ContentService.get_scenario_dependency_record(scenario_id)
+	var source := scenario_record_for_session(session)
+	var dependency_record: Dictionary
+	if GeneratedObjectives.uses_kind(source):
+		dependency_record = {"objectives": source.get("objectives", {}), "script_hooks": source.get("script_hooks", [])}
+		dependency_record["dependency_signature"] = JSON.stringify(dependency_record).sha256_text()
+	else:
+		dependency_record = ContentService.get_scenario_dependency_record(scenario_id)
 	if dependency_record.is_empty():
 		return {
 			"known": false,
@@ -241,7 +254,7 @@ static func _scenario_dependency_metadata(scenario: Dictionary) -> Dictionary:
 		"objectives": [],
 		"hooks": [],
 	}
-	var objectives = scenario.get("objectives", {})
+	var objectives = objective_definitions(scenario)
 	if objectives is Dictionary:
 		var objective_index := {}
 		for bucket_name in ["victory", "defeat"]:
@@ -304,6 +317,8 @@ static func _scenario_objective_dependency(objective: Dictionary, objective_inde
 	var dependency := _empty_dependency()
 	dependency["id"] = String(objective.get("id", ""))
 	match String(objective.get("type", "")):
+		GeneratedObjectives.KIND:
+			dependency["rival_presence"] = true
 		"artifact_owned_by_player":
 			_add_dependency_value(dependency, "artifact_ids", String(objective.get("artifact_id", "")))
 		"hero_artifact_set_equipped":
@@ -486,6 +501,10 @@ static func _scenario_event_dependency(event_facts: Dictionary) -> Dictionary:
 static func _scenario_event_affects_dependency(event_dependency: Dictionary, dependency: Dictionary) -> bool:
 	if not bool(dependency.get("known", false)):
 		return true
+	if bool(dependency.get("rival_presence", false)):
+		# Completion can change through conquest, battle, defender expiry or
+		# an old eligible save's next ordinary action. Never cache live presence.
+		return true
 	if bool(event_dependency.get("day", false)) and bool(dependency.get("day", false)):
 		return true
 	if bool(event_dependency.get("fog_exploration", false)) and bool(dependency.get("fog_exploration", false)):
@@ -583,7 +602,7 @@ static func get_objective(
 	if session == null or session.scenario_id == "" or objective_id == "":
 		return {}
 	var scenario := scenario_record_for_session(session)
-	var objectives = scenario.get("objectives", {})
+	var objectives = objective_definitions(scenario)
 	if not (objectives is Dictionary):
 		return {}
 
@@ -601,7 +620,7 @@ static func get_objective(
 static func describe_objectives(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_scenario_state(session)
 	var scenario := scenario_record_for_session(session)
-	var objectives = scenario.get("objectives", {})
+	var objectives = objective_definitions(scenario)
 	if not (objectives is Dictionary):
 		return "No authored objectives."
 
@@ -662,7 +681,7 @@ static func describe_scenario_launch_preview(
 		],
 	]
 
-	var objectives = scenario.get("objectives", {})
+	var objectives = objective_definitions(scenario)
 	if objectives is Dictionary:
 		var victory_labels := _objective_labels_from_bucket(session, objectives.get("victory", []), 3)
 		if not victory_labels.is_empty():
@@ -1152,7 +1171,7 @@ static func _objective_progress_counts(session: SessionStateStoreScript.SessionD
 	if session == null or session.scenario_id == "":
 		return {}
 	var scenario := scenario_record_for_session(session)
-	var objectives = scenario.get("objectives", {})
+	var objectives = objective_definitions(scenario)
 	if not (objectives is Dictionary):
 		return {}
 	var counts := {
@@ -1177,7 +1196,7 @@ static func _objective_progress_counts(session: SessionStateStoreScript.SessionD
 
 static func _next_unmet_victory_objective_label(session: SessionStateStoreScript.SessionData) -> String:
 	var scenario := scenario_record_for_session(session)
-	var objectives = scenario.get("objectives", {})
+	var objectives = objective_definitions(scenario)
 	if not (objectives is Dictionary):
 		return ""
 	for objective in objectives.get("victory", []):
@@ -1189,7 +1208,7 @@ static func _next_unmet_victory_objective_label(session: SessionStateStoreScript
 
 static func _completed_objective_labels(session: SessionStateStoreScript.SessionData, limit: int) -> Array:
 	var scenario := scenario_record_for_session(session)
-	var objectives = scenario.get("objectives", {})
+	var objectives = objective_definitions(scenario)
 	var labels := []
 	if not (objectives is Dictionary):
 		return labels
@@ -1314,7 +1333,7 @@ static func _last_battle_aftermath_text(session: SessionStateStoreScript.Session
 	return "\n".join(lines)
 
 static func _resolution_text(scenario: Dictionary, status: String) -> String:
-	var objectives = scenario.get("objectives", {})
+	var objectives = objective_definitions(scenario)
 	if objectives is Dictionary:
 		var key := "%s_text" % status
 		var explicit_text := String(objectives.get(key, ""))
@@ -1341,7 +1360,7 @@ static func _scenario_briefing_lines(scenario: Dictionary) -> Array:
 	return lines
 
 static func _scenario_stakes_text(scenario: Dictionary) -> String:
-	var objectives = scenario.get("objectives", {})
+	var objectives = objective_definitions(scenario)
 	if objectives is Dictionary:
 		var victory_text := String(objectives.get("victory_text", ""))
 		var defeat_text := String(objectives.get("defeat_text", ""))
@@ -1413,7 +1432,7 @@ static func _enemy_operational_lines(session: SessionStateStoreScript.SessionDat
 	return lines
 
 static func _opening_objective_summary(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
-	var objectives = scenario.get("objectives", {})
+	var objectives = objective_definitions(scenario)
 	if not (objectives is Dictionary):
 		return ""
 	var lines := []
@@ -1593,6 +1612,8 @@ static func _titleize_token(value: String) -> String:
 
 static func _objective_met(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> bool:
 	match String(objective.get("type", "")):
+		GeneratedObjectives.KIND:
+			return bool(GeneratedObjectives.progress(session).get("complete", false))
 		"artifact_owned_by_player":
 			return _player_owns_artifact(session, String(objective.get("artifact_id", "")))
 		"hero_artifact_set_equipped":
@@ -1646,6 +1667,11 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 static func _objective_label(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> String:
 	var base_label := String(objective.get("label", objective.get("id", "Objective")))
 	match String(objective.get("type", "")):
+		GeneratedObjectives.KIND:
+			var progress := GeneratedObjectives.progress(session)
+			if not bool(progress.get("known", false)):
+				return "%s (Player ownership unavailable)" % base_label
+			return "%s (%d/%d rivals defeated)" % [base_label, int(progress.defeated), int(progress.total)]
 		"artifact_owned_by_player":
 			return "%s (%s)" % [
 				base_label,

@@ -2,8 +2,8 @@
 
 Phase 6 child `performance-generated-full-match-actions-20260906`, under
 `quality-generated-full-match-20260906`. Requirements:
-`docs/generated-full-match-quality-requirements.md`. **In progress**, not complete
-matches, game-wide performance approval or release readiness.
+`docs/generated-full-match-quality-requirements.md`. **In progress**; completed
+match evidence is not game-wide performance approval or release readiness.
 
 Earlier command/footer coverage boundary: Large08 reached a real Day-14 defeat after conquest;
 Medium10 stopped nonterminal on Day 35. Their 201/608 action capacity traces pass,
@@ -12,6 +12,20 @@ during cue isolation (`command_layout_feedback_pause.json`). These profiles are
 hotspot observations, not clean comparison timings. The command/footer checkpoint
 does not make a new performance claim or change the matched results below.
 See `docs/generated-full-match-quality-report.md` for terminal evidence and limits.
+
+2026-09-07 correctness checkpoint: Medium11 now reaches an earned Day-97 victory
+through the original checkpoint-proven driver after interpreting the native
+`defeat_generated_rivals` contract. The final-owner continuation `_03` takes
+389.111 seconds and retains 2426 actions, including its historical prefix; that
+wall time includes driver target selection, validation reads and scene settling.
+It is **not** a matched player-response benchmark or an additional speedup claim.
+All three changed runtime-owner files are identified in the gameplay report.
+The 136-check dual-resolution objective/battle/save fixtures and platform smokes
+support correctness, not performance acceptance. Existing matched Town/EndTurn/
+scenery results below remain bounded to their actual owners and cases. Next:
+refresh complete current-build player-action timings from retained Medium/Large
+checkpoints, separate driver work from actual input-to-usable time, and fix any
+demonstrated remaining dominant runtime owner without skipping work or saves.
 
 ## Town orders: implemented
 

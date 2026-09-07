@@ -3763,7 +3763,7 @@ static func _terrain_id_at(session: SessionStateStoreScript.SessionData, x: int,
 static func describe_objective_board(session: SessionStateStoreScript.SessionData) -> String:
 	_normalize_scenario_state_rules(session)
 	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
-	var objectives = scenario.get("objectives", {})
+	var objectives = _scenario_rules().objectives_for_session(session)
 	if not (objectives is Dictionary):
 		return "Objectives\n- No authored objectives."
 
@@ -3800,7 +3800,7 @@ static func _objective_stakes_surface(session: SessionStateStoreScript.SessionDa
 	if session == null or session.scenario_id == "":
 		return {}
 	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
-	var objectives = scenario.get("objectives", {})
+	var objectives = _scenario_rules().objectives_for_session(session)
 	if not (objectives is Dictionary):
 		return {}
 
@@ -7561,7 +7561,7 @@ static func _encounter_clear_objectives(
 	var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	var victory_flags: Array[String] = _string_array(encounter_def.get("victory_flags", []))
 	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
-	var objective_bucket = scenario.get("objectives", {})
+	var objective_bucket = _scenario_rules().objectives_for_session(session)
 	if not (objective_bucket is Dictionary):
 		return objectives
 	for bucket_name in ["victory", "defeat"]:
@@ -13389,7 +13389,7 @@ static func _finalize_action_result(
 	var hook_count := 0
 	if scenario_event_facts.is_empty():
 		var scenario := ContentService.get_scenario_readonly(session.scenario_id) if session != null else {}
-		var objectives = scenario.get("objectives", {}) if scenario is Dictionary else {}
+		var objectives = _scenario_rules().objectives_for_session(session)
 		if objectives is Dictionary:
 			var victory_objectives = objectives.get("victory", [])
 			var defeat_objectives = objectives.get("defeat", [])
@@ -13608,7 +13608,7 @@ static func _command_briefing_orders_line(session: SessionStateStoreScript.Sessi
 			var contact_lines := first_contact.split("\n")
 			if not contact_lines.is_empty():
 				return "Immediate orders: %s" % String(contact_lines[0]).trim_prefix("Likely first contact: ")
-	var objectives = scenario.get("objectives", {})
+	var objectives = _scenario_rules().objectives_for_session(session)
 	if objectives is Dictionary:
 		var victory_labels: Array = _scenario_objective_labels_from_bucket(session, objectives.get("victory", []), 1)
 		if not victory_labels.is_empty():
@@ -13810,7 +13810,7 @@ static func _command_commitment_action_line(session: SessionStateStoreScript.Ses
 	if not encounter_plan.is_empty():
 		return String(encounter_plan.get("order", "Advance on the nearest hostile contact."))
 	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
-	var objectives = scenario.get("objectives", {})
+	var objectives = _scenario_rules().objectives_for_session(session)
 	if objectives is Dictionary:
 		var victory_labels: Array = _scenario_objective_labels_from_bucket(session, objectives.get("victory", []), 1)
 		if not victory_labels.is_empty():
@@ -14398,7 +14398,7 @@ static func _command_risk_logistics_items(
 static func _command_risk_objective_items(session: SessionStateStoreScript.SessionData, pressured_town_ids: Dictionary, include_details: bool = true) -> Array:
 	var items := []
 	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
-	var objectives = scenario.get("objectives", {})
+	var objectives = _scenario_rules().objectives_for_session(session)
 	if not (objectives is Dictionary):
 		return items
 	for objective in objectives.get("defeat", []):
@@ -14738,7 +14738,7 @@ static func _town_is_objective_anchor(session: SessionStateStoreScript.SessionDa
 	if session == null or placement_id == "":
 		return false
 	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
-	var objectives = scenario.get("objectives", {})
+	var objectives = _scenario_rules().objectives_for_session(session)
 	if not (objectives is Dictionary):
 		return false
 	for bucket in ["victory", "defeat"]:
