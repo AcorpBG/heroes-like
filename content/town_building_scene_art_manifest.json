@@ -20,7 +20,7 @@
   "processing": "Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.",
   "rights": "Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.",
   "catalog_icons": "Unchanged; these exact-faction scene layers are not shared catalog replacements.",
-  "migration_scope": "Bellwake Bell Harbor and Wayfarers Hall starting structures plus normally constructed Market Square, Fog Signal Buoys and Salvage Ledger; remaining catalog-based scene art is explicitly not accepted by this migration.",
+  "migration_scope": "Bellwake Bell Harbor and Wayfarers Hall starting structures plus normally constructed Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange and Mirror Drydock; remaining catalog-based scene art is explicitly not accepted by this migration.",
   "missing_declared_layer_policy": "validation_failure_no_catalog_or_procedural_fallback",
   "factions": {
     "faction_veilmourn": {
@@ -242,6 +242,94 @@
         "grounding": "Compact claims office extends the left working quay above the Market Square and below the main tower; preserve the tower door and the Bell Harbor gangway.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_salvage_ledger.prompt.txt",
         "prompt_sha256": "634d004a8757f2204245f357ded229757a9b4e4db70fb8c79466de1db1dad563",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
+      },
+      "building_veilmourn_ransom_exchange": {
+        "asset_id": "faction_veilmourn_building_veilmourn_ransom_exchange",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_ransom_exchange.png",
+        "source_sha256": "95e4fe8730c7c9ae10493a83c6330b92ba2bfdcb8cc2c98052c89e31c2657a1d",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1522,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_ransom_exchange.png",
+        "trimmed_sha256": "504b04cb9e17b8ba9f14eefb38de68064ef4a73cad5203ce7493308e14eea0ab",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_ransom_exchange.png",
+        "runtime_sha256": "8f6c15f3b14d4212188d527e1b6d5c0716d27fba3b339e626d7fbf92b9ae5701",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.675,
+          0.5722222222222222,
+          0.19198404947916667,
+          0.22962962962962963
+        ],
+        "ground_anchor": [
+          0.765625,
+          0.7666666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Low exchange counters continue the right waterfront below Wayfarers Hall; the open left ramp reaches the quay behind the foreground gate. Preserve the main water channel and bell docks.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_ransom_exchange.prompt.txt",
+        "prompt_sha256": "27ee2c753df2a308ee5dc10d868b496170573207339a7509a9d46251d7e3aa1e",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
+      },
+      "building_veilmourn_mirror_drydock": {
+        "asset_id": "faction_veilmourn_building_veilmourn_mirror_drydock",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_mirror_drydock.png",
+        "source_sha256": "61def7c852073bd01f16aca34660e3cb19233632e53075265559c77438443313",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          9,
+          1522,
+          1000
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_mirror_drydock.png",
+        "trimmed_sha256": "014c5b9482910dd5ac6b63a9ad67de5c1c8341485e6f76094d06ab2bee727cd4",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_mirror_drydock.png",
+        "runtime_sha256": "a518058a9b04bfa486bb121febcc010415afb04b52d1dc25b438c34609db7c3b",
+        "runtime_size": [
+          512,
+          333
+        ],
+        "normalized_rect": [
+          0.75625,
+          0.6356119791666667,
+          0.21675618489583331,
+          0.25090422453703703
+        ],
+        "ground_anchor": [
+          0.871875,
+          0.8666666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Long mirror-lined hull and working slip attach to the foreground-right quay along its receding plank direction; the shore-end shelter sits below the gate. Keep the complete cradle inside the cover crop and clear of bottom navigation.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_mirror_drydock.prompt.txt",
+        "prompt_sha256": "ef663a07f843f2fcb9af0e9efde112bf6c0c536ca02aee8fff22880545723b51",
         "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
       }
     }

@@ -35,6 +35,16 @@ BRIEFS = {
         'scene_bounds':[480,450,260,260*1024/1536], 'ground_anchor':[600,600],
         'grounding':'Compact claims office extends the left working quay above the Market Square and below the main tower; preserve the tower door and the Bell Harbor gangway.',
     },
+    'building_veilmourn_ransom_exchange': {
+        'source_sha256':'95e4fe8730c7c9ae10493a83c6330b92ba2bfdcb8cc2c98052c89e31c2657a1d',
+        'scene_bounds':[1080,515,310,310*1024/1536], 'ground_anchor':[1225,690],
+        'grounding':'Low exchange counters continue the right waterfront below Wayfarers Hall; the open left ramp reaches the quay behind the foreground gate. Preserve the main water channel and bell docks.',
+    },
+    'building_veilmourn_mirror_drydock': {
+        'source_sha256':'61def7c852073bd01f16aca34660e3cb19233632e53075265559c77438443313',
+        'scene_bounds':[1210,570,350,350*1024/1536], 'ground_anchor':[1395,780],
+        'grounding':'Long mirror-lined hull and working slip attach to the foreground-right quay along its receding plank direction; the shore-end shelter sits below the gate. Keep the complete cradle inside the cover crop and clear of bottom navigation.',
+    },
 }
 
 def digest(path):
@@ -86,7 +96,7 @@ def main():
         'processing':'Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.',
         'rights':'Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.',
         'catalog_icons':'Unchanged; these exact-faction scene layers are not shared catalog replacements.',
-        'migration_scope':'Bellwake Bell Harbor and Wayfarers Hall starting structures plus normally constructed Market Square, Fog Signal Buoys and Salvage Ledger; remaining catalog-based scene art is explicitly not accepted by this migration.',
+        'migration_scope':'Bellwake Bell Harbor and Wayfarers Hall starting structures plus normally constructed Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange and Mirror Drydock; remaining catalog-based scene art is explicitly not accepted by this migration.',
         'missing_declared_layer_policy':'validation_failure_no_catalog_or_procedural_fallback',
         'factions':{FACTION:layers},
     }

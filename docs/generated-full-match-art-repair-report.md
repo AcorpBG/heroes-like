@@ -450,10 +450,105 @@ This is production tooling required to ship further scene layers, not additional
 art acceptance or a new speed claim. Continue the remaining developed Bellwake
 plots, upgrades and other factions with the restored but still finite headroom.
 
+## Validated Bellwake Exchange / Drydock scene-layer checkpoint
+
+The actual Large08 terminal Bellwake contains both Ransom Exchange and Mirror
+Drydock. Their prior exact catalog icons were present, but used steep diorama
+perspective and isolated bases rather than the village's working waterfront.
+There was no missing building, failed purchase or missing crop transform.
+
+`tests/town_scene_layer_regression.py --exchange-growth` reuses the normal
+construction, confirmed End Turn, read-only information and full-save checks.
+The failing-before engine log `town_exchange_before_720/runtime.log` completed
+1328 assertions with exactly six failures: both identities still resolved the
+catalog art after construction/save/re-entry and in the developed view. The
+1290-gold Exchange was bought on Day 2; the 1610-gold/1-wood Drydock on Day 3,
+after the normal Day-1 Market. Costs and complete saved states matched. The
+supervising process ended with signal 15 while its isolated engine continued;
+the retained final engine marker is failure evidence, not a clean harness pass.
+
+Two original 1536x1024 RGBA masters now own exact Veilmourn scene mappings.
+The Exchange's covered counters and ramp extend the right shore below the lodge;
+the mirror-lined training/repair slip follows the foreground quay. The first
+Drydock placement clipped its lower edge at 2048x1079 and was rejected. Revised
+sparse/developed previews preserve the open central channel and all controls.
+Three opaque RGB Exchange candidates were rejected before the fourth generated
+real alpha; no checkerboard removal or drawn stand-in processing was used.
+Exact prompts, original generation identities/hashes, source sections, curation
+and rollback live in `art/towns/source/generated/scene_layers/README.md` and the
+adjacent prompts. Candidate evidence: `town_exchange_candidates_20260907/`.
+
+The unchanged packaging pipeline crops only alpha margins and downsamples with
+preserved aspect/alpha and mipmaps. Runtime Exchange is 512x344; Drydock 512x333.
+The original village, catalog/info icons and all five prior scene-layer records
+and rasters remain byte-identical. No runtime controller, core rule, authored
+building cost/effect/prerequisite, native map, built-id or save-schema change.
+
+The source test adds an opt-in Exchange sequence without replacing the existing
+Fog/Ledger sequence. The Windows package smoke retains those earlier purchases
+and extends the same existing generated-Town harness to Exchange and Drydock on
+Days 4/5. Linux's retained disposable-export launcher exercises that same complete
+five-build sequence. No additional runtime validation entry point was added.
+
+Validation and evidence, relative to the goal artifact directory unless noted:
+
+- `town_exchange_final_720`, `town_exchange_final_2048` and
+  `town_exchange_final_1080_serial`: 2824/2824 checks each, zero engine errors,
+  unchanged input/terminal saves and runtime owners. Each proves actual paid
+  Market/Exchange/Drydock construction across Days 1-3, exact loaded layer/aspect,
+  transparent/painted pointer ownership, keyboard/controller information and
+  focus restoration, authoritative main-building Build route, cost/daily limit,
+  full save/resume and re-entry. The terminal 16-built-id view is explicitly a
+  detached composition fixture, not a new terminal match or injected purchase.
+- Visually inspected normal saved Towns at all three resolutions, developed
+  composition at the target resolution and 720p candidate, and both exact
+  information dialogs at 720p. The new layers are grounded and do not clip the
+  footer or command controls. Other legacy diorama layers remain visible and
+  unfinished. The earlier `town_exchange_final_1080` attempt was deliberately
+  interrupted for host RAM pressure; it is not accepted validation evidence.
+- Ten scene-layer Python tests pass, including fail-closed missing new mappings,
+  exact hashes/paths, alpha, mipmaps, aspect and separate catalog identity. The
+  initial focused run failed the required mapping check before registration.
+- Existing rendered Town reports pass: five direct actions/18 main-building
+  cases/two layouts, and all 32 town catalogs/179 plot mappings with existing
+  build/save controls. Evidence is under
+  `.artifacts/full_play_runtime_20260905/town_exchange_existing/`. Those functional
+  mapping counts do not certify the remaining catalog art's visual quality.
+- `town_exchange_linux/report.json` and `town_exchange_windows/report.json` pass
+  established exports, binary/native checks, startup, source-art exclusion and
+  unchanged size ceiling. Both final PCKs are **247312024 bytes**, leaving
+  **2687976 bytes**. The shared compactor removes 3129504 bytes of JSON whitespace
+  from the raw 250441528-byte exports; no pixels or resource paths are removed.
+- Both `town_exchange_linux/generated-entry/live_validation_report.json` and
+  `town_exchange_windows/generated-flow/live_validation_report.json` pass all
+  **13 steps**: normal generated setup/Overworld/Town plus five successive-day
+  builds and information dialogs. Both newly repaired construction payloads are
+  exactly equal across platforms. An optional all-five literal comparison finds
+  only a 0.0001px formatted old-buoy button-width difference; both remain aligned.
+  The inspected Linux exported Day-5 capture is 1920x1080. Windows is headless
+  Wine, not physical Windows/GPU certification; the existing entry fixture is
+  packaging proof, not an additional legitimately completed match.
+- Repository validation and `git diff --check` pass, as do 20 PCK compaction,
+  17 release-artifact and nine release-pipeline Python tests. Together with the
+  ten scene-layer tests, 56 focused Python tests pass.
+
+Reproduce the source cases using `tests/town_scene_layer_regression.py
+--exchange-growth --save <Large08-slot1.json> --developed-save <Large08-slot3.json>
+--label <fresh> --resolution <1280x720|1920x1080|2048x1079>`. Run the two existing
+Town reports with `tests/full_play_validation_suite.py --label <fresh> --rendered
+--accessibility disabled --only town_screen_layout_and_dialog_controls_report
+town_building_skyline_progression_report`. Platform launches use the retained
+`scenery_package_validation.py linux|windows <fresh>` wrapper around the committed
+platform smokes, with disposable RAM-backed exports/fresh Wine installations.
+All commands use `python3 -B`; source masters, caches, saves, reports and RMG
+evidence are retained. No new gameplay/performance claim is made. This accepts
+two more layers, not the full presentation child or parent goal.
+
 ## Remaining acceptance
 
 Extend scene-matched art beyond the two starting structures and constructed
-Bellwake Market Square, Fog Buoys and Salvage Ledger to the remaining
+Bellwake Market Square, Fog Buoys, Salvage Ledger, Ransom Exchange and Mirror
+Drydock to the remaining
 faction/building plots and upgrades.
 Require inspected sparse, mid-development and developed scenes, exact
 built-id/input/save ownership and
