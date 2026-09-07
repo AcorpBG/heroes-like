@@ -105,22 +105,134 @@ python3 -B tests/validate_repo.py
 git diff --check
 ```
 
-## Remaining Town integration and broader sprite work
+## Validated Bellwake starting-building checkpoint
 
-Bell Harbor and faction-specific Wayfarers Hall scene-layer candidates have been
-generated with the built-in tool and inspected in isolation. They match the
-moon's cooler timber/metal palette more closely than the existing catalog icons,
-but remain unaccepted pending in-scene ground/depth/hotspot and transparency
-checks. Candidate rasters, exact prompts and review are retained under
-`.artifacts/generated_full_match_quality_20260906/town_scene_candidates_20260907/`.
-They are not registered as runtime assets. All-faction, per-building
-integration and other reproduced prop-edge defects remain part of the full goal.
+Bell Harbor and faction-specific Wayfarers Hall now have dedicated scene layers
+in `art/towns/runtime/scene_layers/faction_veilmourn/`, separate from the unchanged
+catalog/info icons. `content/town_building_scene_art_manifest.json` owns exact
+faction/building paths, non-square scenic bounds, ground-depth anchors and all
+source/trimmed/runtime hashes. Original generated masters and exact prompts live
+under `art/towns/source/generated/scene_layers/`; the README records curation,
+originality, processing and rollback. The package helper uses disposable outputs,
+not retained duplicate Wine installations.
+
+Root cause: the renderer previously always asked for the 256x256 catalog icon
+and inferred a square scenic rectangle. Bellwake's two initial icons therefore
+clashed with the panorama's camera and light and occupied detached water plots.
+The baseline `town_layers_before` report fails the two exact scene-path assertions
+while ordinary construction, state and save controls pass without engine errors.
+
+The approved generated paintings are cropped only at fully transparent margins,
+aspect-preserving downsampled to maximum 512px and imported with mipmaps. Bell
+Harbor's gangway joins the existing left quay; the Hall lies on the right shore,
+behind the foreground gate. `context_03` / `context_04` are inspected composition
+previews, not shipped-runtime acceptance. Two earlier preview harness failures
+(type inference and invalid scene parenting) are excluded. An initial Hall
+placement that covered the foreground gate was rejected.
+
+`TownStageView` applies the same cover-source projection to art and input. The
+texture cache is keyed by resolved path, preventing shared building ids from
+leaking a Veilmourn scenic layer into another faction. Declared broken layers
+return no texture instead of reverting to a catalog icon. The new building
+button tests pointer hits against an alpha mask of the actual cropped raster;
+keyboard focus still covers the full accessible button. Pointer ordering follows
+the same ground-depth order as drawing. The main building still opens the
+authoritative Construction Ledger, and individual buildings open their existing
+read-only information surface.
+
+Final frozen-source runs `town_layers_controls_720`, `town_layers_controls_1080`
+and `town_layers_controls_2048` each pass **824 checks** at actual 1280x720,
+1920x1080 and 2048x1079. Coverage includes exact asset resolution, 722 alpha/crop
+sample points, transparent and painted pointer activation, keyboard accept/cancel,
+raw controller A/B, preserved catalog info icons, cross-faction/negative-cache
+boundaries, normal affordable construction costs, and complete save/resume.
+Input save and runtime/test owners remain unchanged during each run; no engine
+errors or leaked resources occur. The Large08 opening save SHA256 is
+`d2b4a0ef45521f768a6e0b8f23878c5f7e16a92838250068df05fff1f3cd31a9`.
+
+A separate detached built-id fixture exercises absent/present Hall art and input.
+These two structures are starting buildings, not purchasable Bellwake orders;
+the fixture does not pretend to construct them legally or change the catalog.
+Actual paid construction uses the offered Market Square. Its post-build capture
+still shows an unsuitable floating catalog icon: this is the next concrete art
+target, not an accepted seamless construction result. Opening, information,
+absent/present and post-build captures were visually inspected for the repaired
+layers and preserved controls; the remaining icon is explicitly not accepted.
+
+Six Python tests reject missing/wrong assets, missing mappings and distorted or
+out-of-bounds geometry. Repository validation passes in
+`town_scene_layers_repo_final.log`; `git diff --check` passes. Original source
+masters are retained. Two successive processing runs produce byte-identical
+derivatives after stripping timestamp metadata. Final runtime hashes:
+
+- Bell Harbor (512x477): `e0d2431746b0c7c779da805cef48e62f0ac37ad62bf377a3cd66811b470944d5`.
+- Wayfarers Hall (512x353): `10dd806963528a714c81693337177b996f1ded9e329d4ac16d695355527210b5`.
+- Scene manifest: `b7c3c0a9f7094473e7bca689de26a75d67442324e31ca915b82246f008eecf1a`.
+
+The final reports record renderer, hotspot, manifest, test and executed-probe
+hashes at launch and require them unchanged at exit. Earlier probes are not
+substitutes: test inference/type and pointer-coordinate failures were corrected;
+an impossible Hall purchase fixture was replaced by explicitly detached built-id
+visibility plus real offered construction; alpha tests now sample source pixel
+centers rather than numerically ambiguous boundaries. Pre-final reports whose
+test hashes were sampled after launch are excluded from frozen-source proof.
+
+Existing Town validation under `.artifacts/full_play_runtime_20260905/`:
+
+- `town_scene_layers_existing_v2`: the rendered layout/dialog report passes all
+  five actions and six-faction/three-stage hotspot metadata. The integrated
+  progression report passes all 32 towns and 179 catalog mappings, construction,
+  upgrades, information and saves. This is behavior coverage, not visual
+  acceptance of every faction's older catalog art.
+- The older keyboard smoke fails in unchanged Overworld named-file saving before
+  reaching Town: it expects numbered-slot overwrite confirmation instead of the
+  current filename dialog. This same mismatch is documented in the gameplay
+  report's earlier exact-target validation. It is not reported as passing; the
+  new Town-focused pointer/keyboard/controller checks pass independently.
+- The first rendered save/development report timed out at 240 seconds.
+  `town_scene_save_headless` completes in 407.237 seconds without engine errors:
+  32/32 save/resume, rare-resource, same-day guard and Town resume-target cases
+  pass; 31/32 towns finish development within its 30-turn target. The sole error
+  is `town_moonbite_reedshrine` missing that deadline. Its unchanged domain-only
+  test never uses TownStageView; no balance, rules or assertions were altered.
+  The aggregate report remains failed, not waived or represented as a full pass.
+
+Final `town_layers_linux_final` and `town_layers_windows_final` pass the
+established export/startup checks and actual generated-map-to-Bellwake entry.
+Both PCKs are **249083376 bytes**, 916624 below the unchanged ceiling, with zero
+source-master/metadata package entries. Runtime import settings are versioned
+so clean imports retain mipmaps. The rendered Linux packaged Town capture was
+inspected; Windows startup/native DLL/generated gameplay execution is Wine,
+not physical Windows/GPU certification. Export binaries and Wine prefixes are
+disposable RAM-backed outputs; reports and gameplay captures remain retained.
+
+Reproduction commands (fresh labels, retained input save above):
+
+```sh
+python3 -B tools/prepare_town_scene_layers.py
+godot4 --headless --editor --path . --quit
+python3 -B -m unittest discover -s tests -p test_town_scene_layers.py
+python3 -B tests/town_scene_layer_regression.py --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>
+python3 -B tests/full_play_validation_suite.py --label <fresh> --rendered --accessibility disabled --timeout 240 --only town_screen_layout_and_dialog_controls_report town_building_skyline_progression_report active_play_keyboard_focus_smoke
+python3 -B tests/full_play_validation_suite.py --label <fresh> --accessibility disabled --timeout 600 --only town_development_save_resume_report
+python3 -B tests/validate_repo.py
+python3 -B .artifacts/generated_full_match_quality_20260906/scenery_package_validation.py linux <fresh>
+python3 -B .artifacts/generated_full_match_quality_20260906/scenery_package_validation.py windows <fresh>
+git diff --check
+```
+
+All-faction, per-building integration and other reproduced prop-edge defects
+remain part of the full goal. This two-starting-building checkpoint is not a
+complete seamless construction-art solution for every Town or a release claim.
 
 ## Remaining acceptance
 
-Failing-before edge/identity coverage and actual rendered before/after cases;
-visually inspected 1280x720 and 1920x1080 gameplay; unchanged complete state/save,
-footprint and interactions; existing sprite, fog, movement, Town construction,
-information/hotspot/input checks; repository/diff checks; Linux/Windows exports,
-startup and generated-map/Town entry. The Wreck Quay evidence above is bounded
-to that exact asset, not acceptance of the remaining Town/Overworld art scope.
+Extend scene-matched art from the two starting structures to actual constructible
+buildings, beginning with the reproduced Bellwake Market Square, and then the
+remaining faction/building plots and upgrades. Require inspected sparse,
+mid-development and developed scenes, exact built-id/input/save ownership and
+both-platform packages within the ceiling for each accepted packet. Other
+reproduced Overworld prop-edge/terrain defects and all-faction visual acceptance
+remain open. Preserve the two explicit legacy validation limits above. The
+Wreck Quay and Bellwake evidence accepts only these repaired assets, not the
+remaining art scope or the overall goal.

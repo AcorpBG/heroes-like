@@ -8,9 +8,11 @@ const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
+const TownBuildingHotspotScript = preload("res://scenes/town/TownBuildingHotspot.gd")
 
 const TOWN_VFX_MANIFEST_PATH := "res://content/town_vfx_manifest.json"
 const TOWN_BUILDING_SCENE_LAYOUT_PATH := "res://content/town_building_scene_layouts.json"
+const TOWN_BUILDING_SCENE_ART_PATH := "res://content/town_building_scene_art_manifest.json"
 const FRAME_FILL := Color(0.05, 0.07, 0.09, 1.0)
 const BOARD_FILL := Color(0.09, 0.11, 0.12, 1.0)
 const FRAME_COLOR := Color(0.78, 0.66, 0.38, 0.94)
@@ -230,12 +232,16 @@ var _development_scene_texture_cache: Dictionary = {}
 var _main_building_hotspot: Button
 var _building_scene_layout_manifest: Dictionary = {}
 var _building_scene_layout_loaded := false
+var _building_scene_art_manifest: Dictionary = {}
+var _building_scene_art_loaded := false
 var _town_building_textures: Dictionary = {}
 var _town_building_texture_missing: Dictionary = {}
+var _town_building_masks: Dictionary = {}
 var _building_hotspots: Dictionary = {}
 var _external_command_overlay := false
 
 func _ready() -> void:
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	focus_mode = Control.FOCUS_NONE
 	custom_minimum_size = Vector2(620, 320)
@@ -1328,6 +1334,32 @@ func _building_scene_faction_layout() -> Dictionary:
 	var faction_layout: Variant = factions.get(_town_faction_id(), {})
 	return faction_layout if faction_layout is Dictionary else {}
 
+func _town_scene_layers() -> Dictionary:
+	if not _building_scene_art_loaded:
+		_building_scene_art_loaded = true
+		if FileAccess.file_exists(TOWN_BUILDING_SCENE_ART_PATH):
+			var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(TOWN_BUILDING_SCENE_ART_PATH))
+			if parsed is Dictionary and String(parsed.get("schema_id", "")) == "town_building_scene_art_v1":
+				_building_scene_art_manifest = parsed
+		if _building_scene_art_manifest.is_empty():
+			push_error("Missing or invalid authoritative Town scene-art manifest")
+	var factions: Variant = _building_scene_art_manifest.get("factions", {})
+	var layers: Variant = factions.get(_town_faction_id(), {}) if factions is Dictionary else {}
+	return layers if layers is Dictionary else {}
+
+func _town_scene_layer(building_id: String) -> Dictionary:
+	var value: Variant = _town_scene_layers().get(building_id, {})
+	return value if value is Dictionary else {}
+
+func _town_building_texture_path(building_id: String) -> String:
+	var layers := _town_scene_layers()
+	if _building_scene_art_manifest.is_empty():
+		return ""
+	# A declared layer may never quietly become a catalog icon when broken.
+	if layers.has(building_id):
+		return String(_town_scene_layer(building_id).get("runtime_path", ""))
+	return TownRulesScript.building_icon_path(building_id)
+
 func _town_building_scene_entries(scene_rect: Rect2) -> Array:
 	var faction_layout := _building_scene_faction_layout()
 	var plots: Array = faction_layout.get("plots", []) if faction_layout.get("plots", []) is Array else []
@@ -1363,6 +1395,18 @@ func _town_building_scene_entries(scene_rect: Rect2) -> Array:
 		var height_ratio := float(plot.get("height_ratio", 0.0))
 		var width_ratio := height_ratio * INTEGRATED_BUILDING_SOURCE_SIZE.y / INTEGRATED_BUILDING_SOURCE_SIZE.x
 		var normalized_rect := Rect2(Vector2(anchor.x - width_ratio * 0.5, anchor.y - height_ratio), Vector2(width_ratio, height_ratio))
+		var layer := _town_scene_layer(visible_building_id)
+		var exact_layer := _town_scene_layers().has(visible_building_id)
+		var entry_modulate := building_modulate
+		if exact_layer:
+			var bounds: Array = layer.get("normalized_rect", [])
+			var ground: Array = layer.get("ground_anchor", [])
+			if bounds.size() != 4 or ground.size() != 2:
+				continue
+			normalized_rect = Rect2(float(bounds[0]), float(bounds[1]), float(bounds[2]), float(bounds[3]))
+			anchor = Vector2(float(ground[0]), float(ground[1]))
+			height_ratio = normalized_rect.size.y
+			entry_modulate = Color.WHITE
 		var projection := _project_normalized_source_rect(normalized_rect, scene_rect)
 		var building := ContentService.get_building(visible_building_id) if visible_building_id != "" else {}
 		entries.append({
@@ -1382,7 +1426,9 @@ func _town_building_scene_entries(scene_rect: Rect2) -> Array:
 			"building_name": String(building.get("name", visible_building_id)),
 			"building_description": String(building.get("description", "")),
 			"category": String(building.get("category", "")),
-			"modulate": building_modulate,
+			"modulate": entry_modulate,
+			"scene_layer": exact_layer,
+			"texture_path": _town_building_texture_path(visible_building_id),
 		})
 	entries.sort_custom(func(a: Dictionary, b: Dictionary): return float(a.get("anchor", Vector2.ZERO).y) < float(b.get("anchor", Vector2.ZERO).y))
 	return entries
@@ -1433,19 +1479,19 @@ func _draw_integrated_buildings(scene_rect: Rect2) -> void:
 		draw_texture_rect_region(texture, destination_rect, texture_region, entry.get("modulate", Color.WHITE))
 
 func _town_building_texture(building_id: String) -> Texture2D:
-	if building_id == "" or _town_building_texture_missing.has(building_id):
+	var texture_path := _town_building_texture_path(building_id)
+	if building_id == "" or texture_path == "" or _town_building_texture_missing.has(texture_path):
 		return null
-	if _town_building_textures.has(building_id):
-		return _town_building_textures.get(building_id) as Texture2D
-	var texture_path := TownRulesScript.building_icon_path(building_id)
+	if _town_building_textures.has(texture_path):
+		return _town_building_textures.get(texture_path) as Texture2D
 	if texture_path == "" or not ResourceLoader.exists(texture_path, "Texture2D"):
-		_town_building_texture_missing[building_id] = true
+		_town_building_texture_missing[texture_path] = true
 		return null
 	var texture := load(texture_path) as Texture2D
 	if texture == null:
-		_town_building_texture_missing[building_id] = true
+		_town_building_texture_missing[texture_path] = true
 		return null
-	_town_building_textures[building_id] = texture
+	_town_building_textures[texture_path] = texture
 	return texture
 
 func _town_building_reveal_scale(building_id: String) -> float:
@@ -1457,7 +1503,7 @@ func _town_building_reveal_scale(building_id: String) -> float:
 	return lerpf(1.06, 1.0, ease(progress, 2.0))
 
 func _create_building_hotspot(building_id: String) -> Button:
-	var button := Button.new()
+	var button := TownBuildingHotspotScript.new()
 	button.name = "BuildingHotspot_%s" % building_id.trim_prefix("building_")
 	button.text = ""
 	button.flat = false
@@ -1512,7 +1558,21 @@ func _sync_building_hotspots() -> void:
 		button.accessibility_description = "%s Press to open building information." % description
 		button.position = destination_rect.position
 		button.size = destination_rect.size
+		button.painted_mask = null
+		if bool(entry.get("scene_layer", false)):
+			var path := _town_building_texture_path(building_id)
+			var texture := _town_building_texture(building_id)
+			if texture == null:
+				continue
+			if not _town_building_masks.has(path):
+				var mask := BitMap.new()
+				mask.create_from_image_alpha(texture.get_image(), float(_town_scene_layer(building_id).get("hit_alpha_threshold", 0.25)))
+				_town_building_masks[path] = mask
+			button.painted_mask = _town_building_masks[path]
+			button.texture_region_ratio = entry.get("texture_region_ratio", Rect2(Vector2.ZERO, Vector2.ONE))
 		button.visible = true
+		# Pointer ordering follows the same ground-depth order as the paintings.
+		move_child(button, get_child_count() - 1)
 
 func _town_building_catalog_ids() -> Array:
 	var result: Array = []
@@ -1570,9 +1630,10 @@ func validation_town_building_progression_summary() -> Dictionary:
 			texture_rows.append({
 				"building_id": variant_id,
 				"plot_id": String(entry.get("plot_id", "")),
-				"texture_path": TownRulesScript.building_icon_path(variant_id),
+				"texture_path": _town_building_texture_path(variant_id),
 				"texture_loaded": texture != null,
 				"texture_size": texture.get_size() if texture != null else Vector2.ZERO,
+				"expected_size": _town_scene_layer(variant_id).get("runtime_size", [256, 256]),
 			})
 		var visible_id := String(entry.get("visible_building_id", ""))
 		if visible_id == "":
@@ -1616,7 +1677,7 @@ func validation_town_building_progression_summary() -> Dictionary:
 		"visible_building_ids": visible_ids,
 		"visible_building_count": visible_ids.size(),
 		"visible_covers_authoritative_built": visible_covers_built,
-		"all_textures_loaded": texture_rows.size() == catalog_ids.size() and texture_rows.all(func(row): return bool(row.get("texture_loaded", false)) and row.get("texture_size", Vector2.ZERO) == Vector2(256, 256)),
+		"all_textures_loaded": texture_rows.size() == catalog_ids.size() and texture_rows.all(func(row): return bool(row.get("texture_loaded", false)) and row.get("texture_size", Vector2.ZERO) == Vector2(float(row.expected_size[0]), float(row.expected_size[1]))),
 		"texture_rows": texture_rows,
 		"all_source_rects_contained": all_source_contained,
 		"all_destination_rects_contained": all_destination_contained,

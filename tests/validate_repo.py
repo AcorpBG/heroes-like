@@ -30807,6 +30807,8 @@ def validate_town_building_skyline_progression(errors: list[str]) -> None:
     ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Town building layers must draw over the base scene and below status overlays")
 
     layout_manifest = load_json(TOWN_BUILDING_SCENE_LAYOUT_PATH)
+    from test_town_scene_layers import validate_scene_layers
+    errors.extend(validate_scene_layers())
     ensure(layout_manifest.get("schema_id") == "town_integrated_building_scene_layout_v1", errors, "Town building scene-layout manifest schema must remain explicit")
     ensure(layout_manifest.get("placement_model") == "explicit_faction_ground_anchor_depth_and_perspective", errors, "Town building scene-layout manifest must retain authored faction placement")
     ensure(layout_manifest.get("missing_mapping_policy") == "validation_failure_no_runtime_generated_plot", errors, "Town building scene-layout manifest must fail closed on missing mappings")
