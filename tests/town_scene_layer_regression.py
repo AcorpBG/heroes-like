@@ -272,8 +272,11 @@ def main():
     parser.add_argument('--save', type=Path, required=True)
     parser.add_argument('--resolution', choices=['1280x720', '1920x1080', '2048x1079'], required=True)
     parser.add_argument('--harbor-growth', action='store_true', help='Build Fog Buoys and Salvage Ledger after Market across real confirmed End Turns')
+    parser.add_argument('--exchange-growth', action='store_true', help='Build Ransom Exchange and Mirror Drydock after Market across real confirmed End Turns')
     parser.add_argument('--developed-save', type=Path, help='Exact terminal built-id composition fixture; never resumed as a live match')
     args = parser.parse_args()
+    if args.harbor_growth and args.exchange_growth:
+        parser.error('select one normal construction sequence per run')
     if not args.label or any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789_-' for c in args.label):
         parser.error('fresh lowercase label required')
     save = args.save.resolve(strict=True)
@@ -286,8 +289,11 @@ def main():
     out = OUTPUT / args.label
     out.mkdir(exist_ok=False)
     script_text = SCRIPT
-    if args.harbor_growth:
-        script_text = SCRIPT.replace('await inspect_market_constructed()', 'await inspect_market_constructed()\n\t\tawait inspect_harbor_growth()') + HARBOR_GROWTH
+    if args.harbor_growth or args.exchange_growth:
+        growth = HARBOR_GROWTH
+        if args.exchange_growth:
+            growth = growth.replace('building_veilmourn_fog_signal_buoys', 'building_veilmourn_ransom_exchange').replace('building_veilmourn_salvage_ledger', 'building_veilmourn_mirror_drydock').replace('ordinary_harbor_growth', 'ordinary_exchange_growth')
+        script_text = SCRIPT.replace('await inspect_market_constructed()', 'await inspect_market_constructed()\n\t\tawait inspect_harbor_growth()') + growth
     if args.resolution == '2048x1079':
         script_text = script_text.replace('SettingsService.set_presentation_resolution(OS.get_environment("TOWN_OVERLAY_RESOLUTION"))', 'get_window().content_scale_size = Vector2i(2048,1079)\n\tget_window().size = Vector2i(2048,1079)')
     with tempfile.TemporaryDirectory(prefix='town-layer-probe-', dir=OUTPUT) as temporary, tempfile.TemporaryDirectory(prefix='town-layer-data-', dir='/dev/shm') as data:
@@ -301,7 +307,7 @@ def main():
         if developed:
             env['TOWN_HARBOR_DEVELOPED_SAVE'] = str(developed)
         with (out / 'runtime.log').open('w') as log:
-            code = run_probe(command, env, log, timeout_seconds=600 if args.harbor_growth else 300)
+            code = run_probe(command, env, log, timeout_seconds=600 if args.harbor_growth or args.exchange_growth else 300)
     lines = (out / 'runtime.log').read_text().splitlines()
     marker = 'TOWN_OVERLAY_OWNERSHIP '
     reports = [json.loads(line[len(marker):]) for line in lines if line.startswith(marker)]
@@ -310,6 +316,7 @@ def main():
                   runtime_errors=[s for s in lines if s.startswith(('ERROR:', 'SCRIPT ERROR:')) or 'leaked' in s])
     report['source_hashes'] = source_hashes
     report['developed_save_sha256'] = developed_hash
+    report['construction_sequence'] = 'exchange' if args.exchange_growth else 'harbor' if args.harbor_growth else 'market'
     report['developed_save_unchanged'] = not developed or hashlib.sha256(developed.read_bytes()).hexdigest()==developed_hash
     report['executed_probe_sha256'] = hashlib.sha256(script_text.encode()).hexdigest()
     report['source_unchanged'] = all(hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==sha for path,sha in source_hashes.items())

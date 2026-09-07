@@ -112,3 +112,43 @@ Windows is headless Wine. Source-backed acceptance and the related immediate
 modal-close/departure focus fix are recorded in
 `docs/generated-full-match-art-repair-report.md`. Remaining buildings, upgrades
 and factions are unfinished; five accepted layers are not whole-Town acceptance.
+
+## Ransom Exchange and Mirror Drydock continuation
+
+Original built-in imagegen outputs are preserved as production-named RGBA masters:
+
+- Ransom Exchange: `exec-4b0a32d3-f8dd-47d5-8ff9-32f285d153a8.png`, SHA256
+  `95e4fe8730c7c9ae10493a83c6330b92ba2bfdcb8cc2c98052c89e31c2657a1d`.
+  References: original village and accepted Salvage Ledger master.
+- Mirror Drydock: `exec-309d708a-dea5-47bd-a621-626a64b99cab.png`, SHA256
+  `61def7c852073bd01f16aca34660e3cb19233632e53075265559c77438443313`.
+  References: original village, original exact Drydock catalog icon (identity
+  only), and accepted Salvage Ledger master (material/alpha treatment only).
+
+The adjacent exact prompts and manifest hashes preserve provenance. Sources:
+worldbuilding foundation Tone / Veil Coast / Visual Identity and faction bible
+Veilmourn Town Feel / Visual Language / Town Building Identity. No external game
+art was used. Three Exchange candidates, including one extraction attempt, were
+rejected for opaque RGB checkerboard pixels; only the fourth fresh generation
+provided real alpha. Prompts and rejected originals remain in the goal-owned
+`town_exchange_candidates_20260907/` packet, never in runtime manifests.
+
+The exchange extends the right waterfront below the lodge with covered counters
+and a quay ramp. The long mirror-lined working slip follows the foreground-right
+quay. Its first framing clipped the bottom edge at 2048x1079 and was rejected.
+Final pre-trim bounds: `[1080,515,310,206.6666666667]` and
+`[1210,570,350,233.3333333333]`. The sparse view at 1280x720 and actual developed-16
+built-id views at 1280x720 and 2048x1079 have been inspected. These detached views
+do not prove construction; normal paid-build/input/save/package acceptance is
+recorded separately in the art-repair report. Rubric: readability 4, faction
+identity 4, scene consistency 4, feasibility 4, originality 5.
+
+The existing alpha-margin/Lanczos/512px/mipmap pipeline is unchanged. Village,
+catalog icons and prior five scene-layer rasters stay byte-identical. No costs,
+prerequisites, built ids, effects or saves change. Rollback is the coherent two
+asset/prompt/source/trim/runtime/import additions plus pipeline/manifest/test
+edits; no migration is needed. Normal construction/input/save tests pass 2824
+checks at each of 1280x720, 1920x1080 and 2048x1079. Linux and Windows/Wine exports
+pass the existing generated Town flow extended to five real daily purchases;
+both PCKs are 247312024 bytes. The art-repair report records evidence and limits.
+Remaining buildings, upgrades and factions are not accepted by this packet.

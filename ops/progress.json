@@ -12,7 +12,9 @@
         "docs/lessons-learned.md",
         "docs/generated-full-match-quality-report.md",
         "docs/generated-full-match-art-repair-report.md",
-        "docs/town-integrated-building-progression-requirements.md"
+        "docs/town-integrated-building-progression-requirements.md",
+        "docs/worldbuilding-foundation.md",
+        "docs/factions-content-bible.md"
       ],
       "createdAt": "2026-09-06T12:03:25Z",
       "nonGoals": [
@@ -43,7 +45,8 @@
         "python3 -B -m unittest discover -s tests -p test_compact_export_pck.py",
         "python3 -B tests/packaging_release_candidate_pipeline_test.py",
         "python3 -B tests/export_pck_json_regression.py <raw-export.pck> <compacted-export.pck> --output <fresh>",
-        "python3 -B tests/packaging_release_artifact_verification_test.py"
+        "python3 -B tests/packaging_release_artifact_verification_test.py",
+        "python3 -B tests/town_scene_layer_regression.py --exchange-growth --developed-save <Large08-slot3.json> --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -85,16 +88,18 @@
         "tests/town_scene_layer_regression.py and generated_town_order_profile.py: real successive-day harbor growth, exact terminal built-id view fixture and bounded extended probe timeout",
         "tools/compact_export_pck.py and tools/package_release.py: verified atomic export-only JSON whitespace compaction in standard v3 packs; no source/raster changes",
         "tests/test_compact_export_pck.py and both platform export smokes: corruption/atomicity/token/all-member preservation and real compacted-pack gameplay",
-        "tests/export_pck_json_regression.py: real Godot parser equivalence for every exported JSON member before/after compaction"
+        "tests/export_pck_json_regression.py: real Godot parser equivalence for every exported JSON member before/after compaction",
+        "tools/prepare_town_scene_layers.py, exact-faction scene manifest and original source/trimmed/runtime art: Bellwake Ransom Exchange and Mirror Drydock grounded layers, preserving five accepted layers and village",
+        "tests/town_scene_layer_regression.py and tests/test_town_scene_layers.py: normal three-day Market/Ransom/Mirror construction, strict mappings, input/save and developed-16 composition; both platform packaged five-day construction validation"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T17:46:23Z",
+      "updatedAt": "2026-09-07T18:27:22Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated shared export-only JSON compaction restores 3255936 bytes of art headroom: both PCKs 246744064 bytes, saving 3128608. All 5146 members verified; 5095 non-JSON members byte-identical and all 51 JSON members Godot-parse identical. Twenty focused, 17 artifact and nine pipeline tests pass, plus repository/diff and both-platform nine-step Town flows. Inspected Linux Day-3 screenshot is pixel-identical. No new art/gameplay/speed claim; continue unfinished faction/building/upgrade integration. Windows headless Wine and legacy keyboard/Moonbite limits remain explicit."
+      "notes": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16712,10 +16717,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Validated shared export-only JSON compaction restores 3255936 bytes of art headroom: both PCKs 246744064 bytes, saving 3128608. All 5146 members verified; 5095 non-JSON members byte-identical and all 51 JSON members Godot-parse identical. Twenty focused, 17 artifact and nine pipeline tests pass, plus repository/diff and both-platform nine-step Town flows. Inspected Linux Day-3 screenshot is pixel-identical. No new art/gameplay/speed claim; continue unfinished faction/building/upgrade integration. Windows headless Wine and legacy keyboard/Moonbite limits remain explicit.",
+  "currentSliceNotes": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Presentation Corrections",
-  "currentSliceUpdatedAt": "2026-09-07T17:47:02Z",
+  "currentSliceUpdatedAt": "2026-09-07T18:27:23Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22022,70 +22027,79 @@
   },
   "guardrailNote": "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification.",
   "lastValidation": {
-    "id": "quality-art-package-json-headroom-20260907",
+    "id": "quality-town-exchange-drydock-art-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T17:47:02Z",
-    "scope": "Validated production export-only JSON whitespace compaction prerequisite for remaining scene art; standard Godot v3 PCK, untouched source/raster/script/native/save behavior.",
-    "result": "Validated shared export-only JSON compaction restores 3255936 bytes of art headroom: both PCKs 246744064 bytes, saving 3128608. All 5146 members verified; 5095 non-JSON members byte-identical and all 51 JSON members Godot-parse identical. Twenty focused, 17 artifact and nine pipeline tests pass, plus repository/diff and both-platform nine-step Town flows. Inspected Linux Day-3 screenshot is pixel-identical. No new art/gameplay/speed claim; continue unfinished faction/building/upgrade integration. Windows headless Wine and legacy keyboard/Moonbite limits remain explicit.",
+    "validatedAt": "2026-09-07T18:27:23Z",
+    "scope": "Validated two additional Bellwake scene-matched layers with real construction/input/save and inspected dual-platform packages; not full presentation completion.",
+    "result": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_compaction_first.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_godot_equivalence/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_unit_tests.log",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_artifact_tests.log",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_pipeline_tests.log",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_linux/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_linux/generated-entry/generated_town_building_constructed_building_veilmourn_salvage_ledger.png",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_windows/generated-flow/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_repo.log",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_repo_final.log"
+      "content/town_building_scene_art_manifest.json",
+      "art/towns/source/generated/scene_layers/README.md",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_before_720/runtime.log",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/building_veilmourn_mirror_drydock_saved.png",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/developed_built_id_fixture.png",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/building_veilmourn_mirror_drydock_saved.png",
+      ".artifacts/full_play_runtime_20260905/town_exchange_existing/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/generated_town_building_constructed_building_veilmourn_mirror_drydock.png",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/generated-flow/live_validation_report.json"
     ],
-    "remainingWork": "Use restored 3255936-byte package headroom for remaining approved scene-matched Town buildings, upgrades and factions, starting with detached structures visible in actual developed Bellwake. Continue remaining reproduced Overworld prop-edge/terrain corrections. No new art or speed improvement is claimed by this packaging prerequisite. Preserve physical Windows/hardware, legacy keyboard/Moonbite and release-readiness limits."
+    "remainingWork": "Continue remaining detached developed Bellwake buildings, upgrade plots and other factions with 2687976-byte PCK headroom; continue demonstrated Overworld prop-edge/terrain presentation corrections. Preserve legitimate match/performance evidence, physical Windows and legacy keyboard/Moonbite limits. Full goal remains active."
   },
   "latestEvidence": {
-    "id": "quality-art-package-json-headroom-20260907",
+    "id": "quality-town-exchange-drydock-art-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T17:47:02Z",
-    "scope": "Validated production export-only JSON whitespace compaction prerequisite for remaining scene art; standard Godot v3 PCK, untouched source/raster/script/native/save behavior.",
-    "result": "Validated shared export-only JSON compaction restores 3255936 bytes of art headroom: both PCKs 246744064 bytes, saving 3128608. All 5146 members verified; 5095 non-JSON members byte-identical and all 51 JSON members Godot-parse identical. Twenty focused, 17 artifact and nine pipeline tests pass, plus repository/diff and both-platform nine-step Town flows. Inspected Linux Day-3 screenshot is pixel-identical. No new art/gameplay/speed claim; continue unfinished faction/building/upgrade integration. Windows headless Wine and legacy keyboard/Moonbite limits remain explicit.",
+    "validatedAt": "2026-09-07T18:27:23Z",
+    "scope": "Validated two additional Bellwake scene-matched layers with real construction/input/save and inspected dual-platform packages; not full presentation completion.",
+    "result": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_compaction_first.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_godot_equivalence/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_unit_tests.log",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_artifact_tests.log",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_pipeline_tests.log",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_linux/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_linux/generated-entry/generated_town_building_constructed_building_veilmourn_salvage_ledger.png",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_windows/generated-flow/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_repo.log",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_repo_final.log"
+      "content/town_building_scene_art_manifest.json",
+      "art/towns/source/generated/scene_layers/README.md",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_before_720/runtime.log",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/building_veilmourn_mirror_drydock_saved.png",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/developed_built_id_fixture.png",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/building_veilmourn_mirror_drydock_saved.png",
+      ".artifacts/full_play_runtime_20260905/town_exchange_existing/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/generated_town_building_constructed_building_veilmourn_mirror_drydock.png",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/generated-flow/live_validation_report.json"
     ],
-    "remainingWork": "Use restored 3255936-byte package headroom for remaining approved scene-matched Town buildings, upgrades and factions, starting with detached structures visible in actual developed Bellwake. Continue remaining reproduced Overworld prop-edge/terrain corrections. No new art or speed improvement is claimed by this packaging prerequisite. Preserve physical Windows/hardware, legacy keyboard/Moonbite and release-readiness limits."
+    "remainingWork": "Continue remaining detached developed Bellwake buildings, upgrade plots and other factions with 2687976-byte PCK headroom; continue demonstrated Overworld prop-edge/terrain presentation corrections. Preserve legitimate match/performance evidence, physical Windows and legacy keyboard/Moonbite limits. Full goal remains active."
   },
   "latestEvidenceArtifacts": [
     "docs/generated-full-match-art-repair-report.md",
-    ".artifacts/generated_full_match_quality_20260906/town_pack_compaction_first.json",
-    ".artifacts/generated_full_match_quality_20260906/town_pack_godot_equivalence/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_pack_unit_tests.log",
-    ".artifacts/generated_full_match_quality_20260906/town_pack_artifact_tests.log",
-    ".artifacts/generated_full_match_quality_20260906/town_pack_pipeline_tests.log",
-    ".artifacts/generated_full_match_quality_20260906/town_pack_linux/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_pack_linux/generated-entry/live_validation_report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_pack_linux/generated-entry/generated_town_building_constructed_building_veilmourn_salvage_ledger.png",
-    ".artifacts/generated_full_match_quality_20260906/town_pack_windows/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_pack_windows/generated-flow/live_validation_report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_pack_repo.log",
-    ".artifacts/generated_full_match_quality_20260906/town_pack_repo_final.log"
+    "content/town_building_scene_art_manifest.json",
+    "art/towns/source/generated/scene_layers/README.md",
+    ".artifacts/generated_full_match_quality_20260906/town_exchange_before_720/runtime.log",
+    ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/building_veilmourn_mirror_drydock_saved.png",
+    ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/developed_built_id_fixture.png",
+    ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/building_veilmourn_mirror_drydock_saved.png",
+    ".artifacts/full_play_runtime_20260905/town_exchange_existing/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/live_validation_report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/generated_town_building_constructed_building_veilmourn_mirror_drydock.png",
+    ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/generated-flow/live_validation_report.json"
   ],
-  "latestEvidenceId": "quality-art-package-json-headroom-20260907",
-  "latestFinding": "Validated shared export-only JSON compaction restores 3255936 bytes of art headroom: both PCKs 246744064 bytes, saving 3128608. All 5146 members verified; 5095 non-JSON members byte-identical and all 51 JSON members Godot-parse identical. Twenty focused, 17 artifact and nine pipeline tests pass, plus repository/diff and both-platform nine-step Town flows. Inspected Linux Day-3 screenshot is pixel-identical. No new art/gameplay/speed claim; continue unfinished faction/building/upgrade integration. Windows headless Wine and legacy keyboard/Moonbite limits remain explicit.",
+  "latestEvidenceId": "quality-town-exchange-drydock-art-20260907",
+  "latestFinding": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
   "metrics": {
     "audit_only": false,
     "runtime_behavior_changed": true,
@@ -22451,7 +22465,9 @@
         "docs/lessons-learned.md",
         "docs/generated-full-match-quality-report.md",
         "docs/generated-full-match-art-repair-report.md",
-        "docs/town-integrated-building-progression-requirements.md"
+        "docs/town-integrated-building-progression-requirements.md",
+        "docs/worldbuilding-foundation.md",
+        "docs/factions-content-bible.md"
       ],
       "createdAt": "2026-09-06T12:03:25Z",
       "nonGoals": [
@@ -22482,7 +22498,8 @@
         "python3 -B -m unittest discover -s tests -p test_compact_export_pck.py",
         "python3 -B tests/packaging_release_candidate_pipeline_test.py",
         "python3 -B tests/export_pck_json_regression.py <raw-export.pck> <compacted-export.pck> --output <fresh>",
-        "python3 -B tests/packaging_release_artifact_verification_test.py"
+        "python3 -B tests/packaging_release_artifact_verification_test.py",
+        "python3 -B tests/town_scene_layer_regression.py --exchange-growth --developed-save <Large08-slot3.json> --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -22524,16 +22541,18 @@
         "tests/town_scene_layer_regression.py and generated_town_order_profile.py: real successive-day harbor growth, exact terminal built-id view fixture and bounded extended probe timeout",
         "tools/compact_export_pck.py and tools/package_release.py: verified atomic export-only JSON whitespace compaction in standard v3 packs; no source/raster changes",
         "tests/test_compact_export_pck.py and both platform export smokes: corruption/atomicity/token/all-member preservation and real compacted-pack gameplay",
-        "tests/export_pck_json_regression.py: real Godot parser equivalence for every exported JSON member before/after compaction"
+        "tests/export_pck_json_regression.py: real Godot parser equivalence for every exported JSON member before/after compaction",
+        "tools/prepare_town_scene_layers.py, exact-faction scene manifest and original source/trimmed/runtime art: Bellwake Ransom Exchange and Mirror Drydock grounded layers, preserving five accepted layers and village",
+        "tests/town_scene_layer_regression.py and tests/test_town_scene_layers.py: normal three-day Market/Ransom/Mirror construction, strict mappings, input/save and developed-16 composition; both platform packaged five-day construction validation"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T17:46:23Z",
+      "updatedAt": "2026-09-07T18:27:22Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated shared export-only JSON compaction restores 3255936 bytes of art headroom: both PCKs 246744064 bytes, saving 3128608. All 5146 members verified; 5095 non-JSON members byte-identical and all 51 JSON members Godot-parse identical. Twenty focused, 17 artifact and nine pipeline tests pass, plus repository/diff and both-platform nine-step Town flows. Inspected Linux Day-3 screenshot is pixel-identical. No new art/gameplay/speed claim; continue unfinished faction/building/upgrade integration. Windows headless Wine and legacy keyboard/Moonbite limits remain explicit."
+      "notes": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111298,32 +111317,35 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Validated shared export-only JSON compaction restores 3255936 bytes of art headroom: both PCKs 246744064 bytes, saving 3128608. All 5146 members verified; 5095 non-JSON members byte-identical and all 51 JSON members Godot-parse identical. Twenty focused, 17 artifact and nine pipeline tests pass, plus repository/diff and both-platform nine-step Town flows. Inspected Linux Day-3 screenshot is pixel-identical. No new art/gameplay/speed claim; continue unfinished faction/building/upgrade integration. Windows headless Wine and legacy keyboard/Moonbite limits remain explicit.",
+  "summary": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
   "taskId": "10236",
-  "updatedAt": "2026-09-07T17:47:02Z",
+  "updatedAt": "2026-09-07T18:27:23Z",
   "validation": {
-    "id": "quality-art-package-json-headroom-20260907",
+    "id": "quality-town-exchange-drydock-art-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T17:47:02Z",
-    "scope": "Validated production export-only JSON whitespace compaction prerequisite for remaining scene art; standard Godot v3 PCK, untouched source/raster/script/native/save behavior.",
-    "result": "Validated shared export-only JSON compaction restores 3255936 bytes of art headroom: both PCKs 246744064 bytes, saving 3128608. All 5146 members verified; 5095 non-JSON members byte-identical and all 51 JSON members Godot-parse identical. Twenty focused, 17 artifact and nine pipeline tests pass, plus repository/diff and both-platform nine-step Town flows. Inspected Linux Day-3 screenshot is pixel-identical. No new art/gameplay/speed claim; continue unfinished faction/building/upgrade integration. Windows headless Wine and legacy keyboard/Moonbite limits remain explicit.",
+    "validatedAt": "2026-09-07T18:27:23Z",
+    "scope": "Validated two additional Bellwake scene-matched layers with real construction/input/save and inspected dual-platform packages; not full presentation completion.",
+    "result": "Validated Bellwake Ransom Exchange and Mirror Drydock original scene layers: 2824 checks at each of 1280x720, 1920x1080 and 2048x1079; 56 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 13-step five-day construction flows pass. Both PCKs are 247312024 bytes with 2687976 bytes headroom. Village, prior five layers, catalog icons, rules and saves unchanged. Seven layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_compaction_first.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_godot_equivalence/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_unit_tests.log",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_artifact_tests.log",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_pipeline_tests.log",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_linux/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_linux/generated-entry/generated_town_building_constructed_building_veilmourn_salvage_ledger.png",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_windows/generated-flow/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_repo.log",
-      ".artifacts/generated_full_match_quality_20260906/town_pack_repo_final.log"
+      "content/town_building_scene_art_manifest.json",
+      "art/towns/source/generated/scene_layers/README.md",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_before_720/runtime.log",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_720/building_veilmourn_mirror_drydock_saved.png",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_2048/developed_built_id_fixture.png",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_final_1080_serial/building_veilmourn_mirror_drydock_saved.png",
+      ".artifacts/full_play_runtime_20260905/town_exchange_existing/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_linux/generated-entry/generated_town_building_constructed_building_veilmourn_mirror_drydock.png",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_exchange_windows/generated-flow/live_validation_report.json"
     ],
-    "remainingWork": "Use restored 3255936-byte package headroom for remaining approved scene-matched Town buildings, upgrades and factions, starting with detached structures visible in actual developed Bellwake. Continue remaining reproduced Overworld prop-edge/terrain corrections. No new art or speed improvement is claimed by this packaging prerequisite. Preserve physical Windows/hardware, legacy keyboard/Moonbite and release-readiness limits."
+    "remainingWork": "Continue remaining detached developed Bellwake buildings, upgrade plots and other factions with 2687976-byte PCK headroom; continue demonstrated Overworld prop-edge/terrain presentation corrections. Preserve legitimate match/performance evidence, physical Windows and legacy keyboard/Moonbite limits. Full goal remains active."
   },
   "validationHistory": [
     {
