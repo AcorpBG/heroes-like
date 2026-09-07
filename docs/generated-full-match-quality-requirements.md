@@ -263,6 +263,17 @@ summary dictionaries, save payloads, full normalization and transactional writes
 unchanged. Compare every recap against the complete original SaveService owner
 and measure real full-loop actions, not just warm lookup speed.
 
+Raid commander construction may project its one requested normalized roster entry
+without rebuilding unrelated entries. Full and projected reads must share the
+same authoritative per-entry calculation, retaining faction catalog membership,
+last duplicate input semantics, active raid/Town/resource precedence, recovery,
+role/record/progression/mana/artifact/army fields and exact unknown/null behavior.
+No new retained cache or skipped live normalization. Compare complete original
+owners over every faction hero, real generated saves, malformed/duplicate inputs,
+defender/actor changes and caller/input immutability with
+`tests/ai_commander_entry_projection_regression.py`; full turn decisions and
+serialized states must remain identical with all original saves performed.
+
 Overworld scenery-index reuse must not rebuild unchanged decorative/standalone
 objects when a town, resource, artifact or encounter changes. The cache belongs
 to the view only: identify every input used to construct those records, including

@@ -16617,14 +16617,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Validated request-local AI path fingerprint, terrain-id and strict portal-blocker read reuse. Large rendered three-turn total improves 12.6% (p50 8784.296 to 7830.387 ms); Medium difference is only 3.1%, not a meaningful gain. Both still miss the unchanged 15% speed gate. Exact Medium/Large full states, 1023 focused checks per size, 13 domains, cave/portal gameplay, 51-step full play with 50 equal states, 24 Python tests and both-platform packages pass. PCKs 248463808 bytes. Next: complete-action AI/autosave and repeated stored resume-recap latency, preserving all checks, values, external-file freshness and saves. Performance child/goal, Town integration, visible prop/terrain artifacts and pre-existing Moonbite deadline remain open.",
+  "currentNotes": "Validated exact single-entry commander projection: 1447 Large/1286 Medium original-owner checks, 1023 path controls, 18 domains, 51-step full play with all 50 states equal, native journeys and Linux/Windows startup/generated-entry packages pass. Serial full-turn waiting improves 6.8% Large and 15.9% Medium in one pair; Medium passes the unchanged 15% gate, Large remains below target and multi-second. Every returned/saved field, AI policy, cache lifetime, native geometry and full autosave remain unchanged. Both PCKs are 248465456 bytes; final Linux captures inspected. Remaining Large AI/full-save and Town/prop/terrain work, Moonbite deadline and release/physical-Windows limits stay open; parent and child remain in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "performance-generated-full-match-actions-20260906",
   "currentSliceId": "performance-generated-full-match-actions-20260906",
-  "currentSliceNotes": "Validated direct authoritative blocker-mask reads: 1484 exact-old-owner checks per map size, 1023 path controls, 13 domains, 51-step full play with all 50 states equal, native journeys and Linux/Windows startup/generated-entry packages pass. Large full-turn waiting improves 3.2% in one serial pair; Medium 0.7% is not meaningful and both 15% gates remain unmet. No masks, gameplay, art, save or persistent-cache changes. Continue remaining AI task/target preparation and full-save latency; Town/prop/terrain defects, Moonbite deadline and broader release limits remain open.",
+  "currentSliceNotes": "Validated exact single-entry commander projection: 1447 Large/1286 Medium original-owner checks, 1023 path controls, 18 domains, 51-step full play with all 50 states equal, native journeys and Linux/Windows startup/generated-entry packages pass. Serial full-turn waiting improves 6.8% Large and 15.9% Medium in one pair; Medium passes the unchanged 15% gate, Large remains below target and multi-second. Every returned/saved field, AI policy, cache lifetime, native geometry and full autosave remain unchanged. Both PCKs are 248465456 bytes; final Linux captures inspected. Remaining Large AI/full-save and Town/prop/terrain work, Moonbite deadline and release/physical-Windows limits stay open; parent and child remain in progress.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Responsiveness",
-  "currentSliceUpdatedAt": "2026-09-07T03:10:25Z",
+  "currentSliceUpdatedAt": "2026-09-07T03:46:15Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22283,7 +22283,9 @@
         "python3 -B tests/full_play_runtime_profile.py --label <fresh> --flow skirmish --resolution 1280x720 --accessibility disabled",
         "python3 -B tests/full_play_profile_compare.py <control> <current> --expected-states 50",
         "python3 -B tests/full_play_validation_suite.py --label <fresh> --accessibility disabled --only generated_large_town_explicit_save_surface_regression",
-        "python3 -B tests/overworld_blocked_mask_regression.py --label <fresh> --save <actual-medium-or-large-save> --require-mask-reuse"
+        "python3 -B tests/overworld_blocked_mask_regression.py --label <fresh> --save <actual-medium-or-large-save> --require-mask-reuse",
+        "python3 -B tests/ai_commander_entry_projection_regression.py --label <fresh> --save <actual-medium-or-large-save> --require-projection",
+        "python3 -B tests/full_play_validation_suite.py --label <fresh> --accessibility disabled --only ai_commander_role_state_report ai_commander_role_adoption_boundary_report ai_commander_role_turn_transcript_report ai_hero_task_spawn_commander_selection_report strategic_ai_emergency_defense_commander_fit_report"
       ],
       "id": "performance-generated-full-match-actions-20260906",
       "title": "Full-Match Responsiveness",
@@ -22319,45 +22321,51 @@
         "tests/save_stored_recap_regression.py: complete old-owner text, surface, file/content freshness and state controls",
         "tests/full_play_validation_suite.py: preserve canonical save authority while accounting for exact derived-text reuse",
         "scripts/core/OverworldRules.gd: direct authoritative package-mask blocking without unused content lookup or duplicate decoding",
-        "tests/overworld_blocked_mask_regression.py: complete old-owner indexes, authored mappings, masks/presence/overlap/freshness and full-state controls"
+        "tests/overworld_blocked_mask_regression.py: complete old-owner indexes, authored mappings, masks/presence/overlap/freshness and full-state controls",
+        "scripts/core/EnemyAdventureRules.gd: exact single-entry projection shares authoritative full-roster normalization",
+        "tests/ai_commander_entry_projection_regression.py: complete original owners, every faction hero, active/defender/mutation and full-state controls",
+        "tests/full_play_validation_suite.py: run existing commander role, spawn and emergency-fit reports with their original authoritative markers"
       ],
       "completionCriteria": [
         "Name dominant measured hotspots",
         "Improve full actions with matched complete-state/decision controls",
         "Full-match and focused cache/performance/platform regressions"
       ],
-      "updatedAt": "2026-09-07T03:09:38Z",
+      "updatedAt": "2026-09-07T03:46:46Z",
       "startedAt": "2026-09-06T13:44:06Z",
-      "notes": "Validated direct authoritative blocker-mask reads: 1484 exact-old-owner checks per map size, 1023 path controls, 13 domains, 51-step full play with all 50 states equal, native journeys and Linux/Windows startup/generated-entry packages pass. Large full-turn waiting improves 3.2% in one serial pair; Medium 0.7% is not meaningful and both 15% gates remain unmet. No masks, gameplay, art, save or persistent-cache changes. Continue remaining AI task/target preparation and full-save latency; Town/prop/terrain defects, Moonbite deadline and broader release limits remain open.",
+      "notes": "Validated exact single-entry commander projection: 1447 Large/1286 Medium original-owner checks, 1023 path controls, 18 domains, 51-step full play with all 50 states equal, native journeys and Linux/Windows startup/generated-entry packages pass. Serial full-turn waiting improves 6.8% Large and 15.9% Medium in one pair; Medium passes the unchanged 15% gate, Large remains below target and multi-second. Every returned/saved field, AI policy, cache lifetime, native geometry and full autosave remain unchanged. Both PCKs are 248465456 bytes; final Linux captures inspected. Remaining Large AI/full-save and Town/prop/terrain work, Moonbite deadline and release/physical-Windows limits stay open; parent and child remain in progress.",
       "validation": {
-        "id": "performance-generated-full-match-blocker-masks-20260907",
+        "id": "performance-generated-full-match-commander-entry-20260907",
         "sliceId": "performance-generated-full-match-actions-20260906",
-        "title": "Direct authoritative blocker masks with exact occupancy and full-state controls",
+        "title": "Exact selected commander entry with unchanged full-roster and saved-state behavior",
         "status": "in_progress",
         "scope": "validated_runtime_checkpoint_not_child_or_goal_completion",
-        "validatedAt": "2026-09-07T03:10:25Z",
+        "validatedAt": "2026-09-07T03:46:15Z",
         "artifacts": [
           "docs/generated-full-match-performance-report.md",
-          ".artifacts/generated_full_match_quality_20260906/blocker_masks_positive_control/report.json",
-          ".artifacts/generated_full_match_quality_20260906/blocker_masks_large_verified/report.json",
-          ".artifacts/generated_full_match_quality_20260906/blocker_masks_medium_verified/report.json",
-          ".artifacts/generated_full_match_quality_20260906/blocker_masks_path_large/report.json",
-          ".artifacts/generated_full_match_quality_20260906/blocker_masks_large_before/report.json",
-          ".artifacts/generated_full_match_quality_20260906/blocker_masks_large_compared/report.json",
-          ".artifacts/generated_full_match_quality_20260906/blocker_masks_medium_before/report.json",
-          ".artifacts/generated_full_match_quality_20260906/blocker_masks_medium_compared/report.json",
-          ".artifacts/full_play_runtime_20260905/blocker_masks_domains/report.json",
-          ".artifacts/full_play_runtime_20260905/blocker_masks_full_play/report.json",
-          ".artifacts/full_play_runtime_20260905/blocker_masks_full_play/matched_control_report.json",
-          ".artifacts/rmg_start_audit_20260905/blocker_masks_native_caves/report.json",
-          ".artifacts/rmg_start_audit_20260905/blocker_masks_native_large_portals/report.json",
-          ".artifacts/generated_full_match_quality_20260906/blocker_masks_linux_release/report.json",
-          ".artifacts/generated_full_match_quality_20260906/blocker_masks_linux_release/generated-entry/live_validation_report.json",
-          ".artifacts/generated_full_match_quality_20260906/blocker_masks_windows_release/report.json",
-          ".artifacts/generated_full_match_quality_20260906/blocker_masks_windows_release/generated-flow/live_validation_report.json"
+          ".artifacts/generated_full_match_quality_20260906/task_reads_large_diagnostic/report.json",
+          ".artifacts/generated_full_match_quality_20260906/roster_callers_large_diagnostic/report.json",
+          ".artifacts/generated_full_match_quality_20260906/commander_entry_positive_control/report.json",
+          ".artifacts/generated_full_match_quality_20260906/commander_entry_positive_control_aligned/report.json",
+          ".artifacts/generated_full_match_quality_20260906/commander_entry_large_verified/report.json",
+          ".artifacts/generated_full_match_quality_20260906/commander_entry_medium_verified/report.json",
+          ".artifacts/generated_full_match_quality_20260906/commander_entry_path_large/report.json",
+          ".artifacts/generated_full_match_quality_20260906/commander_entry_large_before/report.json",
+          ".artifacts/generated_full_match_quality_20260906/commander_entry_large_compared/report.json",
+          ".artifacts/generated_full_match_quality_20260906/commander_entry_medium_before/report.json",
+          ".artifacts/generated_full_match_quality_20260906/commander_entry_medium_compared/report.json",
+          ".artifacts/full_play_runtime_20260905/commander_entry_domains/report.json",
+          ".artifacts/full_play_runtime_20260905/commander_entry_full_play_isolated/report.json",
+          ".artifacts/full_play_runtime_20260905/commander_entry_full_play_isolated/matched_control_report.json",
+          ".artifacts/rmg_start_audit_20260905/commander_entry_native_caves/report.json",
+          ".artifacts/rmg_start_audit_20260905/commander_entry_native_large_portals/report.json",
+          ".artifacts/generated_full_match_quality_20260906/commander_entry_linux_release/report.json",
+          ".artifacts/generated_full_match_quality_20260906/commander_entry_linux_release/generated-entry/live_validation_report.json",
+          ".artifacts/generated_full_match_quality_20260906/commander_entry_windows_release/report.json",
+          ".artifacts/generated_full_match_quality_20260906/commander_entry_windows_release/generated-flow/live_validation_report.json"
         ],
-        "result": "Validated direct authoritative blocker-mask reads: 1484 exact-old-owner checks per map size, 1023 path controls, 13 domains, 51-step full play with all 50 states equal, native journeys and Linux/Windows startup/generated-entry packages pass. Large full-turn waiting improves 3.2% in one serial pair; Medium 0.7% is not meaningful and both 15% gates remain unmet. No masks, gameplay, art, save or persistent-cache changes. Continue remaining AI task/target preparation and full-save latency; Town/prop/terrain defects, Moonbite deadline and broader release limits remain open. Both PCKs are 248464880 bytes; captured Linux views were visually inspected. Full-play/domain/native runs are functional evidence, not additional speed claims.",
-        "remainingWork": "Large AI task/target preparation and full-save latency remain multi-second; both unchanged 15% complete End Turn gates are unmet. The blocker-mask gain is modest and Medium is effectively unchanged. Continue complete-action profiling with exact states and full transactional saves. Town integration, prop-edge/terrain defects, the pre-existing Moonbite deadline and broader release/physical-Windows certification remain open."
+        "result": "Validated exact single-entry commander projection: 1447 Large/1286 Medium original-owner checks, 1023 path controls, 18 domains, 51-step full play with all 50 states equal, native journeys and Linux/Windows startup/generated-entry packages pass. Serial full-turn waiting improves 6.8% Large and 15.9% Medium in one pair; Medium passes the unchanged 15% gate, Large remains below target and multi-second. Every returned/saved field, AI policy, cache lifetime, native geometry and full autosave remain unchanged. Both PCKs are 248465456 bytes; final Linux captures inspected. Remaining Large AI/full-save and Town/prop/terrain work, Moonbite deadline and release/physical-Windows limits stay open; parent and child remain in progress.",
+        "remainingWork": "Large complete End Turns remain multi-second and this pair misses the unchanged 15% improvement gate; Medium clears that gate in one pair, not a whole-game/hardware acceptance claim. Continue measured AI task/target preparation and full-save latency work with exact decisions/state and full transactional saves. Town integration, prop-edge/terrain defects, the pre-existing Moonbite deadline and broader release/physical-Windows certification remain open."
       }
     },
     {
@@ -110550,8 +110558,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Current-build whole-loop responsiveness acceptance and selected Town-building/base-art integration remain open; no release acceptance.",
-  "remainingWork": "Measure current complete player-action timings on retained Medium/Large states, separating driver planning and validation overhead; implement only demonstrated remaining runtime bottlenecks; Finish selected Town-building/base-art integration within authorized scope; art-regeneration approval remains outstanding; Preserve physical-Windows, exhaustive seed/faction, native-parity and release-readiness limits",
+  "remainingGap": "Large full-action responsiveness and Town/overworld presentation acceptance remain open; Medium passes the selected speed gate only in one pair. No release acceptance.",
+  "remainingWork": "Large complete End Turns remain multi-second and this pair misses the unchanged 15% improvement gate; Medium clears that gate in one pair, not a whole-game/hardware acceptance claim. Continue measured AI task/target preparation and full-save latency work with exact decisions/state and full transactional saves. Town integration, prop-edge/terrain defects, the pre-existing Moonbite deadline and broader release/physical-Windows certification remain open.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -111190,38 +111198,41 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Direct authoritative blocker-mask reads remove 670 unused content resolutions and 647 duplicate decodes per Large scan with exact tiles/ownership. Full-turn waiting improves only 3.2% Large and 0.7% Medium in one serial pair; both 15% gates remain unmet. Focused/path, 13 domains, 51-step full play with 50 equal states, native journeys, repository and Linux/Windows checks pass; PCKs 248464880 bytes. Continue AI/full-save and presentation work; child and parent remain in progress, not release-ready.",
+  "summary": "Exact selected commander projection removes unused full-roster rebuilding, preserving all returned/saved state and AI decisions. Serial full-turn waiting improves 6.8% Large / 15.9% Medium in one pair; only Medium clears the unchanged 15% gate. Focused/path, 18 domains, 51-step full play with 50 equal states, native journeys, repository and Linux/Windows checks pass; PCKs 248465456 bytes. Continue Large AI/full-save and presentation work; parent and child remain in progress, not release-ready.",
   "taskId": "10236",
-  "updatedAt": "2026-09-07T03:09:38Z",
+  "updatedAt": "2026-09-07T03:46:46Z",
   "validation": {
-    "id": "performance-generated-full-match-blocker-masks-20260907",
+    "id": "performance-generated-full-match-commander-entry-20260907",
     "sliceId": "performance-generated-full-match-actions-20260906",
-    "title": "Direct authoritative blocker masks with exact occupancy and full-state controls",
+    "title": "Exact selected commander entry with unchanged full-roster and saved-state behavior",
     "status": "in_progress",
     "scope": "validated_runtime_checkpoint_not_child_or_goal_completion",
-    "validatedAt": "2026-09-07T03:10:25Z",
+    "validatedAt": "2026-09-07T03:46:15Z",
     "artifacts": [
       "docs/generated-full-match-performance-report.md",
-      ".artifacts/generated_full_match_quality_20260906/blocker_masks_positive_control/report.json",
-      ".artifacts/generated_full_match_quality_20260906/blocker_masks_large_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/blocker_masks_medium_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/blocker_masks_path_large/report.json",
-      ".artifacts/generated_full_match_quality_20260906/blocker_masks_large_before/report.json",
-      ".artifacts/generated_full_match_quality_20260906/blocker_masks_large_compared/report.json",
-      ".artifacts/generated_full_match_quality_20260906/blocker_masks_medium_before/report.json",
-      ".artifacts/generated_full_match_quality_20260906/blocker_masks_medium_compared/report.json",
-      ".artifacts/full_play_runtime_20260905/blocker_masks_domains/report.json",
-      ".artifacts/full_play_runtime_20260905/blocker_masks_full_play/report.json",
-      ".artifacts/full_play_runtime_20260905/blocker_masks_full_play/matched_control_report.json",
-      ".artifacts/rmg_start_audit_20260905/blocker_masks_native_caves/report.json",
-      ".artifacts/rmg_start_audit_20260905/blocker_masks_native_large_portals/report.json",
-      ".artifacts/generated_full_match_quality_20260906/blocker_masks_linux_release/report.json",
-      ".artifacts/generated_full_match_quality_20260906/blocker_masks_linux_release/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/blocker_masks_windows_release/report.json",
-      ".artifacts/generated_full_match_quality_20260906/blocker_masks_windows_release/generated-flow/live_validation_report.json"
+      ".artifacts/generated_full_match_quality_20260906/task_reads_large_diagnostic/report.json",
+      ".artifacts/generated_full_match_quality_20260906/roster_callers_large_diagnostic/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_entry_positive_control/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_entry_positive_control_aligned/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_entry_large_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_entry_medium_verified/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_entry_path_large/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_entry_large_before/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_entry_large_compared/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_entry_medium_before/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_entry_medium_compared/report.json",
+      ".artifacts/full_play_runtime_20260905/commander_entry_domains/report.json",
+      ".artifacts/full_play_runtime_20260905/commander_entry_full_play_isolated/report.json",
+      ".artifacts/full_play_runtime_20260905/commander_entry_full_play_isolated/matched_control_report.json",
+      ".artifacts/rmg_start_audit_20260905/commander_entry_native_caves/report.json",
+      ".artifacts/rmg_start_audit_20260905/commander_entry_native_large_portals/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_entry_linux_release/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_entry_linux_release/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_entry_windows_release/report.json",
+      ".artifacts/generated_full_match_quality_20260906/commander_entry_windows_release/generated-flow/live_validation_report.json"
     ],
-    "result": "Validated direct authoritative blocker-mask reads: 1484 exact-old-owner checks per map size, 1023 path controls, 13 domains, 51-step full play with all 50 states equal, native journeys and Linux/Windows startup/generated-entry packages pass. Large full-turn waiting improves 3.2% in one serial pair; Medium 0.7% is not meaningful and both 15% gates remain unmet. No masks, gameplay, art, save or persistent-cache changes. Continue remaining AI task/target preparation and full-save latency; Town/prop/terrain defects, Moonbite deadline and broader release limits remain open. Both PCKs are 248464880 bytes; captured Linux views were visually inspected. Full-play/domain/native runs are functional evidence, not additional speed claims.",
-    "remainingWork": "Large AI task/target preparation and full-save latency remain multi-second; both unchanged 15% complete End Turn gates are unmet. The blocker-mask gain is modest and Medium is effectively unchanged. Continue complete-action profiling with exact states and full transactional saves. Town integration, prop-edge/terrain defects, the pre-existing Moonbite deadline and broader release/physical-Windows certification remain open."
+    "result": "Validated exact single-entry commander projection: 1447 Large/1286 Medium original-owner checks, 1023 path controls, 18 domains, 51-step full play with all 50 states equal, native journeys and Linux/Windows startup/generated-entry packages pass. Serial full-turn waiting improves 6.8% Large and 15.9% Medium in one pair; Medium passes the unchanged 15% gate, Large remains below target and multi-second. Every returned/saved field, AI policy, cache lifetime, native geometry and full autosave remain unchanged. Both PCKs are 248465456 bytes; final Linux captures inspected. Remaining Large AI/full-save and Town/prop/terrain work, Moonbite deadline and release/physical-Windows limits stay open; parent and child remain in progress.",
+    "remainingWork": "Large complete End Turns remain multi-second and this pair misses the unchanged 15% improvement gate; Medium clears that gate in one pair, not a whole-game/hardware acceptance claim. Continue measured AI task/target preparation and full-save latency work with exact decisions/state and full transactional saves. Town integration, prop-edge/terrain defects, the pre-existing Moonbite deadline and broader release/physical-Windows certification remain open."
   },
   "validationHistory": [
     {
