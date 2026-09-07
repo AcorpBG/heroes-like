@@ -139,10 +139,10 @@ def latency_summary(rows: list[dict]) -> dict:
     return {'count':len(values),'p50_ms':statistics.median(values),'p95_ms':values[min(len(values)-1,int(len(values)*0.95))],'max_ms':max(values),'total_ms':sum(values)} if values else {}
 
 
-def run_probe(command: list[str], env: dict, log) -> int:
+def run_probe(command: list[str], env: dict, log, timeout_seconds: int = 300) -> int:
     process = subprocess.Popen(command,env=env,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
     try:
-        return process.wait(timeout=300)
+        return process.wait(timeout=timeout_seconds)
     finally:
         if process.poll() is None:
             os.killpg(process.pid,signal.SIGTERM)

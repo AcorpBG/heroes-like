@@ -74,3 +74,41 @@ by processing. The imported 512x338 layer uses mipmaps; the unchanged generic
 catalog/info icon remains available to other factions. The earlier two scenic
 runtime raster hashes are unchanged. This is an existing 1000-gold Market Square,
 not a new building, discount, construction shortcut or whole-faction completion.
+
+## Fog Buoys and Salvage Ledger growth continuation
+
+The two additional RGBA masters preserve built-in imagegen outputs unchanged:
+
+- Fog Signal Buoys: `exec-9aee1609-05be-4431-867b-56f9140a7f34.png`, SHA256
+  `3b4b49e32f73eae6d2f2d0b4c9dc72c45fbbef9f9cc32f2df14fde4498c22075`.
+  References: original village and the new original Salvage Ledger master.
+- Salvage Ledger: `exec-56f93d9c-847a-471b-a333-822a547347c1.png`, SHA256
+  `9dbf801a2053651a467237e38fd01c082b1241aad600505b67e29b7897436467`.
+  References: original village and the accepted original Market Square master.
+
+Adjacent prompts are verbatim, hash-locked by the scene manifest. The first buoy
+output (`exec-7a9abb76-0bfe-42c6-be2e-70cb01bd4db7.png`) was opaque RGB with a
+painted checkerboard and was rejected. All studies/prompts and detached-view
+composition reviews remain under `town_harbor_candidates_20260907/` in the goal
+artifact directory. No external game art was supplied, and no source panorama,
+catalog icon or earlier accepted runtime raster changed.
+
+Curation retains small bell/lantern buoys in the foreground channel below Bell
+Harbor and a compact timber claims office extending the left working quay above
+the Market. Earlier buoy placements hidden by Bell Harbor, crowding the footer,
+or overlapping a later developed building were rejected. The office's initial
+preview aspect was corrected before adoption. Final full-source framing is
+`[860,650,180,120]` for buoys and `[480,450,260,173.3333333333]` for the office.
+Depth anchors and trimmed normalized bounds are authoritative in the manifest.
+Both are small functional infrastructure, not new palaces or extra town rules.
+Rubric: readability 4, faction identity 4, scene consistency 4, feasibility 4,
+originality 5; these are curation judgments, not all-faction acceptance.
+
+The unchanged processing pipeline crops only alpha margins and downsamples to
+512px with preserved aspect/alpha and mipmaps. Paid successive-day build and exact
+input/save checks pass at three inspected resolutions (2824 checks each). Both
+platform packages construct and resolve all three paid layers on Days 1-3;
+Windows is headless Wine. Source-backed acceptance and the related immediate
+modal-close/departure focus fix are recorded in
+`docs/generated-full-match-art-repair-report.md`. Remaining buildings, upgrades
+and factions are unfinished; five accepted layers are not whole-Town acceptance.

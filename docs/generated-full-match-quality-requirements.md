@@ -29,6 +29,12 @@ fog, input and Town tests. Repository/diff checks and both-platform export/start
 generated-entry evidence must pass under the unchanged 250000000-byte ceiling.
 Source masters are not packaged; no caches or unrelated evidence may be deleted.
 
+The normal close-information/leave-Town sequence must also cancel stale deferred
+focus restoration safely. Do not query a detached scene tree or steal focus in
+the destination scene; preserve ordinary in-Town focus restoration without
+delaying departure. Validate immediate close/departure through the same packaged
+successive-day building flow and retain failing-before callback errors.
+
 ## Acceptance and truthful play
 
 - Complete reproducible Medium and Large generated matches through ordinary

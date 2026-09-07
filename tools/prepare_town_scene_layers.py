@@ -25,6 +25,16 @@ BRIEFS = {
         'scene_bounds':[200,560,375,250], 'ground_anchor':[390,755],
         'grounding':'Low trading arcade attaches to the foreground-left quay below the main tower; wet pilings and boat-loading ramp continue its working waterfront. Preserve the tower door, central water and accepted bell docks.',
     },
+    'building_veilmourn_fog_signal_buoys': {
+        'source_sha256':'3b4b49e32f73eae6d2f2d0b4c9dc72c45fbbef9f9cc32f2df14fde4498c22075',
+        'scene_bounds':[860,650,180,120], 'ground_anchor':[950,750],
+        'grounding':'Small floating bell and lantern buoys mark the foreground channel below Bell Harbor, clear of bottom navigation and developed quay structures. Their separate hulls preserve water gaps.',
+    },
+    'building_veilmourn_salvage_ledger': {
+        'source_sha256':'9dbf801a2053651a467237e38fd01c082b1241aad600505b67e29b7897436467',
+        'scene_bounds':[480,450,260,260*1024/1536], 'ground_anchor':[600,600],
+        'grounding':'Compact claims office extends the left working quay above the Market Square and below the main tower; preserve the tower door and the Bell Harbor gangway.',
+    },
 }
 
 def digest(path):
@@ -76,7 +86,7 @@ def main():
         'processing':'Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.',
         'rights':'Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.',
         'catalog_icons':'Unchanged; these exact-faction scene layers are not shared catalog replacements.',
-        'migration_scope':'Bellwake Bell Harbor and Wayfarers Hall starting structures plus the normally constructed Market Square; remaining catalog-based scene art is explicitly not accepted by this migration.',
+        'migration_scope':'Bellwake Bell Harbor and Wayfarers Hall starting structures plus normally constructed Market Square, Fog Signal Buoys and Salvage Ledger; remaining catalog-based scene art is explicitly not accepted by this migration.',
         'missing_declared_layer_policy':'validation_failure_no_catalog_or_procedural_fallback',
         'factions':{FACTION:layers},
     }

@@ -20,7 +20,7 @@
   "processing": "Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.",
   "rights": "Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.",
   "catalog_icons": "Unchanged; these exact-faction scene layers are not shared catalog replacements.",
-  "migration_scope": "Bellwake Bell Harbor and Wayfarers Hall starting structures plus the normally constructed Market Square; remaining catalog-based scene art is explicitly not accepted by this migration.",
+  "migration_scope": "Bellwake Bell Harbor and Wayfarers Hall starting structures plus normally constructed Market Square, Fog Signal Buoys and Salvage Ledger; remaining catalog-based scene art is explicitly not accepted by this migration.",
   "missing_declared_layer_policy": "validation_failure_no_catalog_or_procedural_fallback",
   "factions": {
     "faction_veilmourn": {
@@ -154,6 +154,94 @@
         "grounding": "Low trading arcade attaches to the foreground-left quay below the main tower; wet pilings and boat-loading ramp continue its working waterfront. Preserve the tower door, central water and accepted bell docks.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_market_square.prompt.txt",
         "prompt_sha256": "91f3c68f06972033f5771d8cb83e9e72f90856fff44195e39b680961d60404cd",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
+      },
+      "building_veilmourn_fog_signal_buoys": {
+        "asset_id": "faction_veilmourn_building_veilmourn_fog_signal_buoys",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_fog_signal_buoys.png",
+        "source_sha256": "3b4b49e32f73eae6d2f2d0b4c9dc72c45fbbef9f9cc32f2df14fde4498c22075",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          15,
+          1530,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_fog_signal_buoys.png",
+        "trimmed_sha256": "8997b0da3c70fb6927d7fb9883b96a92b6757c801ba75800378061b16018ae03",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_fog_signal_buoys.png",
+        "runtime_sha256": "17a085dbf94fe908e6dce825ce4dad8093b17651fb0fb82204a292c3f2ff4e7a",
+        "runtime_size": [
+          512,
+          338
+        ],
+        "normalized_rect": [
+          0.5375,
+          0.7241753472222222,
+          0.112060546875,
+          0.13138020833333333
+        ],
+        "ground_anchor": [
+          0.59375,
+          0.8333333333333334
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Small floating bell and lantern buoys mark the foreground channel below Bell Harbor, clear of bottom navigation and developed quay structures. Their separate hulls preserve water gaps.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_fog_signal_buoys.prompt.txt",
+        "prompt_sha256": "cf9c711e0ab346dc1ae1ace50f299e63bb3624710d47e0a5cd4de98fb21c7acb",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
+      },
+      "building_veilmourn_salvage_ledger": {
+        "asset_id": "faction_veilmourn_building_veilmourn_salvage_ledger",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_salvage_ledger.png",
+        "source_sha256": "9dbf801a2053651a467237e38fd01c082b1241aad600505b67e29b7897436467",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          21,
+          29,
+          1522,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_salvage_ledger.png",
+        "trimmed_sha256": "e79dc69c1bc2644a0aa03e80b917342647ae8543cb440d124d61bd7a58a57da7",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_salvage_ledger.png",
+        "runtime_sha256": "a4ae8644c58b30079aebeb4e00450a501861010bd2419b4c9bafc3c11741585b",
+        "runtime_size": [
+          512,
+          339
+        ],
+        "normalized_rect": [
+          0.3022216796875,
+          0.5054542824074074,
+          0.15879720052083335,
+          0.1871383101851852
+        ],
+        "ground_anchor": [
+          0.375,
+          0.6666666666666666
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Compact claims office extends the left working quay above the Market Square and below the main tower; preserve the tower door and the Bell Harbor gangway.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_salvage_ledger.prompt.txt",
+        "prompt_sha256": "634d004a8757f2204245f357ded229757a9b4e4db70fb8c79466de1db1dad563",
         "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
       }
     }

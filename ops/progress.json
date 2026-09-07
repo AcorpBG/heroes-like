@@ -38,7 +38,8 @@
         "python3 -B tests/overworld_stockpile_text_fit_regression.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>",
         "python3 -B -m unittest discover -s tests -p test_town_scene_layers.py",
         "python3 -B tests/town_scene_layer_regression.py --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>",
-        "python3 -B tests/full_play_validation_suite.py --label <fresh> --rendered --accessibility disabled --only town_screen_layout_and_dialog_controls_report town_building_skyline_progression_report"
+        "python3 -B tests/full_play_validation_suite.py --label <fresh> --rendered --accessibility disabled --only town_screen_layout_and_dialog_controls_report town_building_skyline_progression_report",
+        "python3 -B tests/town_scene_layer_regression.py --harbor-growth --developed-save <Large08-slot3.json> --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -75,16 +76,18 @@
         "scenes/town/TownStageView.gd and TownBuildingHotspot.gd: non-square scene-layer projection and transparent pointer ownership, preserving catalog icons and normal Town routes",
         "tests/town_scene_layer_regression.py and tests/test_town_scene_layers.py: exact assets, alpha-aware input, construction/save and dual-resolution evidence",
         "scripts/autoload/LiveValidationHarness.gd: opt-in packaged generated-Town ledger build and exact scene-layer/info checks; inert in normal gameplay",
-        "tests/packaging_windows_export_smoke.py: require normal Market construction and information after generated Town entry"
+        "tests/packaging_windows_export_smoke.py: require normal Market/Fog Buoys/Salvage Ledger construction and information across three days after generated Town entry",
+        "scenes/town/TownShell.gd:_restore_town_catalog_focus: cancel detached-scene callbacks before/after await without changing ordinary focus restoration",
+        "tests/town_scene_layer_regression.py and generated_town_order_profile.py: real successive-day harbor growth, exact terminal built-id view fixture and bounded extended probe timeout"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T16:26:35Z",
+      "updatedAt": "2026-09-07T17:15:42Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit."
+      "notes": "Bellwake Fog Buoys and Salvage Ledger now use original scene-matched art after normal Market -> Buoys -> Ledger purchases on Days 1-3. Three inspected resolutions pass 2824 checks each; nine Python tests, Town layout/all-32-town progression, repository and both-platform nine-step generated Town flows pass. Stale deferred modal focus safely cancels after immediate departure while normal focus returns. PCKs 249872672 bytes leave 127328 bytes of headroom; Windows headless Wine. Remaining buildings/factions/upgrades and Overworld presentation stay open; legacy keyboard/Moonbite limits remain explicit."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16702,10 +16705,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
+  "currentSliceNotes": "Bellwake Fog Buoys and Salvage Ledger now use original scene-matched art after normal Market -> Buoys -> Ledger purchases on Days 1-3. Three inspected resolutions pass 2824 checks each; nine Python tests, Town layout/all-32-town progression, repository and both-platform nine-step generated Town flows pass. Stale deferred modal focus safely cancels after immediate departure while normal focus returns. PCKs 249872672 bytes leave 127328 bytes of headroom; Windows headless Wine. Remaining buildings/factions/upgrades and Overworld presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Presentation Corrections",
-  "currentSliceUpdatedAt": "2026-09-07T16:26:12Z",
+  "currentSliceUpdatedAt": "2026-09-07T17:18:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22012,70 +22015,76 @@
   },
   "guardrailNote": "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification.",
   "lastValidation": {
-    "id": "quality-bellwake-constructed-market-scene-layer-20260907",
+    "id": "quality-bellwake-harbor-growth-and-modal-lifetime-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T16:26:12Z",
-    "scope": "Existing Bellwake Market Square scene art after normal paid construction; exact asset/provenance, alpha-aware input and save/re-entry; no gameplay, catalog, backdrop or native changes.",
-    "result": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
+    "validatedAt": "2026-09-07T17:18:42Z",
+    "scope": "Two additional original Bellwake scene layers after ordinary successive-day construction, and safe deferred modal-focus lifetime; exact input/save and both-platform package proof, no gameplay/catalog/backdrop/native changes.",
+    "result": "Bellwake Fog Buoys and Salvage Ledger now use original scene-matched art after normal Market -> Buoys -> Ledger purchases on Days 1-3. Three inspected resolutions pass 2824 checks each; nine Python tests, Town layout/all-32-town progression, repository and both-platform nine-step generated Town flows pass. Stale deferred modal focus safely cancels after immediate departure while normal focus returns. PCKs 249872672 bytes leave 127328 bytes of headroom; Windows headless Wine. Remaining buildings/factions/upgrades and Overworld presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
-      ".artifacts/generated_full_match_quality_20260906/town_market_before_02/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_final_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_final_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_final_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_harness_repo.log",
-      ".artifacts/generated_full_match_quality_20260906/town_market_repo_final.log",
-      ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/generated-flow/live_validation_report.json",
-      ".artifacts/full_play_runtime_20260905/town_market_existing/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_before_02/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_runtime_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_final_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_final_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_linux_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_windows_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_linux/generated-entry/runtime.log",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_focus_repo.log",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_repo_final.log",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_linux_final/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_windows_final/generated-flow/live_validation_report.json",
+      ".artifacts/full_play_runtime_20260905/town_harbor_focus_existing/report.json",
       ".artifacts/full_play_runtime_20260905/town_scene_save_headless/report.json"
     ],
-    "remainingWork": "Extend the approved scene-matched pipeline beyond Bellwake's two starting buildings and constructed Market Square to remaining faction/building plots and upgrades, with sparse/developed input/save and visual acceptance. Continue remaining reproduced Overworld prop-edge/terrain corrections. Keep the package ceiling and explicit legacy keyboard/Moonbite limits. Playthrough and selected responsiveness children are complete; physical Windows/hardware breadth and release readiness remain unproven."
+    "remainingWork": "Extend approved scene-matched art beyond five Bellwake layers to remaining faction/building plots and upgrades, with sparse/developed input/save and visual acceptance. Correct remaining reproduced Overworld prop-edge/terrain defects. Only 127328 bytes remain below the unchanged package ceiling: measure packing efficiency before further asset growth. Legacy keyboard/Moonbite limits remain explicit; physical Windows/hardware breadth and release readiness remain unproven."
   },
   "latestEvidence": {
-    "id": "quality-bellwake-constructed-market-scene-layer-20260907",
+    "id": "quality-bellwake-harbor-growth-and-modal-lifetime-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T16:26:12Z",
-    "scope": "Existing Bellwake Market Square scene art after normal paid construction; exact asset/provenance, alpha-aware input and save/re-entry; no gameplay, catalog, backdrop or native changes.",
-    "result": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
+    "validatedAt": "2026-09-07T17:18:42Z",
+    "scope": "Two additional original Bellwake scene layers after ordinary successive-day construction, and safe deferred modal-focus lifetime; exact input/save and both-platform package proof, no gameplay/catalog/backdrop/native changes.",
+    "result": "Bellwake Fog Buoys and Salvage Ledger now use original scene-matched art after normal Market -> Buoys -> Ledger purchases on Days 1-3. Three inspected resolutions pass 2824 checks each; nine Python tests, Town layout/all-32-town progression, repository and both-platform nine-step generated Town flows pass. Stale deferred modal focus safely cancels after immediate departure while normal focus returns. PCKs 249872672 bytes leave 127328 bytes of headroom; Windows headless Wine. Remaining buildings/factions/upgrades and Overworld presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
-      ".artifacts/generated_full_match_quality_20260906/town_market_before_02/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_final_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_final_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_final_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_harness_repo.log",
-      ".artifacts/generated_full_match_quality_20260906/town_market_repo_final.log",
-      ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/generated-flow/live_validation_report.json",
-      ".artifacts/full_play_runtime_20260905/town_market_existing/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_before_02/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_runtime_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_final_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_final_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_linux_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_windows_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_linux/generated-entry/runtime.log",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_focus_repo.log",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_repo_final.log",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_linux_final/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_windows_final/generated-flow/live_validation_report.json",
+      ".artifacts/full_play_runtime_20260905/town_harbor_focus_existing/report.json",
       ".artifacts/full_play_runtime_20260905/town_scene_save_headless/report.json"
     ],
-    "remainingWork": "Extend the approved scene-matched pipeline beyond Bellwake's two starting buildings and constructed Market Square to remaining faction/building plots and upgrades, with sparse/developed input/save and visual acceptance. Continue remaining reproduced Overworld prop-edge/terrain corrections. Keep the package ceiling and explicit legacy keyboard/Moonbite limits. Playthrough and selected responsiveness children are complete; physical Windows/hardware breadth and release readiness remain unproven."
+    "remainingWork": "Extend approved scene-matched art beyond five Bellwake layers to remaining faction/building plots and upgrades, with sparse/developed input/save and visual acceptance. Correct remaining reproduced Overworld prop-edge/terrain defects. Only 127328 bytes remain below the unchanged package ceiling: measure packing efficiency before further asset growth. Legacy keyboard/Moonbite limits remain explicit; physical Windows/hardware breadth and release readiness remain unproven."
   },
   "latestEvidenceArtifacts": [
     "docs/generated-full-match-art-repair-report.md",
-    ".artifacts/generated_full_match_quality_20260906/town_market_before_02/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_market_final_720/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_market_final_1080/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_market_final_2048/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_market_harness_repo.log",
-    ".artifacts/generated_full_match_quality_20260906/town_market_repo_final.log",
-    ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/generated-entry/live_validation_report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/report.json",
-    ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/generated-flow/live_validation_report.json",
-    ".artifacts/full_play_runtime_20260905/town_market_existing/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_harbor_before_02/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_harbor_runtime_720/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_harbor_final_720/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_harbor_final_1080/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_harbor_final_2048/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_harbor_linux_final/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_harbor_windows_final/report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_harbor_linux/generated-entry/runtime.log",
+    ".artifacts/generated_full_match_quality_20260906/town_harbor_focus_repo.log",
+    ".artifacts/generated_full_match_quality_20260906/town_harbor_repo_final.log",
+    ".artifacts/generated_full_match_quality_20260906/town_harbor_linux_final/generated-entry/live_validation_report.json",
+    ".artifacts/generated_full_match_quality_20260906/town_harbor_windows_final/generated-flow/live_validation_report.json",
+    ".artifacts/full_play_runtime_20260905/town_harbor_focus_existing/report.json",
     ".artifacts/full_play_runtime_20260905/town_scene_save_headless/report.json"
   ],
-  "latestEvidenceId": "quality-bellwake-constructed-market-scene-layer-20260907",
-  "latestFinding": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
+  "latestEvidenceId": "quality-bellwake-harbor-growth-and-modal-lifetime-20260907",
+  "latestFinding": "Bellwake Fog Buoys and Salvage Ledger now use original scene-matched art after normal Market -> Buoys -> Ledger purchases on Days 1-3. Three inspected resolutions pass 2824 checks each; nine Python tests, Town layout/all-32-town progression, repository and both-platform nine-step generated Town flows pass. Stale deferred modal focus safely cancels after immediate departure while normal focus returns. PCKs 249872672 bytes leave 127328 bytes of headroom; Windows headless Wine. Remaining buildings/factions/upgrades and Overworld presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
   "metrics": {
     "audit_only": false,
     "runtime_behavior_changed": true,
@@ -22173,9 +22182,9 @@
         "Complete Medium/Large matches, measured full-action improvements and inspected presentation corrections",
         "Focused/repository/platform validation and coherent commit/push; hardware limits explicit"
       ],
-      "updatedAt": "2026-09-07T16:25:34Z",
+      "updatedAt": "2026-09-07T17:15:42Z",
       "startedAt": "2026-09-06T12:03:26Z",
-      "notes": "Legitimate Medium victory/Large defeat and selected responsiveness children are complete. Approved art checkpoints now include Wreck Quay and three Bellwake layers, including normally constructed Market Square, with source/input/save and both-platform package evidence. Remaining faction/building/upgrade integration and Overworld presentation acceptance are unfinished; not release certification.",
+      "notes": "Legitimate Medium victory/Large defeat and selected responsiveness children are complete. Approved art checkpoints include Wreck Quay and five Bellwake layers, with normal three-day construction/input/save, modal lifetime and both-platform package evidence. Remaining faction/building/upgrade integration and Overworld presentation remain unfinished; 127328 bytes of package headroom requires measured packing efficiency. Not release certification.",
       "remainingWork": "Accept and integrate scene-matched per-faction Town building layers with grounded plots, exact built-id/upgrade/info/click authority and dual-resolution live construction/save proof; correct remaining reproduced sprite/terrain defects. No further art-scope approval is pending for these agreed corrections; full goal remains unfinished."
     },
     {
@@ -22467,7 +22476,8 @@
         "python3 -B tests/overworld_stockpile_text_fit_regression.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>",
         "python3 -B -m unittest discover -s tests -p test_town_scene_layers.py",
         "python3 -B tests/town_scene_layer_regression.py --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>",
-        "python3 -B tests/full_play_validation_suite.py --label <fresh> --rendered --accessibility disabled --only town_screen_layout_and_dialog_controls_report town_building_skyline_progression_report"
+        "python3 -B tests/full_play_validation_suite.py --label <fresh> --rendered --accessibility disabled --only town_screen_layout_and_dialog_controls_report town_building_skyline_progression_report",
+        "python3 -B tests/town_scene_layer_regression.py --harbor-growth --developed-save <Large08-slot3.json> --label <fresh> --save <Large08-slot1.json> --resolution <1280x720|1920x1080|2048x1079>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -22504,16 +22514,18 @@
         "scenes/town/TownStageView.gd and TownBuildingHotspot.gd: non-square scene-layer projection and transparent pointer ownership, preserving catalog icons and normal Town routes",
         "tests/town_scene_layer_regression.py and tests/test_town_scene_layers.py: exact assets, alpha-aware input, construction/save and dual-resolution evidence",
         "scripts/autoload/LiveValidationHarness.gd: opt-in packaged generated-Town ledger build and exact scene-layer/info checks; inert in normal gameplay",
-        "tests/packaging_windows_export_smoke.py: require normal Market construction and information after generated Town entry"
+        "tests/packaging_windows_export_smoke.py: require normal Market/Fog Buoys/Salvage Ledger construction and information across three days after generated Town entry",
+        "scenes/town/TownShell.gd:_restore_town_catalog_focus: cancel detached-scene callbacks before/after await without changing ordinary focus restoration",
+        "tests/town_scene_layer_regression.py and generated_town_order_profile.py: real successive-day harbor growth, exact terminal built-id view fixture and bounded extended probe timeout"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T16:26:35Z",
+      "updatedAt": "2026-09-07T17:15:42Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit."
+      "notes": "Bellwake Fog Buoys and Salvage Ledger now use original scene-matched art after normal Market -> Buoys -> Ledger purchases on Days 1-3. Three inspected resolutions pass 2824 checks each; nine Python tests, Town layout/all-32-town progression, repository and both-platform nine-step generated Town flows pass. Stale deferred modal focus safely cancels after immediate departure while normal focus returns. PCKs 249872672 bytes leave 127328 bytes of headroom; Windows headless Wine. Remaining buildings/factions/upgrades and Overworld presentation stay open; legacy keyboard/Moonbite limits remain explicit."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111278,32 +111290,34 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
+  "summary": "Bellwake Fog Buoys and Salvage Ledger now use original scene-matched art after normal Market -> Buoys -> Ledger purchases on Days 1-3. Three inspected resolutions pass 2824 checks each; nine Python tests, Town layout/all-32-town progression, repository and both-platform nine-step generated Town flows pass. Stale deferred modal focus safely cancels after immediate departure while normal focus returns. PCKs 249872672 bytes leave 127328 bytes of headroom; Windows headless Wine. Remaining buildings/factions/upgrades and Overworld presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
   "taskId": "10236",
-  "updatedAt": "2026-09-07T16:26:35Z",
+  "updatedAt": "2026-09-07T17:15:42Z",
   "validation": {
-    "id": "quality-bellwake-constructed-market-scene-layer-20260907",
+    "id": "quality-bellwake-harbor-growth-and-modal-lifetime-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T16:26:12Z",
-    "scope": "Existing Bellwake Market Square scene art after normal paid construction; exact asset/provenance, alpha-aware input and save/re-entry; no gameplay, catalog, backdrop or native changes.",
-    "result": "Bellwake Market Square now uses original scene-matched quay art after normal 1000-gold construction. Three inspected resolutions pass 1213 checks each; eight Python tests, Town layout/all-32-town progression, repository and Linux/Windows package construction/info checks pass. Both PCKs 249356964 bytes; Windows headless Wine. Remaining faction/building art and presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
+    "validatedAt": "2026-09-07T17:18:42Z",
+    "scope": "Two additional original Bellwake scene layers after ordinary successive-day construction, and safe deferred modal-focus lifetime; exact input/save and both-platform package proof, no gameplay/catalog/backdrop/native changes.",
+    "result": "Bellwake Fog Buoys and Salvage Ledger now use original scene-matched art after normal Market -> Buoys -> Ledger purchases on Days 1-3. Three inspected resolutions pass 2824 checks each; nine Python tests, Town layout/all-32-town progression, repository and both-platform nine-step generated Town flows pass. Stale deferred modal focus safely cancels after immediate departure while normal focus returns. PCKs 249872672 bytes leave 127328 bytes of headroom; Windows headless Wine. Remaining buildings/factions/upgrades and Overworld presentation stay open; legacy keyboard/Moonbite limits remain explicit.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
-      ".artifacts/generated_full_match_quality_20260906/town_market_before_02/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_final_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_final_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_final_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_harness_repo.log",
-      ".artifacts/generated_full_match_quality_20260906/town_market_repo_final.log",
-      ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_linux_03/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_market_windows_final/generated-flow/live_validation_report.json",
-      ".artifacts/full_play_runtime_20260905/town_market_existing/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_before_02/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_runtime_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_final_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_final_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_final_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_linux_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_windows_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_linux/generated-entry/runtime.log",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_focus_repo.log",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_repo_final.log",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_linux_final/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_harbor_windows_final/generated-flow/live_validation_report.json",
+      ".artifacts/full_play_runtime_20260905/town_harbor_focus_existing/report.json",
       ".artifacts/full_play_runtime_20260905/town_scene_save_headless/report.json"
     ],
-    "remainingWork": "Extend the approved scene-matched pipeline beyond Bellwake's two starting buildings and constructed Market Square to remaining faction/building plots and upgrades, with sparse/developed input/save and visual acceptance. Continue remaining reproduced Overworld prop-edge/terrain corrections. Keep the package ceiling and explicit legacy keyboard/Moonbite limits. Playthrough and selected responsiveness children are complete; physical Windows/hardware breadth and release readiness remain unproven."
+    "remainingWork": "Extend approved scene-matched art beyond five Bellwake layers to remaining faction/building plots and upgrades, with sparse/developed input/save and visual acceptance. Correct remaining reproduced Overworld prop-edge/terrain defects. Only 127328 bytes remain below the unchanged package ceiling: measure packing efficiency before further asset growth. Legacy keyboard/Moonbite limits remain explicit; physical Windows/hardware breadth and release readiness remain unproven."
   },
   "validationHistory": [
     {

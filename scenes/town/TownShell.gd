@@ -606,7 +606,12 @@ func _close_town_catalog(restore_focus: bool = true) -> void:
 		call_deferred("_configure_town_keyboard_focus", true)
 
 func _restore_town_catalog_focus(focus_target: Control) -> void:
+	# Closing a modal can be followed immediately by leaving this scene.
+	if not is_inside_tree():
+		return
 	await get_tree().process_frame
+	if not is_inside_tree():
+		return
 	if focus_target != null and is_instance_valid(focus_target) and focus_target.is_visible_in_tree() and not _town_catalog_is_open():
 		focus_target.grab_focus()
 

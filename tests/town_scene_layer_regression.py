@@ -76,15 +76,23 @@ func inspect_scene_layers(ids: Array = ["building_veilmourn_bell_harbor", "build
 		if shell._town_catalog_is_open(): shell._close_town_catalog(false)
 		# Use an opaque body point outside the main-building overlap for actual pointer input.
 		var body := Vector2(0.62,0.36) if id=="building_veilmourn_bell_harbor" else Vector2(0.55,0.60)
+		if id=="building_veilmourn_fog_signal_buoys": body=Vector2(0.55,0.82) # Central floating hull, not the open bell-frame gap.
 		check(button._has_point(body*button.size),"authored pointer test point is not painted: "+id)
+		if not button._has_point(body*button.size):
+			button.pressed.disconnect(observe)
+			continue # Do not send Escape to the Town itself after a failed modal-open assertion.
 		await layer_click(button.get_global_transform_with_canvas()*(body*button.size))
 		var info: Dictionary = shell.validation_building_information_snapshot(id)
 		check(presses[0]==1 and info.open and info.mode=="building_info" and info.title==info.expected_title,"painted pointer did not open exact building info: "+id)
+		if not info.open or info.mode!="building_info":
+			button.pressed.disconnect(observe)
+			continue
 		check(shell._building_info_icon.texture!=null and shell._building_info_icon.texture.resource_path==TownRules.building_icon_path(id),"scene layer replaced separate catalog/info icon: "+id)
 		await RenderingServer.frame_post_draw
 		get_viewport().get_texture().get_image().save_png(out.path_join(id+"_info.png"))
 		await layer_action("ui_cancel")
 		check(not shell._town_catalog_is_open(),"Escape did not dismiss info: "+id)
+		check(get_viewport().gui_get_focus_owner()==button,"normal information close did not restore the building button: "+id)
 		button.grab_focus()
 		await layer_action("ui_accept")
 		check(shell.validation_building_information_snapshot(id).title==ContentService.get_building(id).name and shell._town_catalog_is_open(),"keyboard did not open exact info: "+id)
@@ -176,24 +184,112 @@ SCRIPT = SCRIPT.replace('get_tree().current_scene._commit_build_action(building_
 SCRIPT = SCRIPT.replace('await inspect("after_build")', 'for resource in cost:\n\t\t\tcheck(int(session.overworld.resources[resource])==int(paid_before[resource])-int(cost[resource]),"ordinary construction resource cost changed: "+resource)\n\t\tawait inspect("after_build")')
 SCRIPT = SCRIPT.replace('await inspect("after_build")', 'await inspect("after_build")\n\t\tawait inspect_market_constructed()')
 
+HARBOR_GROWTH = r'''
+func inspect_harbor_growth() -> void:
+	var placement: String = TownRules.get_active_town(session).placement_id
+	for id in ["building_veilmourn_fog_signal_buoys", "building_veilmourn_salvage_ledger"]:
+		print("HARBOR_GROWTH_BEGIN "+id+" "+str(Time.get_ticks_msec()))
+		var shell = get_tree().current_scene
+		check(not shell.get_node("%TownStage").validation_building_hotspot_summary(id).visible,"unbuilt growth layer is visible: "+id)
+		var day_before: int = session.day
+		var previous_id := "building_market_square" if id=="building_veilmourn_fog_signal_buoys" else "building_veilmourn_fog_signal_buoys"
+		var prior_info: Dictionary=shell.validation_activate_building_information(previous_id)
+		check(prior_info.open,"immediate departure control did not open existing building information")
+		shell._on_town_catalog_close_pressed()
+		shell._on_leave_pressed()
+		for frame in range(8): await get_tree().process_frame
+		var field = get_tree().current_scene
+		check(field.scene_file_path=="res://scenes/overworld/OverworldShell.tscn","normal Town departure did not reach Overworld")
+		var turn: Dictionary = field.validation_request_end_turn()
+		if turn.get("confirmation_required",false):
+			turn=field.validation_confirm_end_turn()
+		for frame in range(8): await get_tree().process_frame
+		session=SessionState.ensure_active_session()
+		check(turn.get("ok",false) and session.day==day_before+1 and session.scenario_status=="in_progress","normal confirmed End Turn did not advance exactly one day")
+		check(session.battle.is_empty(),"unexpected battle during early harbor growth")
+		var visit: Dictionary=OverworldRules.set_active_town_visit(session,placement)
+		check(visit.get("ok",false),"hero cannot re-enter the same Town after End Turn")
+		AppRouter.go_to_town()
+		await settle()
+		session=SessionState.ensure_active_session()
+		shell=get_tree().current_scene
+		var actions: Array=TownRules.get_build_actions(session).filter(func(a):return String(a.id)=="build:"+id and not a.get("disabled",true))
+		check(actions.size()==1,"normal prerequisites/resources do not permit growth building: "+id)
+		if actions.size()!=1: return
+		var cost: Dictionary=actions[0].cost
+		var expected: Dictionary=normalized(session.overworld.resources)
+		for resource in cost: expected[resource]=int(expected.get(resource,0))-int(cost[resource])
+		var selected: Dictionary=shell.validation_select_build_plan(id)
+		check(selected.ok and selected.state_unchanged,"growth ledger selection changed state: "+id)
+		var committed: Dictionary=shell.validation_confirm_build_plan()
+		await settle()
+		session=SessionState.ensure_active_session()
+		var active: Dictionary=TownRules.get_active_town(session)
+		check(committed.ok and id in active.built_buildings,"normal growth ledger did not build: "+id)
+		check(normalized(session.overworld.resources)==normalized(expected),"growth construction costs changed: "+id)
+		check(int(active.last_build_day)==int(session.day),"growth construction lost daily limit: "+id)
+		check(TownRules.get_build_actions(session).filter(func(a):return not a.get("disabled",true) and String(a.id).begins_with("build:")).is_empty(),"growth allowed a second same-day build")
+		shell._close_town_catalog(false)
+		await inspect(id)
+		await inspect_scene_layers([id])
+		var before: Dictionary=normalized(session.to_dict())
+		var path: String=SaveService.save_session(session.to_dict(),3)
+		session=SessionState.restore_session(SaveService.load_session(3))
+		check(path!="" and normalized(session.to_dict())==before,"growth changed complete save/resume: "+id)
+		AppRouter.go_to_town()
+		await settle()
+		var stage=get_tree().current_scene.get_node("%TownStage")
+		check(stage.validation_building_hotspot_summary(id).visible and stage._town_building_texture_path(id)=="res://art/towns/runtime/scene_layers/faction_veilmourn/%s.png" % id,"growth save/re-entry lost exact layer: "+id)
+		await RenderingServer.frame_post_draw
+		get_viewport().get_texture().get_image().save_png(out.path_join(id+"_saved.png"))
+		rows.append({"label":"ordinary_harbor_growth","building_id":id,"day":session.day,"cost":cost,"expected_resources":expected,"actual_resources":session.overworld.resources.duplicate(true),"complete_saved_state_equal":true})
+		print("HARBOR_GROWTH_SAVED "+id+" "+str(Time.get_ticks_msec()))
+	if OS.get_environment("TOWN_HARBOR_DEVELOPED_SAVE") != "":
+		await inspect_developed_harbor_composition()
+func inspect_developed_harbor_composition() -> void:
+	# Exact terminal built ids in a detached scenic view, not a resumed match.
+	var payload: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(OS.get_environment("TOWN_HARBOR_DEVELOPED_SAVE")))
+	var actual: Dictionary=payload.overworld.towns.filter(func(t):return t.town_id=="town_veilmourn_bellwake_harbor")[0]
+	var before: Dictionary=normalized(session.to_dict())
+	var shell=get_tree().current_scene
+	var stage=shell.get_node("%TownStage")
+	var view: Dictionary=shell._build_town_stage_view_state()
+	view.town=shell._town_stage_town_payload(actual)
+	stage.set_precomputed_town_state(session,view)
+	await settle()
+	check(normalized(stage._town.built_buildings)==normalized(actual.built_buildings),"developed composition changed the actual terminal built ids")
+	await inspect_scene_layers(["building_veilmourn_fog_signal_buoys","building_veilmourn_salvage_ledger"])
+	await RenderingServer.frame_post_draw
+	get_viewport().get_texture().get_image().save_png(out.path_join("developed_built_id_fixture.png"))
+	check(normalized(session.to_dict())==before,"detached developed composition changed the live session")
+	rows.append({"label":"detached_terminal_built_id_composition_not_match_resume","source_day":payload.day,"source_town":actual.placement_id,"built_ids":actual.built_buildings.duplicate()})
+	stage.set_precomputed_town_state(session,shell._build_town_stage_view_state())
+'''
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--label', required=True)
     parser.add_argument('--save', type=Path, required=True)
     parser.add_argument('--resolution', choices=['1280x720', '1920x1080', '2048x1079'], required=True)
+    parser.add_argument('--harbor-growth', action='store_true', help='Build Fog Buoys and Salvage Ledger after Market across real confirmed End Turns')
+    parser.add_argument('--developed-save', type=Path, help='Exact terminal built-id composition fixture; never resumed as a live match')
     args = parser.parse_args()
     if not args.label or any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789_-' for c in args.label):
         parser.error('fresh lowercase label required')
     save = args.save.resolve(strict=True)
     before_hash = hashlib.sha256(save.read_bytes()).hexdigest()
-    owners = ('scenes/town/TownStageView.gd','scenes/town/TownBuildingHotspot.gd',
+    developed = args.developed_save.resolve(strict=True) if args.developed_save else None
+    developed_hash = hashlib.sha256(developed.read_bytes()).hexdigest() if developed else None
+    owners = ('scenes/town/TownShell.gd','scenes/town/TownStageView.gd','scenes/town/TownBuildingHotspot.gd',
               'content/town_building_scene_art_manifest.json','tests/town_scene_layer_regression.py')
     source_hashes = {path:hashlib.sha256((ROOT/path).read_bytes()).hexdigest() for path in owners}
     out = OUTPUT / args.label
     out.mkdir(exist_ok=False)
     script_text = SCRIPT
+    if args.harbor_growth:
+        script_text = SCRIPT.replace('await inspect_market_constructed()', 'await inspect_market_constructed()\n\t\tawait inspect_harbor_growth()') + HARBOR_GROWTH
     if args.resolution == '2048x1079':
-        script_text = SCRIPT.replace('SettingsService.set_presentation_resolution(OS.get_environment("TOWN_OVERLAY_RESOLUTION"))', 'get_window().content_scale_size = Vector2i(2048,1079)\n\tget_window().size = Vector2i(2048,1079)')
+        script_text = script_text.replace('SettingsService.set_presentation_resolution(OS.get_environment("TOWN_OVERLAY_RESOLUTION"))', 'get_window().content_scale_size = Vector2i(2048,1079)\n\tget_window().size = Vector2i(2048,1079)')
     with tempfile.TemporaryDirectory(prefix='town-layer-probe-', dir=OUTPUT) as temporary, tempfile.TemporaryDirectory(prefix='town-layer-data-', dir='/dev/shm') as data:
         work = Path(temporary)
         script = work / 'probe.gd'
@@ -202,8 +298,10 @@ def main():
         scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="TownLayer" type="Node"]\nscript = ExtResource("1")\n' % script.relative_to(ROOT))
         command = ['dbus-run-session','--','xvfb-run','-a','-s','-screen 0 2200x1200x24','godot4','--path',str(ROOT),'--audio-driver','Dummy','--accessibility','disabled','--resolution',args.resolution,'res://'+str(scene.relative_to(ROOT))]
         env = dict(os.environ, XDG_DATA_HOME=data, TOWN_OVERLAY_OUTPUT=str(out), TOWN_OVERLAY_SAVE=str(save), TOWN_OVERLAY_RESOLUTION=args.resolution)
+        if developed:
+            env['TOWN_HARBOR_DEVELOPED_SAVE'] = str(developed)
         with (out / 'runtime.log').open('w') as log:
-            code = run_probe(command, env, log)
+            code = run_probe(command, env, log, timeout_seconds=600 if args.harbor_growth else 300)
     lines = (out / 'runtime.log').read_text().splitlines()
     marker = 'TOWN_OVERLAY_OWNERSHIP '
     reports = [json.loads(line[len(marker):]) for line in lines if line.startswith(marker)]
@@ -211,9 +309,11 @@ def main():
     report.update(returncode=code, save_sha256=before_hash, input_unchanged=hashlib.sha256(save.read_bytes()).hexdigest()==before_hash, resolution=args.resolution,
                   runtime_errors=[s for s in lines if s.startswith(('ERROR:', 'SCRIPT ERROR:')) or 'leaked' in s])
     report['source_hashes'] = source_hashes
+    report['developed_save_sha256'] = developed_hash
+    report['developed_save_unchanged'] = not developed or hashlib.sha256(developed.read_bytes()).hexdigest()==developed_hash
     report['executed_probe_sha256'] = hashlib.sha256(script_text.encode()).hexdigest()
     report['source_unchanged'] = all(hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==sha for path,sha in source_hashes.items())
-    report['ok'] = bool(report['ok']) and code==0 and not report['runtime_errors'] and report['input_unchanged'] and report['source_unchanged']
+    report['ok'] = bool(report['ok']) and code==0 and not report['runtime_errors'] and report['input_unchanged'] and report['source_unchanged'] and report['developed_save_unchanged']
     (out / 'report.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps({k:v for k,v in report.items() if k != 'rows'}))
     return 0 if report['ok'] else 1
