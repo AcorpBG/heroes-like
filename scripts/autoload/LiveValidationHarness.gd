@@ -227,12 +227,38 @@ func _execute_boot_to_generated_skirmish_town_flow() -> bool:
 		return false
 	_capture_step("generated_player_town_entered", town_snapshot)
 	var building_id := String(_config.get("town_building_id", ""))
-	if building_id != "" and not await _validate_generated_town_construction(town, building_id):
-		return false
+	var building_sequence: Array = _config.get("town_building_sequence", [])
+	if building_sequence.is_empty() and building_id != "":
+		building_sequence = [building_id]
+	for index in range(building_sequence.size()):
+		if index > 0:
+			town.call("_on_town_catalog_close_pressed")
+			town.call("_on_leave_pressed")
+			overworld = await _wait_for_scene(OVERWORLD_SCENE, 10000)
+			if overworld == null: return _fail("Packaged growth did not leave Town.", {})
+			await _settle_frames(6)
+			var prior_day: int = SessionState.ensure_active_session().day
+			var turn: Dictionary = overworld.call("validation_request_end_turn")
+			if bool(turn.get("confirmation_required", false)):
+				turn = overworld.call("validation_confirm_end_turn")
+			await _settle_frames(6)
+			session = SessionState.ensure_active_session()
+			if not _require(bool(turn.get("ok", false)) and session.day == prior_day + 1 and session.battle.is_empty() and session.scenario_status == "in_progress", "Packaged growth did not complete one normal confirmed End Turn.", turn):
+				return false
+			visit_result = OverworldRules.set_active_town_visit(session, String(player_town.get("placement_id", "")))
+			if not _require(bool(visit_result.get("ok", false)), "Packaged growth cannot re-enter the same Town.", visit_result):
+				return false
+			AppRouter.go_to_town()
+			town = await _wait_for_scene(TOWN_SCENE, 10000)
+			if town == null: return _fail("Packaged growth did not return to Town.", {})
+			await _settle_frames(6)
+		var suffix := "" if index == 0 else "_" + String(building_sequence[index])
+		if not await _validate_generated_town_construction(town, String(building_sequence[index]), suffix):
+			return false
 	_log("Packaged generated-map first-run validation completed successfully.")
 	return true
 
-func _validate_generated_town_construction(town: Node, building_id: String) -> bool:
+func _validate_generated_town_construction(town: Node, building_id: String, step_suffix: String = "") -> bool:
 	# Opt-in packaged-resource check; use the same ledger select/confirm controls.
 	# Full save, alpha hit testing and keyboard/controller coverage lives in the
 	# Python-owned town_scene_layer_regression, not a replacement release scene.
@@ -271,13 +297,13 @@ func _validate_generated_town_construction(town: Node, building_id: String) -> b
 		return false
 	town.call("_on_town_catalog_close_pressed")
 	await _settle_frames(3)
-	_capture_step("generated_town_building_constructed", {"building_id": building_id, "texture_path": texture.resource_path, "texture_size": texture.get_size(), "cost": cost, "resources_before": resources_before, "resources_after": expected_resources, "hotspot": hotspot})
+	_capture_step("generated_town_building_constructed" + step_suffix, {"building_id": building_id, "day": session.day, "texture_path": texture.resource_path, "texture_size": texture.get_size(), "cost": cost, "resources_before": resources_before, "resources_after": expected_resources, "hotspot": hotspot})
 	var before_info: Dictionary = session.to_dict().duplicate(true)
 	var info: Dictionary = town.call("validation_activate_building_information", building_id)
 	await _settle_frames(3)
 	if not _require(bool(info.get("open", false)) and bool(info.get("surface_visible", false)) and bool(info.get("icon_loaded", false)) and String(info.get("title", "")) == String(info.get("expected_title", "")) and session.to_dict() == before_info, "Packaged built-building hotspot did not open read-only information.", info):
 		return false
-	_capture_step("generated_town_building_information", info)
+	_capture_step("generated_town_building_information" + step_suffix, info)
 	return true
 
 func _execute_boot_to_skirmish_defeat_outcome_flow() -> bool:
@@ -4118,6 +4144,7 @@ func _parse_user_args(args: Array) -> Dictionary:
 		"generated_faction_id": "faction_veilmourn",
 		"generated_hero_id": "hero_veilmourn_orso_nightchart",
 		"town_building_id": "",
+		"town_building_sequence": [],
 		"manual_slot": 2,
 		"output_dir": "",
 	}
@@ -4159,6 +4186,9 @@ func _parse_user_args(args: Array) -> Dictionary:
 		if arg.begins_with("--live-validation-town-building="):
 			config["town_building_id"] = arg.trim_prefix("--live-validation-town-building=")
 			continue
+		if arg.begins_with("--live-validation-town-building-sequence="):
+			config["town_building_sequence"] = Array(arg.trim_prefix("--live-validation-town-building-sequence=").split(",", false))
+			continue
 		if arg.begins_with("--live-validation-manual-slot="):
 			config["enabled"] = true
 			config["manual_slot"] = int(arg.trim_prefix("--live-validation-manual-slot="))
@@ -4195,6 +4225,7 @@ func _begin_report() -> void:
 		"generated_faction_id": String(_config.get("generated_faction_id", "")),
 		"generated_hero_id": String(_config.get("generated_hero_id", "")),
 		"town_building_id": String(_config.get("town_building_id", "")),
+		"town_building_sequence": _config.get("town_building_sequence", []).duplicate(),
 		"manual_slot": int(_config.get("manual_slot", 0)),
 		"output_dir": _output_dir,
 		"display": OS.get_environment("DISPLAY"),

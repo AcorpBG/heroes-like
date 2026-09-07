@@ -292,10 +292,105 @@ and Moonbite development limits remain unmodified and are not claimed green.
 Reproduce with the commands above and the three `town_scene_layer_regression`
 resolutions; the established package wrapper now also requests Market construction.
 
+## Validated Bellwake Fog Buoys / Salvage Ledger and modal lifetime checkpoint
+
+The same Large08 Bellwake (`native_h3maped_c2520619_object_2167`) had two more
+catalog dioramas in its scenic scene: `building_veilmourn_fog_signal_buoys` and
+`building_veilmourn_salvage_ledger`. They now resolve exact original scene layers:
+separate bell/lantern hulls in the foreground channel and a timber claims office
+on the left working quay. The village, three earlier runtime layers, catalog/info
+icons, building IDs, prerequisites, costs, daily limits and save schema are
+unchanged. Their ordinary sequence is Market on Day 1, Fog Buoys on Day 2
+(900 gold / 1 wood), then Salvage Ledger on Day 3 (1300 gold / 1 wood / 1 ore).
+The regression uses real confirmed End Turns, not resource grants or forced days.
+
+Original 1536x1024 RGBA masters and verbatim prompts are retained in
+`art/towns/source/generated/scene_layers/faction_veilmourn/`; the adjacent README
+records built-in imagegen identities and references. The first opaque RGB
+checkerboard buoy output was rejected. Preview positions obscured by Bell Harbor,
+crowding the footer or conflicting with developed structures were also rejected.
+Final full-source framing is `[860,650,180,120]` for buoys and
+`[480,450,260,173.3333333333]` for the office; the manifest owns trimmed normalized
+bounds and depth anchors. Only alpha-margin crop, aspect-preserving Lanczos
+downsampling and metadata stripping produce the mipmapped runtime derivatives.
+
+- Fog Buoys runtime (512x338): `17a085dbf94fe908e6dce825ce4dad8093b17651fb0fb82204a292c3f2ff4e7a`.
+- Salvage Ledger runtime (512x339): `a4ae8644c58b30079aebeb4e00450a501861010bd2419b4c9bafc3c11741585b`.
+- Five-layer manifest: `fddef117cde38bf7507623dd3d8af56835ca58476af6855a64f2a05c19073783`.
+
+Evidence is under `.artifacts/generated_full_match_quality_20260906/`:
+
+- `town_harbor_before_02`: 1313 checks, four genuine missing-layer/re-entry
+  failures and two test-only dictionary numeric-type comparison failures; zero
+  engine errors. Integer deductions compared with float-decoded JSON must both
+  be normalized. The retained `dictionary_numeric_probe.gd` confirms that
+  distinction. The earlier `town_harbor_before` timed out at the old 300-second
+  whole-probe limit after both purchases; it is not completed proof. The extended
+  growth probe has a 600-second cap, leaving other probes' 300-second cap intact.
+- `town_harbor_runtime_720`: the initial pointer fixture selected the transparent
+  gap in the buoy bell frame, then incorrectly sent Escape to Town and continued
+  on freed scene references, ending in an engine abort. This failed harness run
+  is retained, not evidence of a normal construction crash. The probe now uses
+  the painted central hull and stops that inspection after failed modal opening.
+- `town_harbor_linux`: the exported three-day flow exposed a real production
+  defect: two `Parameter "data.tree" is null` errors after immediate modal close
+  and Town departure. `TownShell._restore_town_catalog_focus` now checks scene
+  membership before and after its await. Normal focus return is preserved;
+  departure is not delayed or rerouted to hide the error.
+- `town_harbor_final_720`, `town_harbor_final_1080` and `town_harbor_final_2048`:
+  **2824 checks pass each** at 1280x720, 1920x1080 and 2048x1079, including normal
+  successive-day purchases, exact costs/daily limits, five exact assets, painted
+  and transparent pointer ownership, keyboard/controller info, ordinary focus
+  return, immediate close/departure and complete save/re-entry equality. Zero
+  runtime errors; executed source and both input saves remain unchanged. The two
+  larger-resolution checks ran concurrently; their durations are not performance
+  measurements. Final test SHA256 is
+  `a8bea079cc1bc9f89cb512faccf0188c0f85ffb71afb3914b1fc01ab7b7c16e0`;
+  TownShell is `eae6a6d2b538efd0ca236ba4cc660f9d6cd0233d1c3d67934ad3bbb3965efb4e`.
+
+The developed composition is explicitly a detached scenic view of the actual
+Day-14 terminal town's **16 built IDs**, not a resumed terminal match. Its input
+SHA256 is `f628774c1beb18b2cd6d127e683572f9fa1a38505de77e36b42763745df1e8d2`;
+the opening save remains `d2b4a0ef45521f768a6e0b8f23878c5f7e16a92838250068df05fff1f3cd31a9`.
+The live Day-3 session is unchanged by this view fixture. All three source
+resolutions and the 1920x1080 Linux package captures were opened and inspected:
+the new office
+connects to the quay, the buoys remain clear of the footer, and both remain
+readable among the developed structures. Other detached catalog buildings in
+that developed view remain visibly unfinished and are not accepted by this work.
+
+`town_harbor_linux_final` and `town_harbor_windows_final` pass the established
+exports, native-library startup and generated-map/Town flow. The opt-in existing
+`LiveValidationHarness` accepts a building sequence and the Windows checker
+requires all nine setup/entry/build/info steps, including normal Days 1, 2 and 3.
+All three constructed assets load from their exact manifest paths without
+runtime errors. Both PCKs are **249872672 bytes**, only **127328 bytes below** the
+unchanged ceiling; further art needs measured packing efficiency, not a raised
+limit. Source art stays excluded. Windows execution is headless Wine, not Windows
+GPU certification; the packaged Town visit fixture is smoke coverage, not another
+legitimate full match. Only newly created disposable exports/Wine trees are
+removed after checks; reports, screenshots, source, saves and caches are retained.
+
+Nine Python provenance/geometry tests pass. Existing rendered Town layout/dialog
+and all-32-town/179-catalog progression reports pass in
+`.artifacts/full_play_runtime_20260905/town_harbor_focus_existing/` with zero
+runtime errors. Repository validation passes in `town_harbor_focus_repo.log`;
+final documentation/tracker validation is retained in `town_harbor_repo_final.log`.
+The previously documented legacy named-slot keyboard mismatch and Moonbite
+30-turn development deadline failure remain explicit, not reclassified as green.
+
+Reproduce the source checks with the earlier command list, adding
+`--harbor-growth --developed-save <Large08-slot3.json>` to
+`tests/town_scene_layer_regression.py` at each of the three resolutions. The
+established package wrapper now requests Market, Fog Buoys and Salvage Ledger
+in sequence. This accepts two more constructed layers and the demonstrated
+modal lifetime fix, not the remaining faction/upgrade art or full quality goal.
+
 ## Remaining acceptance
 
 Extend scene-matched art beyond the two starting structures and constructed
-Bellwake Market Square to the remaining faction/building plots and upgrades.
+Bellwake Market Square, Fog Buoys and Salvage Ledger to the remaining
+faction/building plots and upgrades.
 Require inspected sparse, mid-development and developed scenes, exact
 built-id/input/save ownership and
 both-platform packages within the ceiling for each accepted packet. Other

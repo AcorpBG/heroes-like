@@ -15,18 +15,21 @@ Requirements:
 `docs/generated-full-match-quality-requirements.md`. This is an implementation
 checkpoint, **not completion of the overall quality goal or release readiness**.
 
-Latest approved-art checkpoint: Bellwake's normally constructed Market Square
-now joins Bell Harbor and faction-specific Wayfarers Hall as an original
-scene-matched layer with painted-pixel hotspots. Three resolutions pass 1213
-checks each, including paid construction, information/input and full save/re-entry;
-screenshots were inspected. Town layout/all-32-town progression, repository and
-Linux/Windows package checks pass. Both PCKs are 249356964 bytes and the exported
-games now construct the Market and load its exact scene asset, not merely enter
-an unbuilt Town. Windows execution is headless Wine, not GPU certification.
+Latest approved-art checkpoint: Bellwake's Fog Signal Buoys and Salvage Ledger
+join the earlier three original scene-matched layers. Real Market -> Buoys ->
+Ledger purchases across Days 1-3 pass 2824 checks at each of three resolutions,
+including costs/daily limits, painted-pixel input, information and full save/re-entry.
+Immediate modal-close/Town-departure also exposed and fixed a stale deferred-focus
+callback; ordinary focus return remains intact. Source and Linux package captures
+were inspected, including the actual terminal town's detached 16-built-ID view.
+Town layout/all-32-town progression, repository and Linux/Windows package checks
+pass. Both PCKs are 249872672 bytes (only 127328 bytes of headroom), with all
+three successive-day purchases and exact assets exercised in the exported games.
+Windows execution is headless Wine, not GPU certification.
 The unchanged legacy named-slot keyboard expectation and Moonbite 30-turn
 development failure remain explicit; their 32 save/resume cases pass. Provenance,
 commands and limitations: `docs/generated-full-match-art-repair-report.md`.
-These three Bellwake assets and the earlier Wreck Quay repair do not close the
+These five Bellwake assets and the earlier Wreck Quay repair do not close the
 remaining constructible-building/all-faction presentation requirement.
 
 ## Gameplay corrections
