@@ -1124,3 +1124,54 @@ Keep parent and responsiveness child in progress. Remaining work includes Large
 AI task/target preparation and full-save latency, the selected Town/prop/terrain
 presentation defects, the pre-existing Moonbite deadline and broader release/
 hardware acceptance. The Medium speed result does not close those requirements.
+
+## 2026-09-07 combined committed End Turn control
+
+Fresh serial rendered controls compare `65fb7fcb6ccd5f9bb017c185c82e161e7216ad87`
+with `85599aae0f0baa26ada6415a761da1875372f193`. Every production difference at
+those revisions is replaced: `ContentService.gd`, `SaveService.gd`,
+`EnemyAdventureRules.gd` and `OverworldRules.gd`. This measures their combined
+effect, not a sum of individual percentages and not a speedup from the subsequent
+stockpile UI correction. The actual-handler driver, three full turns, AI, full
+autosaves and usable-input boundary are unchanged. Linux/X11, Godot 4.6.2,
+llvmpipe LLVM 20.1.2; no concurrent test engine during these timings.
+
+| Case / resolution | Before p50 / max ms | After p50 / max ms | Before / after sum ms | Less waiting |
+| --- | ---: | ---: | ---: | ---: |
+| Large / 1920x1080 | 8883.777 / 9459.333 | 7369.400 / 7417.939 | 26981.987 / 21656.637 | 19.7% |
+| Medium / 1280x720 | 3665.261 / 3705.874 | 2914.390 / 2938.285 | 10800.145 / 8611.307 | 20.3% |
+
+`combined_optimizations_large_verified` and `combined_optimizations_medium_verified`
+under the existing full-match artifact root both pass the unchanged 0.85 maximum
+wait ratio. Four complete state trees per size, days, input save hashes and
+backend match; source/retained save bytes remain unchanged, with zero runtime
+errors. Full states are retained as `.json.gz` without field exclusions; captures
+were visually inspected. They preserve fog/minimap/roster/input and retain the
+known prop/terrain and pre-stockpile-fix presentation defects.
+
+The first `combined_optimizations_large` control completed turns but emitted a
+missing `icon.svg` error in its isolated fixture; it is not a pass. The corrected
+fixture includes the unchanged project icon/import and uses a fresh label.
+`normalization_cache_large_diagnostic` independently confirms cached/current
+normalization signatures equal for all three real Large turns and all four
+states equal the commander control. The first save registers the generated
+scenario, later saves already use the existing fast path. Instrumented/headless
+timings are not performance acceptance; no normalization change was warranted.
+
+Reproduce with `python3 -B tests/generated_end_turn_compact_pair.py --label <fresh>
+--save <actual-save> --reference <exact-40-character-commit> --resolution <size>`.
+The final helper derives all changed `.gd`/`.tscn` owners rather than hardcoding
+these four; it copies both source directories so old scene writes cannot follow
+shared symlinks. Unsupported art/native/content/config differences, added/deleted
+owners and dirty/untracked production fail preflight. Seven focused Python tests
+pass for those boundaries; this generalization does not change the measured
+driver or retrospectively claim a new post-UI timing run.
+
+Disk-pressure retention: completed `commander_entry_large_before` and
+`commander_entry_large_compared` `state_00` through `state_03` JSON files and their
+two profiler-owned `input_save.json` copies are now lossless gzip files at the
+same paths plus `.gz`; SHA256 before compression equals decompressed SHA256 for each.
+Decompress for legacy raw-JSON readers. No checkpoint content, screenshots,
+actual input saves, caches, RMG evidence or unrelated artifacts were deleted.
+Large remains multi-second and broader responsiveness/presentation acceptance
+remains open despite passing this bounded combined improvement gate.

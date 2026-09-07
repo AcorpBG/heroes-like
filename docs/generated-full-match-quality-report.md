@@ -1345,3 +1345,160 @@ integration remain open. No art regeneration was authorized or substituted with
 a procedural approximation; no native-source parity or release-certification
 claim follows from this correction. Existing unrelated untracked retention files
 and reports are outside the commit.
+
+## 2026-09-07 prop-edge diagnosis — correction not implemented
+
+At this diagnosis checkpoint the latest committed implementation was `85599aae` (selected commander
+projection; measured results are in the performance report). This investigation
+changes no production behavior, assets or manifests and closes no quality gate.
+
+In the unchanged Medium11 Day43 save, tile **(39,30,level 0)** resolves through
+the authored `object_wreck_quay` mapping to **`mapobj_wreck_quay`**. Its unique
+runtime path is `art/overworld/runtime/objects/map_objects/distinct/mapobj_wreck_quay.png`.
+The live draw uses an extracted `ImageTexture`, not an `AtlasTexture`, with
+painted source bounds `(98,98,316,313)`. The isolated `filter_clip` experiment
+leaves the rectangle visibly unchanged. Godot documents that property as an
+[atlas-region clipping control](https://docs.godotengine.org/en/4.6/classes/class_atlastexture.html#class-atlastexture-property-filter-clip);
+it cannot remove pixels already inside this standalone source image.
+
+Visual inspection of the actual PNG and its retained generated master
+`art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png`
+shows the cause: the magenta-background master contains white grid dividers,
+and the processed Wreck Quay cutout retains a white/magenta rectangular border.
+The existing eight-direction sprite silhouette darkens those alpha pixels into
+the gameplay box. Cinder Ore Face also retains divider fragments; Moss Oath
+Cache shows magenta fringe. Their inspected pixels establish these examples,
+not an exhaustive family audit. Manifest provenance records
+`built_in_image_gen_chroma_key_split` and the generated/trimmed/runtime paths;
+the original batch splitter has not yet been located in tracked tools.
+This differs from #10222's duplicate procedural blocker presentation: Wreck
+Quay resolves its correct unique asset, but that asset's extraction is flawed.
+The earlier distinct-assignment coverage claim did not validate alpha quality.
+
+Evidence under `.artifacts/generated_full_match_quality_20260906/`:
+
+- `atlas_sampling_medium_diagnostic`: five observation checks pass; original
+  and clipped gameplay PNGs were inspected and both retain the defect.
+- `atlas_sampling_medium_identity_retry`: five observation checks pass, exact
+  Wreck Quay mapping recorded, complete world/source save unchanged, no runtime
+  errors. This is diagnosis, **not** visual-correction acceptance.
+- `atlas_sampling_medium_identity`: failed with ENOSPC; excluded from passes.
+- `target_read_large_diagnostic`: three actual AI turns with four complete
+  states equal to the retained control. Descriptor enumeration is already
+  shared across origin batches. Instrumented/headless timings are not comparable
+  to accepted rendered performance runs and prove no speed improvement.
+  Only this turn's six new diagnostic JSON snapshots were losslessly gzipped
+  after disk exhaustion (about 95 MB recovered); decompress them for raw-JSON
+  consumers. Existing caches, RMG evidence and unrelated files were untouched.
+
+The Python diagnostic is retained as
+`tests/overworld_sprite_edge_diagnostic.py`, explicitly not a regression gate.
+Repository validation, diagnostic Python syntax, tracker JSON/PLAN sync and
+`git diff --check` pass for this diagnostic WIP. No new platform exports or
+visual-correction acceptance are claimed for an unimplemented repair. Git HEAD,
+local `origin/main` and the actual remote remain `85599aae`; nothing from this
+diagnostic-only turn was staged, committed or pushed.
+The sprite-processing portion of presentation work awaits owner approval to repair
+derived transparency/crops from existing original masters without new artwork;
+the full-match goal and responsiveness child remain active. Require a real
+failing-before pixel/render regression and dual-resolution/platform validation
+after any approved correction. Do not hide the box with an outline removal,
+procedural approximation or an ineffective atlas flag.
+
+## 2026-09-07 Overworld stockpile readability correction
+
+The actual Large08 Day8 save at 1920x1080 gives the footer a 210px resource
+button but a 756px summary, producing raw mid-word clipping. Existing compact
+layouts already offer the complete nine-resource Stores popup. The shared
+`ResourceStockpileMenu.gd` now has an Overworld-only opt-in: measure the actual
+font, style padding and optional icon against current width, preserving fitting
+copy or selecting the existing Stores label. Stockpile, resize and theme/font
+changes refresh it; explicit compact mode still wins. The Overworld scene also
+uses opaque cream text for read-only popup amounts instead of dim disabled gray.
+Every row remains disabled/non-mutating, with the same icon/value/tooltip.
+Town's default fit behavior and theme remain unchanged. No footer widening,
+asset, gameplay, content, native, balance or save-schema changes are involved.
+
+`tests/overworld_stockpile_text_fit_regression.py` uses the real generated-save
+load/router path and original menu pointer/keyboard actions. It compares the
+entire session and complete autosave/resume trees without excluded fields, all
+nine ordered resource values/icons/tooltips, popup containment and Escape focus,
+resize-only and font-only boundaries, explicit compact mode, large counts,
+icon width, resource refresh and default/opt-out behavior.
+
+The original failing control and its fixture corrections are retained under
+`.artifacts/generated_full_match_quality_20260906/`. The first direct
+`SessionState` restore omitted generated-content registration; real saving then
+changed only `/overworld/command_risk_forecast/signature`. The aligned fixture
+uses `SaveService.restore_manual_session` before routing, as the game does.
+`stockpile_fit_large_positive_aligned` fails only the two intended pre-edit checks
+(clipped text and absent opt-in), with complete saves already equal. This was
+not a production save defect and no save code was modified.
+
+Disk exhaustion interrupted later validation: the first Windows report could
+not be written, two additional focused launches could not create output folders,
+and a legacy run returned 1 despite passing UI rows. These do not count as passes.
+Subsequent attempts exposed `ResourceUID.load_from_cache` corruption, and a
+concurrent Large startup lost class resolution; that failed child was stopped,
+not counted as complete. The exact damaged `.godot/uid_cache.bin` is preserved
+in `stockpile_uid_cache_recovery/damaged_uid_cache.bin`; a clean editor import
+rebuilt that one index without engine errors. Existing imported assets and
+unrelated caches were retained. Final affected exports/runtime checks run serially.
+
+To retain evidence under disk pressure, only this goal's completed profiler
+JSON checkpoints/copies listed in the performance report and the new Linux
+generated-entry report were losslessly gzipped. The latter remains at
+`stockpile_fit_linux_release/generated-entry/live_validation_report.json.gz`,
+decompressing to SHA256
+`3484cbbe2591a77d92afa94fb7328d1ec3c7022266b35df7f8f3292ecd739bc0`.
+No actual match inputs, screenshots, caches, RMG recovery evidence or unrelated
+untracked retention files/reports were removed.
+
+Final validation at production SHA256 `611c3cbd9f76cf380f96b1b1e47eed987fe25bca88956a9e1a76155f9270969b`
+for `ResourceStockpileMenu.gd` and `9d8e94c0493833d54251eac5b1d687dda217e1807b3e4b714b741c73b41bbc03`
+for `OverworldShell.tscn`:
+
+- `stockpile_readable_large_1080`, `stockpile_readable_medium_720`,
+  `stockpile_readable_large_720_recovered` and
+  `stockpile_readable_medium_1080_recovered`: **643 checks each**, zero failures/
+  engine errors, original save hashes unchanged, full autosave/resume equality.
+  Actual Stores text needs 53px and fits the unchanged 80px/210px buttons.
+  Final open-menu captures at all four case/resolution combinations and the
+  main Large/Medium closed captures were visually inspected: all nine amounts
+  are legible, popup stays in bounds and existing footer controls remain usable.
+- `stockpile_readable_legacy_recovered`: both existing authored Overworld cases
+  pass at actual 1280x720/1920x1080. The Python adapter changes only logical
+  viewport setup, selects Overworld cases and replaces the obsolete required
+  clipped-summary text with independently measured fit. Original row/icon/
+  tooltip/input/focus/state assertions remain intact. It does not claim to fix
+  or pass the previously documented unrelated legacy Town geometry fixture.
+- `stockpile_existing_final`: all four unchanged movement input ownership,
+  full-route, fog and End Turn confirmation reports pass without engine errors.
+- `python3 tests/validate_repo.py`, **31** Python acceptance/native-reference/
+  revision-preflight tests, four Python-source parses and `git diff --check`
+  pass. The seven new preflight tests protect complete exact-revision baseline
+  selection; they do not substitute for the actual full-turn comparisons.
+- `stockpile_fit_linux_release` and `stockpile_fit_windows_recovered`: release
+  export, native-library/startup and packaged generated Overworld/Town entry
+  pass. Both PCKs are **248466896 bytes**, 1533104 below the unchanged 250000000
+  ceiling. Linux's generated Town capture was inspected; Windows ran under
+  Wine, not physical Windows hardware. Disposable exports/prefixes were removed
+  by the established wrapper; retained reports/captures remain available.
+
+Focused reproduction: `python3 -B tests/overworld_stockpile_text_fit_regression.py
+--label <fresh> --save <actual-save> --resolution <1280x720|1920x1080>`; append
+`--legacy-overworld` for the two authored menu cases. Platform evidence uses the
+established `tests/packaging_linux_export_smoke.py` and
+`tests/packaging_windows_export_smoke.py` through the existing RAM-backed
+`scenery_package_validation.py` wrapper, with fresh labels and serial platforms.
+The complete-match performance report separately records the fresh combined
+19.7% Large / 20.3% Medium End Turn improvement through committed `85599aae`;
+this UI change does not claim that speed gain.
+
+The heroes-progress workflow keeps the Phase 6 parent and presentation child
+in progress, distinguishing this validated runtime correction from the prior
+diagnostic-only prop investigation. Town building/base-art integration, baked-in
+prop dividers/terrain seams, remaining multi-second Large turns and broader
+release/hardware acceptance are still open. Sprite processing has not been
+authorized or implemented. Stage only the coherent UI/tests/tracking/evidence
+documents; pre-existing unrelated retention files and reports remain outside it.

@@ -291,6 +291,32 @@ placement, masks, art, manifest contents, gameplay or saves to make reuse succee
 
 ## Presentation and compatibility
 
+The Overworld stockpile menu must not show a raw clipped resource-summary fragment
+on wide layouts. Opt into actual-font/available-width fitting in the existing
+shared menu: show its existing Stores label when the complete summary cannot
+fit, preserving full tooltip and all nine ordered resource rows/icons/values.
+Keep short fitting summaries and explicit compact mode; re-evaluate after resize,
+theme/font and stockpile changes. Do not widen the footer, steal focus or change
+Town's default presentation. Keep read-only popup amounts legible with an
+Overworld-only opaque text theme while preserving disabled rows. Verify actual
+pointer/keyboard menu open, Escape
+focus return, complete state/save equality and inspected Medium/Large captures
+at 1280x720/1920x1080. Sprite transparency repair still needs separate approval.
+
+Diagnose rectangular prop edges against the actual resolved raster before
+changing sampling or outlines. The 2026-09-07 Medium Wreck Quay investigation
+finds a baked-in source-sheet divider in a standalone processed PNG, not atlas
+bleed; the clipping experiment is diagnostic evidence, not a correction.
+`tests/overworld_sprite_edge_diagnostic.py` preserves saved state and records
+before/after captures and resolved textures, but does not assert visual quality.
+Repair of derived transparency/crops is pending owner approval of a bounded
+asset-processing scope using retained original generated masters. Preserve object
+identity, interaction, footprint/pathing, save behavior and determinism; do not
+hide objects/outlines or replace art with procedural geometry. Any approved fix
+requires failing-before pixel/render checks, inspected Medium/Large captures at
+1280x720 and 1920x1080, existing sprite/input/fog/save checks and both-platform
+exports below the package ceiling. Town integration remains separately open.
+
 Route-only refreshes must not leave always-visible commander movement, current
 position, army or resource text at the values from scene entry. Update these
 small primary surfaces and existing owned-roster tooltips from current authority
