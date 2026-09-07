@@ -1502,3 +1502,34 @@ prop dividers/terrain seams, remaining multi-second Large turns and broader
 release/hardware acceptance are still open. Sprite processing has not been
 authorized or implemented. Stage only the coherent UI/tests/tracking/evidence
 documents; pre-existing unrelated retention files and reports remain outside it.
+
+## 2026-09-07 Town integration boundary — approval required
+
+Read-only inspection at committed `4d171105` rechecked the actual packaged
+Bellwake Town capture, its unchanged village raster and both starting-building
+PNGs. `town_veilmourn_bellwake_harbor` starts with Town Hall, Bell Harbor and
+Wayfarers Hall. The last two resolve to their exact 256x256 building icons through
+`TownRules.building_icon_path` and `content/building_art_manifest.json`, not a
+missing-resource fallback. Bell Harbor's plot is (0.58,0.63); Wayfarers Hall's is
+(0.79,0.66). The layout generator assigns root buildings to ordered slots, not
+building-specific scene paintings. Those two anchors sit over water; Wayfarers
+Hall is also a generic warm-lit square isometric illustration against a moonlit
+perspective scene. Both source PNGs were inspected directly.
+
+`TownStageView._town_building_scene_entries`, `_project_normalized_source_rect`
+and `_draw_integrated_buildings` consistently apply the same cover transform to
+art and click bounds. Correct transform/identity checks in the earlier #10226
+report therefore do not prove visual integration. Its sparse/developed Riverwatch
+sample did not establish this Bellwake composition. The existing three whole-
+scene panoramas are not exact per-building visibility layers and cannot replace
+the authoritative built-id/upgrade behavior to make the picture look complete.
+
+The remaining correction requires scene-matched original building layers plus
+deliberate grounded plots, preserving catalog/info icons and all gameplay/save
+authority. This crosses the current goal's existing-assets-only/no-regeneration
+boundary. Owner approval is required before asset generation/reprocessing or
+the corresponding manifest/plot implementation. The separate Wreck Quay alpha
+repair remains unapproved too. No production, asset or layout change was made
+in this investigation; no new runtime/platform pass is claimed. The latest
+validated implementation remains `4d171105`, not a new Town fix. PLAN/tracker
+record this presentation blocker while leaving the overall goal active.
