@@ -55226,6 +55226,11 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
         "extends MenuButton",
         'const SNAPSHOT_SCHEMA := "resource_stockpile_icon_menu_v1"',
         'const COMPACT_LABEL := "Stores"',
+        '@export var fit_summary_to_width := false:',
+        'resized.connect(_refresh_button_copy)',
+        'what == NOTIFICATION_THEME_CHANGED and is_node_ready()',
+        'fit_summary_to_width and _summary_exceeds_width()',
+        'func _summary_exceeds_width() -> bool:',
         "func sync_stockpile(resources: Variant, normal_summary: String, full_summary: String) -> void:",
         "for resource_id_value in OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS:",
         "_resource_values[resource_id] = amount",
@@ -55282,6 +55287,8 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
         if menu_match is not None:
             for token in ('unique_name_in_owner = true', 'focus_mode = 2', 'flat = true', 'clip_text = true', 'script = ExtResource("7_resource_stockpile_menu")'):
                 ensure(token in menu_match.group("body"), errors, f"{label} resource MenuButton is missing compact/focus ownership: {token}")
+            ensure(('fit_summary_to_width = true' in menu_match.group("body")) == (label == "Overworld"), errors, f"{label} stockpile width fitting must preserve the Overworld-only opt-in boundary")
+            ensure(('theme = SubResource("Theme_stockpile_readonly")' in menu_match.group("body")) == (label == "Overworld"), errors, f"{label} stockpile read-only text theme must remain Overworld-only")
         ensure('path="res://scenes/shared/ResourceStockpileMenu.gd" id="7_resource_stockpile_menu"' in scene_text, errors, f"{label} must reuse the shared stockpile component")
 
     town_chip_match = re.search(r'\[node name="ResourceChip" type="PanelContainer"[^\]]*\]\n(?P<body>.*?)(?=\n\[node )', town_scene_text, re.DOTALL)

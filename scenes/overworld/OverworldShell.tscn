@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://overworld_scene"]
+[gd_scene load_steps=12 format=3 uid="uid://overworld_scene"]
 
 [ext_resource type="Script" path="res://scenes/overworld/OverworldShell.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/overworld/OverworldMapView.gd" id="2"]
@@ -10,6 +10,9 @@
 [ext_resource type="Script" path="res://scenes/overworld/OverworldSidebarOrnament.gd" id="8_sidebar_ornament"]
 [ext_resource type="Script" path="res://scenes/shared/ArmyStackBar.gd" id="9_army_stack_bar"]
 [ext_resource type="Script" path="res://scenes/overworld/OverworldMinimap.gd" id="10_overworld_minimap"]
+
+[sub_resource type="Theme" id="Theme_stockpile_readonly"]
+PopupMenu/colors/font_disabled_color = Color(0.94, 0.9, 0.81, 1)
 
 [node name="OverworldShell" type="Control"]
 layout_mode = 3
@@ -682,12 +685,14 @@ theme_override_constants/margin_bottom = 6
 [node name="Resources" type="MenuButton" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad"]
 unique_name_in_owner = true
 layout_mode = 2
+theme = SubResource("Theme_stockpile_readonly")
 focus_mode = 2
 flat = true
 alignment = 0
 clip_text = true
 text = "Gold 0 | Wood 0 | Ore 0"
 script = ExtResource("7_resource_stockpile_menu")
+fit_summary_to_width = true
 
 [node name="ResourceDeltaCueRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad"]
 unique_name_in_owner = true

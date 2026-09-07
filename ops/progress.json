@@ -1,9 +1,77 @@
 {
   "actionableNextTasks": [
     {
-      "id": "performance-generated-full-match-actions-20260906",
       "status": "in_progress",
-      "title": "Full-Match Responsiveness"
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/generated-full-match-quality-requirements.md",
+        "docs/full-play-runtime-performance-report.md",
+        "docs/rmg-audit-integrated-correction-report.md",
+        "docs/lessons-learned.md",
+        "docs/generated-full-match-quality-report.md"
+      ],
+      "createdAt": "2026-09-06T12:03:25Z",
+      "nonGoals": [
+        "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification."
+      ],
+      "validationCommands": [
+        "python3 tests/generated_full_match_quality.py --case medium --label <fresh>",
+        "python3 tests/generated_full_match_quality.py --case large --label <fresh>",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "python3 tests/town_overlay_ownership_regression.py --label <fresh> --save <generated-opening-save> --resolution <1280x720|1920x1080>",
+        "python3 tests/full_play_validation_suite.py --label <fresh> --rendered --accessibility disabled --only town_screen_layout_and_dialog_controls_report hero_field_rendezvous_army_transfer_report town_recruitment_ui_surface_report",
+        "python3 tests/generated_command_layout_regression.py --label <fresh> --save <generated-opening-save> --resolution <1280x720|1920x1080>",
+        "python3 tests/town_command_entry_regression.py --label <fresh> --save <generated-opening-save> --resolution <1280x720|1920x1080>",
+        "python3 tests/full_play_validation_suite.py --label <fresh> --accessibility disabled --only generated_opening_autosave_failure_retry_regression active_play_save_written_cue_playback_report active_play_load_resumed_cue_playback_report",
+        "python3 tests/generated_outcome_flow_regression.py --label <fresh> --save <Large08-terminal-save> --opening <Large08-opening-save> --resolution <1280x720|1920x1080>",
+        "python3 tests/full_play_validation_suite.py --label <fresh> --accessibility disabled --only scenario_outcome_new_session_confirmation_safe_cancel_regression scenario_outcome_normal_entry_focus_regression application_scenario_outcome_autosave_failure_recovery_regression",
+        "python3 tests/named_save_files_regression.py",
+        "python3 tests/overworld_live_commander_refresh_regression.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>",
+        "python3 -B tests/overworld_sprite_edge_diagnostic.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>",
+        "python3 -B tests/overworld_stockpile_text_fit_regression.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>"
+      ],
+      "id": "ux-generated-full-match-presentation-20260906",
+      "title": "Full-Match Presentation Corrections",
+      "classification": "implementation_slice",
+      "parentSliceId": "quality-generated-full-match-20260906",
+      "implementationTargets": [
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownStageView.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests",
+        "tests/town_overlay_ownership_regression.py: actual generated Town overlay/build/save controls",
+        "tests/validate_repo.py: conditional standalone overlay geometry and Log ownership",
+        "tests/full_play_validation_suite.py: open the actual Muster dialog before existing surface assertions",
+        "scenes/town/TownShell.tscn: compact commander text layout",
+        "scenes/overworld/OverworldShell.tscn: system frame safe inset",
+        "tests/generated_command_layout_regression.py: real generated Town/Overworld text and save-feedback controls",
+        "tests/town_command_entry_regression.py: first-entry cached commander and earned specialty controls",
+        "scenes/results/ScenarioOutcomeShell.gd and .tscn: readable outcome identity and existing retry confirmation",
+        "scripts/core/ScenarioRules.gd: outcome display identity and generated retry routing only",
+        "scripts/core/ScenarioSelectRules.gd: existing package session restart if the generated retry fails",
+        "tests/generated_outcome_flow_regression.py: real terminal save, display, confirm/cancel and fresh same-map setup",
+        "tests/validate_repo.py: truthful bounded feedback and wrapped-minimum layout expectations",
+        "tests/full_play_validation_suite.py: preserve existing outcome input/storage assertions on the current expanded and legacy-compatible surfaces",
+        "scenes/overworld/OverworldShell.gd: fresh primary commander/status/stockpile and roster tooltip surfaces without hidden-panel rebuilds",
+        "tests/overworld_live_commander_refresh_regression.py: real old-owner state, input, focus, save and two-resolution visual controls",
+        "art/overworld/runtime/objects/map_objects/distinct/mapobj_wreck_quay.png and matching generated/trimmed provenance: baked-in divider correction requires owner-approved processing scope before edits",
+        "tests/overworld_sprite_edge_diagnostic.py: diagnostic-only resolved texture and sampling captures; failing-before pixel/render acceptance still required after approval",
+        "scenes/shared/ResourceStockpileMenu.gd and scenes/overworld/OverworldShell.tscn: opt-in actual-width summary fitting through the existing Stores menu, preserving Town defaults",
+        "tests/overworld_stockpile_text_fit_regression.py: failing-before actual Large font-fit, Medium/Large popup input/state/save controls and resize/font/content boundaries"
+      ],
+      "completionCriteria": [
+        "Reproduce and correct stray Town resources, footer crowding and building integration defects",
+        "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
+        "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
+      ],
+      "updatedAt": "2026-09-07T05:15:08Z",
+      "startedAt": "2026-09-06T17:43:52Z",
+      "notes": "Validated Overworld stockpile checkpoint: actual-font/width fitting uses the existing Stores menu when needed; Overworld-only opaque popup text makes read-only amounts legible. Four actual Medium/Large resolution cases pass 643 checks each with exact nine-resource values/icons/tooltips, pointer/keyboard/focus, resize/font/content behavior and complete state/save equality. Town defaults and all art/gameplay/native/save authority remain unchanged. Linux and Windows export/startup/generated Overworld-Town entry pass at 248466896 bytes per PCK; Windows via Wine. Failed disk/cache attempts are excluded and documented. Remaining legacy/input/repository evidence and finalization are recorded in the quality report. Town integration and sprite/terrain issues remain open; derived transparency repair still awaits owner approval. Parent and presentation remain active, not release-ready."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -1914,7 +1982,7 @@
     },
     "blockedReason": ""
   },
-  "active_slice": "performance-generated-full-match-actions-20260906",
+  "active_slice": "ux-generated-full-match-presentation-20260906",
   "blocker": "",
   "completedImplementationEvidence": [
     {
@@ -16617,14 +16685,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Validated exact single-entry commander projection: 1447 Large/1286 Medium original-owner checks, 1023 path controls, 18 domains, 51-step full play with all 50 states equal, native journeys and Linux/Windows startup/generated-entry packages pass. Serial full-turn waiting improves 6.8% Large and 15.9% Medium in one pair; Medium passes the unchanged 15% gate, Large remains below target and multi-second. Every returned/saved field, AI policy, cache lifetime, native geometry and full autosave remain unchanged. Both PCKs are 248465456 bytes; final Linux captures inspected. Remaining Large AI/full-save and Town/prop/terrain work, Moonbite deadline and release/physical-Windows limits stay open; parent and child remain in progress.",
+  "currentNotes": "Validated Overworld stockpile checkpoint: actual-width fitting uses the existing Stores menu when needed and Overworld-only opaque text keeps all nine read-only amounts legible. Four real Medium/Large resolution cases pass 643 checks each with exact rows/icons/tooltips, input/focus, resize/font/content and complete state/autosave equality. Two existing authored menu cases, four unchanged input/fog/End Turn reports, repository and 31 Python tests pass. Linux/Windows startup/generated-entry packages pass at 248466896 bytes each; Windows via Wine. Failed disk/cache attempts are excluded; the damaged UID index was preserved/rebuilt and selected goal-owned evidence losslessly compressed. Town defaults and art/native/gameplay/save authority remain unchanged. Town integration, prop/terrain quality and remaining multi-second Large turns stay open; sprite processing still awaits owner approval. Parent and child remain active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-generated-full-match-actions-20260906",
-  "currentSliceId": "performance-generated-full-match-actions-20260906",
-  "currentSliceNotes": "Validated exact single-entry commander projection: 1447 Large/1286 Medium original-owner checks, 1023 path controls, 18 domains, 51-step full play with all 50 states equal, native journeys and Linux/Windows startup/generated-entry packages pass. Serial full-turn waiting improves 6.8% Large and 15.9% Medium in one pair; Medium passes the unchanged 15% gate, Large remains below target and multi-second. Every returned/saved field, AI policy, cache lifetime, native geometry and full autosave remain unchanged. Both PCKs are 248465456 bytes; final Linux captures inspected. Remaining Large AI/full-save and Town/prop/terrain work, Moonbite deadline and release/physical-Windows limits stay open; parent and child remain in progress.",
+  "currentSlice": "ux-generated-full-match-presentation-20260906",
+  "currentSliceId": "ux-generated-full-match-presentation-20260906",
+  "currentSliceNotes": "Validated Overworld stockpile checkpoint: actual-font/width fitting uses the existing Stores menu when needed; Overworld-only opaque popup text makes read-only amounts legible. Four actual Medium/Large resolution cases pass 643 checks each with exact nine-resource values/icons/tooltips, pointer/keyboard/focus, resize/font/content behavior and complete state/save equality. Town defaults and all art/gameplay/native/save authority remain unchanged. Linux and Windows export/startup/generated Overworld-Town entry pass at 248466896 bytes per PCK; Windows via Wine. Failed disk/cache attempts are excluded and documented. Remaining legacy/input/repository evidence and finalization are recorded in the quality report. Town integration and sprite/terrain issues remain open; derived transparency repair still awaits owner approval. Parent and presentation remain active, not release-ready.",
   "currentSliceStatus": "in_progress",
-  "currentSliceTitle": "Full-Match Responsiveness",
-  "currentSliceUpdatedAt": "2026-09-07T03:46:15Z",
+  "currentSliceTitle": "Full-Match Presentation Corrections",
+  "currentSliceUpdatedAt": "2026-09-07T04:13:02Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22285,7 +22353,8 @@
         "python3 -B tests/full_play_validation_suite.py --label <fresh> --accessibility disabled --only generated_large_town_explicit_save_surface_regression",
         "python3 -B tests/overworld_blocked_mask_regression.py --label <fresh> --save <actual-medium-or-large-save> --require-mask-reuse",
         "python3 -B tests/ai_commander_entry_projection_regression.py --label <fresh> --save <actual-medium-or-large-save> --require-projection",
-        "python3 -B tests/full_play_validation_suite.py --label <fresh> --accessibility disabled --only ai_commander_role_state_report ai_commander_role_adoption_boundary_report ai_commander_role_turn_transcript_report ai_hero_task_spawn_commander_selection_report strategic_ai_emergency_defense_commander_fit_report"
+        "python3 -B tests/full_play_validation_suite.py --label <fresh> --accessibility disabled --only ai_commander_role_state_report ai_commander_role_adoption_boundary_report ai_commander_role_turn_transcript_report ai_hero_task_spawn_commander_selection_report strategic_ai_emergency_defense_commander_fit_report",
+        "python3 -B tests/generated_end_turn_compact_pair.py --label <fresh> --save <actual-medium-or-large-save> --reference 65fb7fcb6ccd5f9bb017c185c82e161e7216ad87 --resolution <1280x720|1920x1080>"
       ],
       "id": "performance-generated-full-match-actions-20260906",
       "title": "Full-Match Responsiveness",
@@ -22324,16 +22393,17 @@
         "tests/overworld_blocked_mask_regression.py: complete old-owner indexes, authored mappings, masks/presence/overlap/freshness and full-state controls",
         "scripts/core/EnemyAdventureRules.gd: exact single-entry projection shares authoritative full-roster normalization",
         "tests/ai_commander_entry_projection_regression.py: complete original owners, every faction hero, active/defender/mutation and full-state controls",
-        "tests/full_play_validation_suite.py: run existing commander role, spawn and emergency-fit reports with their original authoritative markers"
+        "tests/full_play_validation_suite.py: run existing commander role, spawn and emergency-fit reports with their original authoritative markers",
+        "tests/generated_end_turn_compact_pair.py: exact-production-revision serial full-turn validation of the four committed performance owners; preserve full states compressed, actual saves and input-ready timing"
       ],
       "completionCriteria": [
         "Name dominant measured hotspots",
         "Improve full actions with matched complete-state/decision controls",
         "Full-match and focused cache/performance/platform regressions"
       ],
-      "updatedAt": "2026-09-07T03:46:46Z",
+      "updatedAt": "2026-09-07T05:14:45Z",
       "startedAt": "2026-09-06T13:44:06Z",
-      "notes": "Validated exact single-entry commander projection: 1447 Large/1286 Medium original-owner checks, 1023 path controls, 18 domains, 51-step full play with all 50 states equal, native journeys and Linux/Windows startup/generated-entry packages pass. Serial full-turn waiting improves 6.8% Large and 15.9% Medium in one pair; Medium passes the unchanged 15% gate, Large remains below target and multi-second. Every returned/saved field, AI policy, cache lifetime, native geometry and full autosave remain unchanged. Both PCKs are 248465456 bytes; final Linux captures inspected. Remaining Large AI/full-save and Town/prop/terrain work, Moonbite deadline and release/physical-Windows limits stay open; parent and child remain in progress.",
+      "notes": "Fresh serial exact-revision combined End Turn controls compare 65fb7fcb with 85599aae across all four changed production owners. Large cumulative waiting improves 19.7%, Medium 20.3%; both unchanged 15% gates pass, eight complete states equal, no runtime errors. Large p50 remains 7369ms. This validates committed optimizations, not a speed gain from the subsequent stockpile UI fix or whole-game acceptance. Normalization-cache hypothesis disproved; no cache/rules/native/save change. Seven exact-revision preflight tests pass. Continue measured remaining responsiveness and presentation work; full goal stays active.",
       "validation": {
         "id": "performance-generated-full-match-commander-entry-20260907",
         "sliceId": "performance-generated-full-match-actions-20260906",
@@ -22399,7 +22469,9 @@
         "python3 tests/generated_outcome_flow_regression.py --label <fresh> --save <Large08-terminal-save> --opening <Large08-opening-save> --resolution <1280x720|1920x1080>",
         "python3 tests/full_play_validation_suite.py --label <fresh> --accessibility disabled --only scenario_outcome_new_session_confirmation_safe_cancel_regression scenario_outcome_normal_entry_focus_regression application_scenario_outcome_autosave_failure_recovery_regression",
         "python3 tests/named_save_files_regression.py",
-        "python3 tests/overworld_live_commander_refresh_regression.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>"
+        "python3 tests/overworld_live_commander_refresh_regression.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>",
+        "python3 -B tests/overworld_sprite_edge_diagnostic.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>",
+        "python3 -B tests/overworld_stockpile_text_fit_regression.py --label <fresh> --save <exact-real-save> --resolution <1280x720|1920x1080>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -22424,16 +22496,20 @@
         "tests/validate_repo.py: truthful bounded feedback and wrapped-minimum layout expectations",
         "tests/full_play_validation_suite.py: preserve existing outcome input/storage assertions on the current expanded and legacy-compatible surfaces",
         "scenes/overworld/OverworldShell.gd: fresh primary commander/status/stockpile and roster tooltip surfaces without hidden-panel rebuilds",
-        "tests/overworld_live_commander_refresh_regression.py: real old-owner state, input, focus, save and two-resolution visual controls"
+        "tests/overworld_live_commander_refresh_regression.py: real old-owner state, input, focus, save and two-resolution visual controls",
+        "art/overworld/runtime/objects/map_objects/distinct/mapobj_wreck_quay.png and matching generated/trimmed provenance: baked-in divider correction requires owner-approved processing scope before edits",
+        "tests/overworld_sprite_edge_diagnostic.py: diagnostic-only resolved texture and sampling captures; failing-before pixel/render acceptance still required after approval",
+        "scenes/shared/ResourceStockpileMenu.gd and scenes/overworld/OverworldShell.tscn: opt-in actual-width summary fitting through the existing Stores menu, preserving Town defaults",
+        "tests/overworld_stockpile_text_fit_regression.py: failing-before actual Large font-fit, Medium/Large popup input/state/save controls and resize/font/content boundaries"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-06T23:25:52Z",
+      "updatedAt": "2026-09-07T05:15:08Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated live commander/status/stockpile refresh and retained roster focus: 769 real Medium/Large/authored old-owner state, pointer/keyboard/controller, exhaustion, complete save, font-fit and roster-boundary checks; dual-resolution captures inspected. Affected domain reports and current Overworld stockpile/army cases pass; two unrelated old Town fixture failures remain explicit. Repository, 12 Python tests, diff, Linux/Windows exports/startup/generated entry pass; matching PCKs 248456120 bytes. No art/native/rules/save changes. Original Medium11 timed out Day67; exact autosave/history continuation exposed unsupported defeat_generated_rivals evaluation despite all Towns and resolved encounters on Day93. Correct runtime objective interpretation next; do not force a terminal state. Town integration and full-match quality remain in progress."
+      "notes": "Validated Overworld stockpile checkpoint: actual-font/width fitting uses the existing Stores menu when needed; Overworld-only opaque popup text makes read-only amounts legible. Four actual Medium/Large resolution cases pass 643 checks each with exact nine-resource values/icons/tooltips, pointer/keyboard/focus, resize/font/content behavior and complete state/save equality. Town defaults and all art/gameplay/native/save authority remain unchanged. Linux and Windows export/startup/generated Overworld-Town entry pass at 248466896 bytes per PCK; Windows via Wine. Failed disk/cache attempts are excluded and documented. Remaining legacy/input/repository evidence and finalization are recorded in the quality report. Town integration and sprite/terrain issues remain open; derived transparency repair still awaits owner approval. Parent and presentation remain active, not release-ready."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111198,41 +111274,38 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Exact selected commander projection removes unused full-roster rebuilding, preserving all returned/saved state and AI decisions. Serial full-turn waiting improves 6.8% Large / 15.9% Medium in one pair; only Medium clears the unchanged 15% gate. Focused/path, 18 domains, 51-step full play with 50 equal states, native journeys, repository and Linux/Windows checks pass; PCKs 248465456 bytes. Continue Large AI/full-save and presentation work; parent and child remain in progress, not release-ready.",
+  "summary": "Validated stockpile readability checkpoint: actual-font width fitting and legible Overworld-only read-only menu text; four 643-check saved-map cases, existing input/menu reports, repository and both platforms pass. Combined committed End Turn controls separately improve waiting 19.7% Large / 20.3% Medium with eight complete equal states; Large still multi-second. Town/prop/terrain presentation and broader release work remain open; sprite processing awaits owner approval. No whole-goal completion or art/native/gameplay/save changes.",
   "taskId": "10236",
-  "updatedAt": "2026-09-07T03:46:46Z",
+  "updatedAt": "2026-09-07T05:15:08Z",
   "validation": {
-    "id": "performance-generated-full-match-commander-entry-20260907",
-    "sliceId": "performance-generated-full-match-actions-20260906",
-    "title": "Exact selected commander entry with unchanged full-roster and saved-state behavior",
+    "id": "ux-generated-full-match-stockpile-readability-20260907",
+    "sliceId": "ux-generated-full-match-presentation-20260906",
+    "title": "Fitting Overworld stockpile summaries and readable native popup amounts",
     "status": "in_progress",
     "scope": "validated_runtime_checkpoint_not_child_or_goal_completion",
-    "validatedAt": "2026-09-07T03:46:15Z",
+    "validatedAt": "2026-09-07T05:16:23Z",
     "artifacts": [
+      "docs/generated-full-match-quality-report.md",
       "docs/generated-full-match-performance-report.md",
-      ".artifacts/generated_full_match_quality_20260906/task_reads_large_diagnostic/report.json",
-      ".artifacts/generated_full_match_quality_20260906/roster_callers_large_diagnostic/report.json",
-      ".artifacts/generated_full_match_quality_20260906/commander_entry_positive_control/report.json",
-      ".artifacts/generated_full_match_quality_20260906/commander_entry_positive_control_aligned/report.json",
-      ".artifacts/generated_full_match_quality_20260906/commander_entry_large_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/commander_entry_medium_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/commander_entry_path_large/report.json",
-      ".artifacts/generated_full_match_quality_20260906/commander_entry_large_before/report.json",
-      ".artifacts/generated_full_match_quality_20260906/commander_entry_large_compared/report.json",
-      ".artifacts/generated_full_match_quality_20260906/commander_entry_medium_before/report.json",
-      ".artifacts/generated_full_match_quality_20260906/commander_entry_medium_compared/report.json",
-      ".artifacts/full_play_runtime_20260905/commander_entry_domains/report.json",
-      ".artifacts/full_play_runtime_20260905/commander_entry_full_play_isolated/report.json",
-      ".artifacts/full_play_runtime_20260905/commander_entry_full_play_isolated/matched_control_report.json",
-      ".artifacts/rmg_start_audit_20260905/commander_entry_native_caves/report.json",
-      ".artifacts/rmg_start_audit_20260905/commander_entry_native_large_portals/report.json",
-      ".artifacts/generated_full_match_quality_20260906/commander_entry_linux_release/report.json",
-      ".artifacts/generated_full_match_quality_20260906/commander_entry_linux_release/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/commander_entry_windows_release/report.json",
-      ".artifacts/generated_full_match_quality_20260906/commander_entry_windows_release/generated-flow/live_validation_report.json"
+      ".artifacts/generated_full_match_quality_20260906/stockpile_fit_large_positive_aligned/report.json",
+      ".artifacts/generated_full_match_quality_20260906/stockpile_readable_large_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/stockpile_readable_medium_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/stockpile_readable_large_720_recovered/report.json",
+      ".artifacts/generated_full_match_quality_20260906/stockpile_readable_medium_1080_recovered/report.json",
+      ".artifacts/generated_full_match_quality_20260906/stockpile_readable_legacy_recovered/report.json",
+      ".artifacts/generated_full_match_quality_20260906/stockpile_existing_final/report.json",
+      ".artifacts/generated_full_match_quality_20260906/stockpile_fit_linux_release/report.json",
+      ".artifacts/generated_full_match_quality_20260906/stockpile_fit_linux_release/generated-entry/live_validation_report.json.gz",
+      ".artifacts/generated_full_match_quality_20260906/stockpile_fit_windows_recovered/report.json",
+      ".artifacts/generated_full_match_quality_20260906/stockpile_fit_windows_recovered/generated-flow/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/stockpile_uid_cache_recovery/editor.log",
+      ".artifacts/generated_full_match_quality_20260906/stockpile_repo_final.log",
+      ".artifacts/generated_full_match_quality_20260906/stockpile_preflight_unit_tests.log",
+      ".artifacts/generated_full_match_quality_20260906/combined_optimizations_large_verified/comparison.json",
+      ".artifacts/generated_full_match_quality_20260906/combined_optimizations_medium_verified/comparison.json"
     ],
-    "result": "Validated exact single-entry commander projection: 1447 Large/1286 Medium original-owner checks, 1023 path controls, 18 domains, 51-step full play with all 50 states equal, native journeys and Linux/Windows startup/generated-entry packages pass. Serial full-turn waiting improves 6.8% Large and 15.9% Medium in one pair; Medium passes the unchanged 15% gate, Large remains below target and multi-second. Every returned/saved field, AI policy, cache lifetime, native geometry and full autosave remain unchanged. Both PCKs are 248465456 bytes; final Linux captures inspected. Remaining Large AI/full-save and Town/prop/terrain work, Moonbite deadline and release/physical-Windows limits stay open; parent and child remain in progress.",
-    "remainingWork": "Large complete End Turns remain multi-second and this pair misses the unchanged 15% improvement gate; Medium clears that gate in one pair, not a whole-game/hardware acceptance claim. Continue measured AI task/target preparation and full-save latency work with exact decisions/state and full transactional saves. Town integration, prop-edge/terrain defects, the pre-existing Moonbite deadline and broader release/physical-Windows certification remain open."
+    "result": "Validated Overworld stockpile checkpoint: actual-width fitting uses the existing Stores menu when needed and Overworld-only opaque text keeps all nine read-only amounts legible. Four real Medium/Large resolution cases pass 643 checks each with exact rows/icons/tooltips, input/focus, resize/font/content and complete state/autosave equality. Two existing authored menu cases, four unchanged input/fog/End Turn reports, repository and 31 Python tests pass. Linux/Windows startup/generated-entry packages pass at 248466896 bytes each; Windows via Wine. Failed disk/cache attempts are excluded; the damaged UID index was preserved/rebuilt and selected goal-owned evidence losslessly compressed. Town defaults and art/native/gameplay/save authority remain unchanged. Town integration, prop/terrain quality and remaining multi-second Large turns stay open; sprite processing still awaits owner approval. Parent and child remain active.",
+    "remainingWork": "Town building/base-art integration, baked-in prop dividers and terrain seams remain open; derived transparency/crop processing awaits owner approval. Combined committed optimizations clear the bounded 15% full-turn improvement gate on both sizes, but Large remains multi-second. Broader responsiveness, Moonbite deadline and release/physical-Windows acceptance remain unresolved; full goal stays active."
   },
   "validationHistory": [
     {
