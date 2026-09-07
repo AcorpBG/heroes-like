@@ -55298,8 +55298,9 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
         if menu_match is not None:
             for token in ('unique_name_in_owner = true', 'focus_mode = 2', 'flat = true', 'clip_text = true', 'script = ExtResource("7_resource_stockpile_menu")'):
                 ensure(token in menu_match.group("body"), errors, f"{label} resource MenuButton is missing compact/focus ownership: {token}")
-            ensure(('fit_summary_to_width = true' in menu_match.group("body")) == (label == "Overworld"), errors, f"{label} stockpile width fitting must preserve the Overworld-only opt-in boundary")
-            ensure(('theme = SubResource("Theme_stockpile_readonly")' in menu_match.group("body")) == (label == "Overworld"), errors, f"{label} stockpile read-only text theme must remain Overworld-only")
+            ensure('fit_summary_to_width = true' in menu_match.group("body"), errors, f"{label} stockpile must explicitly opt into fitting its fixed-width caption")
+            ensure('theme = SubResource("Theme_stockpile_readonly")' in menu_match.group("body"), errors, f"{label} stockpile must use its scene-local read-only text theme")
+        ensure('[sub_resource type="Theme" id="Theme_stockpile_readonly"]\nPopupMenu/colors/font_disabled_color = Color(0.94, 0.9, 0.81, 1)' in scene_text, errors, f"{label} stockpile read-only amounts must retain the legible opaque palette")
         ensure('path="res://scenes/shared/ResourceStockpileMenu.gd" id="7_resource_stockpile_menu"' in scene_text, errors, f"{label} must reuse the shared stockpile component")
 
     town_chip_match = re.search(r'\[node name="ResourceChip" type="PanelContainer"[^\]]*\]\n(?P<body>.*?)(?=\n\[node )', town_scene_text, re.DOTALL)

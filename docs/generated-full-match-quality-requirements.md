@@ -387,6 +387,9 @@ opening at 1280x720, 1920x1080 and 2048x1079, with genuine generated-save covera
 and clearly separate authored UI fixtures. No gameplay, art or layout expansion.
 Use `tests/town_stockpile_text_fit_regression.py`, existing Town/stockpile checks,
 repository/diff validation and both-platform generated Town package flows.
+Update the repository's earlier Overworld-only scene assertions to require the
+explicit local opt-in and legible popup theme on both Town and Overworld; retain
+the shared component's false default and all ledger/state ownership checks.
 
 Diagnose rectangular prop edges against the actual resolved raster before
 changing sampling or outlines. The 2026-09-07 Medium Wreck Quay investigation

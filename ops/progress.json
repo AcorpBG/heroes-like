@@ -104,16 +104,17 @@
         "scenes/town/TownStageView.gd: retain exact authored building accessibility labels via UiAccessibility.describe_control",
         "scripts/autoload/LiveValidationHarness.gd: explicit restricted-path SHA256-checked Python Town-probe bootstrap; no normal-game execution or embedded test logic",
         "tests/packaged_town_scene_layer_regression.py and test_packaged_town_scene_layer_probe.py: actual isolated release binary, immutable pack and complete paid/input/save assertions, bootstrap rejection controls and headless-only screenshot omission",
-        "scenes/town/TownShell.tscn and tests/town_stockpile_text_fit_regression.py: after immutable art acceptance, opt Town into existing width fitting and a local legible read-only popup theme; preserve nine-resource input/save behavior at three resolutions"
+        "scenes/town/TownShell.tscn and tests/town_stockpile_text_fit_regression.py: after immutable art acceptance, opt Town into existing width fitting and a local legible read-only popup theme; preserve nine-resource input/save behavior at three resolutions",
+        "tests/validate_repo.py: require explicit Town and Overworld scene opt-ins and legible popup themes, preserving the shared false default and all ledger ownership checks"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T22:43:19Z",
+      "updatedAt": "2026-09-07T23:04:23Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Defense/memory checkpoint validated: six source runs pass 9003/8474 checks at three inspected resolutions; Linux and Windows exact-save probes each pass 8474 checks plus five bootstrap controls, exact paid rows, unchanged saves/export bytes and no engine errors. Both PCKs 249673796 bytes; normal ten-day construction smokes, 62 Python tests and repository checks pass. Immutable batch is complete. Next: Town-only caption fit/read-only popup theme; all-faction art and full goal remain open."
+      "notes": "Town caption/theme checkpoint validated: 856 unchanged authored checks and 855 actual Large-save checks pass across three inspected resolutions; legacy Town/Overworld and Town layout/progression reports pass. Repository assertions now require both explicit scene opt-ins, retaining shared default/ownership. Fresh Linux/Windows export/generated Town flows pass at 249674052 bytes, with inspected 1080p Linux capture. A separate Windows Main Menu quick-exit Ogg object warning is recorded without claiming its cause fixed. All-faction art, package headroom and full goal remain open."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16731,10 +16732,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Defense/memory checkpoint validated: six source runs pass 9003/8474 checks at three inspected resolutions; Linux and Windows exact-save probes each pass 8474 checks plus five bootstrap controls, exact paid rows, unchanged saves/export bytes and no engine errors. Both PCKs 249673796 bytes; normal ten-day construction smokes, 62 Python tests and repository checks pass. Immutable batch is complete. Next: Town-only caption fit/read-only popup theme; all-faction art and full goal remain open.",
+  "currentSliceNotes": "Town caption/theme checkpoint validated: 856 unchanged authored checks and 855 actual Large-save checks pass across three inspected resolutions; legacy Town/Overworld and Town layout/progression reports pass. Repository assertions now require both explicit scene opt-ins, retaining shared default/ownership. Fresh Linux/Windows export/generated Town flows pass at 249674052 bytes, with inspected 1080p Linux capture. A separate Windows Main Menu quick-exit Ogg object warning is recorded without claiming its cause fixed. All-faction art, package headroom and full goal remain open.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Presentation Corrections",
-  "currentSliceUpdatedAt": "2026-09-07T18:27:23Z",
+  "currentSliceUpdatedAt": "2026-09-07T23:05:23Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22574,16 +22575,17 @@
         "scenes/town/TownStageView.gd: retain exact authored building accessibility labels via UiAccessibility.describe_control",
         "scripts/autoload/LiveValidationHarness.gd: explicit restricted-path SHA256-checked Python Town-probe bootstrap; no normal-game execution or embedded test logic",
         "tests/packaged_town_scene_layer_regression.py and test_packaged_town_scene_layer_probe.py: actual isolated release binary, immutable pack and complete paid/input/save assertions, bootstrap rejection controls and headless-only screenshot omission",
-        "scenes/town/TownShell.tscn and tests/town_stockpile_text_fit_regression.py: after immutable art acceptance, opt Town into existing width fitting and a local legible read-only popup theme; preserve nine-resource input/save behavior at three resolutions"
+        "scenes/town/TownShell.tscn and tests/town_stockpile_text_fit_regression.py: after immutable art acceptance, opt Town into existing width fitting and a local legible read-only popup theme; preserve nine-resource input/save behavior at three resolutions",
+        "tests/validate_repo.py: require explicit Town and Overworld scene opt-ins and legible popup themes, preserving the shared false default and all ledger ownership checks"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T22:43:19Z",
+      "updatedAt": "2026-09-07T23:04:23Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Defense/memory checkpoint validated: six source runs pass 9003/8474 checks at three inspected resolutions; Linux and Windows exact-save probes each pass 8474 checks plus five bootstrap controls, exact paid rows, unchanged saves/export bytes and no engine errors. Both PCKs 249673796 bytes; normal ten-day construction smokes, 62 Python tests and repository checks pass. Immutable batch is complete. Next: Town-only caption fit/read-only popup theme; all-faction art and full goal remain open."
+      "notes": "Town caption/theme checkpoint validated: 856 unchanged authored checks and 855 actual Large-save checks pass across three inspected resolutions; legacy Town/Overworld and Town layout/progression reports pass. Repository assertions now require both explicit scene opt-ins, retaining shared default/ownership. Fresh Linux/Windows export/generated Town flows pass at 249674052 bytes, with inspected 1080p Linux capture. A separate Windows Main Menu quick-exit Ogg object warning is recorded without claiming its cause fixed. All-faction art, package headroom and full goal remain open."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111348,36 +111350,36 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Validated Bellwake Salt Counting House, Mourner Pilot Guild and Saltwake Factor original scene layers: 4476 checks at each of 1280x720, 1920x1080 and 2048x1079; 57 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 19-step eight-day construction flows pass. Both PCKs are 248145628 bytes with 1854372 bytes headroom. Village, prior seven layers, catalog icons, rules and saves unchanged. Ten layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
+  "summary": "Validated fifteen Bellwake scene layers plus Town stockpile readability: defense/memory source and exact-save Linux/Windows checks pass; the caption fix passes 856 authored and 855 real Large-save checks at three inspected sizes, existing Town/Overworld reports, repository validation and fresh platform generated-Town smokes. Both current PCKs are 249674052 bytes. Full presentation remains in progress: other buildings/upgrades/factions, Overworld repairs, limited package headroom and a separate Windows Main Menu quick-exit Ogg-object warning remain.",
   "taskId": "10236",
-  "updatedAt": "2026-09-07T22:43:20Z",
+  "updatedAt": "2026-09-07T23:04:24Z",
   "validation": {
-    "id": "quality-town-salt-pilot-art-20260907",
+    "id": "quality-town-caption-20260907",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T19:58:52Z",
-    "scope": "Validated three additional Bellwake scene-matched layers with real construction/input/save and inspected dual-platform packages; not full presentation completion.",
-    "result": "Validated Bellwake Salt Counting House, Mourner Pilot Guild and Saltwake Factor original scene layers: 4476 checks at each of 1280x720, 1920x1080 and 2048x1079; 57 focused Python tests, existing 32-town/179-mapping and layout reports, repository/diff and both-platform 19-step eight-day construction flows pass. Both PCKs are 248145628 bytes with 1854372 bytes headroom. Village, prior seven layers, catalog icons, rules and saves unchanged. Ten layers are not whole-Town/all-faction completion; remaining buildings/upgrades/Overworld presentation, physical Windows and legacy keyboard/Moonbite limits stay open.",
+    "validatedAt": "2026-09-07T23:05:23Z",
+    "scope": "Validated Town-local caption/theme checkpoint after the Bellwake defense/memory art checkpoint; not full presentation completion.",
+    "result": "Validated fifteen Bellwake scene layers plus Town stockpile readability: defense/memory source and exact-save Linux/Windows checks pass; the caption fix passes 856 authored and 855 real Large-save checks at three inspected sizes, existing Town/Overworld reports, repository validation and fresh platform generated-Town smokes. Both current PCKs are 249674052 bytes. Full presentation remains in progress: other buildings/upgrades/factions, Overworld repairs, limited package headroom and a separate Windows Main Menu quick-exit Ogg-object warning remain.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
-      "content/town_building_scene_art_manifest.json",
-      "art/towns/source/generated/scene_layers/README.md",
-      ".artifacts/generated_full_match_quality_20260906/town_salt_before_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_salt_final_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_salt_final2_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_salt_final2_720/building_veilmourn_saltwake_factor_saved.png",
-      ".artifacts/generated_full_match_quality_20260906/town_salt_final_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_salt_final_2048/developed_built_id_fixture.png",
-      ".artifacts/generated_full_match_quality_20260906/town_salt_final_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_salt_final_1080/building_veilmourn_saltwake_factor_saved.png",
-      ".artifacts/full_play_runtime_20260905/town_salt_existing/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_salt_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_salt_linux/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_salt_linux/generated-entry/generated_town_building_constructed_building_veilmourn_saltwake_factor.png",
-      ".artifacts/generated_full_match_quality_20260906/town_salt_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/town_salt_windows/generated-flow/live_validation_report.json"
+      ".artifacts/generated_full_match_quality_20260906/town_defense_detached_final_batch.json",
+      ".artifacts/generated_full_match_quality_20260906/town_memory_final_pack_linux/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_memory_final_pack_windows/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_stockpile_before3_authored/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_stockpile_after_authored/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_stockpile_after_generated/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_stockpile_after_generated/1920x1080_ledger.png",
+      ".artifacts/generated_full_match_quality_20260906/town_stockpile_legacy_after/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_stockpile_overworld_after/report.json",
+      ".artifacts/full_play_runtime_20260905/town_stockpile_existing/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_stockpile_repo_final.log",
+      ".artifacts/generated_full_match_quality_20260906/town_caption_package_batch.json",
+      ".artifacts/generated_full_match_quality_20260906/town_stockpile_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_stockpile_linux/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_stockpile_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/town_stockpile_windows/generated-flow/live_validation_report.json"
     ],
-    "remainingWork": "Continue the five remaining old catalog-based buildings in the actual developed Bellwake view, then remaining upgrade plots and other factions with 1854372-byte PCK headroom; continue demonstrated Overworld prop-edge/terrain presentation corrections. Preserve legitimate match/performance evidence, physical Windows and legacy keyboard/Moonbite limits. Full goal remains active."
+    "remainingWork": "Continue remaining Town buildings/upgrades/factions and demonstrated Overworld repairs, with only 325948 bytes of PCK headroom. Reproduce the separate Windows Main Menu quick-exit Ogg lifetime warning before claiming clean shutdown. Preserve legitimate match/performance evidence and explicit physical Windows and legacy keyboard/Moonbite limits. Full goal remains active."
   },
   "validationHistory": [
     {

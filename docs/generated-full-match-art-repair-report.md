@@ -800,5 +800,70 @@ The two earlier caption probes compared a detached setup object after
 `SessionState.set_active_session` had copied it. Resolving the actual active Town
 model removed their spurious `/game_state` comparison failure; no gameplay code
 changed. These earlier reports are retained, not accepted as clean controls.
-The production caption/theme change and real generated-save/platform validation
-remain pending until the immutable art batch finishes.
+## Town stockpile caption and ledger contrast — validated checkpoint
+
+After the immutable art batch completed, the Town-local scene now enables the
+shared menu's existing `fit_summary_to_width` option and assigns the same opaque
+read-only popup text color as Overworld. Only `TownShell.tscn` changes at runtime;
+the shared default, nine-resource ledger, frame dimensions, art and all gameplay
+owners remain unchanged. This is not a wider header or a new resource display.
+
+`town_stockpile_after_authored/report.json` passes all 856 checks with the same
+executed probe SHA256 as the clean eight-failure control, unchanged source/input
+save and no engine errors. Actual visible text is now 53px (`Stores`) within
+92px/222px allocations at all three sizes. The full tooltip and all nine ordered
+disabled popup entries remain intact; pointer/keyboard/focus, larger font,
+full-state and complete save/re-entry checks pass. The 720p and 2048x1079 popup
+captures were inspected: all amounts are legible and the menu stays inside the
+viewport. These are explicitly authored UI projections, not generated matches.
+
+The older Town stockpile report independently fails only `menu_width_exact` in
+`town_stockpile_legacy_before`: it expects the 80px minimum to equal the actual
+92px allocation. The Python-only `--legacy-town` adapter sets the real logical
+viewport and compares the menu allocation to the exact framed content width,
+preserving original 96/226px frame and 80/210px minimum checks, icons, resources,
+input and full state. `town_stockpile_legacy_aligned_before` passes both sizes
+before the runtime caption/theme edit. The original GDScript report is unchanged;
+this fixture correction is not a game-layout fix.
+
+`town_stockpile_after_generated/report.json` passes 855 checks on the real
+Large08 Day-8 save, without the authored projection or moved hero. All three
+resolutions retain the complete nine-resource ledger, pointer/keyboard/focus,
+original input bytes and full state/save/re-entry equality. Its 720p Town,
+1080p ledger and 2048x1079 Town captures were inspected; the caption fits and the
+popup amounts remain legible. The Town scene SHA256 is
+`d7ba31df4d70b7c1312c7b7b610b84aa398cbcd39adb9cdf9dc5d27e4aad4529`;
+the shared component remains byte-identical to the earlier Overworld checkpoint.
+
+`town_stockpile_legacy_after` and `town_stockpile_overworld_after` pass both
+existing authored viewport cases. Both Town layout/progression reports pass in
+`.artifacts/full_play_runtime_20260905/town_stockpile_existing/`, covering the
+five actions, main-building routes and existing all-town progression surface.
+The first serial batch stopped at the repository checker because its two old
+assertions required Town *not* to use the earlier Overworld fix. The now-selected
+Town contract requires both explicit scene opt-ins and local opaque themes;
+the shared false default and all original ledger/ownership checks remain.
+`town_stockpile_repo_after.log` records the passing rerun. The earlier failed
+batch and exact error log remain retained, not relabeled successful.
+
+Fresh `town_stockpile_linux/report.json` and `town_stockpile_windows/report.json`
+pass established official export/startup checks. Both PCKs are 249674052 bytes,
+leaving 325948 bytes below the unchanged ceiling; all 5166 entries are verified
+by the existing JSON-only compactor. Linux's generated-entry report passes 19
+steps/eight daily builds; Windows's generated-flow report passes 23 steps/ten
+daily builds. Both generated Town flows have zero engine errors. The final
+Linux construction capture was inspected at 1920x1080, requested through the
+existing presentation-resolution option: a short fitting summary stays visible
+and controls retain their bounds. `town_caption_package_batch.json` records
+both successful terminal processes and unchanged source hashes. Temporary
+exports/Wine installations were disposed by their owning launcher; evidence,
+saves, source art, caches and RMG data remain retained.
+
+Windows remains headless Wine, not physical Windows/GPU certification. Its
+separate Main Menu quick-exit log includes an `ObjectDB instances leaked` warning
+listing Ogg music streams/playback/packet sequences. The established checker does
+not treat that warning as fatal. The generated Town flow and focused source
+regressions have no such warning. No audio owner changed in this caption fix;
+the quick-exit lifetime cause is not established here and needs a separate
+reproduction/correction, not a blanket clean-shutdown claim. This checkpoint
+does not close all-faction art, remaining Overworld repairs or the parent goal.
