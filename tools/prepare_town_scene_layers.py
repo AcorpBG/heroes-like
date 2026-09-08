@@ -259,6 +259,25 @@ for brief in EMBERCOURT_RIVERWORKS_BRIEFS.values():
                  curation='Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.')
 EMBERCOURT_BRIEFS.update(EMBERCOURT_RIVERWORKS_BRIEFS)
 
+EMBERCOURT_CIVIC_BRIEFS = {
+    'building_embercourt_lantern_court': {
+        'source_sha256':'f34d056a814a65e2cb46967bf040128680118d6a9ae721d7062e0296add76738',
+        'generation_output':'exec-008e04ee-92e3-47b4-bddf-7820ce9d37d4.png',
+        'scene_bounds':[1330,665,240,160], 'ground_anchor':[1450,812],
+        'grounding':'Low lantern-lit hearing arcade and records wing extend the foreground-right stone bank below the Oath court. Their narrow steps meet the existing quay, with no separate landscape tile; preserve the upper roofs and command controls.',
+    },
+    'building_embercourt_relief_quay': {
+        'source_sha256':'4cffe2a4a5b569b1c17fa4a0d27436688f1214cc6436542d6f02101dceb1d7ca',
+        'generation_output':'exec-07981847-b39d-4354-b993-1aa3a0f885e4.png',
+        'scene_bounds':[345,630,300,200], 'ground_anchor':[495,819],
+        'grounding':'Relief store and timber hoist meet the existing foreground-left stone quay, beside the Tally office. Their attached boarding pontoon and plain supply barge project into the near channel; no painted water or isolated pedestal.',
+    },
+}
+for brief in EMBERCOURT_CIVIC_BRIEFS.values():
+    brief.update(reference_inputs=[], generation_date='2026-09-08',
+                 curation='Original text-only RGBA paintings matched to the inspected Riverwatch panorama. Source masters and earned/mixed-developed 1280x720 scenes inspected: low hearing arcade on the foreground-right stone bank, relief store/hoist on the left quay with an attached pontoon and plain supply barge. Preserve original alpha, adjacent roofs, channel and command controls. Paid Day-18/19 construction and full non-clock save equality pass; three-resolution and official Linux/Windows acceptance are recorded separately in the art-repair report. Registration alone is not acceptance.')
+EMBERCOURT_BRIEFS.update(EMBERCOURT_CIVIC_BRIEFS)
+
 FACTION_BRIEFS = {FACTION: BRIEFS, 'faction_embercourt': EMBERCOURT_BRIEFS}
 
 def digest(path):

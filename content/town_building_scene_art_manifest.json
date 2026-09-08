@@ -1845,6 +1845,100 @@
         "reference_inputs": [],
         "generation_date": "2026-09-08",
         "generation_output": "exec-6729bdfa-4f23-4cb2-acc0-225b425e9425.png"
+      },
+      "building_embercourt_lantern_court": {
+        "asset_id": "faction_embercourt_building_embercourt_lantern_court",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lantern_court.png",
+        "source_sha256": "f34d056a814a65e2cb46967bf040128680118d6a9ae721d7062e0296add76738",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1000
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_lantern_court.png",
+        "trimmed_sha256": "0a443bb7a25fc5c13253fdc9e2701a050d3ada4e611c5f4a21f0aff5a62b9625",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_lantern_court.png",
+        "runtime_sha256": "763e7dfe04b7fdf46265d4d1277d7ae470359dc4889874a5c5bdd424cb331e25",
+        "runtime_size": [
+          512,
+          333
+        ],
+        "normalized_rect": [
+          0.83125,
+          0.7388888888888889,
+          0.15,
+          0.1736111111111111
+        ],
+        "ground_anchor": [
+          0.90625,
+          0.9022222222222223
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Low lantern-lit hearing arcade and records wing extend the foreground-right stone bank below the Oath court. Their narrow steps meet the existing quay, with no separate landscape tile; preserve the upper roofs and command controls.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lantern_court.prompt.txt",
+        "prompt_sha256": "fd1db6531743993e4fb8ef2385147de13266cb903ee1b95030f126ad10442703",
+        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama. Source masters and earned/mixed-developed 1280x720 scenes inspected: low hearing arcade on the foreground-right stone bank, relief store/hoist on the left quay with an attached pontoon and plain supply barge. Preserve original alpha, adjacent roofs, channel and command controls. Paid Day-18/19 construction and full non-clock save equality pass; three-resolution and official Linux/Windows acceptance are recorded separately in the art-repair report. Registration alone is not acceptance.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08",
+        "generation_output": "exec-008e04ee-92e3-47b4-bddf-7820ce9d37d4.png"
+      },
+      "building_embercourt_relief_quay": {
+        "asset_id": "faction_embercourt_building_embercourt_relief_quay",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_relief_quay.png",
+        "source_sha256": "4cffe2a4a5b569b1c17fa4a0d27436688f1214cc6436542d6f02101dceb1d7ca",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          47,
+          7,
+          1520,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_relief_quay.png",
+        "trimmed_sha256": "a86bb3082a229ebb01964fafc8b8ffcee757155c0f1290b0ed39a337573f28cb",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_relief_quay.png",
+        "runtime_sha256": "3332fa118fc53c9ca9893da5a7ab391ff378457bbe8356946ab1699cb1d0fb8d",
+        "runtime_size": [
+          512,
+          353
+        ],
+        "normalized_rect": [
+          0.2213623046875,
+          0.7015190972222223,
+          0.1798095703125,
+          0.220703125
+        ],
+        "ground_anchor": [
+          0.309375,
+          0.91
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Relief store and timber hoist meet the existing foreground-left stone quay, beside the Tally office. Their attached boarding pontoon and plain supply barge project into the near channel; no painted water or isolated pedestal.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_relief_quay.prompt.txt",
+        "prompt_sha256": "3744855720f9b0e298f51649073835f1feaa1058a32c8adfba229223bd1b38f9",
+        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama. Source masters and earned/mixed-developed 1280x720 scenes inspected: low hearing arcade on the foreground-right stone bank, relief store/hoist on the left quay with an attached pontoon and plain supply barge. Preserve original alpha, adjacent roofs, channel and command controls. Paid Day-18/19 construction and full non-clock save equality pass; three-resolution and official Linux/Windows acceptance are recorded separately in the art-repair report. Registration alone is not acceptance.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08",
+        "generation_output": "exec-07981847-b39d-4354-b993-1aa3a0f885e4.png"
       }
     }
   }
