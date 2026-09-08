@@ -185,7 +185,7 @@ scene/sequence/bootstrap/lossless/compaction/release tests, both existing Town
 reports, `python3 tests/validate_repo.py` and `git diff --check` pass. This is
 complete Bellwake scene coverage, not all-faction or release-ready acceptance.
 
-## Next Embercourt opening packet — preparation only
+## Embercourt opening packet — validated 2026-09-08
 
 The real Medium11 Day-1 Riverwatch control reproduces detached catalog art for
 Muster Yard, Wayfarers Hall and the normally purchased Market Square. Its exact
@@ -200,13 +200,107 @@ hashes and the rejected RGB/checkerboard extraction. Direct alpha sampling and
 an actual-engine detached preview resolve the misleading brown RGB visible in
 raw previews: those surrounding pixels are transparent in the game. The preview
 passes 35 overlay/state/save controls, not production art/input acceptance.
-Muster Yard still needs its base raised onto the quay court, and raw full-size
-textures need the established trimmed/mipmapped runtime pipeline before judging
-sampling. No Embercourt candidate has entered the production manifest/export.
-After the validated Bellwake commit, extend exact-faction preparation while
-preserving all 22 Veilmourn layers, then validate placement, actual construction,
-input/save, developed compositions and both-platform packages. The presentation
-child and full-match parent remain in progress.
+The selected paintings now have production source/trim/runtime rows, preserved
+generated alpha, 512px aspect-preserving Lanczos derivatives and mipmaps. Muster
+was raised onto the left-bank court; Wayfarers joins the right shore and the
+Market extends the foreground-left quay. The exact prompts, original output
+identities and source hashes are in `art/towns/source/generated/scene_layers/README.md`.
+`prepare_town_scene_layers.py --faction faction_embercourt` merges selected rows
+without resetting other factions or earlier buildings. The retained preservation
+control against `ed62f12a` proves all 22 Veilmourn rows, 66 scene rasters, 22 prompts,
+imports, village backgrounds, catalog art and gameplay/save owners unchanged;
+selected preparation is byte-identical on replay.
+
+The actual Day-43 Riverwatch built-id fixture (SHA256
+`553ceb3ea972412cd72341ff627fa73c6864f9bcbfb6cc428923ebec5712de59`)
+exposed a separate real input defect. `TownStageView._sync_building_hotspots`
+assigned alpha masks only to new scene layers: transparent margins of older
+catalog art remained rectangular hit areas. The visible Market facade therefore
+opened Charter Flame or Lockhouse Tally information. The retained draft2/draft3
+captures show those wrong modals. The renderer now applies the existing cached
+alpha/crop mask to every visible non-embedded building texture, preserving depth,
+placement, focus bounds and the authoritative information route. It does not
+move/hide other buildings or change their art. The developed probe independently
+compares catalog hit ownership with image alpha, checks actual foreground Charter
+pixels and clicks the exposed Market facade. Watch Barracks correctly supersedes
+Muster Yard; both earned ids remain in the untouched fixture.
+
+`embercourt_developed_720_inputfix` passes 8255 checks without engine errors or
+source/input mutation. This is a read-only composition/input checkpoint, not
+paid-growth or platform acceptance. The first source draft's gold-only dictionary
+assumption was corrected to require 1000 gold and zero other normalized resource
+costs; no game cost changed. Earlier drafts remain failures, including the
+superseded-Muster probe indexing error and draft3's source-hash change during
+curation. The first detached source batch failed before engine launch because
+its PATH omitted `/root/.local/bin`; the corrected serial batch has fresh labels
+and preserved reports. That second batch passes all six ordinary/developed
+resolution runs, Bellwake compatibility and both existing Town reports, but its
+lossless preparation fails because the isolated runner lacked absolute editor
+data/config/cache directories. It published no texture replacements. Its larger
+capture also rejects the over-raised Muster placement: the final reviewed
+pre-trim rect is `[215,355,340,226.6666666667]`, ground anchor `[390,565]`, meeting
+the actual quay instead of leaving a tent under the entrance. The original
+masters and all derived raster bytes remain unchanged by this placement review.
+The third serial batch uses explicit isolated XDG directories and fresh
+`embercourt_accepted_*` labels. This third source batch is complete and passes:
+each normal purchase/input/save run has 2519 checks, each developed composition
+has 8255 checks (including all 18 retained visible catalog paintings), and the
+unchanged Bellwake opening compatibility run has 1382 checks. The opening,
+post-build and developed captures at 1280x720, 1920x1080 and 2048x1079 were
+personally inspected for shoreline grounding, cover crop, information routing
+and readable, unclipped controls. Both existing Town reports and repository
+validation pass. Three lossless imports preserve decoded pixels/mips and import
+options; 2267 earlier imports are cache hits. There is no newly claimed compression
+saving: these fresh textures already used the required lossless settings.
+
+The complete source saves compare equal to the original paid-Market control with
+exact Decimal-valued JSON numbers, excluding only `/saved_at_unix`. The original
+overlay saves before normal JSON restoration while the fuller input probe saves
+after it, so raw number spelling differs (`4000` versus `4000.0`); do not claim
+raw before/after byte equality. The three matched new-probe saves do match
+byte-for-byte outside that clock. Arrays, all other fields and exact numeric
+values remain included. Evidence: `embercourt_accepted_save_comparison.json`.
+The immutable source manifest SHA256 is
+`b5bd44bdd7fde9867de464443b8f6f8a318308075da883209a8ae39f5b0e4173`.
+Official Linux and Windows releases each pass the same 2519 ordinary-purchase
+and 8255 developed-input assertions, with unchanged exports, inputs and source
+owners, no runtime errors and all five opt-in bootstrap boundary controls. Linux
+release captures were personally inspected; Windows uses headless Wine with only
+paired frame/capture operations omitted, not physical Windows/GPU certification.
+Both normal export/startup/native-generated Town construction smokes also pass.
+The first export attempt used the isolated data directory as its template search
+root and failed before making a package; the corrected batch uses the existing
+official 4.6.2 templates and fresh release/report labels, with no game-file change.
+
+`embercourt_package_parity.json` verifies all 5186 members: six new texture/import
+members, no removals and 5177 prior members byte-identical. Only the manifest,
+compiled TownStageView and UID cache change among existing members. Linux and
+Windows differ only in `project.binary`; the new textures match all three
+lossless proofs and no source masters ship. Each PCK is **244111660 bytes**, with
+**5888340 bytes** headroom below the unchanged ceiling. Linux PCK SHA256:
+`d8c66a2c59bf65c6b61495d1b063a89b0a8a3493737f316f155dae5da45637aa`;
+Windows: `c8ca89145990fd99a69ae7c422cc2a2043cc65436c8dd307ba4d441d5781190f`.
+`embercourt_packaged_save_comparison.json` includes the original control, all
+three source resolutions and both releases: complete exact-number states agree
+apart from the clock, and all five matched new-probe saves agree in raw bytes
+outside it. The two-byte Windows length difference is only clock precision.
+
+52 focused Python tests pass (23 scene/preparation, seven sequence preflight,
+three packaged-bootstrap, 19 lossless-import), together with existing Town,
+repository and diff checks. Reproduction commands and complete job exits are in
+`embercourt_source_batch3.json` and `embercourt_package_batch2.json`; drivers are
+`tests/town_scene_layer_regression.py --faction embercourt` (ordinary purchase or
+`--presentation-only --developed-save`), `tests/packaged_town_scene_layer_regression.py`
+against each retained `embercourt_release_*/isolated-export`, the established
+Linux/Windows packaging smokes, `tests/full_play_validation_suite.py` selecting
+both Town reports, `python3 tests/validate_repo.py` and `git diff --check`.
+All paths in this paragraph are under the goal artifact root unless repo-relative.
+The completed tests' two disposable Wine installations were retired only after
+verified process exit; their user/save/registry hashes remain exact. The receipt
+`embercourt_wine_retirement.json` records 2619097088 bytes reclaimed, with caches,
+RMG evidence, current exports and source art retained.
+The presentation child and full-match parent remain in progress; later Embercourt
+catalog art is still visibly unaccepted, not covered by this opening packet.
 
 ## First production briefs
 

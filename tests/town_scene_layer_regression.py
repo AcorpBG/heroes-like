@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Real Bellwake scene assets, cover-crop input and normal construction/save."""
+"""Exact-faction scene assets, cover-crop input and normal construction/save."""
 import argparse
 import hashlib
 import json
@@ -18,6 +18,9 @@ LATE_HARBOR_IDS = [
     'building_veilmourn_saltwake_factor',
 ]
 LATE_HARBOR_SAVE_SHA256 = '69f4c289bb0bd273f175e24a0b2704391302c0cf2dcc0be76c4d487f91886537'
+EMBERCOURT_SAVE_SHA256 = 'c0d67e4b2a8403ac82ae599391ae0a946ea16110beb4dd378a599af9a9ab7a59'
+EMBERCOURT_DEVELOPED_SHA256 = '553ceb3ea972412cd72341ff627fa73c6864f9bcbfb6cc428923ebec5712de59'
+EMBERCOURT_IDS = ['building_muster_yard', 'building_wayfarers_hall', 'building_market_square']
 
 EXTRA = r'''
 func inspect_upgrade_order() -> void:
@@ -81,20 +84,46 @@ func clear_layer_capture_focus() -> void:
 	motion.position=get_viewport().get_final_transform()*Vector2(640,20)
 	Input.parse_input_event(motion)
 	await settle()
+func inspect_catalog_pixel_ownership(stage) -> void:
+	var catalog_count := 0
+	for entry in stage._town_building_scene_entries(stage._town_scene_rect()):
+		var id: String=entry.visible_building_id
+		if id=="" or entry.get("embedded_in_base",false) or entry.get("scene_layer",false): continue
+		var button=stage._building_hotspots.get(id)
+		check(button!=null and button.visible and button.painted_mask!=null,"catalog building still has rectangular pointer ownership: "+id)
+		if button==null or not button.visible: continue
+		var raster: Image=stage._town_building_texture(id).get_image()
+		var ratio: Rect2=entry.texture_region_ratio
+		var transparent := 0
+		var painted := 0
+		for y in range(1,20):
+			for x in range(1,20):
+				var pixel := Vector2i(Vector2(x/20.0,y/20.0)*Vector2(raster.get_size()))
+				var uv := ((Vector2(pixel)+Vector2(0.5,0.5))/Vector2(raster.get_size())-ratio.position)/ratio.size
+				if not Rect2(Vector2.ZERO,Vector2.ONE).has_point(uv): continue
+				var solid: bool=raster.get_pixelv(pixel).a>0.25
+				check(button._has_point(uv*button.size)==solid,"catalog transparent/cropped pixel intercepts scenery: "+id)
+				if solid: painted+=1
+				else: transparent+=1
+		check(painted>0 and transparent>0,"catalog pixel control did not exercise both body and empty margin: "+id)
+		catalog_count+=1
+	rows.append({"label":"independent_catalog_pixel_ownership","faction":stage._town_faction_id(),"catalog_buildings":catalog_count})
 func inspect_scene_layers(ids: Array = ["building_veilmourn_bell_harbor", "building_wayfarers_hall"]) -> void:
 	var shell = get_tree().current_scene
 	var stage = shell.get_node("%TownStage")
 	var before: Dictionary = normalized(session.to_dict())
 	var rows: Array = stage.validation_town_building_progression_summary().texture_rows
 	UiAccessibility.refresh_tree(stage)
+	inspect_catalog_pixel_ownership(stage)
 	for id in ids:
 		var matches: Array = rows.filter(func(row): return row.building_id == id)
-		var expected := "res://art/towns/runtime/scene_layers/faction_veilmourn/%s.png" % id
-		check(matches.size()==1 and matches[0].texture_path==expected,"scenery still resolves catalog icon rather than exact Veilmourn layer: "+id)
+		var expected := "res://art/towns/runtime/scene_layers/%s/%s.png" % [stage._town_faction_id(),id]
+		check(matches.size()==1 and matches[0].texture_path==expected,"scenery still resolves catalog icon rather than exact faction layer: "+id)
 		if matches.size()!=1 or matches[0].texture_path!=expected:
 			continue # A missing layer is already a failure, not valid alpha/input evidence.
 		var summary: Dictionary = stage.validation_building_hotspot_summary(id)
 		check(summary.aligned and summary.visible and summary.focus_mode==Control.FOCUS_ALL,"scene layer focus/crop alignment: "+id)
+		if not summary.visible: continue # Keep the failed assertion; never index a superseded plot as a visible one.
 		check(summary.accessibility_name==ContentService.get_building(id).name+" building","missing exact building accessible name: "+id+" got "+str(summary.accessibility_name))
 		var button = stage._building_hotspots[id]
 		var texture: Texture2D = stage._town_building_texture(id)
@@ -148,6 +177,15 @@ func inspect_scene_layers(ids: Array = ["building_veilmourn_bell_harbor", "build
 		if id=="building_veilmourn_leviathan_sounding": body=Vector2(0.65,0.16) # Right acoustic horn above foreground bell docks.
 		if id=="building_veilmourn_memory_rite_court": body=Vector2(0.67,0.18) # Right acoustic horn remains exposed after the rite upgrade.
 		if id=="building_veilmourn_drowned_admiralty": body=Vector2(0.50,0.25) # Navigation turret above Wayfarers Hall.
+		if id=="building_market_square" and stage._town_faction_id()=="faction_embercourt" and stage.validation_building_hotspot_summary("building_embercourt_charter_flame").get("visible",false):
+			var overlap: Vector2=button.get_global_transform_with_canvas()*(Vector2(0.80,0.68)*button.size)
+			var flame=stage._building_hotspots["building_embercourt_charter_flame"]
+			check(flame._has_point(flame.get_global_transform_with_canvas().affine_inverse()*overlap),"developed Market overlap is not painted by foreground Charter Flame")
+			await layer_click(overlap)
+			var foreground: Dictionary=shell.validation_building_information_snapshot("building_embercourt_charter_flame")
+			check(presses[0]==0 and foreground.open and foreground.mode=="building_info" and foreground.title==foreground.expected_title,"foreground Charter Flame did not own its visible Market overlap")
+			shell._close_town_catalog(false)
+			body=Vector2(0.28,0.60) # Exposed weigh-house facade to the left of the later civic flame.
 		if id=="building_market_square" and stage.validation_building_hotspot_summary("building_veilmourn_obituary_vault").get("visible",false):
 			var overlap: Vector2 = button.get_global_transform_with_canvas()*(body*button.size)
 			var vault = stage._building_hotspots["building_veilmourn_obituary_vault"]
@@ -191,17 +229,19 @@ func inspect_scene_layers(ids: Array = ["building_veilmourn_bell_harbor", "build
 	# Detached view-only cache/negative mapping boundaries, never authored content mutation.
 	var template: Dictionary = stage._town_template
 	stage._town_template=template.duplicate(true)
-	stage._town_template.faction_id="faction_embercourt"
-	check(stage._town_building_texture("building_wayfarers_hall").resource_path==TownRules.building_icon_path("building_wayfarers_hall"),"scenic texture leaked across faction cache keys")
+	var faction: String=stage._town_faction_id()
+	var other_faction := "faction_veilmourn" if faction=="faction_embercourt" else "faction_embercourt"
+	stage._town_template.faction_id=other_faction
+	check(stage._town_building_texture("building_wayfarers_hall").resource_path=="res://art/towns/runtime/scene_layers/%s/building_wayfarers_hall.png" % other_faction,"scenic texture leaked across faction cache keys")
 	stage._town_template=template
 	var manifest: Dictionary = stage._building_scene_art_manifest
 	stage._building_scene_art_manifest=manifest.duplicate(true)
-	stage._building_scene_art_manifest.factions.faction_veilmourn.building_wayfarers_hall.runtime_path="res://missing-declared-town-layer.png"
+	stage._building_scene_art_manifest.factions[faction].building_wayfarers_hall.runtime_path="res://missing-declared-town-layer.png"
 	check(stage._town_building_texture("building_wayfarers_hall")==null,"missing declared art fell back to catalog")
-	stage._building_scene_art_manifest.factions.faction_veilmourn.building_wayfarers_hall={}
+	stage._building_scene_art_manifest.factions[faction].building_wayfarers_hall={}
 	check(stage._town_building_texture("building_wayfarers_hall")==null,"malformed declared art fell back to catalog")
 	stage._building_scene_art_manifest=manifest
-	check(stage._town_building_texture("building_wayfarers_hall").resource_path.contains("scene_layers/faction_veilmourn"),"negative asset cache poisoned restored exact mapping")
+	check(stage._town_building_texture("building_wayfarers_hall").resource_path=="res://art/towns/runtime/scene_layers/%s/building_wayfarers_hall.png" % faction,"negative asset cache poisoned restored exact mapping")
 	check(normalized(session.to_dict())==before,"scene asset inspection mutated gameplay")
 func inspect_market_unbuilt() -> void:
 	var town: Dictionary = TownRules.get_active_town(session)
@@ -223,7 +263,7 @@ func inspect_market_constructed() -> void:
 	await settle()
 	var stage = get_tree().current_scene.get_node("%TownStage")
 	check(stage.validation_building_hotspot_summary("building_market_square").visible,"constructed market disappeared on real saved Town re-entry")
-	check(stage._town_building_texture_path("building_market_square")=="res://art/towns/runtime/scene_layers/faction_veilmourn/building_market_square.png","saved market re-entry lost exact scenic art")
+	check(stage._town_building_texture_path("building_market_square")=="res://art/towns/runtime/scene_layers/%s/building_market_square.png" % stage._town_faction_id(),"saved market re-entry lost exact scenic art")
 	await RenderingServer.frame_post_draw
 	get_viewport().get_texture().get_image().save_png(out.path_join("market_saved_reentry.png"))
 func layer_visibility_fixture() -> void:
@@ -454,11 +494,49 @@ LATE_HARBOR_UPGRADE = r'''
 			check("building_veilmourn_leviathan_sounding" in active.built_buildings,"Court erased the earned Sounding prerequisite from saved progression")
 '''
 
+def embercourt_script(script, *, presentation_only=False):
+    """Reuse the same engine input/save controls, not a second runtime path."""
+    script = script.replace('building_veilmourn_bell_harbor', 'building_muster_yard')
+    script = script.replace('town_veilmourn_bellwake_harbor', 'town_riverwatch')
+    if presentation_only:
+        # The real developed fixture contains the Watch Barracks upgrade.
+        # Preserve it and independently prove that it supersedes the Muster,
+        # whose new layer remains exercised in the real opening above.
+        needle='await inspect_scene_layers(["building_muster_yard", "building_wayfarers_hall", "building_market_square"])'
+        replacement='''check("building_muster_yard" in actual.built_buildings and "building_watch_barracks" in actual.built_buildings,"recorded Riverwatch fixture lost earned base or upgrade")
+	var upgraded_plot: Array=stage._town_building_scene_entries(stage._town_scene_rect()).filter(func(entry):return entry.plot_id=="building_muster_yard")
+	check(upgraded_plot.size()==1 and upgraded_plot[0].visible_building_id=="building_watch_barracks","developed Watch Barracks no longer supersedes Muster Yard")
+	check(not stage.validation_building_hotspot_summary("building_muster_yard").visible,"superseded Muster retains a hotspot")
+	check(stage._town_building_texture_path("building_watch_barracks")==TownRules.building_icon_path("building_watch_barracks"),"opening packet changed unaccepted Watch Barracks art")
+	await inspect_scene_layers(["building_wayfarers_hall","building_market_square"])'''
+        if script.count(needle)!=1:
+            raise ValueError('Missing exact Embercourt developed inspection boundary')
+        script=script.replace(needle,replacement)
+    script = script.replace('await inspect_scene_layers(["building_muster_yard","building_wayfarers_hall","building_veilmourn_harpoon_gantry","building_veilmourn_bell_chain_watch"])',
+                            'await inspect_scene_layers(["building_muster_yard","building_wayfarers_hall"])')
+    # The first affordable Riverwatch order need not be the Market. Select the
+    # actual authored offered action explicitly, retaining its normal commit.
+    script = script.replace('String(a.id).begins_with("build:")', 'String(a.id)=="build:building_market_square"', 1)
+    if not presentation_only:
+        script = script.replace('var paid_before: Dictionary = normalized(session.overworld.resources)',
+                                'var built_before: Array=TownRules.get_active_town(session).built_buildings.duplicate()\n\t\tvar paid_before: Dictionary = normalized(session.overworld.resources)')
+        script = script.replace('var cost: Dictionary = offered[0].cost',
+                                'var cost: Dictionary = offered[0].cost\n\t\tcheck(int(cost.get("gold",0))==1000,"Riverwatch Market authored gold cost changed")\n\t\tfor resource in cost:\n\t\t\tif resource!="gold": check(int(cost[resource])==0,"Riverwatch Market gained a non-gold cost: "+resource)')
+        script = script.replace('await inspect_market_constructed()',
+                                'check(TownRules.get_active_town(session).built_buildings==built_before+[building_id],"Market changed more than its earned built-id append")\n\t\tawait inspect_market_constructed()\n\t\tawait inspect_scene_layers(["building_muster_yard","building_wayfarers_hall","building_market_square"])')
+        # Preserve the legitimate save before the existing detached visibility
+        # fixture. No fixture state is presented as normal construction.
+        script = script.replace('await layer_visibility_fixture()',
+                                'var earned_path: String=SaveService.save_session(session.to_dict(),3)\n\tcheck(earned_path!="" and DirAccess.copy_absolute(earned_path,out.path_join("earned_growth_save.json"))==OK,"could not retain ordinary Market save")\n\tawait layer_visibility_fixture()')
+    return script
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--label', required=True)
     parser.add_argument('--save', type=Path, required=True)
     parser.add_argument('--resolution', choices=['1280x720', '1920x1080', '2048x1079'], required=True)
+    parser.add_argument('--faction', choices=['veilmourn', 'embercourt'], default='veilmourn')
     parser.add_argument('--harbor-growth', action='store_true', help='Build Fog Buoys and Salvage Ledger after Market across real confirmed End Turns')
     parser.add_argument('--exchange-growth', action='store_true', help='Build Ransom Exchange and Mirror Drydock after Market across real confirmed End Turns')
     parser.add_argument('--salt-growth', action='store_true', help='Build Counting House, Fog Buoys, Ledger, Pilot Guild and Saltwake Factor after Market across real confirmed End Turns')
@@ -473,10 +551,14 @@ def main():
         parser.error('select one normal construction sequence per run')
     if args.presentation_only and not args.developed_save:
         parser.error('presentation-only requires an exact --developed-save fixture')
+    if args.faction=='embercourt' and any((args.harbor_growth,args.exchange_growth,args.salt_growth,args.defense_growth,args.memory_growth,args.rigging_magic_growth,args.late_harbor_growth)):
+        parser.error('Bellwake growth sequences cannot run against Embercourt')
     if not args.label or any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789_-' for c in args.label):
         parser.error('fresh lowercase label required')
     save = args.save.resolve(strict=True)
     before_hash = hashlib.sha256(save.read_bytes()).hexdigest()
+    if args.faction=='embercourt' and before_hash!=EMBERCOURT_SAVE_SHA256:
+        parser.error('Embercourt opening requires the exact recorded nonterminal Medium11 Day-1 save')
     if args.late_harbor_growth and before_hash != LATE_HARBOR_SAVE_SHA256:
         parser.error('late-harbor growth requires the exact recorded nonterminal earned Day-14 save')
     if args.memory_growth or args.rigging_magic_growth:
@@ -491,6 +573,8 @@ def main():
             parser.error('late Town growth requires the real nonterminal Day-8 Bellwake prerequisite save')
     developed = args.developed_save.resolve(strict=True) if args.developed_save else None
     developed_hash = hashlib.sha256(developed.read_bytes()).hexdigest() if developed else None
+    if args.faction=='embercourt' and developed and developed_hash!=EMBERCOURT_DEVELOPED_SHA256:
+        parser.error('Embercourt developed composition requires the exact recorded Medium Day-43 fixture')
     owners = ('scenes/town/TownShell.gd','scenes/town/TownStageView.gd','scenes/town/TownBuildingHotspot.gd',
               'scripts/autoload/LiveValidationHarness.gd',
               'content/town_building_scene_art_manifest.json','tests/town_scene_layer_regression.py')
@@ -532,11 +616,11 @@ def main():
             # Inspect the exact recorded Town, whether this is the original
             # terminal-16 fixture or a separately retained ordinary-growth save.
             payload = json.loads(developed.read_text())
-            town = next(t for t in payload['overworld']['towns'] if t.get('town_id')=='town_veilmourn_bellwake_harbor')
+            town = next(t for t in payload['overworld']['towns'] if t.get('town_id')==('town_riverwatch' if args.faction=='embercourt' else 'town_veilmourn_bellwake_harbor'))
             # Inspect visible plot owners, not superseded saved prerequisites.
             # The live renderer and independent reversed-order controls prove
             # ancestry selection; the fixture does not remove any earned ids.
-            inspection_ids = None
+            inspection_ids = EMBERCOURT_IDS if args.faction=='embercourt' else None
         inspection_expression = json.dumps(inspection_ids) if inspection_ids is not None else 'stage._town_building_scene_entries(stage._town_scene_rect()).filter(func(entry):return entry.visible_building_id!="" and not entry.get("embedded_in_base",false)).map(func(entry):return entry.visible_building_id)'
         growth = HARBOR_GROWTH.replace('__GROWTH_IDS__', json.dumps(ids)).replace('__INSPECTION_IDS__', inspection_expression).replace('ordinary_harbor_growth', 'ordinary_'+sequence+'_growth')
         if args.rigging_magic_growth or args.late_harbor_growth:
@@ -563,6 +647,8 @@ def main():
             opening = opening[:start] + '\tawait inspect_scene_layers(["building_veilmourn_bell_harbor","building_wayfarers_hall","building_veilmourn_harpoon_gantry","building_veilmourn_bell_chain_watch"])\n\tawait '+continuation+'()\n' + opening[end:]
             script_text = opening + EXTRA + growth
     script_text = script_text.replace('await inspect("opening")', 'await inspect("opening")\n\tinspect_upgrade_order()')
+    if args.faction=='embercourt':
+        script_text = embercourt_script(script_text, presentation_only=args.presentation_only)
     if args.resolution == '2048x1079':
         script_text = script_text.replace('SettingsService.set_presentation_resolution(OS.get_environment("TOWN_OVERLAY_RESOLUTION"))', 'get_window().content_scale_size = Vector2i(2048,1079)\n\tget_window().size = Vector2i(2048,1079)')
     with tempfile.TemporaryDirectory(prefix='town-layer-probe-', dir=OUTPUT) as temporary, tempfile.TemporaryDirectory(prefix='town-layer-data-', dir='/dev/shm') as data:
@@ -584,7 +670,7 @@ def main():
     reports = [json.loads(line[len(marker):]) for line in lines if line.startswith(marker)]
     report = reports[-1] if reports else {'ok':False,'errors':['missing report']}
     report.update(returncode=code, save_sha256=before_hash, input_unchanged=hashlib.sha256(save.read_bytes()).hexdigest()==before_hash, resolution=args.resolution,
-                  runtime_errors=[s for s in lines if s.startswith(('ERROR:', 'SCRIPT ERROR:')) or 'leaked' in s])
+                  faction=args.faction, runtime_errors=[s for s in lines if s.startswith(('ERROR:', 'SCRIPT ERROR:')) or 'leaked' in s])
     report['source_hashes'] = source_hashes
     report['developed_save_sha256'] = developed_hash
     report['construction_sequence'] = sequence

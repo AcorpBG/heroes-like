@@ -4,6 +4,44 @@ Owner approval: 2026-09-07 full-match presentation continuation. Parent/slice:
 `quality-generated-full-match-20260906` /
 `ux-generated-full-match-presentation-20260906`.
 
+## Embercourt opening packet (2026-09-08)
+
+Three text-only built-in generations supply Riverwatch's original Muster Yard,
+Wayfarers Hall and Market Square layers. Exact prompts are adjacent to the
+unchanged RGBA masters under `faction_embercourt/`; all three explicitly record
+`reference_inputs: []`. Model/version was not exposed. No external game art or
+API fallback was used. Original output identities:
+
+| Building | Built-in output | Source SHA256 |
+| --- | --- | --- |
+| Muster Yard | `exec-5e161a99-f2c8-43d0-ae8a-0a6f49a6976c.png` | `53c09e19ab13788bd7a2d53677ac1efc7772eabfdd80bc316dd960da472f8ce3` |
+| Wayfarers Hall | `exec-985defb2-d710-4207-9d97-89689c511757.png` | `b0c926b8109558b555017c8229eff0d0483c038c36a9342fe08ed78116eb3d5a` |
+| Market Square | `exec-c3cc0cc1-bc42-492c-86b4-851822f78fa6.png` | `0ebb2935cd503cfc188df7c9e217107de96f253004de1c239aaa77692d345974` |
+
+The pipeline's `--faction faction_embercourt` prepares only selected paintings
+and merges exact faction/building rows without resetting earlier factions or
+unselected buildings. Default preparation supports both factions. Alpha-margin
+crop, 512px Lanczos derivatives and mipmaps remain the only image processing.
+Brown RGB shown by the raw preview in alpha-zero pixels is not a visible
+backdrop in-engine. The separate RGB checkerboard extraction attempt is rejected
+and retained only in `embercourt_opening_candidates_20260908/`, never shipped.
+
+Pre-trim scenic bounds: Muster `[215,355,340,226.6666666667]` on the left-bank
+practice court; lodge `[1240,490,305,203.3333333333]` on the right shore;
+Market `[85,530,310,206.6666666667]` on the foreground-left working quay.
+The initial Muster placement overhanging the quay wall was rejected, as was the
+over-raised draft leaving a tent beneath its front edge at 1920x1080. The reviewed
+placement meets the quay edge while retaining the complete practice court.
+Source village, every accepted Veilmourn layer and separate catalog/info icons
+are unchanged. Riverwatch's real developed fixture retains Watch Barracks as
+Muster's visible upgrade and Charter Flame in front of the Market's right edge.
+Later Embercourt catalog paintings are still visually unaccepted. Exact input,
+ordinary 1000-gold Market, complete-save, resolution and platform evidence belongs
+to `docs/generated-full-match-art-repair-report.md`; preparation alone is not
+acceptance of this packet, the faction or the full-match goal.
+
+## Initial Bellwake packet
+
 The production-named PNGs preserve the original generated RGBA masters.
 Adjacent `.prompt.txt` files preserve the exact built-in image_gen prompts;
 the tool did not expose a model/version. The reviewed studies and generation

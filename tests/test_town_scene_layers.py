@@ -24,6 +24,8 @@ def validate_scene_layers(payload=None):
     require(bool(payload.get('owner_approval')) and bool(payload.get('rights')), 'Missing art approval/rights')
     require(payload.get('generation',{}).get('tool')=='built_in_image_gen', 'Missing generated art provenance')
     factions = payload.get('factions', {})
+    required_embercourt = {'building_muster_yard','building_wayfarers_hall','building_market_square'}
+    require(required_embercourt.issubset(factions.get('faction_embercourt',{})), 'Missing accepted Embercourt opening scene mapping')
     bellwake = next(town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['id']=='town_veilmourn_bellwake_harbor')
     required_bellwake = set(bellwake['starting_building_ids'] + bellwake['buildable_building_ids']) - {'building_town_hall'}
     require(required_bellwake.issubset(factions.get('faction_veilmourn',{})), 'Missing constructible Bellwake scene mapping: '+', '.join(sorted(required_bellwake-set(factions.get('faction_veilmourn',{})))))
@@ -90,7 +92,13 @@ def validate_scene_layers(payload=None):
             prompt = ROOT / row.get('prompt_path','').removeprefix('res://')
             prompt_text = prompt.read_text() if prompt.is_file() else ''
             text_only = row.get('reference_inputs') == []
-            require(bool(prompt_text.strip()) and ('image 1' in prompt_text.lower() or (text_only and 'transparent-background rgba png game sprite' in prompt_text.lower())), 'Missing exact generation prompt: '+label)
+            text_lower = prompt_text.lower()
+            text_only_brief = ('transparent-background rgba png game sprite' in text_lower or
+                               ('asset type: original transparent raster building layer' in text_lower and
+                                'genuinely transparent background with a real alpha channel' in text_lower) or
+                               (('town building layer for '+building+'.') in text_lower and
+                                'transparent rgba png' in text_lower))
+            require(bool(prompt_text.strip()) and ('image 1' in text_lower or (text_only and text_only_brief)), 'Missing exact generation prompt: '+label)
             if prompt.is_file():
                 require(hashlib.sha256(prompt.read_bytes()).hexdigest()==row.get('prompt_sha256'), 'Changed generation prompt: '+label)
     return errors
@@ -100,6 +108,21 @@ class TownSceneLayersTests(unittest.TestCase):
         self.payload = json.loads(MANIFEST.read_text())
     def test_production_manifest_and_rasters(self):
         self.assertEqual(validate_scene_layers(), [])
+    def test_every_embercourt_opening_mapping_is_required(self):
+        for building in ('building_muster_yard','building_wayfarers_hall','building_market_square'):
+            with self.subTest(building=building):
+                payload=copy.deepcopy(self.payload)
+                payload['factions']['faction_embercourt'].pop(building,None)
+                self.assertIn('Missing accepted Embercourt opening scene mapping',validate_scene_layers(payload))
+    def test_shared_building_ids_cannot_reuse_another_faction_painting(self):
+        for building in ('building_wayfarers_hall','building_market_square'):
+            with self.subTest(building=building):
+                payload=copy.deepcopy(self.payload)
+                payload['factions']['faction_embercourt'][building]=copy.deepcopy(payload['factions']['faction_veilmourn'][building])
+                errors=validate_scene_layers(payload)
+                self.assertTrue(any('Mismatched scene identity: faction_embercourt' in e for e in errors))
+                self.assertTrue(any('Wrong exact runtime path: faction_embercourt' in e for e in errors))
+                self.assertTrue(any('Shared scene fallback path:' in e for e in errors))
     def test_every_constructible_bellwake_mapping_is_required(self):
         town = next(t for t in json.loads((ROOT/'content/towns.json').read_text())['items'] if t['id']=='town_veilmourn_bellwake_harbor')
         for building in set(town['starting_building_ids']+town['buildable_building_ids'])-{'building_town_hall'}:
