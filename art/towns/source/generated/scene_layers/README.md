@@ -4,6 +4,38 @@ Owner approval: 2026-09-07 full-match presentation continuation. Parent/slice:
 `quality-generated-full-match-20260906` /
 `ux-generated-full-match-presentation-20260906`.
 
+## Embercourt supply/magic packet (2026-09-08; validated checkpoint)
+
+Five original built-in text-only generations extend the earned Riverwatch
+Day-5 scene. Exact prompts and unchanged RGBA masters are in
+`faction_embercourt/`; each manifest row records `reference_inputs: []`, its
+source/trim/runtime hashes and generation date. The model/version was not exposed.
+
+| Building | Built-in output | Source SHA256 |
+| --- | --- | --- |
+| River Granary Exchange | `exec-534a0f2e-1079-4230-864e-0f20a5c0eca4.png` | `e017aa529e8b362b4fab272990569a06262670208adddee0d504c1930a80c797` |
+| Quartermaster Depot | `exec-b5082753-3dfb-4da2-ac3e-53456aa37596.png` | `44b3994b3cdee69d1540f4cfa51e881574b33442d2258952c2c85ca32c3746cb` |
+| Lantern Archive | `exec-b655b21c-a2eb-4f1c-98b7-ca467823c4a2.png` | `4e3f3a2c4281add1f8435e594b8346616f077aa34608aa42ff5b2ec34100fbe5` |
+| Starseer Annex | `exec-b512b304-ec17-4beb-b9f2-af451e108020.png` | `a276bcce673d063d35ad5505633a9325d021ac49a6f0344775ce23afcaeb01b0` |
+| Citadel Pikehall | `exec-1e6ff2fe-3171-4384-a7f3-522d7ae928c3.png` | `6e0f60dacccf22ff583401c8dc152adf3087c645f40b85c34b6870b867c08306` |
+
+An initial Archive (`exec-85e6721e-d1b4-41fc-aa14-c21d3b16ece0.png`) used a
+1312x1199 composition inconsistent with the landscape Annex site. An edit of
+the actual Annex (`exec-c5ce4e77-ef52-43b0-a64b-5393067c9cac.png`) produced RGB
+with a baked checkerboard. Both and their exact prompts are retained only in
+`embercourt_supply_candidates/` under the quality artifacts; neither is
+registered or imported. The selected Archive is a fresh original text-only
+painting informed by the inspected Annex, not a pixel-identical edit.
+Both stages use identical full-master bounds and ground anchor. Derivatives
+use only the established transparent-margin crop, 512px Lanczos and mipmap
+pipeline. All 29 earlier paintings, villages, catalog icons and runtime/rules
+remain unchanged. Three inspected source resolutions and each official
+Linux/Windows release pass 16654 paid-growth and 8349 developed-input checks;
+complete saves match outside only the save clock. Exact source/package,
+preservation and cleanup receipts are recorded in the art-repair report.
+Windows is headless Wine, not physical GPU certification. This accepts only
+these five paintings; later Embercourt buildings and the wider goal remain open.
+
 ## Embercourt early-growth packet (2026-09-08; validated checkpoint)
 
 Four original text-only built-in generations extend Riverwatch's opening.

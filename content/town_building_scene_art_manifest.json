@@ -1333,6 +1333,236 @@
         "curation": "Inspected normal paid Stone/Watch/Bowyer/Beacon progression and the recorded developed Riverwatch composition at 1280x720. Both upgrade pairs retain their scenic site and ground anchor. Three-resolution input/save and official-platform acceptance is recorded separately in the art-repair report; later catalog paintings remain unaccepted.",
         "reference_inputs": [],
         "generation_date": "2026-09-08"
+      },
+      "building_river_granary_exchange": {
+        "asset_id": "faction_embercourt_building_river_granary_exchange",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_river_granary_exchange.png",
+        "source_sha256": "e017aa529e8b362b4fab272990569a06262670208adddee0d504c1930a80c797",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          15,
+          1529,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_river_granary_exchange.png",
+        "trimmed_sha256": "be156fee1dc2fb468654b2e48a41bb690581c7d930d82c8939d6fe84918de02d",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_river_granary_exchange.png",
+        "runtime_sha256": "ace3fbb9ceff713f1f773b5721d00bcef92211fc36efb8d862b9b8b14a4498ed",
+        "runtime_size": [
+          512,
+          338
+        ],
+        "normalized_rect": [
+          0.025,
+          0.3418185763888889,
+          0.16798095703125,
+          0.1970703125
+        ],
+        "ground_anchor": [
+          0.1125,
+          0.5255555555555556
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Bonded grain warehouse joins the left-bank settlement behind the Muster/Watch court; its loading floor meets the existing shore.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_river_granary_exchange.prompt.txt",
+        "prompt_sha256": "2921b4263acf650004b046069beb297539adba765b38324ea9e25590e011d29e",
+        "curation": "Original text-only paintings from the inspected Riverwatch panorama and normal paid-growth draft. Revised developed composition inspected at 1280x720: observatory on the rear left-bank terrace, with exposed supply roof and right-bank pike hall. Archive and Annex share source-space bounds and ground anchor but are not pixel-identical edits. Final three-resolution paid-growth, input/save and platform acceptance is recorded separately in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      },
+      "building_quartermasters_depot": {
+        "asset_id": "faction_embercourt_building_quartermasters_depot",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_quartermasters_depot.png",
+        "source_sha256": "44b3994b3cdee69d1540f4cfa51e881574b33442d2258952c2c85ca32c3746cb",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          31,
+          8,
+          1514,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_quartermasters_depot.png",
+        "trimmed_sha256": "9c7a8b975abcfff488398151bc332fd3e600b49f41cc527510f15652a80f39f1",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_quartermasters_depot.png",
+        "runtime_sha256": "86e6534398f4c3ee90307c7c16aae5aee720eb28cca678da6c56c84e67e5b486",
+        "runtime_size": [
+          512,
+          351
+        ],
+        "normalized_rect": [
+          0.2530904134114583,
+          0.440306712962963,
+          0.14784138997395835,
+          0.18006365740740743
+        ],
+        "ground_anchor": [
+          0.31875,
+          0.6066666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Low supply lodge stands by the left lock buttress, behind the Watch court, with its stores facing the quay approach.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_quartermasters_depot.prompt.txt",
+        "prompt_sha256": "83b78db06ab3514cb371e694bc0a19baebedc1aca38bad96d7a125a9d80dec28",
+        "curation": "Original text-only paintings from the inspected Riverwatch panorama and normal paid-growth draft. Revised developed composition inspected at 1280x720: observatory on the rear left-bank terrace, with exposed supply roof and right-bank pike hall. Archive and Annex share source-space bounds and ground anchor but are not pixel-identical edits. Final three-resolution paid-growth, input/save and platform acceptance is recorded separately in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      },
+      "building_lantern_archive": {
+        "asset_id": "faction_embercourt_building_lantern_archive",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_lantern_archive.png",
+        "source_sha256": "4e3f3a2c4281add1f8435e594b8346616f077aa34608aa42ff5b2ec34100fbe5",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          263,
+          21,
+          1490,
+          1007
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_lantern_archive.png",
+        "trimmed_sha256": "b9f6fda7632cd75840b894e9d49e1a0fda6aececefe236a37cb14bce30fb22ce",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_lantern_archive.png",
+        "runtime_sha256": "1e712e38b9747c05699bbfbd162a72abd04fc396198298b63bf9b516cc6b09bd",
+        "runtime_size": [
+          512,
+          411
+        ],
+        "normalized_rect": [
+          0.0321044921875,
+          0.23233506944444443,
+          0.1497802734375,
+          0.21397569444444445
+        ],
+        "ground_anchor": [
+          0.1125,
+          0.42777777777777776
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Civic records lodge rises on the rear left-bank terrace behind the granary, clear of the command rail; the observatory retains this same site.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_lantern_archive.prompt.txt",
+        "prompt_sha256": "fe195aa5d74f38f4d43db7e9be51056f1ca8ef42a6d468d3ead5ebb0372b3bc6",
+        "curation": "Original text-only paintings from the inspected Riverwatch panorama and normal paid-growth draft. Revised developed composition inspected at 1280x720: observatory on the rear left-bank terrace, with exposed supply roof and right-bank pike hall. Archive and Annex share source-space bounds and ground anchor but are not pixel-identical edits. Final three-resolution paid-growth, input/save and platform acceptance is recorded separately in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      },
+      "building_starseer_annex": {
+        "asset_id": "faction_embercourt_building_starseer_annex",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_starseer_annex.png",
+        "source_sha256": "a276bcce673d063d35ad5505633a9325d021ac49a6f0344775ce23afcaeb01b0",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          57,
+          0,
+          1510,
+          962
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_starseer_annex.png",
+        "trimmed_sha256": "17c206ac38ce252a10feb35b8c6198719708f8a1d25c2bd10324f09092fe0562",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_starseer_annex.png",
+        "runtime_sha256": "5cb7ec0508dec63b91ab76c0d305bfbdc9f68b0115b1f0a92b9a359830028eb3",
+        "runtime_size": [
+          512,
+          339
+        ],
+        "normalized_rect": [
+          0.0069580078125,
+          0.22777777777777777,
+          0.1773681640625,
+          0.2087673611111111
+        ],
+        "ground_anchor": [
+          0.1125,
+          0.42777777777777776
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Expanded records lodge adds a book wing and observation balcony on the identical rear left-bank Archive terrace; its tower remains visible above the granary and away from controls.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_starseer_annex.prompt.txt",
+        "prompt_sha256": "ea03afdd34e599ae3d6ef12088fb4933a12d9db0e661a551baf276078cf36e5c",
+        "curation": "Original text-only paintings from the inspected Riverwatch panorama and normal paid-growth draft. Revised developed composition inspected at 1280x720: observatory on the rear left-bank terrace, with exposed supply roof and right-bank pike hall. Archive and Annex share source-space bounds and ground anchor but are not pixel-identical edits. Final three-resolution paid-growth, input/save and platform acceptance is recorded separately in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      },
+      "building_citadel_pikehall": {
+        "asset_id": "faction_embercourt_building_citadel_pikehall",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_citadel_pikehall.png",
+        "source_sha256": "6e0f60dacccf22ff583401c8dc152adf3087c645f40b85c34b6870b867c08306",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          27,
+          32,
+          1505,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_citadel_pikehall.png",
+        "trimmed_sha256": "4702af3cff293e238fdf9866b8693eef29cafc80c9c9269ccf35b37553424af5",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_citadel_pikehall.png",
+        "runtime_sha256": "b28f3a5f811afff6a8bd2470dfcc6cf22a2fa46997e301e44ec39485333c11bd",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.453021240234375,
+          0.29303240740740744,
+          0.16538492838541669,
+          0.197337962962963
+        ],
+        "ground_anchor": [
+          0.546875,
+          0.4777777777777778
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Low drilled pike hall stands on the right-bank slope behind the bowyer/beacon yard, leaving the main civic entrance and navigation channel intact.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_citadel_pikehall.prompt.txt",
+        "prompt_sha256": "80c3be2db699a96ec2d2c7a2d2451be250050d70969abaf199a62283d699895e",
+        "curation": "Original text-only paintings from the inspected Riverwatch panorama and normal paid-growth draft. Revised developed composition inspected at 1280x720: observatory on the rear left-bank terrace, with exposed supply roof and right-bank pike hall. Archive and Annex share source-space bounds and ground anchor but are not pixel-identical edits. Final three-resolution paid-growth, input/save and platform acceptance is recorded separately in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
       }
     }
   }

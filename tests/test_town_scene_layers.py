@@ -28,6 +28,8 @@ def validate_scene_layers(payload=None):
     require(required_embercourt.issubset(factions.get('faction_embercourt',{})), 'Missing accepted Embercourt opening scene mapping')
     required_growth = {'building_stone_store','building_watch_barracks','building_bowyer_lodge','building_beacon_range'}
     require(required_growth.issubset(factions.get('faction_embercourt',{})), 'Missing Embercourt early-growth scene mapping')
+    required_supply = {'building_river_granary_exchange','building_quartermasters_depot','building_lantern_archive','building_starseer_annex','building_citadel_pikehall'}
+    require(required_supply.issubset(factions.get('faction_embercourt',{})), 'Missing Embercourt supply/magic scene mapping')
     bellwake = next(town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['id']=='town_veilmourn_bellwake_harbor')
     required_bellwake = set(bellwake['starting_building_ids'] + bellwake['buildable_building_ids']) - {'building_town_hall'}
     require(required_bellwake.issubset(factions.get('faction_veilmourn',{})), 'Missing constructible Bellwake scene mapping: '+', '.join(sorted(required_bellwake-set(factions.get('faction_veilmourn',{})))))
@@ -37,7 +39,7 @@ def validate_scene_layers(payload=None):
     pairs = [(sounding, court, 'Memory-Rite Court', 'Sounding')]
     embercourt = factions.get('faction_embercourt',{})
     pairs += [(embercourt.get(base,{}),embercourt.get(upgrade,{}),upgrade,base) for base,upgrade in
-              [('building_muster_yard','building_watch_barracks'),('building_bowyer_lodge','building_beacon_range')]]
+              [('building_muster_yard','building_watch_barracks'),('building_bowyer_lodge','building_beacon_range'),('building_lantern_archive','building_starseer_annex')]]
     for sounding,court,upgrade_name,base_name in pairs:
         if not sounding or not court:
             continue
@@ -104,6 +106,8 @@ def validate_scene_layers(payload=None):
             text_only_brief = ('transparent-background rgba png game sprite' in text_lower or
                                ('asset type: original transparent raster building layer' in text_lower and
                                 'genuinely transparent background with a real alpha channel' in text_lower) or
+                               ('asset type: original transparent raster' in text_lower and
+                                'genuinely transparent rgba' in text_lower and 'constraints:' in text_lower) or
                                (('town building layer for '+building+'.') in text_lower and
                                 'transparent rgba png' in text_lower))
             require(bool(prompt_text.strip()) and ('image 1' in text_lower or (text_only and text_only_brief)), 'Missing exact generation prompt: '+label)
@@ -138,12 +142,18 @@ class TownSceneLayersTests(unittest.TestCase):
                 payload['factions']['faction_embercourt'].pop(building,None)
                 self.assertIn('Missing Embercourt early-growth scene mapping',validate_scene_layers(payload))
     def test_embercourt_upgrades_cannot_move_site_or_ground(self):
-        for base,upgrade in [('building_muster_yard','building_watch_barracks'),('building_bowyer_lodge','building_beacon_range')]:
+        for base,upgrade in [('building_muster_yard','building_watch_barracks'),('building_bowyer_lodge','building_beacon_range'),('building_lantern_archive','building_starseer_annex')]:
             for field,message in [('normalized_rect','scenic site'),('ground_anchor','ground anchor')]:
                 with self.subTest(upgrade=upgrade,field=field):
                     payload=copy.deepcopy(self.payload)
                     payload['factions']['faction_embercourt'][upgrade][field][0]+=0.01
                     self.assertIn(upgrade+' moved the '+base+' '+message,validate_scene_layers(payload))
+    def test_every_embercourt_supply_mapping_is_required(self):
+        for building in ('building_river_granary_exchange','building_quartermasters_depot','building_lantern_archive','building_starseer_annex','building_citadel_pikehall'):
+            with self.subTest(building=building):
+                payload=copy.deepcopy(self.payload)
+                payload['factions']['faction_embercourt'].pop(building,None)
+                self.assertIn('Missing Embercourt supply/magic scene mapping',validate_scene_layers(payload))
     def test_every_constructible_bellwake_mapping_is_required(self):
         town = next(t for t in json.loads((ROOT/'content/towns.json').read_text())['items'] if t['id']=='town_veilmourn_bellwake_harbor')
         for building in set(town['starting_building_ids']+town['buildable_building_ids'])-{'building_town_hall'}:
