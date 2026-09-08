@@ -256,3 +256,60 @@ Windows is headless Wine; full results and remaining limits are in the report.
 Rollback: the five new source/prompt/trim/runtime/import additions and their exact
 pipeline/manifest/test records; no gameplay or save migration. Remaining faction,
 upgrade and higher-tier Bellwake art is not accepted by these five layers.
+
+## Late-harbor continuation — validated
+
+Five original built-in imagegen outputs, generated 2026-09-08, are preserved as
+RGBA masters with adjacent exact prompts. Model/version was not exposed. Source,
+trimmed and runtime hashes, source-space bounds and depth anchors are locked by
+the existing scene manifest and preparation pipeline.
+
+| Building | Selected original output | Source SHA256 |
+| --- | --- | --- |
+| Drowned Map Room | `exec-933713c3-5142-44dc-91a1-c91705193fd6.png` | `9379e7472873d31c86fe378b7d318d5cddd9daf059e676b5f077b448d8fed0ac` |
+| Memory Anchor | `exec-9c88849a-d536-49b9-8c8e-9d83dbd041e3.png` | `54f74fa81dc09706aeee43ad48cd72c4283f01b971b4ab1635fd2ff27465cb8e` |
+| Leviathan Sounding | `exec-02c1d25c-9d10-4d65-a8ef-81e939e1b514.png` | `4a4bf8919b772d8d85812ce1be4146b99b3298a3e1d4c85a1b7618aef317d8e6` |
+| Drowned Admiralty | `exec-8188d278-6a3c-4921-bc44-56b3e1c1cb2a.png` | `5620b5cee9a562b6bc27c0fa6fd54c818e857c73b8e2ba1324237f2264f9f91b` |
+| Memory-Rite Court | `exec-53724cef-48d9-469c-b880-5b9d21794ebb.png` | `cb03c475af5513a0dc8fcef82b63197cb3ad49db06c06efa107d6b7a76acab8d` |
+
+Brief authority: original Veilmourn village, worldbuilding Veil Coast/visual
+identity, faction-bible Veilmourn Town Feel/architecture and exact authored
+building identities. The Map Room's first call used the original village,
+earned-Day-14 Town screenshot and exact original catalog icon as references;
+its selected output is a built-in alpha extraction of that initial RGB painting
+(`exec-b774272b-4cdc-414f-a4ad-b6c1bc8fdb16.png`). Both exact prompts are retained.
+The other four selected calls were text-only, recorded as `reference_inputs: []`.
+No third-party game images or API fallback were used.
+
+Court image-edit/extraction attempts `exec-1da4e887-bc88-45b4-af95-69ec1f99dfaf`,
+`exec-6ebb49ee-ade0-4718-9c72-b84f073ce190`,
+`exec-d5fc41a4-e914-49e3-96ae-11c070099995` and
+`exec-59b518fb-5079-493b-9dbc-93bf450b6242` were rejected as opaque RGB with
+painted checkerboards. The selected Court is a fresh transparent painting
+specified from the inspected Sounding composition, not a pixel-identical edit.
+Both use the same full-master scenic bounds and ground anchor. The thin jetty,
+paired acoustic horns and rightward shore approach identify the same site;
+the Court adds its central ritual canopy, mirrors and salt rails.
+
+The chart house joins the inner-left shore behind the sail workshop; the narrow
+anchor stands on the counting-house quay; the Admiralty rises behind Wayfarers
+Hall. Processing remains transparent-margin crop and aspect-preserving 512px
+Lanczos reduction with mipmaps; no generated geometry, recoloring or palette
+modulation. All seventeen earlier scene rows/paintings, village, separate catalog
+icons, building rules and saves remain unchanged. The art-repair report owns
+actual composition, paid construction/upgrade, input/save and platform results;
+candidate preparation alone is not acceptance or completion of other factions.
+
+Source acceptance: ordinary earned-Day-14-to-30 construction passes 51490 checks,
+including same-site Court replacement and full input/save ownership. Complete
+saved bytes match the old-renderer control except its one wall-clock field.
+All three developed resolutions and actual paid construction/upgrade captures
+were visually inspected. Existing Town reports and 88 focused Python tests pass.
+The same complete replay passes 51490 checks in each official Linux and
+Windows/Wine release. All four final saves match byte-for-byte except the single
+save timestamp. Normal platform startup/generated-entry, repository/diff and
+5180-member package checks pass; both PCKs are 243281500 bytes. Windows omits
+only paired frame/capture operations and is not physical GPU certification.
+The art-repair report records exact commands, hashes and limits. All 22 Bellwake
+scene layers are accepted; other factions and the full presentation goal remain
+unfinished. Embercourt candidates remain separate preparation, not shipped art.

@@ -1360,6 +1360,29 @@ func _town_building_texture_path(building_id: String) -> String:
 		return String(_town_scene_layer(building_id).get("runtime_path", ""))
 	return TownRulesScript.building_icon_path(building_id)
 
+func _visible_town_plot_building_id(variant_ids: Array, built_ids: Array) -> String:
+	# Plot arrays define membership, not upgrade precedence. Both prerequisite
+	# and upgrade remain in saved built ids; only their presentation is replaced.
+	var superseded := {}
+	if variant_ids.size() > 1:
+		for variant_value in variant_ids:
+			var variant_id := String(variant_value)
+			if variant_id not in built_ids:
+				continue
+			var ancestor := String(ContentService.get_building(variant_id).get("upgrade_from", ""))
+			var visited := {}
+			while ancestor != "" and not visited.has(ancestor):
+				visited[ancestor] = true
+				superseded[ancestor] = true
+				ancestor = String(ContentService.get_building(ancestor).get("upgrade_from", ""))
+	var visible_id := ""
+	for variant_value in variant_ids:
+		var variant_id := String(variant_value)
+		if variant_id in built_ids and not superseded.has(variant_id):
+			# Preserve existing ordering for unrelated/incomparable variants.
+			visible_id = variant_id
+	return visible_id
+
 func _town_building_scene_entries(scene_rect: Rect2) -> Array:
 	var faction_layout := _building_scene_faction_layout()
 	var plots: Array = faction_layout.get("plots", []) if faction_layout.get("plots", []) is Array else []
@@ -1383,11 +1406,7 @@ func _town_building_scene_entries(scene_rect: Rect2) -> Array:
 				variant_ids.append(building_id)
 		if variant_ids.is_empty():
 			continue
-		var visible_building_id := ""
-		for variant_id_value in variant_ids:
-			var variant_id := String(variant_id_value)
-			if variant_id in built_ids:
-				visible_building_id = variant_id
+		var visible_building_id := _visible_town_plot_building_id(variant_ids, built_ids)
 		var anchor_values: Array = plot.get("anchor", []) if plot.get("anchor", []) is Array else []
 		if anchor_values.size() != 2:
 			continue

@@ -24,6 +24,25 @@ def validate_scene_layers(payload=None):
     require(bool(payload.get('owner_approval')) and bool(payload.get('rights')), 'Missing art approval/rights')
     require(payload.get('generation',{}).get('tool')=='built_in_image_gen', 'Missing generated art provenance')
     factions = payload.get('factions', {})
+    bellwake = next(town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['id']=='town_veilmourn_bellwake_harbor')
+    required_bellwake = set(bellwake['starting_building_ids'] + bellwake['buildable_building_ids']) - {'building_town_hall'}
+    require(required_bellwake.issubset(factions.get('faction_veilmourn',{})), 'Missing constructible Bellwake scene mapping: '+', '.join(sorted(required_bellwake-set(factions.get('faction_veilmourn',{})))))
+    veilmourn = factions.get('faction_veilmourn',{})
+    sounding = veilmourn.get('building_veilmourn_leviathan_sounding',{})
+    court = veilmourn.get('building_veilmourn_memory_rite_court',{})
+    if sounding and court:
+        # Alpha crops may differ, but both full master canvases must occupy the
+        # same scenic site. Compare reconstructed pre-crop bounds, not pixels.
+        def site(row):
+            rect, crop, size = row.get('normalized_rect',[]), row.get('trim_box',[]), row.get('source_size',[])
+            if len(rect)!=4 or len(crop)!=4 or len(size)!=2 or crop[2]<=crop[0] or crop[3]<=crop[1]:
+                return None
+            width = rect[2]*1600*size[0]/(crop[2]-crop[0])
+            height = rect[3]*900*size[1]/(crop[3]-crop[1])
+            return [rect[0]*1600-width*crop[0]/size[0],rect[1]*900-height*crop[1]/size[1],width,height]
+        first, upgrade = site(sounding), site(court)
+        require(first is not None and upgrade is not None and all(abs(a-b)<0.001 for a,b in zip(first,upgrade)), 'Memory-Rite Court moved the Sounding scenic site')
+        require(sounding.get('ground_anchor')==court.get('ground_anchor'), 'Memory-Rite Court moved the Sounding ground anchor')
     require(set(factions.get('faction_veilmourn',{})) >= {'building_veilmourn_black_sail_loft','building_veilmourn_tideglass_chapel'}, 'Missing accepted Bellwake rigging/magic scene mapping')
     require(set(factions.get('faction_veilmourn',{})) >= {'building_veilmourn_harpoon_gantry','building_veilmourn_bell_chain_watch','building_veilmourn_obituary_vault','building_veilmourn_wake_oratory','building_veilmourn_mistgate_slip'}, 'Missing accepted Bellwake defense/memory scene mapping')
     require(set(factions.get('faction_veilmourn',{})) >= {'building_veilmourn_salt_counting_house','building_veilmourn_mourner_pilot_guild','building_veilmourn_saltwake_factor'}, 'Missing accepted Bellwake salt/pilot scene mapping')
@@ -81,6 +100,29 @@ class TownSceneLayersTests(unittest.TestCase):
         self.payload = json.loads(MANIFEST.read_text())
     def test_production_manifest_and_rasters(self):
         self.assertEqual(validate_scene_layers(), [])
+    def test_every_constructible_bellwake_mapping_is_required(self):
+        town = next(t for t in json.loads((ROOT/'content/towns.json').read_text())['items'] if t['id']=='town_veilmourn_bellwake_harbor')
+        for building in set(town['starting_building_ids']+town['buildable_building_ids'])-{'building_town_hall'}:
+            with self.subTest(building=building):
+                payload=copy.deepcopy(self.payload)
+                payload['factions']['faction_veilmourn'].pop(building, None)
+                self.assertTrue(any(e.startswith('Missing constructible Bellwake scene mapping:') and building in e for e in validate_scene_layers(payload)))
+    def test_upgrade_site_relocation_is_rejected(self):
+        veilmourn=self.payload['factions']['faction_veilmourn']
+        # The production check requires both actual paintings. This synthetic
+        # row isolates the negative geometry control even before art import.
+        base=copy.deepcopy(veilmourn.get('building_veilmourn_leviathan_sounding',veilmourn['building_wayfarers_hall']))
+        veilmourn['building_veilmourn_leviathan_sounding']=base
+        veilmourn['building_veilmourn_memory_rite_court']=copy.deepcopy(base)
+        veilmourn['building_veilmourn_memory_rite_court']['normalized_rect'][0]+=0.01
+        self.assertIn('Memory-Rite Court moved the Sounding scenic site',validate_scene_layers(self.payload))
+    def test_upgrade_ground_anchor_change_is_rejected(self):
+        veilmourn=self.payload['factions']['faction_veilmourn']
+        base=copy.deepcopy(veilmourn.get('building_veilmourn_leviathan_sounding',veilmourn['building_wayfarers_hall']))
+        veilmourn['building_veilmourn_leviathan_sounding']=base
+        veilmourn['building_veilmourn_memory_rite_court']=copy.deepcopy(base)
+        veilmourn['building_veilmourn_memory_rite_court']['ground_anchor'][1]+=0.01
+        self.assertIn('Memory-Rite Court moved the Sounding ground anchor',validate_scene_layers(self.payload))
     def test_missing_mapping_is_rejected(self):
         del self.payload['factions']['faction_veilmourn']['building_wayfarers_hall']
         self.assertIn('Missing accepted Bellwake scene mapping', validate_scene_layers(self.payload))
