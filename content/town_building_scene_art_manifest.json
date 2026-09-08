@@ -1149,6 +1149,190 @@
         "curation": "Inspected original opening, ordinary Market purchase and developed Riverwatch composition at 1280x720. Exact three-resolution input/save and platform acceptance is recorded separately in the art-repair report; other Embercourt catalog layers remain unaccepted.",
         "reference_inputs": [],
         "generation_date": "2026-09-08"
+      },
+      "building_stone_store": {
+        "asset_id": "faction_embercourt_building_stone_store",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_stone_store.png",
+        "source_sha256": "b2d9736d1fe36502c5eb549bd87f6c0bf6491b0365d9c9eff1802f2708a190f5",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          33,
+          0,
+          1515,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_stone_store.png",
+        "trimmed_sha256": "f2b42eabc39d079fb00102673073abab7a7dace26b6beb4c8c4b6a1ca0ae8083",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_stone_store.png",
+        "runtime_sha256": "534c19a591e1714af088054d567c418423b0918d9bba01cc36c50de7c2469145",
+        "runtime_size": [
+          512,
+          354
+        ],
+        "normalized_rect": [
+          0.797509765625,
+          0.3977777777777778,
+          0.16884765625,
+          0.2074074074074074
+        ],
+        "ground_anchor": [
+          0.88125,
+          0.5966666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Low masonry reserve stands on the right-bank ground behind Wayfarers Hall, with open storage bays facing the working shore.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_stone_store.prompt.txt",
+        "prompt_sha256": "2536fa577879e3065837f7123e5686d5aa9fa5a27be0c5d3414dff40bc532c3a",
+        "curation": "Inspected normal paid Stone/Watch/Bowyer/Beacon progression and the recorded developed Riverwatch composition at 1280x720. Both upgrade pairs retain their scenic site and ground anchor. Three-resolution input/save and official-platform acceptance is recorded separately in the art-repair report; later catalog paintings remain unaccepted.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      },
+      "building_watch_barracks": {
+        "asset_id": "faction_embercourt_building_watch_barracks",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_watch_barracks.png",
+        "source_sha256": "285de7e09f4c5c559c2505df5fb40f30041bd2775640ddf6ef8fbb56b0fd7ca3",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          25,
+          9,
+          1524,
+          992
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_watch_barracks.png",
+        "trimmed_sha256": "cc0dd764c6fd05821e85aff23891a65912f4ff42bd49343fff3e4d0aca80ca68",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_watch_barracks.png",
+        "runtime_sha256": "7e75c17ff4c8331af537fc5254652c03928fd7d790bf59def4c53a4b78997637",
+        "runtime_size": [
+          512,
+          336
+        ],
+        "normalized_rect": [
+          0.13783365885416665,
+          0.39665798611111114,
+          0.20738118489583332,
+          0.2417679398148148
+        ],
+        "ground_anchor": [
+          0.24375,
+          0.6277777777777778
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Permanent masonry quarters replace the Muster Yard on the same left-bank court and ground anchor; preserve the original quay and canal.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_watch_barracks.prompt.txt",
+        "prompt_sha256": "837c4af6f2973a81e4be210f90452a38644fe672e3e941b6e0ef8238c091d834",
+        "curation": "Inspected normal paid Stone/Watch/Bowyer/Beacon progression and the recorded developed Riverwatch composition at 1280x720. Both upgrade pairs retain their scenic site and ground anchor. Three-resolution input/save and official-platform acceptance is recorded separately in the art-repair report; later catalog paintings remain unaccepted.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      },
+      "building_bowyer_lodge": {
+        "asset_id": "faction_embercourt_building_bowyer_lodge",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_bowyer_lodge.png",
+        "source_sha256": "5218717d3845925529be66aae7d0d9da52b6945ca800d2a48d267b490619f752",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1530,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_bowyer_lodge.png",
+        "trimmed_sha256": "730b4291b1b6e2e5031fde3dd41ed963d333357ed45e0bb5dd1680b2d953487c",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_bowyer_lodge.png",
+        "runtime_sha256": "7b26b8ebf102b0f4681beb2869db99f08dc82ec5ada69d636e3769fe31cc0ada",
+        "runtime_size": [
+          512,
+          343
+        ],
+        "normalized_rect": [
+          0.49375,
+          0.42,
+          0.1680908203125,
+          0.2
+        ],
+        "ground_anchor": [
+          0.578125,
+          0.6133333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Bow-making workshop and firing lane stand on the right bank west of the civic hall, above the lock-side shore wall; preserve the main hall entrance.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_bowyer_lodge.prompt.txt",
+        "prompt_sha256": "2040e9fec0aafbdd7aa9c1db49f14020b5e115f77c9313eae221792ce0f5016a",
+        "curation": "Inspected normal paid Stone/Watch/Bowyer/Beacon progression and the recorded developed Riverwatch composition at 1280x720. Both upgrade pairs retain their scenic site and ground anchor. Three-resolution input/save and official-platform acceptance is recorded separately in the art-repair report; later catalog paintings remain unaccepted.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      },
+      "building_beacon_range": {
+        "asset_id": "faction_embercourt_building_beacon_range",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_beacon_range.png",
+        "source_sha256": "dd681cc83638e73a2809f4ad8082d6d08ee0345c20bbfa7d391d39486ccdb0b9",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          6,
+          1535,
+          988
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_beacon_range.png",
+        "trimmed_sha256": "aacaae41642eb253ed5b81fadf96129fd32a0ac8dea8ce0e90a4d4a79f2738e6",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_beacon_range.png",
+        "runtime_sha256": "dfa64a451ab6632f8a4a65ddf9b0216e708feddec8b4d0a9fed6506fef95f153",
+        "runtime_size": [
+          512,
+          328
+        ],
+        "normalized_rect": [
+          0.49375,
+          0.421171875,
+          0.16864013671875,
+          0.191796875
+        ],
+        "ground_anchor": [
+          0.578125,
+          0.6133333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Issue loft and signal tower upgrade the Bowyer workshop and firing lane on the identical right-bank site and ground anchor.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_beacon_range.prompt.txt",
+        "prompt_sha256": "c1d1ac2ad81d0fcba95800064847cb2f23bd4d9061368a34b2ac3044c9033172",
+        "curation": "Inspected normal paid Stone/Watch/Bowyer/Beacon progression and the recorded developed Riverwatch composition at 1280x720. Both upgrade pairs retain their scenic site and ground anchor. Three-resolution input/save and official-platform acceptance is recorded separately in the art-repair report; later catalog paintings remain unaccepted.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
       }
     }
   }

@@ -12,6 +12,40 @@ import packaged_town_scene_layer_regression as packaged
 
 
 class EmbercourtSequenceTests(unittest.TestCase):
+    def test_growth_rejects_wrong_earned_save_before_launch(self):
+        with tempfile.TemporaryDirectory(prefix='town-ember-growth-') as temporary:
+            save=Path(temporary)/'wrong.json'
+            save.write_text('{}\n')
+            args=['probe','--faction','embercourt','--embercourt-growth','--save',str(save),'--resolution','1280x720','--label','unit_wrong_growth']
+            with patch('sys.argv',args), patch.object(layers,'run_probe') as run, contextlib.redirect_stderr(io.StringIO()) as stderr, self.assertRaises(SystemExit) as stop:
+                layers.main()
+            self.assertEqual(stop.exception.code,2)
+            self.assertIn('exact earned nonterminal Medium11 Market save',stderr.getvalue())
+            run.assert_not_called()
+
+    def test_growth_rejects_wrong_faction_or_second_sequence(self):
+        for flags,message in [([], 'requires --faction embercourt'), (['--faction','embercourt','--harbor-growth'],'select one normal construction sequence')]:
+            args=['probe','--embercourt-growth','--save','/nonexistent.json','--resolution','1280x720','--label','unit_wrong_growth']+flags
+            with patch('sys.argv',args), patch.object(layers,'run_probe') as run, contextlib.redirect_stderr(io.StringIO()) as stderr, self.assertRaises(SystemExit) as stop:
+                layers.main()
+            self.assertEqual(stop.exception.code,2)
+            self.assertIn(message,stderr.getvalue())
+            run.assert_not_called()
+
+    def test_growth_keeps_paid_daily_save_and_upgrade_controls_in_release(self):
+        script=layers.embercourt_growth_script()
+        self.assertNotIn('__GROWTH_IDS__',script)
+        self.assertNotIn('__INSPECTION_IDS__',script)
+        self.assertNotIn('await layer_visibility_fixture()',script)
+        for token in ('validation_request_end_turn()', 'validation_confirm_end_turn()', 'validation_select_build_plan(id)',
+                      'validation_confirm_build_plan()', 'prior_built+[id]', 'predecessor in active.built_buildings',
+                      'growth construction costs changed', 'growth allowed a second same-day build', 'earned_growth_save.json'):
+            self.assertIn(token,script)
+        headless,removed=packaged.headless_script(script)
+        self.assertTrue(removed)
+        for token in ('check(', 'SaveService.', 'Input.parse_input_event', 'layer_controller('):
+            self.assertEqual(headless.count(token),script.count(token))
+
     def test_wrong_save_is_rejected_before_engine_launch(self):
         with tempfile.TemporaryDirectory(prefix='town-ember-input-') as temporary:
             save=Path(temporary)/'wrong.json'

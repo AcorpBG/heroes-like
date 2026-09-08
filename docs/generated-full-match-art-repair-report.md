@@ -302,6 +302,113 @@ RMG evidence, current exports and source art retained.
 The presentation child and full-match parent remain in progress; later Embercourt
 catalog art is still visibly unaccepted, not covered by this opening packet.
 
+## Embercourt early growth — validated checkpoint, 2026-09-08
+
+The next bounded packet adds original Stone Store, Watch Barracks, Bowyer Lodge
+and Beacon Range scene layers. The actual earned Medium11 Market save is
+`embercourt_accepted_opening_720/earned_growth_save.json`, SHA256
+`838606e03fc1dffd5cf5c2b79ca5d20cc59c77ecfb42b831005577d449652d18`.
+`tests/town_scene_layer_regression.py --faction embercourt --embercourt-growth`
+continues that nonterminal Day-1 save through four confirmed End Turns and normal
+paid ledger orders. Stone costs 900 gold/2 ore, Watch 1400 gold/2 ore, Bowyer
+1200 gold/2 wood, and Beacon 1700 gold/2 wood/1 ore. No resources, days, built ids,
+prerequisites or outcomes are injected. The Day-43 save remains a detached
+composition fixture, never a resumed match.
+
+The unchanged old presentation reproduces 13 scene-resolution failures across
+8198 checks in `embercourt_growth_before_720`, with no engine errors and all
+four orders completed. Inspected captures show the tiny detached catalog
+paintings, including the replacement Watch and Beacon. Four new text-only
+built-in generations now resolve through the exact faction manifest and existing
+alpha/crop-aware renderer. Their original masters, exact prompts, output ids
+and source/trim/runtime hashes are retained in the scene-art README/manifest.
+The initial RGB checkerboard Barracks edit is rejected and retained separately
+in `embercourt_growth_candidates/`; no matte removal or procedural replacement
+was used. The existing transparent-margin/Lanczos/mipmap pipeline is unchanged.
+
+Pre-trim bounds in the 1600x900 panorama: Stone `[1270,358,280,186.6666666667]`,
+ground `[1410,537]`; Watch `[215,355,340,226.6666666667]`, ground `[390,565]`;
+Bowyer and Beacon both `[790,378,270,180]`, ground `[925,552]`. Watch retains
+Muster's exact site. Both upgrade pairs preserve saved predecessors and show
+only the advanced painting/hotspot. Stone stands behind Wayfarers on the right
+bank; the archer yard is west of the civic hall above the lock quay. This packet
+does not change the village, separate catalog icons, Town renderer, gameplay,
+save schema, native/RMG behavior or unrelated art.
+
+The first source draft passes 8306 earned-growth and 8294 developed-fixture
+checks with no engine errors; all four paid-stage screenshots and the developed
+720p view were personally inspected. `embercourt_growth_draft_save_comparison.json`
+proves complete Day-5 raw saves equal to the before-art replay outside only
+`/saved_at_unix`; exact Decimal-valued JSON agrees too, with no other exclusions.
+The focused Python suites pass 57 tests. `embercourt_growth_preservation.json`
+checks every prior row, 75 rasters, 25 prompts and village/catalog/gameplay/UI
+owners against `b96e3eab`, including real selected preparation idempotence.
+
+Final frozen manifest SHA256:
+`d0a2d0cc9b55871fa7868b703a5e05b7eb682cd81efd307955529f1eaa4bed89`.
+The finite serial `embercourt_growth_source_validation.py` batch uses fresh
+`embercourt_growth_accepted_*` labels for earned/developed 1280x720, 1920x1080
+and 2048x1079 runs, both faction opening compatibility controls, both existing
+Town reports, four lossless-import proofs, preservation, all 57 Python tests
+and repository validation. Its receipt is `embercourt_growth_source_batch.json`.
+The source batch is now terminal with all 18 jobs successful. Each earned run
+passes 8306 checks and each developed fixture 8294, with no engine errors or
+source/input mutation. All six final compositions and the paid upgrade stages
+were personally inspected for grounded placement, crop, input and readable
+controls. Opening compatibility retains 2519 Riverwatch / 1382 Bellwake checks;
+both shared Town reports, all 57 Python tests and repository/diff checks pass.
+The four lossless imports preserve all pixels/mips/options; 2270 previous
+resources are cache hits and no new compression saving is claimed. The
+331-file preservation/idempotence replay against `b96e3eab` passes after imports.
+`embercourt_growth_source_save_comparison.json` proves complete Day-5 raw-byte
+equality across all three new saves and the original renderer, outside only the
+single save clock. Every field, array order and exact numeric value is included.
+
+`embercourt_growth_package_validation.py` is now terminal with all eight jobs
+successful: normal official Linux and Windows export/startup/generated-Town
+smokes, the same earned/developed probes, repository and diff checks. Each
+official release passes 8306/8294 checks with unchanged source, inputs and PCK;
+all five bootstrap controls pass per platform. Final Linux release growth and
+developed screenshots were personally inspected. Windows is headless Wine,
+retaining every gameplay/input/save assertion but not physical GPU certification.
+The earlier intermittent Main Menu Ogg shutdown warning is absent from both
+normal Windows logs this time; this art-only packet does not claim a lifetime fix.
+
+`embercourt_growth_package_parity.json` compares every member with the prior
+244111660-byte package. Each new PCK is **245305344 bytes**, with **4694656 bytes**
+headroom. There are 5194 members: eight new texture/import members, no removals,
+5184 prior members byte-identical, and only the scene manifest/UID cache changed.
+The four texture payloads match their lossless proofs; no masters ship.
+5193 members are identical across platforms, with only `project.binary`
+platform-specific. Linux PCK SHA256:
+`7f921485f2c8f86508175b698d39995fd46a1257a1255530ae6e18bd33582ad4`;
+Windows: `da1dcc1a142f7e95ac9bc8b61862965ee4d1b2a8510941278a8f85f083fbf239`.
+`embercourt_growth_packaged_save_comparison.json` proves all six complete Day-5
+states and raw save bytes equal outside only `/saved_at_unix`: original
+presentation, three source resolutions, Linux and Windows.
+
+The completed batch's two Wine installations were retired only after verifying
+terminal success, no live prefix processes, and preserved user/save/registry
+hashes. `embercourt_growth_wine_retirement.json` records **2619105280 bytes**
+removed and the same measured free-space increase. Only each prefix's
+`drive_c/windows`, `Program Files` and `Program Files (x86)` were permanently
+removed; fresh disposable prefixes recreate them. All caches, saves, reports,
+source, exports, RMG evidence and unrelated untracked retention files remain.
+This accepts only the four early-growth paintings. Later Embercourt catalog
+paintings, other factions and remaining Overworld presentation stay unfinished;
+the full presentation child and parent goal remain in progress.
+
+Reproduce the packet with `--faction embercourt --embercourt-growth`, the exact
+earned Market save above, supported `--resolution` and fresh `--label` on
+`tests/town_scene_layer_regression.py`. The developed check instead uses
+`--presentation-only --developed-save` with the original Medium11 opening save
+and exact Day-43 fixture from the preceding section. The official-package wrapper
+adds `--binary`, `--pack`, `--platform`, `--bootstrap-controls` and a fresh
+`--wine-prefix` for Windows. Retired prefixes cannot be reused. The retained
+source/package drivers record every exact command and path. Full receipts use
+`embercourt_growth_save_comparison.py packaged`,
+`embercourt_growth_package_parity.py` and `embercourt_growth_preservation.py`.
+
 ## First production briefs
 
 - Wreck Quay: exact `object_wreck_quay` -> `mapobj_wreck_quay` mapping in
@@ -1051,8 +1158,9 @@ The packaged wrapper additionally requires isolated matching `--binary/--pack`,
 All 22 Bellwake starting/constructible scene layers, including the same-site
 Sounding/Court upgrade, now have source and package acceptance recorded above.
 Extend that scene-matched coverage to the other faction/building plots and
-upgrades, starting with the reproduced Embercourt opening packet. Candidate
-generation or mapping counts alone do not establish that acceptance.
+upgrades. Embercourt's three opening and four early-growth layers are also
+validated; later Embercourt paintings remain unfinished. Candidate generation
+or mapping counts alone do not establish that acceptance.
 Require inspected sparse, mid-development and developed scenes, exact
 built-id/input/save ownership and
 both-platform packages within the ceiling for each accepted packet. Other

@@ -15,29 +15,32 @@ Requirements:
 `docs/generated-full-match-quality-requirements.md`. This is an implementation
 checkpoint, **not completion of the overall quality goal or release readiness**.
 
-Latest approved-art checkpoint: Bellwake's Fog Signal Buoys and Salvage Ledger
-join the earlier three original scene-matched layers. Real Market -> Buoys ->
-Ledger purchases across Days 1-3 pass 2824 checks at each of three resolutions,
-including costs/daily limits, painted-pixel input, information and full save/re-entry.
-Immediate modal-close/Town-departure also exposed and fixed a stale deferred-focus
-callback; ordinary focus return remains intact. Source and Linux package captures
-were inspected, including the actual terminal town's detached 16-built-ID view.
-Town layout/all-32-town progression, repository and Linux/Windows package checks
-pass. Both PCKs are 249872672 bytes (only 127328 bytes of headroom), with all
-three successive-day purchases and exact assets exercised in the exported games.
-Windows execution is headless Wine, not GPU certification.
-The unchanged legacy named-slot keyboard expectation and Moonbite 30-turn
-development failure remain explicit; their 32 save/resume cases pass. Provenance,
-commands and limitations: `docs/generated-full-match-art-repair-report.md`.
-These five Bellwake assets and the earlier Wreck Quay repair do not close the
-remaining constructible-building/all-faction presentation requirement.
+Previous validated approved-art checkpoint (`b96e3eab`, 2026-09-08): all 22
+Bellwake starting/constructible scene layers and Riverwatch's original Muster
+Yard, Wayfarers Hall and Market Square have paid-growth, input/save, inspected
+three-resolution and official Linux/Windows package evidence. Town upgrade
+selection follows authored ancestry; painted-alpha ownership now also applies
+to retained catalog art, preventing transparent margins from intercepting clicks.
+Town's stockpile caption/popup correction and earlier Wreck Quay repair are also
+validated. Export-only JSON compaction and verified lossless texture imports
+preserve tokens/pixels and keep the last validated PCKs at 244111660 bytes,
+leaving 5888340 bytes below the unchanged ceiling. Windows execution is headless
+Wine, not GPU certification. Exact per-checkpoint counts, source provenance,
+commands, legacy test limits and the separate intermittent quick-exit audio
+observation are in `docs/generated-full-match-art-repair-report.md`.
 
-Subsequent packaging prerequisite: export-only JSON whitespace compaction now
-restores 3255936 bytes of art headroom, with both PCKs at 246744064 bytes. All
-5146 members are verified, 5095 non-JSON members remain byte-identical, and Godot
-parses all 51 JSON members identically. Both packaged three-day Town flows pass;
-the inspected Linux Day-3 image is pixel-identical. No new art, gameplay change
-or speed gain is claimed. Continue the remaining faction/building integration.
+Latest continuation, now validated: Riverwatch Stone Store, Watch Barracks,
+Bowyer Lodge and Beacon Range original layers, with same-site upgrades and actual
+earned Day-1 Market-to-Day-5 paid growth. Source at all three inspected resolutions
+and each official Linux/Windows release pass 8306/8294 earned/developed checks.
+All six complete non-clock saves match the old presentation. Prior openings,
+shared Town reports, preservation/imports, 57 Python tests and repository checks
+pass. Each PCK is 245305344 bytes with 4694656 bytes headroom; all 5194 members
+are verified, 5184 prior members unchanged and only `project.binary` differs
+between platforms. This brings accepted scene layers to 22 Bellwake and seven
+Embercourt paintings, not completion of later Embercourt buildings, other
+factions, remaining Overworld presentation or the full goal. Windows remains
+headless Wine rather than physical GPU certification.
 
 ## Gameplay corrections
 
