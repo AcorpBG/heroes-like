@@ -20,7 +20,7 @@
   "processing": "Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.",
   "rights": "Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.",
   "catalog_icons": "Unchanged; these exact-faction scene layers are not shared catalog replacements.",
-  "migration_scope": "Twenty-two Bellwake scene layers cover its authored starting and constructible buildings apart from the embedded Town Hall, including the same-site Sounding/Court upgrade. Source curation and normal growth pass; official-platform evidence is recorded separately in the art-repair report. Other factions remain unaccepted. Text-only rows explicitly record no image inputs and later rows record their generation date.",
+  "migration_scope": "Twenty-two accepted Bellwake layers and three exact-faction Embercourt opening layers; embedded Town Halls and separate catalog icons remain unchanged. Embercourt's Muster Yard, Wayfarers Hall and ordinary Market purchase have their own original paintings; later Embercourt buildings and other factions remain unaccepted. Curation, normal progression, input/save and platform evidence are recorded separately in the art-repair report. Text-only rows explicitly record no image inputs and later rows record their generation date.",
   "missing_declared_layer_policy": "validation_failure_no_catalog_or_procedural_fallback",
   "factions": {
     "faction_veilmourn": {
@@ -1007,6 +1007,146 @@
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_memory_rite_court.prompt.txt",
         "prompt_sha256": "b33254a59e3b8b941ee9043d2f9ccf1a8c2eb1af51cd85275fcf85dd182a953e",
         "curation": "Inspected ordinary 1280x720 Sounding-to-Court replacement at the same site and the developed Town at 1280x720, 1920x1080 and 2048x1079; source input/save checks pass. Fresh original painting, not a pixel-identical base edit. Platform acceptance is recorded separately in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      }
+    },
+    "faction_embercourt": {
+      "building_muster_yard": {
+        "asset_id": "faction_embercourt_building_muster_yard",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_muster_yard.png",
+        "source_sha256": "53c09e19ab13788bd7a2d53677ac1efc7772eabfdd80bc316dd960da472f8ce3",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1525,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_muster_yard.png",
+        "trimmed_sha256": "3e7b615d32d38f3d47702f50b147a3a3881ed5ef904f8144675c818e8108c349",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_muster_yard.png",
+        "runtime_sha256": "9a8bbfc3f78f733e96bb07e36d6e20afa16a69a5a8a6e70f0b4095258ed92bf1",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.134375,
+          0.39444444444444443,
+          0.21097819010416669,
+          0.2518518518518518
+        ],
+        "ground_anchor": [
+          0.24375,
+          0.6277777777777778
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Levy hall and fenced practice court stand on the left bank behind the existing stone quay; preserve the lock, shore wall and water approach.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_muster_yard.prompt.txt",
+        "prompt_sha256": "5b70d630fe032a72365e8da3338250d64f4099556fa5009b52e16548caf9850d",
+        "curation": "Inspected original opening, ordinary Market purchase and developed Riverwatch composition at 1280x720. Exact three-resolution input/save and platform acceptance is recorded separately in the art-repair report; other Embercourt catalog layers remain unaccepted.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      },
+      "building_wayfarers_hall": {
+        "asset_id": "faction_embercourt_building_wayfarers_hall",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_wayfarers_hall.png",
+        "source_sha256": "b0c926b8109558b555017c8229eff0d0483c038c36a9342fe08ed78116eb3d5a",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          45,
+          13,
+          1506,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_wayfarers_hall.png",
+        "trimmed_sha256": "c0803bbc16950c2bc303a5f80b20730e774acddc897faf1c3096446b9929a2c9",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_wayfarers_hall.png",
+        "runtime_sha256": "11e3ef50277199a7865f3d6c7d73a62c1ade6a3c8f91de6d450be5d3b36573c1",
+        "runtime_size": [
+          512,
+          354
+        ],
+        "normalized_rect": [
+          0.780584716796875,
+          0.5473126446759259,
+          0.181317138671875,
+          0.22305772569444443
+        ],
+        "ground_anchor": [
+          0.875,
+          0.7555555555555555
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Hired-roads lodge sits on the right bank beside the fenced training ground, with its porch opening onto the shore path; preserve the main civic hall and lock.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_wayfarers_hall.prompt.txt",
+        "prompt_sha256": "d66ea959c1dc520a60439c9e16167d301f19b1d1cc9079e733f3a0e9a8288519",
+        "curation": "Inspected original opening, ordinary Market purchase and developed Riverwatch composition at 1280x720. Exact three-resolution input/save and platform acceptance is recorded separately in the art-repair report; other Embercourt catalog layers remain unaccepted.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      },
+      "building_market_square": {
+        "asset_id": "faction_embercourt_building_market_square",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_market_square.png",
+        "source_sha256": "0ebb2935cd503cfc188df7c9e217107de96f253004de1c239aaa77692d345974",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          19,
+          1485,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_market_square.png",
+        "trimmed_sha256": "7fb8bad0a7a8c762a8e9ab8df8da4edc6f2b443fb77b16b85c99c72ec5d230b8",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_market_square.png",
+        "runtime_sha256": "63a4848e55b7289c70e7e8c5d9482e9293a818ff5605d3139322ddeb47914da9",
+        "runtime_size": [
+          512,
+          347
+        ],
+        "normalized_rect": [
+          0.053125,
+          0.5931495949074074,
+          0.18731689453125,
+          0.2253689236111111
+        ],
+        "ground_anchor": [
+          0.15,
+          0.7922222222222223
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Weigh house and trade arcades extend the foreground-left working quay beside the original riverside house, leaving the lock and main navigation channel open.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_market_square.prompt.txt",
+        "prompt_sha256": "0d793aaeeb55d1f937d3875f2a697e93e543a2cb3a2794168dd8ba8b6209e4c4",
+        "curation": "Inspected original opening, ordinary Market purchase and developed Riverwatch composition at 1280x720. Exact three-resolution input/save and platform acceptance is recorded separately in the art-repair report; other Embercourt catalog layers remain unaccepted.",
         "reference_inputs": [],
         "generation_date": "2026-09-08"
       }

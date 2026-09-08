@@ -128,9 +128,9 @@
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-08T05:11:48Z",
+      "updatedAt": "2026-09-08T12:51:46Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Late-harbor packet validated: source/Linux/Windows earned-save replays each pass 51490 checks; full four-way raw saves differ only in saved_at_unix; 5180-member preservation/platform parity and both normal smokes pass at 243281500 bytes. Three resolutions inspected; 88 Python tests, existing Town reports, lossless/repository/diff pass. All 22 Bellwake layers accepted; full child/parent remain open. Next Embercourt opening preparation has a real five-failure before-control, three original RGBA candidates and a detached renderer preview only; no Embercourt production adoption yet. Complete its exact-faction pipeline, grounded placement, normal Market/input/save and both-platform validation after the coherent Bellwake commit."
+      "notes": "Validated Embercourt opening checkpoint: three original exact-faction layers and mixed catalog/scene alpha pointer correction. Source at 1280x720, 1920x1080 and 2048x1079 and official Linux/Windows releases pass 2519 normal Market/save plus 8255 developed-input checks each; all 18 catalog masks covered, 22 Veilmourn rows/assets preserved. 52 Python tests, both existing Town reports, repository/diff, normal export/startup/native-generated entry, full exact-number saves and 5186-member parity pass. Both PCKs 244111660 bytes, headroom 5888340. Windows headless Wine only. Art-repair report records root cause, retained failures and limits. Current checkpoint ready for coherent commit/push; later Embercourt buildings, other factions and Overworld art remain unfinished. Parent and child stay in progress."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16748,10 +16748,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Late-harbor packet validated: source/Linux/Windows earned-save replays each pass 51490 checks; full four-way raw saves differ only in saved_at_unix; 5180-member preservation/platform parity and both normal smokes pass at 243281500 bytes. Three resolutions inspected; 88 Python tests, existing Town reports, lossless/repository/diff pass. All 22 Bellwake layers accepted; full child/parent remain open. Next Embercourt opening preparation has a real five-failure before-control, three original RGBA candidates and a detached renderer preview only; no Embercourt production adoption yet. Complete its exact-faction pipeline, grounded placement, normal Market/input/save and both-platform validation after the coherent Bellwake commit.",
+  "currentSliceNotes": "Validated Embercourt opening checkpoint: three original exact-faction layers and mixed catalog/scene alpha pointer correction. Source at 1280x720, 1920x1080 and 2048x1079 and official Linux/Windows releases pass 2519 normal Market/save plus 8255 developed-input checks each; all 18 catalog masks covered, 22 Veilmourn rows/assets preserved. 52 Python tests, both existing Town reports, repository/diff, normal export/startup/native-generated entry, full exact-number saves and 5186-member parity pass. Both PCKs 244111660 bytes, headroom 5888340. Windows headless Wine only. Art-repair report records root cause, retained failures and limits. Current checkpoint ready for coherent commit/push; later Embercourt buildings, other factions and Overworld art remain unfinished. Parent and child stay in progress.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Presentation Corrections",
-  "currentSliceUpdatedAt": "2026-09-08T01:55:07Z",
+  "currentSliceUpdatedAt": "2026-09-08T12:55:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22615,9 +22615,9 @@
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-08T05:11:48Z",
+      "updatedAt": "2026-09-08T12:51:46Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Late-harbor packet validated: source/Linux/Windows earned-save replays each pass 51490 checks; full four-way raw saves differ only in saved_at_unix; 5180-member preservation/platform parity and both normal smokes pass at 243281500 bytes. Three resolutions inspected; 88 Python tests, existing Town reports, lossless/repository/diff pass. All 22 Bellwake layers accepted; full child/parent remain open. Next Embercourt opening preparation has a real five-failure before-control, three original RGBA candidates and a detached renderer preview only; no Embercourt production adoption yet. Complete its exact-faction pipeline, grounded placement, normal Market/input/save and both-platform validation after the coherent Bellwake commit."
+      "notes": "Validated Embercourt opening checkpoint: three original exact-faction layers and mixed catalog/scene alpha pointer correction. Source at 1280x720, 1920x1080 and 2048x1079 and official Linux/Windows releases pass 2519 normal Market/save plus 8255 developed-input checks each; all 18 catalog masks covered, 22 Veilmourn rows/assets preserved. 52 Python tests, both existing Town reports, repository/diff, normal export/startup/native-generated entry, full exact-number saves and 5186-member parity pass. Both PCKs 244111660 bytes, headroom 5888340. Windows headless Wine only. Art-repair report records root cause, retained failures and limits. Current checkpoint ready for coherent commit/push; later Embercourt buildings, other factions and Overworld art remain unfinished. Parent and child stay in progress."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111382,39 +111382,48 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Validated Bellwake Loft/Chapel scene-art checkpoint, preserving fifteen earlier paintings and all gameplay. Source and isolated Linux/Windows earned-save replays each pass 35722 checks; complete final saves differ only in normal saved_at_unix metadata. Three resolutions inspected, 82 Python tests, existing Town reports and repository/diff checks pass. Both PCKs are 241910736 bytes with 8089264 bytes headroom and 5170-member preservation/parity; normal platform generated-Town flows pass. The separate Windows Main Menu quick-exit Ogg ObjectDB warning recurs and remains unresolved. Remaining Town structures/upgrades/factions and Overworld repairs keep the full goal in progress.",
+  "summary": "Validated three Embercourt opening scene layers and corrected transparent catalog hit areas, preserving all 22 Bellwake layers and gameplay. Source at three inspected resolutions and official Linux/Windows releases pass 2519 ordinary Market/save plus 8255 developed-input checks each. 52 Python tests, existing Town/repository checks, complete exact-number saves and 5186-member package parity pass; each PCK is 244111660 bytes with 5888340 bytes headroom. Later Embercourt art, other factions and Overworld repairs keep the full goal in progress; Windows remains headless Wine, not hardware certification.",
   "taskId": "10236",
-  "updatedAt": "2026-09-08T05:11:48Z",
+  "updatedAt": "2026-09-08T12:51:47Z",
   "validation": {
-    "id": "quality-bellwake-rigging-magic-20260908",
+    "id": "quality-embercourt-opening-20260908",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-08T01:55:07Z",
-    "scope": "Validated exact Bellwake Loft/Chapel scene-layer packet; not full Town/faction art, presentation, shutdown or release completion.",
-    "result": "Original source/trimmed/runtime paintings replace two catalog-diorama scene fallbacks without changing the village, fifteen accepted layers, catalog icons or gameplay. Source/Linux/Windows replays each pass 35722 paid-order/input/save checks and exact full saved bytes outside the normal timestamp. Five bootstrap controls pass per platform. Three inspected resolutions, 82 Python tests, both existing Town reports and repository/diff pass. Both normal platform generated-Town flows pass; PCKs are 241910736 bytes, 5170 members verified and 5169 match across platforms except project.binary. The Windows Main Menu quick-exit Ogg ObjectDB warning recurs separately; packaged Large replays exit without it.",
+    "validatedAt": "2026-09-08T12:55:12Z",
+    "scope": "Validated three Embercourt opening layers and mixed catalog/scene alpha pointer ownership; not full faction/Town presentation or release completion.",
+    "result": "Original Muster Yard, Wayfarers Hall and Market Square layers preserve all 22 Veilmourn paintings, village backgrounds, catalog icons and gameplay. Catalog transparent rectangles no longer intercept visible building clicks. Source at three inspected resolutions and each official Linux/Windows release pass 2519 ordinary Market/save and 8255 developed-input checks; all 18 visible catalog masks are covered. Five bootstrap controls pass per platform. 52 Python tests, both existing Town reports, repository/diff and normal export/startup/native-generated Town smokes pass. Full exact-number JSON saves match the original control except saved_at_unix; five matched new-probe saves also match raw bytes outside the clock. Each PCK is 244111660 bytes; all 5186 members checked, 5177 prior members unchanged, platforms differ only in project.binary. Windows is headless Wine, not physical GPU certification.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
-      ".artifacts/generated_full_match_quality_20260906/town_rigging_magic_before_view_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_growth_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_final_view_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_final_view_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_final_view_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_original_developed_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_original_developed_2048/report.json",
-      ".artifacts/full_play_runtime_20260905/rigging_magic_town_existing/report.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_linux/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_windows/generated-flow/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_packaged_linux/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_packaged_windows/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_packaged_save_comparison.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_package_parity.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_lossless_imports.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_batch.json",
-      ".artifacts/generated_full_match_quality_20260906/rigging_magic_repo_final_driver.log"
+      ".artifacts/generated_full_match_quality_20260906/embercourt_opening_before_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_accepted_opening_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_accepted_developed_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_accepted_opening_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_accepted_developed_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_accepted_opening_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_accepted_developed_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_accepted_bellwake_compat/report.json",
+      ".artifacts/full_play_runtime_20260905/embercourt_accepted_existing_town/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_release_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_release_linux/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_packaged_linux/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_packaged_developed_linux/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_release_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_release_windows/generated-flow/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_packaged_windows/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_packaged_developed_windows/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_packaged_save_comparison.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_package_parity.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_accepted_preservation.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_accepted_lossless.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_source_batch3.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_package_batch2.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_accepted_scene_units.log",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_accepted_sequence_units2.log",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_packaged_unit.log",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_lossless_unit.log",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_repo_handoff.log"
     ],
-    "remainingWork": "Continue approved Town buildings/upgrades/factions and demonstrated Overworld repairs with 8089264 bytes of verified PCK headroom. Bellwake still needs Drowned Map Room, Memory Anchor, Leviathan Sounding, Drowned Admiralty and the Memory-Rite Court upgrade. Diagnose the reproduced Windows Main Menu quick-exit Ogg ObjectDB warning before claiming a lifetime fix. Preserve legitimate match/performance evidence and physical Windows/legacy keyboard/Moonbite limits. Full goal remains active."
+    "remainingWork": "Bellwake's 22 required scene layers are accepted. Continue later Embercourt buildings/upgrades, other factions and demonstrated Overworld art repairs with 5888340 bytes of verified package headroom. Preserve legitimate match/performance evidence and documented platform/legacy limits. The earlier intermittent Windows Main Menu quick-exit Ogg warning is absent from this pair but no lifetime fix is claimed. Full presentation and parent goal remain active."
   },
   "validationHistory": [
     {

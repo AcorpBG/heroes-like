@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """Package approved scene-matched raster masters, never synthesize building art."""
+import argparse
+import copy
 import hashlib
 import json
 from pathlib import Path
@@ -134,15 +136,38 @@ BRIEFS = {
     },
 }
 
+EMBERCOURT_BRIEFS = {
+    'building_muster_yard': {
+        'source_sha256':'53c09e19ab13788bd7a2d53677ac1efc7772eabfdd80bc316dd960da472f8ce3',
+        'scene_bounds':[215,355,340,340*1024/1536], 'ground_anchor':[390,565],
+        'grounding':'Levy hall and fenced practice court stand on the left bank behind the existing stone quay; preserve the lock, shore wall and water approach.',
+    },
+    'building_wayfarers_hall': {
+        'source_sha256':'b0c926b8109558b555017c8229eff0d0483c038c36a9342fe08ed78116eb3d5a',
+        'scene_bounds':[1240,490,305,305*1024/1536], 'ground_anchor':[1400,680],
+        'grounding':'Hired-roads lodge sits on the right bank beside the fenced training ground, with its porch opening onto the shore path; preserve the main civic hall and lock.',
+    },
+    'building_market_square': {
+        'source_sha256':'0ebb2935cd503cfc188df7c9e217107de96f253004de1c239aaa77692d345974',
+        'scene_bounds':[85,530,310,310*1024/1536], 'ground_anchor':[240,713],
+        'grounding':'Weigh house and trade arcades extend the foreground-left working quay beside the original riverside house, leaving the lock and main navigation channel open.',
+    },
+}
+for brief in EMBERCOURT_BRIEFS.values():
+    brief.update(reference_inputs=[], generation_date='2026-09-08',
+                 curation='Inspected original opening, ordinary Market purchase and developed Riverwatch composition at 1280x720. Exact three-resolution input/save and platform acceptance is recorded separately in the art-repair report; other Embercourt catalog layers remain unaccepted.')
+
+FACTION_BRIEFS = {FACTION: BRIEFS, 'faction_embercourt': EMBERCOURT_BRIEFS}
+
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
-def main():
+def prepare_layers(faction, briefs):
     layers = {}
-    for building_id, brief in BRIEFS.items():
-        source = ROOT / f'art/towns/source/generated/scene_layers/{FACTION}/{building_id}.png'
-        trimmed = ROOT / f'art/towns/source/trimmed/scene_layers/{FACTION}/{building_id}.png'
-        runtime = ROOT / f'art/towns/runtime/scene_layers/{FACTION}/{building_id}.png'
+    for building_id, brief in briefs.items():
+        source = ROOT / f'art/towns/source/generated/scene_layers/{faction}/{building_id}.png'
+        trimmed = ROOT / f'art/towns/source/trimmed/scene_layers/{faction}/{building_id}.png'
+        runtime = ROOT / f'art/towns/runtime/scene_layers/{faction}/{building_id}.png'
         assert digest(source) == brief['source_sha256'], f'Unapproved master: {source}'
         with Image.open(source) as image:
             assert image.mode == 'RGBA'
@@ -161,7 +186,7 @@ def main():
         # Exact visible alpha crop in the original scenic coordinate system.
         rect = [(x+w*x0/sw)/1600, (y+h*y0/sh)/900, w*(x1-x0)/sw/1600, h*(y1-y0)/sh/900]
         layers[building_id] = {
-            'asset_id':f'{FACTION}_{building_id}',
+            'asset_id':f'{faction}_{building_id}',
             'source_path':'res://'+str(source.relative_to(ROOT)), 'source_sha256':digest(source),
             'source_size':list(source_size), 'trim_box':list(bounds),
             'trimmed_path':'res://'+str(trimmed.relative_to(ROOT)), 'trimmed_sha256':digest(trimmed),
@@ -170,7 +195,7 @@ def main():
             'ground_anchor':[brief['ground_anchor'][0]/1600,brief['ground_anchor'][1]/900],
             'modulate':[1,1,1,1], 'hit_alpha_threshold':0.25,
             'grounding':brief['grounding'],
-            'prompt_path':f'res://art/towns/source/generated/scene_layers/{FACTION}/{building_id}.prompt.txt',
+            'prompt_path':f'res://art/towns/source/generated/scene_layers/{faction}/{building_id}.prompt.txt',
             'prompt_sha256':digest(source.with_suffix('.prompt.txt')),
             'curation':brief.get('curation','Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.'),
         }
@@ -178,7 +203,29 @@ def main():
             layers[building_id]['reference_inputs'] = brief['reference_inputs']
         if 'generation_date' in brief:
             layers[building_id]['generation_date'] = brief['generation_date']
-    payload = {
+    return layers
+
+
+def merge_layers(payload, prepared):
+    """A selected packet cannot erase another faction or an earlier layer."""
+    if payload.get('schema_id') != 'town_building_scene_art_v1':
+        raise ValueError('Refusing to replace an unknown scene-art manifest')
+    result = copy.deepcopy(payload)
+    for faction, layers in prepared.items():
+        for building, row in layers.items():
+            if row.get('asset_id') != faction+'_'+building:
+                raise ValueError('Cross-faction scene identity: '+faction+'/'+building)
+        result.setdefault('factions', {}).setdefault(faction, {}).update(copy.deepcopy(layers))
+    return result
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--faction', choices=sorted(FACTION_BRIEFS), action='append',
+                        help='Prepare only this faction; preserve all other manifest rows and files')
+    args = parser.parse_args()
+    manifest = ROOT/'content/town_building_scene_art_manifest.json'
+    payload = json.loads(manifest.read_text()) if manifest.is_file() else {
         'schema_id':'town_building_scene_art_v1', 'source_size':[1600,900],
         'source_docs':['docs/generated-full-match-quality-requirements.md','docs/town-integrated-building-progression-requirements.md','docs/generated-full-match-art-repair-report.md'],
         'owner_approval':'2026-09-07: owner approved scene-matched Town layers and resuming full-match quality.',
@@ -189,10 +236,13 @@ def main():
         'catalog_icons':'Unchanged; these exact-faction scene layers are not shared catalog replacements.',
         'migration_scope':'Twenty-two Bellwake scene layers cover its authored starting and constructible buildings apart from the embedded Town Hall, including the same-site Sounding/Court upgrade. Source curation and normal growth pass; official-platform evidence is recorded separately in the art-repair report. Other factions remain unaccepted. Text-only rows explicitly record no image inputs and later rows record their generation date.',
         'missing_declared_layer_policy':'validation_failure_no_catalog_or_procedural_fallback',
-        'factions':{FACTION:layers},
+        'factions':{},
     }
-    (ROOT/'content/town_building_scene_art_manifest.json').write_text(json.dumps(payload,indent=2)+'\n')
-    print(json.dumps({k:{'runtime_size':v['runtime_size'],'normalized_rect':v['normalized_rect'],'runtime_sha256':v['runtime_sha256']} for k,v in layers.items()},indent=2))
+    prepared = {faction: prepare_layers(faction, FACTION_BRIEFS[faction])
+                for faction in dict.fromkeys(args.faction or FACTION_BRIEFS)}
+    payload = merge_layers(payload, prepared)
+    manifest.write_text(json.dumps(payload,indent=2)+'\n')
+    print(json.dumps({faction: {k:{'runtime_size':v['runtime_size'],'normalized_rect':v['normalized_rect'],'runtime_sha256':v['runtime_sha256']} for k,v in layers.items()} for faction,layers in prepared.items()},indent=2))
 
 if __name__ == '__main__':
     main()

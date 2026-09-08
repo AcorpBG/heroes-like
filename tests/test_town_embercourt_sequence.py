@@ -1,0 +1,67 @@
+"""The new-faction probe retains the common paid action and input assertions."""
+import contextlib
+import hashlib
+import io
+from pathlib import Path
+import tempfile
+import unittest
+from unittest.mock import patch
+
+import town_scene_layer_regression as layers
+import packaged_town_scene_layer_regression as packaged
+
+
+class EmbercourtSequenceTests(unittest.TestCase):
+    def test_wrong_save_is_rejected_before_engine_launch(self):
+        with tempfile.TemporaryDirectory(prefix='town-ember-input-') as temporary:
+            save=Path(temporary)/'wrong.json'
+            save.write_text('{}\n')
+            args=['probe','--faction','embercourt','--save',str(save),'--resolution','1280x720','--label','unit_wrong_ember']
+            with patch('sys.argv',args), patch.object(layers,'run_probe') as run, contextlib.redirect_stderr(io.StringIO()) as stderr, self.assertRaises(SystemExit) as stop:
+                layers.main()
+            self.assertEqual(stop.exception.code,2)
+            self.assertIn('exact recorded nonterminal Medium11 Day-1 save',stderr.getvalue())
+            run.assert_not_called()
+
+    def test_bellwake_sequence_cannot_run_against_embercourt(self):
+        args=['probe','--faction','embercourt','--late-harbor-growth','--save','/nonexistent.json','--resolution','1280x720','--label','unit_wrong_faction']
+        with patch('sys.argv',args), patch.object(layers,'run_probe') as run, contextlib.redirect_stderr(io.StringIO()) as stderr, self.assertRaises(SystemExit) as stop:
+            layers.main()
+        self.assertEqual(stop.exception.code,2)
+        self.assertIn('Bellwake growth sequences cannot run against Embercourt',stderr.getvalue())
+        run.assert_not_called()
+
+    def test_wrong_developed_fixture_is_rejected_before_engine_launch(self):
+        with tempfile.TemporaryDirectory(prefix='town-ember-developed-') as temporary:
+            opening=Path(temporary)/'opening.json'
+            developed=Path(temporary)/'wrong-developed.json'
+            opening.write_text('{}\n')
+            developed.write_text('{"day":43}\n')
+            args=['probe','--faction','embercourt','--presentation-only','--save',str(opening),'--developed-save',str(developed),'--resolution','1280x720','--label','unit_wrong_developed']
+            # Isolate the second input boundary. The production opening hash
+            # is separately required and tested, never changed on disk.
+            with patch.object(layers,'EMBERCOURT_SAVE_SHA256',hashlib.sha256(opening.read_bytes()).hexdigest()), patch('sys.argv',args), patch.object(layers,'run_probe') as run, contextlib.redirect_stderr(io.StringIO()) as stderr, self.assertRaises(SystemExit) as stop:
+                layers.main()
+            self.assertEqual(stop.exception.code,2)
+            self.assertIn('exact recorded Medium Day-43 fixture',stderr.getvalue())
+            run.assert_not_called()
+
+    def test_common_controls_survive_faction_and_headless_adaptation(self):
+        script=layers.embercourt_script(layers.SCRIPT)
+        self.assertIn('String(a.id)=="build:building_market_square"',script)
+        self.assertIn('check(int(cost.get("gold",0))==1000',script)
+        self.assertIn('if resource!="gold": check(int(cost[resource])==0',script)
+        self.assertIn('built_before+[building_id]',script)
+        self.assertIn('earned_growth_save.json',script)
+        self.assertIn('get_tree().current_scene._commit_build_action(building_id)',script)
+        self.assertNotIn('building_veilmourn_bell_harbor',script)
+        for token in ('SaveService.', 'Input.parse_input_event', 'layer_controller(', 'inspect_market_constructed()', 'button._has_point('):
+            self.assertGreaterEqual(script.count(token),layers.SCRIPT.count(token))
+        headless,removed=packaged.headless_script(script)
+        self.assertGreater(len(removed),0)
+        self.assertEqual(headless.count('check('),script.count('check('))
+        self.assertEqual(headless.count('SaveService.'),script.count('SaveService.'))
+
+
+if __name__=='__main__':
+    unittest.main()

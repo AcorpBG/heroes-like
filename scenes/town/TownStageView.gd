@@ -1579,17 +1579,18 @@ func _sync_building_hotspots() -> void:
 		button.position = destination_rect.position
 		button.size = destination_rect.size
 		button.painted_mask = null
-		if bool(entry.get("scene_layer", false)):
-			var path := _town_building_texture_path(building_id)
-			var texture := _town_building_texture(building_id)
-			if texture == null:
-				continue
-			if not _town_building_masks.has(path):
-				var mask := BitMap.new()
-				mask.create_from_image_alpha(texture.get_image(), float(_town_scene_layer(building_id).get("hit_alpha_threshold", 0.25)))
-				_town_building_masks[path] = mask
-			button.painted_mask = _town_building_masks[path]
-			button.texture_region_ratio = entry.get("texture_region_ratio", Rect2(Vector2.ZERO, Vector2.ONE))
+		# Catalog layers also contain transparent margins. Their empty pixels
+		# must not intercept a visible building painted behind them.
+		var path := _town_building_texture_path(building_id)
+		var texture := _town_building_texture(building_id)
+		if texture == null:
+			continue
+		if not _town_building_masks.has(path):
+			var mask := BitMap.new()
+			mask.create_from_image_alpha(texture.get_image(), float(_town_scene_layer(building_id).get("hit_alpha_threshold", 0.25)))
+			_town_building_masks[path] = mask
+		button.painted_mask = _town_building_masks[path]
+		button.texture_region_ratio = entry.get("texture_region_ratio", Rect2(Vector2.ZERO, Vector2.ONE))
 		button.visible = true
 		# Pointer ordering follows the same ground-depth order as the paintings.
 		move_child(button, get_child_count() - 1)
