@@ -33,6 +33,9 @@ def validate_scene_layers(payload=None):
     required_riverworks = {'building_embercourt_granary_lock_exchange','building_embercourt_lockhouse_tally','building_embercourt_tollstone_weir','building_embercourt_bargebow_slip','building_embercourt_oath_pikehall','building_embercourt_beacon_writs'}
     require(required_riverworks.issubset(factions.get('faction_embercourt',{})), 'Missing Embercourt riverworks scene mapping')
     require({'building_embercourt_lantern_court','building_embercourt_relief_quay'}.issubset(factions.get('faction_embercourt',{})), 'Missing Embercourt civic-quay scene mapping')
+    riverwatch = next(town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['id']=='town_riverwatch')
+    required_riverwatch = set(riverwatch['starting_building_ids'] + riverwatch['buildable_building_ids']) - {'building_town_hall'}
+    require(required_riverwatch.issubset(factions.get('faction_embercourt',{})), 'Missing constructible Riverwatch scene mapping: '+', '.join(sorted(required_riverwatch-set(factions.get('faction_embercourt',{})))))
     bellwake = next(town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['id']=='town_veilmourn_bellwake_harbor')
     required_bellwake = set(bellwake['starting_building_ids'] + bellwake['buildable_building_ids']) - {'building_town_hall'}
     require(required_bellwake.issubset(factions.get('faction_veilmourn',{})), 'Missing constructible Bellwake scene mapping: '+', '.join(sorted(required_bellwake-set(factions.get('faction_veilmourn',{})))))
@@ -42,7 +45,7 @@ def validate_scene_layers(payload=None):
     pairs = [(sounding, court, 'Memory-Rite Court', 'Sounding')]
     embercourt = factions.get('faction_embercourt',{})
     pairs += [(embercourt.get(base,{}),embercourt.get(upgrade,{}),upgrade,base) for base,upgrade in
-              [('building_muster_yard','building_watch_barracks'),('building_bowyer_lodge','building_beacon_range'),('building_lantern_archive','building_starseer_annex')]]
+              [('building_muster_yard','building_watch_barracks'),('building_bowyer_lodge','building_beacon_range'),('building_lantern_archive','building_starseer_annex'),('building_embercourt_charter_bastion','building_embercourt_charter_flame')]]
     for sounding,court,upgrade_name,base_name in pairs:
         if not sounding or not court:
             continue
@@ -124,6 +127,27 @@ class TownSceneLayersTests(unittest.TestCase):
         self.payload = json.loads(MANIFEST.read_text())
     def test_production_manifest_and_rasters(self):
         self.assertEqual(validate_scene_layers(), [])
+    def test_every_constructible_riverwatch_mapping_is_required(self):
+        town=next(row for row in json.loads((ROOT/'content/towns.json').read_text())['items'] if row['id']=='town_riverwatch')
+        for building in set(town['starting_building_ids']+town['buildable_building_ids'])-{'building_town_hall'}:
+            with self.subTest(building=building):
+                payload=copy.deepcopy(self.payload)
+                payload['factions']['faction_embercourt'].pop(building,None)
+                self.assertTrue(any(e.startswith('Missing constructible Riverwatch scene mapping:') and building in e for e in validate_scene_layers(payload)))
+    def test_charter_flame_preserves_bastion_source_plot(self):
+        from tools import prepare_town_scene_layers as preparation
+        briefs=preparation.EMBERCOURT_LATE_COURT_BRIEFS
+        base=briefs['building_embercourt_charter_bastion']
+        upgrade=briefs['building_embercourt_charter_flame']
+        self.assertEqual(base['scene_bounds'],upgrade['scene_bounds'])
+        self.assertEqual(base['ground_anchor'],upgrade['ground_anchor'])
+        self.assertNotEqual(base['source_sha256'],upgrade['source_sha256'])
+    def test_charter_manifest_cannot_move_upgrade_site_or_ground(self):
+        for field,message in [('normalized_rect','scenic site'),('ground_anchor','ground anchor')]:
+            with self.subTest(field=field):
+                payload=copy.deepcopy(self.payload)
+                payload['factions']['faction_embercourt']['building_embercourt_charter_flame'][field][0]+=0.01
+                self.assertIn('building_embercourt_charter_flame moved the building_embercourt_charter_bastion '+message,validate_scene_layers(payload))
     def test_every_embercourt_opening_mapping_is_required(self):
         for building in ('building_muster_yard','building_wayfarers_hall','building_market_square'):
             with self.subTest(building=building):

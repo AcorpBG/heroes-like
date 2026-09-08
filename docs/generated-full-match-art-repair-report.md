@@ -14,6 +14,136 @@ native generation or unrelated cleanup changes. Runtime exports stay below
 250000000 bytes on both platforms. Reverting the coherent art/code commit restores
 prior rendering without save migration.
 
+## Embercourt late court — validated, 2026-09-08
+
+The four remaining Riverwatch buildings (Beacon Court, Drake Sluice, Charter
+Colossus Bastion and Charter Flame) lacked exact scene-manifest rows and therefore
+displayed their separate catalog paintings. Original RGBA scene layers now exist
+in source/prompt/trim/runtime paths, through the unchanged preparation pipeline.
+All 42 previously accepted layers, the village, catalog art and gameplay remain
+intact. The four new paintings now pass source and official-platform acceptance,
+completing the 24 non-embedded starting/constructible Riverwatch mappings. Other
+town variants, factions and the full goal remain unfinished.
+
+The legitimate input is `embercourt_civic_accepted_earned_720/earned_growth_save.json`,
+Day 19, SHA256 `82da9e8507a069a56b4ee114a38b017780f0a60d474400b2e249f4b19696b57f`.
+Its existing resource placement
+`h3maped_small_town_source_support_native_h3maped_93c0f05a_object_0950_required_sources`
+at (41,41,0) references `site_generated_town_required_source_cache` in
+`content/resource_sites.json`: normal claim rewards and controlled daily income
+provide the missing rare resources. The existing rare-source guard blocks its
+approach. No native generation, source placement, market or income rule changed.
+
+The Python-owned `--embercourt-late-court-growth` continuation pays for three
+normal field recruit orders, retains the existing garrison, walks the visible
+map through its ordinary controller, wins the guard through confirmed Quick
+Resolve, continues the casualty report, claims the cache and walks back to the
+same town. Construction uses normal ledger orders, paid Ore trades and confirmed
+End Turns. No resources, days, armies, ownership or built ids are injected.
+
+The original-renderer `embercourt_late_court_control_720` completes **35855 checks**
+with exactly **13 expected missing-art failures**, no runtime errors and unchanged
+source/input hashes. The four purchases occur on Days **22, 30, 40 and 46**;
+all save/re-entry checks pass. Its earned Day-46 nonterminal save SHA256 is
+`bc67b368c3be8b5afe096661ff2b6540784eb82b476ba552b2b3502a174c1a93`.
+The earlier `embercourt_late_court_before_720` driver incorrectly checked raw
+`owner` instead of `OverworldRules._resource_node_matches_controller()` (the
+imported mine uses collected/controller state), and confirmed Quick Resolve
+before its deferred focus settled. That failed evidence is retained. The clean
+repeat uses the canonical predicate and existing settle convention; no production
+ownership or focus behavior was altered. Result logging now keeps compact facts,
+not copies of the nested full autosave payload.
+
+Four built-in text-only generated masters have genuine alpha; exact prompts and
+source hashes are adjacent to the PNGs under
+`art/towns/source/generated/scene_layers/faction_embercourt/`. Two attempted Flame
+edits produced opaque checkerboard backgrounds and were rejected, retained only
+as ignored failure evidence. The final Flame is a fresh original painting using
+the Bastion architectural brief, not a claimed pixel-identical edit. Bastion and
+Flame share source bounds/ground anchor; the Court joins the right terrace and
+the Drake pens meet the existing waterfront. Their four imported textures total
+1106794 bytes; complete package-size and member proofs are recorded below.
+
+The first developed draft records four test errors, not engine errors: the old
+catalog Flame/Market overlap assumption counts a now-exposed Market click twice,
+and the caller requests the correctly superseded Bastion as a visible layer.
+The driver now verifies actual painted ownership, resets the independent body
+click counter, explicitly proves Flame replacement and tests only the expected
+visible successor. The strict visible-layer assertion remains unchanged;
+Bastion's own input is covered before upgrade in paid growth. Twenty sequence
+unit tests pass. The fresh `embercourt_late_court_developed_review_720` passes
+**8499 checks**, without runtime errors or source/input/developed-save changes;
+its final 1280x720 composition was inspected. The strict art suite passes 26
+tests. An added manifest-mutation control then demonstrates two undetected
+Charter upgrade relocations; adding the Bastion/Flame pair to the existing
+reconstructed-site/ground-anchor validator makes that negative control pass.
+This changes validation only, not the frozen gameplay, manifest or paintings.
+
+`embercourt_late_court_preservation.json` proves all **42 prior rows**, **126 prior
+scene rasters**, 42 prompts and **416 existing files** unchanged from `f9a9befb`;
+selected preparation is byte-idempotent. `embercourt_late_court_lossless.json`
+verifies all four new imports through the existing engine-decoded image/mipmap
+comparison (2287 prior cache hits, four reimports, no byte-size change).
+The finite `embercourt_late_court_source_validation.py` batch has completed all
+**18 jobs**, all successful. At **1280x720, 1920x1080 and 2048x1079**, each frozen
+earned replay passes **35963 checks**, and each developed-input fixture passes
+**8499 checks**, with no engine errors and unchanged source/input hashes. All
+four construction stages, final saved/re-entered views and developed compositions
+were visually inspected at each resolution; the guard casualty report and normal
+map capture were also inspected at 720p. The scenic cover crop keeps the HUD,
+command controls and footer unobstructed. Developed fixtures remain composition
+and input evidence only, not legitimate progression.
+
+`embercourt_late_court_source_save_comparison.json` proves all four complete
+**7469715-byte Day-46 saves** (original renderer plus three source resolutions)
+equal as exact-decimal JSON and raw bytes outside only `/saved_at_unix`. The
+receipt retains every input hash; no other field is excluded. The two opening
+compatibility cases pass **2519 Embercourt / 1382 Veilmourn checks**. Existing
+`town_screen_layout_and_dialog_controls_report` and
+`town_building_skyline_progression_report` both pass without runtime errors.
+All **76 Python tests** pass (27 strict-art, 20 Embercourt sequence, 4 preparation,
+3 late-harbor sequence, 3 packaged-probe and 19 lossless-import tests), as do
+the lossless/preservation rechecks, repository validator and diff checks.
+
+Both finite services are terminal-successful: **18 source jobs and 8 package
+jobs**, all return codes zero. Official Linux/Windows export, startup and normal
+generated-Town construction pass. Each release also passes the same **35963
+earned / 8499 developed checks** without engine errors, altered source/input or
+changed exported bytes. All five restricted-probe bootstrap controls pass on
+each platform. All four Linux release saved construction views and its final
+developed composition were inspected at 1280x720; its independent generated-town
+construction capture was inspected too. Windows uses headless Wine, retaining
+every gameplay/input/save assertion and omitting only paired capture operations;
+this is not physical Windows/GPU certification or a shutdown-lifetime fix.
+
+`embercourt_late_court_packaged_save_comparison.json` proves **all six complete
+Day-46 saves** equal as exact-decimal JSON and raw bytes outside only the clock.
+`embercourt_late_court_package_parity.json` compares **all 5228 members**: exactly
+four new texture payloads and four import descriptors, **5218 prior members
+unchanged**, and only the scene manifest / generated UID cache updated. Platform
+payloads differ only in `project.binary`; all four new texture payloads match
+the lossless import proofs and source masters remain excluded. Both PCKs are
+**249662752 bytes**, leaving **337248 bytes** below the unchanged 250000000-byte
+ceiling. SHA256: Linux
+`25fb3569ff985b5613d58ed0c2a4f4b9bb1d7ddb78c17a46f00d25de2de9e9a0`;
+Windows `c07e929db8b9aea849ee95b283a99d94f65fba576c5f1bdfb885f7b823004756`.
+
+After terminal platform/parity acceptance and a live-process-reference audit,
+`embercourt_late_court_wine_retirement.json` records **2619101184 bytes** reclaimed
+from only the two finished probes' disposable Wine system/program directories.
+User/save/registry hashes are preserved, as are caches, source, captures, reports,
+RMG evidence and both retained exports. Deleted Wine system files are rebuildable.
+
+The source and package batch JSON files retain the exact executed commands.
+The tracked probe entry points are `tests/town_scene_layer_regression.py` and
+`tests/packaged_town_scene_layer_regression.py`, using `--faction embercourt
+--embercourt-late-court-growth` and the hash-locked Day-19 input above; use fresh
+labels, the three stated source resolutions, and official release binaries/PCKs
+with `--bootstrap-controls` for the package replay. Complete comparisons are
+reproduced by `embercourt_late_court_save_comparison.py packaged` and
+`embercourt_late_court_package_parity.py`. Evidence/helper names are relative to
+`.artifacts/generated_full_match_quality_20260906/`.
+
 ## Embercourt civic quays — validated, 2026-09-08
 
 Lantern Court and Relief Quay previously selected their separate catalog paintings
@@ -1576,9 +1706,17 @@ The packaged wrapper additionally requires isolated matching `--binary/--pack`,
 All 22 Bellwake starting/constructible scene layers, including the same-site
 Sounding/Court upgrade, now have source and package acceptance recorded above.
 Extend that scene-matched coverage to the other faction/building plots and
-upgrades. Embercourt's three opening and four early-growth layers are also
-validated; later Embercourt paintings remain unfinished. Candidate generation
-or mapping counts alone do not establish that acceptance.
+upgrades. Embercourt now has 24 accepted Riverwatch layers, including the four
+late-court paintings above. Riverwatch/Bellwake coverage is not complete faction coverage:
+the union of current authored towns includes six additional unmapped Embercourt
+building identities and five additional Veilmourn identities. The other four
+factions have no scene-layer mappings yet. These counts come from comparing
+`content/towns.json` starting/buildable ids, excluding embedded Town Hall, with
+the exact-faction scene manifest. Candidate generation or mapping counts alone
+do not establish visual or gameplay acceptance.
+The current platform PCKs leave only 337248 bytes under the 250000000-byte cap.
+A 350 MB data-budget decision has been requested for remaining approved art, but
+no increase is approved or implemented in this checkpoint.
 Require inspected sparse, mid-development and developed scenes, exact
 built-id/input/save ownership and
 both-platform packages within the ceiling for each accepted packet. Other

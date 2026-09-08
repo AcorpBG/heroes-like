@@ -1939,6 +1939,194 @@
         "reference_inputs": [],
         "generation_date": "2026-09-08",
         "generation_output": "exec-07981847-b39d-4354-b993-1aa3a0f885e4.png"
+      },
+      "building_embercourt_beacon_court": {
+        "asset_id": "faction_embercourt_building_embercourt_beacon_court",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
+        "source_sha256": "630a3f7b0a7f5274d6089b232a623fdc070b7a205047b09fba7b24c80599a461",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          17,
+          0,
+          1520,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
+        "trimmed_sha256": "993b7b3309aee5d9617a8bbd0b3e14811059b05d076436e3cbc48d727573b9da",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
+        "runtime_sha256": "7713184215909cd3f885d36676ead688a76be3005238ffd3761b041010fcec66",
+        "runtime_size": [
+          512,
+          349
+        ],
+        "normalized_rect": [
+          0.6986181640625,
+          0.37777777777777777,
+          0.1541162109375,
+          0.18666666666666668
+        ],
+        "ground_anchor": [
+          0.775,
+          0.5444444444444444
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The low lector arcade extends the right-bank terrace below the Writs beacon and behind the stone store and waterfront halls; shallow steps join the existing settlement without an independent landscape tile.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_court.prompt.txt",
+        "prompt_sha256": "120b92b9ce5379fefe4696c7f472385347a942e081260ae7e3b5bdb1a5021ef0",
+        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08",
+        "generation_output": "exec-533a06fb-665f-4c09-9de6-512ea380d2f5.png"
+      },
+      "building_embercourt_drake_sluice": {
+        "asset_id": "faction_embercourt_building_embercourt_drake_sluice",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
+        "source_sha256": "d9051dcd3e8c08f37a09f599a21fef871701f694af7b2a1a147670818a5a150d",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          17,
+          5,
+          1520,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
+        "trimmed_sha256": "801cdf886c0b979947d50302b50f90353094feff910cae0b17ca64c84d11c77a",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
+        "runtime_sha256": "97b7c0ed68cab1d9a37b9920c4433c410932e5d084aad9da73d653d3f83977e7",
+        "runtime_size": [
+          512,
+          347
+        ],
+        "normalized_rect": [
+          0.5864501953125,
+          0.706640625,
+          0.1834716796875,
+          0.2211371527777778
+        ],
+        "ground_anchor": [
+          0.68125,
+          0.9088888888888889
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Iron-barred beast pens descend from the right-bank lockworks toward the near channel; the attached right-hand landing meets the existing bank and Slip while transparent gate openings retain the original water.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_drake_sluice.prompt.txt",
+        "prompt_sha256": "e84f454052450d8c064dc069d22544831a498f4fa31ec45b7477bfb1e3638556",
+        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08",
+        "generation_output": "exec-846ece4d-21d2-4d47-9d83-9710c663fbff.png"
+      },
+      "building_embercourt_charter_bastion": {
+        "asset_id": "faction_embercourt_building_embercourt_charter_bastion",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
+        "source_sha256": "621cc7e7d0c3d3c9e3177ff62356ebc96f84873cca4f014928488c9e1b0144c2",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
+        "trimmed_sha256": "be1aa996c2ee2f29c9522e17b944dbd5d07ecdbae5252122cd3bbaa4be184c0b",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
+        "runtime_sha256": "0ee703ec0ba84ba95b1bd5dfccb2374954219cfe9078b640dc92b0277c8e3339",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.21875,
+          0.17222222222222222,
+          0.225,
+          0.26666666666666666
+        ],
+        "ground_anchor": [
+          0.328125,
+          0.4288888888888889
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "A broad civic workshop crowns the rear-left settlement between the granary roofs and Citadel hall. Foreground roofs retain depth ownership; the bell tower and colossus assembly arch remain readable above them.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_charter_bastion.prompt.txt",
+        "prompt_sha256": "8d660a44cf8875d529cbf6c8b32e5694744a5655eb806b61b2cc16a507c8e10b",
+        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08",
+        "generation_output": "exec-ea80e3af-f83b-43f4-86b7-5e2c900ad6df.png"
+      },
+      "building_embercourt_charter_flame": {
+        "asset_id": "faction_embercourt_building_embercourt_charter_flame",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_charter_flame.png",
+        "source_sha256": "696181065d3000e2896610ed4a192ced892a882850abd97b5cf2d6daca149eea",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_charter_flame.png",
+        "trimmed_sha256": "ed2d6a7c870a72eb03c69fc971710179e7477b9376a4107bae9f2f9a40e4f86f",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_charter_flame.png",
+        "runtime_sha256": "c9ba13c5fd19ab01b18332366abdd9a680d9801a2794a344c055b45506f6b5ad",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.21875,
+          0.17222222222222222,
+          0.225,
+          0.26666666666666666
+        ],
+        "ground_anchor": [
+          0.328125,
+          0.4288888888888889
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The fire-lit completion replaces its Bastion in the same rear-left plot and source canvas: pale civic arch, right bell tower, guarded assembly hall and small entrance charter fires. No separate monument or moved town footprint.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_charter_flame.prompt.txt",
+        "prompt_sha256": "43c73a37bcfaac486909fb6d9cb9f5c28be97e4197480e49153a6b766a30eba0",
+        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08",
+        "generation_output": "exec-e3f11bc9-0c63-4e16-a511-91339c56e570.png"
       }
     }
   }

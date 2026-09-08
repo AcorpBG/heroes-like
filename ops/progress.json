@@ -67,7 +67,9 @@
         "python3 -B tests/town_scene_layer_regression.py --faction embercourt --embercourt-riverworks-growth --save <exact-earned-Medium11-Day10-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
         "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-riverworks-growth --save <exact-earned-Medium11-Day10-save> --resolution 1280x720 --label <fresh>",
         "python3 -B tests/town_scene_layer_regression.py --faction embercourt --embercourt-civic-growth --save <exact-earned-Medium11-Day17-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
-        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-civic-growth --save <exact-earned-Medium11-Day17-save> --resolution 1280x720 --label <fresh>"
+        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-civic-growth --save <exact-earned-Medium11-Day17-save> --resolution 1280x720 --label <fresh>",
+        "python3 -B tests/town_scene_layer_regression.py --faction embercourt --embercourt-late-court-growth --save <exact-earned-Medium11-Day19-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
+        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-late-court-growth --save <exact-earned-Medium11-Day19-save> --resolution 1280x720 --label <fresh>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -136,17 +138,18 @@
         "tests/town_scene_layer_regression.py --embercourt-supply-growth and strict art/sequence tests: exact earned Day-5 fe7ce89b save, five ordinary paid prerequisite orders and paid market shortfalls with confirmed End Turns, full state/save/input preservation and three-resolution growth/developed evidence; same official Linux/Windows probe and exports below 250000000 bytes",
         "Embercourt riverworks packet: original Granary Lock Exchange, Lockhouse Tally, Tollstone Weir, Bargebow Slip, Oath Pikehall and Beacon Writs source/trim/runtime layers and exact-faction preparation/manifest; preserve 34 earlier layers, village/catalog art and gameplay.",
         "tests/town_scene_layer_regression.py --embercourt-riverworks-growth: exact earned Day-10 1a3fc989 save, six ordinary prerequisite-valid paid orders and market shortfalls, confirmed turns, complete state/save/painted-input ownership at three inspected resolutions; prior Town/repository and same official Linux/Windows packaged flow under 250000000 bytes.",
+        "Embercourt late-court packet: original Beacon Court, Drake Sluice, Charter Colossus Bastion and same-site Charter Flame source/prompt/trim/runtime paintings and exact-faction preparation/manifest. Preserve all 42 accepted layers, villages/catalogs and gameplay. Extend tests/town_scene_layer_regression.py --embercourt-late-court-growth and strict Python tests for the exact earned Day-19 save, normal visible supply-cache capture/daily income, paid orders, upgrade/input/full-save preservation, inspected three-resolution composition and both official Linux/Windows packages below 250000000 bytes.",
         "Embercourt civic-quay packet: original Lantern Court and Relief Quay source/prompt/trim/runtime paintings, exact-faction manifest and preparation briefs; preserve 40 accepted layers, villages/catalogs and gameplay.",
-        "tests/town_scene_layer_regression.py --embercourt-civic-growth and strict art/sequence tests: exact earned Day-17 424edffe save, two normal paid orders and Ore trades, confirmed turns, full old/new state/save and painted input/depth ownership at three inspected resolutions; shared Town/repository and identical official Linux/Windows packaged flow below 250000000 bytes. No invented rare-resource supply or injected progression; four remaining rare-cost Riverwatch buildings and other art remain open."
+        "tests/town_scene_layer_regression.py --embercourt-civic-growth and strict art/sequence tests: exact earned Day-17 424edffe save, two normal paid orders and Ore trades, confirmed turns, full old/new state/save and painted input/depth ownership at three inspected resolutions; shared Town/repository and identical official Linux/Windows packaged flow below 250000000 bytes. No invented rare-resource supply or injected progression; the later late-court continuation covers the four rare-cost Riverwatch buildings. Other town variants/factions and Overworld remain open."
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-08T20:38:29Z",
+      "updatedAt": "2026-09-08T23:14:25Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Civic-quay checkpoint validated: two original paintings preserve all 40 earlier layers and gameplay. Every inspected source resolution and both official releases pass 18387 earned/8457 developed checks; six complete saves match outside clock. All 18 source jobs pass across retained original/resumed receipts; explicit XDG paths fixed only the service launcher. 69 Python tests, both faction openings/shared Town reports, 406-file preservation, two lossless mip proofs and repo/diff pass. All 5220 PCK members verified; both packs 248543948 bytes, headroom 1456052. Windows is headless Wine, not physical GPU certification. Scoped terminal-test Wine retirement reclaimed 2619101184 bytes; saves/caches/evidence/exports retained. Four rare-cost Riverwatch buildings, other faction/Overworld art and full goal remain open."
+      "notes": "Late-court checkpoint validated: four original paintings preserve all 42 prior layers and gameplay. All 18 source and 8 package jobs pass; three inspected source resolutions and each official Linux/Windows release pass 35963 earned and 8499 developed checks without engine errors. Six complete Day46 saves match outside only saved_at_unix. Both faction openings/shared Town reports, 76 Python tests, 416-file preservation/idempotence, four lossless mip proofs and repo/diff pass. All 5228 package members checked; 5218 prior members unchanged, only scene manifest/UID cache updated, platforms differ only in project.binary. Both packs 249662752 bytes, headroom 337248. Finished Wine system retirement reclaims 2619101184 bytes with user/save/registry hashes and caches/evidence/exports retained. Windows is headless Wine, not GPU certification. Accepted 22 Bellwake/24 Riverwatch layers do not close other town variants/factions or Overworld; full goal active. A larger data-budget decision is requested, not approved."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16764,10 +16767,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Civic-quay checkpoint validated: two original paintings preserve all 40 earlier layers and gameplay. Every inspected source resolution and both official releases pass 18387 earned/8457 developed checks; six complete saves match outside clock. All 18 source jobs pass across retained original/resumed receipts; explicit XDG paths fixed only the service launcher. 69 Python tests, both faction openings/shared Town reports, 406-file preservation, two lossless mip proofs and repo/diff pass. All 5220 PCK members verified; both packs 248543948 bytes, headroom 1456052. Windows is headless Wine, not physical GPU certification. Scoped terminal-test Wine retirement reclaimed 2619101184 bytes; saves/caches/evidence/exports retained. Four rare-cost Riverwatch buildings, other faction/Overworld art and full goal remain open.",
+  "currentSliceNotes": "Late-court checkpoint validated: four original paintings preserve all 42 prior layers and gameplay. All 18 source and 8 package jobs pass; three inspected source resolutions and each official Linux/Windows release pass 35963 earned and 8499 developed checks without engine errors. Six complete Day46 saves match outside only saved_at_unix. Both faction openings/shared Town reports, 76 Python tests, 416-file preservation/idempotence, four lossless mip proofs and repo/diff pass. All 5228 package members checked; 5218 prior members unchanged, only scene manifest/UID cache updated, platforms differ only in project.binary. Both packs 249662752 bytes, headroom 337248. Finished Wine system retirement reclaims 2619101184 bytes with user/save/registry hashes and caches/evidence/exports retained. Windows is headless Wine, not GPU certification. Accepted 22 Bellwake/24 Riverwatch layers do not close other town variants/factions or Overworld; full goal active. A larger data-budget decision is requested, not approved.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Presentation Corrections",
-  "currentSliceUpdatedAt": "2026-09-08T18:43:10Z",
+  "currentSliceUpdatedAt": "2026-09-08T23:14:25Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22570,7 +22573,9 @@
         "python3 -B tests/town_scene_layer_regression.py --faction embercourt --embercourt-riverworks-growth --save <exact-earned-Medium11-Day10-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
         "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-riverworks-growth --save <exact-earned-Medium11-Day10-save> --resolution 1280x720 --label <fresh>",
         "python3 -B tests/town_scene_layer_regression.py --faction embercourt --embercourt-civic-growth --save <exact-earned-Medium11-Day17-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
-        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-civic-growth --save <exact-earned-Medium11-Day17-save> --resolution 1280x720 --label <fresh>"
+        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-civic-growth --save <exact-earned-Medium11-Day17-save> --resolution 1280x720 --label <fresh>",
+        "python3 -B tests/town_scene_layer_regression.py --faction embercourt --embercourt-late-court-growth --save <exact-earned-Medium11-Day19-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
+        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-late-court-growth --save <exact-earned-Medium11-Day19-save> --resolution 1280x720 --label <fresh>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -22639,17 +22644,18 @@
         "tests/town_scene_layer_regression.py --embercourt-supply-growth and strict art/sequence tests: exact earned Day-5 fe7ce89b save, five ordinary paid prerequisite orders and paid market shortfalls with confirmed End Turns, full state/save/input preservation and three-resolution growth/developed evidence; same official Linux/Windows probe and exports below 250000000 bytes",
         "Embercourt riverworks packet: original Granary Lock Exchange, Lockhouse Tally, Tollstone Weir, Bargebow Slip, Oath Pikehall and Beacon Writs source/trim/runtime layers and exact-faction preparation/manifest; preserve 34 earlier layers, village/catalog art and gameplay.",
         "tests/town_scene_layer_regression.py --embercourt-riverworks-growth: exact earned Day-10 1a3fc989 save, six ordinary prerequisite-valid paid orders and market shortfalls, confirmed turns, complete state/save/painted-input ownership at three inspected resolutions; prior Town/repository and same official Linux/Windows packaged flow under 250000000 bytes.",
+        "Embercourt late-court packet: original Beacon Court, Drake Sluice, Charter Colossus Bastion and same-site Charter Flame source/prompt/trim/runtime paintings and exact-faction preparation/manifest. Preserve all 42 accepted layers, villages/catalogs and gameplay. Extend tests/town_scene_layer_regression.py --embercourt-late-court-growth and strict Python tests for the exact earned Day-19 save, normal visible supply-cache capture/daily income, paid orders, upgrade/input/full-save preservation, inspected three-resolution composition and both official Linux/Windows packages below 250000000 bytes.",
         "Embercourt civic-quay packet: original Lantern Court and Relief Quay source/prompt/trim/runtime paintings, exact-faction manifest and preparation briefs; preserve 40 accepted layers, villages/catalogs and gameplay.",
-        "tests/town_scene_layer_regression.py --embercourt-civic-growth and strict art/sequence tests: exact earned Day-17 424edffe save, two normal paid orders and Ore trades, confirmed turns, full old/new state/save and painted input/depth ownership at three inspected resolutions; shared Town/repository and identical official Linux/Windows packaged flow below 250000000 bytes. No invented rare-resource supply or injected progression; four remaining rare-cost Riverwatch buildings and other art remain open."
+        "tests/town_scene_layer_regression.py --embercourt-civic-growth and strict art/sequence tests: exact earned Day-17 424edffe save, two normal paid orders and Ore trades, confirmed turns, full old/new state/save and painted input/depth ownership at three inspected resolutions; shared Town/repository and identical official Linux/Windows packaged flow below 250000000 bytes. No invented rare-resource supply or injected progression; the later late-court continuation covers the four rare-cost Riverwatch buildings. Other town variants/factions and Overworld remain open."
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-08T20:38:29Z",
+      "updatedAt": "2026-09-08T23:14:25Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Civic-quay checkpoint validated: two original paintings preserve all 40 earlier layers and gameplay. Every inspected source resolution and both official releases pass 18387 earned/8457 developed checks; six complete saves match outside clock. All 18 source jobs pass across retained original/resumed receipts; explicit XDG paths fixed only the service launcher. 69 Python tests, both faction openings/shared Town reports, 406-file preservation, two lossless mip proofs and repo/diff pass. All 5220 PCK members verified; both packs 248543948 bytes, headroom 1456052. Windows is headless Wine, not physical GPU certification. Scoped terminal-test Wine retirement reclaimed 2619101184 bytes; saves/caches/evidence/exports retained. Four rare-cost Riverwatch buildings, other faction/Overworld art and full goal remain open."
+      "notes": "Late-court checkpoint validated: four original paintings preserve all 42 prior layers and gameplay. All 18 source and 8 package jobs pass; three inspected source resolutions and each official Linux/Windows release pass 35963 earned and 8499 developed checks without engine errors. Six complete Day46 saves match outside only saved_at_unix. Both faction openings/shared Town reports, 76 Python tests, 416-file preservation/idempotence, four lossless mip proofs and repo/diff pass. All 5228 package members checked; 5218 prior members unchanged, only scene manifest/UID cache updated, platforms differ only in project.binary. Both packs 249662752 bytes, headroom 337248. Finished Wine system retirement reclaims 2619101184 bytes with user/save/registry hashes and caches/evidence/exports retained. Windows is headless Wine, not GPU certification. Accepted 22 Bellwake/24 Riverwatch layers do not close other town variants/factions or Overworld; full goal active. A larger data-budget decision is requested, not approved."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111414,52 +111420,52 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Validated two original Riverwatch civic/quay paintings, preserving all 40 earlier layers and gameplay. Three inspected source resolutions and official Linux/Windows releases pass 18387 earned-growth/save and 8457 developed-input checks each. All 18 source jobs pass across retained original/resumed receipts; 69 Python tests, prior/shared Town/repository checks, six complete non-clock saves and 5220-member package parity pass. Each PCK is 248543948 bytes with 1456052 bytes headroom. Four rare-cost Riverwatch buildings, other factions and Overworld art keep the full goal in progress; Windows remains headless Wine, not hardware certification.",
+  "summary": "Validated four original Riverwatch late-court paintings and legitimate guarded-supply/paid-growth continuation. All 18 source and 8 package jobs, three inspected resolutions, both official releases, 76 Python tests, prior/shared Town/repository checks, six complete non-clock saves and 5228-member parity pass. Each release passes 35963 earned/8499 developed checks and stays at 249662752 bytes, with 337248 bytes headroom. Accepted 22 Bellwake/24 Riverwatch layers do not cover other town variants, four remaining factions or all Overworld art; full goal in progress. Windows is headless Wine, not hardware certification; no package-limit increase is approved.",
   "taskId": "10236",
-  "updatedAt": "2026-09-08T20:38:29Z",
+  "updatedAt": "2026-09-08T23:14:26Z",
   "validation": {
-    "id": "quality-embercourt-civic-20260908",
+    "id": "quality-embercourt-late-court-20260908",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-08T20:34:39Z",
-    "scope": "Validated Lantern Court and Relief Quay scene paintings; not full faction/Town presentation or release completion.",
-    "result": "Two original civic/quay paintings preserve all 40 prior scene layers, villages, catalog icons and gameplay owners. Exact earned Day17 continuation buys Lantern Court/Relief Quay on Days18/19 through normal paid ledger orders, three paid Ore trades and confirmed turns. Three inspected source resolutions and each official Linux/Windows release pass 18387 earned and 8457 developed checks. Both faction openings, shared Town reports, 69 Python tests, two complete lossless pixel/mip proofs, 406-file preservation/idempotence, repository/diff and normal export/startup/generated-Town smokes pass. The original source batch's missing HOME/XDG editor-directory failure is retained; explicit normal XDG paths resume only the unfinished nine jobs against unchanged source/report hashes, without changing game/import code or error filters. Six complete Day19 Decimal JSON/raw saves match outside only saved_at_unix. Each PCK is 248543948 bytes; all 5220 members checked, 5214 prior members unchanged, only manifest/UID cache updated and platforms differ only in project.binary. Windows is headless Wine, not physical GPU certification. Terminal platform/parity acceptance preceded scoped disposable Wine system retirement reclaiming 2619101184 bytes, preserving user/save/registry hashes and caches/evidence/exports.",
+    "validatedAt": "2026-09-08T23:14:25Z",
+    "scope": "Validated four Riverwatch late-court scene paintings and exact paid progression; not full faction/Town presentation or release completion.",
+    "result": "Four original Beacon Court, Drake Sluice, Charter Colossus Bastion and same-site Charter Flame paintings preserve all 42 earlier layers, villages, catalog icons and gameplay owners. Exact earned Day19 continuation pays for normal recruits, captures the existing visible guarded rare-source cache through Quick Resolve/casualty continuation, and buys buildings on Days22/30/40/46 through ordinary ledger orders, paid trades and confirmed turns. All 18 source and 8 package jobs pass. Three inspected source resolutions and each official Linux/Windows release pass 35963 earned and 8499 developed checks without engine errors or source/input/export changes. Both faction openings/shared Town reports, 76 Python tests, four complete lossless image/mip proofs, 416-file preservation/idempotence, repository/diff and normal export/startup/generated-Town smokes pass. Six complete Day46 Decimal JSON/raw saves match outside only saved_at_unix. Every one of 5228 PCK members is compared: eight new texture/import members, 5218 prior members unchanged, only scene manifest/UID cache updated; platforms differ only in project.binary. Each PCK is 249662752 bytes, headroom 337248. All four Linux release saved building views and its developed composition were visually inspected. Windows is headless Wine, not physical GPU certification. Terminal platform/parity acceptance preceded scoped Wine system retirement reclaiming 2619101184 bytes, preserving user/save/registry hashes and caches/evidence/exports.",
     "artifacts": [
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_control_ordered_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_source_batch.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_source_resume.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_accepted_earned_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_accepted_developed_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_accepted_earned_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_accepted_developed_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_accepted_earned_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_accepted_developed_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_source_save_comparison.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_packaged_save_comparison.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_preservation.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_lossless.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_lossless_verified.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_package_batch.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_package_parity.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_release_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_packaged_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_packaged_linux/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_packaged_linux/bootstrap-controls.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_packaged_developed_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_packaged_developed_linux/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_release_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_packaged_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_packaged_windows/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_packaged_windows/bootstrap-controls.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_packaged_developed_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_packaged_developed_windows/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_compat_embercourt/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_compat_veilmourn/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_wine_retirement.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_civic_repo_final_driver.log",
-      ".artifacts/full_play_runtime_20260905/embercourt_civic_existing_town/report.json"
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_control_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_source_batch.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_accepted_earned_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_accepted_developed_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_accepted_earned_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_accepted_developed_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_accepted_earned_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_accepted_developed_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_source_save_comparison.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_packaged_save_comparison.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_preservation.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_lossless.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_lossless_recheck.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_package_batch.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_package_parity.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_release_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_packaged_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_packaged_linux/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_packaged_linux/bootstrap-controls.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_packaged_developed_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_packaged_developed_linux/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_release_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_packaged_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_packaged_windows/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_packaged_windows/bootstrap-controls.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_packaged_developed_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_packaged_developed_windows/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_compat_embercourt/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_compat_veilmourn/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_wine_retirement.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_repo_final_driver.log",
+      ".artifacts/full_play_runtime_20260905/embercourt_late_court_existing_town/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_late_court_release_linux/generated-entry/live_validation_report.json"
     ],
-    "remainingWork": "Bellwake's 22 layers and 20 Embercourt layers are accepted. Beacon Court, Drake Sluice, Charter Colossus Bastion and Charter Flame still require original art and legitimate rare-resource acquisition. Continue other factions and demonstrated Overworld art repairs with 1456052 bytes verified package headroom. Preserve legitimate match/performance evidence and documented platform/legacy limits. Prior intermittent Windows Main Menu Ogg shutdown warnings are absent here but no lifetime fix is claimed. Full presentation and parent goal remain active."
+    "remainingWork": "Accepted 22 Bellwake and 24 Riverwatch layers cover those towns, not complete factions: six additional Embercourt and five Veilmourn building identities remain unmapped, as do the other four factions. Continue other town/faction and demonstrated Overworld art corrections; only 337248 bytes of verified package headroom remain. A 350 MB PCK budget decision has been requested but is not approved or implemented. Preserve legitimate match/performance evidence and documented platform/legacy limits. Prior intermittent Windows Main Menu Ogg shutdown warnings are absent here but no lifetime fix is claimed. Full presentation and parent goal remain active."
   },
   "validationHistory": [
     {
