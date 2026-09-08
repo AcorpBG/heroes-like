@@ -1563,6 +1563,288 @@
         "curation": "Original text-only paintings from the inspected Riverwatch panorama and normal paid-growth draft. Revised developed composition inspected at 1280x720: observatory on the rear left-bank terrace, with exposed supply roof and right-bank pike hall. Archive and Annex share source-space bounds and ground anchor but are not pixel-identical edits. Final three-resolution paid-growth, input/save and platform acceptance is recorded separately in the art-repair report.",
         "reference_inputs": [],
         "generation_date": "2026-09-08"
+      },
+      "building_embercourt_granary_lock_exchange": {
+        "asset_id": "faction_embercourt_building_embercourt_granary_lock_exchange",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_granary_lock_exchange.png",
+        "source_sha256": "c260b2b98b021921e2510bec6f9b4486906e6f51b9651e517d14c971375bfbf0",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          21,
+          1524,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_granary_lock_exchange.png",
+        "trimmed_sha256": "ccb824eb7ae8be1660ab382903481ea0f2bd6535f1e5389032faecbe36c5f3f5",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_granary_lock_exchange.png",
+        "runtime_sha256": "cce72210e0c6fad156c5f9db9bf7cfe0cc453df0514e1090e73265afb9ebbf6c",
+        "runtime_size": [
+          512,
+          337
+        ],
+        "normalized_rect": [
+          0.1625,
+          0.32061631944444446,
+          0.16123046875,
+          0.18864293981481484
+        ],
+        "ground_anchor": [
+          0.24375,
+          0.49777777777777776
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Bonded grain exchange extends the left-bank settlement behind the Watch court; keep its paired warehouse roofs exposed above the older court and preserve the river approach.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_granary_lock_exchange.prompt.txt",
+        "prompt_sha256": "5b8d03d6c2a4d7c7dcde717a22f7c76c3888665f62e67365bc711c9409b8fb13",
+        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08",
+        "generation_output": "exec-20e63457-9b35-42d0-82f5-f6309010f883.png"
+      },
+      "building_embercourt_lockhouse_tally": {
+        "asset_id": "faction_embercourt_building_embercourt_lockhouse_tally",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
+        "source_sha256": "8d1672c35b2c3c9fd4cba6a1eb573a6d104b5c9ca7aede83dda17ad1f86d76ea",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          19,
+          12,
+          1503,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
+        "trimmed_sha256": "df6b60f7f3158861681451dbb72f018bc9a04e8e8a2e5f51ecee782d90f51a68",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
+        "runtime_sha256": "33c00a0058fb969bcd1c3b1e2532d143dde8147789039ccaf8dc96d47f8cfa20",
+        "runtime_size": [
+          512,
+          349
+        ],
+        "normalized_rect": [
+          0.07369181315104167,
+          0.7575954861111112,
+          0.14190266927083334,
+          0.1720341435185185
+        ],
+        "ground_anchor": [
+          0.145,
+          0.9122222222222223
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Low tally office stands directly on the foreground-left stone quay, below the Market arcade; its receiving counter faces the working waterfront and leaves navigation controls clear.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.prompt.txt",
+        "prompt_sha256": "84bb990fced1e20b2bc10d0e44fcd31ba9e3ff272f3c0a65789a15a1ac4d2047",
+        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08",
+        "generation_output": "exec-ffeed79c-1774-4672-a80d-c0232c698644.png"
+      },
+      "building_embercourt_tollstone_weir": {
+        "asset_id": "faction_embercourt_building_embercourt_tollstone_weir",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_tollstone_weir.png",
+        "source_sha256": "28745ff79ef6736c550eac717795d7ece2716b100fa94c995f4f7b2688e72b69",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          21,
+          1526,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_tollstone_weir.png",
+        "trimmed_sha256": "402f8e9a18bc008dd0a50e59a956531d0eb2f30eb5038b1f978042190af5f404",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_tollstone_weir.png",
+        "runtime_sha256": "a021c62d60ba0675e62bcd59afd463d5d32e30912300017c6cd6275834e93c41",
+        "runtime_size": [
+          512,
+          337
+        ],
+        "normalized_rect": [
+          0.340625,
+          0.5269314236111111,
+          0.19248860677083332,
+          0.22492042824074074
+        ],
+        "ground_anchor": [
+          0.4375,
+          0.7333333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Operational toll sluice continues the existing central weir and masonry abutments, with transparent gate openings revealing the original river rather than a separate painted water tile.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_tollstone_weir.prompt.txt",
+        "prompt_sha256": "374c507b885c4720ed05c588e66286787bbeb8f2a9ddd4eee7b42a0b5df58402",
+        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08",
+        "generation_output": "exec-3fca8a1c-fafc-4cfe-95af-32e17e7bdea4.png"
+      },
+      "building_embercourt_bargebow_slip": {
+        "asset_id": "faction_embercourt_building_embercourt_bargebow_slip",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_bargebow_slip.png",
+        "source_sha256": "c143423cbe307e42515cb68d8882398b3609a8eb21fb7b885dfa8d9ae4e88dfc",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          27,
+          38,
+          1521,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_bargebow_slip.png",
+        "trimmed_sha256": "46440eacb7f0cfe85962409a83e9cb15a2316832dbd3979a91d1b53ab993bf96",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_bargebow_slip.png",
+        "runtime_sha256": "c37b74f99805ae16ee9b729d6b3022643b913454307e35c48de46f81e1d9f3c0",
+        "runtime_size": [
+          512,
+          338
+        ],
+        "normalized_rect": [
+          0.66612548828125,
+          0.6424045138888889,
+          0.2006103515625,
+          0.23537326388888888
+        ],
+        "ground_anchor": [
+          0.765625,
+          0.8611111111111112
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Barge cradle projects from the right working quay into the near channel; its shore-end workshop and gangway meet the existing bank below the civic hall, leaving the Wayfarers porch exposed.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_bargebow_slip.prompt.txt",
+        "prompt_sha256": "583356c56790080cfb78ef7310ffd2fc269ae3428a415397d5b08708a9207e7d",
+        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08",
+        "generation_output": "exec-05faa746-1269-4b43-9c0f-6c60ac0742a3.png"
+      },
+      "building_embercourt_oath_pikehall": {
+        "asset_id": "faction_embercourt_building_embercourt_oath_pikehall",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
+        "source_sha256": "40bc88d3b7dfd945d60cc67532866e353c8fb642293e7947debed79f5328700e",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          33,
+          19,
+          1518,
+          1000
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
+        "trimmed_sha256": "3c59c3b14b34ebc36c8fa3ab52beda7d8146a7bcffa0c4100f312a45d2c19a8d",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
+        "runtime_sha256": "6ead9b5bf4fc59cbf278aa8fc517e535ec96f71e96db51dfea73307f71323574",
+        "runtime_size": [
+          512,
+          338
+        ],
+        "normalized_rect": [
+          0.840789794921875,
+          0.6811451099537037,
+          0.148040771484375,
+          0.17386067708333333
+        ],
+        "ground_anchor": [
+          0.915625,
+          0.8444444444444444
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Low oath court extends the foreground-right bank below Wayfarers Hall, with the arcade toward the river. Keep its bell and roof below the command dock, its approach above navigation and the main civic hall unobstructed.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.prompt.txt",
+        "prompt_sha256": "199f3e9c6416206e4834b540666be91a2726e48d476777619f01ed6b15ed96f2",
+        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08",
+        "generation_output": "exec-fd3e1d33-ce0c-4ed3-a899-3eae2024f983.png"
+      },
+      "building_embercourt_beacon_writs": {
+        "asset_id": "faction_embercourt_building_embercourt_beacon_writs",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_writs.png",
+        "source_sha256": "8d6aab8fc60337147c86f6fa3c89954cb7d17efb5a04b334881d021f178e6c28",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          65,
+          0,
+          1524,
+          988
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_beacon_writs.png",
+        "trimmed_sha256": "4623997a7da8efe6751f5ebae7c58c4ee47e552c48fca8dc104c545977f8e96e",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_beacon_writs.png",
+        "runtime_sha256": "70ce26797f7ac1384f3be344330dc0b14175149901ffa0c2faa5ac4e1c958e8a",
+        "runtime_size": [
+          512,
+          347
+        ],
+        "normalized_rect": [
+          0.6318766276041666,
+          0.2,
+          0.15435384114583334,
+          0.18582175925925926
+        ],
+        "ground_anchor": [
+          0.7,
+          0.38333333333333336
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Narrow signal-and-charter station stands on the rear right-bank rise above the civic hall, with its small beacon visible against the hillside and clear of the command rail.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_writs.prompt.txt",
+        "prompt_sha256": "ddad2b0f5d604bcb099c9adf47e6222fc4e54b2d40f3a7d5a10cdbcd327a3882",
+        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08",
+        "generation_output": "exec-6729bdfa-4f23-4cb2-acc0-225b425e9425.png"
       }
     }
   }

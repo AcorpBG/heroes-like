@@ -216,6 +216,49 @@ for brief in EMBERCOURT_SUPPLY_BRIEFS.values():
                  curation='Original text-only paintings from the inspected Riverwatch panorama and normal paid-growth draft. Revised developed composition inspected at 1280x720: observatory on the rear left-bank terrace, with exposed supply roof and right-bank pike hall. Archive and Annex share source-space bounds and ground anchor but are not pixel-identical edits. Final three-resolution paid-growth, input/save and platform acceptance is recorded separately in the art-repair report.')
 EMBERCOURT_BRIEFS.update(EMBERCOURT_SUPPLY_BRIEFS)
 
+EMBERCOURT_RIVERWORKS_BRIEFS = {
+    'building_embercourt_granary_lock_exchange': {
+        'source_sha256':'c260b2b98b021921e2510bec6f9b4486906e6f51b9651e517d14c971375bfbf0',
+        'generation_output':'exec-20e63457-9b35-42d0-82f5-f6309010f883.png',
+        'scene_bounds':[260,285,260,260*1024/1536], 'ground_anchor':[390,448],
+        'grounding':'Bonded grain exchange extends the left-bank settlement behind the Watch court; keep its paired warehouse roofs exposed above the older court and preserve the river approach.',
+    },
+    'building_embercourt_lockhouse_tally': {
+        'source_sha256':'8d1672c35b2c3c9fd4cba6a1eb573a6d104b5c9ca7aede83dda17ad1f86d76ea',
+        'generation_output':'exec-ffeed79c-1774-4672-a80d-c0232c698644.png',
+        'scene_bounds':[115,680,235,235*1024/1536], 'ground_anchor':[232,821],
+        'grounding':'Low tally office stands directly on the foreground-left stone quay, below the Market arcade; its receiving counter faces the working waterfront and leaves navigation controls clear.',
+    },
+    'building_embercourt_tollstone_weir': {
+        'source_sha256':'28745ff79ef6736c550eac717795d7ece2716b100fa94c995f4f7b2688e72b69',
+        'generation_output':'exec-3fca8a1c-fafc-4cfe-95af-32e17e7bdea4.png',
+        'scene_bounds':[545,470,310,310*1024/1536], 'ground_anchor':[700,660],
+        'grounding':'Operational toll sluice continues the existing central weir and masonry abutments, with transparent gate openings revealing the original river rather than a separate painted water tile.',
+    },
+    'building_embercourt_bargebow_slip': {
+        'source_sha256':'c143423cbe307e42515cb68d8882398b3609a8eb21fb7b885dfa8d9ae4e88dfc',
+        'generation_output':'exec-05faa746-1269-4b43-9c0f-6c60ac0742a3.png',
+        'scene_bounds':[1060,570,330,220], 'ground_anchor':[1225,775],
+        'grounding':'Barge cradle projects from the right working quay into the near channel; its shore-end workshop and gangway meet the existing bank below the civic hall, leaving the Wayfarers porch exposed.',
+    },
+    'building_embercourt_oath_pikehall': {
+        'source_sha256':'40bc88d3b7dfd945d60cc67532866e353c8fb642293e7947debed79f5328700e',
+        'generation_output':'exec-fd3e1d33-ce0c-4ed3-a899-3eae2024f983.png',
+        'scene_bounds':[1340,610,245,245*1024/1536], 'ground_anchor':[1465,760],
+        'grounding':'Low oath court extends the foreground-right bank below Wayfarers Hall, with the arcade toward the river. Keep its bell and roof below the command dock, its approach above navigation and the main civic hall unobstructed.',
+    },
+    'building_embercourt_beacon_writs': {
+        'source_sha256':'8d6aab8fc60337147c86f6fa3c89954cb7d17efb5a04b334881d021f178e6c28',
+        'generation_output':'exec-6729bdfa-4f23-4cb2-acc0-225b425e9425.png',
+        'scene_bounds':[1000,180,260,260*1024/1536], 'ground_anchor':[1120,345],
+        'grounding':'Narrow signal-and-charter station stands on the rear right-bank rise above the civic hall, with its small beacon visible against the hillside and clear of the command rail.',
+    },
+}
+for brief in EMBERCOURT_RIVERWORKS_BRIEFS.values():
+    brief.update(reference_inputs=[], generation_date='2026-09-08',
+                 curation='Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.')
+EMBERCOURT_BRIEFS.update(EMBERCOURT_RIVERWORKS_BRIEFS)
+
 FACTION_BRIEFS = {FACTION: BRIEFS, 'faction_embercourt': EMBERCOURT_BRIEFS}
 
 def digest(path):
@@ -262,6 +305,8 @@ def prepare_layers(faction, briefs):
             layers[building_id]['reference_inputs'] = brief['reference_inputs']
         if 'generation_date' in brief:
             layers[building_id]['generation_date'] = brief['generation_date']
+        if 'generation_output' in brief:
+            layers[building_id]['generation_output'] = brief['generation_output']
     return layers
 
 
