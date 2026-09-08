@@ -29,7 +29,7 @@ Wine, not GPU certification. Exact per-checkpoint counts, source provenance,
 commands, legacy test limits and the separate intermittent quick-exit audio
 observation are in `docs/generated-full-match-art-repair-report.md`.
 
-Latest continuation, now validated: Riverwatch Stone Store, Watch Barracks,
+Previous early-growth continuation, validated in `fe7ce89b`: Riverwatch Stone Store, Watch Barracks,
 Bowyer Lodge and Beacon Range original layers, with same-site upgrades and actual
 earned Day-1 Market-to-Day-5 paid growth. Source at all three inspected resolutions
 and each official Linux/Windows release pass 8306/8294 earned/developed checks.
@@ -41,6 +41,24 @@ between platforms. This brings accepted scene layers to 22 Bellwake and seven
 Embercourt paintings, not completion of later Embercourt buildings, other
 factions, remaining Overworld presentation or the full goal. Windows remains
 headless Wine rather than physical GPU certification.
+
+Latest validated continuation: five original Riverwatch supply/magic layers
+(Granary, Depot, Archive, Annex and Pikehall), preserving the earlier 29 paintings,
+villages, catalog icons and all runtime/gameplay owners. Five normal paid orders
+and four paid one-Ore trades continue the exact earned Day-5 save to Day 10;
+Archive/Annex share a site and preserve the saved predecessor. Three inspected
+source resolutions and each official Linux/Windows release pass 16654 growth
+and 8349 developed checks. Six complete saves match the original renderer outside
+only the clock. Prior/shared Town reports, 60 Python tests, 351-file preservation,
+lossless imports, repository/diff and normal platform smokes pass. All 5204
+package members are checked: ten new texture/import members, 5192 prior members
+unchanged, only scene manifest/UID cache updated, and platforms differ only in
+`project.binary`. Each PCK is 246609244 bytes with 3390756 bytes headroom.
+Accepted layers now total 22 Bellwake and 12 Embercourt; later buildings, other
+factions and remaining Overworld presentation remain unfinished. Windows is
+headless Wine, not physical GPU certification. Provenance, failed drafts,
+inspected captures, exact commands and safe disposable-Wine cleanup are recorded
+in `docs/generated-full-match-art-repair-report.md`.
 
 ## Gameplay corrections
 

@@ -409,6 +409,143 @@ source/package drivers record every exact command and path. Full receipts use
 `embercourt_growth_save_comparison.py packaged`,
 `embercourt_growth_package_parity.py` and `embercourt_growth_preservation.py`.
 
+## Embercourt supply/magic — validated checkpoint, 2026-09-08
+
+Selected after pushed `fe7ce89b`: River Granary Exchange, Quartermaster Depot,
+Lantern Archive, Starseer Annex and Citadel Pikehall. These existing authored
+buildings still resolve to detached catalog miniatures in the actual earned
+Medium11 progression and developed Riverwatch capture. No gameplay identity,
+build cost, prerequisite, daily limit, saved predecessor or schema changes are
+selected. The original villages, catalog art and 29 accepted scene layers stay
+unchanged; Archive/Annex retain one scene site.
+
+The exact earned Day-5 input is
+`embercourt_growth_accepted_earned_720/earned_growth_save.json`, SHA256
+`48ed86fb4babfd21b5aab898baae06e7bc3f2d45ba91a182d29260c01551e963`.
+The new `--embercourt-supply-growth` probe reuses ordinary End Turn, Trade and
+construction-ledger routes, complete state/save assertions and the prior bounded
+availability loop. It rejects wrong input hashes, factions or combined sequences.
+The old-renderer replay in `embercourt_supply_before_720` completed all five
+orders on Days 6–10 and retained the full earned save: 16490 checks, 18 expected
+exact-scene failures, no runtime errors or source/input mutation. Four normal
+one-Ore trades occurred (one Day 9, three Day 10); final resources are 560 gold,
+four wood and zero ore. No resources, days, outcomes or built ids were injected.
+The actual final before-art screenshot was inspected.
+
+Five original text-only RGBA paintings now use the exact scene manifest and
+unchanged alpha/crop-aware renderer. Source/output/prompt provenance and two
+rejected Archive attempts are recorded in the scene-art README. One rejection
+has an incompatible canvas, the other is opaque RGB with a baked checkerboard;
+neither ships. All selected masters are 1536x1024. The fresh Archive resembles
+the Annex's earlier records-lodge stage, not a pixel-identical generated edit.
+Only transparent-margin cropping, aspect-preserving 512px Lanczos and mipmaps
+are applied. Strict art checks now recognize the actual structured text-only
+prompt form while retaining exact prompt hashes and explicit empty input lists.
+The first art-unit invocation ran before mipmap setup and failed correctly;
+after enabling mipmaps on exactly five new imports, all 22 art tests pass.
+Nine sequence tests also pass, retaining paid trades, full-state comparisons,
+daily limits, predecessor ownership, no-progress bounds and Windows assertions.
+
+`embercourt_supply_preservation.json` verifies all 29 prior rows, 87 rasters,
+29 prompts and original village/catalog/runtime/gameplay owners against
+`fe7ce89b`, plus real selected preparation idempotence. The retained
+source/package drivers use fresh `embercourt_supply_*` labels and the same
+official-package bootstrap; no prior package evidence is relabeled as current
+acceptance.
+The first draft completed 16625 checks with 15 input failures, no runtime errors
+and unchanged source/input. The depot's chosen click point is genuinely behind
+the Watch court; the final probe proves that foreground ownership before
+clicking the exposed supply roof instead. Archive/Annex's first right-bank
+site hides the observatory behind the command rail. Both now share the rear
+left-bank terrace `[0,205,300,200]`, ground `[180,385]`, with exposed upper
+architecture above the granary. Earlier paintings, depth priority and controls
+were not moved to conceal these failures. This is pre-acceptance composition
+curation and stronger actual pointer testing, not a new renderer/gameplay rule.
+The revised developed composition was inspected: the observatory now reads above
+the left-bank granary, outside the command rail. The first revised probe's only
+failure samples the open balcony rather than opaque architecture (8341 checks,
+no engine errors). The final pointer control uses the inspected solid turret
+roof, whose runtime alpha is independently confirmed, without filling the
+opening or relaxing painted-pixel ownership.
+The revised developed probe then passes all 8349 checks with no engine errors
+or source/input mutation (`embercourt_supply_developed_draft2_720`). The Archive
+control similarly uses an independently confirmed solid roof pixel, not the
+transparent margin. `embercourt_supply_draft_save_comparison.json` proves the
+complete old-renderer and first-draft Day-10 raw saves identical outside only
+`/saved_at_unix`, including exact Decimal-valued JSON; no other fields are excluded.
+Final frozen manifest SHA256:
+`2473718258fb17657ee73d0f0a528865d33b2a20ccfe1a44a14b2532422c992e`;
+Python probe SHA256:
+`ff9aa598e85cb12480734d6df667535b55a4982ecba60585730a8174c8ea7309`.
+`embercourt_supply_source_batch.json` is terminal with all 18 jobs successful.
+Each earned replay passes 16654 checks and each developed fixture 8349 at
+1280x720, 1920x1080 and 2048x1079, without runtime errors or source/input
+mutation. All six final compositions and the Archive/Annex paid stages were
+personally inspected, including the full-width crop and information dialog.
+The existing header, command controls and footer remain readable; later
+unaccepted catalog paintings are still visible in the developed fixture.
+The detached fixture's header uses the opening session while its stage uses
+the recorded developed built ids; it is not a resumed Day-43 match. Actual
+earned captures show the ordinary tier-1 to tier-2 progression.
+
+Earlier Riverwatch/Bellwake openings pass 2519/1382 checks; both existing Town
+reports, all 60 Python tests and repository validation pass. Five lossless-import
+proofs preserve pixels, mips and options, with 2274 prior cache hits and no new
+compression saving claimed. The post-import preservation/idempotence replay
+checks 351 files against `fe7ce89b`. `embercourt_supply_source_save_comparison.json`
+proves all four complete Day-10 states and raw saves identical outside only
+`/saved_at_unix`: original presentation and all three final source resolutions.
+The final state retains all 13 built ids, including the saved predecessors.
+
+`embercourt_supply_package_batch.json` is terminal with all eight jobs successful.
+Each fresh official Linux/Windows release passes the same 16654 earned and
+8349 developed checks, with unchanged source, input and PCK. All five bootstrap
+controls pass per platform. Both normal export/startup/generated-Town smokes,
+repository and diff checks pass. Final Linux release growth and developed
+captures were personally inspected; Windows is headless Wine, retaining every
+gameplay/input/save assertion, not physical GPU certification. Both normal
+Windows logs have no script errors or leak messages this time; this art-only
+packet does not claim a fix for the earlier intermittent Main Menu Ogg warning.
+`embercourt_supply_packaged_save_comparison.json` proves all six complete Day-10
+states and raw saves equal outside only the one clock field: original renderer,
+three source resolutions, Linux and Windows. No other value or array is omitted.
+
+`embercourt_supply_package_parity.json` checks all **5204 members** against the
+previous 245305344-byte release. Each new PCK is **246609244 bytes**, leaving
+**3390756 bytes** under the unchanged 250000000-byte ceiling. Exactly ten new
+texture/import members are added, none removed, and 5192 existing members are
+byte-identical. Only the scene manifest and generated UID cache change; no
+source masters ship. The five new payloads match their lossless-import proofs.
+Across platforms, 5203 members match and only `project.binary` differs.
+Linux PCK SHA256:
+`17c9c7b77a6a80756767c32628ed4dc4d7aea3423c0d2a935c139debaa67b910`;
+Windows: `be63a64868255823fa6858ede31c3a123743be39e3d2b858a201a25251f78248`.
+
+After terminal success and verified absence of live prefix processes,
+`embercourt_supply_wine_retirement.json` records **2619097088 bytes** removed,
+with the same measured free-space increase. Only `drive_c/windows`,
+`Program Files` and `Program Files (x86)` in this packet's two disposable Wine
+prefixes were permanently removed; fresh prefixes recreate them. Every retained
+user/save/registry hash is unchanged. Caches, source, reports, captures, exports,
+RMG evidence and unrelated untracked files remain. Retired prefixes cannot be
+reused as complete Wine installations.
+
+Reproduce the earned flow with `python3 -B tests/town_scene_layer_regression.py
+--faction embercourt --embercourt-supply-growth --save <exact-Day5-save>
+--resolution <1280x720|1920x1080|2048x1079> --label <fresh>`. Developed input
+uses the original opening save with `--presentation-only --developed-save`
+and the exact recorded Day-43 fixture instead. The official-package equivalent
+is `tests/packaged_town_scene_layer_regression.py`, adding `--binary`, `--pack`,
+`--platform`, `--bootstrap-controls` for earned growth and a fresh `--wine-prefix`
+for Windows. The retained source/package drivers record every exact command.
+Full receipts use `embercourt_supply_save_comparison.py packaged`,
+`embercourt_supply_package_parity.py` and `embercourt_supply_preservation.py`.
+
+This accepts five supply/magic layers, bringing accepted scene art to 22
+Bellwake and 12 Embercourt paintings. Later Embercourt catalog paintings, other
+factions and remaining Overworld repairs are unfinished. The presentation child
+and parent quality goal remain in progress; this is not release readiness.
+
 ## First production briefs
 
 - Wreck Quay: exact `object_wreck_quay` -> `mapobj_wreck_quay` mapping in

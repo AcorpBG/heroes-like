@@ -184,6 +184,38 @@ for brief in EMBERCOURT_GROWTH_BRIEFS.values():
                  curation='Inspected normal paid Stone/Watch/Bowyer/Beacon progression and the recorded developed Riverwatch composition at 1280x720. Both upgrade pairs retain their scenic site and ground anchor. Three-resolution input/save and official-platform acceptance is recorded separately in the art-repair report; later catalog paintings remain unaccepted.')
 EMBERCOURT_BRIEFS.update(EMBERCOURT_GROWTH_BRIEFS)
 
+EMBERCOURT_SUPPLY_BRIEFS = {
+    'building_river_granary_exchange': {
+        'source_sha256':'e017aa529e8b362b4fab272990569a06262670208adddee0d504c1930a80c797',
+        'scene_bounds':[40,305,270,180], 'ground_anchor':[180,473],
+        'grounding':'Bonded grain warehouse joins the left-bank settlement behind the Muster/Watch court; its loading floor meets the existing shore.',
+    },
+    'building_quartermasters_depot': {
+        'source_sha256':'44b3994b3cdee69d1540f4cfa51e881574b33442d2258952c2c85ca32c3746cb',
+        'scene_bounds':[400,395,245,245*1024/1536], 'ground_anchor':[510,546],
+        'grounding':'Low supply lodge stands by the left lock buttress, behind the Watch court, with its stores facing the quay approach.',
+    },
+    'building_lantern_archive': {
+        'source_sha256':'4e3f3a2c4281add1f8435e594b8346616f077aa34608aa42ff5b2ec34100fbe5',
+        'scene_bounds':[0,205,300,200], 'ground_anchor':[180,385],
+        'grounding':'Civic records lodge rises on the rear left-bank terrace behind the granary, clear of the command rail; the observatory retains this same site.',
+    },
+    'building_starseer_annex': {
+        'source_sha256':'a276bcce673d063d35ad5505633a9325d021ac49a6f0344775ce23afcaeb01b0',
+        'scene_bounds':[0,205,300,200], 'ground_anchor':[180,385],
+        'grounding':'Expanded records lodge adds a book wing and observation balcony on the identical rear left-bank Archive terrace; its tower remains visible above the granary and away from controls.',
+    },
+    'building_citadel_pikehall': {
+        'source_sha256':'6e0f60dacccf22ff583401c8dc152adf3087c645f40b85c34b6870b867c08306',
+        'scene_bounds':[720,258,275,275*1024/1536], 'ground_anchor':[875,430],
+        'grounding':'Low drilled pike hall stands on the right-bank slope behind the bowyer/beacon yard, leaving the main civic entrance and navigation channel intact.',
+    },
+}
+for brief in EMBERCOURT_SUPPLY_BRIEFS.values():
+    brief.update(reference_inputs=[], generation_date='2026-09-08',
+                 curation='Original text-only paintings from the inspected Riverwatch panorama and normal paid-growth draft. Revised developed composition inspected at 1280x720: observatory on the rear left-bank terrace, with exposed supply roof and right-bank pike hall. Archive and Annex share source-space bounds and ground anchor but are not pixel-identical edits. Final three-resolution paid-growth, input/save and platform acceptance is recorded separately in the art-repair report.')
+EMBERCOURT_BRIEFS.update(EMBERCOURT_SUPPLY_BRIEFS)
+
 FACTION_BRIEFS = {FACTION: BRIEFS, 'faction_embercourt': EMBERCOURT_BRIEFS}
 
 def digest(path):

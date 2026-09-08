@@ -61,7 +61,9 @@
         "python3 -B tests/town_scene_layer_regression.py --late-harbor-growth --save <exact-earned-Day14-save> --resolution 1280x720 --label <fresh>",
         "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --late-harbor-growth --save <exact-earned-Day14-save> --resolution 1280x720 --label <fresh>",
         "python3 -B tests/town_scene_layer_regression.py --faction embercourt --embercourt-growth --save <exact-earned-Medium11-Market-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
-        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-growth --save <exact-earned-Medium11-Market-save> --resolution 1280x720 --label <fresh>"
+        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-growth --save <exact-earned-Medium11-Market-save> --resolution 1280x720 --label <fresh>",
+        "python3 -B tests/town_scene_layer_regression.py --faction embercourt --embercourt-supply-growth --save <exact-earned-Medium11-Day5-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
+        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-supply-growth --save <exact-earned-Medium11-Day5-save> --resolution 1280x720 --label <fresh>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -125,16 +127,18 @@
         "tests/town_scene_layer_regression.py --late-harbor-growth and packaged equivalent: earned nonterminal Day-14 normal prerequisite/build orders, paid trades, upgrade replacement, all painted input and complete save/re-entry at three resolutions; strict art/repository and Linux/Windows packages under 250000000 bytes",
         "Embercourt opening packet after the validated Bellwake commit: preserve all 22 Veilmourn layers while extending exact-faction tools/prepare_town_scene_layers.py, manifest/source/trim/runtime art and parameterized Python probes for real Medium11 starting Muster Yard/Wayfarers Hall and paid Market; grounded placement, strict missing/cross-faction mappings, input/save, three-resolution composition and both-platform packages; validated in b96e3eab",
         "Embercourt early-growth packet: original Stone Store, Watch Barracks, Bowyer Lodge and Beacon Range source/trim/runtime paintings and exact-faction manifest through tools/prepare_town_scene_layers.py; preserve 25 accepted layers, villages/catalogs and same-site Muster/Watch and Bowyer/Beacon upgrades",
-        "tests/town_scene_layer_regression.py --embercourt-growth and strict art/sequence tests: exact earned Day-1 Market save, four normal confirmed End Turns and paid orders, complete built/resource/save/input preservation, inspected three-resolution growth/developed views and same official Linux/Windows packaged probe below 250000000 bytes"
+        "tests/town_scene_layer_regression.py --embercourt-growth and strict art/sequence tests: exact earned Day-1 Market save, four normal confirmed End Turns and paid orders, complete built/resource/save/input preservation, inspected three-resolution growth/developed views and same official Linux/Windows packaged probe below 250000000 bytes",
+        "Embercourt supply/magic packet: original River Granary Exchange, Quartermaster Depot, Lantern Archive, Starseer Annex and Citadel Pikehall source/trim/runtime layers; tools/prepare_town_scene_layers.py and exact-faction manifest; preserve all 29 accepted layers/villages/catalogs and same-site Archive/Annex",
+        "tests/town_scene_layer_regression.py --embercourt-supply-growth and strict art/sequence tests: exact earned Day-5 fe7ce89b save, five ordinary paid prerequisite orders and paid market shortfalls with confirmed End Turns, full state/save/input preservation and three-resolution growth/developed evidence; same official Linux/Windows probe and exports below 250000000 bytes"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-08T14:22:38Z",
+      "updatedAt": "2026-09-08T16:11:07Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated Embercourt early-growth checkpoint ready for coherent commit: source at three inspected resolutions and both official releases pass 8306/8294 checks; 57 Python/prior Town/repository tests, 331 preserved files, six exact non-clock saves and 5194-member package parity pass. Each pack 245305344 bytes; only four new paintings adopted, all earlier art/gameplay intact. Disposable completed Wine installations retired with saves/caches retained. Later Embercourt/faction/Overworld work keeps the full goal active."
+      "notes": "Validated five Embercourt supply/magic paintings: source at three inspected resolutions and each official Linux/Windows release pass 16654 growth and 8349 developed checks; 60 Python tests, prior/shared Town, repository/diff, 351 preserved files, six complete non-clock saves and 5204-member package parity pass. Each PCK 246609244 bytes, headroom 3390756. Retired only completed disposable Wine system files; saves/caches/evidence retained. This accepts only the five supply/magic paintings. Later Embercourt/faction/Overworld art keeps the full goal active; Windows remains headless Wine, not hardware certification."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16752,10 +16756,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Validated Embercourt early-growth checkpoint ready for coherent commit: source at three inspected resolutions and both official releases pass 8306/8294 checks; 57 Python/prior Town/repository tests, 331 preserved files, six exact non-clock saves and 5194-member package parity pass. Each pack 245305344 bytes; only four new paintings adopted, all earlier art/gameplay intact. Disposable completed Wine installations retired with saves/caches retained. Later Embercourt/faction/Overworld work keeps the full goal active.",
+  "currentSliceNotes": "Validated five Embercourt supply/magic paintings: source at three inspected resolutions and each official Linux/Windows release pass 16654 growth and 8349 developed checks; 60 Python tests, prior/shared Town, repository/diff, 351 preserved files, six complete non-clock saves and 5204-member package parity pass. Each PCK 246609244 bytes, headroom 3390756. Retired only completed disposable Wine system files; saves/caches/evidence retained. This accepts only the five supply/magic paintings. Later Embercourt/faction/Overworld art keeps the full goal active; Windows remains headless Wine, not hardware certification.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Presentation Corrections",
-  "currentSliceUpdatedAt": "2026-09-08T14:22:06Z",
+  "currentSliceUpdatedAt": "2026-09-08T16:09:18Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22552,7 +22556,9 @@
         "python3 -B tests/town_scene_layer_regression.py --late-harbor-growth --save <exact-earned-Day14-save> --resolution 1280x720 --label <fresh>",
         "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --late-harbor-growth --save <exact-earned-Day14-save> --resolution 1280x720 --label <fresh>",
         "python3 -B tests/town_scene_layer_regression.py --faction embercourt --embercourt-growth --save <exact-earned-Medium11-Market-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
-        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-growth --save <exact-earned-Medium11-Market-save> --resolution 1280x720 --label <fresh>"
+        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-growth --save <exact-earned-Medium11-Market-save> --resolution 1280x720 --label <fresh>",
+        "python3 -B tests/town_scene_layer_regression.py --faction embercourt --embercourt-supply-growth --save <exact-earned-Medium11-Day5-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
+        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-supply-growth --save <exact-earned-Medium11-Day5-save> --resolution 1280x720 --label <fresh>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -22616,16 +22622,18 @@
         "tests/town_scene_layer_regression.py --late-harbor-growth and packaged equivalent: earned nonterminal Day-14 normal prerequisite/build orders, paid trades, upgrade replacement, all painted input and complete save/re-entry at three resolutions; strict art/repository and Linux/Windows packages under 250000000 bytes",
         "Embercourt opening packet after the validated Bellwake commit: preserve all 22 Veilmourn layers while extending exact-faction tools/prepare_town_scene_layers.py, manifest/source/trim/runtime art and parameterized Python probes for real Medium11 starting Muster Yard/Wayfarers Hall and paid Market; grounded placement, strict missing/cross-faction mappings, input/save, three-resolution composition and both-platform packages; validated in b96e3eab",
         "Embercourt early-growth packet: original Stone Store, Watch Barracks, Bowyer Lodge and Beacon Range source/trim/runtime paintings and exact-faction manifest through tools/prepare_town_scene_layers.py; preserve 25 accepted layers, villages/catalogs and same-site Muster/Watch and Bowyer/Beacon upgrades",
-        "tests/town_scene_layer_regression.py --embercourt-growth and strict art/sequence tests: exact earned Day-1 Market save, four normal confirmed End Turns and paid orders, complete built/resource/save/input preservation, inspected three-resolution growth/developed views and same official Linux/Windows packaged probe below 250000000 bytes"
+        "tests/town_scene_layer_regression.py --embercourt-growth and strict art/sequence tests: exact earned Day-1 Market save, four normal confirmed End Turns and paid orders, complete built/resource/save/input preservation, inspected three-resolution growth/developed views and same official Linux/Windows packaged probe below 250000000 bytes",
+        "Embercourt supply/magic packet: original River Granary Exchange, Quartermaster Depot, Lantern Archive, Starseer Annex and Citadel Pikehall source/trim/runtime layers; tools/prepare_town_scene_layers.py and exact-faction manifest; preserve all 29 accepted layers/villages/catalogs and same-site Archive/Annex",
+        "tests/town_scene_layer_regression.py --embercourt-supply-growth and strict art/sequence tests: exact earned Day-5 fe7ce89b save, five ordinary paid prerequisite orders and paid market shortfalls with confirmed End Turns, full state/save/input preservation and three-resolution growth/developed evidence; same official Linux/Windows probe and exports below 250000000 bytes"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-08T14:22:38Z",
+      "updatedAt": "2026-09-08T16:11:07Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated Embercourt early-growth checkpoint ready for coherent commit: source at three inspected resolutions and both official releases pass 8306/8294 checks; 57 Python/prior Town/repository tests, 331 preserved files, six exact non-clock saves and 5194-member package parity pass. Each pack 245305344 bytes; only four new paintings adopted, all earlier art/gameplay intact. Disposable completed Wine installations retired with saves/caches retained. Later Embercourt/faction/Overworld work keeps the full goal active."
+      "notes": "Validated five Embercourt supply/magic paintings: source at three inspected resolutions and each official Linux/Windows release pass 16654 growth and 8349 developed checks; 60 Python tests, prior/shared Town, repository/diff, 351 preserved files, six complete non-clock saves and 5204-member package parity pass. Each PCK 246609244 bytes, headroom 3390756. Retired only completed disposable Wine system files; saves/caches/evidence retained. This accepts only the five supply/magic paintings. Later Embercourt/faction/Overworld art keeps the full goal active; Windows remains headless Wine, not hardware certification."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111390,50 +111398,50 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Validated four original Embercourt early-growth paintings and same-site upgrades, preserving 25 earlier layers and gameplay. Three inspected source resolutions and official Linux/Windows releases pass 8306 paid-growth/save and 8294 developed-input checks each. 57 Python tests, prior/shared Town and repository checks, six complete non-clock saves and 5194-member package parity pass. Each PCK is 245305344 bytes with 4694656 bytes headroom. Later Embercourt/faction/Overworld art keeps the full goal in progress; Windows remains headless Wine, not hardware certification.",
+  "summary": "Validated five original Embercourt supply/magic paintings and same-site Archive/Annex, preserving all 29 earlier layers and gameplay. Three inspected source resolutions and official Linux/Windows releases pass 16654 paid-growth/save and 8349 developed-input checks each. 60 Python tests, prior/shared Town and repository checks, six complete non-clock saves and 5204-member package parity pass. Each PCK is 246609244 bytes with 3390756 bytes headroom. Later Embercourt/faction/Overworld art keeps the full goal in progress; Windows remains headless Wine, not hardware certification.",
   "taskId": "10236",
-  "updatedAt": "2026-09-08T14:22:38Z",
+  "updatedAt": "2026-09-08T16:11:07Z",
   "validation": {
-    "id": "quality-embercourt-early-growth-20260908",
+    "id": "quality-embercourt-supply-magic-20260908",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-08T14:22:06Z",
-    "scope": "Validated four Embercourt early-growth scene layers and same-site Muster/Watch and Bowyer/Beacon upgrades; not full faction/Town presentation or release completion.",
-    "result": "Original Stone Store, Watch Barracks, Bowyer Lodge and Beacon Range paintings preserve all 25 prior layers, villages, catalog icons, runtime owners and rules. Four paid orders from the exact earned Market save retain daily limits, predecessors, input and complete save/re-entry. Source at three inspected resolutions and each official Linux/Windows release pass 8306 growth and 8294 developed checks, with five bootstrap controls per platform. Prior faction openings, shared Town reports, 57 Python tests, lossless pixel/mip proofs, 331-file preservation/idempotence, repository/diff and normal export/startup/generated-Town smokes pass. Six complete Day-5 saves are byte-identical outside saved_at_unix. Each PCK is 245305344 bytes; all 5194 members checked, 5184 prior members unchanged, only manifest/UID cache updated and platforms differ only in project.binary. Windows is headless Wine, not physical GPU certification.",
+    "validatedAt": "2026-09-08T16:09:18Z",
+    "scope": "Validated five Embercourt supply/magic scene layers and same-site Archive/Annex upgrade; not full faction/Town presentation or release completion.",
+    "result": "Original Granary, Depot, Archive, Annex and Pikehall paintings preserve all 29 prior layers, villages, catalog icons, runtime owners and rules. Five normal paid orders and four paid one-Ore trades continue the exact earned Day-5 save to Day 10, retaining daily limits, predecessors, input and complete save/re-entry. Three inspected source resolutions and each official Linux/Windows release pass 16654 growth and 8349 developed checks, with five bootstrap controls per platform. Prior faction openings, shared Town reports, 60 Python tests, five lossless pixel/mip proofs, 351-file preservation/idempotence, repository/diff and normal export/startup/generated-Town smokes pass. Six complete Day-10 saves match outside only saved_at_unix. Each PCK is 246609244 bytes; all 5204 members checked, 5192 prior members unchanged, only manifest/UID cache updated and platforms differ only in project.binary. Windows is headless Wine, not physical GPU certification.",
     "artifacts": [
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_before_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_source_batch.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_accepted_earned_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_accepted_developed_720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_accepted_earned_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_accepted_developed_1080/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_accepted_earned_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_accepted_developed_2048/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_source_save_comparison.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_packaged_save_comparison.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_preservation.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_lossless.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_package_batch.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_package_parity.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_release_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_packaged_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_packaged_linux/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_packaged_linux/bootstrap-controls.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_packaged_developed_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_packaged_developed_linux/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_release_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_packaged_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_packaged_windows/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_packaged_windows/bootstrap-controls.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_packaged_developed_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_packaged_developed_windows/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_compat_embercourt/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_compat_veilmourn/report.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_wine_retirement.json",
-      ".artifacts/generated_full_match_quality_20260906/embercourt_growth_repo_final_driver.log",
-      ".artifacts/full_play_runtime_20260905/embercourt_growth_existing_town/report.json"
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_before_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_source_batch.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_accepted_earned_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_accepted_developed_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_accepted_earned_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_accepted_developed_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_accepted_earned_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_accepted_developed_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_source_save_comparison.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_packaged_save_comparison.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_preservation.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_lossless.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_package_batch.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_package_parity.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_release_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_packaged_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_packaged_linux/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_packaged_linux/bootstrap-controls.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_packaged_developed_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_packaged_developed_linux/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_release_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_packaged_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_packaged_windows/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_packaged_windows/bootstrap-controls.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_packaged_developed_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_packaged_developed_windows/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_compat_embercourt/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_compat_veilmourn/report.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_wine_retirement.json",
+      ".artifacts/generated_full_match_quality_20260906/embercourt_supply_repo_final_driver.log",
+      ".artifacts/full_play_runtime_20260905/embercourt_supply_existing_town/report.json"
     ],
-    "remainingWork": "Bellwake's 22 layers and seven Embercourt layers are accepted. Continue later Embercourt buildings/upgrades, other factions and demonstrated Overworld art repairs with 4694656 bytes verified package headroom. Preserve legitimate match/performance evidence and documented platform/legacy limits. The prior intermittent Windows Main Menu Ogg shutdown warning is absent here but no lifetime fix is claimed. Full presentation and parent goal remain active."
+    "remainingWork": "Bellwake's 22 layers and 12 Embercourt layers are accepted. Continue later Embercourt buildings/upgrades, other factions and demonstrated Overworld art repairs with 3390756 bytes verified package headroom. Preserve legitimate match/performance evidence and documented platform/legacy limits. The prior intermittent Windows Main Menu Ogg shutdown warning is absent here but no lifetime fix is claimed. Full presentation and parent goal remain active."
   },
   "validationHistory": [
     {
