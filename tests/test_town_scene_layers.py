@@ -26,13 +26,21 @@ def validate_scene_layers(payload=None):
     factions = payload.get('factions', {})
     required_embercourt = {'building_muster_yard','building_wayfarers_hall','building_market_square'}
     require(required_embercourt.issubset(factions.get('faction_embercourt',{})), 'Missing accepted Embercourt opening scene mapping')
+    required_growth = {'building_stone_store','building_watch_barracks','building_bowyer_lodge','building_beacon_range'}
+    require(required_growth.issubset(factions.get('faction_embercourt',{})), 'Missing Embercourt early-growth scene mapping')
     bellwake = next(town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['id']=='town_veilmourn_bellwake_harbor')
     required_bellwake = set(bellwake['starting_building_ids'] + bellwake['buildable_building_ids']) - {'building_town_hall'}
     require(required_bellwake.issubset(factions.get('faction_veilmourn',{})), 'Missing constructible Bellwake scene mapping: '+', '.join(sorted(required_bellwake-set(factions.get('faction_veilmourn',{})))))
     veilmourn = factions.get('faction_veilmourn',{})
     sounding = veilmourn.get('building_veilmourn_leviathan_sounding',{})
     court = veilmourn.get('building_veilmourn_memory_rite_court',{})
-    if sounding and court:
+    pairs = [(sounding, court, 'Memory-Rite Court', 'Sounding')]
+    embercourt = factions.get('faction_embercourt',{})
+    pairs += [(embercourt.get(base,{}),embercourt.get(upgrade,{}),upgrade,base) for base,upgrade in
+              [('building_muster_yard','building_watch_barracks'),('building_bowyer_lodge','building_beacon_range')]]
+    for sounding,court,upgrade_name,base_name in pairs:
+        if not sounding or not court:
+            continue
         # Alpha crops may differ, but both full master canvases must occupy the
         # same scenic site. Compare reconstructed pre-crop bounds, not pixels.
         def site(row):
@@ -43,8 +51,8 @@ def validate_scene_layers(payload=None):
             height = rect[3]*900*size[1]/(crop[3]-crop[1])
             return [rect[0]*1600-width*crop[0]/size[0],rect[1]*900-height*crop[1]/size[1],width,height]
         first, upgrade = site(sounding), site(court)
-        require(first is not None and upgrade is not None and all(abs(a-b)<0.001 for a,b in zip(first,upgrade)), 'Memory-Rite Court moved the Sounding scenic site')
-        require(sounding.get('ground_anchor')==court.get('ground_anchor'), 'Memory-Rite Court moved the Sounding ground anchor')
+        require(first is not None and upgrade is not None and all(abs(a-b)<0.001 for a,b in zip(first,upgrade)), upgrade_name+' moved the '+base_name+' scenic site')
+        require(sounding.get('ground_anchor')==court.get('ground_anchor'), upgrade_name+' moved the '+base_name+' ground anchor')
     require(set(factions.get('faction_veilmourn',{})) >= {'building_veilmourn_black_sail_loft','building_veilmourn_tideglass_chapel'}, 'Missing accepted Bellwake rigging/magic scene mapping')
     require(set(factions.get('faction_veilmourn',{})) >= {'building_veilmourn_harpoon_gantry','building_veilmourn_bell_chain_watch','building_veilmourn_obituary_vault','building_veilmourn_wake_oratory','building_veilmourn_mistgate_slip'}, 'Missing accepted Bellwake defense/memory scene mapping')
     require(set(factions.get('faction_veilmourn',{})) >= {'building_veilmourn_salt_counting_house','building_veilmourn_mourner_pilot_guild','building_veilmourn_saltwake_factor'}, 'Missing accepted Bellwake salt/pilot scene mapping')
@@ -123,6 +131,19 @@ class TownSceneLayersTests(unittest.TestCase):
                 self.assertTrue(any('Mismatched scene identity: faction_embercourt' in e for e in errors))
                 self.assertTrue(any('Wrong exact runtime path: faction_embercourt' in e for e in errors))
                 self.assertTrue(any('Shared scene fallback path:' in e for e in errors))
+    def test_every_embercourt_growth_mapping_is_required(self):
+        for building in ('building_stone_store','building_watch_barracks','building_bowyer_lodge','building_beacon_range'):
+            with self.subTest(building=building):
+                payload=copy.deepcopy(self.payload)
+                payload['factions']['faction_embercourt'].pop(building,None)
+                self.assertIn('Missing Embercourt early-growth scene mapping',validate_scene_layers(payload))
+    def test_embercourt_upgrades_cannot_move_site_or_ground(self):
+        for base,upgrade in [('building_muster_yard','building_watch_barracks'),('building_bowyer_lodge','building_beacon_range')]:
+            for field,message in [('normalized_rect','scenic site'),('ground_anchor','ground anchor')]:
+                with self.subTest(upgrade=upgrade,field=field):
+                    payload=copy.deepcopy(self.payload)
+                    payload['factions']['faction_embercourt'][upgrade][field][0]+=0.01
+                    self.assertIn(upgrade+' moved the '+base+' '+message,validate_scene_layers(payload))
     def test_every_constructible_bellwake_mapping_is_required(self):
         town = next(t for t in json.loads((ROOT/'content/towns.json').read_text())['items'] if t['id']=='town_veilmourn_bellwake_harbor')
         for building in set(town['starting_building_ids']+town['buildable_building_ids'])-{'building_town_hall'}:

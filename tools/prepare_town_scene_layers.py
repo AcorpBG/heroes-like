@@ -157,6 +157,33 @@ for brief in EMBERCOURT_BRIEFS.values():
     brief.update(reference_inputs=[], generation_date='2026-09-08',
                  curation='Inspected original opening, ordinary Market purchase and developed Riverwatch composition at 1280x720. Exact three-resolution input/save and platform acceptance is recorded separately in the art-repair report; other Embercourt catalog layers remain unaccepted.')
 
+EMBERCOURT_GROWTH_BRIEFS = {
+    'building_stone_store': {
+        'source_sha256':'b2d9736d1fe36502c5eb549bd87f6c0bf6491b0365d9c9eff1802f2708a190f5',
+        'scene_bounds':[1270,358,280,280*1024/1536], 'ground_anchor':[1410,537],
+        'grounding':'Low masonry reserve stands on the right-bank ground behind Wayfarers Hall, with open storage bays facing the working shore.',
+    },
+    'building_watch_barracks': {
+        'source_sha256':'285de7e09f4c5c559c2505df5fb40f30041bd2775640ddf6ef8fbb56b0fd7ca3',
+        'scene_bounds':[215,355,340,340*1024/1536], 'ground_anchor':[390,565],
+        'grounding':'Permanent masonry quarters replace the Muster Yard on the same left-bank court and ground anchor; preserve the original quay and canal.',
+    },
+    'building_bowyer_lodge': {
+        'source_sha256':'5218717d3845925529be66aae7d0d9da52b6945ca800d2a48d267b490619f752',
+        'scene_bounds':[790,378,270,270*1024/1536], 'ground_anchor':[925,552],
+        'grounding':'Bow-making workshop and firing lane stand on the right bank west of the civic hall, above the lock-side shore wall; preserve the main hall entrance.',
+    },
+    'building_beacon_range': {
+        'source_sha256':'dd681cc83638e73a2809f4ad8082d6d08ee0345c20bbfa7d391d39486ccdb0b9',
+        'scene_bounds':[790,378,270,270*1024/1536], 'ground_anchor':[925,552],
+        'grounding':'Issue loft and signal tower upgrade the Bowyer workshop and firing lane on the identical right-bank site and ground anchor.',
+    },
+}
+for brief in EMBERCOURT_GROWTH_BRIEFS.values():
+    brief.update(reference_inputs=[], generation_date='2026-09-08',
+                 curation='Inspected normal paid Stone/Watch/Bowyer/Beacon progression and the recorded developed Riverwatch composition at 1280x720. Both upgrade pairs retain their scenic site and ground anchor. Three-resolution input/save and official-platform acceptance is recorded separately in the art-repair report; later catalog paintings remain unaccepted.')
+EMBERCOURT_BRIEFS.update(EMBERCOURT_GROWTH_BRIEFS)
+
 FACTION_BRIEFS = {FACTION: BRIEFS, 'faction_embercourt': EMBERCOURT_BRIEFS}
 
 def digest(path):

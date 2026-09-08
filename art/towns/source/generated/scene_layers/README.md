@@ -4,6 +4,34 @@ Owner approval: 2026-09-07 full-match presentation continuation. Parent/slice:
 `quality-generated-full-match-20260906` /
 `ux-generated-full-match-presentation-20260906`.
 
+## Embercourt early-growth packet (2026-09-08; validated checkpoint)
+
+Four original text-only built-in generations extend Riverwatch's opening.
+Exact prompts accompany the unchanged RGBA masters in `faction_embercourt/`;
+`reference_inputs: []` is explicit and the model/version was not exposed.
+The inspected original village and Muster/Bowyer compositions informed the text
+briefs; no external game pixels or API fallback were used.
+
+| Building | Built-in output | Source SHA256 |
+| --- | --- | --- |
+| Stone Store | `exec-4e28b04a-2f49-4638-9123-8960505330b1.png` | `b2d9736d1fe36502c5eb549bd87f6c0bf6491b0365d9c9eff1802f2708a190f5` |
+| Watch Barracks | `exec-f7fb76fd-e2f8-41dd-870e-1c8c3c99fbc2.png` | `285de7e09f4c5c559c2505df5fb40f30041bd2775640ddf6ef8fbb56b0fd7ca3` |
+| Bowyer Lodge | `exec-6bb4f54e-4ac0-4d9d-9be5-4ab39e1420f9.png` | `5218717d3845925529be66aae7d0d9da52b6945ca800d2a48d267b490619f752` |
+| Beacon Range | `exec-65f72938-c170-4c8a-9c96-e8d95ef68e7a.png` | `dd681cc83638e73a2809f4ad8082d6d08ee0345c20bbfa7d391d39486ccdb0b9` |
+
+An initial edit of the actual Muster master produced RGB with a baked checkerboard
+(`exec-38a10c0b-4b4a-456f-bc85-897007e2fdb8.png`). It and its exact edit prompt
+are retained only in `embercourt_growth_candidates/`; it is not imported or
+registered. The accepted-for-testing replacement is a fresh original painting,
+not a pixel-identical edit. Both upgrade pairs use identical full-master scenic
+bounds and ground anchors; alpha trims may differ. Only transparent-margin crop,
+512px aspect-preserving Lanczos derivatives and mipmap import are applied.
+The original villages, earlier 25 layers and separate catalog icons remain
+unchanged. Paid-growth, visual and platform acceptance belongs to the art-repair
+report. Source growth/developed and all upgrade stages pass at three inspected
+resolutions and in both official releases. Complete saves, prior art and package
+members are preserved; later Embercourt/other-faction art remains unfinished.
+
 ## Embercourt opening packet (2026-09-08)
 
 Three text-only built-in generations supply Riverwatch's original Muster Yard,

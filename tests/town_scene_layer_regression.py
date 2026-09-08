@@ -21,6 +21,8 @@ LATE_HARBOR_SAVE_SHA256 = '69f4c289bb0bd273f175e24a0b2704391302c0cf2dcc0be76c4d4
 EMBERCOURT_SAVE_SHA256 = 'c0d67e4b2a8403ac82ae599391ae0a946ea16110beb4dd378a599af9a9ab7a59'
 EMBERCOURT_DEVELOPED_SHA256 = '553ceb3ea972412cd72341ff627fa73c6864f9bcbfb6cc428923ebec5712de59'
 EMBERCOURT_IDS = ['building_muster_yard', 'building_wayfarers_hall', 'building_market_square']
+EMBERCOURT_GROWTH_IDS = ['building_stone_store', 'building_watch_barracks', 'building_bowyer_lodge', 'building_beacon_range']
+EMBERCOURT_GROWTH_SAVE_SHA256 = '838606e03fc1dffd5cf5c2b79ca5d20cc59c77ecfb42b831005577d449652d18'
 
 EXTRA = r'''
 func inspect_upgrade_order() -> void:
@@ -507,8 +509,8 @@ def embercourt_script(script, *, presentation_only=False):
 	var upgraded_plot: Array=stage._town_building_scene_entries(stage._town_scene_rect()).filter(func(entry):return entry.plot_id=="building_muster_yard")
 	check(upgraded_plot.size()==1 and upgraded_plot[0].visible_building_id=="building_watch_barracks","developed Watch Barracks no longer supersedes Muster Yard")
 	check(not stage.validation_building_hotspot_summary("building_muster_yard").visible,"superseded Muster retains a hotspot")
-	check(stage._town_building_texture_path("building_watch_barracks")==TownRules.building_icon_path("building_watch_barracks"),"opening packet changed unaccepted Watch Barracks art")
-	await inspect_scene_layers(["building_wayfarers_hall","building_market_square"])'''
+	check(not stage.validation_building_hotspot_summary("building_bowyer_lodge").visible,"superseded Bowyer retains a hotspot")
+	await inspect_scene_layers(["building_wayfarers_hall","building_market_square","building_stone_store","building_watch_barracks","building_beacon_range"])'''
         if script.count(needle)!=1:
             raise ValueError('Missing exact Embercourt developed inspection boundary')
         script=script.replace(needle,replacement)
@@ -531,12 +533,34 @@ def embercourt_script(script, *, presentation_only=False):
     return script
 
 
+def embercourt_growth_script():
+    """Continue the real earned Market save through existing daily build routes."""
+    opening = overlay.SCRIPT
+    start = opening.index('\tvar offered: Array=TownRules.get_build_actions(session)')
+    end = opening.index('\tvar path: String=SaveService.save_session', start)
+    opening = opening[:start] + '\tawait inspect_scene_layers(["building_muster_yard","building_wayfarers_hall","building_market_square"])\n\tawait inspect_harbor_growth()\n' + opening[end:]
+    visible = 'stage._town_building_scene_entries(stage._town_scene_rect()).filter(func(entry):return entry.visible_building_id in '+json.dumps(EMBERCOURT_IDS+EMBERCOURT_GROWTH_IDS)+').map(func(entry):return entry.visible_building_id)'
+    growth = HARBOR_GROWTH.replace('__GROWTH_IDS__',json.dumps(EMBERCOURT_GROWTH_IDS)).replace('__INSPECTION_IDS__',visible)
+    growth = growth.replace('town_veilmourn_bellwake_harbor','town_riverwatch').replace('scene_layers/faction_veilmourn/','scene_layers/faction_embercourt/').replace('ordinary_harbor_growth','ordinary_embercourt_growth')
+    growth = growth.replace('\t\tvar cost: Dictionary=actions[0].cost','\t\tvar prior_built: Array=TownRules.get_active_town(session).built_buildings.duplicate()\n\t\tvar cost: Dictionary=actions[0].cost')
+    growth = growth.replace('\t\tshell._close_town_catalog(false)\n\t\tawait inspect(id)', '''		check(active.built_buildings==prior_built+[id],"early construction changed more than the earned built-id append")
+		var predecessor: String=ContentService.get_building(id).get("upgrade_from","")
+		if predecessor!="":
+			check(predecessor in active.built_buildings,"paid upgrade erased its saved predecessor: "+id)
+			check(not shell.get_node("%TownStage").validation_building_hotspot_summary(predecessor).visible,"paid upgrade retained predecessor painting/input: "+id)
+		shell._close_town_catalog(false)
+		await inspect(id)''')
+    growth = growth.replace('await inspect_scene_layers([id])', 'var growth_stage=shell.get_node("%TownStage")\n\t\tawait inspect_scene_layers('+visible.replace('stage.', 'growth_stage.')+')')
+    return opening + EXTRA + growth
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--label', required=True)
     parser.add_argument('--save', type=Path, required=True)
     parser.add_argument('--resolution', choices=['1280x720', '1920x1080', '2048x1079'], required=True)
     parser.add_argument('--faction', choices=['veilmourn', 'embercourt'], default='veilmourn')
+    parser.add_argument('--embercourt-growth', action='store_true', help='Four paid Stone/Watch/Bowyer/Beacon orders from the exact earned Medium11 Market save')
     parser.add_argument('--harbor-growth', action='store_true', help='Build Fog Buoys and Salvage Ledger after Market across real confirmed End Turns')
     parser.add_argument('--exchange-growth', action='store_true', help='Build Ransom Exchange and Mirror Drydock after Market across real confirmed End Turns')
     parser.add_argument('--salt-growth', action='store_true', help='Build Counting House, Fog Buoys, Ledger, Pilot Guild and Saltwake Factor after Market across real confirmed End Turns')
@@ -547,17 +571,21 @@ def main():
     parser.add_argument('--presentation-only', action='store_true', help='Read-only opening/developed input checks; no purchases or match progression evidence')
     parser.add_argument('--developed-save', type=Path, help='Exact recorded built-id composition fixture; never resumed as a live match')
     args = parser.parse_args()
-    if sum((args.harbor_growth, args.exchange_growth, args.salt_growth, args.defense_growth, args.memory_growth, args.rigging_magic_growth, args.late_harbor_growth, args.presentation_only)) > 1:
+    if sum((args.harbor_growth, args.exchange_growth, args.salt_growth, args.defense_growth, args.memory_growth, args.rigging_magic_growth, args.late_harbor_growth, args.embercourt_growth, args.presentation_only)) > 1:
         parser.error('select one normal construction sequence per run')
     if args.presentation_only and not args.developed_save:
         parser.error('presentation-only requires an exact --developed-save fixture')
     if args.faction=='embercourt' and any((args.harbor_growth,args.exchange_growth,args.salt_growth,args.defense_growth,args.memory_growth,args.rigging_magic_growth,args.late_harbor_growth)):
         parser.error('Bellwake growth sequences cannot run against Embercourt')
+    if args.embercourt_growth and args.faction!='embercourt':
+        parser.error('Embercourt growth requires --faction embercourt')
     if not args.label or any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789_-' for c in args.label):
         parser.error('fresh lowercase label required')
     save = args.save.resolve(strict=True)
     before_hash = hashlib.sha256(save.read_bytes()).hexdigest()
-    if args.faction=='embercourt' and before_hash!=EMBERCOURT_SAVE_SHA256:
+    if args.embercourt_growth and before_hash!=EMBERCOURT_GROWTH_SAVE_SHA256:
+        parser.error('Embercourt growth requires the exact earned nonterminal Medium11 Market save')
+    if args.faction=='embercourt' and not args.embercourt_growth and before_hash!=EMBERCOURT_SAVE_SHA256:
         parser.error('Embercourt opening requires the exact recorded nonterminal Medium11 Day-1 save')
     if args.late_harbor_growth and before_hash != LATE_HARBOR_SAVE_SHA256:
         parser.error('late-harbor growth requires the exact recorded nonterminal earned Day-14 save')
@@ -647,7 +675,10 @@ def main():
             opening = opening[:start] + '\tawait inspect_scene_layers(["building_veilmourn_bell_harbor","building_wayfarers_hall","building_veilmourn_harpoon_gantry","building_veilmourn_bell_chain_watch"])\n\tawait '+continuation+'()\n' + opening[end:]
             script_text = opening + EXTRA + growth
     script_text = script_text.replace('await inspect("opening")', 'await inspect("opening")\n\tinspect_upgrade_order()')
-    if args.faction=='embercourt':
+    if args.embercourt_growth:
+        script_text=embercourt_growth_script().replace('await inspect("opening")', 'await inspect("opening")\n\tinspect_upgrade_order()')
+        sequence='embercourt'
+    elif args.faction=='embercourt':
         script_text = embercourt_script(script_text, presentation_only=args.presentation_only)
     if args.resolution == '2048x1079':
         script_text = script_text.replace('SettingsService.set_presentation_resolution(OS.get_environment("TOWN_OVERLAY_RESOLUTION"))', 'get_window().content_scale_size = Vector2i(2048,1079)\n\tget_window().size = Vector2i(2048,1079)')
@@ -664,7 +695,7 @@ def main():
         with (out / 'runtime.log').open('w') as log:
             # Rigging/magic covers every currently visible painting after each
             # of six orders, not only the newly constructed building.
-            code = run_probe(command, env, log, timeout_seconds=3600 if args.late_harbor_growth else 1800 if args.rigging_magic_growth else 900 if args.salt_growth or args.defense_growth or args.memory_growth else 600 if growth_enabled else 300)
+            code = run_probe(command, env, log, timeout_seconds=3600 if args.late_harbor_growth else 1800 if args.rigging_magic_growth else 900 if args.salt_growth or args.defense_growth or args.memory_growth or args.embercourt_growth else 600 if growth_enabled else 300)
     lines = (out / 'runtime.log').read_text().splitlines()
     marker = 'TOWN_OVERLAY_OWNERSHIP '
     reports = [json.loads(line[len(marker):]) for line in lines if line.startswith(marker)]
