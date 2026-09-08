@@ -20,7 +20,7 @@
   "processing": "Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.",
   "rights": "Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.",
   "catalog_icons": "Unchanged; these exact-faction scene layers are not shared catalog replacements.",
-  "migration_scope": "Fifteen Bellwake scene layers: Bell Harbor, Wayfarers Hall, Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange, Mirror Drydock, Salt Counting House, Mourner Pilot Guild, Saltwake Factor, Harpoon Gantry, Bell-Chain Watch, Obituary Vault, Wake Oratory and Mistgate Slip. Other buildings/upgrades/factions remain unaccepted; five defense/memory rows explicitly record text-only generation inputs.",
+  "migration_scope": "Seventeen Bellwake scene layers: Bell Harbor, Wayfarers Hall, Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange, Mirror Drydock, Salt Counting House, Mourner Pilot Guild, Saltwake Factor, Harpoon Gantry, Bell-Chain Watch, Obituary Vault, Wake Oratory, Mistgate Slip, Black-Sail Loft and Tideglass Chapel. Other buildings/upgrades/factions remain unaccepted; text-only rows explicitly record no image inputs, and the two rigging/magic rows record their later generation date.",
   "missing_declared_layer_policy": "validation_failure_no_catalog_or_procedural_fallback",
   "factions": {
     "faction_veilmourn": {
@@ -688,6 +688,98 @@
         "prompt_sha256": "388a97a760d951c1c0cb082413fea1c2ad43387c4e820eb055e42dd3e17e5c8f",
         "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.",
         "reference_inputs": []
+      },
+      "building_veilmourn_black_sail_loft": {
+        "asset_id": "faction_veilmourn_building_veilmourn_black_sail_loft",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_black_sail_loft.png",
+        "source_sha256": "a3709f1f7604457b7fe07e080564bbc6b5685761d88ec1446e5d0607e8bdf52d",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_black_sail_loft.png",
+        "trimmed_sha256": "9fd2179e7abcc1f6e17472c1da5d5c9affa08ebb73e28708003c82d083739fee",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_black_sail_loft.png",
+        "runtime_sha256": "5946965bc5fd2f96b4fcd78f7770c8f17dcda5ae80c315167d8b163bdc8f7cb4",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.025,
+          0.48333333333333334,
+          0.2,
+          0.23703703703703705
+        ],
+        "ground_anchor": [
+          0.128125,
+          0.7111111111111111
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Sail-making workshop and drying frames extend the foreground-left warehouse quay, behind the Harpoon Gantry. Preserve exposed canvas, the main tower door and the established trading approach.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_black_sail_loft.prompt.txt",
+        "prompt_sha256": "0a58d115f168deaf07b61206068c1fbab2ed9f6f5a5b0372b21deed271b6629c",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      },
+      "building_veilmourn_tideglass_chapel": {
+        "asset_id": "faction_veilmourn_building_veilmourn_tideglass_chapel",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_tideglass_chapel.png",
+        "source_sha256": "27bf61402edaddc7be477b56a36332f863a84c738334b7be67720655e8a6b876",
+        "source_size": [
+          1254,
+          1254
+        ],
+        "trim_box": [
+          21,
+          0,
+          1230,
+          1232
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_tideglass_chapel.png",
+        "trimmed_sha256": "4525bb128df96b99678d8115791a9738bc88d34aac274e2925c9842b15019179",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_tideglass_chapel.png",
+        "runtime_sha256": "77d9a7a8861348fc8c9ec664344efba2ef5e103b71639d7c545fffdc871e6ba5",
+        "runtime_size": [
+          502,
+          512
+        ],
+        "normalized_rect": [
+          0.3557416267942584,
+          0.35555555555555557,
+          0.15064294258373206,
+          0.2729044834307992
+        ],
+        "ground_anchor": [
+          0.43125,
+          0.6277777777777778
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Tideglass study chapel joins the inner-left quay beside the main bell tower, behind the Ledger and salt treasury. Its reflective roof and bell remain exposed above the working waterfront; preserve the Bell Harbor gangway and open channel.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_tideglass_chapel.prompt.txt",
+        "prompt_sha256": "b25576746d2c7b6122f4dc3c591de883e767ad75bcb1edef760f3b443d4282b5",
+        "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
       }
     }
   }
