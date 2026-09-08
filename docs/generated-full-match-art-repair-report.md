@@ -14,6 +14,200 @@ native generation or unrelated cleanup changes. Runtime exports stay below
 250000000 bytes on both platforms. Reverting the coherent art/code commit restores
 prior rendering without save migration.
 
+## Late-harbor continuation — validated, 2026-09-08
+
+Bellwake's five remaining catalog-scene mappings were Drowned Map Room, Memory
+Anchor, Leviathan Sounding, Drowned Admiralty and the Sounding upgrade,
+Memory-Rite Court. Exact original catalog paintings existed; the missing
+faction/building scene-manifest rows selected those catalog dioramas at the old
+plots. This is a scene-art gap, not changed construction rules or save identity.
+The seventeen accepted scene paintings and the village remain the baseline.
+
+`tests/town_scene_layer_regression.py --late-harbor-growth` starts only from the
+actual nonterminal Day-14 earned save, SHA256
+`69f4c289bb0bd273f175e24a0b2704391302c0cf2dcc0be76c4d487f91886537`.
+It orders Map Room, Mistgate Slip, Memory Anchor, Sounding, Admiralty, Court and
+Saltwake Factor through ordinary End Turns, the ledger and paid one-ore Trade.
+The source market permits six ore purchases weekly, so the driver must wait
+through real daily simulation for caps or income; it never injects reserves,
+resets market usage or resumes a terminal match. Each paid Trade is compared to
+the complete authoritative rule result and recap. The Court must replace the
+Sounding's visible plot/hotspot while retaining the earned prerequisite in the
+built-id array. Other visible paintings retain their complete input coverage.
+
+Initial strict coverage fails on exactly the five missing Bellwake mappings.
+The three driver-preflight tests pass (dependency order, altered-save rejection
+and mutually exclusive sequences). The original renderer's complete
+`late_harbor_before_720` control finished 44185 checks with the expected missing
+scene-mapping, overlap/input and Court replacement failures. The outer launcher
+ended with code 143 while its isolated Godot child continued; observation of that
+same child, its terminal report and final earned save recovered the evidence
+without replaying it. `late_harbor_before_harvest.py` records that the child's exit
+code is unavailable, not zero. Intermediate saved-frame markers alone were not
+accepted. The real seven orders completed on Days 15, 16, 17, 22, 23, 29 and 30;
+weekly ore caps account for the intervening ordinary End Turns.
+
+Five original source-curated RGBA masters and exact prompts are prepared via
+the built-in image tool. The chart-house initial RGB candidate required a
+built-in alpha extraction. Court image-to-image/extraction variants repeatedly
+returned opaque checkerboards and were rejected. Its selected master is a
+fresh transparent painting specified from the inspected Sounding composition,
+with the same source-space site and ground anchor, not a pixel-identical edit.
+API fallback approval was requested as an alternative, but no API was used.
+The earned-Day-30 composition passes 9615 checks at each of 1280x720,
+1920x1080 and 2048x1079, including all visible building information/input
+controls and 16 authored upgrade relationships in both variant and saved-id
+orders. All three scenic captures and the Court information dialog have been
+visually inspected: the header, command controls and footer remain clear, the
+chart house joins the inner-left shore, the anchor occupies the counting-house
+quay and the Admiralty sits behind the inn. Complete input saves and runtime
+owners remain unchanged. Reports: `late_harbor_candidate_view_720`,
+`late_harbor_final_view_1080` and `late_harbor_final_view_2048` under the goal
+artifact directory. These read-only composition checks are not paid construction
+or base-to-upgrade transition proof. The separate source and official-package
+normal replays below prove those behaviors. This packet is accepted; other
+faction art and the full presentation goal remain unfinished.
+
+The combined Python run passes 88 tests (`late_harbor_unit.log`): strict original
+scene layers, late-sequence preflight, packaged-probe/bootstrap contract,
+lossless imports, PCK compaction, release artifact verification and candidate
+pipeline. Every selected master was additionally compared byte-for-byte to its
+actual original built-in generation output; all five have genuine RGBA. Exact
+output identities and rejected RGB attempts are now recorded in the scene-layer
+source README.
+
+`late_harbor_growth_720/report.json` now passes **51490 checks**, with exit code
+zero, no runtime errors and unchanged input save/runtime owners. All seven paid
+orders complete on the same Days 15, 16, 17, 22, 23, 29 and 30 as the before-art
+control, including normal weekly ore-cap waits. Every purchase preserves exact
+costs, daily limits, all visible painted/input/information ownership and complete
+save/re-entry. The Court correctly replaces the Sounding and its live hotspot
+without deleting the earned base id. The actual Map Room, Anchor, Sounding,
+Admiralty, Court and final saved Town captures were inspected; the Sounding/Court
+pair visibly develops the same jetty site, rather than relocating the structure.
+
+`late_harbor_save_comparison.json` compares all 17625693 saved bytes against the
+old-renderer Day-30 control. The only difference is the single top-level
+`/saved_at_unix` clock value; no other fields, whitespace or array ordering are
+normalized away. Both remain nonterminal Day-30 sessions with all 23 earned
+building ids, including base and upgrade. New save SHA256:
+`79c4eca066dd4b7ca5c954b56c2d49f0a79ace4eb99b7f98b67c0de53f05b8cb`.
+
+The existing rendered Town layout/dialog and all-town skyline/progression reports
+pass (`late_harbor_town_existing_driver.log`). The full lossless preparation
+verifies five new textures and reuses 2262 verified cache entries; all decoded
+pixels/mipmaps and imported bytes are unchanged. These initial caches already
+used the approved stronger setting, so this run claims zero additional savings.
+`late_harbor_lossless.json` retains the full five-resource proof.
+
+The paid Court continuation also exposes a real visual-selection defect:
+`TownStageView._town_building_scene_entries` loops the authored plot's variants
+and keeps the last built member. The Bellwake plot lists Court before Sounding,
+so preserving both earned ids selects the predecessor instead. The selected
+renderer correction now excludes built ancestors of built upgrades using
+`content/buildings.json`'s `upgrade_from`, keeping plot ownership and saved
+progression intact; array order is not upgrade authority. The old renderer and
+manifest stayed frozen through the completed before-art control. The new
+source-run supervisor retains each real child exit result independently of the
+interactive launcher's lifetime; it stops on a failure rather than retrying.
+
+`late_harbor_preservation.json` proves all seventeen accepted rows, their 51
+rasters and seventeen prompts are unchanged against `e97d7e66`; all 160 tracked
+catalog files, the village and the selected building/town/rule owners are also
+byte-identical. The first managed source-batch launch failed before Godot because
+its service PATH omitted the local engine directory (exit 127), not because of
+a game failure. That report remains retained. `late_harbor_source_batch2.json`
+ran with the explicit engine PATH under the finite
+`heroes-late-harbor-source2-20260908` user service. All five jobs completed with
+zero exits and the service is now terminal/successful. Intermediate live state
+and saved-frame markers were never treated as acceptance.
+
+After those source checks ended, the existing preparation pipeline recorded the
+curation decision. `late_harbor_curation_metadata.json` proves that only the five
+new `curation` strings and `migration_scope` changed in the manifest, with all 110
+asset/prompt/import files and all scenic geometry unchanged. Source checks used
+manifest SHA256 `e782c36ffbe8b4be7dc6bf1ced53d863e8dc3a80cd861f898def0881aa8bfb10`;
+both official packages use the resulting
+`61f495580a0e6f562c1998bcf72aded411b92669c6519b4e3239b7c2072454f9` manifest.
+`late_harbor_package_batch.py` runs the unchanged normal platform smokes and
+the same complete seven-order probe in each isolated official release pack,
+with five bootstrap controls and no game-script/art overrides.
+
+The normal Linux and Windows smokes have both completed successfully, including
+startup and generated-map/Town construction. The isolated Linux release replay
+also passes all **51490 checks**, with zero exit/runtime errors, unchanged input
+and runtime owners, all five bootstrap controls, and the exact current manifest.
+Its Sounding, Court and final saved Town captures have been visually inspected;
+the same-site upgrade and readable header/commands/footer remain present in the
+actual release build. The Linux PCK is 243281500 bytes, SHA256
+`c5cda746d309314e3ce854b111594aff2dba2af7bd165fa8448097148cb9d71c`,
+with 5180 members and 6718500 bytes below the unchanged ceiling. Normal Windows
+startup and generated-entry logs have no fatal runtime matches in this run;
+this does not establish a fix for the earlier intermittent quick-exit warning.
+The exact Windows/Wine seven-order replay also passes **51490 checks**, exit
+zero, no runtime errors, unchanged input/source owners and all five bootstrap
+controls. Both release probes retain every gameplay/input/save assertion; only
+paired frame/screenshot operations are omitted in headless Windows. The six-job
+`late_harbor_package_batch.json` is terminal/successful, including the final
+repository and diff checks. The managed service is inactive with result success.
+Headless Wine is not physical Windows/GPU certification.
+
+`late_harbor_package_parity.json` verifies all 5180 members: exactly five texture
+caches and five import descriptors were added; no old member was removed.
+Of the prior members, 5167 are unchanged; only the scene manifest, compiled
+`TownStageView` and generated UID cache differ. All new texture bytes match the
+lossless-import proof. Linux and Windows have 5179 identical members, with only
+`project.binary` platform-specific; no source master is packaged. Both PCKs are
+243281500 bytes. Windows SHA256:
+`428f05f5805da0336fb7e510612e6ed79530ca997434b1c1db53184874d9d8bd`.
+
+`late_harbor_packaged_save_comparison.json` passes a four-way raw-byte comparison
+of the original renderer, new source, Linux release and Windows release earned
+Day-30 saves. Only the one top-level `/saved_at_unix` numeric span is excluded;
+no whitespace, field or array normalization is permitted. All remain nonterminal
+with 23 earned building ids. Linux save SHA256:
+`9d20f5cefc788faa88686fc1cabc46cc410997dda83be0c99066db3a5452e9e2`;
+Windows: `e86e0b29b70350dfb6b08436b945e3d41bc018dbf80fc8df6c9620779dfe94bd`.
+
+After every process finished, `late_harbor_wine_retirement.json` records removal
+of only the test prefix's three rebuildable Windows/Program Files directories:
+1309548544 allocated bytes. All user data and registry hashes remain identical;
+reports, saves, source art, caches, RMG evidence and both official exports remain.
+
+Reproduction: run `tests/town_scene_layer_regression.py --late-harbor-growth`
+with the recorded Day-14 `--save`, a fresh `--label` and `--resolution 1280x720`;
+use `--presentation-only --developed-save <earned-Day-30-save>` for the inspected
+three-resolution composition controls. The packaged counterpart additionally
+takes `--binary`, `--pack`, `--platform`, `--bootstrap-controls` and a fresh
+Windows `--wine-prefix`. The artifact supervisor records the exact standard
+Linux/Windows export/startup/generated-entry commands and retained logs. Strict
+scene/sequence/bootstrap/lossless/compaction/release tests, both existing Town
+reports, `python3 tests/validate_repo.py` and `git diff --check` pass. This is
+complete Bellwake scene coverage, not all-faction or release-ready acceptance.
+
+## Next Embercourt opening packet — preparation only
+
+The real Medium11 Day-1 Riverwatch control reproduces detached catalog art for
+Muster Yard, Wayfarers Hall and the normally purchased Market Square. Its exact
+save SHA256 is `c0d67e4b2a8403ac82ae599391ae0a946ea16110beb4dd378a599af9a9ab7a59`.
+`embercourt_opening_before_720` runs 72 checks with five expected scene-mapping
+failures and no engine errors; exact 1000-gold purchase, daily/build-id and
+complete save/resume controls are retained. The before capture was inspected.
+
+Three original text-only RGBA candidates and exact prompts are preserved under
+`embercourt_opening_candidates_20260908/`; its README owns output identities,
+hashes and the rejected RGB/checkerboard extraction. Direct alpha sampling and
+an actual-engine detached preview resolve the misleading brown RGB visible in
+raw previews: those surrounding pixels are transparent in the game. The preview
+passes 35 overlay/state/save controls, not production art/input acceptance.
+Muster Yard still needs its base raised onto the quay court, and raw full-size
+textures need the established trimmed/mipmapped runtime pipeline before judging
+sampling. No Embercourt candidate has entered the production manifest/export.
+After the validated Bellwake commit, extend exact-faction preparation while
+preserving all 22 Veilmourn layers, then validate placement, actual construction,
+input/save, developed compositions and both-platform packages. The presentation
+child and full-match parent remain in progress.
+
 ## First production briefs
 
 - Wreck Quay: exact `object_wreck_quay` -> `mapobj_wreck_quay` mapping in
@@ -760,12 +954,11 @@ The packaged wrapper additionally requires isolated matching `--binary/--pack`,
 
 ## Remaining acceptance
 
-Extend scene-matched art beyond the two starting structures and constructed
-Bellwake Market Square, Fog Buoys, Salvage Ledger, Ransom Exchange and Mirror
-Drydock, Salt Counting House, Mourner Pilot Guild and Saltwake Factor to the
-remaining faction/building plots and upgrades. Harpoon Gantry, Obituary Vault,
-Mistgate Slip, Bell-Chain Watch and Wake Oratory now have original scene layers,
-with complete source/package acceptance recorded above.
+All 22 Bellwake starting/constructible scene layers, including the same-site
+Sounding/Court upgrade, now have source and package acceptance recorded above.
+Extend that scene-matched coverage to the other faction/building plots and
+upgrades, starting with the reproduced Embercourt opening packet. Candidate
+generation or mapping counts alone do not establish that acceptance.
 Require inspected sparse, mid-development and developed scenes, exact
 built-id/input/save ownership and
 both-platform packages within the ceiling for each accepted packet. Other

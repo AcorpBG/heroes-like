@@ -97,6 +97,41 @@ BRIEFS = {
         'reference_inputs':[], 'generation_date':'2026-09-08',
         'grounding':'Tideglass study chapel joins the inner-left quay beside the main bell tower, behind the Ledger and salt treasury. Its reflective roof and bell remain exposed above the working waterfront; preserve the Bell Harbor gangway and open channel.',
     },
+    'building_veilmourn_drowned_map_room': {
+        'source_sha256':'9379e7472873d31c86fe378b7d318d5cddd9daf059e676b5f077b448d8fed0ac',
+        'scene_bounds':[195,305,250,250*1024/1536], 'ground_anchor':[310,455],
+        'generation_date':'2026-09-08',
+        'grounding':'Chart house extends the inner-left shore between the original foreground warehouse and main bell tower, behind the sail workshop; keep its navigation roof exposed and the tower doorway clear.',
+        'curation':'Inspected ordinary 1280x720 construction and the developed Town at 1280x720, 1920x1080 and 2048x1079; source input/save checks pass. Platform acceptance is recorded separately in the art-repair report.',
+    },
+    'building_veilmourn_memory_anchor': {
+        'source_sha256':'54f74fa81dc09706aeee43ad48cd72c4283f01b971b4ab1635fd2ff27465cb8e',
+        'scene_bounds':[540,610,120,180], 'ground_anchor':[605,775],
+        'reference_inputs':[], 'generation_date':'2026-09-08',
+        'grounding':'Narrow memory-salt anchor stands on the existing left quay in front of the counting house, between the low Vault and seaward Factor warehouse; retain an exposed anchor and its stone approach.',
+        'curation':'Inspected ordinary 1280x720 construction and the developed Town at 1280x720, 1920x1080 and 2048x1079; source input/save checks pass. Platform acceptance is recorded separately in the art-repair report.',
+    },
+    'building_veilmourn_leviathan_sounding': {
+        'source_sha256':'4a4bf8919b772d8d85812ce1be4146b99b3298a3e1d4c85a1b7618aef317d8e6',
+        'scene_bounds':[745,325,320,320*1024/1536], 'ground_anchor':[940,520],
+        'reference_inputs':[], 'generation_date':'2026-09-08',
+        'grounding':'Sounding jetty joins the middle-distance right shore through its rightward gangway, behind Bell Harbor; open piling gaps preserve the channel, with paired acoustic horns exposed above the foreground docks.',
+        'curation':'Inspected ordinary 1280x720 construction and the developed Town at 1280x720, 1920x1080 and 2048x1079; source input/save checks pass. Platform acceptance is recorded separately in the art-repair report.',
+    },
+    'building_veilmourn_drowned_admiralty': {
+        'source_sha256':'5620b5cee9a562b6bc27c0fa6fd54c818e857c73b8e2ba1324237f2264f9f91b',
+        'scene_bounds':[940,210,290,290], 'ground_anchor':[1090,480],
+        'reference_inputs':[], 'generation_date':'2026-09-08',
+        'grounding':'Admiralty occupies the right shoreline behind Wayfarers Hall; the navigation turret rises above the inn roof while its lower approach joins that established waterfront, clear of the command rail.',
+        'curation':'Inspected ordinary 1280x720 construction and the developed Town at 1280x720, 1920x1080 and 2048x1079; source input/save checks pass. Platform acceptance is recorded separately in the art-repair report.',
+    },
+    'building_veilmourn_memory_rite_court': {
+        'source_sha256':'cb03c475af5513a0dc8fcef82b63197cb3ad49db06c06efa107d6b7a76acab8d',
+        'scene_bounds':[745,325,320,320*1024/1536], 'ground_anchor':[940,520],
+        'reference_inputs':[], 'generation_date':'2026-09-08',
+        'grounding':'Developed sounding station retains the same middle-distance jetty site and rightward shore approach, adding an open memory canopy, mirrors and salt rails. A new original painting from the inspected Sounding composition, not a claim of pixel-identical image editing.',
+        'curation':'Inspected ordinary 1280x720 Sounding-to-Court replacement at the same site and the developed Town at 1280x720, 1920x1080 and 2048x1079; source input/save checks pass. Fresh original painting, not a pixel-identical base edit. Platform acceptance is recorded separately in the art-repair report.',
+    },
 }
 
 def digest(path):
@@ -137,7 +172,7 @@ def main():
             'grounding':brief['grounding'],
             'prompt_path':f'res://art/towns/source/generated/scene_layers/{FACTION}/{building_id}.prompt.txt',
             'prompt_sha256':digest(source.with_suffix('.prompt.txt')),
-            'curation':'Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.',
+            'curation':brief.get('curation','Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.'),
         }
         if 'reference_inputs' in brief:
             layers[building_id]['reference_inputs'] = brief['reference_inputs']
@@ -152,7 +187,7 @@ def main():
         'processing':'Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.',
         'rights':'Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.',
         'catalog_icons':'Unchanged; these exact-faction scene layers are not shared catalog replacements.',
-        'migration_scope':'Seventeen Bellwake scene layers: Bell Harbor, Wayfarers Hall, Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange, Mirror Drydock, Salt Counting House, Mourner Pilot Guild, Saltwake Factor, Harpoon Gantry, Bell-Chain Watch, Obituary Vault, Wake Oratory, Mistgate Slip, Black-Sail Loft and Tideglass Chapel. Other buildings/upgrades/factions remain unaccepted; text-only rows explicitly record no image inputs, and the two rigging/magic rows record their later generation date.',
+        'migration_scope':'Twenty-two Bellwake scene layers cover its authored starting and constructible buildings apart from the embedded Town Hall, including the same-site Sounding/Court upgrade. Source curation and normal growth pass; official-platform evidence is recorded separately in the art-repair report. Other factions remain unaccepted. Text-only rows explicitly record no image inputs and later rows record their generation date.',
         'missing_declared_layer_policy':'validation_failure_no_catalog_or_procedural_fallback',
         'factions':{FACTION:layers},
     }

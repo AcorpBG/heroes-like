@@ -20,7 +20,7 @@
   "processing": "Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.",
   "rights": "Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.",
   "catalog_icons": "Unchanged; these exact-faction scene layers are not shared catalog replacements.",
-  "migration_scope": "Seventeen Bellwake scene layers: Bell Harbor, Wayfarers Hall, Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange, Mirror Drydock, Salt Counting House, Mourner Pilot Guild, Saltwake Factor, Harpoon Gantry, Bell-Chain Watch, Obituary Vault, Wake Oratory, Mistgate Slip, Black-Sail Loft and Tideglass Chapel. Other buildings/upgrades/factions remain unaccepted; text-only rows explicitly record no image inputs, and the two rigging/magic rows record their later generation date.",
+  "migration_scope": "Twenty-two Bellwake scene layers cover its authored starting and constructible buildings apart from the embedded Town Hall, including the same-site Sounding/Court upgrade. Source curation and normal growth pass; official-platform evidence is recorded separately in the art-repair report. Other factions remain unaccepted. Text-only rows explicitly record no image inputs and later rows record their generation date.",
   "missing_declared_layer_policy": "validation_failure_no_catalog_or_procedural_fallback",
   "factions": {
     "faction_veilmourn": {
@@ -778,6 +778,235 @@
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_tideglass_chapel.prompt.txt",
         "prompt_sha256": "b25576746d2c7b6122f4dc3c591de883e767ad75bcb1edef760f3b443d4282b5",
         "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      },
+      "building_veilmourn_drowned_map_room": {
+        "asset_id": "faction_veilmourn_building_veilmourn_drowned_map_room",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_drowned_map_room.png",
+        "source_sha256": "9379e7472873d31c86fe378b7d318d5cddd9daf059e676b5f077b448d8fed0ac",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          76,
+          9,
+          1473,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_drowned_map_room.png",
+        "trimmed_sha256": "5117288cbaa0eb899a227cacd24edcac5273e2c882eb5fd5d8a3ed5902785df5",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_drowned_map_room.png",
+        "runtime_sha256": "23686042d9c31bf12f412ffb6b1bccd90ed7e6f33621f3e608c18de05a1f6ac0",
+        "runtime_size": [
+          512,
+          372
+        ],
+        "normalized_rect": [
+          0.12960611979166667,
+          0.34051649305555554,
+          0.14211018880208334,
+          0.18355758101851852
+        ],
+        "ground_anchor": [
+          0.19375,
+          0.5055555555555555
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Chart house extends the inner-left shore between the original foreground warehouse and main bell tower, behind the sail workshop; keep its navigation roof exposed and the tower doorway clear.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_drowned_map_room.prompt.txt",
+        "prompt_sha256": "6791f1733ce1c58764de75a0e94e1a4b4318c3c1b7ef6e4269712e2907603ab7",
+        "curation": "Inspected ordinary 1280x720 construction and the developed Town at 1280x720, 1920x1080 and 2048x1079; source input/save checks pass. Platform acceptance is recorded separately in the art-repair report.",
+        "generation_date": "2026-09-08"
+      },
+      "building_veilmourn_memory_anchor": {
+        "asset_id": "faction_veilmourn_building_veilmourn_memory_anchor",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_memory_anchor.png",
+        "source_sha256": "54f74fa81dc09706aeee43ad48cd72c4283f01b971b4ab1635fd2ff27465cb8e",
+        "source_size": [
+          1024,
+          1536
+        ],
+        "trim_box": [
+          0,
+          0,
+          1006,
+          1536
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_memory_anchor.png",
+        "trimmed_sha256": "7c3d7d3c3ad6307a1bc9c5712c8e5f6744f96645b876811811f57d1cf3465818",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_memory_anchor.png",
+        "runtime_sha256": "cdce7fce04233851f6a54cabd173ad92f486a51c3b4b83538a14024ebdc6cc3b",
+        "runtime_size": [
+          335,
+          512
+        ],
+        "normalized_rect": [
+          0.3375,
+          0.6777777777777778,
+          0.073681640625,
+          0.2
+        ],
+        "ground_anchor": [
+          0.378125,
+          0.8611111111111112
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Narrow memory-salt anchor stands on the existing left quay in front of the counting house, between the low Vault and seaward Factor warehouse; retain an exposed anchor and its stone approach.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_memory_anchor.prompt.txt",
+        "prompt_sha256": "c53c23df523fa03cd430cac6de2095838c4dd0aa94353dc4ccc28a9c172a3915",
+        "curation": "Inspected ordinary 1280x720 construction and the developed Town at 1280x720, 1920x1080 and 2048x1079; source input/save checks pass. Platform acceptance is recorded separately in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      },
+      "building_veilmourn_leviathan_sounding": {
+        "asset_id": "faction_veilmourn_building_veilmourn_leviathan_sounding",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_leviathan_sounding.png",
+        "source_sha256": "4a4bf8919b772d8d85812ce1be4146b99b3298a3e1d4c85a1b7618aef317d8e6",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1520,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_leviathan_sounding.png",
+        "trimmed_sha256": "30c99a970a0ec89ec0c2069ca5b88e3b97c998d5670d21d3f4000eded5a3b38c",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_leviathan_sounding.png",
+        "runtime_sha256": "4ef41f4ee5b2ca39098ff9ae97223248f996d0fb128d551a72c3ebb4b05896a9",
+        "runtime_size": [
+          512,
+          345
+        ],
+        "normalized_rect": [
+          0.465625,
+          0.3611111111111111,
+          0.19791666666666669,
+          0.23703703703703705
+        ],
+        "ground_anchor": [
+          0.5875,
+          0.5777777777777777
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Sounding jetty joins the middle-distance right shore through its rightward gangway, behind Bell Harbor; open piling gaps preserve the channel, with paired acoustic horns exposed above the foreground docks.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_leviathan_sounding.prompt.txt",
+        "prompt_sha256": "021d3705d6d2e9aa8bf074a4aaca8bb404e7043d9e785da6229dfa68ea224bc7",
+        "curation": "Inspected ordinary 1280x720 construction and the developed Town at 1280x720, 1920x1080 and 2048x1079; source input/save checks pass. Platform acceptance is recorded separately in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      },
+      "building_veilmourn_drowned_admiralty": {
+        "asset_id": "faction_veilmourn_building_veilmourn_drowned_admiralty",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_drowned_admiralty.png",
+        "source_sha256": "5620b5cee9a562b6bc27c0fa6fd54c818e857c73b8e2ba1324237f2264f9f91b",
+        "source_size": [
+          1254,
+          1254
+        ],
+        "trim_box": [
+          0,
+          0,
+          1236,
+          1254
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_drowned_admiralty.png",
+        "trimmed_sha256": "0e644c8bc2ad349a38dba83b62e454d102b4c9551a241cfbedff9b3a91bdf69d",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_drowned_admiralty.png",
+        "runtime_sha256": "80cd48c9c91486136ed589e142f55b59100910649af7899f730e02c900331abb",
+        "runtime_size": [
+          505,
+          512
+        ],
+        "normalized_rect": [
+          0.5875,
+          0.23333333333333334,
+          0.17864832535885167,
+          0.32222222222222224
+        ],
+        "ground_anchor": [
+          0.68125,
+          0.5333333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Admiralty occupies the right shoreline behind Wayfarers Hall; the navigation turret rises above the inn roof while its lower approach joins that established waterfront, clear of the command rail.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_drowned_admiralty.prompt.txt",
+        "prompt_sha256": "dfb5524712514bfce096a46d59f579276151aa781c2917096321c6bd0b41f79e",
+        "curation": "Inspected ordinary 1280x720 construction and the developed Town at 1280x720, 1920x1080 and 2048x1079; source input/save checks pass. Platform acceptance is recorded separately in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-08"
+      },
+      "building_veilmourn_memory_rite_court": {
+        "asset_id": "faction_veilmourn_building_veilmourn_memory_rite_court",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_memory_rite_court.png",
+        "source_sha256": "cb03c475af5513a0dc8fcef82b63197cb3ad49db06c06efa107d6b7a76acab8d",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          13,
+          1519,
+          1010
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_memory_rite_court.png",
+        "trimmed_sha256": "43b52916663f16e3c8ae7af2ad8aaba8c1ec913fb2c9e2e061379ea37e77841d",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_memory_rite_court.png",
+        "runtime_sha256": "ae5b0cbcc8ec5be701657f3026932dbed28278a71de393d24764d6a51a0ef49c",
+        "runtime_size": [
+          512,
+          336
+        ],
+        "normalized_rect": [
+          0.465625,
+          0.36412037037037037,
+          0.19778645833333333,
+          0.23078703703703704
+        ],
+        "ground_anchor": [
+          0.5875,
+          0.5777777777777777
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Developed sounding station retains the same middle-distance jetty site and rightward shore approach, adding an open memory canopy, mirrors and salt rails. A new original painting from the inspected Sounding composition, not a claim of pixel-identical image editing.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_memory_rite_court.prompt.txt",
+        "prompt_sha256": "b33254a59e3b8b941ee9043d2f9ccf1a8c2eb1af51cd85275fcf85dd182a953e",
+        "curation": "Inspected ordinary 1280x720 Sounding-to-Court replacement at the same site and the developed Town at 1280x720, 1920x1080 and 2048x1079; source input/save checks pass. Fresh original painting, not a pixel-identical base edit. Platform acceptance is recorded separately in the art-repair report.",
         "reference_inputs": [],
         "generation_date": "2026-09-08"
       }

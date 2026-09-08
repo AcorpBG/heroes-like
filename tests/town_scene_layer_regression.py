@@ -11,7 +11,37 @@ from generated_full_match_quality import ROOT, OUTPUT
 from generated_town_order_profile import run_probe
 import town_overlay_ownership_regression as overlay
 
+LATE_HARBOR_IDS = [
+    'building_veilmourn_drowned_map_room', 'building_veilmourn_mistgate_slip',
+    'building_veilmourn_memory_anchor', 'building_veilmourn_leviathan_sounding',
+    'building_veilmourn_drowned_admiralty', 'building_veilmourn_memory_rite_court',
+    'building_veilmourn_saltwake_factor',
+]
+LATE_HARBOR_SAVE_SHA256 = '69f4c289bb0bd273f175e24a0b2704391302c0cf2dcc0be76c4d487f91886537'
+
 EXTRA = r'''
+func inspect_upgrade_order() -> void:
+	var stage=get_tree().current_scene.get_node("%TownStage")
+	var before: Dictionary=normalized(session.to_dict())
+	var tested := 0
+	for faction in stage._building_scene_layout_manifest.factions:
+		for plot in stage._building_scene_layout_manifest.factions[faction].plots:
+			var variants: Array=plot.building_ids
+			for id in variants:
+				var base: String=ContentService.get_building(id).get("upgrade_from","")
+				if base=="" or base not in variants: continue
+				for order in [[base,id],[id,base]]:
+					check(stage._visible_town_plot_building_id(order,[])=="","unbuilt upgrade plot became visible")
+					check(stage._visible_town_plot_building_id(order,[base])==base,"unbuilt upgrade hides its base: "+id)
+					check(stage._visible_town_plot_building_id(order,[id])==id,"upgrade-only compatible state selects a missing base: "+id)
+					check(stage._visible_town_plot_building_id(order,[base,id])==id,"plot order selects predecessor: "+id)
+					check(stage._visible_town_plot_building_id(order,[id,base])==id,"saved-id order selects predecessor: "+id)
+				tested+=1
+	check(tested>0,"no authored upgrade relationships exercised")
+	check(stage._visible_town_plot_building_id(["building_wayfarers_hall","building_market_square"],["building_market_square","building_wayfarers_hall"])=="building_market_square","unrelated plot order changed")
+	check(normalized(session.to_dict())==before,"visual upgrade selection mutated gameplay")
+	rows.append({"label":"authored_upgrade_order_controls","authored_relationships":tested})
+
 func layer_changed_paths(before, after, prefix: String = "", found: Array = []) -> Array:
 	if before==after or found.size()>=20: return found
 	if before is Dictionary and after is Dictionary:
@@ -113,6 +143,11 @@ func inspect_scene_layers(ids: Array = ["building_veilmourn_bell_harbor", "build
 		if id=="building_veilmourn_wake_oratory": body=Vector2(0.80,0.60) # Right-hand funeral cloth, below expanded specialty/command controls and above the Drydock.
 		if id=="building_veilmourn_tideglass_chapel": body=Vector2(0.55,0.40) # Exposed tideglass roof above the foreground Ledger.
 		if id=="building_veilmourn_black_sail_loft": body=Vector2(0.35,0.35) # Exposed workshop roof above the foreground Harpoon Gantry.
+		if id=="building_veilmourn_drowned_map_room": body=Vector2(0.55,0.35) # Navigation roof above the foreground sail workshop.
+		if id=="building_veilmourn_memory_anchor": body=Vector2(0.55,0.60) # Exposed iron shank on the counting-house quay.
+		if id=="building_veilmourn_leviathan_sounding": body=Vector2(0.65,0.16) # Right acoustic horn above foreground bell docks.
+		if id=="building_veilmourn_memory_rite_court": body=Vector2(0.67,0.18) # Right acoustic horn remains exposed after the rite upgrade.
+		if id=="building_veilmourn_drowned_admiralty": body=Vector2(0.50,0.25) # Navigation turret above Wayfarers Hall.
 		if id=="building_market_square" and stage.validation_building_hotspot_summary("building_veilmourn_obituary_vault").get("visible",false):
 			var overlap: Vector2 = button.get_global_transform_with_canvas()*(body*button.size)
 			var vault = stage._building_hotspots["building_veilmourn_obituary_vault"]
@@ -363,6 +398,62 @@ func purchase_growth_ore_if_needed(building_id: String) -> void:
 	await settle()
 '''
 
+LATE_HARBOR_ORDERS = r'''
+		var actions: Array=[]
+		var attempt := 0
+		var shell=get_tree().current_scene
+		check(not shell.get_node("%TownStage").validation_building_hotspot_summary(id).visible,"unbuilt late harbor layer is visible: "+id)
+		while actions.is_empty():
+			attempt+=1
+			check(attempt<=28,"ordinary late construction remained unavailable for four weeks: "+id)
+			if attempt>28: return
+			var day_before: int=session.day
+			shell=get_tree().current_scene
+			var prior_info: Dictionary=shell.validation_activate_building_information(previous_id)
+			check(prior_info.open,"late harbor departure did not open prior building information")
+			shell._on_town_catalog_close_pressed()
+			shell._on_leave_pressed()
+			for frame in range(8): await get_tree().process_frame
+			var field=get_tree().current_scene
+			check(field.scene_file_path=="res://scenes/overworld/OverworldShell.tscn","late harbor departure did not reach Overworld")
+			if field.scene_file_path!="res://scenes/overworld/OverworldShell.tscn": return
+			var turn: Dictionary=field.validation_request_end_turn()
+			if turn.get("confirmation_required",false): turn=field.validation_confirm_end_turn()
+			for frame in range(8): await get_tree().process_frame
+			session=SessionState.ensure_active_session()
+			var valid_turn: bool=turn.get("ok",false) and session.day==day_before+1 and session.scenario_status=="in_progress" and session.battle.is_empty()
+			check(valid_turn,"normal late growth turn interrupted by battle/outcome or did not advance one day")
+			if not valid_turn: return
+			var visit: Dictionary=OverworldRules.set_active_town_visit(session,placement)
+			check(visit.get("ok",false),"hero cannot re-enter Bellwake after ordinary late End Turn")
+			if not visit.get("ok",false): return
+			AppRouter.go_to_town()
+			await settle()
+			session=SessionState.ensure_active_session()
+			shell=get_tree().current_scene
+			var ore_needed: int=int(ContentService.get_building(id).cost.get("ore",0))
+			while int(session.overworld.resources.ore)<ore_needed:
+				var offers: Array=TownRules.get_market_actions(session).filter(func(a):return a.id=="market:buy:ore:1" and not a.get("disabled",true))
+				if offers.size()!=1: break # Normal stock cap or affordability: no bypass.
+				var ore_before: int=int(session.overworld.resources.ore)
+				await purchase_growth_ore_if_needed(id)
+				check(int(session.overworld.resources.ore)==ore_before+1,"ordinary late ore order made no paid progress")
+				if int(session.overworld.resources.ore)!=ore_before+1: return
+			actions=TownRules.get_build_actions(session).filter(func(a):return String(a.id)=="build:"+id and not a.get("disabled",true) and a.get("direct_affordable",true))
+			rows.append({"label":"ordinary_late_growth_turn","day":session.day,"building_id":id,"resources":session.overworld.resources.duplicate(true),"market_usage":TownRules.get_active_town(session).get("market_usage",{}).duplicate(true),"construction_available":actions.size()==1})
+			print("LATE_HARBOR_DAY "+str(session.day)+" "+id+" available="+str(actions.size()==1))
+'''
+
+LATE_HARBOR_UPGRADE = r'''
+		if id=="building_veilmourn_memory_rite_court":
+			var current_stage=get_tree().current_scene.get_node("%TownStage")
+			var entries: Array=current_stage._town_building_scene_entries(current_stage._town_scene_rect())
+			var plot: Array=entries.filter(func(entry):return entry.plot_id=="building_veilmourn_leviathan_sounding")
+			check(plot.size()==1 and plot[0].visible_building_id==id,"ordinary Court upgrade did not replace Sounding in its original plot")
+			check(not current_stage.validation_building_hotspot_summary("building_veilmourn_leviathan_sounding").get("visible",false),"superseded Sounding retains a live hotspot")
+			check("building_veilmourn_leviathan_sounding" in active.built_buildings,"Court erased the earned Sounding prerequisite from saved progression")
+'''
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--label', required=True)
@@ -374,10 +465,11 @@ def main():
     parser.add_argument('--defense-growth', action='store_true', help='Build Fog Buoys, Bell-Chain Watch, Ransom Exchange, Mirror Drydock and Harpoon Gantry after Market across real confirmed End Turns')
     parser.add_argument('--memory-growth', action='store_true', help='Resume the earned Day-8 Bellwake save and normally build Obituary Vault, Wake Oratory and Mistgate Slip; never inject resources or reset built ids')
     parser.add_argument('--rigging-magic-growth', action='store_true', help='Six ordinary prerequisite/build orders and one paid ore purchase for Loft/Chapel from the earned Day-8 save')
+    parser.add_argument('--late-harbor-growth', action='store_true', help='Seven normal late orders from exact earned Day-14 save, respecting paid ore, weekly caps and upgrade replacement')
     parser.add_argument('--presentation-only', action='store_true', help='Read-only opening/developed input checks; no purchases or match progression evidence')
     parser.add_argument('--developed-save', type=Path, help='Exact recorded built-id composition fixture; never resumed as a live match')
     args = parser.parse_args()
-    if sum((args.harbor_growth, args.exchange_growth, args.salt_growth, args.defense_growth, args.memory_growth, args.rigging_magic_growth, args.presentation_only)) > 1:
+    if sum((args.harbor_growth, args.exchange_growth, args.salt_growth, args.defense_growth, args.memory_growth, args.rigging_magic_growth, args.late_harbor_growth, args.presentation_only)) > 1:
         parser.error('select one normal construction sequence per run')
     if args.presentation_only and not args.developed_save:
         parser.error('presentation-only requires an exact --developed-save fixture')
@@ -385,6 +477,8 @@ def main():
         parser.error('fresh lowercase label required')
     save = args.save.resolve(strict=True)
     before_hash = hashlib.sha256(save.read_bytes()).hexdigest()
+    if args.late_harbor_growth and before_hash != LATE_HARBOR_SAVE_SHA256:
+        parser.error('late-harbor growth requires the exact recorded nonterminal earned Day-14 save')
     if args.memory_growth or args.rigging_magic_growth:
         payload = json.loads(save.read_text())
         town = next((t for t in payload['overworld']['towns'] if t.get('town_id')=='town_veilmourn_bellwake_harbor' and t.get('owner')=='player'), {})
@@ -404,8 +498,8 @@ def main():
     out = OUTPUT / args.label
     out.mkdir(exist_ok=False)
     script_text = SCRIPT
-    growth_enabled = args.harbor_growth or args.exchange_growth or args.salt_growth or args.defense_growth or args.memory_growth or args.rigging_magic_growth or args.presentation_only
-    sequence = 'rigging_magic' if args.rigging_magic_growth else 'presentation_only' if args.presentation_only else 'memory' if args.memory_growth else 'defense' if args.defense_growth else 'salt' if args.salt_growth else 'exchange' if args.exchange_growth else 'harbor' if args.harbor_growth else 'market'
+    growth_enabled = args.harbor_growth or args.exchange_growth or args.salt_growth or args.defense_growth or args.memory_growth or args.rigging_magic_growth or args.late_harbor_growth or args.presentation_only
+    sequence = 'late_harbor' if args.late_harbor_growth else 'rigging_magic' if args.rigging_magic_growth else 'presentation_only' if args.presentation_only else 'memory' if args.memory_growth else 'defense' if args.defense_growth else 'salt' if args.salt_growth else 'exchange' if args.exchange_growth else 'harbor' if args.harbor_growth else 'market'
     if growth_enabled:
         ids = ['building_veilmourn_fog_signal_buoys', 'building_veilmourn_salvage_ledger']
         if args.exchange_growth:
@@ -418,6 +512,8 @@ def main():
             ids = ['building_veilmourn_obituary_vault','building_veilmourn_wake_oratory','building_veilmourn_mistgate_slip']
         if args.rigging_magic_growth:
             ids = ['building_veilmourn_salvage_ledger','building_veilmourn_black_sail_loft','building_veilmourn_obituary_vault','building_veilmourn_wake_oratory','building_veilmourn_mourner_pilot_guild','building_veilmourn_tideglass_chapel']
+        if args.late_harbor_growth:
+            ids = LATE_HARBOR_IDS
         inspection_ids = [id for id in ids if id not in ('building_veilmourn_fog_signal_buoys', 'building_veilmourn_salvage_ledger')] if args.salt_growth else ids
         if args.defense_growth or args.memory_growth or args.rigging_magic_growth or args.presentation_only:
             # Test earlier accepted paintings too: later foreground layers must
@@ -437,13 +533,25 @@ def main():
             # terminal-16 fixture or a separately retained ordinary-growth save.
             payload = json.loads(developed.read_text())
             town = next(t for t in payload['overworld']['towns'] if t.get('town_id')=='town_veilmourn_bellwake_harbor')
-            inspection_ids = [id for id in town['built_buildings'] if id != 'building_town_hall']
-        growth = HARBOR_GROWTH.replace('__GROWTH_IDS__', json.dumps(ids)).replace('__INSPECTION_IDS__', json.dumps(inspection_ids)).replace('ordinary_harbor_growth', 'ordinary_'+sequence+'_growth')
-        if args.rigging_magic_growth:
+            # Inspect visible plot owners, not superseded saved prerequisites.
+            # The live renderer and independent reversed-order controls prove
+            # ancestry selection; the fixture does not remove any earned ids.
+            inspection_ids = None
+        inspection_expression = json.dumps(inspection_ids) if inspection_ids is not None else 'stage._town_building_scene_entries(stage._town_scene_rect()).filter(func(entry):return entry.visible_building_id!="" and not entry.get("embedded_in_base",false)).map(func(entry):return entry.visible_building_id)'
+        growth = HARBOR_GROWTH.replace('__GROWTH_IDS__', json.dumps(ids)).replace('__INSPECTION_IDS__', inspection_expression).replace('ordinary_harbor_growth', 'ordinary_'+sequence+'_growth')
+        if args.rigging_magic_growth or args.late_harbor_growth:
             growth = growth.replace('await inspect_scene_layers([id])', 'await inspect_scene_layers(shell.get_node("%TownStage")._town_building_scene_entries(shell.get_node("%TownStage")._town_scene_rect()).filter(func(entry): return entry.visible_building_id!="" and not entry.get("embedded_in_base",false)).map(func(entry): return entry.visible_building_id))')
+        if args.rigging_magic_growth:
             growth = growth.replace('\t\tvar actions: Array=TownRules.get_build_actions', '\t\tawait purchase_growth_ore_if_needed(id)\n\t\tvar actions: Array=TownRules.get_build_actions') + RIGGING_ORE_PURCHASE
+        if args.late_harbor_growth:
+            start = growth.index('\t\tprint("HARBOR_GROWTH_BEGIN ')
+            end = growth.index('\t\tvar cost: Dictionary=actions[0].cost', start)
+            growth = growth[:start] + LATE_HARBOR_ORDERS + growth[end:]
+            growth = growth.replace('\t\tvar cost: Dictionary=actions[0].cost', '\t\tvar prior_built: Array=TownRules.get_active_town(session).built_buildings.duplicate()\n\t\tvar cost: Dictionary=actions[0].cost')
+            growth = growth.replace('\t\tshell._close_town_catalog(false)\n\t\tawait inspect(id)', '\t\tcheck(active.built_buildings==prior_built+[id],"late construction changed more than the earned built-id append")\n' + LATE_HARBOR_UPGRADE + '\t\tshell._close_town_catalog(false)\n\t\tawait inspect(id)')
+            growth += RIGGING_ORE_PURCHASE.replace('building_id!="building_veilmourn_tideglass_chapel" or ', '')
         script_text = SCRIPT.replace('await inspect_market_constructed()', 'await inspect_market_constructed()\n\t\tawait inspect_harbor_growth()') + growth
-        if args.memory_growth or args.rigging_magic_growth or args.presentation_only:
+        if args.memory_growth or args.rigging_magic_growth or args.late_harbor_growth or args.presentation_only:
             # Existing market/prerequisites and rare resources come from the
             # hash-recorded legitimate mid-match save, not a presentation fixture.
             # Skip only the opening-only Market purchase; keep actual daily
@@ -454,6 +562,7 @@ def main():
             continuation = 'inspect_developed_harbor_composition' if args.presentation_only else 'inspect_harbor_growth'
             opening = opening[:start] + '\tawait inspect_scene_layers(["building_veilmourn_bell_harbor","building_wayfarers_hall","building_veilmourn_harpoon_gantry","building_veilmourn_bell_chain_watch"])\n\tawait '+continuation+'()\n' + opening[end:]
             script_text = opening + EXTRA + growth
+    script_text = script_text.replace('await inspect("opening")', 'await inspect("opening")\n\tinspect_upgrade_order()')
     if args.resolution == '2048x1079':
         script_text = script_text.replace('SettingsService.set_presentation_resolution(OS.get_environment("TOWN_OVERLAY_RESOLUTION"))', 'get_window().content_scale_size = Vector2i(2048,1079)\n\tget_window().size = Vector2i(2048,1079)')
     with tempfile.TemporaryDirectory(prefix='town-layer-probe-', dir=OUTPUT) as temporary, tempfile.TemporaryDirectory(prefix='town-layer-data-', dir='/dev/shm') as data:
@@ -469,7 +578,7 @@ def main():
         with (out / 'runtime.log').open('w') as log:
             # Rigging/magic covers every currently visible painting after each
             # of six orders, not only the newly constructed building.
-            code = run_probe(command, env, log, timeout_seconds=1800 if args.rigging_magic_growth else 900 if args.salt_growth or args.defense_growth or args.memory_growth else 600 if growth_enabled else 300)
+            code = run_probe(command, env, log, timeout_seconds=3600 if args.late_harbor_growth else 1800 if args.rigging_magic_growth else 900 if args.salt_growth or args.defense_growth or args.memory_growth else 600 if growth_enabled else 300)
     lines = (out / 'runtime.log').read_text().splitlines()
     marker = 'TOWN_OVERLAY_OWNERSHIP '
     reports = [json.loads(line[len(marker):]) for line in lines if line.startswith(marker)]

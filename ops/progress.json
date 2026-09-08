@@ -56,7 +56,10 @@
         "python3 -B tools/prepare_lossless_texture_imports.py --report <fresh-report.json>",
         "python3 -B tests/lossless_texture_clean_import_regression.py --output <fresh-directory>",
         "python3 -B -m unittest discover -s tests -p test_lossless_texture_imports.py",
-        "python3 -B tests/lossless_texture_package_regression.py <before-linux.pck> <after-linux.pck> <after-windows.pck> --proofs <retained-proof.json> --output <fresh-report.json>"
+        "python3 -B tests/lossless_texture_package_regression.py <before-linux.pck> <after-linux.pck> <after-windows.pck> --proofs <retained-proof.json> --output <fresh-report.json>",
+        "python3 -B -m unittest discover -s tests -p test_town_late_harbor_sequence.py",
+        "python3 -B tests/town_scene_layer_regression.py --late-harbor-growth --save <exact-earned-Day14-save> --resolution 1280x720 --label <fresh>",
+        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --late-harbor-growth --save <exact-earned-Day14-save> --resolution 1280x720 --label <fresh>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -114,16 +117,20 @@
         "tools/package_release.py and both platform export smokes: shared verified import preparation, actual smaller packages and generated Town gameplay",
         "tests/test_lossless_texture_imports.py and tests/lossless_texture_package_regression.py: complete engine-decoded image/cache/member preservation, failure/rollback controls, inspected dual-resolution evidence",
         "tools/prepare_town_scene_layers.py and exact-faction source/trim/runtime art: Black-Sail Loft and Tideglass Chapel scene layers; preserve the village, fifteen accepted layers and catalog icons",
-        "tests/town_scene_layer_regression.py --rigging-magic-growth and strict art tests: normal earned Day-8 Ledger/Loft/Vault/Oratory/Pilot/Chapel purchases plus paid Ore, exact input/save and three-resolution composition; same probe in both official release packages"
+        "tests/town_scene_layer_regression.py --rigging-magic-growth and strict art tests: normal earned Day-8 Ledger/Loft/Vault/Oratory/Pilot/Chapel purchases plus paid Ore, exact input/save and three-resolution composition; same probe in both official release packages",
+        "Late-harbor packet: original Drowned Map Room, Memory Anchor, Leviathan Sounding, Drowned Admiralty and same-site Memory-Rite Court source/trim/runtime paintings through tools/prepare_town_scene_layers.py; preserve seventeen accepted layers and village",
+        "scenes/town/TownStageView.gd: choose the most advanced built upgrade through authored ancestry, not plot-array order; preserve saved ids and unrelated/incomparable selection; actual Court and reversed-order/save controls",
+        "tests/town_scene_layer_regression.py --late-harbor-growth and packaged equivalent: earned nonterminal Day-14 normal prerequisite/build orders, paid trades, upgrade replacement, all painted input and complete save/re-entry at three resolutions; strict art/repository and Linux/Windows packages under 250000000 bytes",
+        "Embercourt opening packet after the validated Bellwake commit: preserve all 22 Veilmourn layers while extending exact-faction tools/prepare_town_scene_layers.py, manifest/source/trim/runtime art and parameterized Python probes for real Medium11 starting Muster Yard/Wayfarers Hall and paid Market; grounded placement, strict missing/cross-faction mappings, input/save, three-resolution composition and both-platform packages; current separate candidates are not production adoption"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-08T01:55:55Z",
+      "updatedAt": "2026-09-08T05:11:48Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated Loft/Chapel scene-art checkpoint: source/Linux/Windows earned-save replays each pass 35722 checks for six paid orders, the ordinary Ore trade, input and complete save/re-entry; complete final saves differ only in saved_at_unix. Three resolutions inspected, 82 Python tests and existing Town/repository/diff checks pass. Both 241910736-byte PCKs pass normal generated-Town flows and 5170-member preservation/parity. The separate Windows Main Menu quick-exit Ogg ObjectDB warning recurs and is not fixed. Remaining Bellwake structures/upgrades, other factions and Overworld repairs keep this child and the full goal in progress."
+      "notes": "Late-harbor packet validated: source/Linux/Windows earned-save replays each pass 51490 checks; full four-way raw saves differ only in saved_at_unix; 5180-member preservation/platform parity and both normal smokes pass at 243281500 bytes. Three resolutions inspected; 88 Python tests, existing Town reports, lossless/repository/diff pass. All 22 Bellwake layers accepted; full child/parent remain open. Next Embercourt opening preparation has a real five-failure before-control, three original RGBA candidates and a detached renderer preview only; no Embercourt production adoption yet. Complete its exact-faction pipeline, grounded placement, normal Market/input/save and both-platform validation after the coherent Bellwake commit."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16741,7 +16748,7 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Validated Loft/Chapel scene-art checkpoint: source/Linux/Windows earned-save replays each pass 35722 checks for six paid orders, the ordinary Ore trade, input and complete save/re-entry; complete final saves differ only in saved_at_unix. Three resolutions inspected, 82 Python tests and existing Town/repository/diff checks pass. Both 241910736-byte PCKs pass normal generated-Town flows and 5170-member preservation/parity. The separate Windows Main Menu quick-exit Ogg ObjectDB warning recurs and is not fixed. Remaining Bellwake structures/upgrades, other factions and Overworld repairs keep this child and the full goal in progress.",
+  "currentSliceNotes": "Late-harbor packet validated: source/Linux/Windows earned-save replays each pass 51490 checks; full four-way raw saves differ only in saved_at_unix; 5180-member preservation/platform parity and both normal smokes pass at 243281500 bytes. Three resolutions inspected; 88 Python tests, existing Town reports, lossless/repository/diff pass. All 22 Bellwake layers accepted; full child/parent remain open. Next Embercourt opening preparation has a real five-failure before-control, three original RGBA candidates and a detached renderer preview only; no Embercourt production adoption yet. Complete its exact-faction pipeline, grounded placement, normal Market/input/save and both-platform validation after the coherent Bellwake commit.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Presentation Corrections",
   "currentSliceUpdatedAt": "2026-09-08T01:55:07Z",
@@ -22536,7 +22543,10 @@
         "python3 -B tools/prepare_lossless_texture_imports.py --report <fresh-report.json>",
         "python3 -B tests/lossless_texture_clean_import_regression.py --output <fresh-directory>",
         "python3 -B -m unittest discover -s tests -p test_lossless_texture_imports.py",
-        "python3 -B tests/lossless_texture_package_regression.py <before-linux.pck> <after-linux.pck> <after-windows.pck> --proofs <retained-proof.json> --output <fresh-report.json>"
+        "python3 -B tests/lossless_texture_package_regression.py <before-linux.pck> <after-linux.pck> <after-windows.pck> --proofs <retained-proof.json> --output <fresh-report.json>",
+        "python3 -B -m unittest discover -s tests -p test_town_late_harbor_sequence.py",
+        "python3 -B tests/town_scene_layer_regression.py --late-harbor-growth --save <exact-earned-Day14-save> --resolution 1280x720 --label <fresh>",
+        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --late-harbor-growth --save <exact-earned-Day14-save> --resolution 1280x720 --label <fresh>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
@@ -22594,16 +22604,20 @@
         "tools/package_release.py and both platform export smokes: shared verified import preparation, actual smaller packages and generated Town gameplay",
         "tests/test_lossless_texture_imports.py and tests/lossless_texture_package_regression.py: complete engine-decoded image/cache/member preservation, failure/rollback controls, inspected dual-resolution evidence",
         "tools/prepare_town_scene_layers.py and exact-faction source/trim/runtime art: Black-Sail Loft and Tideglass Chapel scene layers; preserve the village, fifteen accepted layers and catalog icons",
-        "tests/town_scene_layer_regression.py --rigging-magic-growth and strict art tests: normal earned Day-8 Ledger/Loft/Vault/Oratory/Pilot/Chapel purchases plus paid Ore, exact input/save and three-resolution composition; same probe in both official release packages"
+        "tests/town_scene_layer_regression.py --rigging-magic-growth and strict art tests: normal earned Day-8 Ledger/Loft/Vault/Oratory/Pilot/Chapel purchases plus paid Ore, exact input/save and three-resolution composition; same probe in both official release packages",
+        "Late-harbor packet: original Drowned Map Room, Memory Anchor, Leviathan Sounding, Drowned Admiralty and same-site Memory-Rite Court source/trim/runtime paintings through tools/prepare_town_scene_layers.py; preserve seventeen accepted layers and village",
+        "scenes/town/TownStageView.gd: choose the most advanced built upgrade through authored ancestry, not plot-array order; preserve saved ids and unrelated/incomparable selection; actual Court and reversed-order/save controls",
+        "tests/town_scene_layer_regression.py --late-harbor-growth and packaged equivalent: earned nonterminal Day-14 normal prerequisite/build orders, paid trades, upgrade replacement, all painted input and complete save/re-entry at three resolutions; strict art/repository and Linux/Windows packages under 250000000 bytes",
+        "Embercourt opening packet after the validated Bellwake commit: preserve all 22 Veilmourn layers while extending exact-faction tools/prepare_town_scene_layers.py, manifest/source/trim/runtime art and parameterized Python probes for real Medium11 starting Muster Yard/Wayfarers Hall and paid Market; grounded placement, strict missing/cross-faction mappings, input/save, three-resolution composition and both-platform packages; current separate candidates are not production adoption"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-08T01:55:55Z",
+      "updatedAt": "2026-09-08T05:11:48Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated Loft/Chapel scene-art checkpoint: source/Linux/Windows earned-save replays each pass 35722 checks for six paid orders, the ordinary Ore trade, input and complete save/re-entry; complete final saves differ only in saved_at_unix. Three resolutions inspected, 82 Python tests and existing Town/repository/diff checks pass. Both 241910736-byte PCKs pass normal generated-Town flows and 5170-member preservation/parity. The separate Windows Main Menu quick-exit Ogg ObjectDB warning recurs and is not fixed. Remaining Bellwake structures/upgrades, other factions and Overworld repairs keep this child and the full goal in progress."
+      "notes": "Late-harbor packet validated: source/Linux/Windows earned-save replays each pass 51490 checks; full four-way raw saves differ only in saved_at_unix; 5180-member preservation/platform parity and both normal smokes pass at 243281500 bytes. Three resolutions inspected; 88 Python tests, existing Town reports, lossless/repository/diff pass. All 22 Bellwake layers accepted; full child/parent remain open. Next Embercourt opening preparation has a real five-failure before-control, three original RGBA candidates and a detached renderer preview only; no Embercourt production adoption yet. Complete its exact-faction pipeline, grounded placement, normal Market/input/save and both-platform validation after the coherent Bellwake commit."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111370,7 +111384,7 @@
   ],
   "summary": "Validated Bellwake Loft/Chapel scene-art checkpoint, preserving fifteen earlier paintings and all gameplay. Source and isolated Linux/Windows earned-save replays each pass 35722 checks; complete final saves differ only in normal saved_at_unix metadata. Three resolutions inspected, 82 Python tests, existing Town reports and repository/diff checks pass. Both PCKs are 241910736 bytes with 8089264 bytes headroom and 5170-member preservation/parity; normal platform generated-Town flows pass. The separate Windows Main Menu quick-exit Ogg ObjectDB warning recurs and remains unresolved. Remaining Town structures/upgrades/factions and Overworld repairs keep the full goal in progress.",
   "taskId": "10236",
-  "updatedAt": "2026-09-08T01:55:55Z",
+  "updatedAt": "2026-09-08T05:11:48Z",
   "validation": {
     "id": "quality-bellwake-rigging-magic-20260908",
     "sliceId": "ux-generated-full-match-presentation-20260906",
