@@ -12,6 +12,55 @@ import packaged_town_scene_layer_regression as packaged
 
 
 class EmbercourtSequenceTests(unittest.TestCase):
+    def test_civic_rejects_wrong_save_faction_or_combined_sequence(self):
+        with tempfile.TemporaryDirectory(prefix='town-ember-civic-') as temporary:
+            save=Path(temporary)/'wrong.json'
+            save.write_text('{}\n')
+            for flags,message in [([], 'requires --faction embercourt'),
+                                  (['--faction','embercourt'], 'exact earned nonterminal Medium11 Day-17 save'),
+                                  (['--faction','embercourt','--embercourt-riverworks-growth'],'select one normal construction sequence')]:
+                args=['probe','--embercourt-civic-growth','--save',str(save),'--resolution','1280x720','--label','unit_wrong_civic']+flags
+                with patch('sys.argv',args), patch.object(layers,'run_probe') as run, contextlib.redirect_stderr(io.StringIO()) as stderr, self.assertRaises(SystemExit) as stop:
+                    layers.main()
+                self.assertEqual(stop.exception.code,2)
+                self.assertIn(message,stderr.getvalue())
+                run.assert_not_called()
+        for flags in ({'supply':True},{'riverworks':True}):
+            with self.assertRaisesRegex(ValueError,'select one normal construction sequence'):
+                layers.embercourt_growth_script(civic=True,**flags)
+
+    def test_civic_keeps_paid_ore_daily_complete_save_and_all_prior_input(self):
+        script=layers.embercourt_growth_script(civic=True)
+        self.assertEqual(layers.EMBERCOURT_CIVIC_IDS,['building_embercourt_lantern_court','building_embercourt_relief_quay'])
+        for token in ('validation_request_end_turn()', 'validation_confirm_end_turn()', 'attempt<=28',
+                      'validation_select_build_plan(id)', 'validation_confirm_build_plan()',
+                      'validation_perform_town_action("market:buy:ore:1")', 'TownRules.perform_market_action(control',
+                      'normalized(session.to_dict())==normalized(control.to_dict())', 'prior_built+[id]',
+                      'growth construction costs changed', 'growth allowed a second same-day build', 'earned_growth_save.json'):
+            self.assertIn(token,script)
+        for id in layers.EMBERCOURT_IDS+layers.EMBERCOURT_GROWTH_IDS+layers.EMBERCOURT_SUPPLY_IDS+layers.EMBERCOURT_RIVERWORKS_IDS+layers.EMBERCOURT_CIVIC_IDS:
+            self.assertIn(id,script)
+        for token in ('__GROWTH_IDS__','__INSPECTION_IDS__','prepare_riverworks_defense','await layer_visibility_fixture()'):
+            self.assertNotIn(token,script)
+        headless,removed=packaged.headless_script(script)
+        self.assertTrue(removed)
+        for token in ('check(', 'SaveService.', 'Input.parse_input_event', 'layer_controller('):
+            self.assertEqual(headless.count(token),script.count(token))
+
+    def test_paid_trade_control_preserves_live_dictionary_order(self):
+        self.assertIn('control.from_dict(session.to_dict())',layers.RIGGING_ORE_PURCHASE)
+        self.assertNotIn('control.from_dict(before)',layers.RIGGING_ORE_PURCHASE)
+        self.assertIn('paid Trade control changed live recruit option order',layers.RIGGING_ORE_PURCHASE)
+        self.assertIn('normalized(session.to_dict())==normalized(control.to_dict())',layers.RIGGING_ORE_PURCHASE)
+        self.assertIn('paid_trade_state_mismatch',layers.RIGGING_ORE_PURCHASE)
+
+    def test_lantern_overlap_keeps_actual_alpha_and_own_building_routes(self):
+        self.assertIn('var lantern_painted: bool=lantern._has_point(',layers.EXTRA)
+        self.assertIn('"building_embercourt_lantern_court" if lantern_painted else id',layers.EXTRA)
+        self.assertIn('presses[0]==(0 if lantern_painted else 1)',layers.EXTRA)
+        self.assertIn('Vector2(0.90,0.35)',layers.EXTRA)
+        self.assertIn('foreground Bargebow Slip did not own its visible Oath roof overlap',layers.EXTRA)
+
     def test_riverworks_rejects_wrong_save_faction_or_combined_sequence(self):
         with tempfile.TemporaryDirectory(prefix='town-ember-riverworks-') as temporary:
             save=Path(temporary)/'wrong.json'

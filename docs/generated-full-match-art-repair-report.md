@@ -14,6 +14,149 @@ native generation or unrelated cleanup changes. Runtime exports stay below
 250000000 bytes on both platforms. Reverting the coherent art/code commit restores
 prior rendering without save migration.
 
+## Embercourt civic quays — validated, 2026-09-08
+
+Lantern Court and Relief Quay previously selected their separate catalog paintings
+in Riverwatch because their exact faction/building scene-manifest rows were absent.
+The selected correction adds original grounded court/quay layers, preserving all
+40 accepted paintings, the village, catalog information art and gameplay.
+The exact earned Day-17 input from `424edffe` is
+`embercourt_riverworks_accepted_earned_720/earned_growth_save.json`, SHA256
+`9f7dcbf9f69d49e21d9404d042e63e388c5ce959411af738dcf9b7422ff1884e`.
+The Python-owned `--embercourt-civic-growth` sequence uses the existing paid
+ledger, paid Ore Trade and confirmed End Turns; no new market goods or resources
+are injected. Beacon Court, Drake Sluice, Charter Colossus Bastion and Charter
+Flame remain open: they require rare resources absent from this save, whereas
+the normal market only buys/sells wood and ore. Their legitimate acquisition and
+art acceptance are not implied by this two-building checkpoint.
+
+The terminal original-renderer control completes 18348 checks and both purchases
+on Days 18/19, but has five expected missing-layer failures plus one unexpected
+Trade recap mismatch. The detailed repeat
+`embercourt_civic_control_details_720` proves the latter is the reference clone:
+`normalized()` uses `JSON.stringify()` with sorted dictionary keys, then
+`control.from_dict(before)` reproduces that reordered state. The existing
+`get_town_recruit_options()` preserves recruit dictionary order and
+`TownRules._next_town_action_line()` chooses its first ready recruit. The sorted
+control recommends “Citadel Pikeward fields 4 now.”; the actual UI recommends
+“River Guard fields 12 now.” Only the four recap next/text fields differ.
+The corrected driver clones `session.to_dict()` directly, asserts identical
+recruit-option order, and still compares complete normalized state/recaps.
+Production rules and saved state remain unchanged. The fresh
+`embercourt_civic_control_ordered_720` finishes **18351 checks**, with exactly five
+expected missing-layer failures, no recap mismatch or engine errors and unchanged
+input/source hashes. Its complete earned Day-19 save SHA256 is
+`6a606584222a44e59d07e80b8fc5455c4501a17b237bf38636ab49da2ac46923`.
+That run is the missing-art-only control; the two earlier runs retain their
+explicit clone defect and are not presented as clean acceptance evidence.
+
+The initial 14 sequence/preflight tests pass. The strict 24-test art suite fails exactly
+on `Missing Embercourt civic-quay scene mapping` before integration. The initial
+`embercourt_civic_before_720` launcher stopped with code 127 before Godot ran:
+the systemd service lacked `/root/.local/bin` in PATH. This is retained launcher
+evidence, not a game/render failure. Corrected launcher and clone-control results
+are recorded separately above.
+
+The built-in image tool generated two text-only transparent 1536x1024 original
+masters, inspected and copied unchanged into
+`art/towns/source/generated/scene_layers/faction_embercourt/`, with exact adjacent
+`.prompt.txt` files. Lantern Court output `exec-008e04ee-92e3-47b4-bddf-7820ce9d37d4.png`
+has SHA256 `f34d056a814a65e2cb46967bf040128680118d6a9ae721d7062e0296add76738`;
+Relief Quay output `exec-07981847-b39d-4354-b993-1aa3a0f885e4.png` has SHA256
+`4cffe2a4a5b569b1c17fa4a0d27436688f1214cc6436542d6f02101dceb1d7ca`.
+Original outputs remain under the same thread's generated-image directory.
+Actual alpha is present; no manual recoloring, silhouette drawing or background
+approximation was used. The two exact-faction rows and aspect-preserving runtime
+derivatives are now registered with normal lossless imports/mipmaps. Preservation
+checks prove all 40 old rows, 120 scene rasters and 40 prompts unchanged, with
+byte-identical selected preparation. The 24 strict art tests and 16 sequence tests
+pass. The Oath/Lantern pointer probe now follows the actual foreground alpha:
+the old catalog silhouette covers its sampled roof while the lower scenic arcade
+may expose it; either route is checked before the separate Oath body and Slip
+overlap controls. No runtime input owner changed.
+
+The terminal developed 720p draft passes **8457 checks** and the ordinary paid
+growth draft passes **18387 checks**, both without runtime errors and with the
+source/input unchanged. Their actual frames and both information surfaces were
+visually inspected: the low Court follows the foreground-right stone bank;
+Relief's store and timber hoist meet the left quay, with an attached pontoon and
+plain barge extending into the channel. Neither needs an independent landscape
+tile or a moved command control. The earned header reaches Tier 4 then Tier 5.
+The detached developed fixture still retains its previously documented stale
+opening-header context; it is not legitimate progression evidence.
+
+`embercourt_civic_draft_save_comparison.json` proves complete exact-number JSON
+and raw save-byte equality against the clean pre-art control, excluding only
+`/saved_at_unix`. The live sequence reaches Day 19 with 21 built ids, 3368 gold,
+12 wood and zero ore/rare resources after three paid one-Ore trades and two
+normal daily purchases. Its final save SHA256 is
+`8b82c1fd0e3e42ebabbb61fd0e24ad42c8d5321456cc43aa08d00ede41c5ffc7`.
+The frozen placement/curation passed the finite 18-job source acceptance
+(`embercourt_civic_source_validation.py`, receipt `embercourt_civic_source_batch.json`,
+followed by `embercourt_civic_source_resume.py` / `embercourt_civic_source_resume.json`).
+All three earned cases pass **18387 checks** each; all three mixed-developed cases
+pass **8457** each at 1280x720, 1920x1080 and 2048x1079. Their final frames were
+visually inspected for grounding, depth, crop and clear controls. Embercourt and
+Veilmourn opening controls pass 2519/1382 checks; the shared Town layout/dialog
+and skyline reports pass without runtime errors. Six Python suites pass **69
+tests**, the repository validator/diff pass, and preservation proves 406 prior
+files plus byte-identical selected preparation.
+
+The first batch stopped only at lossless import: a fresh transient systemd service
+had neither HOME nor XDG data/config/cache paths. Godot returned zero but reported
+relative editor-cache/feature-profile directory failures; the strict importer
+correctly rejected that run before cache publication. The failed receipt and
+`embercourt_civic_lossless.json` / `.import.log` remain intact. The resumed nine
+jobs explicitly set `XDG_DATA_HOME=/root/.local/share`,
+`XDG_CONFIG_HOME=/root/.config` and `XDG_CACHE_HOME=/root/.cache`; retained successful
+reports are bound to unchanged source hashes and the prior batch hash. No game,
+import-tool or error-filter change was made, and no passed rendered case was
+discarded or counted twice.
+
+`embercourt_civic_lossless_verified.json` proves exact decoded/header equality for
+both new caches, including all nine mip levels. Their 288420/247866-byte encodings
+were already at factor 100; verification saves zero additional bytes. The other
+2285 eligible entries remain cache hits. `embercourt_civic_source_save_comparison.json`
+proves complete exact-number JSON and raw-byte equality for the old control and
+all three final earned saves, excluding only the timestamp.
+
+The subsequent eight-job official Linux/Windows export and packaged-probe batch
+passes (`embercourt_civic_package_validation.py` / `embercourt_civic_package_batch.json`),
+with the same explicit XDG paths and normal tool PATH. Both exports pass normal
+startup/generated-Town construction. Each isolated release passes **18387 earned
+checks** and **8457 developed checks**, with unchanged packages, source and inputs.
+All five restricted bootstrap controls pass on both platforms. Linux final earned
+and developed captures were visually inspected; Windows runs headlessly under
+Wine, omitting only paired capture operations while retaining all gameplay/input/
+identity/save assertions. This is not physical Windows GPU certification. No
+error/leak warning appears in this packet's normal Windows startup/generated-entry
+logs; the earlier intermittent Ogg shutdown warning has not received a lifecycle
+fix and is not claimed resolved.
+
+`embercourt_civic_packaged_save_comparison.json` proves all six complete earned
+saves (old control, three source resolutions and both platforms) equal outside
+only `/saved_at_unix`. `embercourt_civic_package_parity.json` checks every one of
+**5220 PCK members**: four new exact texture/import members, 5214 unchanged prior
+members, and only the scene manifest/UID cache changed among existing members.
+The platforms differ only in `project.binary`. Each PCK is **248543948 bytes**,
+leaving **1456052 bytes** below the unchanged ceiling. Linux SHA256:
+`4b205a8ecbcba42e84e6b2d0281d1bafd839da7771e8b869d63d43fc74774c83`;
+Windows SHA256:
+`e5c71b277d5bb3fa5bcec176e3f2fcee32791a721c568d3b0c28b7a590be543c`.
+
+After terminal platform/save/member acceptance, `embercourt_civic_wine_retirement.json`
+records **2619101184 bytes** reclaimed from the two new test prefixes' disposable
+Windows/Program Files trees. Live-process checks and retained user/registry hashes
+pass; caches, saves, sources, evidence, RMG work and exported packages are retained.
+These installations are permanently deleted but recreated by fresh Wine setup.
+
+This accepts only Lantern Court and Relief Quay: **22 Bellwake and 20 Embercourt
+scene layers** now have accepted paintings. Four rare-cost Riverwatch buildings,
+other factions and remaining Overworld presentation keep the child and full goal
+in progress. Gameplay, native generation, save schema and the village/catalog art
+are unchanged.
+Evidence names above are relative to `.artifacts/generated_full_match_quality_20260906/`.
+
 ## Embercourt riverworks — validated, 2026-09-08
 
 The next six exact-faction scene gaps are Granary Lock Exchange, Lockhouse Tally,
