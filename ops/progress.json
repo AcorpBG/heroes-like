@@ -112,16 +112,18 @@
         "tests/validate_repo.py: require explicit Town and Overworld scene opt-ins and legible popup themes, preserving the shared false default and all ledger ownership checks",
         "project.godot and tools/prepare_lossless_texture_imports.py: stronger built-in lossless compression and bounded verified reimport; preserve source/import options and every decoded pixel/mipmap, no lossy changes or cache deletion",
         "tools/package_release.py and both platform export smokes: shared verified import preparation, actual smaller packages and generated Town gameplay",
-        "tests/test_lossless_texture_imports.py and tests/lossless_texture_package_regression.py: complete engine-decoded image/cache/member preservation, failure/rollback controls, inspected dual-resolution evidence"
+        "tests/test_lossless_texture_imports.py and tests/lossless_texture_package_regression.py: complete engine-decoded image/cache/member preservation, failure/rollback controls, inspected dual-resolution evidence",
+        "tools/prepare_town_scene_layers.py and exact-faction source/trim/runtime art: Black-Sail Loft and Tideglass Chapel scene layers; preserve the village, fifteen accepted layers and catalog icons",
+        "tests/town_scene_layer_regression.py --rigging-magic-growth and strict art tests: normal earned Day-8 Ledger/Loft/Vault/Oratory/Pilot/Chapel purchases plus paid Ore, exact input/save and three-resolution composition; same probe in both official release packages"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T23:46:46Z",
+      "updatedAt": "2026-09-08T01:55:55Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Lossless headroom prerequisite validated: 2260 exact decoded texture proofs; both PCKs 241309204 bytes with 8690796 bytes headroom; 5166-member preservation, Linux/Windows construction, first-import/input/save tests and inspected captures pass. Remaining faction/building/upgrade art and Overworld repairs stay in progress; prior audio warning is not declared fixed."
+      "notes": "Validated Loft/Chapel scene-art checkpoint: source/Linux/Windows earned-save replays each pass 35722 checks for six paid orders, the ordinary Ore trade, input and complete save/re-entry; complete final saves differ only in saved_at_unix. Three resolutions inspected, 82 Python tests and existing Town/repository/diff checks pass. Both 241910736-byte PCKs pass normal generated-Town flows and 5170-member preservation/parity. The separate Windows Main Menu quick-exit Ogg ObjectDB warning recurs and is not fixed. Remaining Bellwake structures/upgrades, other factions and Overworld repairs keep this child and the full goal in progress."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16739,10 +16741,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Lossless headroom prerequisite validated: 2260 exact decoded texture proofs; both PCKs 241309204 bytes with 8690796 bytes headroom; 5166-member preservation, Linux/Windows construction, first-import/input/save tests and inspected captures pass. Remaining faction/building/upgrade art and Overworld repairs stay in progress; prior audio warning is not declared fixed.",
+  "currentSliceNotes": "Validated Loft/Chapel scene-art checkpoint: source/Linux/Windows earned-save replays each pass 35722 checks for six paid orders, the ordinary Ore trade, input and complete save/re-entry; complete final saves differ only in saved_at_unix. Three resolutions inspected, 82 Python tests and existing Town/repository/diff checks pass. Both 241910736-byte PCKs pass normal generated-Town flows and 5170-member preservation/parity. The separate Windows Main Menu quick-exit Ogg ObjectDB warning recurs and is not fixed. Remaining Bellwake structures/upgrades, other factions and Overworld repairs keep this child and the full goal in progress.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Presentation Corrections",
-  "currentSliceUpdatedAt": "2026-09-07T23:05:23Z",
+  "currentSliceUpdatedAt": "2026-09-08T01:55:07Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22590,16 +22592,18 @@
         "tests/validate_repo.py: require explicit Town and Overworld scene opt-ins and legible popup themes, preserving the shared false default and all ledger ownership checks",
         "project.godot and tools/prepare_lossless_texture_imports.py: stronger built-in lossless compression and bounded verified reimport; preserve source/import options and every decoded pixel/mipmap, no lossy changes or cache deletion",
         "tools/package_release.py and both platform export smokes: shared verified import preparation, actual smaller packages and generated Town gameplay",
-        "tests/test_lossless_texture_imports.py and tests/lossless_texture_package_regression.py: complete engine-decoded image/cache/member preservation, failure/rollback controls, inspected dual-resolution evidence"
+        "tests/test_lossless_texture_imports.py and tests/lossless_texture_package_regression.py: complete engine-decoded image/cache/member preservation, failure/rollback controls, inspected dual-resolution evidence",
+        "tools/prepare_town_scene_layers.py and exact-faction source/trim/runtime art: Black-Sail Loft and Tideglass Chapel scene layers; preserve the village, fifteen accepted layers and catalog icons",
+        "tests/town_scene_layer_regression.py --rigging-magic-growth and strict art tests: normal earned Day-8 Ledger/Loft/Vault/Oratory/Pilot/Chapel purchases plus paid Ore, exact input/save and three-resolution composition; same probe in both official release packages"
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-07T23:46:46Z",
+      "updatedAt": "2026-09-08T01:55:55Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Lossless headroom prerequisite validated: 2260 exact decoded texture proofs; both PCKs 241309204 bytes with 8690796 bytes headroom; 5166-member preservation, Linux/Windows construction, first-import/input/save tests and inspected captures pass. Remaining faction/building/upgrade art and Overworld repairs stay in progress; prior audio warning is not declared fixed."
+      "notes": "Validated Loft/Chapel scene-art checkpoint: source/Linux/Windows earned-save replays each pass 35722 checks for six paid orders, the ordinary Ore trade, input and complete save/re-entry; complete final saves differ only in saved_at_unix. Three resolutions inspected, 82 Python tests and existing Town/repository/diff checks pass. Both 241910736-byte PCKs pass normal generated-Town flows and 5170-member preservation/parity. The separate Windows Main Menu quick-exit Ogg ObjectDB warning recurs and is not fixed. Remaining Bellwake structures/upgrades, other factions and Overworld repairs keep this child and the full goal in progress."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111364,35 +111368,39 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Validated lossless-import headroom prerequisite after the fifteen Bellwake layers and Town caption fixes: all 2260 selected raster imports retain exact decoded pixels/mipmaps, and all 5166 PCK members satisfy encoding-only preservation. Both platform packages are 241309204 bytes, with 8690796 bytes of headroom; normal generated Town flows, actual saved Town/Overworld input/state checks, existing reports and repository tests pass. Full presentation remains in progress for remaining buildings/upgrades/factions and Overworld repairs. The earlier Windows quick-exit Ogg warning is not reproduced in this pair, not declared fixed.",
+  "summary": "Validated Bellwake Loft/Chapel scene-art checkpoint, preserving fifteen earlier paintings and all gameplay. Source and isolated Linux/Windows earned-save replays each pass 35722 checks; complete final saves differ only in normal saved_at_unix metadata. Three resolutions inspected, 82 Python tests, existing Town reports and repository/diff checks pass. Both PCKs are 241910736 bytes with 8089264 bytes headroom and 5170-member preservation/parity; normal platform generated-Town flows pass. The separate Windows Main Menu quick-exit Ogg ObjectDB warning recurs and remains unresolved. Remaining Town structures/upgrades/factions and Overworld repairs keep the full goal in progress.",
   "taskId": "10236",
-  "updatedAt": "2026-09-07T23:47:55Z",
+  "updatedAt": "2026-09-08T01:55:55Z",
   "validation": {
-    "id": "quality-lossless-import-headroom-20260907",
+    "id": "quality-bellwake-rigging-magic-20260908",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-07T23:45:25Z",
-    "scope": "Validated original-pixel-preserving package prerequisite for remaining approved art; not full presentation or release completion.",
-    "result": "All 2260 selected PNG imports retain exact headers/decoded pixels/mipmaps. Both 241309204-byte PCKs pass startup and generated Town construction; all 5166 members are verified and 5165 match across platforms except project.binary. Real first-import/changed-option controls, 65 Python packaging/helper tests, 855 Town and 643-per-resolution Overworld checks, six existing Town/Overworld reports and repository/diff pass. Captures inspected. Remaining art and prior audio/physical Windows/legacy limits stay explicit.",
+    "validatedAt": "2026-09-08T01:55:07Z",
+    "scope": "Validated exact Bellwake Loft/Chapel scene-layer packet; not full Town/faction art, presentation, shutdown or release completion.",
+    "result": "Original source/trimmed/runtime paintings replace two catalog-diorama scene fallbacks without changing the village, fifteen accepted layers, catalog icons or gameplay. Source/Linux/Windows replays each pass 35722 paid-order/input/save checks and exact full saved bytes outside the normal timestamp. Five bootstrap controls pass per platform. Three inspected resolutions, 82 Python tests, both existing Town reports and repository/diff pass. Both normal platform generated-Town flows pass; PCKs are 241910736 bytes, 5170 members verified and 5169 match across platforms except project.binary. The Windows Main Menu quick-exit Ogg ObjectDB warning recurs separately; packaged Large replays exit without it.",
     "artifacts": [
       "docs/generated-full-match-art-repair-report.md",
-      ".artifacts/generated_full_match_quality_20260906/lossless_sample2/report.json",
-      ".artifacts/generated_full_match_quality_20260906/lossless_all/report.json",
-      ".artifacts/generated_full_match_quality_20260906/lossless_texture_proofs.json",
-      ".artifacts/generated_full_match_quality_20260906/lossless_first_import2/report.json",
-      ".artifacts/generated_full_match_quality_20260906/lossless_package_proof.json",
-      ".artifacts/generated_full_match_quality_20260906/lossless_town/report.json",
-      ".artifacts/generated_full_match_quality_20260906/lossless_overworld720/report.json",
-      ".artifacts/generated_full_match_quality_20260906/lossless_overworld1080/report.json",
-      ".artifacts/full_play_runtime_20260905/lossless_town_existing/report.json",
-      ".artifacts/full_play_runtime_20260905/lossless_overworld_existing2/report.json",
-      ".artifacts/generated_full_match_quality_20260906/lossless_repo_final.log",
-      ".artifacts/generated_full_match_quality_20260906/lossless_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/lossless_linux/generated-entry/live_validation_report.json",
-      ".artifacts/generated_full_match_quality_20260906/lossless_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/lossless_windows/generated-flow/live_validation_report.json"
+      ".artifacts/generated_full_match_quality_20260906/town_rigging_magic_before_view_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_growth_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_final_view_720/report.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_final_view_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_final_view_2048/report.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_original_developed_1080/report.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_original_developed_2048/report.json",
+      ".artifacts/full_play_runtime_20260905/rigging_magic_town_existing/report.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_linux/generated-entry/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_windows/generated-flow/live_validation_report.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_packaged_linux/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_packaged_windows/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_packaged_save_comparison.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_package_parity.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_lossless_imports.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_batch.json",
+      ".artifacts/generated_full_match_quality_20260906/rigging_magic_repo_final_driver.log"
     ],
-    "remainingWork": "Continue remaining approved Town buildings/upgrades/factions and demonstrated Overworld repairs with 8690796 bytes of verified PCK headroom. The earlier Windows Main Menu quick-exit Ogg warning was not reproduced here; establish its cause before claiming a lifetime fix. Preserve legitimate match/performance evidence and explicit physical Windows and legacy keyboard/Moonbite limits. Full goal remains active."
+    "remainingWork": "Continue approved Town buildings/upgrades/factions and demonstrated Overworld repairs with 8089264 bytes of verified PCK headroom. Bellwake still needs Drowned Map Room, Memory Anchor, Leviathan Sounding, Drowned Admiralty and the Memory-Rite Court upgrade. Diagnose the reproduced Windows Main Menu quick-exit Ogg ObjectDB warning before claiming a lifetime fix. Preserve legitimate match/performance evidence and physical Windows/legacy keyboard/Moonbite limits. Full goal remains active."
   },
   "validationHistory": [
     {

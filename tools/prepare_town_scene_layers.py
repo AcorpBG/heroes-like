@@ -85,6 +85,18 @@ BRIEFS = {
         'scene_bounds':[985,620,270,180], 'ground_anchor':[1115,790], 'reference_inputs':[],
         'grounding':'Mirror-lined boarding slip attaches to the foreground-right quay beside the Drydock, with its walkway directed toward shore and the main channel kept open beside the buoys.',
     },
+    'building_veilmourn_black_sail_loft': {
+        'source_sha256':'a3709f1f7604457b7fe07e080564bbc6b5685761d88ec1446e5d0607e8bdf52d',
+        'scene_bounds':[40,435,320,320*1024/1536], 'ground_anchor':[205,640],
+        'reference_inputs':[], 'generation_date':'2026-09-08',
+        'grounding':'Sail-making workshop and drying frames extend the foreground-left warehouse quay, behind the Harpoon Gantry. Preserve exposed canvas, the main tower door and the established trading approach.',
+    },
+    'building_veilmourn_tideglass_chapel': {
+        'source_sha256':'27bf61402edaddc7be477b56a36332f863a84c738334b7be67720655e8a6b876',
+        'scene_bounds':[565,320,250,250], 'ground_anchor':[690,565],
+        'reference_inputs':[], 'generation_date':'2026-09-08',
+        'grounding':'Tideglass study chapel joins the inner-left quay beside the main bell tower, behind the Ledger and salt treasury. Its reflective roof and bell remain exposed above the working waterfront; preserve the Bell Harbor gangway and open channel.',
+    },
 }
 
 def digest(path):
@@ -129,6 +141,8 @@ def main():
         }
         if 'reference_inputs' in brief:
             layers[building_id]['reference_inputs'] = brief['reference_inputs']
+        if 'generation_date' in brief:
+            layers[building_id]['generation_date'] = brief['generation_date']
     payload = {
         'schema_id':'town_building_scene_art_v1', 'source_size':[1600,900],
         'source_docs':['docs/generated-full-match-quality-requirements.md','docs/town-integrated-building-progression-requirements.md','docs/generated-full-match-art-repair-report.md'],
@@ -138,7 +152,7 @@ def main():
         'processing':'Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.',
         'rights':'Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.',
         'catalog_icons':'Unchanged; these exact-faction scene layers are not shared catalog replacements.',
-        'migration_scope':'Fifteen Bellwake scene layers: Bell Harbor, Wayfarers Hall, Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange, Mirror Drydock, Salt Counting House, Mourner Pilot Guild, Saltwake Factor, Harpoon Gantry, Bell-Chain Watch, Obituary Vault, Wake Oratory and Mistgate Slip. Other buildings/upgrades/factions remain unaccepted; five defense/memory rows explicitly record text-only generation inputs.',
+        'migration_scope':'Seventeen Bellwake scene layers: Bell Harbor, Wayfarers Hall, Market Square, Fog Signal Buoys, Salvage Ledger, Ransom Exchange, Mirror Drydock, Salt Counting House, Mourner Pilot Guild, Saltwake Factor, Harpoon Gantry, Bell-Chain Watch, Obituary Vault, Wake Oratory, Mistgate Slip, Black-Sail Loft and Tideglass Chapel. Other buildings/upgrades/factions remain unaccepted; text-only rows explicitly record no image inputs, and the two rigging/magic rows record their later generation date.',
         'missing_declared_layer_policy':'validation_failure_no_catalog_or_procedural_fallback',
         'factions':{FACTION:layers},
     }

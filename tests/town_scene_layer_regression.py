@@ -45,6 +45,12 @@ func layer_controller(button_index: int) -> void:
 		Input.parse_input_event(event)
 		await get_tree().process_frame
 	await settle()
+func clear_layer_capture_focus() -> void:
+	get_viewport().gui_release_focus()
+	var motion := InputEventMouseMotion.new()
+	motion.position=get_viewport().get_final_transform()*Vector2(640,20)
+	Input.parse_input_event(motion)
+	await settle()
 func inspect_scene_layers(ids: Array = ["building_veilmourn_bell_harbor", "building_wayfarers_hall"]) -> void:
 	var shell = get_tree().current_scene
 	var stage = shell.get_node("%TownStage")
@@ -105,6 +111,8 @@ func inspect_scene_layers(ids: Array = ["building_veilmourn_bell_harbor", "build
 		if id=="building_veilmourn_mourner_pilot_guild": body=Vector2(0.32,0.35) # Lookout remains exposed behind later waterfront buildings.
 		if id=="building_veilmourn_bell_chain_watch": body=Vector2(0.35,0.20) # Upper bell, not the open frame behind the Market.
 		if id=="building_veilmourn_wake_oratory": body=Vector2(0.80,0.60) # Right-hand funeral cloth, below expanded specialty/command controls and above the Drydock.
+		if id=="building_veilmourn_tideglass_chapel": body=Vector2(0.55,0.40) # Exposed tideglass roof above the foreground Ledger.
+		if id=="building_veilmourn_black_sail_loft": body=Vector2(0.35,0.35) # Exposed workshop roof above the foreground Harpoon Gantry.
 		if id=="building_market_square" and stage.validation_building_hotspot_summary("building_veilmourn_obituary_vault").get("visible",false):
 			var overlap: Vector2 = button.get_global_transform_with_canvas()*(body*button.size)
 			var vault = stage._building_hotspots["building_veilmourn_obituary_vault"]
@@ -278,22 +286,26 @@ func inspect_harbor_growth() -> void:
 		await settle()
 		var stage=get_tree().current_scene.get_node("%TownStage")
 		check(stage.validation_building_hotspot_summary(id).visible and stage._town_building_texture_path(id)=="res://art/towns/runtime/scene_layers/faction_veilmourn/%s.png" % id,"growth save/re-entry lost exact layer: "+id)
+		await clear_layer_capture_focus()
 		await RenderingServer.frame_post_draw
 		get_viewport().get_texture().get_image().save_png(out.path_join(id+"_saved.png"))
 		rows.append({"label":"ordinary_harbor_growth","building_id":id,"day":session.day,"cost":cost,"expected_resources":expected,"actual_resources":session.overworld.resources.duplicate(true),"complete_saved_state_equal":true})
 		print("HARBOR_GROWTH_SAVED "+id+" "+str(Time.get_ticks_msec()))
 		previous_id = id
+	# Preserve the final actual paid-growth save separately from detached views.
+	var earned_path: String=SaveService.save_session(session.to_dict(),3)
+	check(earned_path!="" and DirAccess.copy_absolute(earned_path,out.path_join("earned_growth_save.json"))==OK,"could not retain actual earned-growth save")
 	if OS.get_environment("TOWN_HARBOR_DEVELOPED_SAVE") != "":
 		await inspect_developed_harbor_composition()
 func inspect_developed_harbor_composition() -> void:
-	# Exact terminal built ids in a detached scenic view, not a resumed match.
+	# Exact recorded built ids in a detached scenic view, not a resumed match.
 	var payload: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(OS.get_environment("TOWN_HARBOR_DEVELOPED_SAVE")))
 	var actual: Dictionary=payload.overworld.towns.filter(func(t):return t.town_id=="town_veilmourn_bellwake_harbor")[0]
 	var before: Dictionary=normalized(session.to_dict())
 	var shell=get_tree().current_scene
 	var stage=shell.get_node("%TownStage")
 	# This is a detached UI model, not the active session or a paid build.
-	# Its shell and stage must agree on the displayed terminal built-id set.
+	# Its shell and stage must agree on the displayed recorded built-id set.
 	var live_shell_session=shell._session
 	var fixture=SessionStateStore.SessionData.new()
 	fixture.from_dict(before)
@@ -314,13 +326,41 @@ func inspect_developed_harbor_composition() -> void:
 	rows.append({"label":"detached_model_preparation_changes","paths":preparation_paths})
 	check(normalized(stage._town.built_buildings)==normalized(actual.built_buildings),"developed composition changed the actual terminal built ids")
 	await inspect_scene_layers(__INSPECTION_IDS__)
+	await clear_layer_capture_focus()
 	await RenderingServer.frame_post_draw
 	get_viewport().get_texture().get_image().save_png(out.path_join("developed_built_id_fixture.png"))
 	check(normalized(fixture.to_dict())==fixture_before,"read-only developed information mutated its detached model: "+str(layer_changed_paths(fixture_before,normalized(fixture.to_dict()))))
 	check(normalized(session.to_dict())==before,"detached developed composition changed the live session")
-	rows.append({"label":"detached_terminal_built_id_composition_not_match_resume","source_day":payload.day,"source_town":actual.placement_id,"built_ids":actual.built_buildings.duplicate()})
+	rows.append({"label":"detached_recorded_built_id_composition_not_match_resume","source_day":payload.day,"source_scenario_status":payload.get("scenario_status",""),"source_town":actual.placement_id,"built_ids":actual.built_buildings.duplicate()})
 	shell._session=live_shell_session
 	stage.set_precomputed_town_state(session,shell._build_town_stage_view_state())
+'''
+
+RIGGING_ORE_PURCHASE = r'''
+func purchase_growth_ore_if_needed(building_id: String) -> void:
+	if building_id!="building_veilmourn_tideglass_chapel" or int(session.overworld.resources.ore)>=int(ContentService.get_building(building_id).cost.ore): return
+	var shell=get_tree().current_scene
+	var opened: Dictionary=shell.validation_open_town_catalog("trade")
+	await settle()
+	check(opened.open,"ordinary Trade dialog did not open")
+	var offered: Array=TownRules.get_market_actions(session).filter(func(a):return a.id=="market:buy:ore:1" and not a.get("disabled",true))
+	check(offered.size()==1,"normal market cannot cover the one-ore shortfall")
+	if offered.size()!=1: return
+	var before: Dictionary=normalized(session.to_dict())
+	var control=SessionStateStore.SessionData.new()
+	control.from_dict(before)
+	var signature: Dictionary=TownRules.town_action_consequence_signature(control)
+	var expected: Dictionary=TownRules.perform_market_action(control,"market:buy:ore:1")
+	var recap: Dictionary=TownRules.build_town_action_recap(control,"market","market:buy:ore:1",offered[0],expected,signature)
+	if recap.get("active",false): control.flags["last_town_action_recap"]=recap.duplicate(true)
+	var traded: Dictionary=shell.validation_perform_town_action("market:buy:ore:1")
+	await settle()
+	check(expected.ok and traded.ok,"ordinary paid ore exchange failed")
+	check(normalized(session.to_dict())==normalized(control.to_dict()),"paid Trade UI diverged from complete authoritative market result: "+str(layer_changed_paths(normalized(control.to_dict()),normalized(session.to_dict()))))
+	check(int(session.overworld.resources.ore)==int(before.overworld.resources.ore)+1 and int(session.overworld.resources.gold)<int(before.overworld.resources.gold),"ore was not paid for through the existing market")
+	rows.append({"label":"ordinary_paid_growth_ore","day":session.day,"before_resources":before.overworld.resources,"after_resources":session.overworld.resources.duplicate(true),"complete_rule_state_equal":normalized(session.to_dict())==normalized(control.to_dict())})
+	shell._close_town_catalog(false)
+	await settle()
 '''
 
 def main():
@@ -333,10 +373,11 @@ def main():
     parser.add_argument('--salt-growth', action='store_true', help='Build Counting House, Fog Buoys, Ledger, Pilot Guild and Saltwake Factor after Market across real confirmed End Turns')
     parser.add_argument('--defense-growth', action='store_true', help='Build Fog Buoys, Bell-Chain Watch, Ransom Exchange, Mirror Drydock and Harpoon Gantry after Market across real confirmed End Turns')
     parser.add_argument('--memory-growth', action='store_true', help='Resume the earned Day-8 Bellwake save and normally build Obituary Vault, Wake Oratory and Mistgate Slip; never inject resources or reset built ids')
+    parser.add_argument('--rigging-magic-growth', action='store_true', help='Six ordinary prerequisite/build orders and one paid ore purchase for Loft/Chapel from the earned Day-8 save')
     parser.add_argument('--presentation-only', action='store_true', help='Read-only opening/developed input checks; no purchases or match progression evidence')
-    parser.add_argument('--developed-save', type=Path, help='Exact terminal built-id composition fixture; never resumed as a live match')
+    parser.add_argument('--developed-save', type=Path, help='Exact recorded built-id composition fixture; never resumed as a live match')
     args = parser.parse_args()
-    if sum((args.harbor_growth, args.exchange_growth, args.salt_growth, args.defense_growth, args.memory_growth, args.presentation_only)) > 1:
+    if sum((args.harbor_growth, args.exchange_growth, args.salt_growth, args.defense_growth, args.memory_growth, args.rigging_magic_growth, args.presentation_only)) > 1:
         parser.error('select one normal construction sequence per run')
     if args.presentation_only and not args.developed_save:
         parser.error('presentation-only requires an exact --developed-save fixture')
@@ -344,13 +385,16 @@ def main():
         parser.error('fresh lowercase label required')
     save = args.save.resolve(strict=True)
     before_hash = hashlib.sha256(save.read_bytes()).hexdigest()
-    if args.memory_growth:
+    if args.memory_growth or args.rigging_magic_growth:
         payload = json.loads(save.read_text())
         town = next((t for t in payload['overworld']['towns'] if t.get('town_id')=='town_veilmourn_bellwake_harbor' and t.get('owner')=='player'), {})
         required = {'building_market_square','building_veilmourn_harpoon_gantry','building_veilmourn_bell_chain_watch','building_veilmourn_salt_counting_house'}
         unbuilt = {'building_veilmourn_obituary_vault','building_veilmourn_wake_oratory','building_veilmourn_mistgate_slip'}
+        if args.rigging_magic_growth:
+            required |= {'building_veilmourn_mirror_drydock'}
+            unbuilt = {'building_veilmourn_salvage_ledger','building_veilmourn_black_sail_loft','building_veilmourn_obituary_vault','building_veilmourn_wake_oratory','building_veilmourn_mourner_pilot_guild','building_veilmourn_tideglass_chapel'}
         if payload.get('day')!=8 or payload.get('scenario_status')!='in_progress' or not required.issubset(town.get('built_buildings',[])) or unbuilt.intersection(town.get('built_buildings',[])):
-            parser.error('memory growth requires the real nonterminal Day-8 Bellwake prerequisite save')
+            parser.error('late Town growth requires the real nonterminal Day-8 Bellwake prerequisite save')
     developed = args.developed_save.resolve(strict=True) if args.developed_save else None
     developed_hash = hashlib.sha256(developed.read_bytes()).hexdigest() if developed else None
     owners = ('scenes/town/TownShell.gd','scenes/town/TownStageView.gd','scenes/town/TownBuildingHotspot.gd',
@@ -360,8 +404,8 @@ def main():
     out = OUTPUT / args.label
     out.mkdir(exist_ok=False)
     script_text = SCRIPT
-    growth_enabled = args.harbor_growth or args.exchange_growth or args.salt_growth or args.defense_growth or args.memory_growth or args.presentation_only
-    sequence = 'presentation_only' if args.presentation_only else 'memory' if args.memory_growth else 'defense' if args.defense_growth else 'salt' if args.salt_growth else 'exchange' if args.exchange_growth else 'harbor' if args.harbor_growth else 'market'
+    growth_enabled = args.harbor_growth or args.exchange_growth or args.salt_growth or args.defense_growth or args.memory_growth or args.rigging_magic_growth or args.presentation_only
+    sequence = 'rigging_magic' if args.rigging_magic_growth else 'presentation_only' if args.presentation_only else 'memory' if args.memory_growth else 'defense' if args.defense_growth else 'salt' if args.salt_growth else 'exchange' if args.exchange_growth else 'harbor' if args.harbor_growth else 'market'
     if growth_enabled:
         ids = ['building_veilmourn_fog_signal_buoys', 'building_veilmourn_salvage_ledger']
         if args.exchange_growth:
@@ -372,8 +416,10 @@ def main():
             ids = ['building_veilmourn_fog_signal_buoys','building_veilmourn_bell_chain_watch','building_veilmourn_ransom_exchange','building_veilmourn_mirror_drydock','building_veilmourn_harpoon_gantry']
         if args.memory_growth:
             ids = ['building_veilmourn_obituary_vault','building_veilmourn_wake_oratory','building_veilmourn_mistgate_slip']
+        if args.rigging_magic_growth:
+            ids = ['building_veilmourn_salvage_ledger','building_veilmourn_black_sail_loft','building_veilmourn_obituary_vault','building_veilmourn_wake_oratory','building_veilmourn_mourner_pilot_guild','building_veilmourn_tideglass_chapel']
         inspection_ids = [id for id in ids if id not in ('building_veilmourn_fog_signal_buoys', 'building_veilmourn_salvage_ledger')] if args.salt_growth else ids
-        if args.defense_growth or args.memory_growth or args.presentation_only:
+        if args.defense_growth or args.memory_growth or args.rigging_magic_growth or args.presentation_only:
             # Test earlier accepted paintings too: later foreground layers must
             # not silently make the rest of the developed Town unclickable.
             inspection_ids = [
@@ -386,9 +432,18 @@ def main():
                 'building_veilmourn_obituary_vault', 'building_veilmourn_wake_oratory',
                 'building_veilmourn_mistgate_slip',
             ]
+        if args.presentation_only:
+            # Inspect the exact recorded Town, whether this is the original
+            # terminal-16 fixture or a separately retained ordinary-growth save.
+            payload = json.loads(developed.read_text())
+            town = next(t for t in payload['overworld']['towns'] if t.get('town_id')=='town_veilmourn_bellwake_harbor')
+            inspection_ids = [id for id in town['built_buildings'] if id != 'building_town_hall']
         growth = HARBOR_GROWTH.replace('__GROWTH_IDS__', json.dumps(ids)).replace('__INSPECTION_IDS__', json.dumps(inspection_ids)).replace('ordinary_harbor_growth', 'ordinary_'+sequence+'_growth')
+        if args.rigging_magic_growth:
+            growth = growth.replace('await inspect_scene_layers([id])', 'await inspect_scene_layers(shell.get_node("%TownStage")._town_building_scene_entries(shell.get_node("%TownStage")._town_scene_rect()).filter(func(entry): return entry.visible_building_id!="" and not entry.get("embedded_in_base",false)).map(func(entry): return entry.visible_building_id))')
+            growth = growth.replace('\t\tvar actions: Array=TownRules.get_build_actions', '\t\tawait purchase_growth_ore_if_needed(id)\n\t\tvar actions: Array=TownRules.get_build_actions') + RIGGING_ORE_PURCHASE
         script_text = SCRIPT.replace('await inspect_market_constructed()', 'await inspect_market_constructed()\n\t\tawait inspect_harbor_growth()') + growth
-        if args.memory_growth or args.presentation_only:
+        if args.memory_growth or args.rigging_magic_growth or args.presentation_only:
             # Existing market/prerequisites and rare resources come from the
             # hash-recorded legitimate mid-match save, not a presentation fixture.
             # Skip only the opening-only Market purchase; keep actual daily
@@ -412,7 +467,9 @@ def main():
         if developed:
             env['TOWN_HARBOR_DEVELOPED_SAVE'] = str(developed)
         with (out / 'runtime.log').open('w') as log:
-            code = run_probe(command, env, log, timeout_seconds=900 if args.salt_growth or args.defense_growth or args.memory_growth else 600 if growth_enabled else 300)
+            # Rigging/magic covers every currently visible painting after each
+            # of six orders, not only the newly constructed building.
+            code = run_probe(command, env, log, timeout_seconds=1800 if args.rigging_magic_growth else 900 if args.salt_growth or args.defense_growth or args.memory_growth else 600 if growth_enabled else 300)
     lines = (out / 'runtime.log').read_text().splitlines()
     marker = 'TOWN_OVERLAY_OWNERSHIP '
     reports = [json.loads(line[len(marker):]) for line in lines if line.startswith(marker)]

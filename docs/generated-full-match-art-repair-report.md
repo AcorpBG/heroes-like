@@ -963,3 +963,140 @@ stopped at argument parsing, before any scene ran.
 
 This closes the measured package-headroom prerequisite, not the remaining Town
 building/upgrade/faction paintings, Overworld cutout repairs or the overall goal.
+
+## Bellwake rigging/magic continuation — 2026-09-08 (validated checkpoint)
+
+The real earned Large08 Day-8 Town can construct Black-Sail Loft and Tideglass
+Chapel, but neither had an exact scene-layer entry. Consequently
+`TownStageView._town_building_texture_path` selected their separate 256px catalog
+icons. This was an unpainted scene-art category, not a save/visibility or crop
+transform defect. The corrected read-only before probe,
+`town_rigging_magic_before_view_720/report.json` under the artifact root above,
+runs 6446 checks and fails only those two exact identity-to-scene-art mappings;
+runtime errors are empty and both source/input hashes remain unchanged.
+
+Two original built-in image generations now supply exact faction/building
+source, trimmed and runtime rasters. The prompts and source masters are paired
+under `art/towns/source/generated/scene_layers/faction_veilmourn/` with stems
+`building_veilmourn_black_sail_loft` and `building_veilmourn_tideglass_chapel`.
+Neither generation used input images; each new manifest row explicitly records
+that and its 2026-09-08 generation date. The fifteen accepted rows and their
+rasters remain byte-identical, as do the village and separate catalog icons.
+Processing retains generated alpha and aspect, trims transparent margins and
+uses the established maximum-512px mipmapped runtime pipeline. No game rules,
+native generation, save schema or live scene scripts change in this packet.
+
+The first Loft preview appeared hazy, but pixel inspection found zero alpha at
+the sampled background positions. An attempted background-only refinement
+returned an RGB checkerboard and was rejected; a second text-only alternate
+was unselected. No extraction/repainting was applied to the chosen master.
+Exact attempted prompts and output locations are retained in
+`rigging_magic_generation_attempts.json`. The first in-engine composition passes
+7196 checks but puts the Loft too high. Its final authored source bounds lower
+it onto the existing left quay behind Harpoon Gantry; the Chapel occupies the
+inner quay behind the Ledger, with an exposed roof information target.
+
+Ordinary growth requires six orders, not the initially assumed four: Salvage
+Ledger, Loft, Obituary Vault, Wake Oratory, Mourner Pilot Guild and Chapel on
+Days 9–14. The first normal run retained all six exact-cost/save rows and the
+ordinary Day-14 Ore trade (720 gold for one Ore), with complete authoritative
+market-result equality. However, its new test loop wrongly inspected all catalog
+variants as visible, causing missing-hotspot driver errors; that report is a
+failure, not acceptance. The corrected loop selects every currently visible
+non-embedded scene entry and preserves all alpha/pointer/information/input/state
+assertions after each order. The copied Day-14 save remains `in_progress`, SHA256
+`d81339827f0a9a617109d685ed7daf434679e9e2876900c5fb11c8951025ab68`;
+it is not a new terminal-match claim. Read-only composition fixtures now name
+their recorded scenario status instead of labeling every fixture terminal.
+
+The final lowered-placement `rigging_magic_final_view_720/report.json` passes
+7196 checks with no engine errors and unchanged complete source/input snapshots.
+Its Day-14 capture was visually inspected: the Loft joins the existing quay
+behind the Gantry, the Chapel remains visible above the Ledger, controls do not
+clip, and the clean capture retains the actual Spell Tier 5 header. This view
+loads the earned Day-14 save itself; it does not mix the Day-8 header with a later
+Town composition. Broader resolution and fresh paid-construction proof are
+recorded below, not inferred from this read-only view.
+
+The fresh ordinary replay, `rigging_magic_growth_720/report.json`, passes 35722
+checks with no engine errors and unchanged source/input hashes. All six orders
+preserve exact costs, daily limits and complete save/re-entry state; the paid Ore
+exchange matches the complete authoritative market result. Its actual post-build
+Day-14 screenshot was inspected. `rigging_magic_save_comparison.json` compares
+the complete before/after save files: every byte outside the single
+`saved_at_unix` value is identical. That field is normal wall-clock metadata
+written by unchanged `SaveService.gd:1660`; the raw files are not byte-identical
+and no other field or formatting is excluded. The new earned save SHA256 is
+`69f4c289bb0bd273f175e24a0b2704391302c0cf2dcc0be76c4d487f91886537`.
+The 1920x1080 and 2048x1079 views each pass 7196 checks and were visually
+inspected, as were the original developed fixtures at both larger resolutions
+(7196 checks each). All have empty engine-error lists and unchanged complete
+source/input hashes. The original terminal built-id fixtures remain detached
+composition tests, not live-match screenshots; the two larger standalone fixture
+runs inherit the Day-8 shell, while the growth run inherits its earned Day-14
+shell. Neither mixed fixture is evidence of live terminal gameplay. The actual earned-save views retain
+the consistent Spell Tier 5 header and stage. Neither composition clips controls.
+
+Strict art/provenance tests (14), packaged-probe tests (3), 65 existing packaging
+unit tests, initial repository validation and verified lossless import preparation
+pass. The latter checks
+2262 textures, retaining 2260 unchanged proof hits and verifying the two new
+imports in 26.366 seconds. Both existing rendered Town reports also pass:
+`full_play_runtime_20260905/rigging_magic_town_existing/report.json` under
+`.artifacts/` records layout/dialog routing and building skyline progression,
+with no engine errors. The latter retains its existing test-only anchor-size
+warning in `_validate_building_information`; this packet does not fix or hide it.
+The official Linux export/startup and 19-step generated-Town flow pass. Its
+isolated release-pack Large replay also passes all 35722 checks, including the
+paid Ore exchange, six exact-cost/save-re-entry steps and all five bootstrap
+controls. Source/input/package hashes stay unchanged; final Loft/Chapel and older
+developed-fixture captures were inspected. The earned source and Linux saves
+match every byte except the normal save timestamp.
+
+Both platform packages are 241910736 bytes, leaving 8089264 bytes of headroom.
+`rigging_magic_package_parity.json` verifies all 5170 members: four additions
+are the exact two verified texture payloads and their import records; only the
+scene manifest and UID cache change among previous members. All 5164 other old
+members are unchanged, and all 5169 non-platform-specific Linux/Windows members
+match. The Windows export/startup and 23-step generated-Town flow pass, but its
+short Main Menu exit reproduces the previously retained ObjectDB warning for
+three Ogg streams and their playback/packet objects. No engine errors occur in
+that smoke, and the generated-Town flow exits without the warning. This is an
+explicit unresolved audio-lifetime limit, not an art fix or clean-shutdown claim;
+the unchanged established smoke does not classify that warning as fatal.
+
+The official Windows earned-save replay also passes 35722 checks, with empty
+engine-error lists, all five bootstrap controls and unchanged source/input/export
+hashes. Its headless adaptation omits only eight paired frame/capture operations,
+not gameplay or input assertions. The complete source/Linux/Windows earned saves
+are compared in `rigging_magic_packaged_save_comparison.json`: every byte outside
+the single normal `saved_at_unix` value matches, including all gameplay fields
+and formatting. The retained Linux and Windows save SHA256 values are
+`c5f3d553fe0a33ce27e0249e76f3fe7640e0459b09a0b138774493c98d20e524`
+and `3a695f4e7bf1965c62139042430a5392ed9ea3ad79be9b07adff566d58394945`.
+The packaged Large replay itself exits without the audio warning on both
+platforms. Wine headless remains distinct from physical Windows/GPU evidence.
+
+The normal smoke wrappers retire their temporary exports/Wine installations
+automatically, preserving this packet's verified isolated release pair. After
+the separate Windows probe completed and its prefix had no live processes,
+`rigging_magic_retire_wine.py` permanently removed only that prefix's three
+disposable Windows/Program Files directories, reclaiming 1309552640 bytes.
+`rigging_magic_wine_retirement.json` verifies every retained user-data/registry
+file; saves, logs, source assets, caches, RMG evidence and release packs remain.
+Those runtime directories can be regenerated through a fresh Wine initialization.
+
+All thirteen jobs in the serial `rigging_magic_validation_batch.py` complete
+successfully, including final repository and diff checks. Exact commands and
+results remain in `rigging_magic_batch.json`, with repository output in
+`rigging_magic_repo_final_driver.log`. Reproduce the six-order source path with
+`tests/town_scene_layer_regression.py --rigging-magic-growth --save <Large08-slot2>
+--developed-save <Large08-slot3> --resolution 1280x720 --label <fresh>`; the existing
+packaged wrapper forwards those arguments with isolated `--binary`, `--pack`,
+`--platform`, `--bootstrap-controls` and a fresh Windows `--wine-prefix`.
+The wider presentation goal remains in progress for other buildings, upgrades,
+factions and Overworld repairs. Bellwake itself still lacks accepted scene layers
+for Drowned Map Room, Memory Anchor, Leviathan Sounding, Drowned Admiralty and
+the Memory-Rite Court upgrade; its Town Hall is embedded in the original base.
+The audio warning and earlier physical-Windows/legacy-keyboard/Moonbite limits
+also remain explicit. This two-painting packet is not full-goal completion.
