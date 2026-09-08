@@ -30,6 +30,8 @@ def validate_scene_layers(payload=None):
     require(required_growth.issubset(factions.get('faction_embercourt',{})), 'Missing Embercourt early-growth scene mapping')
     required_supply = {'building_river_granary_exchange','building_quartermasters_depot','building_lantern_archive','building_starseer_annex','building_citadel_pikehall'}
     require(required_supply.issubset(factions.get('faction_embercourt',{})), 'Missing Embercourt supply/magic scene mapping')
+    required_riverworks = {'building_embercourt_granary_lock_exchange','building_embercourt_lockhouse_tally','building_embercourt_tollstone_weir','building_embercourt_bargebow_slip','building_embercourt_oath_pikehall','building_embercourt_beacon_writs'}
+    require(required_riverworks.issubset(factions.get('faction_embercourt',{})), 'Missing Embercourt riverworks scene mapping')
     bellwake = next(town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['id']=='town_veilmourn_bellwake_harbor')
     required_bellwake = set(bellwake['starting_building_ids'] + bellwake['buildable_building_ids']) - {'building_town_hall'}
     require(required_bellwake.issubset(factions.get('faction_veilmourn',{})), 'Missing constructible Bellwake scene mapping: '+', '.join(sorted(required_bellwake-set(factions.get('faction_veilmourn',{})))))
@@ -107,7 +109,7 @@ def validate_scene_layers(payload=None):
                                ('asset type: original transparent raster building layer' in text_lower and
                                 'genuinely transparent background with a real alpha channel' in text_lower) or
                                ('asset type: original transparent raster' in text_lower and
-                                'genuinely transparent rgba' in text_lower and 'constraints:' in text_lower) or
+                                any(phrase in text_lower for phrase in ('genuinely transparent rgba','actual transparent rgba','real transparent rgba','genuine rgba transparency')) and 'constraints:' in text_lower) or
                                (('town building layer for '+building+'.') in text_lower and
                                 'transparent rgba png' in text_lower))
             require(bool(prompt_text.strip()) and ('image 1' in text_lower or (text_only and text_only_brief)), 'Missing exact generation prompt: '+label)
@@ -161,6 +163,12 @@ class TownSceneLayersTests(unittest.TestCase):
                 payload=copy.deepcopy(self.payload)
                 payload['factions']['faction_veilmourn'].pop(building, None)
                 self.assertTrue(any(e.startswith('Missing constructible Bellwake scene mapping:') and building in e for e in validate_scene_layers(payload)))
+    def test_every_embercourt_riverworks_mapping_is_required(self):
+        for building in ('building_embercourt_granary_lock_exchange','building_embercourt_lockhouse_tally','building_embercourt_tollstone_weir','building_embercourt_bargebow_slip','building_embercourt_oath_pikehall','building_embercourt_beacon_writs'):
+            with self.subTest(building=building):
+                payload=copy.deepcopy(self.payload)
+                payload['factions']['faction_embercourt'].pop(building,None)
+                self.assertIn('Missing Embercourt riverworks scene mapping',validate_scene_layers(payload))
     def test_upgrade_site_relocation_is_rejected(self):
         veilmourn=self.payload['factions']['faction_veilmourn']
         # The production check requires both actual paintings. This synthetic

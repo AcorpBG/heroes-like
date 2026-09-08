@@ -14,6 +14,144 @@ native generation or unrelated cleanup changes. Runtime exports stay below
 250000000 bytes on both platforms. Reverting the coherent art/code commit restores
 prior rendering without save migration.
 
+## Embercourt riverworks — validated, 2026-09-08
+
+The next six exact-faction scene gaps are Granary Lock Exchange, Lockhouse Tally,
+Tollstone Weir, Bargebow Slip, Oath Pikehall and Beacon Writs. Their original
+catalog images remain separate. Six new text-only RGBA paintings, exact prompts,
+trimmed/runtime derivatives and hash-locked preparation briefs are registered.
+Their three-resolution placement/input and full post-art replays pass, including
+both official platform packages. The 34 previously accepted rows, 102 scene rasters, 34 prompts, village
+backdrops, catalog art and runtime/gameplay owners remain byte-identical to
+`1a3fc9895da1d6ac0121569378db3a257cb7d902`. The completed source batch verifies
+376 prior files and byte-identical selected preparation, including the frozen
+composition and curation: `embercourt_riverworks_preservation.json`.
+
+The exact Day-10 input is `embercourt_supply_accepted_earned_720/earned_growth_save.json`,
+SHA256 `6c24033ca1d35971c9ca5b50fee30bed47cb0992fdfe737d07767839ca445d66`.
+The first replay stopped after two orders: ordinary enemy conquest changed
+Riverwatch placement `native_h3maped_93c0f05a_object_0950` to enemy ownership on
+Day 13. `OverworldRules.set_active_town_visit` correctly rejected remote management
+with “Only owned towns can be managed remotely.” The complete interrupted state,
+Overworld capture and exact error are retained in
+`embercourt_riverworks_before_interruption_720`; this is not a Town-entry bug.
+
+The revised Python replay uses normal enabled Recruit/Transfer controls on Days
+10–12, pays actual discounted costs, respects stock and keeps a field guard
+company. Each action matches its complete authoritative rule/recap state. It
+does not change enemy actions, ownership, armies, resources, daily simulation or
+construction rules. The same policy must run before and after art changes.
+`embercourt_riverworks_defended_before_720` completes all six orders on Days 12–17:
+31921 checks, exactly 27 expected missing-scene-art errors, no other assertion or
+engine errors, unchanged input/source hashes and complete save/re-entry. Its
+earned Day-17 save SHA256 is
+`5dcb5990c719bf649f018b0f68ea46999e2bd16c5faa9ddd2847b2af7b9f9198`.
+This is the pre-art control, not a passing presentation report or complete match.
+
+Source files/prompts are under
+`art/towns/source/generated/scene_layers/faction_embercourt/`, with corresponding
+trimmed and runtime directories. Each new manifest row records its actual built-in
+`generation_output` filename and source/prompt/derivative SHA256. Original tool
+outputs remain in `/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/`.
+No CLI/API fallback, copyrighted reference, pixel recoloring or procedural stand-in
+was used. The initial strict manifest check reproduces the missing riverworks
+mapping before adoption. Full visual, three-resolution, unchanged-state and
+official Linux/Windows package checks pass as recorded below.
+
+The first developed draft (8420 checks) exposed Oath Pikehall overlapping the
+command dock. Only its new placement moved, to the foreground-right bank; no
+existing building or control moved. The revised/input drafts retain the real
+Lantern Court and Bargebow Slip foreground hits on overlapping roof pixels.
+Those are correct depth ownership, not renderer failures. The probe now tests
+both foreground routes explicitly and uses the visually exposed right gable for
+the Oath information route. `embercourt_riverworks_developed_gable_720` passes
+8431 checks, with no runtime errors and both complete input states unchanged.
+The scene and exact Oath information capture have been visually inspected.
+Failed frames and reports remain in `embercourt_riverworks_developed_*`.
+The separate catalog icons shown in information dialogs remain unchanged.
+
+The focused six-suite Python run passes 64 tests; repository validation and
+`git diff --check` pass. The frozen source acceptance is selected by
+`embercourt_riverworks_source_validation.py`: normal earned and developed views
+at three resolutions, both earlier faction openings, existing Town layout/skyline
+reports, lossless-import proof, complete prior-file/idempotence controls, the
+six Python suites and repository checks. `embercourt_riverworks_package_validation.py`
+requires that completed source batch before official Linux/Windows export,
+startup/generated entry and the identical paid-growth/input/save probe. Complete
+non-clock save and all-member package comparisons are separate required
+checks; their completed results are recorded below.
+
+The frozen normal replays at **1280x720, 1920x1080 and 2048x1079 each pass 32177
+checks**, exit zero, no assertion/runtime errors and unchanged input/source hashes.
+Their six paid orders complete on Days 12–17. All four full Day-17 states (control
+plus three resolutions) match as exact Decimal JSON and raw bytes after excluding
+only `/saved_at_unix`; `embercourt_riverworks_source_save_comparison.json` records
+every exact file and SHA256. The three developed-view counterparts each pass
+**8431 checks**, with clean exits and both complete input saves unchanged.
+
+Evidence: `report.json`, `earned_growth_save.json` and
+`building_embercourt_beacon_writs_saved.png` under
+`embercourt_riverworks_accepted_earned_{720,1080,2048}`, with the corresponding
+`accepted_developed` directories and `developed_built_id_fixture.png` frames.
+All six final/developed scenes and the 720p Oath information capture have been
+visually inspected: the new paintings occupy their riverbank sites, with the
+header, command buttons and footer clear. Developed frames retain the later,
+unaccepted catalog-art buildings; these are read-only built-id fixtures, not
+earned match continuations. All six source PNGs were also compared byte-for-byte
+with their recorded original generation outputs.
+
+`embercourt_riverworks_source_batch.json` is terminal/pass for all 18 serial jobs.
+Embercourt/Veilmourn opening compatibility passes 2519/1382 checks; both existing
+Town layout/dialog and skyline reports pass under
+`.artifacts/full_play_runtime_20260905/embercourt_riverworks_existing_town/`.
+The six lossless-import proofs preserve all decoded pixels/mips and cache bytes;
+376-file/idempotence preservation, 64 Python tests and repository validation pass.
+
+`embercourt_riverworks_package_batch.json` is terminal/pass for all eight serial
+jobs. Official Linux and Windows exports, startup and generated-map Town
+construction pass. Both platforms' exact Riverwatch probes pass **32177 earned /
+8431 developed checks**, with unchanged inputs, current manifest equality and
+unchanged exports. Reports are under `embercourt_riverworks_release_{linux,windows}`,
+`embercourt_riverworks_packaged_{linux,windows}` and
+`embercourt_riverworks_packaged_developed_{linux,windows}`. The Linux generated
+construction frame and both final Riverwatch frames are visually inspected.
+Windows uses fresh isolated headless Wine, not physical Windows GPU certification.
+Its startup/generated logs contain no warning/error-like or fatal matches in this
+run; the earlier quick-exit audio warning is not claimed fixed by these art changes.
+
+`embercourt_riverworks_packaged_save_comparison.json` proves **six-way complete
+Decimal JSON and raw-byte equality outside only `/saved_at_unix`**: the pre-art
+control, three source resolutions and both platform packages. Each ends on Day 17,
+still in progress, with the same 19 built ids, resources, troops, ownership,
+simulation and saved state. Reproduce the final comparison with
+`python3 -B .artifacts/generated_full_match_quality_20260906/embercourt_riverworks_save_comparison.py packaged`.
+
+`embercourt_riverworks_package_parity.json` verifies all **5216 members**: exactly
+twelve new texture/import entries, 5202 unchanged prior entries, and only the
+scene manifest and generated UID cache changed among prior members. The platforms
+differ only in `project.binary`; all six new cache payloads match the lossless
+proof. Each PCK is **248001816 bytes**, leaving **1998184 bytes** under the unchanged
+250000000-byte ceiling. Linux SHA256:
+`c01a92d329ba083387cacd94e27364f9e42d56a4b236f827bb2bdf353fd55cff`;
+Windows SHA256:
+`bdf77dd6f6c43b46e878c041406b08e5e0dbf6c451dcc21c237582fbb7403eb4`.
+Reproduce with
+`python3 -B .artifacts/generated_full_match_quality_20260906/embercourt_riverworks_package_parity.py`.
+All riverworks evidence paths above are relative to
+`.artifacts/generated_full_match_quality_20260906/` unless explicitly stated.
+
+After terminal platform/save/parity success and live-process checks, only the two
+riverworks Wine prefixes' `drive_c/windows`, `Program Files` and
+`Program Files (x86)` directories were permanently removed: **2619101184 allocated
+bytes reclaimed**, matching the measured free-space increase. Fresh Wine prefixes
+rebuild those disposable installations. User/save data and registry hashes remain
+identical; caches, source/generated art, RMG evidence, reports, captures and current
+exports are retained. Receipt: `embercourt_riverworks_wine_retirement.json`.
+The unrelated pre-existing artifact-retention files remain untouched.
+
+This accepts six paintings, not the whole presentation goal. Later Riverwatch
+buildings, other factions and remaining Overworld repairs stay in progress.
+
 ## Late-harbor continuation — validated, 2026-09-08
 
 Bellwake's five remaining catalog-scene mappings were Drowned Map Room, Memory

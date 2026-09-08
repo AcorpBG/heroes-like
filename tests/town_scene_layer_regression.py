@@ -25,6 +25,8 @@ EMBERCOURT_GROWTH_IDS = ['building_stone_store', 'building_watch_barracks', 'bui
 EMBERCOURT_GROWTH_SAVE_SHA256 = '838606e03fc1dffd5cf5c2b79ca5d20cc59c77ecfb42b831005577d449652d18'
 EMBERCOURT_SUPPLY_IDS = ['building_river_granary_exchange', 'building_quartermasters_depot', 'building_lantern_archive', 'building_starseer_annex', 'building_citadel_pikehall']
 EMBERCOURT_SUPPLY_SAVE_SHA256 = '48ed86fb4babfd21b5aab898baae06e7bc3f2d45ba91a182d29260c01551e963'
+EMBERCOURT_RIVERWORKS_IDS = ['building_embercourt_granary_lock_exchange', 'building_embercourt_lockhouse_tally', 'building_embercourt_tollstone_weir', 'building_embercourt_bargebow_slip', 'building_embercourt_oath_pikehall', 'building_embercourt_beacon_writs']
+EMBERCOURT_RIVERWORKS_SAVE_SHA256 = '6c24033ca1d35971c9ca5b50fee30bed47cb0992fdfe737d07767839ca445d66'
 
 EXTRA = r'''
 func inspect_upgrade_order() -> void:
@@ -171,6 +173,24 @@ func inspect_scene_layers(ids: Array = ["building_veilmourn_bell_harbor", "build
 			body=Vector2(0.80,0.35)
 		if id=="building_lantern_archive" and stage._town_faction_id()=="faction_embercourt": body=Vector2(0.50,0.30) # Solid records roof above the foreground granary.
 		if id=="building_starseer_annex" and stage._town_faction_id()=="faction_embercourt": body=Vector2(0.80,0.10) # Solid turret roof above the open observation balcony and foreground granary.
+		if id=="building_embercourt_oath_pikehall":
+			if stage.validation_building_hotspot_summary("building_embercourt_lantern_court").get("visible",false):
+				var overlap: Vector2=button.get_global_transform_with_canvas()*(Vector2(0.40,0.28)*button.size)
+				var lantern=stage._building_hotspots["building_embercourt_lantern_court"]
+				check(lantern._has_point(lantern.get_global_transform_with_canvas().affine_inverse()*overlap),"Oath roof overlap is not painted by foreground Lantern Court")
+				await layer_click(overlap)
+				var foreground: Dictionary=shell.validation_building_information_snapshot("building_embercourt_lantern_court")
+				check(presses[0]==0 and foreground.open and foreground.mode=="building_info" and foreground.title==foreground.expected_title,"foreground Lantern Court did not own its visible Oath roof overlap")
+				shell._close_town_catalog(false)
+			if stage.validation_building_hotspot_summary("building_embercourt_bargebow_slip").get("visible",false):
+				var overlap: Vector2=button.get_global_transform_with_canvas()*(Vector2(0.15,0.28)*button.size)
+				var slip=stage._building_hotspots["building_embercourt_bargebow_slip"]
+				check(slip._has_point(slip.get_global_transform_with_canvas().affine_inverse()*overlap),"Oath left-roof overlap is not painted by foreground Bargebow Slip")
+				await layer_click(overlap)
+				var foreground: Dictionary=shell.validation_building_information_snapshot("building_embercourt_bargebow_slip")
+				check(presses[0]==0 and foreground.open and foreground.mode=="building_info" and foreground.title==foreground.expected_title,"foreground Bargebow Slip did not own its visible Oath roof overlap")
+				shell._close_town_catalog(false)
+			body=Vector2(0.90,0.35) # Exposed right gable, beyond the foreground Slip and Lantern Court silhouettes.
 		if id=="building_veilmourn_salvage_ledger" and stage.validation_building_hotspot_summary("building_veilmourn_salt_counting_house").get("visible",false):
 			# The treasury is visibly in front of the Ledger's lower facade.
 			# Prove the foreground painting owns that overlap, then click the
@@ -482,8 +502,16 @@ LATE_HARBOR_ORDERS = r'''
 			check(valid_turn,"normal late growth turn interrupted by battle/outcome or did not advance one day")
 			if not valid_turn: return
 			var visit: Dictionary=OverworldRules.set_active_town_visit(session,placement)
-			check(visit.get("ok",false),"hero cannot re-enter Bellwake after ordinary late End Turn")
-			if not visit.get("ok",false): return
+			check(visit.get("ok",false),"hero cannot re-enter Bellwake after ordinary late End Turn: "+str(visit.get("message","")))
+			if not visit.get("ok",false):
+				# Preserve a real ownership/entry interruption, not a successful
+				# growth save or an injected replacement Town.
+				var failed_path: String=SaveService.save_session(session.to_dict(),3)
+				check(failed_path!="" and DirAccess.copy_absolute(failed_path,out.path_join("interrupted_growth_save.json"))==OK,"could not retain interrupted growth state")
+				rows.append({"label":"ordinary_growth_visit_interruption","day":session.day,"placement_id":placement,"message":visit.get("message",""),"town_owner":visit.get("town",{}).get("owner","")})
+				await RenderingServer.frame_post_draw
+				get_viewport().get_texture().get_image().save_png(out.path_join("interrupted_growth_overworld.png"))
+				return
 			AppRouter.go_to_town()
 			await settle()
 			session=SessionState.ensure_active_session()
@@ -511,6 +539,56 @@ LATE_HARBOR_UPGRADE = r'''
 			check("building_veilmourn_leviathan_sounding" in active.built_buildings,"Court erased the earned Sounding prerequisite from saved progression")
 '''
 
+RIVERWORKS_DEFENSE = r'''
+var riverworks_defense_days := []
+func prepare_riverworks_defense() -> void:
+	# Normal player policy for the retained Day-10 save, not altered simulation.
+	# Fortify before the recorded assault while keeping a field guard company.
+	if session.day not in [10,11,12] or session.day in riverworks_defense_days: return
+	riverworks_defense_days.append(session.day)
+	var shell=get_tree().current_scene
+	var opened: Dictionary=shell.validation_open_town_catalog("muster")
+	await settle()
+	check(opened.open,"ordinary defensive Muster dialog did not open")
+	for unit_id in ["unit_river_guard","unit_ember_archer","unit_citadel_pikeward"]:
+		var offered: Array=TownRules.get_recruit_actions(session).filter(func(a):return a.id=="recruit:"+unit_id and not a.get("disabled",true))
+		if offered.size()==1:
+			await perform_riverworks_defense_order("recruit:"+unit_id)
+		var amount: String="half" if unit_id=="unit_river_guard" else "all"
+		var action_id: String="transfer:%s:garrison:%s:%s" % [session.overworld.active_hero_id,unit_id,amount]
+		var transfer: Array=shell.validation_action_catalog().get("transfer",[]).filter(func(a):return a.id==action_id and not a.get("disabled",true))
+		if transfer.size()==1:
+			await perform_riverworks_defense_order(action_id)
+	check(not session.overworld.army.stacks.is_empty(),"defensive transfers emptied the field army")
+	rows.append({"label":"ordinary_riverworks_defense_day","day":session.day,"resources":session.overworld.resources.duplicate(true),"garrison":TownRules.get_active_town(session).garrison.duplicate(true),"field_stacks":session.overworld.army.stacks.duplicate(true)})
+	shell._close_town_catalog(false)
+	await settle()
+func perform_riverworks_defense_order(action_id: String) -> void:
+	var shell=get_tree().current_scene
+	var action: Dictionary=shell._validation_action_for_id(action_id)
+	check(not action.is_empty(),"defensive order is not enabled in the normal catalog: "+action_id)
+	if action.is_empty(): return
+	var before: Dictionary=normalized(session.to_dict())
+	var control=SessionStateStore.SessionData.new()
+	control.from_dict(before)
+	var signature: Dictionary=TownRules.town_action_consequence_signature(control)
+	var lane: String="recruit" if action_id.begins_with("recruit:") else "order"
+	if lane=="order": signature["transfer"]=shell._town_transfer_holder_snapshot(action_id)
+	var expected: Dictionary
+	if lane=="recruit": expected=TownRules.recruit_active_town(control,action_id.trim_prefix("recruit:"))
+	else: expected=TownRules.transfer_in_active_town(control,action_id)
+	var recap: Dictionary=TownRules.build_town_action_recap(control,lane,action_id,action,expected,signature)
+	if recap.get("active",false): control.flags["last_town_action_recap"]=recap.duplicate(true)
+	var result: Dictionary=shell.validation_perform_town_action(action_id)
+	await settle()
+	check(expected.ok and result.ok,"ordinary defensive order failed: "+action_id)
+	check(normalized(session.to_dict())==normalized(control.to_dict()),"defensive UI diverged from complete authoritative result: "+action_id+" "+str(layer_changed_paths(normalized(control.to_dict()),normalized(session.to_dict()))))
+	check(session.day==int(before.day),"defensive order changed the day")
+	if lane=="recruit": check(int(session.overworld.resources.gold)<int(before.overworld.resources.gold),"defensive recruits were not paid for")
+	else: check(normalized(session.overworld.resources)==before.overworld.resources,"garrison transfer changed resources")
+	rows.append({"label":"ordinary_paid_riverworks_defense_order","day":session.day,"action_id":action_id,"complete_rule_state_equal":normalized(session.to_dict())==normalized(control.to_dict())})
+'''
+
 def embercourt_script(script, *, presentation_only=False):
     """Reuse the same engine input/save controls, not a second runtime path."""
     script = script.replace('building_veilmourn_bell_harbor', 'building_muster_yard')
@@ -526,7 +604,7 @@ def embercourt_script(script, *, presentation_only=False):
 	check(not stage.validation_building_hotspot_summary("building_muster_yard").visible,"superseded Muster retains a hotspot")
 	check(not stage.validation_building_hotspot_summary("building_bowyer_lodge").visible,"superseded Bowyer retains a hotspot")
 	check(not stage.validation_building_hotspot_summary("building_lantern_archive").visible,"superseded Archive retains a hotspot")
-	await inspect_scene_layers(["building_wayfarers_hall","building_market_square","building_stone_store","building_watch_barracks","building_beacon_range","building_river_granary_exchange","building_quartermasters_depot","building_starseer_annex","building_citadel_pikehall"])'''
+	await inspect_scene_layers(["building_wayfarers_hall","building_market_square","building_stone_store","building_watch_barracks","building_beacon_range","building_river_granary_exchange","building_quartermasters_depot","building_starseer_annex","building_citadel_pikehall","building_embercourt_granary_lock_exchange","building_embercourt_lockhouse_tally","building_embercourt_tollstone_weir","building_embercourt_bargebow_slip","building_embercourt_oath_pikehall","building_embercourt_beacon_writs"])'''
         if script.count(needle)!=1:
             raise ValueError('Missing exact Embercourt developed inspection boundary')
         script=script.replace(needle,replacement)
@@ -549,19 +627,21 @@ def embercourt_script(script, *, presentation_only=False):
     return script
 
 
-def embercourt_growth_script(*, supply=False):
+def embercourt_growth_script(*, supply=False, riverworks=False):
     """Continue exact earned saves through existing daily build and market routes."""
-    ids = EMBERCOURT_SUPPLY_IDS if supply else EMBERCOURT_GROWTH_IDS
-    accepted = EMBERCOURT_IDS + EMBERCOURT_GROWTH_IDS + (EMBERCOURT_SUPPLY_IDS if supply else [])
+    if supply and riverworks:
+        raise ValueError('select one normal construction sequence')
+    ids = EMBERCOURT_RIVERWORKS_IDS if riverworks else EMBERCOURT_SUPPLY_IDS if supply else EMBERCOURT_GROWTH_IDS
+    accepted = EMBERCOURT_IDS + EMBERCOURT_GROWTH_IDS + (EMBERCOURT_SUPPLY_IDS if supply or riverworks else []) + (EMBERCOURT_RIVERWORKS_IDS if riverworks else [])
     visible = 'stage._town_building_scene_entries(stage._town_scene_rect()).filter(func(entry):return entry.visible_building_id in '+json.dumps(accepted)+').map(func(entry):return entry.visible_building_id)'
     opening = overlay.SCRIPT
     start = opening.index('\tvar offered: Array=TownRules.get_build_actions(session)')
     end = opening.index('\tvar path: String=SaveService.save_session', start)
     opening = opening[:start] + '\tawait inspect_scene_layers(["building_muster_yard","building_wayfarers_hall","building_market_square"])\n\tawait inspect_harbor_growth()\n' + opening[end:]
-    if supply:
+    if supply or riverworks:
         opening=opening.replace('await inspect_scene_layers(["building_muster_yard","building_wayfarers_hall","building_market_square"])', 'var stage=get_tree().current_scene.get_node("%TownStage")\n\tawait inspect_scene_layers('+visible+')')
     growth = HARBOR_GROWTH.replace('__GROWTH_IDS__',json.dumps(ids)).replace('__INSPECTION_IDS__',visible)
-    if supply:
+    if supply or riverworks:
         start=growth.index('\t\tprint("HARBOR_GROWTH_BEGIN ')
         end=growth.index('\t\tvar cost: Dictionary=actions[0].cost',start)
         growth=growth[:start]+LATE_HARBOR_ORDERS.replace('Bellwake','Riverwatch')+growth[end:]
@@ -576,6 +656,13 @@ def embercourt_growth_script(*, supply=False):
 		shell._close_town_catalog(false)
 		await inspect(id)''')
     growth = growth.replace('await inspect_scene_layers([id])', 'var growth_stage=shell.get_node("%TownStage")\n\t\tawait inspect_scene_layers('+visible.replace('stage.', 'growth_stage.')+')')
+    if riverworks:
+        opening=opening.replace('await inspect_harbor_growth()', 'await prepare_riverworks_defense()\n\tawait inspect_harbor_growth()')
+        needle='\t\t\tvar ore_needed: int=int(ContentService.get_building(id).cost.get("ore",0))'
+        if growth.count(needle)!=1:
+            raise ValueError('Missing exact normal post-turn riverworks boundary')
+        growth=growth.replace(needle,'\t\t\tawait prepare_riverworks_defense()\n'+needle)
+        growth+=RIVERWORKS_DEFENSE
     return opening + EXTRA + growth
 
 
@@ -587,6 +674,7 @@ def main():
     parser.add_argument('--faction', choices=['veilmourn', 'embercourt'], default='veilmourn')
     parser.add_argument('--embercourt-growth', action='store_true', help='Four paid Stone/Watch/Bowyer/Beacon orders from the exact earned Medium11 Market save')
     parser.add_argument('--embercourt-supply-growth', action='store_true', help='Five paid supply/magic orders and ordinary ore trades from the exact earned Day-5 save')
+    parser.add_argument('--embercourt-riverworks-growth', action='store_true', help='Six normal riverworks-chain builds from the exact earned Day-10 save')
     parser.add_argument('--harbor-growth', action='store_true', help='Build Fog Buoys and Salvage Ledger after Market across real confirmed End Turns')
     parser.add_argument('--exchange-growth', action='store_true', help='Build Ransom Exchange and Mirror Drydock after Market across real confirmed End Turns')
     parser.add_argument('--salt-growth', action='store_true', help='Build Counting House, Fog Buoys, Ledger, Pilot Guild and Saltwake Factor after Market across real confirmed End Turns')
@@ -597,7 +685,7 @@ def main():
     parser.add_argument('--presentation-only', action='store_true', help='Read-only opening/developed input checks; no purchases or match progression evidence')
     parser.add_argument('--developed-save', type=Path, help='Exact recorded built-id composition fixture; never resumed as a live match')
     args = parser.parse_args()
-    if sum((args.harbor_growth, args.exchange_growth, args.salt_growth, args.defense_growth, args.memory_growth, args.rigging_magic_growth, args.late_harbor_growth, args.embercourt_growth, args.embercourt_supply_growth, args.presentation_only)) > 1:
+    if sum((args.harbor_growth, args.exchange_growth, args.salt_growth, args.defense_growth, args.memory_growth, args.rigging_magic_growth, args.late_harbor_growth, args.embercourt_growth, args.embercourt_supply_growth, args.embercourt_riverworks_growth, args.presentation_only)) > 1:
         parser.error('select one normal construction sequence per run')
     if args.presentation_only and not args.developed_save:
         parser.error('presentation-only requires an exact --developed-save fixture')
@@ -607,6 +695,8 @@ def main():
         parser.error('Embercourt growth requires --faction embercourt')
     if args.embercourt_supply_growth and args.faction!='embercourt':
         parser.error('Embercourt supply growth requires --faction embercourt')
+    if args.embercourt_riverworks_growth and args.faction!='embercourt':
+        parser.error('Embercourt riverworks growth requires --faction embercourt')
     if not args.label or any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789_-' for c in args.label):
         parser.error('fresh lowercase label required')
     save = args.save.resolve(strict=True)
@@ -615,7 +705,9 @@ def main():
         parser.error('Embercourt growth requires the exact earned nonterminal Medium11 Market save')
     if args.embercourt_supply_growth and before_hash!=EMBERCOURT_SUPPLY_SAVE_SHA256:
         parser.error('Embercourt supply growth requires the exact earned nonterminal Medium11 Day-5 save')
-    if args.faction=='embercourt' and not (args.embercourt_growth or args.embercourt_supply_growth) and before_hash!=EMBERCOURT_SAVE_SHA256:
+    if args.embercourt_riverworks_growth and before_hash!=EMBERCOURT_RIVERWORKS_SAVE_SHA256:
+        parser.error('Embercourt riverworks growth requires the exact earned nonterminal Medium11 Day-10 save')
+    if args.faction=='embercourt' and not (args.embercourt_growth or args.embercourt_supply_growth or args.embercourt_riverworks_growth) and before_hash!=EMBERCOURT_SAVE_SHA256:
         parser.error('Embercourt opening requires the exact recorded nonterminal Medium11 Day-1 save')
     if args.late_harbor_growth and before_hash != LATE_HARBOR_SAVE_SHA256:
         parser.error('late-harbor growth requires the exact recorded nonterminal earned Day-14 save')
@@ -705,9 +797,9 @@ def main():
             opening = opening[:start] + '\tawait inspect_scene_layers(["building_veilmourn_bell_harbor","building_wayfarers_hall","building_veilmourn_harpoon_gantry","building_veilmourn_bell_chain_watch"])\n\tawait '+continuation+'()\n' + opening[end:]
             script_text = opening + EXTRA + growth
     script_text = script_text.replace('await inspect("opening")', 'await inspect("opening")\n\tinspect_upgrade_order()')
-    if args.embercourt_growth or args.embercourt_supply_growth:
-        script_text=embercourt_growth_script(supply=args.embercourt_supply_growth).replace('await inspect("opening")', 'await inspect("opening")\n\tinspect_upgrade_order()')
-        sequence='embercourt_supply' if args.embercourt_supply_growth else 'embercourt'
+    if args.embercourt_growth or args.embercourt_supply_growth or args.embercourt_riverworks_growth:
+        script_text=embercourt_growth_script(supply=args.embercourt_supply_growth,riverworks=args.embercourt_riverworks_growth).replace('await inspect("opening")', 'await inspect("opening")\n\tinspect_upgrade_order()')
+        sequence='embercourt_riverworks' if args.embercourt_riverworks_growth else 'embercourt_supply' if args.embercourt_supply_growth else 'embercourt'
     elif args.faction=='embercourt':
         script_text = embercourt_script(script_text, presentation_only=args.presentation_only)
     if args.resolution == '2048x1079':
@@ -725,7 +817,7 @@ def main():
         with (out / 'runtime.log').open('w') as log:
             # Rigging/magic covers every currently visible painting after each
             # of six orders, not only the newly constructed building.
-            code = run_probe(command, env, log, timeout_seconds=3600 if args.late_harbor_growth else 1800 if args.rigging_magic_growth or args.embercourt_supply_growth else 900 if args.salt_growth or args.defense_growth or args.memory_growth or args.embercourt_growth else 600 if growth_enabled else 300)
+            code = run_probe(command, env, log, timeout_seconds=3600 if args.late_harbor_growth else 1800 if args.rigging_magic_growth or args.embercourt_supply_growth or args.embercourt_riverworks_growth else 900 if args.salt_growth or args.defense_growth or args.memory_growth or args.embercourt_growth else 600 if growth_enabled else 300)
     lines = (out / 'runtime.log').read_text().splitlines()
     marker = 'TOWN_OVERLAY_OWNERSHIP '
     reports = [json.loads(line[len(marker):]) for line in lines if line.startswith(marker)]
