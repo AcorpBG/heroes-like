@@ -12,6 +12,66 @@ import packaged_town_scene_layer_regression as packaged
 
 
 class EmbercourtSequenceTests(unittest.TestCase):
+    def test_developed_charter_upgrade_inspects_visible_successor_only(self):
+        source='await inspect_scene_layers(["building_veilmourn_bell_harbor", "building_wayfarers_hall", "building_market_square"])'
+        script=layers.embercourt_script(source,presentation_only=True)
+        self.assertIn('developed Charter Flame no longer supersedes Bastion',script)
+        self.assertIn('superseded Bastion retains a hotspot',script)
+        self.assertIn('"building_embercourt_charter_bastion" in actual.built_buildings',script)
+        visible=script.split('await inspect_scene_layers(',1)[1]
+        self.assertNotIn('building_embercourt_charter_bastion',visible)
+        for id in layers.EMBERCOURT_LATE_COURT_IDS:
+            if id!='building_embercourt_charter_bastion': self.assertIn(id,visible)
+        self.assertIn('summary.aligned and summary.visible and summary.focus_mode==Control.FOCUS_ALL',layers.EXTRA)
+
+    def test_flame_market_overlap_keeps_painted_owner_and_independent_body_click(self):
+        block=layers.EXTRA.split('var flame=stage._building_hotspots["building_embercourt_charter_flame"]',1)[1].split('if id=="building_market_square" and stage.validation_building_hotspot_summary',1)[0]
+        for token in ('var flame_painted: bool=flame._has_point(',
+                      '"building_embercourt_charter_flame" if flame_painted else id',
+                      'presses[0]==(0 if flame_painted else 1)',
+                      'foreground.mode=="building_info"', 'foreground.title==foreground.expected_title',
+                      'presses[0]=0'):
+            self.assertIn(token,block)
+
+    def test_late_court_rejects_wrong_save_faction_or_combined_sequence(self):
+        with tempfile.TemporaryDirectory(prefix='town-ember-late-court-') as temporary:
+            save=Path(temporary)/'wrong.json'
+            save.write_text('{}\n')
+            for flags,message in [([], 'requires --faction embercourt'),
+                                  (['--faction','embercourt'], 'exact earned nonterminal Medium11 Day-19 save'),
+                                  (['--faction','embercourt','--embercourt-civic-growth'],'select one normal construction sequence')]:
+                args=['probe','--embercourt-late-court-growth','--save',str(save),'--resolution','1280x720','--label','unit_wrong_late_court']+flags
+                with patch('sys.argv',args), patch.object(layers,'run_probe') as run, contextlib.redirect_stderr(io.StringIO()) as stderr, self.assertRaises(SystemExit) as stop:
+                    layers.main()
+                self.assertEqual(stop.exception.code,2)
+                self.assertIn(message,stderr.getvalue())
+                run.assert_not_called()
+        for flag in ('supply','riverworks','civic'):
+            with self.assertRaisesRegex(ValueError,'select one normal construction sequence'):
+                layers.embercourt_growth_script(late_court=True,**{flag:True})
+
+    def test_late_court_keeps_guard_capture_income_and_all_paid_controls(self):
+        script=layers.embercourt_growth_script(late_court=True)
+        for token in ('if await prepare_late_court_supply():', 'field._on_map_tile_pressed(tile)',
+                      'OverworldRules.is_tile_visible(session,tile.x,tile.y)',
+                      'validation_request_quick_resolve_confirmation()', 'validation_confirm_quick_resolve_confirmation()',
+                      'scene.get_node("%Continue").pressed.emit()',
+                      'OverworldRules._resource_node_matches_controller(source[0],"player")',
+                      'validation_request_end_turn()', 'validation_confirm_end_turn()',
+                      'validation_select_build_plan(id)', 'validation_confirm_build_plan()',
+                      'control.from_dict(session.to_dict())', 'prior_built+[id]',
+                      'paid upgrade retained predecessor painting/input', 'earned_growth_save.json'):
+            self.assertIn(token,script)
+        for id in layers.EMBERCOURT_LATE_COURT_IDS+layers.EMBERCOURT_CIVIC_IDS+layers.EMBERCOURT_RIVERWORKS_IDS:
+            self.assertIn(id,script)
+        for token in ('source[0].owner=="player"','source[0]["collected"]=', 'await layer_visibility_fixture()', 'prepare_riverworks_defense()'):
+            self.assertNotIn(token,script)
+        self.assertNotRegex(script,r'\bsession\.day\s*=(?!=)')
+        headless,removed=packaged.headless_script(script)
+        self.assertTrue(removed)
+        for token in ('check(', 'SaveService.', 'Input.parse_input_event', 'layer_controller(', 'validation_confirm_quick_resolve_confirmation()'):
+            self.assertEqual(headless.count(token),script.count(token))
+
     def test_civic_rejects_wrong_save_faction_or_combined_sequence(self):
         with tempfile.TemporaryDirectory(prefix='town-ember-civic-') as temporary:
             save=Path(temporary)/'wrong.json'

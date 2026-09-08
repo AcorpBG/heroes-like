@@ -278,6 +278,37 @@ for brief in EMBERCOURT_CIVIC_BRIEFS.values():
                  curation='Original text-only RGBA paintings matched to the inspected Riverwatch panorama. Source masters and earned/mixed-developed 1280x720 scenes inspected: low hearing arcade on the foreground-right stone bank, relief store/hoist on the left quay with an attached pontoon and plain supply barge. Preserve original alpha, adjacent roofs, channel and command controls. Paid Day-18/19 construction and full non-clock save equality pass; three-resolution and official Linux/Windows acceptance are recorded separately in the art-repair report. Registration alone is not acceptance.')
 EMBERCOURT_BRIEFS.update(EMBERCOURT_CIVIC_BRIEFS)
 
+EMBERCOURT_LATE_COURT_BRIEFS = {
+    'building_embercourt_beacon_court': {
+        'source_sha256':'630a3f7b0a7f5274d6089b232a623fdc070b7a205047b09fba7b24c80599a461',
+        'generation_output':'exec-533a06fb-665f-4c09-9de6-512ea380d2f5.png',
+        'scene_bounds':[1115,340,252,168], 'ground_anchor':[1240,490],
+        'grounding':'The low lector arcade extends the right-bank terrace below the Writs beacon and behind the stone store and waterfront halls; shallow steps join the existing settlement without an independent landscape tile.',
+    },
+    'building_embercourt_drake_sluice': {
+        'source_sha256':'d9051dcd3e8c08f37a09f599a21fef871701f694af7b2a1a147670818a5a150d',
+        'generation_output':'exec-846ece4d-21d2-4d47-9d83-9710c663fbff.png',
+        'scene_bounds':[935,635,300,200], 'ground_anchor':[1090,818],
+        'grounding':'Iron-barred beast pens descend from the right-bank lockworks toward the near channel; the attached right-hand landing meets the existing bank and Slip while transparent gate openings retain the original water.',
+    },
+    'building_embercourt_charter_bastion': {
+        'source_sha256':'621cc7e7d0c3d3c9e3177ff62356ebc96f84873cca4f014928488c9e1b0144c2',
+        'generation_output':'exec-ea80e3af-f83b-43f4-86b7-5e2c900ad6df.png',
+        'scene_bounds':[350,155,360,240], 'ground_anchor':[525,386],
+        'grounding':'A broad civic workshop crowns the rear-left settlement between the granary roofs and Citadel hall. Foreground roofs retain depth ownership; the bell tower and colossus assembly arch remain readable above them.',
+    },
+    'building_embercourt_charter_flame': {
+        'source_sha256':'696181065d3000e2896610ed4a192ced892a882850abd97b5cf2d6daca149eea',
+        'generation_output':'exec-e3f11bc9-0c63-4e16-a511-91339c56e570.png',
+        'scene_bounds':[350,155,360,240], 'ground_anchor':[525,386],
+        'grounding':'The fire-lit completion replaces its Bastion in the same rear-left plot and source canvas: pale civic arch, right bell tower, guarded assembly hall and small entrance charter fires. No separate monument or moved town footprint.',
+    },
+}
+for brief in EMBERCOURT_LATE_COURT_BRIEFS.values():
+    brief.update(reference_inputs=[], generation_date='2026-09-08',
+                 curation='Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.')
+EMBERCOURT_BRIEFS.update(EMBERCOURT_LATE_COURT_BRIEFS)
+
 FACTION_BRIEFS = {FACTION: BRIEFS, 'faction_embercourt': EMBERCOURT_BRIEFS}
 
 def digest(path):
