@@ -222,13 +222,129 @@ Linux PCK SHA-256:
 Windows PCK SHA-256:
 `b9ee40b2bce1bdd9486ca1f263f7dc9fcf39dbbaf58ce27816a27f6bce3f05a2`.
 
+## Older decorations: 185 further accepted art corrections
+
+2026-09-09: all 200 members of the 13 original decoration sheets have explicit
+dispositions. This checkpoint integrates 183 recovered original paintings,
+one exact Brasspipe neighbor-sliver removal and one original generated Heatglass
+replacement. Fifteen inspected clean base archetypes remain byte-identical,
+including their differently sized trimmed sources. The 185 runtime PNGs and
+their trimmed derivatives are installed and pass consolidated acceptance below.
+This is a bounded checkpoint, not runtime-pool or parent completion.
+
+`tools/prepare_overworld_decoration_cutouts.py` and the `decorations/` packet
+under `art/overworld/source/generated/cutout_recovery_20260909/` retain exact
+original rows, source/before hashes, reviewed rectangles, material regions,
+before rasters and reproducible source/trim/runtime provenance. Opaque source
+RGB independently establishes the older distinct-sheet transform: 1254-pixel
+sheet divisions `[0,314,627,941,1254]`, then each cell proportionally bilinear-fit
+to its original 512 canvas. Actual divider locations differ; their feathered
+edges were not removed by the old extraction. The correction removes the
+inspected gutters and faint backing without changing the original scale.
+Six previously clipped batch-12 paintings use recorded vertical translations
+of -23, -3, -55, -40, -50 and -43 pixels; none is stretched. Brasspipe loses only
+the detached preceding-cliff fragment above y=70; every remaining RGBA pixel,
+its 460x483 trim size and `(26,14)` canvas placement are preserved.
+
+Heatglass's original painting could not be cleanly separated from its backing
+without gray holes or a pink patch. The owner-approved built-in image workflow
+repainted that same low, passable scenic glass field. Its first checkerboard RGB
+output and subsequent opaque-wisp candidate were rejected. The accepted source
+uses a recorded solid-color extraction and a targeted soft-vapor edit; all three
+prompts and source hashes are in `decorations/heatglass_generation.json`.
+The new original source is `heatglass_haze_replacement_final.png`; proportional
+fitting keeps the former painted envelope `[20,65,492,423]` on the same canvas.
+The authoritative row names the new source instead of falsely naming the old
+atlas as its current painting. Original atlas provenance remains in the recipe.
+
+The live render owner is unchanged. Authored `object_id`/family/direct mappings
+resolve through `_decorative_object_asset_id`. Native collision-body records
+instead use the existing separate cohesive biome palette; this cohort does not
+substitute older authored art into those bodies. All ids, profiles, body masks,
+content records, game rules and saved state remain unchanged.
+
+Before evidence: `decor_before_1280` and `decor_before_1920` each perform 8,498
+checks and fail only the expected 185 decoded-texture comparisons against the
+initial recovery preview. No engine errors occur. They preserve the same earned
+Medium Day-97 save, check 2,380 native body presentations, then open unmodified
+normal starts of Third Hearths and Ninefold Confluence. Four naturally visible
+affected placements in Ninefold produce three unique authored art captures;
+Third Hearths has eight affected placements but none initially visible, so no
+fog is injected to manufacture coverage. The fourth screenshot is an unchanged
+native collision-body control. Real SaveService round trips preserve each
+complete session; no fields are excluded within a run.
+
+Final acceptance under `.artifacts/overworld_cutout_quality_20260909/`:
+
+- **14 decoration Python tests plus 28 prior cutout tests pass**. The first
+  decoration test run exposed eight genuinely shaved source edges. The reviewed
+  rectangles now retain those original pixels while excluding the actual white
+  gutter. Strict source-boundary checks reject future clipped paint; regression
+  inputs reinstate the original Quarry/Soot crop errors and must fail. Earlier
+  previews/exports are retained as intermediate evidence, not final acceptance.
+- `decor_source_final_1280` and `decor_source_final_1920` each pass **8,498 checks**:
+  all 185 exact authored/family/direct identities, independently decoded full
+  RGBA, actual map rendering, 2,380 unchanged native collision-body presentations,
+  and complete save/load/re-entry. No engine errors. All eight final source
+  screenshots were visually inspected: corrected authored decorations without
+  sheet frames, intact fog and unclipped controls at 1280x720 and 1920x1080.
+  All 13 source/recovered contact sheets and the accepted generated Heatglass
+  cutout were inspected separately. Not every asset occurs in these live views;
+  exact resolver/texture coverage is not claimed as 185 active-placement captures.
+- `decor_packaged_linux_final` and `decor_packaged_windows_final` pass the same
+  **8,498 checks** inside isolated actual releases. The four Linux-package
+  screenshots were separately inspected. Windows is headless Wine with all
+  assertions retained and only screenshot operations omitted, not hardware/GPU
+  certification. The Linux terminal returned 143 after writing its complete
+  passing report; `decor_packaged_linux_exit_confirm` independently repeats the
+  same package/probe successfully with terminal exit 0. The first confirmation
+  also produced a passing report but the same terminal anomaly; it is retained.
+- All seven native saved outputs from both before runs, both final source runs,
+  Linux final/first-confirmation and Windows final match in full excluding only
+  `saved_at_unix`. Authored starts have independently created session ids, so
+  their complete equality is asserted within each run, not across different
+  factory-created sessions. `decorations_delivery_preservation.json` records
+  exact package/member/manifest/control/save comparisons.
+- Existing distinct/decorative sprite, movement-input, full-route and rendered
+  permanent-fog reports pass (`cutout_decorations_shared` and
+  `cutout_decorations_fog` in the established generated-full-match artifact root).
+  `python3 tests/validate_repo.py` and `git diff --check` pass. Repository
+  validation reconstructs all 185 rasters and rejects provenance/identity drift.
+- Official Linux (`decorations_linux_final/report.json`) and Windows
+  (`decorations_windows_final/report.json`) export/startup/generated-flow reports
+  pass without fatal matches. The first two Windows terminals returned 143 after
+  their passing reports; `decorations_windows_exit_confirm/report.json` completes
+  the same official export/startup/generated flow with terminal exit 0 and a
+  byte-identical PCK. Terminal confirmations used PTYs; no game or assertion
+  changes were made to obtain them.
+- Each final PCK contains **286,218,020 bytes / 5,482 entries**. Member sets match;
+  only `project.binary` differs by platform. Against the prior 159-map-sprite
+  Linux release, exactly 185 selected textures, the Overworld manifest and UID
+  cache change; the other 5,295 payloads are identical. No members added/removed;
+  source/before/generation/preparation files are excluded. No fixed size ceiling.
+- Production changes are exactly 185 runtime PNGs, their 185 trimmed derivatives
+  and the same 185 manifest rows. All non-provenance metadata, content records,
+  runtime/native scripts, source sheets, prior repairs and 15 clean controls are
+  unchanged. Pre-existing unrelated untracked retention files remain untouched.
+
+Linux PCK SHA-256:
+`d55ff9ebb05dac7f2e1dd849fb3fd5c9b40b94e8183a17860126493815cf085d`.
+Windows PCK SHA-256:
+`74bf3a3f360dd7498f3cbd9a22f8333ba6efb58a3f15a8ec2047be6d1689bad4`.
+
+Reproduce preparation with `python3 -B tools/prepare_overworld_decoration_cutouts.py
+--output <fresh-preview-dir> [--install]`; focused tests with `python3 -B -m
+unittest discover -s tests -p 'test_overworld_decoration_cutouts.py'`. Existing
+source/packaged probes select `--batch decorations`; resolutions, platform
+arguments and fresh artifact-directory requirements remain as above.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. Remaining review/recovery is
-active in the same child. Direct inspection confirms faint rectangular residue
-on older decorations (including Bramble Wall and Redstone Chip Scatter), white
-dividers in decorative batch 12, clipped/neighbor-contaminated legacy props and
-damaged older generated-tree cutouts. Six faction-hero sprites also need edge
+active in the same child after the accepted older-decoration checkpoint.
+Direct inspection confirms clipped/neighbor-contaminated legacy props and
+damaged older generated-tree cutouts.
+Six faction-hero sprites also need edge
 review/recovery; `resource_site_neutral_miremoon_crownmere_controlled` has a
 visible rectangular backing. Atlas-backed resource/state/artifact/encounter/town/hero families
 still need complete detailed dispositions; small contact thumbnails and color
