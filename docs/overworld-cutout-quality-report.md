@@ -504,16 +504,110 @@ The unchanged earned native Medium Day97 case still has 2,380 original cohesive
 blocker bodies; none of its current resource states uses these seven variants,
 so that capture is a regression control, not a corrected-state native capture.
 
+## Recurring encounter source recovery (2026-09-09)
+
+Twenty-four recurring encounters now use high-resolution derivatives of their
+original generated RGBA paintings. The recovery recipe and exact historical
+atlas are retained in `art/overworld/source/generated/cutout_recovery_20260909/recurring_encounters/`;
+prepared cutouts are in the corresponding `source/trimmed` folder. This is
+original-source reprocessing under the owner's approval, not new generation,
+procedural approximation or color-key removal.
+
+The concrete fault is historical palette/alpha loss. Atlas revisions `180c83bf`
+and `823b8fc7` used indexed palettes with multilevel transparency. `f18349e6`
+(high-difficulty encounter landmarks) reduced the first 24 regions to binary
+alpha. `01251fed` later copied those damaged pixels unchanged into an RGBA atlas
+while adding seven smooth-alpha neighbors. Current imports faithfully loaded
+those already-damaged PNGs; missing `.ctex`, fallback routing and native map
+generation were not the cause. Thin pikes, flags and chains were particularly
+damaged. Original source RGB also recovers detail lost to palette quantization.
+
+The first recovery retained 48x48 cells. Its functional tests passed, but actual
+1280/1920 gameplay inspection rejected it as blurry. Those rejected outputs
+remain under `recurring_install`, `recurring_after_1280` and
+`recurring_after_1920`, not as the accepted package boundary. The installed
+`recurring_encounter_recovered_atlas.png` is 4608x192: 24 cells at 192 pixels,
+resampled directly from original paintings, not enlarged 48-pixel thumbnails.
+The recipe preserves original crop/aspect and multiplies fit/offset coordinates
+by exactly four. First-six bottom alignment and subsequent centered alignment
+remain distinct. This does not claim recovery of the undocumented historical
+resampler command; source registration and palette-loss evidence are explicit.
+
+Only the 24 manifest rows change raster paths/regions and processing provenance.
+Their content IDs, faction/role ownership and source paintings remain exact.
+`OverworldMapView._hostile_actor_layout` owns the world draw rectangle independently
+of raster dimensions. The actual Beacon Wardens marker/draw rectangle is equal
+before/after at both source resolutions and in the packages. The entire old
+1488x48 atlas remains byte-identical (`a43eeb70…`), including its seven unaffected
+alpha controls. **Those seven are not blanket visual acceptance**: the later
+Lantern Patrol source comparison still shows resolution loss, so their detailed
+quality follow-up remains in the parent work.
+
+Evidence under `.artifacts/overworld_cutout_quality_20260909/`:
+
+- `recurring_before_1280` records all 24 failing independent pixel oracles and
+  the actual original Beacon Wardens. One additional assertion was a stale
+  generic tile-report expectation; the final probe checks the actual encounter
+  draw owner's identity route instead. No runtime fallback fix is claimed.
+- `recurring_hd_preview/comparison_00..05.png` shows all 24 before/recovered/source
+  comparisons. `recurring_hd_1280`, `recurring_hd_1920`,
+  `recurring_hd_packaged_linux` and `recurring_hd_packaged_windows` each pass
+  2,550 checks without runtime errors. Eleven focused Python tests cover full
+  reconstruction, normalized geometry, smooth alpha, exact neighbors and
+  negative source/identity/resolution cases.
+- All twelve final source/Linux images were inspected: two labeled detached
+  24-identity galleries, ordinary authored scouting and the unchanged native-map
+  control at each rendered boundary. The larger detached gallery intentionally
+  enlarges its cells; actual game-size inspection is separate. Windows is
+  headless Wine, not a claim of Windows GPU/hardware visual validation.
+- `recurring_linux_hd` and `recurring_windows_hd` official exports pass startup,
+  generated gameplay/Town entry and native-library checks. Both 286,696,296-byte
+  PCKs have 5,484 members and all 21 encounter atlas import/texture pairs; source
+  art stays excluded. Only `project.binary` differs between platforms. New large
+  platform artifacts live in a fresh root-disk temporary directory through
+  recorded `.artifacts` links; no old artifacts or caches were deleted.
+- `recurring_delivery_preservation.json` proves only the new texture/import pair
+  is added, with no removed members. Of existing members, only the Overworld
+  manifest and UID cache change; 5,480 remain byte-identical to the passage
+  checkpoint, including all gameplay/native code and the original atlas.
+  Exactly 24 of 1,214 manifest rows change; all gameplay mappings stay exact.
+  Five native saves match outside `saved_at_unix`; five fresh authored saves
+  additionally differ only in the existing clock-generated `session_id`.
+  Within each run, save/load/reentry excludes no state fields.
+- The existing 31-identity/two-resolution encounter report passes after its atlas
+  expectations are updated. Its Roadward Lodge fixture also now expects that
+  already-authored exact Waywatch identity, not its obsolete unit fallback.
+  Production fallback order and rendering code are unchanged.
+
+Actual gameplay coverage is precise: two ordinary moves from Charter Pyre's
+starting hero expose original Beacon Wardens at (4,1), with Bridgeward Levies
+also visible. No placement, visibility or resource injection is used. The earned
+native Medium Day97 save has two Tidepool Skiffyard guard records at (46,3) and
+(50,17), **both already resolved**. They remain resolved, not revived for a
+picture. That run verifies all 2,380 original manifest-backed blockers and full
+native state unchanged; the detached gallery proves the 24 repaired identities
+separately. Probe-only audio teardown uses existing stop methods after gameplay,
+without changing game audio behavior.
+
+Final consolidated acceptance passes: `recurring_hd_repo_acceptance_final.log`
+records repository validation; `recurring_hd_shared_final` in the existing
+full-play validation artifact root passes all five distinct/decorative sprite,
+movement-input, route and fog reports. `recurring_hd_unit.log` records all eleven
+Python tests; `recurring_hd_legacy_report_final.log` records the 31-identity
+two-resolution report. Earlier rejected/failed diagnostics remain distinguished
+from these final results. Diff checks pass. This accepts the 24 repaired rows,
+not the whole parent or the seven unchanged resolution-quality follow-ups.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The remaining 783 rows have
 now received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The five cohort recipes cover 454 repaired/preserved dispositions, leaving 760
-for complete detailed review and any necessary recovery. Next are 24 recurring
-encounter regions whose historical atlas has only binary alpha despite sources
-retaining full alpha; source/runtime comparisons show broken thin silhouettes.
-The other seven recurring regions retain smooth coverage. Individual source/
-native-resolution checks of intentional purple materials also remain. Existing
+The accepted cohorts now cover 478 repaired/preserved dispositions, leaving
+736 for complete detailed review/recovery. Next are the seven remaining
+recurring source paintings: smooth alpha survived, but the Lantern Patrol
+comparison still shows excessive resolution loss. Those unchanged controls
+are not counted as fully accepted. Individual source/native-resolution checks of
+other remaining families and intentional purple materials also remain. Existing
 unit medallions and state indicators are not mislabeled as magenta matte.
 Do not hide remaining defects or claim release readiness from this checkpoint.

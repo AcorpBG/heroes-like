@@ -44151,6 +44151,16 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             ensure(recovery["ok"], errors, f"Passage recovery {asset_id} must preserve original paint and registration: {recovery['errors']}")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Passage cutout recovery failed closed: {exc}")
+    recurring_recoveries = {}
+    try:
+        recurring_spec = importlib.util.spec_from_file_location("recurring_cutout_validation", ROOT / "tools" / "prepare_overworld_recurring_cutouts.py")
+        recurring_module = importlib.util.module_from_spec(recurring_spec)
+        recurring_spec.loader.exec_module(recurring_module)
+        recurring_recoveries = recurring_module.validate_assets()
+        for asset_id, recovery in recurring_recoveries.items():
+            ensure(recovery["ok"], errors, f"Recurring recovery {asset_id} must preserve source-backed coverage: {recovery['errors']}")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Recurring cutout recovery failed closed: {exc}")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
@@ -44180,7 +44190,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             if source_model == "built_in_image_gen_original_signature_encounter_landmark":
                 expected_canvas = (64, 64)
             elif source_model == "built_in_image_gen_original_recurring_encounter_landmark_atlas":
-                expected_canvas = (1488, 48)
+                expected_canvas = (4608, 192) if asset_id in recurring_recoveries else (1488, 48)
             elif source_model == "built_in_image_gen_original_recurring_resource_site_landmark_atlas":
                 expected_canvas = (1440, 48)
             elif source_model == "built_in_image_gen_original_live_faction_landmark_atlas":
@@ -52142,6 +52152,21 @@ def passage_atlas_recovery_matches(path: Path, historical_sha: str) -> bool:
         return False
 
 
+def recurring_atlas_recovery_matches(path: Path) -> bool:
+    """The seven controls keep the byte-exact historical atlas; 24 use a new one."""
+    historical_sha = "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149"
+    packet = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/recurring_encounters"
+    try:
+        proof = load_json(packet / "manifest.json")
+        row = proof["original_atlas"]
+        before = packet / "before_runtime" / path.relative_to(ROOT / "art/overworld/runtime")
+        return (row == {"path": "res://" + str(path.relative_to(ROOT)), "sha256": historical_sha}
+                and hashlib.sha256(before.read_bytes()).hexdigest() == historical_sha
+                and hashlib.sha256(path.read_bytes()).hexdigest() == historical_sha)
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+
+
 def validate_seven_minor_guarded_caches(errors: list[str]) -> None:
     expected = {
         "site_toll_ruin": ("tollreaver-roadward-lodge", "tollreaver_toll_ruin", "tollreaver_roadward_lodge_watch", "encounter_roadward_lodge_watch", "mapobj_toll_ruin", "resource_site_minor_cache_toll_ruin_opened", "toll_ruin_opened", "4bea1a56d8e6bf8ed57155e0379297995e0a5c8201d6030c6359bb5dfbdfc2de", [0,0,48,48], "resource_and_scouting_rewards_live"),
@@ -52860,11 +52885,11 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
     atlas_payload = atlas_path.read_bytes()
     ensure(png_size(atlas_path) == (1488, 48), errors, "Recurring encounter landmark atlas must remain 1488x48")
     ensure(
-        hashlib.sha256(atlas_payload).hexdigest() == "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149"
+        recurring_atlas_recovery_matches(atlas_path)
         and len(atlas_payload) >= 26
         and atlas_payload[25] in {3, 4, 6},
         errors,
-        "Recurring encounter landmark atlas bytes or alpha changed",
+        "Recurring encounter original/repaired atlas proof or alpha changed",
     )
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Recurring encounter landmark atlas import metadata is missing")
 
@@ -52878,8 +52903,12 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         ensure(isinstance(entry, dict) and identity_sprites.get(encounter_id) == asset_id, errors, f"Recurring encounter {encounter_id} mapping is missing")
         if not isinstance(entry, dict):
             continue
-        ensure(entry.get("path") == "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png", errors, f"Recurring encounter {encounter_id} atlas path changed")
-        ensure(entry.get("atlas_region") == region and entry.get("atlas_size") == [1488, 48], errors, f"Recurring encounter {encounter_id} atlas ownership changed")
+        recovered = region[0] < 1152
+        atlas_name = "recurring_encounter_recovered_atlas" if recovered else "recurring_encounter_landmarks_atlas"
+        expected_region = [v * 4 for v in region] if recovered else region
+        expected_size = [4608, 192] if recovered else [1488, 48]
+        ensure(entry.get("path") == f"res://art/overworld/runtime/objects/encounters/recurring/{atlas_name}.png", errors, f"Recurring encounter {encounter_id} atlas path changed")
+        ensure(entry.get("atlas_region") == expected_region and entry.get("atlas_size") == expected_size, errors, f"Recurring encounter {encounter_id} normalized atlas ownership changed")
         ensure(entry.get("source_generated") == source_res and entry.get("source_model") == "built_in_image_gen_original_recurring_encounter_landmark_atlas", errors, f"Recurring encounter {encounter_id} generation provenance changed")
         ensure(entry.get("assigned_encounter_id") == encounter_id and entry.get("assigned_faction_id") == faction_id, errors, f"Recurring encounter {encounter_id} content ownership changed")
         ensure(entry.get("presentation_role") == role and len(str(entry.get("accessible_description", "")).strip()) >= 24, errors, f"Recurring encounter {encounter_id} role or non-color description changed")
@@ -52932,6 +52961,8 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         ensure(row.get("path") == f"res://art/overworld/source/generated/encounters/{source_folder}/{stem}_source.png" and row.get("sha256") == source_sha and row.get("atlas_region") == region and len(str(row.get("prompt_summary", "")).strip()) >= 24, errors, f"Recurring encounter {encounter_id} third-wave source manifest row changed")
 
     wave4_source_manifest = load_json(wave4_source_manifest_path)
+    for provenance in (source_manifest, wave2_source_manifest, wave3_source_manifest, wave4_source_manifest):
+        ensure(provenance.get("runtime_repair") == "res://art/overworld/source/generated/cutout_recovery_20260909/recurring_encounters/manifest.json", errors, "Recurring encounter historical source/repair ownership changed")
     wave4_source_rows = wave4_source_manifest.get("sources", [])
     wave4_source_by_id = {str(row.get("encounter_id", "")): row for row in wave4_source_rows if isinstance(row, dict)} if isinstance(wave4_source_rows, list) else {}
     wave4_runtime_atlas = wave4_source_manifest.get("runtime_atlas", {})
@@ -53093,7 +53124,7 @@ def validate_systemic_encounter_landmarks(errors: list[str]) -> None:
         ensure(token in report_text, errors, f"Systemic encounter consolidated runtime owner is missing exact proof: {token}")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure('REQUIRED_SYSTEMIC_ENCOUNTER_ATLAS_NAME = "systemic_encounter_landmarks_atlas"' in packaging_text and 'systemic/systemic_encounter_landmarks_atlas.png.import' in packaging_text and 'len(required_recurring_encounter_atlas_texture_entries) == 20' in packaging_text, errors, f"{packaging_path.name} must audit the compact systemic, Horizon Compact, Horizon court, dormant-roster, rival-commander, field-muster commission, twin-hold defense, pilgrimage, and Border Oath encounter atlases")
+        ensure('REQUIRED_SYSTEMIC_ENCOUNTER_ATLAS_NAME = "systemic_encounter_landmarks_atlas"' in packaging_text and 'systemic/systemic_encounter_landmarks_atlas.png.import' in packaging_text and 'len(required_recurring_encounter_atlas_texture_entries) == 21' in packaging_text, errors, f"{packaging_path.name} must audit the compact systemic, Horizon Compact, Horizon court, dormant-roster, rival-commander, field-muster commission, twin-hold defense, pilgrimage, and Border Oath encounter atlases")
 
 
 def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
@@ -80732,7 +80763,7 @@ def validate_five_horizon_court_skirmishes(errors: list[str]) -> None:
         ensure(token in smoke_text, errors, f"Five-Horizon-court smoke is missing consolidated live proof: {token}")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure('REQUIRED_HORIZON_COURTS_ATLAS_NAME = "horizon_courts_atlas"' in packaging_text and "horizon_courts/horizon_courts_atlas.png.import" in packaging_text and "len(required_recurring_encounter_atlas_texture_entries) == 20" in packaging_text, errors, f"{packaging_path.name} must audit the Horizon court and later encounter atlases")
+        ensure('REQUIRED_HORIZON_COURTS_ATLAS_NAME = "horizon_courts_atlas"' in packaging_text and "horizon_courts/horizon_courts_atlas.png.import" in packaging_text and "len(required_recurring_encounter_atlas_texture_entries) == 21" in packaging_text, errors, f"{packaging_path.name} must audit the Horizon court and later encounter atlases")
 
 
 def validate_three_horizon_specialist_companies(errors: list[str]) -> None:
@@ -81374,7 +81405,7 @@ def validate_six_grand_convergence_rival_commanders(errors: list[str]) -> None:
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("named_roster_commander_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(report.get("rows", [])) == 6 and all(row.get("named_commander_exact") and row.get("objective_met") and row.get("reward_exact") and row.get("exact_art") and row.get("save_round_trip_exact") for row in report.get("rows", [])), errors, "Grand-convergence rival-commander consolidated smoke report is not fully green")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_GRAND_CONVERGENCE_RIVAL_COMMANDERS_ATLAS_NAME" in packaging_text and "grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png.import" in packaging_text and "== 20" in packaging_text, errors, f"{packaging_path.name} must audit the rival-commander atlas")
+        ensure("REQUIRED_GRAND_CONVERGENCE_RIVAL_COMMANDERS_ATLAS_NAME" in packaging_text and "grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png.import" in packaging_text and "== 21" in packaging_text, errors, f"{packaging_path.name} must audit the rival-commander atlas")
 
 
 def validate_eighteen_campaign_finale_nemeses(errors: list[str]) -> None:
@@ -81457,7 +81488,7 @@ def validate_eighteen_campaign_finale_nemeses(errors: list[str]) -> None:
         ensure(report.get("ok") is True and report.get("case_count") == 18 and report.get("named_finale_nemesis_count") == 18 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(report.get("rows", [])) == 18 and all(row.get("placement_exact") and row.get("army_exact") and row.get("named_commander_exact") and row.get("objective_met") and row.get("reward_exact") and row.get("exact_art") and row.get("save_round_trip_exact") for row in report.get("rows", [])), errors, "Campaign-finale nemesis consolidated smoke report is not fully green")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_CAMPAIGN_FINALE_NEMESES_ATLAS_NAME" in packaging_text and "campaign_finale_nemeses/campaign_finale_nemeses_atlas.png.import" in packaging_text and "== 20" in packaging_text, errors, f"{packaging_path.name} must audit the campaign-finale nemesis atlas")
+        ensure("REQUIRED_CAMPAIGN_FINALE_NEMESES_ATLAS_NAME" in packaging_text and "campaign_finale_nemeses/campaign_finale_nemeses_atlas.png.import" in packaging_text and "== 21" in packaging_text, errors, f"{packaging_path.name} must audit the campaign-finale nemesis atlas")
 
 
 def validate_six_rival_road_skirmishes(errors: list[str]) -> None:
@@ -81856,7 +81887,7 @@ def validate_six_field_muster_commission_skirmishes(errors: list[str]) -> None:
     ensure_scene_nodes(smoke_scene_path.read_text(encoding="utf-8"), errors, smoke_scene_path.name, [("FieldMusterCommissionSkirmishesSmoke", "Node")])
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_FIELD_MUSTER_COMMISSIONS_ATLAS_NAME" in packaging_text and "field_muster_commissions/field_muster_commissions_atlas.png.import" in packaging_text and "== 20" in packaging_text, errors, f"{packaging_path.name} must audit the field-muster commission atlas inside the expanded eighteen-atlas package set")
+        ensure("REQUIRED_FIELD_MUSTER_COMMISSIONS_ATLAS_NAME" in packaging_text and "field_muster_commissions/field_muster_commissions_atlas.png.import" in packaging_text and "== 21" in packaging_text, errors, f"{packaging_path.name} must audit the field-muster commission atlas inside the expanded eighteen-atlas package set")
     ensure(report_path.is_file(), errors, "Field-muster commission consolidated smoke report is missing")
     if report_path.is_file():
         report = load_json(report_path)
@@ -81951,7 +81982,7 @@ def validate_six_twin_hold_defense_vigils(errors: list[str]) -> None:
     ensure_scene_nodes(smoke_scene_path.read_text(encoding="utf-8"), errors, smoke_scene_path.name, [("TwinHoldDefenseVigilsSmoke", "Node")])
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_TWIN_HOLD_DEFENSE_VIGILS_ATLAS_NAME" in packaging_text and "twin_hold_defense_vigils/twin_hold_defense_vigils_atlas.png.import" in packaging_text and "== 20" in packaging_text, errors, f"{packaging_path.name} must audit the compact twin-hold defense atlas")
+        ensure("REQUIRED_TWIN_HOLD_DEFENSE_VIGILS_ATLAS_NAME" in packaging_text and "twin_hold_defense_vigils/twin_hold_defense_vigils_atlas.png.import" in packaging_text and "== 21" in packaging_text, errors, f"{packaging_path.name} must audit the compact twin-hold defense atlas")
     ensure(report_path.is_file(), errors, "Twin-hold consolidated smoke report is missing")
     if report_path.is_file():
         report = load_json(report_path)
@@ -82052,7 +82083,7 @@ def validate_six_three_relic_pilgrimages(errors: list[str]) -> None:
     ensure_scene_nodes(smoke_scene_path.read_text(encoding="utf-8"), errors, smoke_scene_path.name, [("ThreeRelicPilgrimagesSmoke", "Node")])
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_THREE_RELIC_PILGRIMAGES_ATLAS_NAME" in packaging_text and "three_relic_pilgrimages/three_relic_pilgrimages_atlas.png.import" in packaging_text and "three_relic_pilgrimages_artifacts/three_relic_pilgrimages_artifacts_atlas.png.import" not in packaging_text and "objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png.import" in packaging_text and "== 20" in packaging_text, errors, f"{packaging_path.name} must audit both compact pilgrimage atlases in the nineteen-atlas package set")
+        ensure("REQUIRED_THREE_RELIC_PILGRIMAGES_ATLAS_NAME" in packaging_text and "three_relic_pilgrimages/three_relic_pilgrimages_atlas.png.import" in packaging_text and "three_relic_pilgrimages_artifacts/three_relic_pilgrimages_artifacts_atlas.png.import" not in packaging_text and "objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png.import" in packaging_text and "== 21" in packaging_text, errors, f"{packaging_path.name} must audit both compact pilgrimage atlases in the nineteen-atlas package set")
     ensure(report_path.is_file(), errors, "Three-relic consolidated smoke report is missing")
     if report_path.is_file():
         report = load_json(report_path)
@@ -82950,7 +82981,7 @@ def validate_six_border_oath_standard_seizures(errors: list[str]) -> None:
     ensure_scene_nodes(smoke_scene_path.read_text(encoding="utf-8"), errors, smoke_scene_path.name, [("BorderOathStandardSeizuresSmoke","Node")])
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH,PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_BORDER_OATH_STANDARDS_ATLAS_NAME" in packaging_text and "REQUIRED_BORDER_OATH_CORDONS_ATLAS_NAME" in packaging_text and "border_oath_standards_atlas.png.import" in packaging_text and "border_oath_cordons_atlas.png.import" in packaging_text and "== 47" in packaging_text and "== 20" in packaging_text, errors, f"{packaging_path.name} must audit both Border Oath atlases")
+        ensure("REQUIRED_BORDER_OATH_STANDARDS_ATLAS_NAME" in packaging_text and "REQUIRED_BORDER_OATH_CORDONS_ATLAS_NAME" in packaging_text and "border_oath_standards_atlas.png.import" in packaging_text and "border_oath_cordons_atlas.png.import" in packaging_text and "== 47" in packaging_text and "== 21" in packaging_text, errors, f"{packaging_path.name} must audit both Border Oath atlases")
     ensure(report_path.is_file(), errors, "Border Oath consolidated smoke report is missing")
     if report_path.is_file():
         report = load_json(report_path)
