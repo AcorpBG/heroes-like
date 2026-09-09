@@ -44180,6 +44180,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(len(claimed_recoveries) == 31, errors, "All 31 claimed originals must reconstruct with exact backing/paint provenance")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Claimed dwelling cutout recovery failed closed: {exc}")
+    state_recoveries = {}
+    try:
+        state_spec = importlib.util.spec_from_file_location("early_state_cutout_validation", ROOT / "tools" / "prepare_overworld_state_cutouts.py")
+        state_module = importlib.util.module_from_spec(state_spec)
+        state_spec.loader.exec_module(state_module)
+        state_recoveries = state_module.validate_assets()
+        ensure(len(state_recoveries) == 34, errors, "All 34 early state paintings must reconstruct from original sources and inspected backing")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Early state cutout recovery failed closed: {exc}")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
@@ -44215,9 +44224,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             elif source_model == "built_in_image_gen_original_live_faction_landmark_atlas":
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas":
-                expected_canvas = (288, 48)
+                expected_canvas = (1152, 192) if asset_id in state_recoveries else (288, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_creature_bank_opened_atlas":
-                expected_canvas = (144, 48)
+                expected_canvas = (576, 192) if asset_id in state_recoveries else (144, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas":
                 expected_canvas = (336, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas":
@@ -44227,13 +44236,13 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             elif source_model == "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas":
                 expected_canvas = (1344, 192) if asset_id in claimed_recoveries else (336, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas":
-                expected_canvas = (384, 48)
+                expected_canvas = (1536, 192) if asset_id in state_recoveries else (384, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_repeatable_service_visited_atlas":
-                expected_canvas = (288, 48)
+                expected_canvas = (1152, 192) if asset_id in state_recoveries else (288, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas":
-                expected_canvas = (288, 48)
+                expected_canvas = (1152, 192) if asset_id in state_recoveries else (288, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas":
-                expected_canvas = (240, 48)
+                expected_canvas = (960, 192) if asset_id in state_recoveries else (240, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_roads_objectives_state_atlas":
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas":
@@ -52007,7 +52016,8 @@ def validate_six_major_vault_unsealing(errors: list[str]) -> None:
         "site_prism_ossuary": ("glassmarshal-ossuary-battery", "glassmarshal_dormant_c", "glassmarshal_prism_ossuary_guard", "encounter_kite_signal_eyrie_watch", "mapobj_prism_ossuary", "resource_site_major_vault_prism_ossuary_unsealed", "prism_ossuary_unsealed", "d70a0c7ddda6729f2aa0de7980affde61e62f2eb5ee7c630d002975f4832baa8", [192, 0, 48, 48]),
         "site_basalt_oath_tomb": ("ninefold-confluence", "ninefold_basalt_oath_tomb", "ninefold_basalt_gatehouse_watch", "encounter_basalt_gatehouse_watch", "mapobj_basalt_oath_tomb", "resource_site_major_vault_basalt_oath_tomb_unsealed", "basalt_oath_tomb_unsealed", "ee3d74c4ec92e34f7c9ed24341300de353f84deaae4b4283ddfdf4c652c17e82", [240, 0, 48, 48]),
     }
-    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "major_vault_unsealed_atlas.png"
+    # Historical generated-source proof; current derivatives are reconstructed above.
+    atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/early_states/before_runtime/objects/resource_sites/major_vault_unsealed_atlas.png"
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "major_vault_unsealed_wave1"
     source_manifest_path = source_dir / "manifest.json"
     report_script_path = ROOT / "tests" / "six_major_vault_unsealing_report.gd"
@@ -52047,7 +52057,7 @@ def validate_six_major_vault_unsealing(errors: list[str]) -> None:
         mapping = site_sprites.get(site_id, {})
         entry = object_assets.get(claimed_asset_id, {})
         ensure(mapping.get("asset_id") == claimed_asset_id and mapping.get("unclaimed_asset_id") == unclaimed_asset_id, errors, f"{site_id} claimed/unclaimed art mapping changed")
-        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [288, 48] and entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == "unsealed_claimed_state", errors, f"{site_id} claimed atlas entry changed")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png" and entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [1152, 192] and entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == "unsealed_claimed_state", errors, f"{site_id} claimed atlas entry changed")
         source_path = source_dir / f"{stem}_source.png"
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{site_id} transparent generated source or import is missing")
         if source_path.is_file():
@@ -52097,7 +52107,8 @@ def validate_three_creature_bank_forts(errors: list[str]) -> None:
             "stem": "brasswake_depot_opened", "sha": "8694673c47386b35dcba2c0cf8aab60f1ee49666a028ee0cc21ec783a99bce26", "region": [96, 0, 48, 48],
         },
     }
-    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "creature_bank_opened_atlas.png"
+    # Historical generated-source proof; current derivatives are reconstructed above.
+    atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/early_states/before_runtime/objects/resource_sites/creature_bank_opened_atlas.png"
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "creature_bank_opened_wave1"
     source_manifest_path = source_dir / "manifest.json"
     report_script_path = ROOT / "tests" / "three_creature_bank_forts_report.gd"
@@ -52138,7 +52149,7 @@ def validate_three_creature_bank_forts(errors: list[str]) -> None:
         mapping = site_sprites.get(site_id, {})
         entry = object_assets.get(contract["claimed"], {})
         ensure(mapping.get("asset_id") == contract["claimed"] and mapping.get("unclaimed_asset_id") == contract["unclaimed"], errors, f"{site_id} opened/sealed art mapping changed")
-        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png" and entry.get("atlas_region") == contract["region"] and entry.get("atlas_size") == [144, 48] and entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == "opened_claimed_state", errors, f"{site_id} opened atlas entry changed")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png" and entry.get("atlas_region") == [v * 4 for v in contract["region"]] and entry.get("atlas_size") == [576, 192] and entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == "opened_claimed_state", errors, f"{site_id} opened atlas entry changed")
         source_path = source_dir / f"{contract['stem']}_source.png"
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{site_id} transparent generated source or import metadata is missing")
         if source_path.is_file():
@@ -52266,7 +52277,8 @@ def validate_six_repeatable_field_services(errors: list[str]) -> None:
         "site_ash_cooler_kitchen": ("object_ash_cooler_kitchen", "ninefold_ash_cooler_kitchen", (45,4), {"gold":100,"ore":1}, {"experience":65}, {"movement_restore":100,"nearest_player_town_recovery_relief":1}, "resource_site_repeatable_service_ash_cooler_kitchen_visited", [192,0,48,48]),
         "site_lens_calibration_cart": ("object_lens_calibration_cart", "ninefold_lens_calibration_cart", (4,9), {"gold":130}, {"experience":50}, {}, "resource_site_repeatable_service_lens_calibration_cart_visited", [240,0,48,48]),
     }
-    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "repeatable_service_visited_atlas.png"
+    # Historical generated-source proof; current derivatives are reconstructed above.
+    atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/early_states/before_runtime/objects/resource_sites/repeatable_service_visited_atlas.png"
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "repeatable_service_visited_wave1"
     report_script = ROOT / "tests" / "six_repeatable_field_services_report.gd"
     report_scene = ROOT / "tests" / "six_repeatable_field_services_report.tscn"
@@ -52298,7 +52310,7 @@ def validate_six_repeatable_field_services(errors: list[str]) -> None:
         mapping = mappings.get(site_id, {})
         entry = assets.get(visited_id, {})
         ensure(mapping.get("asset_id") == visited_id and mapping.get("unclaimed_asset_id") == "mapobj_" + site_id.removeprefix("site_"), errors, f"{site_id} ready/visited mapping changed")
-        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [288,48] and entry.get("presentation_role") == "visited_service_state" and len(str(entry.get("accessible_description", ""))) >= 48, errors, f"{site_id} visited atlas entry changed")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png" and entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [1152,192] and entry.get("presentation_role") == "visited_service_state" and len(str(entry.get("accessible_description", ""))) >= 48, errors, f"{site_id} visited atlas entry changed")
         source_path = ROOT / str(entry.get("source_generated", "")).removeprefix("res://")
         ensure(source_path.is_file() and Path(f"{source_path}.import").is_file(), errors, f"{site_id} generated visited source or import metadata is missing")
         if source_path.is_file():
@@ -52329,7 +52341,8 @@ def validate_six_progression_shrines(errors: list[str]) -> None:
         "site_furnace_oath_marker": ("object_furnace_oath_marker", "pitmarshal-peat-chain-seizure", "pitmarshal_dormant_b", (2,5), "pitmarshal_screen_a", "encounter_mossglass_moonhunt", {"experience":65}, {}, {"movement_restore":150}, "", 0, True, "resource_site_progression_shrine_furnace_oath_awakened", [192,0,48,48], "805c658ac30b4e000afea5ebba4ad8e2ec6b26b9499dceea5acda74900a61239"),
         "site_tide_bell_shrine": ("object_tide_bell_shrine", "keelwarden-lockfire-run", "keelwarden_dormant_b", (2,5), "keelwarden_screen_a", "encounter_lockflame_turncoats", {"experience":55}, {}, {"enemy_pressure_relief":1}, "", 4, True, "resource_site_progression_shrine_tide_bell_awakened", [240,0,48,48], "7c3539d7de4c0edfccc8091042014b4f2a1f70f77400c11b5b8ed6b994cc28d5"),
     }
-    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "progression_shrine_awakened_atlas.png"
+    # Historical generated-source proof; current derivatives are reconstructed above.
+    atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/early_states/before_runtime/objects/resource_sites/progression_shrine_awakened_atlas.png"
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "progression_shrine_awakened_wave1"
     report_script = ROOT / "tests" / "six_progression_shrines_report.gd"
     report_scene = ROOT / "tests" / "six_progression_shrines_report.tscn"
@@ -52370,7 +52383,7 @@ def validate_six_progression_shrines(errors: list[str]) -> None:
         mapping = mappings.get(site_id, {})
         entry = assets.get(awakened_id, {})
         ensure(mapping.get("asset_id") == awakened_id and mapping.get("unclaimed_asset_id") == "mapobj_" + site_id.removeprefix("site_"), errors, f"{site_id} ready/awakened mapping changed")
-        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [288,48] and entry.get("presentation_role") == "awakened_shrine_state" and len(str(entry.get("accessible_description", ""))) >= 48, errors, f"{site_id} awakened atlas entry changed")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png" and entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [1152,192] and entry.get("presentation_role") == "awakened_shrine_state" and len(str(entry.get("accessible_description", ""))) >= 48, errors, f"{site_id} awakened atlas entry changed")
         source_path = ROOT / str(entry.get("source_generated", "")).removeprefix("res://")
         ensure(source_path.is_file() and Path(f"{source_path}.import").is_file(), errors, f"{site_id} generated awakened source or import metadata is missing")
         if source_path.is_file():
@@ -52401,7 +52414,8 @@ def validate_five_scouting_structures(errors: list[str]) -> None:
         "site_underway_echo_well": ("object_underway_echo_well", "ninefold-confluence", "ninefold_underway_echo_well", (32,44), 3, "resource_site_scouting_underway_echo_well_controlled", [144,0,48,48], "870a784fa8578a39b11b4127fbde37e77f7492546ad7e694ef707fb25d0759c6"),
         "site_coast_bell_watch": ("object_coast_bell_watch", "keelwarden-lockfire-run", "keelwarden_dormant_a", (1,0), 5, "resource_site_scouting_coast_bell_watch_controlled", [192,0,48,48], "e4a04f912ec75d91d39286b7a56a2d774e3aff1c7f7b1beb7fafcf620d3ad079"),
     }
-    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "scouting_structure_controlled_atlas.png"
+    # Historical generated-source proof; current derivatives are reconstructed above.
+    atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/early_states/before_runtime/objects/resource_sites/scouting_structure_controlled_atlas.png"
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "scouting_structure_controlled_wave1"
     report_script = ROOT / "tests" / "five_scouting_structures_report.gd"
     report_scene = ROOT / "tests" / "five_scouting_structures_report.tscn"
@@ -52439,7 +52453,7 @@ def validate_five_scouting_structures(errors: list[str]) -> None:
         mapping = mappings.get(site_id, {})
         entry = assets.get(controlled_id, {})
         ensure(mapping.get("asset_id") == controlled_id and mapping.get("unclaimed_asset_id") == "mapobj_" + site_id.removeprefix("site_"), errors, f"{site_id} ready/controlled mapping changed")
-        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [240,48] and entry.get("presentation_role") == "controlled_scouting_state" and len(str(entry.get("accessible_description", ""))) >= 48, errors, f"{site_id} controlled atlas entry changed")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png" and entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [960,192] and entry.get("presentation_role") == "controlled_scouting_state" and len(str(entry.get("accessible_description", ""))) >= 48, errors, f"{site_id} controlled atlas entry changed")
         source_path = ROOT / str(entry.get("source_generated", "")).removeprefix("res://")
         ensure(source_path.is_file() and Path(f"{source_path}.import").is_file(), errors, f"{site_id} generated controlled source or import metadata is missing")
         if source_path.is_file():
@@ -52564,7 +52578,8 @@ def validate_eight_guarded_route_gates(errors: list[str]) -> None:
         "site_ashbarb_roadblock": ("object_ashbarb_roadblock", "ninefold_ashbarb_roadblock", (25, 61), "ninefold_ashbarb_roadblock_watch", "encounter_charcoal_burners_watch", (27, 61), "medium", 26434, "mapobj_ashbarb_roadblock", "resource_site_guarded_route_ashbarb_roadblock_opened", "ashbarb_roadblock_opened", "a5d81ab28742ab40caf91a931cb8a0444d2d4d552e6ade16588d33fbc4612789", [288,0,48,48]),
         "site_frostford_hold": ("object_frostford_hold", "ninefold_frostford_hold", (3, 61), "ninefold_frostford_hold_watch", "encounter_frostwharf_house_watch", (5, 61), "high", 26435, "mapobj_frostford_hold", "resource_site_guarded_route_frostford_hold_opened", "frostford_hold_opened", "a51c27d531530aaec4b2181652c45ce1bcbcb3767619fca38b905be2aa596bdd", [336,0,48,48]),
     }
-    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "guarded_route_opened_atlas.png"
+    # Historical generated-source proof; current derivatives are reconstructed above.
+    atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/early_states/before_runtime/objects/resource_sites/guarded_route_opened_atlas.png"
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "guarded_route_opened_wave1"
     manifest_path = source_dir / "manifest.json"
     report_script_path = ROOT / "tests" / "eight_guarded_route_gates_report.gd"
@@ -52610,7 +52625,7 @@ def validate_eight_guarded_route_gates(errors: list[str]) -> None:
         mapping = site_sprites.get(site_id, {})
         entry = object_assets.get(claimed_id, {})
         ensure(mapping.get("asset_id") == claimed_id and mapping.get("unclaimed_asset_id") == unclaimed_id, errors, f"{site_id} opened/unclaimed art mapping changed")
-        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [384,48] and entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == "opened_claimed_state" and len(str(entry.get("accessible_description", "")).strip()) >= 48, errors, f"{site_id} opened atlas entry changed")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png" and entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [1536,192] and entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == "opened_claimed_state" and len(str(entry.get("accessible_description", "")).strip()) >= 48, errors, f"{site_id} opened atlas entry changed")
         source_path = source_dir / f"{stem}_source.png"
         ensure(source_path.is_file() and png_size(source_path) == (1254,1254) and Path(f"{source_path}.import").is_file(), errors, f"{site_id} transparent generated source or import metadata is missing")
         if source_path.is_file():

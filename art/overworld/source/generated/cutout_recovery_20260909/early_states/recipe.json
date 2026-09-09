@@ -1,0 +1,3618 @@
+{
+  "schema_id": "early_state_cutout_recipe_v1",
+  "assets": {
+    "resource_site_major_vault_mirror_archive_unsealed": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/mirror_archive_unsealed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas",
+        "assigned_resource_site_id": "site_mirror_archive",
+        "presentation_role": "unsealed_claimed_state",
+        "accessible_description": "The Mirror Archive stands open with a calm blue survey light visible through its brass-bound entrance."
+      },
+      "source_sha256": "e87028b691e9a056f6d522cbd30ae0658c3396f8f4340be52ad855f1f7f906bb",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        241,
+        208,
+        1088,
+        979
+      ],
+      "source_resize": [
+        42,
+        38
+      ],
+      "canvas_origin": [
+        3,
+        5
+      ],
+      "fit_limit": 42,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.23307291666666666,
+        "opaque_rgb_mae": 0.9794560185185185
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1074917,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1011,
+            554
+          ],
+          "area": 2499,
+          "bounds": [
+            1010,
+            554,
+            1048,
+            683
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1036,
+            707
+          ],
+          "area": 255,
+          "bounds": [
+            1033,
+            707,
+            1046,
+            742
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1018,
+            688
+          ],
+          "area": 202,
+          "bounds": [
+            1018,
+            688,
+            1030,
+            726
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1054,
+            707
+          ],
+          "area": 104,
+          "bounds": [
+            1053,
+            707,
+            1064,
+            731
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_major_vault_mirror_archive_unsealed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_major_vault_mirror_archive_unsealed.png"
+    },
+    "resource_site_major_vault_furnace_vault_unsealed": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/furnace_vault_unsealed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas",
+        "assigned_resource_site_id": "site_furnace_vault",
+        "presentation_role": "unsealed_claimed_state",
+        "accessible_description": "The Furnace Vault gate stands open around a steady amber forge glow."
+      },
+      "source_sha256": "3f0abd140c4ab34adf98cc7ee917daa94b5daf2bbc044a1fc9f2f8274066dc3f",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        202,
+        236,
+        1100,
+        997
+      ],
+      "source_resize": [
+        42,
+        36
+      ],
+      "canvas_origin": [
+        3,
+        6
+      ],
+      "fit_limit": 42,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.2191840277777778,
+        "opaque_rgb_mae": 0.6850241545893719
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1080804,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_major_vault_furnace_vault_unsealed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_major_vault_furnace_vault_unsealed.png"
+    },
+    "resource_site_major_vault_thorn_crown_hollow_unsealed": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/thorn_crown_hollow_unsealed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas",
+        "assigned_resource_site_id": "site_thorn_crown_hollow",
+        "presentation_role": "unsealed_claimed_state",
+        "accessible_description": "The Thorn Crown Hollow entrance is open beneath its living thorn dome and green claim lantern."
+      },
+      "source_sha256": "352125ade4941db4c915cae7e0391e74a61bbfeed60d5421de1e8f743505d32b",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        240,
+        159,
+        1036,
+        970
+      ],
+      "source_resize": [
+        41,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "fit_limit": 42,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.4427083333333333,
+        "opaque_rgb_mae": 0.9067688378033205
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1132331,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            775,
+            327
+          ],
+          "area": 1158,
+          "bounds": [
+            765,
+            327,
+            811,
+            370
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            670,
+            319
+          ],
+          "area": 1062,
+          "bounds": [
+            653,
+            319,
+            709,
+            351
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            343,
+            409
+          ],
+          "area": 1001,
+          "bounds": [
+            315,
+            409,
+            352,
+            455
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            870,
+            367
+          ],
+          "area": 966,
+          "bounds": [
+            850,
+            367,
+            889,
+            409
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            974,
+            582
+          ],
+          "area": 849,
+          "bounds": [
+            972,
+            582,
+            1003,
+            639
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            954,
+            488
+          ],
+          "area": 760,
+          "bounds": [
+            947,
+            488,
+            973,
+            540
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            470,
+            333
+          ],
+          "area": 635,
+          "bounds": [
+            446,
+            333,
+            491,
+            364
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            326,
+            467
+          ],
+          "area": 581,
+          "bounds": [
+            315,
+            467,
+            343,
+            500
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            561,
+            304
+          ],
+          "area": 573,
+          "bounds": [
+            554,
+            304,
+            589,
+            331
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            415,
+            354
+          ],
+          "area": 457,
+          "bounds": [
+            402,
+            354,
+            427,
+            384
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            307,
+            549
+          ],
+          "area": 317,
+          "bounds": [
+            292,
+            549,
+            311,
+            586
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1009,
+            682
+          ],
+          "area": 296,
+          "bounds": [
+            1005,
+            682,
+            1019,
+            717
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            812,
+            354
+          ],
+          "area": 244,
+          "bounds": [
+            802,
+            354,
+            820,
+            376
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            584,
+            335
+          ],
+          "area": 165,
+          "bounds": [
+            574,
+            335,
+            597,
+            347
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            283,
+            644
+          ],
+          "area": 144,
+          "bounds": [
+            279,
+            644,
+            293,
+            672
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            509,
+            344
+          ],
+          "area": 118,
+          "bounds": [
+            502,
+            344,
+            518,
+            359
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            817,
+            387
+          ],
+          "area": 86,
+          "bounds": [
+            814,
+            387,
+            827,
+            397
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            500,
+            354
+          ],
+          "area": 84,
+          "bounds": [
+            494,
+            354,
+            506,
+            365
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            444,
+            361
+          ],
+          "area": 67,
+          "bounds": [
+            443,
+            361,
+            458,
+            374
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            981,
+            649
+          ],
+          "area": 42,
+          "bounds": [
+            980,
+            649,
+            988,
+            660
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_major_vault_thorn_crown_hollow_unsealed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_major_vault_thorn_crown_hollow_unsealed.png"
+    },
+    "resource_site_major_vault_storm_bell_wreck_unsealed": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/storm_bell_wreck_unsealed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas",
+        "assigned_resource_site_id": "site_storm_bell_wreck",
+        "presentation_role": "unsealed_claimed_state",
+        "accessible_description": "The recovered storm bell hangs upright above calmer wreck timbers and a warm pilot lantern."
+      },
+      "source_sha256": "2fe6232cc93e7feb84fc1bcf3549ad092843ca41b8a0ff4f6f1d63e3d5d5488a",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        0,
+        19,
+        1234,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "fit_limit": 42,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.8376736111111112,
+        "opaque_rgb_mae": 1.121264367816092
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_major_vault_storm_bell_wreck_unsealed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_major_vault_storm_bell_wreck_unsealed.png"
+    },
+    "resource_site_major_vault_prism_ossuary_unsealed": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/prism_ossuary_unsealed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas",
+        "assigned_resource_site_id": "site_prism_ossuary",
+        "presentation_role": "unsealed_claimed_state",
+        "accessible_description": "The Prism Ossuary doors stand open around a restrained violet-white survey beam."
+      },
+      "source_sha256": "d70a0c7ddda6729f2aa0de7980affde61e62f2eb5ee7c630d002975f4832baa8",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        201,
+        162,
+        1071,
+        1043
+      ],
+      "source_resize": [
+        41,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "fit_limit": 42,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.453125,
+        "opaque_rgb_mae": 1.0918988152417548
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1073385,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_major_vault_prism_ossuary_unsealed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_major_vault_prism_ossuary_unsealed.png"
+    },
+    "resource_site_major_vault_basalt_oath_tomb_unsealed": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/basalt_oath_tomb_unsealed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas",
+        "assigned_resource_site_id": "site_basalt_oath_tomb",
+        "presentation_role": "unsealed_claimed_state",
+        "accessible_description": "The Basalt Oath Tomb doors stand open beneath steady gold runes and blue-amber interior light."
+      },
+      "source_sha256": "ee3d74c4ec92e34f7c9ed24341300de353f84deaae4b4283ddfdf4c652c17e82",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1312,
+        1199
+      ],
+      "source_crop": [
+        0,
+        52,
+        1309,
+        1169
+      ],
+      "source_resize": [
+        42,
+        36
+      ],
+      "canvas_origin": [
+        3,
+        6
+      ],
+      "fit_limit": 42,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.5455729166666666,
+        "opaque_rgb_mae": 0.9179357021996616
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_major_vault_basalt_oath_tomb_unsealed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_major_vault_basalt_oath_tomb_unsealed.png"
+    },
+    "resource_site_creature_bank_sealed_muster_fort_opened": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          144,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/creature_bank_opened_wave1/sealed_muster_fort_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_creature_bank_opened_atlas",
+        "assigned_resource_site_id": "site_sealed_muster_fort",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Sealed Muster Fort gate stands open around a lit courtyard with orderly shield and spear racks."
+      },
+      "source_sha256": "322794ee4de51702ec530fe88a06894be6bf4e0a83ee8eb27f08f346a34e5a67",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        231,
+        279,
+        1050,
+        1045
+      ],
+      "source_resize": [
+        42,
+        39
+      ],
+      "canvas_origin": [
+        3,
+        4
+      ],
+      "fit_limit": 42,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.2547743055555556,
+        "opaque_rgb_mae": 0.8381134480560867
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1149275,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_creature_bank_sealed_muster_fort_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_creature_bank_sealed_muster_fort_opened.png"
+    },
+    "resource_site_creature_bank_kiln_chain_redoubt_opened": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          144,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/creature_bank_opened_wave1/kiln_chain_redoubt_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_creature_bank_opened_atlas",
+        "assigned_resource_site_id": "site_kiln_chain_redoubt",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Kiln Chain Redoubt glows with controlled furnace light behind an open gate and lowered chains."
+      },
+      "source_sha256": "4a139a6dfc65c6640aa18c929235a3ed1402f90a8d81b6cd6d8fe87f1c20411e",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        240,
+        179,
+        1020,
+        990
+      ],
+      "source_resize": [
+        40,
+        42
+      ],
+      "canvas_origin": [
+        4,
+        3
+      ],
+      "fit_limit": 42,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.3055555555555556,
+        "opaque_rgb_mae": 0.8234880450070324
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1190528,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            624,
+            421
+          ],
+          "area": 47,
+          "bounds": [
+            623,
+            421,
+            627,
+            440
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_creature_bank_kiln_chain_redoubt_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_creature_bank_kiln_chain_redoubt_opened.png"
+    },
+    "resource_site_creature_bank_brasswake_depot_opened": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          144,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/creature_bank_opened_wave1/brasswake_depot_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_creature_bank_opened_atlas",
+        "assigned_resource_site_id": "site_brasswake_depot",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Brasswake Depot hatch stands open above a loading ramp, uncovered supply crates, and a clean steam plume."
+      },
+      "source_sha256": "8694673c47386b35dcba2c0cf8aab60f1ee49666a028ee0cc21ec783a99bce26",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        280,
+        262,
+        1002,
+        947
+      ],
+      "source_resize": [
+        42,
+        40
+      ],
+      "canvas_origin": [
+        3,
+        4
+      ],
+      "fit_limit": 42,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.3385416666666667,
+        "opaque_rgb_mae": 0.894007490636704
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1284592,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            888,
+            508
+          ],
+          "area": 561,
+          "bounds": [
+            881,
+            508,
+            899,
+            574
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            538,
+            431
+          ],
+          "area": 410,
+          "bounds": [
+            537,
+            431,
+            550,
+            487
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            477,
+            313
+          ],
+          "area": 134,
+          "bounds": [
+            476,
+            313,
+            480,
+            360
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            457,
+            481
+          ],
+          "area": 130,
+          "bounds": [
+            448,
+            481,
+            465,
+            494
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            383,
+            564
+          ],
+          "area": 99,
+          "bounds": [
+            379,
+            564,
+            391,
+            577
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            914,
+            603
+          ],
+          "area": 95,
+          "bounds": [
+            906,
+            603,
+            919,
+            616
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            687,
+            418
+          ],
+          "area": 84,
+          "bounds": [
+            684,
+            418,
+            697,
+            428
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            423,
+            527
+          ],
+          "area": 82,
+          "bounds": [
+            422,
+            527,
+            430,
+            543
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            443,
+            487
+          ],
+          "area": 76,
+          "bounds": [
+            441,
+            487,
+            451,
+            499
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            674,
+            422
+          ],
+          "area": 57,
+          "bounds": [
+            668,
+            422,
+            677,
+            431
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            509,
+            479
+          ],
+          "area": 56,
+          "bounds": [
+            507,
+            479,
+            514,
+            506
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            762,
+            425
+          ],
+          "area": 53,
+          "bounds": [
+            759,
+            425,
+            767,
+            435
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            809,
+            477
+          ],
+          "area": 52,
+          "bounds": [
+            805,
+            477,
+            811,
+            493
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            952,
+            645
+          ],
+          "area": 45,
+          "bounds": [
+            952,
+            645,
+            958,
+            656
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_creature_bank_brasswake_depot_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_creature_bank_brasswake_depot_opened.png"
+    },
+    "resource_site_guarded_route_bridge_bastion_opened": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/bridge_bastion_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+        "assigned_resource_site_id": "site_bridge_bastion",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "Bridge Bastion with its portcullis raised, deck clear, and two warm route lamps lit."
+      },
+      "source_sha256": "ccfce539488a679f432683df49379e051ce931aa7a262a0e5bac30d92d2e2d02",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        275,
+        300,
+        980,
+        927
+      ],
+      "source_resize": [
+        44,
+        39
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.2595486111111111,
+        "opaque_rgb_mae": 0.8203483043079743
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1271722,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            626,
+            545
+          ],
+          "area": 2021,
+          "bounds": [
+            623,
+            545,
+            668,
+            608
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_guarded_route_bridge_bastion_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_guarded_route_bridge_bastion_opened.png"
+    },
+    "resource_site_guarded_route_chainboom_fort_opened": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/chainboom_fort_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+        "assigned_resource_site_id": "site_chainboom_fort",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "Chainboom Fort with both chains raised to their winches and the harbor lane open."
+      },
+      "source_sha256": "3a5e758905927220f9c221dce1400f742a517595baa0da0ae283929ebd82b993",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        270,
+        260,
+        966,
+        956
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.2560763888888889,
+        "opaque_rgb_mae": 0.8085106382978724
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1282428,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_guarded_route_chainboom_fort_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_guarded_route_chainboom_fort_opened.png"
+    },
+    "resource_site_guarded_route_railblock_camp_opened": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/railblock_camp_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+        "assigned_resource_site_id": "site_railblock_camp",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "Railblock Camp with carts moved aside and an uninterrupted lit track through the tents."
+      },
+      "source_sha256": "bd095ac5b972c35dc5320abeb58a1a47550bacd4aef8d1ac10136c3bd229c3cb",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        240,
+        259,
+        959,
+        951
+      ],
+      "source_resize": [
+        44,
+        42
+      ],
+      "canvas_origin": [
+        2,
+        3
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.2921006944444444,
+        "opaque_rgb_mae": 0.7849044379656624
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1276454,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            725,
+            440
+          ],
+          "area": 426,
+          "bounds": [
+            714,
+            440,
+            726,
+            510
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            735,
+            484
+          ],
+          "area": 205,
+          "bounds": [
+            735,
+            484,
+            745,
+            523
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            519,
+            350
+          ],
+          "area": 151,
+          "bounds": [
+            519,
+            350,
+            532,
+            372
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            625,
+            404
+          ],
+          "area": 126,
+          "bounds": [
+            620,
+            404,
+            628,
+            433
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            625,
+            360
+          ],
+          "area": 115,
+          "bounds": [
+            620,
+            360,
+            627,
+            379
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            526,
+            396
+          ],
+          "area": 109,
+          "bounds": [
+            526,
+            396,
+            536,
+            420
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            735,
+            451
+          ],
+          "area": 96,
+          "bounds": [
+            735,
+            451,
+            742,
+            483
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            519,
+            395
+          ],
+          "area": 95,
+          "bounds": [
+            519,
+            395,
+            525,
+            424
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            734,
+            527
+          ],
+          "area": 55,
+          "bounds": [
+            734,
+            527,
+            748,
+            535
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            322,
+            468
+          ],
+          "area": 49,
+          "bounds": [
+            317,
+            468,
+            325,
+            481
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_guarded_route_railblock_camp_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_guarded_route_railblock_camp_opened.png"
+    },
+    "resource_site_guarded_route_rootgate_den_opened": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/rootgate_den_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+        "assigned_resource_site_id": "site_rootgate_den",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "Rootgate Den opened around a broad earthen tunnel with a teal guide light beyond."
+      },
+      "source_sha256": "ad8b1ff9b764e59624e63ae8cbfafd3c9f35f17300c6a6902ff5aab6142bbc9c",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        281,
+        252,
+        970,
+        940
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.3480902777777778,
+        "opaque_rgb_mae": 0.8011996572407883
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1263405,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            422,
+            430
+          ],
+          "area": 782,
+          "bounds": [
+            416,
+            430,
+            450,
+            478
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            769,
+            333
+          ],
+          "area": 548,
+          "bounds": [
+            755,
+            333,
+            791,
+            372
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            852,
+            496
+          ],
+          "area": 485,
+          "bounds": [
+            842,
+            496,
+            878,
+            531
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            413,
+            494
+          ],
+          "area": 203,
+          "bounds": [
+            411,
+            494,
+            426,
+            515
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            533,
+            330
+          ],
+          "area": 196,
+          "bounds": [
+            518,
+            330,
+            537,
+            363
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            864,
+            535
+          ],
+          "area": 162,
+          "bounds": [
+            856,
+            535,
+            875,
+            550
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            820,
+            442
+          ],
+          "area": 144,
+          "bounds": [
+            817,
+            442,
+            827,
+            462
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            881,
+            577
+          ],
+          "area": 95,
+          "bounds": [
+            879,
+            577,
+            890,
+            600
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            937,
+            636
+          ],
+          "area": 77,
+          "bounds": [
+            933,
+            636,
+            944,
+            649
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            383,
+            574
+          ],
+          "area": 40,
+          "bounds": [
+            380,
+            574,
+            386,
+            585
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_guarded_route_rootgate_den_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_guarded_route_rootgate_den_opened.png"
+    },
+    "resource_site_guarded_route_fog_quay_ambush_opened": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/fog_quay_ambush_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+        "assigned_resource_site_id": "site_fog_quay_ambush",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "Fog Quay cleared of ambush crates and rope traps, with guide lanterns along the open pier."
+      },
+      "source_sha256": "dbf67b98c2d88ad9f0411d7082d8e7bf4ebc9397ad76fdf8c508be92192c84ee",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        0,
+        53,
+        1192,
+        1197
+      ],
+      "source_resize": [
+        44,
+        42
+      ],
+      "canvas_origin": [
+        2,
+        3
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.3515625,
+        "opaque_rgb_mae": 0.871435977190254
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_guarded_route_fog_quay_ambush_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_guarded_route_fog_quay_ambush_opened.png"
+    },
+    "resource_site_guarded_route_mirror_toll_causeway_opened": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/mirror_toll_causeway_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+        "assigned_resource_site_id": "site_mirror_toll_causeway",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "Mirror Toll Causeway with barriers folded aside and a continuous silver-blue lane."
+      },
+      "source_sha256": "b54f843f09a5330ee2b1f86aaf0e727cda578403f11eb6dfa6f2d15b39f3bb81",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        219,
+        231,
+        1008,
+        990
+      ],
+      "source_resize": [
+        44,
+        42
+      ],
+      "canvas_origin": [
+        2,
+        3
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.2925347222222222,
+        "opaque_rgb_mae": 0.8565965583173996
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1207359,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_guarded_route_mirror_toll_causeway_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_guarded_route_mirror_toll_causeway_opened.png"
+    },
+    "resource_site_guarded_route_ashbarb_roadblock_opened": {
+      "matte_boundary_radius": 12,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/ashbarb_roadblock_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+        "assigned_resource_site_id": "site_ashbarb_roadblock",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "Ashbarb spikes dismantled to both verges around a broad open stone road."
+      },
+      "source_sha256": "a5d81ab28742ab40caf91a931cb8a0444d2d4d552e6ade16588d33fbc4612789",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        249,
+        286,
+        973,
+        937
+      ],
+      "source_resize": [
+        44,
+        40
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.3415798611111111,
+        "opaque_rgb_mae": 0.8081795150199059
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1302948,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            423,
+            428
+          ],
+          "area": 329,
+          "bounds": [
+            423,
+            428,
+            447,
+            470
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            328,
+            622
+          ],
+          "area": 136,
+          "bounds": [
+            322,
+            622,
+            330,
+            655
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            373,
+            568
+          ],
+          "area": 127,
+          "bounds": [
+            371,
+            568,
+            383,
+            589
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            475,
+            462
+          ],
+          "area": 68,
+          "bounds": [
+            474,
+            462,
+            481,
+            485
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_guarded_route_ashbarb_roadblock_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_guarded_route_ashbarb_roadblock_opened.png"
+    },
+    "resource_site_guarded_route_frostford_hold_opened": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+        "atlas_region": [
+          336,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/frostford_hold_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+        "assigned_resource_site_id": "site_frostford_hold",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "Frostford Hold with portcullis raised, bridge clear, and blue-white welcome lamps lit."
+      },
+      "source_sha256": "a51c27d531530aaec4b2181652c45ce1bcbcb3767619fca38b905be2aa596bdd",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        284,
+        292,
+        987,
+        983
+      ],
+      "source_resize": [
+        44,
+        43
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.2608506944444444,
+        "opaque_rgb_mae": 1.1512195121951219
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1237347,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            645,
+            555
+          ],
+          "area": 2304,
+          "bounds": [
+            639,
+            555,
+            704,
+            616
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_guarded_route_frostford_hold_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_guarded_route_frostford_hold_opened.png"
+    },
+    "resource_site_repeatable_service_wayfarer_menders_tent_visited": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/repeatable_service_visited_wave1/wayfarer_menders_tent_visited_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_repeatable_service_visited_atlas",
+        "assigned_resource_site_id": "site_wayfarer_menders_tent",
+        "presentation_role": "visited_service_state",
+        "accessible_description": "A used menders tent with tidy treatment table, depleted medicines, and a softly dimmed field lantern."
+      },
+      "source_sha256": "06d24a6ed13e28efae2827e501d8bac920be0cefa8dceba9752b4609937c6788",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        287,
+        387,
+        955,
+        972
+      ],
+      "source_resize": [
+        46,
+        40
+      ],
+      "canvas_origin": [
+        1,
+        8
+      ],
+      "fit_limit": 46,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.2287326388888889,
+        "opaque_rgb_mae": 1.0789564023343632
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1353512,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            493,
+            476
+          ],
+          "area": 4381,
+          "bounds": [
+            401,
+            476,
+            498,
+            632
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            869,
+            680
+          ],
+          "area": 2551,
+          "bounds": [
+            868,
+            680,
+            926,
+            802
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            770,
+            578
+          ],
+          "area": 2428,
+          "bounds": [
+            770,
+            578,
+            849,
+            706
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            402,
+            642
+          ],
+          "area": 1200,
+          "bounds": [
+            398,
+            642,
+            422,
+            731
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            850,
+            679
+          ],
+          "area": 703,
+          "bounds": [
+            830,
+            679,
+            851,
+            744
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_repeatable_service_wayfarer_menders_tent_visited.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_repeatable_service_wayfarer_menders_tent_visited.png"
+    },
+    "resource_site_repeatable_service_courier_change_post_visited": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/repeatable_service_visited_wave1/courier_change_post_visited_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_repeatable_service_visited_atlas",
+        "assigned_resource_site_id": "site_courier_change_post",
+        "presentation_role": "visited_service_state",
+        "accessible_description": "A courier change post after exchange, with resting mounts, shifted saddlebags, and a lowered green route flag."
+      },
+      "source_sha256": "cb1099bbcf47d13031475ff8d9879d2685ce95a94a9f42b0f0f717d3ee9cb091",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        320,
+        279,
+        968,
+        942
+      ],
+      "source_resize": [
+        45,
+        46
+      ],
+      "canvas_origin": [
+        1,
+        2
+      ],
+      "fit_limit": 46,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.2947048611111111,
+        "opaque_rgb_mae": 0.9666961391099322
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1322244,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            429,
+            550
+          ],
+          "area": 2320,
+          "bounds": [
+            397,
+            550,
+            480,
+            612
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            877,
+            736
+          ],
+          "area": 1903,
+          "bounds": [
+            818,
+            736,
+            893,
+            792
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            855,
+            618
+          ],
+          "area": 820,
+          "bounds": [
+            839,
+            618,
+            877,
+            654
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            711,
+            540
+          ],
+          "area": 682,
+          "bounds": [
+            710,
+            540,
+            730,
+            585
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            728,
+            503
+          ],
+          "area": 188,
+          "bounds": [
+            717,
+            503,
+            729,
+            528
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            711,
+            336
+          ],
+          "area": 172,
+          "bounds": [
+            710,
+            336,
+            715,
+            395
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            397,
+            531
+          ],
+          "area": 112,
+          "bounds": [
+            397,
+            531,
+            409,
+            548
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            855,
+            665
+          ],
+          "area": 98,
+          "bounds": [
+            838,
+            665,
+            859,
+            674
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            890,
+            730
+          ],
+          "area": 72,
+          "bounds": [
+            886,
+            730,
+            893,
+            750
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_repeatable_service_courier_change_post_visited.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_repeatable_service_courier_change_post_visited.png"
+    },
+    "resource_site_repeatable_service_contract_scribe_booth_visited": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/repeatable_service_visited_wave1/contract_scribe_booth_visited_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_repeatable_service_visited_atlas",
+        "assigned_resource_site_id": "site_contract_scribe_booth",
+        "presentation_role": "visited_service_state",
+        "accessible_description": "A contract booth with sealed scroll bundles, closed leather ledger, set-aside quill, and a low amber lamp."
+      },
+      "source_sha256": "6c81f9ddca5d1273ef52b34cabf75bed4f004e738b2cbe3617973fb12d750c6b",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        337,
+        232,
+        1192,
+        1038
+      ],
+      "source_resize": [
+        46,
+        43
+      ],
+      "canvas_origin": [
+        1,
+        5
+      ],
+      "fit_limit": 46,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.3858506944444444,
+        "opaque_rgb_mae": 0.9718764407561088
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_repeatable_service_contract_scribe_booth_visited.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_repeatable_service_contract_scribe_booth_visited.png"
+    },
+    "resource_site_repeatable_service_reedboat_supply_stand_visited": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/repeatable_service_visited_wave1/reedboat_supply_stand_visited_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_repeatable_service_visited_atlas",
+        "assigned_resource_site_id": "site_reedboat_supply_stand",
+        "presentation_role": "visited_service_state",
+        "accessible_description": "A reedboat stand with an emptied rack, provision crate and coiled rope already loaded into the woven boat."
+      },
+      "source_sha256": "de7e7b9d1d0e94c756c60885677fa5e4de5669e55c523c19821b37c7654636df",
+      "source_alpha_levels": 255,
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_crop": [
+        394,
+        118,
+        1378,
+        998
+      ],
+      "source_resize": [
+        46,
+        41
+      ],
+      "canvas_origin": [
+        1,
+        7
+      ],
+      "fit_limit": 46,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.3784722222222222,
+        "opaque_rgb_mae": 1.0150684931506848
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_repeatable_service_reedboat_supply_stand_visited.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_repeatable_service_reedboat_supply_stand_visited.png"
+    },
+    "resource_site_repeatable_service_ash_cooler_kitchen_visited": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/repeatable_service_visited_wave1/ash_cooler_kitchen_visited_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_repeatable_service_visited_atlas",
+        "assigned_resource_site_id": "site_ash_cooler_kitchen",
+        "presentation_role": "visited_service_state",
+        "accessible_description": "An ash-route kitchen with covered cauldron, stacked bowls, banked embers, and pale cooling vapor."
+      },
+      "source_sha256": "7797947947ee8a275a1855d428eb5b6fa5dd4fa08b3df60c9cb583c91c0016d6",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        136,
+        9,
+        1192,
+        1200
+      ],
+      "source_resize": [
+        41,
+        46
+      ],
+      "canvas_origin": [
+        3,
+        2
+      ],
+      "fit_limit": 46,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.29296875,
+        "opaque_rgb_mae": 1.0185185185185186
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_repeatable_service_ash_cooler_kitchen_visited.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_repeatable_service_ash_cooler_kitchen_visited.png"
+    },
+    "resource_site_repeatable_service_lens_calibration_cart_visited": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/repeatable_service_visited_wave1/lens_calibration_cart_visited_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_repeatable_service_visited_atlas",
+        "assigned_resource_site_id": "site_lens_calibration_cart",
+        "presentation_role": "visited_service_state",
+        "accessible_description": "A survey cart with its large prism steadily aligned and its smaller instruments folded and packed away."
+      },
+      "source_sha256": "019b3fb1e6492558c7d125cf8cfa7530706566860f40ed791215934d2c80afa1",
+      "source_alpha_levels": 255,
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_crop": [
+        382,
+        35,
+        1378,
+        998
+      ],
+      "source_resize": [
+        46,
+        44
+      ],
+      "canvas_origin": [
+        1,
+        4
+      ],
+      "fit_limit": 46,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.4314236111111111,
+        "opaque_rgb_mae": 1.1673027989821882
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_repeatable_service_lens_calibration_cart_visited.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_repeatable_service_lens_calibration_cart_visited.png"
+    },
+    "resource_site_progression_shrine_oath_ember_awakened": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/progression_shrine_awakened_wave1/oath_ember_shrine_awakened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas",
+        "assigned_resource_site_id": "site_oath_ember_shrine",
+        "presentation_role": "awakened_shrine_state",
+        "accessible_description": "The Oath Ember Shrine after its rite, with a steady low flame, warm oath carvings, and a fresh ember seal."
+      },
+      "source_sha256": "3c2e7f41824fe2b1ae6e7aaf6a591d6805b3371d732a09bd7057655af945d5f5",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        210,
+        53,
+        1192,
+        1171
+      ],
+      "source_resize": [
+        39,
+        44
+      ],
+      "canvas_origin": [
+        4,
+        2
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.2065972222222222,
+        "opaque_rgb_mae": 0.7958656330749353
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_progression_shrine_oath_ember_awakened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_progression_shrine_oath_ember_awakened.png"
+    },
+    "resource_site_progression_shrine_reedscript_vow_awakened": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/progression_shrine_awakened_wave1/reedscript_vow_shrine_awakened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas",
+        "assigned_resource_site_id": "site_reedscript_vow_shrine",
+        "presentation_role": "awakened_shrine_state",
+        "accessible_description": "The Reedscript Vow Shrine with a newly sealed teal-gold cord, calm marsh candle, and illuminated base seal."
+      },
+      "source_sha256": "015d469fa066887eb738dd5b8ce7e45beeb74320991b5eb10787407f58eaa1aa",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1288,
+        1221
+      ],
+      "source_crop": [
+        291,
+        53,
+        1169,
+        1165
+      ],
+      "source_resize": [
+        35,
+        44
+      ],
+      "canvas_origin": [
+        6,
+        2
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.2009548611111111,
+        "opaque_rgb_mae": 0.8850967007963595
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_progression_shrine_reedscript_vow_awakened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_progression_shrine_reedscript_vow_awakened.png"
+    },
+    "resource_site_progression_shrine_prism_measure_awakened": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/progression_shrine_awakened_wave1/prism_measure_shrine_awakened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas",
+        "assigned_resource_site_id": "site_prism_measure_shrine",
+        "presentation_role": "awakened_shrine_state",
+        "accessible_description": "The Prism Measure Shrine after calibration, with aligned facets, cyan-gold glints, and a softly lit survey emblem."
+      },
+      "source_sha256": "030a1f7eb05f9e5d22201f08c85b8fd92ede49083f0e9922e34efec9d3c18f31",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        97,
+        53,
+        1194,
+        1180
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.3072916666666667,
+        "opaque_rgb_mae": 1.057422969187675
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_progression_shrine_prism_measure_awakened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_progression_shrine_prism_measure_awakened.png"
+    },
+    "resource_site_progression_shrine_root_accord_awakened": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/progression_shrine_awakened_wave1/root_accord_ring_awakened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas",
+        "assigned_resource_site_id": "site_root_accord_ring",
+        "presentation_role": "awakened_shrine_state",
+        "accessible_description": "The Root Accord Ring renewed with fresh shoots, four warm pact lights, and a luminous spiral stone."
+      },
+      "source_sha256": "330f8996962d69f274249160624597998e71e1392299e707853ee12ad838c2b3",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1305,
+        1205
+      ],
+      "source_crop": [
+        73,
+        155,
+        1253,
+        1155
+      ],
+      "source_resize": [
+        44,
+        37
+      ],
+      "canvas_origin": [
+        2,
+        5
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.3563368055555556,
+        "opaque_rgb_mae": 1.1759603469640645
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_progression_shrine_root_accord_awakened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_progression_shrine_root_accord_awakened.png"
+    },
+    "resource_site_progression_shrine_furnace_oath_awakened": {
+      "matte_boundary_radius": 2,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/progression_shrine_awakened_wave1/furnace_oath_marker_awakened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas",
+        "assigned_resource_site_id": "site_furnace_oath_marker",
+        "presentation_role": "awakened_shrine_state",
+        "accessible_description": "The Furnace Oath Marker with banked coals, steady fork-rune glow, and a smith hammer resting on the step."
+      },
+      "source_sha256": "805c658ac30b4e000afea5ebba4ad8e2ec6b26b9499dceea5acda74900a61239",
+      "source_alpha_levels": 2,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        409,
+        320,
+        850,
+        917
+      ],
+      "source_resize": [
+        33,
+        44
+      ],
+      "canvas_origin": [
+        7,
+        2
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.20052083333333334,
+        "opaque_rgb_mae": 0.7936085219707056
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1427181,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_progression_shrine_furnace_oath_awakened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_progression_shrine_furnace_oath_awakened.png"
+    },
+    "resource_site_progression_shrine_tide_bell_awakened": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/progression_shrine_awakened_wave1/tide_bell_shrine_awakened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas",
+        "assigned_resource_site_id": "site_tide_bell_shrine",
+        "presentation_role": "awakened_shrine_state",
+        "accessible_description": "The Tide Bell Shrine just rung, with a fresh sailor knot, pale mist echoes, and bright tide-pool ripples."
+      },
+      "source_sha256": "7c3539d7de4c0edfccc8091042014b4f2a1f70f77400c11b5b8ed6b994cc28d5",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        97,
+        49,
+        1194,
+        1203
+      ],
+      "source_resize": [
+        42,
+        44
+      ],
+      "canvas_origin": [
+        3,
+        2
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.3220486111111111,
+        "opaque_rgb_mae": 1.1136079900124844
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_progression_shrine_tide_bell_awakened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_progression_shrine_tide_bell_awakened.png"
+    },
+    "resource_site_scouting_hilltop_signal_nest_controlled": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          240,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/scouting_structure_controlled_wave1/hilltop_signal_nest_controlled_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas",
+        "assigned_resource_site_id": "site_hilltop_signal_nest",
+        "presentation_role": "controlled_scouting_state",
+        "accessible_description": "A captured hilltop signal nest with a blue-white watch fire, taut teal pennant, and lit platform runes."
+      },
+      "source_sha256": "1ea9a6becbbd34ff1f5eadb1d04d94c79a08c270091f8d4af5e787345ffa0a58",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        0,
+        19,
+        1194,
+        1254
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.4904513888888889,
+        "opaque_rgb_mae": 1.0346320346320346
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_scouting_hilltop_signal_nest_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_scouting_hilltop_signal_nest_controlled.png"
+    },
+    "resource_site_scouting_marsh_listener_post_controlled": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          240,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/scouting_structure_controlled_wave1/marsh_listener_post_controlled_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas",
+        "assigned_resource_site_id": "site_marsh_listener_post",
+        "presentation_role": "controlled_scouting_state",
+        "accessible_description": "A captured marsh listening post with three outward brass horns, teal sound rings, and a fresh survey ribbon."
+      },
+      "source_sha256": "e179a31058ba88e6a26950ab5785e092e591b77d6ad36004675aaff78cb71c9b",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1272,
+        1236
+      ],
+      "source_crop": [
+        39,
+        17,
+        1258,
+        1220
+      ],
+      "source_resize": [
+        44,
+        43
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.6692708333333334,
+        "opaque_rgb_mae": 0.82502965599051
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_scouting_marsh_listener_post_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_scouting_marsh_listener_post_controlled.png"
+    },
+    "resource_site_scouting_prism_survey_frame_controlled": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          240,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/scouting_structure_controlled_wave1/prism_survey_frame_controlled_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas",
+        "assigned_resource_site_id": "site_prism_survey_frame",
+        "presentation_role": "controlled_scouting_state",
+        "accessible_description": "A captured prism survey frame with an aligned bright lens, cyan-gold ray, and illuminated meridian circle."
+      },
+      "source_sha256": "0df5d4316814c140c8a38ff39f0ade26c83c4a99fd6e937e6e78b7d1e3eda310",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_crop": [
+        0,
+        43,
+        1206,
+        1254
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.640625,
+        "opaque_rgb_mae": 1.0623655913978494
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_scouting_prism_survey_frame_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_scouting_prism_survey_frame_controlled.png"
+    },
+    "resource_site_scouting_underway_echo_well_controlled": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          240,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/scouting_structure_controlled_wave1/underway_echo_well_controlled_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas",
+        "assigned_resource_site_id": "site_underway_echo_well",
+        "presentation_role": "controlled_scouting_state",
+        "accessible_description": "A captured echo well with cyan water rings, an amber plumb light, and teal receiver lamps in both horns."
+      },
+      "source_sha256": "870a784fa8578a39b11b4127fbde37e77f7492546ad7e694ef707fb25d0759c6",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1289,
+        1221
+      ],
+      "source_crop": [
+        98,
+        0,
+        1237,
+        1185
+      ],
+      "source_resize": [
+        42,
+        44
+      ],
+      "canvas_origin": [
+        3,
+        2
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.3680555555555556,
+        "opaque_rgb_mae": 1.0136865342163355
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_scouting_underway_echo_well_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_scouting_underway_echo_well_controlled.png"
+    },
+    "resource_site_scouting_coast_bell_watch_controlled": {
+      "matte_boundary_radius": 0,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          240,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/scouting_structure_controlled_wave1/coast_bell_watch_controlled_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas",
+        "assigned_resource_site_id": "site_coast_bell_watch",
+        "presentation_role": "controlled_scouting_state",
+        "accessible_description": "A captured coast bell watch with pale resonance arcs, a cyan harbor lantern, and raised blue-gold pennant."
+      },
+      "source_sha256": "e4a04f912ec75d91d39286b7a56a2d774e3aff1c7f7b1beb7fafcf620d3ad079",
+      "source_alpha_levels": 256,
+      "source_size": [
+        1270,
+        1239
+      ],
+      "source_crop": [
+        15,
+        0,
+        1210,
+        1239
+      ],
+      "source_resize": [
+        42,
+        44
+      ],
+      "canvas_origin": [
+        3,
+        2
+      ],
+      "fit_limit": 44,
+      "resampling": "BILINEAR",
+      "registration_evidence": {
+        "alpha_mae": 0.6684027777777778,
+        "opaque_rgb_mae": 1.1128640776699028
+      },
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/resource_site_scouting_coast_bell_watch_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/early_states/sources/resource_site_scouting_coast_bell_watch_controlled.png"
+    }
+  },
+  "atlases": {
+    "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png": {
+      "before_size": [
+        288,
+        48
+      ],
+      "before_sha256": "d63393db95d6fa3e6a5fd347a4233de9478565539b077286da752403e79f51d4"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png": {
+      "before_size": [
+        144,
+        48
+      ],
+      "before_sha256": "2da0921c877cb7febea8819afbb521fba14eb17507c3110ddb913f10241e6d92"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png": {
+      "before_size": [
+        384,
+        48
+      ],
+      "before_sha256": "1d9d69a536b9b451a365aacfe2cdfadad7b4d3935155a935be8cac1f47a90abb"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png": {
+      "before_size": [
+        288,
+        48
+      ],
+      "before_sha256": "3d1bcea2fd80284b09778e4c9be61a754ca2d3c988d8ea290fea31a7011f5341"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png": {
+      "before_size": [
+        288,
+        48
+      ],
+      "before_sha256": "7512f942364aa4e288cace45518c1a30a38d1da9200a366c20371e5a6ba181d3"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png": {
+      "before_size": [
+        240,
+        48
+      ],
+      "before_sha256": "4f7e8161354b351a8a9b65af4244d2c378984f9cc8d5d8e4f00c6167910fc304"
+    }
+  },
+  "state_mappings": {
+    "site_mirror_archive": {
+      "asset_id": "resource_site_major_vault_mirror_archive_unsealed",
+      "unclaimed_asset_id": "mapobj_mirror_archive",
+      "fit": "Exact open-door claimed state paired with the original closed Mirror Archive landmark."
+    },
+    "site_furnace_vault": {
+      "asset_id": "resource_site_major_vault_furnace_vault_unsealed",
+      "unclaimed_asset_id": "mapobj_furnace_vault",
+      "fit": "Exact open-gate claimed state paired with the original sealed Furnace Vault landmark."
+    },
+    "site_thorn_crown_hollow": {
+      "asset_id": "resource_site_major_vault_thorn_crown_hollow_unsealed",
+      "unclaimed_asset_id": "mapobj_thorn_crown_hollow",
+      "fit": "Exact open-threshold claimed state paired with the original sealed Thorn Crown Hollow landmark."
+    },
+    "site_storm_bell_wreck": {
+      "asset_id": "resource_site_major_vault_storm_bell_wreck_unsealed",
+      "unclaimed_asset_id": "mapobj_storm_bell_wreck",
+      "fit": "Exact recovered-bell claimed state paired with the original storm-damaged wreck landmark."
+    },
+    "site_prism_ossuary": {
+      "asset_id": "resource_site_major_vault_prism_ossuary_unsealed",
+      "unclaimed_asset_id": "mapobj_prism_ossuary",
+      "fit": "Exact open-door claimed state paired with the original sealed Prism Ossuary landmark."
+    },
+    "site_basalt_oath_tomb": {
+      "asset_id": "resource_site_major_vault_basalt_oath_tomb_unsealed",
+      "unclaimed_asset_id": "mapobj_basalt_oath_tomb",
+      "fit": "Exact open-door claimed state paired with the original sealed Basalt Oath Tomb landmark."
+    },
+    "site_sealed_muster_fort": {
+      "asset_id": "resource_site_creature_bank_sealed_muster_fort_opened",
+      "unclaimed_asset_id": "mapobj_sealed_muster_fort",
+      "fit": "Exact open-gate claimed state paired with the original locked Sealed Muster Fort landmark."
+    },
+    "site_kiln_chain_redoubt": {
+      "asset_id": "resource_site_creature_bank_kiln_chain_redoubt_opened",
+      "unclaimed_asset_id": "mapobj_kiln_chain_redoubt",
+      "fit": "Exact lowered-chain claimed state paired with the original closed Kiln Chain Redoubt landmark."
+    },
+    "site_brasswake_depot": {
+      "asset_id": "resource_site_creature_bank_brasswake_depot_opened",
+      "unclaimed_asset_id": "mapobj_brasswake_depot",
+      "fit": "Exact open-hatch claimed state paired with the original closed Brasswake Depot landmark."
+    },
+    "site_bridge_bastion": {
+      "asset_id": "resource_site_guarded_route_bridge_bastion_opened",
+      "unclaimed_asset_id": "mapobj_bridge_bastion",
+      "fit": "Raised-gate state paired with the original closed Bridge Bastion."
+    },
+    "site_chainboom_fort": {
+      "asset_id": "resource_site_guarded_route_chainboom_fort_opened",
+      "unclaimed_asset_id": "mapobj_chainboom_fort",
+      "fit": "Raised-chain state paired with the original closed Chainboom Fort."
+    },
+    "site_railblock_camp": {
+      "asset_id": "resource_site_guarded_route_railblock_camp_opened",
+      "unclaimed_asset_id": "mapobj_railblock_camp",
+      "fit": "Clear-track state paired with the original blocked Railblock Camp."
+    },
+    "site_rootgate_den": {
+      "asset_id": "resource_site_guarded_route_rootgate_den_opened",
+      "unclaimed_asset_id": "mapobj_rootgate_den",
+      "fit": "Open-tunnel state paired with the original thorn-closed Rootgate Den."
+    },
+    "site_fog_quay_ambush": {
+      "asset_id": "resource_site_guarded_route_fog_quay_ambush_opened",
+      "unclaimed_asset_id": "mapobj_fog_quay_ambush",
+      "fit": "Cleared-pier state paired with the original trapped Fog Quay Ambush."
+    },
+    "site_mirror_toll_causeway": {
+      "asset_id": "resource_site_guarded_route_mirror_toll_causeway_opened",
+      "unclaimed_asset_id": "mapobj_mirror_toll_causeway",
+      "fit": "Open mirror lane paired with the original closed Mirror Toll Causeway."
+    },
+    "site_ashbarb_roadblock": {
+      "asset_id": "resource_site_guarded_route_ashbarb_roadblock_opened",
+      "unclaimed_asset_id": "mapobj_ashbarb_roadblock",
+      "fit": "Dismantled-barrier state paired with the original Ashbarb Roadblock."
+    },
+    "site_frostford_hold": {
+      "asset_id": "resource_site_guarded_route_frostford_hold_opened",
+      "unclaimed_asset_id": "mapobj_frostford_hold",
+      "fit": "Raised-portcullis state paired with the original closed Frostford Hold."
+    },
+    "site_wayfarer_menders_tent": {
+      "asset_id": "resource_site_repeatable_service_wayfarer_menders_tent_visited",
+      "unclaimed_asset_id": "mapobj_wayfarer_menders_tent",
+      "fit": "Used-treatment cooldown state paired with the stocked menders tent."
+    },
+    "site_courier_change_post": {
+      "asset_id": "resource_site_repeatable_service_courier_change_post_visited",
+      "unclaimed_asset_id": "mapobj_courier_change_post",
+      "fit": "Resting post cooldown state paired with the ready courier mounts."
+    },
+    "site_contract_scribe_booth": {
+      "asset_id": "resource_site_repeatable_service_contract_scribe_booth_visited",
+      "unclaimed_asset_id": "mapobj_contract_scribe_booth",
+      "fit": "Closed-ledger cooldown state paired with the open scribe service."
+    },
+    "site_reedboat_supply_stand": {
+      "asset_id": "resource_site_repeatable_service_reedboat_supply_stand_visited",
+      "unclaimed_asset_id": "mapobj_reedboat_supply_stand",
+      "fit": "Issued-supplies cooldown state paired with the stocked reedboat stand."
+    },
+    "site_ash_cooler_kitchen": {
+      "asset_id": "resource_site_repeatable_service_ash_cooler_kitchen_visited",
+      "unclaimed_asset_id": "mapobj_ash_cooler_kitchen",
+      "fit": "Served-meal cooldown state paired with the active ash kitchen."
+    },
+    "site_lens_calibration_cart": {
+      "asset_id": "resource_site_repeatable_service_lens_calibration_cart_visited",
+      "unclaimed_asset_id": "mapobj_lens_calibration_cart",
+      "fit": "Aligned-lens cooldown state paired with the ready calibration cart."
+    },
+    "site_oath_ember_shrine": {
+      "asset_id": "resource_site_progression_shrine_oath_ember_awakened",
+      "unclaimed_asset_id": "mapobj_oath_ember_shrine",
+      "fit": "Awakened ember rite paired with the ready oath shrine."
+    },
+    "site_reedscript_vow_shrine": {
+      "asset_id": "resource_site_progression_shrine_reedscript_vow_awakened",
+      "unclaimed_asset_id": "mapobj_reedscript_vow_shrine",
+      "fit": "Sealed-vow state paired with the ready reedscript shrine."
+    },
+    "site_prism_measure_shrine": {
+      "asset_id": "resource_site_progression_shrine_prism_measure_awakened",
+      "unclaimed_asset_id": "mapobj_prism_measure_shrine",
+      "fit": "Calibrated-measure state paired with the ready prism shrine."
+    },
+    "site_root_accord_ring": {
+      "asset_id": "resource_site_progression_shrine_root_accord_awakened",
+      "unclaimed_asset_id": "mapobj_root_accord_ring",
+      "fit": "Renewed weekly accord paired with the dormant root ring."
+    },
+    "site_furnace_oath_marker": {
+      "asset_id": "resource_site_progression_shrine_furnace_oath_awakened",
+      "unclaimed_asset_id": "mapobj_furnace_oath_marker",
+      "fit": "Struck weekly oath state paired with the banked furnace marker."
+    },
+    "site_tide_bell_shrine": {
+      "asset_id": "resource_site_progression_shrine_tide_bell_awakened",
+      "unclaimed_asset_id": "mapobj_tide_bell_shrine",
+      "fit": "Rung weekly warning state paired with the still tide bell."
+    },
+    "site_hilltop_signal_nest": {
+      "asset_id": "resource_site_scouting_hilltop_signal_nest_controlled",
+      "unclaimed_asset_id": "mapobj_hilltop_signal_nest",
+      "fit": "Lit controlled signal state paired with the original quiet hill watch."
+    },
+    "site_marsh_listener_post": {
+      "asset_id": "resource_site_scouting_marsh_listener_post_controlled",
+      "unclaimed_asset_id": "mapobj_marsh_listener_post",
+      "fit": "Active listening state paired with the original quiet marsh post."
+    },
+    "site_prism_survey_frame": {
+      "asset_id": "resource_site_scouting_prism_survey_frame_controlled",
+      "unclaimed_asset_id": "mapobj_prism_survey_frame",
+      "fit": "Aligned controlled survey state paired with the original idle prism frame."
+    },
+    "site_underway_echo_well": {
+      "asset_id": "resource_site_scouting_underway_echo_well_controlled",
+      "unclaimed_asset_id": "mapobj_underway_echo_well",
+      "fit": "Sounded controlled echo state paired with the original still well."
+    },
+    "site_coast_bell_watch": {
+      "asset_id": "resource_site_scouting_coast_bell_watch_controlled",
+      "unclaimed_asset_id": "mapobj_coast_bell_watch",
+      "fit": "Rung controlled harbor state paired with the original quiet coast bell."
+    }
+  },
+  "preserved_controls": {},
+  "source_policy": "Original repository paintings retained byte-exact; individually inspected neutral backing components only; genuine RGBA unchanged; no gameplay or placement changes."
+}

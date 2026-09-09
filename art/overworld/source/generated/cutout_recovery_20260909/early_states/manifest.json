@@ -1,0 +1,581 @@
+{
+  "schema_id": "early_state_cutout_recovery_v1",
+  "recipe_sha256": "e549e1c09d602ebd7925f90d0e165e9aadf215b1beba9a628646a81846e7cbb6",
+  "processing_tool_sha256": "795df88d93148b63ac182997a7edcd1c2c32978b526f9a70b30e540a193a6f4a",
+  "shared_tool_sha256": "12a454b0547d01684c8b1c4901c074b51940144712124bf6126255dcd8422001",
+  "projection_tool_sha256": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
+  "component_tool_sha256": "092ea67fbcb062cf1cb166d0f302cc057139ccf97e835aba2032611326edbf0e",
+  "assets": {
+    "resource_site_major_vault_mirror_archive_unsealed": {
+      "trim_sha256": "2e57492acbf58c11771ba7b6442b4a340af44841dde12318d07921ac43f51060",
+      "source_sha256": "8bec038c02380ab73854bd232193a264c7f86c4b8fc2f8d5f4b0fa80a6fb8701",
+      "rgba_sha256": "8e4d44006b26552688f826cdd47e2cbce58fcf62ea94ef52a49862f5984be468",
+      "removed_source_pixels": 1077977,
+      "metrics": {
+        "alpha_levels": 249,
+        "partial_alpha_pixels": 1558,
+        "bounds": [
+          12,
+          20,
+          180,
+          172
+        ]
+      }
+    },
+    "resource_site_major_vault_furnace_vault_unsealed": {
+      "trim_sha256": "2f9e6eae0fb1f17506ee11e2c071a794733e62b3d8efac24945830f86bbe6ade",
+      "source_sha256": "62056855ae066a08394868d42ad7c70a85a87195979fa4c0f3e1d9ad164b9909",
+      "rgba_sha256": "9538eadf018f545fa19b8f70c43009e9e9c5e5a9be8233172ab65cc4647b7ea8",
+      "removed_source_pixels": 1080804,
+      "metrics": {
+        "alpha_levels": 244,
+        "partial_alpha_pixels": 1354,
+        "bounds": [
+          12,
+          24,
+          180,
+          168
+        ]
+      }
+    },
+    "resource_site_major_vault_thorn_crown_hollow_unsealed": {
+      "trim_sha256": "f9ed011a067655328bceb9ea5ba8d190700801c4892407eb0b825213e7fcff6b",
+      "source_sha256": "55e3d0ada08e02ed488f9f5f6b148f555c275d288b5f85c6544d5636d422770e",
+      "rgba_sha256": "2333a8049817aa8219d141eb67b0deb42b183326879c2b38eb836ea389d745ca",
+      "removed_source_pixels": 1141936,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 3267,
+        "bounds": [
+          12,
+          12,
+          176,
+          180
+        ]
+      }
+    },
+    "resource_site_major_vault_storm_bell_wreck_unsealed": {
+      "trim_sha256": "33a3798c88cc7c7c07081917a206918d88924a9f2b2b8ac47729e47f8a9b6434",
+      "source_sha256": "d48fcafdf843b2ac2bf21bb17b2779d1a2d8338bcbcd406c8356070692fdc952",
+      "rgba_sha256": "0cd72fbcc21fb7ced2255e4af6da2f82d58525326370c35cd7be78ca157067a6",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 13329,
+        "bounds": [
+          25,
+          19,
+          171,
+          167
+        ]
+      }
+    },
+    "resource_site_major_vault_prism_ossuary_unsealed": {
+      "trim_sha256": "9f33636c78e625d5ab756de5d8b9b9aa1b1375400e50401610d5488a1459a5b3",
+      "source_sha256": "18991b54fc509db5c1a69749e24e54c0d0c68879311d393d5751cff0f97785b7",
+      "rgba_sha256": "3ca73f89d3bf01f3125f2ea06893e24629554e32d64badef50e4d5a19a122186",
+      "removed_source_pixels": 1073385,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 1957,
+        "bounds": [
+          12,
+          12,
+          176,
+          180
+        ]
+      }
+    },
+    "resource_site_major_vault_basalt_oath_tomb_unsealed": {
+      "trim_sha256": "961b805e0e1e45491ce8ba5db4d99b6490a03f90d9eb3a04465f44ce5cb5531e",
+      "source_sha256": "266c277275240b6e594b364ab0fd64e1062bb1af27eba81d29470d27b34b6fea",
+      "rgba_sha256": "1059514dcf634770d159d62f40c931dba187c51c37709e0de22d5b837f7f1573",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 252,
+        "partial_alpha_pixels": 14456,
+        "bounds": [
+          23,
+          24,
+          173,
+          158
+        ]
+      }
+    },
+    "resource_site_creature_bank_sealed_muster_fort_opened": {
+      "trim_sha256": "a007deff0f74130efb61fed462fcdf74473618fca00f1ed0f5c8f022f578ed7f",
+      "source_sha256": "3eef2998e5c0cceb4cc4ba977d9c9f654d0ace596c9ca2e0814f5a94e8febffc",
+      "rgba_sha256": "cf5482e94008df1f6cd11828f495e295da5047132960b414defe67cade1bfdf4",
+      "removed_source_pixels": 1149275,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 1686,
+        "bounds": [
+          12,
+          16,
+          180,
+          172
+        ]
+      }
+    },
+    "resource_site_creature_bank_kiln_chain_redoubt_opened": {
+      "trim_sha256": "dde8e11a14b3800706f530a61ec9fa9dab062e32d89ea0f154ed12438ec14d07",
+      "source_sha256": "edc440008bed352a6807b823d97dd6384483e975fbc7cf3498ddb888cd4ea0ce",
+      "rgba_sha256": "be6e2aa9781cdee089dd3aca47d5f8a7b5af7f43644a191bdcabc442a76e5123",
+      "removed_source_pixels": 1190575,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 1932,
+        "bounds": [
+          16,
+          12,
+          176,
+          180
+        ]
+      }
+    },
+    "resource_site_creature_bank_brasswake_depot_opened": {
+      "trim_sha256": "9a1867899ec4b6d956f30386dce78b257fc2a0498e35e32e520ec7ffa51f83f5",
+      "source_sha256": "d4476d4e7e0ecbccdd100bfa7a00d07142c6b7fbb820fc63ad4e6e353d95c3bc",
+      "rgba_sha256": "4040a4ca042dd4f686d8067580082c2711f037d891400cce150344e037691868",
+      "removed_source_pixels": 1286526,
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 2395,
+        "bounds": [
+          12,
+          16,
+          180,
+          176
+        ]
+      }
+    },
+    "resource_site_guarded_route_bridge_bastion_opened": {
+      "trim_sha256": "9a14cdeb40db557edd37bc4fdaa9351ae817591496c6da9751d9a2da952df084",
+      "source_sha256": "127ae5a78d2480579e14f7ddcca3a9097c2f74c60ed88f89158d7b49051ddde1",
+      "rgba_sha256": "8c83c8df8f36da22c54112d431d8840dd3687911154871176707593c7f361db7",
+      "removed_source_pixels": 1273743,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 2060,
+        "bounds": [
+          8,
+          16,
+          184,
+          172
+        ]
+      }
+    },
+    "resource_site_guarded_route_chainboom_fort_opened": {
+      "trim_sha256": "e9a12c883e31da20a06f9c8bd52a15a0f9e44970f75dbddc0fa9793d9eac9a25",
+      "source_sha256": "f712726f04a80681d64a9c7e490dcb7d634ae51c26d4a4f438ad955fe280c6e1",
+      "rgba_sha256": "f3d1adee1a6c5bc59809492d605e479bfce7899f0ceeffc49e521770e0809803",
+      "removed_source_pixels": 1282428,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 2010,
+        "bounds": [
+          8,
+          8,
+          184,
+          184
+        ]
+      }
+    },
+    "resource_site_guarded_route_railblock_camp_opened": {
+      "trim_sha256": "a2091166a5e0de5957625dd3ec2920e9037f719776ba2400a34763cde9a83121",
+      "source_sha256": "fdb4278b682ef507e8526e9cb97fbcb678735c9f9e47dc7dbbb5e08578c3f555",
+      "rgba_sha256": "0c514d1b67baff475119aea79b935be73ff244510effc6d1be01d79433480773",
+      "removed_source_pixels": 1277881,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 2455,
+        "bounds": [
+          8,
+          12,
+          184,
+          180
+        ]
+      }
+    },
+    "resource_site_guarded_route_rootgate_den_opened": {
+      "trim_sha256": "70a692589188ba4d057694f4172e75c05e77726ff97ebb0c64236fdb6eb117dc",
+      "source_sha256": "7270103e04f0fb6cb769b4820187acc6edc3b0054132ed624a2df2ff41f5cdbc",
+      "rgba_sha256": "873bc5271b2b018ee8cd2d41728f5efa291a529a6f98e99511561301fe5bbade",
+      "removed_source_pixels": 1266137,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 3272,
+        "bounds": [
+          8,
+          8,
+          184,
+          184
+        ]
+      }
+    },
+    "resource_site_guarded_route_fog_quay_ambush_opened": {
+      "trim_sha256": "254fbf8782f6057b84c1c3ed52b194ac0440266bbe8ab44eff9525809789b36d",
+      "source_sha256": "fbffe26025cb8bec12ddf2258d6b58091e3e901c6be132d48526255ad47adea4",
+      "rgba_sha256": "221d101bde72642bbbae85f175b65155cd5ac046b35c5f7e0947fbcbf0c8b009",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 11802,
+        "bounds": [
+          8,
+          39,
+          170,
+          153
+        ]
+      }
+    },
+    "resource_site_guarded_route_mirror_toll_causeway_opened": {
+      "trim_sha256": "923ef4c093f49dcc3bd068c4906ac0f6517e233c0c22932ef6372151f38d899b",
+      "source_sha256": "290d69f228dd021b872ffc94690d963bdaf9936ef60b017540b33e8515ef0790",
+      "rgba_sha256": "ad2f0ef91a52536d0cf1c7af64f5328f2943077560b899b3777db3669ea6ace9",
+      "removed_source_pixels": 1207359,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 1994,
+        "bounds": [
+          8,
+          12,
+          184,
+          180
+        ]
+      }
+    },
+    "resource_site_guarded_route_ashbarb_roadblock_opened": {
+      "trim_sha256": "4179ab1ab8c0dcb3ff876762081afff23e42a641277c17f7e443914e948056cd",
+      "source_sha256": "1ab01185fec9161351e1b8e5968e781199d3ab8698e51fc42e41529d70d5f853",
+      "rgba_sha256": "48f7a83adffa3a61b8842d30784928cbb7cb76793dc6479149f41b6a9efedc31",
+      "removed_source_pixels": 1303608,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 4332,
+        "bounds": [
+          8,
+          16,
+          184,
+          176
+        ]
+      }
+    },
+    "resource_site_guarded_route_frostford_hold_opened": {
+      "trim_sha256": "d67f4e9c1bcae2ab108fc4909f656f9d7a6c4b20880528245c1adf3dbb57cac9",
+      "source_sha256": "d438336417c8622e6e6fcac42a26c4da4e57cb4933627d1768e803f75ad6ffa8",
+      "rgba_sha256": "55ce846fa567ded38c17bab4b1306e94fd1dd0dd20450c6f528e6d78eb52129b",
+      "removed_source_pixels": 1239651,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 2038,
+        "bounds": [
+          8,
+          8,
+          184,
+          180
+        ]
+      }
+    },
+    "resource_site_repeatable_service_wayfarer_menders_tent_visited": {
+      "trim_sha256": "30d89558216939e638f95eee0ff3023a751f8e33401c6de8152153c6a502e5e5",
+      "source_sha256": "7ed573f235546653c400e65abce69a4b21e31f0a3a940af4dd00395f97466fac",
+      "rgba_sha256": "e446039564c3ccb2c643e461712d427e793e2b58b06af446f021a36319b2aa3b",
+      "removed_source_pixels": 1364775,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 2515,
+        "bounds": [
+          4,
+          32,
+          188,
+          192
+        ]
+      }
+    },
+    "resource_site_repeatable_service_courier_change_post_visited": {
+      "trim_sha256": "53b5a4d9049ffa63331d0fa19426556bed3509c8007017044f74da298bf4e9c8",
+      "source_sha256": "ce7f97b59e206830c1bc6057c64dc7570335fa9443266485e107aea8b6c54db9",
+      "rgba_sha256": "0ee167bdfd5b8fd6b02acae8148491f6b5664cd3472a9e1a0a7dd2648fdb3088",
+      "removed_source_pixels": 1328611,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 2779,
+        "bounds": [
+          4,
+          8,
+          184,
+          192
+        ]
+      }
+    },
+    "resource_site_repeatable_service_contract_scribe_booth_visited": {
+      "trim_sha256": "d6fdb9025049a6ff7e109b38d8e7940c7a91c31cb69e9e314e9f1293c3183685",
+      "source_sha256": "497f6cbb5a2d6a339231925bc164cb2e3665bb957715ff69d581e3c50d308581",
+      "rgba_sha256": "7c589f168f3d45f72c8ed2016885239f7b40ff53e47bda64c9b1641abd3411e1",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 251,
+        "partial_alpha_pixels": 13539,
+        "bounds": [
+          4,
+          26,
+          132,
+          170
+        ]
+      }
+    },
+    "resource_site_repeatable_service_reedboat_supply_stand_visited": {
+      "trim_sha256": "8a5f849382a438ddc9d5dddb477ce0019e89defbdccd39f7a7d207db10847de3",
+      "source_sha256": "cb6bd291ac5db12b98aba32f0e0600ec0adbe44452ba971db6ebbfbb9fcb8d2f",
+      "rgba_sha256": "7a31605d9a5d45df6fdffae035a1ac9cbc7f8c1ed3cb93cacb44f97830739510",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 249,
+        "partial_alpha_pixels": 13716,
+        "bounds": [
+          4,
+          28,
+          141,
+          170
+        ]
+      }
+    },
+    "resource_site_repeatable_service_ash_cooler_kitchen_visited": {
+      "trim_sha256": "90b4caa4b57beed48b67468f4bbbb8f3c18a126e8c169c9ce1d9ed89df139492",
+      "source_sha256": "a793f0e838a65e11e0934301a54b09aaa16f3214f426da81b73e4b94ab78b333",
+      "rgba_sha256": "3100043b212e9e75b4761ba55d64be33ac92a060a395017c165ecce210503c1d",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 251,
+        "partial_alpha_pixels": 8508,
+        "bounds": [
+          32,
+          34,
+          137,
+          166
+        ]
+      }
+    },
+    "resource_site_repeatable_service_lens_calibration_cart_visited": {
+      "trim_sha256": "a3ff299a32b99c2e691e8f460c47563ac0b221aee12df173062ef8f6af71288a",
+      "source_sha256": "356cbe0004e3878ab46ff07228b4b62983f144e121b5694f0a57436aea9af4f8",
+      "rgba_sha256": "57b7a5cd6eefce4d3251a0425691ad3ffe26660b8c9b5595fcc6ec4672acdd61",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 252,
+        "partial_alpha_pixels": 10291,
+        "bounds": [
+          4,
+          33,
+          151,
+          168
+        ]
+      }
+    },
+    "resource_site_progression_shrine_oath_ember_awakened": {
+      "trim_sha256": "d6212b8e63c876f1fa57037ec11ca7fd02d64582fb6ccb23dc94bfd33ebeecac",
+      "source_sha256": "f3c950d37d44f83ef994a8c68d07e9b0111385617b26d9216642f52c006b5640",
+      "rgba_sha256": "2a380365de4e67a18fac37b34d7a4b7eb37435c1b517c16f5ad4d4aa60b79a96",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 232,
+        "partial_alpha_pixels": 5095,
+        "bounds": [
+          39,
+          39,
+          125,
+          144
+        ]
+      }
+    },
+    "resource_site_progression_shrine_reedscript_vow_awakened": {
+      "trim_sha256": "3d3c59892f29cc9a8248eda55e91d8bccac36fa3900dfb0ff0c0013ebb37ff12",
+      "source_sha256": "40cfb4e41fbaccaa890a19fb8cc9c0da6c6774471b03b2ceb904a530c1c959e8",
+      "rgba_sha256": "2308755a47b5bc4e02fd0c63eae6941134664fa87228925a7fd1fb7f9dac9341",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 235,
+        "partial_alpha_pixels": 5747,
+        "bounds": [
+          36,
+          47,
+          119,
+          145
+        ]
+      }
+    },
+    "resource_site_progression_shrine_prism_measure_awakened": {
+      "trim_sha256": "2cb264e932c55031f5ceeed83286e34bd72b8d4c112d930018b19a7355cf9d08",
+      "source_sha256": "b5bd0da29cdf278e1f57b9380aa01cd310717dfb30a012644739088ccea41918",
+      "rgba_sha256": "2861646427aecbb65b4e6868cbf44a86b4810ad9513cd62779ccfa7285cd8e30",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 248,
+        "partial_alpha_pixels": 5283,
+        "bounds": [
+          53,
+          41,
+          129,
+          148
+        ]
+      }
+    },
+    "resource_site_progression_shrine_root_accord_awakened": {
+      "trim_sha256": "4b0459359185abd9551dfe04ac452d7f4f744c9f77dbbf86a465e3e55837ceb3",
+      "source_sha256": "be00b2a90bf8a4539afb5bb143cf60bb233cdcf1fc45a871517993cac449a017",
+      "rgba_sha256": "5175948438123d676958ccb92ef90639a7297c723266426db3baf8695145f259",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 14924,
+        "bounds": [
+          22,
+          20,
+          178,
+          151
+        ]
+      }
+    },
+    "resource_site_progression_shrine_furnace_oath_awakened": {
+      "trim_sha256": "34e991597503bb507836fbb9d14058c3304b13d225607879225cdcd46b832d24",
+      "source_sha256": "d04b5f168254e0ce285b8d3fc4b95139014bb18ed3885b83b813782efe028794",
+      "rgba_sha256": "3dbb8039ed39ddf9869ad19bf50c39b1951dc0a9f4d3ec1ec302077a49db1e1c",
+      "removed_source_pixels": 1427181,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 1506,
+        "bounds": [
+          28,
+          8,
+          160,
+          184
+        ]
+      }
+    },
+    "resource_site_progression_shrine_tide_bell_awakened": {
+      "trim_sha256": "c9c6e1a3a8ff253b8944d9105862e208d4f2e5022c53c375962344e8154e9de2",
+      "source_sha256": "edc982a5b15fed47236b810ccba4018c35aabc300ef680d217b4a14f1039d294",
+      "rgba_sha256": "0f1026fcf959dfd77f8f7786b7902430ebd73d4c8d8d17f4143118e50608fccc",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 252,
+        "partial_alpha_pixels": 6114,
+        "bounds": [
+          45,
+          53,
+          137,
+          168
+        ]
+      }
+    },
+    "resource_site_scouting_hilltop_signal_nest_controlled": {
+      "trim_sha256": "23373038cb681ade9a1620a6a5f7563592f8295e280b50ca37f4bbe3dce2cc19",
+      "source_sha256": "fda506edf8d977020ae07a2e09ec51815cda8a0dc943523399f3b632a879d809",
+      "rgba_sha256": "5fe713de1ce810130b9c5db581bc2e47185f64d3592593e0d81e76418e3858ae",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 11241,
+        "bounds": [
+          35,
+          19,
+          165,
+          169
+        ]
+      }
+    },
+    "resource_site_scouting_marsh_listener_post_controlled": {
+      "trim_sha256": "bc4425dfc8bf3937881f97f7290bf539ffca29174b4d2d8dd7e1f43e1fd64bce",
+      "source_sha256": "6ae8854e789208c160d9a256fddbedbe7444e689dfb123558a168fc916597c55",
+      "rgba_sha256": "8ebcb8ced42a58b4c4bd655c39393ba6cc14636849954fed44e640f1de0d529d",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 13910,
+        "bounds": [
+          29,
+          25,
+          163,
+          180
+        ]
+      }
+    },
+    "resource_site_scouting_prism_survey_frame_controlled": {
+      "trim_sha256": "3e812422f0ebadc0676aa5686141dae5b2a7bc85896cda129f9ad39c74e1c664",
+      "source_sha256": "2a20c8f6cd18dd01015768d068ee4cbe13aa0f22f109d6a7579fa9d4fde97a10",
+      "rgba_sha256": "21029b52843dfbe7fdbb6895b24cb49deb6935748996ce60cef5094348f8c168",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 10621,
+        "bounds": [
+          28,
+          17,
+          169,
+          162
+        ]
+      }
+    },
+    "resource_site_scouting_underway_echo_well_controlled": {
+      "trim_sha256": "28b1a4bcd8941b65915ce1b55687ae8fc98e0802c7cb94563c97c71ba4aa2f49",
+      "source_sha256": "8cb149a69cf6cbadb6276b92d77b15415abbc831184620c0c60d98ff88540fa6",
+      "rgba_sha256": "cd07c83c8206245f4fc38267f6f93ad149ea5b6b3075902c7f1e6d9ff0b57ddb",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 241,
+        "partial_alpha_pixels": 13188,
+        "bounds": [
+          26,
+          8,
+          162,
+          160
+        ]
+      }
+    },
+    "resource_site_scouting_coast_bell_watch_controlled": {
+      "trim_sha256": "df287a1b0ec30a01ed847f584c70bc1dd49e86389cd81eb4ae2f6ceca7c81629",
+      "source_sha256": "95d9d63a0ad8285d6aa2d8f1aea9dbd26f805fa3e6889dbcc4c3bf317358d7a6",
+      "rgba_sha256": "80350c3e0282d922a11368a2217aea422f373e77d677ea0beea497caa06ccc4c",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 16177,
+        "bounds": [
+          12,
+          8,
+          180,
+          184
+        ]
+      }
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png": {
+      "after_sha256": "acb8b44d7f62acb008e036c16df1acca6940688f56c5073757660ce150cdbcb4",
+      "prepared": "runtime/objects/resource_sites/major_vault_unsealed_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png": {
+      "after_sha256": "a9cfeaaa06ad9b7580e5bd89f9ba3becc3766a0036704413c06852b2fe52d605",
+      "prepared": "runtime/objects/resource_sites/creature_bank_opened_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png": {
+      "after_sha256": "fdad24f10082d8b42f4448b12cf4809666c85a0423ee9a33538bb5c95aaab942",
+      "prepared": "runtime/objects/resource_sites/guarded_route_opened_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png": {
+      "after_sha256": "7bcc76f4ae448a39e527a2af6fbc16e4b5a4381e2bc1c2ddf8529356aaef4c12",
+      "prepared": "runtime/objects/resource_sites/repeatable_service_visited_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png": {
+      "after_sha256": "64d89e89a599895a60fb083b1731dfa5c043dcdd717713893a4e76535e5caa74",
+      "prepared": "runtime/objects/resource_sites/progression_shrine_awakened_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png": {
+      "after_sha256": "0a525228be968ebf0c44450cc52609f30a03472f56f2f6f5389d81dc0936b04e",
+      "prepared": "runtime/objects/resource_sites/scouting_structure_controlled_atlas.png"
+    }
+  },
+  "processing": "Reviewed original retained RGB backing components; genuine source RGBA unchanged. Original measured logical crop/fit/anchor projected at 4x raster density. All identities, state mappings and world draw owners unchanged."
+}

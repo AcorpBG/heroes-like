@@ -181,6 +181,23 @@ including original earned claimed sites where present; do not manufacture claims
 or substitute their clean unclaimed images. Reuse dual-resolution/source/package
 drivers, existing claim/reward/save cases and both official platform exports.
 
+For the 34 early post-interaction state paintings (major vaults, creature banks,
+guarded routes, weekly services, progression shrines and scouting structures),
+preserve all six atlas paths and every separate ready/used state mapping. Keep
+the measured original 42/44-pixel centered and 46-pixel south-aligned transforms
+when projecting original sources into 192-pixel cells. Remove only explicitly
+reviewed backing components. Neutral-matte decontamination is limited to their
+two-source-pixel boundary (twelve for Ashbarb's inspected diffuse ground edge),
+using original foreground/background samples and rejecting inconsistent fits.
+All genuine-alpha sources and paint outside that band stay exact. Retain the
+historical atlases and reconstructible source/trim/runtime provenance.
+Validate with `tools/prepare_overworld_state_cutouts.py`,
+`tests/test_overworld_state_cutouts.py`, and source/package drivers using
+`--batch early_states`. Earned native records that the unchanged presence rule
+considers consumed are not visible-object evidence; never resurrect them for
+screenshots. Capture actual remaining state-selected objects and preserve full
+saves, compiled owners, masks, coordinates and world-space draw rectangles.
+
 ## Completion and non-goals
 
 Each cohort completes only after its actual repaired art is integrated and its

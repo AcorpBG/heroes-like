@@ -818,14 +818,82 @@ Evidence under `.artifacts/overworld_cutout_quality_20260909/`:
   match at float32 precision. Original registration and geometry owners remain
   unchanged at both resolutions.
 
+## Thirty-four early post-interaction paintings — accepted 2026-09-09
+
+The six major-vault, creature-bank, guarded-route, repeatable-service,
+progression-shrine and scouting atlases used separate original state paintings,
+not the already accepted unclaimed map objects. Seventeen repository originals
+had binary-keyed alpha with retained painted RGB; seventeen had genuine smooth
+RGBA. The old 48-pixel derivatives obscured detail and retained backing inside
+gates, braces and ropes. This was a source/cutout defect, not a state-key mismatch.
+
+`tools/prepare_overworld_state_cutouts.py` recovers retained paint and removes
+96 individually inspected, seed/area/bounds-locked backing components
+(20,971,852 source pixels). Genuine RGBA stays exact. Crystal, snow, canvas,
+smoke and painted water are preserved. Original-sample matte decontamination
+is restricted to the two-source-pixel backing boundary, or twelve pixels at
+Ashbarb's inspected diffuse ground rim; inconsistent composite fits are rejected.
+The first preview's white Ashbarb outline was rejected before this correction.
+No new painting generation or procedural replacement was needed.
+
+The `early_states` recipe/provenance packet retains all six historical atlases
+and the immutable original inputs, recovered masters and 192-pixel derivatives.
+Independently measured 42/44-pixel centered and 46-pixel south-aligned source
+transforms match the historical cells (alpha MAE below 1, opaque RGB MAE below
+1.6 on the 0–255 scale). Fourfold source projection changes density, not original
+world draw rectangles. Every path, identity and ready/used mapping stays intact.
+
+Evidence under `.artifacts/overworld_cutout_quality_20260909/`:
+
+- All nine final `early_states_preview_02/comparison_*.png` pages and all three
+  source-1920 and packaged-Linux detached galleries were opened and inspected.
+  Actual 1280/1920 gameplay captures collectively cover all eleven visible
+  affected native identities; the packaged Wayfarer capture was also inspected.
+  Detached galleries are explicitly labeled, not represented as earned gameplay.
+- `early-states-unit-final.log`: eleven tests pass. `early_states_source_1280`,
+  `early_states_source_1920`, `early_states_packaged_linux` and
+  `early_states_packaged_windows`: 2,763 checks each, exit 0, no runtime errors.
+  The independent full-atlas import oracle verifies all 34 assets and state
+  routes. The earned Day-97 native save contains 31 affected records, not 31
+  visible objects; eleven distinct affected identities are actually visible.
+  Consumed records remain absent through the existing presence/cache owners
+  (`OverworldMapView._resource_node_at`, `OverworldRules.resource_node_is_present`).
+  All 2,380 original native blockers and the authored relay remain controls.
+- Before-run raw evidence retains 102 intended new-size/pixel failures plus five
+  erroneous probe attempts to capture consumed records. The probe was corrected
+  to respect existing visibility/presence; gameplay was not changed. Its initial
+  outer shell exited 143, so this is diagnostic evidence, not a passing process.
+  All four final direct-process runs exit 0. The first repository run rejected
+  34 stale size expectations; exact six-atlas expectations were updated alongside
+  independent reconstruction. `early-states-repo-final.log` passes.
+- All five existing sprite/decorative/input/route/fog reports pass in
+  `.artifacts/full_play_runtime_20260905/early_states_shared/report.json`.
+  Older combined domain fixtures are not claimed as rerun in this batch.
+- Official `early_states_linux` and `early_states_windows` exports pass their
+  startup/package/gameplay checks; Windows generated Overworld/Town flows exit
+  0 without fatal matches. Windows art validation is headless Wine, not a real
+  Windows GPU capture. Both PCKs are 290,229,064 bytes with 5,484 members; only
+  `project.binary` differs by platform. Source art is excluded; no ceiling applies.
+- `early_states_delivery_preservation.json` compares baseline `28a82998`, source
+  and both packages: exactly six textures, the manifest and UID cache change;
+  5,476 members including every compiled game/native/content/save owner remain
+  exact. Exactly 34 art rows change, 1,180 do not, and all state mappings match.
+  All eight complete saves match within runs without exclusions, and across
+  runs except save time and fresh authored session ids. Native/authored saves
+  also match the before capture and prior accepted checkpoint. All 31 matching
+  native placement records, thirteen actual/control capture records, original
+  source/atlas hashes and 1280 world rectangles remain exact (Windows float32).
+  The wide view retains the same unchanged geometry owner.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The remaining 783 rows have
 now received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 546 repaired/preserved dispositions, leaving
-668 for complete detailed review/recovery. All 31 recurring encounters, 30
-recurring resource-site originals and 31 separate claimed dwellings are accepted.
+The accepted cohorts now cover 580 repaired/preserved dispositions, leaving
+634 for complete detailed review/recovery. All 31 recurring encounters, 30
+recurring resource-site originals, 31 separate claimed dwellings and 34 early
+post-interaction paintings are accepted.
 Next: the other resource-site state and remaining landmark families; recovery of
 these originals does not accept different paintings. Individual source and native-resolution
 checks of other remaining families and intentional purple materials remain. Existing
