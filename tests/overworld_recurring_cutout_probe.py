@@ -21,7 +21,7 @@ func run() -> void:
     var bytes := FileAccess.get_file_as_bytes(OS.get_environment("CUTOUT_ASSETS_FILE"))
     check(digest(bytes)==OS.get_environment("CUTOUT_ASSETS_SHA256"),"complete independent expectations transferred unchanged")
     var specs: Dictionary=JSON.parse_string(bytes.get_string_from_utf8())
-    check(specs.size()==24,"all twenty-four source-recovered encounters")
+    check(specs.size()==31,"all thirty-one source-recovered encounters")
     SettingsService.set_presentation_mode("windowed")
     SettingsService.set_presentation_resolution(OS.get_environment("CUTOUT_RESOLUTION"))
     var session=SessionState.restore_session(JSON.parse_string(FileAccess.get_file_as_string(OS.get_environment("CUTOUT_SAVE"))))
@@ -98,6 +98,38 @@ func run() -> void:
         await capture(view,tile,key,encounter,"actual authored Beacon Wardens after ordinary scouting")
     check(found,"actual original Beacon Wardens found")
     await save_control(session,before,"authored")
+    session=SessionState.set_active_session(ScenarioFactory.create_session("bogbound-oath","normal",SessionState.LAUNCH_MODE_SKIRMISH))
+    AppRouter.resume_active_session()
+    await settle()
+    if get_tree().current_scene.scene_file_path.ends_with("TownShell.tscn"):
+        check(get_tree().current_scene.validation_leave_town().get("ok",false),"normal Bogbound Town exit")
+        await settle()
+    var wave4 := {"moves":[]}
+    for tile in [Vector2i(1,2),Vector2i(2,2)]:
+        var position: Vector2i=OverworldRules.hero_position(session)
+        var result: Dictionary=OverworldRules.try_move(session,tile.x-position.x,tile.y-position.y)
+        wave4.moves.append({"from":position,"to":tile,"result":result})
+        check(bool(result.get("ok",false)),"ordinary Bogbound scouting: "+str(tile))
+        if not bool(result.get("ok",false)):break
+    AppRouter.resume_active_session()
+    await settle()
+    view=get_tree().current_scene._map_view
+    before=normalized(session.to_dict())
+    found=false
+    for encounter in session.overworld.get("encounters",[]):
+        if str(encounter.get("placement_id",""))!="bogbound_lantern_patrol":continue
+        found=true
+        var tile:=Vector2i(int(encounter.x),int(encounter.y))
+        check(tile==Vector2i(3,1),"original Lantern Patrol placement")
+        check(not OverworldRules.is_encounter_resolved(session,encounter),"actual Lantern Patrol remains unresolved")
+        check(OverworldRules.is_tile_visible(session,tile.x,tile.y),"Lantern Patrol reached through ordinary vision")
+        var key: String=view._encounter_identity_asset_id(encounter)
+        check(key=="encounter_recurring_lantern_patrol","actual later-wave identity")
+        wave4["encounter"]=normalized(encounter)
+        await capture(view,tile,key,encounter,"actual Bogbound Lantern Patrol after ordinary scouting")
+    check(found,"actual original Lantern Patrol found")
+    await save_control(session,before,"wave4")
+    authored["wave4"]=wave4
     before=normalized(session.to_dict())
     MusicAudio.stop_music("recurring_probe_complete")
     AmbientAudio.stop_overworld_ambient("recurring_probe_complete")

@@ -1,6 +1,6 @@
 {
-  "schema_id": "recurring_cutout_recipe_v3",
-  "diagnosis": "The f18349e6 atlas changed from a multilevel tRNS palette to a single transparent palette index, collapsing coverage in the first 24 cells. Original RGBA paintings retain fine silhouettes. Retain original crop/44-pixel fit, bottom alignment for first six and centered later cells; restore source coverage without color keying. Gameplay inspection rejected the intermediate 48-pixel recovery as too blurry. Restore native source detail in 192-pixel cells with exactly 4x the original fit/offset; unchanged world draw rectangles retain on-map geometry. Seven later smooth-alpha cutouts also lose fine detail at 48px; recover their measured alpha-support crop and 42px bottom-aligned fit at 4x raster density, retaining the accepted first 24 source/trim pixels exactly.",
+  "schema_id": "recurring_cutout_recipe_v2",
+  "diagnosis": "The f18349e6 atlas changed from a multilevel tRNS palette to a single transparent palette index, collapsing coverage in the first 24 cells. Original RGBA paintings retain fine silhouettes. Retain original crop/44-pixel fit, bottom alignment for first six and centered later cells; restore source coverage without color keying. Gameplay inspection rejected the intermediate 48-pixel recovery as too blurry. Restore native source detail in 192-pixel cells with exactly 4x the original fit/offset; unchanged world draw rectangles retain on-map geometry.",
   "assets": {
     "encounter_recurring_beacon_wardens": {
       "mode": "original_recurring",
@@ -1105,9 +1105,10 @@
       "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_basalt_gatehouse_watch.png",
       "pixel_scale": 4,
       "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
-    },
+    }
+  },
+  "preserved_controls": {
     "encounter_recurring_barrow_pickets": {
-      "mode": "original_recurring",
       "original_manifest_entry": {
         "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
         "atlas_region": [
@@ -1126,41 +1127,9 @@
         "assigned_faction_id": "faction_mireclaw",
         "presentation_role": "peat_barrow_hook_picket_ring",
         "accessible_description": "Two uneven rows of tall hooked reed pikes rise from a peat barrow behind a squat hide drum, clawed palisade, and bent stone marker."
-      },
-      "source_sha256": "26f850099417ba1dd556521fee433a5c41f7e818fc627c2717ef6c69f429a0ef",
-      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
-      "source_crop": [
-        51,
-        3,
-        1252,
-        1167
-      ],
-      "source_crop_alpha_threshold": 8,
-      "source_resize": [
-        42,
-        41
-      ],
-      "fit_limit": 42,
-      "canvas_origin": [
-        3,
-        7
-      ],
-      "canvas_size": [
-        192,
-        192
-      ],
-      "resampling": "BILINEAR",
-      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_barrow_pickets.png",
-      "pixel_scale": 4,
-      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png",
-      "registration_evidence": {
-        "alpha_mae": 0.6861979166666666,
-        "opaque_rgb_mae": 0.7241079199303743,
-        "note": "Bounded original-crop/fit comparison, not a recovered historical resampler command."
       }
     },
     "encounter_recurring_bramble_hedge_watch": {
-      "mode": "original_recurring",
       "original_manifest_entry": {
         "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
         "atlas_region": [
@@ -1179,41 +1148,9 @@
         "assigned_faction_id": "",
         "presentation_role": "bramble_crescent_vault_watch",
         "accessible_description": "A raised wicker watch basket overlooks a crescent thorn hedge, crossed thornbow rests, and a chained root-wrapped stone vault hatch."
-      },
-      "source_sha256": "31515600af74988a0508caca487fde9ff4e22992c4f2e47f0210a6b6ca9af890",
-      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
-      "source_crop": [
-        29,
-        11,
-        1229,
-        1239
-      ],
-      "source_crop_alpha_threshold": 8,
-      "source_resize": [
-        41,
-        42
-      ],
-      "fit_limit": 42,
-      "canvas_origin": [
-        3,
-        6
-      ],
-      "canvas_size": [
-        192,
-        192
-      ],
-      "resampling": "BILINEAR",
-      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_bramble_hedge_watch.png",
-      "pixel_scale": 4,
-      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png",
-      "registration_evidence": {
-        "alpha_mae": 0.5386284722222222,
-        "opaque_rgb_mae": 0.6230907457322552,
-        "note": "Bounded original-crop/fit comparison, not a recovered historical resampler command."
       }
     },
     "encounter_recurring_lantern_patrol": {
-      "mode": "original_recurring",
       "original_manifest_entry": {
         "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
         "atlas_region": [
@@ -1232,41 +1169,9 @@
         "assigned_faction_id": "faction_embercourt",
         "presentation_role": "forked_lantern_lane_battery",
         "accessible_description": "A forked signal mast with stacked amber lanterns stands above a three-lamp brass range battery, red pavises, and road pikes."
-      },
-      "source_sha256": "b1e19ad352187c7b66fffc4e19195be406ae0552e44b062b7fabf332a01b8a96",
-      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
-      "source_crop": [
-        131,
-        8,
-        1144,
-        1231
-      ],
-      "source_crop_alpha_threshold": 8,
-      "source_resize": [
-        35,
-        42
-      ],
-      "fit_limit": 42,
-      "canvas_origin": [
-        6,
-        6
-      ],
-      "canvas_size": [
-        192,
-        192
-      ],
-      "resampling": "BILINEAR",
-      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_lantern_patrol.png",
-      "pixel_scale": 4,
-      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png",
-      "registration_evidence": {
-        "alpha_mae": 0.7256944444444444,
-        "opaque_rgb_mae": 0.7952380952380952,
-        "note": "Bounded original-crop/fit comparison, not a recovered historical resampler command."
       }
     },
     "encounter_recurring_reedward_camp": {
-      "mode": "original_recurring",
       "original_manifest_entry": {
         "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
         "atlas_region": [
@@ -1285,41 +1190,9 @@
         "assigned_faction_id": "faction_mireclaw",
         "presentation_role": "forktorch_reedward_field_camp",
         "accessible_description": "A forked torch beacon towers over an asymmetric reed-and-hide shelter, snare stakes, violet sling bolts, and a shallow peat supply sled."
-      },
-      "source_sha256": "2d6f7fa57d0324d8c182200a6b8546d89e1859e1a8bd911bc1de336d2d2db5c5",
-      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
-      "source_crop": [
-        253,
-        0,
-        1294,
-        1003
-      ],
-      "source_crop_alpha_threshold": 8,
-      "source_resize": [
-        42,
-        40
-      ],
-      "fit_limit": 42,
-      "canvas_origin": [
-        3,
-        8
-      ],
-      "canvas_size": [
-        192,
-        192
-      ],
-      "resampling": "BILINEAR",
-      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_reedward_camp.png",
-      "pixel_scale": 4,
-      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png",
-      "registration_evidence": {
-        "alpha_mae": 0.8068576388888888,
-        "opaque_rgb_mae": 0.7183235867446394,
-        "note": "Bounded original-crop/fit comparison, not a recovered historical resampler command."
       }
     },
     "encounter_recurring_sluice_raiders": {
-      "mode": "original_recurring",
       "original_manifest_entry": {
         "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
         "atlas_region": [
@@ -1338,41 +1211,9 @@
         "assigned_faction_id": "faction_mireclaw",
         "presentation_role": "captured_claw_crank_sluice",
         "accessible_description": "A broken diagonal timber sluice spans unequal peat-and-stone posts beside a claw-shaped crank wheel, channel planks, hook rack, and signal drum."
-      },
-      "source_sha256": "9fe4076cfc003e439d5c1c29221182cb7c8a234d706a01976c1c9201e9cf80fe",
-      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
-      "source_crop": [
-        144,
-        1,
-        1412,
-        1024
-      ],
-      "source_crop_alpha_threshold": 8,
-      "source_resize": [
-        42,
-        34
-      ],
-      "fit_limit": 42,
-      "canvas_origin": [
-        3,
-        14
-      ],
-      "canvas_size": [
-        192,
-        192
-      ],
-      "resampling": "BILINEAR",
-      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_sluice_raiders.png",
-      "pixel_scale": 4,
-      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png",
-      "registration_evidence": {
-        "alpha_mae": 0.5013020833333334,
-        "opaque_rgb_mae": 0.6381909547738693,
-        "note": "Bounded original-crop/fit comparison, not a recovered historical resampler command."
       }
     },
     "encounter_recurring_willow_mill_pack": {
-      "mode": "original_recurring",
       "original_manifest_entry": {
         "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
         "atlas_region": [
@@ -1391,41 +1232,9 @@
         "assigned_faction_id": "faction_mireclaw",
         "presentation_role": "willow_bound_ruined_mill_den",
         "accessible_description": "A leaning willow embraces a cracked half waterwheel and millstone above a low hide awning, sling-stone basket, and paired claw hooks."
-      },
-      "source_sha256": "65a48ec0f371cd056a6910e8b77b5a64b8381cdf0486de368a78d4c0e4512944",
-      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
-      "source_crop": [
-        65,
-        10,
-        1234,
-        1204
-      ],
-      "source_crop_alpha_threshold": 4,
-      "source_resize": [
-        41,
-        42
-      ],
-      "fit_limit": 42,
-      "canvas_origin": [
-        3,
-        6
-      ],
-      "canvas_size": [
-        192,
-        192
-      ],
-      "resampling": "BILINEAR",
-      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_willow_mill_pack.png",
-      "pixel_scale": 4,
-      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png",
-      "registration_evidence": {
-        "alpha_mae": 0.6948784722222222,
-        "opaque_rgb_mae": 0.8024193548387096,
-        "note": "Bounded original-crop/fit comparison, not a recovered historical resampler command."
       }
     },
     "encounter_recurring_ghoul_grove": {
-      "mode": "original_recurring",
       "original_manifest_entry": {
         "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
         "atlas_region": [
@@ -1444,48 +1253,7 @@
         "assigned_faction_id": "faction_mireclaw",
         "presentation_role": "three_hollow_blackbranch_berm",
         "accessible_description": "Three crooked hollow blackbranch trunks rise like claws behind a thorn-woven earth berm, sling nest, paired fog jars, and stone-veil cairn."
-      },
-      "source_sha256": "f7e7fd5d5794ef94e7c0eba91d125214fc1a978775cba950726095b346219452",
-      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
-      "source_crop": [
-        7,
-        23,
-        1340,
-        1140
-      ],
-      "source_crop_alpha_threshold": 8,
-      "source_resize": [
-        42,
-        35
-      ],
-      "fit_limit": 42,
-      "canvas_origin": [
-        3,
-        13
-      ],
-      "canvas_size": [
-        192,
-        192
-      ],
-      "resampling": "BILINEAR",
-      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_ghoul_grove.png",
-      "pixel_scale": 4,
-      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png",
-      "registration_evidence": {
-        "alpha_mae": 0.5868055555555556,
-        "opaque_rgb_mae": 0.7678571428571429,
-        "note": "Bounded original-crop/fit comparison, not a recovered historical resampler command."
       }
     }
-  },
-  "preserved_controls": {},
-  "prior_checkpoint": {
-    "commit": "6eb62e93aab4376bce1d8fc56fafcb59982c0718",
-    "recipe_path": "res://art/overworld/source/generated/cutout_recovery_20260909/recurring_encounters/prior_24_checkpoint/recipe.json",
-    "recipe_sha256": "c858e59375fef4eb3407c0c8979bdcecf804cf3491871d32cdc57663e1e8b5d8",
-    "manifest_path": "res://art/overworld/source/generated/cutout_recovery_20260909/recurring_encounters/prior_24_checkpoint/manifest.json",
-    "manifest_sha256": "6b8e33aa7060ecd5de5207baa3ddb937ed5683bb97e26ab114a90e8aa64fbfc6",
-    "runtime_path": "res://art/overworld/source/generated/cutout_recovery_20260909/recurring_encounters/before_runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png",
-    "runtime_sha256": "b33061e82cc37b092970665f0eaa3916feb2d8e9d13ed018998407bbdf66f219"
   }
 }

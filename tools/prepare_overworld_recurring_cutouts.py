@@ -3,9 +3,9 @@
 
 Original painting/crop/canvas registration is explicit per identity. No color
 key, binary-alpha threshold, shared replacement, or runtime geometry is used.
-The first six landmarks retain their bottom-aligned registration; later selected
-landmarks retain their centered registration. A separate 192-pixel atlas supplies
-paint detail without changing world draw rectangles. The old atlas stays exact.
+The first six and final seven retain their distinct bottom-aligned registrations;
+the middle eighteen remain centered. A 192-pixel atlas supplies paint detail
+without changing world draw rectangles. Historical and first-24 art stay exact.
 """
 import argparse
 import hashlib
@@ -47,30 +47,37 @@ def recover(source,row):
 def expected_entry(row):
     x,y,w,h=row['original_manifest_entry']['atlas_region']
     return dict(row['original_manifest_entry'],path=RUNTIME,
-                atlas_region=[v*4 for v in (x,y,w,h)],atlas_size=[4608,192],source_trimmed=row['trimmed_path'],
+                atlas_region=[v*4 for v in (x,y,w,h)],atlas_size=[5952,192],source_trimmed=row['trimmed_path'],
                 source_processing_manifest=base.resource(PACKET/'manifest.json'))
 
 
 def inputs():
     recipe=json.loads(RECIPE.read_text());manifest=json.loads(MANIFEST.read_text())
     proof=json.loads((PACKET/'manifest.json').read_text()) if (PACKET/'manifest.json').exists() else {}
-    if recipe.get('schema_id')!='recurring_cutout_recipe_v2':raise ValueError('Unknown recurring recipe')
-    if len(recipe['assets'])!=24 or len(recipe['preserved_controls'])!=7:raise ValueError('Cohort membership changed')
+    if recipe.get('schema_id')!='recurring_cutout_recipe_v3':raise ValueError('Unknown recurring recipe')
+    if len(recipe['assets'])!=31 or recipe['preserved_controls']:raise ValueError('Cohort membership changed')
     sources={};paths=set()
     for key,row in recipe['assets'].items():
         entry=manifest['object_assets'][key];original_entry=row['original_manifest_entry'];paths.add(original_entry['path'])
         candidate={k:v for k,v in entry.items() if k!='runtime_sha256'}
-        intermediate=dict(original_entry,source_trimmed=row['trimmed_path'],source_processing_manifest=base.resource(PACKET/'manifest.json'))
         allowed=(original_entry,expected_entry(row))
-        if proof.get('schema_id')=='recurring_cutout_recovery_v1':allowed+=(intermediate,)
+        if proof.get('schema_id')=='recurring_cutout_recovery_v2' and original_entry['atlas_region'][0]<1152:
+            allowed+=(dict(expected_entry(row),atlas_size=[4608,192]),)
         if candidate not in allowed:raise ValueError('Identity/region changed: '+key)
         source_path=base.local(row['original_manifest_entry']['source_generated'])
         if base.digest(source_path)!=row['source_sha256']:raise ValueError('Original painting hash changed: '+key)
         source=Image.open(source_path).convert('RGBA');sources[key]=source
-        if list(source.getbbox())!=row['source_crop']:raise ValueError('Original source crop changed: '+key)
+        later=original_entry['atlas_region'][0]>=1152
+        threshold=row.get('source_crop_alpha_threshold',0)
+        if threshold not in ((4,8) if later else (0,)):raise ValueError('Unapproved crop support threshold')
+        # Support threshold selects bounds only, never changes source pixels.
+        bounds=source.getchannel('A').point(lambda a:255 if a>threshold else 0).getbbox()
+        if list(bounds)!=row['source_crop']:raise ValueError('Original source crop changed: '+key)
         w,h=row['source_resize'];x,y=row['canvas_origin']
-        if not all(type(v) is int for v in (x,y,w,h)) or max(w,h)!=44 or not (0<=x<x+w<=48 and 0<=y<y+h<=48):raise ValueError('Unscoped canvas transform')
-        sx,sy,ex,ey=row['source_crop'];ratio=44/max(ex-sx,ey-sy)
+        fit=42 if later else 44
+        if row.get('fit_limit',44)!=fit or not all(type(v) is int for v in (x,y,w,h)) or max(w,h)!=fit or not (0<=x<x+w<=48 and 0<=y<y+h<=48):raise ValueError('Unscoped canvas transform')
+        if later and (x!=(48-w)//2 or y!=48-h):raise ValueError('Later-wave anchor changed')
+        sx,sy,ex,ey=row['source_crop'];ratio=fit/max(ex-sx,ey-sy)
         if abs(w-(ex-sx)*ratio)>1 or abs(h-(ey-sy)*ratio)>1:raise ValueError('Distorted source fit')
         if row['resampling'] not in ('BICUBIC','BILINEAR'):raise ValueError('Unapproved resampling')
         if row['canvas_size']!=[192,192] or row['pixel_scale']!=4 or row['runtime_path']!=RUNTIME:raise ValueError('Unapproved raster resolution/path')
@@ -78,9 +85,7 @@ def inputs():
         old=before_path(original_entry)
         if base.digest(old if old.exists() else base.local(original_entry['path']))!=row['before_sha256']:raise ValueError('Original atlas hash changed')
         original_path=original_entry['path']
-        permitted={row['before_sha256']}
-        if proof.get('schema_id')=='recurring_cutout_recovery_v1':permitted.add(proof.get('files',{}).get(original_path,{}).get('after_sha256'))
-        if base.digest(base.local(original_path)) not in permitted:raise ValueError('Unrelated original atlas edit')
+        if base.digest(base.local(original_path))!=row['before_sha256']:raise ValueError('Unrelated original atlas edit')
         if base.digest(base.local(entry['path'])) not in (row['before_sha256'],proof.get('files',{}).get(entry['path'],{}).get('after_sha256')):raise ValueError('Unrecognized runtime edit')
         trim=ROOT/'art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters'/(key+'.png')
         if base.local(row['trimmed_path'])!=trim:raise ValueError('Unscoped trim path')
@@ -88,10 +93,16 @@ def inputs():
     if len(paths)!=1:raise ValueError('Atlas scope changed')
     members={k for k,v in manifest['object_assets'].items() if v['path'] in paths|{RUNTIME}}
     if members!=set(recipe['assets'])|set(recipe['preserved_controls']):raise ValueError('Incomplete atlas membership')
-    for key,row in recipe['preserved_controls'].items():
-        entry=manifest['object_assets'][key]
-        if entry!=row['original_manifest_entry']:raise ValueError('Unrelated control metadata changed')
-        if owner.region(original(entry),entry).tobytes()!=owner.region(Image.open(base.local(entry['path'])).convert('RGBA'),entry).tobytes():raise ValueError('Unrelated atlas neighbor changed')
+    prior=recipe['prior_checkpoint']
+    for name in ('recipe','manifest'):
+        expected=PACKET/'prior_24_checkpoint'/(name+'.json')
+        if base.local(prior[name+'_path'])!=expected or base.digest(expected)!=prior[name+'_sha256']:raise ValueError('Prior checkpoint changed')
+    old_recipe=json.loads(base.local(prior['recipe_path']).read_text())
+    if len(old_recipe['assets'])!=24 or set(recipe['assets'])!=set(old_recipe['assets'])|set(old_recipe['preserved_controls']):raise ValueError('Prior membership changed')
+    if any(recipe['assets'][k]!=v for k,v in old_recipe['assets'].items()):raise ValueError('Accepted source registration changed')
+    retained=base.local(prior['runtime_path'])
+    if retained!=before_path({'path':RUNTIME}):raise ValueError('Unscoped prior atlas path')
+    if base.digest(retained if retained.exists() else base.local(RUNTIME))!=prior['runtime_sha256']:raise ValueError('Prior recovered atlas changed')
     return recipe,manifest,sources
 
 
@@ -105,7 +116,7 @@ def prepare(output,install=False):
     if output==ROOT.resolve() or output.is_relative_to((ROOT/'art').resolve()):raise ValueError('Preview must be outside art')
     recipe,manifest,sources=inputs();output.mkdir(parents=True,exist_ok=False)
     first=next(iter(recipe['assets'].values()))['original_manifest_entry']
-    atlas=Image.new('RGBA',(4608,192));rows={};results={}
+    atlas=Image.new('RGBA',(5952,192));rows={};results={}
     for key,row in recipe['assets'].items():
         fixed=recover(sources[key],row);results[key]=fixed
         fixed.save(output/(key+'.png'),optimize=True)
@@ -116,7 +127,7 @@ def prepare(output,install=False):
     old=before_path(first)
     original_proof=dict(path=first['path'],sha256=base.digest(old if old.exists() else base.local(first['path'])))
     files={path:dict(after_sha256=base.digest(target),prepared=str(target.relative_to(output)))}
-    for page in range(6):
+    for page in range(8):
         canvas=Image.new('RGB',(1320,600),'#334c3a');draw=ImageDraw.Draw(canvas)
         for j,(key,row) in enumerate(list(recipe['assets'].items())[page*4:page*4+4]):
             x,y=(j%2)*660,(j//2)*300
@@ -126,15 +137,21 @@ def prepare(output,install=False):
             thumb=sources[key].copy();thumb.thumbnail((216,216),Image.Resampling.LANCZOS);canvas.paste(thumb,(x+430,y),thumb)
             draw.text((x+5,y+228),key,fill='white');draw.text((x+5,y+246),'BEFORE / 192px SOURCE RECOVERY / ORIGINAL | unchanged world fit',fill='white')
         canvas.save(output/f'comparison_{page:02}.png')
-    proof=dict(schema_id='recurring_cutout_recovery_v2',recipe_sha256=base.digest(RECIPE),
+    prior=recipe['prior_checkpoint']
+    prior_proof=json.loads(base.local(prior['manifest_path']).read_text())
+    for key,value in prior_proof['assets'].items():
+        if rows[key]!=value:raise ValueError('Accepted painting pixels changed: '+key)
+    proof=dict(schema_id='recurring_cutout_recovery_v3',recipe_sha256=base.digest(RECIPE),
         processing_tool='tools/prepare_overworld_recurring_cutouts.py',processing_tool_sha256=base.digest(Path(__file__)),
-        processing='Reproject original RGBA at 4x raster resolution through unchanged normalized source fit and canvas registration; no color removal, alpha threshold or palette quantization. Entire original atlas and seven unaffected identities retained exactly; renderer world draw rectangles unchanged.',
-        assets=rows,files=files,original_atlas=original_proof,preserved_controls=recipe['preserved_controls'])
+        processing='Reproject original RGBA at 4x raster resolution through unchanged normalized source fit and canvas registration. Later-wave support thresholds select crop bounds only; all source pixels within remain intact. Entire original atlas and accepted first-24 painting pixels retained exactly; renderer world draw rectangles unchanged.',
+        assets=rows,files=files,original_atlas=original_proof,preserved_controls={},prior_checkpoint=prior)
     if install:
         for key,row in recipe['assets'].items():manifest['object_assets'][key]=dict(expected_entry(row),runtime_sha256=files[path]['after_sha256'])
         text=owner.manifest_text(manifest,recipe['assets'])
         old.parent.mkdir(parents=True,exist_ok=True)
         if not old.exists():shutil.copy2(base.local(first['path']),old)
+        retained=base.local(prior['runtime_path']);retained.parent.mkdir(parents=True,exist_ok=True)
+        if not retained.exists():shutil.copy2(base.local(path),retained)
         shutil.copyfile(old,base.local(first['path']))
         shutil.copyfile(target,base.local(path))
         for key,row in recipe['assets'].items():
@@ -146,7 +163,7 @@ def prepare(output,install=False):
 
 def validate_assets():
     recipe,manifest,sources=inputs();proof=json.loads((PACKET/'manifest.json').read_text())
-    if proof['schema_id']!='recurring_cutout_recovery_v2' or proof['recipe_sha256']!=base.digest(RECIPE) or proof['processing_tool_sha256']!=base.digest(Path(__file__)):raise ValueError('Preparation provenance changed')
+    if proof['schema_id']!='recurring_cutout_recovery_v3' or proof['recipe_sha256']!=base.digest(RECIPE) or proof['processing_tool_sha256']!=base.digest(Path(__file__)):raise ValueError('Preparation provenance changed')
     if set(proof['assets'])!=set(recipe['assets']) or proof['preserved_controls']!=recipe['preserved_controls']:raise ValueError('Cohort proof changed')
     reports={}
     for key,row in recipe['assets'].items():
@@ -165,6 +182,12 @@ def validate_assets():
     first=next(iter(recipe['assets'].values()))
     if old!={'path':first['original_manifest_entry']['path'],'sha256':first['before_sha256']}:raise ValueError('Original proof changed')
     if base.digest(base.local(old['path']))!=old['sha256']:raise ValueError('Original atlas changed')
+    if proof['prior_checkpoint']!=recipe['prior_checkpoint']:raise ValueError('Prior checkpoint provenance changed')
+    prior_proof=json.loads(base.local(recipe['prior_checkpoint']['manifest_path']).read_text())
+    prior_atlas=Image.open(base.local(recipe['prior_checkpoint']['runtime_path'])).convert('RGBA')
+    current=Image.open(base.local(RUNTIME)).convert('RGBA')
+    if current.size!=(5952,192) or current.crop((0,0,4608,192)).tobytes()!=prior_atlas.tobytes():raise ValueError('Accepted atlas pixels changed')
+    if any(proof['assets'][k]!=v for k,v in prior_proof['assets'].items()):raise ValueError('Accepted source derivatives changed')
     return reports
 
 
