@@ -80,6 +80,31 @@ Fixture development is not an earned match, and the unchanged 46-day chain
 does not need replaying for these data-only variants. All failures remain
 evidence; further factions and the full goal stay unfinished.
 
+The following five-painting Veilmourn variant batch completes 27 non-embedded
+identities across five towns, preserving all 83 accepted layers and the village.
+Wakeglass Chart House, Saltwake Eulogy House, Pale Sounding Last-Memory Beacon,
+Dreamwake Tideglass Oratory and Foganchor Slip need distinct, grounded paintings
+matched to the moonlit harbor, with their authored information/visibility intact.
+Use ordinary Day-1 purchases in `wakeoracle-dreamwake-tideglass-trial` and
+`wakeoracle-dreamwake-foganchor-works`, without injected stores or prerequisites.
+Retain the unchanged earned Bellwake Day-30 control, five detached developed
+views and five isolated ledger fixtures with complete independent rule/recap,
+daily-limit, alpha/input and save/re-entry controls. Fixtures are not earned
+development. One inspected 1280x720/actual 2048x1079 boundary and both official
+platform startup/generated/exact-variant flows must preserve prior payloads.
+Do not replay the unrelated 30-day chain or export after individual paintings.
+Further factions and the full goal remain unfinished.
+
+For the next whole-faction art batch, use small existing authored scenarios as
+the basis of detached composition and isolated build fixtures, instead of
+copying the complete earned Large world into every synthetic fixture. Retain a
+separate unchanged real generated-Large surface/save control, ordinary authored
+paid orders, all complete within-run rule/input/save assertions, actual small/
+wide captures and exact package membership checks. This changes test setup cost,
+not gameplay, native map generation or the meaning of earned progression.
+Record the selected scenario ids before implementation and keep fixtures clearly
+labeled; passing a small fixture is not Large-map performance certification.
+
 ## Owner-directed package policy — 2026-09-09
 
 There is no fixed release-PCK size budget. Remove the former 250000000-byte

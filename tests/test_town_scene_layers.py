@@ -60,6 +60,9 @@ def validate_scene_layers(payload=None):
     required_bellwake = set(bellwake['starting_building_ids'] + bellwake['buildable_building_ids']) - {'building_town_hall'}
     require(required_bellwake.issubset(factions.get('faction_veilmourn',{})), 'Missing constructible Bellwake scene mapping: '+', '.join(sorted(required_bellwake-set(factions.get('faction_veilmourn',{})))))
     veilmourn = factions.get('faction_veilmourn',{})
+    veil_towns = [town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['faction_id']=='faction_veilmourn']
+    required_veil_union = {building for town in veil_towns for building in town['starting_building_ids']+town['buildable_building_ids']} - {'building_town_hall'}
+    require(required_veil_union.issubset(veilmourn), 'Missing authored Veilmourn variant scene mapping: '+', '.join(sorted(required_veil_union-set(veilmourn))))
     sounding = veilmourn.get('building_veilmourn_leviathan_sounding',{})
     court = veilmourn.get('building_veilmourn_memory_rite_court',{})
     pairs = [(sounding, court, 'Memory-Rite Court', 'Sounding')]
@@ -139,7 +142,7 @@ def validate_scene_layers(payload=None):
                                ('asset type: original transparent raster building layer' in text_lower and
                                 'genuinely transparent background with a real alpha channel' in text_lower) or
                                ('asset type: original transparent raster' in text_lower and
-                                any(phrase in text_lower for phrase in ('genuinely transparent rgba','actual transparent rgba','real transparent rgba','genuine rgba transparency','genuinely transparent alpha everywhere','actual transparent alpha')) and
+                                any(phrase in text_lower for phrase in ('genuinely transparent rgba','actual transparent rgba','real transparent rgba','genuine rgba transparency','genuinely transparent alpha everywhere','genuine transparent alpha everywhere','actual transparent alpha')) and
                                 any(label in text_lower for label in ('constraints:', 'background:', 'composition:'))) or
                                (('town building layer for '+building+'.') in text_lower and
                                 'transparent rgba png' in text_lower))

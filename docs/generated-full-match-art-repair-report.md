@@ -5,6 +5,121 @@ Parent: `quality-generated-full-match-20260906`; selected child:
 removed the package-size budget and requested continuing. The parent quality
 goal remains unfinished.
 
+## Veilmourn town-variant batch — 2026-09-09, validated
+
+Five authored identities lack scene-layer entries and therefore follow
+`TownStageView._town_building_texture_path`'s retained catalog-icon path:
+Wakeglass Chart House, Saltwake Eulogy House, Pale Sounding Last-Memory Beacon,
+Dreamwake Tideglass Oratory and Foganchor Slip. All five now have original
+built-in text-only 1536x1024 RGBA paintings, exact prompts/source hashes and
+the existing transparent-margin trim/512px runtime pipeline. Current coverage
+is 27 non-embedded Veilmourn identities across five towns; all 83 earlier rows
+are unchanged (88 total). No village, catalog icon, gameplay/native/save owner
+or authored building definition changes.
+
+Selected sources and prompts are in
+`art/towns/source/generated/scene_layers/faction_veilmourn/`; trimmed and runtime
+counterparts retain the same five exact ids. Provenance is in the authoritative
+scene manifest and `tools/prepare_town_scene_layers.py`. The new Python-owned
+variant probe retains the accepted complete build/recap, daily-limit,
+painted-input, keyboard/controller and save controls. It separates two ordinary
+authored Dreamwake Day-1 purchases, five isolated ledger fixtures, five developed
+views and unchanged earned Bellwake Day-30 input. Fixtures are not earned
+development. That original input is `late_harbor_packaged_linux/earned_growth_save.json`,
+SHA256 `9d20f5cefc788faa88686fc1cabc46cc410997dda83be0c99066db3a5452e9e2`.
+
+The first preview (`veilmourn_variants_layout_01`) passes 310 layout checks but
+fails visual acceptance: Chart House pilings stop above the shore and Eulogy
+House appears perched on the warehouse. Their bounds/depth are corrected to
+meet the actual right bank and foreground-left quay; retain the rejected
+captures. The three other new structures are visibly grounded in these views.
+This preview does not run paid orders or establish progression acceptance.
+The corrected four-view `veilmourn_variants_layout_02` passes 124 checks; sparse
+Chart/Eulogy and developed Gloamwake/Dreamwake views are inspected. The chart
+gangway now meets the right bank, and Eulogy joins the permanent quay beneath
+the sail workshop, with its white gable and veranda remaining visible.
+
+The first boundary (`veilmourn_variant_acceptance_jobs_01.json`) failed before
+game execution because the systemd launcher lacked the installed Godot directory
+in PATH. Its source exit 127 and export missing-executable traceback are retained;
+they are not game failures or completed exports. Separately, 57 of 58 Python
+tests passed: the prompt matcher rejected the literal phrase "genuine transparent
+alpha everywhere" despite the exact retained prompt and real RGBA assets. Accept
+that wording alongside its existing "genuinely" form; keep hashes, alpha, exact
+identity, geometry and all other assertions intact. Do not rewrite the prompts
+after generation to satisfy a wording check.
+All 37 affected strict-art/Veilmourn tests pass after that wording correction;
+the 58-test run's unrelated passing tests are retained rather than repeated.
+The retry source checks execute normally, but its export discovers missing XDG
+user-directory bindings in the same background launcher. The accepted prior
+export unit explicitly supplied PATH and XDG data/config/cache locations. The
+export-only resume uses those same locations, preserves the live source runs,
+and retains the failed import log rather than suppressing engine errors.
+
+The source runs `veilmourn_variants_source_03` (1280x720) and `_04` (actual
+2048x1079) each pass 12600 checks, with unchanged input/source and no engine
+errors. Both authored paid views and the developed Dreamwake/Pale Sounding
+compositions were inspected; the command and navigation controls remain clear.
+`veilmourn_variants_packaged_linux_01` also passes all 12600 checks with the
+export unchanged and every probe assertion retained; its developed Dreamwake
+capture is visually inspected. The shared Town layout/dialog and skyline reports
+pass under `.artifacts/full_play_runtime_20260905/veilmourn_variants_shared/`.
+Repository validation passes. Windows exact-variant acceptance also passes all
+12600 checks, with unchanged export and all input/rule/save assertions retained.
+It is headless Wine, not native Windows GPU/audio/controller certification.
+
+Both official `veilmourn_variants_release_*_03` exports pass startup/native and
+normal generated-Town paid-flow checks; both PCKs are 261332732 bytes. The final
+`veilmourn_variant_acceptance_final.py` reuses those exact exports and the live
+source checks, overlapping independent Linux/wide-screen work with at most two
+Godot instances. The earlier export supervisor was stopped only while waiting,
+with no child processes; no export or source run was restarted for this change
+in scheduling. Preserve its nonterminal state and the failed launcher histories.
+
+Tracked batch command:
+`python3 -B tests/town_veilmourn_variant_regression.py --label <fresh> --save <exact-earned-Bellwake-save> --resolution <1280x720|2048x1079>`.
+Exact package mode adds `--platform <linux|windows> --binary <official-binary> --pack <matching-PCK>`
+at 1280x720 and a fresh `--wine-prefix <path>` for Windows. The strict Python
+batch is `PYTHONPATH=tests python3 -B -m unittest test_town_scene_layers test_town_scene_layer_preparation test_town_veilmourn_variants test_town_embercourt_variants test_town_mireclaw_variants test_packaged_town_scene_layer_probe`;
+the affected rerun uses `test_town_scene_layers test_town_veilmourn_variants`.
+`veilmourn_variant_acceptance_jobs_04.json` is terminal and passing for all seven
+jobs. `veilmourn_variant_verify.py` passes and writes
+`veilmourn_variant_acceptance.json`. All 44 retained-case/fixture saves match
+across four runs outside only `saved_at_unix`; the eight independently created
+authored saves additionally distinguish their explicitly recorded fresh
+`session_id` values. Within-run complete rule/recap and save checks exclude
+nothing. Each rendered run has 48 captures at its actual requested resolution.
+Both PCKs contain 5312 members: 10 new texture/import entries, 5300 prior payloads
+unchanged, and only scene-manifest/UID-cache changes among previous members.
+Linux/Windows membership matches, with only `project.binary` differing. No
+source paintings, tests or stray editor files enter the packages.
+
+The first final comparison rejected the raw old earned control. Its only
+semantic difference outside the save clock is the existing cached
+`overworld.command_risk_forecast.signature`: Town entry removes the literal
+` | objective anchor` clause. `OverworldRules._normalize_command_risk_forecast`
+recomputes this derived text through `_command_risk_forecast_from_normalized_session`
+and `_command_risk_items`. A targeted previous-release check
+(`veilmourn_variants_earned_previous_release`, 33 checks) reproduces exactly the
+same saved state in the unchanged official `9f1b116` PCK. The initial normal
+package adapter correctly rejected that old manifest; the artifact-only baseline
+adapter pins the expected manifest to that exact Git revision without changing
+the production guard. The final verifier requires this one exact transformation
+and complete equality to the old release, not a blanket exclusion of the field.
+The original input file remains SHA-identical; every other field matches outside
+the clock. This is preservation of pre-existing Town-entry behavior, not a fix
+to that cached-summary behavior or an assertion that the raw cache never changes.
+All failures remain described here and their existing runtime reports/logs are
+retained. `git diff --check` passes.
+
+Evidence paths above are relative to
+`.artifacts/generated_full_match_quality_20260906/` unless otherwise stated.
+Remaining scene mappings: Sunvault 29, Thornwake 29, Brasshollow 27 (85 total).
+Continue whole-faction batches with one combined acceptance boundary, not
+per-painting exports or unrelated match replays. The parent/child remain in
+progress. Preserve earlier evidence and the unrelated untracked retention files,
+reports and cache; no fixed size budget or Windows-hardware certification claim.
+
 ## Embercourt town-variant batch — 2026-09-09, validated
 
 Six exact authored identities still selected catalog paintings because their
