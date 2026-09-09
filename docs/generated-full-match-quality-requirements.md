@@ -26,6 +26,24 @@ requires actual evidence; unchanged or unfinished factions remain explicit gaps.
 This cadence supersedes per-small-packet repetition in earlier instructions, not
 asset integrity, legal progression, compatibility or platform requirements.
 
+The next coherent Duskfen batch covers the remaining 13 faction-specific
+identities, including the same-site Nightglass Dominion/Oathmire Court upgrade.
+Preserve all 58 accepted paintings and the original village. Continue from the
+earned Day-11 save, pay normal construction/trade/recruitment costs and obtain
+rare supplies through the existing explored guarded source cache when needed.
+Retain normal movement, guard combat/casualty reports, daily limits and complete
+saves. No injected progression or fixture-only development claim is acceptable.
+Use one shared input sweep at the completed batch boundary and inspected small/
+large views; remaining other-town/faction variants stay explicit gaps.
+
+After a complete legitimate construction sequence, a presentation-only correction
+may reuse its earned final save. Preserve every paid-authority/save comparison
+and the original failing report; recheck the corrected complete input surface at
+small/large resolutions and in both packages instead of replaying dozens of
+unchanged turns. Package membership must prove the gameplay owners/content are
+unchanged, and the official normal generated-Town paid flows must still pass.
+Label earned-save input replays as read-only, never as additional paid orders.
+
 ## Owner-directed package policy — 2026-09-09
 
 There is no fixed release-PCK size budget. Remove the former 250000000-byte

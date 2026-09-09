@@ -2693,6 +2693,617 @@
         "reference_inputs": [],
         "generation_date": "2026-09-09",
         "generation_output": "exec-8d89afaf-d461-45c3-8b2d-716869426a9c.png"
+      },
+      "building_mireclaw_reed_toll": {
+        "asset_id": "faction_mireclaw_building_mireclaw_reed_toll",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
+        "source_sha256": "c046c4651c4657163192fdb5418a3beeb94fd51ce9b9f01c25c50f355395057e",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          1,
+          1522,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
+        "trimmed_sha256": "a99b8f3c978b635c0a86cdf2b2e2558ddefbe570494a04e8fdcb43b85204c0d5",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
+        "runtime_sha256": "e3f32b6fa173535300844c7454974604faf81acbc838b8fcdff879164c84e475",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.425,
+          0.49456380208333334,
+          0.10218505859375,
+          0.12210286458333333
+        ],
+        "ground_anchor": [
+          0.504375,
+          0.5988888888888889
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Compact toll approach follows the middle-left causeway beside the market/Den routes, keeping the central main-hall entrance exposed.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.prompt.txt",
+        "prompt_sha256": "1ad3fee9a8c641282c168e0dc56f2259fce19915e9259f735f142fea43feb457",
+        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-3cd953b4-9ec1-40f0-8ef2-f6a163f3fb73.png"
+      },
+      "building_mireclaw_blackbranch_den": {
+        "asset_id": "faction_mireclaw_building_mireclaw_blackbranch_den",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_blackbranch_den.png",
+        "source_sha256": "9ececf80b90e06aef88484f6e194b34752d9ed58a28a6932dac1455acde1c778",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          23,
+          27,
+          1518,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_blackbranch_den.png",
+        "trimmed_sha256": "70d39badc60d7f792843dce0885681823b1f96eaf11940b46901892f1ac6d125",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_blackbranch_den.png",
+        "runtime_sha256": "10f940b37a3a8d16eca82aea0088b1ddd738c12dc5e183c7c53969c567297eec",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.15191853841145833,
+          0.3262261284722222,
+          0.12470499674479166,
+          0.14784794560185185
+        ],
+        "ground_anchor": [
+          0.25125,
+          0.4588888888888889
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The faction snare dens occupy the rear-left marsh shore behind the Archive and existing Pens, distinct from the generic Den plot.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_blackbranch_den.prompt.txt",
+        "prompt_sha256": "65d36fea2ab0ebeac02b4edcccc6263ca722b465e94f7b6c536fcc6bef509689",
+        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-5efe0086-f667-407e-9aaa-a3bb030e6b67.png"
+      },
+      "building_mireclaw_silt_watch": {
+        "asset_id": "faction_mireclaw_building_mireclaw_silt_watch",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
+        "source_sha256": "cf4d8586fb8df0a3cdfef245e6057969a9a6cd5aa089d8eff6e66840770cc4e8",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1524,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
+        "trimmed_sha256": "f97087e083cb8b0e0a25c4eb8fb3056d1a911272306c0b66799e78c783664fee",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
+        "runtime_sha256": "93de9a34da651436e046cb37b47566fee1e0382704a9549be78cc2e3fa43e991",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.51875,
+          0.5555555555555556,
+          0.11162109375,
+          0.13333333333333333
+        ],
+        "ground_anchor": [
+          0.553125,
+          0.6766666666666666
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The lookout stands on the central causeway landing below the main hall, with its stair reaching the bridge approach. Its roof and body remain outside the command dock.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.prompt.txt",
+        "prompt_sha256": "f0162a27052134de81e4353fa913c96ee62dd1904be18748adad19cb63243553",
+        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-c1197b26-7e91-434e-ad90-043ec32b2ef1.png"
+      },
+      "building_mireclaw_war_drum_circle": {
+        "asset_id": "faction_mireclaw_building_mireclaw_war_drum_circle",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_war_drum_circle.png",
+        "source_sha256": "537ff316f227fb65a8286dab13119027dfd74835f9263d6d9f56538033769f4a",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          16,
+          1522,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_war_drum_circle.png",
+        "trimmed_sha256": "454d223b5145cd886facc53b4333fa154785a2436fe86083b111ac88a2a0532e",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_war_drum_circle.png",
+        "runtime_sha256": "372e82fbe93fbff6019de11eac05af28e11e0b69389f80b12e93efcd24bbf705",
+        "runtime_size": [
+          512,
+          339
+        ],
+        "normalized_rect": [
+          0.859375,
+          0.6744212962962969,
+          0.11766764322916666,
+          0.13854166666670312
+        ],
+        "ground_anchor": [
+          0.895,
+          0.7955555555555556
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The mudglass rehearsal deck follows the far-right near shore, separate from the earlier communal War Drum Circle.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_war_drum_circle.prompt.txt",
+        "prompt_sha256": "617a9e3dde56d6f9bf156b985bc70a3f3e782dc96be8809bffcfca8366dba9f9",
+        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-e28c3874-7fb5-4c53-ba36-7da4b941f9d9.png"
+      },
+      "building_mireclaw_floodtide_forge": {
+        "asset_id": "faction_mireclaw_building_mireclaw_floodtide_forge",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
+        "source_sha256": "953852dc044568ff497a0835df172dfd6d652308da8f4a534657e1299d976593",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1524,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
+        "trimmed_sha256": "7a596363af808150dba935bafa58b772b59a9c2bafa3650335edfe3388354d42",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
+        "runtime_sha256": "5a3ee6fe1e0f825cb9450e4deae6afe2cdde58dc9ee36461cb75c359bdd14cb5",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.88125,
+          0.4666666666666667,
+          0.11162109375,
+          0.13333333333333333
+        ],
+        "ground_anchor": [
+          0.928125,
+          0.5877777777777777
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The flood-quenching forge occupies the easternmost working shore beside the hiring hall, without moving older paintings.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.prompt.txt",
+        "prompt_sha256": "a845f27899a9288ccfe117d26095cdd04d9408031d37b12a51ffb7a6fca6ed38",
+        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-e5ea0ba1-ac59-462e-9613-33e8eef21733.png"
+      },
+      "building_mireclaw_chainboom_ferry": {
+        "asset_id": "faction_mireclaw_building_mireclaw_chainboom_ferry",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_chainboom_ferry.png",
+        "source_sha256": "309d212285cce22ed56ee93b01544086bebadf4dad9790630735f8fe4f475385",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1522,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_chainboom_ferry.png",
+        "trimmed_sha256": "6637c03c670f3b8d9ed2066d5b5e71a51568352d34dfa2b132c0b36a3591ed31",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_chainboom_ferry.png",
+        "runtime_sha256": "2e4d89f7d2b3a289bc91d3ab96c7414a3b787d124164ea6d9af94ae5f5c02ffd",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.69375,
+          0.7611111111111111,
+          0.14243977864583335,
+          0.1703703703703704
+        ],
+        "ground_anchor": [
+          0.72875,
+          0.91
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The attached ferry boards from the lower-right waterfront and leaves the central bridge lane readable.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_chainboom_ferry.prompt.txt",
+        "prompt_sha256": "7cd116c7cd4ef668739a320aa54b0f45514234b0a7cdce05b5fc0b521f19f226",
+        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-b4122dc8-047a-467e-868c-73d03c11e5af.png"
+      },
+      "building_mireclaw_bog_oracle_nest": {
+        "asset_id": "faction_mireclaw_building_mireclaw_bog_oracle_nest",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_bog_oracle_nest.png",
+        "source_sha256": "3ad91b62a53bca660c00d09e65e6610f011e8f1145727b11c628d51fc47a33e3",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          59,
+          14,
+          1524,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_bog_oracle_nest.png",
+        "trimmed_sha256": "58ad46b9087b9e58e04dcbb3f3b25daa7443230c1ec8b72ab80223f1545d7027",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_bog_oracle_nest.png",
+        "runtime_sha256": "61f6bb0cdff8d693121586b6461625d6dbc6d215aa174dde09d265fbb8a10c56",
+        "runtime_size": [
+          512,
+          353
+        ],
+        "normalized_rect": [
+          0.6099711100260417,
+          0.6182364004629629,
+          0.09239705403645834,
+          0.1132450810185185
+        ],
+        "ground_anchor": [
+          0.6775,
+          0.7166666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The oracle alcove joins the right bridge landing between Silt Watch and the communal drum quay, with visible stairs and a short piling base. The command dock and hiring hall cannot conceal it.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_bog_oracle_nest.prompt.txt",
+        "prompt_sha256": "17707b04f329b7618957a02372b48845c85331d1c67ba33d6986c14ccd3d72b3",
+        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-0bb09f3b-6caf-4d91-b86e-19a3af10d5ef.png"
+      },
+      "building_mireclaw_boneboom_palisade": {
+        "asset_id": "faction_mireclaw_building_mireclaw_boneboom_palisade",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_boneboom_palisade.png",
+        "source_sha256": "d95a14c73f90dbfd1375dc8ebebd4cb9165adbc12899fc05f7acd2aaef422c3b",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          23,
+          0,
+          1520,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_boneboom_palisade.png",
+        "trimmed_sha256": "cbf9254e9d03fcf916d87ce6fa903fb75933d4c84d7b8bcd1961de2327ecbd4c",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_boneboom_palisade.png",
+        "runtime_sha256": "d8bef53c21a52d3fc4efc9ff212772238add7c772e121c8f40209a9121ab0f7b",
+        "runtime_size": [
+          512,
+          350
+        ],
+        "normalized_rect": [
+          0.8366678873697917,
+          0.7555555555555555,
+          0.149237060546875,
+          0.18148148148144444
+        ],
+        "ground_anchor": [
+          0.8775,
+          0.9166666666666666
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The short irregular boom follows the near-right settlement edge and joins the ferry/drum approaches.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_boneboom_palisade.prompt.txt",
+        "prompt_sha256": "8cae1abab8268c2dbdb71401b3a4af789e5cec20a47fe2048a102ff7cc54e1da",
+        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-9f5dd28d-f111-459c-bec5-817be1c5face.png"
+      },
+      "building_mireclaw_sporewake_shrine": {
+        "asset_id": "faction_mireclaw_building_mireclaw_sporewake_shrine",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_sporewake_shrine.png",
+        "source_sha256": "1164ea8198563b20b0aed13496a6b1adff9f84ac04986d8ffed1e05f37740090",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          4,
+          1530,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_sporewake_shrine.png",
+        "trimmed_sha256": "57fa0ed77e3c7816cfe2ae1a95dace7bb9e018a91e653cdf0178a18520e49926",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_sporewake_shrine.png",
+        "runtime_sha256": "f07bf518cfaefe6ec659cedd498983db06fb330abd3ba59d76ff33a666343e1b",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.7875,
+          0.5783420138888888,
+          0.12139892578125,
+          0.14388020833333334
+        ],
+        "ground_anchor": [
+          0.879375,
+          0.7066666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The shrine occupies the east waterfront below the hiring hall and beside the forge, behind the nearer drum decks.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_sporewake_shrine.prompt.txt",
+        "prompt_sha256": "ce7e9ace30d63a0822cbaa85016d94d9dbea9f3fadffacc51c586c33c2acf1c1",
+        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-56bfea45-c9bf-4d98-bfaa-72d57be02d5c.png"
+      },
+      "building_mireclaw_fenbell_hunt_lodge": {
+        "asset_id": "faction_mireclaw_building_mireclaw_fenbell_hunt_lodge",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_fenbell_hunt_lodge.png",
+        "source_sha256": "77fe84973b97216cedd1f5794b080fbc3e3aa9488703c868f55520415dc67510",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1518,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_fenbell_hunt_lodge.png",
+        "trimmed_sha256": "bcc194370122de36b9bc8ce0d13cf285b3b8610d81d4e944bfa0f294dcc14fe1",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_fenbell_hunt_lodge.png",
+        "runtime_sha256": "2dc686ced43cad17dcba902cdf1c8dde4b4da1d938bff8ecc1ff662954672030",
+        "runtime_size": [
+          512,
+          345
+        ],
+        "normalized_rect": [
+          0.134375,
+          0.6055555555555555,
+          0.1297119140625,
+          0.15555555555555556
+        ],
+        "ground_anchor": [
+          0.240625,
+          0.7488888888888889
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The hunt lodge joins the left shore below the Archive and beside the Market, behind the nearer pack enclosure.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_fenbell_hunt_lodge.prompt.txt",
+        "prompt_sha256": "a9ea0f7ec9f5d35cdebd49b4afdb93b471efd207941829772813c0659332b168",
+        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-922e0fdf-7812-42a0-9429-fff09b4b84f6.png"
+      },
+      "building_mireclaw_nightglass_dominion": {
+        "asset_id": "faction_mireclaw_building_mireclaw_nightglass_dominion",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
+        "source_sha256": "dba7fb4f10bb71dd468e02370e27b0bdf4d5fc98c267616f4bec8bcf64493ff7",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1530,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
+        "trimmed_sha256": "2a444811d80c844956aa70a309967e12d85026752809534d5212664978669a84",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
+        "runtime_sha256": "8140c9e30546c3370841f858768382a7420e9f77389711dcf85ac8efcae1b48a",
+        "runtime_size": [
+          512,
+          343
+        ],
+        "normalized_rect": [
+          0.515625,
+          0.7444444444444445,
+          0.16497802734375,
+          0.19629629629633333
+        ],
+        "ground_anchor": [
+          0.5725,
+          0.9177777777777778
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The low command house sits on the near-right landing beside the central bridge, keeping the original main hall distinct.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.prompt.txt",
+        "prompt_sha256": "79982a2acd58554bd8dcf30b67de5dd55bb1a11a088aef7b56053ab557b82a1a",
+        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-f5d0d97b-3957-440e-9abf-f8a304260315.png"
+      },
+      "building_mireclaw_antler_pit": {
+        "asset_id": "faction_mireclaw_building_mireclaw_antler_pit",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
+        "source_sha256": "b1e90dfcb9c8f217aa3860e158daebac2815c7d1303f475cb85cd5b319ddb5ff",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1522,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
+        "trimmed_sha256": "1009c66522d8297179ef70c5cea0681b90f1586ee224edd3c86e5bc5639eebbf",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
+        "runtime_sha256": "8a02cfab7d3071d08f6dc454a277d8a6be6b04315e3e156506fb08ceb44352f6",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.31875,
+          0.7722222222222223,
+          0.15792236328125,
+          0.18888888888888888
+        ],
+        "ground_anchor": [
+          0.446875,
+          0.9444444444444444
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The shallow apex enclosure extends the left foreground landing beside the earlier pack ring.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.prompt.txt",
+        "prompt_sha256": "b5bdc31aac7e497d398e5d2a891e7ee84800265acac77efe1b594d91a0bec091",
+        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-fcb9ee28-4601-4ea4-9b0e-219a2544723d.png"
+      },
+      "building_mireclaw_oathmire_court": {
+        "asset_id": "faction_mireclaw_building_mireclaw_oathmire_court",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_oathmire_court.png",
+        "source_sha256": "b7f9907ffc6d147a8831ea11ba7632fc53c3fe4e9d49528fad02f796ef63580b",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_oathmire_court.png",
+        "trimmed_sha256": "fccdc52df3bbe985b9a8c545123862cbd3f080e84d587ffc6ced304d2380fd21",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_oathmire_court.png",
+        "runtime_sha256": "10b35117f9029dd7399a3b4f4fa1f641d6f94ebca5d151432443f0bc97714e85",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.515625,
+          0.7444444444444445,
+          0.165625,
+          0.19629629629633333
+        ],
+        "ground_anchor": [
+          0.5725,
+          0.9177777777777778
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The expanded council gallery replaces the Dominion in its exact source-space site and ground anchor; the saved predecessor remains intact.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_oathmire_court.prompt.txt",
+        "prompt_sha256": "650af308eff6ea8c025e8ca3655ff4ac25761c469d105533f7adf9bf8d719664",
+        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-316372ce-827b-4ed6-aaf5-81fef5cabe2c.png"
       }
     }
   }

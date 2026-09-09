@@ -28,6 +28,9 @@ def validate_scene_layers(payload=None):
     require(required_mireclaw.issubset(factions.get('faction_mireclaw',{})), 'Missing Mireclaw opening scene mapping')
     required_mireclaw_growth = {'building_mire_pens','building_reed_warren','building_slingers_post','building_rot_warren','building_fenscale_pens','building_war_drum_circle','building_lantern_archive','building_starseer_annex','building_gorefen_ring'}
     require(required_mireclaw_growth.issubset(factions.get('faction_mireclaw',{})), 'Missing Mireclaw dwelling/magic batch scene mapping')
+    duskfen = next(town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['id']=='town_duskfen')
+    required_duskfen = set(duskfen['starting_building_ids'] + duskfen['buildable_building_ids']) - {'building_town_hall'}
+    require(required_duskfen.issubset(factions.get('faction_mireclaw',{})), 'Missing constructible Duskfen scene mapping: '+', '.join(sorted(required_duskfen-set(factions.get('faction_mireclaw',{})))))
     required_embercourt = {'building_muster_yard','building_wayfarers_hall','building_market_square'}
     require(required_embercourt.issubset(factions.get('faction_embercourt',{})), 'Missing accepted Embercourt opening scene mapping')
     required_growth = {'building_stone_store','building_watch_barracks','building_bowyer_lodge','building_beacon_range'}
@@ -52,7 +55,7 @@ def validate_scene_layers(payload=None):
               [('building_muster_yard','building_watch_barracks'),('building_bowyer_lodge','building_beacon_range'),('building_lantern_archive','building_starseer_annex'),('building_embercourt_charter_bastion','building_embercourt_charter_flame')]]
     mireclaw = factions.get('faction_mireclaw',{})
     pairs += [(mireclaw.get(base,{}),mireclaw.get(upgrade,{}),upgrade,base) for base,upgrade in
-              [('building_blackbranch_den','building_reed_warren'),('building_mire_pens','building_fenscale_pens'),('building_slingers_post','building_rot_warren'),('building_lantern_archive','building_starseer_annex')]]
+              [('building_blackbranch_den','building_reed_warren'),('building_mire_pens','building_fenscale_pens'),('building_slingers_post','building_rot_warren'),('building_lantern_archive','building_starseer_annex'),('building_mireclaw_nightglass_dominion','building_mireclaw_oathmire_court')]]
     for sounding,court,upgrade_name,base_name in pairs:
         if not sounding or not court:
             continue
@@ -140,7 +143,7 @@ class TownSceneLayersTests(unittest.TestCase):
     def test_every_mireclaw_opening_mapping_is_required(self):
         from tools import prepare_town_scene_layers as preparation
         opening={'building_blackbranch_den','building_wayfarers_hall','building_market_square'}
-        self.assertEqual(set(preparation.MIRECLAW_BRIEFS), opening|set(preparation.MIRECLAW_GROWTH_BRIEFS))
+        self.assertEqual(set(preparation.MIRECLAW_BRIEFS), opening|set(preparation.MIRECLAW_GROWTH_BRIEFS)|set(preparation.MIRECLAW_FACTION_BRIEFS))
         for building in opening:
             with self.subTest(building=building):
                 payload=copy.deepcopy(self.payload)

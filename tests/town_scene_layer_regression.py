@@ -22,6 +22,9 @@ EMBERCOURT_SAVE_SHA256 = 'c0d67e4b2a8403ac82ae599391ae0a946ea16110beb4dd378a599a
 MIRECLAW_SAVE_SHA256 = '57f48cd7fcb650777a7923f5aec273f8bd73e61d65acaf9306a048323549ba89'
 MIRECLAW_IDS = ['building_blackbranch_den', 'building_wayfarers_hall', 'building_market_square']
 MIRECLAW_GROWTH_IDS = ['building_mire_pens', 'building_reed_warren', 'building_slingers_post', 'building_rot_warren', 'building_fenscale_pens', 'building_war_drum_circle', 'building_lantern_archive', 'building_starseer_annex', 'building_gorefen_ring']
+MIRECLAW_FACTION_SAVE_SHA256 = '803dd1cb233b5816a50e02bbbf4605b9873eeede52570552fee5249750a71b63'
+MIRECLAW_FACTION_DEVELOPED_SAVE_SHA256 = 'd02feae85e182e76af2397b50684c49472a19b6b221c8d45f501d78272d4ad83'
+MIRECLAW_FACTION_IDS = ['building_mireclaw_reed_toll', 'building_mireclaw_blackbranch_den', 'building_mireclaw_silt_watch', 'building_mireclaw_war_drum_circle', 'building_mireclaw_floodtide_forge', 'building_mireclaw_chainboom_ferry', 'building_mireclaw_bog_oracle_nest', 'building_mireclaw_boneboom_palisade', 'building_mireclaw_sporewake_shrine', 'building_mireclaw_fenbell_hunt_lodge', 'building_mireclaw_nightglass_dominion', 'building_mireclaw_antler_pit', 'building_mireclaw_oathmire_court']
 EMBERCOURT_DEVELOPED_SHA256 = '553ceb3ea972412cd72341ff627fa73c6864f9bcbfb6cc428923ebec5712de59'
 EMBERCOURT_IDS = ['building_muster_yard', 'building_wayfarers_hall', 'building_market_square']
 EMBERCOURT_GROWTH_IDS = ['building_stone_store', 'building_watch_barracks', 'building_bowyer_lodge', 'building_beacon_range']
@@ -249,6 +252,13 @@ func inspect_scene_layers(ids: Array = ["building_veilmourn_bell_harbor", "build
 			check(presses[0]==0 and foreground.open and foreground.mode=="building_info" and foreground.title==foreground.expected_title,"foreground Vault did not own its visible Market overlap")
 			shell._close_town_catalog(false)
 			body=Vector2(0.70,0.35) # Exposed right-hand trading canopy, not the concealed lower counter.
+		if id=="building_mireclaw_antler_pit":
+			var old_point: Vector2=button.get_global_transform_with_canvas()*(body*button.size)
+			var footer: Rect2=shell.validation_owner_town_layout_snapshot().footer_rect
+			if get_viewport().get_visible_rect().size.x<=1280:
+				check(footer.has_point(old_point),"Antler lower-body overlap is not the protected navigation footer")
+			body=Vector2(0.32,0.24) # Exposed roof; navigation keeps ownership of the lower rim.
+			check(not footer.has_point(button.get_global_transform_with_canvas()*(body*button.size)),"Antler exposed roof is still covered by navigation")
 		check(button._has_point(body*button.size),"authored pointer test point is not painted: "+id)
 		if not button._has_point(body*button.size):
 			button.pressed.disconnect(observe)
@@ -901,6 +911,83 @@ func purchase_mireclaw_materials(id: String) -> void:
 '''
 
 
+def mireclaw_faction_script():
+    """Finish Duskfen from the earned Day-11 save, never a built-id fixture."""
+    script=mireclaw_script(SCRIPT,batch_growth=True)
+    start=script.index('\tawait inspect("opening")')
+    end=script.index('\tvar path: String=SaveService.save_session',start)
+    script=script[:start]+'\tawait inspect("faction_chain_opening")\n\tawait inspect_harbor_growth()\n'+script[end:]
+    script=script.replace(json.dumps(MIRECLAW_GROWTH_IDS),json.dumps(MIRECLAW_FACTION_IDS))
+    script=script.replace('for id in '+json.dumps(MIRECLAW_FACTION_IDS)+':',
+                          'for id in '+json.dumps(MIRECLAW_FACTION_IDS)+':\n\t\tif id=="building_mireclaw_sporewake_shrine" and not await prepare_late_court_supply(): return')
+    script=script.replace('var prior_info: Dictionary=shell.validation_activate_building_information(previous_id)',
+                          'if id=="building_mireclaw_oathmire_court":\n\t\t\t\tvar checkpoint: String=SaveService.save_session(session.to_dict(),3)\n\t\t\t\tcheck(checkpoint!="" and DirAccess.copy_absolute(checkpoint,out.path_join("pending_court_turn_save.json"))==OK,"could not retain actual pre-turn Court state")\n\t\t\tawait prepare_duskfen_faction_defense()\n\t\t\tif not errors.is_empty(): return\n\t\t\tvar prior_info: Dictionary=shell.validation_activate_building_information(previous_id)')
+    # A real Day-14 town-defense battle interrupted the first run. Resolve the
+    # actual fight/report, retain any loss and re-check ownership before entry.
+    script=script.replace('\t\t\tvar valid_turn: bool=',
+                          '\t\t\tif not session.battle.is_empty():\n\t\t\t\tvar battle_save: String=SaveService.save_session(session.to_dict(),3)\n\t\t\t\tcheck(battle_save!="" and DirAccess.copy_absolute(battle_save,out.path_join("defense_day_%d_save.json" % session.day))==OK,"could not retain real town-defense battle")\n\t\t\t\tawait resolve_late_court_guard()\n\t\t\t\tsession=SessionState.ensure_active_session()\n\t\t\tvar valid_turn: bool=')
+    # Reuse the previously accepted ordinary recruitment, map-pointer guard,
+    # casualty-report and return-to-town routes with this exact saved identity.
+    supply=EMBERCOURT_LATE_COURT_SUPPLY.replace('native_h3maped_93c0f05a_object_0950','native_h3maped_ce8e40cc_object_0950')
+    supply=supply.replace('["unit_river_guard","unit_ember_archer","unit_citadel_pikeward"]',
+                          '["unit_bog_brute","unit_blackbranch_cutthroat","unit_mire_slinger"]')
+    supply=supply.replace('var source_id: String=', 'var battles_before: int=rows.filter(func(r):return r.label=="ordinary_late_court_supply_battle").size()\n\tvar reports_before: int=rows.filter(func(r):return r.label=="ordinary_late_court_supply_battle_report").size()\n\tvar source_id: String=')
+    supply=supply.replace('rows.any(func(r):return r.label=="ordinary_late_court_supply_battle") and rows.any(func(r):return r.label=="ordinary_late_court_supply_battle_report")',
+                          'rows.filter(func(r):return r.label=="ordinary_late_court_supply_battle").size()>battles_before and rows.filter(func(r):return r.label=="ordinary_late_court_supply_battle_report").size()>reports_before')
+    supply=supply.replace('var request: Dictionary=scene.validation_request_quick_resolve_confirmation()',
+                          'var context: Dictionary=SessionState.ensure_active_session().battle.get("context",{}).duplicate(true)\n\t\t\tvar request: Dictionary=scene.validation_request_quick_resolve_confirmation()')
+    supply=supply.replace('"request_ok":request.get("ok",false)', '"context":context,"request_ok":request.get("ok",false)')
+    order='func perform_riverworks_defense_order'+RIVERWORKS_DEFENSE.split('func perform_riverworks_defense_order',1)[1]
+    order=order.replace('perform_riverworks_defense_order','perform_late_court_supply_order').replace('control.from_dict(before)','control.from_dict(session.to_dict())')
+    # Match the real synchronous read scopes and isolate only detached cache
+    # metadata, as for the accepted build control. The broad validation wrapper
+    # adds forecast reads which are not part of the ordinary button action.
+    order=order.replace('var signature: Dictionary=TownRules.town_action_consequence_signature(control)',
+                        'var normalization_cache: Dictionary=OverworldRules._runtime_normalized_signatures.duplicate(true)\n\tOverworldRules.begin_normalized_read_scope(control)\n\tTownRules.begin_read_scope(control)\n\tvar signature: Dictionary=TownRules.town_action_consequence_signature(control)\n\tTownRules.end_read_scope(control)\n\tOverworldRules.end_normalized_read_scope(control)')
+    order=order.replace('var recap: Dictionary=TownRules.build_town_action_recap(control,lane,action_id,action,expected,signature)',
+                        'OverworldRules.begin_normalized_read_scope(control)\n\tTownRules.begin_read_scope(control)\n\tvar recap: Dictionary=TownRules.build_town_action_recap(control,lane,action_id,action,expected,signature)\n\tTownRules.end_read_scope(control)\n\tOverworldRules.end_normalized_read_scope(control)')
+    order=order.replace('var result: Dictionary=shell.validation_perform_town_action(action_id)',
+                        'OverworldRules._runtime_normalized_signatures=normalization_cache\n\tif lane=="recruit": shell._on_recruit_action_pressed(action_id.trim_prefix("recruit:"))\n\telse: shell._on_transfer_action_pressed(action_id)\n\tvar result: Dictionary={"ok":shell._last_action_recap.get("action_id","")==action_id}')
+    defense=RIVERWORKS_DEFENSE.split('func perform_riverworks_defense_order',1)[0]
+    defense=defense.replace('prepare_riverworks_defense','prepare_duskfen_faction_defense').replace('[10,11,12]','[11,12,13]')
+    defense=defense.replace('if session.day not in [11,12,13] or session.day in riverworks_defense_days: return',
+                            'var scheduled: bool=session.day in [11,12,13] or (session.day>=29 and (session.day-1)%7==0)\n\tif not scheduled or session.day in riverworks_defense_days: return')
+    defense=defense.replace('["unit_river_guard","unit_ember_archer","unit_citadel_pikeward"]','["unit_bog_brute","unit_blackbranch_cutthroat","unit_mire_slinger"]')
+    defense=defense.replace('for unit_id in ["unit_bog_brute","unit_blackbranch_cutthroat","unit_mire_slinger"]:',
+                            'var defense_units: Array=["unit_bog_brute","unit_blackbranch_cutthroat","unit_mire_slinger"]\n\tif session.day>=29: defense_units.append("unit_gorefen_ripper")\n\tfor unit_id in defense_units:')
+    defense=defense.replace('var amount: String="half" if unit_id=="unit_river_guard" else "all"',
+                            'var amount: String="all" if unit_id=="unit_gorefen_ripper" else "half"')
+    defense=defense.replace('perform_riverworks_defense_order','perform_late_court_supply_order')
+    # Preserve and report a genuine loss without running Town-only fixtures on
+    # the Overworld scene afterwards. This does not turn a failed run green.
+    script=script.replace('await layer_visibility_fixture()',
+                          'if errors.is_empty(): await layer_visibility_fixture()')
+    script=script.replace('if not ok: errors.append(message)',
+                          'if not ok:\n\t\terrors.append(message)\n\t\tprint("TOWN_LAYER_CHECK_FAILED "+message)')
+    script=script.replace('previous_id = id',
+                          'if not errors.is_empty(): return\n\t\tprevious_id = id')
+    script=script.replace('batch_developed.png','faction_chain_developed.png')
+    return script+supply+defense+order
+
+
+def mireclaw_developed_script():
+    """Read-only replay of the genuine Day-51 result; never reconstruct growth."""
+    script=mireclaw_faction_script()
+    script=script.replace('await inspect("faction_chain_opening")\n\tawait inspect_harbor_growth()', r'''await inspect("earned_developed")
+	var before_input: Dictionary=normalized(session.to_dict())
+	var stage=get_tree().current_scene.get_node("%TownStage")
+	var visible: Array=stage._town_building_scene_entries(stage._town_scene_rect()).filter(func(e):return e.visible_building_id!="" and not e.get("embedded_in_base",false)).map(func(e):return e.visible_building_id)
+	await inspect_scene_layers(visible)
+	check(normalized(session.to_dict())==before_input,"earned developed input changed full gameplay state")
+	await clear_layer_capture_focus()
+	await RenderingServer.frame_post_draw
+	get_viewport().get_texture().get_image().save_png(out.path_join("earned_developed.png"))
+	rows.append({"label":"read_only_earned_developed_input_not_paid_replay","day":session.day,"visible_ids":visible,"full_state_equal":normalized(session.to_dict())==before_input})''')
+    script=script.replace('var resumed=SessionState.restore_session(SaveService.load_session(3))',
+                          'check(DirAccess.copy_absolute(path,out.path_join("earned_growth_save.json"))==OK,"could not retain read-only earned state")\n\tvar resumed=SessionState.restore_session(SaveService.load_session(3))',1)
+    return script
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--label', required=True)
@@ -908,6 +995,8 @@ def main():
     parser.add_argument('--resolution', choices=['1280x720', '1920x1080', '2048x1079'], required=True)
     parser.add_argument('--faction', choices=['veilmourn', 'embercourt', 'mireclaw'], default='veilmourn')
     parser.add_argument('--mireclaw-growth', action='store_true', help='Nine ordinary Duskfen orders; lightweight per-build checks and one combined input sweep')
+    parser.add_argument('--mireclaw-faction-growth', action='store_true', help='Thirteen paid faction-chain orders from earned Day 11, with ordinary guarded supply acquisition')
+    parser.add_argument('--mireclaw-developed-input', action='store_true', help='Read-only complete input/save sweep of exact earned Day 51; no paid progression claim')
     parser.add_argument('--embercourt-growth', action='store_true', help='Four paid Stone/Watch/Bowyer/Beacon orders from the exact earned Medium11 Market save')
     parser.add_argument('--embercourt-supply-growth', action='store_true', help='Five paid supply/magic orders and ordinary ore trades from the exact earned Day-5 save')
     parser.add_argument('--embercourt-riverworks-growth', action='store_true', help='Six normal riverworks-chain builds from the exact earned Day-10 save')
@@ -923,9 +1012,9 @@ def main():
     parser.add_argument('--presentation-only', action='store_true', help='Read-only opening/developed input checks; no purchases or match progression evidence')
     parser.add_argument('--developed-save', type=Path, help='Exact recorded built-id composition fixture; never resumed as a live match')
     args = parser.parse_args()
-    if args.mireclaw_growth and args.faction!='mireclaw':
+    if (args.mireclaw_growth or args.mireclaw_faction_growth or args.mireclaw_developed_input) and args.faction!='mireclaw':
         parser.error('Mireclaw growth requires --faction mireclaw')
-    if sum((args.harbor_growth, args.exchange_growth, args.salt_growth, args.defense_growth, args.memory_growth, args.rigging_magic_growth, args.late_harbor_growth, args.embercourt_growth, args.embercourt_supply_growth, args.embercourt_riverworks_growth, args.embercourt_civic_growth, args.embercourt_late_court_growth, args.presentation_only)) > 1:
+    if sum((args.mireclaw_growth, args.mireclaw_faction_growth, args.mireclaw_developed_input, args.harbor_growth, args.exchange_growth, args.salt_growth, args.defense_growth, args.memory_growth, args.rigging_magic_growth, args.late_harbor_growth, args.embercourt_growth, args.embercourt_supply_growth, args.embercourt_riverworks_growth, args.embercourt_civic_growth, args.embercourt_late_court_growth, args.presentation_only)) > 1:
         parser.error('select one normal construction sequence per run')
     if args.presentation_only and not args.developed_save:
         parser.error('presentation-only requires an exact --developed-save fixture')
@@ -947,7 +1036,11 @@ def main():
         parser.error('fresh lowercase label required')
     save = args.save.resolve(strict=True)
     before_hash = hashlib.sha256(save.read_bytes()).hexdigest()
-    if args.faction=='mireclaw' and before_hash!=MIRECLAW_SAVE_SHA256:
+    if args.mireclaw_faction_growth and before_hash!=MIRECLAW_FACTION_SAVE_SHA256:
+        parser.error('Mireclaw faction growth requires the exact earned Duskfen Day-11 save')
+    if args.mireclaw_developed_input and before_hash!=MIRECLAW_FACTION_DEVELOPED_SAVE_SHA256:
+        parser.error('Mireclaw developed input requires the exact earned Duskfen Day-51 save')
+    if args.faction=='mireclaw' and not (args.mireclaw_faction_growth or args.mireclaw_developed_input) and before_hash!=MIRECLAW_SAVE_SHA256:
         parser.error('Mireclaw opening requires the exact recorded nonterminal generated Duskfen Day-1 save')
     if args.embercourt_growth and before_hash!=EMBERCOURT_GROWTH_SAVE_SHA256:
         parser.error('Embercourt growth requires the exact earned nonterminal Medium11 Market save')
@@ -1055,8 +1148,8 @@ def main():
     elif args.faction=='embercourt':
         script_text = embercourt_script(script_text, presentation_only=args.presentation_only)
     elif args.faction=='mireclaw':
-        script_text=mireclaw_script(script_text,batch_growth=args.mireclaw_growth)
-        sequence='mireclaw_nine_building_batch' if args.mireclaw_growth else 'mireclaw_market_and_mire_pens'
+        script_text=mireclaw_developed_script() if args.mireclaw_developed_input else mireclaw_faction_script() if args.mireclaw_faction_growth else mireclaw_script(script_text,batch_growth=args.mireclaw_growth)
+        sequence='mireclaw_read_only_earned_developed_input' if args.mireclaw_developed_input else 'mireclaw_thirteen_faction_batch' if args.mireclaw_faction_growth else 'mireclaw_nine_building_batch' if args.mireclaw_growth else 'mireclaw_market_and_mire_pens'
     if args.resolution == '2048x1079':
         script_text = script_text.replace('SettingsService.set_presentation_resolution(OS.get_environment("TOWN_OVERLAY_RESOLUTION"))', 'get_window().content_scale_size = Vector2i(2048,1079)\n\tget_window().size = Vector2i(2048,1079)')
     with tempfile.TemporaryDirectory(prefix='town-layer-probe-', dir=OUTPUT) as temporary, tempfile.TemporaryDirectory(prefix='town-layer-data-', dir='/dev/shm') as data:
@@ -1072,7 +1165,7 @@ def main():
         with (out / 'runtime.log').open('w') as log:
             # Rigging/magic covers every currently visible painting after each
             # of six orders, not only the newly constructed building.
-            code = run_probe(command, env, log, timeout_seconds=1800 if args.mireclaw_growth else 3600 if args.late_harbor_growth or args.embercourt_late_court_growth else 1800 if args.rigging_magic_growth or args.embercourt_supply_growth or args.embercourt_riverworks_growth or args.embercourt_civic_growth else 900 if args.salt_growth or args.defense_growth or args.memory_growth or args.embercourt_growth else 600 if growth_enabled else 300)
+            code = run_probe(command, env, log, timeout_seconds=3600 if args.mireclaw_faction_growth else 1800 if args.mireclaw_growth else 3600 if args.late_harbor_growth or args.embercourt_late_court_growth else 1800 if args.rigging_magic_growth or args.embercourt_supply_growth or args.embercourt_riverworks_growth or args.embercourt_civic_growth else 900 if args.salt_growth or args.defense_growth or args.memory_growth or args.embercourt_growth else 600 if growth_enabled else 300)
     lines = (out / 'runtime.log').read_text().splitlines()
     marker = 'TOWN_OVERLAY_OWNERSHIP '
     reports = [json.loads(line[len(marker):]) for line in lines if line.startswith(marker)]
