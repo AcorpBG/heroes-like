@@ -44128,7 +44128,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             ensure(hashlib.sha256(runtime_path.read_bytes()).hexdigest() == entry.get("runtime_sha256"), errors, "Wreck Quay runtime must match its approved processing provenance")
             repair_manifest_path = res_path_to_disk(str(entry.get("source_processing_manifest", "")))
             ensure(repair_manifest_path.is_file(), errors, "Wreck Quay must name its original-raster processing manifest")
-        if asset_id in {"mapobj_cinder_ore_face", "mapobj_moss_oath_cache"} and runtime_path.exists():
+        if asset_id in {"mapobj_cinder_ore_face", "mapobj_moss_oath_cache", "mapobj_marsh_listener_post"} and runtime_path.exists():
             cutout_spec = importlib.util.spec_from_file_location("map_object_cutout_validation", ROOT / "tools" / "repair_map_object_cutouts.py")
             cutout_module = importlib.util.module_from_spec(cutout_spec)
             cutout_spec.loader.exec_module(cutout_module)

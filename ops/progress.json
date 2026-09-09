@@ -71,8 +71,8 @@
         "python3 -B tests/town_scene_layer_regression.py --faction embercourt --embercourt-late-court-growth --save <exact-earned-Medium11-Day19-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
         "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-late-court-growth --save <exact-earned-Medium11-Day19-save> --resolution 1280x720 --label <fresh>",
         "python3 -B -m unittest discover -s tests -p test_map_object_cutouts.py",
-        "python3 -B tests/overworld_map_object_cutout_regression.py --case <large_cinder|medium_moss_unclaimed|medium_moss_claimed> --save <exact-case-save> --resolution <1280x720|1920x1080> --label <fresh>",
-        "python3 -B tests/packaged_overworld_map_object_cutout_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --case <large_cinder|medium_moss_unclaimed|medium_moss_claimed> --save <exact-case-save> --label <fresh>",
+        "python3 -B tests/overworld_map_object_cutout_regression.py --case <large_cinder|medium_moss_unclaimed|medium_moss_claimed|medium_marsh_listener> --save <exact-case-save> --resolution <1280x720|1920x1080> --label <fresh>",
+        "python3 -B tests/packaged_overworld_map_object_cutout_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --case <large_cinder|medium_moss_unclaimed|medium_moss_claimed|medium_marsh_listener> --save <exact-case-save> --label <fresh>",
         "python3 -B tools/repair_map_object_cutouts.py --check",
         "python3 -B -m unittest discover -s tests -p test_packaged_overworld_cutout_probe.py"
       ],
@@ -146,16 +146,17 @@
         "Embercourt late-court packet: original Beacon Court, Drake Sluice, Charter Colossus Bastion and same-site Charter Flame source/prompt/trim/runtime paintings and exact-faction preparation/manifest. Preserve all 42 accepted layers, villages/catalogs and gameplay. Extend tests/town_scene_layer_regression.py --embercourt-late-court-growth and strict Python tests for the exact earned Day-19 save, normal visible supply-cache capture/daily income, paid orders, upgrade/input/full-save preservation, inspected three-resolution composition and both official Linux/Windows packages below 250000000 bytes.",
         "Embercourt civic-quay packet: original Lantern Court and Relief Quay source/prompt/trim/runtime paintings, exact-faction manifest and preparation briefs; preserve 40 accepted layers, villages/catalogs and gameplay.",
         "tests/town_scene_layer_regression.py --embercourt-civic-growth and strict art/sequence tests: exact earned Day-17 424edffe save, two normal paid orders and Ore trades, confirmed turns, full old/new state/save and painted input/depth ownership at three inspected resolutions; shared Town/repository and identical official Linux/Windows packaged flow below 250000000 bytes. No invented rare-resource supply or injected progression; the later late-court continuation covers the four rare-cost Riverwatch buildings. Other town variants/factions and Overworld remain open.",
-        "Cinder/Moss cutout repair: tools/repair_map_object_cutouts.py, exact before/trim/runtime rasters and processing provenance, tests/test_map_object_cutouts.py and tests/overworld_map_object_cutout_regression.py. Hash-lock two original extracted assets, remove only inspected divider/magenta contamination, preserve all other art/native/gameplay authority, and validate Large mine plus Medium earned unclaimed/claimed cache through source and official Linux/Windows dual-resolution/full-save/member checks below 250000000 bytes."
+        "Cinder/Moss cutout repair: tools/repair_map_object_cutouts.py, exact before/trim/runtime rasters and processing provenance, tests/test_map_object_cutouts.py and tests/overworld_map_object_cutout_regression.py. Hash-lock two original extracted assets, remove only inspected divider/magenta contamination, preserve all other art/native/gameplay authority, and validate Large mine plus Medium earned unclaimed/claimed cache through source and official Linux/Windows dual-resolution/full-save/member checks below 250000000 bytes.",
+        "Marsh Listener Post continuation: tools/repair_map_object_cutouts.py selected-asset preparation and separate source/trim/runtime provenance; tests/overworld_map_object_cutout_regression.py --case medium_marsh_listener. Preserve the exact Medium Day-46 original placement, body/block/visit masks, controller, fog and full saves; failing-before and accepted dual-resolution source/Linux/Windows evidence, existing sprite/input/Town tests, all-member parity and unchanged 250000000-byte cap."
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-09T00:28:54Z",
+      "updatedAt": "2026-09-09T01:05:10Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated Cinder/Moss checkpoint: two original runtime/trim cutouts cleaned with preserved masters, exact pixels and provenance; 17 source jobs/43 Python tests and 14 official Linux/Windows package jobs pass. Six negative controls and 18 repaired earned views preserve all 24 full non-clock saves and entire placements. Twelve source/Linux screenshots inspected; Windows headless Wine only. Both PCKs 249668544 bytes, 5228 members, 5224 prior members unchanged and platform difference only project.binary. All 5820 other baseline files and tracked native sources/binaries preserved. This pair is accepted; observed Marsh Listener Post cutout, broader Town/faction art and unapproved cap request remain open. Full goal and presentation child stay in_progress."
+      "notes": "Original Marsh Listener Post runtime/trim cutouts now have zero sheet debris or magenta contamination, preserving the exact before master/atlas, original canvas and all 30385 uncontaminated body pixels. Two failing-before controls and six corrected source/Linux/Windows earned Day-46 views pass 31 checks each; all eight complete saves and entire native placement/masks/tile/art authority match outside only saved_at_unix, as exact Decimal JSON and raw bytes. All 16 source jobs (44 Python tests, prior Cinder/Moss/Wreck and sprite/decorative/fog/input/Town reports, preservation, repository/diff) and six official package jobs pass. Both platforms pass the five existing bootstrap controls. Four corrected source/Linux captures inspected; Windows headless Wine only. Both PCKs are 249671040 bytes with 328960 headroom, 5228 members, 5225 prior payloads unchanged and platform difference only project.binary. All 5864 other baseline art/content/runtime/native files are unchanged. Existing caches, saves and evidence preserved; new Wine environments disposable. Broader Town variants/factions and the unapproved budget decision remain open."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16773,10 +16774,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
   "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Validated Cinder/Moss checkpoint: two original runtime/trim cutouts cleaned with preserved masters, exact pixels and provenance; 17 source jobs/43 Python tests and 14 official Linux/Windows package jobs pass. Six negative controls and 18 repaired earned views preserve all 24 full non-clock saves and entire placements. Twelve source/Linux screenshots inspected; Windows headless Wine only. Both PCKs 249668544 bytes, 5228 members, 5224 prior members unchanged and platform difference only project.binary. All 5820 other baseline files and tracked native sources/binaries preserved. This pair is accepted; observed Marsh Listener Post cutout, broader Town/faction art and unapproved cap request remain open. Full goal and presentation child stay in_progress.",
+  "currentSliceNotes": "Original Marsh Listener Post runtime/trim cutouts now have zero sheet debris or magenta contamination, preserving the exact before master/atlas, original canvas and all 30385 uncontaminated body pixels. Two failing-before controls and six corrected source/Linux/Windows earned Day-46 views pass 31 checks each; all eight complete saves and entire native placement/masks/tile/art authority match outside only saved_at_unix, as exact Decimal JSON and raw bytes. All 16 source jobs (44 Python tests, prior Cinder/Moss/Wreck and sprite/decorative/fog/input/Town reports, preservation, repository/diff) and six official package jobs pass. Both platforms pass the five existing bootstrap controls. Four corrected source/Linux captures inspected; Windows headless Wine only. Both PCKs are 249671040 bytes with 328960 headroom, 5228 members, 5225 prior payloads unchanged and platform difference only project.binary. All 5864 other baseline art/content/runtime/native files are unchanged. Existing caches, saves and evidence preserved; new Wine environments disposable. Broader Town variants/factions and the unapproved budget decision remain open.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Full-Match Presentation Corrections",
-  "currentSliceUpdatedAt": "2026-09-09T00:30:25Z",
+  "currentSliceUpdatedAt": "2026-09-09T01:03:14Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22583,8 +22584,8 @@
         "python3 -B tests/town_scene_layer_regression.py --faction embercourt --embercourt-late-court-growth --save <exact-earned-Medium11-Day19-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
         "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction embercourt --embercourt-late-court-growth --save <exact-earned-Medium11-Day19-save> --resolution 1280x720 --label <fresh>",
         "python3 -B -m unittest discover -s tests -p test_map_object_cutouts.py",
-        "python3 -B tests/overworld_map_object_cutout_regression.py --case <large_cinder|medium_moss_unclaimed|medium_moss_claimed> --save <exact-case-save> --resolution <1280x720|1920x1080> --label <fresh>",
-        "python3 -B tests/packaged_overworld_map_object_cutout_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --case <large_cinder|medium_moss_unclaimed|medium_moss_claimed> --save <exact-case-save> --label <fresh>",
+        "python3 -B tests/overworld_map_object_cutout_regression.py --case <large_cinder|medium_moss_unclaimed|medium_moss_claimed|medium_marsh_listener> --save <exact-case-save> --resolution <1280x720|1920x1080> --label <fresh>",
+        "python3 -B tests/packaged_overworld_map_object_cutout_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --case <large_cinder|medium_moss_unclaimed|medium_moss_claimed|medium_marsh_listener> --save <exact-case-save> --label <fresh>",
         "python3 -B tools/repair_map_object_cutouts.py --check",
         "python3 -B -m unittest discover -s tests -p test_packaged_overworld_cutout_probe.py"
       ],
@@ -22658,16 +22659,17 @@
         "Embercourt late-court packet: original Beacon Court, Drake Sluice, Charter Colossus Bastion and same-site Charter Flame source/prompt/trim/runtime paintings and exact-faction preparation/manifest. Preserve all 42 accepted layers, villages/catalogs and gameplay. Extend tests/town_scene_layer_regression.py --embercourt-late-court-growth and strict Python tests for the exact earned Day-19 save, normal visible supply-cache capture/daily income, paid orders, upgrade/input/full-save preservation, inspected three-resolution composition and both official Linux/Windows packages below 250000000 bytes.",
         "Embercourt civic-quay packet: original Lantern Court and Relief Quay source/prompt/trim/runtime paintings, exact-faction manifest and preparation briefs; preserve 40 accepted layers, villages/catalogs and gameplay.",
         "tests/town_scene_layer_regression.py --embercourt-civic-growth and strict art/sequence tests: exact earned Day-17 424edffe save, two normal paid orders and Ore trades, confirmed turns, full old/new state/save and painted input/depth ownership at three inspected resolutions; shared Town/repository and identical official Linux/Windows packaged flow below 250000000 bytes. No invented rare-resource supply or injected progression; the later late-court continuation covers the four rare-cost Riverwatch buildings. Other town variants/factions and Overworld remain open.",
-        "Cinder/Moss cutout repair: tools/repair_map_object_cutouts.py, exact before/trim/runtime rasters and processing provenance, tests/test_map_object_cutouts.py and tests/overworld_map_object_cutout_regression.py. Hash-lock two original extracted assets, remove only inspected divider/magenta contamination, preserve all other art/native/gameplay authority, and validate Large mine plus Medium earned unclaimed/claimed cache through source and official Linux/Windows dual-resolution/full-save/member checks below 250000000 bytes."
+        "Cinder/Moss cutout repair: tools/repair_map_object_cutouts.py, exact before/trim/runtime rasters and processing provenance, tests/test_map_object_cutouts.py and tests/overworld_map_object_cutout_regression.py. Hash-lock two original extracted assets, remove only inspected divider/magenta contamination, preserve all other art/native/gameplay authority, and validate Large mine plus Medium earned unclaimed/claimed cache through source and official Linux/Windows dual-resolution/full-save/member checks below 250000000 bytes.",
+        "Marsh Listener Post continuation: tools/repair_map_object_cutouts.py selected-asset preparation and separate source/trim/runtime provenance; tests/overworld_map_object_cutout_regression.py --case medium_marsh_listener. Preserve the exact Medium Day-46 original placement, body/block/visit masks, controller, fog and full saves; failing-before and accepted dual-resolution source/Linux/Windows evidence, existing sprite/input/Town tests, all-member parity and unchanged 250000000-byte cap."
       ],
       "completionCriteria": [
         "Reproduce and correct stray Town resources, footer crowding and building integration defects",
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-09T00:28:54Z",
+      "updatedAt": "2026-09-09T01:05:10Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Validated Cinder/Moss checkpoint: two original runtime/trim cutouts cleaned with preserved masters, exact pixels and provenance; 17 source jobs/43 Python tests and 14 official Linux/Windows package jobs pass. Six negative controls and 18 repaired earned views preserve all 24 full non-clock saves and entire placements. Twelve source/Linux screenshots inspected; Windows headless Wine only. Both PCKs 249668544 bytes, 5228 members, 5224 prior members unchanged and platform difference only project.binary. All 5820 other baseline files and tracked native sources/binaries preserved. This pair is accepted; observed Marsh Listener Post cutout, broader Town/faction art and unapproved cap request remain open. Full goal and presentation child stay in_progress."
+      "notes": "Original Marsh Listener Post runtime/trim cutouts now have zero sheet debris or magenta contamination, preserving the exact before master/atlas, original canvas and all 30385 uncontaminated body pixels. Two failing-before controls and six corrected source/Linux/Windows earned Day-46 views pass 31 checks each; all eight complete saves and entire native placement/masks/tile/art authority match outside only saved_at_unix, as exact Decimal JSON and raw bytes. All 16 source jobs (44 Python tests, prior Cinder/Moss/Wreck and sprite/decorative/fog/input/Town reports, preservation, repository/diff) and six official package jobs pass. Both platforms pass the five existing bootstrap controls. Four corrected source/Linux captures inspected; Windows headless Wine only. Both PCKs are 249671040 bytes with 328960 headroom, 5228 members, 5225 prior payloads unchanged and platform difference only project.binary. All 5864 other baseline art/content/runtime/native files are unchanged. Existing caches, saves and evidence preserved; new Wine environments disposable. Broader Town variants/factions and the unapproved budget decision remain open."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -34880,10 +34882,10 @@
         "artifact": ".artifacts/ui_runtime_skin_visual_report/battle_1280x720.png",
         "artifactSha256": "7860c25c10b6cedf4da280b38d6e2b7f42f9a189a30ef808e92fd89f936e2fc4",
         "observedLabels": [
-          "River G\u2026 x10",
-          "Blackbra\u2026 x8",
-          "Mudglas\u2026 x1",
-          "Ember A\u2026 x5"
+          "River G… x10",
+          "Blackbra… x8",
+          "Mudglas… x1",
+          "Ember A… x5"
         ]
       },
       "createdAt": "2026-08-20T09:24:19Z",
@@ -111432,38 +111434,29 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Validated four original Riverwatch late-court paintings and legitimate guarded-supply/paid-growth continuation. All 18 source and 8 package jobs, three inspected resolutions, both official releases, 76 Python tests, prior/shared Town/repository checks, six complete non-clock saves and 5228-member parity pass. Each release passes 35963 earned/8499 developed checks and stays at 249662752 bytes, with 337248 bytes headroom. Accepted 22 Bellwake/24 Riverwatch layers do not cover other town variants, four remaining factions or all Overworld art; full goal in progress. Windows is headless Wine, not hardware certification; no package-limit increase is approved.",
+  "summary": "Validated the original Marsh Listener Post extraction repair: 16 source jobs, 44 Python tests, six official Linux/Windows package jobs, eight identical non-clock saves and inspected source/Linux captures. All earlier art/native/runtime authority preserved; 5225 of 5228 package members unchanged, both packs 249671040 bytes below the unchanged 250000000-byte limit. Wider Town variants/factions and the full quality goal remain in progress; Windows headless Wine only and no budget increase approved.",
   "taskId": "10236",
-  "updatedAt": "2026-09-09T00:30:25Z",
+  "updatedAt": "2026-09-09T01:05:11Z",
   "validation": {
-    "id": "quality-cinder-moss-cutouts-20260909",
+    "id": "quality-marsh-listener-cutout-20260909",
     "sliceId": "ux-generated-full-match-presentation-20260906",
     "status": "in_progress",
-    "validatedAt": "2026-09-09T00:30:25Z",
-    "scope": "Accepted two original-raster cutout corrections; full presentation and the parent goal remain in progress.",
-    "result": "Cinder Ore Face and Moss Oath Cache runtime/trim images now have zero inspected sheet debris or magenta contamination, preserving original masters, canvases and all uncontaminated body pixels. Six failing-before controls and eighteen repaired source/Linux/Windows earned-map cases preserve every complete placement and all 24 full saves outside only saved_at_unix, including exact Decimal JSON and raw-byte equality. All 17 source jobs (43 Python tests, shared sprite/decorative/fog/movement/Town/Wreck reports, preservation, repository/diff) and 14 official package jobs pass. All twelve repaired source/Linux screenshots were inspected; Windows is headless Wine, not physical GPU certification. Both packs are 249668544 bytes with 331456 headroom; 5224 of 5228 prior entries are unchanged, only two textures/Overworld manifest/UID cache differ and platforms differ only in project.binary. Earlier Town/Wreck/opened-cache art, 5820 other baseline files and tracked native sources/binaries are preserved. Failed service-environment attempts and the stopped editor-resource export remain separate from accepted final evidence. Standard smoke reports were copied unchanged after exact exported-inventory verification. Marsh Listener Post and broader Town/faction art remain open; no budget increase approved.",
+    "validatedAt": "2026-09-09T01:03:14Z",
+    "scope": "Accepted Marsh Listener Post original-raster correction; full presentation and parent goal remain in progress.",
+    "result": "Original Marsh Listener Post runtime/trim cutouts now have zero sheet debris or magenta contamination, preserving the exact before master/atlas, original canvas and all 30385 uncontaminated body pixels. Two failing-before controls and six corrected source/Linux/Windows earned Day-46 views pass 31 checks each; all eight complete saves and entire native placement/masks/tile/art authority match outside only saved_at_unix, as exact Decimal JSON and raw bytes. All 16 source jobs (44 Python tests, prior Cinder/Moss/Wreck and sprite/decorative/fog/input/Town reports, preservation, repository/diff) and six official package jobs pass. Both platforms pass the five existing bootstrap controls. Four corrected source/Linux captures inspected; Windows headless Wine only. Both PCKs are 249671040 bytes with 328960 headroom, 5228 members, 5225 prior payloads unchanged and platform difference only project.binary. All 5864 other baseline art/content/runtime/native files are unchanged. Existing caches, saves and evidence preserved; new Wine environments disposable. Broader Town variants/factions and the unapproved budget decision remain open.",
     "artifacts": [
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_source_acceptance_batch.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_packages_final_batch.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_source_acceptance.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_packages_acceptance.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_preservation.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_lossless.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_standard_report_retention.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_final_release_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_final_release_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_packaged_final_linux_large_cinder_1280x720/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_packaged_final_linux_large_cinder_1920x1080/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_packaged_final_linux_medium_moss_unclaimed_1280x720/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_packaged_final_linux_medium_moss_unclaimed_1920x1080/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_packaged_final_linux_medium_moss_claimed_1280x720/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_packaged_final_linux_medium_moss_claimed_1920x1080/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_packaged_final_windows_large_cinder_1280x720/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_packaged_final_windows_large_cinder_1920x1080/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_packaged_final_windows_medium_moss_unclaimed_1280x720/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_packaged_final_windows_medium_moss_unclaimed_1920x1080/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_packaged_final_windows_medium_moss_claimed_1280x720/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/cinder_moss_packaged_final_windows_medium_moss_claimed_1920x1080/packaged-report.json"
+      ".artifacts/generated_full_match_quality_20260906/marsh_listener_source_batch.json",
+      ".artifacts/generated_full_match_quality_20260906/marsh_listener_packages_batch.json",
+      ".artifacts/generated_full_match_quality_20260906/marsh_listener_source_acceptance.json",
+      ".artifacts/generated_full_match_quality_20260906/marsh_listener_packages_acceptance.json",
+      ".artifacts/generated_full_match_quality_20260906/marsh_listener_preservation.json",
+      ".artifacts/generated_full_match_quality_20260906/marsh_listener_lossless.json",
+      ".artifacts/generated_full_match_quality_20260906/marsh_listener_release_linux/report.json",
+      ".artifacts/generated_full_match_quality_20260906/marsh_listener_release_windows/report.json",
+      ".artifacts/generated_full_match_quality_20260906/marsh_listener_packaged_linux_1280x720/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/marsh_listener_packaged_linux_1920x1080/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/marsh_listener_packaged_windows_1280x720/packaged-report.json",
+      ".artifacts/generated_full_match_quality_20260906/marsh_listener_packaged_windows_1920x1080/packaged-report.json"
     ]
   },
   "validationHistory": [

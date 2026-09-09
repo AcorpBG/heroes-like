@@ -1,0 +1,58 @@
+{
+  "schema_id": "original_map_object_cutout_repair_v1",
+  "owner_approval": "2026-09-07 approved Overworld cutout repairs; Marsh Listener Post continuation selected in PLAN.md on 2026-09-09.",
+  "processing_tool": "tools/repair_map_object_cutouts.py",
+  "processing": "Original 512x512 RGBA canvases; remove inspected sheet debris outside each complete subject; analytically unmatte magenta and recover partial alpha. No replacement geometry or new painted pixels.",
+  "source_docs": [
+    "docs/generated-full-match-quality-requirements.md",
+    "docs/generated-full-match-art-repair-report.md"
+  ],
+  "generation": "No new generation. Original built-in image-generated batch06 painting and exact extracted before raster are retained.",
+  "assets": {
+    "mapobj_marsh_listener_post": {
+      "input": "res://art/overworld/source/generated/full_match_art_repairs/marsh_listener_cutout/mapobj_marsh_listener_post_before.png",
+      "input_sha256": "d73f51678c1ca4b756fe15a236e5eaacad5e2141ab01aa235d3e53b0000f7a7f",
+      "original_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "original_generated_atlas_sha256": "111b62a8da56c966ccc2d93cf1a4bfb25919de663aa012de667b98bd75b32798",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_marsh_listener_post.png",
+      "trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_marsh_listener_post-trimmed.png",
+      "runtime_sha256": "b1a9c1e6d86fade72300649791e05628f3b651e6168b33c437630ea465379e0b",
+      "body_window": [
+        124,
+        176,
+        382,
+        420
+      ],
+      "inspected_boundary": "Exclude the detached upper sheet divider and magenta debris; retain the entire horn-equipped hut, stilts, reeds, lily pads and water base.",
+      "before": {
+        "ok": false,
+        "errors": [
+          "sheet debris outside complete painted body",
+          "magenta-key contamination"
+        ],
+        "divider_pixels": 356,
+        "magenta_pixels": 4580,
+        "painted_pixels": 34974,
+        "alpha_bounds": [
+          99,
+          99,
+          413,
+          412
+        ]
+      },
+      "after": {
+        "ok": true,
+        "errors": [],
+        "divider_pixels": 0,
+        "magenta_pixels": 0,
+        "painted_pixels": 34618,
+        "alpha_bounds": [
+          128,
+          181,
+          377,
+          412
+        ]
+      }
+    }
+  }
+}

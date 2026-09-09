@@ -18,7 +18,8 @@ spec.loader.exec_module(cutouts)
 class MapObjectCutoutsTest(unittest.TestCase):
     def test_exact_originals_reproduce_defects(self):
         expected = {'mapobj_cinder_ore_face':(282,2941,47476),
-                    'mapobj_moss_oath_cache':(5,2056,42800)}
+                    'mapobj_moss_oath_cache':(5,2056,42800),
+                    'mapobj_marsh_listener_post':(356,4580,34974)}
         for asset_id, counts in expected.items():
             with self.subTest(asset=asset_id):
                 paths = cutouts.paths(asset_id)
@@ -47,7 +48,9 @@ class MapObjectCutoutsTest(unittest.TestCase):
                         if a and min(r,b)-g<=8:
                             self.assertEqual(repaired.getpixel((x,y)),(r,g,b,a))
                             preserved += 1
-                self.assertGreater(preserved,40000)
+                self.assertGreater(preserved,30000 if asset=='mapobj_marsh_listener_post' else 40000)
+                if asset=='mapobj_marsh_listener_post':
+                    self.assertEqual(preserved,30385)
                 self.assertEqual(repaired.size,original.size)
                 self.assertEqual(cutouts.repair_image(asset,repaired).tobytes(),repaired.tobytes())
 
@@ -82,6 +85,10 @@ class MapObjectCutoutsTest(unittest.TestCase):
             before = json.loads(manifest.read_text())
             with patch.multiple(cutouts,ROOT=root,ART_MANIFEST=manifest,
                                 PROVENANCE_DIR=provenance,PROVENANCE_PATH=provenance/'manifest.json'):
+                unselected = {str(p):cutouts.digest(p) for asset in cutouts.SPECS
+                              if asset!='mapobj_marsh_listener_post' for p in cutouts.paths(asset).values()}
+                cutouts.prepare(['mapobj_marsh_listener_post'])
+                self.assertEqual(unselected,{name:cutouts.digest(Path(name)) for name in unselected})
                 cutouts.prepare()
                 hashes = {str(p):cutouts.digest(p) for p in root.rglob('*') if p.is_file()}
                 cutouts.prepare()
@@ -98,6 +105,13 @@ class MapObjectCutoutsTest(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     cutouts.prepare()
                 self.assertEqual(before_reject,{str(p):cutouts.digest(p) for p in root.rglob('*') if p.is_file()})
+
+    def test_selection_rejects_empty_unknown_or_duplicate_before_writing(self):
+        for assets in ([],['fallback'],['mapobj_marsh_listener_post']*2):
+            with self.subTest(assets=assets), patch.object(cutouts,'digest') as digest:
+                with self.assertRaises(ValueError):
+                    cutouts.prepare(assets)
+                digest.assert_not_called()
 
 
 if __name__=='__main__':

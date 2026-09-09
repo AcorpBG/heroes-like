@@ -48,6 +48,23 @@ cases in official Linux/Windows packages, with all-member parity and the existin
 Quay/Town corrections byte-identical. Broader Town art and the pending data-budget
 decision remain separate from this repair.
 
+The next inspected extraction repair is Marsh Listener Post from original
+batch 06. Remove only the detached upper sheet divider and magenta matte using
+the same deterministic processing; retain its complete horn-equipped wooden
+hut, stilts, reeds, lily pads and water base on the original 512x512 canvas.
+Keep a separate hash-locked before raster and provenance packet so the accepted
+Cinder/Moss provenance and all earlier art remain byte-identical. Preparation
+must support selecting this asset without rewriting earlier packets and fail
+closed for missing or mismatched originals. The exact earned Medium Day-46
+placement `native_h3maped_93c0f05a_object_1053`, `(39,41,0)`, must resolve through
+its existing `object_marsh_listener_post` / `site_marsh_listener_post` identity.
+Prove original native body/block/visit masks, unclaimed controller, legitimate
+exploration, and complete session/save preservation in before/after source and
+both official release packages. Inspect source/Linux gameplay at 1280x720 and
+1920x1080; retain the same Windows headless limitations and package cap. Reuse
+the existing restricted packaged Node bootstrap with no activation-policy or
+runtime changes. Other Town variants/factions and unrelated art remain open.
+
 The existing opt-in live-validation autoload may bootstrap the Python-owned Town
 probe for official release templates that forbid CLI scene/path overrides. This
 must require the explicit `python_town_scene_probe` flow, a reserved export-local

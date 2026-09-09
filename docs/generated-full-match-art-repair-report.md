@@ -3,6 +3,87 @@
 Parent: `quality-generated-full-match-20260906`; selected child:
 `ux-generated-full-match-presentation-20260906`. Status: in progress.
 
+## Marsh Listener Post extraction repair — 2026-09-09
+
+The same earned Medium Day-46 map used in the accepted Cinder/Moss packet exposes
+another contaminated original cutout. Inspection of the runtime PNG and generated
+batch-06 atlas shows a detached upper white divider, isolated sheet debris and
+magenta around the wooden listening hut, stilts and reeds. This is extraction
+contamination, not a missing identity or procedural fallback. The actual
+`OverworldMapView._resource_asset_id` selects `mapobj_marsh_listener_post` from
+`object_marsh_listener_post` for resource site `site_marsh_listener_post`.
+Native placement `native_h3maped_93c0f05a_object_1053` remains at `(39,41,0)` with
+the original one-cell body/block/visit masks, unclaimed controller and earned
+exploration. No generator, map records, renderer, gameplay or save code changed.
+
+`tools/repair_map_object_cutouts.py --write --asset mapobj_marsh_listener_post`
+reuses approved analytical magenta unmatting within independently inspected
+`[124,176,382,420)` bounds. The full 512x512 canvas remains; only detached debris
+is excluded. All 30,385 uncontaminated painted body pixels are unchanged, with
+34,618 visible pixels retained. Stray pixels fall from 356 to zero and magenta
+contamination from 4,580 to zero. Original inputs/atlas are hash-locked. A separate
+`art/overworld/source/generated/full_match_art_repairs/marsh_listener_cutout/`
+packet retains the exact before PNG, processing description and runtime hashes.
+Selected preparation leaves accepted Cinder/Moss packets untouched; focused
+tests cover per-packet preservation, idempotence, corrupt masters, invalid
+selection and manifest identity/provenance mismatch rejection.
+
+Source input SHA256: `d73f51678c1ca4b756fe15a236e5eaacad5e2141ab01aa235d3e53b0000f7a7f`.
+Original atlas SHA256: `111b62a8da56c966ccc2d93cf1a4bfb25919de663aa012de667b98bd75b32798`.
+Repaired runtime/trim SHA256: `b1a9c1e6d86fade72300649791e05628f3b651e6168b33c437630ea465379e0b`.
+
+Evidence base: `.artifacts/generated_full_match_quality_20260906/`.
+`marsh_listener_before_1280x720` and `marsh_listener_before_1920x1080`
+fail only the two intended decoded-image checks, with zero engine errors.
+Both `marsh_listener_accepted_<resolution>` source cases pass all 31 checks;
+before and after gameplay images at both resolutions were visually inspected.
+The unchanged earned input is `embercourt_late_court_packaged_linux/earned_growth_save.json`,
+SHA256 `a3c565cc299de08f2970be3456b07d97a8fba628c288162f12c5360e7c89d6fe`.
+Reproduce with `python3 -B tests/overworld_map_object_cutout_regression.py --case
+medium_marsh_listener --save <exact-earned-save> --resolution <1280x720|1920x1080>
+--label <fresh>`; official packages use the existing `packaged_overworld_map_object_cutout_regression.py`
+adapter and restricted SHA-checked Node bootstrap, without runtime changes.
+
+All 16 source jobs pass in `marsh_listener_source_batch.json`: the two exact
+Marsh views, all three prior Cinder/Moss cases, both Wreck Quay resolutions,
+six existing distinct/decorative/fog/movement/Town reports, 44 Python tests,
+preservation and repository/diff checks. `marsh_listener_source_acceptance.json`
+proves all four complete saves equal both as exact Decimal JSON and raw bytes
+outside only `/saved_at_unix`; entire placement and tile/art-footprint authority
+also match. `marsh_listener_preservation.json` proves 5,864 of 5,867 earlier
+tracked art/content/runtime/native files unchanged, with only the two selected
+PNGs and the one Overworld manifest row different. Normal Godot import and the
+existing stronger-lossless helper preserve the complete decoded raster while
+reducing that fresh imported texture by 700 bytes (`marsh_listener_lossless.json`).
+All six jobs in `marsh_listener_packages_batch.json` pass: official Linux/Windows
+export and startup/generated-map/Town construction, then the identical earned
+Marsh probe at both resolutions on each platform. Both platforms also pass the
+five existing inert/path/hash/base-type/valid-Node bootstrap controls. All six
+repaired source/platform views pass 31 checks with zero engine errors. The four
+corrected source/Linux screenshots were inspected; Windows is headless Wine,
+not physical GPU certification. New Wine installations use disposable temporary
+directories, leaving persistent caches, existing evidence and saves intact.
+
+`marsh_listener_packages_acceptance.json` proves all eight before/source/Linux/
+Windows saves equal outside only their timestamps, including raw bytes and
+entire placement/tile/art-footprint records. Each PCK is 249671040 bytes, leaving
+328960 bytes under the unchanged 250000000-byte limit. All 5228 members remain;
+5225 prior payloads are byte-identical. Only the selected imported Marsh texture,
+Overworld manifest and generated UID cache differ from the accepted Cinder/Moss
+export. Linux/Windows differ only in `project.binary`; no source masters or
+editor resources leak into either package. Official reports remain directly in
+`marsh_listener_release_linux/report.json` and
+`marsh_listener_release_windows/report.json` beside the retained isolated exports.
+Linux PCK SHA256: `bcd67ac63f446be413423e671dccddbcb9f2bd9f94646381992a838d22c771d6`.
+Windows PCK SHA256: `0b5d770225cb528627f2bb605b70f8b7d391ccc2a05fa38b624150522e4ce086`.
+
+This cutout checkpoint is accepted. There were no failed acceptance attempts;
+the two intentionally failing original-image controls remain retained. A
+read-only duplicate-payload check found only 2612 repeated bytes, insufficient
+to provide meaningful headroom for remaining Town art; no deduplication or
+package-limit change was implemented.
+The wider Town variant/faction art requirement and full goal remain open.
+
 ## Cinder Ore Face / Moss Oath Cache extraction repair — 2026-09-08
 
 This continues the owner-approved cutout processing, not new painting or changes
