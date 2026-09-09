@@ -155,6 +155,32 @@ including every-member and original-save preservation. No per-asset exports,
 village/catalog repaint, gameplay/native/RMG/save changes or unrelated cleanup.
 Brasshollow and the broader quality goal remain unfinished.
 
+### Brasshollow whole-faction paintings
+
+Complete the 27 non-embedded identities across Orevein Gantry, Clauseworks Depot,
+Cindercoil Foundry, Blackbell Foundry and Whitegauge Calibration Yard. Preserve
+the original Brass Deeps village and all 146 earlier scene rasters. Match its
+soot-black iron, restrained brass, furnace windows and stepped quarry terraces;
+keep the foreground rail, middle bridge and embedded hall readable. Industrial
+architecture must express contract law, repair, extraction and heat rites, not
+decorative gears or generic fantasy towers. Titan Charter Hall/Brassbound
+Directorate replace at the same scenic site through the existing ancestry.
+
+Retain a normal seed-10 generated Large land/one-level Marka/Orevein opening,
+ordinary Market purchase and complete unchanged save control. Exercise uninjected
+Day-1 purchases in `gaugesavant-whitegauge-datum-trial` and
+`gaugesavant-whitegauge-breach-pressure-works`. Use `orevein-contract` (11x6) for
+five detached developed compositions and 26 isolated constructible identities;
+Ore Tithe Office is starter-only and must not be claimed as a paid order.
+Retain independent complete rule/recap, daily-limit, upgrade, painted mouse/
+keyboard/controller and save/re-entry assertions. Inspect small/actual 2048x1079
+views and run one combined source/official Linux/Windows boundary with original
+save and complete package-member comparisons. Correct the 29 prior prompt hashes
+changed by final EOF formatting; preserve all prior art bytes and prompt text.
+Fixtures do not prove earned development or Large-map performance. No per-asset
+exports, fixed size ceiling, native/RMG/gameplay/save change or unrelated cleanup.
+All-faction visual acceptance and the broader quality goal remain separate.
+
 ## Owner-directed package policy — 2026-09-09
 
 There is no fixed release-PCK size budget. Remove the former 250000000-byte
