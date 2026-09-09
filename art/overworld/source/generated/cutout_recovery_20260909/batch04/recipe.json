@@ -1,0 +1,409 @@
+{
+  "schema_id": "original_sheet_cutout_recipe_v1",
+  "source_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+  "source_sha256": "8b5091ec6a85380c799672fce7ef97320fe933e286a4acb931bf08ad0e64508f",
+  "alignment_evidence": "Exact unchanged foreground RGB matches prove source-minus-canvas offsets [-99,215,528,841] in each axis; no resizing. Rectangles exclude visually inspected full white atlas gutters.",
+  "preserved_controls": {
+    "mapobj_cinder_ore_face": "07be69ebfbe66a5792ddc7803dd9d5f44d38bfdb008156110a67b271bb7fb16a"
+  },
+  "assets": {
+    "mapobj_floodplain_sluice_camp": {
+      "before_sha256": "1ddea74cabc2b564b1d447a62159f39e152e96553d94dcb0449c98e849a9599d",
+      "source_rect": [
+        0,
+        0,
+        307,
+        307
+      ],
+      "canvas_origin": [
+        99,
+        99
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_floodplain_sluice_camp.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_floodplain_sluice_camp-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_floodplain_sluice_camp",
+        "assigned_map_object_family": "mine"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Original timber, stone, snow, metal, blue glass/water or green foliage; saturated magenta in exposed lattice/gaps is source backing, not an authored material. Scope is this exact reviewed painting, not arbitrary purple assets."
+    },
+    "mapobj_ironstep_ore_pit": {
+      "before_sha256": "0f1da2762b509d9113a07e9371af78667c76e56a6c93c93c8bdb15afe4226b0f",
+      "source_rect": [
+        319,
+        0,
+        622,
+        307
+      ],
+      "canvas_origin": [
+        104,
+        99
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ironstep_ore_pit.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_ironstep_ore_pit-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_ironstep_ore_pit",
+        "assigned_map_object_family": "mine"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Original timber, stone, snow, metal, blue glass/water or green foliage; saturated magenta in exposed lattice/gaps is source backing, not an authored material. Scope is this exact reviewed painting, not arbitrary purple assets."
+    },
+    "mapobj_reef_coin_assay": {
+      "before_sha256": "1fd8808ab8e680b413f025a2359c06cb2993c7fa53c70e5b997c305456b203e0",
+      "source_rect": [
+        633,
+        0,
+        936,
+        307
+      ],
+      "canvas_origin": [
+        105,
+        99
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_reef_coin_assay.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_reef_coin_assay-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_reef_coin_assay",
+        "assigned_map_object_family": "mine"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Protect the original pink coral RGB in its explicit source region; remove the magenta backing around the rest of the original stone/wood/water assay.",
+      "protected_source_rects": [
+        [
+          680,
+          60,
+          740,
+          130
+        ]
+      ]
+    },
+    "mapobj_frostwood_cutting_yard": {
+      "before_sha256": "d31463d041f9c662d7bd7fdb485b5d880eccc9143c06d1ecaf4bdec21a41a16f",
+      "source_rect": [
+        0,
+        319,
+        307,
+        622
+      ],
+      "canvas_origin": [
+        99,
+        104
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_frostwood_cutting_yard.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_frostwood_cutting_yard-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_frostwood_cutting_yard",
+        "assigned_map_object_family": "mine"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Original timber, stone, snow, metal, blue glass/water or green foliage; saturated magenta in exposed lattice/gaps is source backing, not an authored material. Scope is this exact reviewed painting, not arbitrary purple assets."
+    },
+    "mapobj_aetherglass_lens_house": {
+      "before_sha256": "91145f4742c8a6fde548ed5969d88db564c34542a6215cea1cf3dd294cbc9d66",
+      "source_rect": [
+        319,
+        319,
+        622,
+        622
+      ],
+      "canvas_origin": [
+        104,
+        104
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_aetherglass_lens_house.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_aetherglass_lens_house-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_aetherglass_lens_house",
+        "assigned_map_object_family": "staged_resource_front"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Original timber, stone, snow, metal, blue glass/water or green foliage; saturated magenta in exposed lattice/gaps is source backing, not an authored material. Scope is this exact reviewed painting, not arbitrary purple assets."
+    },
+    "mapobj_sunfall_aetherglass_yard": {
+      "before_sha256": "bb85f339852ecc09f038c393b4793b331b11800dfeb1e96089d8e4c086d3d63c",
+      "source_rect": [
+        633,
+        319,
+        936,
+        622
+      ],
+      "canvas_origin": [
+        105,
+        104
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_sunfall_aetherglass_yard.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_sunfall_aetherglass_yard-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_sunfall_aetherglass_yard",
+        "assigned_map_object_family": "staged_resource_front"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Original timber, stone, snow, metal, blue glass/water or green foliage; saturated magenta in exposed lattice/gaps is source backing, not an authored material. Scope is this exact reviewed painting, not arbitrary purple assets."
+    },
+    "mapobj_embergrain_warm_granary": {
+      "before_sha256": "cdb2c0221f0b504b90f81fcf991326bdc4f232e829642a2805b7f94797b369ee",
+      "source_rect": [
+        947,
+        319,
+        1252,
+        622
+      ],
+      "canvas_origin": [
+        106,
+        104
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_embergrain_warm_granary.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_embergrain_warm_granary-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_embergrain_warm_granary",
+        "assigned_map_object_family": "staged_resource_front"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Original timber, stone, snow, metal, blue glass/water or green foliage; saturated magenta in exposed lattice/gaps is source backing, not an authored material. Scope is this exact reviewed painting, not arbitrary purple assets."
+    },
+    "mapobj_charcoal_embergrain_store": {
+      "before_sha256": "1717261be865ebe71d127a563e430cd64b133560084f3947cc08abf0e210af14",
+      "source_rect": [
+        0,
+        633,
+        307,
+        936
+      ],
+      "canvas_origin": [
+        99,
+        105
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_charcoal_embergrain_store.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_charcoal_embergrain_store-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_charcoal_embergrain_store",
+        "assigned_map_object_family": "staged_resource_front"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Original timber, stone, snow, metal, blue glass/water or green foliage; saturated magenta in exposed lattice/gaps is source backing, not an authored material. Scope is this exact reviewed painting, not arbitrary purple assets."
+    },
+    "mapobj_peatwax_reed_yard": {
+      "before_sha256": "daec2079ca30af8677fc8815dfa031a473e3e5afeca758cab86fc28f9a52d3e1",
+      "source_rect": [
+        319,
+        633,
+        622,
+        936
+      ],
+      "canvas_origin": [
+        104,
+        105
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_peatwax_reed_yard.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_peatwax_reed_yard-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_peatwax_reed_yard",
+        "assigned_map_object_family": "staged_resource_front"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Original timber, stone, snow, metal, blue glass/water or green foliage; saturated magenta in exposed lattice/gaps is source backing, not an authored material. Scope is this exact reviewed painting, not arbitrary purple assets."
+    },
+    "mapobj_verdant_graft_nursery": {
+      "before_sha256": "331a6b6848cac49aef7706fab55bbcb365cec1977c4f3308a19e51c42bf577bd",
+      "source_rect": [
+        633,
+        633,
+        936,
+        936
+      ],
+      "canvas_origin": [
+        105,
+        105
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_verdant_graft_nursery.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_verdant_graft_nursery-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_verdant_graft_nursery",
+        "assigned_map_object_family": "staged_resource_front"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Original timber, stone, snow, metal, blue glass/water or green foliage; saturated magenta in exposed lattice/gaps is source backing, not an authored material. Scope is this exact reviewed painting, not arbitrary purple assets."
+    },
+    "mapobj_brass_scrip_mint": {
+      "before_sha256": "5105d5e19e4a64822725618c24647133b29076dc3f809733747ade2063ac3e38",
+      "source_rect": [
+        947,
+        633,
+        1252,
+        936
+      ],
+      "canvas_origin": [
+        106,
+        105
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_brass_scrip_mint.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_brass_scrip_mint-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_brass_scrip_mint",
+        "assigned_map_object_family": "staged_resource_front"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Original timber, stone, snow, metal, blue glass/water or green foliage; saturated magenta in exposed lattice/gaps is source backing, not an authored material. Scope is this exact reviewed painting, not arbitrary purple assets."
+    },
+    "mapobj_underway_brass_scrip_press": {
+      "before_sha256": "4a5caab1bab0cb5619a2f500a3c1c264fad973876e2e1de4dbbdefdbedd1c6f0",
+      "source_rect": [
+        0,
+        946,
+        307,
+        1252
+      ],
+      "canvas_origin": [
+        99,
+        105
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_underway_brass_scrip_press.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_underway_brass_scrip_press-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_underway_brass_scrip_press",
+        "assigned_map_object_family": "staged_resource_front"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Original timber, stone, snow, metal, blue glass/water or green foliage; saturated magenta in exposed lattice/gaps is source backing, not an authored material. Scope is this exact reviewed painting, not arbitrary purple assets."
+    },
+    "mapobj_memory_salt_pan": {
+      "before_sha256": "57f3b14a671317a4a2281a52fc952ede8ec654c4dd4351f467012b2746c7ab0a",
+      "source_rect": [
+        319,
+        946,
+        622,
+        1252
+      ],
+      "canvas_origin": [
+        104,
+        105
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_memory_salt_pan.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_memory_salt_pan-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_memory_salt_pan",
+        "assigned_map_object_family": "staged_resource_front"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Original timber, stone, snow, metal, blue glass/water or green foliage; saturated magenta in exposed lattice/gaps is source backing, not an authored material. Scope is this exact reviewed painting, not arbitrary purple assets."
+    },
+    "mapobj_wind_press": {
+      "before_sha256": "25ed29940ca2d2f3a6a915e6237153354858c9f57b671502bf5441ce3d3a2780",
+      "source_rect": [
+        633,
+        946,
+        936,
+        1252
+      ],
+      "canvas_origin": [
+        105,
+        105
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wind_press.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_wind_press-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_wind_press",
+        "assigned_map_object_family": "support_producer"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Original timber, stone, snow, metal, blue glass/water or green foliage; saturated magenta in exposed lattice/gaps is source backing, not an authored material. Scope is this exact reviewed painting, not arbitrary purple assets."
+    },
+    "mapobj_saw_chain": {
+      "before_sha256": "9ac665a4579c8d7720a89336ddefe07ede4c39aa61fc37bb6051ef195a5538df",
+      "source_rect": [
+        947,
+        946,
+        1252,
+        1252
+      ],
+      "canvas_origin": [
+        106,
+        105
+      ],
+      "matte_boundary_radius": 6,
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_saw_chain.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_saw_chain-trimmed.png",
+        "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "source_model": "built_in_image_gen_chroma_key_split",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_saw_chain",
+        "assigned_map_object_family": "support_producer"
+      },
+      "matte_policy": "inspected_neutral_materials",
+      "material_review": "Original timber, stone, snow, metal, blue glass/water or green foliage; saturated magenta in exposed lattice/gaps is source backing, not an authored material. Scope is this exact reviewed painting, not arbitrary purple assets."
+    }
+  }
+}

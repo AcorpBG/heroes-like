@@ -44111,6 +44111,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(road_tile_count >= 8, errors, f"Terrain layer {scenario_id} must include enough road tiles to prove structural overlays")
 
     ensure(OVERWORLD_ART_REQUIRED_ASSET_IDS.issubset(set(object_assets.keys())), errors, "Overworld art manifest must preserve all required prepared object asset ids")
+    try:
+        sheet_spec = importlib.util.spec_from_file_location("original_sheet_cutout_validation", ROOT / "tools" / "prepare_overworld_cutout_art.py")
+        sheet_module = importlib.util.module_from_spec(sheet_spec)
+        sheet_spec.loader.exec_module(sheet_module)
+        for asset_id, recovery in sheet_module.validate_batch_assets().items():
+            ensure(recovery["ok"], errors, f"Original-sheet recovery {asset_id} must preserve clean source-backed art: {recovery['errors']}")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Original-sheet cutout recovery failed closed: {exc}")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):

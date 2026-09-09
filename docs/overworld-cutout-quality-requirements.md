@@ -1,0 +1,105 @@
+# Overworld cutout quality recovery
+
+Owner direction: 2026-09-09, repair remaining pink-fringed overworld art and
+generate original replacement assets where the existing art cannot look good.
+Phase 6 parent: `art-overworld-cutout-quality-20260909`. This is new work after
+the bounded full-match quality goal, not a claim that its four earlier cutout
+repairs covered all assets.
+
+## Scope and diagnosis
+
+Inventory all authoritative `art/overworld/manifest.json` object assets and their
+map-object, decorative, resource, artifact, encounter, town and hero mappings.
+Include runtime variants and native/generated adoption paths. Record unresolved
+identities explicitly. Color statistics only select review candidates: legitimate
+purple flowers, crystals, cloth and magic must not be removed to pass a threshold.
+Do not broaden this goal into repainting unrelated clean terrain or Town screens.
+
+The first confirmed cohort is original map-object atlas batch 04. Direct inspection
+of Frostwood Cutting Yard, Aetherglass Lens House and Memory Salt Pan shows
+magenta edges, retained sheet divider rectangles and missing opaque subject
+pixels. The original generated sheet retains those details. Current `.ctex`
+imports cannot repair damage already baked into the runtime PNG.
+
+### Initial execution checkpoint (2026-09-09)
+
+All 1,214 manifest-backed raster regions decode. A read-only screen of visible
+boundary pixels (`alpha >= 32`, `min(R,B)-G > 50`, `R,B > 140`) finds 191 review
+candidates, 174 with `built_in_image_gen_chroma_key_split` provenance. These are
+not 191 confirmed defects or an acceptance result; authored purple details need
+individual review.
+
+The built-in original-repair attempt and targeted transparency retry for
+Frostwood both returned 1254x1254 RGB images with painted checkerboards, not
+RGBA cutouts. Neither is installed. Rejected output SHA-256 values:
+`03aec8291e4adca517c04025de388d908de25e16078b871dd41f1dbe606fec4d` and
+`38e10e7998a207e75feef099758b9a63eb73244f101359095fbe1f16ae1cc8d7`.
+Original tool outputs remain under the session's Codex generated-images folder;
+they are rejected attempts, not project assets or package inputs. The selected
+slice awaits explicit permission for deterministic source-sheet extraction or
+the image skill's transparency-capable CLI/API fallback (requires
+`OPENAI_API_KEY`). No runtime correction, gameplay validation, export, commit or
+push is claimed at this checkpoint.
+
+Owner approval subsequently received on 2026-09-09: use deterministic image
+processing to recover the original paintings. This clears the method blocker.
+Recover from the intact original sheet, not only the already-damaged alpha;
+remove inspected gutters and matte while preserving foreground color/detail.
+No external image API/model switch was requested or used.
+
+## Implementation contract
+
+- Preserve exact runtime asset/content ids, manifest mapping keys, object
+  positions, footprints, masks, anchors, pathing, interactions, controller/state
+  variants, saves and deterministic generation. Never hide a legitimate object.
+- Recover the original painting and its fine detail where possible using the
+  explicitly approved deterministic original-sheet recovery. Use the built-in
+  image workflow for genuinely necessary new original paintings, preserving
+  valid generated alpha. No generic shared
+  replacements, geometric stand-ins, copied commercial art or indiscriminate
+  magenta/white deletion. Normal packaging may trim/resize/place the resulting
+  raster on its established canvas without distorting the subject.
+- Retain original sheets, exact before rasters and hashes, edit/generation prompt
+  and output provenance, and source/trim/runtime derivatives. Replacements must
+  match the overworld's camera, materials and lighting, with an appropriate
+  grounded silhouette and no sheet lines, matte halos or unwanted detached pixels.
+- The first batch covers the 15 still-damaged batch-04 identities; preserve the
+  already-repaired Cinder Ore Face as an unchanged control. The original 16 ids
+  are obtained by exact `source_generated_atlas` membership, not filename guesses.
+- Add authoritative scoped acceptance metadata and tests that fail on missing
+  files, stale hashes, swapped identities or reintroduced confirmed edge defects.
+  Do not turn candidate color counts into a claim of whole-pool visual acceptance.
+
+## Batch cadence and validation
+
+Do useful art/integration work in coherent cohorts. During assembly inspect
+rasters and run lightweight provenance/alpha/geometry checks. At the completed
+cohort boundary run one combined strict regression, actual renderer/identity,
+save-preservation and Linux/Windows export/gameplay acceptance cycle. Do not
+re-export or rerun full gameplay after each individual image.
+
+Reuse existing distinct/decorative sprite, fog/input and exact generated-save
+probes, extending Python-owned orchestration without weakening their assertions.
+Retain before and after in-context screenshots at 1280x720 and 1920x1080 or
+2048x1079. Show corrected native/generated and authored resolution paths with
+original placement and complete save comparisons. Clearly label detached visual
+fixtures; they are not earned gameplay. Inspect the final screenshots directly.
+
+Commands: new focused Python cutout-preparation/manifest tests, the scoped
+rendered cutout batch probe, existing distinct/decorative and affected input/fog
+reports, `python3 tests/validate_repo.py`, `git diff --check`, and the established
+`tests/packaging_linux_export_smoke.py` /
+`tests/packaging_windows_export_smoke.py` startup/generated-map flows.
+Packages must contain the repaired textures with matching Linux/Windows content;
+there is no fixed package-size ceiling. Windows/Wine is not GPU certification.
+
+## Completion and non-goals
+
+Each cohort completes only after its actual repaired art is integrated and its
+validation passes. The parent completes only after the authoritative runtime
+pool review is accounted for and all confirmed selected defects are corrected;
+one cohort or an automated screening report cannot close it. Update PLAN/tracker,
+record concise evidence and remaining ids, then commit/push coherent validated
+work. No native/RMG rule changes, gameplay/balance/save migration, Town redesign,
+unrelated cleanup, cache deletion or release-readiness claim. Preserve the four
+pre-existing unrelated untracked retention files/directories.

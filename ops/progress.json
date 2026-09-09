@@ -1,5 +1,9 @@
 {
-  "actionableNextTasks": [],
+  "actionableNextTasks": [
+    {
+      "id": "art-overworld-cutout-runtime-pool-20260909"
+    }
+  ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
       {
@@ -16611,14 +16615,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "All three selected children implemented and validated. Legitimate Medium Day-97 victory and Large Day-14 defeat after conquest; behavior-preserving measured responsiveness; all-faction Town art and four selected Overworld cutout repairs. Current-source and exact package evidence is preserved and reused. See docs/generated-full-match-quality-completion.md for source-backed acceptance, approximately 7.4-second Large turns, legacy test limits and headless-Wine limitation. Not release certification.",
+  "currentNotes": "First resource-sheet recovery child completed: 15 corrected original cutouts, 5519 restored opaque pixels, 15 Python tests, 124 checks at each source resolution and in each Linux/Windows package; inspected captures and unchanged full saves. The broader 1214-row runtime pool is still unfinished. Evidence: docs/overworld-cutout-quality-report.md.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "quality-generated-full-match-20260906",
-  "currentSliceId": "quality-generated-full-match-20260906",
-  "currentSliceNotes": "All three selected children implemented and validated. Legitimate Medium Day-97 victory and Large Day-14 defeat after conquest; behavior-preserving measured responsiveness; all-faction Town art and four selected Overworld cutout repairs. Current-source and exact package evidence is preserved and reused. See docs/generated-full-match-quality-completion.md for source-backed acceptance, approximately 7.4-second Large turns, legacy test limits and headless-Wine limitation. Not release certification.",
+  "currentSlice": "art-overworld-cutout-batch04-20260909",
+  "currentSliceId": "art-overworld-cutout-batch04-20260909",
+  "currentSliceNotes": "15 original resource-sheet cutouts recovered and installed; Cinder and all other production art/content/runtime/native authority preserved. 15 focused Python tests; 124 source checks at each inspected resolution and 124 in each exact Linux/Windows package; all six cross-run saves equal outside only saved_at_unix. Distinct/decorative/input/full-route/fog reports, repository and both official export smokes pass. Evidence: docs/overworld-cutout-quality-report.md and .artifacts/overworld_cutout_quality_20260909. Parent runtime-pool work remains unfinished.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Generated Full-Match Quality",
-  "currentSliceUpdatedAt": "2026-09-09T13:16:39Z",
+  "currentSliceTitle": "Original Resource-Sheet Cutout Recovery",
+  "currentSliceUpdatedAt": "2026-09-09T15:55:01Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21923,57 +21927,58 @@
       }
     }
   },
-  "guardrailNote": "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification.",
+  "guardrailNote": "Original-art recovery only; preserve exact identity, placement, footprint, interaction, saves and deterministic generation. No native/RMG rules, Town redesign, unrelated cleanup or fixed package-size ceiling.",
   "lastValidation": {
-    "id": "quality-generated-full-match-completion-20260909",
-    "sliceId": "quality-generated-full-match-20260906",
+    "id": "art-overworld-cutout-batch04-20260909",
+    "sliceId": "art-overworld-cutout-batch04-20260909",
     "status": "completed",
-    "validatedAt": "2026-09-09T13:16:39Z",
-    "scope": "Closure of delivered gameplay, selected responsiveness and all-faction Town/four cutout presentation work; unchanged evidence reused, not additional implementation or release certification.",
-    "result": "All three selected children implemented and validated. Legitimate Medium Day-97 victory and Large Day-14 defeat after conquest; behavior-preserving measured responsiveness; all-faction Town art and four selected Overworld cutout repairs. Current-source and exact package evidence is preserved and reused. See docs/generated-full-match-quality-completion.md for source-backed acceptance, approximately 7.4-second Large turns, legacy test limits and headless-Wine limitation. Not release certification.",
-    "artifacts": [
-      "docs/generated-full-match-quality-completion.md",
-      "docs/generated-full-match-quality-report.md",
-      "docs/generated-full-match-performance-report.md",
-      "docs/generated-full-match-art-repair-report.md",
-      ".artifacts/generated_full_match_quality_20260906/brasshollow_faction_acceptance.json",
-      ".artifacts/generated_full_match_quality_20260906/brasshollow_faction_acceptance_jobs_01.json",
-      ".artifacts/generated_full_match_quality_20260906/medium_match_11_continuation_03/report.json",
-      ".artifacts/generated_full_match_quality_20260906/large_match_08/report.json"
-    ],
-    "remainingWork": "No unfinished work in the selected full-match quality goal. Future product work includes further Large-turn latency reduction, physical Windows/GPU/audio/controller certification, broader manual/seed/faction play, the legacy named-save keyboard test mismatch and Moonbite 30-turn development target. No next implementation goal is selected; not release-ready or whole-H3MapEd parity."
+    "sourceReport": "docs/overworld-cutout-quality-report.md",
+    "runtimeChanges": "15 original resource-sheet cutouts; no gameplay/native/placement/save changes",
+    "validation": {
+      "python_tests": 15,
+      "source_checks_per_resolution": 124,
+      "packaged_checks_per_platform": 124,
+      "source_resolutions": [
+        "1280x720",
+        "1920x1080"
+      ],
+      "linux_export": "passed",
+      "windows_export": "passed (headless Wine, not physical GPU certification)",
+      "repository": "passed",
+      "existing_sprite_input_route_fog_reports": "passed"
+    },
+    "parentComplete": false
   },
   "latestEvidence": {
-    "id": "quality-generated-full-match-completion-20260909",
-    "sliceId": "quality-generated-full-match-20260906",
+    "id": "art-overworld-cutout-batch04-20260909",
+    "sliceId": "art-overworld-cutout-batch04-20260909",
     "status": "completed",
-    "validatedAt": "2026-09-09T13:16:39Z",
-    "scope": "Closure of delivered gameplay, selected responsiveness and all-faction Town/four cutout presentation work; unchanged evidence reused, not additional implementation or release certification.",
-    "result": "All three selected children implemented and validated. Legitimate Medium Day-97 victory and Large Day-14 defeat after conquest; behavior-preserving measured responsiveness; all-faction Town art and four selected Overworld cutout repairs. Current-source and exact package evidence is preserved and reused. See docs/generated-full-match-quality-completion.md for source-backed acceptance, approximately 7.4-second Large turns, legacy test limits and headless-Wine limitation. Not release certification.",
-    "artifacts": [
-      "docs/generated-full-match-quality-completion.md",
-      "docs/generated-full-match-quality-report.md",
-      "docs/generated-full-match-performance-report.md",
-      "docs/generated-full-match-art-repair-report.md",
-      ".artifacts/generated_full_match_quality_20260906/brasshollow_faction_acceptance.json",
-      ".artifacts/generated_full_match_quality_20260906/brasshollow_faction_acceptance_jobs_01.json",
-      ".artifacts/generated_full_match_quality_20260906/medium_match_11_continuation_03/report.json",
-      ".artifacts/generated_full_match_quality_20260906/large_match_08/report.json"
-    ],
-    "remainingWork": "No unfinished work in the selected full-match quality goal. Future product work includes further Large-turn latency reduction, physical Windows/GPU/audio/controller certification, broader manual/seed/faction play, the legacy named-save keyboard test mismatch and Moonbite 30-turn development target. No next implementation goal is selected; not release-ready or whole-H3MapEd parity."
+    "sourceReport": "docs/overworld-cutout-quality-report.md",
+    "runtimeChanges": "15 original resource-sheet cutouts; no gameplay/native/placement/save changes",
+    "validation": {
+      "python_tests": 15,
+      "source_checks_per_resolution": 124,
+      "packaged_checks_per_platform": 124,
+      "source_resolutions": [
+        "1280x720",
+        "1920x1080"
+      ],
+      "linux_export": "passed",
+      "windows_export": "passed (headless Wine, not physical GPU certification)",
+      "repository": "passed",
+      "existing_sprite_input_route_fog_reports": "passed"
+    },
+    "parentComplete": false
   },
   "latestEvidenceArtifacts": [
-    "docs/generated-full-match-quality-completion.md",
-    "docs/generated-full-match-quality-report.md",
-    "docs/generated-full-match-performance-report.md",
-    "docs/generated-full-match-art-repair-report.md",
-    ".artifacts/generated_full_match_quality_20260906/brasshollow_faction_acceptance.json",
-    ".artifacts/generated_full_match_quality_20260906/brasshollow_faction_acceptance_jobs_01.json",
-    ".artifacts/generated_full_match_quality_20260906/medium_match_11_continuation_03/report.json",
-    ".artifacts/generated_full_match_quality_20260906/large_match_08/report.json"
+    "docs/overworld-cutout-quality-report.md",
+    ".artifacts/overworld_cutout_quality_20260909/batch04_source_final_1280/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/batch04_source_final_1920/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/batch04_packaged_linux/packaged-report.json",
+    ".artifacts/overworld_cutout_quality_20260909/batch04_packaged_windows/packaged-report.json"
   ],
-  "latestEvidenceId": "quality-generated-full-match-completion-20260909",
-  "latestFinding": "All three selected children implemented and validated. Legitimate Medium Day-97 victory and Large Day-14 defeat after conquest; behavior-preserving measured responsiveness; all-faction Town art and four selected Overworld cutout repairs. Current-source and exact package evidence is preserved and reused. See docs/generated-full-match-quality-completion.md for source-backed acceptance, approximately 7.4-second Large turns, legacy test limits and headless-Wine limitation. Not release certification.",
+  "latestEvidenceId": "art-overworld-cutout-batch04-20260909",
+  "latestFinding": "First resource-sheet recovery child completed: 15 corrected original cutouts, 5519 restored opaque pixels, 15 Python tests, 124 checks at each source resolution and in each Linux/Windows package; inspected captures and unchanged full saves. The broader 1214-row runtime pool is still unfinished. Evidence: docs/overworld-cutout-quality-report.md.",
   "metrics": {
     "audit_only": false,
     "runtime_behavior_changed": true,
@@ -22025,9 +22030,134 @@
     "generated_rival_objective_implemented": true
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Full-match quality: legal win-seeking gameplay and real outcomes; no forced terminal state, balance/RMG shortcuts, skipped simulation/autosaves, unrelated cleanup or release certification.",
+  "nextActionGuardrailNote": "Continue inspected original-sheet recovery across remaining runtime families; no blanket color deletion, hidden legitimate objects, gameplay/native/RMG/save changes, unrelated cleanup or full-pool completion from one accepted cohort.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "phase": "phase-6-production-alpha-layer",
+      "status": "in_progress",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/overworld-cutout-quality-requirements.md",
+        "docs/generated-full-match-art-repair-report.md",
+        "docs/overworld-map-object-distinct-sprite-gap-audit.md",
+        "docs/lessons-learned.md",
+        "docs/overworld-cutout-quality-report.md"
+      ],
+      "validationCommands": [
+        "python3 -B -m unittest discover -s tests -p 'test_overworld_cutout*.py'",
+        "python3 tests/overworld_cutout_batch_regression.py --batch batch04 --resolution 1280x720 --label <fresh>",
+        "python3 tests/overworld_cutout_batch_regression.py --batch batch04 --resolution 1920x1080 --label <fresh>",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py"
+      ],
+      "createdAt": "2026-09-09T14:41:53Z",
+      "updatedAt": "2026-09-09T15:17:09Z",
+      "nonGoals": [
+        "No gameplay/native/RMG/placement/save changes",
+        "No blanket magenta or white removal; preserve legitimate purple art",
+        "No Town-screen or unrelated terrain redesign",
+        "No fixed package ceiling, cache deletion or unrelated cleanup"
+      ],
+      "id": "art-overworld-cutout-quality-20260909",
+      "title": "Overworld Cutout Quality Recovery",
+      "classification": "parent_implementation_goal",
+      "childSliceIds": [
+        "art-overworld-cutout-batch04-20260909",
+        "art-overworld-cutout-runtime-pool-20260909"
+      ],
+      "implementationTargets": [
+        "Original asset repair/replacement across authoritative overworld runtime pool",
+        "Scoped provenance, source/trim/runtime preparation and integrated visual/gameplay/platform acceptance"
+      ],
+      "notes": "Owner-approved deterministic source recovery. First 15-asset cohort accepted with full source/visual/save/Linux/Windows evidence; remaining-runtime-pool child still pending. Keep parent in_progress until every confirmed defect and full-pool review is resolved.",
+      "startedAt": "2026-09-09T14:41:54Z"
+    },
+    {
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/overworld-cutout-quality-requirements.md",
+        "docs/generated-full-match-art-repair-report.md",
+        "docs/overworld-map-object-distinct-sprite-gap-audit.md",
+        "docs/lessons-learned.md",
+        "docs/overworld-cutout-quality-report.md"
+      ],
+      "validationCommands": [
+        "python3 -B -m unittest discover -s tests -p 'test_overworld_cutout*.py'",
+        "python3 tests/overworld_cutout_batch_regression.py --batch batch04 --resolution 1280x720 --label <fresh>",
+        "python3 tests/overworld_cutout_batch_regression.py --batch batch04 --resolution 1920x1080 --label <fresh>",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py"
+      ],
+      "createdAt": "2026-09-09T14:41:53Z",
+      "updatedAt": "2026-09-09T15:55:01Z",
+      "nonGoals": [
+        "No gameplay/native/RMG/placement/save changes",
+        "No blanket magenta or white removal; preserve legitimate purple art",
+        "No Town-screen or unrelated terrain redesign",
+        "No fixed package ceiling, cache deletion or unrelated cleanup"
+      ],
+      "id": "art-overworld-cutout-batch04-20260909",
+      "title": "Original Resource-Sheet Cutout Recovery",
+      "classification": "implementation_slice",
+      "parentSliceId": "art-overworld-cutout-quality-20260909",
+      "implementationTargets": [
+        "15 unrepaired exact original map-object atlas batch04 members; preserve repaired Cinder control",
+        "tools/prepare_overworld_cutout_art.py; exact before/source/prompt/trim/runtime provenance",
+        "tests/test_overworld_cutout_art.py; tests/overworld_cutout_batch_regression.py; authoritative art manifest registration"
+      ],
+      "notes": "15 original resource-sheet cutouts recovered and installed; Cinder and all other production art/content/runtime/native authority preserved. 15 focused Python tests; 124 source checks at each inspected resolution and 124 in each exact Linux/Windows package; all six cross-run saves equal outside only saved_at_unix. Distinct/decorative/input/full-route/fog reports, repository and both official export smokes pass. Evidence: docs/overworld-cutout-quality-report.md and .artifacts/overworld_cutout_quality_20260909. Parent runtime-pool work remains unfinished.",
+      "startedAt": "2026-09-09T14:41:54Z",
+      "completedAt": "2026-09-09T15:55:01Z"
+    },
+    {
+      "phase": "phase-6-production-alpha-layer",
+      "status": "pending",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/overworld-cutout-quality-requirements.md",
+        "docs/generated-full-match-art-repair-report.md",
+        "docs/overworld-map-object-distinct-sprite-gap-audit.md",
+        "docs/lessons-learned.md",
+        "docs/overworld-cutout-quality-report.md"
+      ],
+      "validationCommands": [
+        "python3 -B -m unittest discover -s tests -p 'test_overworld_cutout*.py'",
+        "python3 tests/overworld_cutout_batch_regression.py --batch batch04 --resolution 1280x720 --label <fresh>",
+        "python3 tests/overworld_cutout_batch_regression.py --batch batch04 --resolution 1920x1080 --label <fresh>",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py"
+      ],
+      "createdAt": "2026-09-09T14:41:53Z",
+      "updatedAt": "2026-09-09T14:41:53Z",
+      "nonGoals": [
+        "No gameplay/native/RMG/placement/save changes",
+        "No blanket magenta or white removal; preserve legitimate purple art",
+        "No Town-screen or unrelated terrain redesign",
+        "No fixed package ceiling, cache deletion or unrelated cleanup"
+      ],
+      "id": "art-overworld-cutout-runtime-pool-20260909",
+      "title": "Remaining Runtime-Pool Cutout Recovery",
+      "classification": "implementation_slice",
+      "parentSliceId": "art-overworld-cutout-quality-20260909",
+      "implementationTargets": [
+        "Complete authoritative pool inventory and visual dispositions including state/native/adopted categories",
+        "Follow-up coherent original cutout/replacement cohorts for confirmed defects",
+        "Regression, actual renderer/save preservation and both-platform validation"
+      ],
+      "notes": "Select only after resource-sheet cohort; screening is not visual acceptance. Full pool remains unfinished."
+    },
     {
       "status": "completed",
       "phase": "phase-6-production-alpha-layer",
@@ -110634,8 +110764,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "No unfinished work in the selected full-match quality goal. Future product work includes further Large-turn latency reduction, physical Windows/GPU/audio/controller certification, broader manual/seed/faction play, the legacy named-save keyboard test mismatch and Moonbite 30-turn development target. No next implementation goal is selected; not release-ready or whole-H3MapEd parity.",
-  "remainingWork": "No unfinished work in the selected full-match quality goal. Future product work includes further Large-turn latency reduction, physical Windows/GPU/audio/controller certification, broader manual/seed/faction play, the legacy named-save keyboard test mismatch and Moonbite 30-turn development target. No next implementation goal is selected; not release-ready or whole-H3MapEd parity.",
+  "remainingGap": "Review and recover remaining authoritative runtime-pool cutouts in source-backed cohorts. Other visible sheet frames/fringes remain in the inspected maps; do not claim the full 1214-row pool is fixed. Preserve identities, saves, legitimate colors and all native/gameplay authority; consolidate subsequent platform acceptance.",
+  "remainingWork": "Review and recover remaining authoritative runtime-pool cutouts in source-backed cohorts. Other visible sheet frames/fringes remain in the inspected maps; do not claim the full 1214-row pool is fixed. Preserve identities, saves, legitimate colors and all native/gameplay authority; consolidate subsequent platform acceptance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -111173,7 +111303,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "selected_full_match_quality_goal_completed_product_pre_alpha",
+  "result": "first_original_resource_sheet_cohort_accepted_parent_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -111274,9 +111404,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "All three selected children implemented and validated. Legitimate Medium Day-97 victory and Large Day-14 defeat after conquest; behavior-preserving measured responsiveness; all-faction Town art and four selected Overworld cutout repairs. Current-source and exact package evidence is preserved and reused. See docs/generated-full-match-quality-completion.md for source-backed acceptance, approximately 7.4-second Large turns, legacy test limits and headless-Wine limitation. Not release certification.",
+  "summary": "First resource-sheet recovery child completed: 15 corrected original cutouts, 5519 restored opaque pixels, 15 Python tests, 124 checks at each source resolution and in each Linux/Windows package; inspected captures and unchanged full saves. The broader 1214-row runtime pool is still unfinished. Evidence: docs/overworld-cutout-quality-report.md.",
   "taskId": "10236",
-  "updatedAt": "2026-09-09T13:16:39Z",
+  "updatedAt": "2026-09-09T15:55:01Z",
   "validation": {
     "id": "quality-marsh-listener-cutout-20260909",
     "sliceId": "ux-generated-full-match-presentation-20260906",

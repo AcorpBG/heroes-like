@@ -1,0 +1,823 @@
+{
+  "schema_id": "original_sheet_cutout_recovery_v1",
+  "owner_approval": "2026-09-09 explicit deterministic image-processing approval",
+  "processing_tool": "tools/prepare_overworld_cutout_art.py",
+  "processing": "Original RGB source cells; inspected gutter exclusion; coverage fitted against nearest source background/paint colors, contaminated color replaced by nearest intact source paint; explicit original coral-color protection; exact integer translation onto unchanged 512x512 canvases. No generated substitute or gameplay changes.",
+  "processing_tool_sha256": "247801087cb8c5bfd6fb0a471bf39dbbfdb2a8bd8fe984d3816df92f00b0d68d",
+  "recipe": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/recipe.json",
+  "recipe_sha256": "d5f2d97a247cb50428af795a924993fa7d1a1b23004ccb3730a0c829771eb8a5",
+  "source_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+  "source_sha256": "8b5091ec6a85380c799672fce7ef97320fe933e286a4acb931bf08ad0e64508f",
+  "assets": {
+    "mapobj_floodplain_sluice_camp": {
+      "runtime_sha256": "801f9471284634bb98287fd2aaa0964ea46ef6f840e8392ec7254d6d5cd6e1b4",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          109,
+          115,
+          401,
+          388
+        ],
+        "opaque_pixels": 43669,
+        "visible_pixels": 46682,
+        "magenta_review_pixels": 0
+      },
+      "source_rect": [
+        0,
+        0,
+        307,
+        307
+      ],
+      "canvas_origin": [
+        99,
+        99
+      ],
+      "before_sha256": "1ddea74cabc2b564b1d447a62159f39e152e96553d94dcb0449c98e849a9599d",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_floodplain_sluice_camp.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_floodplain_sluice_camp_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          99,
+          99,
+          408,
+          408
+        ],
+        "opaque_pixels": 46843,
+        "visible_pixels": 46843,
+        "magenta_review_pixels": 711
+      }
+    },
+    "mapobj_ironstep_ore_pit": {
+      "runtime_sha256": "fea9b5fec5d84e2c33242a663f524f3efebeb9a441c817788993c9d55357a708",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          113,
+          114,
+          399,
+          388
+        ],
+        "opaque_pixels": 49105,
+        "visible_pixels": 52238,
+        "magenta_review_pixels": 0
+      },
+      "source_rect": [
+        319,
+        0,
+        622,
+        307
+      ],
+      "canvas_origin": [
+        104,
+        99
+      ],
+      "before_sha256": "0f1da2762b509d9113a07e9371af78667c76e56a6c93c93c8bdb15afe4226b0f",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ironstep_ore_pit.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_ironstep_ore_pit_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          101,
+          99,
+          409,
+          408
+        ],
+        "opaque_pixels": 52991,
+        "visible_pixels": 52991,
+        "magenta_review_pixels": 946
+      }
+    },
+    "mapobj_reef_coin_assay": {
+      "runtime_sha256": "2d9a1c47bf7141dc87410e84b16c47a92f324d778f3a75bc4fe12e20edf438ab",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          107,
+          136,
+          406,
+          380
+        ],
+        "opaque_pixels": 45247,
+        "visible_pixels": 47054,
+        "magenta_review_pixels": 330
+      },
+      "source_rect": [
+        633,
+        0,
+        936,
+        307
+      ],
+      "canvas_origin": [
+        105,
+        99
+      ],
+      "before_sha256": "1fd8808ab8e680b413f025a2359c06cb2993c7fa53c70e5b997c305456b203e0",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_reef_coin_assay.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_reef_coin_assay_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          102,
+          99,
+          410,
+          408
+        ],
+        "opaque_pixels": 46560,
+        "visible_pixels": 46560,
+        "magenta_review_pixels": 616
+      }
+    },
+    "mapobj_frostwood_cutting_yard": {
+      "runtime_sha256": "ced04d22539c4a4b3e035780ade4effbcd44a3e6d0f70e0e6cc9e73483663298",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          104,
+          108,
+          402,
+          395
+        ],
+        "opaque_pixels": 51573,
+        "visible_pixels": 58385,
+        "magenta_review_pixels": 0
+      },
+      "source_rect": [
+        0,
+        319,
+        307,
+        622
+      ],
+      "canvas_origin": [
+        99,
+        104
+      ],
+      "before_sha256": "d31463d041f9c662d7bd7fdb485b5d880eccc9143c06d1ecaf4bdec21a41a16f",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_frostwood_cutting_yard.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_frostwood_cutting_yard_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          99,
+          101,
+          408,
+          409
+        ],
+        "opaque_pixels": 53690,
+        "visible_pixels": 53690,
+        "magenta_review_pixels": 1493
+      }
+    },
+    "mapobj_aetherglass_lens_house": {
+      "runtime_sha256": "7cc46f8ae805e3916c36194c1ee554a48f317755bd0f93b78071d381aed6e9fc",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          114,
+          106,
+          395,
+          386
+        ],
+        "opaque_pixels": 45633,
+        "visible_pixels": 47610,
+        "magenta_review_pixels": 0
+      },
+      "source_rect": [
+        319,
+        319,
+        622,
+        622
+      ],
+      "canvas_origin": [
+        104,
+        104
+      ],
+      "before_sha256": "91145f4742c8a6fde548ed5969d88db564c34542a6215cea1cf3dd294cbc9d66",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_aetherglass_lens_house.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_aetherglass_lens_house_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          101,
+          101,
+          409,
+          409
+        ],
+        "opaque_pixels": 48504,
+        "visible_pixels": 48504,
+        "magenta_review_pixels": 1417
+      }
+    },
+    "mapobj_sunfall_aetherglass_yard": {
+      "runtime_sha256": "f19618a6959c58b648d4e088251d81f771376ecfbb68c390fcef48b860058804",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          107,
+          113,
+          406,
+          391
+        ],
+        "opaque_pixels": 54491,
+        "visible_pixels": 58897,
+        "magenta_review_pixels": 0
+      },
+      "source_rect": [
+        633,
+        319,
+        936,
+        622
+      ],
+      "canvas_origin": [
+        105,
+        104
+      ],
+      "before_sha256": "bb85f339852ecc09f038c393b4793b331b11800dfeb1e96089d8e4c086d3d63c",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_sunfall_aetherglass_yard.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_sunfall_aetherglass_yard_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          102,
+          101,
+          410,
+          409
+        ],
+        "opaque_pixels": 57335,
+        "visible_pixels": 57335,
+        "magenta_review_pixels": 1298
+      }
+    },
+    "mapobj_embergrain_warm_granary": {
+      "runtime_sha256": "be1927d18e2d948777c7942f58a9717623bc0773977e83db8d9fc9e5c4ccc917",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          110,
+          113,
+          406,
+          396
+        ],
+        "opaque_pixels": 50159,
+        "visible_pixels": 53438,
+        "magenta_review_pixels": 0
+      },
+      "source_rect": [
+        947,
+        319,
+        1252,
+        622
+      ],
+      "canvas_origin": [
+        106,
+        104
+      ],
+      "before_sha256": "cdb2c0221f0b504b90f81fcf991326bdc4f232e829642a2805b7f94797b369ee",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_embergrain_warm_granary.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_embergrain_warm_granary_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          104,
+          101,
+          413,
+          409
+        ],
+        "opaque_pixels": 53130,
+        "visible_pixels": 53130,
+        "magenta_review_pixels": 1099
+      }
+    },
+    "mapobj_charcoal_embergrain_store": {
+      "runtime_sha256": "be3885b5aac6145b4d03bd283b4c2a8d10f2991be2825f6783121bf5cf1fd1f8",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          104,
+          109,
+          400,
+          388
+        ],
+        "opaque_pixels": 51435,
+        "visible_pixels": 53502,
+        "magenta_review_pixels": 0
+      },
+      "source_rect": [
+        0,
+        633,
+        307,
+        936
+      ],
+      "canvas_origin": [
+        99,
+        105
+      ],
+      "before_sha256": "1717261be865ebe71d127a563e430cd64b133560084f3947cc08abf0e210af14",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_charcoal_embergrain_store.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_charcoal_embergrain_store_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          99,
+          103,
+          408,
+          410
+        ],
+        "opaque_pixels": 54171,
+        "visible_pixels": 54171,
+        "magenta_review_pixels": 804
+      }
+    },
+    "mapobj_peatwax_reed_yard": {
+      "runtime_sha256": "47961ff90bb6629bfb1988ad70a9e96e57fd7cea10731f230ed2dd86d6406c6c",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          107,
+          116,
+          402,
+          384
+        ],
+        "opaque_pixels": 46291,
+        "visible_pixels": 48721,
+        "magenta_review_pixels": 0
+      },
+      "source_rect": [
+        319,
+        633,
+        622,
+        936
+      ],
+      "canvas_origin": [
+        104,
+        105
+      ],
+      "before_sha256": "daec2079ca30af8677fc8815dfa031a473e3e5afeca758cab86fc28f9a52d3e1",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_peatwax_reed_yard.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_peatwax_reed_yard_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          101,
+          103,
+          409,
+          410
+        ],
+        "opaque_pixels": 49146,
+        "visible_pixels": 49146,
+        "magenta_review_pixels": 1130
+      }
+    },
+    "mapobj_verdant_graft_nursery": {
+      "runtime_sha256": "2c227ea92944b726aabd193fdde2c33cef98c4dc2758c6846e8e07bf83343dff",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          107,
+          112,
+          406,
+          388
+        ],
+        "opaque_pixels": 52812,
+        "visible_pixels": 56059,
+        "magenta_review_pixels": 0
+      },
+      "source_rect": [
+        633,
+        633,
+        936,
+        936
+      ],
+      "canvas_origin": [
+        105,
+        105
+      ],
+      "before_sha256": "331a6b6848cac49aef7706fab55bbcb365cec1977c4f3308a19e51c42bf577bd",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_verdant_graft_nursery.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_verdant_graft_nursery_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          102,
+          103,
+          410,
+          410
+        ],
+        "opaque_pixels": 57255,
+        "visible_pixels": 57255,
+        "magenta_review_pixels": 932
+      }
+    },
+    "mapobj_brass_scrip_mint": {
+      "runtime_sha256": "d2b51f8c50e0958f7d28a29f5a4d966a5e48272e859ef42dcad5da0425e3e547",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          109,
+          113,
+          404,
+          383
+        ],
+        "opaque_pixels": 48525,
+        "visible_pixels": 51187,
+        "magenta_review_pixels": 0
+      },
+      "source_rect": [
+        947,
+        633,
+        1252,
+        936
+      ],
+      "canvas_origin": [
+        106,
+        105
+      ],
+      "before_sha256": "5105d5e19e4a64822725618c24647133b29076dc3f809733747ade2063ac3e38",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_brass_scrip_mint.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_brass_scrip_mint_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          104,
+          103,
+          413,
+          410
+        ],
+        "opaque_pixels": 51279,
+        "visible_pixels": 51279,
+        "magenta_review_pixels": 804
+      }
+    },
+    "mapobj_underway_brass_scrip_press": {
+      "runtime_sha256": "2e67eebb5cfe8713a15260a3445813e75fa53b2fabf199fce67f72cc3d5ba3eb",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          111,
+          124,
+          392,
+          390
+        ],
+        "opaque_pixels": 56385,
+        "visible_pixels": 57727,
+        "magenta_review_pixels": 0
+      },
+      "source_rect": [
+        0,
+        946,
+        307,
+        1252
+      ],
+      "canvas_origin": [
+        99,
+        105
+      ],
+      "before_sha256": "4a5caab1bab0cb5619a2f500a3c1c264fad973876e2e1de4dbbdefdbedd1c6f0",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_underway_brass_scrip_press.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_underway_brass_scrip_press_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          99,
+          103,
+          408,
+          413
+        ],
+        "opaque_pixels": 58171,
+        "visible_pixels": 58171,
+        "magenta_review_pixels": 715
+      }
+    },
+    "mapobj_memory_salt_pan": {
+      "runtime_sha256": "0d04dd688923431960a72d757061d6402be41890d544416702e43f7589e36157",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          109,
+          109,
+          401,
+          392
+        ],
+        "opaque_pixels": 45455,
+        "visible_pixels": 48325,
+        "magenta_review_pixels": 0
+      },
+      "source_rect": [
+        319,
+        946,
+        622,
+        1252
+      ],
+      "canvas_origin": [
+        104,
+        105
+      ],
+      "before_sha256": "57f3b14a671317a4a2281a52fc952ede8ec654c4dd4351f467012b2746c7ab0a",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_memory_salt_pan.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_memory_salt_pan_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          101,
+          103,
+          409,
+          413
+        ],
+        "opaque_pixels": 47031,
+        "visible_pixels": 47031,
+        "magenta_review_pixels": 1170
+      }
+    },
+    "mapobj_wind_press": {
+      "runtime_sha256": "0b4c0803e4c43a9de60bdc7507ed80fd185cafdbd1abc050bab4da25f53717ae",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          132,
+          113,
+          383,
+          394
+        ],
+        "opaque_pixels": 33316,
+        "visible_pixels": 35983,
+        "magenta_review_pixels": 0
+      },
+      "source_rect": [
+        633,
+        946,
+        936,
+        1252
+      ],
+      "canvas_origin": [
+        105,
+        105
+      ],
+      "before_sha256": "25ed29940ca2d2f3a6a915e6237153354858c9f57b671502bf5441ce3d3a2780",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wind_press.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_wind_press_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          102,
+          103,
+          410,
+          413
+        ],
+        "opaque_pixels": 35886,
+        "visible_pixels": 35886,
+        "magenta_review_pixels": 822
+      }
+    },
+    "mapobj_saw_chain": {
+      "runtime_sha256": "85aff4db46bdc378fa8a88261bac7c550fab4ec8e6332de6562613c8dfbca476",
+      "after": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          112,
+          124,
+          403,
+          386
+        ],
+        "opaque_pixels": 40256,
+        "visible_pixels": 42838,
+        "magenta_review_pixels": 0
+      },
+      "source_rect": [
+        947,
+        946,
+        1252,
+        1252
+      ],
+      "canvas_origin": [
+        106,
+        105
+      ],
+      "before_sha256": "9ac665a4579c8d7720a89336ddefe07ede4c39aa61fc37bb6051ef195a5538df",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_saw_chain.png",
+      "before": "res://art/overworld/source/generated/cutout_recovery_20260909/batch04/mapobj_saw_chain_before.png",
+      "before_metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          104,
+          103,
+          413,
+          413
+        ],
+        "opaque_pixels": 43107,
+        "visible_pixels": 43107,
+        "magenta_review_pixels": 713
+      }
+    }
+  }
+}
