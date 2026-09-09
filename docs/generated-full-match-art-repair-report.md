@@ -5,6 +5,114 @@ Parent: `quality-generated-full-match-20260906`; selected child:
 removed the package-size budget and requested continuing. The parent quality
 goal remains unfinished.
 
+## Mireclaw town-variant batch — 2026-09-09, validated
+
+Six original built-in-generated 1536x1024 RGBA masters now complete the exact
+Mireclaw scene-layer union: 31 non-embedded identities across all seven authored
+towns. Generic Floodtide Forge and Nightglass Dominion are different live
+buildings from their faction-prefixed namesakes; both can be built in the same
+town. They now have distinct repair-workshop/signal-ring paintings and sites,
+not aliases of the armor forge/command house. Smugglers Flotilla, Hollowreed
+Moonwax Ossuary and Moonbite's Votive Drum-Court/Mirehorn Chain-Pen retain their
+exact town membership, requirements, effects and catalog/info icons.
+
+All 71 earlier scene layers, the original village, gameplay/native/save owners
+and authored content are unchanged. The existing `tools/prepare_town_scene_layers.py`
+pipeline retains exact prompts/source hashes, transparent-margin trims,
+aspect-preserving 512px runtime PNGs, mipmaps and provenance. The new pen joins
+the left causeway landing; the open command ring meets the nearer bridge, the
+repair forge and local shrine/theater follow the rear shore, and the Flotilla
+joins Reedbarrow's existing communal landing. Shared locations are permitted
+only for buildings whose town catalogs cannot overlap, covered by strict tests.
+
+The first combined source report, `mireclaw_variants_source_01/report.json`, is
+retained as a failure: 3315 checks, eight failed assertions, no runtime errors.
+Two pointer failures exposed the pen under the command dock. Five fixture-only
+built-array assertions ignored the existing prerequisite-order normalization;
+the sixth fixture setup left a dependent pen built while deleting its required
+court, so normalization correctly restored the court. The corrected fixture
+uses only authored starting buildings and recursive prerequisites, normalized
+through the existing owner. No gameplay normalization was changed. Both real
+Moonbite Day-1 purchases and all seven executed build controls already matched
+their complete independent rule/recap state in that failed run.
+
+`tests/town_mireclaw_variant_regression.py` reuses the existing complete input,
+alpha/crop, info, main-building, keyboard/controller and packaged bootstrap
+checks. Its two actual authored Day-1 purchases use `votivejaw-moonbite-drum-trial`
+and `votivejaw-moonbite-mirehorn-works` without injected state. Seven developed
+views and six isolated paid ledger controls are explicitly detached fixtures,
+not earned development or full-match outcomes. The unchanged earned Duskfen
+Day-51 control remains separate. The most developed Moonbite fixture receives
+one comprehensive visible-building input sweep; individual purchases do not
+repeat a whole-town sweep. All 44 focused Python tests pass after updating the
+prior brief-union/prompt-label assumptions without rewriting exact prompts;
+the final seven variant tests also pass, including the new exact-size check.
+
+Evidence is under `.artifacts/generated_full_match_quality_20260906/`.
+The single completed-boundary supervisor is `mireclaw_variant_acceptance_run.py`:
+small/large source views, one official Linux/Windows export/generated-Town cycle
+and the identical exact variant probe in both packages. Its state file is
+`mireclaw_variant_acceptance_jobs_01.json`; final full-save/member comparisons
+are owned by `mireclaw_variant_verify.py`. The first boundary's corrected source
+run (`mireclaw_variants_source_02`) passes all 12753 engine/input/save assertions
+with no runtime errors, but correctly fails acceptance because its launcher
+started 0.157 seconds before the final manifest write completed. Keep that
+failed stability report; do not relabel it passing. Both official exports pass
+and contain the current manifest. `mireclaw_variant_acceptance_resume.py` verifies
+those existing packs and resumes only the failed/unrun source and exact package
+checks, recorded in `mireclaw_variant_acceptance_jobs_02.json`. The unchanged two
+shared Town reports pass in `.artifacts/full_play_runtime_20260905/mireclaw_variants_shared/`.
+The resumed boundary is complete: `mireclaw_variants_source_04` passes 12753
+checks at 1280x720; `mireclaw_variants_source_03` passes 12752 at **1920x1080**.
+The latter requested 2048x1079, but the Settings preset normalized it to 1920.
+It is not evidence for the annotated size. The follow-up
+`mireclaw_variant_wide_layout.py` uses the established explicit custom-window
+path and skips already-proven paid orders. Its
+`mireclaw_variants_wide_layout_01/report.json` passes 10336 layout/input/save
+checks; `annotated-size-proof.json` verifies all 43 PNGs really are 2048x1079.
+The tracked variant CLI now uses that same custom-window path for this size;
+its 1280/1920 script remains byte-identical to the accepted platform probe.
+Small source/packaged-Linux Moonbite and wide Moonbite/Hollowreed/Reedbarrow
+captures were visually inspected: the pen is exposed between the causeway
+landings, local shrines follow the shore, and navigation/command controls remain
+readable and contained. These developed views are fixtures, not earned towns.
+
+Both `mireclaw_variants_packaged_linux_01` and
+`mireclaw_variants_packaged_windows_01` pass 12753 checks with unchanged exports
+and all assertions retained. Windows is headless Wine, not native GPU/audio
+or physical-controller certification. The official `mireclaw_variants_release_*_01`
+startup/native/generated-Town paid flows also pass. Both PCKs are 258620468 bytes
+with 5290 members: 12 new texture/import entries, 5276 unchanged earlier members,
+and only the scene manifest and UID cache changed from the prior batch.
+Linux and Windows have identical membership and differ only in `project.binary`.
+No source art, test harness or editor leak is shipped. The removed size ceiling
+has not been reintroduced.
+
+`mireclaw_variant_acceptance.json` records complete state/member comparisons.
+All 56 retained-case/fixture saves match across four runs outside only
+`saved_at_unix`. The eight independently created authored saves additionally
+have different, explicitly recorded fresh `session_id` values, as required by
+`SessionStateStore.gd`'s `Time.get_ticks_msec()` default. Their remaining fields
+match. No fields are excluded from each run's independent rule/recap and
+save/re-entry controls. The original earned control is unchanged; its input SHA
+is `d02feae85e182e76af2397b50684c49472a19b6b221c8d45f501d78272d4ad83`.
+
+Reproduce the exact source/package batch with
+`python3 -B tests/town_mireclaw_variant_regression.py --label <fresh> --save
+<duskfen_faction_source_04/earned_growth_save.json> --resolution 1280x720`, adding
+`--platform <linux|windows> --binary <official-export> --pack <matching.pck>`
+and a fresh `--wine-prefix` for Windows. The two unchanged shared Town reports,
+strict Python checks, repository validation and `git diff --check` are the
+batch-boundary checks; no unchanged 51-day chain was repeated. The final script
+hash remains `652b07f38a8e73f7b9c31bae6acf24b7d0dff50847c00d727f75470b2130d6ae`
+at the ordinary preset sizes.
+
+Mireclaw has no remaining scene-mapping gaps. The broader presentation child
+and full-match goal remain in progress: 96 non-embedded faction/town mappings
+remain (Embercourt 6, Veilmourn 5, Sunvault 29, Thornwake 29, Brasshollow 27).
+Next is the six-building Embercourt variant batch, preserving these 77 layers
+and using the same implementation-first, one-boundary validation cadence.
+
 ## Duskfen faction-chain batch — 2026-09-09, validated
 
 Thirteen original scene layers now cover the remaining Duskfen faction chain:

@@ -44,6 +44,26 @@ unchanged turns. Package membership must prove the gameplay owners/content are
 unchanged, and the official normal generated-Town paid flows must still pass.
 Label earned-save input replays as read-only, never as additional paid orders.
 
+The following variant batch closes the six remaining Mireclaw scene mappings
+across seven authored towns (31 non-embedded building identities total). Generic
+Floodtide Forge and Nightglass Dominion can coexist with the faction-prefixed
+buildings of the same names and therefore require distinct paintings/sites.
+Smugglers Flotilla, Hollowreed Moonwax Ossuary and Moonbite's two local dwellings
+retain exact catalog membership. Preserve all 71 previously accepted paintings,
+the village and all simulation/content/save owners. Require the complete town
+union to have exact scene mappings, not catalog-style fallback presentation.
+
+Use ordinary paid Day-1 orders in the existing Moonbite Drum Trial and Mirehorn
+Works scenarios without injecting prerequisites or resources. Reuse the earned
+Duskfen save for unchanged generated-Town surface/save proof. Separately labeled
+detached developed fixtures cover all seven compositions, while six isolated
+ledger controls compare full rule/recap state, daily limits and save/re-entry.
+These fixtures prove art/input/build compatibility, not earned development or
+complete authored matches. Run one combined small/large rendered boundary and
+the identical probe through both official packages; retain normal generated
+Town paid-flow gates and prove unchanged compiled gameplay/content. Do not
+replay the unrelated 51-day chain for six data-only variant paintings.
+
 ## Owner-directed package policy — 2026-09-09
 
 There is no fixed release-PCK size budget. Remove the former 250000000-byte
