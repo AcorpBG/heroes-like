@@ -1,9 +1,12 @@
 # Approved full-match art repairs
 
 Parent: `quality-generated-full-match-20260906`; selected child:
-`ux-generated-full-match-presentation-20260906`. Status: in progress; the owner
-removed the package-size budget and requested continuing. The parent quality
-goal remains unfinished.
+`ux-generated-full-match-presentation-20260906`. Status: completed 2026-09-09,
+along with the selected parent goal. All six factions and the four reproduced
+Overworld cutout defects have implemented and validated corrections. Current
+closure, package/source identity and explicit limits:
+`docs/generated-full-match-quality-completion.md`. Dated checkpoints below
+preserve their historical open scope and rejected evidence, not current blockers.
 
 ## Brasshollow whole-faction batch — 2026-09-09, validated
 
@@ -2853,7 +2856,7 @@ Large08 slot1, or `--memory-growth` using its slot2; both use slot3 only as
 The packaged wrapper additionally requires isolated matching `--binary/--pack`,
 `--platform`, `--bootstrap-controls`, and a fresh `--wine-prefix` for Windows.
 
-## Remaining acceptance
+## Historical remaining acceptance — superseded by 2026-09-09 closure
 
 All 22 Bellwake starting/constructible scene layers, including the same-site
 Sounding/Court upgrade, now have source and package acceptance recorded above.
