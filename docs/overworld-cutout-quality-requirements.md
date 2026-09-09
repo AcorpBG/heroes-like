@@ -80,6 +80,14 @@ re-export or rerun full gameplay after each individual image.
 
 Reuse existing distinct/decorative sprite, fog/input and exact generated-save
 probes, extending Python-owned orchestration without weakening their assertions.
+For mixed legacy families, `--batch legacy_families` covers 35 reviewed rows
+with full-atlas-before-region import checks and explicitly labeled detached
+renderer galleries. Faction-fallback heroes and legacy tree art must not be
+injected into a world or substituted for current identity/cohesive art to
+manufacture gameplay evidence. Report actual selected-asset occurrence counts;
+when absent, the unchanged earned native map is a regression control, not a
+corrected-object gameplay capture. The Crownmere controlled/unclaimed switch
+must still resolve its exact separate manifest states.
 Retain before and after in-context screenshots at 1280x720 and 1920x1080 or
 2048x1079. Show corrected native/generated and authored resolution paths with
 original placement and complete save comparisons. Clearly label detached visual
@@ -92,6 +100,11 @@ reports, `python3 tests/validate_repo.py`, `git diff --check`, and the establish
 `tests/packaging_windows_export_smoke.py` startup/generated-map flows.
 Packages must contain the repaired textures with matching Linux/Windows content;
 there is no fixed package-size ceiling. Windows/Wine is not GPU certification.
+Legacy-family preparation uses `tools/prepare_overworld_legacy_cutouts.py
+--output <fresh-preview-dir> [--install]`; focused tests use `python3 -B -m
+unittest discover -s tests -p 'test_overworld_legacy_cutouts.py'`. Existing
+source and packaged cutout drivers accept `--batch legacy_families` with the
+same resolution/platform/isolated-release arguments as earlier cohorts.
 
 ## Completion and non-goals
 

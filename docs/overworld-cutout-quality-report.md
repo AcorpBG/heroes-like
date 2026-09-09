@@ -338,15 +338,93 @@ unittest discover -s tests -p 'test_overworld_decoration_cutouts.py'`. Existing
 source/packaged probes select `--batch decorations`; resolutions, platform
 arguments and fresh artifact-directory requirements remain as above.
 
+## Accepted mixed legacy/hero/tree/state cohort (2026-09-09)
+
+35 further authoritative rows are corrected in 20 runtime PNG files. The packet
+is `art/overworld/source/generated/cutout_recovery_20260909/legacy_families/`:
+`recipe.json` locks exact identities, original bytes and geometry;
+`generation.json` records the four built-in original image-edit prompts and tool
+outputs; `manifest.json` locks preparation, source, trim and runtime hashes.
+`before_runtime/` retains all 20 originals. Prepared trim copies are under
+`art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/`.
+
+| Family | Source-backed defect and correction |
+| --- | --- |
+| Six faction heroes | Bad matte extraction retained pink edge colors and neighboring sheet fragments. Original opaque RGB matches the six original 512-square cells exactly. Recover original paint, including cross-row banner tips; preserve boots' baseline. Embercourt/Mireclaw/Sunvault remain 1:1; complete Thornwake/Brasshollow/Veilmourn paintings are proportionally contained at 0.94358/0.97379/0.92776, never stretched. Explicit prism/flower regions preserve intentional color. |
+| Sixteen older generated trees | The recorded source already had clipped crowns, missing alpha and neon edge patches; fully transparent pixels contain only black, not recoverable foliage. An original built-in atlas edit repairs the same sixteen ordered subjects. Extract complete groups into the unchanged sixteen 128-square regions. Current native `cohesive_*` blocker paintings are not replaced. |
+| Sawmill and quarry | Existing processed sources clip the roof/woodpile and rear crane/rim. Recorded intact old sheet files were not found. Two precise original image edits restore those edges, preserving architecture, camera and proportions; fit on unchanged 512-square canvases with original floor baselines. |
+| Ten other legacy props | Remove recorded neighboring sheet fragments without repainting or moving the original main subject. Every pixel of each original main connected painting is independently checked unchanged; retain the watchtower's separate foreground rock. Original processed source files remain byte-identical. |
+| Controlled Miremoon Crownmere | A painted checkerboard survived the historical extraction. A backing-only original image edit preserves the landmark. Independent old-source pixel comparison recovers the original full-source 44-square bilinear resize and 2-pixel pad inside its unchanged 48-square region. Eleven neighboring atlas regions remain byte-identical. The historical source manifest points to the corrected derivative while retaining original provenance. |
+
+Preparation refuses incomplete cohorts, clipped source paint, changed input
+hashes/identities, unrecognized runtime edits and unrelated trim destinations.
+Manifest row replacements are preflighted before installation. Assembly checks
+caught a tree branch crossing the proposed grid boundary and a shrine cleanup
+rectangle touching real foliage; the branch and foliage are preserved in the
+accepted result. Two generated corner-pixel artifacts are explicitly excluded
+from the tree source and two from Crownmere; no global color threshold is an
+acceptance shortcut. Eighteen clean controls are unchanged.
+
+Validation evidence under `.artifacts/overworld_cutout_quality_20260909/`:
+
+- `legacy_unit_acceptance.log`: **15 new Python tests pass**; prior pool and
+  decoration logs pass **28 + 14** tests. Exact source reconstruction, complete
+  main-subject preservation, source colors, original alignment, clean neighbors
+  and fail-closed corruption/clipping cases are covered. All 35 before rasters
+  fail independent visible-pixel acceptance of the corrected result.
+- `legacy_after_1280/`, `legacy_after_1920/`, `legacy_packaged_linux/` and
+  `legacy_packaged_windows/`: **7,364 checks pass per run**, zero runtime errors
+  or leaked-resource reports, terminal exit 0. Import expectations are derived
+  independently from source PNGs; alpha-edge processing occurs on each complete
+  atlas before extracting its authoritative region. Windows retains every
+  assertion and omits only screenshot operations.
+- All **12 final source/Linux screenshots** were directly inspected: three
+  explicitly labeled detached art-gallery pages and one actual earned native
+  map control at each source resolution and in Linux's 1280 package. Clear
+  margins, intact silhouettes and no sheet dividers/checker backing were
+  checked. The old 48-square Crownmere remains low-resolution when enlarged;
+  this is a backing repair, not an atlas-resolution or gameplay-layout change.
+- **Evidence boundary:** none of these 35 selected legacy assets occurs in the
+  unchanged earned Medium Day97 save. Do not call that map a corrected-object
+  gameplay capture. It proves 2,380 current native blocker presentations remain
+  art-backed and use their existing cohesive palette, and the real saved hero
+  retains identity-art priority. Detached inputs verify the exact Crownmere
+  controlled/unclaimed resolver and registered fallback/direct art paths;
+  no hero mappings, world objects, coordinates or fog are injected.
+- `legacy_delivery_preservation.json`: all five before/source/package native
+  saved outputs are equal except the save-envelope `saved_at_unix`; within-run
+  full-session/save/load checks exclude nothing. All 1,214 manifest identities
+  and all top-level content mappings remain; only the selected 35 source/art
+  metadata rows change.
+- Shared distinct/decorative sprite, movement-input, route and fog checks pass:
+  `.artifacts/full_play_runtime_20260905/legacy_cutout_shared_final/report.json`.
+  `legacy_repo_acceptance.log` passes the full repository validator. The older
+  sovereign-atlas gate now verifies its exact retained original plus the
+  source-locked repaired derivative, not the defective historical runtime hash.
+  `git diff --check` passes.
+- Official `legacy_linux_final/report.json` and
+  `legacy_windows_final/report.json` pass, terminal exit 0. Linux startup and
+  the packaged earned-map probe pass; Windows fresh-prefix startup and the
+  existing generated Overworld/Town ten-building flow pass. Windows evidence
+  remains headless Wine, not hardware/GPU certification.
+
+Both PCKs are **285,850,292 bytes / 5,482 members**, 367,728 bytes smaller than
+the prior decoration checkpoint. Only `project.binary` differs by platform.
+Against that checkpoint, exactly 20 texture members, the Overworld manifest and
+UID cache change; **5,460 members are byte-identical**, with no additions or
+removals. Compiled runtime/gameplay/native/save owners therefore remain exact.
+Linux SHA-256: `ece698b87080c3bfa3b7d4168274b0488345a6f7b82ad0b2a6fefc156c261838`.
+Windows SHA-256: `632f4b1c344a11a0247e416a343dfb202c03ab105bdaed2c683e457d19ec00d3`.
+Commands and honest detached-versus-gameplay coverage requirements are in
+`docs/overworld-cutout-quality-requirements.md`; both existing cutout drivers
+select this cohort with `--batch legacy_families`.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. Remaining review/recovery is
-active in the same child after the accepted older-decoration checkpoint.
-Direct inspection confirms clipped/neighbor-contaminated legacy props and
-damaged older generated-tree cutouts.
-Six faction-hero sprites also need edge
-review/recovery; `resource_site_neutral_miremoon_crownmere_controlled` has a
-visible rectangular backing. Atlas-backed resource/state/artifact/encounter/town/hero families
+active in the same child after the accepted 35-row mixed-family checkpoint.
+The confirmed older-tree, twelve legacy-prop, six faction-hero and controlled
+Crownmere defects above are corrected. Other atlas-backed resource/state/artifact/encounter/town/hero families
 still need complete detailed dispositions; small contact thumbnails and color
 counts are not visual acceptance. Legitimate purple materials are preserved.
 Other-object defects visible in the maps are not hidden or declared fixed.

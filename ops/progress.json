@@ -16619,10 +16619,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "art-overworld-cutout-runtime-pool-20260909",
   "currentSliceId": "art-overworld-cutout-runtime-pool-20260909",
-  "currentSliceNotes": "Accepted 185 decoration corrections: 183 original-sheet recoveries, Brasspipe stray-fragment removal and approved original Heatglass replacement; 15 clean controls unchanged. 14 new plus 28 prior Python tests, 8498 checks at each source resolution and in each exact Linux/Windows package, inspected visuals and seven native saved outputs equal outside only saved_at_unix. Prior map/resource cohorts remain accepted. Tree/legacy/hero/state defects and detailed remaining full-pool dispositions keep the goal in progress. Evidence and terminal-exit confirmation: docs/overworld-cutout-quality-report.md.",
+  "currentSliceNotes": "Accepted 35 further hero/tree/legacy/state cutout corrections in 20 runtime files, with four original generated repair masters and 18 unchanged controls. 15 new plus 42 prior Python tests, 7364 checks per source resolution and exact Linux/Windows package, all 12 final source/Linux screenshots inspected, complete native saves preserved, shared reports and repository checks pass. Both official exports and Windows generated Town flow pass. No selected legacy asset is inserted into gameplay: detached galleries and unchanged native control are explicitly distinguished. Full remaining resource/state/artifact/encounter/town/hero dispositions keep this child and parent in progress. Evidence: docs/overworld-cutout-quality-report.md.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Remaining Runtime-Pool Cutout Recovery",
-  "currentSliceUpdatedAt": "2026-09-09T18:06:41Z",
+  "currentSliceUpdatedAt": "2026-09-09T19:04:14Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21929,59 +21929,77 @@
   },
   "guardrailNote": "Original-art recovery only; preserve exact identity, placement, footprint, interaction, saves and deterministic generation. No native/RMG rules, Town redesign, unrelated cleanup or fixed package-size ceiling.",
   "lastValidation": {
-    "id": "art-overworld-cutout-batch04-20260909",
-    "sliceId": "art-overworld-cutout-batch04-20260909",
-    "status": "completed",
+    "id": "art-overworld-cutout-runtime-pool-20260909",
+    "sliceId": "art-overworld-cutout-runtime-pool-20260909",
+    "status": "in_progress",
+    "acceptedCohort": "35 mixed legacy/hero/tree/state cutouts",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
-    "runtimeChanges": "15 original resource-sheet cutouts; no gameplay/native/placement/save changes",
+    "runtimeChanges": "20 runtime PNG files, 35 prepared trims, four original generated repair masters and exact source/provenance; no gameplay/native/placement/save changes",
     "validation": {
-      "python_tests": 15,
-      "source_checks_per_resolution": 124,
-      "packaged_checks_per_platform": 124,
+      "python_tests": 57,
+      "new_python_tests": 15,
+      "source_checks_per_resolution": 7364,
+      "packaged_checks_per_platform": 7364,
       "source_resolutions": [
         "1280x720",
         "1920x1080"
       ],
+      "inspected_final_source_linux_screenshots": 12,
       "linux_export": "passed",
-      "windows_export": "passed (headless Wine, not physical GPU certification)",
+      "windows_export": "passed including generated Overworld/Town flow (headless Wine, not physical GPU certification)",
       "repository": "passed",
-      "existing_sprite_input_route_fog_reports": "passed"
+      "existing_sprite_input_route_fog_reports": "passed",
+      "linux_pck_bytes": 285850292,
+      "windows_pck_bytes": 285850292,
+      "unchanged_package_members": 5460
     },
-    "parentComplete": false
+    "parentComplete": false,
+    "remainingWork": "Detailed remaining resource/state/artifact/encounter/town/hero family dispositions; no full-pool or release-readiness acceptance"
   },
   "latestEvidence": {
     "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "in_progress",
-    "acceptedCohort": "159 remaining original map-sheet sprites",
+    "acceptedCohort": "35 mixed legacy/hero/tree/state cutouts",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
-    "runtimeChanges": "159 runtime PNGs plus matching trims and exact-row provenance; no gameplay/native/placement/save changes",
+    "runtimeChanges": "20 runtime PNG files, 35 prepared trims, four original generated repair masters and exact source/provenance; no gameplay/native/placement/save changes",
     "validation": {
-      "python_tests": 28,
-      "source_checks_per_resolution": 1177,
-      "packaged_checks_per_platform": 1177,
+      "python_tests": 57,
+      "new_python_tests": 15,
+      "source_checks_per_resolution": 7364,
+      "packaged_checks_per_platform": 7364,
       "source_resolutions": [
         "1280x720",
         "1920x1080"
       ],
+      "inspected_final_source_linux_screenshots": 12,
       "linux_export": "passed",
-      "windows_export": "passed (headless Wine, not physical GPU certification)",
+      "windows_export": "passed including generated Overworld/Town flow (headless Wine, not physical GPU certification)",
       "repository": "passed",
-      "existing_sprite_input_route_fog_reports": "passed"
+      "existing_sprite_input_route_fog_reports": "passed",
+      "linux_pck_bytes": 285850292,
+      "windows_pck_bytes": 285850292,
+      "unchanged_package_members": 5460
     },
     "parentComplete": false,
-    "remainingWork": "Older decoration residues/dividers, damaged trees/legacy props, faction-hero edges, confirmed resource-state backing and detailed whole-pool dispositions"
+    "remainingWork": "Detailed remaining resource/state/artifact/encounter/town/hero family dispositions; no full-pool or release-readiness acceptance"
   },
   "latestEvidenceArtifacts": [
     "docs/overworld-cutout-quality-report.md",
-    ".artifacts/overworld_cutout_quality_20260909/batch04_source_final_1280/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/batch04_source_final_1920/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/batch04_packaged_linux/packaged-report.json",
-    ".artifacts/overworld_cutout_quality_20260909/batch04_packaged_windows/packaged-report.json"
+    ".artifacts/overworld_cutout_quality_20260909/legacy_unit_acceptance.log",
+    ".artifacts/overworld_cutout_quality_20260909/legacy_after_1280/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/legacy_after_1920/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/legacy_packaged_linux/packaged-report.json",
+    ".artifacts/overworld_cutout_quality_20260909/legacy_packaged_windows/packaged-report.json",
+    ".artifacts/overworld_cutout_quality_20260909/legacy_delivery_preservation.json",
+    ".artifacts/overworld_cutout_quality_20260909/legacy_linux_final/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/legacy_windows_final/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/legacy_repo_acceptance.log"
   ],
-  "latestEvidenceId": "art-overworld-cutout-batch04-20260909",
-  "latestFinding": "First resource-sheet recovery child completed: 15 corrected original cutouts, 5519 restored opaque pixels, 15 Python tests, 124 checks at each source resolution and in each Linux/Windows package; inspected captures and unchanged full saves. The broader 1214-row runtime pool is still unfinished. Evidence: docs/overworld-cutout-quality-report.md.",
+  "latestEvidenceId": "art-overworld-cutout-runtime-pool-20260909",
+  "latestFinding": "Accepted 35 further hero/tree/legacy/state cutout corrections in 20 runtime files, with four original generated repair masters and 18 unchanged controls. 15 new plus 42 prior Python tests, 7364 checks per source resolution and exact Linux/Windows package, all 12 final source/Linux screenshots inspected, complete native saves preserved, shared reports and repository checks pass. Both official exports and Windows generated Town flow pass. No selected legacy asset is inserted into gameplay: detached galleries and unchanged native control are explicitly distinguished. Full remaining resource/state/artifact/encounter/town/hero dispositions keep this child and parent in progress. Evidence: docs/overworld-cutout-quality-report.md.",
   "metrics": {
+    "scope": "Historical full-match checkpoint metrics retained below; these are not current release metrics. Current art-goal acceptance is in latestEvidence and validation.",
     "audit_only": false,
     "runtime_behavior_changed": true,
     "source_backed_behavior_progress": true,
@@ -22061,7 +22079,12 @@
         "python3 tests/overworld_cutout_batch_regression.py --batch decorations --resolution 1280x720 --label <fresh>",
         "python3 tests/overworld_cutout_batch_regression.py --batch decorations --resolution 1920x1080 --label <fresh>",
         "python3 tests/packaged_overworld_cutout_batch_regression.py --batch decorations --platform linux --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh>",
-        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch decorations --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch decorations --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>",
+        "python3 -B -m unittest discover -s tests -p 'test_overworld_legacy_cutouts.py'",
+        "python3 tests/overworld_cutout_batch_regression.py --batch legacy_families --resolution 1280x720 --label <fresh>",
+        "python3 tests/overworld_cutout_batch_regression.py --batch legacy_families --resolution 1920x1080 --label <fresh>",
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch legacy_families --platform linux --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh>",
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch legacy_families --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
       "updatedAt": "2026-09-09T16:42:26Z",
@@ -22156,7 +22179,7 @@
         "python3 tests/packaged_overworld_cutout_batch_regression.py --batch decorations --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-09T18:06:41Z",
+      "updatedAt": "2026-09-09T19:04:14Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22174,9 +22197,11 @@
         "tools/prepare_overworld_cutout_pool.py and art/overworld/source/generated/cutout_recovery_20260909/map_sheets source/trim/runtime cohort",
         "tests/test_overworld_cutout_pool.py; exact authored/native renderer, complete-save and platform package cohort probes",
         "tools/prepare_overworld_decoration_cutouts.py; decorations original/generated/trim/runtime source packet and 15 clean controls",
-        "tests/test_overworld_decoration_cutouts.py and tests/overworld_decoration_cutout_probe.py; exact identity and unchanged native-body palette coverage"
+        "tests/test_overworld_decoration_cutouts.py and tests/overworld_decoration_cutout_probe.py; exact identity and unchanged native-body palette coverage",
+        "tools/prepare_overworld_legacy_cutouts.py; 35 hero/tree/prop/state cutouts, retained originals, generated repair masters and 18 unchanged controls",
+        "tests/test_overworld_legacy_cutouts.py and tests/overworld_legacy_cutout_probe.py; full-atlas import oracle, labeled detached coverage and unchanged earned native/save control"
       ],
-      "notes": "Accepted 185 decoration corrections: 183 original-sheet recoveries, Brasspipe stray-fragment removal and approved original Heatglass replacement; 15 clean controls unchanged. 14 new plus 28 prior Python tests, 8498 checks at each source resolution and in each exact Linux/Windows package, inspected visuals and seven native saved outputs equal outside only saved_at_unix. Prior map/resource cohorts remain accepted. Tree/legacy/hero/state defects and detailed remaining full-pool dispositions keep the goal in progress. Evidence and terminal-exit confirmation: docs/overworld-cutout-quality-report.md.",
+      "notes": "Accepted 35 further hero/tree/legacy/state cutout corrections in 20 runtime files, with four original generated repair masters and 18 unchanged controls. 15 new plus 42 prior Python tests, 7364 checks per source resolution and exact Linux/Windows package, all 12 final source/Linux screenshots inspected, complete native saves preserved, shared reports and repository checks pass. Both official exports and Windows generated Town flow pass. No selected legacy asset is inserted into gameplay: detached galleries and unchanged native control are explicitly distinguished. Full remaining resource/state/artifact/encounter/town/hero dispositions keep this child and parent in progress. Evidence: docs/overworld-cutout-quality-report.md.",
       "startedAt": "2026-09-09T16:04:51Z"
     },
     {
@@ -111425,29 +111450,27 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Accepted 185 decoration corrections: 183 original-sheet recoveries, Brasspipe stray-fragment removal and approved original Heatglass replacement; 15 clean controls unchanged. 14 new plus 28 prior Python tests, 8498 checks at each source resolution and in each exact Linux/Windows package, inspected visuals and seven native saved outputs equal outside only saved_at_unix. Prior map/resource cohorts remain accepted. Tree/legacy/hero/state defects and detailed remaining full-pool dispositions keep the goal in progress. Evidence and terminal-exit confirmation: docs/overworld-cutout-quality-report.md.",
+  "summary": "Accepted 35 further hero/tree/legacy/state cutout corrections in 20 runtime files, with four original generated repair masters and 18 unchanged controls. 15 new plus 42 prior Python tests, 7364 checks per source resolution and exact Linux/Windows package, all 12 final source/Linux screenshots inspected, complete native saves preserved, shared reports and repository checks pass. Both official exports and Windows generated Town flow pass. No selected legacy asset is inserted into gameplay: detached galleries and unchanged native control are explicitly distinguished. Full remaining resource/state/artifact/encounter/town/hero dispositions keep this child and parent in progress. Evidence: docs/overworld-cutout-quality-report.md.",
   "taskId": "10236",
-  "updatedAt": "2026-09-09T18:06:41Z",
+  "updatedAt": "2026-09-09T19:04:14Z",
   "validation": {
-    "id": "quality-marsh-listener-cutout-20260909",
-    "sliceId": "ux-generated-full-match-presentation-20260906",
+    "id": "art-overworld-cutout-runtime-pool-20260909",
+    "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "in_progress",
-    "validatedAt": "2026-09-09T01:03:14Z",
-    "scope": "Accepted Marsh Listener Post original-raster correction; full presentation and parent goal remain in progress.",
-    "result": "Original Marsh Listener Post runtime/trim cutouts now have zero sheet debris or magenta contamination, preserving the exact before master/atlas, original canvas and all 30385 uncontaminated body pixels. Two failing-before controls and six corrected source/Linux/Windows earned Day-46 views pass 31 checks each; all eight complete saves and entire native placement/masks/tile/art authority match outside only saved_at_unix, as exact Decimal JSON and raw bytes. All 16 source jobs (44 Python tests, prior Cinder/Moss/Wreck and sprite/decorative/fog/input/Town reports, preservation, repository/diff) and six official package jobs pass. Both platforms pass the five existing bootstrap controls. Four corrected source/Linux captures inspected; Windows headless Wine only. Both PCKs are 249671040 bytes with 328960 headroom, 5228 members, 5225 prior payloads unchanged and platform difference only project.binary. All 5864 other baseline art/content/runtime/native files are unchanged. Existing caches, saves and evidence preserved; new Wine environments disposable. Broader Town variants/factions and the unapproved budget decision remain open.",
+    "validatedAt": "2026-09-09T19:04:14Z",
+    "scope": "Accepted 35-row mixed-family art cohort; remaining full-pool review and parent goal stay in progress.",
+    "result": "Accepted 35 further hero/tree/legacy/state cutout corrections in 20 runtime files, with four original generated repair masters and 18 unchanged controls. 15 new plus 42 prior Python tests, 7364 checks per source resolution and exact Linux/Windows package, all 12 final source/Linux screenshots inspected, complete native saves preserved, shared reports and repository checks pass. Both official exports and Windows generated Town flow pass. No selected legacy asset is inserted into gameplay: detached galleries and unchanged native control are explicitly distinguished. Full remaining resource/state/artifact/encounter/town/hero dispositions keep this child and parent in progress. Evidence: docs/overworld-cutout-quality-report.md.",
     "artifacts": [
-      ".artifacts/generated_full_match_quality_20260906/marsh_listener_source_batch.json",
-      ".artifacts/generated_full_match_quality_20260906/marsh_listener_packages_batch.json",
-      ".artifacts/generated_full_match_quality_20260906/marsh_listener_source_acceptance.json",
-      ".artifacts/generated_full_match_quality_20260906/marsh_listener_packages_acceptance.json",
-      ".artifacts/generated_full_match_quality_20260906/marsh_listener_preservation.json",
-      ".artifacts/generated_full_match_quality_20260906/marsh_listener_lossless.json",
-      ".artifacts/generated_full_match_quality_20260906/marsh_listener_release_linux/report.json",
-      ".artifacts/generated_full_match_quality_20260906/marsh_listener_release_windows/report.json",
-      ".artifacts/generated_full_match_quality_20260906/marsh_listener_packaged_linux_1280x720/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/marsh_listener_packaged_linux_1920x1080/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/marsh_listener_packaged_windows_1280x720/packaged-report.json",
-      ".artifacts/generated_full_match_quality_20260906/marsh_listener_packaged_windows_1920x1080/packaged-report.json"
+      "docs/overworld-cutout-quality-report.md",
+      ".artifacts/overworld_cutout_quality_20260909/legacy_unit_acceptance.log",
+      ".artifacts/overworld_cutout_quality_20260909/legacy_after_1280/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/legacy_after_1920/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/legacy_packaged_linux/packaged-report.json",
+      ".artifacts/overworld_cutout_quality_20260909/legacy_packaged_windows/packaged-report.json",
+      ".artifacts/overworld_cutout_quality_20260909/legacy_delivery_preservation.json",
+      ".artifacts/overworld_cutout_quality_20260909/legacy_linux_final/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/legacy_windows_final/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/legacy_repo_acceptance.log"
     ]
   },
   "validationHistory": [

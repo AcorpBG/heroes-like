@@ -1,6 +1,11 @@
 {
   "schema_id": "sovereign_wild_habitat_art_wave1",
   "content_slice_id": "content-six-sovereign-wild-habitats-10184",
+  "runtime_repair": {
+    "processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+    "preserved_original_atlas": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/before_runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+    "scope": "2026-09-09 Crownmere controlled-state checker backing repair only; eleven neighboring regions unchanged. The source rows and runtime_sha256 below describe the retained original assembly, not the repaired derivative."
+  },
   "generation_mode": "built_in_image_gen_original_landmarks_and_precise_controlled_edits",
   "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
   "atlas_size": [576, 48],

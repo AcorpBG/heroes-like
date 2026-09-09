@@ -44135,6 +44135,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             ensure(recovery["ok"], errors, f"Decoration recovery {asset_id} must preserve source-backed art: {recovery['errors']}")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Decoration cutout recovery failed closed: {exc}")
+    try:
+        legacy_spec = importlib.util.spec_from_file_location("legacy_cutout_validation", ROOT / "tools" / "prepare_overworld_legacy_cutouts.py")
+        legacy_module = importlib.util.module_from_spec(legacy_spec)
+        legacy_spec.loader.exec_module(legacy_module)
+        for asset_id, recovery in legacy_module.validate_assets().items():
+            ensure(recovery["ok"], errors, f"Legacy recovery {asset_id} must preserve clean source-backed art: {recovery['errors']}")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Legacy cutout recovery failed closed: {exc}")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
@@ -44280,6 +44288,10 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             elif source_model in {"built_in_image_gen_original_elder_wild_sanctuary_atlas", "built_in_image_gen_precise_edit_and_background_extraction_elder_wild_sanctuary_atlas"}:
                 expected_canvas = (384, 48)
             elif source_model in {"built_in_image_gen_original_sovereign_wild_habitat_atlas", "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas"}:
+                expected_canvas = (576, 48)
+            elif source_model == "built_in_image_gen_precise_legacy_family_repair" and asset_id == "resource_site_neutral_miremoon_crownmere_controlled":
+                # The source-locked recovery validator above also requires the
+                # unchanged atlas path/region and all eleven neighbor regions.
                 expected_canvas = (576, 48)
             elif source_model in {"built_in_image_gen_original_unbound_wild_concord_atlas", "built_in_image_gen_original_controlled_unbound_wild_concord_atlas"}:
                 expected_canvas = (576, 48)
@@ -79392,14 +79404,19 @@ def validate_six_sovereign_wild_habitats(errors: list[str]) -> None:
     unit_animation = {str(row.get("unit_id", "")): row for row in load_json(CONTENT_DIR / "unit_animation_manifest.json").get("items", []) if isinstance(row, dict)}
     ensure(len(units) >= 136 and (len(groups),len(encounters),len(dwellings),len(sites),len(objects)) == (437,203,49,377,422), errors, "Sovereign-wild batch catalogs changed")
     atlas_payload = atlas_path.read_bytes()
-    atlas_sha = "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32"
+    repair_res = "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json"
+    repair_manifest = load_json(res_path_to_disk(repair_res))
+    repair_file = repair_manifest.get("files", {}).get(atlas_res, {})
+    ensure(repair_file.get("before_sha256") == "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32", errors, "Sovereign-wild repair lost its exact original atlas provenance")
+    atlas_sha = repair_file.get("after_sha256", "")
     ensure(png_size(atlas_path) == (576,48) and hashlib.sha256(atlas_payload).hexdigest() == atlas_sha and len(atlas_payload) >= 26 and atlas_payload[25] in {4,6}, errors, "Sovereign-wild habitat atlas bytes, size, or alpha changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Sovereign-wild habitat atlas Godot import metadata is missing")
     source_manifest = load_json(source_manifest_path)
+    ensure(source_manifest.get("runtime_repair", {}).get("processing_manifest") == repair_res, errors, "Sovereign-wild historical source manifest must identify its current repaired derivative")
     unit_source_manifest = load_json(unit_source_manifest_path)
     source_rows = source_manifest.get("assets", [])
     unit_source_rows = {str(row.get("unit_id", "")): row for row in unit_source_manifest.get("items", []) if isinstance(row, dict)}
-    ensure(source_manifest.get("content_slice_id") == slice_id and source_manifest.get("runtime_sha256") == atlas_sha and source_manifest.get("atlas_size") == [576,48] and len(source_rows) == 12, errors, "Sovereign-wild habitat generated-source provenance changed")
+    ensure(source_manifest.get("content_slice_id") == slice_id and source_manifest.get("runtime_sha256") == repair_file.get("before_sha256") and source_manifest.get("atlas_size") == [576,48] and len(source_rows) == 12, errors, "Sovereign-wild habitat original generated-source provenance changed")
     ensure(unit_source_manifest.get("content_slice_id") == slice_id and set(unit_source_rows) == {row[3] for row in expected.values()}, errors, "Sovereign-wild unit generated-source provenance changed")
 
     for stem, row in expected.items():
