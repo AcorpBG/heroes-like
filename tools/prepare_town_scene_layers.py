@@ -395,6 +395,209 @@ for brief in MIRECLAW_GROWTH_BRIEFS.values():
                  curation='Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.')
 MIRECLAW_BRIEFS.update(MIRECLAW_GROWTH_BRIEFS)
 
+MIRECLAW_FACTION_BRIEFS = {
+    "building_mireclaw_reed_toll": {
+        "source_sha256": "c046c4651c4657163192fdb5418a3beeb94fd51ce9b9f01c25c50f355395057e",
+        "generation_output": "exec-3cd953b4-9ec1-40f0-8ef2-f6a163f3fb73.png",
+        "scene_bounds": [
+            680,
+            445,
+            165,
+            110
+        ],
+        "ground_anchor": [
+            807,
+            539
+        ],
+        "grounding": "Compact toll approach follows the middle-left causeway beside the market/Den routes, keeping the central main-hall entrance exposed."
+    },
+    "building_mireclaw_blackbranch_den": {
+        "source_sha256": "9ececf80b90e06aef88484f6e194b34752d9ed58a28a6932dac1455acde1c778",
+        "generation_output": "exec-5efe0086-f667-407e-9aaa-a3bb030e6b67.png",
+        "scene_bounds": [
+            240,
+            290,
+            205,
+            136.66666666666666
+        ],
+        "ground_anchor": [
+            402,
+            413
+        ],
+        "grounding": "The faction snare dens occupy the rear-left marsh shore behind the Archive and existing Pens, distinct from the generic Den plot."
+    },
+    "building_mireclaw_silt_watch": {
+        "source_sha256": "cf4d8586fb8df0a3cdfef245e6057969a9a6cd5aa089d8eff6e66840770cc4e8",
+        "generation_output": "exec-c1197b26-7e91-434e-ad90-043ec32b2ef1.png",
+        "scene_bounds": [
+            830,
+            500,
+            180,
+            120
+        ],
+        "ground_anchor": [
+            885,
+            609
+        ],
+        "grounding": "The lookout stands on the central causeway landing below the main hall, with its stair reaching the bridge approach. Its roof and body remain outside the command dock."
+    },
+    "building_mireclaw_war_drum_circle": {
+        "source_sha256": "537ff316f227fb65a8286dab13119027dfd74835f9263d6d9f56538033769f4a",
+        "generation_output": "exec-e28c3874-7fb5-4c53-ba36-7da4b941f9d9.png",
+        "scene_bounds": [
+            1375,
+            605,
+            190,
+            126.6666666667
+        ],
+        "ground_anchor": [
+            1432,
+            716
+        ],
+        "grounding": "The mudglass rehearsal deck follows the far-right near shore, separate from the earlier communal War Drum Circle."
+    },
+    "building_mireclaw_floodtide_forge": {
+        "source_sha256": "953852dc044568ff497a0835df172dfd6d652308da8f4a534657e1299d976593",
+        "generation_output": "exec-e5ea0ba1-ac59-462e-9613-33e8eef21733.png",
+        "scene_bounds": [
+            1410,
+            420,
+            180,
+            120
+        ],
+        "ground_anchor": [
+            1485,
+            529
+        ],
+        "grounding": "The flood-quenching forge occupies the easternmost working shore beside the hiring hall, without moving older paintings."
+    },
+    "building_mireclaw_chainboom_ferry": {
+        "source_sha256": "309d212285cce22ed56ee93b01544086bebadf4dad9790630735f8fe4f475385",
+        "generation_output": "exec-b4122dc8-047a-467e-868c-73d03c11e5af.png",
+        "scene_bounds": [
+            1110,
+            685,
+            230,
+            153.33333333333334
+        ],
+        "ground_anchor": [
+            1166,
+            819
+        ],
+        "grounding": "The attached ferry boards from the lower-right waterfront and leaves the central bridge lane readable."
+    },
+    "building_mireclaw_bog_oracle_nest": {
+        "source_sha256": "3ad91b62a53bca660c00d09e65e6610f011e8f1145727b11c628d51fc47a33e3",
+        "generation_output": "exec-0bb09f3b-6caf-4d91-b86e-19a3af10d5ef.png",
+        "scene_bounds": [
+            970,
+            555,
+            155,
+            103.33333333333333
+        ],
+        "ground_anchor": [
+            1084,
+            645
+        ],
+        "grounding": "The oracle alcove joins the right bridge landing between Silt Watch and the communal drum quay, with visible stairs and a short piling base. The command dock and hiring hall cannot conceal it."
+    },
+    "building_mireclaw_boneboom_palisade": {
+        "source_sha256": "d95a14c73f90dbfd1375dc8ebebd4cb9165adbc12899fc05f7acd2aaef422c3b",
+        "generation_output": "exec-9f5dd28d-f111-459c-bec5-817be1c5face.png",
+        "scene_bounds": [
+            1335,
+            680,
+            245,
+            163.3333333333
+        ],
+        "ground_anchor": [
+            1404,
+            825
+        ],
+        "grounding": "The short irregular boom follows the near-right settlement edge and joins the ferry/drum approaches."
+    },
+    "building_mireclaw_sporewake_shrine": {
+        "source_sha256": "1164ea8198563b20b0aed13496a6b1adff9f84ac04986d8ffed1e05f37740090",
+        "generation_output": "exec-56bfea45-c9bf-4d98-bfaa-72d57be02d5c.png",
+        "scene_bounds": [
+            1260,
+            520,
+            195,
+            130
+        ],
+        "ground_anchor": [
+            1407,
+            636
+        ],
+        "grounding": "The shrine occupies the east waterfront below the hiring hall and beside the forge, behind the nearer drum decks."
+    },
+    "building_mireclaw_fenbell_hunt_lodge": {
+        "source_sha256": "77fe84973b97216cedd1f5794b080fbc3e3aa9488703c868f55520415dc67510",
+        "generation_output": "exec-922e0fdf-7812-42a0-9429-fff09b4b84f6.png",
+        "scene_bounds": [
+            215,
+            545,
+            210,
+            140
+        ],
+        "ground_anchor": [
+            385,
+            674
+        ],
+        "grounding": "The hunt lodge joins the left shore below the Archive and beside the Market, behind the nearer pack enclosure."
+    },
+    "building_mireclaw_nightglass_dominion": {
+        "source_sha256": "dba7fb4f10bb71dd468e02370e27b0bdf4d5fc98c267616f4bec8bcf64493ff7",
+        "generation_output": "exec-f5d0d97b-3957-440e-9abf-f8a304260315.png",
+        "scene_bounds": [
+            825,
+            670,
+            265,
+            176.6666666667
+        ],
+        "ground_anchor": [
+            916,
+            826
+        ],
+        "grounding": "The low command house sits on the near-right landing beside the central bridge, keeping the original main hall distinct."
+    },
+    "building_mireclaw_antler_pit": {
+        "source_sha256": "b1e90dfcb9c8f217aa3860e158daebac2815c7d1303f475cb85cd5b319ddb5ff",
+        "generation_output": "exec-fcb9ee28-4601-4ea4-9b0e-219a2544723d.png",
+        "scene_bounds": [
+            510,
+            695,
+            255,
+            170
+        ],
+        "ground_anchor": [
+            715,
+            850
+        ],
+        "grounding": "The shallow apex enclosure extends the left foreground landing beside the earlier pack ring."
+    },
+    "building_mireclaw_oathmire_court": {
+        "source_sha256": "b7f9907ffc6d147a8831ea11ba7632fc53c3fe4e9d49528fad02f796ef63580b",
+        "generation_output": "exec-316372ce-827b-4ed6-aaf5-81fef5cabe2c.png",
+        "scene_bounds": [
+            825,
+            670,
+            265,
+            176.6666666667
+        ],
+        "ground_anchor": [
+            916,
+            826
+        ],
+        "grounding": "The expanded council gallery replaces the Dominion in its exact source-space site and ground anchor; the saved predecessor remains intact."
+    }
+}
+for brief in MIRECLAW_FACTION_BRIEFS.values():
+    brief.update(reference_inputs=[], generation_date='2026-09-09',
+                 curation='Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.')
+MIRECLAW_BRIEFS.update(MIRECLAW_FACTION_BRIEFS)
+
+
 FACTION_BRIEFS = {FACTION: BRIEFS, 'faction_embercourt': EMBERCOURT_BRIEFS, 'faction_mireclaw': MIRECLAW_BRIEFS}
 
 def digest(path):

@@ -5,6 +5,139 @@ Parent: `quality-generated-full-match-20260906`; selected child:
 removed the package-size budget and requested continuing. The parent quality
 goal remains unfinished.
 
+## Duskfen faction-chain batch — 2026-09-09, validated
+
+Thirteen original scene layers now cover the remaining Duskfen faction chain:
+Reed Toll, faction Blackbranch Den, Silt Watch, Mudglass Drum Circle, Bogplate
+Floodtide Forge, Chainboom Ferry, Bog Oracle Nest, Boneboom Palisade, Sporewake
+Shrine, Fenbell Hunt Lodge, Gorefen Nightglass Dominion, Antler Pit and Oathmire
+Court. The source/prompt/trim/runtime pipeline preserves genuine alpha, exact
+identity and the Dominion/Court site; all 58 earlier layers and the village
+remain unchanged. No production scene, gameplay, native/RMG or save owner changes.
+
+Built-in generation produced twelve originals and a text-described Court
+upgrade. The first reference-image Court edit baked an opaque checkerboard and
+was rejected; its exact prompt/output is retained in
+`duskfen_faction_court_rejected.json` under the evidence base below. The accepted
+Court has actual RGBA transparency and explicitly records no image inputs.
+The first detached layout preview exposed two floating rear shrines despite
+passing rectangle checks. The next preview moved them onto the shoreline;
+`duskfen_faction_layout_02/town.png` passes 56 checks and was inspected, but is
+superseded by the final earned-town correction below. Both early views are
+all-buildings composition fixtures, **not paid progression**.
+
+All 50 focused Python tests pass (`duskfen_faction_python.log`), followed by all
+15 affected sequence/packaged-probe tests after the defense-driver correction
+(`duskfen_faction_followup_python.log`). The new
+`tests/town_scene_layer_regression.py --faction mireclaw --mireclaw-faction-growth`
+resumes the exact earned Day-11 save with SHA256
+`803dd1cb233b5816a50e02bbbf4605b9873eeede52570552fee5249750a71b63`. It retains
+ordinary paid prerequisite orders, material trades, confirmed turns, explored
+guarded source-cache acquisition with recruitment/combat/casualty routing, one
+final shared input sweep, full authoritative comparisons and save/re-entry.
+The first paid run, `duskfen_faction_source_01`, stopped after two valid orders
+on the real Day-14 `player_2_raid_1` Town-defense battle. Its 85-check failing
+report and actual battle save remain retained; there was no engine error. The
+old driver assumed every End Turn would be peaceful. The revised player policy
+uses ordinary paid recruitment and half-army garrison transfers on Days 11–13,
+preserving a field army. It also retains and resolves any actual battle through
+Quick Resolve and the casualty Continue route, then checks day, outcome and
+ownership again. The accepted cache route must itself produce a new battle and
+report; an earlier defense cannot satisfy that assertion. No enemy, loss, rule,
+resource balance or save field is bypassed. The second run's genuine Day-22
+guard battle has been visually inspected: Vaska wins with one Mire Slinger lost.
+
+`duskfen_faction_source_02` retains twelve paid orders through Day 45, but is not
+accepted: the town is genuinely lost in the Day-51 defense before Court, and one
+Day-13 transfer control differs in the derived forecast signature. Both the
+pre-defense and resulting ownership-loss saves are retained. Subsequent
+Town-only fixture calls on the Overworld caused the reported missing-node errors;
+the revised driver now skips those fixtures on an already-failed run, not the
+failure itself. Normal early defense is extended with paid weekly recruitment
+and half transfers from Day 29. The independent recruit/transfer control now
+matches ordinary synchronous read scopes and calls the actual button handlers,
+isolating only detached normalization-cache metadata, as in the accepted build
+control. No state field is excluded. The failed package supervisor launched no
+replays; both already-passing official exports are reused unchanged. The next
+source replay must prove these corrections before exact platform replays start.
+
+The third source run passes every recruit/transfer control (695 checks with
+only the ownership-loss failure and no engine errors), but the three early
+unit types still lose the Day-51 defense. Its retained pre-battle state has
+42 Bog Brutes, 74 Cutthroats and 68 Slingers in garrison, while 29 unlocked
+gold-cost Gorefen Rippers were never recruited. The player policy now includes
+those available Rippers in its late weekly paid orders and assigns them to the
+garrison, retaining the ordinary field company. It retains the actual pre-turn
+Court save, prints assertion failures immediately and stops a failed order
+sequence early. These are test-driver corrections, not balance changes; the
+third loss and both unstarted platform-supervisor reports remain retained.
+
+`duskfen_faction_source_04` earns all thirteen orders through Day 51. Every
+independent paid build/trade/recruit/transfer and full save/re-entry comparison
+passes, the guard casualty is retained, and Duskfen stays owned; no Town-defense
+battle occurs in this run. Its overall **8259-check report remains failed** on
+exactly three final pointer targets, not a gameplay or engine error. The earned
+save is `duskfen_faction_source_04/earned_growth_save.json`, SHA256
+`d02feae85e182e76af2397b50684c49472a19b6b221c8d45f501d78272d4ad83`.
+
+Silt Watch and Bog Oracle Nest were concealed by the right command dock/hiring
+hall; their unchanged paintings now stand on the central/right bridge landings,
+with visible stairs and short piling bases. Antler Pit's old body test point
+hits the navigation footer at 1280x720; the probe proves that protected overlap
+and clicks its exposed roof instead. No painting pixels, gameplay owner, rule,
+building id, save schema or earlier layer changed for this correction.
+
+The new `--mireclaw-developed-input` mode accepts only that genuine Day-51 save.
+It replays the complete 20-visible-layer pointer/keyboard/controller/info/save
+surface without any construction or End Turn calls. Source
+`duskfen_faction_input_01` at 1280x720 and `_input_03` at 1920x1080 each pass
+**7567 checks**, with no engine error or input/source mutation. Both final
+`earned_developed.png` views are inspected: the bridge buildings are visible,
+the main hall stays readable, and controls remain contained. The stopped
+`_input_02` Node/CanvasItem API typo is retained separately as a probe parse
+failure before gameplay; the corrected call is `get_viewport().get_visible_rect()`.
+All 16 final affected Python tests pass (`duskfen_faction_final_python_02.log`).
+
+Both shared Town layout/dialog and all-town skyline reports pass
+(`duskfen_faction_shared.log`). Both `_release_*_01` official export/startup and
+generated-Town flows pass before the geometry repair. Both final `_release_*_02`
+flows also pass. Final `duskfen_faction_packaged_linux_input_01` and
+`duskfen_faction_packaged_windows_input_01` each pass **7568 checks**, with every
+assertion retained, unchanged isolated exports and no engine errors. The Linux
+earned-town screenshot is inspected. These are read-only final-town replays,
+not additional paid sequences; Windows uses headless Wine, not physical GPU
+certification. Unchanged compiled gameplay owners/content and the ordinary
+official generated-Town paid flows support the reused source construction trace.
+
+`duskfen_faction_acceptance.json` accepts the combined evidence without changing
+the failed source report: all thirteen paid-order controls, four passing final
+input replays, and **five complete saves identical outside only the save clock**.
+All 58 earlier layers remain unchanged; the manifest now contains 71 exact
+paintings, including all 25 non-embedded Duskfen identities. Each final PCK is
+**256780956 bytes**, with 5278 members: 26 new texture/import entries, no removed
+members, and 5250 earlier payloads unchanged. Only the scene manifest/UID cache
+change from the accepted nine-building baseline; no source masters or editor
+settings leak into the pack. Linux/Windows differ only in `project.binary`.
+PCK SHA256: Linux `f66c113e558206ab972254f76b2cf8d8ed0f52a0cab1c106a03f87c3ee1ab25e`;
+Windows `234855265364bde0cee61b55a0c4073b7053c6206bafa9e02d8ebd3692ae9452`.
+Final repository validation and diff checks pass (`duskfen_faction_final_repo.log`).
+
+Reproduce paid growth with `tests/town_scene_layer_regression.py --faction
+mireclaw --mireclaw-faction-growth --save <base>/duskfen_nine_source_02/earned_growth_save.json
+--resolution 1280x720 --label <fresh>`. For the corrected earned-input surface,
+use `--mireclaw-developed-input --save <base>/duskfen_faction_source_04/earned_growth_save.json`
+instead, at 1280x720 or 1920x1080. The packaged wrapper accepts the same arguments
+plus `--platform`, `--binary`, `--pack` and a fresh Windows `--wine-prefix`.
+Retained official driver: `duskfen_faction_exports.py --run-id 02`; concurrent
+input driver: `duskfen_faction_packages_parallel.py --source-label
+duskfen_faction_input_03 --run-id 05 --release-id 02 --earned-input`; final
+state/member acceptance: `duskfen_faction_accept.py`. All sit under the evidence
+base `.artifacts/generated_full_match_quality_20260906/`.
+
+Six other Mireclaw variant mappings and other faction/town art remain unfinished.
+This accepted thirteen-building batch does not complete the presentation child,
+the full-match quality goal or release readiness.
+
 ## Duskfen dwelling/magic batch — 2026-09-09, validated
 
 The owner requested larger implementation batches and less repeated validation.
