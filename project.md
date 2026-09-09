@@ -53,6 +53,7 @@ Locked stack for the current production foundation:
 - Runtime saves: versioned JSON snapshots and campaign progression under `user://saves/` until a selected migration introduces asset-reference saves plus compact deltas.
 - Manual save UX is named-file based, not limited to numbered slots. Keep legacy slot files loadable, autosave separate, Linux/Windows filename identity consistent, and replacements transactionally verified with explicit overwrite consent.
 - Validation: Python repository checks plus focused runtime smoke coverage where engine execution is required.
+- Release packages have no fixed content-size budget. Report their measured sizes without rejecting legitimate content for exceeding an arbitrary ceiling. Preserve asset completeness, source-art exclusion, corruption checks and bounded parsing of untrusted inputs.
 - Native extension candidate: Phase 2 map/scenario persistence may introduce a Godot GDExtension written in C++ for typed map documents, durable map packages, validation, save/load, and migration.
 
 Native extensions, external asset pipelines, or new storage layers may be added only through concrete tactical slices with rollback, compatibility, and validation gates.

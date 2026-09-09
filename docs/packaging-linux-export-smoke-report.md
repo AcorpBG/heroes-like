@@ -19,7 +19,7 @@ godot --headless --path . --export-release "Linux Release" .artifacts/packaging_
 
 - The runner verifies the exported executable exists, is larger than the minimum binary-size floor, has executable permission bits, and has an ELF x86_64 header.
 - The runner verifies `.artifacts/packaging_linux_export_smoke/export/heroes-like.pck` exists and is larger than the minimum package-size floor.
-- The runner requires the release PCK to remain at or below the explicit 250 MB ceiling.
+- The runner records the release PCK size without imposing a maximum content-size budget, per owner direction on 2026-09-09. The former 250 MB check and its boolean report field were removed; completeness, integrity and startup checks remain mandatory.
 - Before inventory, size and boot checks, the runner uses the same verified
   `tools/compact_export_pck.py` operation as the production release builder.
   It removes only exported JSON formatting; source files and all non-JSON payload
@@ -36,6 +36,13 @@ godot --headless --path . --export-release "Linux Release" .artifacts/packaging_
 - The runner writes `.artifacts/packaging_linux_export_smoke/report.json` with command summaries, warning/error tails, artifact sizes, ELF checks, native-library checks, boot evidence, artifact listing, and explicit non-claims.
 
 ## Validation Command
+
+Validated no-size-budget checkpoint (2026-09-09):
+`.artifacts/generated_full_match_quality_20260906/mireclaw_release_linux_no_cap_02/report.json`
+passes with a 250525428-byte PCK. The generated-entry flow passes eight normal
+daily Town builds; exact Mireclaw replays at 1280x720 and 2048x1079 each pass
+4068 checks with unchanged saves/exports. Final rendered captures were inspected.
+Full payload/input/provenance evidence: `docs/generated-full-match-art-repair-report.md`.
 
 ```bash
 python3 tests/packaging_linux_export_smoke.py

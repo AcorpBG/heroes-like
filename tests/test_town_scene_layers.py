@@ -24,6 +24,8 @@ def validate_scene_layers(payload=None):
     require(bool(payload.get('owner_approval')) and bool(payload.get('rights')), 'Missing art approval/rights')
     require(payload.get('generation',{}).get('tool')=='built_in_image_gen', 'Missing generated art provenance')
     factions = payload.get('factions', {})
+    required_mireclaw = {'building_blackbranch_den','building_wayfarers_hall','building_market_square'}
+    require(required_mireclaw.issubset(factions.get('faction_mireclaw',{})), 'Missing Mireclaw opening scene mapping')
     required_embercourt = {'building_muster_yard','building_wayfarers_hall','building_market_square'}
     require(required_embercourt.issubset(factions.get('faction_embercourt',{})), 'Missing accepted Embercourt opening scene mapping')
     required_growth = {'building_stone_store','building_watch_barracks','building_bowyer_lodge','building_beacon_range'}
@@ -113,7 +115,7 @@ def validate_scene_layers(payload=None):
                                ('asset type: original transparent raster building layer' in text_lower and
                                 'genuinely transparent background with a real alpha channel' in text_lower) or
                                ('asset type: original transparent raster' in text_lower and
-                                any(phrase in text_lower for phrase in ('genuinely transparent rgba','actual transparent rgba','real transparent rgba','genuine rgba transparency')) and
+                                any(phrase in text_lower for phrase in ('genuinely transparent rgba','actual transparent rgba','real transparent rgba','genuine rgba transparency','genuinely transparent alpha everywhere','actual transparent alpha')) and
                                 any(label in text_lower for label in ('constraints:', 'background:'))) or
                                (('town building layer for '+building+'.') in text_lower and
                                 'transparent rgba png' in text_lower))
@@ -127,6 +129,33 @@ class TownSceneLayersTests(unittest.TestCase):
         self.payload = json.loads(MANIFEST.read_text())
     def test_production_manifest_and_rasters(self):
         self.assertEqual(validate_scene_layers(), [])
+    def test_every_mireclaw_opening_mapping_is_required(self):
+        from tools import prepare_town_scene_layers as preparation
+        self.assertEqual(set(preparation.MIRECLAW_BRIEFS), {'building_blackbranch_den','building_wayfarers_hall','building_market_square'})
+        for building in preparation.MIRECLAW_BRIEFS:
+            with self.subTest(building=building):
+                payload=copy.deepcopy(self.payload)
+                payload['factions'].get('faction_mireclaw',{}).pop(building,None)
+                self.assertIn('Missing Mireclaw opening scene mapping',validate_scene_layers(payload))
+    def test_mireclaw_shared_ids_cannot_reuse_other_faction_art(self):
+        for other in ('faction_embercourt','faction_veilmourn'):
+            for building in ('building_wayfarers_hall','building_market_square'):
+                with self.subTest(other=other,building=building):
+                    payload=copy.deepcopy(self.payload)
+                    payload['factions'].setdefault('faction_mireclaw',{})[building]=copy.deepcopy(payload['factions'][other][building])
+                    errors=validate_scene_layers(payload)
+                    self.assertIn('Mismatched scene identity: faction_mireclaw/'+building,errors)
+                    self.assertIn('Wrong exact runtime path: faction_mireclaw/'+building,errors)
+                    self.assertTrue(any('Shared scene fallback path:' in e for e in errors))
+    def test_mireclaw_preparation_merge_keeps_all_existing_layers(self):
+        from tools import prepare_town_scene_layers as preparation
+        original=copy.deepcopy(self.payload)
+        source={'faction_mireclaw':copy.deepcopy(original['factions'].get('faction_mireclaw',{}))}
+        merged=preparation.merge_layers(original,source)
+        self.assertEqual(merged,original)
+        self.assertIsNot(merged,original)
+        for faction in ('faction_embercourt','faction_veilmourn'):
+            self.assertEqual(merged['factions'][faction],self.payload['factions'][faction])
     def test_every_constructible_riverwatch_mapping_is_required(self):
         town=next(row for row in json.loads((ROOT/'content/towns.json').read_text())['items'] if row['id']=='town_riverwatch')
         for building in set(town['starting_building_ids']+town['buildable_building_ids'])-{'building_town_hall'}:

@@ -2128,6 +2128,149 @@
         "generation_date": "2026-09-08",
         "generation_output": "exec-e3f11bc9-0c63-4e16-a511-91339c56e570.png"
       }
+    },
+    "faction_mireclaw": {
+      "building_blackbranch_den": {
+        "asset_id": "faction_mireclaw_building_blackbranch_den",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_blackbranch_den.png",
+        "source_sha256": "d0c8a1df8391f08940483ee55b521775c51d64b89e9a4999a33fc493d27ca0b3",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1524,
+          1005
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_blackbranch_den.png",
+        "trimmed_sha256": "fb629dd4e125cc41d2ee5752fe5a3e56023284ec9ed518c9b130f0b3e7461ef3",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_blackbranch_den.png",
+        "runtime_sha256": "f0bc38ca8bc845287bdffc6ae005f300c3352d798b0918660022a2fa35208984",
+        "runtime_size": [
+          512,
+          338
+        ],
+        "normalized_rect": [
+          0.259375,
+          0.4166666666666667,
+          0.1736328125,
+          0.2035590277777778
+        ],
+        "ground_anchor": [
+          0.38125,
+          0.6044444444444445
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Low connected reed chambers extend the middle-left shore behind the ferry landing. Their front-right stair reaches the existing boardwalk; wet short pilings descend into the marsh without a separate terrain disk.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_blackbranch_den.prompt.txt",
+        "prompt_sha256": "9c3cccc859458e67923f052ef78abb2e23939a41e1836bf80026bf4e2446652f",
+        "curation": "Original built-in text-only paintings described from the inspected Duskfen village. Preserve generated alpha, camera, warm upper-left backlight and wet reed/timber materials. Actual composition, paid growth, input/save and platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-50bdfb12-3f05-49a7-aca8-47673fbb874d.png"
+      },
+      "building_wayfarers_hall": {
+        "asset_id": "faction_mireclaw_building_wayfarers_hall",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_wayfarers_hall.png",
+        "source_sha256": "3d315adc84489fe3a4a5e35310194263c9644d060f9de1d00a51904a9fb36a59",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1532,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_wayfarers_hall.png",
+        "trimmed_sha256": "b168b4f1527f49c79c87f8418350b244e83237a14f62c63c8661d159d6a1dcde",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_wayfarers_hall.png",
+        "runtime_sha256": "90e58e629943890f919958f5050fa015eb44df5b9ae6893159fc1a4cde5c87e3",
+        "runtime_size": [
+          512,
+          342
+        ],
+        "normalized_rect": [
+          0.7,
+          0.37777777777777777,
+          0.1901285807291667,
+          0.22592592592592595
+        ],
+        "ground_anchor": [
+          0.78125,
+          0.5888888888888889
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Long reed-roofed hiring hall sits behind the right communal fire platform. Its front-left stair approaches the existing causeway, retaining the main hall and fire as distinct landmarks.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_wayfarers_hall.prompt.txt",
+        "prompt_sha256": "cae3d288d24051f66546f2ae8b662294a599a421dc817644a449732d1b1b70ea",
+        "curation": "Original built-in text-only paintings described from the inspected Duskfen village. Preserve generated alpha, camera, warm upper-left backlight and wet reed/timber materials. Actual composition, paid growth, input/save and platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-c06f2362-c3dc-4dba-8ea1-283780a15022.png"
+      },
+      "building_market_square": {
+        "asset_id": "faction_mireclaw_building_market_square",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_market_square.png",
+        "source_sha256": "c6dac6c22a564073798bc0e1e34e1701ea4d6a4590d894f1e3cc8d68f3713eeb",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          11,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_market_square.png",
+        "trimmed_sha256": "60f4fd30735cd7e9f841c9c33d6e324bce1c29e0e95ff6246d0c8907df1e75bb",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_market_square.png",
+        "runtime_sha256": "23c96ef129af5ffa5815d7e1b805fbb5a669918df0ef6b522615ec6dc718550e",
+        "runtime_size": [
+          512,
+          338
+        ],
+        "normalized_rect": [
+          0.25625,
+          0.5912760416666667,
+          0.1875,
+          0.21983506944444445
+        ],
+        "ground_anchor": [
+          0.403125,
+          0.7888888888888889
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Low reed-and-hide trade counters continue the left working landing below the Den. The short front-right loading stair faces the ferry approach; open piling gaps retain the original marsh below.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_market_square.prompt.txt",
+        "prompt_sha256": "1bfb4dca804d395e810b9660ff8270101c62832ba3bc10b85a7fcbc6c2c9b832",
+        "curation": "Original built-in text-only paintings described from the inspected Duskfen village. Preserve generated alpha, camera, warm upper-left backlight and wet reed/timber materials. Actual composition, paid growth, input/save and platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-23b1bc97-61b0-4235-b754-1c68a43b739f.png"
+      }
     }
   }
 }
