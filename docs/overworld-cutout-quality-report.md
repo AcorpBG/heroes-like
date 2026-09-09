@@ -742,16 +742,92 @@ noted otherwise:
   exact (Windows float32 exact); wide gameplay uses the same unchanged geometry
   owner. All original paintings and the historical atlas remain hash-exact.
 
+## Thirty-one separately authored claimed dwellings — accepted 2026-09-09
+
+The original claimed paintings were a different family from the thirty preceding
+legacy resource-site originals. Twenty-five source files had binary-keyed alpha:
+white salt-pan interiors, snow roofs, canvas and pale stone were erased, while
+enclosed checkerboard behind ropes, frames and banners remained. Six sources had
+genuine smooth alpha. All 31 also lost detail in their old 48-pixel atlas cells.
+The repository source files retain the original painted RGB beneath zero alpha;
+the absolute external `generated_original` paths no longer exist and are not
+claimed as available recovery inputs.
+
+`tools/prepare_overworld_claimed_cutouts.py` restores that retained paint and removes
+only individually inspected, seed/area/bounds-locked connected backing. The two
+scoped lower-body policies remove neutral backing beneath Reedbarge and Cinder
+Kiln without applying those thresholds to their roofs, cloth or smoke. True-alpha
+sources remain byte-identical as RGBA. Original edited source PNGs are immutable.
+Salt trays, Icehook's snowy roof and its separate snow cap touching the canvas
+edge are explicit positive preservation tests, not a global white-removal class.
+
+The `claimed_dwellings` recipe/provenance packet preserves all three old atlases
+and records source hashes, inspected components, recovered masters and trimmed
+cells. Original alpha bounds, bilinear fit and canvas anchors are measured against
+the old cells: alpha MAE below 1 and opaque RGB MAE below 1.6 on the 0–255 scale.
+The first eight retain the south anchor; the later 23 retain their centered fit.
+Reprojection at 192 pixels per cell gives 1536x192, 3072x192 and 1344x192 atlases
+at the same paths. No new generation, upscaled old cells, world-size change,
+gameplay/native/content/save change or claimed-to-unclaimed substitution occurs.
+
+Evidence under `.artifacts/overworld_cutout_quality_20260909/`:
+
+- `claimed_prepared_01/comparison_00..07.png`: every repaired original and runtime
+  cell visually inspected against its old painting. Final 1280/1920 source and
+  Linux package galleries distinguish detached coverage from actual gameplay.
+  All eighteen final source/Linux images were opened and visually inspected:
+  three galleries and three gameplay/control captures at each rendered boundary.
+- `claimed_final_scout_1280`, `claimed_final_1920`, `claimed_packaged_linux` and
+  `claimed_packaged_windows`: 2,693 checks each, exit 0 and no runtime errors.
+  All 31 texture identities and claimed/unclaimed routes match the independent
+  full-atlas import oracle. Bramble Hedge remains enemy-owned at (16,18) in
+  Ninefold Confluence; normal UI route selection moves Mira to (18,19), revealing
+  it through ordinary vision. No position, ownership, guard, placement or fog
+  injection was used. The Day-97 generated sample retains all 2,380 original
+  manifest-backed blockers but has zero selected claimed-cohort assets; it is an
+  unchanged control. The Prismhearth relay is also an unchanged gameplay control.
+- Early scouting diagnostics are retained: a noncontiguous direct movement call
+  was rejected, then the normal route to (20,21) stopped outside Bramble's vision
+  range. The accepted route uses the existing UI planner to (18,19), with normal
+  movement cost and no end-turn, combat or visibility shortcut.
+- `claimed-unit-final.log`: twelve Python tests pass, exit 0. All 38 existing
+  claim/reward/repeat/save cases pass (`claimed-claim-save.log`). This fixture
+  initializes states and is not presented as earned gameplay. The older combined
+  visual/muster fixture remains outside acceptance; the Python-owned 31-identity
+  probe supplies current atlas/registration coverage. No legacy fixture failure
+  is relabeled as a gameplay pass.
+- `claimed-validate-repo.log` and `claimed-validate-repo-final.log` pass. The five existing sprite/decorative/input/
+  route/fog reports pass individually and as a complete suite in
+  `.artifacts/full_play_runtime_20260905/claimed_dwellings_shared/report.json`.
+  Initial completed unit/source runners had outer-shell SIGTERM observations;
+  the final direct-process unit and all four final source/package runners exit 0.
+- Official `claimed_linux` and `claimed_windows` exports pass startup and their
+  required package/gameplay checks. Windows startup and generated Overworld/Town
+  flows exit 0 with no fatal matches. Exact-art Windows validation is headless
+  Wine, not real Windows GPU evidence. Both PCKs contain 5,484 members and are
+  289,137,800 bytes; only `project.binary` differs between platforms. Source-art
+  metadata/payloads remain excluded. No fixed package ceiling applies.
+- `claimed_delivery_preservation.json` compares baseline `24354c6c`, source and
+  both packages. Exactly the three textures, Overworld manifest and UID cache
+  change; 5,479 members, including all compiled game/native/content/save owners,
+  remain exact. Exactly 31/1,214 art rows change; all state mappings are unchanged.
+  All twelve full saves match across four runs except cross-run save timestamps
+  and fresh authored session ids; within-run comparisons exclude nothing.
+  Native and Prismhearth saves also match the prior accepted batch. Actual
+  Bramble placement and 1280 source/Linux draw geometry are exact; Windows values
+  match at float32 precision. Original registration and geometry owners remain
+  unchanged at both resolutions.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The remaining 783 rows have
 now received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 515 repaired/preserved dispositions, leaving
-699 for complete detailed review/recovery. All 31 recurring encounters and 30
-recurring resource-site originals are accepted. Next: the separately authored
-resource-site state and remaining landmark families; recovery of legacy originals
-does not accept those different paintings. Individual source and native-resolution
+The accepted cohorts now cover 546 repaired/preserved dispositions, leaving
+668 for complete detailed review/recovery. All 31 recurring encounters, 30
+recurring resource-site originals and 31 separate claimed dwellings are accepted.
+Next: the other resource-site state and remaining landmark families; recovery of
+these originals does not accept different paintings. Individual source and native-resolution
 checks of other remaining families and intentional purple materials remain. Existing
 unit medallions and state indicators are not mislabeled as magenta matte.
 Do not hide remaining defects or claim release readiness from this checkpoint.

@@ -167,6 +167,20 @@ Keep separately authored state art unchanged rather than routing around it to
 manufacture screenshots. Original source manifests retain historical hashes and
 point to the repaired derivative proof. Whole-cohort acceptance only.
 
+For the subsequent 31 separately authored claimed-dwelling paintings, preserve
+all three atlas owners and every claimed/unclaimed state mapping. Original
+RGBA edits remain immutable: where binary keying erased white foreground,
+recover retained source RGB with explicitly inspected backing components, not
+blanket white removal. Snow, salt-pan interiors, cloth and pale masonry are
+paint. Clear actual enclosed checkerboard backing without erasing these details.
+Retain genuine-alpha sources unchanged. Derive 192-pixel cells directly from
+the recovered sources with measured original crop/fit/anchor registration;
+retain original atlases and record exact source/trim/runtime provenance.
+Validate whole-cohort identity, state transitions and save/placement preservation,
+including original earned claimed sites where present; do not manufacture claims
+or substitute their clean unclaimed images. Reuse dual-resolution/source/package
+drivers, existing claim/reward/save cases and both official platform exports.
+
 ## Completion and non-goals
 
 Each cohort completes only after its actual repaired art is integrated and its
