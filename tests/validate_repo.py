@@ -44190,7 +44190,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             if source_model == "built_in_image_gen_original_signature_encounter_landmark":
                 expected_canvas = (64, 64)
             elif source_model == "built_in_image_gen_original_recurring_encounter_landmark_atlas":
-                expected_canvas = (4608, 192) if asset_id in recurring_recoveries else (1488, 48)
+                expected_canvas = (5952, 192) if asset_id in recurring_recoveries else (1488, 48)
             elif source_model == "built_in_image_gen_original_recurring_resource_site_landmark_atlas":
                 expected_canvas = (1440, 48)
             elif source_model == "built_in_image_gen_original_live_faction_landmark_atlas":
@@ -52903,10 +52903,9 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         ensure(isinstance(entry, dict) and identity_sprites.get(encounter_id) == asset_id, errors, f"Recurring encounter {encounter_id} mapping is missing")
         if not isinstance(entry, dict):
             continue
-        recovered = region[0] < 1152
-        atlas_name = "recurring_encounter_recovered_atlas" if recovered else "recurring_encounter_landmarks_atlas"
-        expected_region = [v * 4 for v in region] if recovered else region
-        expected_size = [4608, 192] if recovered else [1488, 48]
+        atlas_name = "recurring_encounter_recovered_atlas"
+        expected_region = [v * 4 for v in region]
+        expected_size = [5952, 192]
         ensure(entry.get("path") == f"res://art/overworld/runtime/objects/encounters/recurring/{atlas_name}.png", errors, f"Recurring encounter {encounter_id} atlas path changed")
         ensure(entry.get("atlas_region") == expected_region and entry.get("atlas_size") == expected_size, errors, f"Recurring encounter {encounter_id} normalized atlas ownership changed")
         ensure(entry.get("source_generated") == source_res and entry.get("source_model") == "built_in_image_gen_original_recurring_encounter_landmark_atlas", errors, f"Recurring encounter {encounter_id} generation provenance changed")

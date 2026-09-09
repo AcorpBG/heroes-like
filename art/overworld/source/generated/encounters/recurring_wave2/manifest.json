@@ -2,7 +2,7 @@
   "schema": "recurring_encounter_landmark_wave2_source_manifest_v1",
   "generation_mode": "built_in_image_gen",
   "runtime_repair": "res://art/overworld/source/generated/cutout_recovery_20260909/recurring_encounters/manifest.json",
-  "runtime_repair_note": "Historical assembly and hash retained byte-exact. Twenty-four damaged identities now use a separate 192-pixel original-source recovery atlas with unchanged normalized placement; seven smooth-alpha controls retain this original atlas.",
+  "runtime_repair_note": "Historical assembly and hash retained byte-exact. All thirty-one identities now use original-source 192-pixel cutouts with their distinct normalized registrations. The first twenty-four accepted paintings remain pixel-identical; the later seven recover their measured crop and 42-pixel bottom-aligned fit.",
   "generation_session_directory": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16",
   "runtime_atlas": {
     "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",

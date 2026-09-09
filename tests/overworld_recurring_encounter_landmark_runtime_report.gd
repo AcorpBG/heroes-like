@@ -68,7 +68,7 @@ func _run() -> void:
 		"atlas_path": ATLAS_PATH,
 		"atlas_size": [1488, 48],
 		"recovered_atlas_path": RECOVERED_ATLAS_PATH,
-		"recovered_atlas_size": [4608, 192],
+		"recovered_atlas_size": [5952, 192],
 		"fallback_order": ["commander", "exact_encounter", "faction", "unit", "generic"],
 		"viewports": [[1280, 720], [1920, 1080]],
 		"rows": rows,
@@ -103,11 +103,9 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		var expected: Array = EXPECTED[encounter_id]
 		var asset_id := String(expected[0])
 		var expected_region: Rect2 = expected[1]
-		var recovered := expected_region.position.x < 1152
-		var expected_path := RECOVERED_ATLAS_PATH if recovered else ATLAS_PATH
-		var expected_size := Vector2(4608, 192) if recovered else Vector2(1488, 48)
-		if recovered:
-			expected_region = Rect2(expected_region.position * 4, expected_region.size * 4)
+		var expected_path := RECOVERED_ATLAS_PATH
+		var expected_size := Vector2(5952, 192)
+		expected_region = Rect2(expected_region.position * 4, expected_region.size * 4)
 		var payload: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": encounter_id})
 		var texture = map_view.call("_object_texture_for_asset", asset_id)
 		var entry: Dictionary = object_assets.get(asset_id, {}) if object_assets.get(asset_id, {}) is Dictionary else {}

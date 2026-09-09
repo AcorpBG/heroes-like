@@ -60,9 +60,9 @@ def expected_assets(recipe, expected_dir, output):
     assets={}
     for key,row in recipe['assets'].items():
         entry=row['original_manifest_entry']
-        recurring=recipe.get('schema_id')=='recurring_cutout_recipe_v2'
+        recurring=recipe.get('schema_id')=='recurring_cutout_recipe_v3'
         if recurring:
-            entry=dict(entry,path=row['runtime_path'],atlas_region=[v*row['pixel_scale'] for v in entry['atlas_region']],atlas_size=[4608,192])
+            entry=dict(entry,path=row['runtime_path'],atlas_region=[v*row['pixel_scale'] for v in entry['atlas_region']],atlas_size=[5952,192])
         legacy=recurring or recipe.get('schema_id') in ('legacy_family_cutout_recipe_v1','passage_cutout_recipe_v1')
         # Atlas alpha-edge processing runs on the complete original atlas;
         # cropping before import would not be an independent runtime oracle.
@@ -255,7 +255,7 @@ def main():
     if args.batch=='passages':
         captures_ok=captures_ok and len(report.get('galleries',[]))==1 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
     if args.batch=='recurring_encounters':
-        captures_ok=captures_ok and len(report.get('galleries',[]))==2 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
+        captures_ok=captures_ok and len(report.get('galleries',[]))==3 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
     report['ok']=bool(report['ok']) and code==0 and report['input_unchanged'] and not report['runtime_errors'] and captures_ok
     (output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({k:v for k,v in report.items() if k not in ('textures','captures','expected_rasters')}))

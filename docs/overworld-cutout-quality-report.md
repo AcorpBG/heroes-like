@@ -598,16 +598,83 @@ two-resolution report. Earlier rejected/failed diagnostics remain distinguished
 from these final results. Diff checks pass. This accepts the 24 repaired rows,
 not the whole parent or the seven unchanged resolution-quality follow-ups.
 
+## Remaining seven recurring paintings — accepted 2026-09-09
+
+The seven later recurring sources have intact smooth alpha; their defect was
+excessive detail loss in 48-pixel runtime cells, not the earlier binary-alpha
+damage. Original Barrow Pickets, Bramble Hedge Watch, Lantern Patrol, Reedward
+Camp, Sluice Raiders, Willow Mill Pack and Ghoul Grove now join the same recovered
+atlas at 192 pixels per cell (5952x192 total). No new painting was necessary.
+The original 1488x48 atlas remains byte-exact; the first 24 accepted recovered
+cells and trim/proof hashes are also exact, retained in `prior_24_checkpoint`
+and `before_runtime` within the recurring recovery source packet.
+
+The v3 recipe records each immutable source, crop and measured registration:
+42-pixel logical aspect fit, bottom alignment and BILINEAR resampling. Projecting
+those sources at the old size matches alpha and opaque RGB to less than one
+average channel level on the 0–255 scale. This is measured registration, not a
+claim that the historical processing command was recovered. Alpha-support
+thresholds of 4 or 8 select crop bounds only; all original RGBA pixels inside
+remain intact. Geometry, placement, identity, gameplay and save code are unchanged.
+
+Consolidated evidence under `.artifacts/overworld_cutout_quality_20260909/`:
+
+- `recurring_wave4_before` completes 2,607 checks with 28 expected failures,
+  four per new identity (path, region, canvas, RGBA), and no runtime errors.
+  `recurring_wave4_preview/comparison_06.png` and `comparison_07.png` show all
+  seven before/recovered/source comparisons; both were inspected.
+- `recurring_wave4_1280`, `recurring_wave4_1920`,
+  `recurring_wave4_packaged_linux` and `recurring_wave4_packaged_windows` each
+  pass all 2,607 checks without runtime errors. All eighteen final source/Linux
+  images were inspected: three explicitly detached 31-identity gallery pages
+  and three actual gameplay/control views per rendered run. Windows is
+  headless Wine, not Windows GPU visual certification.
+- The first packaged Linux wrapper returned 143 after writing its successful
+  complete reports (engine exit 0). The clean
+  `recurring_wave4_packaged_linux_final` repeat exits 0 and passes all 2,607
+  checks; its three complete saves match that earlier run under the same
+  timestamp/session-ID rules. Its three gameplay images were re-inspected;
+  the three gallery PNGs are byte-identical to those already inspected.
+  No test failure or incomplete wrapper is waived.
+- `recurring_wave4_unit.log`: thirteen focused Python tests pass, including
+  original-paint registration, retained weak alpha and exact first-24 controls.
+  `recurring_wave4_existing_report.log`: existing 31-identity/two-resolution
+  report passes. `recurring_wave4_repo.log`: repository validation passes.
+  Existing full-play output `recurring_wave4_shared/report.json` passes all five
+  distinct/decorative sprite, movement-input, route and fog reports.
+- Official `recurring_wave4_linux` / `recurring_wave4_windows` exports pass
+  startup, generated Overworld/Town, native-library and source-exclusion checks.
+  Both PCKs are 286,972,440 bytes with the same 5,484 members; only
+  `project.binary` differs between platforms. Relative to the previous 24-row
+  checkpoint, there are no new or removed members: only the existing recovered
+  texture, Overworld manifest and UID cache change; 5,481 members remain exact.
+  No package-size limit was introduced, and no artifacts or caches were removed.
+- `recurring_wave4_delivery_preservation.json` proves all fifteen full saves
+  match across before/source/platform runs outside the existing save timestamp
+  and fresh-authored session ID. Within-run save/load/reentry excludes no state.
+  Actual Linux world/marker rectangles are JSON-exact before and after; Windows
+  geometry has identical float32 bits (one JSON decimal endpoint differs by
+  1e-12). This numeric serialization distinction does not exclude any save state.
+
+Actual new gameplay coverage is original Bogbound Oath Lantern Patrol at (3,1),
+visible after two ordinary moves from (0,2) to (2,2), with no injected placement
+or fog. Original Charter Pyre Beacon Wardens remains the prior-art control.
+The unchanged earned native Medium Day97 save contains three Bramble Hedge and
+two Tidepool guards, **all already resolved**; none was revived for a screenshot.
+Its 2,380 original blockers and complete native state remain unchanged. Detached
+31-identity art coverage is not presented as 31 live native encounters.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The remaining 783 rows have
 now received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 478 repaired/preserved dispositions, leaving
-736 for complete detailed review/recovery. Next are the seven remaining
-recurring source paintings: smooth alpha survived, but the Lantern Patrol
-comparison still shows excessive resolution loss. Those unchanged controls
-are not counted as fully accepted. Individual source/native-resolution checks of
-other remaining families and intentional purple materials also remain. Existing
+The accepted cohorts now cover 485 repaired/preserved dispositions, leaving
+729 for complete detailed review/recovery. All 31 recurring encounters are now
+accepted. Next is source-level review/recovery of the 30 recurring resource-site
+landmarks: their original paintings remain available and the historical source
+manifest records 44-pixel aspect fit with a south anchor. Individual source and
+native-resolution checks of other remaining families and intentional purple
+materials also remain. Existing
 unit medallions and state indicators are not mislabeled as magenta matte.
 Do not hide remaining defects or claim release readiness from this checkpoint.

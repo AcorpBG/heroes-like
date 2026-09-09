@@ -142,6 +142,16 @@ Historical atlas hashes remain source evidence, with exact before bytes and
 source-reconstructed high-resolution derivative ownership checked by repository
 validation. Check the new atlas explicitly in both platform packages.
 
+The subsequent seven-row completion extends that same atlas to 5952x192 for all
+31 recurring identities. Preserve the accepted first 24 source/trim pixels and
+normalized registrations, as well as the complete original historical atlas.
+The seven later sources use explicitly measured alpha-support crop bounds,
+42-pixel logical aspect fit and bottom alignment, not the earlier 44-pixel fit.
+The support threshold selects crop bounds only: do not threshold or remove
+painted pixels within those bounds. Retain the exact prior 24-cell atlas and
+per-row hashes as preservation controls. Validate all 31 routes and show an
+actual later-wave authored encounter without injecting placement or fog.
+
 ## Completion and non-goals
 
 Each cohort completes only after its actual repaired art is integrated and its
