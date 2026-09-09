@@ -60,12 +60,21 @@ def validate_scene_layers(payload=None):
     required_bellwake = set(bellwake['starting_building_ids'] + bellwake['buildable_building_ids']) - {'building_town_hall'}
     require(required_bellwake.issubset(factions.get('faction_veilmourn',{})), 'Missing constructible Bellwake scene mapping: '+', '.join(sorted(required_bellwake-set(factions.get('faction_veilmourn',{})))))
     veilmourn = factions.get('faction_veilmourn',{})
+    sunvault = factions.get('faction_sunvault',{})
+    sun_towns = [town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['faction_id']=='faction_sunvault']
+    required_sun_union = {building for town in sun_towns for building in town['starting_building_ids']+town['buildable_building_ids']} - {'building_town_hall'}
+    require(required_sun_union.issubset(sunvault), 'Missing authored Sunvault scene mapping: '+', '.join(sorted(required_sun_union-set(sunvault))))
+    for base in ('shard_yard','mirror_forge','lens_gallery','harmonic_cloister','aurora_spire','daybreak_matrix'):
+        generic, specific = sunvault.get('building_'+base,{}), sunvault.get('building_sunvault_'+base,{})
+        require(generic.get('runtime_sha256')!=specific.get('runtime_sha256') and generic.get('ground_anchor')!=specific.get('ground_anchor'), 'Simultaneous Sunvault generic/faction buildings need distinct art/sites: '+base)
     veil_towns = [town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['faction_id']=='faction_veilmourn']
     required_veil_union = {building for town in veil_towns for building in town['starting_building_ids']+town['buildable_building_ids']} - {'building_town_hall'}
     require(required_veil_union.issubset(veilmourn), 'Missing authored Veilmourn variant scene mapping: '+', '.join(sorted(required_veil_union-set(veilmourn))))
     sounding = veilmourn.get('building_veilmourn_leviathan_sounding',{})
     court = veilmourn.get('building_veilmourn_memory_rite_court',{})
     pairs = [(sounding, court, 'Memory-Rite Court', 'Sounding')]
+    pairs += [(sunvault.get(base,{}),sunvault.get(upgrade,{}),upgrade,base) for base,upgrade in
+              [('building_shard_yard','building_mirror_forge'),('building_prism_range','building_lens_gallery'),('building_lantern_archive','building_starseer_annex'),('building_sunvault_daybreak_matrix','building_sunvault_zenith_court')]]
     embercourt = factions.get('faction_embercourt',{})
     pairs += [(embercourt.get(base,{}),embercourt.get(upgrade,{}),upgrade,base) for base,upgrade in
               [('building_muster_yard','building_watch_barracks'),('building_bowyer_lodge','building_beacon_range'),('building_lantern_archive','building_starseer_annex'),('building_embercourt_charter_bastion','building_embercourt_charter_flame')]]

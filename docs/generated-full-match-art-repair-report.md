@@ -5,6 +5,108 @@ Parent: `quality-generated-full-match-20260906`; selected child:
 removed the package-size budget and requested continuing. The parent quality
 goal remains unfinished.
 
+## Sunvault whole-faction batch — 2026-09-09, validated
+
+All 29 non-embedded identities across five Sunvault towns previously lacked
+scene-art mappings and followed `TownStageView._town_building_texture_path` to
+generic catalog icons. They now have distinct original built-in text-only RGBA
+paintings, exact source prompts/hashes and the existing transparent-margin
+trim/512px runtime pipeline. Source and provenance briefs are under
+`art/towns/source/generated/scene_layers/faction_sunvault/`; all 88 earlier
+manifest rows and the stable village remain unchanged (117 total). Six generic
+and faction-specific name pairs remain separate assets/sites; all four actual
+`upgrade_from` pairs retain their shared source bounds and ground anchors.
+No gameplay, authored building, native generation, save schema or catalog icon
+changes. Thornwake and Brasshollow are still outside accepted scene coverage.
+
+The real generated control is seed `10`, `homm3_large`, two players, land,
+one level, Sunvault / `hero_solera`, normal native template/profile 42. It
+produces an actual 108x108 map on the first native attempt and places Solera at
+Prismhearth. `sunvault_faction_opening_01` failed only the new probe's identity
+assertion: it used the design bible's non-runtime `hero_sunvault_solera_prismarch`
+instead of `hero_solera`; the game correctly normalized the selection. No
+generation/selection rule was changed. Corrected `sunvault_faction_opening_02`
+passes complete save/re-entry with no engine errors. Its unchanged opening save
+SHA256 is `babf82504d6d5baa9f71447b1ceefcd6c3806855cc8c8d54ca11abbe1b6b5be7`.
+The inspected before capture is 1920x1080: the existing settings override the
+old opening driver's 1280 command-line request. Do not label it a 1280 capture.
+
+`tests/town_sunvault_faction_regression.py` preserves the shared complete
+rule/recap, daily-limit, save/re-entry, painted-pointer, keyboard/controller and
+negative mapping assertions. One uninjected generated Market purchase and two
+ordinary authored Splitprism Day-1 purchases are separated from five developed
+fixtures and 28 isolated paid-rule fixtures. Those fixtures start from the
+existing 10x6 `prismhearth-watch` scenario, not a repeated Large-map clone;
+they are neither earned development nor performance evidence. Generic Shard
+Yard is starting-only and is not fabricated as a paid order. All four real
+upgrades preserve the saved ancestor while replacing its painting/hotspot.
+The Sunvault-only pointer test chooses an exposed painted patch, with a
+three-pixel clearance cross, outside real foreground alpha/main-building/UI
+ownership. It sends ordinary input; it never changes ordering or hides controls.
+A completely hidden building fails. The earlier shared Mireclaw probe is
+byte-identical.
+
+First source run `sunvault_faction_source_01` passes 22056 checks, all 31 actual
+ledger actions, complete-state controls and zero engine errors. The 61-test
+strict Python batch passes (`sunvault_python_01.log`). Visual acceptance is
+separate: inspected `sunvault_faction_layout_01` and real opening views expose
+an obscured main-hall dome, high inn steps and foreground crop pressure.
+Seven source-space site adjustments preserve the paintings and rules while
+moving rear structures off the dome, grounding the inn, and raising the near
+structures clear of the crop. Retain the first captures and their passing
+behavior report; they do not establish final visual acceptance. The next
+small/wide previews (`sunvault_faction_layout_02`/`_03`) preserve the dome but
+leave three rear structures looking detached. Their final sites join the west
+terrace and rear village benches rather than isolated distant ground.
+
+Final `sunvault_faction_layout_04`/`_05` contain ten starter/developed views
+each at actual 1280x720/2048x1079. All five developed small views, the starter
+Prismhearth and wide Splitprism were visually inspected: the dome, canal and
+navigation remain readable, and the nearer buildings clear the crop. The
+prior 31-action source trace is retained instead of repeated for placement-only
+edits. Final exact packages rerun the full probe with all assertions and each
+pass **22094 checks**, all 31 actions, four upgrade controls, five developed
+fixtures and zero engine errors. The Linux package's final Splitprism input
+capture was also inspected. Windows is headless Wine, not native GPU/audio or
+physical-controller certification.
+
+The combined boundary is `sunvault_faction_acceptance.py` and
+`sunvault_faction_acceptance_jobs_01.json`: both official exports and
+startup/generated-Town flows pass, as do the shared layout/dialog and skyline
+reports, 41 affected final Python tests and `python3 tests/validate_repo.py`.
+Earlier unaffected tests remain covered by the passing 61-test run. Shared
+Town artifacts are under `.artifacts/full_play_runtime_20260905/sunvault_faction_shared/`.
+The package adapter keeps imports/exports serial and runs at most two game
+instances; its fresh Wine/export scratch is disposed, not older evidence.
+
+`sunvault_faction_verify.py` / `sunvault_faction_acceptance.json` compare all
+37 retained save cases across source/Linux/Windows. Generated opening/Market
+cases match outside `saved_at_unix`; 35 independently created authored/fixture
+cases additionally differ only in the existing factory's clock-owned
+`session_id`. Every within-run full-rule/save check excludes **nothing**.
+The original generated opening file and all 88 earlier manifest rows remain
+unchanged. Both PCKs are **269884080 bytes / 5370 members**: 5310 older payloads
+are byte-identical, only the scene manifest and UID cache changed, and exactly
+58 new entries are the 29 runtime textures and import mappings. No source art
+or test files leak into either package; only `project.binary` differs between
+platforms. No fixed size ceiling is reintroduced.
+
+Primary commands: `python3 -B tests/sunvault_town_opening.py --label <fresh>`;
+`python3 -B tests/town_sunvault_faction_regression.py --label <fresh> --save <exact-opening-02-save> --resolution 1280x720`, with the same probe plus
+`--platform <linux|windows> --binary <official-binary> --pack <matching.pck>`
+and a fresh `--wine-prefix` for Windows. Final focused suite:
+`PYTHONPATH=tests:. python3 -B -m unittest test_town_sunvault_faction test_town_scene_layers`.
+Exact executed commands, source hashes, package inventories, save names and
+capture sizes are retained in the batch JSON reports above. `git diff --check`
+and the pre-existing untracked-file preservation hash audit pass.
+
+All batch artifacts above are under
+`.artifacts/generated_full_match_quality_20260906/`. The owner-requested cadence
+is a whole-faction implementation batch followed by combined acceptance, not
+one export/full-play matrix per painting. The parent and child remain active;
+next are Thornwake's 29 and Brasshollow's 27 missing scene mappings. This is a
+validated town-art batch, not completion of the whole quality/release goal.
+
 ## Veilmourn town-variant batch — 2026-09-09, validated
 
 Five authored identities lack scene-layer entries and therefore follow
