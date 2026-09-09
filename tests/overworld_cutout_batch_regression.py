@@ -22,6 +22,7 @@ SAVE_SHA = '1734cf2274e00eb763b94db4f814f4ffc73e30bb9377a9225b36bcc3780e0fcc'
 RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/batch04/recipe.json'
 POOL_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/map_sheets/recipe.json'
 DECORATION_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/decorations/recipe.json'
+LEGACY_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/legacy_families/recipe.json'
 MARKER = 'OVERWORLD_CUTOUT_BATCH '
 
 IMPORT_ORACLE = r'''
@@ -33,6 +34,9 @@ func _initialize() -> void:
         var raster := Image.load_from_file(config.assets[asset_id].source)
         raster.convert(Image.FORMAT_RGBA8)
         raster.fix_alpha_edges()
+        if config.assets[asset_id].has("atlas_region"):
+            var r: Array = config.assets[asset_id].atlas_region
+            raster=raster.get_region(Rect2i(int(r[0]),int(r[1]),int(r[2]),int(r[3])))
         var hash := HashingContext.new()
         hash.start(HashingContext.HASH_SHA256)
         hash.update(raster.get_data())
@@ -54,18 +58,25 @@ def expected_assets(recipe, expected_dir, output):
     assets={}
     for key,row in recipe['assets'].items():
         entry=row['original_manifest_entry']
-        path=expected_dir/(key+'.png') if expected_dir else ROOT/entry['path'].removeprefix('res://')
+        legacy=recipe.get('schema_id')=='legacy_family_cutout_recipe_v1'
+        # Atlas alpha-edge processing runs on the complete original atlas;
+        # cropping before import would not be an independent runtime oracle.
+        path=(expected_dir/'runtime'/Path(entry['path'].removeprefix('res://art/overworld/runtime/')) if legacy else expected_dir/(key+'.png')) if expected_dir else ROOT/entry['path'].removeprefix('res://')
         options=Path(str(ROOT/entry['path'].removeprefix('res://'))+'.import')
         text=options.read_text()
         for required in ['compress/mode=0','mipmaps/generate=false','process/fix_alpha_border=true','process/premult_alpha=false','process/size_limit=0']:
             if required not in text.splitlines():raise ValueError('Revalidate changed import processing: '+key+'/'+required)
         with Image.open(path) as im:
-            if im.mode!='RGBA' or im.size!=(512,512):raise ValueError('Expected original logical RGBA canvas: '+key)
+            logical_size=tuple(entry['atlas_region'][2:]) if 'atlas_region' in entry else im.size
+            if im.mode!='RGBA' or logical_size!=tuple(row.get('canvas_size',[512,512])):raise ValueError('Expected original logical RGBA canvas: '+key)
         object_id=entry.get('assigned_map_object_id',entry.get('assigned_decorative_object_id',''))
-        if not object_id:raise ValueError('Missing exact authored identity: '+key)
+        if not object_id and not legacy:raise ValueError('Missing exact authored identity: '+key)
         assets[key]=dict(object_id=object_id,path=entry['path'],source=str(path.resolve()),
                          source_group=row.get('source','batch04'),
                          source_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),import_options_sha256=hashlib.sha256(options.read_bytes()).hexdigest())
+        if legacy:
+            assets[key].update(mode=row['mode'],size=row['canvas_size'],entry=entry)
+            if 'atlas_region' in entry:assets[key]['atlas_region']=entry['atlas_region']
     with tempfile.TemporaryDirectory(prefix='cutout-source-oracle-',dir=OUTPUT) as temporary:
         work=Path(temporary)
         (work/'project.godot').write_text('config_version=5\n')
@@ -195,7 +206,7 @@ def probe_environment(environment):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--batch',choices=['batch04','map_sheets','decorations'],default='batch04')
+    parser.add_argument('--batch',choices=['batch04','map_sheets','decorations','legacy_families'],default='batch04')
     parser.add_argument('--label',required=True)
     parser.add_argument('--resolution',choices=['1280x720','1920x1080'],default='1280x720')
     parser.add_argument('--expected-dir',type=Path,help='Preview acceptance candidate; permits an honest failing-before run')
@@ -203,10 +214,12 @@ def main():
     if not re.fullmatch(r'[a-z0-9_-]+',args.label):parser.error('label must be a fresh slug')
     original=SAVE.read_bytes()
     if hashlib.sha256(original).hexdigest()!=SAVE_SHA:parser.error('unchanged exact earned save required')
-    recipe=json.loads({'batch04':RECIPE,'map_sheets':POOL_RECIPE,'decorations':DECORATION_RECIPE}[args.batch].read_text())
+    recipe=json.loads({'batch04':RECIPE,'map_sheets':POOL_RECIPE,'decorations':DECORATION_RECIPE,'legacy_families':LEGACY_RECIPE}[args.batch].read_text())
     script=SCRIPT
     if args.batch=='decorations':
         from overworld_decoration_cutout_probe import SCRIPT as script
+    if args.batch=='legacy_families':
+        from overworld_legacy_cutout_probe import SCRIPT as script
     output=OUTPUT/args.label
     output.mkdir(parents=True,exist_ok=False)
     assets=expected_assets(recipe,args.expected_dir,output)
@@ -228,6 +241,8 @@ def main():
     report.update(returncode=code,save_sha256=SAVE_SHA,input_unchanged=SAVE.read_bytes()==original,resolution=args.resolution,
                   expected_rasters=assets,runtime_errors=[s for s in lines if s.startswith(('ERROR:','SCRIPT ERROR:')) or 'leaked' in s])
     captures_ok=report.get('backend')=='headless' or all((output/(r['asset_id']+'.png')).exists() for r in report.get('captures',[]) if r.get('screenshot_requested',True))
+    if args.batch=='legacy_families':
+        captures_ok=captures_ok and len(report.get('galleries',[]))==3 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
     report['ok']=bool(report['ok']) and code==0 and report['input_unchanged'] and not report['runtime_errors'] and captures_ok
     (output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({k:v for k,v in report.items() if k not in ('textures','captures','expected_rasters')}))

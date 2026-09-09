@@ -1,0 +1,1835 @@
+{
+  "schema_id": "legacy_family_cutout_recovery_v1",
+  "recipe_sha256": "a5b756554f4a2e2f10a49a879895b204c58910b42ab00fc8f917236767b74e0c",
+  "processing_tool": "tools/prepare_overworld_legacy_cutouts.py",
+  "processing_tool_sha256": "578dd78feaf322f585df5b214cfdbe607ea29eb0a359a95ce549e289c8d7b092",
+  "material_engine_sha256": "fa86cc23c34bdbbb0b7f217381fa859ba8ce7aab0882f82fc5cbafb120a75815",
+  "matte_engine_sha256": "247801087cb8c5bfd6fb0a471bf39dbbfdb2a8bd8fe984d3816df92f00b0d68d",
+  "generation_sha256": "f725e8cd41ef21e675b18ea0ddd13ff5cb0e8aa3c7cb3d2b350a1acb5e233917",
+  "sources": {
+    "heroes": {
+      "path": "res://art/overworld/source/faction_hero_sprite_atlas.png",
+      "sha256": "335287cb16dc216c909f8497ae17b4489a5dc932d2bdf40e8742643d7acde860"
+    },
+    "trees": {
+      "path": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "sha256": "f64a2ed74ddf03a71e7b49db9dbee66fa06b996c6d654004a8114fce5f01f1e6"
+    },
+    "crownmere": {
+      "path": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/crownmere_repair_source.png",
+      "sha256": "99dae98e79b0b4a0ad8df2b452b66e1d11fa39995804ba64bbe63c7946b0aa09"
+    },
+    "sawmill": {
+      "path": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/sawmill_repair_source.png",
+      "sha256": "43f57f0924d90af5afc214a3159e002ba0223cdbaed1890978cf5d4a0dbd32ca"
+    },
+    "quarry": {
+      "path": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/quarry_repair_source.png",
+      "sha256": "9ef24eaaabc669c9800f2724e73973111019eac24e02907a920be369df6ba806"
+    }
+  },
+  "assets": {
+    "hero_faction_embercourt": {
+      "trim_sha256": "990c3a3eece7f1ab92e7cee67c4b7e3ee0b61db00d2a9dc608fdb3aec8937341",
+      "geometry": {
+        "source_painted_bounds": [
+          28,
+          13,
+          341,
+          487
+        ],
+        "original_canvas_bounds": [
+          118,
+          18,
+          431,
+          492
+        ],
+        "scale": 1.0,
+        "painted_size": [
+          313,
+          474
+        ],
+        "canvas_origin": [
+          118,
+          18
+        ]
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          118,
+          18,
+          431,
+          492
+        ],
+        "opaque_pixels": 58127,
+        "visible_pixels": 63946,
+        "magenta_review_pixels": 0
+      }
+    },
+    "hero_faction_mireclaw": {
+      "trim_sha256": "db4c7d2ddc2c0a9211ac9b6fb7041059594a69661060fb5030eaeaa66fe42202",
+      "geometry": {
+        "source_painted_bounds": [
+          13,
+          4,
+          371,
+          487
+        ],
+        "original_canvas_bounds": [
+          48,
+          9,
+          406,
+          492
+        ],
+        "scale": 1.0,
+        "painted_size": [
+          358,
+          483
+        ],
+        "canvas_origin": [
+          48,
+          9
+        ]
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          48,
+          9,
+          406,
+          492
+        ],
+        "opaque_pixels": 64380,
+        "visible_pixels": 70074,
+        "magenta_review_pixels": 0
+      }
+    },
+    "hero_faction_sunvault": {
+      "trim_sha256": "31a72f7ec96471ddff2da56cecb7176e62a0a2a8c0221118e9a39adaad3bd270",
+      "geometry": {
+        "source_painted_bounds": [
+          6,
+          6,
+          360,
+          488
+        ],
+        "original_canvas_bounds": [
+          72,
+          11,
+          426,
+          493
+        ],
+        "scale": 1.0,
+        "painted_size": [
+          354,
+          482
+        ],
+        "canvas_origin": [
+          72,
+          11
+        ]
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          72,
+          11,
+          426,
+          493
+        ],
+        "opaque_pixels": 69510,
+        "visible_pixels": 73890,
+        "magenta_review_pixels": 71
+      }
+    },
+    "hero_faction_thornwake": {
+      "trim_sha256": "e64a277c15ea12fa122dade116761a4d21eecee386e1ef87127b76ed2844fd0d",
+      "geometry": {
+        "source_painted_bounds": [
+          17,
+          4,
+          380,
+          518
+        ],
+        "original_canvas_bounds": [
+          82,
+          -24,
+          445,
+          490
+        ],
+        "scale": 0.943579766536965,
+        "painted_size": [
+          343,
+          485
+        ],
+        "canvas_origin": [
+          92,
+          5
+        ]
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          92,
+          5,
+          435,
+          490
+        ],
+        "opaque_pixels": 58132,
+        "visible_pixels": 74944,
+        "magenta_review_pixels": 73
+      }
+    },
+    "hero_faction_brasshollow": {
+      "trim_sha256": "187d3a32db9aed203a7993fc8fa36b925c3fd63802929746b741df840920ec85",
+      "geometry": {
+        "source_painted_bounds": [
+          16,
+          5,
+          343,
+          501
+        ],
+        "original_canvas_bounds": [
+          54,
+          -8,
+          381,
+          488
+        ],
+        "scale": 0.9737903225806451,
+        "painted_size": [
+          318,
+          483
+        ],
+        "canvas_origin": [
+          58,
+          5
+        ]
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          58,
+          5,
+          376,
+          488
+        ],
+        "opaque_pixels": 74533,
+        "visible_pixels": 87889,
+        "magenta_review_pixels": 0
+      }
+    },
+    "hero_faction_veilmourn": {
+      "trim_sha256": "00f56ec8ed0de5659954400569fcd7a04b45c87be6c64ca5d131f761dd9da32f",
+      "geometry": {
+        "source_painted_bounds": [
+          27,
+          4,
+          399,
+          530
+        ],
+        "original_canvas_bounds": [
+          83,
+          -33,
+          455,
+          493
+        ],
+        "scale": 0.9277566539923955,
+        "painted_size": [
+          345,
+          488
+        ],
+        "canvas_origin": [
+          96,
+          5
+        ]
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          96,
+          5,
+          441,
+          493
+        ],
+        "opaque_pixels": 67899,
+        "visible_pixels": 84819,
+        "magenta_review_pixels": 1
+      }
+    },
+    "generated_tree_deciduous_0": {
+      "trim_sha256": "3a748b9fc8939a75ea1fda972758a73b5a0da519ab2661b6cff3a7c11e31d0e9",
+      "geometry": {
+        "source_painted_bounds": [
+          18,
+          11,
+          318,
+          288
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.4,
+        "painted_size": [
+          120,
+          111
+        ],
+        "canvas_origin": [
+          4,
+          13
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          4,
+          13,
+          124,
+          124
+        ],
+        "opaque_pixels": 8373,
+        "visible_pixels": 9999,
+        "magenta_review_pixels": 0
+      }
+    },
+    "generated_tree_deciduous_1": {
+      "trim_sha256": "5242c3361bb11ea3ba5f04073458862cae71359398dff1ef50514d7174dfebd4",
+      "geometry": {
+        "source_painted_bounds": [
+          16,
+          11,
+          314,
+          287
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.40268456375838924,
+        "painted_size": [
+          120,
+          111
+        ],
+        "canvas_origin": [
+          4,
+          13
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          4,
+          13,
+          124,
+          124
+        ],
+        "opaque_pixels": 8363,
+        "visible_pixels": 9869,
+        "magenta_review_pixels": 1
+      }
+    },
+    "generated_tree_deciduous_2": {
+      "trim_sha256": "29421ba5f38e01d2bf9a0237e8456d7243f8b76a593449ebcce2f540f63d160e",
+      "geometry": {
+        "source_painted_bounds": [
+          23,
+          7,
+          298,
+          289
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.425531914893617,
+        "painted_size": [
+          117,
+          120
+        ],
+        "canvas_origin": [
+          5,
+          4
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          5,
+          4,
+          122,
+          124
+        ],
+        "opaque_pixels": 9374,
+        "visible_pixels": 11215,
+        "magenta_review_pixels": 0
+      }
+    },
+    "generated_tree_deciduous_3": {
+      "trim_sha256": "494955c436d84299334306dea023eeab1e4ed2af555c6e27523a71746494f8d5",
+      "geometry": {
+        "source_painted_bounds": [
+          21,
+          9,
+          303,
+          293
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.4225352112676056,
+        "painted_size": [
+          119,
+          120
+        ],
+        "canvas_origin": [
+          4,
+          4
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          4,
+          4,
+          123,
+          124
+        ],
+        "opaque_pixels": 8570,
+        "visible_pixels": 10837,
+        "magenta_review_pixels": 0
+      }
+    },
+    "generated_tree_evergreen_0": {
+      "trim_sha256": "90c2d08dd3e71bc17373848f3809437522b77e98baa8a639c89dc77d2ca4b102",
+      "geometry": {
+        "source_painted_bounds": [
+          18,
+          4,
+          302,
+          293
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.41522491349480967,
+        "painted_size": [
+          118,
+          120
+        ],
+        "canvas_origin": [
+          5,
+          4
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          5,
+          4,
+          123,
+          124
+        ],
+        "opaque_pixels": 7710,
+        "visible_pixels": 9413,
+        "magenta_review_pixels": 0
+      }
+    },
+    "generated_tree_evergreen_1": {
+      "trim_sha256": "ffbb83f876da6e4197bb0be0f35ac5087121743ca4571dcd6a4f8b644dac80b4",
+      "geometry": {
+        "source_painted_bounds": [
+          15,
+          4,
+          307,
+          289
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.410958904109589,
+        "painted_size": [
+          120,
+          117
+        ],
+        "canvas_origin": [
+          4,
+          7
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          4,
+          7,
+          124,
+          124
+        ],
+        "opaque_pixels": 6826,
+        "visible_pixels": 8600,
+        "magenta_review_pixels": 0
+      }
+    },
+    "generated_tree_evergreen_2": {
+      "trim_sha256": "231133c17774fab91ba69c82a90e931a41c8d4d7f484db3c41d091b830e1b8a8",
+      "geometry": {
+        "source_painted_bounds": [
+          13,
+          5,
+          313,
+          291
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.4,
+        "painted_size": [
+          120,
+          114
+        ],
+        "canvas_origin": [
+          4,
+          10
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          4,
+          10,
+          124,
+          124
+        ],
+        "opaque_pixels": 6731,
+        "visible_pixels": 8563,
+        "magenta_review_pixels": 0
+      }
+    },
+    "generated_tree_evergreen_3": {
+      "trim_sha256": "79c9f897ab297c6eb37c8374c0eb517eb57a46a8cb0cc3f2a7f5ec9ca8997b05",
+      "geometry": {
+        "source_painted_bounds": [
+          17,
+          10,
+          307,
+          289
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.41379310344827586,
+        "painted_size": [
+          120,
+          115
+        ],
+        "canvas_origin": [
+          4,
+          9
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          4,
+          9,
+          124,
+          124
+        ],
+        "opaque_pixels": 7097,
+        "visible_pixels": 8792,
+        "magenta_review_pixels": 0
+      }
+    },
+    "generated_tree_mire_0": {
+      "trim_sha256": "3d3014127d05ac5e7d2ffb65cd50a7d321982e4ddf3b3c79fd5f425b5956b8f2",
+      "geometry": {
+        "source_painted_bounds": [
+          19,
+          5,
+          311,
+          298
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.40955631399317405,
+        "painted_size": [
+          120,
+          120
+        ],
+        "canvas_origin": [
+          4,
+          4
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          4,
+          4,
+          124,
+          124
+        ],
+        "opaque_pixels": 8570,
+        "visible_pixels": 10720,
+        "magenta_review_pixels": 0
+      }
+    },
+    "generated_tree_mire_1": {
+      "trim_sha256": "eeb8989782f5727c9fed1886ebfec253890c716e3a21a953e52c5eec013079af",
+      "geometry": {
+        "source_painted_bounds": [
+          31,
+          4,
+          311,
+          299
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.4067796610169492,
+        "painted_size": [
+          114,
+          120
+        ],
+        "canvas_origin": [
+          7,
+          4
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          7,
+          4,
+          121,
+          124
+        ],
+        "opaque_pixels": 7516,
+        "visible_pixels": 10732,
+        "magenta_review_pixels": 0
+      }
+    },
+    "generated_tree_mire_2": {
+      "trim_sha256": "1dac402893e48ebb3a00e166dccf4d1d2d70bbe66dedaf684690657d4d46596e",
+      "geometry": {
+        "source_painted_bounds": [
+          17,
+          7,
+          314,
+          298
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.40404040404040403,
+        "painted_size": [
+          120,
+          118
+        ],
+        "canvas_origin": [
+          4,
+          6
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          4,
+          6,
+          124,
+          124
+        ],
+        "opaque_pixels": 8932,
+        "visible_pixels": 11140,
+        "magenta_review_pixels": 0
+      }
+    },
+    "generated_tree_mire_3": {
+      "trim_sha256": "f8e28d76cbdd1df9b0dca54c7a15597f8807bc9def759c103a31016513384df7",
+      "geometry": {
+        "source_painted_bounds": [
+          22,
+          2,
+          303,
+          295
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.40955631399317405,
+        "painted_size": [
+          115,
+          120
+        ],
+        "canvas_origin": [
+          6,
+          4
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          6,
+          4,
+          121,
+          124
+        ],
+        "opaque_pixels": 7097,
+        "visible_pixels": 10039,
+        "magenta_review_pixels": 0
+      }
+    },
+    "generated_tree_autumn": {
+      "trim_sha256": "7c56936e8a56e6e030f5b451c4abf954b7babfbb8e409844f50f76dd9fbc0b58",
+      "geometry": {
+        "source_painted_bounds": [
+          19,
+          2,
+          305,
+          288
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.4195804195804196,
+        "painted_size": [
+          120,
+          120
+        ],
+        "canvas_origin": [
+          4,
+          4
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          4,
+          4,
+          124,
+          124
+        ],
+        "opaque_pixels": 9141,
+        "visible_pixels": 11481,
+        "magenta_review_pixels": 0
+      }
+    },
+    "generated_tree_frost": {
+      "trim_sha256": "a9f7b67d3bf03ef0b4a68fde766ceb923667b55af7101dc5f6f0dfbb6b8110b0",
+      "geometry": {
+        "source_painted_bounds": [
+          21,
+          1,
+          310,
+          295
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.40816326530612246,
+        "painted_size": [
+          118,
+          120
+        ],
+        "canvas_origin": [
+          5,
+          4
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          5,
+          4,
+          123,
+          124
+        ],
+        "opaque_pixels": 8196,
+        "visible_pixels": 10125,
+        "magenta_review_pixels": 0
+      }
+    },
+    "generated_tree_badland": {
+      "trim_sha256": "07719b8aa1d345f699a7b6b30dfd9c270212bb3d42ca74a07c4a81a2f9d8ca50",
+      "geometry": {
+        "source_painted_bounds": [
+          16,
+          4,
+          307,
+          293
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.41237113402061853,
+        "painted_size": [
+          120,
+          119
+        ],
+        "canvas_origin": [
+          4,
+          5
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          4,
+          5,
+          124,
+          124
+        ],
+        "opaque_pixels": 6424,
+        "visible_pixels": 9776,
+        "magenta_review_pixels": 0
+      }
+    },
+    "generated_tree_ash": {
+      "trim_sha256": "c0511b77763dfee722e803d097eaa7a02a3e4e3091ebda837303bd02f7aab2ce",
+      "geometry": {
+        "source_painted_bounds": [
+          25,
+          4,
+          299,
+          296
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.410958904109589,
+        "painted_size": [
+          113,
+          120
+        ],
+        "canvas_origin": [
+          7,
+          4
+        ]
+      },
+      "metrics": {
+        "size": [
+          128,
+          128
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          7,
+          4,
+          120,
+          124
+        ],
+        "opaque_pixels": 5478,
+        "visible_pixels": 9494,
+        "magenta_review_pixels": 0
+      }
+    },
+    "resource_site_neutral_miremoon_crownmere_controlled": {
+      "trim_sha256": "808ea35670ce330d840e5a4e1d362735e9a64a57e82d46e87ef8dce334b6a1d2",
+      "geometry": {
+        "source_resize": [
+          44,
+          44
+        ],
+        "canvas_origin": [
+          2,
+          2
+        ]
+      },
+      "metrics": {
+        "size": [
+          48,
+          48
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          6,
+          2,
+          42,
+          44
+        ],
+        "opaque_pixels": 552,
+        "visible_pixels": 922,
+        "magenta_review_pixels": 0
+      }
+    },
+    "sawmill": {
+      "trim_sha256": "c0213f8a81b0f54fbbc068eba0e91ad6bd11bc42ada7c25419cb616c9f9c078d",
+      "geometry": {
+        "source_painted_bounds": [
+          62,
+          88,
+          1224,
+          878
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.342512908777969,
+        "painted_size": [
+          398,
+          271
+        ],
+        "canvas_origin": [
+          90,
+          114
+        ]
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          90,
+          114,
+          488,
+          385
+        ],
+        "opaque_pixels": 71275,
+        "visible_pixels": 75591,
+        "magenta_review_pixels": 0
+      }
+    },
+    "stone_quarry": {
+      "trim_sha256": "ca1ab83de27d2095a09b82bbcefaf68affd8f83a07c86ae8de50e36a1559c17d",
+      "geometry": {
+        "source_painted_bounds": [
+          45,
+          63,
+          1220,
+          873
+        ],
+        "original_canvas_bounds": null,
+        "scale": 0.38893617021276594,
+        "painted_size": [
+          457,
+          315
+        ],
+        "canvas_origin": [
+          31,
+          80
+        ]
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          31,
+          80,
+          488,
+          395
+        ],
+        "opaque_pixels": 100164,
+        "visible_pixels": 105050,
+        "magenta_review_pixels": 0
+      }
+    },
+    "ruined_obelisk": {
+      "trim_sha256": "6f51eeda52394c980465595d756bf33293f339b43e47242246ac5f9bfa6e9e0c",
+      "geometry": {
+        "keep_canvas_rect": [
+          110,
+          70,
+          500,
+          430
+        ],
+        "excluded_canvas_rects": []
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          126,
+          97,
+          482,
+          418
+        ],
+        "opaque_pixels": 31528,
+        "visible_pixels": 54459,
+        "magenta_review_pixels": 0
+      }
+    },
+    "lumber_wagon": {
+      "trim_sha256": "4ae3f7d63d28cd0681f1b5f52bca164e6bffaa8a7945b878f7089800ded77808",
+      "geometry": {
+        "keep_canvas_rect": [
+          12,
+          106,
+          420,
+          424
+        ],
+        "excluded_canvas_rects": []
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          30,
+          124,
+          399,
+          405
+        ],
+        "opaque_pixels": 41561,
+        "visible_pixels": 62792,
+        "magenta_review_pixels": 0
+      }
+    },
+    "ore_crates": {
+      "trim_sha256": "9bbc98301da243389e6ab975d970ea88881ca91c7fde67c9763f06610d1d6654",
+      "geometry": {
+        "keep_canvas_rect": [
+          110,
+          90,
+          500,
+          374
+        ],
+        "excluded_canvas_rects": []
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          139,
+          114,
+          481,
+          354
+        ],
+        "opaque_pixels": 35481,
+        "visible_pixels": 51424,
+        "magenta_review_pixels": 0
+      }
+    },
+    "adventurers_bundle": {
+      "trim_sha256": "8bb88f0f4bb7423b2ffadd019336a5284a93d485a125214b4170f843cb6cc81c",
+      "geometry": {
+        "keep_canvas_rect": [
+          12,
+          90,
+          397,
+          405
+        ],
+        "excluded_canvas_rects": [
+          [
+            350,
+            385,
+            397,
+            405
+          ]
+        ]
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          31,
+          111,
+          372,
+          382
+        ],
+        "opaque_pixels": 31968,
+        "visible_pixels": 53186,
+        "magenta_review_pixels": 0
+      }
+    },
+    "guarded_farmhouse": {
+      "trim_sha256": "f19580963515a5382385450ffff8e93afc99255c877dec96e919270e76b807ae",
+      "geometry": {
+        "keep_canvas_rect": [
+          85,
+          98,
+          502,
+          424
+        ],
+        "excluded_canvas_rects": [
+          [
+            440,
+            129,
+            446,
+            137
+          ],
+          [
+            85,
+            115,
+            87,
+            119
+          ]
+        ]
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          107,
+          120,
+          482,
+          403
+        ],
+        "opaque_pixels": 57916,
+        "visible_pixels": 67278,
+        "magenta_review_pixels": 0
+      }
+    },
+    "kennel": {
+      "trim_sha256": "5db248e16b4ee5ae2a05123c7103d60f9574933a6d5a04ae05578fc4d4fa450d",
+      "geometry": {
+        "keep_canvas_rect": [
+          6,
+          104,
+          459,
+          404
+        ],
+        "excluded_canvas_rects": []
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          24,
+          125,
+          459,
+          383
+        ],
+        "opaque_pixels": 61394,
+        "visible_pixels": 68825,
+        "magenta_review_pixels": 0
+      }
+    },
+    "falconers_nest": {
+      "trim_sha256": "ae1f77740b6aeb3c187d57d8e8fde6fba791ed93440d472e8fe72da2a064e7f1",
+      "geometry": {
+        "keep_canvas_rect": [
+          85,
+          86,
+          502,
+          424
+        ],
+        "excluded_canvas_rects": [
+          [
+            85,
+            227,
+            110,
+            379
+          ]
+        ]
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          113,
+          111,
+          483,
+          401
+        ],
+        "opaque_pixels": 59363,
+        "visible_pixels": 72159,
+        "magenta_review_pixels": 0
+      }
+    },
+    "alchemists_hut": {
+      "trim_sha256": "acb4fef1e82b02dc24ff0b308edcab3c2be4d847ee1c0625834636a9f12b66f9",
+      "geometry": {
+        "keep_canvas_rect": [
+          10,
+          84,
+          411,
+          423
+        ],
+        "excluded_canvas_rects": []
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          30,
+          110,
+          411,
+          401
+        ],
+        "opaque_pixels": 67170,
+        "visible_pixels": 78204,
+        "magenta_review_pixels": 0
+      }
+    },
+    "shrine": {
+      "trim_sha256": "e95e77654a54c1b2d112c44350d638c30bab5fdccb2d6d22773760d61bf69c38",
+      "geometry": {
+        "keep_canvas_rect": [
+          20,
+          125,
+          402,
+          416
+        ],
+        "excluded_canvas_rects": [
+          [
+            20,
+            125,
+            80,
+            152
+          ]
+        ]
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          24,
+          125,
+          377,
+          397
+        ],
+        "opaque_pixels": 51025,
+        "visible_pixels": 63641,
+        "magenta_review_pixels": 0
+      }
+    },
+    "watchtower": {
+      "trim_sha256": "f145df512997088bec94cd20a53e32766cea78d3371e97e75003268ac0e73168",
+      "geometry": {
+        "keep_canvas_rect": [
+          8,
+          102,
+          369,
+          412
+        ],
+        "excluded_canvas_rects": []
+      },
+      "metrics": {
+        "size": [
+          512,
+          512
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "painted_bounds": [
+          24,
+          124,
+          344,
+          388
+        ],
+        "opaque_pixels": 40776,
+        "visible_pixels": 51518,
+        "magenta_review_pixels": 0
+      }
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/heroes/factions/embercourt.png": {
+      "before_sha256": "9108332d7ff5e3651f04fe425c3c15dc4d5f17ec1dbe34cb776d381b6a5aa384",
+      "after_sha256": "990c3a3eece7f1ab92e7cee67c4b7e3ee0b61db00d2a9dc608fdb3aec8937341",
+      "prepared": "runtime/heroes/factions/embercourt.png"
+    },
+    "res://art/overworld/runtime/heroes/factions/mireclaw.png": {
+      "before_sha256": "fb43a7ce639cb883ef3a9e7db038472a66e42b8e21b0723c4291bbf56970a1d9",
+      "after_sha256": "db4c7d2ddc2c0a9211ac9b6fb7041059594a69661060fb5030eaeaa66fe42202",
+      "prepared": "runtime/heroes/factions/mireclaw.png"
+    },
+    "res://art/overworld/runtime/heroes/factions/sunvault.png": {
+      "before_sha256": "53ede95ce128cf3e8a6464c67a47453b489c90ae21bf67c3686abe86763e614c",
+      "after_sha256": "31a72f7ec96471ddff2da56cecb7176e62a0a2a8c0221118e9a39adaad3bd270",
+      "prepared": "runtime/heroes/factions/sunvault.png"
+    },
+    "res://art/overworld/runtime/heroes/factions/thornwake.png": {
+      "before_sha256": "4d2592e2fb7d6fe9bde94d1d4bd90abcaab0ac8e16143f99612eec5fc0acd72e",
+      "after_sha256": "e64a277c15ea12fa122dade116761a4d21eecee386e1ef87127b76ed2844fd0d",
+      "prepared": "runtime/heroes/factions/thornwake.png"
+    },
+    "res://art/overworld/runtime/heroes/factions/brasshollow.png": {
+      "before_sha256": "f209aed5ecb787e836c6409449c8159fbe08706e35904af59a56b5e396a2d34d",
+      "after_sha256": "187d3a32db9aed203a7993fc8fa36b925c3fd63802929746b741df840920ec85",
+      "prepared": "runtime/heroes/factions/brasshollow.png"
+    },
+    "res://art/overworld/runtime/heroes/factions/veilmourn.png": {
+      "before_sha256": "77f5f8f92515ee70fa3edcd67a947c8bc827be4ab2e66ea915b78c39e2a9a7f0",
+      "after_sha256": "00f56ec8ed0de5659954400569fcd7a04b45c87be6c64ca5d131f761dd9da32f",
+      "prepared": "runtime/heroes/factions/veilmourn.png"
+    },
+    "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png": {
+      "before_sha256": "baebebefcc5918d8255929d9d7d81d8aa1ea1b8802504a3092dfe3ce65564523",
+      "after_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba",
+      "prepared": "runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png": {
+      "before_sha256": "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32",
+      "after_sha256": "78a86f619bd3897adb56cb98ace0893473ff517150d1eda953899f4c784a102b",
+      "prepared": "runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/landmarks/sawmill.png": {
+      "before_sha256": "1b4faba2aac5fdc63de754291540d50cb3ad2c8e120312f253c343983bb902ea",
+      "after_sha256": "c0213f8a81b0f54fbbc068eba0e91ad6bd11bc42ada7c25419cb616c9f9c078d",
+      "prepared": "runtime/objects/landmarks/sawmill.png"
+    },
+    "res://art/overworld/runtime/objects/landmarks/stone_quarry.png": {
+      "before_sha256": "af480bb87fd6009d4c415d58cc0a0b2c72913c069c3742af2bc46410126f7d88",
+      "after_sha256": "ca1ab83de27d2095a09b82bbcefaf68affd8f83a07c86ae8de50e36a1559c17d",
+      "prepared": "runtime/objects/landmarks/stone_quarry.png"
+    },
+    "res://art/overworld/runtime/objects/pickups/ruined_obelisk.png": {
+      "before_sha256": "c34231802a8bf9d05c2c437b5a1a1796d3c1834b7b69ac4c577748dabf1cde56",
+      "after_sha256": "6f51eeda52394c980465595d756bf33293f339b43e47242246ac5f9bfa6e9e0c",
+      "prepared": "runtime/objects/pickups/ruined_obelisk.png"
+    },
+    "res://art/overworld/runtime/objects/pickups/lumber_wagon.png": {
+      "before_sha256": "07cfbe6725d3a992b7ddfaaa2f7ef8804599b85bdaf077621d5d81cc36a55166",
+      "after_sha256": "4ae3f7d63d28cd0681f1b5f52bca164e6bffaa8a7945b878f7089800ded77808",
+      "prepared": "runtime/objects/pickups/lumber_wagon.png"
+    },
+    "res://art/overworld/runtime/objects/pickups/ore_crates.png": {
+      "before_sha256": "c300f0f966e9ffd3d96622c0789f31ab7775aba134319581b8f989125cc2228c",
+      "after_sha256": "9bbc98301da243389e6ab975d970ea88881ca91c7fde67c9763f06610d1d6654",
+      "prepared": "runtime/objects/pickups/ore_crates.png"
+    },
+    "res://art/overworld/runtime/objects/pickups/adventurers_bundle.png": {
+      "before_sha256": "0e41a604fd1128d324005f7aff9dcdb79fd7843758e3b364c7b5ab31609a38ae",
+      "after_sha256": "8bb88f0f4bb7423b2ffadd019336a5284a93d485a125214b4170f843cb6cc81c",
+      "prepared": "runtime/objects/pickups/adventurers_bundle.png"
+    },
+    "res://art/overworld/runtime/objects/dwellings/guarded_farmhouse.png": {
+      "before_sha256": "9ae094a3281fe20017afd5ab0e58c713894c888bb44de7ee090a31260c18f23e",
+      "after_sha256": "f19580963515a5382385450ffff8e93afc99255c877dec96e919270e76b807ae",
+      "prepared": "runtime/objects/dwellings/guarded_farmhouse.png"
+    },
+    "res://art/overworld/runtime/objects/dwellings/kennel.png": {
+      "before_sha256": "a72144d6b8d92b0d7913667795bfdacbe4c7d7c6bee80d5880504a32b55b1403",
+      "after_sha256": "5db248e16b4ee5ae2a05123c7103d60f9574933a6d5a04ae05578fc4d4fa450d",
+      "prepared": "runtime/objects/dwellings/kennel.png"
+    },
+    "res://art/overworld/runtime/objects/dwellings/falconers_nest.png": {
+      "before_sha256": "4882156e06aa397b65752341da364cb7f24e9fa1bbfb8af0d1bbe4c4339a9002",
+      "after_sha256": "ae1f77740b6aeb3c187d57d8e8fde6fba791ed93440d472e8fe72da2a064e7f1",
+      "prepared": "runtime/objects/dwellings/falconers_nest.png"
+    },
+    "res://art/overworld/runtime/objects/dwellings/alchemists_hut.png": {
+      "before_sha256": "c4d3416fbcc51df5745eb9545d1ddf36e40f4656746b31f1b98b3de70e94636c",
+      "after_sha256": "acb4fef1e82b02dc24ff0b308edcab3c2be4d847ee1c0625834636a9f12b66f9",
+      "prepared": "runtime/objects/dwellings/alchemists_hut.png"
+    },
+    "res://art/overworld/runtime/objects/landmarks/shrine.png": {
+      "before_sha256": "4d6afe997f08098ccd0015ae2eb73ea1febbdb14f542e026b1d319ba01e63a63",
+      "after_sha256": "e95e77654a54c1b2d112c44350d638c30bab5fdccb2d6d22773760d61bf69c38",
+      "prepared": "runtime/objects/landmarks/shrine.png"
+    },
+    "res://art/overworld/runtime/objects/landmarks/watchtower.png": {
+      "before_sha256": "6dc9c0c1f4a287acac43b11a55057d4880cda59361963d5072e18dc6f592e7a8",
+      "after_sha256": "f145df512997088bec94cd20a53e32766cea78d3371e97e75003268ac0e73168",
+      "prepared": "runtime/objects/landmarks/watchtower.png"
+    }
+  },
+  "preserved_controls": {
+    "beacon_path_scroll": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/pickups/beacon_path_scroll.png",
+        "source_generated": "res://art/overworld/source/generated/pickups/beacon_path_scroll_source.png",
+        "source_model": "built_in_image_gen",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "background": "transparent",
+        "assigned_resource_site_id": "site_beacon_path_scroll"
+      },
+      "sha256": "ad34c0072461a2361d91776aa551c36a6e72da427cd0b6c2e05e21a1df6ba49b"
+    },
+    "resource_pickup_peatwax": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/pickups/peatwax_reed_bundle.png",
+        "source_generated": "res://art/overworld/source/generated/pickups/peatwax_reed_bundle_source.png",
+        "source_model": "built_in_image_gen",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "background": "transparent",
+        "assigned_resource_site_id": "site_peatwax_reed_yard"
+      },
+      "sha256": "0a625464329950300f9bf5ea27c755af0a7bf65053fe079e380b3775c1eab633"
+    },
+    "resource_pickup_embergrain": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/pickups/embergrain_sack.png",
+        "source_generated": "res://art/overworld/source/generated/pickups/embergrain_sack_source.png",
+        "source_model": "built_in_image_gen",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "background": "transparent",
+        "assigned_resource_site_id": "site_embergrain_warm_granary"
+      },
+      "sha256": "58d17d2985393eaf07480b149205dd310d3d5b837eeba091c1028fbc5aed5147"
+    },
+    "resource_pickup_aetherglass": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/pickups/aetherglass_lens_crate.png",
+        "source_generated": "res://art/overworld/source/generated/pickups/aetherglass_lens_crate_source.png",
+        "source_model": "built_in_image_gen",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "background": "transparent",
+        "assigned_resource_site_id": "site_aetherglass_lens_house"
+      },
+      "sha256": "3d1fca05d9f37255157b1b5da87d13f321f7367d678b85a48120d935bde41e1a"
+    },
+    "resource_pickup_memory_salt": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/pickups/memory_salt_reliquary.png",
+        "source_generated": "res://art/overworld/source/generated/pickups/memory_salt_reliquary_source.png",
+        "source_model": "built_in_image_gen",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "background": "transparent",
+        "assigned_resource_site_id": "site_memory_salt_pan"
+      },
+      "sha256": "bb855b47c20d7eaef44086791ff4e5d993b66ac49f7963226fc5d89ab98874aa"
+    },
+    "resource_pickup_gold": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/pickups/reef_coin_coffer.png",
+        "source_generated": "res://art/overworld/source/generated/pickups/reef_coin_coffer_source.png",
+        "source_model": "built_in_image_gen",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "background": "transparent",
+        "assigned_resource_site_id": "site_reef_coin_assay"
+      },
+      "sha256": "7acedd3dd405224554576a82015265eb83cd7fe72a6934516772ce867eea7b2c"
+    },
+    "ember_signal_post": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/landmarks/ember_signal_post.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/ember_signal_post-trimmed.png",
+        "source_model": "built_in_image_gen_original_transparent_cutout",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "assigned_resource_site_id": "site_ember_signal_post",
+        "distinct_sprite_assignment": true
+      },
+      "sha256": "f820d4c3f18d8b39b06efb0850123ae9e7a86ad14ec3fd3f5175326050bed3de"
+    },
+    "mapobj_ashcrown_cinderfold": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/ashcrown_cinderfold_unclaimed.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_ashcrown_cinderfold",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "ceramic antler arch and clinker trough",
+        "accessible_description": "A branching ceramic-antler arch shelters a clinker-stone trough between two banked kiln vents and ash-black paving."
+      },
+      "sha256": "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32"
+    },
+    "resource_site_neutral_ashcrown_cinderfold_controlled": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/ashcrown_cinderfold_controlled.png",
+        "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+        "assigned_resource_site_id": "site_ashcrown_cinderfold",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The controlled Ashcrown Cinderfold stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+      },
+      "sha256": "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32"
+    },
+    "mapobj_miremoon_crownmere": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/miremoon_crownmere_unclaimed.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_miremoon_crownmere",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "crescent peatglass pool and moon-crowned roots",
+        "accessible_description": "A crescent peat-glass pool rests between four moon-crowned root posts, blue mineral glints, moss, and reed beds."
+      },
+      "sha256": "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32"
+    },
+    "mapobj_noonshard_prism_aviary": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/noonshard_prism_aviary_unclaimed.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_noonshard_prism_aviary",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "three prism vanes and whiteglass nesting dais",
+        "accessible_description": "Three tall icebound prism vanes hold narrow perches around a raised white-glass nesting dais and gold bracework."
+      },
+      "sha256": "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32"
+    },
+    "resource_site_neutral_noonshard_prism_aviary_controlled": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/noonshard_prism_aviary_controlled.png",
+        "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+        "assigned_resource_site_id": "site_noonshard_prism_aviary",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The controlled Noonshard Prism Aviary stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+      },
+      "sha256": "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32"
+    },
+    "mapobj_rootvault_heartwood_hollow": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/rootvault_heartwood_hollow_unclaimed.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_rootvault_heartwood_hollow",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "concentric root arches and sealed heartwood door",
+        "accessible_description": "Three concentric living-root arches surround a sealed round heartwood door, amber sap knots, moss, and stone steps."
+      },
+      "sha256": "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32"
+    },
+    "resource_site_neutral_rootvault_heartwood_hollow_controlled": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          336,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/rootvault_heartwood_hollow_controlled.png",
+        "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+        "assigned_resource_site_id": "site_rootvault_heartwood_hollow",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The controlled Rootvault Heartwood Hollow stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+      },
+      "sha256": "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32"
+    },
+    "mapobj_quenchbell_pressure_den": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          384,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/quenchbell_pressure_den_unclaimed.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_quenchbell_pressure_den",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "basalt pressure den and bellhorn gate",
+        "accessible_description": "A squat basalt pressure den carries a broad brass bell-horn gate, three red gauges, vents, and coolant troughs."
+      },
+      "sha256": "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32"
+    },
+    "resource_site_neutral_quenchbell_pressure_den_controlled": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          432,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/quenchbell_pressure_den_controlled.png",
+        "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+        "assigned_resource_site_id": "site_quenchbell_pressure_den",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The controlled Quenchbell Pressure Den stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+      },
+      "sha256": "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32"
+    },
+    "mapobj_saltwake_belldeep": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          480,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/saltwake_belldeep_unclaimed.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_saltwake_belldeep",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "whalerib saltglass quay and six chimes",
+        "accessible_description": "A half-submerged pale quay lies beneath whale-rib and salt-glass arches, six bronze chimes, fog basins, and dark teal water."
+      },
+      "sha256": "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32"
+    },
+    "resource_site_neutral_saltwake_belldeep_controlled": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          528,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/saltwake_belldeep_controlled.png",
+        "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+        "assigned_resource_site_id": "site_saltwake_belldeep",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The controlled Saltwake Belldeep stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+      },
+      "sha256": "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32"
+    }
+  }
+}

@@ -146,131 +146,259 @@
     },
     "generated_tree_deciduous_0": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [0, 0, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_deciduous_0.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_deciduous_1": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [128, 0, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        128,
+        0,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_deciduous_1.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_deciduous_2": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [256, 0, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        256,
+        0,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_deciduous_2.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_deciduous_3": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [384, 0, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        384,
+        0,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_deciduous_3.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_evergreen_0": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [0, 128, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        0,
+        128,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_evergreen_0.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_evergreen_1": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [128, 128, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        128,
+        128,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_evergreen_1.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_evergreen_2": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [256, 128, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        256,
+        128,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_evergreen_2.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_evergreen_3": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [384, 128, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        384,
+        128,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_evergreen_3.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_mire_0": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [0, 256, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        0,
+        256,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_mire_0.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_mire_1": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [128, 256, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        128,
+        256,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_mire_1.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_mire_2": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [256, 256, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        256,
+        256,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_mire_2.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_mire_3": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [384, 256, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        384,
+        256,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_mire_3.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_autumn": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [0, 384, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        0,
+        384,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_autumn.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_frost": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [128, 384, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        128,
+        384,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_frost.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_badland": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [256, 384, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        256,
+        384,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_badland.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "generated_tree_ash": {
       "path": "res://art/overworld/runtime/objects/decorations/generated_blocker_tree_clusters_atlas.png",
-      "atlas_region": [384, 384, 128, 128],
-      "source_generated": "res://art/overworld/source/generated/terrain/raster_base_v2/blocker_tree_clusters_source.png",
-      "source_model": "built_in_image_gen_original_blocker_tree_cluster_atlas",
-      "source_manifest": "res://art/overworld/source/generated/terrain/raster_base_v2/manifest.json",
-      "asset_policy": "original_generated_no_copied_pixels"
+      "atlas_region": [
+        384,
+        384,
+        128,
+        128
+      ],
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/tree_atlas_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "asset_policy": "original_generated_no_copied_pixels",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/generated_tree_ash.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e24232f3954d1d9fb4c699eb0f2ec958ab33628d2ec7a0f6127d3ffbe09714ba"
     },
     "cohesive_temperate_00": {
       "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/temperate_atlas.png",
@@ -807,27 +935,45 @@
     },
     "hero_faction_embercourt": {
       "path": "res://art/overworld/runtime/heroes/factions/embercourt.png",
-      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
+      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/hero_faction_embercourt.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "990c3a3eece7f1ab92e7cee67c4b7e3ee0b61db00d2a9dc608fdb3aec8937341"
     },
     "hero_faction_mireclaw": {
       "path": "res://art/overworld/runtime/heroes/factions/mireclaw.png",
-      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
+      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/hero_faction_mireclaw.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "db4c7d2ddc2c0a9211ac9b6fb7041059594a69661060fb5030eaeaa66fe42202"
     },
     "hero_faction_sunvault": {
       "path": "res://art/overworld/runtime/heroes/factions/sunvault.png",
-      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
+      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/hero_faction_sunvault.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "31a72f7ec96471ddff2da56cecb7176e62a0a2a8c0221118e9a39adaad3bd270"
     },
     "hero_faction_thornwake": {
       "path": "res://art/overworld/runtime/heroes/factions/thornwake.png",
-      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
+      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/hero_faction_thornwake.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e64a277c15ea12fa122dade116761a4d21eecee386e1ef87127b76ed2844fd0d"
     },
     "hero_faction_brasshollow": {
       "path": "res://art/overworld/runtime/heroes/factions/brasshollow.png",
-      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
+      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/hero_faction_brasshollow.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "187d3a32db9aed203a7993fc8fa36b925c3fd63802929746b741df840920ec85"
     },
     "hero_faction_veilmourn": {
       "path": "res://art/overworld/runtime/heroes/factions/veilmourn.png",
-      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
+      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/hero_faction_veilmourn.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "00f56ec8ed0de5659954400569fcd7a04b45c87be6c64ca5d131f761dd9da32f"
     },
     "hero_signature_lyra": {
       "path": "res://art/overworld/runtime/heroes/signature/hero_lyra.png",
@@ -2060,19 +2206,27 @@
     },
     "ruined_obelisk": {
       "path": "res://art/overworld/runtime/objects/pickups/ruined_obelisk.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/pickups/ruined_obelisk-trimmed.png"
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/ruined_obelisk.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "6f51eeda52394c980465595d756bf33293f339b43e47242246ac5f9bfa6e9e0c"
     },
     "lumber_wagon": {
       "path": "res://art/overworld/runtime/objects/pickups/lumber_wagon.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/pickups/lumber_wagon-trimmed.png"
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/lumber_wagon.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "4ae3f7d63d28cd0681f1b5f52bca164e6bffaa8a7945b878f7089800ded77808"
     },
     "ore_crates": {
       "path": "res://art/overworld/runtime/objects/pickups/ore_crates.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/pickups/ore_crates-trimmed.png"
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/ore_crates.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "9bbc98301da243389e6ab975d970ea88881ca91c7fde67c9763f06610d1d6654"
     },
     "adventurers_bundle": {
       "path": "res://art/overworld/runtime/objects/pickups/adventurers_bundle.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/pickups/adventurers_bundle-trimmed.png"
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/adventurers_bundle.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "8bb88f0f4bb7423b2ffadd019336a5284a93d485a125214b4170f843cb6cc81c"
     },
     "beacon_path_scroll": {
       "path": "res://art/overworld/runtime/objects/pickups/beacon_path_scroll.png",
@@ -2901,27 +3055,39 @@
     },
     "guarded_farmhouse": {
       "path": "res://art/overworld/runtime/objects/dwellings/guarded_farmhouse.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/dwellings/guarded_farmhouse-trimmed.png"
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/guarded_farmhouse.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "f19580963515a5382385450ffff8e93afc99255c877dec96e919270e76b807ae"
     },
     "kennel": {
       "path": "res://art/overworld/runtime/objects/dwellings/kennel.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/dwellings/kennel-trimmed.png"
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/kennel.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "5db248e16b4ee5ae2a05123c7103d60f9574933a6d5a04ae05578fc4d4fa450d"
     },
     "falconers_nest": {
       "path": "res://art/overworld/runtime/objects/dwellings/falconers_nest.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/dwellings/falconers_nest-trimmed.png"
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/falconers_nest.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "ae1f77740b6aeb3c187d57d8e8fde6fba791ed93440d472e8fe72da2a064e7f1"
     },
     "alchemists_hut": {
       "path": "res://art/overworld/runtime/objects/dwellings/alchemists_hut.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/dwellings/alchemists_hut-trimmed.png"
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/alchemists_hut.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "acb4fef1e82b02dc24ff0b308edcab3c2be4d847ee1c0625834636a9f12b66f9"
     },
     "shrine": {
       "path": "res://art/overworld/runtime/objects/landmarks/shrine.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/landmarks/shrine-trimmed.png"
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/shrine.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "e95e77654a54c1b2d112c44350d638c30bab5fdccb2d6d22773760d61bf69c38"
     },
     "watchtower": {
       "path": "res://art/overworld/runtime/objects/landmarks/watchtower.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/landmarks/watchtower-trimmed.png"
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/watchtower.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "f145df512997088bec94cd20a53e32766cea78d3371e97e75003268ac0e73168"
     },
     "ember_signal_post": {
       "path": "res://art/overworld/runtime/objects/landmarks/ember_signal_post.png",
@@ -2933,11 +3099,19 @@
     },
     "sawmill": {
       "path": "res://art/overworld/runtime/objects/landmarks/sawmill.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/landmarks/sawmill-trimmed.png"
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/sawmill.png",
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/sawmill_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "c0213f8a81b0f54fbbc068eba0e91ad6bd11bc42ada7c25419cb616c9f9c078d"
     },
     "stone_quarry": {
       "path": "res://art/overworld/runtime/objects/landmarks/stone_quarry.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/landmarks/stone_quarry-trimmed.png"
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/stone_quarry.png",
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/quarry_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "ca1ab83de27d2095a09b82bbcefaf68affd8f83a07c86ae8de50e36a1559c17d"
     },
     "decor_grass_root_millstone": {
       "path": "res://art/overworld/runtime/objects/decorations/decor_grass_root_millstone.png",
@@ -12622,11 +12796,14 @@
         576,
         48
       ],
-      "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/miremoon_crownmere_controlled.png",
-      "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+      "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/crownmere_repair_source.png",
+      "source_model": "built_in_image_gen_precise_legacy_family_repair",
       "assigned_resource_site_id": "site_miremoon_crownmere",
       "presentation_role": "controlled_muster_state",
-      "accessible_description": "The controlled Miremoon Crownmere stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+      "accessible_description": "The controlled Miremoon Crownmere stands open, supplied, lit, and marked for weekly sovereign-wild recruitment.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/resource_site_neutral_miremoon_crownmere_controlled.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+      "runtime_sha256": "78a86f619bd3897adb56cb98ace0893473ff517150d1eda953899f4c784a102b"
     },
     "encounter_sovereign_wild_miremoon_crownmere_watch": {
       "path": "res://art/units/overworld_icons/unit_neutral_miremoon_crownmaws.png",
