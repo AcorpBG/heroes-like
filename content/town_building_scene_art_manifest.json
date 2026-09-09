@@ -20,7 +20,7 @@
   "processing": "Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.",
   "rights": "Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.",
   "catalog_icons": "Unchanged; these exact-faction scene layers are not shared catalog replacements.",
-  "migration_scope": "All non-embedded building identities in Veilmourn (27), Embercourt (30), Mireclaw (31) and Sunvault (29) have accepted exact scene layers. The Thornwake whole-faction batch adds 29 distinct original paintings across five towns, with combined visual/input/save/platform evidence recorded in the art-repair report. Preserve all 117 earlier rows, original villages, embedded Town Halls and separate catalog icons. Brasshollow's 27 mappings and broader visual acceptance remain unfinished. Exact provenance is per row; acceptance, fixture-versus-earned controls and platform limits are recorded in docs/generated-full-match-art-repair-report.md.",
+  "migration_scope": "All 173 non-embedded faction/building identities across 32 authored towns resolve to exact original scene layers: Veilmourn 27, Embercourt 30, Mireclaw 31, Sunvault 29, Thornwake 29 and Brasshollow 27. Preserve original villages, embedded Town Halls and separate catalog icons. Brasshollow adds foundry-matched paintings; the only prior-row edits correct Thornwake prompt hashes after EOF-only formatting, with every earlier raster unchanged. Asset registration is not visual or gameplay acceptance. Combined composition/input/save/platform evidence, fixture-versus-earned controls and outstanding full-goal limits are recorded separately in docs/generated-full-match-art-repair-report.md.",
   "missing_declared_layer_policy": "validation_failure_no_catalog_or_procedural_fallback",
   "factions": {
     "faction_veilmourn": {
@@ -5512,7 +5512,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The seed repository joins the left mid-ground terrace behind the market and beside the original glass nursery.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_seed_vault.prompt.txt",
-        "prompt_sha256": "d4a624e5cf735dd922e7bfcd889736005e100cabdaf45638f434cab935e4e731",
+        "prompt_sha256": "6403691fe7206246a4272243571b18aa907b1620e21c4be95427998fa576cac8",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -5559,7 +5559,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The caravan inn meets the right woodland bank beside the waterfall approach, clear of the central hall.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_wayfarers_hall.prompt.txt",
-        "prompt_sha256": "444dcd87b0280cf767352714a016203761814c09fd2ee0d7fbd9cb61528254a4",
+        "prompt_sha256": "90e986798a88c3fb28ad16260ecee74895185497b257a2c694de4aa9b1614cf5",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -5606,7 +5606,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The low market extends the left terrace toward the main path; its roof stays below the seed repository.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_market_square.prompt.txt",
-        "prompt_sha256": "cf4ce3ea29280428179461b6d001b32f961bbf954a645ed924574bec47ba38ec",
+        "prompt_sha256": "9a78c6e1d68a1876912df3c979f3e5caa5c6c8e61c69ea1c5ca174c96ac207d1",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -5653,7 +5653,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The slender route posts mark the left edge of the foreground arrival path rather than closing its center.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_rootroad_markers.prompt.txt",
-        "prompt_sha256": "65247b7424d289707e35820537fe2a0a0b75eb7c6f83b81c80942b095a1a35bf",
+        "prompt_sha256": "0686704af5ec9f95525f001149f5ba6d18fdba1eb06149c40094dc7c7feb89ee",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -5700,7 +5700,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The contract house joins the far-right bank above the older village dwelling and beside the road toll.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_loam_ledger.prompt.txt",
-        "prompt_sha256": "9f9748adf528a17cd41ac00bde8993d688357cff46801cd5f9eae8ebde31a668",
+        "prompt_sha256": "42be9af853e56e37d59316dba7bf0f331b99676ee55e5b81ad016659466ecb73",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -5747,7 +5747,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The pollen pavilion meets the far-right wooded terrace below the command icons and above the tollhouse.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_pollen_litany.prompt.txt",
-        "prompt_sha256": "ed5c169f9c6d42e1a560deb2b774ccb6d452a56ca5b4e4d9d1338e788892c9e0",
+        "prompt_sha256": "2e480a4cd4990762a916c82a6cb36c0d7a83682779f8291309fe2eb4d3b07abb",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -5794,7 +5794,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The coppice fortification follows the left approach behind the foreground workshops and preserves an exposed watch roof.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_bramblewall_coppice.prompt.txt",
-        "prompt_sha256": "969d4131cdc8e9d2ccc00f8edb5095092dd929fc59268920cba7246f691b0e12",
+        "prompt_sha256": "d5360d3b4dd5830fc11d303ccfd34c2fd1ebcfa8efd9b1ca6780e1c475b7e023",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -5841,7 +5841,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The old council joins the bank immediately left of the main trunk, keeping the hall doorway clear.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_old_grove_accord.prompt.txt",
-        "prompt_sha256": "a84ac78fd18fc145f6cea56effba360475bcc4013876167e206f27bdb0d75c7b",
+        "prompt_sha256": "c094ef458f442e203e59fbad6ea15304714339549596a07eca4f189d83f3321f",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -5888,7 +5888,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The tithe barn meets the left foreground path with its receiving porch exposed below the market.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_rootweave_tithe.prompt.txt",
-        "prompt_sha256": "3a02e0a1b4b25b17e04bca7df0332381060bba9838ea681bfec147f0536c6835",
+        "prompt_sha256": "7aef6bb46e459873523445b10cc3a901132166b925071b2272e8156fa8764e70",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -5935,7 +5935,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The escort lodge occupies the inner-right terrace below the grafting hall and behind the seed council.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_bramble_marshal_moot.prompt.txt",
-        "prompt_sha256": "be583fda878bfdc704dc5bfd1fa02fe9c4bff5f38d6c64d7bb461981d4e7b8be",
+        "prompt_sha256": "3e829cfdbc9a16fc9eb5162f33cda982cb07f22c28901c2fd9d62236a50b416b",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -5982,7 +5982,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The advanced study lodge attaches to the rear-right bank behind the caravan inn, its upper chamber exposed.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_spore_oath_chantry.prompt.txt",
-        "prompt_sha256": "4d5e17f585d5300793b1295929fa4673ded4e88c1604857ddf6e05b63def0ec6",
+        "prompt_sha256": "36257f517f1aa6605b9dc3bcf6806c21f1970f904ebeb9112a659a1a4506a9a9",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6029,7 +6029,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The defensive nursery joins the right terrace below the ledger and behind the foreground provisions store.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_thornwarden_husk_yard.prompt.txt",
-        "prompt_sha256": "fc77cfe695c47e6a3d856d42342950301603017f60c0c393091879faf384ba38",
+        "prompt_sha256": "8bfd2392b6e2a1ad73694d87d2aabc529f270681177db303caeb587e50e7f2ef",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6076,7 +6076,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The living gate stands on the left wooded bank behind the coppice, with its whole open arch clear of the central hall.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_worldroot_gate.prompt.txt",
-        "prompt_sha256": "df4e45d738250481742b29748e0a6d4dd7d89a9f1dc9b63948ce761dd9fe829d",
+        "prompt_sha256": "42107a21d9ef92c007595a3d2b2a503a006a1b5dc798cf07361e63c587332909",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6123,7 +6123,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The mature covenant gate replaces Worldroot Gate at exactly the same left-bank site and ground anchor.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_verdant_concord_seat.prompt.txt",
-        "prompt_sha256": "33daf6c646e39ce11670eb108a317b38f1fe8bc7612c4e4587433be58e91872e",
+        "prompt_sha256": "a01c015ef3f43e49a7bdcf1f02830d61a208f6227cbb6d5c338a661c6c73ab60",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6170,7 +6170,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The sentry cairn is rooted against the heavy inner-left tree bank behind the gate, not suspended in the open rear clearing.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_root_cairn_watch.prompt.txt",
-        "prompt_sha256": "299ac012cc77d04279f8b96018f525411cb1155c757056823719cc58c9d8065f",
+        "prompt_sha256": "e9cff24b956c39987f8b5e0106d40fdf590f833e368e3344a6374ae509771e9b",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6217,7 +6217,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The resin workshop extends the foreground-left coppice bank, keeping its work roof visible beside the siege run.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_sap_chandler_grove.prompt.txt",
-        "prompt_sha256": "55322377e31101c79909ab175b922208ff36e3ac06a7a64e0efee8a3e2286e5d",
+        "prompt_sha256": "047a96ae016d15d1c34a293616799fd5edad1816f5663c4e7b62418c910220e8",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6264,7 +6264,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The bastion-seed council joins the right foreground bank; the central arrival path stays open.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_bastion_seed_conclave.prompt.txt",
-        "prompt_sha256": "e33703e5dde0351f2dc7c09b51903e28a73a1239769ca76ef49b013204008b76",
+        "prompt_sha256": "d8e191eedb445527aa04490203bfdc37b1f9d538f31f62165667020b68f90fb8",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6311,7 +6311,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The provisions store meets the right foreground root bank below the husk yard, leaving the center approach clear.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_mycorrhizal_store.prompt.txt",
-        "prompt_sha256": "45d2c0d5da7fabb4598b97e9a014d425fa18761aa7c99605c6b29b6068d7435d",
+        "prompt_sha256": "41eb5e0a93cfa24ec452b7f49ecfb4a5f9d2aeee38df7c474ae8e9b2f482261e",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6358,7 +6358,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The tribunal joins the existing right terrace below the hall, keeping the actual hall doorway and its central stair clear.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_rootlaw_moot.prompt.txt",
-        "prompt_sha256": "ee0b7323ef8f9cecf6395c86f52fd751ed02122d22345c45ba0497f4c33480da",
+        "prompt_sha256": "ca34692f5e9a5debefb34e2d4ca28629b670287a2da7515f866727b80d7f0222",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6405,7 +6405,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The toll occupies the far-right approach behind the ledger and does not close the painted central forecourt.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_bramble_toll.prompt.txt",
-        "prompt_sha256": "eb37e9558d83bcb0aecc52dfbb3410b0bafe985345fab87a1e562c0a2d80893d",
+        "prompt_sha256": "a4f51c567bdf0c3e697e15b6b4c6c0af2079d6e77b1067d175b4eea0a9abf446",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6452,7 +6452,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The new conservatory extends the established left glass-nursery bank with its smaller domes exposed behind the coppice.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_sporeglass_hothouse.prompt.txt",
-        "prompt_sha256": "f6c53e91c59c463adbf9188e9c7046a3830e21d93150e2e2af968987875b0952",
+        "prompt_sha256": "7eb42591051095a5d763de502730992361b2ebed2df71da2d9d1aa92eb5cc531",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6499,7 +6499,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The training run faces the left foreground road below the market and beside the chandler workshop.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_barkmantle_run.prompt.txt",
-        "prompt_sha256": "71555e89a7d7c2bf35b58537b5232e5069544e9a777c512195065ca392fe6ab5",
+        "prompt_sha256": "2e92365c5af2aca24a3bfad8029bdf7ec039b4da025df0f0fff18632c72c5035",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6546,7 +6546,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The orchard nursery extends the left main-trunk terrace behind the market, with trained branches rather than a detached grove icon.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_pilgrim_orchard.prompt.txt",
-        "prompt_sha256": "342c239b6bb8717eb793dc90fb52a4de5c54a05dcd64a73069f080930c525b74",
+        "prompt_sha256": "c8bde98a945888b285814421c3672ffab3f41cec937444c5bb88abac8b7e3dcb",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6593,7 +6593,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The grafting hall joins the inner-right terrace below the caravan inn and above the road markers.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_graftworks.prompt.txt",
-        "prompt_sha256": "739173fb9496cac5a5416085c32def226c2b983698df68686e5e63e7e8c81fad",
+        "prompt_sha256": "b1db643ad11499f30e7613b24636f81cd986c5072b82acd2b8b3197756d3a043",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6640,7 +6640,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The canopy nursery grows from the extreme left foreground bank below the coppice; its frame stays above navigation.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_canopy_breach_grove.prompt.txt",
-        "prompt_sha256": "b303cd75205301a2e3425c127872b9199ecdd46cd11b16bc638079b8fabf209e",
+        "prompt_sha256": "c24979cf4af2216a4c71a372803fd30e6552a56d065e4805681f5a68a431097b",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6687,7 +6687,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The chime pavilion joins the inner-left raised root bank, away from the command overlay and behind the seed repository.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_seedglass_cantory.prompt.txt",
-        "prompt_sha256": "7d5d1faf634d0ca42add08be0cbcb579a13f5cd9c6d4849f1f83bd3d37bfa91b",
+        "prompt_sha256": "64886631126b738025b31fc24ef51a5304808c0bbc0fa67596e9eb5f85afc8b8",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6734,7 +6734,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "Crownroot's council is grounded on the original inner forecourt root terrace below the main hall; the hall roof and stair remain clear. The site cannot coexist with Woundroot's Hollow.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_crownroot_heartseed_parliament.prompt.txt",
-        "prompt_sha256": "1221a7be728318659c94c5ecdeab7a9ccaff0e74862c2aadb048a0bd2e9c657e",
+        "prompt_sha256": "0e0fc5131e81bbd60833bd4a77a793ad9cf4b4d55f22cbb955f53287b05118aa",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6781,7 +6781,7 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "Woundroot's monumental nursery meets the original inner forecourt root terrace below the main hall instead of hovering on its roof. It cannot coexist with Crownroot's Parliament.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_woundroot_rootmaul_hollow.prompt.txt",
-        "prompt_sha256": "8b23cbd156dfc493d734c2b5061de4948fd1dc43c993bf0e019d68fe2b6773aa",
+        "prompt_sha256": "12901383a9e34708e5785cecbcadc5d655f21df2b4d9509949b6b328535c06b5",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
@@ -6828,11 +6828,1282 @@
         "hit_alpha_threshold": 0.25,
         "grounding": "The local nursery joins the near forecourt root terrace below the Hollow, keeping its complete footing above navigation.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_woundroot_hearthseed_nursery.prompt.txt",
-        "prompt_sha256": "4d4061157031c052171e2254335c2fbba7877bf6e45f434aed2ef6bb5babc8df",
+        "prompt_sha256": "8e03d8e0c65c0c04067f811632e75d419d88d9dd97263b61cb215a0f12c790b9",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
         "reference_inputs": [],
         "generation_date": "2026-09-09",
         "generation_output": "exec-6927d2b1-278d-4526-96a9-8343d9fe2453.png"
+      }
+    },
+    "faction_brasshollow": {
+      "building_brasshollow_ore_tithe_office": {
+        "asset_id": "faction_brasshollow_building_brasshollow_ore_tithe_office",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_ore_tithe_office.png",
+        "source_sha256": "329613d3a6149b8e2577673abae73352eb2c52dcaeb528b050347c5d20d41e52",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_ore_tithe_office.png",
+        "trimmed_sha256": "c814065b7167c2c900ce2f0ca554947b1dfc582fe70cbf3c3d66fac7d0e905cb",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_ore_tithe_office.png",
+        "runtime_sha256": "5c6f19dd397ce3a63912083dd4ffc27167e95980828a3bce0438873726066f4b",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.3375,
+          0.3888888888888889,
+          0.140625,
+          0.16666666666666666
+        ],
+        "ground_anchor": [
+          0.4078125,
+          0.5455555555555556
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Left middle quarry ledge, immediately beyond the permanent hall approach.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_ore_tithe_office.prompt.txt",
+        "prompt_sha256": "81102427da3115c40f9dc46b6a89ee0564b4f045f7f334fa5d19ba4d861085ff",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-00948a18-caa0-4d63-a0d0-1494fe1ed2e7.png"
+      },
+      "building_wayfarers_hall": {
+        "asset_id": "faction_brasshollow_building_wayfarers_hall",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_wayfarers_hall.png",
+        "source_sha256": "4d27b48cc6e143e7ec1d9702796378d524c3ee0e8fde40d540b29065a8e5fa4d",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_wayfarers_hall.png",
+        "trimmed_sha256": "0965e0d0f2bc61a9dd33ae5a7859663c1eb01e8970c08fd11f59b3e7bd00454f",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_wayfarers_hall.png",
+        "runtime_sha256": "9142eb9e41bb788e46d0ba5f4b711337083b2668037e26e7779d6888957ab935",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.71875,
+          0.3277777777777778,
+          0.140625,
+          0.16666666666666666
+        ],
+        "ground_anchor": [
+          0.7890625,
+          0.48444444444444446
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Right workers' terrace below the command icons and above the production bays.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_wayfarers_hall.prompt.txt",
+        "prompt_sha256": "445bc6e870828441c061f15afe50bc68c87207ba5e547db655aa5429eb97e692",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-38f24784-c4b5-4273-9a5b-1fbbbb170d72.png"
+      },
+      "building_market_square": {
+        "asset_id": "faction_brasshollow_building_market_square",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_market_square.png",
+        "source_sha256": "f895297d0792d8da3e1140b78749a36308ecc5094bbca64499e969361da77c8e",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          14,
+          0,
+          1525,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_market_square.png",
+        "trimmed_sha256": "2fc764bf13accff95fca88b41c80ccff56707006220c7113a1223a0d3c9dc94d",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_market_square.png",
+        "runtime_sha256": "6910caebf8724dc0e0429c64f1466898ae72d3d0bd41fc9a0271cb226bbb4ea9",
+        "runtime_size": [
+          512,
+          347
+        ],
+        "normalized_rect": [
+          0.55770263671875,
+          0.5333333333333333,
+          0.156781005859375,
+          0.18888888888888888
+        ],
+        "ground_anchor": [
+          0.6359375,
+          0.7108888888888888
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Middle-right trade terrace, leaving the main rail crossing open.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_market_square.prompt.txt",
+        "prompt_sha256": "3f9dc29092e1059cbe1f0eb70edb59988280f827d9d3c767c6ba97142c33a977",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-07785742-0ec3-49cc-b925-6760d7982438.png"
+      },
+      "building_brasshollow_scalehouse": {
+        "asset_id": "faction_brasshollow_building_brasshollow_scalehouse",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_scalehouse.png",
+        "source_sha256": "d41d83a3a87fbaca803058dec68e3a315224747bf1fd5d4fece47bd8cbc821da",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_scalehouse.png",
+        "trimmed_sha256": "71a2c122368c49e6563bee83b614bb526a393cd50302a670f149139bcc44809f",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_scalehouse.png",
+        "runtime_sha256": "e30da44e5435161b65f9d21b5b512b12284da4a0482da58d97f268e6347b5b11",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.471875,
+          0.36666666666666664,
+          0.1125,
+          0.13333333333333333
+        ],
+        "ground_anchor": [
+          0.528125,
+          0.492
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Small counting terrace behind the central railway approach.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_scalehouse.prompt.txt",
+        "prompt_sha256": "911ac23a38d9221041d1d4fe4269fa71d721feca068ceec38ae1a6bbd292c6a4",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-d648c012-753d-4df8-ae70-f89264b716d5.png"
+      },
+      "building_brasshollow_clause_court": {
+        "asset_id": "faction_brasshollow_building_brasshollow_clause_court",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_clause_court.png",
+        "source_sha256": "a7a895fbdad83032ecc901cbfa5ce81f51a8a543a9b1c8abc34bdfe0e49e9805",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          998
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_clause_court.png",
+        "trimmed_sha256": "f89b758fa0233a5ad97096f63e345f327c49a30ff06dec061b73f0cb2646bce4",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_clause_court.png",
+        "runtime_sha256": "5f7196986068d7306936ad90031743583eac17bac5e4581d00296a7ed785a4eb",
+        "runtime_size": [
+          512,
+          333
+        ],
+        "normalized_rect": [
+          0.5875,
+          0.37222222222222223,
+          0.140625,
+          0.16243489583333334
+        ],
+        "ground_anchor": [
+          0.6578125,
+          0.5288888888888889
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Central civic ledge beneath the high charter district.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_clause_court.prompt.txt",
+        "prompt_sha256": "4fd046c4f144bae5af55d64f5d84098be236e2d0ad1abb3a1114bd50be5c9df8",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-bb9195f4-f505-4acc-b892-fc2e07859465.png"
+      },
+      "building_brasshollow_heatwright_vestry": {
+        "asset_id": "faction_brasshollow_building_brasshollow_heatwright_vestry",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_heatwright_vestry.png",
+        "source_sha256": "c89d51df56b24e92d69c5cd45b915d1cd581d3e48eee278047d351fbc2edfa3b",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1522,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_heatwright_vestry.png",
+        "trimmed_sha256": "68da115f664f412c08e01c3fa24cb12c878c84b51c75b27e780c8e3d9c693f97",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_heatwright_vestry.png",
+        "runtime_sha256": "1d87bd7c58f781302754157f7dc3adc7d1258134ec409968db4787a4dad06919",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.53125,
+          0.2722222222222222,
+          0.111474609375,
+          0.13333333333333333
+        ],
+        "ground_anchor": [
+          0.5875,
+          0.39755555555555555
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Rear furnace ledge among the upper works.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_heatwright_vestry.prompt.txt",
+        "prompt_sha256": "99af718d6b9d5c060ef83a9f1763c4dd443307286a820e899ac15bd119f37397",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-3009e59a-6440-494c-87d0-075bb7bc5b4b.png"
+      },
+      "building_brasshollow_gauge_arsenal": {
+        "asset_id": "faction_brasshollow_building_brasshollow_gauge_arsenal",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_gauge_arsenal.png",
+        "source_sha256": "8f140e4a27058028da38416253d96443af36df928441dbd65835ff99926ad0f2",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1518,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_gauge_arsenal.png",
+        "trimmed_sha256": "ee546e2a2e1739ecf30c72f78894cdd2cc42a979c2a7a5eeeb9f4ef38487f9d9",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_gauge_arsenal.png",
+        "runtime_sha256": "6f77ad6c89946c6df4c90b4ed5db748b947eb94be70abdb05e10a0f9c51eca89",
+        "runtime_size": [
+          512,
+          345
+        ],
+        "normalized_rect": [
+          0.5,
+          0.4888888888888889,
+          0.1297119140625,
+          0.15555555555555556
+        ],
+        "ground_anchor": [
+          0.565625,
+          0.6351111111111112
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Right-hand middle quarry terrace beyond the open central chasm.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_gauge_arsenal.prompt.txt",
+        "prompt_sha256": "de9ff834c61de2208017324d3a8eec4ba7b6b5516a7a5519d4a7d9144454dd8c",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-dc1e042a-706e-4b85-b850-8c612120af50.png"
+      },
+      "building_brasshollow_debtworks_vault": {
+        "asset_id": "faction_brasshollow_building_brasshollow_debtworks_vault",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_debtworks_vault.png",
+        "source_sha256": "edc546d2ec5d8e4728cea7609bdbac08ec0c4e63e49364340cda5ca5ac159642",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          15,
+          1535,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_debtworks_vault.png",
+        "trimmed_sha256": "8b7acd88d7ad53b795163967409d4ff7bccd3403ff56c78656301066a7f23a71",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_debtworks_vault.png",
+        "runtime_sha256": "3bc120e229e7890789c8400668d24522467f8de58748f98ce09f0b3f45590898",
+        "runtime_size": [
+          512,
+          337
+        ],
+        "normalized_rect": [
+          0.709375,
+          0.4802191840277778,
+          0.140533447265625,
+          0.16422526041666666
+        ],
+        "ground_anchor": [
+          0.7796875,
+          0.6344444444444445
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Right-hand treasury ledge above the repair yard.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_debtworks_vault.prompt.txt",
+        "prompt_sha256": "6ee2e62558fa991d0225a2ab003e91746fb80a549d9a6f7084bc42bd28362d57",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-019bb311-7d9f-4248-904b-b2086e5ed119.png"
+      },
+      "building_brasshollow_ledger_mint": {
+        "asset_id": "faction_brasshollow_building_brasshollow_ledger_mint",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_ledger_mint.png",
+        "source_sha256": "9a4a2e2ab04a7313ab70141f060444a4da08d12f87a745ad67537eb4fcd245e7",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_ledger_mint.png",
+        "trimmed_sha256": "ff390311875de65ff64525b0a243a915266657c0584297e7ed4ea6f297af7fd4",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_ledger_mint.png",
+        "runtime_sha256": "bbee3742aeee0b0796a66d50a73de8de284cb44e30398c8db2e603b2ec8bfe9c",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.353125,
+          0.3,
+          0.1125,
+          0.13333333333333333
+        ],
+        "ground_anchor": [
+          0.409375,
+          0.42533333333333334
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Rear-left narrow ledge above the ore office.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_ledger_mint.prompt.txt",
+        "prompt_sha256": "9291e84b8f090418a3c6e38742319d3ad751bc949fd815650e8d3c3f3e7a79ed",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-583bc4fa-fc94-49e6-b6e0-3680c4164773.png"
+      },
+      "building_brasshollow_foreman_clausehouse": {
+        "asset_id": "faction_brasshollow_building_brasshollow_foreman_clausehouse",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_foreman_clausehouse.png",
+        "source_sha256": "f02922538435f0238a40abfe237aba40100de2980643f41e00a49934e63e47da",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1504,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_foreman_clausehouse.png",
+        "trimmed_sha256": "a54b42009335ce8a5f9ab8099ff743f30eba226209294f53a4e619b0205f7d1a",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_foreman_clausehouse.png",
+        "runtime_sha256": "baf0bff94f5ed85f705b04937cca9f271ddd9323879da91762af9e4d7aff3812",
+        "runtime_size": [
+          512,
+          349
+        ],
+        "normalized_rect": [
+          0.459375,
+          0.3,
+          0.11015625,
+          0.13333333333333333
+        ],
+        "ground_anchor": [
+          0.515625,
+          0.42533333333333334
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Upper shift-office ledge beside the mine works.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_foreman_clausehouse.prompt.txt",
+        "prompt_sha256": "97b88fd57ecef1ffec9c99be1e65ce95b08a94981b2f84bedca59ff72d977bca",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-759c5809-070a-47fa-a5bc-3234db871ba8.png"
+      },
+      "building_brasshollow_caliper_sanctum": {
+        "asset_id": "faction_brasshollow_building_brasshollow_caliper_sanctum",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_caliper_sanctum.png",
+        "source_sha256": "3950866c802b639357b34e1a21150aa136db36a5c5e3d1671db8510898743b1c",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          15,
+          0,
+          1526,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_caliper_sanctum.png",
+        "trimmed_sha256": "c9517ecb753e3a712eecfb30a5bee6657cec73e57cadefac9914962d6de6fcb4",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_caliper_sanctum.png",
+        "runtime_sha256": "94894ca3c66a5fa6eb60f84ba8d589ed688d91b9821ff3e606fb133500b37efd",
+        "runtime_size": [
+          512,
+          347
+        ],
+        "normalized_rect": [
+          0.491815185546875,
+          0.2388888888888889,
+          0.119891357421875,
+          0.14444444444444443
+        ],
+        "ground_anchor": [
+          0.5515625,
+          0.37466666666666665
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Rear calibration ledge left of the charter complex, clear of the command panel.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_caliper_sanctum.prompt.txt",
+        "prompt_sha256": "59bd1fc8c95d0f07f57bf4ed76a584b5660a522d926014f89b9bc0aa0163ceba",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-b36fec83-59cc-449f-bc08-ba0f4eca8c9b.png"
+      },
+      "building_brasshollow_redline_assembly_yard": {
+        "asset_id": "faction_brasshollow_building_brasshollow_redline_assembly_yard",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_redline_assembly_yard.png",
+        "source_sha256": "627df1bc24c9cb97c4d9b44af23976654c43e73deabbb726f8411147489eb8d5",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_redline_assembly_yard.png",
+        "trimmed_sha256": "874f1d3af842dfaa361d71a6be9e81452a4a4e74936a39fd085eb0e75446a6d4",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_redline_assembly_yard.png",
+        "runtime_sha256": "405f0d68d84b034a715ed71d26e3d6fd5980fe9d9d2a6877a42ecff3df70e6ad",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.4375,
+          0.6,
+          0.159375,
+          0.18888888888888888
+        ],
+        "ground_anchor": [
+          0.5171875,
+          0.7775555555555556
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Near workshop shelf beside the lower rail approach.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_redline_assembly_yard.prompt.txt",
+        "prompt_sha256": "be29fb68ef0305762519ed85941c4f036842989a7e9d4affedf3b3a7ab4ce81e",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-447fe329-19c5-41f5-926a-03328d99fbbd.png"
+      },
+      "building_brasshollow_brassbound_directorate": {
+        "asset_id": "faction_brasshollow_building_brasshollow_brassbound_directorate",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_brassbound_directorate.png",
+        "source_sha256": "4b82080ab3f8721e0dfbd56c979116f9a45b41c9e34b910cc8821fc81ab70c36",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          992
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_brassbound_directorate.png",
+        "trimmed_sha256": "10e8c8f87354727c1400583cbdd3c0f3036285597d6e72c10759b69220c2ecb8",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_brassbound_directorate.png",
+        "runtime_sha256": "25669609ebc5d243befa2ff54a64c17ba0111ef91ec3733c48db9c2fec0750ec",
+        "runtime_size": [
+          512,
+          331
+        ],
+        "normalized_rect": [
+          0.578125,
+          0.15555555555555556,
+          0.20625,
+          0.23680555555555555
+        ],
+        "ground_anchor": [
+          0.68125,
+          0.3853333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Same high civic terrace as Titan Charter Hall; advanced authored replacement.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_brassbound_directorate.prompt.txt",
+        "prompt_sha256": "0c765787f1dbeed2d6e9b21187bd4b73f74656fd46153ff3c87633f0807a197e",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-d3bfde1e-5eba-4df9-91c9-181b2d41b7e9.png"
+      },
+      "building_brasshollow_quenchwright_bay": {
+        "asset_id": "faction_brasshollow_building_brasshollow_quenchwright_bay",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_quenchwright_bay.png",
+        "source_sha256": "affe7b3c316f13cc4771097644f4ec313114a6e332a4378bec2ae31b8a7cb345",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_quenchwright_bay.png",
+        "trimmed_sha256": "d31980988327a4eb5abe9ca2b6229a7e294c2a81d62149c3633a66c9edee6aa0",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_quenchwright_bay.png",
+        "runtime_sha256": "462c32af3d4e916d1ce7d7a728dd1f7dbf3add25d3902964b3f0e4a85daa12c9",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.7125,
+          0.5611111111111111,
+          0.13125,
+          0.15555555555555556
+        ],
+        "ground_anchor": [
+          0.778125,
+          0.7073333333333334
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Right middle repair terrace, clear of the original large crane.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_quenchwright_bay.prompt.txt",
+        "prompt_sha256": "2982052da0b7553b52999744fa66f2c13aca5b7e0f006a09d53c97473b7136a5",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-ea948211-84a0-4e14-a8c7-47d6ef192cd4.png"
+      },
+      "building_brasshollow_rail_tax_office": {
+        "asset_id": "faction_brasshollow_building_brasshollow_rail_tax_office",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_rail_tax_office.png",
+        "source_sha256": "ac9bb4ad673de757e9fc5b5ba2630a49ebfafe84f9350d9ec8a92e794b8670be",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1527,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_rail_tax_office.png",
+        "trimmed_sha256": "7f98fd54e44cad3fc025ba094d1e4fe941968308b550949786c11d4ece0876ec",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_rail_tax_office.png",
+        "runtime_sha256": "2f4b4846a68913440323b4fd18d2a8413dabf20f5b15a0e087b4da3609c37c12",
+        "runtime_size": [
+          512,
+          343
+        ],
+        "normalized_rect": [
+          0.4875,
+          0.43333333333333335,
+          0.102520751953125,
+          0.12222222222222222
+        ],
+        "ground_anchor": [
+          0.5390625,
+          0.5482222222222222
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Middle rail-inspection ledge at the civic approach.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_rail_tax_office.prompt.txt",
+        "prompt_sha256": "5efbbc24746fb65f7fd7881eca6ce1223de153caddee95f2f13be9ef05dde72b",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-8ff04f43-433a-435b-a909-8b07858b9f18.png"
+      },
+      "building_brasshollow_warrant_engine_house": {
+        "asset_id": "faction_brasshollow_building_brasshollow_warrant_engine_house",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_warrant_engine_house.png",
+        "source_sha256": "55bbec5a78d1d750a0e5823c8733d5068e51283f28364896ede212529e4ab126",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1525,
+          997
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_warrant_engine_house.png",
+        "trimmed_sha256": "106d75a03eeba95be602fa8184eb29dd38b8b83fe7fe23dcfa28fc4f5e26ae7b",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_warrant_engine_house.png",
+        "runtime_sha256": "3b568c04199789cb47afaf109fb1448babc8d11f8f18600c1ee723d52e0f506d",
+        "runtime_size": [
+          512,
+          335
+        ],
+        "normalized_rect": [
+          0.60625,
+          0.45,
+          0.13031005859375,
+          0.15145399305555557
+        ],
+        "ground_anchor": [
+          0.671875,
+          0.5962222222222222
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Central machinery terrace below the charter hall.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_warrant_engine_house.prompt.txt",
+        "prompt_sha256": "bbaea957b70ebc673623f32ad10e8ea6a0282d46a31c936d9256907c2ac1fcc2",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-a98a1919-d109-4651-8a28-09c5953148ab.png"
+      },
+      "building_brasshollow_rivet_kennels": {
+        "asset_id": "faction_brasshollow_building_brasshollow_rivet_kennels",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_rivet_kennels.png",
+        "source_sha256": "01fd5087372f381d1b11933a38601f2ce58cf27527d9252854f66cff38aee064",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          30,
+          1,
+          1523,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_rivet_kennels.png",
+        "trimmed_sha256": "24172f6085e7cdab8cfb3b0728f70ce3cbd09c6a21146c3009c4cc9806aa1e0b",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_rivet_kennels.png",
+        "runtime_sha256": "5a4cf53ba5c12b5e20eee292611c1ffcfb470594e4c5b81bec362adfd4187e0f",
+        "runtime_size": [
+          512,
+          351
+        ],
+        "normalized_rect": [
+          0.77774658203125,
+          0.37794053819444445,
+          0.136688232421875,
+          0.16650390625
+        ],
+        "ground_anchor": [
+          0.8453125,
+          0.5344444444444445
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Right production shelf beneath the worker quarters.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_rivet_kennels.prompt.txt",
+        "prompt_sha256": "f8d40c8eb407fd09383384a61b526792764054ecafa80f22eb713d5a6d50596b",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-d6c88328-46c3-4bcf-a1cb-06a3f6133543.png"
+      },
+      "building_brasshollow_pavis_foundry": {
+        "asset_id": "faction_brasshollow_building_brasshollow_pavis_foundry",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_pavis_foundry.png",
+        "source_sha256": "461b6c0ca4937e134ec7821d30d91d0b9f65c7e92e4d2009c6c58990fe574a0b",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1524,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_pavis_foundry.png",
+        "trimmed_sha256": "e10a03d9d67550b2d9d360d7516cdabb5a6e83d494ce29cbe414303c349b2709",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_pavis_foundry.png",
+        "runtime_sha256": "e7a53706ae1156c17bdefde68614ae294231f48604411251f0e26d4f61f3e37e",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.80625,
+          0.5,
+          0.148828125,
+          0.17777777777777778
+        ],
+        "ground_anchor": [
+          0.88125,
+          0.6671111111111111
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Right lower foundry shelf, grounded beside the slag-channel approach.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_pavis_foundry.prompt.txt",
+        "prompt_sha256": "894c9e466c684b0cf519d5740892c2496406000627d08b381d1409aaa57c67a6",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-bc3b1e6b-df52-4a45-b89e-aabf5400e20b.png"
+      },
+      "building_brasshollow_boiler_cathedral": {
+        "asset_id": "faction_brasshollow_building_brasshollow_boiler_cathedral",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_boiler_cathedral.png",
+        "source_sha256": "706e1d938913140c938bdc128d830e622aab3d40fbe4554f7e0f529e65adfe38",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_boiler_cathedral.png",
+        "trimmed_sha256": "20dc6463e138d6fcf6d69a70eff323737f96279abf6959a12e0c14845d2b3b0d",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_boiler_cathedral.png",
+        "runtime_sha256": "b96ad7a2a59a07d5629541320c256a363765f05090b1c8e421ed663f0acae246",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.4125,
+          0.3,
+          0.16875,
+          0.2
+        ],
+        "ground_anchor": [
+          0.496875,
+          0.488
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Middle-distance furnace terrace behind the arsenal.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_boiler_cathedral.prompt.txt",
+        "prompt_sha256": "7b4f33f9dadc5f7ea9b29add780049778f282d0d060195c8622d30d411952728",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-0ffb6f72-6758-4418-acdd-d499671b2911.png"
+      },
+      "building_brasshollow_pressure_rail": {
+        "asset_id": "faction_brasshollow_building_brasshollow_pressure_rail",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_pressure_rail.png",
+        "source_sha256": "1c93ef829ac2a8017b04c3755d955397d5d4995944165dad285510f679136a77",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1535,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_pressure_rail.png",
+        "trimmed_sha256": "dad8db3b0ae39017af5b12a015bbb6d0d78fb6483c7c369cb97104a4d6244ae8",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_pressure_rail.png",
+        "runtime_sha256": "7bc2ff67bb3b6285182fa417a2bf5f499aeac29c7e057713092207a0fd00856f",
+        "runtime_size": [
+          512,
+          342
+        ],
+        "normalized_rect": [
+          0.540625,
+          0.6944444444444444,
+          0.16864013671875,
+          0.2
+        ],
+        "ground_anchor": [
+          0.625,
+          0.8824444444444445
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Lower rail terrace, aligned with the permanent foreground transport route.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_pressure_rail.prompt.txt",
+        "prompt_sha256": "0fbf8808c56c76ff11ff203df293aa6ab2a3233820316d30301f9ef9889df558",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-d5e7fbe0-1eb6-4b51-a090-3a18d7a130ed.png"
+      },
+      "building_brasshollow_crucible_dock": {
+        "asset_id": "faction_brasshollow_building_brasshollow_crucible_dock",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_crucible_dock.png",
+        "source_sha256": "69c4b3d0b5fadf16169e3e7a6793e42532509a0b58889d0a8e29d09886b02ecd",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1530,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_crucible_dock.png",
+        "trimmed_sha256": "9023aefda3bc61fc8367889526a1234b2670b7227b566a9a9da94d5e7fd277e8",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_crucible_dock.png",
+        "runtime_sha256": "8b8aedf610b7cc76f1005abd6d3be7d79f93a6fc3a9995b58a7b5e4886f1c686",
+        "runtime_size": [
+          512,
+          343
+        ],
+        "normalized_rect": [
+          0.625,
+          0.6111111111111112,
+          0.17742919921875,
+          0.2111111111111111
+        ],
+        "ground_anchor": [
+          0.7140625,
+          0.8095555555555556
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Lower central-right assembly terrace beside the original furnace.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_crucible_dock.prompt.txt",
+        "prompt_sha256": "3ad553941437d98c001811e2b09f4d90f621268e9a96566dea4687a7eaf3892c",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-22a878e7-b0a8-471e-a8b5-549f7c64d10d.png"
+      },
+      "building_brasshollow_titan_charter_hall": {
+        "asset_id": "faction_brasshollow_building_brasshollow_titan_charter_hall",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_titan_charter_hall.png",
+        "source_sha256": "f856f483b70484561db768ff7c4b49164e2bd595f05da193bbc9f1ec6744d9ec",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_titan_charter_hall.png",
+        "trimmed_sha256": "d66864b9cad501275edb55e307b670596d234c986cafb07fa230701059e1ef10",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_titan_charter_hall.png",
+        "runtime_sha256": "d2b72a4236d568bfce5e00e2a9b8ed5ef43df3dfc9ed78c0fa40d30e86136949",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.578125,
+          0.15555555555555556,
+          0.20625,
+          0.24444444444444444
+        ],
+        "ground_anchor": [
+          0.68125,
+          0.3853333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "High civic terrace; the same authored site used by Brassbound Directorate.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_titan_charter_hall.prompt.txt",
+        "prompt_sha256": "053acb0a32c95f8a1131166920c0ad4378e35b1bda32eb19dfc4304ba915890a",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-89379bc5-b1c9-45db-9ed5-edd440eb98fa.png"
+      },
+      "building_brasshollow_redline_charter_bay": {
+        "asset_id": "faction_brasshollow_building_brasshollow_redline_charter_bay",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_redline_charter_bay.png",
+        "source_sha256": "27fcecd7df097bcaab674b77dae9d2d6020dffa30b70e36635bd9849cfe4cf63",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1533,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_redline_charter_bay.png",
+        "trimmed_sha256": "9fc46b78ad97f1c393b3d42bb0f1f5024d51153eba7a323a4285c7331d399822",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_redline_charter_bay.png",
+        "runtime_sha256": "564a6e863ea51b0bbc668a842e28acdfc2ea1059c99af50c8e01130d8cbecd91",
+        "runtime_size": [
+          512,
+          342
+        ],
+        "normalized_rect": [
+          0.834375,
+          0.3111111111111111,
+          0.121636962890625,
+          0.14444444444444443
+        ],
+        "ground_anchor": [
+          0.8953125,
+          0.4468888888888889
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Far-right upper arsenal terrace.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_redline_charter_bay.prompt.txt",
+        "prompt_sha256": "798966e3defb87d3963603222de9473be9af6b3a4bbee216f49570cad3982fea",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-6232562c-81f5-4e85-939a-4be88ee8f39e.png"
+      },
+      "building_brasshollow_quenchbell_mortar_bay": {
+        "asset_id": "faction_brasshollow_building_brasshollow_quenchbell_mortar_bay",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_quenchbell_mortar_bay.png",
+        "source_sha256": "d0860c186bdc721496927ec738ee8b21e40d2238cd95d4430099bd968fa448be",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          28,
+          21,
+          1524,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_quenchbell_mortar_bay.png",
+        "trimmed_sha256": "48bd944a455ed5c2fc4f3eacdb2181b122225380f290ad5f7ec16a7e9a261ccf",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_quenchbell_mortar_bay.png",
+        "runtime_sha256": "4c138cd21eb1dc4a354b02f71f602b832ad87f04f2bcc550b7eb817f0ef95696",
+        "runtime_size": [
+          512,
+          343
+        ],
+        "normalized_rect": [
+          0.8150634765625,
+          0.6145290798611112,
+          0.136962890625,
+          0.16324869791666666
+        ],
+        "ground_anchor": [
+          0.8828125,
+          0.7677777777777778
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Right foreground ordnance shelf beneath the original crane.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_quenchbell_mortar_bay.prompt.txt",
+        "prompt_sha256": "ba3a89a2aa37d8b166e087cb91969382c0eec35cc0b479a99ebc149e795489cf",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-d42e7f9c-ac96-4160-b785-29574abd68b2.png"
+      },
+      "building_brasshollow_blackbell_grand_assay_bell": {
+        "asset_id": "faction_brasshollow_building_brasshollow_blackbell_grand_assay_bell",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_blackbell_grand_assay_bell.png",
+        "source_sha256": "724c9e69bf0de0520095a3b57436cacfee25beb0ae3e10c50116d28a248905eb",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1522,
+          998
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_blackbell_grand_assay_bell.png",
+        "trimmed_sha256": "63545a3be9be57ab11ce4c675a9c44620ab658542dd458488a8b4120b7500ce3",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_blackbell_grand_assay_bell.png",
+        "runtime_sha256": "7a8b55241dc0fd68f034c4e087ace80aa1fbc7c6705bd26d0d39326ed62bc30d",
+        "runtime_size": [
+          512,
+          336
+        ],
+        "normalized_rect": [
+          0.8125,
+          0.7277777777777777,
+          0.13934326171875,
+          0.16243489583333334
+        ],
+        "ground_anchor": [
+          0.8828125,
+          0.8844444444444445
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Town-specific right foreground quarry terrace, grounded beyond the crane and away from the open central chasm. Blackbell and Whitegauge never coexist.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_blackbell_grand_assay_bell.prompt.txt",
+        "prompt_sha256": "99aa35b449cff69b4d1d45b8fefa5c07f55aaed12bd745a2c52db17aa57be0f9",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-465653ba-def0-4b9f-8569-1be1965dda71.png"
+      },
+      "building_brasshollow_whitegauge_datum_railhouse": {
+        "asset_id": "faction_brasshollow_building_brasshollow_whitegauge_datum_railhouse",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_whitegauge_datum_railhouse.png",
+        "source_sha256": "07be34ec16a2265ca573ea0a2dd23c47c41af00e379e664504912721c3b12161",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_whitegauge_datum_railhouse.png",
+        "trimmed_sha256": "1f708f15247a9d3356b42e37e74b0872ba2c1678f9c718919c70ee32c4fe4094",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_whitegauge_datum_railhouse.png",
+        "runtime_sha256": "b213fed7719d31f4f4ac1a86cfe2b8341a39596b22ba4832222fe2ed33ddfbe6",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.340625,
+          0.5611111111111111,
+          0.140625,
+          0.16666666666666666
+        ],
+        "ground_anchor": [
+          0.4109375,
+          0.7177777777777777
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Whitegauge's lower calibration terrace beside the permanent crossing.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_whitegauge_datum_railhouse.prompt.txt",
+        "prompt_sha256": "ef151a8ae16438f1f5ca946c34adcb95bbd851142989079c827ea23871939619",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-cd7b67d9-1b31-4f59-9bba-3d41c2461e30.png"
+      },
+      "building_brasshollow_whitegauge_breach_pressure_foundry": {
+        "asset_id": "faction_brasshollow_building_brasshollow_whitegauge_breach_pressure_foundry",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_whitegauge_breach_pressure_foundry.png",
+        "source_sha256": "937ddd95700a631966441e398f8b54a845dda5a0f48f4163849859465fc506f0",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1526,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_brasshollow/building_brasshollow_whitegauge_breach_pressure_foundry.png",
+        "trimmed_sha256": "4b5e9bfcb72f224a3f0e96a1c50be541d59825c72c8f96ac05e42b94616d8f97",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_brasshollow/building_brasshollow_whitegauge_breach_pressure_foundry.png",
+        "runtime_sha256": "dcb1fa196652d351353a556a42d4d36c40576edbfee70fe3f1273faceed251b1",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.8125,
+          0.7277777777777777,
+          0.13970947265625,
+          0.16666666666666666
+        ],
+        "ground_anchor": [
+          0.8828125,
+          0.8844444444444445
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Town-specific right foreground quarry terrace, grounded beyond the crane and away from the open central chasm. Blackbell and Whitegauge never coexist.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_whitegauge_breach_pressure_foundry.prompt.txt",
+        "prompt_sha256": "9283cecf17e3da988bf559d8fb2106dad72d7bc2e31811ac8b1f7a285c2788b1",
+        "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-6f1c5efd-4fb9-4643-8016-beb464ed5c68.png"
       }
     }
   }

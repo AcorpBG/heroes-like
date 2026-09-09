@@ -63,6 +63,10 @@ def validate_scene_layers(payload=None):
     thorn_towns = [town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['faction_id']=='faction_thornwake']
     required_thorn_union = {building for town in thorn_towns for building in town['starting_building_ids']+town['buildable_building_ids']} - {'building_town_hall'}
     require(required_thorn_union.issubset(thornwake), 'Missing authored Thornwake scene mapping: '+', '.join(sorted(required_thorn_union-set(thornwake))))
+    brasshollow = factions.get('faction_brasshollow',{})
+    brass_towns = [town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['faction_id']=='faction_brasshollow']
+    required_brass_union = {building for town in brass_towns for building in town['starting_building_ids']+town['buildable_building_ids']} - {'building_town_hall'}
+    require(required_brass_union.issubset(brasshollow), 'Missing authored Brasshollow scene mapping: '+', '.join(sorted(required_brass_union-set(brasshollow))))
     veilmourn = factions.get('faction_veilmourn',{})
     sunvault = factions.get('faction_sunvault',{})
     sun_towns = [town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['faction_id']=='faction_sunvault']
@@ -77,6 +81,7 @@ def validate_scene_layers(payload=None):
     sounding = veilmourn.get('building_veilmourn_leviathan_sounding',{})
     court = veilmourn.get('building_veilmourn_memory_rite_court',{})
     pairs = [(sounding, court, 'Memory-Rite Court', 'Sounding')]
+    pairs += [(brasshollow.get('building_brasshollow_titan_charter_hall',{}), brasshollow.get('building_brasshollow_brassbound_directorate',{}), 'Brassbound Directorate', 'Titan Charter Hall')]
     pairs += [(thornwake.get('building_thornwake_worldroot_gate',{}), thornwake.get('building_thornwake_verdant_concord_seat',{}), 'Verdant Concord Seat', 'Worldroot Gate')]
     pairs += [(sunvault.get(base,{}),sunvault.get(upgrade,{}),upgrade,base) for base,upgrade in
               [('building_shard_yard','building_mirror_forge'),('building_prism_range','building_lens_gallery'),('building_lantern_archive','building_starseer_annex'),('building_sunvault_daybreak_matrix','building_sunvault_zenith_court')]]
@@ -156,7 +161,7 @@ def validate_scene_layers(payload=None):
                                ('asset type: original transparent raster building layer' in text_lower and
                                 'genuinely transparent background with a real alpha channel' in text_lower) or
                                ('asset type: original transparent raster' in text_lower and
-                                any(phrase in text_lower for phrase in ('genuinely transparent rgba','actual transparent rgba','real transparent rgba','genuine rgba transparency','genuinely transparent alpha everywhere','genuine transparent alpha everywhere','actual transparent alpha')) and
+                                any(phrase in text_lower for phrase in ('genuinely transparent rgba','actual transparent rgba','real transparent rgba','genuine rgba transparency','genuinely transparent alpha everywhere','genuine transparent alpha everywhere','actual transparent alpha','genuinely transparent alpha outside')) and
                                 any(label in text_lower for label in ('constraints:', 'background:', 'composition:'))) or
                                (('town building layer for '+building+'.') in text_lower and
                                 'transparent rgba png' in text_lower))

@@ -1,0 +1,488 @@
+{
+  "building_brasshollow_ore_tithe_office": {
+    "scene_bounds": [
+      540,
+      350,
+      225,
+      150
+    ],
+    "ground_anchor": [
+      652.5,
+      491
+    ],
+    "grounding": "Left middle quarry ledge, immediately beyond the permanent hall approach.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "329613d3a6149b8e2577673abae73352eb2c52dcaeb528b050347c5d20d41e52",
+    "generation_output": "exec-00948a18-caa0-4d63-a0d0-1494fe1ed2e7.png"
+  },
+  "building_wayfarers_hall": {
+    "scene_bounds": [
+      1150,
+      295,
+      225,
+      150
+    ],
+    "ground_anchor": [
+      1262.5,
+      436
+    ],
+    "grounding": "Right workers' terrace below the command icons and above the production bays.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "4d27b48cc6e143e7ec1d9702796378d524c3ee0e8fde40d540b29065a8e5fa4d",
+    "generation_output": "exec-38f24784-c4b5-4273-9a5b-1fbbbb170d72.png"
+  },
+  "building_market_square": {
+    "scene_bounds": [
+      890,
+      480,
+      255,
+      170
+    ],
+    "ground_anchor": [
+      1017.5,
+      639.8
+    ],
+    "grounding": "Middle-right trade terrace, leaving the main rail crossing open.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "f895297d0792d8da3e1140b78749a36308ecc5094bbca64499e969361da77c8e",
+    "generation_output": "exec-07785742-0ec3-49cc-b925-6760d7982438.png"
+  },
+  "building_brasshollow_scalehouse": {
+    "scene_bounds": [
+      755,
+      330,
+      180,
+      120
+    ],
+    "ground_anchor": [
+      845,
+      442.8
+    ],
+    "grounding": "Small counting terrace behind the central railway approach.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "d41d83a3a87fbaca803058dec68e3a315224747bf1fd5d4fece47bd8cbc821da",
+    "generation_output": "exec-d648c012-753d-4df8-ae70-f89264b716d5.png"
+  },
+  "building_brasshollow_clause_court": {
+    "scene_bounds": [
+      940,
+      335,
+      225,
+      150
+    ],
+    "ground_anchor": [
+      1052.5,
+      476
+    ],
+    "grounding": "Central civic ledge beneath the high charter district.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "a7a895fbdad83032ecc901cbfa5ce81f51a8a543a9b1c8abc34bdfe0e49e9805",
+    "generation_output": "exec-bb9195f4-f505-4acc-b892-fc2e07859465.png"
+  },
+  "building_brasshollow_heatwright_vestry": {
+    "scene_bounds": [
+      850,
+      245,
+      180,
+      120
+    ],
+    "ground_anchor": [
+      940,
+      357.8
+    ],
+    "grounding": "Rear furnace ledge among the upper works.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "c89d51df56b24e92d69c5cd45b915d1cd581d3e48eee278047d351fbc2edfa3b",
+    "generation_output": "exec-3009e59a-6440-494c-87d0-075bb7bc5b4b.png"
+  },
+  "building_brasshollow_gauge_arsenal": {
+    "scene_bounds": [
+      800,
+      440,
+      210,
+      140
+    ],
+    "ground_anchor": [
+      905,
+      571.6
+    ],
+    "grounding": "Right-hand middle quarry terrace beyond the open central chasm.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "8f140e4a27058028da38416253d96443af36df928441dbd65835ff99926ad0f2",
+    "generation_output": "exec-dc1e042a-706e-4b85-b850-8c612120af50.png"
+  },
+  "building_brasshollow_debtworks_vault": {
+    "scene_bounds": [
+      1135,
+      430,
+      225,
+      150
+    ],
+    "ground_anchor": [
+      1247.5,
+      571
+    ],
+    "grounding": "Right-hand treasury ledge above the repair yard.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "edc546d2ec5d8e4728cea7609bdbac08ec0c4e63e49364340cda5ca5ac159642",
+    "generation_output": "exec-019bb311-7d9f-4248-904b-b2086e5ed119.png"
+  },
+  "building_brasshollow_ledger_mint": {
+    "scene_bounds": [
+      565,
+      270,
+      180,
+      120
+    ],
+    "ground_anchor": [
+      655,
+      382.8
+    ],
+    "grounding": "Rear-left narrow ledge above the ore office.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "9a4a2e2ab04a7313ab70141f060444a4da08d12f87a745ad67537eb4fcd245e7",
+    "generation_output": "exec-583bc4fa-fc94-49e6-b6e0-3680c4164773.png"
+  },
+  "building_brasshollow_foreman_clausehouse": {
+    "scene_bounds": [
+      735,
+      270,
+      180,
+      120
+    ],
+    "ground_anchor": [
+      825,
+      382.8
+    ],
+    "grounding": "Upper shift-office ledge beside the mine works.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "f02922538435f0238a40abfe237aba40100de2980643f41e00a49934e63e47da",
+    "generation_output": "exec-759c5809-070a-47fa-a5bc-3234db871ba8.png"
+  },
+  "building_brasshollow_caliper_sanctum": {
+    "scene_bounds": [
+      785,
+      215,
+      195,
+      130
+    ],
+    "ground_anchor": [
+      882.5,
+      337.2
+    ],
+    "grounding": "Rear calibration ledge left of the charter complex, clear of the command panel.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "3950866c802b639357b34e1a21150aa136db36a5c5e3d1671db8510898743b1c",
+    "generation_output": "exec-b36fec83-59cc-449f-bc08-ba0f4eca8c9b.png"
+  },
+  "building_brasshollow_redline_assembly_yard": {
+    "scene_bounds": [
+      700,
+      540,
+      255,
+      170
+    ],
+    "ground_anchor": [
+      827.5,
+      699.8
+    ],
+    "grounding": "Near workshop shelf beside the lower rail approach.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "627df1bc24c9cb97c4d9b44af23976654c43e73deabbb726f8411147489eb8d5",
+    "generation_output": "exec-447fe329-19c5-41f5-926a-03328d99fbbd.png"
+  },
+  "building_brasshollow_brassbound_directorate": {
+    "scene_bounds": [
+      925,
+      140,
+      330,
+      220
+    ],
+    "ground_anchor": [
+      1090,
+      346.79999999999995
+    ],
+    "grounding": "Same high civic terrace as Titan Charter Hall; advanced authored replacement.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "4b82080ab3f8721e0dfbd56c979116f9a45b41c9e34b910cc8821fc81ab70c36",
+    "generation_output": "exec-d3bfde1e-5eba-4df9-91c9-181b2d41b7e9.png"
+  },
+  "building_brasshollow_quenchwright_bay": {
+    "scene_bounds": [
+      1140,
+      505,
+      210,
+      140
+    ],
+    "ground_anchor": [
+      1245,
+      636.6
+    ],
+    "grounding": "Right middle repair terrace, clear of the original large crane.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "affe7b3c316f13cc4771097644f4ec313114a6e332a4378bec2ae31b8a7cb345",
+    "generation_output": "exec-ea948211-84a0-4e14-a8c7-47d6ef192cd4.png"
+  },
+  "building_brasshollow_rail_tax_office": {
+    "scene_bounds": [
+      780,
+      390,
+      165,
+      110
+    ],
+    "ground_anchor": [
+      862.5,
+      493.4
+    ],
+    "grounding": "Middle rail-inspection ledge at the civic approach.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "ac9bb4ad673de757e9fc5b5ba2630a49ebfafe84f9350d9ec8a92e794b8670be",
+    "generation_output": "exec-8ff04f43-433a-435b-a909-8b07858b9f18.png"
+  },
+  "building_brasshollow_warrant_engine_house": {
+    "scene_bounds": [
+      970,
+      405,
+      210,
+      140
+    ],
+    "ground_anchor": [
+      1075,
+      536.6
+    ],
+    "grounding": "Central machinery terrace below the charter hall.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "55bbec5a78d1d750a0e5823c8733d5068e51283f28364896ede212529e4ab126",
+    "generation_output": "exec-a98a1919-d109-4651-8a28-09c5953148ab.png"
+  },
+  "building_brasshollow_rivet_kennels": {
+    "scene_bounds": [
+      1240,
+      340,
+      225,
+      150
+    ],
+    "ground_anchor": [
+      1352.5,
+      481
+    ],
+    "grounding": "Right production shelf beneath the worker quarters.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "01fd5087372f381d1b11933a38601f2ce58cf27527d9252854f66cff38aee064",
+    "generation_output": "exec-d6c88328-46c3-4bcf-a1cb-06a3f6133543.png"
+  },
+  "building_brasshollow_pavis_foundry": {
+    "scene_bounds": [
+      1290,
+      450,
+      240,
+      160
+    ],
+    "ground_anchor": [
+      1410,
+      600.4
+    ],
+    "grounding": "Right lower foundry shelf, grounded beside the slag-channel approach.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "461b6c0ca4937e134ec7821d30d91d0b9f65c7e92e4d2009c6c58990fe574a0b",
+    "generation_output": "exec-bc3b1e6b-df52-4a45-b89e-aabf5400e20b.png"
+  },
+  "building_brasshollow_boiler_cathedral": {
+    "scene_bounds": [
+      660,
+      270,
+      270,
+      180
+    ],
+    "ground_anchor": [
+      795,
+      439.2
+    ],
+    "grounding": "Middle-distance furnace terrace behind the arsenal.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "706e1d938913140c938bdc128d830e622aab3d40fbe4554f7e0f529e65adfe38",
+    "generation_output": "exec-0ffb6f72-6758-4418-acdd-d499671b2911.png"
+  },
+  "building_brasshollow_pressure_rail": {
+    "scene_bounds": [
+      865,
+      625,
+      270,
+      180
+    ],
+    "ground_anchor": [
+      1000,
+      794.2
+    ],
+    "grounding": "Lower rail terrace, aligned with the permanent foreground transport route.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "1c93ef829ac2a8017b04c3755d955397d5d4995944165dad285510f679136a77",
+    "generation_output": "exec-d5e7fbe0-1eb6-4b51-a090-3a18d7a130ed.png"
+  },
+  "building_brasshollow_crucible_dock": {
+    "scene_bounds": [
+      1000,
+      550,
+      285,
+      190
+    ],
+    "ground_anchor": [
+      1142.5,
+      728.6
+    ],
+    "grounding": "Lower central-right assembly terrace beside the original furnace.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "69c4b3d0b5fadf16169e3e7a6793e42532509a0b58889d0a8e29d09886b02ecd",
+    "generation_output": "exec-22a878e7-b0a8-471e-a8b5-549f7c64d10d.png"
+  },
+  "building_brasshollow_titan_charter_hall": {
+    "scene_bounds": [
+      925,
+      140,
+      330,
+      220
+    ],
+    "ground_anchor": [
+      1090,
+      346.79999999999995
+    ],
+    "grounding": "High civic terrace; the same authored site used by Brassbound Directorate.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "f856f483b70484561db768ff7c4b49164e2bd595f05da193bbc9f1ec6744d9ec",
+    "generation_output": "exec-89379bc5-b1c9-45db-9ed5-edd440eb98fa.png"
+  },
+  "building_brasshollow_redline_charter_bay": {
+    "scene_bounds": [
+      1335,
+      280,
+      195,
+      130
+    ],
+    "ground_anchor": [
+      1432.5,
+      402.2
+    ],
+    "grounding": "Far-right upper arsenal terrace.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "27fcecd7df097bcaab674b77dae9d2d6020dffa30b70e36635bd9849cfe4cf63",
+    "generation_output": "exec-6232562c-81f5-4e85-939a-4be88ee8f39e.png"
+  },
+  "building_brasshollow_quenchbell_mortar_bay": {
+    "scene_bounds": [
+      1300,
+      550,
+      225,
+      150
+    ],
+    "ground_anchor": [
+      1412.5,
+      691
+    ],
+    "grounding": "Right foreground ordnance shelf beneath the original crane.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "d0860c186bdc721496927ec738ee8b21e40d2238cd95d4430099bd968fa448be",
+    "generation_output": "exec-d42e7f9c-ac96-4160-b785-29574abd68b2.png"
+  },
+  "building_brasshollow_blackbell_grand_assay_bell": {
+    "scene_bounds": [
+      1300,
+      655,
+      225,
+      150
+    ],
+    "ground_anchor": [
+      1412.5,
+      796
+    ],
+    "grounding": "Town-specific right foreground quarry terrace, grounded beyond the crane and away from the open central chasm. Blackbell and Whitegauge never coexist.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "724c9e69bf0de0520095a3b57436cacfee25beb0ae3e10c50116d28a248905eb",
+    "generation_output": "exec-465653ba-def0-4b9f-8569-1be1965dda71.png"
+  },
+  "building_brasshollow_whitegauge_datum_railhouse": {
+    "scene_bounds": [
+      545,
+      505,
+      225,
+      150
+    ],
+    "ground_anchor": [
+      657.5,
+      646
+    ],
+    "grounding": "Whitegauge's lower calibration terrace beside the permanent crossing.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "07be34ec16a2265ca573ea0a2dd23c47c41af00e379e664504912721c3b12161",
+    "generation_output": "exec-cd7b67d9-1b31-4f59-9bba-3d41c2461e30.png"
+  },
+  "building_brasshollow_whitegauge_breach_pressure_foundry": {
+    "scene_bounds": [
+      1300,
+      655,
+      225,
+      150
+    ],
+    "ground_anchor": [
+      1412.5,
+      796
+    ],
+    "grounding": "Town-specific right foreground quarry terrace, grounded beyond the crane and away from the open central chasm. Blackbell and Whitegauge never coexist.",
+    "reference_inputs": [],
+    "generation_date": "2026-09-09",
+    "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
+    "source_sha256": "937ddd95700a631966441e398f8b54a845dda5a0f48f4163849859465fc506f0",
+    "generation_output": "exec-6f1c5efd-4fb9-4643-8016-beb464ed5c68.png"
+  }
+}

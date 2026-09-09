@@ -5,6 +5,100 @@ Parent: `quality-generated-full-match-20260906`; selected child:
 removed the package-size budget and requested continuing. The parent quality
 goal remains unfinished.
 
+## Brasshollow whole-faction batch — 2026-09-09, validated
+
+The normal seed-10 Large Marka/Orevein opening reproduces the remaining faction
+gap: an ore-office catalog painting floats over the bridge, and Wayfarers Hall
+uses a blue-roofed generic inn. `TownStageView._town_building_texture_path` has
+no Brasshollow scene rows and resolves those catalog assets. All 27 exact
+non-embedded identities across Orevein, Clauseworks, Cindercoil, Blackbell and
+Whitegauge now have original built-in text-only RGBA paintings, hash-locked
+prompts/masters, alpha-margin trims and maximum-512px runtime derivatives with
+mipmaps. Sources: `art/towns/source/generated/scene_layers/faction_brasshollow/`;
+runtime: `art/towns/runtime/scene_layers/faction_brasshollow/`. The existing
+Brass Deeps village, catalog icons, embedded hall, all 146 prior rasters and
+gameplay/native/save owners are unchanged. The 173 scene rows cover all six
+factions and 32 authored towns; counts alone are not acceptance or release proof.
+Titan Charter Hall/Brassbound Directorate share the same site and ground anchor.
+
+`tests/brasshollow_town_opening.py` uses the ordinary seed-10, two-player,
+land/one-level Large request with native template/profile 42 and the live Marka
+id. The original opening passes town entry, complete save/resume and zero
+engine errors. Its exact input save SHA256 is
+`548db41080154582e621b2ad63257979fe77a982f49d9f9d5da7aefbcb6616a6`.
+The before capture is 1920x1080 because the unchanged opening driver follows
+SettingsService; the separate layout probes set and verify actual dimensions.
+
+Five starter/five developed views exposed placements behind the command rail
+and above the central chasm. The calibration shrine, lodge and arsenal move
+onto usable terraces; Blackbell's assay bell and Whitegauge's mutually exclusive
+breach foundry move onto the right foreground shelf. These are metadata-only
+placement corrections, not art repainting, rule changes or new backgrounds.
+The final ten-view sets are `brasshollow_faction_layout_04` (1280x720) and
+`_layout_05` (2048x1079), both passing entry/source-preservation controls. Small
+starter/developed and wide Whitegauge views were inspected directly. Preserve
+the earlier unaccepted previews: `_layout_01` also correctly flags a source
+manifest description edited while it ran; `_layout_02`/`_layout_03` precede the
+final two local-building placements. The first strict run failed only because
+the prompt validator did not recognize the explicit wording "genuinely
+transparent alpha outside"; it now accepts that equivalent instruction while
+retaining prompt hash, actual RGBA, distinct-source and malformed-input checks.
+The exact prompts are not rewritten to satisfy a phrase test.
+
+The staging audit also found a real provenance defect in the prior Thornwake
+commit: final EOF formatting removed one blank line from each of 29 prompt
+files after validation, leaving their previous hashes in the manifest. Correct
+only those hashes. The batch verifier proves each old hash equals the current
+prompt plus one newline, each new hash equals the actual file, and every other
+prior row field/raster is identical. This correction is part of the next package
+boundary, not a claim that the mismatched committed provenance passed validation.
+
+`tests/town_brasshollow_faction_regression.py` reuses complete independent
+rule/recap, daily-limit, ancestor/replacement, painted pointer/keyboard/controller
+and save/re-entry assertions. It separates the real Large Market order and
+uninjected datum/breach orders from the existing Whitegauge scenarios from
+26 isolated constructible-building fixtures and five developed compositions
+based on the existing 66-tile `orevein-contract` map. Ore Tithe Office is an
+actual starter, not fabricated as a paid order. Fixtures do not establish earned
+development or Large-map performance. Source and both exact Linux/Windows
+packages each pass 22050 checks and 29 construction actions, with no engine
+errors and complete input/source preservation. Shared Town layout/dialog and
+building-progression reports, 45 final Python tests and repository validation
+pass. The generated Market, Directorate information and final packaged Linux
+Whitegauge views have also been visually inspected. Windows remains headless
+Wine, not native Windows GPU/audio/physical-controller certification.
+
+`brasshollow_faction_acceptance_jobs_01.json` records seven successful jobs.
+`brasshollow_faction_acceptance.json` proves all 35 complete saved cases match
+across source/Linux/Windows. Cross-run comparison excludes only wrapper
+`saved_at_unix` and the existing factory's clock-owned numeric `session_id` for
+the 33 independently created authored/fixture cases. Within-run full-state
+comparisons exclude nothing, and the original generated opening remains exact.
+The verifier proves every prior row identical except the 29 precise Thornwake
+prompt-hash corrections described above. Both PCKs contain 286717700 bytes /
+5482 members, preserving 5426 earlier payloads byte-for-byte. Only the scene
+manifest and UID cache change; the 54 added members are the 27 Brasshollow
+runtime texture/import pairs. No source art/tests leak into the packages, and
+only `project.binary` differs between platforms. It verifies dimensions for
+20 final layout captures and 71 packaged Linux captures. The parent and child
+remain active for the full presentation/quality completion audit; this batch
+does not itself certify the full goal or release readiness.
+
+Reproduce the retained opening with `python3 -B tests/brasshollow_town_opening.py
+--label <fresh>`. Run `python3 -B tests/town_brasshollow_faction_regression.py
+--label <fresh> --save <exact-opening-save> --resolution 1280x720`; add
+`--platform <linux|windows> --binary <official-export> --pack <matching.pck>`
+and a fresh Windows `--wine-prefix` for the same packaged assertions. Focused
+tests: `PYTHONPATH=tests:. python3 -B -m unittest test_town_brasshollow_faction
+test_town_scene_layer_preparation test_town_scene_layers`. One combined
+`brasshollow_faction_acceptance.py` boundary runs official exports/startup/
+generated-Town paid flows, shared Town reports, focused Python/repository checks
+and exact faction probes; `brasshollow_faction_verify.py` compares original
+rasters, complete saved cases and every released member. These orchestration
+scripts and evidence live under `.artifacts/generated_full_match_quality_20260906/`.
+No per-asset exports, fixed size ceiling, native/RMG/gameplay/save migration,
+unrelated cleanup or physical-Windows certification is claimed.
+
 ## Thornwake whole-faction batch — 2026-09-09, validated
 
 All 29 non-embedded identities across Graftroot Caravan, Rootgate Nursery,
