@@ -20,6 +20,7 @@ OUTPUT = ROOT/'.artifacts/overworld_cutout_quality_20260909'
 SAVE = ROOT/'.artifacts/generated_full_match_quality_20260906/medium_match_11_continuation_01/data/godot/app_userdata/heroes-like/saves/autosave.json'
 SAVE_SHA = '1734cf2274e00eb763b94db4f814f4ffc73e30bb9377a9225b36bcc3780e0fcc'
 RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/batch04/recipe.json'
+POOL_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/map_sheets/recipe.json'
 MARKER = 'OVERWORLD_CUTOUT_BATCH '
 
 IMPORT_ORACLE = r'''
@@ -60,6 +61,7 @@ def expected_assets(recipe, expected_dir, output):
         with Image.open(path) as im:
             if im.mode!='RGBA' or im.size!=(512,512):raise ValueError('Expected original logical RGBA canvas: '+key)
         assets[key]=dict(object_id=entry['assigned_map_object_id'],path=entry['path'],source=str(path.resolve()),
+                         source_group=row.get('source','batch04'),
                          source_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),import_options_sha256=hashlib.sha256(options.read_bytes()).hexdigest())
     with tempfile.TemporaryDirectory(prefix='cutout-source-oracle-',dir=OUTPUT) as temporary:
         work=Path(temporary)
@@ -101,7 +103,13 @@ func settle() -> void:
 func run() -> void:
     get_tree().current_scene = null
     var out := OS.get_environment("CUTOUT_OUTPUT")
-    var specs: Dictionary = JSON.parse_string(OS.get_environment("CUTOUT_ASSETS"))
+    var spec_bytes := FileAccess.get_file_as_bytes(OS.get_environment("CUTOUT_ASSETS_FILE"))
+    check(digest(spec_bytes)==OS.get_environment("CUTOUT_ASSETS_SHA256"),"complete independent asset expectations transferred unchanged")
+    if not errors.is_empty():
+        print("OVERWORLD_CUTOUT_BATCH "+JSON.stringify({"ok":false,"checks":checks,"errors":errors}))
+        get_tree().quit(1)
+        return
+    var specs: Dictionary = JSON.parse_string(spec_bytes.get_string_from_utf8())
     SettingsService.set_presentation_mode("windowed")
     SettingsService.set_presentation_resolution(OS.get_environment("CUTOUT_RESOLUTION"))
     var session = SessionState.restore_session(JSON.parse_string(FileAccess.get_file_as_string(OS.get_environment("CUTOUT_SAVE"))))
@@ -136,6 +144,7 @@ func run() -> void:
         textures[asset_id] = {"rgba_sha256":sha,"bounds":raster.get_used_rect(),"draw":draw.get("canvas_draw_rect")}
     var captures := []
     var seen := {}
+    var captured_sources := {}
     for node in session.overworld.get("resource_nodes",[]):
         if node.get("kind","") not in ["mine","resource_site"]:continue
         var asset_id: String = view._resource_asset_id(node)
@@ -152,10 +161,13 @@ func run() -> void:
         check(JSON.stringify(tile).contains(asset_id),asset_id+" visible at original native coordinates")
         check(not bool(tile.get("art_presentation",{}).get("fallback_procedural_marker",true)),asset_id+" no normal-play procedural fallback")
         check(normalized(node)==exact_placement,asset_id+" full native record including footprint/masks unchanged")
-        if DisplayServer.get_name()!="headless":
+        var source_group: String = str(specs[asset_id].get("source_group","batch04"))
+        var capture_requested: bool = OS.get_environment("CUTOUT_CAPTURE_PER_SOURCE")!="1" or not captured_sources.has(source_group)
+        if capture_requested and DisplayServer.get_name()!="headless":
             await RenderingServer.frame_post_draw
             get_viewport().get_texture().get_image().save_png(out.path_join(asset_id+".png"))
-        captures.append({"asset_id":asset_id,"placement":exact_placement,"tile":tile})
+        captured_sources[source_group]=true
+        captures.append({"asset_id":asset_id,"placement":exact_placement,"tile":tile,"screenshot_requested":capture_requested})
     check(captures.size()>=1,"earned explored affected native placement captured without fog injection")
     check(normalized(session.to_dict())==before,"all resolver/render/camera work preserves complete session")
     var save_path: String = SaveService.save_session(session.to_dict(),3)
@@ -180,7 +192,7 @@ def probe_environment(environment):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--batch',choices=['batch04'],default='batch04')
+    parser.add_argument('--batch',choices=['batch04','map_sheets'],default='batch04')
     parser.add_argument('--label',required=True)
     parser.add_argument('--resolution',choices=['1280x720','1920x1080'],default='1280x720')
     parser.add_argument('--expected-dir',type=Path,help='Preview acceptance candidate; permits an honest failing-before run')
@@ -188,16 +200,20 @@ def main():
     if not re.fullmatch(r'[a-z0-9_-]+',args.label):parser.error('label must be a fresh slug')
     original=SAVE.read_bytes()
     if hashlib.sha256(original).hexdigest()!=SAVE_SHA:parser.error('unchanged exact earned save required')
-    recipe=json.loads(RECIPE.read_text())
+    recipe=json.loads((RECIPE if args.batch=='batch04' else POOL_RECIPE).read_text())
     output=OUTPUT/args.label
     output.mkdir(parents=True,exist_ok=False)
     assets=expected_assets(recipe,args.expected_dir,output)
+    # A full cohort exceeds Windows' single environment-variable capacity.
+    # Only expectations live in this file, never textures or world overrides.
+    expectations=output/'expected-assets.json'
+    expectations.write_text(json.dumps(assets,sort_keys=True)+'\n')
     with tempfile.TemporaryDirectory(prefix='cutout-probe-',dir=OUTPUT) as temp, tempfile.TemporaryDirectory(prefix='cutout-userdata-',dir='/dev/shm') as userdata:
         directory=Path(temp)
         (directory/'probe.gd').write_text(SCRIPT)
         scene=directory/'probe.tscn'
         scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="CutoutBatchProbe" type="Node"]\nscript = ExtResource("1")\n' % (directory/'probe.gd').relative_to(ROOT))
-        env=dict(os.environ,XDG_DATA_HOME=userdata,CUTOUT_OUTPUT=str(output),CUTOUT_SAVE=str(SAVE),CUTOUT_RESOLUTION=args.resolution,CUTOUT_ASSETS=json.dumps(assets))
+        env=dict(os.environ,XDG_DATA_HOME=userdata,CUTOUT_OUTPUT=str(output),CUTOUT_SAVE=str(SAVE),CUTOUT_RESOLUTION=args.resolution,CUTOUT_ASSETS_FILE=str(expectations),CUTOUT_ASSETS_SHA256=hashlib.sha256(expectations.read_bytes()).hexdigest(),CUTOUT_CAPTURE_PER_SOURCE='1' if args.batch=='map_sheets' else '0')
         with (output/'runtime.log').open('w') as log:
             code=run_probe(['dbus-run-session','--','xvfb-run','-a','-s','-screen 0 2200x1200x24','godot4','--path',str(ROOT),'--audio-driver','Dummy','--accessibility','disabled','res://'+str(scene.relative_to(ROOT))],probe_environment(env),log)
     lines=(output/'runtime.log').read_text().splitlines()
@@ -205,7 +221,7 @@ def main():
     report=found[-1] if found else dict(ok=False,errors=['missing Godot report'])
     report.update(returncode=code,save_sha256=SAVE_SHA,input_unchanged=SAVE.read_bytes()==original,resolution=args.resolution,
                   expected_rasters=assets,runtime_errors=[s for s in lines if s.startswith(('ERROR:','SCRIPT ERROR:')) or 'leaked' in s])
-    captures_ok=report.get('backend')=='headless' or all((output/(r['asset_id']+'.png')).exists() for r in report.get('captures',[]))
+    captures_ok=report.get('backend')=='headless' or all((output/(r['asset_id']+'.png')).exists() for r in report.get('captures',[]) if r.get('screenshot_requested',True))
     report['ok']=bool(report['ok']) and code==0 and report['input_unchanged'] and not report['runtime_errors'] and captures_ok
     (output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({k:v for k,v in report.items() if k not in ('textures','captures','expected_rasters')}))

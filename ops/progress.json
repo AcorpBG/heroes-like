@@ -16615,14 +16615,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "First resource-sheet recovery child completed: 15 corrected original cutouts, 5519 restored opaque pixels, 15 Python tests, 124 checks at each source resolution and in each Linux/Windows package; inspected captures and unchanged full saves. The broader 1214-row runtime pool is still unfinished. Evidence: docs/overworld-cutout-quality-report.md.",
+  "currentNotes": "Accepted 159 further original map-sheet sprites; 28 focused Python tests, 1177 source checks per resolution and in each exact Linux/Windows package, inspected visuals and six complete saved outputs equal outside only saved_at_unix. Initial 15-sprite cohort remains accepted. Remaining decorative/tree/legacy/hero/state defects and detailed full-pool dispositions keep this goal in progress. Evidence: docs/overworld-cutout-quality-report.md.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-overworld-cutout-batch04-20260909",
-  "currentSliceId": "art-overworld-cutout-batch04-20260909",
-  "currentSliceNotes": "15 original resource-sheet cutouts recovered and installed; Cinder and all other production art/content/runtime/native authority preserved. 15 focused Python tests; 124 source checks at each inspected resolution and 124 in each exact Linux/Windows package; all six cross-run saves equal outside only saved_at_unix. Distinct/decorative/input/full-route/fog reports, repository and both official export smokes pass. Evidence: docs/overworld-cutout-quality-report.md and .artifacts/overworld_cutout_quality_20260909. Parent runtime-pool work remains unfinished.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "Original Resource-Sheet Cutout Recovery",
-  "currentSliceUpdatedAt": "2026-09-09T15:55:01Z",
+  "currentSlice": "art-overworld-cutout-runtime-pool-20260909",
+  "currentSliceId": "art-overworld-cutout-runtime-pool-20260909",
+  "currentSliceNotes": "Accepted 159 further original map-sheet sprites; 28 focused Python tests, 1177 source checks per resolution and in each exact Linux/Windows package, inspected visuals and six complete saved outputs equal outside only saved_at_unix. Initial 15-sprite cohort remains accepted. Remaining decorative/tree/legacy/hero/state defects and detailed full-pool dispositions keep this goal in progress. Evidence: docs/overworld-cutout-quality-report.md.",
+  "currentSliceStatus": "in_progress",
+  "currentSliceTitle": "Remaining Runtime-Pool Cutout Recovery",
+  "currentSliceUpdatedAt": "2026-09-09T16:42:26Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21950,15 +21950,16 @@
     "parentComplete": false
   },
   "latestEvidence": {
-    "id": "art-overworld-cutout-batch04-20260909",
-    "sliceId": "art-overworld-cutout-batch04-20260909",
-    "status": "completed",
+    "id": "art-overworld-cutout-runtime-pool-20260909",
+    "sliceId": "art-overworld-cutout-runtime-pool-20260909",
+    "status": "in_progress",
+    "acceptedCohort": "159 remaining original map-sheet sprites",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
-    "runtimeChanges": "15 original resource-sheet cutouts; no gameplay/native/placement/save changes",
+    "runtimeChanges": "159 runtime PNGs plus matching trims and exact-row provenance; no gameplay/native/placement/save changes",
     "validation": {
-      "python_tests": 15,
-      "source_checks_per_resolution": 124,
-      "packaged_checks_per_platform": 124,
+      "python_tests": 28,
+      "source_checks_per_resolution": 1177,
+      "packaged_checks_per_platform": 1177,
       "source_resolutions": [
         "1280x720",
         "1920x1080"
@@ -21968,7 +21969,8 @@
       "repository": "passed",
       "existing_sprite_input_route_fog_reports": "passed"
     },
-    "parentComplete": false
+    "parentComplete": false,
+    "remainingWork": "Older decoration residues/dividers, damaged trees/legacy props, faction-hero edges, confirmed resource-state backing and detailed whole-pool dispositions"
   },
   "latestEvidenceArtifacts": [
     "docs/overworld-cutout-quality-report.md",
@@ -22047,15 +22049,17 @@
       ],
       "validationCommands": [
         "python3 -B -m unittest discover -s tests -p 'test_overworld_cutout*.py'",
-        "python3 tests/overworld_cutout_batch_regression.py --batch batch04 --resolution 1280x720 --label <fresh>",
-        "python3 tests/overworld_cutout_batch_regression.py --batch batch04 --resolution 1920x1080 --label <fresh>",
+        "python3 tests/overworld_cutout_batch_regression.py --batch map_sheets --resolution 1280x720 --label <fresh>",
+        "python3 tests/overworld_cutout_batch_regression.py --batch map_sheets --resolution 1920x1080 --label <fresh>",
         "python3 tests/validate_repo.py",
         "git diff --check",
         "python3 tests/packaging_linux_export_smoke.py",
-        "python3 tests/packaging_windows_export_smoke.py"
+        "python3 tests/packaging_windows_export_smoke.py",
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch map_sheets --platform linux --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh>",
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch map_sheets --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-09T15:17:09Z",
+      "updatedAt": "2026-09-09T16:42:26Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22073,7 +22077,7 @@
         "Original asset repair/replacement across authoritative overworld runtime pool",
         "Scoped provenance, source/trim/runtime preparation and integrated visual/gameplay/platform acceptance"
       ],
-      "notes": "Owner-approved deterministic source recovery. First 15-asset cohort accepted with full source/visual/save/Linux/Windows evidence; remaining-runtime-pool child still pending. Keep parent in_progress until every confirmed defect and full-pool review is resolved.",
+      "notes": "Accepted 159 further original map-sheet sprites; 28 focused Python tests, 1177 source checks per resolution and in each exact Linux/Windows package, inspected visuals and six complete saved outputs equal outside only saved_at_unix. Initial 15-sprite cohort remains accepted. Remaining decorative/tree/legacy/hero/state defects and detailed full-pool dispositions keep this goal in progress. Evidence: docs/overworld-cutout-quality-report.md.",
       "startedAt": "2026-09-09T14:41:54Z"
     },
     {
@@ -22120,7 +22124,7 @@
     },
     {
       "phase": "phase-6-production-alpha-layer",
-      "status": "pending",
+      "status": "in_progress",
       "source": "PLAN.md",
       "sourceDocs": [
         "project.md",
@@ -22132,15 +22136,17 @@
       ],
       "validationCommands": [
         "python3 -B -m unittest discover -s tests -p 'test_overworld_cutout*.py'",
-        "python3 tests/overworld_cutout_batch_regression.py --batch batch04 --resolution 1280x720 --label <fresh>",
-        "python3 tests/overworld_cutout_batch_regression.py --batch batch04 --resolution 1920x1080 --label <fresh>",
+        "python3 tests/overworld_cutout_batch_regression.py --batch map_sheets --resolution 1280x720 --label <fresh>",
+        "python3 tests/overworld_cutout_batch_regression.py --batch map_sheets --resolution 1920x1080 --label <fresh>",
         "python3 tests/validate_repo.py",
         "git diff --check",
         "python3 tests/packaging_linux_export_smoke.py",
-        "python3 tests/packaging_windows_export_smoke.py"
+        "python3 tests/packaging_windows_export_smoke.py",
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch map_sheets --platform linux --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh>",
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch map_sheets --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-09T14:41:53Z",
+      "updatedAt": "2026-09-09T16:42:26Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22154,9 +22160,12 @@
       "implementationTargets": [
         "Complete authoritative pool inventory and visual dispositions including state/native/adopted categories",
         "Follow-up coherent original cutout/replacement cohorts for confirmed defects",
-        "Regression, actual renderer/save preservation and both-platform validation"
+        "Regression, actual renderer/save preservation and both-platform validation",
+        "tools/prepare_overworld_cutout_pool.py and art/overworld/source/generated/cutout_recovery_20260909/map_sheets source/trim/runtime cohort",
+        "tests/test_overworld_cutout_pool.py; exact authored/native renderer, complete-save and platform package cohort probes"
       ],
-      "notes": "Select only after resource-sheet cohort; screening is not visual acceptance. Full pool remains unfinished."
+      "notes": "Accepted 159 further original map-sheet sprites; 28 focused Python tests, 1177 source checks per resolution and in each exact Linux/Windows package, inspected visuals and six complete saved outputs equal outside only saved_at_unix. Initial 15-sprite cohort remains accepted. Remaining decorative/tree/legacy/hero/state defects and detailed full-pool dispositions keep this goal in progress. Evidence: docs/overworld-cutout-quality-report.md.",
+      "startedAt": "2026-09-09T16:04:51Z"
     },
     {
       "status": "completed",
@@ -111404,9 +111413,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "First resource-sheet recovery child completed: 15 corrected original cutouts, 5519 restored opaque pixels, 15 Python tests, 124 checks at each source resolution and in each Linux/Windows package; inspected captures and unchanged full saves. The broader 1214-row runtime pool is still unfinished. Evidence: docs/overworld-cutout-quality-report.md.",
+  "summary": "Accepted 159 further original map-sheet sprites; 28 focused Python tests, 1177 source checks per resolution and in each exact Linux/Windows package, inspected visuals and six complete saved outputs equal outside only saved_at_unix. Initial 15-sprite cohort remains accepted. Remaining decorative/tree/legacy/hero/state defects and detailed full-pool dispositions keep this goal in progress. Evidence: docs/overworld-cutout-quality-report.md.",
   "taskId": "10236",
-  "updatedAt": "2026-09-09T15:55:01Z",
+  "updatedAt": "2026-09-09T16:42:26Z",
   "validation": {
     "id": "quality-marsh-listener-cutout-20260909",
     "sliceId": "ux-generated-full-match-presentation-20260906",

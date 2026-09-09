@@ -3,7 +3,7 @@
 Phase 6 parent: `art-overworld-cutout-quality-20260909`.
 First cohort: `art-overworld-cutout-batch04-20260909`, 2026-09-09.
 Requirements: `docs/overworld-cutout-quality-requirements.md`.
-This report accepts only the resource-sheet cohort, not the entire runtime pool.
+The dated cohorts below are bounded acceptances, not whole-pool completion.
 
 ## Cause and implemented correction
 
@@ -129,11 +129,109 @@ Run the source probe using `--batch batch04 --label <fresh> --resolution
 and a fresh `--wine-prefix` for Windows. Use the established platform artifact-dir
 environment variables when rerunning exports, preserving prior evidence.
 
+## Remaining map sheets: 159 further original cutouts
+
+2026-09-09 checkpoint within the **in-progress**
+`art-overworld-cutout-runtime-pool-20260909` child. The other 11 original
+`map_object_distinct_atlas_20260504_batch_*.png` sheets have the same baked-in
+matte/divider damage. All 159 unrepaired members are now recovered. The three
+already-repaired members (Marsh Listener Post, Wreck Quay, Moss Oath Cache) and
+the whole earlier batch-04 sheet remain unchanged. Together these cover all
+178 original map-sheet members, not all 1,214 runtime manifest rows.
+
+`tools/prepare_overworld_cutout_pool.py` uses the accepted original matte engine
+with explicit source-space material regions for violet crystals, bellflowers,
+petals and magic. Opaque neutral paint and protected chromatic interiors retain
+exact source RGB. Unprotected edges use a separate neutral foreground field so
+nearby purple crystals cannot recolor unrelated backing. No replacement art,
+global desaturation, runtime drawing or gameplay code change was needed.
+Recipe, original manifest rows, exact before PNGs and source/tool/output hashes:
+`art/overworld/source/generated/cutout_recovery_20260909/map_sheets/`.
+
+Independent opaque RGB matches prove each old cutout's source origin; reviewed
+per-sheet rectangles exclude the actual irregular dividers, not an assumed
+uniform grid. Batch 02 also had a genuine split error: the Caravanserai painting
+extends past the presumed first-column boundary, and its right half appeared
+in Ember Signal Brazier. Their complete separate paintings are recovered and
+recentered by integer translation on the same 512x512 canvases. The other 157
+retain the original source-to-canvas translation. There is no resampling or
+warping; all manifest anchors/profiles and gameplay footprints stay unchanged.
+
+Evidence under `.artifacts/overworld_cutout_quality_20260909/`:
+
+- `maps_before_1280` / `maps_before_1920`: 159 expected texture mismatches
+  against the initial recovery preview, no other failed checks or engine errors.
+  These are actual old-art captures, not final-output acceptance.
+- `maps_source_1280` / `maps_source_1920`: **1,176 checks pass each** against
+  the final installed rasters. All 159 authored and native/adopted identities
+  resolve to exact decoded RGBA textures. Actual captures/checks use 14 distinct
+  original, already-explored placements in the same unchanged earned Day-97 save;
+  five screenshots per resolution sample five source groups. No hero/fog/record
+  injection. All ten final source screenshots, all 11 source/recovered contact
+  sheets and representative old-art gameplay captures were visually inspected.
+- The save does not contain an active Caravanserai placement. Its Brazier at
+  `(58,4)` was collected on Day 54 and already uses separate state art. Their
+  complete source paintings and exact runtime textures are tested, but neither
+  is misrepresented as an earned active-placement screenshot.
+- **28 focused Python tests pass** (15 prior + 13 new): exact source recovery,
+  independent pixel alignment, scoped color/detail preservation, strict cutout
+  bounds, irregular-cell separation, provenance and fail-closed corrupt source/
+  swapped identity detection. Every retained before raster fails visible-pixel
+  acceptance. `python3 tests/validate_repo.py` passes with the new reconstruction
+  validator. Shared distinct/decorative sprite, input ownership, full-route and
+  fog reports pass (`cutout_maps_shared` / `cutout_maps_fog` in the established
+  generated-full-match artifact root).
+
+Preparation: `python3 -B tools/prepare_overworld_cutout_pool.py --output
+<fresh-preview-dir> [--install]`. The existing source and packaged probes select
+this cohort with `--batch map_sheets`; their other arguments remain as above.
+
+Final package and save acceptance:
+
+- The first Windows cohort probe (`maps_packaged_windows`) failed parsing its
+  large environment-variable expectation payload, then faulted; it is not a
+  passing result. The Python-owned harness now transfers that read-only JSON
+  through a file and verifies its full SHA-256 before resolving any asset.
+  No loose texture, world override or weakened assertion was introduced.
+- `maps_source_file_1280`, `maps_source_file_1920`,
+  `maps_packaged_linux_file` and `maps_packaged_windows_file` each pass **1,177
+  checks**, adding the exact expectation-transfer check. There are zero engine
+  errors. The four after/package saves equal both before saves in full, omitting
+  only the envelope's `saved_at_unix`; within-run comparisons exclude nothing.
+  All 159 texture hashes match the independent source oracle on each platform.
+  Representative final file-transfer captures were re-inspected at both sizes;
+  all five preceding Linux-package captures of these same final rasters were
+  also inspected. Windows remains headless Wine, not GPU certification.
+- Official Linux export/startup (`map_sheets_linux_confirm/report.json`) and
+  Windows export/startup/generated gameplay (`map_sheets_windows_export/report.json`)
+  pass. The initial Linux terminal session returned 143 despite a successful
+  export/boot report; the separate confirmation completed with exit 0 and a
+  byte-identical PCK. Its exact isolated release passed the final cohort probe.
+- Both PCKs contain **286,565,204 bytes / 5,482 entries**, matching member sets,
+  and differ only in `project.binary`. Against the preceding batch-04 release,
+  exactly 159 selected textures, the Overworld manifest and UID cache differ;
+  no members are added/removed and no other payload changes. Source/before/
+  preparation files are excluded. There is no fixed size ceiling.
+- Production changes are exactly 159 runtime PNGs, their 159 matching trimmed
+  PNGs, and provenance additions on those same manifest rows. All other fields,
+  content records, runtime/native scripts and prior repaired controls remain
+  unchanged. The unrelated untracked retention files remain untouched.
+
+Linux PCK SHA-256:
+`bf4b9ff91ee34ad4a77b346afd6d3d408481287ea2526ff092bf504a97b56439`.
+Windows PCK SHA-256:
+`b9ee40b2bce1bdd9486ca1f263f7dc9fcf39dbbaf58ce27816a27f6bce3f05a2`.
+
 ## Remaining parent work
 
-The full 1,214-row runtime pool is **not accepted** by this cohort. Review and
-recovery of remaining map-object/decorative/resource/state/artifact/encounter/
-town/hero assets remains the next child. The initial 191 color-screened candidates
-were not confirmed defect totals; legitimate colored materials still require
-individual review. Existing other-object fringes visible in these maps are not
-hidden or declared fixed. No release-readiness claim is made.
+The full 1,214-row runtime pool is **not accepted**. Remaining review/recovery is
+active in the same child. Direct inspection confirms faint rectangular residue
+on older decorations (including Bramble Wall and Redstone Chip Scatter), white
+dividers in decorative batch 12, clipped/neighbor-contaminated legacy props and
+damaged older generated-tree cutouts. Six faction-hero sprites also need edge
+review/recovery; `resource_site_neutral_miremoon_crownmere_controlled` has a
+visible rectangular backing. Atlas-backed resource/state/artifact/encounter/town/hero families
+still need complete detailed dispositions; small contact thumbnails and color
+counts are not visual acceptance. Legitimate purple materials are preserved.
+Other-object defects visible in the maps are not hidden or declared fixed.
+No release-readiness claim is made.
