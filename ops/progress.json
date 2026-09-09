@@ -16619,10 +16619,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "art-overworld-cutout-runtime-pool-20260909",
   "currentSliceId": "art-overworld-cutout-runtime-pool-20260909",
-  "currentSliceNotes": "Accepted 159 further original map-sheet sprites; 28 focused Python tests, 1177 source checks per resolution and in each exact Linux/Windows package, inspected visuals and six complete saved outputs equal outside only saved_at_unix. Initial 15-sprite cohort remains accepted. Remaining decorative/tree/legacy/hero/state defects and detailed full-pool dispositions keep this goal in progress. Evidence: docs/overworld-cutout-quality-report.md.",
+  "currentSliceNotes": "Accepted 185 decoration corrections: 183 original-sheet recoveries, Brasspipe stray-fragment removal and approved original Heatglass replacement; 15 clean controls unchanged. 14 new plus 28 prior Python tests, 8498 checks at each source resolution and in each exact Linux/Windows package, inspected visuals and seven native saved outputs equal outside only saved_at_unix. Prior map/resource cohorts remain accepted. Tree/legacy/hero/state defects and detailed remaining full-pool dispositions keep the goal in progress. Evidence and terminal-exit confirmation: docs/overworld-cutout-quality-report.md.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Remaining Runtime-Pool Cutout Recovery",
-  "currentSliceUpdatedAt": "2026-09-09T16:42:26Z",
+  "currentSliceUpdatedAt": "2026-09-09T18:06:41Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22056,7 +22056,12 @@
         "python3 tests/packaging_linux_export_smoke.py",
         "python3 tests/packaging_windows_export_smoke.py",
         "python3 tests/packaged_overworld_cutout_batch_regression.py --batch map_sheets --platform linux --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh>",
-        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch map_sheets --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch map_sheets --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>",
+        "python3 -B -m unittest discover -s tests -p 'test_overworld_decoration_cutouts.py'",
+        "python3 tests/overworld_cutout_batch_regression.py --batch decorations --resolution 1280x720 --label <fresh>",
+        "python3 tests/overworld_cutout_batch_regression.py --batch decorations --resolution 1920x1080 --label <fresh>",
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch decorations --platform linux --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh>",
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch decorations --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
       "updatedAt": "2026-09-09T16:42:26Z",
@@ -22143,10 +22148,15 @@
         "python3 tests/packaging_linux_export_smoke.py",
         "python3 tests/packaging_windows_export_smoke.py",
         "python3 tests/packaged_overworld_cutout_batch_regression.py --batch map_sheets --platform linux --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh>",
-        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch map_sheets --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch map_sheets --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>",
+        "python3 -B -m unittest discover -s tests -p 'test_overworld_decoration_cutouts.py'",
+        "python3 tests/overworld_cutout_batch_regression.py --batch decorations --resolution 1280x720 --label <fresh>",
+        "python3 tests/overworld_cutout_batch_regression.py --batch decorations --resolution 1920x1080 --label <fresh>",
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch decorations --platform linux --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh>",
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch decorations --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-09T16:42:26Z",
+      "updatedAt": "2026-09-09T18:06:41Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22162,9 +22172,11 @@
         "Follow-up coherent original cutout/replacement cohorts for confirmed defects",
         "Regression, actual renderer/save preservation and both-platform validation",
         "tools/prepare_overworld_cutout_pool.py and art/overworld/source/generated/cutout_recovery_20260909/map_sheets source/trim/runtime cohort",
-        "tests/test_overworld_cutout_pool.py; exact authored/native renderer, complete-save and platform package cohort probes"
+        "tests/test_overworld_cutout_pool.py; exact authored/native renderer, complete-save and platform package cohort probes",
+        "tools/prepare_overworld_decoration_cutouts.py; decorations original/generated/trim/runtime source packet and 15 clean controls",
+        "tests/test_overworld_decoration_cutouts.py and tests/overworld_decoration_cutout_probe.py; exact identity and unchanged native-body palette coverage"
       ],
-      "notes": "Accepted 159 further original map-sheet sprites; 28 focused Python tests, 1177 source checks per resolution and in each exact Linux/Windows package, inspected visuals and six complete saved outputs equal outside only saved_at_unix. Initial 15-sprite cohort remains accepted. Remaining decorative/tree/legacy/hero/state defects and detailed full-pool dispositions keep this goal in progress. Evidence: docs/overworld-cutout-quality-report.md.",
+      "notes": "Accepted 185 decoration corrections: 183 original-sheet recoveries, Brasspipe stray-fragment removal and approved original Heatglass replacement; 15 clean controls unchanged. 14 new plus 28 prior Python tests, 8498 checks at each source resolution and in each exact Linux/Windows package, inspected visuals and seven native saved outputs equal outside only saved_at_unix. Prior map/resource cohorts remain accepted. Tree/legacy/hero/state defects and detailed remaining full-pool dispositions keep the goal in progress. Evidence and terminal-exit confirmation: docs/overworld-cutout-quality-report.md.",
       "startedAt": "2026-09-09T16:04:51Z"
     },
     {
@@ -111413,9 +111425,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Accepted 159 further original map-sheet sprites; 28 focused Python tests, 1177 source checks per resolution and in each exact Linux/Windows package, inspected visuals and six complete saved outputs equal outside only saved_at_unix. Initial 15-sprite cohort remains accepted. Remaining decorative/tree/legacy/hero/state defects and detailed full-pool dispositions keep this goal in progress. Evidence: docs/overworld-cutout-quality-report.md.",
+  "summary": "Accepted 185 decoration corrections: 183 original-sheet recoveries, Brasspipe stray-fragment removal and approved original Heatglass replacement; 15 clean controls unchanged. 14 new plus 28 prior Python tests, 8498 checks at each source resolution and in each exact Linux/Windows package, inspected visuals and seven native saved outputs equal outside only saved_at_unix. Prior map/resource cohorts remain accepted. Tree/legacy/hero/state defects and detailed remaining full-pool dispositions keep the goal in progress. Evidence and terminal-exit confirmation: docs/overworld-cutout-quality-report.md.",
   "taskId": "10236",
-  "updatedAt": "2026-09-09T16:42:26Z",
+  "updatedAt": "2026-09-09T18:06:41Z",
   "validation": {
     "id": "quality-marsh-listener-cutout-20260909",
     "sliceId": "ux-generated-full-match-presentation-20260906",

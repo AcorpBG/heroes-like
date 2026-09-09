@@ -44127,6 +44127,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             ensure(recovery["ok"], errors, f"Original-pool recovery {asset_id} must preserve clean source-backed art: {recovery['errors']}")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Original-pool cutout recovery failed closed: {exc}")
+    try:
+        decor_spec = importlib.util.spec_from_file_location("original_decoration_cutout_validation", ROOT / "tools" / "prepare_overworld_decoration_cutouts.py")
+        decor_module = importlib.util.module_from_spec(decor_spec)
+        decor_spec.loader.exec_module(decor_module)
+        for asset_id, recovery in decor_module.validate_assets().items():
+            ensure(recovery["ok"], errors, f"Decoration recovery {asset_id} must preserve source-backed art: {recovery['errors']}")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Decoration cutout recovery failed closed: {exc}")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
@@ -44427,13 +44435,13 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 if isinstance(entry, dict):
                     runtime_path = res_path_to_disk(str(entry.get("path", "")))
                     source_trimmed_path = res_path_to_disk(str(entry.get("source_trimmed", "")))
-                    source_atlas_path = res_path_to_disk(str(entry.get("source_generated_atlas", "")))
+                    source_atlas_path = res_path_to_disk(str(entry.get("source_generated_atlas", entry.get("source_generated", ""))))
                     ensure(str(entry.get("asset_policy", "")) == "original_generated_runtime_sprite_no_homm3_art_import", errors, f"Decorative distinct asset {asset_id} must record generated no-HoMM3 policy")
                     ensure(bool(entry.get("distinct_sprite_assignment", False)), errors, f"Decorative distinct asset {asset_id} must be marked as a distinct sprite assignment")
                     ensure(str(entry.get("assigned_decorative_object_id", "")) in decorative_object_ids, errors, f"Decorative distinct asset {asset_id} must record its assigned object id")
                     ensure(runtime_path.with_name(runtime_path.name + ".import").exists(), errors, f"Decorative distinct runtime asset is missing Godot import sidecar: {runtime_path.relative_to(ROOT)}.import")
                     ensure(source_trimmed_path.exists(), errors, f"Decorative distinct asset {asset_id} is missing trimmed source {entry.get('source_trimmed')}")
-                    ensure(source_atlas_path.exists(), errors, f"Decorative distinct asset {asset_id} is missing generated source atlas {entry.get('source_generated_atlas')}")
+                    ensure(source_atlas_path.is_file(), errors, f"Decorative distinct asset {asset_id} is missing its generated source raster")
 
     map_object_manifest_path = res_path_to_disk(str(manifest.get("map_object_sprite_manifest", "")))
     ensure(map_object_manifest_path.exists(), errors, "Overworld art manifest must reference the map object sprite manifest")

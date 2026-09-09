@@ -21,6 +21,7 @@ SAVE = ROOT/'.artifacts/generated_full_match_quality_20260906/medium_match_11_co
 SAVE_SHA = '1734cf2274e00eb763b94db4f814f4ffc73e30bb9377a9225b36bcc3780e0fcc'
 RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/batch04/recipe.json'
 POOL_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/map_sheets/recipe.json'
+DECORATION_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/decorations/recipe.json'
 MARKER = 'OVERWORLD_CUTOUT_BATCH '
 
 IMPORT_ORACLE = r'''
@@ -60,7 +61,9 @@ def expected_assets(recipe, expected_dir, output):
             if required not in text.splitlines():raise ValueError('Revalidate changed import processing: '+key+'/'+required)
         with Image.open(path) as im:
             if im.mode!='RGBA' or im.size!=(512,512):raise ValueError('Expected original logical RGBA canvas: '+key)
-        assets[key]=dict(object_id=entry['assigned_map_object_id'],path=entry['path'],source=str(path.resolve()),
+        object_id=entry.get('assigned_map_object_id',entry.get('assigned_decorative_object_id',''))
+        if not object_id:raise ValueError('Missing exact authored identity: '+key)
+        assets[key]=dict(object_id=object_id,path=entry['path'],source=str(path.resolve()),
                          source_group=row.get('source','batch04'),
                          source_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),import_options_sha256=hashlib.sha256(options.read_bytes()).hexdigest())
     with tempfile.TemporaryDirectory(prefix='cutout-source-oracle-',dir=OUTPUT) as temporary:
@@ -192,7 +195,7 @@ def probe_environment(environment):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--batch',choices=['batch04','map_sheets'],default='batch04')
+    parser.add_argument('--batch',choices=['batch04','map_sheets','decorations'],default='batch04')
     parser.add_argument('--label',required=True)
     parser.add_argument('--resolution',choices=['1280x720','1920x1080'],default='1280x720')
     parser.add_argument('--expected-dir',type=Path,help='Preview acceptance candidate; permits an honest failing-before run')
@@ -200,7 +203,10 @@ def main():
     if not re.fullmatch(r'[a-z0-9_-]+',args.label):parser.error('label must be a fresh slug')
     original=SAVE.read_bytes()
     if hashlib.sha256(original).hexdigest()!=SAVE_SHA:parser.error('unchanged exact earned save required')
-    recipe=json.loads((RECIPE if args.batch=='batch04' else POOL_RECIPE).read_text())
+    recipe=json.loads({'batch04':RECIPE,'map_sheets':POOL_RECIPE,'decorations':DECORATION_RECIPE}[args.batch].read_text())
+    script=SCRIPT
+    if args.batch=='decorations':
+        from overworld_decoration_cutout_probe import SCRIPT as script
     output=OUTPUT/args.label
     output.mkdir(parents=True,exist_ok=False)
     assets=expected_assets(recipe,args.expected_dir,output)
@@ -210,7 +216,7 @@ def main():
     expectations.write_text(json.dumps(assets,sort_keys=True)+'\n')
     with tempfile.TemporaryDirectory(prefix='cutout-probe-',dir=OUTPUT) as temp, tempfile.TemporaryDirectory(prefix='cutout-userdata-',dir='/dev/shm') as userdata:
         directory=Path(temp)
-        (directory/'probe.gd').write_text(SCRIPT)
+        (directory/'probe.gd').write_text(script)
         scene=directory/'probe.tscn'
         scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="CutoutBatchProbe" type="Node"]\nscript = ExtResource("1")\n' % (directory/'probe.gd').relative_to(ROOT))
         env=dict(os.environ,XDG_DATA_HOME=userdata,CUTOUT_OUTPUT=str(output),CUTOUT_SAVE=str(SAVE),CUTOUT_RESOLUTION=args.resolution,CUTOUT_ASSETS_FILE=str(expectations),CUTOUT_ASSETS_SHA256=hashlib.sha256(expectations.read_bytes()).hexdigest(),CUTOUT_CAPTURE_PER_SOURCE='1' if args.batch=='map_sheets' else '0')
