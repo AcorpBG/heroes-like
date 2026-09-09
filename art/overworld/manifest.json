@@ -5589,7 +5589,9 @@
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "distinct_sprite_assignment": true,
       "assigned_map_object_id": "object_marsh_listener_post",
-      "assigned_map_object_family": "scouting_structure"
+      "assigned_map_object_family": "scouting_structure",
+      "source_processing_manifest": "res://art/overworld/source/generated/full_match_art_repairs/marsh_listener_cutout/manifest.json",
+      "runtime_sha256": "b1a9c1e6d86fade72300649791e05628f3b651e6168b33c437630ea465379e0b"
     },
     "mapobj_prism_survey_frame": {
       "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_prism_survey_frame.png",

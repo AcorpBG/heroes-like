@@ -15,6 +15,16 @@ import tempfile
 from generated_town_order_profile import OUTPUT, ROOT, run_probe
 
 CASES = {
+    'medium_marsh_listener': dict(
+        save_sha256='a3c565cc299de08f2970be3456b07d97a8fba628c288162f12c5360e7c89d6fe',
+        placement_id='native_h3maped_93c0f05a_object_1053',
+        object_id='object_marsh_listener_post', site_id='site_marsh_listener_post',
+        asset_id='mapobj_marsh_listener_post', x=39, y=41, day=46, claimed=False,
+        kind='resource_site', body_window=[124, 176, 382, 420],
+        block_tiles=[dict(x=39, y=41, level=0)],
+        body_tiles=[dict(x=39, y=41, level=0)],
+        visit_tiles=[dict(x=39, y=41, level=0)],
+    ),
     'large_cinder': dict(
         save_sha256='f30453a639d1bae75839292979f05a71b626fb952a20e6eacd0422a9a625545d',
         placement_id='native_h3maped_c2520619_object_2306',
@@ -79,8 +89,11 @@ func run() -> void:
         check(placement.get(key, "") == spec[key], "preserved placement " + key)
     for key in ["x", "y"]:
         check(int(placement.get(key,-1)) == int(spec[key]), "preserved native " + key)
-    check(int(placement.get("level",-1))==0 and placement.get("kind","")=="mine", "preserved level and adopted kind")
+    check(int(placement.get("level",-1))==0 and placement.get("kind","")==spec.get("kind","mine"), "preserved level and adopted kind")
     check(normalized({"tiles":placement.get("package_block_tiles",[])}) == normalized({"tiles":spec.block_tiles}), "exact native movement block mask")
+    for key in ["body_tiles", "visit_tiles"]:
+        if spec.has(key):
+            check(normalized({"tiles":placement.get("package_"+key,[])}) == normalized({"tiles":spec[key]}), "exact native "+key)
     check(placement.get("runtime_footprint",null)==null, "no injected visual footprint")
     check(bool(placement.get("collected",false))==bool(spec.claimed), "earned collection state")
     check(OverworldRules._resource_node_matches_controller(placement,"player")==bool(spec.claimed), "canonical earned controller state")

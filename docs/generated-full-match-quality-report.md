@@ -15,6 +15,18 @@ Requirements:
 `docs/generated-full-match-quality-requirements.md`. This is an implementation
 checkpoint, **not completion of the overall quality goal or release readiness**.
 
+Validated Marsh Listener Post checkpoint (2026-09-09): the original listening-hut
+cutout no longer carries its detached atlas divider or magenta fringe. The exact
+earned Medium placement, masks, controller, fog and full save behavior remain
+unchanged. Both failing-before controls and all six corrected source/Linux/
+Windows views are retained; four corrected source/Linux images were inspected.
+All 16 source jobs (44 Python tests, prior sprites/fog/input/Town, preservation,
+repository/diff) and six official package jobs pass. Eight full saves match
+outside only timestamps, and 5225 of 5228 prior package payloads are unchanged.
+Both PCKs are 249671040 bytes, below the unchanged cap; Windows is headless Wine.
+This closes the specific Marsh observation, not remaining Town variants/factions
+or all Overworld presentation. Details: `docs/generated-full-match-art-repair-report.md`.
+
 Validated cutout checkpoint (2026-09-09): Cinder Ore Face and Moss Oath Cache now
 retain their original paintings without the reproduced sheet debris/magenta
 matte. Exact native/resource-site mappings, canvases, original body pixels,

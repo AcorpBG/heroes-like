@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Approved alpha extraction repair of two original, hash-locked paintings.
+"""Approved alpha extraction repair of original, hash-locked paintings.
 
 No replacement shapes or new painted pixels. Reuse the analytical magenta
 unmatting approach accepted for Wreck Quay, with independently inspected bounds.
@@ -31,14 +31,26 @@ SPECS = {
         'atlas_sha256': '316451178feadfb669d8125c9164af99e41185d8f62852ffd083179a9ddff7e2',
         'reason': 'Exclude isolated cell debris above/left of the subject; retain the complete chest, three stones, flowers, plants and ground edge.',
     },
+    'mapobj_marsh_listener_post': {
+        'input_sha256': 'd73f51678c1ca4b756fe15a236e5eaacad5e2141ab01aa235d3e53b0000f7a7f',
+        'body_window': (124, 176, 382, 420),
+        'atlas_batch': '06',
+        'atlas_sha256': '111b62a8da56c966ccc2d93cf1a4bfb25919de663aa012de667b98bd75b32798',
+        'reason': 'Exclude the detached upper sheet divider and magenta debris; retain the entire horn-equipped hut, stilts, reeds, lily pads and water base.',
+        'provenance_packet': 'marsh_listener_cutout',
+    },
 }
 
 
 def paths(asset_id):
     if asset_id not in SPECS:
         raise ValueError('Unsupported cutout identity: ' + asset_id)
+    packet = SPECS[asset_id].get('provenance_packet')
+    provenance = (ROOT / 'art/overworld/source/generated/full_match_art_repairs' / packet / 'manifest.json'
+                  if packet else PROVENANCE_PATH)
     return {
-        'input': PROVENANCE_DIR / (asset_id + '_before.png'),
+        'input': provenance.parent / (asset_id + '_before.png'),
+        'provenance': provenance,
         'runtime': ROOT / ('art/overworld/runtime/objects/map_objects/distinct/' + asset_id + '.png'),
         'trimmed': ROOT / ('art/overworld/source/trimmed/map_objects/distinct/' + asset_id + '-trimmed.png'),
         'atlas': ROOT / ('art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_' + SPECS[asset_id]['atlas_batch'] + '.png'),
@@ -108,29 +120,39 @@ def inspect_image(asset_id, path):
                     alpha_bounds=source.getchannel('A').getbbox())
 
 
-def preserve_inputs():
-    # Validate the whole pair before copying either input; never overwrite a master.
-    for asset_id, spec in SPECS.items():
+def selected_assets(assets=None):
+    result = tuple(SPECS if assets is None else assets)
+    if not result or len(set(result)) != len(result) or any(asset not in SPECS for asset in result):
+        raise ValueError('Expected unique supported cutout identities')
+    return result
+
+
+def preserve_inputs(assets=None):
+    # Validate the entire selection before copying any input; never overwrite a master.
+    assets = selected_assets(assets)
+    for asset_id in assets:
+        spec = SPECS[asset_id]
         files = paths(asset_id)
         candidate = files['input'] if files['input'].exists() else files['runtime']
         if digest(candidate) != spec['input_sha256']:
             raise ValueError('Original cutout hash changed: ' + asset_id)
         if not files['atlas'].is_file() or digest(files['atlas']) != spec['atlas_sha256']:
             raise ValueError('Original generated atlas missing or changed: ' + asset_id)
-    PROVENANCE_DIR.mkdir(parents=True, exist_ok=True)
-    for asset_id in SPECS:
+    for asset_id in assets:
         files = paths(asset_id)
+        files['input'].parent.mkdir(parents=True, exist_ok=True)
         if not files['input'].exists():
             files['input'].write_bytes(files['runtime'].read_bytes())
 
 
-def prepare():
-    preserve_inputs()
+def prepare(assets=None):
+    assets = selected_assets(assets)
+    preserve_inputs(assets)
     manifest_text = ART_MANIFEST.read_text()
     manifest = json.loads(manifest_text)
     prepared = {}
-    # Check every identity before altering either registered runtime path.
-    for asset_id in SPECS:
+    # Check every selected identity before altering any registered runtime path.
+    for asset_id in assets:
         files = paths(asset_id)
         row = manifest['object_assets'][asset_id]
         for field, expected in [('assigned_map_object_id', asset_id.replace('mapobj_', 'object_', 1)),
@@ -162,21 +184,34 @@ def prepare():
             before=inspect_image(asset_id, files['input']), after=proof,
         )
         manifest['object_assets'][asset_id].update(
-            source_processing_manifest='res://' + str(PROVENANCE_PATH.relative_to(ROOT)),
+            source_processing_manifest='res://' + str(files['provenance'].relative_to(ROOT)),
             runtime_sha256=rows[asset_id]['runtime_sha256'],
         )
-    provenance = dict(
+    provenance_template = dict(
         schema_id='original_map_object_cutout_repair_v1',
         owner_approval='2026-09-07 approved Overworld cutout repairs; Cinder/Moss continuation selected in PLAN.md.',
         processing_tool='tools/repair_map_object_cutouts.py',
         processing='Original 512x512 RGBA canvases; remove inspected sheet debris outside each complete subject; analytically unmatte magenta and recover partial alpha. No replacement geometry or new painted pixels.',
         source_docs=['docs/generated-full-match-quality-requirements.md', 'docs/generated-full-match-art-repair-report.md'],
         generation='No new generation. Original built-in image-generated batch04/batch09 paintings and exact extracted before rasters are retained.',
-        assets=rows,
+        assets={},
     )
-    PROVENANCE_PATH.write_text(json.dumps(provenance, indent=2) + '\n')
+    packets = {}
+    for asset_id, row in rows.items():
+        path = paths(asset_id)['provenance']
+        if path not in packets:
+            # Preserve earlier packet metadata and any unselected asset entries.
+            packets[path] = json.loads(path.read_text()) if path.exists() else dict(provenance_template, assets={})
+            if not path.exists() and SPECS[asset_id].get('provenance_packet') == 'marsh_listener_cutout':
+                packets[path].update(
+                    owner_approval='2026-09-07 approved Overworld cutout repairs; Marsh Listener Post continuation selected in PLAN.md on 2026-09-09.',
+                    generation='No new generation. Original built-in image-generated batch06 painting and exact extracted before raster are retained.',
+                )
+        packets[path]['assets'][asset_id] = row
+    for path, provenance in packets.items():
+        path.write_text(json.dumps(provenance, indent=2) + '\n')
     # Retain all unrelated whitespace/rows as well as their semantic content.
-    for asset_id in SPECS:
+    for asset_id in assets:
         pattern = r'(?ms)^    "' + re.escape(asset_id) + r'": \{\n.*?^    \}(?=,?\n)'
         replacement = '    ' + json.dumps(asset_id) + ': ' + json.dumps(manifest['object_assets'][asset_id], indent=2).replace('\n','\n    ')
         manifest_text, count = re.subn(pattern, lambda match: replacement, manifest_text)
@@ -195,11 +230,11 @@ def validate_asset(asset_id, entry):
     errors = list(report['errors'])
     try:
         spec = SPECS[asset_id]
-        provenance = json.loads(PROVENANCE_PATH.read_text())
+        provenance = json.loads(files['provenance'].read_text())
         row = provenance['assets'][asset_id]
         expected_paths = {
             'path': files['runtime'], 'source_trimmed': files['trimmed'],
-            'source_generated_atlas': files['atlas'], 'source_processing_manifest': PROVENANCE_PATH,
+            'source_generated_atlas': files['atlas'], 'source_processing_manifest': files['provenance'],
         }
         for key, path in expected_paths.items():
             if entry.get(key) != 'res://' + str(path.relative_to(ROOT)):
@@ -235,17 +270,18 @@ def main():
     modes.add_argument('--preserve-inputs', action='store_true')
     modes.add_argument('--write', action='store_true')
     modes.add_argument('--check', action='store_true')
+    parser.add_argument('--asset', choices=SPECS, action='append', help='Limit processing/checks to these exact assets; default: all approved assets')
     args = parser.parse_args()
     if args.preserve_inputs:
-        preserve_inputs()
-        print('Preserved both exact original extracted rasters; runtime unchanged')
+        preserve_inputs(args.asset)
+        print('Preserved exact selected original extracted rasters; runtime unchanged')
         return 0
     if args.write:
-        rows = prepare()
+        rows = prepare(args.asset)
         print(json.dumps({asset: row['after'] for asset, row in rows.items()}))
         return 0
     manifest = json.loads(ART_MANIFEST.read_text())
-    result = {asset: validate_asset(asset, manifest['object_assets'][asset]) for asset in SPECS}
+    result = {asset: validate_asset(asset, manifest['object_assets'][asset]) for asset in selected_assets(args.asset)}
     print(json.dumps(result))
     return 0 if all(row['ok'] for row in result.values()) else 1
 
