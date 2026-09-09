@@ -1,10 +1,10 @@
 # Generated full-match quality: gameplay corrections
 
-2026-09-06. Active Phase 6 parent `quality-generated-full-match-20260906`,
-playthrough child `quality-generated-full-match-playthrough-20260906` completed
-on 2026-09-07. The selected responsiveness child is also completed; presentation
-and the parent remain in progress. Town overlay and command/footer checkpoints
-below are validated.
+Current disposition, 2026-09-09: Phase 6 parent
+`quality-generated-full-match-20260906` and its three children are complete for
+their selected requirements. Source-backed closure, final package identity,
+evidence reuse and remaining product limits:
+`docs/generated-full-match-quality-completion.md`.
 Large08 reached a legitimate Day-14 defeat after enemy-town conquest. The exact
 Medium11 continuation now reaches a legitimate Day-97 victory and complete
 terminal save/resume after the generated-objective correction documented below.
@@ -12,8 +12,9 @@ Medium10's Day-35 stop remains diagnostic. Measured
 responsiveness improvements satisfy the selected action criteria, not universal
 fast interaction or hardware certification; see the performance report.
 Requirements:
-`docs/generated-full-match-quality-requirements.md`. This is an implementation
-checkpoint, **not completion of the overall quality goal or release readiness**.
+`docs/generated-full-match-quality-requirements.md`. This is scoped quality-goal
+completion, **not release readiness**. The dated checkpoints below retain their
+original failures and then-open scope; they do not override the current closure.
 
 Validated owner-directed continuation (2026-09-09): the fixed release-package
 size budget is removed, preserving measured sizes, source-art exclusion and

@@ -4,6 +4,12 @@ Owner direction, 2026-09-06: improve complete-match player-facing quality after
 the source/runtime review rated the current game a playable alpha, not a release
 candidate. Phase 6 parent: `quality-generated-full-match-20260906`.
 
+Implementation acceptance completed 2026-09-09 for the selected parent and three
+children. Evidence, final source/package boundary, reused validation and explicit
+remaining product limits: `docs/generated-full-match-quality-completion.md`.
+The requirements and dated scope amendments below remain the acceptance record;
+completion does not change them or imply release readiness.
+
 ## Owner-directed implementation cadence — 2026-09-09
 
 Work in coherent faction/progression batches. The first resumed Duskfen batch covers

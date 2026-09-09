@@ -1,5 +1,11 @@
 # Full-match responsiveness — 2026-09-06
 
+Current disposition, 2026-09-09: the completed responsiveness child's source
+owners remain unchanged through the all-faction presentation boundary. The
+selected parent and presentation child are now complete; see
+`docs/generated-full-match-quality-completion.md`. The dated measurements and
+limits below remain unchanged, including approximately 7.4-second Large turns.
+
 Phase 6 child `performance-generated-full-match-actions-20260906`, under
 `quality-generated-full-match-20260906`. Requirements:
 `docs/generated-full-match-quality-requirements.md`. **Completed for the selected
