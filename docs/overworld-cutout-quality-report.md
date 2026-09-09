@@ -419,13 +419,101 @@ Commands and honest detached-versus-gameplay coverage requirements are in
 `docs/overworld-cutout-quality-requirements.md`; both existing cutout drivers
 select this cohort with `--batch legacy_families`.
 
+## Enclosed resource-state backing recovery (2026-09-09)
+
+Seven more original paintings are corrected in three existing atlas PNGs:
+opened Thorn Seal Gate, Frost Toll Bar, Reef Chain Boom, Ash Sluice Lock and
+Toll Ruin, plus active Root Pass Arch and Ridge Wind Chute. No new generated
+painting was needed. The original `route_control_opened_wave1/manifest.json`
+and `land_transit_active_wave1/manifest.json` explicitly document border-only
+background removal. Enclosed checker/white regions therefore survived inside
+arches, chain links and braces. Original source inspection and the actual
+earned Root Pass screenshot reproduce the defect; it was baked raster backing,
+not a missing import, runtime overlay, identity fallback or RMG placement issue.
+
+`tools/prepare_overworld_passage_cutouts.py` removes only explicitly inspected,
+source-connected near-neutral backing components, with exact seed/area/bounds
+and original-source hash checks. It retains every other source pixel, including
+snow/crystal glints and the wind/canvas current. Independent original RGB
+comparison proves the unchanged source crops and bilinear 44-pixel fits:
+274–977 opaque material samples per asset average 0.87–1.22 channel error against
+the historical atlas. Toll Ruin retains its unusual `(2,4)` canvas offset.
+Only the projected repair support changes in the runtime: all other original
+RGBA pixels, all seven 48-square regions, all 16 neighboring atlas regions and
+every content/placement/state mapping stay unchanged.
+
+The `passages/recipe.json`, `manifest.json` and three retained `before_runtime/`
+atlases under `source/generated/cutout_recovery_20260909/` record the recovery.
+Seven complete recovered sources and seven prepared runtime-size trims are
+under `source/trimmed/cutout_recovery_20260909/passages/`. Historical source
+manifests retain original hashes and point to the repair proof; repository
+validation reconstructs the actual corrected pixels rather than accepting a
+replacement hash alone.
+
+Accepted evidence under `.artifacts/overworld_cutout_quality_20260909/`:
+
+- `passages_acceptance_1280`, `passages_acceptance_1920`,
+  `passages_packaged_linux_acceptance` and fresh-prefix
+  `passages_packaged_windows_acceptance` each pass **2,458 checks**, terminal
+  exit 0 and zero runtime errors. The final nine source/Linux screenshots
+  were individually inspected. Windows remains headless Wine, not rendered
+  Windows or physical-GPU certification.
+- `passages_before_1280` reproduces all seven independent art-oracle failures;
+  ordinary movement, full saved state and unrelated controls still pass.
+  `passages_unit_acceptance.log` passes 11 new Python tests;
+  `passages_prior_legacy_tests.log` passes 15 prior tests. The full repository
+  validator passes (`passages_repo_acceptance.log`), as do `git diff --check`
+  and shared distinct/decorative sprite, movement-input, route and fog reports
+  (`.artifacts/full_play_runtime_20260905/passages_cutout_shared/report.json`).
+- Both official `passages_linux_final/report.json` and
+  `passages_windows_final/report.json` pass, including Linux startup and
+  Windows fresh-prefix startup/generated Overworld/Town ten-building flow.
+- `passages_delivery_preservation.json` proves all five native saved outputs
+  equal except `saved_at_unix`. Five independently started authored outputs
+  additionally differ only in `session_id`, whose existing constructor uses
+  `Time.get_ticks_msec()` (`SessionStateStore.gd:48`). Each run's complete
+  session/save/load comparisons exclude **nothing**, including session identity.
+
+The first Windows probe passed its 2,456 assertions but failed acceptance on
+an abrupt-exit ObjectDB warning. Retained verbose diagnostics identify four
+`AudioStreamPlaybackOggVorbis` references after the multi-scene test. The final
+probe leaves audio enabled during gameplay, then uses the existing music and
+ambient stop methods and briefly drains the mixer **after** all captures and
+save checks. Two additional checks prove the owners stop and full session
+state is unchanged. The verbose teardown diagnostic and a fresh-prefix final
+run are clean. This is test-lifecycle correction, not a production audio fix
+or a claim that arbitrary game-exit paths were repaired. The original failure
+remains in `passages_packaged_windows` and `passages_exit_diagnostic`.
+
+Both exact PCKs are **285,855,668 bytes / 5,482 members**, 5,376 bytes larger
+than the mixed-family checkpoint. Only `project.binary` differs by platform;
+exactly three texture members, the Overworld manifest and UID cache changed.
+All **5,477 other members are byte-identical**, with no additions/removals and
+no runtime/gameplay/native/save-owner changes. Linux SHA-256:
+`0c49b7026b31aee3a77bec6081c53d749df8efe0fe387d90b692553cf6a865e3`.
+Windows SHA-256:
+`dd53b9f298fa810beb6ebfb942c0a956aedb149e5cc057111191f15646010187`.
+Both cutout drivers select this cohort with `--batch passages`.
+
+Gameplay evidence is explicit: a fresh `seedseer-drowned-orchard` start reaches
+and claims Root Pass Arch at its original `(5,1)` through seven ordinary moves,
+with no position, fog, movement, collection, resource or encounter grants.
+The opening is visibly clear in both source resolutions and the Linux package.
+Detached galleries show all seven variants and are labeled **not gameplay**.
+The unchanged earned native Medium Day97 case still has 2,380 original cohesive
+blocker bodies; none of its current resource states uses these seven variants,
+so that capture is a regression control, not a corrected-state native capture.
+
 ## Remaining parent work
 
-The full 1,214-row runtime pool is **not accepted**. Remaining review/recovery is
-active in the same child after the accepted 35-row mixed-family checkpoint.
-The confirmed older-tree, twelve legacy-prop, six faction-hero and controlled
-Crownmere defects above are corrected. Other atlas-backed resource/state/artifact/encounter/town/hero families
-still need complete detailed dispositions; small contact thumbnails and color
-counts are not visual acceptance. Legitimate purple materials are preserved.
-Other-object defects visible in the maps are not hidden or declared fixed.
-No release-readiness claim is made.
+The full 1,214-row runtime pool is **not accepted**. The remaining 783 rows have
+now received a first-pass visual contact review across all six remaining family
+groups; those contacts and 32 color candidates are not final per-row acceptance.
+The five cohort recipes cover 454 repaired/preserved dispositions, leaving 760
+for complete detailed review and any necessary recovery. Next are 24 recurring
+encounter regions whose historical atlas has only binary alpha despite sources
+retaining full alpha; source/runtime comparisons show broken thin silhouettes.
+The other seven recurring regions retain smooth coverage. Individual source/
+native-resolution checks of intentional purple materials also remain. Existing
+unit medallions and state indicators are not mislabeled as magenta matte.
+Do not hide remaining defects or claim release readiness from this checkpoint.

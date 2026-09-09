@@ -1,0 +1,1917 @@
+{
+  "schema_id": "passage_cutout_recipe_v1",
+  "owner_approval": "2026-09-09 explicit deterministic original-image recovery approval",
+  "assets": {
+    "resource_site_route_control_thorn_seal_gate_opened": {
+      "mode": "interior_backing",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/thorn_seal_gate_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+        "assigned_resource_site_id": "site_thorn_seal_gate",
+        "presentation_role": "opened_route_lock_state",
+        "accessible_description": "Thorn Seal Gate with its living barrier withdrawn into the arch and a broad green-gold passage standing open."
+      },
+      "before_sha256": "073e1e55c6f3bbff714755a250dcb0764426e45a263e72799a5f72660c1b7059",
+      "source_sha256": "894dcd610ad005b86624ef7c33c4a76438eeeb33c88552ced258b47029b0ea7a",
+      "source_crop": [
+        235,
+        264,
+        1023,
+        995
+      ],
+      "source_resize": [
+        44,
+        41
+      ],
+      "canvas_origin": [
+        2,
+        3
+      ],
+      "canvas_size": [
+        48,
+        48
+      ],
+      "backing_components": [
+        {
+          "area": 76290,
+          "seed": [
+            627,
+            463
+          ],
+          "bounds": [
+            517,
+            463,
+            734,
+            886
+          ]
+        },
+        {
+          "area": 1659,
+          "seed": [
+            623,
+            312
+          ],
+          "bounds": [
+            588,
+            312,
+            658,
+            349
+          ]
+        },
+        {
+          "area": 1113,
+          "seed": [
+            919,
+            641
+          ],
+          "bounds": [
+            914,
+            641,
+            946,
+            706
+          ]
+        },
+        {
+          "area": 900,
+          "seed": [
+            684,
+            323
+          ],
+          "bounds": [
+            664,
+            323,
+            731,
+            366
+          ]
+        },
+        {
+          "area": 551,
+          "seed": [
+            525,
+            347
+          ],
+          "bounds": [
+            492,
+            347,
+            527,
+            387
+          ]
+        },
+        {
+          "area": 473,
+          "seed": [
+            559,
+            333
+          ],
+          "bounds": [
+            539,
+            333,
+            580,
+            361
+          ]
+        },
+        {
+          "area": 440,
+          "seed": [
+            402,
+            456
+          ],
+          "bounds": [
+            393,
+            456,
+            412,
+            498
+          ]
+        },
+        {
+          "area": 311,
+          "seed": [
+            781,
+            399
+          ],
+          "bounds": [
+            780,
+            399,
+            810,
+            425
+          ]
+        },
+        {
+          "area": 284,
+          "seed": [
+            427,
+            439
+          ],
+          "bounds": [
+            404,
+            439,
+            431,
+            460
+          ]
+        },
+        {
+          "area": 206,
+          "seed": [
+            839,
+            458
+          ],
+          "bounds": [
+            831,
+            458,
+            848,
+            481
+          ]
+        },
+        {
+          "area": 183,
+          "seed": [
+            832,
+            436
+          ],
+          "bounds": [
+            822,
+            436,
+            839,
+            459
+          ]
+        },
+        {
+          "area": 118,
+          "seed": [
+            373,
+            535
+          ],
+          "bounds": [
+            362,
+            535,
+            377,
+            552
+          ]
+        },
+        {
+          "area": 104,
+          "seed": [
+            912,
+            600
+          ],
+          "bounds": [
+            904,
+            600,
+            913,
+            619
+          ]
+        },
+        {
+          "area": 74,
+          "seed": [
+            350,
+            626
+          ],
+          "bounds": [
+            343,
+            626,
+            353,
+            641
+          ]
+        },
+        {
+          "area": 62,
+          "seed": [
+            974,
+            781
+          ],
+          "bounds": [
+            965,
+            781,
+            976,
+            793
+          ]
+        },
+        {
+          "area": 49,
+          "seed": [
+            437,
+            436
+          ],
+          "bounds": [
+            435,
+            436,
+            444,
+            446
+          ]
+        },
+        {
+          "area": 45,
+          "seed": [
+            819,
+            421
+          ],
+          "bounds": [
+            818,
+            421,
+            826,
+            430
+          ]
+        },
+        {
+          "area": 45,
+          "seed": [
+            308,
+            787
+          ],
+          "bounds": [
+            303,
+            787,
+            310,
+            801
+          ]
+        },
+        {
+          "area": 43,
+          "seed": [
+            324,
+            725
+          ],
+          "bounds": [
+            324,
+            725,
+            331,
+            734
+          ]
+        },
+        {
+          "area": 41,
+          "seed": [
+            362,
+            561
+          ],
+          "bounds": [
+            362,
+            561,
+            370,
+            572
+          ]
+        },
+        {
+          "area": 37,
+          "seed": [
+            340,
+            658
+          ],
+          "bounds": [
+            340,
+            658,
+            347,
+            669
+          ]
+        },
+        {
+          "area": 31,
+          "seed": [
+            368,
+            553
+          ],
+          "bounds": [
+            368,
+            553,
+            374,
+            562
+          ]
+        },
+        {
+          "area": 31,
+          "seed": [
+            339,
+            646
+          ],
+          "bounds": [
+            338,
+            646,
+            347,
+            654
+          ]
+        },
+        {
+          "area": 27,
+          "seed": [
+            864,
+            506
+          ],
+          "bounds": [
+            863,
+            506,
+            869,
+            517
+          ]
+        },
+        {
+          "area": 27,
+          "seed": [
+            381,
+            530
+          ],
+          "bounds": [
+            379,
+            530,
+            385,
+            538
+          ]
+        },
+        {
+          "area": 22,
+          "seed": [
+            661,
+            318
+          ],
+          "bounds": [
+            661,
+            318,
+            669,
+            323
+          ]
+        },
+        {
+          "area": 22,
+          "seed": [
+            589,
+            346
+          ],
+          "bounds": [
+            589,
+            346,
+            594,
+            353
+          ]
+        },
+        {
+          "area": 21,
+          "seed": [
+            958,
+            743
+          ],
+          "bounds": [
+            958,
+            743,
+            963,
+            754
+          ]
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_route_control_thorn_seal_gate_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_route_control_thorn_seal_gate_opened.png"
+    },
+    "resource_site_route_control_frost_toll_bar_opened": {
+      "mode": "interior_backing",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/frost_toll_bar_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+        "assigned_resource_site_id": "site_frost_toll_bar",
+        "presentation_role": "opened_route_lock_state",
+        "accessible_description": "Frost Toll Bar with its chain arched high between cyan pylons and the snowy pass fully clear."
+      },
+      "before_sha256": "073e1e55c6f3bbff714755a250dcb0764426e45a263e72799a5f72660c1b7059",
+      "source_sha256": "c33eefd11adad485785c9b81ad50a68e3cbab70fe6cf9990027f7e7513d874d3",
+      "source_crop": [
+        171,
+        234,
+        1087,
+        978
+      ],
+      "source_resize": [
+        44,
+        36
+      ],
+      "canvas_origin": [
+        2,
+        6
+      ],
+      "canvas_size": [
+        48,
+        48
+      ],
+      "backing_components": [
+        {
+          "area": 259040,
+          "seed": [
+            611,
+            259
+          ],
+          "bounds": [
+            370,
+            259,
+            877,
+            879
+          ]
+        },
+        {
+          "area": 234,
+          "seed": [
+            635,
+            246
+          ],
+          "bounds": [
+            634,
+            246,
+            662,
+            259
+          ]
+        },
+        {
+          "area": 219,
+          "seed": [
+            458,
+            322
+          ],
+          "bounds": [
+            442,
+            322,
+            466,
+            347
+          ]
+        },
+        {
+          "area": 213,
+          "seed": [
+            813,
+            350
+          ],
+          "bounds": [
+            805,
+            350,
+            827,
+            376
+          ]
+        },
+        {
+          "area": 212,
+          "seed": [
+            580,
+            251
+          ],
+          "bounds": [
+            560,
+            251,
+            584,
+            267
+          ]
+        },
+        {
+          "area": 212,
+          "seed": [
+            866,
+            471
+          ],
+          "bounds": [
+            856,
+            471,
+            873,
+            497
+          ]
+        },
+        {
+          "area": 208,
+          "seed": [
+            708,
+            264
+          ],
+          "bounds": [
+            702,
+            264,
+            727,
+            283
+          ]
+        },
+        {
+          "area": 206,
+          "seed": [
+            513,
+            279
+          ],
+          "bounds": [
+            494,
+            279,
+            519,
+            299
+          ]
+        },
+        {
+          "area": 205,
+          "seed": [
+            766,
+            301
+          ],
+          "bounds": [
+            762,
+            301,
+            785,
+            325
+          ]
+        },
+        {
+          "area": 204,
+          "seed": [
+            391,
+            436
+          ],
+          "bounds": [
+            385,
+            436,
+            401,
+            461
+          ]
+        },
+        {
+          "area": 201,
+          "seed": [
+            846,
+            408
+          ],
+          "bounds": [
+            837,
+            408,
+            855,
+            433
+          ]
+        },
+        {
+          "area": 200,
+          "seed": [
+            417,
+            375
+          ],
+          "bounds": [
+            407,
+            375,
+            426,
+            401
+          ]
+        },
+        {
+          "area": 190,
+          "seed": [
+            388,
+            499
+          ],
+          "bounds": [
+            377,
+            499,
+            389,
+            523
+          ]
+        },
+        {
+          "area": 68,
+          "seed": [
+            387,
+            563
+          ],
+          "bounds": [
+            378,
+            563,
+            388,
+            575
+          ]
+        },
+        {
+          "area": 45,
+          "seed": [
+            384,
+            601
+          ],
+          "bounds": [
+            373,
+            601,
+            386,
+            617
+          ]
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_route_control_frost_toll_bar_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_route_control_frost_toll_bar_opened.png"
+    },
+    "resource_site_route_control_reef_chain_boom_opened": {
+      "mode": "interior_backing",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/reef_chain_boom_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+        "assigned_resource_site_id": "site_reef_chain_boom",
+        "presentation_role": "opened_route_lock_state",
+        "accessible_description": "Reef Chain Boom with its heavy chain lifted above the route and teal capstan lights lit."
+      },
+      "before_sha256": "073e1e55c6f3bbff714755a250dcb0764426e45a263e72799a5f72660c1b7059",
+      "source_sha256": "888196697a1f9833fb6c1274febe36194951119f04979609ed12141b5a912e1c",
+      "source_crop": [
+        190,
+        326,
+        1047,
+        1042
+      ],
+      "source_resize": [
+        44,
+        37
+      ],
+      "canvas_origin": [
+        2,
+        5
+      ],
+      "canvas_size": [
+        48,
+        48
+      ],
+      "backing_components": [
+        {
+          "area": 35856,
+          "seed": [
+            420,
+            455
+          ],
+          "bounds": [
+            413,
+            455,
+            852,
+            691
+          ]
+        },
+        {
+          "area": 152,
+          "seed": [
+            650,
+            579
+          ],
+          "bounds": [
+            645,
+            579,
+            663,
+            592
+          ]
+        },
+        {
+          "area": 150,
+          "seed": [
+            581,
+            561
+          ],
+          "bounds": [
+            575,
+            561,
+            597,
+            577
+          ]
+        },
+        {
+          "area": 145,
+          "seed": [
+            461,
+            474
+          ],
+          "bounds": [
+            452,
+            474,
+            473,
+            494
+          ]
+        },
+        {
+          "area": 145,
+          "seed": [
+            518,
+            524
+          ],
+          "bounds": [
+            511,
+            524,
+            531,
+            542
+          ]
+        },
+        {
+          "area": 126,
+          "seed": [
+            842,
+            468
+          ],
+          "bounds": [
+            838,
+            468,
+            854,
+            488
+          ]
+        },
+        {
+          "area": 110,
+          "seed": [
+            723,
+            569
+          ],
+          "bounds": [
+            716,
+            569,
+            729,
+            583
+          ]
+        },
+        {
+          "area": 83,
+          "seed": [
+            779,
+            540
+          ],
+          "bounds": [
+            772,
+            540,
+            789,
+            554
+          ]
+        },
+        {
+          "area": 39,
+          "seed": [
+            822,
+            503
+          ],
+          "bounds": [
+            818,
+            503,
+            829,
+            513
+          ]
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_route_control_reef_chain_boom_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_route_control_reef_chain_boom_opened.png"
+    },
+    "resource_site_route_control_ash_sluice_lock_opened": {
+      "mode": "interior_backing",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/ash_sluice_lock_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+        "assigned_resource_site_id": "site_ash_sluice_lock",
+        "presentation_role": "opened_route_lock_state",
+        "accessible_description": "Ash Sluice Lock with both grates raised and blue route lamps marking a cooled open channel."
+      },
+      "before_sha256": "073e1e55c6f3bbff714755a250dcb0764426e45a263e72799a5f72660c1b7059",
+      "source_sha256": "b1a4ee7db7f9dd9c88024c45e2aa0533a3a9f1c358bc7fccb8ce41eb69153cb0",
+      "source_crop": [
+        196,
+        242,
+        1075,
+        1041
+      ],
+      "source_resize": [
+        44,
+        40
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "canvas_size": [
+        48,
+        48
+      ],
+      "backing_components": [
+        {
+          "area": 11531,
+          "seed": [
+            692,
+            428
+          ],
+          "bounds": [
+            578,
+            428,
+            694,
+            608
+          ]
+        },
+        {
+          "area": 837,
+          "seed": [
+            350,
+            581
+          ],
+          "bounds": [
+            326,
+            581,
+            353,
+            633
+          ]
+        },
+        {
+          "area": 384,
+          "seed": [
+            381,
+            562
+          ],
+          "bounds": [
+            370,
+            562,
+            387,
+            610
+          ]
+        },
+        {
+          "area": 166,
+          "seed": [
+            888,
+            486
+          ],
+          "bounds": [
+            883,
+            486,
+            896,
+            511
+          ]
+        },
+        {
+          "area": 87,
+          "seed": [
+            582,
+            497
+          ],
+          "bounds": [
+            575,
+            497,
+            584,
+            512
+          ]
+        },
+        {
+          "area": 44,
+          "seed": [
+            414,
+            551
+          ],
+          "bounds": [
+            408,
+            551,
+            415,
+            570
+          ]
+        },
+        {
+          "area": 36,
+          "seed": [
+            872,
+            464
+          ],
+          "bounds": [
+            872,
+            464,
+            878,
+            472
+          ]
+        },
+        {
+          "area": 29,
+          "seed": [
+            870,
+            492
+          ],
+          "bounds": [
+            867,
+            492,
+            871,
+            503
+          ]
+        },
+        {
+          "area": 28,
+          "seed": [
+            386,
+            583
+          ],
+          "bounds": [
+            386,
+            583,
+            390,
+            595
+          ]
+        },
+        {
+          "area": 26,
+          "seed": [
+            636,
+            467
+          ],
+          "bounds": [
+            630,
+            467,
+            637,
+            474
+          ]
+        },
+        {
+          "area": 17,
+          "seed": [
+            579,
+            530
+          ],
+          "bounds": [
+            577,
+            530,
+            580,
+            537
+          ]
+        },
+        {
+          "area": 17,
+          "seed": [
+            399,
+            562
+          ],
+          "bounds": [
+            399,
+            562,
+            401,
+            575
+          ]
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_route_control_ash_sluice_lock_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_route_control_ash_sluice_lock_opened.png"
+    },
+    "resource_site_land_transit_root_pass_arch_active": {
+      "mode": "interior_backing",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/root_pass_arch_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_root_pass_arch",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A living root arch with an open luminous passage, fresh leaves, clear path stones, and green-gold waylight."
+      },
+      "before_sha256": "a50690ec924dd2059899801c2803f1296650b79792cba4b260bec4e53e086d8d",
+      "source_sha256": "729b79c982873be77c817a2a14953b53f520e6dba89a559685af572e7be3b26c",
+      "source_crop": [
+        242,
+        223,
+        1035,
+        1002
+      ],
+      "source_resize": [
+        44,
+        43
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        48,
+        48
+      ],
+      "backing_components": [
+        {
+          "area": 50745,
+          "seed": [
+            605,
+            447
+          ],
+          "bounds": [
+            500,
+            447,
+            756,
+            724
+          ]
+        },
+        {
+          "area": 1606,
+          "seed": [
+            540,
+            492
+          ],
+          "bounds": [
+            504,
+            492,
+            550,
+            551
+          ]
+        },
+        {
+          "area": 1394,
+          "seed": [
+            627,
+            429
+          ],
+          "bounds": [
+            606,
+            429,
+            680,
+            457
+          ]
+        },
+        {
+          "area": 1325,
+          "seed": [
+            694,
+            449
+          ],
+          "bounds": [
+            689,
+            449,
+            739,
+            503
+          ]
+        },
+        {
+          "area": 1207,
+          "seed": [
+            944,
+            561
+          ],
+          "bounds": [
+            922,
+            561,
+            964,
+            616
+          ]
+        },
+        {
+          "area": 702,
+          "seed": [
+            742,
+            517
+          ],
+          "bounds": [
+            736,
+            517,
+            768,
+            565
+          ]
+        },
+        {
+          "area": 599,
+          "seed": [
+            589,
+            438
+          ],
+          "bounds": [
+            572,
+            438,
+            601,
+            472
+          ]
+        },
+        {
+          "area": 462,
+          "seed": [
+            983,
+            681
+          ],
+          "bounds": [
+            967,
+            681,
+            996,
+            715
+          ]
+        },
+        {
+          "area": 429,
+          "seed": [
+            558,
+            449
+          ],
+          "bounds": [
+            528,
+            449,
+            564,
+            482
+          ]
+        },
+        {
+          "area": 253,
+          "seed": [
+            651,
+            241
+          ],
+          "bounds": [
+            638,
+            241,
+            659,
+            263
+          ]
+        },
+        {
+          "area": 134,
+          "seed": [
+            506,
+            657
+          ],
+          "bounds": [
+            500,
+            657,
+            509,
+            678
+          ]
+        },
+        {
+          "area": 129,
+          "seed": [
+            929,
+            492
+          ],
+          "bounds": [
+            927,
+            492,
+            944,
+            507
+          ]
+        },
+        {
+          "area": 106,
+          "seed": [
+            610,
+            230
+          ],
+          "bounds": [
+            607,
+            230,
+            617,
+            246
+          ]
+        },
+        {
+          "area": 64,
+          "seed": [
+            763,
+            656
+          ],
+          "bounds": [
+            761,
+            656,
+            766,
+            687
+          ]
+        },
+        {
+          "area": 22,
+          "seed": [
+            361,
+            497
+          ],
+          "bounds": [
+            356,
+            497,
+            363,
+            504
+          ]
+        },
+        {
+          "area": 19,
+          "seed": [
+            767,
+            582
+          ],
+          "bounds": [
+            767,
+            582,
+            771,
+            589
+          ]
+        },
+        {
+          "area": 17,
+          "seed": [
+            558,
+            517
+          ],
+          "bounds": [
+            557,
+            517,
+            562,
+            523
+          ]
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_land_transit_root_pass_arch_active.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_land_transit_root_pass_arch_active.png"
+    },
+    "resource_site_land_transit_ridge_wind_chute_active": {
+      "mode": "interior_backing",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/ridge_wind_chute_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_ridge_wind_chute",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A taut ridge wind chute catching a strong directed white-blue current beside a lit departure lantern."
+      },
+      "before_sha256": "a50690ec924dd2059899801c2803f1296650b79792cba4b260bec4e53e086d8d",
+      "source_sha256": "c3a286966da877db349a61ccd997c1b5798502188771ec60ce12fdb8feb6d964",
+      "source_crop": [
+        186,
+        139,
+        1129,
+        1113
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        48,
+        48
+      ],
+      "backing_components": [
+        {
+          "area": 5118,
+          "seed": [
+            601,
+            437
+          ],
+          "bounds": [
+            496,
+            437,
+            608,
+            534
+          ]
+        },
+        {
+          "area": 3449,
+          "seed": [
+            955,
+            532
+          ],
+          "bounds": [
+            932,
+            532,
+            1000,
+            610
+          ]
+        },
+        {
+          "area": 3403,
+          "seed": [
+            601,
+            316
+          ],
+          "bounds": [
+            541,
+            316,
+            608,
+            432
+          ]
+        },
+        {
+          "area": 3151,
+          "seed": [
+            1003,
+            605
+          ],
+          "bounds": [
+            925,
+            605,
+            1024,
+            673
+          ]
+        },
+        {
+          "area": 900,
+          "seed": [
+            970,
+            465
+          ],
+          "bounds": [
+            954,
+            465,
+            987,
+            526
+          ]
+        },
+        {
+          "area": 468,
+          "seed": [
+            774,
+            224
+          ],
+          "bounds": [
+            747,
+            224,
+            781,
+            252
+          ]
+        },
+        {
+          "area": 414,
+          "seed": [
+            486,
+            536
+          ],
+          "bounds": [
+            468,
+            536,
+            497,
+            595
+          ]
+        },
+        {
+          "area": 336,
+          "seed": [
+            893,
+            585
+          ],
+          "bounds": [
+            863,
+            585,
+            894,
+            619
+          ]
+        },
+        {
+          "area": 223,
+          "seed": [
+            639,
+            307
+          ],
+          "bounds": [
+            638,
+            307,
+            646,
+            360
+          ]
+        },
+        {
+          "area": 122,
+          "seed": [
+            937,
+            365
+          ],
+          "bounds": [
+            935,
+            365,
+            949,
+            383
+          ]
+        },
+        {
+          "area": 109,
+          "seed": [
+            687,
+            265
+          ],
+          "bounds": [
+            663,
+            265,
+            689,
+            276
+          ]
+        },
+        {
+          "area": 65,
+          "seed": [
+            716,
+            267
+          ],
+          "bounds": [
+            715,
+            267,
+            723,
+            277
+          ]
+        },
+        {
+          "area": 29,
+          "seed": [
+            655,
+            275
+          ],
+          "bounds": [
+            655,
+            275,
+            663,
+            279
+          ]
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_land_transit_ridge_wind_chute_active.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_land_transit_ridge_wind_chute_active.png"
+    },
+    "resource_site_minor_cache_toll_ruin_opened": {
+      "mode": "interior_backing",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/toll_ruin_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_toll_ruin",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Toll Ruin barrier stands open beneath a relit road lantern and cleared toll desk."
+      },
+      "before_sha256": "1c6c5c965a8eb371321afff30f94c30faf2747bc85875e4d4a65d0e7bd7d8c8d",
+      "source_sha256": "4bea1a56d8e6bf8ed57155e0379297995e0a5c8201d6030c6359bb5dfbdfc2de",
+      "source_crop": [
+        258,
+        287,
+        979,
+        1007
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "canvas_size": [
+        48,
+        48
+      ],
+      "backing_components": [
+        {
+          "area": 12564,
+          "seed": [
+            656,
+            414
+          ],
+          "bounds": [
+            637,
+            414,
+            705,
+            707
+          ]
+        },
+        {
+          "area": 76,
+          "seed": [
+            694,
+            525
+          ],
+          "bounds": [
+            693,
+            525,
+            702,
+            544
+          ]
+        },
+        {
+          "area": 41,
+          "seed": [
+            699,
+            510
+          ],
+          "bounds": [
+            692,
+            510,
+            701,
+            518
+          ]
+        },
+        {
+          "area": 26,
+          "seed": [
+            675,
+            685
+          ],
+          "bounds": [
+            670,
+            685,
+            678,
+            693
+          ]
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_minor_cache_toll_ruin_opened.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_minor_cache_toll_ruin_opened.png"
+    }
+  },
+  "preserved_controls": {
+    "resource_site_minor_cache_wreck_locker_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/wreck_locker_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_wreck_locker",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The wreck locker lid hangs open beside sorted salvage and a steady harbor lamp."
+      }
+    },
+    "resource_site_minor_cache_amber_reliquary_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/amber_reliquary_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_amber_reliquary",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Amber Reliquary petals stand open around a calm survey light and empty reliquary cradle."
+      }
+    },
+    "resource_site_minor_cache_slag_purse_vault_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/slag_purse_vault_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_slag_purse_vault",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Slag Purse Vault gate is raised over orderly ore bins and a claimed brass tally plate."
+      }
+    },
+    "resource_site_minor_cache_old_orchard_crypt_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/old_orchard_crypt_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_old_orchard_crypt",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Old Orchard Crypt door stands open beneath trimmed roots and a warm recovery lantern."
+      }
+    },
+    "resource_site_minor_cache_moss_oath_cache_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/moss_oath_cache_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_moss_oath_cache",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Moss Oath Cache is open beside restored tablets and a fresh green claim ribbon."
+      }
+    },
+    "resource_site_minor_cache_frost_tithe_cellar_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/frost_tithe_cellar_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_frost_tithe_cellar",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Frost Tithe Cellar hatch stands open around an orderly blue-lit muster alcove."
+      }
+    },
+    "resource_site_land_transit_repaired_ferry_stage_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/repaired_ferry_stage_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_repaired_ferry_stage",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A repaired ferry stage with a clear deck, taut guide ropes, lit route lanterns, safety ring, and raised pennant."
+      }
+    },
+    "resource_site_land_transit_rope_lift_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/rope_lift_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_rope_lift",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A braced working rope lift with taut lines, a secure platform, lit landing lamps, and route pennant."
+      }
+    },
+    "resource_site_land_transit_pressure_rail_switch_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/pressure_rail_switch_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_pressure_rail_switch",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "An aligned rail switch with a raised lever, charged blue-brass pipes, clear track, and lit route gauge."
+      }
+    },
+    "resource_site_land_transit_mirror_stair_turn_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/mirror_stair_turn_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_mirror_stair_turn",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A curved mirror stair with illuminated glass steps, bright rail beacons, and restrained blue-white route shimmer."
+      }
+    },
+    "resource_site_land_transit_basalt_undergate_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/basalt_undergate_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_basalt_undergate",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "An open basalt undergate with a deep lit passage, warm floor lamps, and paired violet guide crystals."
+      }
+    },
+    "resource_site_land_transit_slipgate_mirror_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          336,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/slipgate_mirror_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_slipgate_mirror",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A standing slipgate mirror charged with a directional blue-gold vortex and bright outward transit stream."
+      }
+    },
+    "resource_site_land_transit_spillway_drop_marker_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          384,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/spillway_drop_marker_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_spillway_drop_marker",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "An open blue-lit spillway control with a forceful one-way rush through its bounded channel."
+      }
+    },
+    "resource_site_land_transit_tide_bore_marker_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          432,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/tide_bore_marker_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_tide_bore_marker",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A carved current marker surrounded by a forceful directional turquoise tide and lit rope posts."
+      }
+    },
+    "resource_site_route_control_charter_bar_gate_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/charter_bar_gate_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+        "assigned_resource_site_id": "site_charter_bar_gate",
+        "presentation_role": "opened_route_lock_state",
+        "accessible_description": "Charter Bar Gate with its sealed barrier raised beside the left pillar and both charter medallions glowing warm gold."
+      }
+    },
+    "resource_site_route_control_brass_toll_arch_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/brass_toll_arch_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+        "assigned_resource_site_id": "site_brass_toll_arch",
+        "presentation_role": "opened_route_lock_state",
+        "accessible_description": "Brass Toll Arch with its striped arm raised against the booth and amber lamps showing lawful passage."
+      }
+    }
+  }
+}

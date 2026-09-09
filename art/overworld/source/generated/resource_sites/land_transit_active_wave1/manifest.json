@@ -1,5 +1,7 @@
 {
   "schema_version": 1,
+  "runtime_repair": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+  "runtime_repair_note": "The runtime_atlas hash records the original assembly. Current Root Pass/Ridge Wind interior-alpha derivatives and unchanged neighbors are proven by the repair packet; original sources and geometry remain intact.",
   "generation_mode": "built_in_image_gen_precise_object_edit",
   "source_model": "existing_original_land_transit_landmark_active_state",
   "intent": "Distinct activated-state variants for the complete ten-site land-transit family, preserving each original landmark identity while making live direction and operation legible at overworld scale.",

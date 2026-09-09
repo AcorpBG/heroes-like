@@ -44143,6 +44143,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             ensure(recovery["ok"], errors, f"Legacy recovery {asset_id} must preserve clean source-backed art: {recovery['errors']}")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Legacy cutout recovery failed closed: {exc}")
+    try:
+        passage_spec = importlib.util.spec_from_file_location("passage_cutout_validation", ROOT / "tools" / "prepare_overworld_passage_cutouts.py")
+        passage_module = importlib.util.module_from_spec(passage_spec)
+        passage_spec.loader.exec_module(passage_module)
+        for asset_id, recovery in passage_module.validate_assets().items():
+            ensure(recovery["ok"], errors, f"Passage recovery {asset_id} must preserve original paint and registration: {recovery['errors']}")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Passage cutout recovery failed closed: {exc}")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
@@ -52120,6 +52128,20 @@ def validate_three_creature_bank_forts(errors: list[str]) -> None:
         ensure('REQUIRED_CREATURE_BANK_OPENED_ATLAS_NAME = "creature_bank_opened_atlas"' in packaging_text and 'creature_bank_opened_atlas.png.import' in packaging_text, errors, f"{packaging_path.name} must audit the creature-bank opened atlas")
 
 
+def passage_atlas_recovery_matches(path: Path, historical_sha: str) -> bool:
+    """Historical assembly remains exact; current source reconstruction is gated above."""
+    packet = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/passages"
+    try:
+        proof = load_json(packet / "manifest.json")
+        row = proof["files"]["res://" + str(path.relative_to(ROOT))]
+        before = packet / "before_runtime" / path.relative_to(ROOT / "art/overworld/runtime")
+        return (row["before_sha256"] == historical_sha
+                and hashlib.sha256(before.read_bytes()).hexdigest() == historical_sha
+                and hashlib.sha256(path.read_bytes()).hexdigest() == row["after_sha256"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+
+
 def validate_seven_minor_guarded_caches(errors: list[str]) -> None:
     expected = {
         "site_toll_ruin": ("tollreaver-roadward-lodge", "tollreaver_toll_ruin", "tollreaver_roadward_lodge_watch", "encounter_roadward_lodge_watch", "mapobj_toll_ruin", "resource_site_minor_cache_toll_ruin_opened", "toll_ruin_opened", "4bea1a56d8e6bf8ed57155e0379297995e0a5c8201d6030c6359bb5dfbdfc2de", [0,0,48,48], "resource_and_scouting_rewards_live"),
@@ -52142,7 +52164,7 @@ def validate_seven_minor_guarded_caches(errors: list[str]) -> None:
         return
     atlas_payload = atlas_path.read_bytes()
     atlas_sha = hashlib.sha256(atlas_payload).hexdigest()
-    ensure(png_size(atlas_path) == (336, 48) and atlas_sha == "1c6c5c965a8eb371321afff30f94c30faf2747bc85875e4d4a65d0e7bd7d8c8d", errors, "Minor guarded-cache opened atlas bytes or compact dimensions changed")
+    ensure(png_size(atlas_path) == (336, 48) and passage_atlas_recovery_matches(atlas_path, "1c6c5c965a8eb371321afff30f94c30faf2747bc85875e4d4a65d0e7bd7d8c8d"), errors, "Minor guarded-cache original/repaired atlas proof or compact dimensions changed")
     ensure(len(atlas_payload) >= 26 and atlas_payload[25] == 6 and Path(f"{atlas_path}.import").is_file(), errors, "Minor guarded-cache atlas alpha or import metadata is missing")
     sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
@@ -52152,7 +52174,7 @@ def validate_seven_minor_guarded_caches(errors: list[str]) -> None:
     source_manifest = load_json(manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("sources", []) if isinstance(row, dict)}
     ensure(source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("imagegen_use_case") == "precise-object-edit", errors, "Minor guarded-cache source provenance changed")
-    ensure(source_manifest.get("runtime_atlas", {}).get("size") == [336, 48] and source_manifest.get("runtime_atlas", {}).get("sha256") == atlas_sha, errors, "Minor guarded-cache source atlas ownership changed")
+    ensure(source_manifest.get("runtime_atlas", {}).get("size") == [336, 48] and source_manifest.get("runtime_atlas", {}).get("sha256") == "1c6c5c965a8eb371321afff30f94c30faf2747bc85875e4d4a65d0e7bd7d8c8d" and source_manifest.get("runtime_repair") == "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json", errors, "Minor guarded-cache historical assembly or repair ownership changed")
     ensure(set(source_rows) == set(expected), errors, "Minor guarded-cache source manifest must own exactly seven selected sites")
     source_payloads: list[bytes] = []
     for site_id, (scenario_id, placement_id, guard_id, encounter_id, unclaimed_id, claimed_id, stem, source_sha, region, status) in expected.items():
@@ -76473,12 +76495,12 @@ def validate_six_gate_charter_road(errors: list[str]) -> None:
     ensure(atlas_path.exists(), errors, "Six-gate opened-state atlas is missing")
     if atlas_path.exists():
         payload = atlas_path.read_bytes()
-        ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(payload).hexdigest() == "073e1e55c6f3bbff714755a250dcb0764426e45a263e72799a5f72660c1b7059" and len(payload) >= 26 and payload[25] == 6, errors, "Six-gate opened-state atlas bytes, alpha, or dimensions changed")
+        ensure(png_size(atlas_path) == (288,48) and passage_atlas_recovery_matches(atlas_path, "073e1e55c6f3bbff714755a250dcb0764426e45a263e72799a5f72660c1b7059") and len(payload) >= 26 and payload[25] == 6, errors, "Six-gate original/repaired atlas proof, alpha, or dimensions changed")
     source_manifest_path = source_dir / "manifest.json"
     ensure(source_manifest_path.exists(), errors, "Six-gate source provenance manifest is missing")
     if source_manifest_path.exists():
         provenance = load_json(source_manifest_path)
-        ensure(provenance.get("source_model") == "built_in_image_gen_precise_object_edit_route_control_opened_atlas" and len(provenance.get("items", [])) == 6, errors, "Six-gate source provenance changed")
+        ensure(provenance.get("source_model") == "built_in_image_gen_precise_object_edit_route_control_opened_atlas" and len(provenance.get("items", [])) == 6 and provenance.get("runtime_repair") == "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json", errors, "Six-gate source/repair provenance changed")
     for index, (site_id, object_id, placement_id, cost, flag, region, source_hash) in enumerate(gates):
         site = resource_sites.get(site_id, {})
         obj = map_objects.get(object_id, {})
@@ -76687,10 +76709,10 @@ def validate_overworld_ten_land_transit_network(errors: list[str]) -> None:
     ensure(scene_path.exists(), errors, "Ten-site land-transit consolidated scene is missing")
     if atlas_path.exists():
         atlas_payload = atlas_path.read_bytes()
-        ensure(png_size(atlas_path) == (480, 48) and hashlib.sha256(atlas_payload).hexdigest() == "a50690ec924dd2059899801c2803f1296650b79792cba4b260bec4e53e086d8d" and len(atlas_payload) >= 26 and atlas_payload[25] == 6, errors, "Land-transit active atlas bytes, alpha, or compact dimensions changed")
+        ensure(png_size(atlas_path) == (480, 48) and passage_atlas_recovery_matches(atlas_path, "a50690ec924dd2059899801c2803f1296650b79792cba4b260bec4e53e086d8d") and len(atlas_payload) >= 26 and atlas_payload[25] == 6, errors, "Land-transit original/repaired atlas proof, alpha, or compact dimensions changed")
     if source_manifest_path.exists():
         source_manifest = load_json(source_manifest_path)
-        ensure(source_manifest.get("generation_mode") == "built_in_image_gen_precise_object_edit" and source_manifest.get("runtime_atlas", {}).get("size") == [480, 48] and len(source_manifest.get("assets", [])) == 10, errors, "Land-transit source provenance or atlas contract changed")
+        ensure(source_manifest.get("generation_mode") == "built_in_image_gen_precise_object_edit" and source_manifest.get("runtime_atlas", {}).get("size") == [480, 48] and len(source_manifest.get("assets", [])) == 10 and source_manifest.get("runtime_repair") == "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json", errors, "Land-transit source/repair provenance or atlas contract changed")
 
     for index, (site_id, object_id, scenario_id, placement_id, x, y, directionality, entry_offsets, exit_offsets, movement_delta, requires_repair) in enumerate(cases):
         site = resource_sites.get(site_id, {})
