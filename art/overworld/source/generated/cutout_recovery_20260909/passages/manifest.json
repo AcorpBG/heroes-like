@@ -1,0 +1,411 @@
+{
+  "schema_id": "passage_cutout_recovery_v1",
+  "recipe_sha256": "41051bfc466349984e82928f7a8bc0ccca917493f75e67c8892c9c64953d5c1a",
+  "processing_tool": "tools/prepare_overworld_passage_cutouts.py",
+  "processing_tool_sha256": "092ea67fbcb062cf1cb166d0f302cc057139ccf97e835aba2032611326edbf0e",
+  "processing": "Only explicit source-connected backing components removed. Original registered bilinear projection patches only affected runtime pixels; all other original RGBA is preserved.",
+  "assets": {
+    "resource_site_route_control_thorn_seal_gate_opened": {
+      "metrics": {
+        "source_removed_pixels": 83209,
+        "runtime_affected_pixels": 472
+      },
+      "trim_sha256": "32211bd4e96cd90a937bc75c1f4401d037f0ba3b1852875feecd8bfbdd88133d",
+      "recovered_source_sha256": "cf22f0032afe00cfa99107c21e0a2410ca2a4ac624939d636c16eddb8a177175",
+      "support_sha256": "35bbad5e4414d0005b8bd6f4fd14874a31ad501de49a242835725b71bde5dd3d"
+    },
+    "resource_site_route_control_frost_toll_bar_opened": {
+      "metrics": {
+        "source_removed_pixels": 261657,
+        "runtime_affected_pixels": 731
+      },
+      "trim_sha256": "5016940ae97254b6e363bb87f315d19a4463df84f8857d560796d5b81d6a9fd9",
+      "recovered_source_sha256": "3adcdfedb207ef8bcc4661fad92fc9dc71ff15636b5f164fe498e7fe07e207b9",
+      "support_sha256": "711a1cb4ae1067fce5b2d2a294397e9c721921eaf0488543a36ee45117cc4b6f"
+    },
+    "resource_site_route_control_reef_chain_boom_opened": {
+      "metrics": {
+        "source_removed_pixels": 36806,
+        "runtime_affected_pixels": 194
+      },
+      "trim_sha256": "50e324257c550779dda2feadd185336e8f4b79827055a3fa34d91d0d137ad00a",
+      "recovered_source_sha256": "8571bd2fea5ac190ec1902f2ac444f8618a0e637e0ed7b9031e1c52e295af92e",
+      "support_sha256": "aa84524ec7a769f0e5b8546b113d2b743e1a4f93bca47f078d6a2b3c28c2f021"
+    },
+    "resource_site_route_control_ash_sluice_lock_opened": {
+      "metrics": {
+        "source_removed_pixels": 13202,
+        "runtime_affected_pixels": 99
+      },
+      "trim_sha256": "5f9de3cfec957523d83c0613148e8048639deac1aacfd4eb0680aab2cecc2ab7",
+      "recovered_source_sha256": "f7bb5e3385731fad266dc50a177e071ae2d018ec5fa4a23d71047d148a48a108",
+      "support_sha256": "6f052c11443667884222b31a7b060a06b6e794bb8fff026318dbd7b8c0722f7a"
+    },
+    "resource_site_land_transit_root_pass_arch_active": {
+      "metrics": {
+        "source_removed_pixels": 59213,
+        "runtime_affected_pixels": 309
+      },
+      "trim_sha256": "e33d7155c9a1112f852f0b8a1f060e9e69558d375fcbe70149cb24473c75d621",
+      "recovered_source_sha256": "8f8177be8e8288bdabd1c888ed420fa511e674430fe3353aa4a38796073b0305",
+      "support_sha256": "2114aba93758941e6e0295eea26a062add33330f693c6a9fb4388b347364bf90"
+    },
+    "resource_site_land_transit_ridge_wind_chute_active": {
+      "metrics": {
+        "source_removed_pixels": 17787,
+        "runtime_affected_pixels": 150
+      },
+      "trim_sha256": "635fa415a0b206ec7d91d85f9b035fb432cdc74d48fbc9625f092a7a4774d4b5",
+      "recovered_source_sha256": "9cd0b74cba0ff02d6cef34fe400ca8dfe228b68d7c41176a71fb8ac36872f8d5",
+      "support_sha256": "37f5a1c02b85154ff2c3b06a2af19e0fe2ecdb8f96df25d6b38880423a8b3257"
+    },
+    "resource_site_minor_cache_toll_ruin_opened": {
+      "metrics": {
+        "source_removed_pixels": 12707,
+        "runtime_affected_pixels": 102
+      },
+      "trim_sha256": "493b14a4de9ceca74ebf947caa5605428ece7f9eebed12328b7abd3c5b1b562f",
+      "recovered_source_sha256": "3b53b587e844b7e180b35cbc16318d0e41b35a3505af58bbb55453c3733796ff",
+      "support_sha256": "b2ed78f9989004ef8741cc45dd61046fa171831b0eb59e2ba004cf0cf03b7f7b"
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png": {
+      "before_sha256": "073e1e55c6f3bbff714755a250dcb0764426e45a263e72799a5f72660c1b7059",
+      "after_sha256": "cf027ac06c79f8fd6294c1280a9df729fe020a30db38d9290681adbb1fa8bb99",
+      "prepared": "runtime/objects/resource_sites/route_control_opened_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png": {
+      "before_sha256": "a50690ec924dd2059899801c2803f1296650b79792cba4b260bec4e53e086d8d",
+      "after_sha256": "817b538f65588a41b60eebbaa6594b8260b56a1dd232e4a1221e780f20a80218",
+      "prepared": "runtime/objects/resource_sites/land_transit_active_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png": {
+      "before_sha256": "1c6c5c965a8eb371321afff30f94c30faf2747bc85875e4d4a65d0e7bd7d8c8d",
+      "after_sha256": "0e0ed78365c9333fb71d354133e32577ac2f1d5186898998fcb434abd4cd9842",
+      "prepared": "runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png"
+    }
+  },
+  "preserved_controls": {
+    "resource_site_minor_cache_wreck_locker_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/wreck_locker_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_wreck_locker",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The wreck locker lid hangs open beside sorted salvage and a steady harbor lamp."
+      }
+    },
+    "resource_site_minor_cache_amber_reliquary_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/amber_reliquary_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_amber_reliquary",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Amber Reliquary petals stand open around a calm survey light and empty reliquary cradle."
+      }
+    },
+    "resource_site_minor_cache_slag_purse_vault_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/slag_purse_vault_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_slag_purse_vault",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Slag Purse Vault gate is raised over orderly ore bins and a claimed brass tally plate."
+      }
+    },
+    "resource_site_minor_cache_old_orchard_crypt_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/old_orchard_crypt_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_old_orchard_crypt",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Old Orchard Crypt door stands open beneath trimmed roots and a warm recovery lantern."
+      }
+    },
+    "resource_site_minor_cache_moss_oath_cache_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/moss_oath_cache_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_moss_oath_cache",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Moss Oath Cache is open beside restored tablets and a fresh green claim ribbon."
+      }
+    },
+    "resource_site_minor_cache_frost_tithe_cellar_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/frost_tithe_cellar_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_frost_tithe_cellar",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Frost Tithe Cellar hatch stands open around an orderly blue-lit muster alcove."
+      }
+    },
+    "resource_site_land_transit_repaired_ferry_stage_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/repaired_ferry_stage_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_repaired_ferry_stage",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A repaired ferry stage with a clear deck, taut guide ropes, lit route lanterns, safety ring, and raised pennant."
+      }
+    },
+    "resource_site_land_transit_rope_lift_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/rope_lift_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_rope_lift",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A braced working rope lift with taut lines, a secure platform, lit landing lamps, and route pennant."
+      }
+    },
+    "resource_site_land_transit_pressure_rail_switch_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/pressure_rail_switch_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_pressure_rail_switch",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "An aligned rail switch with a raised lever, charged blue-brass pipes, clear track, and lit route gauge."
+      }
+    },
+    "resource_site_land_transit_mirror_stair_turn_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/mirror_stair_turn_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_mirror_stair_turn",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A curved mirror stair with illuminated glass steps, bright rail beacons, and restrained blue-white route shimmer."
+      }
+    },
+    "resource_site_land_transit_basalt_undergate_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/basalt_undergate_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_basalt_undergate",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "An open basalt undergate with a deep lit passage, warm floor lamps, and paired violet guide crystals."
+      }
+    },
+    "resource_site_land_transit_slipgate_mirror_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          336,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/slipgate_mirror_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_slipgate_mirror",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A standing slipgate mirror charged with a directional blue-gold vortex and bright outward transit stream."
+      }
+    },
+    "resource_site_land_transit_spillway_drop_marker_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          384,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/spillway_drop_marker_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_spillway_drop_marker",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "An open blue-lit spillway control with a forceful one-way rush through its bounded channel."
+      }
+    },
+    "resource_site_land_transit_tide_bore_marker_active": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          432,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/tide_bore_marker_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_tide_bore_marker",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A carved current marker surrounded by a forceful directional turquoise tide and lit rope posts."
+      }
+    },
+    "resource_site_route_control_charter_bar_gate_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/charter_bar_gate_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+        "assigned_resource_site_id": "site_charter_bar_gate",
+        "presentation_role": "opened_route_lock_state",
+        "accessible_description": "Charter Bar Gate with its sealed barrier raised beside the left pillar and both charter medallions glowing warm gold."
+      }
+    },
+    "resource_site_route_control_brass_toll_arch_opened": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/brass_toll_arch_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+        "assigned_resource_site_id": "site_brass_toll_arch",
+        "presentation_role": "opened_route_lock_state",
+        "accessible_description": "Brass Toll Arch with its striped arm raised against the booth and amber lamps showing lawful passage."
+      }
+    }
+  }
+}

@@ -106,6 +106,19 @@ unittest discover -s tests -p 'test_overworld_legacy_cutouts.py'`. Existing
 source and packaged cutout drivers accept `--batch legacy_families` with the
 same resolution/platform/isolated-release arguments as earlier cohorts.
 
+For enclosed resource-state backing, use `tools/prepare_overworld_passage_cutouts.py
+--output <fresh-preview-dir> [--install]` and the existing source/package drivers
+with `--batch passages`. Explicit inspected source-component seeds, bounds and
+areas restrict removal; white snow, canvas, wind and highlights are not a global
+color-removal class. Preserve original crop/resize/offset and every runtime pixel
+outside the projected repair support, plus all 16 neighboring atlas regions.
+`test_overworld_passage_cutouts.py` covers these invariants. Prove Root Pass Arch
+through seven ordinary moves from the unmodified Seedseer Drowned Orchard start;
+do not grant position, collection, movement or fog. The unchanged earned native
+map remains a separate regression control when none of its current states uses
+these seven repaired variants. Historical source manifests retain original
+assembly hashes and point to the exact repaired derivative proof.
+
 ## Completion and non-goals
 
 Each cohort completes only after its actual repaired art is integrated and its

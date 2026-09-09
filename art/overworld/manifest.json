@@ -7597,7 +7597,10 @@
       "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
       "assigned_resource_site_id": "site_toll_ruin",
       "presentation_role": "opened_claimed_state",
-      "accessible_description": "The Toll Ruin barrier stands open beneath a relit road lantern and cleared toll desk."
+      "accessible_description": "The Toll Ruin barrier stands open beneath a relit road lantern and cleared toll desk.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_minor_cache_toll_ruin_opened.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+      "runtime_sha256": "0e0ed78365c9333fb71d354133e32577ac2f1d5186898998fcb434abd4cd9842"
     },
     "resource_site_minor_cache_wreck_locker_opened": {
       "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
@@ -9857,7 +9860,10 @@
       "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
       "assigned_resource_site_id": "site_root_pass_arch",
       "presentation_role": "active_land_transit_state",
-      "accessible_description": "A living root arch with an open luminous passage, fresh leaves, clear path stones, and green-gold waylight."
+      "accessible_description": "A living root arch with an open luminous passage, fresh leaves, clear path stones, and green-gold waylight.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_land_transit_root_pass_arch_active.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+      "runtime_sha256": "817b538f65588a41b60eebbaa6594b8260b56a1dd232e4a1221e780f20a80218"
     },
     "resource_site_land_transit_pressure_rail_switch_active": {
       "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
@@ -9929,7 +9935,10 @@
       "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
       "assigned_resource_site_id": "site_ridge_wind_chute",
       "presentation_role": "active_land_transit_state",
-      "accessible_description": "A taut ridge wind chute catching a strong directed white-blue current beside a lit departure lantern."
+      "accessible_description": "A taut ridge wind chute catching a strong directed white-blue current beside a lit departure lantern.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_land_transit_ridge_wind_chute_active.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+      "runtime_sha256": "817b538f65588a41b60eebbaa6594b8260b56a1dd232e4a1221e780f20a80218"
     },
     "resource_site_land_transit_slipgate_mirror_active": {
       "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
@@ -10181,7 +10190,10 @@
       "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
       "assigned_resource_site_id": "site_thorn_seal_gate",
       "presentation_role": "opened_route_lock_state",
-      "accessible_description": "Thorn Seal Gate with its living barrier withdrawn into the arch and a broad green-gold passage standing open."
+      "accessible_description": "Thorn Seal Gate with its living barrier withdrawn into the arch and a broad green-gold passage standing open.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_route_control_thorn_seal_gate_opened.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+      "runtime_sha256": "cf027ac06c79f8fd6294c1280a9df729fe020a30db38d9290681adbb1fa8bb99"
     },
     "resource_site_route_control_brass_toll_arch_opened": {
       "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
@@ -10217,7 +10229,10 @@
       "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
       "assigned_resource_site_id": "site_reef_chain_boom",
       "presentation_role": "opened_route_lock_state",
-      "accessible_description": "Reef Chain Boom with its heavy chain lifted above the route and teal capstan lights lit."
+      "accessible_description": "Reef Chain Boom with its heavy chain lifted above the route and teal capstan lights lit.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_route_control_reef_chain_boom_opened.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+      "runtime_sha256": "cf027ac06c79f8fd6294c1280a9df729fe020a30db38d9290681adbb1fa8bb99"
     },
     "resource_site_route_control_frost_toll_bar_opened": {
       "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
@@ -10235,7 +10250,10 @@
       "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
       "assigned_resource_site_id": "site_frost_toll_bar",
       "presentation_role": "opened_route_lock_state",
-      "accessible_description": "Frost Toll Bar with its chain arched high between cyan pylons and the snowy pass fully clear."
+      "accessible_description": "Frost Toll Bar with its chain arched high between cyan pylons and the snowy pass fully clear.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_route_control_frost_toll_bar_opened.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+      "runtime_sha256": "cf027ac06c79f8fd6294c1280a9df729fe020a30db38d9290681adbb1fa8bb99"
     },
     "resource_site_route_control_ash_sluice_lock_opened": {
       "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
@@ -10253,7 +10271,10 @@
       "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
       "assigned_resource_site_id": "site_ash_sluice_lock",
       "presentation_role": "opened_route_lock_state",
-      "accessible_description": "Ash Sluice Lock with both grates raised and blue route lamps marking a cooled open channel."
+      "accessible_description": "Ash Sluice Lock with both grates raised and blue route lamps marking a cooled open channel.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_route_control_ash_sluice_lock_opened.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+      "runtime_sha256": "cf027ac06c79f8fd6294c1280a9df729fe020a30db38d9290681adbb1fa8bb99"
     },
     "resource_site_fourteen_marks_granary_lock_exchange_state": {
       "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",

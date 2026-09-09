@@ -1,5 +1,7 @@
 {
   "schema": "heroes_like_generated_resource_site_art_v1",
+  "runtime_repair": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+  "runtime_repair_note": "The runtime_atlas hash records the original assembly. Toll Ruin enclosed checker backing is repaired with the original 44-square resize and (2,4) offset; all six atlas neighbors and original sources are unchanged.",
   "generation_mode": "built_in_image_gen",
   "imagegen_use_case": "precise-object-edit",
   "family": "minor_guarded_cache_opened_wave1",
