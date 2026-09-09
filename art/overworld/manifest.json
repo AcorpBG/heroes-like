@@ -8576,108 +8576,126 @@
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/ember_signal_brazier.png",
       "source_model": "built_in_image_gen_original_live_faction_landmark_atlas",
       "assigned_resource_site_id": "site_ember_signal_brazier",
       "presentation_role": "tripod_brazier_ember_mirror_signal",
-      "accessible_description": "A caged signal flame rises from an iron tripod between hinged ember mirrors and a heavy oath chain."
+      "accessible_description": "A caged signal flame rises from an iron tripod between hinged ember mirrors and a heavy oath chain.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_live_ember_signal_brazier.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "321d1ba55b972d07ea24193a07a203520b3863c41234c0b0d026fcd075c27f79"
     },
     "resource_site_live_bog_drum_totem": {
       "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/bog_drum_totem.png",
       "source_model": "built_in_image_gen_original_live_faction_landmark_atlas",
       "assigned_resource_site_id": "site_bog_drum_totem",
       "presentation_role": "forked_blackwood_bog_drum_totem",
-      "accessible_description": "An oval hide drum hangs between forked blackwood stilts with jawbone clappers and reed charms."
+      "accessible_description": "An oval hide drum hangs between forked blackwood stilts with jawbone clappers and reed charms.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_live_bog_drum_totem.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "321d1ba55b972d07ea24193a07a203520b3863c41234c0b0d026fcd075c27f79"
     },
     "resource_site_live_prism_relay_lens": {
       "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/prism_relay_lens.png",
       "source_model": "built_in_image_gen_original_live_faction_landmark_atlas",
       "assigned_resource_site_id": "site_prism_relay_lens",
       "presentation_role": "offset_crystal_lens_ray_vane_relay",
-      "accessible_description": "An offset crystal lens and ray vanes pivot above an ivory and bronze relay stand."
+      "accessible_description": "An offset crystal lens and ray vanes pivot above an ivory and bronze relay stand.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_live_prism_relay_lens.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "321d1ba55b972d07ea24193a07a203520b3863c41234c0b0d026fcd075c27f79"
     },
     "resource_site_live_thornwake_graft_arch": {
       "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/thornwake_graft_arch.png",
       "source_model": "built_in_image_gen_original_live_faction_landmark_atlas",
       "assigned_resource_site_id": "site_thornwake_graft_arch",
       "presentation_role": "living_graft_arch_seed_basket_hooks",
-      "accessible_description": "Two sap-lit living roots form a grafted arch hung with seed baskets, pruning hooks, and a leaf bell."
+      "accessible_description": "Two sap-lit living roots form a grafted arch hung with seed baskets, pruning hooks, and a leaf bell.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_live_thornwake_graft_arch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "321d1ba55b972d07ea24193a07a203520b3863c41234c0b0d026fcd075c27f79"
     },
     "resource_site_live_brasshollow_gauge_shrine": {
       "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
       "atlas_region": [
-        192,
+        768,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/brasshollow_gauge_shrine.png",
       "source_model": "built_in_image_gen_original_live_faction_landmark_atlas",
       "assigned_resource_site_id": "site_brasshollow_gauge_shrine",
       "presentation_role": "riveted_gauge_column_gear_offerings",
-      "accessible_description": "A riveted pressure column carries mismatched gauges, copper pipes, a flywheel, and gear offering trays."
+      "accessible_description": "A riveted pressure column carries mismatched gauges, copper pipes, a flywheel, and gear offering trays.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_live_brasshollow_gauge_shrine.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "321d1ba55b972d07ea24193a07a203520b3863c41234c0b0d026fcd075c27f79"
     },
     "resource_site_live_veilmourn_bell_mast": {
       "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
       "atlas_region": [
-        240,
+        960,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/veilmourn_bell_mast.png",
       "source_model": "built_in_image_gen_original_live_faction_landmark_atlas",
       "assigned_resource_site_id": "site_veilmourn_bell_mast",
       "presentation_role": "shiprib_fog_bell_salvage_mast",
-      "accessible_description": "A salt-black ship-rib mast leans over a cracked fog bell, cold lanterns, shell markers, and ballast stones."
+      "accessible_description": "A salt-black ship-rib mast leans over a cracked fog bell, cold lanterns, shell markers, and ballast stones.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_live_veilmourn_bell_mast.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "321d1ba55b972d07ea24193a07a203520b3863c41234c0b0d026fcd075c27f79"
     },
     "encounter_contract_tollglass_drowned_tally": {
       "path": "res://art/overworld/runtime/objects/encounters/standalone_contracts/standalone_contracts_atlas.png",
@@ -10083,108 +10101,126 @@
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/roads_objectives_state_wave1/toll_chain_court_opened_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_roads_objectives_state_atlas",
       "assigned_resource_site_id": "site_toll_chain_court",
       "presentation_role": "opened_route_lock_state",
-      "accessible_description": "The Toll Chain Court with its heavy chain lowered and coiled beside the winch, leaving the cobbled road fully clear."
+      "accessible_description": "The Toll Chain Court with its heavy chain lowered and coiled beside the winch, leaving the cobbled road fully clear.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_roads_objectives_toll_chain_opened.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "b531dfa734dbd7289e47f48c9aca2c1d762518d81e7bdd3cc0767cddd1309492"
     },
     "resource_site_roads_objectives_root_lease_opened": {
       "path": "res://art/overworld/runtime/objects/resource_sites/roads_objectives_state_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/roads_objectives_state_wave1/root_lease_gate_opened_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_roads_objectives_state_atlas",
       "assigned_resource_site_id": "site_root_lease_gate",
       "presentation_role": "opened_route_lock_state",
-      "accessible_description": "The Root Lease Gate with its woven barrier withdrawn, its living arch open, and a renewed green-gold lease ribbon tied at the side."
+      "accessible_description": "The Root Lease Gate with its woven barrier withdrawn, its living arch open, and a renewed green-gold lease ribbon tied at the side.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_roads_objectives_root_lease_opened.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "b531dfa734dbd7289e47f48c9aca2c1d762518d81e7bdd3cc0767cddd1309492"
     },
     "resource_site_roads_objectives_pressure_rail_opened": {
       "path": "res://art/overworld/runtime/objects/resource_sites/roads_objectives_state_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/roads_objectives_state_wave1/pressure_rail_stop_opened_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_roads_objectives_state_atlas",
       "assigned_resource_site_id": "site_pressure_rail_stop",
       "presentation_role": "opened_route_lock_state",
-      "accessible_description": "The repaired Pressure Rail Stop with a safe gauge reading, lifted stop hardware, glowing brass indicator, and unobstructed rails."
+      "accessible_description": "The repaired Pressure Rail Stop with a safe gauge reading, lifted stop hardware, glowing brass indicator, and unobstructed rails.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_roads_objectives_pressure_rail_opened.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "b531dfa734dbd7289e47f48c9aca2c1d762518d81e7bdd3cc0767cddd1309492"
     },
     "resource_site_roads_objectives_campaign_muster_activated": {
       "path": "res://art/overworld/runtime/objects/resource_sites/roads_objectives_state_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/roads_objectives_state_wave1/campaign_muster_seal_activated_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_roads_objectives_state_atlas",
       "assigned_resource_site_id": "site_campaign_muster_seal",
       "presentation_role": "activated_objective_state",
-      "accessible_description": "The raised Campaign Muster Seal glowing warm gold between fully unfurled blue banners, with a fresh wax charter seal on its dais."
+      "accessible_description": "The raised Campaign Muster Seal glowing warm gold between fully unfurled blue banners, with a fresh wax charter seal on its dais.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_roads_objectives_campaign_muster_activated.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "b531dfa734dbd7289e47f48c9aca2c1d762518d81e7bdd3cc0767cddd1309492"
     },
     "resource_site_roads_objectives_broken_accord_activated": {
       "path": "res://art/overworld/runtime/objects/resource_sites/roads_objectives_state_atlas.png",
       "atlas_region": [
-        192,
+        768,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/roads_objectives_state_wave1/broken_accord_marker_activated_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_roads_objectives_state_atlas",
       "assigned_resource_site_id": "site_broken_accord_marker",
       "presentation_role": "activated_objective_state",
-      "accessible_description": "The still-broken Accord Marker formally recorded with a bronze central band, neatly retied red cords, and calm amber witness light."
+      "accessible_description": "The still-broken Accord Marker formally recorded with a bronze central band, neatly retied red cords, and calm amber witness light.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_roads_objectives_broken_accord_activated.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "b531dfa734dbd7289e47f48c9aca2c1d762518d81e7bdd3cc0767cddd1309492"
     },
     "resource_site_roads_objectives_witness_stone_activated": {
       "path": "res://art/overworld/runtime/objects/resource_sites/roads_objectives_state_atlas.png",
       "atlas_region": [
-        240,
+        960,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/roads_objectives_state_wave1/scenario_witness_stone_activated_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_roads_objectives_state_atlas",
       "assigned_resource_site_id": "site_scenario_witness_stone",
       "presentation_role": "activated_objective_state",
-      "accessible_description": "The sworn Witness Stone with its carved eye shining pale gold-blue above two lit candles and a small blue oath ribbon."
+      "accessible_description": "The sworn Witness Stone with its carved eye shining pale gold-blue above two lit candles and a small blue oath ribbon.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_roads_objectives_witness_stone_activated.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "b531dfa734dbd7289e47f48c9aca2c1d762518d81e7bdd3cc0767cddd1309492"
     },
     "resource_site_land_transit_repaired_ferry_stage_active": {
       "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
@@ -10659,396 +10695,462 @@
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        672,
-        48
+        2688,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/granary_lock_exchange_controlled_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
       "assigned_resource_site_id": "site_granary_lock_exchange",
       "presentation_role": "controlled_landmark_state",
-      "accessible_description": "Warm windows, grain stores, and a raised civic pennant mark the secured Granary Lock Exchange."
+      "accessible_description": "Warm windows, grain stores, and a raised civic pennant mark the secured Granary Lock Exchange.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_fourteen_marks_granary_lock_exchange_state.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858"
     },
     "resource_site_fourteen_marks_blackwater_shrine_marker_state": {
       "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        672,
-        48
+        2688,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/blackwater_shrine_marker_controlled_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
       "assigned_resource_site_id": "site_blackwater_shrine_marker",
       "presentation_role": "controlled_landmark_state",
-      "accessible_description": "Violet altar light and green marsh lanterns mark the secured Blackwater Shrine Marker."
+      "accessible_description": "Violet altar light and green marsh lanterns mark the secured Blackwater Shrine Marker.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_fourteen_marks_blackwater_shrine_marker_state.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858"
     },
     "resource_site_fourteen_marks_prism_yard_standard_state": {
       "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        672,
-        48
+        2688,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/prism_yard_standard_controlled_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
       "assigned_resource_site_id": "site_prism_yard_standard",
       "presentation_role": "controlled_landmark_state",
-      "accessible_description": "A cyan-gold prism flare and straight banners mark the secured Prism Yard Standard."
+      "accessible_description": "A cyan-gold prism flare and straight banners mark the secured Prism Yard Standard.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_fourteen_marks_prism_yard_standard_state.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858"
     },
     "resource_site_fourteen_marks_broken_treaty_stone_state": {
       "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        672,
-        48
+        2688,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/broken_treaty_stone_activated_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
       "assigned_resource_site_id": "site_broken_treaty_stone",
       "presentation_role": "activated_objective_state",
-      "accessible_description": "Gold fracture light and witness seals show the Broken Treaty Stone has been recorded."
+      "accessible_description": "Gold fracture light and witness seals show the Broken Treaty Stone has been recorded.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_fourteen_marks_broken_treaty_stone_state.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858"
     },
     "resource_site_fourteen_marks_sealed_causeway_lever_state": {
       "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
       "atlas_region": [
-        192,
+        768,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        672,
-        48
+        2688,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/sealed_causeway_lever_activated_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
       "assigned_resource_site_id": "site_sealed_causeway_lever",
       "presentation_role": "activated_objective_state",
-      "accessible_description": "An engaged handle and green lock light show the Sealed Causeway Lever has released."
+      "accessible_description": "An engaged handle and green lock light show the Sealed Causeway Lever has released.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_fourteen_marks_sealed_causeway_lever_state.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858"
     },
     "resource_site_fourteen_marks_mirror_anchor_frame_state": {
       "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
       "atlas_region": [
-        240,
+        960,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        672,
-        48
+        2688,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/mirror_anchor_frame_activated_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
       "assigned_resource_site_id": "site_mirror_anchor_frame",
       "presentation_role": "activated_objective_state",
-      "accessible_description": "A calm cyan reflection and lit calibration marks show the Mirror Anchor Frame aligned."
+      "accessible_description": "A calm cyan reflection and lit calibration marks show the Mirror Anchor Frame aligned.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_fourteen_marks_mirror_anchor_frame_state.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858"
     },
     "resource_site_fourteen_marks_crownless_standard_state": {
       "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
       "atlas_region": [
-        288,
+        1152,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        672,
-        48
+        2688,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/crownless_standard_activated_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
       "assigned_resource_site_id": "site_crownless_standard",
       "presentation_role": "activated_objective_state",
-      "accessible_description": "A repaired raised banner and warm lanterns show the Crownless Standard has been claimed."
+      "accessible_description": "A repaired raised banner and warm lanterns show the Crownless Standard has been claimed.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_fourteen_marks_crownless_standard_state.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858"
     },
     "resource_site_fourteen_marks_drowned_toll_bell_state": {
       "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
       "atlas_region": [
-        336,
+        1344,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        672,
-        48
+        2688,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/drowned_toll_bell_activated_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
       "assigned_resource_site_id": "site_drowned_toll_bell",
       "presentation_role": "activated_objective_state",
-      "accessible_description": "A restored rope, teal-gold light, and fresh ripples show the Drowned Toll Bell has rung."
+      "accessible_description": "A restored rope, teal-gold light, and fresh ripples show the Drowned Toll Bell has rung.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_fourteen_marks_drowned_toll_bell_state.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858"
     },
     "resource_site_fourteen_marks_orchard_writ_seal_state": {
       "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
       "atlas_region": [
-        384,
+        1536,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        672,
-        48
+        2688,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/orchard_writ_seal_activated_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
       "assigned_resource_site_id": "site_orchard_writ_seal",
       "presentation_role": "activated_objective_state",
-      "accessible_description": "A bright wax seal, open ribbon, and green leaves show the Orchard Writ has been accepted."
+      "accessible_description": "A bright wax seal, open ribbon, and green leaves show the Orchard Writ has been accepted.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_fourteen_marks_orchard_writ_seal_state.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858"
     },
     "resource_site_fourteen_marks_brass_oath_wheel_state": {
       "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
       "atlas_region": [
-        432,
+        1728,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        672,
-        48
+        2688,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/brass_oath_wheel_activated_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
       "assigned_resource_site_id": "site_brass_oath_wheel",
       "presentation_role": "activated_objective_state",
-      "accessible_description": "An engaged wheel, taut chains, and amber hub show the Brass Oath Wheel has been secured."
+      "accessible_description": "An engaged wheel, taut chains, and amber hub show the Brass Oath Wheel has been secured.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_fourteen_marks_brass_oath_wheel_state.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858"
     },
     "resource_site_fourteen_marks_burned_signal_brazier_state": {
       "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
       "atlas_region": [
-        480,
+        1920,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        672,
-        48
+        2688,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/burned_signal_brazier_restored_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
       "assigned_resource_site_id": "site_burned_signal_brazier",
       "presentation_role": "restored_state_variant",
-      "accessible_description": "A repaired bowl and strong signal flame show the Burned Signal Brazier has been restored."
+      "accessible_description": "A repaired bowl and strong signal flame show the Burned Signal Brazier has been restored.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_fourteen_marks_burned_signal_brazier_state.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858"
     },
     "resource_site_fourteen_marks_repaired_ferry_stage_claimed_state": {
       "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
       "atlas_region": [
-        528,
+        2112,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        672,
-        48
+        2688,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/repaired_ferry_stage_claimed_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
       "assigned_resource_site_id": "site_repaired_ferry_stage_claimed",
       "presentation_role": "restored_state_variant",
-      "accessible_description": "Fresh planks, taut ropes, lit lamps, and a blue pennant show the ferry stage is claimed."
+      "accessible_description": "Fresh planks, taut ropes, lit lamps, and a blue pennant show the ferry stage is claimed.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_fourteen_marks_repaired_ferry_stage_claimed_state.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858"
     },
     "resource_site_fourteen_marks_claimed_quarry_head_state": {
       "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
       "atlas_region": [
-        576,
+        2304,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        672,
-        48
+        2688,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/claimed_quarry_head_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
       "assigned_resource_site_id": "site_claimed_quarry_head",
       "presentation_role": "restored_state_variant",
-      "accessible_description": "A working hoist, loaded basket, new braces, and lantern show the quarry head is claimed."
+      "accessible_description": "A working hoist, loaded basket, new braces, and lantern show the quarry head is claimed.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_fourteen_marks_claimed_quarry_head_state.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858"
     },
     "resource_site_fourteen_marks_withered_rootgate_marker_state": {
       "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
       "atlas_region": [
-        624,
+        2496,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        672,
-        48
+        2688,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/withered_rootgate_marker_restored_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
       "assigned_resource_site_id": "site_withered_rootgate_marker",
       "presentation_role": "restored_state_variant",
-      "accessible_description": "Fresh leaves, teal sap-light, and living buds show the Withered Rootgate has been restored."
+      "accessible_description": "Fresh leaves, teal sap-light, and living buds show the Withered Rootgate has been restored.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_fourteen_marks_withered_rootgate_marker_state.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858"
     },
     "resource_site_eightfold_barrow_vault_opened": {
       "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        384,
-        48
+        1536,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/barrow_vault_opened_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
       "assigned_resource_site_id": "site_barrow_vault",
       "presentation_role": "opened_guarded_reward_state",
-      "accessible_description": "An open stone door, broken seal, empty coffer, and survey lantern show the Barrow Vault has been claimed."
+      "accessible_description": "An open stone door, broken seal, empty coffer, and survey lantern show the Barrow Vault has been claimed.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_eightfold_barrow_vault_opened.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "27be471726604b764c6c59ab37b6a84d4f5bd50306b9cc8a8d11c4138b19b65d"
     },
     "resource_site_eightfold_drowned_reliquary_recovered": {
       "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        384,
-        48
+        1536,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/drowned_reliquary_recovered_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
       "assigned_resource_site_id": "site_drowned_reliquary",
       "presentation_role": "recovered_guarded_reward_state",
-      "accessible_description": "An open bronze gate, emptied reliquary, calm water, and recovery lamps show the Drowned Reliquary is secured."
+      "accessible_description": "An open bronze gate, emptied reliquary, calm water, and recovery lamps show the Drowned Reliquary is secured.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_eightfold_drowned_reliquary_recovered.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "27be471726604b764c6c59ab37b6a84d4f5bd50306b9cc8a8d11c4138b19b65d"
     },
     "resource_site_eightfold_lantern_crown_nave_consecrated": {
       "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        384,
-        48
+        1536,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/lantern_crown_nave_consecrated_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
       "assigned_resource_site_id": "site_lantern_crown_nave",
       "presentation_role": "consecrated_guarded_reward_state",
-      "accessible_description": "Open doors, aligned lamps, a bright crown lantern, and teal floor seal show the Lantern Crown Nave is consecrated."
+      "accessible_description": "Open doors, aligned lamps, a bright crown lantern, and teal floor seal show the Lantern Crown Nave is consecrated.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_eightfold_lantern_crown_nave_consecrated.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "27be471726604b764c6c59ab37b6a84d4f5bd50306b9cc8a8d11c4138b19b65d"
     },
     "resource_site_eightfold_hive_of_reeds_reclaimed": {
       "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        384,
-        48
+        1536,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/hive_of_reeds_reclaimed_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
       "assigned_resource_site_id": "site_hive_of_reeds",
       "presentation_role": "reclaimed_guarded_reward_state",
-      "accessible_description": "Breached reed towers, fading smoke, a cleared stair, and salvage lamps show the Hive of Reeds has been reclaimed."
+      "accessible_description": "Breached reed towers, fading smoke, a cleared stair, and salvage lamps show the Hive of Reeds has been reclaimed.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_eightfold_hive_of_reeds_reclaimed.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "27be471726604b764c6c59ab37b6a84d4f5bd50306b9cc8a8d11c4138b19b65d"
     },
     "resource_site_eightfold_glassbound_eyrie_secured": {
       "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
       "atlas_region": [
-        192,
+        768,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        384,
-        48
+        1536,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/glassbound_eyrie_secured_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
       "assigned_resource_site_id": "site_glassbound_eyrie",
       "presentation_role": "secured_guarded_reward_state",
-      "accessible_description": "Calm cyan crystals, repaired access, amber lamps, and survey pennants show the Glassbound Eyrie is secured."
+      "accessible_description": "Calm cyan crystals, repaired access, amber lamps, and survey pennants show the Glassbound Eyrie is secured.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_eightfold_glassbound_eyrie_secured.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "27be471726604b764c6c59ab37b6a84d4f5bd50306b9cc8a8d11c4138b19b65d"
     },
     "resource_site_eightfold_rust_choir_foundry_silenced": {
       "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
       "atlas_region": [
-        240,
+        960,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        384,
-        48
+        1536,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/rust_choir_foundry_silenced_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
       "assigned_resource_site_id": "site_rust_choir_foundry",
       "presentation_role": "silenced_guarded_reward_state",
-      "accessible_description": "A cooled furnace, open vents, slack chains, and teal inspection lamps show the Rust Choir Foundry is silenced."
+      "accessible_description": "A cooled furnace, open vents, slack chains, and teal inspection lamps show the Rust Choir Foundry is silenced.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_eightfold_rust_choir_foundry_silenced.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "27be471726604b764c6c59ab37b6a84d4f5bd50306b9cc8a8d11c4138b19b65d"
     },
     "resource_site_eightfold_salt_wight_convoy_cleared": {
       "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
       "atlas_region": [
-        288,
+        1152,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        384,
-        48
+        1536,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/salt_wight_convoy_cleared_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
       "assigned_resource_site_id": "site_salt_wight_convoy",
       "presentation_role": "cleared_guarded_route_state",
-      "accessible_description": "Open wagon covers, orderly salvage, warm lamps, and a clear center lane show the Salt-Wight Convoy route is open."
+      "accessible_description": "Open wagon covers, orderly salvage, warm lamps, and a clear center lane show the Salt-Wight Convoy route is open.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_eightfold_salt_wight_convoy_cleared.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "27be471726604b764c6c59ab37b6a84d4f5bd50306b9cc8a8d11c4138b19b65d"
     },
     "resource_site_eightfold_rootwarden_stockade_reclaimed": {
       "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
       "atlas_region": [
-        336,
+        1344,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        384,
-        48
+        1536,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/rootwarden_stockade_reclaimed_source.png",
       "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
       "assigned_resource_site_id": "site_rootwarden_stockade",
       "presentation_role": "reclaimed_guarded_reward_state",
-      "accessible_description": "An open gate, removed hostile banner, controlled roots, fresh shoots, and ward lamps show the Rootwarden Stockade reclaimed."
+      "accessible_description": "An open gate, removed hostile banner, controlled roots, fresh shoots, and ward lamps show the Rootwarden Stockade reclaimed.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_eightfold_rootwarden_stockade_reclaimed.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json",
+      "runtime_sha256": "27be471726604b764c6c59ab37b6a84d4f5bd50306b9cc8a8d11c4138b19b65d"
     },
     "encounter_auxiliary_canopy_breachers": {
       "path": "res://art/units/overworld_icons/unit_thornwake_canopy_rammers.png",
@@ -15349,15 +15451,15 @@
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e",
-      "source_trimmed": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/embercourt_three_writ_border_standard.png",
+      "runtime_sha256": "f28a5f30df50cb505b4d15778838d8643dae5090e76c86729058f79ccf165257",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_border_oath_embercourt_three_writ.png",
       "source_generated": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/embercourt_three_writ_border_standard.png",
       "source_model": "built_in_image_gen_original_border_oath_standards_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -15365,22 +15467,23 @@
       "assigned_resource_site_id": "site_embercourt_three_writ_border_standard",
       "assigned_faction_id": "faction_embercourt",
       "presentation_role": "three_writ_charter_crossbar",
-      "accessible_description": "A blackened iron crossbar raises three separate rain-charred charter plates above a sealed ember bowl, with off-center chain tags making the Embercourt oath readable by silhouette."
+      "accessible_description": "A blackened iron crossbar raises three separate rain-charred charter plates above a sealed ember bowl, with off-center chain tags making the Embercourt oath readable by silhouette.",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json"
     },
     "resource_site_border_oath_mireclaw_fenhook": {
       "path": "res://art/overworld/runtime/objects/resource_sites/border_oath_standards_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e",
-      "source_trimmed": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/mireclaw_fenhook_border_standard.png",
+      "runtime_sha256": "f28a5f30df50cb505b4d15778838d8643dae5090e76c86729058f79ccf165257",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_border_oath_mireclaw_fenhook.png",
       "source_generated": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/mireclaw_fenhook_border_standard.png",
       "source_model": "built_in_image_gen_original_border_oath_standards_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -15388,22 +15491,23 @@
       "assigned_resource_site_id": "site_mireclaw_fenhook_border_standard",
       "assigned_faction_id": "faction_mireclaw",
       "presentation_role": "fenhook_drum_ring",
-      "accessible_description": "Three crooked reed hooks surround a stretched hide oath drum on root feet, with dangling peatwax tokens creating a broad low Mireclaw silhouette."
+      "accessible_description": "Three crooked reed hooks surround a stretched hide oath drum on root feet, with dangling peatwax tokens creating a broad low Mireclaw silhouette.",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json"
     },
     "resource_site_border_oath_sunvault_trifold": {
       "path": "res://art/overworld/runtime/objects/resource_sites/border_oath_standards_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e",
-      "source_trimmed": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/sunvault_trifold_prism_border_standard.png",
+      "runtime_sha256": "f28a5f30df50cb505b4d15778838d8643dae5090e76c86729058f79ccf165257",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_border_oath_sunvault_trifold.png",
       "source_generated": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/sunvault_trifold_prism_border_standard.png",
       "source_model": "built_in_image_gen_original_border_oath_standards_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -15411,22 +15515,23 @@
       "assigned_resource_site_id": "site_sunvault_trifold_prism_border_standard",
       "assigned_faction_id": "faction_sunvault",
       "presentation_role": "trifold_prism_mast",
-      "accessible_description": "Three triangular mirror vanes climb a slim sunstone mast around a bright central prism, making a precise ascending Sunvault survey silhouette."
+      "accessible_description": "Three triangular mirror vanes climb a slim sunstone mast around a bright central prism, making a precise ascending Sunvault survey silhouette.",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json"
     },
     "resource_site_border_oath_thornwake_three_seed": {
       "path": "res://art/overworld/runtime/objects/resource_sites/border_oath_standards_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e",
-      "source_trimmed": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/thornwake_three_seed_border_standard.png",
+      "runtime_sha256": "f28a5f30df50cb505b4d15778838d8643dae5090e76c86729058f79ccf165257",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_border_oath_thornwake_three_seed.png",
       "source_generated": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/thornwake_three_seed_border_standard.png",
       "source_model": "built_in_image_gen_original_border_oath_standards_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -15434,22 +15539,23 @@
       "assigned_resource_site_id": "site_thornwake_three_seed_border_standard",
       "assigned_faction_id": "faction_thornwake",
       "presentation_role": "three_seed_living_fork",
-      "accessible_description": "A living forked trunk cradles three luminous seed pods at unequal heights, with thorn ties and root feet forming an organic Thornwake border mark."
+      "accessible_description": "A living forked trunk cradles three luminous seed pods at unequal heights, with thorn ties and root feet forming an organic Thornwake border mark.",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json"
     },
     "resource_site_border_oath_brasshollow_tripgauge": {
       "path": "res://art/overworld/runtime/objects/resource_sites/border_oath_standards_atlas.png",
       "atlas_region": [
-        192,
+        768,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e",
-      "source_trimmed": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/brasshollow_tripgauge_border_standard.png",
+      "runtime_sha256": "f28a5f30df50cb505b4d15778838d8643dae5090e76c86729058f79ccf165257",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_border_oath_brasshollow_tripgauge.png",
       "source_generated": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/brasshollow_tripgauge_border_standard.png",
       "source_model": "built_in_image_gen_original_border_oath_standards_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -15457,22 +15563,23 @@
       "assigned_resource_site_id": "site_brasshollow_tripgauge_border_standard",
       "assigned_faction_id": "faction_brasshollow",
       "presentation_role": "tripgauge_pressure_crossbar",
-      "accessible_description": "A riveted pressure crossbar carries three unequal furnace gauges, hanging counterweights, and a compact black bell in a heavy Brasshollow silhouette."
+      "accessible_description": "A riveted pressure crossbar carries three unequal furnace gauges, hanging counterweights, and a compact black bell in a heavy Brasshollow silhouette.",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json"
     },
     "resource_site_border_oath_veilmourn_three_wake": {
       "path": "res://art/overworld/runtime/objects/resource_sites/border_oath_standards_atlas.png",
       "atlas_region": [
-        240,
+        960,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e",
-      "source_trimmed": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/veilmourn_three_wake_border_standard.png",
+      "runtime_sha256": "f28a5f30df50cb505b4d15778838d8643dae5090e76c86729058f79ccf165257",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/landmark_states/resource_site_border_oath_veilmourn_three_wake.png",
       "source_generated": "res://art/overworld/source/generated/resource_sites/border_oath_standards_wave1/veilmourn_three_wake_border_standard.png",
       "source_model": "built_in_image_gen_original_border_oath_standards_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -15480,7 +15587,8 @@
       "assigned_resource_site_id": "site_veilmourn_three_wake_border_standard",
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "three_wake_crescent_mast",
-      "accessible_description": "A pale crescent ship-rib mast suspends three tide bells above salt-dark chains and a narrow wakeglass marker in a haunting Veilmourn silhouette."
+      "accessible_description": "A pale crescent ship-rib mast suspends three tide bells above salt-dark chains and a narrow wakeglass marker in a haunting Veilmourn silhouette.",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/landmark_states/manifest.json"
     },
     "encounter_border_oath_mireclaw_moonhook": {
       "path": "res://art/overworld/runtime/objects/encounters/border_oath_cordons/border_oath_cordons_atlas.png",

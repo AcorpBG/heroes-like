@@ -198,6 +198,20 @@ considers consumed are not visible-object evidence; never resurrect them for
 screenshots. Capture actual remaining state-selected objects and preserve full
 saves, compiled owners, masks, coordinates and world-space draw rectangles.
 
+The 40 landmark/state originals span the faction-landmark, road/objective,
+fourteen-mark, eightfold-reliquary and border-standard atlases. Preserve 39
+genuine RGBA masters exactly; preserve Witness Stone's pale eye/candle paint
+while rebuilding its keyed boundary from retained RGB, removing only inspected exterior backing with its two-pixel
+original-sample boundary repair. Project all originals through their measured
+44-pixel logical fit and centered/south anchors into 192-pixel cells. Preserve
+the five paths and all state mappings. The renderer's existing faction-landmark
+precedence keeps Granary Lock, Blackwater Shrine and Prism Yard on their live
+state art even when unclaimed; do not change that behavior for a test fixture.
+Use `tools/prepare_overworld_landmark_cutouts.py`,
+`tests/test_overworld_landmark_cutouts.py` and both source/package drivers with
+`--batch landmark_states`. Inspect actual earned native cases and four labeled
+detached galleries; retain full-save, compiled-owner and original-place controls.
+
 ## Completion and non-goals
 
 Each cohort completes only after its actual repaired art is integrated and its

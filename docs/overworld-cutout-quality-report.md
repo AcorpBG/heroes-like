@@ -885,15 +885,85 @@ Evidence under `.artifacts/overworld_cutout_quality_20260909/`:
   source/atlas hashes and 1280 world rectangles remain exact (Windows float32).
   The wide view retains the same unchanged geometry owner.
 
+## Forty landmark and objective-state paintings — accepted 2026-09-09
+
+The five faction-landmark, road/objective, fourteen-mark, eightfold-reliquary
+and border-standard atlases still used 48-pixel derivatives of intact originals.
+Those derivatives visibly blurred rope, branch, crystal, masonry and instrument
+detail in actual native gameplay. Thirty-nine originals have genuine smooth
+RGBA and remain exact. Witness Stone has binary-keyed alpha: its pale eye and
+candles were already opaque, contrary to the initial visual hypothesis. They
+are preserved, not claimed as restored. Its correction is a narrow edge repair.
+
+`tools/prepare_overworld_landmark_cutouts.py` projects the originals at 192 pixels
+per cell through measured 44-pixel logical fits and the original centered/south
+anchors. It removes Witness Stone's single inspected exterior backing component
+(1,437,420 mostly already-transparent source pixels), decontaminating only its
+two-source-pixel boundary. Compared with original alpha, 43 formerly visible
+backing pixels disappear, 3,422 hard edge pixels soften and 28 faint edge pixels
+are recovered. Pale foreground is exact. No global color deletion or new image
+generation occurs. The `landmark_states` source/trim/provenance packet retains
+all five historical atlas hashes, all forty original input hashes and exact
+reconstruction of every new runtime cell. Existing source files are immutable.
+
+Historical-source registration alpha MAE is below 1 for 39 rows and 1.07856 for
+the live Graft Arch; opaque RGB MAE is below 1.34 for all forty. The arch's exact
+measured discrepancy is recorded separately (maximum alpha difference 10/255),
+not hidden by weakening earlier batches. A one-logical-pixel shift fails every
+registration test. Texture density changes; original world rectangles do not.
+
+Evidence under `.artifacts/overworld_cutout_quality_20260909/`:
+
+- All ten original-review and ten candidate-comparison pages were inspected,
+  plus all four source-1920 and packaged-Linux detached galleries. Actual source
+  1280/1920 captures collectively cover all eight visible affected identities;
+  packaged Graft Arch and before/after Graft Arch and Granary captures were
+  inspected in context. Galleries are explicitly detached, not earned gameplay.
+- `landmark-unit-final.log`: eleven tests pass. The initial test incorrectly
+  expected erased eye/candle pixels; exact input inspection corrected it to a
+  positive preservation assertion, without changing art to satisfy the test.
+- Source 1280, source 1920 and packaged Linux/Windows each pass 2,804 checks, exit 0 and
+  no runtime errors. The independent full-atlas oracle covers forty exact
+  textures and state resolvers. There are 21 matching earned native records,
+  eight visible affected identities and two unchanged gameplay controls. All
+  2,380 native blocker bodies remain manifest-backed. Consumed records stay
+  consumed; no position, ownership, guard or fog grants manufacture captures.
+- The before diagnostic records 120 intended new-size/pixel failures and three
+  incorrect fixture assumptions: Granary Lock, Blackwater Shrine and Prism Yard
+  are faction landmarks, so existing `_resource_asset_id` precedence always
+  selects their live image. The final probe explicitly preserves that rule.
+  The before outer runner exited 143; its complete raw report/screenshots are
+  diagnostic evidence, not a passing run.
+- `landmark-repo.log` and final `landmark-repo-final.log` pass. Both existing sprite reports passed before the
+  initial shared runner exited 143; `landmark_states_shared_final/report.json`
+  under `.artifacts/full_play_runtime_20260905/` passes the remaining three
+  movement/route/fog tests with exit 0. No interrupted suite is called complete.
+- Official Linux and Windows exports/startup/generated-map flows pass, as do
+  their exact packaged art probes. The first Windows runner exited 143 without
+  a final report; `landmark_states_windows_final/report.json` is the completed
+  fresh isolated run, not acceptance of that interruption. Windows/Wine is
+  headless and does not establish hardware/GPU visual certification.
+- `landmark_states_delivery_preservation.json` passes: both PCKs are
+  291,354,392 bytes with the same 5,484 members; only `project.binary` differs
+  by platform. Against commit `742a3a89`, exactly five imported atlases, the
+  Overworld art manifest and UID cache change; 5,477 other members are exact,
+  including compiled game/native/content/save owners. Only forty manifest rows
+  change; all state mappings, forty original paintings and five archived atlas
+  hashes remain exact. All eight complete saves agree with both prior art
+  checkpoints, excluding only cross-run timestamps and fresh authored session
+  ids (no within-run exclusions). All 21 earned records and original world
+  draw rectangles remain exact, including Windows float32 equivalence.
+  Forty new, non-overlapping dispositions bring acceptance to 620; 594 remain.
+
 ## Remaining parent work
 
-The full 1,214-row runtime pool is **not accepted**. The remaining 783 rows have
-now received a first-pass visual contact review across all six remaining family
+The full 1,214-row runtime pool is **not accepted**. The then-remaining 783 rows
+received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 580 repaired/preserved dispositions, leaving
-634 for complete detailed review/recovery. All 31 recurring encounters, 30
+The accepted cohorts now cover 620 repaired/preserved dispositions, leaving
+594 for complete detailed review/recovery. All 31 recurring encounters, 30
 recurring resource-site originals, 31 separate claimed dwellings and 34 early
-post-interaction paintings are accepted.
+post-interaction and 40 landmark/objective-state paintings are accepted.
 Next: the other resource-site state and remaining landmark families; recovery of
 these originals does not accept different paintings. Individual source and native-resolution
 checks of other remaining families and intentional purple materials remain. Existing

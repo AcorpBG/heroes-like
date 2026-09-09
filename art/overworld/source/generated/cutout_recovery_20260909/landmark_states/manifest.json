@@ -1,0 +1,677 @@
+{
+  "schema_id": "landmark_state_cutout_recovery_v1",
+  "recipe_sha256": "48a6f234d63a9edf2b5f1406cf8f8dea087b7c9d8a69e88ed9024235b855a6f4",
+  "processing_tool_sha256": "102e44f08f1acc72a59c407f67a8de01e35ca42c00c4bec20cef6c05d3b7b4b5",
+  "state_tool_sha256": "795df88d93148b63ac182997a7edcd1c2c32978b526f9a70b30e540a193a6f4a",
+  "state_dependencies": {
+    "processing_tool_sha256": "795df88d93148b63ac182997a7edcd1c2c32978b526f9a70b30e540a193a6f4a",
+    "shared_tool_sha256": "12a454b0547d01684c8b1c4901c074b51940144712124bf6126255dcd8422001",
+    "projection_tool_sha256": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
+    "component_tool_sha256": "092ea67fbcb062cf1cb166d0f302cc057139ccf97e835aba2032611326edbf0e"
+  },
+  "assets": {
+    "resource_site_live_ember_signal_brazier": {
+      "trim_sha256": "a59c7b6f2367c0cb42191d0470f3e161e8fabc4b91b93f20ed5b140369b7e9be",
+      "source_sha256": "6fb9d222bf4f4ea9ebf3324fe56880c71e8bc607bc30632d035345c46acb451b",
+      "rgba_sha256": "f159745c6910789784c7bca873c170c7e404cec08c48e0d5dd7cbc4bce8475f4",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 7820,
+        "bounds": [
+          51,
+          16,
+          138,
+          187
+        ]
+      }
+    },
+    "resource_site_live_bog_drum_totem": {
+      "trim_sha256": "dd743d747c98c9dd657128bb05c37e7920a1d5e01fa095d7dd13ef6cf2fcbea2",
+      "source_sha256": "bd59470ee228ae6094439a895a2987f764a62d8d0122c5a3a622ed02b8da8f8d",
+      "rgba_sha256": "fd8acd323bce426b5c0718437b4fd19b7bc72719efdbde2b69787bee8673eb9a",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 9123,
+        "bounds": [
+          52,
+          16,
+          142,
+          192
+        ]
+      }
+    },
+    "resource_site_live_prism_relay_lens": {
+      "trim_sha256": "add2be6ebc09e91d862dd1e797af426d2c34e6ef98b135cc8b4b29dd602e24de",
+      "source_sha256": "adec11c83f726a7215840b821c81cb97af67fcff0905a7ce0833eb72fd4dcebd",
+      "rgba_sha256": "df4e0a69a2320b5b040941ed8c9fcf74d1c51fe8370629183d1afd40288c9ee0",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 9907,
+        "bounds": [
+          36,
+          16,
+          159,
+          192
+        ]
+      }
+    },
+    "resource_site_live_thornwake_graft_arch": {
+      "trim_sha256": "27dce6aff863e9ec38a198fc1f9e121d293168ab5f41884aee14d527502fe0dc",
+      "source_sha256": "48c4ba62dd47bd3eab536324aff412b3585ef10ebbd2274914adc751e4ab8859",
+      "rgba_sha256": "cc980ff3f47dad36d2dd1e0e4b28f9f758cd944e841d954c2a76b15c4f7ecee6",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 16003,
+        "bounds": [
+          12,
+          17,
+          176,
+          190
+        ]
+      }
+    },
+    "resource_site_live_brasshollow_gauge_shrine": {
+      "trim_sha256": "6662daffefac3f603e01c8f9fe5d9febefa9d9d64d2685c84381bd910185512e",
+      "source_sha256": "00a20c5f6e0919d292c84a8dc733f303c75df9bb4c68c3cd83307429cfa08b25",
+      "rgba_sha256": "43f840d417c4819215f12254443e83628006f0d03b36851db51158a4b0f6cc0a",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 8649,
+        "bounds": [
+          52,
+          16,
+          135,
+          191
+        ]
+      }
+    },
+    "resource_site_live_veilmourn_bell_mast": {
+      "trim_sha256": "280989a06b6afbe35aff719c7c00fab646a1bf92221ee1e812ceed1dfe6cf41d",
+      "source_sha256": "4ffa4fcea93a73b73b2f388d7866d7e2e79f89a851aad6666cade682e14dade9",
+      "rgba_sha256": "318d0c6cb0d76f6d8d51f9091c5b44746ca02205b9417f8ab24d9c3f69a99e60",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 6697,
+        "bounds": [
+          65,
+          16,
+          141,
+          192
+        ]
+      }
+    },
+    "resource_site_roads_objectives_toll_chain_opened": {
+      "trim_sha256": "9c322bddb50360682a171a5bd850ff913d5335ac4c96a9b50cf6b1dd5202c705",
+      "source_sha256": "b1326b803ee4ccc04c879299c03a4f9154e423672db0615f3fddf7b13b787a89",
+      "rgba_sha256": "062ea393e936920bbefcbd6a686f90735b6fdf9a49671d226d290dcc842db2c8",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 249,
+        "partial_alpha_pixels": 8905,
+        "bounds": [
+          24,
+          31,
+          159,
+          162
+        ]
+      }
+    },
+    "resource_site_roads_objectives_root_lease_opened": {
+      "trim_sha256": "7a62f61370b76136ef55b491728a8656d4e0b883283a372af681f04ba09b7a5c",
+      "source_sha256": "2dd9822040778438ae554bda550665f925941ed8fbeed81711a652a07a59f2a7",
+      "rgba_sha256": "d1eafa2093d7410103cbcd6fd2573c97e7c0349bd1b1911a4195a846cdb6c38a",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 11628,
+        "bounds": [
+          16,
+          20,
+          170,
+          160
+        ]
+      }
+    },
+    "resource_site_roads_objectives_pressure_rail_opened": {
+      "trim_sha256": "d8f8d2d38db67a706215061b6ae4f46c188ee7b58b7edc3da988d41b708c0ae6",
+      "source_sha256": "312d8a642c567b334e0e6b1c8f8bdbc336f37514724b37ed1f15dd7e2448497c",
+      "rgba_sha256": "6e54265b06736a52499a47cc7ef4feb431f05d60c5da0509b554e6013b6a252f",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 10572,
+        "bounds": [
+          8,
+          34,
+          160,
+          157
+        ]
+      }
+    },
+    "resource_site_roads_objectives_campaign_muster_activated": {
+      "trim_sha256": "3743e0555dee1995ec01d04b23a8bc5de09e7c500c75c6db0dc38dc050b283bc",
+      "source_sha256": "a48827ee3768a73675fea3b36734ab21c8561436e972981fa1bc5ea7b653353d",
+      "rgba_sha256": "c74d20ea45748b12d61241385427d4a832e7ee3d07ced7e4fe198e63519754c1",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 240,
+        "partial_alpha_pixels": 6643,
+        "bounds": [
+          46,
+          38,
+          144,
+          149
+        ]
+      }
+    },
+    "resource_site_roads_objectives_broken_accord_activated": {
+      "trim_sha256": "453e6e0a8f3b330a69d882ca82d4a34ff666c7f309f9ffbcaf0fa8b382e17ae4",
+      "source_sha256": "8a82ab3f4a6a89b7226cead54b0b94d19269159ef05b536aa492d6ec1c194c66",
+      "rgba_sha256": "a25dc63c09007cdb0fd8cc48884921abff3f73434e5565cef008d3df014c1766",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 232,
+        "partial_alpha_pixels": 6421,
+        "bounds": [
+          42,
+          55,
+          156,
+          132
+        ]
+      }
+    },
+    "resource_site_roads_objectives_witness_stone_activated": {
+      "trim_sha256": "8d185b6547322a8cfd0ad8de426472c4fa8bae6c8ac379db85eee1bbe9522499",
+      "source_sha256": "e495e720c905fabb144ff93413bdabce6575ffc8d67a817b299ca08c8187cec0",
+      "rgba_sha256": "65d3cac0d03db6d334cadc953eef8711f663ce39ff4f827b8854f0fa3361f36a",
+      "removed_source_pixels": 1437420,
+      "metrics": {
+        "alpha_levels": 247,
+        "partial_alpha_pixels": 1564,
+        "bounds": [
+          24,
+          8,
+          168,
+          184
+        ]
+      }
+    },
+    "resource_site_fourteen_marks_granary_lock_exchange_state": {
+      "trim_sha256": "204d2a01b7d15476c9be10b64aecacd9b02390f09378e3f41e222c1b8ba0eb74",
+      "source_sha256": "1503470f7635ce5532f56284bdedd3e082640573331551aeb617eff82732e155",
+      "rgba_sha256": "2d25c17965e57853bc8f1fff8048e8c29079e521e2d4a57a905cc26aeecbba0c",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 248,
+        "partial_alpha_pixels": 13317,
+        "bounds": [
+          34,
+          28,
+          168,
+          166
+        ]
+      }
+    },
+    "resource_site_fourteen_marks_blackwater_shrine_marker_state": {
+      "trim_sha256": "d35fee3c62f97f39049fa5c4882a9a5799614323974785f2695773bd76a50227",
+      "source_sha256": "c487fabd8be5cce473aa566190871efd7f1ad9d6b5dece0918c5ebd8d41b4bf0",
+      "rgba_sha256": "231b54fd23a2e4270ccbdcf13d45e860b6ad0d688690496f841cf705e749cef0",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 13073,
+        "bounds": [
+          28,
+          20,
+          168,
+          180
+        ]
+      }
+    },
+    "resource_site_fourteen_marks_prism_yard_standard_state": {
+      "trim_sha256": "7a247dd5e5ec928a57f881ea5127fa1d984c404a74c3794722cac59ffc6a88d6",
+      "source_sha256": "5bf995b79aacfe705803db5f437a62b891d7a140813c982b256a1de6fe6391f6",
+      "rgba_sha256": "dca57e4ee7c9a3732d7e652afc850c73a89e6190ddbcc389edcf0c0a89193acc",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 5291,
+        "bounds": [
+          57,
+          19,
+          132,
+          167
+        ]
+      }
+    },
+    "resource_site_fourteen_marks_broken_treaty_stone_state": {
+      "trim_sha256": "60b3db145b319145fd6e3a23c3c53e933f0b118f9b030708554149d9e1fb30ee",
+      "source_sha256": "89ad4cb7b39c4bddc136690ad120313c74413a5a734d7bb3a4506c1306bcc75a",
+      "rgba_sha256": "88ad1dc8e7a99090dbf29033c1ababa4d812e67b7d443f0cffea08c0751d4fcf",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 11522,
+        "bounds": [
+          36,
+          33,
+          168,
+          178
+        ]
+      }
+    },
+    "resource_site_fourteen_marks_sealed_causeway_lever_state": {
+      "trim_sha256": "86229caaf59831e21beec18e76024df4056030b166294703f1dc35084a488304",
+      "source_sha256": "3cf3a06c7e53ed604ca9028acb81e0bff13a83a5b26cff4b4ee4c3114cdeaa76",
+      "rgba_sha256": "994f379418ab69b56c21c37f0d58455b646415fba27eec8d825f16b412d5e6ad",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 233,
+        "partial_alpha_pixels": 7028,
+        "bounds": [
+          52,
+          92,
+          152,
+          192
+        ]
+      }
+    },
+    "resource_site_fourteen_marks_mirror_anchor_frame_state": {
+      "trim_sha256": "0c6bccdf7bb06b06cd9dc6ddb4341556cd3f6ee2bd59961da0915098fed833c4",
+      "source_sha256": "bc70b13ecc503c0f440351076ff3d0ca094b39500f949f19267627d6455f9ecb",
+      "rgba_sha256": "9f3b6381d67c517664843e7268742230f294316d9ef8998e4d7106240360d8fa",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 244,
+        "partial_alpha_pixels": 9312,
+        "bounds": [
+          24,
+          64,
+          152,
+          192
+        ]
+      }
+    },
+    "resource_site_fourteen_marks_crownless_standard_state": {
+      "trim_sha256": "f25fdbb1ee5cb8095445083e13e0bf571f93cf15751d80879d0ebf416fb24c40",
+      "source_sha256": "669ab268b20a4d1401add84216d79315c7d4da3c15662b15a0753ad399304d1f",
+      "rgba_sha256": "a43911c3c3c63b3955b8a033237f04de0e69b70dc76635ebadde17d200bb9c4e",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 6044,
+        "bounds": [
+          55,
+          19,
+          142,
+          167
+        ]
+      }
+    },
+    "resource_site_fourteen_marks_drowned_toll_bell_state": {
+      "trim_sha256": "b878407f272482b3bdb7497676f731e1280da9297e6581887e9ecaf580706ef8",
+      "source_sha256": "e069ebc03d98d560556a5c2aa913f778a3167131b0e0f83b05c3a947ad50e086",
+      "rgba_sha256": "9888d259089c250f509120de444faa7f46a611414441e90aaa22a99097f45a41",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 244,
+        "partial_alpha_pixels": 12343,
+        "bounds": [
+          32,
+          28,
+          164,
+          181
+        ]
+      }
+    },
+    "resource_site_fourteen_marks_orchard_writ_seal_state": {
+      "trim_sha256": "5682656024bbf43222bf85e5d06aa2039129e96c3455b3542c224e62aea3df48",
+      "source_sha256": "46e32db5c1567b4d65b9ea9070a2c49566d16edc976d4ff67ebe74fb1d349cc3",
+      "rgba_sha256": "30ddf2bf4f5cd910a1ab94a1e292f22fbfe140456bde66b09030d07c5c20de3d",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 249,
+        "partial_alpha_pixels": 11334,
+        "bounds": [
+          28,
+          38,
+          177,
+          175
+        ]
+      }
+    },
+    "resource_site_fourteen_marks_brass_oath_wheel_state": {
+      "trim_sha256": "992b3d0de06e5fda361e27d1616cf4e96890a6316d9205790611df7555e69c11",
+      "source_sha256": "a748d336331c95a23ae61a274188eda20362e4bc5823ae72a253f6493ef061d3",
+      "rgba_sha256": "b8c1bc7e1bc8eff3a82ca0a52630259d8377d1e3167a1f2217f15a29bf6f6328",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 11575,
+        "bounds": [
+          37,
+          16,
+          158,
+          174
+        ]
+      }
+    },
+    "resource_site_fourteen_marks_burned_signal_brazier_state": {
+      "trim_sha256": "70066300539347a2c226b702995783f631153b13da252c0328229f187e24caeb",
+      "source_sha256": "dfe824bd2901a1d675e28fb3d58dfb405feefa3ae8606b316455b3ff69033934",
+      "rgba_sha256": "344dee5af7041f029c78480cb1c08f63b5e39f1455523260448ee32f63c7860b",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 10611,
+        "bounds": [
+          8,
+          30,
+          118,
+          184
+        ]
+      }
+    },
+    "resource_site_fourteen_marks_repaired_ferry_stage_claimed_state": {
+      "trim_sha256": "85d3edbb1122a13c9fc6567d2a3dfef862980dc7d57d82c50dc88df02ab115bc",
+      "source_sha256": "716baf81809cb72be6f7bc6578d98a490d0cf9b882f4d36ce8e92caf902e0fa4",
+      "rgba_sha256": "7de8a310f1df7c162824d712a8d1c1baa0a4aa4f505b5674ed83843a917f4683",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 9213,
+        "bounds": [
+          26,
+          56,
+          153,
+          185
+        ]
+      }
+    },
+    "resource_site_fourteen_marks_claimed_quarry_head_state": {
+      "trim_sha256": "9c66d02d67785f7263b37343a35c9595498ae54d401546e006e48965477c0a5c",
+      "source_sha256": "02a1265db68c388d75f580ade67164ee8b38b6976bb9f5ae8cfc5632963de130",
+      "rgba_sha256": "454bfdf720462aa08a239bf620d5225731fa473ec501681162d881eb28ee4c76",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 252,
+        "partial_alpha_pixels": 14200,
+        "bounds": [
+          27,
+          38,
+          172,
+          169
+        ]
+      }
+    },
+    "resource_site_fourteen_marks_withered_rootgate_marker_state": {
+      "trim_sha256": "0d1e1dd4d8975340a7d7cba0624c7da1178e962a6b47d96fa3c09356f42efe1d",
+      "source_sha256": "8e46b8760b8a5caa2ff059b2c259dc5e39bd94facf763c29dfcf2479e28f1d7f",
+      "rgba_sha256": "172d98a5318cc7588cd74a4d34428a29e69ea2962044062e07ccc47c7677068c",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 13305,
+        "bounds": [
+          8,
+          52,
+          160,
+          188
+        ]
+      }
+    },
+    "resource_site_eightfold_barrow_vault_opened": {
+      "trim_sha256": "31291c2592bc3abda62af60b706c65bb881e811827fafa5105dbe1c1ffb179fb",
+      "source_sha256": "6b2a0bfee12ad5cf073d9ccaa46150a5c93813706ba4124fad41cbfc48df5c0e",
+      "rgba_sha256": "56894ae8205c229566d7a311cd599dc4277914a0d2249d2282e955292d1a724e",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 15255,
+        "bounds": [
+          19,
+          64,
+          184,
+          191
+        ]
+      }
+    },
+    "resource_site_eightfold_drowned_reliquary_recovered": {
+      "trim_sha256": "ee7a6ba47ca55aebce05387f2833871af117b01067fef27fd2a156641a7622e7",
+      "source_sha256": "6d7bdd36393bc6e62e31b313b74d8a22ecf0cc2a6dc462f3750d8561d780e917",
+      "rgba_sha256": "b3b0a9f9fe4def57e0dcadce1d7d4f92d03c68254000236948d7dd8c7b64e6a0",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 18086,
+        "bounds": [
+          17,
+          28,
+          182,
+          190
+        ]
+      }
+    },
+    "resource_site_eightfold_lantern_crown_nave_consecrated": {
+      "trim_sha256": "be18d51494251def208056a9abe93f2bdbe606d75f438e520c7b708042e5033a",
+      "source_sha256": "0a7cd48a5f32feb86f6552d0cae508c6ca6bb5133fb4ee64e11233539b7a107b",
+      "rgba_sha256": "d6574aecb227dbf3dbad2387a33654e2a03d4b5b32d622b40d99cb8bef953176",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 243,
+        "partial_alpha_pixels": 17406,
+        "bounds": [
+          20,
+          16,
+          177,
+          189
+        ]
+      }
+    },
+    "resource_site_eightfold_hive_of_reeds_reclaimed": {
+      "trim_sha256": "3343f4a820727bace40e8b34bcba1638a3db93bf74cf3032e4498d81051e5c73",
+      "source_sha256": "4d7c9f7852b195e0de9dbdc09137dd2df128fde947a374765ed057fec57d904b",
+      "rgba_sha256": "cb0d6ece0fcef758884762d828679c3432ce8bbb4a715c745f39d08bda1a909b",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 17882,
+        "bounds": [
+          19,
+          28,
+          184,
+          192
+        ]
+      }
+    },
+    "resource_site_eightfold_glassbound_eyrie_secured": {
+      "trim_sha256": "d9336260eb1aa82244695ae23c7b1be493c8c21a80d8c203c233d321ea1ebb4c",
+      "source_sha256": "40c5e30feb5553cb36b6dfa7007f4fdcb23ba6780f3562f4f02973ff875d44d3",
+      "rgba_sha256": "7961ac3a6525c60bc160c034a63daf44be2aaa5ba7463931f91ee4559e05c16a",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 15107,
+        "bounds": [
+          21,
+          24,
+          164,
+          185
+        ]
+      }
+    },
+    "resource_site_eightfold_rust_choir_foundry_silenced": {
+      "trim_sha256": "4d79b80d82bc3c63a92538a48c04244d781d475e8023243c8ae353798666823c",
+      "source_sha256": "c3f22da477628f8084b378d7f0f476c6519320cc0352fa49d35b41e5d21fbdcf",
+      "rgba_sha256": "7ba9158b6c0abec4f6bb8c5c19d0042e297b8a22cac1339575e774809ecf3101",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 15286,
+        "bounds": [
+          23,
+          36,
+          177,
+          179
+        ]
+      }
+    },
+    "resource_site_eightfold_salt_wight_convoy_cleared": {
+      "trim_sha256": "41381abdb276d66c731e9cc94580a1af538a4899450fac24441719c88d23873d",
+      "source_sha256": "0559f24fb5c0541e0e8fb8e1d8477f9e60fc7430315968030e28cfbf5b17a2ef",
+      "rgba_sha256": "247cc7c6bd477c812f300edae228825a3135c39989aa3eda180207da390f8d6d",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 13229,
+        "bounds": [
+          24,
+          52,
+          178,
+          191
+        ]
+      }
+    },
+    "resource_site_eightfold_rootwarden_stockade_reclaimed": {
+      "trim_sha256": "c15e2e5fc6ff0c94fbea7755dcc950727dcdd3fca1d11e18758d8ff732ad30ca",
+      "source_sha256": "e67bd29a6047229bb3bb7b76deec4ec27dd179c3528d6b023889fde728f1d1a9",
+      "rgba_sha256": "08602c1ae986b7aab91bdeecf79b3aedd96e61a3b5df863e1d396490cb2a27fe",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 252,
+        "partial_alpha_pixels": 11363,
+        "bounds": [
+          29,
+          68,
+          164,
+          192
+        ]
+      }
+    },
+    "resource_site_border_oath_embercourt_three_writ": {
+      "trim_sha256": "5b7932ed51eec6897fc38e5346c9d7dc3722ec3b8545d4c42d28d6059a11a3c9",
+      "source_sha256": "b5af15f49069547c920b56c4f11d398bb05f308200f91beb43e0e53f4d3af030",
+      "rgba_sha256": "267aff4863435a336f5207f34622c6d1ca457ddc17d04032e203206e60592a1d",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 8927,
+        "bounds": [
+          40,
+          8,
+          152,
+          181
+        ]
+      }
+    },
+    "resource_site_border_oath_mireclaw_fenhook": {
+      "trim_sha256": "c0553706d2d1fbd6ec9235b00261e31403e46e78d296b3439689d4881bb6cac5",
+      "source_sha256": "eff1a9b905649984415caf217ed54a0bed4f5b13cdfe60abe1701afd5d7c74b9",
+      "rgba_sha256": "1dcb591fda7d2f49e5fe8d5a4f350261cb1d55e829fd1f9b998524a3de92f536",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 10565,
+        "bounds": [
+          33,
+          8,
+          176,
+          184
+        ]
+      }
+    },
+    "resource_site_border_oath_sunvault_trifold": {
+      "trim_sha256": "f7f3ffa5e588f61652b3191706c6520d75c965a5ccce8df625ed84e1709fe8e3",
+      "source_sha256": "f00cbaf9168e2fb83accd2b428117365e608bc57ebcc578d596f5b6f8a5b4b15",
+      "rgba_sha256": "0a44f33e3caf457ad6aaf617aea373b841fb2727314f536080e27f6653ac806b",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 6312,
+        "bounds": [
+          45,
+          8,
+          143,
+          178
+        ]
+      }
+    },
+    "resource_site_border_oath_thornwake_three_seed": {
+      "trim_sha256": "cd25d513f1b7d1f4ed8fb35809401dc6306bab89327f8918cc219f40a2fba78d",
+      "source_sha256": "d6ed213e4be8e68d19f233aa9e57d3286735c6f8c3ff90081aa7d1f478dbca64",
+      "rgba_sha256": "fa642e5a74471e1687abe4777d26124b91690a374b813ea9673e22efb39d6ee5",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 6910,
+        "bounds": [
+          47,
+          8,
+          146,
+          184
+        ]
+      }
+    },
+    "resource_site_border_oath_brasshollow_tripgauge": {
+      "trim_sha256": "c8a44271613d3eb420044adac2e2c2db91b7cbdeecc44684fdbf73482f7574e7",
+      "source_sha256": "f4f453e9cf050a1bc0f8a3d73ed74282817c88ea236d9980d2e24d91f0ecef94",
+      "rgba_sha256": "aaa3b3688a4d86270952770f5837d305bf9442af6cc60806c3bb8ca8fcafa0c3",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 8882,
+        "bounds": [
+          24,
+          28,
+          173,
+          159
+        ]
+      }
+    },
+    "resource_site_border_oath_veilmourn_three_wake": {
+      "trim_sha256": "78b8d5cef5622201678ded3727a03c8e17d086257ea002cf1fa17754014d4483",
+      "source_sha256": "cb686fb885ac16b9911f31a5b77e728e43bd3f8438dd08c51674a1d8f720037f",
+      "rgba_sha256": "0c28c9cada704a6e2bdfe0f6810c80736a500cf749abd97c6ca7ff4c7f74aa2c",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 9390,
+        "bounds": [
+          52,
+          8,
+          151,
+          184
+        ]
+      }
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png": {
+      "after_sha256": "321d1ba55b972d07ea24193a07a203520b3863c41234c0b0d026fcd075c27f79",
+      "prepared": "runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/roads_objectives_state_atlas.png": {
+      "after_sha256": "b531dfa734dbd7289e47f48c9aca2c1d762518d81e7bdd3cc0767cddd1309492",
+      "prepared": "runtime/objects/resource_sites/roads_objectives_state_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png": {
+      "after_sha256": "2393b8166ef596eaf60fc13d88714d1f0f3525d2e5ca88fcaa0484c373ebd858",
+      "prepared": "runtime/objects/resource_sites/fourteen_marks_state_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png": {
+      "after_sha256": "27be471726604b764c6c59ab37b6a84d4f5bd50306b9cc8a8d11c4138b19b65d",
+      "prepared": "runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/border_oath_standards_atlas.png": {
+      "after_sha256": "f28a5f30df50cb505b4d15778838d8643dae5090e76c86729058f79ccf165257",
+      "prepared": "runtime/objects/resource_sites/border_oath_standards_atlas.png"
+    }
+  },
+  "processing": "Reviewed original retained RGB backing components; genuine source RGBA unchanged. Original measured logical crop/fit/anchor projected at 4x raster density. All identities, state mappings and world draw owners unchanged."
+}

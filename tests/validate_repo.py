@@ -44189,6 +44189,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(len(state_recoveries) == 34, errors, "All 34 early state paintings must reconstruct from original sources and inspected backing")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Early state cutout recovery failed closed: {exc}")
+    landmark_recoveries = {}
+    try:
+        landmark_spec = importlib.util.spec_from_file_location("landmark_cutout_validation", ROOT / "tools" / "prepare_overworld_landmark_cutouts.py")
+        landmark_module = importlib.util.module_from_spec(landmark_spec)
+        landmark_spec.loader.exec_module(landmark_module)
+        landmark_recoveries = landmark_module.validate_assets()
+        ensure(len(landmark_recoveries) == 40, errors, "All 40 landmark/state paintings must reconstruct from original paint and exact registration")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Landmark state cutout recovery failed closed: {exc}")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
@@ -44222,7 +44231,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             elif source_model == "built_in_image_gen_original_recurring_resource_site_landmark_atlas":
                 expected_canvas = (5760, 192) if asset_id in recurring_site_recoveries else (1440, 48)
             elif source_model == "built_in_image_gen_original_live_faction_landmark_atlas":
-                expected_canvas = (288, 48)
+                expected_canvas = (1152, 192) if asset_id in landmark_recoveries else (288, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas":
                 expected_canvas = (1152, 192) if asset_id in state_recoveries else (288, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_creature_bank_opened_atlas":
@@ -44244,11 +44253,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             elif source_model == "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas":
                 expected_canvas = (960, 192) if asset_id in state_recoveries else (240, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_roads_objectives_state_atlas":
-                expected_canvas = (288, 48)
+                expected_canvas = (1152, 192) if asset_id in landmark_recoveries else (288, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas":
-                expected_canvas = (672, 48)
+                expected_canvas = (2688, 192) if asset_id in landmark_recoveries else (672, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas":
-                expected_canvas = (384, 48)
+                expected_canvas = (1536, 192) if asset_id in landmark_recoveries else (384, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_land_transit_active_atlas":
                 expected_canvas = (480, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_route_control_opened_atlas":
@@ -44320,7 +44329,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             elif source_model == "built_in_image_gen_original_frontier_treasury_offices_atlas":
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_border_oath_standards_atlas":
-                expected_canvas = (288, 48)
+                expected_canvas = (1152, 192) if asset_id in landmark_recoveries else (288, 48)
             elif source_model == "built_in_image_gen_original_border_oath_cordons_atlas":
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_garrison_warrant_musters_atlas":
@@ -52492,7 +52501,8 @@ def validate_eleven_roads_objectives(errors: list[str]) -> None:
         "site_broken_accord_marker": ("writbound_broken_accord", "mapobj_broken_accord_marker", "resource_site_roads_objectives_broken_accord_activated", [192,0,48,48], "activated_objective_state", {}, "writbound_broken_accord_recorded", "record_broken_accord", "broken_accord_marker_activated_source.png", "0e89e93ff0ae186138b75cb6df3a946ba12d755c04b218d06b2a813b1294d0b9"),
         "site_scenario_witness_stone": ("writbound_witness_stone", "mapobj_scenario_witness_stone", "resource_site_roads_objectives_witness_stone_activated", [240,0,48,48], "activated_objective_state", {}, "writbound_route_witness_sworn", "swear_route_witness", "scenario_witness_stone_activated_source.png", "47c6e6b12e9bb36019bca1ffd03e9c4e3316fe10190b630340183c6bacdf5732"),
     }
-    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "roads_objectives_state_atlas.png"
+    # Exact historical generated-source proof; current derivatives reconstruct above.
+    atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/landmark_states/before_runtime/objects/resource_sites/roads_objectives_state_atlas.png"
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "roads_objectives_state_wave1"
     report_script = ROOT / "tests" / "eleven_roads_objectives_report.gd"
     report_scene = ROOT / "tests" / "eleven_roads_objectives_report.tscn"
@@ -52544,7 +52554,7 @@ def validate_eleven_roads_objectives(errors: list[str]) -> None:
         mapping = mappings.get(site_id, {})
         entry = assets.get(active_id, {})
         ensure(mapping.get("asset_id") == active_id and mapping.get("unclaimed_asset_id") == ready_id, errors, f"{site_id} dormant/active art mapping changed")
-        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/roads_objectives_state_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [288,48] and entry.get("presentation_role") == role and len(str(entry.get("accessible_description", ""))) >= 48, errors, f"{site_id} state atlas entry changed")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/roads_objectives_state_atlas.png" and entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [1152,192] and entry.get("presentation_role") == role and len(str(entry.get("accessible_description", ""))) >= 48, errors, f"{site_id} state atlas entry changed")
         source_path = source_dir / source_name
         ensure(source_path.is_file() and Path(f"{source_path}.import").is_file(), errors, f"{site_id} generated state source or import metadata is missing")
         if source_path.is_file():
@@ -53467,7 +53477,8 @@ def validate_live_faction_landmarks(errors: list[str]) -> None:
     source_manifest_path = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "faction_landmarks_live" / "manifest.json"
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("resource_site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
-    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "faction_landmarks_live" / "faction_landmarks_live_atlas.png"
+    # Exact historical generated-source proof; current derivatives reconstruct above.
+    atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/landmark_states/before_runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png"
     ensure(atlas_path.is_file() and png_size(atlas_path) == (288, 48), errors, "Live faction landmarks must retain one compact 288x48 runtime atlas")
     if atlas_path.is_file():
         ensure(hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "decc9e53f70f19329df9a77bbb7bd6e9337c6fe2fd6be180f7e918424df73863", errors, "Live faction-landmark runtime atlas bytes changed")
@@ -53503,7 +53514,7 @@ def validate_live_faction_landmarks(errors: list[str]) -> None:
         source_res = f"res://art/overworld/source/generated/resource_sites/faction_landmarks_live/{stem}.png"
         source_path = res_path_to_disk(source_res)
         ensure(mapping.get("asset_id") == asset_id and len(str(mapping.get("fit", "")).strip()) >= 32, errors, f"{site_id} exact live art mapping changed")
-        ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png" and asset.get("atlas_region") == region and asset.get("atlas_size") == [288, 48], errors, f"{site_id} live atlas region changed")
+        ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png" and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1152, 192], errors, f"{site_id} live atlas region changed")
         ensure(asset.get("source_generated") == source_res and asset.get("source_model") == "built_in_image_gen_original_live_faction_landmark_atlas" and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description", "")).strip()) >= 40, errors, f"{site_id} art provenance changed")
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024, errors, f"{site_id} high-resolution generated source is missing")
         ensure(Path(f"{source_path}.import").is_file(), errors, f"{site_id} generated source import metadata is missing")
@@ -76619,7 +76630,8 @@ def validate_fourteen_marks_accordfall(errors: list[str]) -> None:
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     scenario = scenarios.get("accordfall-fourteen-marks", {})
     source_dir = ROOT / "art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1"
-    atlas_path = ROOT / "art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png"
+    # Exact historical generated-source proof; current derivatives reconstruct above.
+    atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/landmark_states/before_runtime/objects/resource_sites/fourteen_marks_state_atlas.png"
     cases = [
         ("granary_lock_exchange", "faction_landmark", "accordfall_granary_exchange", "live", {}, {"gold":120,"wood":2}, "", [0,0,48,48]),
         ("blackwater_shrine_marker", "faction_landmark", "accordfall_blackwater_shrine", "live", {}, {"gold":100,"wood":1}, "", [48,0,48,48]),
@@ -76673,7 +76685,7 @@ def validate_fourteen_marks_accordfall(errors: list[str]) -> None:
         asset_id = f"resource_site_fourteen_marks_{stem}_state"
         asset = object_assets.get(asset_id, {})
         sprite = site_sprites.get(site_id, {})
-        ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png" and asset.get("atlas_region") == region and asset.get("atlas_size") == [672,48] and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description", ""))) >= 72, errors, f"{site_id} state atlas entry changed")
+        ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png" and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [2688,192] and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description", ""))) >= 72, errors, f"{site_id} state atlas entry changed")
         ensure(sprite.get("asset_id") == asset_id and sprite.get("unclaimed_asset_id") == f"mapobj_{stem}", errors, f"{site_id} pre/post state sprite mapping changed")
     report_path = ROOT / "tests/fourteen_marks_accordfall_report.gd"
     scene_path = ROOT / "tests/fourteen_marks_accordfall_report.tscn"
@@ -76702,7 +76714,8 @@ def validate_eightfold_guarded_reliquary_march(errors: list[str]) -> None:
     }
     source_dir = ROOT / "art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1"
     manifest_path = source_dir / "manifest.json"
-    atlas_path = ROOT / "art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png"
+    # Exact historical generated-source proof; current derivatives reconstruct above.
+    atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/landmark_states/before_runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png"
     report_path = ROOT / "tests/eightfold_guarded_reliquary_march_report.gd"
     scene_path = ROOT / "tests/eightfold_guarded_reliquary_march_report.tscn"
     required = (manifest_path, atlas_path, report_path, scene_path)
@@ -76730,7 +76743,7 @@ def validate_eightfold_guarded_reliquary_march(errors: list[str]) -> None:
         asset = object_assets.get(asset_id, {})
         sprite = site_sprites.get(site_id, {})
         ensure(sprite.get("asset_id") == asset_id and str(sprite.get("unclaimed_asset_id", "")).startswith("mapobj_"), errors, f"{site_id} claimed/unclaimed sprite switch changed")
-        ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png" and asset.get("atlas_region") == region and asset.get("atlas_size") == [384,48] and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description", "")).strip()) >= 56, errors, f"{site_id} Eightfold atlas entry changed")
+        ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png" and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1536,192] and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description", "")).strip()) >= 56, errors, f"{site_id} Eightfold atlas entry changed")
         source_path = source_dir / source_name
         ensure(source_path.is_file() and Path(f"{source_path}.import").is_file(), errors, f"{site_id} generated source or import is missing")
         if source_path.is_file():
@@ -82981,7 +82994,8 @@ def validate_six_border_oath_standard_seizures(errors: list[str]) -> None:
     standard_sources = {row.get("site_id"):row for row in load_json(standard_manifest_path).get("items", [])}
     cordon_sources = {row.get("encounter_id"):row for row in load_json(cordon_manifest_path).get("items", [])}
     ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,203,377,299), errors, "Current content catalogs must retain the expanded frontier-mythic totals")
-    ensure(png_size(required[0]) == (288,48) and hashlib.sha256(required[0].read_bytes()).hexdigest() == "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e", errors, "Border Oath standards atlas changed")
+    historical_standard = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/landmark_states/before_runtime/objects/resource_sites/border_oath_standards_atlas.png"
+    ensure(png_size(historical_standard) == (288,48) and hashlib.sha256(historical_standard.read_bytes()).hexdigest() == "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e", errors, "Historical Border Oath standards atlas changed")
     ensure(png_size(required[1]) == (288,48) and hashlib.sha256(required[1].read_bytes()).hexdigest() == "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c", errors, "Border Oath cordons atlas changed")
     for scenario_id, contract in expected.items():
         prefix,faction_id,hero_id,player_group_id,site_id,site_asset_id,encounter_id,enemy_group_id,encounter_asset_id,rare_id,region = contract
@@ -83005,7 +83019,7 @@ def validate_six_border_oath_standard_seizures(errors: list[str]) -> None:
         ensure(site.get("content_batch_id") == slice_id and site.get("persistent_control") is True and site.get("claim_rewards") == {"gold":250,rare_id:1} and site.get("control_income") == {"gold":100}, errors, f"{site_id} control-site behavior changed")
         site_asset = assets.get(site_asset_id,{})
         encounter_asset = assets.get(encounter_asset_id,{})
-        ensure(art.get("resource_site_sprites",{}).get(site_id,{}).get("asset_id") == site_asset_id and site_asset.get("path") == standard_atlas_res and site_asset.get("atlas_region") == region and site_asset.get("assigned_resource_site_id") == site_id, errors, f"{site_id} exact standard art changed")
+        ensure(art.get("resource_site_sprites",{}).get(site_id,{}).get("asset_id") == site_asset_id and site_asset.get("path") == standard_atlas_res and site_asset.get("atlas_region") == [v * 4 for v in region] and site_asset.get("assigned_resource_site_id") == site_id, errors, f"{site_id} exact standard art changed")
         ensure(art.get("encounter_identity_sprites",{}).get(encounter_id) == encounter_asset_id and encounter_asset.get("path") == cordon_atlas_res and encounter_asset.get("atlas_region") == region and encounter_asset.get("assigned_encounter_id") == encounter_id, errors, f"{encounter_id} exact cordon art changed")
         for source, source_root in ((standard_sources.get(site_id,{}),standard_manifest_path.parent),(cordon_sources.get(encounter_id,{}),cordon_manifest_path.parent)):
             source_path = source_root / str(source.get("source_file",""))
