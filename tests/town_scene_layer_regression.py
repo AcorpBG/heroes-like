@@ -21,6 +21,7 @@ LATE_HARBOR_SAVE_SHA256 = '69f4c289bb0bd273f175e24a0b2704391302c0cf2dcc0be76c4d4
 EMBERCOURT_SAVE_SHA256 = 'c0d67e4b2a8403ac82ae599391ae0a946ea16110beb4dd378a599af9a9ab7a59'
 MIRECLAW_SAVE_SHA256 = '57f48cd7fcb650777a7923f5aec273f8bd73e61d65acaf9306a048323549ba89'
 MIRECLAW_IDS = ['building_blackbranch_den', 'building_wayfarers_hall', 'building_market_square']
+MIRECLAW_GROWTH_IDS = ['building_mire_pens', 'building_reed_warren', 'building_slingers_post', 'building_rot_warren', 'building_fenscale_pens', 'building_war_drum_circle', 'building_lantern_archive', 'building_starseer_annex', 'building_gorefen_ring']
 EMBERCOURT_DEVELOPED_SHA256 = '553ceb3ea972412cd72341ff627fa73c6864f9bcbfb6cc428923ebec5712de59'
 EMBERCOURT_IDS = ['building_muster_yard', 'building_wayfarers_hall', 'building_market_square']
 EMBERCOURT_GROWTH_IDS = ['building_stone_store', 'building_watch_barracks', 'building_bowyer_lodge', 'building_beacon_range']
@@ -787,8 +788,8 @@ def embercourt_growth_script(*, supply=False, riverworks=False, civic=False, lat
     return opening + EXTRA + growth
 
 
-def mireclaw_script(script):
-    """Real opening/Market/Mire Pens orders; reuse all shared input/save checks."""
+def mireclaw_script(script, *, batch_growth=False):
+    """Paid Duskfen growth; sweep combined input once, not after every order."""
     script=embercourt_script(script).replace('building_muster_yard','building_blackbranch_den').replace('town_riverwatch','town_duskfen').replace('Riverwatch Market','Duskfen Market')
     script=script.replace('get_tree().current_scene._commit_build_action(building_id)',
                           'var expected_build: Dictionary=mireclaw_expected_build(building_id,offered[0])\n\t\tget_tree().current_scene._commit_build_action(building_id)')
@@ -799,28 +800,105 @@ def mireclaw_script(script):
     script=script.replace('await RenderingServer.frame_post_draw\n\tget_viewport().get_texture().get_image().save_png(out.path_join("market_saved_reentry.png"))',
                           'check(DirAccess.copy_absolute(path,out.path_join("earned_market_save.json"))==OK,"could not retain ordinary Market state")\n\tawait RenderingServer.frame_post_draw\n\tget_viewport().get_texture().get_image().save_png(out.path_join("market_saved_reentry.png"))')
     growth=HARBOR_GROWTH[:HARBOR_GROWTH.index('\tif OS.get_environment("TOWN_HARBOR_DEVELOPED_SAVE")')]
-    growth=growth.replace('__GROWTH_IDS__','["building_mire_pens"]')
+    growth=growth.replace('__GROWTH_IDS__',json.dumps(MIRECLAW_GROWTH_IDS if batch_growth else ['building_mire_pens']))
+    if batch_growth:
+        start=growth.index('\t\tprint("HARBOR_GROWTH_BEGIN ')
+        end=growth.index('\t\tvar cost: Dictionary=actions[0].cost',start)
+        orders=LATE_HARBOR_ORDERS.replace('Bellwake','Duskfen')
+        ore_start=orders.index('\t\t\tvar ore_needed:')
+        ore_end=orders.index('\t\t\tactions=TownRules.get_build_actions',ore_start)
+        orders=orders[:ore_start]+'\t\t\tawait purchase_mireclaw_materials(id)\n'+orders[ore_end:]
+        growth=growth[:start]+orders+growth[end:]
     growth=growth.replace('var cost: Dictionary=actions[0].cost',
                           'var expected_build: Dictionary=mireclaw_expected_build(id,actions[0])\n\t\tvar prior_built: Array=TownRules.get_active_town(session).built_buildings.duplicate()\n\t\tvar cost: Dictionary=actions[0].cost')
     growth=growth.replace('check(committed.ok and id in active.built_buildings',
-                          'check(normalized(session.to_dict())==expected_build,"Mire Pens UI diverged from complete authoritative build state")\n\t\tcheck(active.built_buildings==prior_built+[id],"Mire Pens changed more than the earned built-id append")\n\t\tcheck(committed.ok and id in active.built_buildings')
-    growth=growth.replace('await inspect_scene_layers([id])',
-                          'await inspect_scene_layers(["building_blackbranch_den","building_wayfarers_hall","building_market_square"])')
-    growth=growth.replace('"res://art/towns/runtime/scene_layers/faction_veilmourn/%s.png" % id', 'TownRules.building_icon_path(id)')
-    growth=growth.replace('"growth save/re-entry lost exact layer: "+id)',
-                          '"growth save/re-entry lost exact retained catalog asset: "+id)\n\t\tvar mixed: Array=stage._town_building_scene_entries(stage._town_scene_rect()).filter(func(e):return e.visible_building_id==id)\n\t\tcheck(mixed.size()==1 and not mixed[0].scene_layer,"unconverted Mire Pens was falsely accepted as new scene art")')
+                          'if normalized(session.to_dict())!=expected_build:\n\t\t\trows.append({"label":"batch_build_state_mismatch","building_id":id,"paths":layer_changed_paths(expected_build,normalized(session.to_dict())),"expected_recap":expected_build.flags.get("last_town_action_recap",{}),"actual_recap":session.flags.get("last_town_action_recap",{})})\n\t\tcheck(normalized(session.to_dict())==expected_build,"Mire Pens UI diverged from complete authoritative build state")\n\t\tcheck(active.built_buildings==prior_built+[id],"Mire Pens changed more than the earned built-id append")\n\t\tcheck(committed.ok and id in active.built_buildings')
+    growth=growth.replace('scene_layers/faction_veilmourn/','scene_layers/faction_mireclaw/')
+    if batch_growth:
+        # The broad validation_* wrappers construct a full diagnostic snapshot
+        # and normalize scouting/forecast state. Exercise the ordinary handlers
+        # here; their direct state is what the independent rule control models.
+        growth=growth.replace('var expected_build: Dictionary=mireclaw_expected_build(id,actions[0])\n\t\t','')
+        growth=growth.replace('var selected: Dictionary=shell.validation_select_build_plan(id)\n\t\tcheck(selected.ok and selected.state_unchanged,"growth ledger selection changed state: "+id)\n\t\tvar committed: Dictionary=shell.validation_confirm_build_plan()',
+                              'var selection_before: Dictionary=normalized(session.to_dict())\n\t\tshell._select_build_action("build:"+id)\n\t\tcheck(shell._selected_build_action_id=="build:"+id and normalized(session.to_dict())==selection_before,"ordinary ledger selection changed full state: "+id)\n\t\tvar expected_build: Dictionary=mireclaw_expected_build(id,actions[0])\n\t\tshell._on_confirm_build_pressed()\n\t\tvar committed: Dictionary={"ok":shell._last_action_recap.get("action_id","")=="build:"+id}')
+        growth=growth.replace('\t\tawait inspect(id)\n\t\tawait inspect_scene_layers([id])', '\t\tawait inspect_mireclaw_new_building(id)')
+        growth+='''
+	var stage=get_tree().current_scene.get_node("%TownStage")
+	var visible: Array=stage._town_building_scene_entries(stage._town_scene_rect()).filter(func(e):return e.visible_building_id!="" and not e.get("embedded_in_base",false)).map(func(e):return e.visible_building_id)
+	await inspect_scene_layers(visible)
+	await clear_layer_capture_focus()
+	await RenderingServer.frame_post_draw
+	get_viewport().get_texture().get_image().save_png(out.path_join("batch_developed.png"))
+'''
     helper=r'''
 func mireclaw_expected_build(id: String, action: Dictionary) -> Dictionary:
 	var control=SessionStateStore.SessionData.new()
-	control.from_dict(normalized(session.to_dict()))
+	control.from_dict(session.to_dict())
+	check(normalized(control.to_dict())==normalized(session.to_dict()),"build control clone changed full input")
+	var normalization_cache: Dictionary=OverworldRules._runtime_normalized_signatures.duplicate(true)
+	OverworldRules.begin_normalized_read_scope(control)
+	TownRules.begin_read_scope(control)
 	var before: Dictionary=TownRules.town_action_consequence_signature(control)
+	TownRules.end_read_scope(control)
+	OverworldRules.end_normalized_read_scope(control)
 	var result: Dictionary=TownRules.build_active_town(control,id)
 	check(result.ok,"ordinary build control rejected: "+id)
+	OverworldRules.begin_normalized_read_scope(control)
+	TownRules.begin_read_scope(control)
 	var recap: Dictionary=TownRules.build_town_action_recap(control,"build","build:"+id,action,result,before)
+	TownRules.end_read_scope(control)
+	OverworldRules.end_normalized_read_scope(control)
 	if recap.get("active",false): control.flags["last_town_action_recap"]=recap.duplicate(true)
+	# Isolate the detached control's cache metadata from the real UI action.
+	OverworldRules._runtime_normalized_signatures=normalization_cache
 	return normalized(control.to_dict())
 '''
-    return script+growth+helper
+    return script+growth+helper+(MIRECLAW_BATCH_HELPERS if batch_growth else '')
+
+
+MIRECLAW_BATCH_HELPERS = r'''
+func inspect_mireclaw_new_building(id: String) -> void:
+	var shell=get_tree().current_scene
+	var stage=shell.get_node("%TownStage")
+	var before: Dictionary=normalized(session.to_dict())
+	var summary: Dictionary=stage.validation_building_hotspot_summary(id)
+	check(summary.visible and summary.aligned and summary.focus_mode==Control.FOCUS_ALL,"new batch layer lost aligned accessible hotspot: "+id)
+	check(stage._town_building_texture_path(id)=="res://art/towns/runtime/scene_layers/faction_mireclaw/%s.png" % id,"new batch layer resolved unrelated art: "+id)
+	var predecessor: String=ContentService.get_building(id).get("upgrade_from","")
+	if predecessor!="":
+		check(predecessor in TownRules.get_active_town(session).built_buildings,"upgrade erased saved predecessor: "+id)
+		check(not stage.validation_building_hotspot_summary(predecessor).visible,"upgrade left predecessor painting/hotspot visible: "+id)
+	var info: Dictionary=shell.validation_activate_building_information(id)
+	check(info.open and info.title==ContentService.get_building(id).name,"new batch building cannot open its own information: "+id)
+	shell._close_town_catalog(false)
+	await settle()
+	check(normalized(session.to_dict())==before,"new batch building information changed full state: "+id)
+	rows.append({"label":"batch_new_layer_and_upgrade","building_id":id,"predecessor":predecessor,"full_state_equal":true})
+
+func purchase_mireclaw_materials(id: String) -> void:
+	for resource in ["wood","ore"]:
+		var needed: int=int(ContentService.get_building(id).cost.get(resource,0))
+		while int(session.overworld.resources.get(resource,0))<needed:
+			var action: String="market:buy:"+resource+":1"
+			var offered: Array=TownRules.get_market_actions(session).filter(func(a):return a.id==action and not a.get("disabled",true))
+			if offered.size()!=1: break # Ordinary stock/affordability; wait a legal day.
+			var shell=get_tree().current_scene
+			var opened: Dictionary=shell.validation_open_town_catalog("trade")
+			check(opened.open,"Duskfen material Trade dialog unavailable")
+			var control=SessionStateStore.SessionData.new()
+			control.from_dict(session.to_dict())
+			var signature: Dictionary=TownRules.town_action_consequence_signature(control)
+			var expected: Dictionary=TownRules.perform_market_action(control,action)
+			var recap: Dictionary=TownRules.build_town_action_recap(control,"market",action,offered[0],expected,signature)
+			if recap.get("active",false): control.flags["last_town_action_recap"]=recap.duplicate(true)
+			var result: Dictionary=shell.validation_perform_town_action(action)
+			await settle()
+			check(expected.ok and result.ok,"Duskfen ordinary paid material trade failed")
+			check(normalized(session.to_dict())==normalized(control.to_dict()),"Duskfen paid material trade changed complete authoritative state")
+			rows.append({"label":"ordinary_paid_batch_material","action":action,"day":session.day,"full_rule_state_equal":true})
+			shell._close_town_catalog(false)
+			if not result.ok: return
+'''
 
 
 def main():
@@ -829,6 +907,7 @@ def main():
     parser.add_argument('--save', type=Path, required=True)
     parser.add_argument('--resolution', choices=['1280x720', '1920x1080', '2048x1079'], required=True)
     parser.add_argument('--faction', choices=['veilmourn', 'embercourt', 'mireclaw'], default='veilmourn')
+    parser.add_argument('--mireclaw-growth', action='store_true', help='Nine ordinary Duskfen orders; lightweight per-build checks and one combined input sweep')
     parser.add_argument('--embercourt-growth', action='store_true', help='Four paid Stone/Watch/Bowyer/Beacon orders from the exact earned Medium11 Market save')
     parser.add_argument('--embercourt-supply-growth', action='store_true', help='Five paid supply/magic orders and ordinary ore trades from the exact earned Day-5 save')
     parser.add_argument('--embercourt-riverworks-growth', action='store_true', help='Six normal riverworks-chain builds from the exact earned Day-10 save')
@@ -844,6 +923,8 @@ def main():
     parser.add_argument('--presentation-only', action='store_true', help='Read-only opening/developed input checks; no purchases or match progression evidence')
     parser.add_argument('--developed-save', type=Path, help='Exact recorded built-id composition fixture; never resumed as a live match')
     args = parser.parse_args()
+    if args.mireclaw_growth and args.faction!='mireclaw':
+        parser.error('Mireclaw growth requires --faction mireclaw')
     if sum((args.harbor_growth, args.exchange_growth, args.salt_growth, args.defense_growth, args.memory_growth, args.rigging_magic_growth, args.late_harbor_growth, args.embercourt_growth, args.embercourt_supply_growth, args.embercourt_riverworks_growth, args.embercourt_civic_growth, args.embercourt_late_court_growth, args.presentation_only)) > 1:
         parser.error('select one normal construction sequence per run')
     if args.presentation_only and not args.developed_save:
@@ -974,8 +1055,8 @@ def main():
     elif args.faction=='embercourt':
         script_text = embercourt_script(script_text, presentation_only=args.presentation_only)
     elif args.faction=='mireclaw':
-        script_text=mireclaw_script(script_text)
-        sequence='mireclaw_market_and_mixed_mire_pens'
+        script_text=mireclaw_script(script_text,batch_growth=args.mireclaw_growth)
+        sequence='mireclaw_nine_building_batch' if args.mireclaw_growth else 'mireclaw_market_and_mire_pens'
     if args.resolution == '2048x1079':
         script_text = script_text.replace('SettingsService.set_presentation_resolution(OS.get_environment("TOWN_OVERLAY_RESOLUTION"))', 'get_window().content_scale_size = Vector2i(2048,1079)\n\tget_window().size = Vector2i(2048,1079)')
     with tempfile.TemporaryDirectory(prefix='town-layer-probe-', dir=OUTPUT) as temporary, tempfile.TemporaryDirectory(prefix='town-layer-data-', dir='/dev/shm') as data:
@@ -991,7 +1072,7 @@ def main():
         with (out / 'runtime.log').open('w') as log:
             # Rigging/magic covers every currently visible painting after each
             # of six orders, not only the newly constructed building.
-            code = run_probe(command, env, log, timeout_seconds=3600 if args.late_harbor_growth or args.embercourt_late_court_growth else 1800 if args.rigging_magic_growth or args.embercourt_supply_growth or args.embercourt_riverworks_growth or args.embercourt_civic_growth else 900 if args.salt_growth or args.defense_growth or args.memory_growth or args.embercourt_growth else 600 if growth_enabled else 300)
+            code = run_probe(command, env, log, timeout_seconds=1800 if args.mireclaw_growth else 3600 if args.late_harbor_growth or args.embercourt_late_court_growth else 1800 if args.rigging_magic_growth or args.embercourt_supply_growth or args.embercourt_riverworks_growth or args.embercourt_civic_growth else 900 if args.salt_growth or args.defense_growth or args.memory_growth or args.embercourt_growth else 600 if growth_enabled else 300)
     lines = (out / 'runtime.log').read_text().splitlines()
     marker = 'TOWN_OVERLAY_OWNERSHIP '
     reports = [json.loads(line[len(marker):]) for line in lines if line.startswith(marker)]

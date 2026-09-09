@@ -26,6 +26,8 @@ def validate_scene_layers(payload=None):
     factions = payload.get('factions', {})
     required_mireclaw = {'building_blackbranch_den','building_wayfarers_hall','building_market_square'}
     require(required_mireclaw.issubset(factions.get('faction_mireclaw',{})), 'Missing Mireclaw opening scene mapping')
+    required_mireclaw_growth = {'building_mire_pens','building_reed_warren','building_slingers_post','building_rot_warren','building_fenscale_pens','building_war_drum_circle','building_lantern_archive','building_starseer_annex','building_gorefen_ring'}
+    require(required_mireclaw_growth.issubset(factions.get('faction_mireclaw',{})), 'Missing Mireclaw dwelling/magic batch scene mapping')
     required_embercourt = {'building_muster_yard','building_wayfarers_hall','building_market_square'}
     require(required_embercourt.issubset(factions.get('faction_embercourt',{})), 'Missing accepted Embercourt opening scene mapping')
     required_growth = {'building_stone_store','building_watch_barracks','building_bowyer_lodge','building_beacon_range'}
@@ -48,6 +50,9 @@ def validate_scene_layers(payload=None):
     embercourt = factions.get('faction_embercourt',{})
     pairs += [(embercourt.get(base,{}),embercourt.get(upgrade,{}),upgrade,base) for base,upgrade in
               [('building_muster_yard','building_watch_barracks'),('building_bowyer_lodge','building_beacon_range'),('building_lantern_archive','building_starseer_annex'),('building_embercourt_charter_bastion','building_embercourt_charter_flame')]]
+    mireclaw = factions.get('faction_mireclaw',{})
+    pairs += [(mireclaw.get(base,{}),mireclaw.get(upgrade,{}),upgrade,base) for base,upgrade in
+              [('building_blackbranch_den','building_reed_warren'),('building_mire_pens','building_fenscale_pens'),('building_slingers_post','building_rot_warren'),('building_lantern_archive','building_starseer_annex')]]
     for sounding,court,upgrade_name,base_name in pairs:
         if not sounding or not court:
             continue
@@ -112,6 +117,9 @@ def validate_scene_layers(payload=None):
             text_only = row.get('reference_inputs') == []
             text_lower = prompt_text.lower()
             text_only_brief = ('transparent-background rgba png game sprite' in text_lower or
+                               ('asset type: original production fantasy town environment building layer' in text_lower and
+                                'scene/backdrop: genuinely transparent rgba background' in text_lower and
+                                'constraints:' in text_lower) or
                                ('asset type: original transparent raster building layer' in text_lower and
                                 'genuinely transparent background with a real alpha channel' in text_lower) or
                                ('asset type: original transparent raster' in text_lower and
@@ -131,8 +139,9 @@ class TownSceneLayersTests(unittest.TestCase):
         self.assertEqual(validate_scene_layers(), [])
     def test_every_mireclaw_opening_mapping_is_required(self):
         from tools import prepare_town_scene_layers as preparation
-        self.assertEqual(set(preparation.MIRECLAW_BRIEFS), {'building_blackbranch_den','building_wayfarers_hall','building_market_square'})
-        for building in preparation.MIRECLAW_BRIEFS:
+        opening={'building_blackbranch_den','building_wayfarers_hall','building_market_square'}
+        self.assertEqual(set(preparation.MIRECLAW_BRIEFS), opening|set(preparation.MIRECLAW_GROWTH_BRIEFS))
+        for building in opening:
             with self.subTest(building=building):
                 payload=copy.deepcopy(self.payload)
                 payload['factions'].get('faction_mireclaw',{}).pop(building,None)
@@ -177,6 +186,21 @@ class TownSceneLayersTests(unittest.TestCase):
                 payload=copy.deepcopy(self.payload)
                 payload['factions']['faction_embercourt']['building_embercourt_charter_flame'][field][0]+=0.01
                 self.assertIn('building_embercourt_charter_flame moved the building_embercourt_charter_bastion '+message,validate_scene_layers(payload))
+    def test_mireclaw_batch_requires_all_mappings_and_fixed_upgrade_sites(self):
+        required=('building_mire_pens','building_reed_warren','building_slingers_post','building_rot_warren','building_fenscale_pens','building_war_drum_circle','building_lantern_archive','building_starseer_annex','building_gorefen_ring')
+        payload=copy.deepcopy(self.payload)
+        for id in required: payload['factions']['faction_mireclaw'].pop(id)
+        self.assertIn('Missing Mireclaw dwelling/magic batch scene mapping',validate_scene_layers(payload))
+        payload=copy.deepcopy(self.payload)
+        pairs=[('building_blackbranch_den','building_reed_warren'),('building_mire_pens','building_fenscale_pens'),('building_slingers_post','building_rot_warren'),('building_lantern_archive','building_starseer_annex')]
+        for base,upgrade in pairs:
+            payload['factions']['faction_mireclaw'][upgrade]['normalized_rect'][0]+=0.01
+            payload['factions']['faction_mireclaw'][upgrade]['ground_anchor'][0]+=0.01
+        errors=validate_scene_layers(payload)
+        for base,upgrade in pairs:
+            for field in ('scenic site','ground anchor'):
+                self.assertIn(upgrade+' moved the '+base+' '+field,errors)
+
     def test_every_embercourt_opening_mapping_is_required(self):
         for building in ('building_muster_yard','building_wayfarers_hall','building_market_square'):
             with self.subTest(building=building):

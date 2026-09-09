@@ -1,6 +1,7 @@
 """The Mireclaw art packet must use real generated and paid progression."""
 import contextlib
 import io
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -37,7 +38,7 @@ class MireclawTownSequenceTests(unittest.TestCase):
                          'complete Town save/resume changed gameplay state'):
             self.assertIn(fragment,script)
 
-    def test_paid_market_and_mixed_catalog_order_have_full_rule_controls(self):
+    def test_paid_market_and_pens_order_have_full_rule_controls(self):
         script=layers.mireclaw_script(layers.SCRIPT)
         for fragment in ('String(a.id)=="build:building_market_square"',
                          'for id in ["building_mire_pens"]:',
@@ -47,7 +48,7 @@ class MireclawTownSequenceTests(unittest.TestCase):
                          'shell.validation_select_build_plan(id)',
                          'shell.validation_confirm_build_plan()',
                          'field.validation_confirm_end_turn()',
-                         'not mixed[0].scene_layer', 'TownRules.building_icon_path(id)',
+                         'scene_layers/faction_mireclaw/%s.png',
                          'earned_market_save.json','earned_growth_save.json'):
             self.assertIn(fragment,script)
         self.assertIn('await inspect_scene_layers(["building_blackbranch_den","building_wayfarers_hall","building_market_square"])',script)
@@ -64,7 +65,45 @@ class MireclawTownSequenceTests(unittest.TestCase):
         for fragment in ('Market UI diverged from complete authoritative build state',
                          'Mire Pens UI diverged from complete authoritative build state',
                          'await inspect_scene_layers(', 'layer_controller(JOY_BUTTON_A)',
-                         'SaveService.save_session', 'not mixed[0].scene_layer'):
+                         'SaveService.save_session', 'scene_layers/faction_mireclaw/%s.png'):
+            self.assertEqual(script.count(fragment),headless.count(fragment))
+
+    def test_batch_follows_authored_dependencies_and_preserves_paid_authority(self):
+        towns=json.loads((layers.ROOT/'content/towns.json').read_text())['items']
+        town=next(t for t in towns if t['id']=='town_duskfen')
+        buildings={b['id']:b for b in json.loads((layers.ROOT/'content/buildings.json').read_text())['items']}
+        built=set(town['starting_building_ids'])|{'building_market_square'}
+        self.assertEqual(len(layers.MIRECLAW_GROWTH_IDS),9)
+        for id in layers.MIRECLAW_GROWTH_IDS:
+            self.assertIn(id,town['buildable_building_ids'])
+            self.assertTrue(set(buildings[id]['requires'])<=built,id)
+            built.add(id)
+        script=layers.mireclaw_script(layers.SCRIPT,batch_growth=True)
+        for fragment in ('field.validation_confirm_end_turn()', 'shell._on_confirm_build_pressed()',
+                         'purchase_mireclaw_materials(id)', 'TownRules.perform_market_action(control,action)',
+                         'Mire Pens UI diverged from complete authoritative build state',
+                         'upgrade erased saved predecessor', 'growth changed complete save/resume',
+                         'batch_developed.png'):
+            self.assertIn(fragment,script)
+        for target in (r'session\.day',r'session\.overworld\.resources'):
+            self.assertNotRegex(script,target+r'\s*=(?!=)')
+        self.assertNotIn('__GROWTH_IDS__',script)
+
+    def test_batch_sweeps_combined_input_once_not_every_purchase(self):
+        script=layers.mireclaw_script(layers.SCRIPT,batch_growth=True)
+        growth=script.split('func inspect_harbor_growth()',1)[1].split('func mireclaw_expected_build',1)[0]
+        self.assertEqual(growth.count('await inspect_scene_layers(visible)'),1)
+        self.assertNotIn('await inspect_scene_layers([id])',growth)
+        self.assertIn('await inspect_mireclaw_new_building(id)',growth)
+        self.assertNotIn('validation_select_build_plan(',growth)
+        self.assertNotIn('validation_confirm_build_plan(',growth)
+        self.assertIn('ordinary ledger selection changed full state',growth)
+        self.assertIn('OverworldRules._runtime_normalized_signatures=normalization_cache',script)
+        self.assertIn('build control clone changed full input',script)
+        self.assertIn('complete_saved_state_equal',growth)
+        headless,removed=headless_script(script)
+        self.assertTrue(removed)
+        for fragment in ('check(', 'SaveService.', 'Input.parse_input_event', 'validation_confirm_build_plan'):
             self.assertEqual(script.count(fragment),headless.count(fragment))
 
     def test_wrong_opening_is_rejected_before_engine_launch(self):

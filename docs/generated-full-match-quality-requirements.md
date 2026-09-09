@@ -4,6 +4,28 @@ Owner direction, 2026-09-06: improve complete-match player-facing quality after
 the source/runtime review rated the current game a playable alpha, not a release
 candidate. Phase 6 parent: `quality-generated-full-match-20260906`.
 
+## Owner-directed implementation cadence — 2026-09-09
+
+Work in coherent faction/progression batches. The first resumed Duskfen batch covers
+Mire Pens, Reed Warren, Slingers Post, Rot Warren, Fenscale Pens, War Drum Circle,
+Lantern Archive, Starseer Annex and Gorefen Ring. Preserve the original village,
+49 earlier layers and same-site upgrades; each new painting retains exact prompt,
+source/trim/runtime hashes, alpha and faction/building mapping. Keep ordinary
+paid construction, clickable information, save/re-entry and existing rules.
+
+Use lightweight provenance/alpha, syntax and composition checks while assembling
+the batch. Run strict art/sequence checks, a representative comprehensive input
+sweep, ordinary multi-building progression with full saved-state controls and
+inspected small/large opening/intermediate/developed views once at the coherent
+batch boundary. Then run repository/diff validation and one Linux/Windows
+export/startup/generated-Town and exact batch-flow acceptance cycle. Reuse shared
+unchanged coverage; do not multiply exhaustive pixel/input sweeps, full source
+matrices, exports or separate reports after every asset. A discovered defect or
+runtime-owner change justifies targeted additional checks. Batch completion still
+requires actual evidence; unchanged or unfinished factions remain explicit gaps.
+This cadence supersedes per-small-packet repetition in earlier instructions, not
+asset integrity, legal progression, compatibility or platform requirements.
+
 ## Owner-directed package policy — 2026-09-09
 
 There is no fixed release-PCK size budget. Remove the former 250000000-byte
