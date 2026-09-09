@@ -333,6 +333,68 @@ for brief in MIRECLAW_BRIEFS.values():
     brief.update(reference_inputs=[], generation_date='2026-09-09',
                  curation='Original built-in text-only paintings described from the inspected Duskfen village. Preserve generated alpha, camera, warm upper-left backlight and wet reed/timber materials. Actual composition, paid growth, input/save and platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance.')
 
+
+MIRECLAW_GROWTH_BRIEFS = {
+    'building_mire_pens': {
+        'source_sha256':'f1c3cd062158d9435741a601e4d8ad50bce1da13df05aa32e46158737f6cee69',
+        'generation_output':'exec-ab2f3467-9a2b-48d6-af9c-443e97892d42.png',
+        'scene_bounds':[390,245,290,193.33333333333334], 'ground_anchor':[626,424],
+        'grounding':"Rear-left handler platforms join the reed shore behind the original Den; the exposed roof remains separate from the main hall and the foreground Den.",
+    },
+    'building_reed_warren': {
+        'source_sha256':'6327d590b233fef5b0d8f5cd441ccc2a6b0c4713dd0692cc14c251950df46bd7',
+        'generation_output':'exec-7e6c70b6-c832-4035-af76-0b8339b906d6.png',
+        'scene_bounds':[415,375,280,186.66666666666666], 'ground_anchor':[610,544],
+        'grounding':"The larger nested Warren replaces the original Den in its exact source-space site and grounding; saved predecessor identity is retained.",
+    },
+    'building_slingers_post': {
+        'source_sha256':'1b48e2827f8809fb0993f37102c8b7e6b0f2cd8033cf0ab5707f66f6a10ee236',
+        'generation_output':'exec-098ab0b7-6b4c-4873-8c13-578bbe1ce2d5.png',
+        'scene_bounds':[1030,238,235,156.66666666666666], 'ground_anchor':[1075,382],
+        'grounding':"Low firing deck follows the right rear shoreline above the Wayfarers Hall, leaving the central hall and fire approach intact.",
+    },
+    'building_rot_warren': {
+        'source_sha256':'02766314a44fab62235eee9057f511db4543f0071ad3b4ac44be94d28b2a7558',
+        'generation_output':'exec-05a0b25a-a02b-4f0c-97eb-f4020d4aa4d3.png',
+        'scene_bounds':[1030,238,235,156.66666666666666], 'ground_anchor':[1075,382],
+        'grounding':"Expanded gear shelters replace the Slingers Post in the exact same rear-right site, not a second disconnected plot.",
+    },
+    'building_fenscale_pens': {
+        'source_sha256':'e9267ea805cd05b0424801e4e8727b758cc6c320300a2604a06ac5b2c3f820f5',
+        'generation_output':'exec-ec72f739-3124-4b75-8855-f07329b45bd0.png',
+        'scene_bounds':[390,245,290,193.33333333333334], 'ground_anchor':[626,424],
+        'grounding':"Bogplate gates replace the earlier Mire Pens in the same footprint and ground anchor; no moved enclosure or separate new yard.",
+    },
+    'building_war_drum_circle': {
+        'source_sha256':'ab9870e32eef792afafbd66c03b81ceb077bdcaaf63253d3d9271e6a505962d1',
+        'generation_output':'exec-8cee1801-0b61-4c71-86bc-d27bfa01215a.png',
+        'scene_bounds':[1070,550,240,160], 'ground_anchor':[1138,691],
+        'grounding':"The low drum platform joins the right-hand shore below the communal fire and hiring hall; its steps face the existing main causeway.",
+    },
+    'building_lantern_archive': {
+        'source_sha256':'ac6c3026a9921e6aee275bceece530b30ee6bd50c7f152af07fb7b78b92bb2e4',
+        'generation_output':'exec-acc93383-863b-4666-a296-2ffe899ba0c3.png',
+        'scene_bounds':[245,405,220,146.66666666666666], 'ground_anchor':[411,540],
+        'grounding':"The compact records house occupies the left shore beside the Den and above the Market approach, set behind their nearer roofs.",
+    },
+    'building_starseer_annex': {
+        'source_sha256':'299f709e6a115507f958d4325e71c51440a29225c7a3d8a5f31f0247e831193f',
+        'generation_output':'exec-b36880fa-ed8c-4c8d-b247-351fe63f340e.png',
+        'scene_bounds':[245,405,220,146.66666666666666], 'ground_anchor':[411,540],
+        'grounding':"The sky-reader alcove grows out of the Archive in the identical source site and anchor; its low silhouette leaves the backdrop landmark clear.",
+    },
+    'building_gorefen_ring': {
+        'source_sha256':'82733f8ba39aee397533186bf0199c7ca510d1c4be38f82df177ed345a57cbdf',
+        'generation_output':'exec-8d89afaf-d461-45c3-8b2d-716869426a9c.png',
+        'scene_bounds':[270,650,255,170], 'ground_anchor':[473,804],
+        'grounding':"The low pack ring continues the dark foreground-left landing behind its nearer edge, retaining the original main bridge and central water lane.",
+    },
+}
+for brief in MIRECLAW_GROWTH_BRIEFS.values():
+    brief.update(reference_inputs=[], generation_date='2026-09-09',
+                 curation='Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.')
+MIRECLAW_BRIEFS.update(MIRECLAW_GROWTH_BRIEFS)
+
 FACTION_BRIEFS = {FACTION: BRIEFS, 'faction_embercourt': EMBERCOURT_BRIEFS, 'faction_mireclaw': MIRECLAW_BRIEFS}
 
 def digest(path):

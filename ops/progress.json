@@ -79,6 +79,7 @@
         "python3 -B tests/mireclaw_town_opening.py --label <fresh-deterministic-start>",
         "python3 -B tools/prepare_town_scene_layers.py --faction faction_mireclaw",
         "python3 -B tests/town_scene_layer_regression.py --faction mireclaw --save <exact-earned-opening-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
+        "python3 -B tests/town_scene_layer_regression.py --faction mireclaw --mireclaw-growth --save <exact-earned-opening-save> --resolution 1280x720 --label <fresh>; run the same --mireclaw-growth sequence through packaged_town_scene_layer_regression.py on both official exports once per coherent batch, with inspected small/large captures and source/platform full-save and member equality.",
         "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction mireclaw --save <exact-earned-opening-save> --resolution 1280x720 --label <fresh>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
@@ -86,6 +87,7 @@
       "classification": "implementation_slice",
       "parentSliceId": "quality-generated-full-match-20260906",
       "implementationTargets": [
+        "Batch-first Duskfen dwelling/magic art: nine exact generated source/prompt/trim/runtime layers and manifest/preparation briefs; tests/town_scene_layer_regression.py --mireclaw-growth uses normal paid orders, lightweight per-building checks and one final combined input sweep. Preserve 49 earlier layers, shared upgrade sites, village and all rules/native/save authority. Run one coherent source/visual/repository/Linux/Windows acceptance boundary; remaining 13 Duskfen identities and other faction/variant art stay open.",
         "Owner-directed no-size-budget continuation: remove numeric PCK ceilings from both official packaging smokes, packaged Town probe and lossless-transfer regression; update tests/validate_repo.py and add tests/test_release_package_size_policy.py. Preserve byte reporting, integrity, source-art exclusion, gameplay and all prior art; require actual Linux/Windows startup/generated and Mireclaw paid-build/input/save acceptance.",
         "Mireclaw opening: tools/prepare_town_scene_layers.py and exact original Duskfen Den/Hall/Market source, prompt, trim, runtime and manifest rows; tests/mireclaw_town_opening.py, town_scene_layer_regression.py and strict scene-art tests. Preserve all 46 earlier layers, gameplay, native generation and saves; ordinary paid Market and mixed catalog construction with three-resolution input/save and both-platform package acceptance with no imposed size ceiling.",
         "scenes/town/TownShell.gd",
@@ -161,9 +163,9 @@
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-09T03:11:13Z",
+      "updatedAt": "2026-09-09T04:17:14Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Owner-directed package ceiling removal and three original Duskfen opening layers validated. No replacement numeric budget; integrity, actual sizes and source-art exclusion retained. All 16 art-source jobs, 87 follow-up Python tests, repository/diff and all six official/exact Linux/Windows package jobs pass. Both PCKs 250525428 bytes; four packaged Town replays pass 4068 checks each, all 18 complete saves equal outside timestamps, all 46 earlier layers preserved and four final Linux captures inspected. Windows is headless Wine. Evidence: art-repair report and mireclaw_packages_no_cap_02 acceptance. Checkpoint ready for coherent commit/push; next Duskfen art target is the unconverted Mire Pens. Remaining buildings/factions/variants and full quality goal stay in progress."
+      "notes": "Validated nine-building Duskfen dwelling/magic batch: 58 exact layers, all 49 earlier layers preserved, four same-site upgrade pairs. Source/Linux/Windows each pass 5743 normal paid build/input/save checks through Day 11; complete saves equal outside timestamps. All 46 focused Python tests plus 11 affected follow-ups, shared Town reports, repository/diff and inspected 1280x720/1920x1080 views pass. Clean official platform packages are 253207360 bytes each; 5252 members, 5232 earlier payloads unchanged, platform difference only project.binary. Removed only two stray editor-settings package members; every tested gameplay member remains byte-identical. Evidence: art-repair report and duskfen_nine_acceptance.json. Continue remaining 13 Duskfen identities and other faction/variant art in coherent batches with one acceptance boundary, not repeated full validation per painting. Full goal remains unfinished; Windows is headless Wine."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16777,14 +16779,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Bellwake Bell Harbor and faction-specific Wayfarers Hall now use scene-matched original layers and alpha-aware accessible hotspots. Three inspected resolutions pass 824 checks each; six Python tests, Town layout/all-32-town progression, repository and Linux/Windows generated-entry packages pass at 249083376 bytes. Legacy named-slot keyboard and Moonbite 30-turn development failures remain explicit; all 32 save/resume cases pass. Market Square and remaining constructible/faction art remain unfinished; parent and presentation stay in progress. Wreck Quay remains corrected; these are starting-building assets, not a complete construction-art or release claim.",
+  "currentNotes": "Batch-first Duskfen continuation validated: nine original scene layers, 58 total with all 49 prior layers retained. Normal paid progression/input/save passes 5743 checks in source, Linux and Windows; clean packages preserve every tested gameplay payload. Remaining 13 Duskfen identities and other faction/variant art stay in progress. Evidence: docs/generated-full-match-art-repair-report.md. No release-readiness claim.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
-  "currentSliceId": "quality-generated-full-match-20260906",
-  "currentSliceNotes": "Legitimate Medium victory/Large defeat and selected responsiveness children are complete. Presentation has 49 accepted exact-faction Town layers across Bellwake, Riverwatch and the Duskfen opening, plus accepted Wreck/Cinder/Moss/Marsh cutout repairs. Owner removed the fixed package-size budget; both 250525428-byte packages pass startup/generated and exact paid Town/save/input validation. Remaining faction/building/variant integration and broader presentation acceptance are unfinished; not release certification.",
+  "currentSliceId": "ux-generated-full-match-presentation-20260906",
+  "currentSliceNotes": "Validated nine-building Duskfen dwelling/magic batch: 58 exact layers, all 49 earlier layers preserved, four same-site upgrade pairs. Source/Linux/Windows each pass 5743 normal paid build/input/save checks through Day 11; complete saves equal outside timestamps. All 46 focused Python tests plus 11 affected follow-ups, shared Town reports, repository/diff and inspected 1280x720/1920x1080 views pass. Clean official platform packages are 253207360 bytes each; 5252 members, 5232 earlier payloads unchanged, platform difference only project.binary. Removed only two stray editor-settings package members; every tested gameplay member remains byte-identical. Evidence: art-repair report and duskfen_nine_acceptance.json. Continue remaining 13 Duskfen identities and other faction/variant art in coherent batches with one acceptance boundary, not repeated full validation per painting. Full goal remains unfinished; Windows is headless Wine.",
   "currentSliceStatus": "in_progress",
-  "currentSliceTitle": "Generated Full-Match Quality",
-  "currentSliceUpdatedAt": "2026-09-09T01:03:14Z",
+  "currentSliceTitle": "Full-Match Presentation Corrections",
+  "currentSliceUpdatedAt": "2026-09-09T04:17:14Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22264,9 +22266,9 @@
         "Complete Medium/Large matches, measured full-action improvements and inspected presentation corrections",
         "Focused/repository/platform validation and coherent commit/push; hardware limits explicit"
       ],
-      "updatedAt": "2026-09-09T03:11:14Z",
+      "updatedAt": "2026-09-09T04:17:14Z",
       "startedAt": "2026-09-06T12:03:26Z",
-      "notes": "Legitimate Medium victory/Large defeat and selected responsiveness children are complete. Presentation has 49 accepted exact-faction Town layers across Bellwake, Riverwatch and the Duskfen opening, plus accepted Wreck/Cinder/Moss/Marsh cutout repairs. Owner removed the fixed package-size budget; both 250525428-byte packages pass startup/generated and exact paid Town/save/input validation. Remaining faction/building/variant integration and broader presentation acceptance are unfinished; not release certification.",
+      "notes": "Legitimate generated Medium victory/Large defeat and selected responsiveness work are complete. The owner resumed with batch-first implementation and no fixed package budget. Presentation now has 58 exact Town layers, including nine validated Duskfen growth paintings; all three 5743-check source/platform flows, full-save equality and clean Linux/Windows packages pass. Remaining 13 Duskfen identities and other faction/variant art keep the quality goal unfinished; no release certification.",
       "remainingWork": "Accept and integrate scene-matched per-faction Town building layers with grounded plots, exact built-id/upgrade/info/click authority and dual-resolution live construction/save proof; correct remaining reproduced sprite/terrain defects. No further art-scope approval is pending for these agreed corrections; full goal remains unfinished."
     },
     {
@@ -22599,6 +22601,7 @@
         "python3 -B tests/mireclaw_town_opening.py --label <fresh-deterministic-start>",
         "python3 -B tools/prepare_town_scene_layers.py --faction faction_mireclaw",
         "python3 -B tests/town_scene_layer_regression.py --faction mireclaw --save <exact-earned-opening-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
+        "python3 -B tests/town_scene_layer_regression.py --faction mireclaw --mireclaw-growth --save <exact-earned-opening-save> --resolution 1280x720 --label <fresh>; run the same --mireclaw-growth sequence through packaged_town_scene_layer_regression.py on both official exports once per coherent batch, with inspected small/large captures and source/platform full-save and member equality.",
         "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction mireclaw --save <exact-earned-opening-save> --resolution 1280x720 --label <fresh>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
@@ -22606,6 +22609,7 @@
       "classification": "implementation_slice",
       "parentSliceId": "quality-generated-full-match-20260906",
       "implementationTargets": [
+        "Batch-first Duskfen dwelling/magic art: nine exact generated source/prompt/trim/runtime layers and manifest/preparation briefs; tests/town_scene_layer_regression.py --mireclaw-growth uses normal paid orders, lightweight per-building checks and one final combined input sweep. Preserve 49 earlier layers, shared upgrade sites, village and all rules/native/save authority. Run one coherent source/visual/repository/Linux/Windows acceptance boundary; remaining 13 Duskfen identities and other faction/variant art stay open.",
         "Owner-directed no-size-budget continuation: remove numeric PCK ceilings from both official packaging smokes, packaged Town probe and lossless-transfer regression; update tests/validate_repo.py and add tests/test_release_package_size_policy.py. Preserve byte reporting, integrity, source-art exclusion, gameplay and all prior art; require actual Linux/Windows startup/generated and Mireclaw paid-build/input/save acceptance.",
         "Mireclaw opening: tools/prepare_town_scene_layers.py and exact original Duskfen Den/Hall/Market source, prompt, trim, runtime and manifest rows; tests/mireclaw_town_opening.py, town_scene_layer_regression.py and strict scene-art tests. Preserve all 46 earlier layers, gameplay, native generation and saves; ordinary paid Market and mixed catalog construction with three-resolution input/save and both-platform package acceptance with no imposed size ceiling.",
         "scenes/town/TownShell.gd",
@@ -22681,9 +22685,9 @@
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-09T03:11:13Z",
+      "updatedAt": "2026-09-09T04:17:14Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Owner-directed package ceiling removal and three original Duskfen opening layers validated. No replacement numeric budget; integrity, actual sizes and source-art exclusion retained. All 16 art-source jobs, 87 follow-up Python tests, repository/diff and all six official/exact Linux/Windows package jobs pass. Both PCKs 250525428 bytes; four packaged Town replays pass 4068 checks each, all 18 complete saves equal outside timestamps, all 46 earlier layers preserved and four final Linux captures inspected. Windows is headless Wine. Evidence: art-repair report and mireclaw_packages_no_cap_02 acceptance. Checkpoint ready for coherent commit/push; next Duskfen art target is the unconverted Mire Pens. Remaining buildings/factions/variants and full quality goal stay in progress."
+      "notes": "Validated nine-building Duskfen dwelling/magic batch: 58 exact layers, all 49 earlier layers preserved, four same-site upgrade pairs. Source/Linux/Windows each pass 5743 normal paid build/input/save checks through Day 11; complete saves equal outside timestamps. All 46 focused Python tests plus 11 affected follow-ups, shared Town reports, repository/diff and inspected 1280x720/1920x1080 views pass. Clean official platform packages are 253207360 bytes each; 5252 members, 5232 earlier payloads unchanged, platform difference only project.binary. Removed only two stray editor-settings package members; every tested gameplay member remains byte-identical. Evidence: art-repair report and duskfen_nine_acceptance.json. Continue remaining 13 Duskfen identities and other faction/variant art in coherent batches with one acceptance boundary, not repeated full validation per painting. Full goal remains unfinished; Windows is headless Wine."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111448,9 +111452,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Validated the original Marsh Listener Post extraction repair: 16 source jobs, 44 Python tests, six official Linux/Windows package jobs, eight identical non-clock saves and inspected source/Linux captures. All earlier art/native/runtime authority preserved; 5225 of 5228 package members unchanged, both packs 249671040 bytes below the unchanged 250000000-byte limit. Wider Town variants/factions and the full quality goal remain in progress; Windows headless Wine only and no budget increase approved.",
+  "summary": "Resumed full quality goal with coherent implementation batches and fewer repeated validation cycles. Nine Duskfen dwelling/magic paintings are integrated; 46 focused tests, 11 affected follow-ups, shared Town reports, inspected small/large views, repository checks and both official platform packages pass. Complete final source/platform saves match outside timestamps. No fixed size budget; 253207360-byte packages have 5252 members and differ only in project.binary. Full presentation goal remains unfinished; Windows is headless Wine.",
   "taskId": "10236",
-  "updatedAt": "2026-09-09T03:11:14Z",
+  "updatedAt": "2026-09-09T04:17:14Z",
   "validation": {
     "id": "quality-marsh-listener-cutout-20260909",
     "sliceId": "ux-generated-full-match-presentation-20260906",

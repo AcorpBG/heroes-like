@@ -5,6 +5,92 @@ Parent: `quality-generated-full-match-20260906`; selected child:
 removed the package-size budget and requested continuing. The parent quality
 goal remains unfinished.
 
+## Duskfen dwelling/magic batch — 2026-09-09, validated
+
+The owner requested larger implementation batches and less repeated validation.
+Nine original paintings now cover Mire Pens, Reed Warren, Slingers Post, Rot
+Warren, Fenscale Pens, War Drum Circle, Lantern Archive, Starseer Annex and
+Gorefen Ring. Built-in image generation produced nine 1536x1024 RGBA masters;
+exact prompts/output names/hashes are retained in the scene manifest and
+`tools/prepare_town_scene_layers.py`. The existing transparent trim/512px runtime
+pipeline preserves alpha. Four upgrade pairs share reconstructed source bounds
+and ground anchors; all 49 earlier paintings and the village remain unchanged.
+No runtime scene, construction rule, native generator or save-schema change.
+
+`tests/town_scene_layer_regression.py --faction mireclaw --mireclaw-growth`
+continues the existing hash-locked generated opening through ordinary Market and
+nine prerequisite-valid paid orders. Shortfalls use real Wood/Ore market actions
+and normal confirmed turns; each build/trade compares the complete authoritative
+result, and every purchased building checks exact art/info, upgrade replacement
+and complete save/re-entry. One final combined scene input sweep replaces the
+old repeated all-visible-building sweep after every order. Use the existing
+command-layout capture on the earned final save for larger-resolution visual
+review, rather than repeating the entire economy sequence for another picture.
+The final input sweep covers all visible painted layers once. The batch's
+ordinary `_select_build_action` / `_on_confirm_build_pressed` handlers avoid
+the broad `validation_*_build_plan` wrappers' full diagnostic snapshots. A
+retained one-order comparison from the real Day-11 pre-Gorefen autosave shows
+the wrappers refreshing scouting/forecast state, while the direct handlers
+match the complete independent rules/recap control with no changed paths.
+The control uses matching normalized read scopes and restores its detached
+normalization-cache metadata before the live action. No state fields are
+excluded from comparison and no production normalization behavior changed.
+
+Evidence base: `.artifacts/generated_full_match_quality_20260906/`. Source
+`duskfen_nine_source_02` and packaged `duskfen_nine_packaged_linux_02` /
+`duskfen_nine_packaged_windows_02` each pass **5743 checks**, without engine
+errors or input/source mutation. Market plus nine paid orders finish on Day 11;
+each order retains complete authoritative build/trade and save/re-entry checks.
+The original Medium seed-10 Duskfen opening below remains the input. Final source
+save: `duskfen_nine_source_02/earned_growth_save.json`, SHA256
+`803dd1cb233b5816a50e02bbbf4605b9873eeede52570552fee5249750a71b63`.
+
+All 46 focused Python tests pass (`duskfen_nine_python.log`), followed by all 11
+affected sequence/packaged-probe tests after the control correction
+(`duskfen_nine_followup_python.log`). Shared Town layout/dialog and all-town
+skyline/progression reports pass (`duskfen_nine_shared.log`), as do repository
+validation and diff checks. Source intermediate and source/Linux final 1280x720
+captures are visually inspected: the wet reed/timber structures preserve the
+main hall, causeways and water lane; HUD/navigation controls do not clip. The
+earned final save's read-only 1920x1080 capture passes 56 layout checks and is
+also inspected (`duskfen_nine_earned_1080/town.png`). Its retained capture adapter
+omits only the already-completed opening purchase sequence; it is layout/visual
+evidence, not a second paid progression or an unmodified full command-flow run.
+
+The first source launcher's SIGTERM/uncaptured exit and eight expectation
+mismatches remain retained, along with the first Linux stale-mipmap rejection,
+the second import's missing service XDG paths, and the deliberately stopped
+redundant packaged probe. `duskfen_nine_build_control_03` isolates the diagnostic
+wrapper issue above. Both `_release_*_03` official export/startup/generated-Town
+flows pass, but final membership comparison rejects two extra editor-settings
+members left by the failed XDG-less launcher. Its 44 KiB `godot/` folder is moved
+intact into `duskfen_nine_failed_service_godot/`, not deleted. Both clean `_04`
+official exports/startup/generated-Town flows now pass. The final
+`duskfen_nine_acceptance.json` proves every retained member byte-identical to
+the packages used for the complete building replay: only those two stray editor
+members are removed, so that replay is not repeated. All three complete final
+source/Linux/Windows saves match as exact Decimal JSON outside only the save
+timestamp. Each clean PCK is **253207360 bytes**, with 5252 members: 18 new
+texture/import entries, no earlier removal, and 5232 earlier payloads unchanged.
+Only the scene manifest/UID cache differ from the prior opening packages;
+Linux/Windows differ only in `project.binary`. No source masters are packaged.
+PCK SHA256: Linux `73b9877d87ca4ea2c1046abba76cebff8fb58bd7bdf66d59fd6e2631bd94abc4`;
+Windows `19012690107fb73e7c3742f3b6e3432c28b8ad9d91aec34d8f6a9b04117b3dc7`.
+
+Reproduction: use `tests/town_scene_layer_regression.py --faction mireclaw
+--mireclaw-growth --save <base>/mireclaw_opening_01/opening_save.json --resolution
+1280x720 --label <fresh>`; `tests/packaged_town_scene_layer_regression.py` accepts
+the same arguments plus `--platform`, `--binary` and `--pack`. Retained official
+driver: `<base>/duskfen_nine_clean_packages.py`; final state/member acceptance:
+`<base>/duskfen_nine_accept.py`. Python coverage uses `PYTHONPATH=tests python3
+-B -m unittest test_town_mireclaw_sequence test_town_scene_layer_preparation
+test_town_scene_layers test_packaged_town_scene_layer_probe`.
+
+There are now 58 exact paintings, including 12 Mireclaw layers; 13 more Duskfen
+building identities and other town/faction variants still need scene-matched
+art. Windows evidence is headless Wine, not physical Windows GPU certification.
+This nine-building batch is not completion of the full presentation/quality goal.
+
 ## Mireclaw opening integration — 2026-09-09, validated without a size budget
 
 The real deterministic Medium seed `10`, two-player land setup with
