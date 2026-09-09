@@ -16619,10 +16619,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "art-overworld-cutout-runtime-pool-20260909",
   "currentSliceId": "art-overworld-cutout-runtime-pool-20260909",
-  "currentSliceNotes": "34 early post-interaction originals recovered and source/Linux/Windows validated: 2763 checks each, 11 Python tests, five shared reports, eleven actual native identities and complete package/save preservation. 580 repaired/preserved dispositions accepted; 634 remain. Continue other state/landmark paintings; parent and child remain active, not full-pool or release acceptance.",
+  "currentSliceNotes": "40 landmark/objective-state originals recovered and source/Linux/Windows validated: 2804 checks each, 11 Python tests, five shared reports, eight actual affected native identities and full package/save preservation. 620 dispositions accepted; 594 remain. Continue other state/landmark paintings; parent and child remain active, not full-pool or release acceptance.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Remaining Runtime-Pool Cutout Recovery",
-  "currentSliceUpdatedAt": "2026-09-09T23:08:08Z",
+  "currentSliceUpdatedAt": "2026-09-09T23:38:45Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22143,7 +22143,7 @@
         "Original asset repair/replacement across authoritative overworld runtime pool",
         "Scoped provenance, source/trim/runtime preparation and integrated visual/gameplay/platform acceptance"
       ],
-      "notes": "Accepted 159 further original map-sheet sprites; 28 focused Python tests, 1177 source checks per resolution and in each exact Linux/Windows package, inspected visuals and six complete saved outputs equal outside only saved_at_unix. Initial 15-sprite cohort remains accepted. Remaining decorative/tree/legacy/hero/state defects and detailed full-pool dispositions keep this goal in progress. Evidence: docs/overworld-cutout-quality-report.md.",
+      "notes": "Accepted cohorts now account for 620 of 1214 repaired/preserved dispositions, including forty original landmark/objective-state paintings in the latest source/Linux/Windows-validated batch. 594 still require complete detailed review/recovery; the goal is not complete. Latest package, save, registration, visual and interrupted-run evidence is in docs/overworld-cutout-quality-report.md. No gameplay/native/RMG/save changes or release-readiness claim.",
       "startedAt": "2026-09-09T14:41:54Z"
     },
     {
@@ -22239,10 +22239,15 @@
         "python3 tests/overworld_cutout_batch_regression.py --batch early_states --resolution 1280x720 --label <fresh>",
         "python3 tests/overworld_cutout_batch_regression.py --batch early_states --resolution 1920x1080 --label <fresh>",
         "python3 tests/packaged_overworld_cutout_batch_regression.py --batch early_states --platform linux --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh>",
-        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch early_states --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch early_states --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>",
+        "python3 -B -m unittest discover -s tests -p 'test_overworld_landmark_cutouts.py'",
+        "python3 tests/overworld_cutout_batch_regression.py --batch landmark_states --resolution 1280x720 --label <fresh>",
+        "python3 tests/overworld_cutout_batch_regression.py --batch landmark_states --resolution 1920x1080 --label <fresh>",
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch landmark_states --platform linux --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh>",
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch landmark_states --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-09T23:08:08Z",
+      "updatedAt": "2026-09-09T23:38:45Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22272,9 +22277,11 @@
         "tools/prepare_overworld_claimed_cutouts.py; thirty-one separately authored claimed paintings, explicit inspected backing and retained-RGB paint recovery, original registrations and state routes",
         "tests/test_overworld_claimed_cutouts.py and claimed_dwellings source/package probe; all 31 exact identities, source-paint preservation and complete save controls",
         "tools/prepare_overworld_state_cutouts.py; 34 original post-interaction paintings, explicit backing and narrow original-sample matte repair, three measured registrations and six preserved atlas owners",
-        "tests/test_overworld_state_cutouts.py and early_states source/package probe; 34 exact state identities, original earned visible/consumed native records and full save preservation"
+        "tests/test_overworld_state_cutouts.py and early_states source/package probe; 34 exact state identities, original earned visible/consumed native records and full save preservation",
+        "tools/prepare_overworld_landmark_cutouts.py; forty original landmark/state paintings, Witness Stone retained-RGB recovery and 39 preserved RGBA sources, five same-path atlases and original logical registrations",
+        "tests/test_overworld_landmark_cutouts.py and landmark_states source/package probe; exact state/family precedence, earned native captures and complete save/placement/compiled-owner preservation"
       ],
-      "notes": "34 early post-interaction originals recovered and source/Linux/Windows validated: 2763 checks each, 11 Python tests, five shared reports, eleven actual native identities and complete package/save preservation. 580 repaired/preserved dispositions accepted; 634 remain. Continue other state/landmark paintings; parent and child remain active, not full-pool or release acceptance.",
+      "notes": "40 original landmark/objective-state paintings accepted on five same-path 192-pixel atlases: 39 genuine RGBA originals exact, Witness Stone narrow edge repaired with already-intact pale foreground preserved. Eleven Python tests, 2804 checks per source resolution/Linux/Windows package, five shared reports and repository/export checks pass. All forty gallery assets and eight actual affected native identities visually inspected; 21 records, eight complete saves and compiled game/native/content/save owners unchanged. Both PCKs 291354392 bytes/5484 members. Fresh Windows final run passes after an interrupted attempt. 620 dispositions accepted; 594 remain. Parent and child stay active; evidence and limits: docs/overworld-cutout-quality-report.md.",
       "startedAt": "2026-09-09T16:04:51Z"
     },
     {
@@ -111523,28 +111530,29 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "34 early post-interaction originals recovered and source/Linux/Windows validated: 2763 checks each, 11 Python tests, five shared reports, eleven actual native identities and complete package/save preservation. 580 repaired/preserved dispositions accepted; 634 remain. Continue other state/landmark paintings; parent and child remain active, not full-pool or release acceptance. All 34 final gallery assets and all eleven actual native identities visually inspected across source resolutions, plus packaged Linux evidence. Both PCKs 290229064 bytes/5484 members; all eight full saves and compiled game/native/content/save owners preserved.",
+  "summary": "40 landmark/objective-state originals recovered and source/Linux/Windows validated: 2804 checks each, 11 Python tests, five shared reports, eight actual affected native identities and complete package/save preservation. 620 repaired/preserved dispositions accepted; 594 remain. Continue other state/landmark paintings; parent and child remain active, not full-pool or release acceptance. All 40 final gallery assets and all eight actual affected identities visually inspected across source resolutions, plus packaged Linux evidence. Both PCKs 291354392 bytes/5484 members; all eight full saves and compiled game/native/content/save owners preserved. Interrupted shared/Windows attempts remain documented separately from completed runs.",
   "taskId": "10236",
-  "updatedAt": "2026-09-09T23:08:08Z",
+  "updatedAt": "2026-09-09T23:38:45Z",
   "validation": {
     "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "in_progress",
-    "validatedAt": "2026-09-09T23:08:08Z",
-    "scope": "34 separately authored post-interaction paintings accepted; eleven actual state-selected native identities captured from unchanged earned gameplay. Remaining full-pool review stays in progress.",
-    "result": "2763 checks per source resolution/Linux/Windows package, 11 Python tests, five shared reports and repository checks pass. All 34 gallery assets and eleven actual native identities visually inspected across source resolutions, with packaged Linux evidence. Both PCKs 290229064 bytes/5484 members; all eight full saves, original registrations and compiled game/native/content/save owners preserved. 580 repaired/preserved dispositions accepted; 634 remain. Windows validation is headless Wine; no full-pool or release acceptance.",
+    "validatedAt": "2026-09-09T23:38:45Z",
+    "scope": "40 original landmark/objective-state paintings accepted; eight actual affected native identities captured from unchanged earned gameplay. Remaining full-pool review stays in progress.",
+    "result": "2804 checks per source resolution/Linux/Windows package, 11 Python tests, five shared reports and repository checks pass. All 40 gallery assets and eight actual affected identities visually inspected across source resolutions, with packaged Linux evidence. Both PCKs 291354392 bytes/5484 members; all eight full saves, original registrations and compiled game/native/content/save owners preserved. 620 repaired/preserved dispositions accepted; 594 remain. Windows validation is headless Wine; interrupted attempts are not passes. No full-pool or release acceptance.",
     "artifacts": [
       "docs/overworld-cutout-quality-report.md",
-      ".artifacts/overworld_cutout_quality_20260909/early-states-unit-final.log",
-      ".artifacts/overworld_cutout_quality_20260909/early_states_source_1280/report.json",
-      ".artifacts/overworld_cutout_quality_20260909/early_states_source_1920/report.json",
-      ".artifacts/overworld_cutout_quality_20260909/early_states_packaged_linux/packaged-report.json",
-      ".artifacts/overworld_cutout_quality_20260909/early_states_packaged_windows/packaged-report.json",
-      ".artifacts/overworld_cutout_quality_20260909/early_states_delivery_preservation.json",
-      ".artifacts/overworld_cutout_quality_20260909/early_states_linux/report.json",
-      ".artifacts/overworld_cutout_quality_20260909/early_states_windows/report.json",
-      ".artifacts/overworld_cutout_quality_20260909/early-states-repo-final.log",
-      ".artifacts/full_play_runtime_20260905/early_states_shared/report.json"
+      ".artifacts/overworld_cutout_quality_20260909/landmark-unit-final.log",
+      ".artifacts/overworld_cutout_quality_20260909/landmark_states_source_1280/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/landmark_states_source_1920/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/landmark_states_packaged_linux/packaged-report.json",
+      ".artifacts/overworld_cutout_quality_20260909/landmark_states_packaged_windows/packaged-report.json",
+      ".artifacts/overworld_cutout_quality_20260909/landmark_states_delivery_preservation.json",
+      ".artifacts/overworld_cutout_quality_20260909/landmark_states_linux/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/landmark_states_windows_final/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/landmark-repo-final.log",
+      ".artifacts/full_play_runtime_20260905/landmark_states_shared/report.json",
+      ".artifacts/full_play_runtime_20260905/landmark_states_shared_final/report.json"
     ]
   },
   "validationHistory": [
