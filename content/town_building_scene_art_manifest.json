@@ -1009,6 +1009,241 @@
         "curation": "Inspected ordinary 1280x720 Sounding-to-Court replacement at the same site and the developed Town at 1280x720, 1920x1080 and 2048x1079; source input/save checks pass. Fresh original painting, not a pixel-identical base edit. Platform acceptance is recorded separately in the art-repair report.",
         "reference_inputs": [],
         "generation_date": "2026-09-08"
+      },
+      "building_veilmourn_wakeglass_chart_house": {
+        "asset_id": "faction_veilmourn_building_veilmourn_wakeglass_chart_house",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_wakeglass_chart_house.png",
+        "source_sha256": "0cb9d6800b7ff996b4f668320248ad5d5d129404ecbe5e6de632227c3dcc9380",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          57,
+          0,
+          1488,
+          1006
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_wakeglass_chart_house.png",
+        "trimmed_sha256": "66b809fb8da1471876bb086c1308d123822a44745db0adf0b01fb18530517aef",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_wakeglass_chart_house.png",
+        "runtime_sha256": "6b0a10c0a3d663fb597eecf50737de5802277fa8b28bb5523b88e9c701b35c42",
+        "runtime_size": [
+          512,
+          360
+        ],
+        "normalized_rect": [
+          0.49249267578125,
+          0.28888888888888886,
+          0.20379638671875,
+          0.2547019675925926
+        ],
+        "ground_anchor": [
+          0.615625,
+          0.5444444444444444
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Navigator's compass house occupies the inner right shoreline behind the Sounding jetty; its shoreward gangway joins the existing bank, and the compass loft remains exposed above later harbor structures.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_wakeglass_chart_house.prompt.txt",
+        "prompt_sha256": "11bbb2946abdb91e7f6c28c10716f156a902ac60fbea2c4b8a7b4c9558eb5d61",
+        "curation": "Original built-in text-only RGBA paintings for the five remaining Veilmourn variant identities. Preserve moonlit wet timber, salt stone, silver-blue roofs and restrained warm lamps, original alpha, the village and all earlier scene layers. Composition, full build/input/save and platform acceptance are recorded separately in the art-repair report; detached fixtures are not earned development.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-77a87ad1-48b7-4b1d-8806-aea74cec5b71.png"
+      },
+      "building_veilmourn_saltwake_eulogy_house": {
+        "asset_id": "faction_veilmourn_building_veilmourn_saltwake_eulogy_house",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_saltwake_eulogy_house.png",
+        "source_sha256": "9fbac621f71d903fc693982dbde6338d05b0693473e0b6f03168512d86571792",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1524,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_saltwake_eulogy_house.png",
+        "trimmed_sha256": "68da259db39edeba33fd15b6afd46294051c779d04522af8d1b27dc51d0dcfa7",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_saltwake_eulogy_house.png",
+        "runtime_sha256": "ba872fcd5b72c4f02aa8fd2742ecf15cf8715e2153d1c22821870decade1ad37",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.009375,
+          0.5555555555555556,
+          0.1767333984375,
+          0.2111111111111111
+        ],
+        "ground_anchor": [
+          0.109375,
+          0.7555555555555555
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Memorial house joins the permanent foreground-left quay below the sail-workshop roofs and behind the harpoon landing. Salt-stone steps, tablet veranda and its timber approach share that waterfront level rather than sitting on the old warehouse.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_saltwake_eulogy_house.prompt.txt",
+        "prompt_sha256": "a8b49299efeb4223e8203a58cfe3a665cf4103a6d031ee5cf0581916b6cb49cd",
+        "curation": "Original built-in text-only RGBA paintings for the five remaining Veilmourn variant identities. Preserve moonlit wet timber, salt stone, silver-blue roofs and restrained warm lamps, original alpha, the village and all earlier scene layers. Composition, full build/input/save and platform acceptance are recorded separately in the art-repair report; detached fixtures are not earned development.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-d2438de9-eeba-476f-b924-cdd04b2209d2.png"
+      },
+      "building_veilmourn_pale_sounding_last_memory_beacon": {
+        "asset_id": "faction_veilmourn_building_veilmourn_pale_sounding_last_memory_beacon",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_pale_sounding_last_memory_beacon.png",
+        "source_sha256": "faeeaf5a04581ff3c68198fbce59fd3bd720c2e46eaa946167c81eba7cea6e1f",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          59,
+          0,
+          1524,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_pale_sounding_last_memory_beacon.png",
+        "trimmed_sha256": "ee30657a63ffd07e047aff4513db10ca8f8168d5103d538146601a62c04b9a86",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_pale_sounding_last_memory_beacon.png",
+        "runtime_sha256": "f24f47e53a72de7402ff6c6c4844b0bc873d086ae5c8a7fce1f887865735a75e",
+        "runtime_size": [
+          512,
+          358
+        ],
+        "normalized_rect": [
+          0.48749186197916666,
+          0.7277777777777777,
+          0.15498860677083334,
+          0.1925925925925926
+        ],
+        "ground_anchor": [
+          0.580625,
+          0.9111111111111111
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Slender return beacon marks the downstream harbor with a narrow pile-supported mooring and mirror basin; keep open channel around it and its bell exposed above navigation.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_pale_sounding_last_memory_beacon.prompt.txt",
+        "prompt_sha256": "974a444869f9488e45593324d253c44a8a944e0ee300c7a5c379ba10e418a6c4",
+        "curation": "Original built-in text-only RGBA paintings for the five remaining Veilmourn variant identities. Preserve moonlit wet timber, salt stone, silver-blue roofs and restrained warm lamps, original alpha, the village and all earlier scene layers. Composition, full build/input/save and platform acceptance are recorded separately in the art-repair report; detached fixtures are not earned development.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-6edadf42-9201-4312-b187-a29b917578ad.png"
+      },
+      "building_veilmourn_dreamwake_tideglass_oratory": {
+        "asset_id": "faction_veilmourn_building_veilmourn_dreamwake_tideglass_oratory",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_dreamwake_tideglass_oratory.png",
+        "source_sha256": "9d575417d6c5fdc6709e1291b366dd8466d5dd004300a259a93bd87d71cf1619",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          49,
+          0,
+          1522,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_dreamwake_tideglass_oratory.png",
+        "trimmed_sha256": "86de48a46bac5bbc9f4bf0556e8b6ab89610c821ee38aea3165d6f3c68f52f7e",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_dreamwake_tideglass_oratory.png",
+        "runtime_sha256": "7233e5720dffb41be8605ac415ab1135e3efc6431ae38a682aa192b88d0c0aa3",
+        "runtime_size": [
+          512,
+          356
+        ],
+        "normalized_rect": [
+          0.090057373046875,
+          0.7,
+          0.170819091796875,
+          0.2111111111111111
+        ],
+        "ground_anchor": [
+          0.1875,
+          0.9
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Crescent training pavilion attaches to the permanent foreground-left quay below the harpoon landing. Its left approach meets the existing shore, with basins and roof exposed in sparse and developed towns.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_dreamwake_tideglass_oratory.prompt.txt",
+        "prompt_sha256": "9e85de433e5e550513a6edd3eb4962c1d07c20310428b0703ddd3e64566026ac",
+        "curation": "Original built-in text-only RGBA paintings for the five remaining Veilmourn variant identities. Preserve moonlit wet timber, salt stone, silver-blue roofs and restrained warm lamps, original alpha, the village and all earlier scene layers. Composition, full build/input/save and platform acceptance are recorded separately in the art-repair report; detached fixtures are not earned development.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-89d70eb8-7ebe-4dfc-b0e3-be1a45501445.png"
+      },
+      "building_veilmourn_dreamwake_foganchor_slip": {
+        "asset_id": "faction_veilmourn_building_veilmourn_dreamwake_foganchor_slip",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_dreamwake_foganchor_slip.png",
+        "source_sha256": "13133177e67847775082dbe87f61e918b6d5d79ce5eec10dcdd010d5ac25cd1e",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          9,
+          1530,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_veilmourn/building_veilmourn_dreamwake_foganchor_slip.png",
+        "trimmed_sha256": "742c0a73c7958cf7f2b639dd3d49c22de823a42e7d8a38ac5a1003221b92238c",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_veilmourn/building_veilmourn_dreamwake_foganchor_slip.png",
+        "runtime_sha256": "2985c1dc35eeb140adc780e5bb8ca113f758f76cedb6897b04cd228f6df10b5b",
+        "runtime_size": [
+          512,
+          340
+        ],
+        "normalized_rect": [
+          0.553125,
+          0.5077039930555556,
+          0.2054443359375,
+          0.24229600694444445
+        ],
+        "ground_anchor": [
+          0.68125,
+          0.7288888888888889
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Anchor-work drydock meets the right-bank working landing through its shoreward gangway; the cradle and folded mantle remain distinct from the older Mirror Drydock and Mistgate Slip, with open piling gaps into the channel.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_dreamwake_foganchor_slip.prompt.txt",
+        "prompt_sha256": "8d44af6e45f9f85663086cfe2d6ace0790cb5581196f02b875d394d5c8e70012",
+        "curation": "Original built-in text-only RGBA paintings for the five remaining Veilmourn variant identities. Preserve moonlit wet timber, salt stone, silver-blue roofs and restrained warm lamps, original alpha, the village and all earlier scene layers. Composition, full build/input/save and platform acceptance are recorded separately in the art-repair report; detached fixtures are not earned development.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-5d1c2f92-c83a-4185-9696-81d4bb9efceb.png"
       }
     },
     "faction_embercourt": {

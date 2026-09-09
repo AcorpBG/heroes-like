@@ -136,6 +136,88 @@ BRIEFS = {
     },
 }
 
+VEILMOURN_VARIANT_BRIEFS = {
+    "building_veilmourn_wakeglass_chart_house": {
+        "source_sha256": "0cb9d6800b7ff996b4f668320248ad5d5d129404ecbe5e6de632227c3dcc9380",
+        "generation_output": "exec-77a87ad1-48b7-4b1d-8806-aea74cec5b71.png",
+        "scene_bounds": [
+            775,
+            260,
+            350,
+            233.33333333333334
+        ],
+        "ground_anchor": [
+            985,
+            490
+        ],
+        "grounding": "Navigator's compass house occupies the inner right shoreline behind the Sounding jetty; its shoreward gangway joins the existing bank, and the compass loft remains exposed above later harbor structures."
+    },
+    "building_veilmourn_saltwake_eulogy_house": {
+        "source_sha256": "9fbac621f71d903fc693982dbde6338d05b0693473e0b6f03168512d86571792",
+        "generation_output": "exec-d2438de9-eeba-476f-b924-cdd04b2209d2.png",
+        "scene_bounds": [
+            15,
+            500,
+            285,
+            190
+        ],
+        "ground_anchor": [
+            175,
+            680
+        ],
+        "grounding": "Memorial house joins the permanent foreground-left quay below the sail-workshop roofs and behind the harpoon landing. Salt-stone steps, tablet veranda and its timber approach share that waterfront level rather than sitting on the old warehouse."
+    },
+    "building_veilmourn_pale_sounding_last_memory_beacon": {
+        "source_sha256": "faeeaf5a04581ff3c68198fbce59fd3bd720c2e46eaa946167c81eba7cea6e1f",
+        "generation_output": "exec-6edadf42-9201-4312-b187-a29b917578ad.png",
+        "scene_bounds": [
+            770,
+            655,
+            260,
+            173.33333333333334
+        ],
+        "ground_anchor": [
+            929,
+            820
+        ],
+        "grounding": "Slender return beacon marks the downstream harbor with a narrow pile-supported mooring and mirror basin; keep open channel around it and its bell exposed above navigation."
+    },
+    "building_veilmourn_dreamwake_tideglass_oratory": {
+        "source_sha256": "9d575417d6c5fdc6709e1291b366dd8466d5dd004300a259a93bd87d71cf1619",
+        "generation_output": "exec-89d70eb8-7ebe-4dfc-b0e3-be1a45501445.png",
+        "scene_bounds": [
+            135,
+            630,
+            285,
+            190
+        ],
+        "ground_anchor": [
+            300,
+            810
+        ],
+        "grounding": "Crescent training pavilion attaches to the permanent foreground-left quay below the harpoon landing. Its left approach meets the existing shore, with basins and roof exposed in sparse and developed towns."
+    },
+    "building_veilmourn_dreamwake_foganchor_slip": {
+        "source_sha256": "13133177e67847775082dbe87f61e918b6d5d79ce5eec10dcdd010d5ac25cd1e",
+        "generation_output": "exec-5d1c2f92-c83a-4185-9696-81d4bb9efceb.png",
+        "scene_bounds": [
+            885,
+            455,
+            330,
+            220
+        ],
+        "ground_anchor": [
+            1090,
+            656
+        ],
+        "grounding": "Anchor-work drydock meets the right-bank working landing through its shoreward gangway; the cradle and folded mantle remain distinct from the older Mirror Drydock and Mistgate Slip, with open piling gaps into the channel."
+    }
+}
+for brief in VEILMOURN_VARIANT_BRIEFS.values():
+    brief.update(reference_inputs=[], generation_date='2026-09-09',
+                 curation='Original built-in text-only RGBA paintings for the five remaining Veilmourn variant identities. Preserve moonlit wet timber, salt stone, silver-blue roofs and restrained warm lamps, original alpha, the village and all earlier scene layers. Composition, full build/input/save and platform acceptance are recorded separately in the art-repair report; detached fixtures are not earned development.')
+BRIEFS.update(VEILMOURN_VARIANT_BRIEFS)
+
 EMBERCOURT_BRIEFS = {
     'building_muster_yard': {
         'source_sha256':'53c09e19ab13788bd7a2d53677ac1efc7772eabfdd80bc316dd960da472f8ce3',
