@@ -2,6 +2,7 @@ extends Node
 
 const SCENARIO_ID := "river-pass"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png"
+const RECOVERED_ATLAS_PATH := "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
 const EXPECTED := {
 	"encounter_beacon_wardens": ["encounter_recurring_beacon_wardens", Rect2(0, 0, 48, 48)],
 	"encounter_bridgeward_levies": ["encounter_recurring_bridgeward_levies", Rect2(48, 0, 48, 48)],
@@ -66,6 +67,8 @@ func _run() -> void:
 		"encounter_count": EXPECTED.size(),
 		"atlas_path": ATLAS_PATH,
 		"atlas_size": [1488, 48],
+		"recovered_atlas_path": RECOVERED_ATLAS_PATH,
+		"recovered_atlas_size": [4608, 192],
 		"fallback_order": ["commander", "exact_encounter", "faction", "unit", "generic"],
 		"viewports": [[1280, 720], [1920, 1080]],
 		"rows": rows,
@@ -100,16 +103,21 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		var expected: Array = EXPECTED[encounter_id]
 		var asset_id := String(expected[0])
 		var expected_region: Rect2 = expected[1]
+		var recovered := expected_region.position.x < 1152
+		var expected_path := RECOVERED_ATLAS_PATH if recovered else ATLAS_PATH
+		var expected_size := Vector2(4608, 192) if recovered else Vector2(1488, 48)
+		if recovered:
+			expected_region = Rect2(expected_region.position * 4, expected_region.size * 4)
 		var payload: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": encounter_id})
 		var texture = map_view.call("_object_texture_for_asset", asset_id)
 		var entry: Dictionary = object_assets.get(asset_id, {}) if object_assets.get(asset_id, {}) is Dictionary else {}
 		var exact: bool = String(payload.get("identity_encounter_asset_id", "")) == asset_id \
-			and String(payload.get("identity_encounter_path", "")) == ATLAS_PATH \
+			and String(payload.get("identity_encounter_path", "")) == expected_path \
 			and texture is AtlasTexture \
 			and texture.region == expected_region \
 			and texture.atlas is Texture2D \
-			and texture.atlas.resource_path == ATLAS_PATH \
-			and texture.atlas.get_size() == Vector2(1488, 48) \
+			and texture.atlas.resource_path == expected_path \
+			and texture.atlas.get_size() == expected_size \
 			and bool(payload.get("uses_identity_encounter_sprite", false)) \
 			and not bool(payload.get("uses_commander_sprite", true)) \
 			and not bool(payload.get("uses_faction_encounter_sprite", true)) \
@@ -118,8 +126,9 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 			and not String(entry.get("accessible_description", "")).strip_edges().is_empty() \
 			and is_equal_approx(float(payload.get("faction_landmark_visible_extent_tiles", 0.0)), 1.08)
 		exact_rows.append({"encounter_id": encounter_id, "asset_id": asset_id, "region": expected_region, "exact": exact})
-		if expected_region not in unique_regions:
-			unique_regions.append(expected_region)
+		var region_key := expected_path + str(expected_region)
+		if region_key not in unique_regions:
+			unique_regions.append(region_key)
 		if not exact:
 			return await _finish(shell, {"ok": false, "failure": "identity", "encounter_id": encounter_id, "payload": payload, "entry": entry})
 	if unique_regions.size() != EXPECTED.size():
@@ -144,14 +153,17 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		and bool(faction.get("uses_faction_encounter_sprite", false)) \
 		and String(faction.get("faction_encounter_asset_id", "")) == "encounter_faction_mireclaw"
 	var neutral: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": "encounter_roadward_lodge_watch"})
-	var neutral_fallback := String(neutral.get("identity_encounter_asset_id", "")) == "" \
+	# This authored encounter gained exact Waywatch art after this old fixture.
+	# Retain the real content route; do not expect a now-forbidden unit fallback.
+	var neutral_identity := String(neutral.get("identity_encounter_asset_id", "")) == "encounter_waywatch_roadward_lodge_watch" \
 		and not bool(neutral.get("uses_faction_encounter_sprite", true)) \
-		and bool(neutral.get("uses_unit_icon_fallback", false))
+		and bool(neutral.get("uses_identity_encounter_sprite", false)) \
+		and not bool(neutral.get("uses_unit_icon_fallback", true))
 	var unknown: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": "encounter_missing_recurring_fixture"})
 	var generic_fallback := String(unknown.get("identity_encounter_asset_id", "")) == "" \
 		and bool(unknown.get("uses_encounter_sprite_fallback", false)) \
 		and String(unknown.get("encounter_asset_id", "")) == "hostile_camp"
-	if not (invalid_region_fail_closed and missing_asset_fail_closed and commander_first and faction_fallback and neutral_fallback and generic_fallback):
+	if not (invalid_region_fail_closed and missing_asset_fail_closed and commander_first and faction_fallback and neutral_identity and generic_fallback):
 		return await _finish(shell, {"ok": false, "failure": "fallback_order_or_fail_closed", "invalid_region": invalid_region_fail_closed, "missing_asset": missing_asset_fail_closed, "commander": commander, "faction": faction, "neutral": neutral, "unknown": unknown})
 	if session.to_dict() != authority_before:
 		return await _finish(shell, {"ok": false, "failure": "authority_mutated"})
@@ -165,7 +177,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		"missing_asset_fail_closed": missing_asset_fail_closed,
 		"commander_first": commander_first,
 		"faction_fallback": faction_fallback,
-		"neutral_unit_fallback": neutral_fallback,
+		"neutral_exact_identity": neutral_identity,
 		"unknown_generic_fallback": generic_fallback,
 		"authority_exact": true,
 	})

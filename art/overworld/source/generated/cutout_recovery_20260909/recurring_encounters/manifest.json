@@ -1,0 +1,504 @@
+{
+  "schema_id": "recurring_cutout_recovery_v2",
+  "recipe_sha256": "c858e59375fef4eb3407c0c8979bdcecf804cf3491871d32cdc57663e1e8b5d8",
+  "processing_tool": "tools/prepare_overworld_recurring_cutouts.py",
+  "processing_tool_sha256": "082aa3769e4e734e1b1652a4bd9e3d427d28b0fa1149b07566a9749317465a8b",
+  "processing": "Reproject original RGBA at 4x raster resolution through unchanged normalized source fit and canvas registration; no color removal, alpha threshold or palette quantization. Entire original atlas and seven unaffected identities retained exactly; renderer world draw rectangles unchanged.",
+  "assets": {
+    "encounter_recurring_beacon_wardens": {
+      "trim_sha256": "933f15ea36f8b57c42bd8224b68ca05d61781481c5783dcd692d2c44fb21b02c",
+      "rgba_sha256": "83e9991fc1c6ed51a3beceb07c489ce9ecf54f6deb8f55ec1a778613479caa07",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 7385,
+        "bounds": [
+          56,
+          16,
+          162,
+          191
+        ]
+      }
+    },
+    "encounter_recurring_bridgeward_levies": {
+      "trim_sha256": "635cc2d33a5bdc5db0400afddcd80ec17380968d34407300b08df201e4e157fa",
+      "rgba_sha256": "df584aebd8d0825e2ab2fe3da5773710903767eb0a797b4921d00982ac7c04b1",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 10906,
+        "bounds": [
+          17,
+          40,
+          176,
+          186
+        ]
+      }
+    },
+    "encounter_recurring_aurora_battery": {
+      "trim_sha256": "da7c34164eb72733d03cf883f4e151660a5e4e15a5e00a248c7b5db5b0b65c0d",
+      "rgba_sha256": "20b2554bf43b6c01eb6a2a72a33256ae77c64534b8a4ba2a82e76786652b59c9",
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 7436,
+        "bounds": [
+          33,
+          78,
+          152,
+          180
+        ]
+      }
+    },
+    "encounter_recurring_bone_ferry_watch": {
+      "trim_sha256": "3ad6e0bd750525d02719a07e56c136974be45b12636b0c2f36feb04f2f601a49",
+      "rgba_sha256": "1dd9d14855b9bfcb2cc7fb0210d6d5249d09c47872f63929adecc1dc53c5b07b",
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 14180,
+        "bounds": [
+          19,
+          16,
+          181,
+          183
+        ]
+      }
+    },
+    "encounter_recurring_charter_guard": {
+      "trim_sha256": "e36a96288b892ebf26522ba7dd658d450403b8f7be2352d88e392723347f552b",
+      "rgba_sha256": "dc4aaf3869e6ebb17378fb88272b17eaa7fd5f881f7b69a41ad6d6c8a0647d6d",
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 10324,
+        "bounds": [
+          29,
+          68,
+          179,
+          188
+        ]
+      }
+    },
+    "encounter_recurring_mirror_lancers": {
+      "trim_sha256": "678da3d196c5689d8319a48735772a3c7cca3e40cedb9e67eae629a49ae721f8",
+      "rgba_sha256": "fc906aac4be77c5050f6c02c0059e6bb8beab89fbf6f1fe836bf3ed6dbd09a1b",
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 9677,
+        "bounds": [
+          26,
+          16,
+          179,
+          192
+        ]
+      }
+    },
+    "encounter_recurring_drum_circle": {
+      "trim_sha256": "94d2a67b28a3eeba15a3e3cfe6cf007d69ca74fefeb9507964f448f6a9418fb9",
+      "rgba_sha256": "b39cbf911a55bd92195b861bc07fddf6066d406bd0d586e70bf3f33a3500bf2b",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 13206,
+        "bounds": [
+          30,
+          24,
+          171,
+          168
+        ]
+      }
+    },
+    "encounter_recurring_gate_marshals": {
+      "trim_sha256": "882dfcb2df03a3f04be8ba090d6e38eb1c07e26d85bce353ca3928900a6b7d9f",
+      "rgba_sha256": "2cc5ebff79963d6df9cc9a9528b1c75f02bc4ca3dcafc5aac47f3b571cfe474c",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 11077,
+        "bounds": [
+          8,
+          32,
+          184,
+          160
+        ]
+      }
+    },
+    "encounter_recurring_charter_bastion_reserve": {
+      "trim_sha256": "a193d4a4db5e9000f169cd93abe3140c4ebf9da113be11de53e242bf8b1c1638",
+      "rgba_sha256": "858a4d0915918bc196c868a73e308b2c897db65481d5bd6435e2d9aaa8eda8e5",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 15764,
+        "bounds": [
+          8,
+          12,
+          180,
+          179
+        ]
+      }
+    },
+    "encounter_recurring_ford_reavers": {
+      "trim_sha256": "475b2ef1cda6cb4543c29289587efe723970f578887d39476847fd2d513cefdf",
+      "rgba_sha256": "17581dd1ab6fbe9912dd9ee9f3dc401e2a8fbcfc48e8c1d36ed7f5f3145d7ba5",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 10878,
+        "bounds": [
+          13,
+          36,
+          183,
+          155
+        ]
+      }
+    },
+    "encounter_recurring_glasswing_sortie": {
+      "trim_sha256": "290597b3f17f01edd71084db700066bc4083452581eb98c70adc67d3a70c77ce",
+      "rgba_sha256": "9475005b748e02494ea0ae3964a69019a3d65c406ed3f95d9c06ba355a7f4bf5",
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 9825,
+        "bounds": [
+          9,
+          28,
+          184,
+          163
+        ]
+      }
+    },
+    "encounter_recurring_hollow_mire": {
+      "trim_sha256": "452214f7666969255d662b44eff9ead15fa6d8e30e71537f64130f8152369070",
+      "rgba_sha256": "de74ddc638cb0a4b55639d703a27059881e78ec9f3069b7eeb982aa0239157f7",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 13557,
+        "bounds": [
+          18,
+          24,
+          182,
+          163
+        ]
+      }
+    },
+    "encounter_recurring_silt_hunters": {
+      "trim_sha256": "e22d64d39e6a11786e3dfe9eb8c3aa3bd70e97709ef86fa6c3d6193f90be9ec1",
+      "rgba_sha256": "efc597bc2c129d184be68222778925b695380e559692a2e46900b92d708d132b",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 11684,
+        "bounds": [
+          8,
+          36,
+          184,
+          152
+        ]
+      }
+    },
+    "encounter_recurring_tidepool_skiffyard_watch": {
+      "trim_sha256": "55d83c77ee88531bf8b7328dc86dacd566c0fc44b885efb91a940b6a60d2f799",
+      "rgba_sha256": "c2f0f9af8c304d544d3fdbfbbe16f9ef95c35e3a0b931ef7979287427375827a",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 10887,
+        "bounds": [
+          13,
+          36,
+          184,
+          152
+        ]
+      }
+    },
+    "encounter_recurring_survey_guard": {
+      "trim_sha256": "979d2b7ff89fe054dd21732d1f1b0ec63af8149ec454cfebe2a93020b3acb94a",
+      "rgba_sha256": "8eb8c9726ec0149331ad33fd6bc219ff6b754f14326ee0d19fd5b32e9aac428e",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 10722,
+        "bounds": [
+          35,
+          8,
+          164,
+          179
+        ]
+      }
+    },
+    "encounter_recurring_road_chaplains": {
+      "trim_sha256": "0c875c514261d2c80d2fa12450d2c48a54259d833179e33ace2c157d7bb4192b",
+      "rgba_sha256": "83c78a4616974f46103b8b3eb601f375a9fd91d02f5cecffbf5af6cfc8dd359b",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 13029,
+        "bounds": [
+          12,
+          8,
+          176,
+          184
+        ]
+      }
+    },
+    "encounter_recurring_mill_levies": {
+      "trim_sha256": "485b0254aa12fb7b4828cb0dfd0da8e6c740e6b2f4728fec8ad0849dc574a18d",
+      "rgba_sha256": "7a787eac1e91c870dfb30cde1cde0d729d15b3d633cc0ee6af64cf313949a16b",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 18140,
+        "bounds": [
+          23,
+          8,
+          175,
+          177
+        ]
+      }
+    },
+    "encounter_recurring_reedbarrow_chain": {
+      "trim_sha256": "1cdb0687850ef6d30f156ba8a3e7b287f66902c400817acd160abcf68a8c60c2",
+      "rgba_sha256": "1da55ed5cd6c93b983c699e7b0c0d813135b0d05ec19e0936635e714c06c36e6",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 9268,
+        "bounds": [
+          8,
+          32,
+          182,
+          153
+        ]
+      }
+    },
+    "encounter_recurring_nightglass_dominion": {
+      "trim_sha256": "c4dab5cb273e620e12e3f797507681729bf6da473f7f154e493cac7835fac34e",
+      "rgba_sha256": "0df30df7fcf40e22a5a02f4146e453c8e2a8aff24168e34c87ea9603b159cb53",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 13788,
+        "bounds": [
+          21,
+          8,
+          170,
+          182
+        ]
+      }
+    },
+    "encounter_recurring_mirror_causeway": {
+      "trim_sha256": "52903ee1974f40a1aa4ec88b292be1839b725f67f2b2bb01fd44b7f70cd85bd9",
+      "rgba_sha256": "51522b9e5333f24d345aa3b058480282b2ba9457bb76ebc4c0aeab137ca9fa67",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 12427,
+        "bounds": [
+          23,
+          8,
+          180,
+          176
+        ]
+      }
+    },
+    "encounter_recurring_halo_reserve": {
+      "trim_sha256": "ad0db5fa06435001a213718cb2e5d99eac7c5eb8c04268ac3555d25493e59c5c",
+      "rgba_sha256": "799d608101b731599df2ff9e1c3e12a58938272cafed165e15091e37d817411b",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 14149,
+        "bounds": [
+          31,
+          8,
+          160,
+          176
+        ]
+      }
+    },
+    "encounter_recurring_daybreak_matrix": {
+      "trim_sha256": "bedb32e42188bc31baf7cecfb25b8c123540612fcc19a6bdfce808bceda621dc",
+      "rgba_sha256": "e3da729cb2f4a5ef418ebc28c82dfa448ea3cc089d7c3986c60cbd2acfd740cb",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 14129,
+        "bounds": [
+          8,
+          8,
+          184,
+          180
+        ]
+      }
+    },
+    "encounter_recurring_daybreak_array": {
+      "trim_sha256": "6e9a24e223602dec1df6e5a88f04dfd75f9035e3a462168ba9c0eb1c54ef835b",
+      "rgba_sha256": "42363343bbfaed589112344e0c54ec2225db64927acfcd82a6bbc3d658cb6cce",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 11108,
+        "bounds": [
+          15,
+          16,
+          184,
+          175
+        ]
+      }
+    },
+    "encounter_recurring_basalt_gatehouse_watch": {
+      "trim_sha256": "a0141fadc0013710e2710d18243edf4345a1a1153bee7b34e7879ba80fa2d825",
+      "rgba_sha256": "db90ed86031b56f70fd42458ef8631acf701b1190f984918bcc5c3cb9b73cc24",
+      "metrics": {
+        "alpha_levels": 249,
+        "partial_alpha_pixels": 18115,
+        "bounds": [
+          10,
+          12,
+          184,
+          172
+        ]
+      }
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png": {
+      "after_sha256": "b33061e82cc37b092970665f0eaa3916feb2d8e9d13ed018998407bbdf66f219",
+      "prepared": "runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    }
+  },
+  "original_atlas": {
+    "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+    "sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149"
+  },
+  "preserved_controls": {
+    "encounter_recurring_barrow_pickets": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1152,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/barrow_pickets_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_barrow_pickets",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "peat_barrow_hook_picket_ring",
+        "accessible_description": "Two uneven rows of tall hooked reed pikes rise from a peat barrow behind a squat hide drum, clawed palisade, and bent stone marker."
+      }
+    },
+    "encounter_recurring_bramble_hedge_watch": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1200,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/bramble_hedge_watch_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_bramble_hedge_watch",
+        "assigned_faction_id": "",
+        "presentation_role": "bramble_crescent_vault_watch",
+        "accessible_description": "A raised wicker watch basket overlooks a crescent thorn hedge, crossed thornbow rests, and a chained root-wrapped stone vault hatch."
+      }
+    },
+    "encounter_recurring_lantern_patrol": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1248,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/lantern_patrol_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_lantern_patrol",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "forked_lantern_lane_battery",
+        "accessible_description": "A forked signal mast with stacked amber lanterns stands above a three-lamp brass range battery, red pavises, and road pikes."
+      }
+    },
+    "encounter_recurring_reedward_camp": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1296,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/reedward_camp_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_reedward_camp",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "forktorch_reedward_field_camp",
+        "accessible_description": "A forked torch beacon towers over an asymmetric reed-and-hide shelter, snare stakes, violet sling bolts, and a shallow peat supply sled."
+      }
+    },
+    "encounter_recurring_sluice_raiders": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1344,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/sluice_raiders_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_sluice_raiders",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "captured_claw_crank_sluice",
+        "accessible_description": "A broken diagonal timber sluice spans unequal peat-and-stone posts beside a claw-shaped crank wheel, channel planks, hook rack, and signal drum."
+      }
+    },
+    "encounter_recurring_willow_mill_pack": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1392,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/willow_mill_pack_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_willow_mill_pack",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "willow_bound_ruined_mill_den",
+        "accessible_description": "A leaning willow embraces a cracked half waterwheel and millstone above a low hide awning, sling-stone basket, and paired claw hooks."
+      }
+    },
+    "encounter_recurring_ghoul_grove": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1440,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/ghoul_grove_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_ghoul_grove",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "three_hollow_blackbranch_berm",
+        "accessible_description": "Three crooked hollow blackbranch trunks rise like claws behind a thorn-woven earth berm, sling nest, paired fog jars, and stone-veil cairn."
+      }
+    }
+  }
+}

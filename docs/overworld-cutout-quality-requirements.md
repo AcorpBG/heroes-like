@@ -119,6 +119,29 @@ map remains a separate regression control when none of its current states uses
 these seven repaired variants. Historical source manifests retain original
 assembly hashes and point to the exact repaired derivative proof.
 
+For palette-damaged recurring encounters, use
+`tools/prepare_overworld_recurring_cutouts.py --output <fresh> [--install]`
+and both cutout drivers with `--batch recurring_encounters`. Recover the first
+24 cells from their immutable original RGBA paintings: original crop, 44-pixel
+aspect-preserving fit, bottom alignment for the first six and centered later
+cells. No alpha threshold or color key may replace original source coverage.
+Actual gameplay inspection rejected a 48-pixel recovery as still too blurry.
+Supply the 24 recovered paintings in a separate 192-pixel-per-cell raster atlas,
+using exactly four times the original crop-fit/offset coordinates. The renderer's
+unchanged world-space draw rectangles, not texture pixel dimensions, own their
+on-map size. Preserve the complete original 1488x48 atlas for the seven clean
+wave-four alpha controls in this 24-row cohort; do not resample those neighbors
+or modify their metadata in this cohort. Their separate resolution-quality
+follow-up remains parent work and is not counted as visual acceptance.
+Keep every encounter id, map coordinate, footprint, anchor and gameplay rule.
+Focused `test_overworld_recurring_cutouts.py` covers source/trim/runtime
+reconstruction, smooth alpha, identity and normalized geometry. Show Beacon Wardens
+at its original Charter Pyre placement through ordinary scouting; keep the
+24-state detached gallery and unchanged earned native map explicitly separate.
+Historical atlas hashes remain source evidence, with exact before bytes and
+source-reconstructed high-resolution derivative ownership checked by repository
+validation. Check the new atlas explicitly in both platform packages.
+
 ## Completion and non-goals
 
 Each cohort completes only after its actual repaired art is integrated and its

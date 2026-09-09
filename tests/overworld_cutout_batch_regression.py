@@ -24,6 +24,7 @@ POOL_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/map_
 DECORATION_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/decorations/recipe.json'
 LEGACY_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/legacy_families/recipe.json'
 PASSAGE_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/passages/recipe.json'
+RECURRING_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/recurring_encounters/recipe.json'
 MARKER = 'OVERWORLD_CUTOUT_BATCH '
 
 IMPORT_ORACLE = r'''
@@ -59,7 +60,10 @@ def expected_assets(recipe, expected_dir, output):
     assets={}
     for key,row in recipe['assets'].items():
         entry=row['original_manifest_entry']
-        legacy=recipe.get('schema_id') in ('legacy_family_cutout_recipe_v1','passage_cutout_recipe_v1')
+        recurring=recipe.get('schema_id')=='recurring_cutout_recipe_v2'
+        if recurring:
+            entry=dict(entry,path=row['runtime_path'],atlas_region=[v*row['pixel_scale'] for v in entry['atlas_region']],atlas_size=[4608,192])
+        legacy=recurring or recipe.get('schema_id') in ('legacy_family_cutout_recipe_v1','passage_cutout_recipe_v1')
         # Atlas alpha-edge processing runs on the complete original atlas;
         # cropping before import would not be an independent runtime oracle.
         path=(expected_dir/'runtime'/Path(entry['path'].removeprefix('res://art/overworld/runtime/')) if legacy else expected_dir/(key+'.png')) if expected_dir else ROOT/entry['path'].removeprefix('res://')
@@ -207,7 +211,7 @@ def probe_environment(environment):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--batch',choices=['batch04','map_sheets','decorations','legacy_families','passages'],default='batch04')
+    parser.add_argument('--batch',choices=['batch04','map_sheets','decorations','legacy_families','passages','recurring_encounters'],default='batch04')
     parser.add_argument('--label',required=True)
     parser.add_argument('--resolution',choices=['1280x720','1920x1080'],default='1280x720')
     parser.add_argument('--expected-dir',type=Path,help='Preview acceptance candidate; permits an honest failing-before run')
@@ -215,7 +219,7 @@ def main():
     if not re.fullmatch(r'[a-z0-9_-]+',args.label):parser.error('label must be a fresh slug')
     original=SAVE.read_bytes()
     if hashlib.sha256(original).hexdigest()!=SAVE_SHA:parser.error('unchanged exact earned save required')
-    recipe=json.loads({'batch04':RECIPE,'map_sheets':POOL_RECIPE,'decorations':DECORATION_RECIPE,'legacy_families':LEGACY_RECIPE,'passages':PASSAGE_RECIPE}[args.batch].read_text())
+    recipe=json.loads({'batch04':RECIPE,'map_sheets':POOL_RECIPE,'decorations':DECORATION_RECIPE,'legacy_families':LEGACY_RECIPE,'passages':PASSAGE_RECIPE,'recurring_encounters':RECURRING_RECIPE}[args.batch].read_text())
     script=SCRIPT
     if args.batch=='decorations':
         from overworld_decoration_cutout_probe import SCRIPT as script
@@ -223,6 +227,8 @@ def main():
         from overworld_legacy_cutout_probe import SCRIPT as script
     if args.batch=='passages':
         from overworld_passage_cutout_probe import SCRIPT as script
+    if args.batch=='recurring_encounters':
+        from overworld_recurring_cutout_probe import SCRIPT as script
     output=OUTPUT/args.label
     output.mkdir(parents=True,exist_ok=False)
     assets=expected_assets(recipe,args.expected_dir,output)
@@ -248,6 +254,8 @@ def main():
         captures_ok=captures_ok and len(report.get('galleries',[]))==3 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
     if args.batch=='passages':
         captures_ok=captures_ok and len(report.get('galleries',[]))==1 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
+    if args.batch=='recurring_encounters':
+        captures_ok=captures_ok and len(report.get('galleries',[]))==2 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
     report['ok']=bool(report['ok']) and code==0 and report['input_unchanged'] and not report['runtime_errors'] and captures_ok
     (output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({k:v for k,v in report.items() if k not in ('textures','captures','expected_rasters')}))

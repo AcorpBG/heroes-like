@@ -1,0 +1,1259 @@
+{
+  "schema_id": "recurring_cutout_recipe_v2",
+  "diagnosis": "The f18349e6 atlas changed from a multilevel tRNS palette to a single transparent palette index, collapsing coverage in the first 24 cells. Original RGBA paintings retain fine silhouettes. Retain original crop/44-pixel fit, bottom alignment for first six and centered later cells; restore source coverage without color keying. Gameplay inspection rejected the intermediate 48-pixel recovery as too blurry. Restore native source detail in 192-pixel cells with exactly 4x the original fit/offset; unchanged world draw rectangles retain on-map geometry.",
+  "assets": {
+    "encounter_recurring_beacon_wardens": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring/beacon_wardens_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_beacon_wardens",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "twin_lantern_beacon_watch",
+        "accessible_description": "A tall brass-bound signal mast carries three ember lanterns, a blue charter pennant, and four warding pikes."
+      },
+      "source_sha256": "e38bf9da4ba3527d1b467b5fc01046abc6780267f2ec4db52c6aa69c8c94cee3",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        23,
+        9,
+        1119,
+        1232
+      ],
+      "source_resize": [
+        39,
+        44
+      ],
+      "canvas_origin": [
+        4,
+        4
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BICUBIC",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_beacon_wardens.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_bridgeward_levies": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring/bridgeward_levies_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_bridgeward_levies",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "fortified_bridge_toll_barricade",
+        "accessible_description": "Two squat stone piers brace a red toll beam, blue pavise, ember lantern, and fan of four levy pikes."
+      },
+      "source_sha256": "807bd33e0d81985ab4ec898366a8dd564eab2e573fa67add574b22b197eefbcd",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        69,
+        0,
+        1368,
+        1114
+      ],
+      "source_resize": [
+        44,
+        38
+      ],
+      "canvas_origin": [
+        2,
+        10
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BICUBIC",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_bridgeward_levies.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_aurora_battery": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring/aurora_battery_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_aurora_battery",
+        "assigned_faction_id": "faction_sunvault",
+        "presentation_role": "triple_prism_aurora_battery",
+        "accessible_description": "Three horizontal cyan-violet prism lances sit on a low ivory turntable with pale-gold stabilizer fins."
+      },
+      "source_sha256": "671cb5c4f2df72350a902e754df10706fa380e41c03562c9748d76eb430dbe5e",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        59,
+        9,
+        1522,
+        1024
+      ],
+      "source_resize": [
+        44,
+        31
+      ],
+      "canvas_origin": [
+        2,
+        17
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BICUBIC",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_aurora_battery.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_bone_ferry_watch": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring/bone_ferry_watch_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_bone_ferry_watch",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "bone_prowed_ferry_ambush_watch",
+        "accessible_description": "A crooked bone-prowed skiff rests on bog stilts beneath rib hooks, a peat lantern, hide drum, and torn reed pennant."
+      },
+      "source_sha256": "39c6065bb5cea3a79fd2f64c35fb6aa099dec3b03e5b5e79458d53434a5a5cd6",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        19,
+        1226,
+        1254
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BICUBIC",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_bone_ferry_watch.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_charter_guard": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring/charter_guard_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_charter_guard",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "sealed_charter_command_pavilion",
+        "accessible_description": "A broad red command canopy shelters a sealed charter lectern and supply chests behind short crenellated pavises."
+      },
+      "source_sha256": "ffb67b13f925476e45982ae5193051ac5ad227640997995167debef4847ad612",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        61,
+        12,
+        1496,
+        1024
+      ],
+      "source_resize": [
+        44,
+        31
+      ],
+      "canvas_origin": [
+        2,
+        17
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BICUBIC",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_charter_guard.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_mirror_lancers": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring/mirror_lancers_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_mirror_lancers",
+        "assigned_faction_id": "faction_sunvault",
+        "presentation_role": "crossed_mirror_lance_dueling_marker",
+        "accessible_description": "Three mirrored lances cross above two opposing faceted shields, a crescent rack, and a split blue aurora pennant."
+      },
+      "source_sha256": "0ff3851b0830e013409bd1b861f48f53b7906ffe8579e2dd28899e05a1df296b",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        0,
+        1205,
+        1269
+      ],
+      "source_resize": [
+        42,
+        44
+      ],
+      "canvas_origin": [
+        3,
+        4
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BICUBIC",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_mirror_lancers.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_drum_circle": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave2/drum_circle_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_drum_circle",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "nightglass_drum_ritual_pylon",
+        "accessible_description": "Four taut hide war drums ring a tall split nightglass pylon beneath a crooked peat lantern and bone-strung reed lines."
+      },
+      "source_sha256": "54fa28da2f99ce48a34fba17ae2462ec8efca305fe8f8330c31fb0ba6bdfbaef",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        0,
+        1388,
+        1122
+      ],
+      "source_resize": [
+        44,
+        36
+      ],
+      "canvas_origin": [
+        2,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_drum_circle.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_gate_marshals": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          336,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave2/gate_marshals_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_gate_marshals",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "chained_bog_gate_marshal_post",
+        "accessible_description": "Two blackwood gate posts hold a spiked chain boom between bone horns, narrow hide pennants, and a mud-brick watch plinth."
+      },
+      "source_sha256": "05ce01b9ac069d3eea2e4fb9e78cf2352b94976f6904f7be1bf03c93ad1749a1",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        94,
+        9,
+        1452,
+        1010
+      ],
+      "source_resize": [
+        44,
+        32
+      ],
+      "canvas_origin": [
+        2,
+        8
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_gate_marshals.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_charter_bastion_reserve": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          384,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave2/charter_bastion_reserve_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_charter_bastion_reserve",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "charter_bastion_reserve_fortification",
+        "accessible_description": "Three red brass-edged pavises defend a sealed charter standard, upright pike rack, supply chests, and low ember brazier."
+      },
+      "source_sha256": "09558e6e821ef86a48acc2c825ba05de83e89aae3b64f5f68078e97e9701e769",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        37,
+        0,
+        1282,
+        1199
+      ],
+      "source_resize": [
+        44,
+        42
+      ],
+      "canvas_origin": [
+        2,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_charter_bastion_reserve.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_ford_reavers": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          432,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave2/ford_reavers_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_ford_reavers",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "hooked_ford_reaver_skiff_mooring",
+        "accessible_description": "Two narrow blackwood skiffs flank a stepping-stone ford beneath crossed hooked boarding poles, reed arrows, and a torn rush-red pennant."
+      },
+      "source_sha256": "35896d3512a5dadb4e58466b2f4d0531f8a3d747e245d774b5a18efb57504af0",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        0,
+        1508,
+        1024
+      ],
+      "source_resize": [
+        44,
+        30
+      ],
+      "canvas_origin": [
+        2,
+        9
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_ford_reavers.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_glasswing_sortie": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          480,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave2/glasswing_sortie_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_glasswing_sortie",
+        "assigned_faction_id": "faction_sunvault",
+        "presentation_role": "glasswing_sortie_launch_rack",
+        "accessible_description": "Two swept translucent glass wings rise from an ivory launch rack with a central prism lance, angled rails, tuning fork, and split cobalt pennant."
+      },
+      "source_sha256": "8d0520ba4c9ea9d0980dcc167374dfe887c58ee707679ece593805114b13c877",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        0,
+        1402,
+        1096
+      ],
+      "source_resize": [
+        44,
+        34
+      ],
+      "canvas_origin": [
+        2,
+        7
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_glasswing_sortie.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_hollow_mire": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          528,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave2/hollow_mire_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_hollow_mire",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "sunken_hollow_mire_ambush_basin",
+        "accessible_description": "A deep peat sink yawns inside leaning root ribs and two mudglass perches beneath a cold fog lantern and narrow plank approach."
+      },
+      "source_sha256": "a2eb31e479ff7500d6a4b38bbd380ea0d7eea7a23b6c4c5ffde05a74e9adc233",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        10,
+        1388,
+        1122
+      ],
+      "source_resize": [
+        44,
+        35
+      ],
+      "canvas_origin": [
+        2,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_hollow_mire.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_silt_hunters": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          576,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave2/silt_hunters_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_silt_hunters",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "silt_hunter_trap_field",
+        "accessible_description": "Three huge mud-caked jaw traps radiate from a hooked blade rack, weighted reed nets, and two cloudy mudglass range stakes."
+      },
+      "source_sha256": "c23c5c7f441e02f7532c5d493f4a062af1e923a5c6b6d9f2d28b0fbc3a110b2e",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "source_resize": [
+        44,
+        29
+      ],
+      "canvas_origin": [
+        2,
+        9
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_silt_hunters.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_tidepool_skiffyard_watch": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          624,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/tidepool_skiffyard_watch_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_tidepool_skiffyard_watch",
+        "assigned_faction_id": "",
+        "presentation_role": "tidepool_skiff_rack_supply_watch",
+        "accessible_description": "Three narrow tide skiffs rest on tilted tarred racks beside a rope winch, reefbolt stand, supply chest, and tall shell-marked tide gauge."
+      },
+      "source_sha256": "536760be529153cd59c4875a3afcbd86516bc3bf52c0a86a5d747265f30226fb",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        0,
+        1536,
+        1008
+      ],
+      "source_resize": [
+        44,
+        29
+      ],
+      "canvas_origin": [
+        2,
+        9
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_tidepool_skiffyard_watch.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_survey_guard": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          672,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/survey_guard_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_survey_guard",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "charter_survey_tripod_guard_post",
+        "accessible_description": "A tall brass survey tripod stands over a charter map table beside a narrow pavise, three river pikes, compass chain, and ember lantern."
+      },
+      "source_sha256": "81cccad4237c96bbede8ef3e59c8cec62139972f98c17c0ade684568979132c4",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        10,
+        1226,
+        1254
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_survey_guard.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_road_chaplains": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          720,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/road_chaplains_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_road_chaplains",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "portable_road_chaplain_shrine_wagon",
+        "accessible_description": "A two-wheeled brass-bound road shrine carries twin ember lanterns, an open hymn lectern, supply cases, and a disciplined fan of pikes."
+      },
+      "source_sha256": "8a643b0aecec5bac5bcd163f2fcf7e2dd41aef19bdde22cec4ecf12b63b0e0ed",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        17,
+        0,
+        1213,
+        1295
+      ],
+      "source_resize": [
+        41,
+        44
+      ],
+      "canvas_origin": [
+        3,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_road_chaplains.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_mill_levies": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          768,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/mill_levies_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_mill_levies",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "granary_mill_levy_barricade",
+        "accessible_description": "A broad half mill wheel rises behind grain sacks, three short brass-edged pavises, levy pikes, a flour chest, and an ember lantern."
+      },
+      "source_sha256": "3ada694f23cd8bb8598c0effe3ae3a32d78e4757ad88418ebb02df536a89649a",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        17,
+        1224,
+        1254
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_mill_levies.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_reedbarrow_chain": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          816,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/reedbarrow_chain_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_reedbarrow_chain",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "ferry_chain_levee_choke",
+        "accessible_description": "A massive sagging ferry chain hangs between unequal peat-stone stanchions above levee stakes, sling bolts, a hooked winch, and torn rush flags."
+      },
+      "source_sha256": "b0813c1c5e1ee8eb33820967cc691e0970119015bf6cc90377e9cc83e3151829",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        65,
+        0,
+        1524,
+        1024
+      ],
+      "source_resize": [
+        44,
+        31
+      ],
+      "canvas_origin": [
+        2,
+        8
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_reedbarrow_chain.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_nightglass_dominion": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          864,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/nightglass_dominion_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_nightglass_dominion",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "nightglass_dominion_command_crown",
+        "accessible_description": "Three jagged nightglass spires form a dark crown behind a clawed peat palisade, central hide command drum, bone lanterns, and hooked walls."
+      },
+      "source_sha256": "e3341aa0d5f698d6ffc7a44bee49cdd3989dc3928115e47859e1e1135a74f429",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        0,
+        1234,
+        1254
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_nightglass_dominion.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_mirror_causeway": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          912,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/mirror_causeway_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_mirror_causeway",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "broken_mirror_causeway_harrow",
+        "accessible_description": "Cracked silver-black mirror slabs step diagonally between hooked reed pilings, crossed harrow hooks, a bloodwake drum, and torn rush pennant."
+      },
+      "source_sha256": "4b9373b9281eeb809de920d6019522cdc3b788a388dd62b40a6683a147eba278",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        14,
+        1207,
+        1254
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_mirror_causeway.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_halo_reserve": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          960,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/halo_reserve_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_halo_reserve",
+        "assigned_faction_id": "faction_sunvault",
+        "presentation_role": "concentric_prism_halo_reserve_rack",
+        "accessible_description": "A large concentric prism halo stands in an ivory tuning rack above four faceted shields, a horizontal aurora bolt, and resonant chimes."
+      },
+      "source_sha256": "b26091b1af256ed6141e8502878663f3c4a99ebbe59a0bd3ca39b411306e2c5f",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        16,
+        1222,
+        1254
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_halo_reserve.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_daybreak_matrix": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1008,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/daybreak_matrix_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_daybreak_matrix",
+        "assigned_faction_id": "faction_sunvault",
+        "presentation_role": "four_node_daybreak_battery_matrix",
+        "accessible_description": "Four short corner prisms connect by pale-gold rails to a tall central daybreak beacon, shelter fins, and a compact relay depot."
+      },
+      "source_sha256": "d7a55eb048d355e995195ccf75d0c142756a50055c9302731fd8d4ac432143ad",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        12,
+        1240,
+        1254
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_daybreak_matrix.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_daybreak_array": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1056,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/daybreak_array_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_daybreak_array",
+        "assigned_faction_id": "faction_sunvault",
+        "presentation_role": "triple_sunlance_daybreak_array",
+        "accessible_description": "Three long sunlance mirrors fan outward on elevated ivory rails from a low turntable beneath a tuning chime and split cobalt pennant."
+      },
+      "source_sha256": "37db4876c995154c80c112940dcd942173dc0b93bf643978f3d44bd503ba78a0",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        12,
+        1299,
+        1200
+      ],
+      "source_resize": [
+        44,
+        40
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_daybreak_array.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    },
+    "encounter_recurring_basalt_gatehouse_watch": {
+      "mode": "original_recurring",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1104,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/basalt_gatehouse_watch_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_basalt_gatehouse_watch",
+        "assigned_faction_id": "",
+        "presentation_role": "basalt_portcullis_gatehouse_watch",
+        "accessible_description": "A thick black-basalt arch encloses an amber-lit tunnel throat and iron portcullis between twin bolter buttresses and a heavy chain winch."
+      },
+      "source_sha256": "d90b37744e7ce1be3ee8f60e4701b93de654b9d26543d6b59472ff96c93b0fc3",
+      "before_sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+      "source_crop": [
+        0,
+        0,
+        1294,
+        1199
+      ],
+      "source_resize": [
+        44,
+        41
+      ],
+      "canvas_origin": [
+        2,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "resampling": "BILINEAR",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recurring_encounters/encounter_recurring_basalt_gatehouse_watch.png",
+      "pixel_scale": 4,
+      "runtime_path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png"
+    }
+  },
+  "preserved_controls": {
+    "encounter_recurring_barrow_pickets": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1152,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/barrow_pickets_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_barrow_pickets",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "peat_barrow_hook_picket_ring",
+        "accessible_description": "Two uneven rows of tall hooked reed pikes rise from a peat barrow behind a squat hide drum, clawed palisade, and bent stone marker."
+      }
+    },
+    "encounter_recurring_bramble_hedge_watch": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1200,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/bramble_hedge_watch_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_bramble_hedge_watch",
+        "assigned_faction_id": "",
+        "presentation_role": "bramble_crescent_vault_watch",
+        "accessible_description": "A raised wicker watch basket overlooks a crescent thorn hedge, crossed thornbow rests, and a chained root-wrapped stone vault hatch."
+      }
+    },
+    "encounter_recurring_lantern_patrol": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1248,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/lantern_patrol_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_lantern_patrol",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "forked_lantern_lane_battery",
+        "accessible_description": "A forked signal mast with stacked amber lanterns stands above a three-lamp brass range battery, red pavises, and road pikes."
+      }
+    },
+    "encounter_recurring_reedward_camp": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1296,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/reedward_camp_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_reedward_camp",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "forktorch_reedward_field_camp",
+        "accessible_description": "A forked torch beacon towers over an asymmetric reed-and-hide shelter, snare stakes, violet sling bolts, and a shallow peat supply sled."
+      }
+    },
+    "encounter_recurring_sluice_raiders": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1344,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/sluice_raiders_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_sluice_raiders",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "captured_claw_crank_sluice",
+        "accessible_description": "A broken diagonal timber sluice spans unequal peat-and-stone posts beside a claw-shaped crank wheel, channel planks, hook rack, and signal drum."
+      }
+    },
+    "encounter_recurring_willow_mill_pack": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1392,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/willow_mill_pack_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_willow_mill_pack",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "willow_bound_ruined_mill_den",
+        "accessible_description": "A leaning willow embraces a cracked half waterwheel and millstone above a low hide awning, sling-stone basket, and paired claw hooks."
+      }
+    },
+    "encounter_recurring_ghoul_grove": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "atlas_region": [
+          1440,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          1488,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/ghoul_grove_source.png",
+        "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+        "assigned_encounter_id": "encounter_ghoul_grove",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "three_hollow_blackbranch_berm",
+        "accessible_description": "Three crooked hollow blackbranch trunks rise like claws behind a thorn-woven earth berm, sling nest, paired fog jars, and stone-veil cairn."
+      }
+    }
+  }
+}
