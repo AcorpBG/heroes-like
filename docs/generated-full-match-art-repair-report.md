@@ -5,6 +5,123 @@ Parent: `quality-generated-full-match-20260906`; selected child:
 removed the package-size budget and requested continuing. The parent quality
 goal remains unfinished.
 
+## Embercourt town-variant batch — 2026-09-09, validated
+
+Six exact authored identities still selected catalog paintings because their
+scene-layer rows were absent: Signal Citadel, generic Charter Bastion,
+Beaconline Charter House, Rainwrit Stormseal Treasury and Amberweir's Sluiceguard
+Lock/Counterweight Foundry. Generic and faction Bastions can coexist and are
+not aliases: one is a campaign command hall, the other a colossus workshop.
+Six original built-in text-only RGBA masters now give these identities distinct
+architecture through the existing source/prompt/trim/runtime pipeline. All 77
+earlier rows and paintings, village, catalog icons and gameplay/native/save
+owners are preserved; exact Embercourt coverage is 30 identities across five
+towns. Masters, prompts and hashes are under the existing `faction_embercourt`
+scene-layer directories and authoritative scene manifest.
+
+The initial five-town composition preview (`embercourt_variants_layout_01`)
+passed 418 layout/save checks but failed visual acceptance: the signal station
+floated above the hillside and the charter house was hidden by the command dock.
+The revised station joins the rear Pikehall rise and the house joins the left
+settlement terrace. An intermediate treasury/foundry placement on the relief
+quay exposed their entrances above navigation but failed the sparse-town check
+below; the final site uses the permanent quay. Earlier pixels remain retained.
+Treasury/Foundry share a site only in mutually exclusive town catalogs;
+the generic Bastion occupies the approach used by Riverwatch's absent-in-these-
+towns Quartermaster Depot. Strict tests reject coexistence or Bastion aliasing.
+
+`tests/town_embercourt_variant_regression.py` reuses the accepted variant probe's
+complete rule/recap, daily-limit, alpha/input, keyboard/controller and save
+controls. Shared Python launch configuration is parameterized; the accepted
+Mireclaw GDScript body remains byte-identical, covered by a hash assertion.
+Actual authored Amberweir Lockpike Trial/Sluicebrand Works Day-1 purchases have
+no injected prerequisites/resources. Five developed views and six isolated
+ledger builds are detached fixtures, not earned development. The unchanged
+earned Riverwatch Day-46 input is
+`embercourt_late_court_packaged_linux/earned_growth_save.json`, SHA256
+`a3c565cc299de08f2970be3456b07d97a8fba628c288162f12c5360e7c89d6fe`.
+All 52 focused Python tests pass. The corrected source runs
+`embercourt_variants_source_05` (1280x720) and `_06` (actual 2048x1079) each
+pass 12617 checks with unchanged source/input and no engine errors. Their
+authored Foundry and developed Amberweir/Rainwrit captures were visually
+inspected; new architecture and both edge-control groups remain visible.
+The exact packaged probes also pass; the full goal remains unfinished.
+
+The first full acceptance run was explicitly stopped on a confirmed visual
+defect before continuing its matrix: the actually purchased Foundry floated
+when Relief Quay was absent. Keep `embercourt_variants_source_01` partial saves,
+captures/logs and the interrupted `embercourt_variant_acceptance_jobs_01.json`;
+there is no completed source report for that attempt. Treasury and Foundry now
+meet the permanent foreground-left stone quay/timber landing, independent of
+later buildings. The sparse follow-up replays the already captured authored
+Foundry and isolated Treasury states without purchasing again, alongside the
+two developed views. No gameplay prerequisite was added to hide the problem.
+
+The corrected `embercourt_variants_source_03` completes all eight build controls
+with full independent state equality and no engine errors, but retains three
+input failures at the old Relief Quay body point. The new Foundry correctly owns
+that painted overlap; its warehouse roof remains visible. The Embercourt-only
+probe now independently checks foreground alpha/event ownership before clicking
+the exposed Relief roof, following existing Town probe conventions. No runtime
+input priority or earlier painting changes. The targeted two-town replay passes
+770 checks (`embercourt_variants_relief_input_01`), and all 14 affected Python
+tests pass; the accepted Mireclaw script remains byte-identical.
+
+The first interrupted export left an empty `.godot/lossless-import.lock`.
+After confirming the exact service/processes were gone, only that empty lock
+directory was removed with `rmdir`; no caches or prior evidence were deleted.
+The failed lock-acquisition log remains. Both `embercourt_variants_release_*_03`
+official exports, startup/native and generated paid flows now pass. The final
+supervisor `embercourt_variant_acceptance_final.py` verifies their current
+manifest and reuses them rather than exporting again for a test-only correction.
+
+Evidence paths are relative to
+`.artifacts/generated_full_match_quality_20260906/`.
+`embercourt_variant_acceptance_run.py` started the combined source/export/
+exact-platform boundary; `embercourt_variant_acceptance_final.py` resumes only
+the corrected/unrun checks while retaining the completed current exports.
+`embercourt_variant_package_validation.py` uses the project volume for new
+disposable test environments, preserving existing tmpfs occupants and caches.
+The tracked source command is
+`python3 -B tests/town_embercourt_variant_regression.py --label <fresh> --save <earned-Riverwatch-save> --resolution <1280x720|2048x1079>`;
+the exact package command adds `--platform <linux|windows> --binary <official-binary> --pack <official-PCK>`
+at 1280x720 and a fresh `--wine-prefix <path>` for Windows. Package wrappers keep
+the existing official startup/native/generated-Town flows. Focused unit command:
+`PYTHONPATH=tests python3 -B -m unittest test_town_scene_layers test_town_scene_layer_preparation test_town_embercourt_variants test_town_mireclaw_variants test_packaged_town_scene_layer_probe`.
+No size ceiling, native/RMG/rules/save change, unrelated cleanup or Windows-
+hardware claim. Remaining faction/town work is not completed by these six assets.
+
+The final `embercourt_variant_acceptance_jobs_04.json` is terminal and passing
+for all seven jobs, including the two reused current official exports. Both
+`embercourt_variants_packaged_linux_01` and `_windows_01` pass all 12617 checks
+with exports unchanged and every input/rule/save assertion retained. The two
+shared Town layout/dialog and skyline reports pass under
+`.artifacts/full_play_runtime_20260905/embercourt_variants_shared/`.
+`python3 -B tests/validate_repo.py` and `git diff --check` pass. The 52-test suite and final 14-test
+affected-subset run are recorded above; they are not 66 distinct tests.
+
+`embercourt_variant_verify.py` passes and writes
+`embercourt_variant_acceptance.json`: all 48 retained-case/fixture saves match
+across four runs outside only `saved_at_unix`. The eight independently created
+authored saves additionally have explicitly recorded fresh `session_id` values
+from `SessionStateStore.gd`'s clock-owned default; every other field matches.
+Within-run complete independent build/recap and save controls exclude nothing.
+The original earned Riverwatch state is preserved. Each rendered report has
+48 PNGs, all at the actual requested size: 1280x720 source/Linux and 2048x1079
+source. The sparse paid Foundry and developed Amberweir/Rainwrit source views,
+and the sparse/developed packaged-Linux Amberweir views, were inspected directly.
+
+Both PCKs are 260296760 bytes with 5302 members: exactly 12 new texture/import
+entries, 5288 earlier payloads unchanged, and only the scene manifest and UID
+cache changed from the previous Mireclaw batch. Membership is identical across
+platforms and only `project.binary` differs. No source painting, test harness
+or editor artifact ships. All 77 previous scene rows remain unchanged (83 total).
+Windows evidence is headless Wine, not native GPU/audio/controller certification.
+The next bounded batch is Veilmourn's five remaining variant mappings; together
+with Sunvault 29, Thornwake 29 and Brasshollow 27, 90 town mappings remain.
+Keep the child and full quality goal in progress, with quick composition checks
+during implementation and one combined acceptance boundary per coherent batch.
+
 ## Mireclaw town-variant batch — 2026-09-09, validated
 
 Six original built-in-generated 1536x1024 RGBA masters now complete the exact

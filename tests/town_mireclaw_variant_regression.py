@@ -154,10 +154,10 @@ def script_text():
     return script
 
 
-def script_for_resolution(resolution):
+def script_for_resolution(resolution, *, script=None):
     if resolution not in ('1280x720', '1920x1080', '2048x1079'):
         raise ValueError('unsupported capture resolution: ' + resolution)
-    script = script_text()
+    script = script_text() if script is None else script
     if resolution == '2048x1079':
         # This annotated size is not a selectable SettingsService preset.
         # Use the established custom-window probe path instead of its fallback.
@@ -167,8 +167,10 @@ def script_for_resolution(resolution):
     return script
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
+def main(*, expected_save_sha256=layers.MIRECLAW_FACTION_DEVELOPED_SAVE_SHA256,
+         save_description='exact earned Day-51 Duskfen control save',
+         script_factory=None, additional_owners=(), description=__doc__):
+    parser = argparse.ArgumentParser(description=description, allow_abbrev=False)
     parser.add_argument('--label', required=True)
     parser.add_argument('--save', type=Path, required=True)
     parser.add_argument('--resolution', choices=['1280x720','1920x1080','2048x1079'], required=True)
@@ -177,17 +179,18 @@ def main():
         parser.error('fresh lowercase label required')
     save = args.save.resolve(strict=True)
     before_hash = hashlib.sha256(save.read_bytes()).hexdigest()
-    if before_hash != layers.MIRECLAW_FACTION_DEVELOPED_SAVE_SHA256:
-        parser.error('requires exact earned Day-51 Duskfen control save')
+    if before_hash != expected_save_sha256:
+        parser.error('requires ' + save_description)
     out = OUTPUT / args.label
     out.mkdir(exist_ok=False)
     owners = ['scenes/town/TownShell.gd','scenes/town/TownStageView.gd','scenes/town/TownBuildingHotspot.gd',
               'scripts/autoload/LiveValidationHarness.gd','content/town_building_scene_art_manifest.json',
               'tests/town_scene_layer_regression.py','tests/town_mireclaw_variant_regression.py']
+    owners.extend(additional_owners)
     hashes = {p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in owners}
     with tempfile.TemporaryDirectory(prefix='town-variant-', dir=OUTPUT) as temporary:
         work = Path(temporary)
-        (work/'probe.gd').write_text(script_for_resolution(args.resolution))
+        (work/'probe.gd').write_text((script_factory or script_for_resolution)(args.resolution))
         scene = work/'probe.tscn'
         scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s/probe.gd" id="1"]\n[node name="TownVariant" type="Node"]\nscript = ExtResource("1")\n' % work.relative_to(ROOT))
         command = ['dbus-run-session','--','xvfb-run','-a','-s','-screen 0 2200x1200x24','godot4','--path',str(ROOT),'--audio-driver','Dummy','--accessibility','disabled','--resolution',args.resolution,'res://'+str(scene.relative_to(ROOT))]

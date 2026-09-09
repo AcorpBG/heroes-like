@@ -2127,6 +2127,288 @@
         "reference_inputs": [],
         "generation_date": "2026-09-08",
         "generation_output": "exec-e3f11bc9-0c63-4e16-a511-91339c56e570.png"
+      },
+      "building_signal_citadel": {
+        "asset_id": "faction_embercourt_building_signal_citadel",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_signal_citadel.png",
+        "source_sha256": "0a4e5e7dd2138698b862183ff6a3ca587a17a96bb4a5368ba57fe5c336da9eca",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          17,
+          1496,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_signal_citadel.png",
+        "trimmed_sha256": "5f61823970552eb8bc37193c2cbfd25d15cd79837d4c671ae4f0df5cad7c642e",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_signal_citadel.png",
+        "runtime_sha256": "275d69cdd3dc6f7d56694bb771d7861b0ad6f47ac29b0e3c76aac2f8a410f6ae",
+        "runtime_size": [
+          512,
+          345
+        ],
+        "normalized_rect": [
+          0.459375,
+          0.23036024305555555,
+          0.12783203125,
+          0.15297309027777778
+        ],
+        "ground_anchor": [
+          0.52625,
+          0.37777777777777777
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Compact relay station stands on the rear right-bank rise behind the Pikehall, with lens and horn clear of the civic colossus workshop.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_signal_citadel.prompt.txt",
+        "prompt_sha256": "3a3c4e694d4757ae295af0feffdd3a226bed333514948b756c3ab86e857bce2d",
+        "curation": "Original built-in text-only RGBA paintings for all six remaining Embercourt variant identities. Preserve original alpha, sunset light, cream river masonry, red tile and wet timber, with all earlier layers unchanged. Generic and faction Bastions remain distinct original paintings and sites. Actual composition, full build/input/save and platform evidence is recorded in the art-repair report; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-5e8ce9fa-2662-466d-87db-98884a6a5ea5.png"
+      },
+      "building_charter_bastion": {
+        "asset_id": "faction_embercourt_building_charter_bastion",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_charter_bastion.png",
+        "source_sha256": "9cf452b6119e9a68d60baaa27266f6a5bd8781b94d5d8fef88a665ce62f12e73",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          13,
+          1523,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_charter_bastion.png",
+        "trimmed_sha256": "6d2afdded15328a906ef769bbcd21ac943642494f05bd09b645eefbb1e885339",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_charter_bastion.png",
+        "runtime_sha256": "14ed766ffd21bf4dce46554f25eb0261267d8bafe0c867e5f4a53a2587d0eec3",
+        "runtime_size": [
+          512,
+          340
+        ],
+        "normalized_rect": [
+          0.2625,
+          0.4024450231481477,
+          0.16112467447916667,
+          0.1901475694444079
+        ],
+        "ground_anchor": [
+          0.3625,
+          0.5833333333333334
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Basin command hall joins the left lock approach in towns without Riverwatch's Quartermaster Depot; keep this headquarters separate from the faction Colossus Bastion and its Flame upgrade.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_charter_bastion.prompt.txt",
+        "prompt_sha256": "ff96a199e839cfcfa340ad1cd2b18c942cf73db47228a4a5f49be279b23fffa2",
+        "curation": "Original built-in text-only RGBA paintings for all six remaining Embercourt variant identities. Preserve original alpha, sunset light, cream river masonry, red tile and wet timber, with all earlier layers unchanged. Generic and faction Bastions remain distinct original paintings and sites. Actual composition, full build/input/save and platform evidence is recorded in the art-repair report; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-c5e69ade-ae1a-4004-b0bc-d3e033c585d9.png"
+      },
+      "building_embercourt_beaconline_charter_house": {
+        "asset_id": "faction_embercourt_building_embercourt_beaconline_charter_house",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beaconline_charter_house.png",
+        "source_sha256": "b86eb52f8f64ffb8bb8b4880168d0c330e9ec4dfb0913f5cb618822ce2cb52e9",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          40,
+          0,
+          1442,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_beaconline_charter_house.png",
+        "trimmed_sha256": "a56a87397c4331340461634d6a359030f2b0d510c7c9fff3a4c825ecc5facb25",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_beaconline_charter_house.png",
+        "runtime_sha256": "ab05fba6c251466713ee347ea4c9c15b80705cc3697c4b3976f45049eb1cf6d8",
+        "runtime_size": [
+          512,
+          374
+        ],
+        "normalized_rect": [
+          0.13113606770833333,
+          0.24444444444444444,
+          0.10553792317708334,
+          0.13703703703700001
+        ],
+        "ground_anchor": [
+          0.191875,
+          0.37222222222222223
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Veteran charter hall joins the rear left-bank terrace between the records lodge and civic workshop. Foreground granary roofs retain depth; the upper charter gable stays exposed away from the command dock.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beaconline_charter_house.prompt.txt",
+        "prompt_sha256": "2dda5feda418af41bc173d816e2e32b3b5d92331662f7c952a2f042e1eff4622",
+        "curation": "Original built-in text-only RGBA paintings for all six remaining Embercourt variant identities. Preserve original alpha, sunset light, cream river masonry, red tile and wet timber, with all earlier layers unchanged. Generic and faction Bastions remain distinct original paintings and sites. Actual composition, full build/input/save and platform evidence is recorded in the art-repair report; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-b934fc4e-61c7-4297-bacb-30a5a31682ac.png"
+      },
+      "building_embercourt_rainwrit_stormseal_treasury": {
+        "asset_id": "faction_embercourt_building_embercourt_rainwrit_stormseal_treasury",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_rainwrit_stormseal_treasury.png",
+        "source_sha256": "cd8a4aa09cbdf4c0f3b4b4ba3ea815b64541f4ca4298db0d70ba1eef4fd3da3a",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          16,
+          1520,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_rainwrit_stormseal_treasury.png",
+        "trimmed_sha256": "e15a8cf82e78ca783c9282b8bdb6da06ba57ed1bd22028df1c1c0f1e87701ecb",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_rainwrit_stormseal_treasury.png",
+        "runtime_sha256": "57653141b88046b8fdcffcae540910148a91a60947a144772f4f2e4d38b34b32",
+        "runtime_size": [
+          512,
+          340
+        ],
+        "normalized_rect": [
+          0.203125,
+          0.741782407407408,
+          0.15462239583333334,
+          0.1822916666667031
+        ],
+        "ground_anchor": [
+          0.290625,
+          0.9122222222222223
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Raised reserve court stands at the permanent foreground-left stone quay and timber landing, independent of whether Relief Quay has been built. Its adjoining pier follows the base waterfront; the rear Relief roof remains visible when developed.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_rainwrit_stormseal_treasury.prompt.txt",
+        "prompt_sha256": "bc6b35ec7a32f76c53145ba5718cf71c594c42657459cd009748a8d52a929e9f",
+        "curation": "Original built-in text-only RGBA paintings for all six remaining Embercourt variant identities. Preserve original alpha, sunset light, cream river masonry, red tile and wet timber, with all earlier layers unchanged. Generic and faction Bastions remain distinct original paintings and sites. Actual composition, full build/input/save and platform evidence is recorded in the art-repair report; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-cfa1fd83-c1c8-454e-948d-67a99b9a951f.png"
+      },
+      "building_embercourt_amberweir_sluiceguard_lock": {
+        "asset_id": "faction_embercourt_building_embercourt_amberweir_sluiceguard_lock",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_amberweir_sluiceguard_lock.png",
+        "source_sha256": "0855f88065dc10099e8bbfa3a960d64680076126b849b020c64de4e9a3a5c400",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          10,
+          1499,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_amberweir_sluiceguard_lock.png",
+        "trimmed_sha256": "d6a3793c8ee137405c6ea0f8ff8418323224c4ca58e8bf46036a9ad88db8627c",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_amberweir_sluiceguard_lock.png",
+        "runtime_sha256": "6599f0634b292767153eb7fdd9e30077d3598aabd5e29e95c905ee1e26b33cca",
+        "runtime_size": [
+          512,
+          346
+        ],
+        "normalized_rect": [
+          0.465625,
+          0.6074725115740744,
+          0.16163533528645832,
+          0.19437934027781445
+        ],
+        "ground_anchor": [
+          0.5625,
+          0.7822222222222223
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Fortified lock extends the existing central weir toward the right bank; gate gaps reveal the river and the attached guardwalk meets the working lock route.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_amberweir_sluiceguard_lock.prompt.txt",
+        "prompt_sha256": "bbb45e406ab09da00b7dc296ab41ad6bbbaf9ac0dd425e51baef3ecc339e85b4",
+        "curation": "Original built-in text-only RGBA paintings for all six remaining Embercourt variant identities. Preserve original alpha, sunset light, cream river masonry, red tile and wet timber, with all earlier layers unchanged. Generic and faction Bastions remain distinct original paintings and sites. Actual composition, full build/input/save and platform evidence is recorded in the art-repair report; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-0285c41c-a570-4492-9ce2-a57308540149.png"
+      },
+      "building_embercourt_amberweir_counterweight_foundry": {
+        "asset_id": "faction_embercourt_building_embercourt_amberweir_counterweight_foundry",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_amberweir_counterweight_foundry.png",
+        "source_sha256": "bacc30e6af0d5e26fe5338eea9c0f7d35e9a93700919f3ce199d533ef419a270",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          31,
+          1520,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_amberweir_counterweight_foundry.png",
+        "trimmed_sha256": "0a6d45e4b813808ea709a89ba162f2972b92bcb835992075b29a9db791ba8541",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_amberweir_counterweight_foundry.png",
+        "runtime_sha256": "c19ab1150f425e4fed0dcf6f98323b1fece82c64f17c5819353be40753408ccf",
+        "runtime_size": [
+          512,
+          334
+        ],
+        "normalized_rect": [
+          0.203125,
+          0.7444950810185196,
+          0.15462239583333334,
+          0.17957899305559147
+        ],
+        "ground_anchor": [
+          0.290625,
+          0.9122222222222223
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Water-driven workshop meets the permanent foreground-left stone quay and timber landing even without Relief Quay. Its waterwheel descends from that shore into the channel, while the developed Relief roof remains visible behind it. Rainwrit's same-site treasury cannot coexist in Amberweir.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_amberweir_counterweight_foundry.prompt.txt",
+        "prompt_sha256": "9a7c282fade3e181f0f2152d481145d720dba54797ba50c9fd680af2da37688e",
+        "curation": "Original built-in text-only RGBA paintings for all six remaining Embercourt variant identities. Preserve original alpha, sunset light, cream river masonry, red tile and wet timber, with all earlier layers unchanged. Generic and faction Bastions remain distinct original paintings and sites. Actual composition, full build/input/save and platform evidence is recorded in the art-repair report; detached fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-f0164211-75bd-4e2a-a8fb-f345ac2220a0.png"
       }
     },
     "faction_mireclaw": {
