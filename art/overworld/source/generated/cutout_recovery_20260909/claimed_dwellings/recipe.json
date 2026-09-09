@@ -1,0 +1,4411 @@
+{
+  "schema_id": "claimed_dwelling_cutout_recipe_v1",
+  "authority": "Owner-approved recovery from immutable original edited source RGB/RGBA; explicit inspected backing, never global white deletion. External generation paths are historical and unavailable; retained repository source paint is authoritative.",
+  "assets": {
+    "resource_site_neutral_roadward_lodge_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/roadward_lodge_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_free_company_yard",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Roadward Lodge toll beam stands open beside orderly shield and spear bundles, bright road lanterns, and a teal claim pennant."
+      },
+      "source_sha256": "53178f2c1b78544d04c2572cb3ba7a1fc266252663935e64764b41f980fe415a",
+      "source_crop": [
+        125,
+        0,
+        1412,
+        1058
+      ],
+      "source_resize": [
+        44,
+        36
+      ],
+      "canvas_origin": [
+        2,
+        12
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_roadward_lodge_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_roadward_lodge_claimed.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "registration_evidence": {
+        "alpha_mae": 0.5616319444444444,
+        "opaque_rgb_mae": 1.012206572769953
+      }
+    },
+    "resource_site_neutral_fenhound_kennels_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/fenhound_kennels_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_fenhound_kennels",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The three kennel bays stand open with clean bowls, packed bedrolls, a bright handler lantern, and teal claim ribbons."
+      },
+      "source_sha256": "d8c65127f6b36cb17639273339f80f29de703b69155d86a36efc4c9f671eed62",
+      "source_crop": [
+        124,
+        18,
+        1451,
+        932
+      ],
+      "source_resize": [
+        44,
+        30
+      ],
+      "canvas_origin": [
+        2,
+        18
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_fenhound_kennels_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_fenhound_kennels_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 917863,
+          "bounds": [
+            0,
+            0,
+            1536,
+            1024
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            308,
+            221
+          ],
+          "area": 1832,
+          "bounds": [
+            257,
+            221,
+            316,
+            278
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            205,
+            282
+          ],
+          "area": 609,
+          "bounds": [
+            202,
+            282,
+            228,
+            328
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            245,
+            195
+          ],
+          "area": 594,
+          "bounds": [
+            245,
+            195,
+            288,
+            227
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            239,
+            441
+          ],
+          "area": 492,
+          "bounds": [
+            234,
+            441,
+            246,
+            539
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1284,
+            387
+          ],
+          "area": 432,
+          "bounds": [
+            1278,
+            387,
+            1291,
+            441
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.3033854166666667,
+        "opaque_rgb_mae": 0.822434875066454
+      }
+    },
+    "resource_site_neutral_cliffhawk_roost_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/cliffhawk_roost_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_cliffhawk_roost",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Cliffhawk Roost has a repaired teal canopy, packed nest platform, glowing signal crystals, and a clean claim streamer."
+      },
+      "source_sha256": "5916bd8da0d0f827e95a44c64489370490c376367bbd2206a23657ba49158761",
+      "source_crop": [
+        112,
+        21,
+        1191,
+        1270
+      ],
+      "source_resize": [
+        38,
+        44
+      ],
+      "canvas_origin": [
+        5,
+        4
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_cliffhawk_roost_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_cliffhawk_roost_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 965490,
+          "bounds": [
+            0,
+            0,
+            1226,
+            1283
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            770,
+            114
+          ],
+          "area": 16680,
+          "bounds": [
+            736,
+            114,
+            832,
+            454
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            863,
+            237
+          ],
+          "area": 2805,
+          "bounds": [
+            859,
+            237,
+            923,
+            404
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            835,
+            240
+          ],
+          "area": 2295,
+          "bounds": [
+            794,
+            240,
+            849,
+            382
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            517,
+            869
+          ],
+          "area": 1862,
+          "bounds": [
+            511,
+            869,
+            565,
+            940
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            672,
+            492
+          ],
+          "area": 1686,
+          "bounds": [
+            594,
+            492,
+            673,
+            578
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            775,
+            1185
+          ],
+          "area": 1368,
+          "bounds": [
+            739,
+            1185,
+            801,
+            1229
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            758,
+            83
+          ],
+          "area": 966,
+          "bounds": [
+            737,
+            83,
+            764,
+            171
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            238,
+            460
+          ],
+          "area": 828,
+          "bounds": [
+            214,
+            460,
+            257,
+            502
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            708,
+            952
+          ],
+          "area": 802,
+          "bounds": [
+            689,
+            952,
+            714,
+            999
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            574,
+            567
+          ],
+          "area": 670,
+          "bounds": [
+            520,
+            567,
+            575,
+            609
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            749,
+            1150
+          ],
+          "area": 666,
+          "bounds": [
+            729,
+            1150,
+            764,
+            1182
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            726,
+            1061
+          ],
+          "area": 646,
+          "bounds": [
+            709,
+            1061,
+            737,
+            1096
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            717,
+            1011
+          ],
+          "area": 632,
+          "bounds": [
+            699,
+            1011,
+            725,
+            1047
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            700,
+            904
+          ],
+          "area": 617,
+          "bounds": [
+            680,
+            904,
+            704,
+            941
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            733,
+            1109
+          ],
+          "area": 456,
+          "bounds": [
+            718,
+            1109,
+            743,
+            1139
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            549,
+            836
+          ],
+          "area": 440,
+          "bounds": [
+            532,
+            836,
+            563,
+            862
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            690,
+            867
+          ],
+          "area": 428,
+          "bounds": [
+            673,
+            867,
+            697,
+            893
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            740,
+            638
+          ],
+          "area": 328,
+          "bounds": [
+            736,
+            638,
+            770,
+            669
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.41015625,
+        "opaque_rgb_mae": 1.1776753712237582
+      }
+    },
+    "resource_site_neutral_reedbarge_mooring_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/reedbarge_mooring_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_reedbarge_mooring",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The reed barge is tied to an active pier under a clean teal canopy with packed crates, route rope, and a bright lantern."
+      },
+      "source_sha256": "73541a8d1c660dfb65b4b203ef98ddd69cf5d3638f12d181c23c1cae282d539a",
+      "source_crop": [
+        255,
+        5,
+        1299,
+        938
+      ],
+      "source_resize": [
+        44,
+        39
+      ],
+      "canvas_origin": [
+        2,
+        9
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_reedbarge_mooring_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_reedbarge_mooring_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1053398,
+          "bounds": [
+            0,
+            0,
+            1536,
+            1024
+          ],
+          "minimum": 230,
+          "maximum_delta": 20,
+          "lower_minimum": 50,
+          "lower_start_y": 550
+        },
+        {
+          "seed": [
+            1059,
+            390
+          ],
+          "area": 4758,
+          "bounds": [
+            1006,
+            390,
+            1087,
+            516
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            899,
+            333
+          ],
+          "area": 4594,
+          "bounds": [
+            816,
+            333,
+            901,
+            460
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            649,
+            403
+          ],
+          "area": 1141,
+          "bounds": [
+            639,
+            403,
+            691,
+            446
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            518,
+            401
+          ],
+          "area": 927,
+          "bounds": [
+            507,
+            401,
+            535,
+            468
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            516,
+            392
+          ],
+          "area": 366,
+          "bounds": [
+            493,
+            392,
+            519,
+            436
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            557,
+            369
+          ],
+          "area": 262,
+          "bounds": [
+            556,
+            369,
+            565,
+            421
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            740,
+            432
+          ],
+          "area": 163,
+          "bounds": [
+            722,
+            432,
+            741,
+            452
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            480,
+            417
+          ],
+          "area": 101,
+          "bounds": [
+            475,
+            417,
+            485,
+            435
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            784,
+            595
+          ],
+          "area": 7001,
+          "bounds": [
+            641,
+            595,
+            792,
+            726
+          ],
+          "minimum": 230,
+          "maximum_delta": 20,
+          "lower_minimum": 50,
+          "lower_start_y": 550
+        },
+        {
+          "seed": [
+            861,
+            550
+          ],
+          "area": 2381,
+          "bounds": [
+            820,
+            550,
+            898,
+            611
+          ],
+          "minimum": 230,
+          "maximum_delta": 20,
+          "lower_minimum": 50,
+          "lower_start_y": 550
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.4244791666666667,
+        "opaque_rgb_mae": 1.083031035872632
+      }
+    },
+    "resource_site_neutral_glowcap_croft_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/glowcap_croft_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_glowcap_croft",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Glowcap Croft door stands open to warm light beside a tended fungus bed, packed satchels, and a teal fence ribbon."
+      },
+      "source_sha256": "6f8b8d3bfc9281fe24af20d239035ced6fec3927b1c4cb119e438ffec61bc274",
+      "source_crop": [
+        114,
+        18,
+        1250,
+        1144
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_glowcap_croft_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_glowcap_croft_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 752515,
+          "bounds": [
+            0,
+            0,
+            1354,
+            1162
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.2269965277777778,
+        "opaque_rgb_mae": 1.0981543624161074
+      }
+    },
+    "resource_site_neutral_dustjack_yard_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/dustjack_yard_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_dustjack_yard",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Dustjack Yard is tidied into spear and bow racks beside packed blankets, a supply chest, lit lantern, and teal pennant."
+      },
+      "source_sha256": "0f104bf8b0887341e6df7169863947a17dcf803314b7d43b88e24e974dedab71",
+      "source_crop": [
+        162,
+        4,
+        1232,
+        1128
+      ],
+      "source_resize": [
+        42,
+        44
+      ],
+      "canvas_origin": [
+        3,
+        4
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_dustjack_yard_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_dustjack_yard_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 942785,
+          "bounds": [
+            0,
+            0,
+            1340,
+            1174
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            453,
+            478
+          ],
+          "area": 5165,
+          "bounds": [
+            417,
+            478,
+            491,
+            711
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            341,
+            561
+          ],
+          "area": 4823,
+          "bounds": [
+            334,
+            561,
+            381,
+            717
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            478,
+            424
+          ],
+          "area": 1978,
+          "bounds": [
+            462,
+            424,
+            520,
+            476
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            513,
+            900
+          ],
+          "area": 1347,
+          "bounds": [
+            489,
+            900,
+            544,
+            945
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            429,
+            498
+          ],
+          "area": 1219,
+          "bounds": [
+            405,
+            498,
+            435,
+            597
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            585,
+            939
+          ],
+          "area": 737,
+          "bounds": [
+            571,
+            939,
+            605,
+            973
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            378,
+            379
+          ],
+          "area": 736,
+          "bounds": [
+            375,
+            379,
+            431,
+            419
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            288,
+            747
+          ],
+          "area": 706,
+          "bounds": [
+            279,
+            747,
+            318,
+            794
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            438,
+            876
+          ],
+          "area": 464,
+          "bounds": [
+            432,
+            876,
+            455,
+            909
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1167,
+            820
+          ],
+          "area": 179,
+          "bounds": [
+            1156,
+            820,
+            1172,
+            837
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1136,
+            887
+          ],
+          "area": 171,
+          "bounds": [
+            1136,
+            887,
+            1149,
+            910
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1115,
+            913
+          ],
+          "area": 159,
+          "bounds": [
+            1107,
+            913,
+            1117,
+            943
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1160,
+            861
+          ],
+          "area": 142,
+          "bounds": [
+            1151,
+            861,
+            1165,
+            878
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.3068576388888889,
+        "opaque_rgb_mae": 1.1374531835205992
+      }
+    },
+    "resource_site_neutral_cinder_kiln_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/cinder_kiln_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_cinder_kiln",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Cinder Kiln burns steadily beside ordered cinder pots, travel packs, a clean smoke plume, and a teal claim ribbon."
+      },
+      "source_sha256": "6fed1f4cc64fa13e1544fba1286367ef90ee98baf65bcf56a0754df3b55e6e2c",
+      "source_crop": [
+        173,
+        0,
+        1272,
+        1141
+      ],
+      "source_resize": [
+        42,
+        44
+      ],
+      "canvas_origin": [
+        3,
+        4
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_cinder_kiln_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_cinder_kiln_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 950712,
+          "bounds": [
+            0,
+            0,
+            1313,
+            1198
+          ],
+          "minimum": 230,
+          "maximum_delta": 20,
+          "lower_minimum": 190,
+          "lower_start_y": 900
+        },
+        {
+          "seed": [
+            1093,
+            677
+          ],
+          "area": 2184,
+          "bounds": [
+            1084,
+            677,
+            1116,
+            774
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1133,
+            693
+          ],
+          "area": 2149,
+          "bounds": [
+            1127,
+            693,
+            1157,
+            815
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1069,
+            825
+          ],
+          "area": 1813,
+          "bounds": [
+            1018,
+            825,
+            1117,
+            893
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1173,
+            707
+          ],
+          "area": 1366,
+          "bounds": [
+            1166,
+            707,
+            1188,
+            824
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1061,
+            665
+          ],
+          "area": 948,
+          "bounds": [
+            1054,
+            665,
+            1075,
+            729
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1033,
+            655
+          ],
+          "area": 774,
+          "bounds": [
+            1030,
+            655,
+            1044,
+            729
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1182,
+            893
+          ],
+          "area": 319,
+          "bounds": [
+            1166,
+            893,
+            1194,
+            915
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1105,
+            900
+          ],
+          "area": 210,
+          "bounds": [
+            1105,
+            900,
+            1144,
+            914
+          ],
+          "minimum": 230,
+          "maximum_delta": 20,
+          "lower_minimum": 190,
+          "lower_start_y": 900
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.2604166666666667,
+        "opaque_rgb_mae": 0.9044289044289044
+      }
+    },
+    "resource_site_neutral_frostbeacon_bothy_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          336,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/frostbeacon_bothy_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_frostbeacon_bothy",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Frostbeacon Bothy has a bright cyan beacon, open warm doorway, cleared steps, winter packs, and spare pikes ready."
+      },
+      "source_sha256": "4bd5bb1cc2dde5cb2cd48b03913eae7d317ad10794abc511940943584c19af5a",
+      "source_crop": [
+        172,
+        14,
+        1069,
+        1189
+      ],
+      "source_resize": [
+        34,
+        44
+      ],
+      "canvas_origin": [
+        7,
+        4
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_frostbeacon_bothy_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_frostbeacon_bothy_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 973137,
+          "bounds": [
+            0,
+            0,
+            1307,
+            1203
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            790,
+            320
+          ],
+          "area": 2966,
+          "bounds": [
+            753,
+            320,
+            794,
+            479
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            749,
+            422
+          ],
+          "area": 577,
+          "bounds": [
+            739,
+            422,
+            778,
+            467
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.3038194444444444,
+        "opaque_rgb_mae": 1.587651122625216
+      }
+    },
+    "resource_site_neutral_orchard_levy_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/orchard_levy_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_orchard_levy",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Orchard Levy storehouse stands open beneath laden boughs, ordered levy pikes, packed fruit stores, working lanterns, and teal claim pennants."
+      },
+      "source_sha256": "f71f14ca6e4b2f4121fe98e0e4f374b905188582f6f5a152a61bc6336d646f16",
+      "source_crop": [
+        29,
+        4,
+        1313,
+        1130
+      ],
+      "source_resize": [
+        44,
+        39
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_orchard_levy_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_orchard_levy_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 521962,
+          "bounds": [
+            0,
+            0,
+            1327,
+            1186
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            613,
+            391
+          ],
+          "area": 35349,
+          "bounds": [
+            290,
+            391,
+            634,
+            749
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            765,
+            220
+          ],
+          "area": 7735,
+          "bounds": [
+            615,
+            220,
+            793,
+            375
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            497,
+            333
+          ],
+          "area": 2937,
+          "bounds": [
+            409,
+            333,
+            532,
+            436
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            380,
+            469
+          ],
+          "area": 1087,
+          "bounds": [
+            370,
+            469,
+            393,
+            576
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1151,
+            376
+          ],
+          "area": 446,
+          "bounds": [
+            1150,
+            376,
+            1161,
+            435
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            420,
+            310
+          ],
+          "area": 391,
+          "bounds": [
+            406,
+            310,
+            428,
+            347
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.4778645833333333,
+        "opaque_rgb_mae": 1.0837180670975686
+      }
+    },
+    "resource_site_neutral_bramble_hedge_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/bramble_hedge_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_bramble_hedge",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Bramble Hedge passage stands trimmed and open beside ordered bows, quivers, field packs, a warm lantern, and teal claim ribbons."
+      },
+      "source_sha256": "8e80e05912176b77257d1d6d5898fa0f7e8e884af57eb10fa55211f842d7ce2f",
+      "source_crop": [
+        167,
+        2,
+        1212,
+        1178
+      ],
+      "source_resize": [
+        39,
+        44
+      ],
+      "canvas_origin": [
+        4,
+        2
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_bramble_hedge_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_bramble_hedge_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 800473,
+          "bounds": [
+            0,
+            0,
+            1322,
+            1190
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.3138020833333333,
+        "opaque_rgb_mae": 0.900990099009901
+      }
+    },
+    "resource_site_neutral_tidepool_skiffyard_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/tidepool_skiffyard_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_tidepool_skiffyard",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Tidepool skiff rests ready beside ordered oars, nets, rope, supply boxes, a bright pier lantern, and teal signal sails."
+      },
+      "source_sha256": "df63bffff760bc4bca123595133b607250fe161fb82308c0f712c498c7c18755",
+      "source_crop": [
+        0,
+        0,
+        1448,
+        1070
+      ],
+      "source_resize": [
+        44,
+        33
+      ],
+      "canvas_origin": [
+        2,
+        7
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_tidepool_skiffyard_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_tidepool_skiffyard_claimed.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "registration_evidence": {
+        "alpha_mae": 0.7278645833333334,
+        "opaque_rgb_mae": 1.2091648189209165
+      }
+    },
+    "resource_site_neutral_switchback_hostel_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/switchback_hostel_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_switchback_hostel",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Switchback Hostel glows with open access, bright windows, ordered pikes, shields, travel packs, and teal route pennants."
+      },
+      "source_sha256": "1ae2a0cec4b6d214b0000e9f3ed950d3d433e72ed5546577fb0d6b1f07fef864",
+      "source_crop": [
+        196,
+        10,
+        1019,
+        1201
+      ],
+      "source_resize": [
+        30,
+        44
+      ],
+      "canvas_origin": [
+        9,
+        2
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_switchback_hostel_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_switchback_hostel_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1020514,
+          "bounds": [
+            0,
+            0,
+            1204,
+            1306
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            275,
+            892
+          ],
+          "area": 1932,
+          "bounds": [
+            256,
+            892,
+            323,
+            947
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            418,
+            461
+          ],
+          "area": 900,
+          "bounds": [
+            418,
+            461,
+            446,
+            513
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            460,
+            474
+          ],
+          "area": 606,
+          "bounds": [
+            455,
+            474,
+            487,
+            504
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.3689236111111111,
+        "opaque_rgb_mae": 1.0156803237228125
+      }
+    },
+    "resource_site_neutral_saltpan_camp_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/saltpan_camp_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_saltpan_camp",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Saltpan Camp holds worked trays, filled sacks, ordered bucklers and throwing spears beneath a clean teal-and-ivory canopy."
+      },
+      "source_sha256": "881864fe1e148b7912247f801c0fcedde907edb44e0f52f289d00e8a7d1552c3",
+      "source_crop": [
+        282,
+        6,
+        1315,
+        946
+      ],
+      "source_resize": [
+        44,
+        40
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_saltpan_camp_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_saltpan_camp_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 896794,
+          "bounds": [
+            0,
+            0,
+            1536,
+            1024
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            640,
+            345
+          ],
+          "area": 22340,
+          "bounds": [
+            638,
+            345,
+            949,
+            531
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            565,
+            310
+          ],
+          "area": 21878,
+          "bounds": [
+            377,
+            310,
+            605,
+            517
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1072,
+            338
+          ],
+          "area": 6041,
+          "bounds": [
+            992,
+            338,
+            1073,
+            499
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            987,
+            421
+          ],
+          "area": 5730,
+          "bounds": [
+            986,
+            421,
+            1073,
+            582
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            381,
+            212
+          ],
+          "area": 3786,
+          "bounds": [
+            374,
+            212,
+            404,
+            439
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1137,
+            255
+          ],
+          "area": 1757,
+          "bounds": [
+            1099,
+            255,
+            1139,
+            339
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            567,
+            105
+          ],
+          "area": 1715,
+          "bounds": [
+            445,
+            105,
+            569,
+            186
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1173,
+            388
+          ],
+          "area": 1611,
+          "bounds": [
+            1172,
+            388,
+            1187,
+            544
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1127,
+            571
+          ],
+          "area": 686,
+          "bounds": [
+            1115,
+            571,
+            1137,
+            634
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1075,
+            356
+          ],
+          "area": 356,
+          "bounds": [
+            1055,
+            356,
+            1077,
+            469
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.9405381944444444,
+        "opaque_rgb_mae": 0.9936647173489278
+      }
+    },
+    "resource_site_neutral_crystal_sump_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/crystal_sump_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_crystal_sump",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Crystal Sump shines around a secured lifting bucket, ordered stone shields and dart cases, and a teal claim ribbon."
+      },
+      "source_sha256": "f5d5bf153560ba0a65730417e8dcad10b8ee58add441e666b441cde4788733e7",
+      "source_crop": [
+        168,
+        15,
+        1082,
+        1229
+      ],
+      "source_resize": [
+        33,
+        44
+      ],
+      "canvas_origin": [
+        7,
+        2
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_crystal_sump_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_crystal_sump_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 898184,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.4001736111111111,
+        "opaque_rgb_mae": 1.1386467413864674
+      }
+    },
+    "resource_site_neutral_icehook_trapper_lodge_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/icehook_trapper_lodge_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_icehook_trapper_lodge",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Icehook Lodge door stands warm and open beside cleared steps, ordered hooks, traps, pikes, winter packs, and teal claim cloth."
+      },
+      "source_sha256": "dec2287bb82e80da7040c454fe7a5c5aa0662af0ffd630e3fa3e3a6288e79830",
+      "source_crop": [
+        94,
+        0,
+        1322,
+        1074
+      ],
+      "source_resize": [
+        44,
+        38
+      ],
+      "canvas_origin": [
+        2,
+        5
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_icehook_trapper_lodge_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_icehook_trapper_lodge_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 749556,
+          "bounds": [
+            0,
+            0,
+            1397,
+            1126
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.625,
+        "opaque_rgb_mae": 1.0303030303030303
+      }
+    },
+    "resource_site_neutral_obsidian_scar_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          336,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/obsidian_scar_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_obsidian_scar",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Obsidian Scar burns steadily behind an open chain, ordered black shields, ash darts, travel packs, and teal claim pennants."
+      },
+      "source_sha256": "b8fee6c3b96747c7381c59514a68ec59cd0409e2c33767535fa119885edd7498",
+      "source_crop": [
+        19,
+        10,
+        1312,
+        1177
+      ],
+      "source_resize": [
+        44,
+        40
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_obsidian_scar_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_obsidian_scar_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 784771,
+          "bounds": [
+            0,
+            0,
+            1312,
+            1199
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            865,
+            299
+          ],
+          "area": 20182,
+          "bounds": [
+            860,
+            299,
+            1026,
+            727
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            826,
+            850
+          ],
+          "area": 9363,
+          "bounds": [
+            644,
+            850,
+            840,
+            982
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            917,
+            757
+          ],
+          "area": 3619,
+          "bounds": [
+            827,
+            757,
+            959,
+            848
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            740,
+            284
+          ],
+          "area": 2792,
+          "bounds": [
+            687,
+            284,
+            745,
+            407
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            420,
+            661
+          ],
+          "area": 2283,
+          "bounds": [
+            378,
+            661,
+            452,
+            725
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            443,
+            507
+          ],
+          "area": 1900,
+          "bounds": [
+            414,
+            507,
+            449,
+            612
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            473,
+            460
+          ],
+          "area": 1209,
+          "bounds": [
+            462,
+            460,
+            476,
+            569
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            774,
+            940
+          ],
+          "area": 389,
+          "bounds": [
+            732,
+            940,
+            783,
+            967
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.5512152777777778,
+        "opaque_rgb_mae": 0.8409785932721713
+      }
+    },
+    "resource_site_neutral_harbor_pilot_house_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          384,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/harbor_pilot_house_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_harbor_pilot_house",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Harbor Pilot House and mast glow beside ordered polearms, oars, flare crates, coiled rope, and teal signal cloth."
+      },
+      "source_sha256": "02a85cac01aeadcfaba87d809f5c392e56ae3ea327f65144fefa2336bc19bf0a",
+      "source_crop": [
+        135,
+        13,
+        931,
+        1485
+      ],
+      "source_resize": [
+        24,
+        44
+      ],
+      "canvas_origin": [
+        12,
+        2
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_harbor_pilot_house_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_harbor_pilot_house_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 939049,
+          "bounds": [
+            0,
+            0,
+            1024,
+            1536
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            237,
+            208
+          ],
+          "area": 24997,
+          "bounds": [
+            231,
+            208,
+            445,
+            494
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            579,
+            285
+          ],
+          "area": 7807,
+          "bounds": [
+            555,
+            285,
+            707,
+            497
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            555,
+            274
+          ],
+          "area": 6071,
+          "bounds": [
+            513,
+            274,
+            572,
+            418
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            838,
+            937
+          ],
+          "area": 4962,
+          "bounds": [
+            768,
+            937,
+            851,
+            1023
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            758,
+            344
+          ],
+          "area": 3435,
+          "bounds": [
+            657,
+            344,
+            759,
+            516
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            749,
+            328
+          ],
+          "area": 1620,
+          "bounds": [
+            708,
+            328,
+            755,
+            428
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            311,
+            1233
+          ],
+          "area": 1180,
+          "bounds": [
+            285,
+            1233,
+            314,
+            1327
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            623,
+            1283
+          ],
+          "area": 946,
+          "bounds": [
+            599,
+            1283,
+            638,
+            1335
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            253,
+            860
+          ],
+          "area": 790,
+          "bounds": [
+            253,
+            860,
+            293,
+            915
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            707,
+            1264
+          ],
+          "area": 582,
+          "bounds": [
+            703,
+            1264,
+            720,
+            1321
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            443,
+            434
+          ],
+          "area": 468,
+          "bounds": [
+            422,
+            434,
+            445,
+            464
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.4275173611111111,
+        "opaque_rgb_mae": 1.011137629276054
+      }
+    },
+    "resource_site_neutral_kite_signal_eyrie_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          432,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/kite_signal_eyrie_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_kite_signal_eyrie",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Kite Signal Eyrie holds taut lines, a bright signal fire, ordered ridge bows, route packs, and teal claim pennants."
+      },
+      "source_sha256": "35c4ba1dc2132efff8e27ff412f7c77f9c84c5e3ffe1c0c6a8cf5c5ffe8e12af",
+      "source_crop": [
+        131,
+        3,
+        1201,
+        1275
+      ],
+      "source_resize": [
+        37,
+        44
+      ],
+      "canvas_origin": [
+        5,
+        2
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_kite_signal_eyrie_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_kite_signal_eyrie_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1001861,
+          "bounds": [
+            0,
+            0,
+            1220,
+            1289
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            625,
+            546
+          ],
+          "area": 7388,
+          "bounds": [
+            609,
+            546,
+            747,
+            759
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            549,
+            554
+          ],
+          "area": 7350,
+          "bounds": [
+            447,
+            554,
+            556,
+            735
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            987,
+            631
+          ],
+          "area": 1448,
+          "bounds": [
+            961,
+            631,
+            994,
+            723
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            324,
+            459
+          ],
+          "area": 798,
+          "bounds": [
+            314,
+            459,
+            334,
+            539
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.5564236111111112,
+        "opaque_rgb_mae": 1.1656881930854535
+      }
+    },
+    "resource_site_neutral_lantern_warren_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          480,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/lantern_warren_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_lantern_warren",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Lantern Warren opens under bright lamps beside ordered packs, needle cases, small shields, and teal claim ribbons."
+      },
+      "source_sha256": "bbab74e011ef7293118dc278d9f744d2b81ce8ca319fdd067b7a91e08cbc1c76",
+      "source_crop": [
+        194,
+        9,
+        1365,
+        1014
+      ],
+      "source_resize": [
+        44,
+        38
+      ],
+      "canvas_origin": [
+        2,
+        5
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_lantern_warren_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_lantern_warren_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 826199,
+          "bounds": [
+            0,
+            0,
+            1536,
+            1024
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.24869791666666666,
+        "opaque_rgb_mae": 1.0633499170812604
+      }
+    },
+    "resource_site_neutral_bogbell_croft_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          528,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/bogbell_croft_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_bogbell_croft",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Bogbell Croft has cleared steps, a lit bell and lamps, ordered mauls, peat jars, packs, and teal claim ribbons."
+      },
+      "source_sha256": "067a8676257f9d7ae0fda779ec7391820d5ee79993a4ac9702ec712ae7a8ed6f",
+      "source_crop": [
+        157,
+        9,
+        1087,
+        1242
+      ],
+      "source_resize": [
+        33,
+        44
+      ],
+      "canvas_origin": [
+        7,
+        2
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_bogbell_croft_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_bogbell_croft_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 897714,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            693,
+            403
+          ],
+          "area": 4269,
+          "bounds": [
+            693,
+            403,
+            772,
+            545
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            531,
+            431
+          ],
+          "area": 3128,
+          "bounds": [
+            499,
+            431,
+            537,
+            552
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            357,
+            806
+          ],
+          "area": 1458,
+          "bounds": [
+            352,
+            806,
+            382,
+            884
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            335,
+            460
+          ],
+          "area": 719,
+          "bounds": [
+            317,
+            460,
+            344,
+            531
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            902,
+            901
+          ],
+          "area": 683,
+          "bounds": [
+            895,
+            901,
+            912,
+            972
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            394,
+            614
+          ],
+          "area": 583,
+          "bounds": [
+            359,
+            614,
+            395,
+            671
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            879,
+            486
+          ],
+          "area": 561,
+          "bounds": [
+            866,
+            486,
+            881,
+            547
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            868,
+            436
+          ],
+          "area": 506,
+          "bounds": [
+            831,
+            436,
+            872,
+            504
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            977,
+            430
+          ],
+          "area": 404,
+          "bounds": [
+            971,
+            430,
+            990,
+            462
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            558,
+            118
+          ],
+          "area": 186,
+          "bounds": [
+            548,
+            118,
+            561,
+            145
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            628,
+            122
+          ],
+          "area": 182,
+          "bounds": [
+            627,
+            122,
+            640,
+            145
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            431,
+            600
+          ],
+          "area": 144,
+          "bounds": [
+            422,
+            600,
+            434,
+            618
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.5368923611111112,
+        "opaque_rgb_mae": 0.880129091747349
+      }
+    },
+    "resource_site_neutral_milestone_arsenal_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          576,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/milestone_arsenal_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_milestone_arsenal",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Milestone Arsenal stands open around ready bucklers, pikes, cartbows, bolt crates, field packs, and a teal claim pennant."
+      },
+      "source_sha256": "756cdaea75108bfa334db623be945e2ab5c6c6a214cc15d3793e0374b0d55ace",
+      "source_crop": [
+        64,
+        1,
+        1243,
+        1162
+      ],
+      "source_resize": [
+        44,
+        43
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_milestone_arsenal_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_milestone_arsenal_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 796930,
+          "bounds": [
+            0,
+            0,
+            1312,
+            1199
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            986,
+            520
+          ],
+          "area": 1140,
+          "bounds": [
+            933,
+            520,
+            1024,
+            574
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            902,
+            496
+          ],
+          "area": 422,
+          "bounds": [
+            901,
+            496,
+            928,
+            535
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1101,
+            552
+          ],
+          "area": 395,
+          "bounds": [
+            1101,
+            552,
+            1121,
+            585
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            332,
+            487
+          ],
+          "area": 375,
+          "bounds": [
+            329,
+            487,
+            341,
+            543
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.5043402777777778,
+        "opaque_rgb_mae": 1.0073606729758149
+      }
+    },
+    "resource_site_neutral_frostwharf_house_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          624,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/frostwharf_house_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_frostwharf_house",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Frostwharf House glows above a cleared landing with ordered cutters, lanternskate cases, rope, winter packs, and teal claim cloth."
+      },
+      "source_sha256": "81639571ff2110bb90b253724187792df467a9be3d7680f446c0fd80c4653d47",
+      "source_crop": [
+        132,
+        19,
+        1148,
+        1174
+      ],
+      "source_resize": [
+        39,
+        44
+      ],
+      "canvas_origin": [
+        4,
+        2
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_frostwharf_house_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_frostwharf_house_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 946058,
+          "bounds": [
+            0,
+            0,
+            1312,
+            1199
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            389,
+            545
+          ],
+          "area": 1160,
+          "bounds": [
+            344,
+            545,
+            394,
+            583
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            173,
+            630
+          ],
+          "area": 401,
+          "bounds": [
+            161,
+            630,
+            176,
+            686
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            318,
+            557
+          ],
+          "area": 276,
+          "bounds": [
+            314,
+            557,
+            335,
+            579
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            153,
+            628
+          ],
+          "area": 115,
+          "bounds": [
+            150,
+            628,
+            162,
+            641
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.3723958333333333,
+        "opaque_rgb_mae": 0.8339307048984468
+      }
+    },
+    "resource_site_neutral_charcoal_burners_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          672,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/charcoal_burners_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_charcoal_burners",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Charcoal Burners clamp vents steady smoke beside ordered sacks, mauls, ember packs, tools, and a teal claim pennant."
+      },
+      "source_sha256": "ad7c10a253560373fdc1c42589b9231f0e41e80ec7ff85101827a47173db5271",
+      "source_crop": [
+        78,
+        0,
+        1449,
+        972
+      ],
+      "source_resize": [
+        44,
+        31
+      ],
+      "canvas_origin": [
+        2,
+        8
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_charcoal_burners_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_charcoal_burners_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 786461,
+          "bounds": [
+            0,
+            0,
+            1536,
+            1024
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1110,
+            95
+          ],
+          "area": 3734,
+          "bounds": [
+            1096,
+            95,
+            1121,
+            272
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1295,
+            518
+          ],
+          "area": 1688,
+          "bounds": [
+            1295,
+            518,
+            1373,
+            612
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1103,
+            350
+          ],
+          "area": 1246,
+          "bounds": [
+            1102,
+            350,
+            1143,
+            422
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1405,
+            573
+          ],
+          "area": 1170,
+          "bounds": [
+            1404,
+            573,
+            1421,
+            682
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1162,
+            466
+          ],
+          "area": 417,
+          "bounds": [
+            1161,
+            466,
+            1214,
+            497
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1214,
+            486
+          ],
+          "area": 383,
+          "bounds": [
+            1214,
+            486,
+            1289,
+            518
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1193,
+            83
+          ],
+          "area": 193,
+          "bounds": [
+            1134,
+            83,
+            1199,
+            93
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            519,
+            894
+          ],
+          "area": 152,
+          "bounds": [
+            519,
+            894,
+            546,
+            911
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1355,
+            582
+          ],
+          "area": 122,
+          "bounds": [
+            1354,
+            582,
+            1363,
+            619
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1329,
+            710
+          ],
+          "area": 101,
+          "bounds": [
+            1328,
+            710,
+            1337,
+            732
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.2877604166666667,
+        "opaque_rgb_mae": 0.7948363301060396
+      }
+    },
+    "resource_site_neutral_basalt_gatehouse_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          720,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          768,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/basalt_gatehouse_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_basalt_gatehouse",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Basalt Gatehouse stands open beneath bright cyan markers, ready pikes, bolt cases, shields, packs, and teal claim banners."
+      },
+      "source_sha256": "d89e8076a87aa89ed079fc9041128a1c191f26593f022d64bcdfaecc9ead2302",
+      "source_crop": [
+        61,
+        3,
+        1429,
+        1009
+      ],
+      "source_resize": [
+        44,
+        32
+      ],
+      "canvas_origin": [
+        2,
+        8
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_basalt_gatehouse_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_basalt_gatehouse_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 767899,
+          "bounds": [
+            0,
+            0,
+            1536,
+            1024
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.4197048611111111,
+        "opaque_rgb_mae": 0.9100817438692098
+      }
+    },
+    "resource_site_neutral_salt_skirmisher_pier_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/final_neutral_dwelling_claimed_wave1/salt_skirmisher_pier_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_salt_skirmisher_pier",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Salt Skirmisher Pier stands open above the tide beside ordered bucklers, throwing spears, packed salt sacks, bright lamps, and a teal claim pennant."
+      },
+      "source_sha256": "1a89c28122b1ec8b3d7b2b1f3529f0ab774dd7c7e8a8085c11de765550617efa",
+      "source_crop": [
+        0,
+        61,
+        1224,
+        1254
+      ],
+      "source_resize": [
+        44,
+        43
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_salt_skirmisher_pier_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_salt_skirmisher_pier_claimed.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "registration_evidence": {
+        "alpha_mae": 0.7105034722222222,
+        "opaque_rgb_mae": 0.9468926553672317
+      }
+    },
+    "resource_site_neutral_ember_cart_yard_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/final_neutral_dwelling_claimed_wave1/ember_cart_yard_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_ember_cart_yard",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Ember Cart Yard holds two loaded red carts beside ordered pikes, shields, coal sacks, route lamps, and teal-and-ivory muster cloth."
+      },
+      "source_sha256": "bf9c0e8b8e9c1ef2ad8b4cca477a94bdf217bc29af35fea067c04d18fdc65307",
+      "source_crop": [
+        0,
+        45,
+        1216,
+        1254
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_ember_cart_yard_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_ember_cart_yard_claimed.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "registration_evidence": {
+        "alpha_mae": 0.5225694444444444,
+        "opaque_rgb_mae": 0.9076137418755804
+      }
+    },
+    "resource_site_neutral_prism_outrider_post_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/final_neutral_dwelling_claimed_wave1/prism_outrider_post_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_prism_outrider_post",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Prism Outrider Post shines beside ready tack, ordered travel packs, a clear tent entrance, signal lamps, and teal claim ribbons."
+      },
+      "source_sha256": "5f24b7219f81c54765c8414220319b4717a094267fc326845854de364c0932c8",
+      "source_crop": [
+        0,
+        31,
+        1226,
+        1254
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_prism_outrider_post_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_prism_outrider_post_claimed.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "registration_evidence": {
+        "alpha_mae": 0.6002604166666666,
+        "opaque_rgb_mae": 0.9551020408163265
+      }
+    },
+    "resource_site_neutral_storm_rook_eyrie_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/final_neutral_dwelling_claimed_wave1/storm_rook_eyrie_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_storm_rook_eyrie",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Storm Rook Eyrie rises over repaired platforms, a bright blue beacon, ordered climbing gear, lit stairs, and teal signal pennants."
+      },
+      "source_sha256": "b42a0ccdae90a610b3a3c487d38e600704d4c20f830e69eed0c59bf29562923e",
+      "source_crop": [
+        0,
+        7,
+        1240,
+        1254
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_storm_rook_eyrie_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_storm_rook_eyrie_claimed.png",
+      "source_mode": "genuine_rgba",
+      "backing_components": [],
+      "registration_evidence": {
+        "alpha_mae": 0.6905381944444444,
+        "opaque_rgb_mae": 0.9359359359359359
+      }
+    },
+    "resource_site_neutral_mirror_bound_barracks_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/final_neutral_dwelling_claimed_wave1/mirror_bound_barracks_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_mirror_bound_barracks",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Mirror-Bound Barracks gate stands open beneath lit windows beside ordered crystal arms, ready shields, courtyard lamps, and teal claim flags."
+      },
+      "source_sha256": "2487c3a7b4c66617c10370ba3b431e320b8fee9eecbba3dc3cc86222166ac66d",
+      "source_crop": [
+        149,
+        198,
+        1135,
+        1011
+      ],
+      "source_resize": [
+        44,
+        36
+      ],
+      "canvas_origin": [
+        2,
+        6
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_mirror_bound_barracks_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_mirror_bound_barracks_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1025069,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.2126736111111111,
+        "opaque_rgb_mae": 1.162091503267974
+      }
+    },
+    "resource_site_neutral_furnace_oath_yard_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/final_neutral_dwelling_claimed_wave1/furnace_oath_yard_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_furnace_oath_yard",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Furnace Oath Yard burns steadily among ordered hammers, pikes, ready ingots, field packs, bright lamps, and teal-and-ivory banners."
+      },
+      "source_sha256": "6ebbfba24ad7a4e4869438df443b140d42d267ebf5e9bb79823db823c2569572",
+      "source_crop": [
+        170,
+        130,
+        1141,
+        1033
+      ],
+      "source_resize": [
+        44,
+        41
+      ],
+      "canvas_origin": [
+        2,
+        3
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_furnace_oath_yard_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_furnace_oath_yard_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 999142,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            611,
+            197
+          ],
+          "area": 35565,
+          "bounds": [
+            388,
+            197,
+            614,
+            557
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            632,
+            199
+          ],
+          "area": 20802,
+          "bounds": [
+            631,
+            199,
+            767,
+            471
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            954,
+            363
+          ],
+          "area": 5667,
+          "bounds": [
+            906,
+            363,
+            974,
+            577
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            303,
+            439
+          ],
+          "area": 5077,
+          "bounds": [
+            228,
+            439,
+            305,
+            575
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            752,
+            380
+          ],
+          "area": 1137,
+          "bounds": [
+            727,
+            380,
+            753,
+            464
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            812,
+            380
+          ],
+          "area": 1072,
+          "bounds": [
+            811,
+            380,
+            838,
+            470
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            1004,
+            549
+          ],
+          "area": 1003,
+          "bounds": [
+            1002,
+            549,
+            1030,
+            596
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            301,
+            569
+          ],
+          "area": 827,
+          "bounds": [
+            280,
+            569,
+            305,
+            611
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            364,
+            457
+          ],
+          "area": 705,
+          "bounds": [
+            350,
+            457,
+            369,
+            539
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            254,
+            588
+          ],
+          "area": 550,
+          "bounds": [
+            239,
+            588,
+            260,
+            622
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            945,
+            290
+          ],
+          "area": 400,
+          "bounds": [
+            911,
+            290,
+            948,
+            309
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            606,
+            406
+          ],
+          "area": 368,
+          "bounds": [
+            570,
+            406,
+            611,
+            445
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            608,
+            366
+          ],
+          "area": 340,
+          "bounds": [
+            596,
+            366,
+            611,
+            404
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            331,
+            388
+          ],
+          "area": 340,
+          "bounds": [
+            315,
+            388,
+            335,
+            424
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            468,
+            907
+          ],
+          "area": 326,
+          "bounds": [
+            450,
+            907,
+            476,
+            945
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            673,
+            493
+          ],
+          "area": 305,
+          "bounds": [
+            663,
+            493,
+            677,
+            521
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.2899305555555556,
+        "opaque_rgb_mae": 1.152891310929458
+      }
+    },
+    "resource_site_neutral_drowned_crown_hall_claimed": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/final_neutral_dwelling_claimed_wave1/drowned_crown_hall_claimed_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+        "assigned_resource_site_id": "site_drowned_crown_hall",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Drowned Crown Hall glows over clear flooded steps beside ordered tide arms, supply crates, warm crown doors, and teal claim banners."
+      },
+      "source_sha256": "22da3aeb61671410614fe1e7d75574bd9357394824f42170841d511e59cc89fe",
+      "source_crop": [
+        201,
+        149,
+        1083,
+        1044
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "resampling": "BILINEAR",
+      "pixel_scale": 4,
+      "canvas_size": [
+        192,
+        192
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/resource_site_neutral_drowned_crown_hall_claimed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/claimed_dwellings/sources/resource_site_neutral_drowned_crown_hall_claimed.png",
+      "source_mode": "retained_rgb",
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1052088,
+          "bounds": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            661,
+            292
+          ],
+          "area": 666,
+          "bounds": [
+            661,
+            292,
+            675,
+            356
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            641,
+            286
+          ],
+          "area": 449,
+          "bounds": [
+            641,
+            286,
+            655,
+            322
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            466,
+            327
+          ],
+          "area": 350,
+          "bounds": [
+            460,
+            327,
+            473,
+            366
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            652,
+            259
+          ],
+          "area": 250,
+          "bounds": [
+            642,
+            259,
+            655,
+            284
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            661,
+            264
+          ],
+          "area": 224,
+          "bounds": [
+            661,
+            264,
+            675,
+            292
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            589,
+            292
+          ],
+          "area": 201,
+          "bounds": [
+            575,
+            292,
+            592,
+            309
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        },
+        {
+          "seed": [
+            586,
+            274
+          ],
+          "area": 152,
+          "bounds": [
+            576,
+            274,
+            591,
+            294
+          ],
+          "minimum": 230,
+          "maximum_delta": 20
+        }
+      ],
+      "registration_evidence": {
+        "alpha_mae": 0.3203125,
+        "opaque_rgb_mae": 0.9609868043602984
+      }
+    }
+  },
+  "atlases": {
+    "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png": {
+      "before_sha256": "291d52bfb6f26d1db8a8133f38d9deda2ff24ce21c0f65d523017eb63dc9ea2f",
+      "before_size": [
+        384,
+        48
+      ]
+    },
+    "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png": {
+      "before_sha256": "a9876d12fffeb2f6de5efcac84e679a7678e4a4bf0802ec949770870b8375393",
+      "before_size": [
+        768,
+        48
+      ]
+    },
+    "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png": {
+      "before_sha256": "300708e46ea7d0136f354f7206afb1a345383a7829d10b9a09f4d42cfa50fb9b",
+      "before_size": [
+        336,
+        48
+      ]
+    }
+  },
+  "state_mappings": {
+    "site_free_company_yard": {
+      "asset_id": "resource_site_neutral_roadward_lodge_claimed",
+      "unclaimed_asset_id": "mapobj_roadward_lodge",
+      "fit": "Exact original toll-gate and pikehook lodge for the controlled Roadward Lodge neutral dwelling identity."
+    },
+    "site_fenhound_kennels": {
+      "asset_id": "resource_site_neutral_fenhound_kennels_claimed",
+      "unclaimed_asset_id": "mapobj_fenhound_kennels",
+      "fit": "Exact original antler-post moss-roof kennel before control, paired with the established open three-bay controlled state."
+    },
+    "site_cliffhawk_roost": {
+      "asset_id": "resource_site_neutral_cliffhawk_roost_claimed",
+      "unclaimed_asset_id": "mapobj_cliffhawk_roost",
+      "fit": "Exact original twin-spire aviary for the controlled Cliffhawk Roost neutral dwelling identity."
+    },
+    "site_reedbarge_mooring": {
+      "asset_id": "resource_site_neutral_reedbarge_mooring_claimed",
+      "unclaimed_asset_id": "mapobj_reedbarge_mooring",
+      "fit": "Exact original reed-barge, pier, and lantern landmark for the persistent Reedbarge Mooring neutral dwelling identity."
+    },
+    "site_glowcap_croft": {
+      "asset_id": "resource_site_neutral_glowcap_croft_claimed",
+      "unclaimed_asset_id": "mapobj_glowcap_croft",
+      "fit": "Exact original mushroom-cap turf croft landmark for the persistent Glowcap Croft neutral dwelling identity."
+    },
+    "site_dustjack_yard": {
+      "asset_id": "resource_site_neutral_dustjack_yard_claimed",
+      "unclaimed_asset_id": "mapobj_dustjack_yard",
+      "fit": "Exact original patched-canvas scrap yard landmark for the persistent Dustjack Yard neutral dwelling identity."
+    },
+    "site_cinder_kiln": {
+      "asset_id": "resource_site_neutral_cinder_kiln_claimed",
+      "unclaimed_asset_id": "mapobj_cinder_kiln",
+      "fit": "Exact original domed ember kiln landmark for the persistent Cinder Kiln neutral dwelling identity."
+    },
+    "site_frostbeacon_bothy": {
+      "asset_id": "resource_site_neutral_frostbeacon_bothy_claimed",
+      "unclaimed_asset_id": "mapobj_frostbeacon_bothy",
+      "fit": "Exact original steep-roof crystal beacon shelter for the persistent Frostbeacon Bothy neutral dwelling identity."
+    },
+    "site_orchard_levy": {
+      "asset_id": "resource_site_neutral_orchard_levy_claimed",
+      "unclaimed_asset_id": "mapobj_orchard_levy",
+      "fit": "Exact original fruit-bough levy yard for the controlled Orchard Levy Grounds neutral dwelling identity."
+    },
+    "site_bramble_hedge": {
+      "asset_id": "resource_site_neutral_bramble_hedge_claimed",
+      "unclaimed_asset_id": "mapobj_bramble_hedge",
+      "fit": "Exact original thorn-arch watch-croft landmark for the persistent Bramble Hedge neutral dwelling identity."
+    },
+    "site_tidepool_skiffyard": {
+      "asset_id": "resource_site_neutral_tidepool_skiffyard_claimed",
+      "unclaimed_asset_id": "mapobj_tidepool_skiffyard",
+      "fit": "Exact original drydock skiff and lantern-net yard for the persistent Tidepool Skiffyard neutral dwelling identity."
+    },
+    "site_switchback_hostel": {
+      "asset_id": "resource_site_neutral_switchback_hostel_claimed",
+      "unclaimed_asset_id": "mapobj_switchback_hostel",
+      "fit": "Exact original stepped mountain hostel and zigzag stair for the persistent Switchback Hostel neutral dwelling identity."
+    },
+    "site_saltpan_camp": {
+      "asset_id": "resource_site_neutral_saltpan_camp_claimed",
+      "unclaimed_asset_id": "mapobj_saltpan_camp",
+      "fit": "Exact original striped awning and evaporation trays for the persistent Saltpan Camp neutral dwelling identity."
+    },
+    "site_crystal_sump": {
+      "asset_id": "resource_site_neutral_crystal_sump_claimed",
+      "unclaimed_asset_id": "mapobj_crystal_sump",
+      "fit": "Exact original three-spire crystal well station for the persistent Crystal Sump neutral dwelling identity."
+    },
+    "site_icehook_trapper_lodge": {
+      "asset_id": "resource_site_neutral_icehook_trapper_lodge_claimed",
+      "unclaimed_asset_id": "mapobj_icehook_trapper_lodge",
+      "fit": "Exact original crescent-hook snow lodge for the persistent Icehook Trapper Lodge neutral dwelling identity."
+    },
+    "site_obsidian_scar": {
+      "asset_id": "resource_site_neutral_obsidian_scar_claimed",
+      "unclaimed_asset_id": "mapobj_obsidian_scar",
+      "fit": "Exact original triple-obsidian forge arch for the persistent Obsidian Scar neutral dwelling identity."
+    },
+    "site_harbor_pilot_house": {
+      "asset_id": "resource_site_neutral_harbor_pilot_house_claimed",
+      "unclaimed_asset_id": "mapobj_harbor_pilot_house",
+      "fit": "Exact original narrow signal tower house for the controlled Harbor Pilot House neutral dwelling identity."
+    },
+    "site_kite_signal_eyrie": {
+      "asset_id": "resource_site_neutral_kite_signal_eyrie_claimed",
+      "unclaimed_asset_id": "mapobj_kite_signal_eyrie",
+      "fit": "Exact original diamond-kite signal station for the controlled Kite Signal Eyrie neutral dwelling identity."
+    },
+    "site_lantern_warren": {
+      "asset_id": "resource_site_neutral_lantern_warren_claimed",
+      "unclaimed_asset_id": "mapobj_lantern_warren",
+      "fit": "Exact original three-mouth lantern burrow for the controlled Lantern Warren neutral dwelling identity."
+    },
+    "site_bogbell_croft": {
+      "asset_id": "resource_site_neutral_bogbell_croft_claimed",
+      "unclaimed_asset_id": "mapobj_bogbell_croft",
+      "fit": "Exact original giant-bell stilt croft for the controlled Bogbell Croft neutral dwelling identity."
+    },
+    "site_milestone_arsenal": {
+      "asset_id": "resource_site_neutral_milestone_arsenal_claimed",
+      "unclaimed_asset_id": "mapobj_milestone_arsenal",
+      "fit": "Exact original obelisk arsenal and buckler yard for the controlled Milestone Arsenal neutral dwelling identity."
+    },
+    "site_frostwharf_house": {
+      "asset_id": "resource_site_neutral_frostwharf_house_claimed",
+      "unclaimed_asset_id": "mapobj_frostwharf_house",
+      "fit": "Exact original crescent-cutter pile house for the controlled Frostwharf House neutral dwelling identity."
+    },
+    "site_charcoal_burners": {
+      "asset_id": "resource_site_neutral_charcoal_burners_claimed",
+      "unclaimed_asset_id": "mapobj_charcoal_burners",
+      "fit": "Exact original three-vent charcoal clamp for the controlled Charcoal Burners Camp neutral dwelling identity."
+    },
+    "site_basalt_gatehouse": {
+      "asset_id": "resource_site_neutral_basalt_gatehouse_claimed",
+      "unclaimed_asset_id": "mapobj_basalt_gatehouse",
+      "fit": "Exact original twin-tower basalt gate for the controlled Basalt Gatehouse neutral dwelling identity."
+    },
+    "site_salt_skirmisher_pier": {
+      "asset_id": "resource_site_neutral_salt_skirmisher_pier_claimed",
+      "unclaimed_asset_id": "mapobj_salt_skirmisher_pier",
+      "fit": "Exact original stilt pier and buckler racks for the controlled Salt Skirmisher Pier neutral dwelling identity."
+    },
+    "site_ember_cart_yard": {
+      "asset_id": "resource_site_neutral_ember_cart_yard_claimed",
+      "unclaimed_asset_id": "mapobj_ember_cart_yard",
+      "fit": "Exact original paired ember carts and coal yard for the controlled Ember Cart Yard neutral dwelling identity."
+    },
+    "site_prism_outrider_post": {
+      "asset_id": "resource_site_neutral_prism_outrider_post_claimed",
+      "unclaimed_asset_id": "mapobj_prism_outrider_post",
+      "fit": "Exact original prism obelisk and tack post for the controlled Prism Outrider Post neutral dwelling identity."
+    },
+    "site_storm_rook_eyrie": {
+      "asset_id": "resource_site_neutral_storm_rook_eyrie_claimed",
+      "unclaimed_asset_id": "mapobj_storm_rook_eyrie",
+      "fit": "Exact original storm crag and rook platforms for the controlled Storm Rook Eyrie neutral dwelling identity."
+    },
+    "site_mirror_bound_barracks": {
+      "asset_id": "resource_site_neutral_mirror_bound_barracks_claimed",
+      "unclaimed_asset_id": "mapobj_mirror_bound_barracks",
+      "fit": "Exact original pale mirror fortress and shield racks for the controlled Mirror-Bound Barracks neutral dwelling identity."
+    },
+    "site_furnace_oath_yard": {
+      "asset_id": "resource_site_neutral_furnace_oath_yard_claimed",
+      "unclaimed_asset_id": "mapobj_furnace_oath_yard",
+      "fit": "Exact original blackstone furnace court for the controlled Furnace Oath Yard neutral dwelling identity."
+    },
+    "site_drowned_crown_hall": {
+      "asset_id": "resource_site_neutral_drowned_crown_hall_claimed",
+      "unclaimed_asset_id": "mapobj_drowned_crown_hall",
+      "fit": "Exact original flooded crown hall for the controlled Drowned Crown Hall neutral dwelling identity."
+    }
+  }
+}

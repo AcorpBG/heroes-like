@@ -44171,6 +44171,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             ensure(recovery["ok"], errors, f"Recurring site {asset_id} must preserve original paint and state ownership")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Recurring site cutout recovery failed closed: {exc}")
+    claimed_recoveries = {}
+    try:
+        claimed_spec = importlib.util.spec_from_file_location("claimed_cutout_validation", ROOT / "tools" / "prepare_overworld_claimed_cutouts.py")
+        claimed_module = importlib.util.module_from_spec(claimed_spec)
+        claimed_spec.loader.exec_module(claimed_module)
+        claimed_recoveries = claimed_module.validate_assets()
+        ensure(len(claimed_recoveries) == 31, errors, "All 31 claimed originals must reconstruct with exact backing/paint provenance")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Claimed dwelling cutout recovery failed closed: {exc}")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
@@ -44212,11 +44221,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             elif source_model == "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas":
                 expected_canvas = (336, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas":
-                expected_canvas = (384, 48)
+                expected_canvas = (1536, 192) if asset_id in claimed_recoveries else (384, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas":
-                expected_canvas = (768, 48)
+                expected_canvas = (3072, 192) if asset_id in claimed_recoveries else (768, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas":
-                expected_canvas = (336, 48)
+                expected_canvas = (1344, 192) if asset_id in claimed_recoveries else (336, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas":
                 expected_canvas = (384, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_repeatable_service_visited_atlas":
@@ -52635,6 +52644,8 @@ def validate_eight_neutral_dwelling_musters(errors: list[str]) -> None:
         "site_frostbeacon_bothy": ("object_frostbeacon_bothy", "beaconscribe-frostbeacon-circuit", "beaconscribe_watch_dwelling", "beaconscribe_frostbeacon_bothy_watch", "encounter_frostbeacon_bothy_watch", "mapobj_frostbeacon_bothy", "resource_site_neutral_frostbeacon_bothy_claimed", "frostbeacon_bothy_claimed", "4bd5bb1cc2dde5cb2cd48b03913eae7d317ad10794abc511940943584c19af5a", [336,0,48,48], {"gold":90}, {"gold":35}, {"unit_neutral_frostbeacon_pikes":2,"unit_neutral_snowglass_markers":1}, {"unit_neutral_frostbeacon_pikes":1}),
     }
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "neutral_dwelling_claimed_atlas.png"
+    # Historical hashes remain exact; current reconstruction is checked above.
+    atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/claimed_dwellings/before_runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png"
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "neutral_dwelling_claimed_wave1"
     manifest_path = source_dir / "manifest.json"
     report_script_path = ROOT / "tests" / "eight_neutral_dwelling_musters_report.gd"
@@ -52676,7 +52687,7 @@ def validate_eight_neutral_dwelling_musters(errors: list[str]) -> None:
         mapping = site_sprites.get(site_id, {})
         entry = object_assets.get(claimed_id, {})
         ensure(mapping.get("asset_id") == claimed_id and mapping.get("unclaimed_asset_id") == unclaimed_id, errors, f"{site_id} controlled/unclaimed art mapping changed")
-        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [384,48] and entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == "controlled_muster_state" and len(str(entry.get("accessible_description", "")).strip()) >= 48, errors, f"{site_id} claimed atlas entry changed")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png" and entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [1536,192] and entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == "controlled_muster_state" and len(str(entry.get("accessible_description", "")).strip()) >= 48, errors, f"{site_id} claimed atlas entry changed")
         source_path = source_dir / f"{stem}_source.png"
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{site_id} transparent generated source or import metadata is missing")
         if source_path.is_file():
@@ -52715,6 +52726,8 @@ def validate_sixteen_neutral_dwelling_musters(errors: list[str]) -> None:
         "site_basalt_gatehouse": ("object_basalt_gatehouse", "resource_site_neutral_basalt_gatehouse_claimed", "basalt_gatehouse_claimed_source.png", "d89e8076a87aa89ed079fc9041128a1c191f26593f022d64bcdfaecc9ead2302", [720,0,48,48]),
     }
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "remaining_neutral_dwelling_claimed_atlas.png"
+    # Historical hashes remain exact; current reconstruction is checked above.
+    atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/claimed_dwellings/before_runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png"
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "remaining_neutral_dwelling_claimed_wave1"
     source_manifest_path = source_dir / "manifest.json"
     report_script_path = ROOT / "tests" / "sixteen_neutral_dwelling_musters_report.gd"
@@ -52746,7 +52759,7 @@ def validate_sixteen_neutral_dwelling_musters(errors: list[str]) -> None:
         mapping = site_sprites.get(site_id, {})
         entry = object_assets.get(claimed_id, {})
         ensure(mapping.get("asset_id") == claimed_id and str(mapping.get("unclaimed_asset_id", "")).strip(), errors, f"{site_id} claimed/unclaimed mapping changed")
-        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [768,48] and entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == "controlled_muster_state", errors, f"{site_id} claimed atlas entry changed")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png" and entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [3072,192] and entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == "controlled_muster_state", errors, f"{site_id} claimed atlas entry changed")
         source_path = source_dir / source_name
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{site_id} generated source or import is missing")
         if source_path.is_file():
@@ -52775,6 +52788,8 @@ def validate_seven_final_neutral_dwelling_musters(errors: list[str]) -> None:
         "site_drowned_crown_hall": ("object_drowned_crown_hall", "dwelling_drowned_crown_hall", "ninefold_drowned_crown_hall_watch", "encounter_tidepool_skiffyard_watch", "mapobj_drowned_crown_hall", "resource_site_neutral_drowned_crown_hall_claimed", "drowned_crown_hall_claimed_source.png", "22da3aeb61671410614fe1e7d75574bd9357394824f42170841d511e59cc89fe", [288,0,48,48], True),
     }
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "final_neutral_dwelling_claimed_atlas.png"
+    # Historical hashes remain exact; current reconstruction is checked above.
+    atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/claimed_dwellings/before_runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png"
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "final_neutral_dwelling_claimed_wave1"
     source_manifest_path = source_dir / "manifest.json"
     report_script_path = ROOT / "tests" / "seven_final_neutral_dwelling_musters_report.gd"
@@ -52812,7 +52827,7 @@ def validate_seven_final_neutral_dwelling_musters(errors: list[str]) -> None:
         mapping = site_sprites.get(site_id, {})
         entry = object_assets.get(claimed_id, {})
         ensure(mapping.get("asset_id") == claimed_id and mapping.get("unclaimed_asset_id") == unclaimed_id, errors, f"{site_id} final claimed/unclaimed mapping changed")
-        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [336,48] and entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == "controlled_muster_state" and len(str(entry.get("accessible_description", "")).strip()) >= 48, errors, f"{site_id} final claimed atlas entry changed")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png" and entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [1344,192] and entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == "controlled_muster_state" and len(str(entry.get("accessible_description", "")).strip()) >= 48, errors, f"{site_id} final claimed atlas entry changed")
         source_path = source_dir / source_name
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{site_id} final generated source or import is missing")
         if source_path.is_file():

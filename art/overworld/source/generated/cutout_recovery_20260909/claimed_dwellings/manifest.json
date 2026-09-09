@@ -1,0 +1,520 @@
+{
+  "schema_id": "claimed_dwelling_cutout_recovery_v1",
+  "recipe_sha256": "ac8ed599eed9e30c54cf67937dcfb6ac918fe674dbf289ee98f00e58b96e695d",
+  "processing_tool_sha256": "12a454b0547d01684c8b1c4901c074b51940144712124bf6126255dcd8422001",
+  "shared_tool_sha256": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
+  "component_tool_sha256": "092ea67fbcb062cf1cb166d0f302cc057139ccf97e835aba2032611326edbf0e",
+  "assets": {
+    "resource_site_neutral_roadward_lodge_claimed": {
+      "trim_sha256": "f8bc714d861328baa6ba2242c0dbb2e27ff4777f190664fc779d5cc461a7f4b6",
+      "source_sha256": "d4d6fdaa383565430f7aa29d4f71ec1aab7a6dbed2692baf61812c60b3ce43de",
+      "rgba_sha256": "bc5b0926de0a143a8ffcf1093867b4921fb6fb71e41d6a51d91eca6546b64dd5",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 14083,
+        "bounds": [
+          8,
+          48,
+          171,
+          192
+        ]
+      }
+    },
+    "resource_site_neutral_fenhound_kennels_claimed": {
+      "trim_sha256": "ef6feb927e4f929400cf8b92bd9fb0fc042ffa44c554f9bb75f9b81de0f14b83",
+      "source_sha256": "cbac45f1aa73936cbfeddf5764cc35d05b63dfedbee8cbe600051fc93f0b8c73",
+      "rgba_sha256": "0e0be773b30dc89e59a91045900780c7ee60dd1374fbbb432596432b3a2ac21a",
+      "removed_source_pixels": 921822,
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 2239,
+        "bounds": [
+          8,
+          72,
+          184,
+          192
+        ]
+      }
+    },
+    "resource_site_neutral_cliffhawk_roost_claimed": {
+      "trim_sha256": "0b07e0b05602028b0c5fbd01cbf43088d6553f1e2037a077848794b6520d3aa5",
+      "source_sha256": "b520a305e7b6361830ee9e89f405f2238f61da77e142f32a7ae0aa7bd4cc40f9",
+      "rgba_sha256": "461f53ff7ff87c024e4d94b55ab1b352922819c63edea4aa9f6ce8c010c59648",
+      "removed_source_pixels": 999665,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 3335,
+        "bounds": [
+          20,
+          16,
+          172,
+          192
+        ]
+      }
+    },
+    "resource_site_neutral_reedbarge_mooring_claimed": {
+      "trim_sha256": "2d86eb5247ec72f1fed4cb93fee544ce7260c524aa6b25467d6ea01a10bb4e75",
+      "source_sha256": "5afdd885651eac3b51b6fe1ff72b8e644f0c95b47ba22eba10af5a97566c16f4",
+      "rgba_sha256": "2e82dc7847c94c58ec3d97f304c04f5f488211c8f77fab3414dd2d10e9f696c9",
+      "removed_source_pixels": 1075092,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 3472,
+        "bounds": [
+          8,
+          36,
+          184,
+          192
+        ]
+      }
+    },
+    "resource_site_neutral_glowcap_croft_claimed": {
+      "trim_sha256": "a82eccbbb840c61841594fae17540ec368892b8ca41cdca60cb32a2bc82f5efb",
+      "source_sha256": "033655f74f6fcd30a0d1e5f0663126c1dd9feec62dc5c5e0a4f5f523528cc3f0",
+      "rgba_sha256": "951bc0b5fd11fa9b51763e68daabc603b7dcdd864823b821b20505f6b6f12d48",
+      "removed_source_pixels": 752515,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 1466,
+        "bounds": [
+          8,
+          16,
+          184,
+          192
+        ]
+      }
+    },
+    "resource_site_neutral_dustjack_yard_claimed": {
+      "trim_sha256": "5681b31ddc2994bbb63691834d1e3775a1a76dc1faa85019223c313fb8bbbe20",
+      "source_sha256": "5d5778613dda08052e474a98e292ed8d0cf85e26d46eec91dc389c448fd72372",
+      "rgba_sha256": "163a9a4668c21c96ea7df1196eeddd2b467c6d245649d84f9912f7734a6b25bf",
+      "removed_source_pixels": 960611,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 2478,
+        "bounds": [
+          12,
+          16,
+          180,
+          192
+        ]
+      }
+    },
+    "resource_site_neutral_cinder_kiln_claimed": {
+      "trim_sha256": "ededde809ee89932da633bf6565a6d21399723a13548f28bf817c374890ab706",
+      "source_sha256": "0a46e30e8f984e9332f9a56d1af8b54d2c359a1f44aeda1038ce4eef7e8dc206",
+      "rgba_sha256": "91c9494fd905f737ec297628fd82d7d780403a8c9c59c0674b7aab5178a134c0",
+      "removed_source_pixels": 960475,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 2036,
+        "bounds": [
+          12,
+          16,
+          180,
+          192
+        ]
+      }
+    },
+    "resource_site_neutral_frostbeacon_bothy_claimed": {
+      "trim_sha256": "cf7e072469513e7b4a22997d933a0f4f542d2a162da7133f6f503c9d92af6259",
+      "source_sha256": "c0ddf008d5323ce7c982dcc1a201758ffeeb5789a65d8ae38b56f24a6a954fc7",
+      "rgba_sha256": "96ec80a95b043e1716c551337580d03e25d7b9ece618ecfb71b1c1c0baf65e99",
+      "removed_source_pixels": 976680,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 1982,
+        "bounds": [
+          28,
+          16,
+          164,
+          192
+        ]
+      }
+    },
+    "resource_site_neutral_orchard_levy_claimed": {
+      "trim_sha256": "68ea2777514a07976b19d7bbf6a953a818add2ae6b1aea2d117bed838c94c679",
+      "source_sha256": "f88c7fa76b319d1211ee3004b225ab5e2559b31565fb69c35371c69ff928b9fa",
+      "rgba_sha256": "90b410dbbd631bd0ace4ca5e49191fb03f6dc562661d3f96758159583d6ce9d6",
+      "removed_source_pixels": 569907,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 2985,
+        "bounds": [
+          8,
+          16,
+          184,
+          172
+        ]
+      }
+    },
+    "resource_site_neutral_bramble_hedge_claimed": {
+      "trim_sha256": "283f715b710f360ff9a18df334834667bed731b51a9dd426c608b6b27ad88657",
+      "source_sha256": "c844530f2fbe20962cc6bc90ae70d5509f1cb27670226a2c4180068931433667",
+      "rgba_sha256": "ef66d1539e16f179efe1a0713a2509e0b0e66d1bef6c9256e3a7821dcd2dc026",
+      "removed_source_pixels": 800473,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 1890,
+        "bounds": [
+          16,
+          8,
+          172,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_tidepool_skiffyard_claimed": {
+      "trim_sha256": "a75966f032d86ae8b069999fd84d29fddf28d1540ea77e5fc676eef6d4a49267",
+      "source_sha256": "8be9989f98ec32474049cbe73af8b40b36aeba38409d794acc2090150c07736a",
+      "rgba_sha256": "3752c693639f310cfab96aabb78153bd3939aead59c8e1f824c5d2d47cc4a3b5",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 11048,
+        "bounds": [
+          12,
+          28,
+          183,
+          160
+        ]
+      }
+    },
+    "resource_site_neutral_switchback_hostel_claimed": {
+      "trim_sha256": "c9a75f2f9f378d210a2e43d1188bfe4757629fdc692d41bfaff40801a857d473",
+      "source_sha256": "eb6d71c3166534796fb012842fee431bdfeef55a928cb3817942d24b929fe6aa",
+      "rgba_sha256": "05c5a4ab74974f92c1f4bac5ea1c69feec0332ea12903cb2e5763e093b7e920c",
+      "removed_source_pixels": 1023952,
+      "metrics": {
+        "alpha_levels": 248,
+        "partial_alpha_pixels": 1603,
+        "bounds": [
+          36,
+          8,
+          156,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_saltpan_camp_claimed": {
+      "trim_sha256": "cce60bf67d59e28815114339053d47b36c10097b0139d0b392c0c9ddb0338e1a",
+      "source_sha256": "23d136ab2301df075a138040c4b5c46339817124c585689e8bb8eb19d62157e3",
+      "rgba_sha256": "79a3fbdee1ab3e654f96af077199a0930772d8d53dc9ef723b7229fe57460e5f",
+      "removed_source_pixels": 962694,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 2860,
+        "bounds": [
+          8,
+          16,
+          184,
+          176
+        ]
+      }
+    },
+    "resource_site_neutral_crystal_sump_claimed": {
+      "trim_sha256": "9aa92cf1333a34b92a4d343179278ec35f9c93d35cc6c00d763daf2da3ba9512",
+      "source_sha256": "7415fd5948d656202f410999b026b520244f2be8bd2e6bac1bb59a3acce6bb17",
+      "rgba_sha256": "c8c63bf575d933a61652a6691ba004f89eb58911fff3525c6f17ca8f27224dda",
+      "removed_source_pixels": 898184,
+      "metrics": {
+        "alpha_levels": 246,
+        "partial_alpha_pixels": 1316,
+        "bounds": [
+          28,
+          8,
+          160,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_icehook_trapper_lodge_claimed": {
+      "trim_sha256": "4499031edc830a13cd8ef86a0b8eecbef0dfbe7543d6ffd5551d8d19c1ab3d6d",
+      "source_sha256": "e8346f9df1143bd7d9c12541ee3996a6b9ca8d9159d1fd63e83f05a11108b5c0",
+      "rgba_sha256": "904f9bd8c233baa0c731d4f1f678aabb1c79305469bb7d45919fa6374cb9051e",
+      "removed_source_pixels": 749556,
+      "metrics": {
+        "alpha_levels": 251,
+        "partial_alpha_pixels": 1757,
+        "bounds": [
+          8,
+          20,
+          184,
+          172
+        ]
+      }
+    },
+    "resource_site_neutral_obsidian_scar_claimed": {
+      "trim_sha256": "a1f02399e713f44a52e045e8ca70c7a997261fe23577e5eeb8f97e77bd340778",
+      "source_sha256": "ca8931b32dbc4cf7b60d7c3db78269a4b7005bc66b05e044c4ab1c5f1113a520",
+      "rgba_sha256": "83dffef8e6cd8c449622ecec1c317e00756840dd307c42be4ec31ccc5adc23df",
+      "removed_source_pixels": 826508,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 2802,
+        "bounds": [
+          8,
+          16,
+          184,
+          176
+        ]
+      }
+    },
+    "resource_site_neutral_harbor_pilot_house_claimed": {
+      "trim_sha256": "2d6f4c47314a39ed6f0530d306626acc2e0187e162d879513d97d4de08d6436b",
+      "source_sha256": "25b2d1e69aa08e731551e88724f3cd743b435a5cf12c49ddaa2dd5b89172e0bb",
+      "rgba_sha256": "624343ae31e273b7fe69a69a2786898b0eec02975f6d36fb19fd1da241aacf0f",
+      "removed_source_pixels": 991907,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 2468,
+        "bounds": [
+          48,
+          8,
+          144,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_kite_signal_eyrie_claimed": {
+      "trim_sha256": "cea25391d79c2356714045d2090d51151d01445815e9d2b8f0c8fee3017f001d",
+      "source_sha256": "dff30cb4d82edc070bfce0017d9ad79e6458eb94c24c2533ceb1070587b96834",
+      "rgba_sha256": "32da360539f822fbd49acd0b882c8fe65e56070b5579c82ed90a493e47c64a0b",
+      "removed_source_pixels": 1018845,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 2978,
+        "bounds": [
+          20,
+          8,
+          168,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_lantern_warren_claimed": {
+      "trim_sha256": "dff6a162ec5fe8bcd05b78e5a68324eb254d6d7f5b817f6bcbcb43b10a0cc2e3",
+      "source_sha256": "649f2252288b2e39018c0bd14afc1ed6d417402925d97d36fe30038fa797911b",
+      "rgba_sha256": "b32ba4a33679a376ecd317b4bb7a7c8e4b34cb1779cd7e838315a58db7470fc6",
+      "removed_source_pixels": 826199,
+      "metrics": {
+        "alpha_levels": 249,
+        "partial_alpha_pixels": 1424,
+        "bounds": [
+          8,
+          20,
+          184,
+          172
+        ]
+      }
+    },
+    "resource_site_neutral_bogbell_croft_claimed": {
+      "trim_sha256": "b8a04db2d1b7f9e29872c9c333e218c1b773f8399cddd2e603d6499a8d1961a2",
+      "source_sha256": "f8702b69ef3303a74b008c160359e89a8ed12935f50bed9c6ed762ff4ecb1e89",
+      "rgba_sha256": "1b858373908249e5b30a91d8993777b4600f30650f7fa5e2098e6215890564ea",
+      "removed_source_pixels": 910537,
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 2987,
+        "bounds": [
+          28,
+          8,
+          160,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_milestone_arsenal_claimed": {
+      "trim_sha256": "3fe8d19f6069b27749382a7df9357ec02edde735d060841ac5597e6848f78439",
+      "source_sha256": "26192dba2ef101f6444444a90fd4c0aa3f03b8153a31d9aa2e2ba7b02c279eca",
+      "rgba_sha256": "f94ef48a0e621e67aca7c477cacd056e795f9e47d5decaae933222c9972186b6",
+      "removed_source_pixels": 799262,
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 2407,
+        "bounds": [
+          8,
+          8,
+          184,
+          180
+        ]
+      }
+    },
+    "resource_site_neutral_frostwharf_house_claimed": {
+      "trim_sha256": "6c393c6eb2ec07828bc6a285811ac0e2b785379c1017d6995a137fb902461ae2",
+      "source_sha256": "443653858e9547e13093a33b81d0cca78deab5376feab774300763edd8e22105",
+      "rgba_sha256": "d68248d9bde22642a68ded168d920724936b5693dcb8bae51e5d537bfa0139fb",
+      "removed_source_pixels": 948010,
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 1976,
+        "bounds": [
+          16,
+          8,
+          172,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_charcoal_burners_claimed": {
+      "trim_sha256": "a7e5c75cbba81a5bd12eee4ac1186472496948a787e46b8ce008aa634d9800c4",
+      "source_sha256": "80f50b4eda0c6d24b5d9d1403b8e8a26606b19e75238c1f5040894db6f639f5c",
+      "rgba_sha256": "e35e279ac56bbbd2be73cdd91a0ae1c4705f9a94f2baffdd7979dea9893b17de",
+      "removed_source_pixels": 795667,
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 2069,
+        "bounds": [
+          8,
+          32,
+          184,
+          156
+        ]
+      }
+    },
+    "resource_site_neutral_basalt_gatehouse_claimed": {
+      "trim_sha256": "016a590da3d69b2a3dc012084ce4c43b515b566ea1edc5e4863913cf907ae89f",
+      "source_sha256": "f3cab8e12c48fdd4a3f21f7c5b26de4e24da7d9ea7e0fdeb459dfc19dddb1746",
+      "rgba_sha256": "11e8ce0b9267f85fa2312d284316772a6801e22f7d77c6a3b459f4e4458cccc3",
+      "removed_source_pixels": 767899,
+      "metrics": {
+        "alpha_levels": 249,
+        "partial_alpha_pixels": 1544,
+        "bounds": [
+          8,
+          32,
+          184,
+          160
+        ]
+      }
+    },
+    "resource_site_neutral_salt_skirmisher_pier_claimed": {
+      "trim_sha256": "bb59d75a4336dc3c9b8ba2238bb833f1a039193ed74b80cdd82cfa955ef6574b",
+      "source_sha256": "990438371723b412158888eb2e32ea23c2abbe2885caedbf7f158e28d41aabb7",
+      "rgba_sha256": "959839bded1fd5ab630528c9127cf24318abea59a0a48aa5d53887aec7b72e41",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 17583,
+        "bounds": [
+          14,
+          8,
+          184,
+          177
+        ]
+      }
+    },
+    "resource_site_neutral_ember_cart_yard_claimed": {
+      "trim_sha256": "ed79d5ec01b4f855c674aece9896230ef9f506c9af7b68f558703e7b137ae6e4",
+      "source_sha256": "fe9598deb5af353ea30fe1efa6f3c2272705f22f3191063e33daec2d4bb3c1c0",
+      "rgba_sha256": "d98a4c46bac5d100916a1a0e7d8bcf04f331e3c75f9866039cb0811ec3d727b3",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 14377,
+        "bounds": [
+          16,
+          9,
+          182,
+          154
+        ]
+      }
+    },
+    "resource_site_neutral_prism_outrider_post_claimed": {
+      "trim_sha256": "76e5a431001e7729c3a5bb1983ef363f74006690517333034f9a42492d8a037b",
+      "source_sha256": "fc41492067d8c9fe1268cf3a535faa08ec9d28218165d712f10f8a21d8286daf",
+      "rgba_sha256": "5238f3e83a5a74fb709799eacbf066b31a20f746ddd1c2ba69f92e08e824fabe",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 11080,
+        "bounds": [
+          24,
+          18,
+          177,
+          161
+        ]
+      }
+    },
+    "resource_site_neutral_storm_rook_eyrie_claimed": {
+      "trim_sha256": "0a724f4b23e31a8f0aafdfb9799bd8cba9b96302584821dd2348cba3b3f24a04",
+      "source_sha256": "7d82cdd82866377f66e52cbe8dd262bee41a76b5bdbca5e1f9e08aa1d5442caa",
+      "rgba_sha256": "a07fbb3b37b5b6d5e327cfa686558627cdced743e3c29d8d676f606634c619dc",
+      "removed_source_pixels": 0,
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 14410,
+        "bounds": [
+          31,
+          8,
+          172,
+          182
+        ]
+      }
+    },
+    "resource_site_neutral_mirror_bound_barracks_claimed": {
+      "trim_sha256": "531ea9f1304636bba21a5e9adeec3ff6a11679a7c46f91d0701b7ffad80bbb84",
+      "source_sha256": "c51f439a939c1583ca3507a4f79d655d94903c9b1ca21d552b0ff97b463de1e5",
+      "rgba_sha256": "69ea517fd6b347c3d7969d7bdcdf1d624f440318f96f7ec781b9374c361d7239",
+      "removed_source_pixels": 1025069,
+      "metrics": {
+        "alpha_levels": 243,
+        "partial_alpha_pixels": 1473,
+        "bounds": [
+          8,
+          24,
+          184,
+          168
+        ]
+      }
+    },
+    "resource_site_neutral_furnace_oath_yard_claimed": {
+      "trim_sha256": "0b649306a9b3f99775494a3e25d7fd1b86b0c6aec14fbdc3de774c24c0bed8c1",
+      "source_sha256": "41bcdb96c04183adb680cc8b6b65f1fa1b05bf569f9f60d9ae5d5726b9f3629c",
+      "rgba_sha256": "e00249f85db220b3725800c28507a4a95a71dad73928fc21d9911fa578e690fe",
+      "removed_source_pixels": 1073626,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 3794,
+        "bounds": [
+          8,
+          12,
+          184,
+          176
+        ]
+      }
+    },
+    "resource_site_neutral_drowned_crown_hall_claimed": {
+      "trim_sha256": "5fb0a743b631ab55261977aa29959adadf86e2a60ea7dac05f10f2ea6e7b37cd",
+      "source_sha256": "2a0e9cf7ddb516d1ad2322651c980f4ec9e9c0ab615c2e755e6c2f2bfb524325",
+      "rgba_sha256": "718cabdb10ac162a890f3d2305f1eacfecc149bcc5e2d7afb6ce875a88e0c417",
+      "removed_source_pixels": 1054380,
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 2426,
+        "bounds": [
+          8,
+          8,
+          180,
+          184
+        ]
+      }
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png": {
+      "after_sha256": "1327c2f38c91065e995f68b233d48cfdc5f76897a365a60d7e4dc80d09d3d1f5",
+      "prepared": "runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png": {
+      "after_sha256": "e5120a550c9f9ad66e91ccf91f81aa4046c076a98745975ef0a8df81b7e2ef56",
+      "prepared": "runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png": {
+      "after_sha256": "befc8b249c8f82b3d31bbe08312905dac6563398c3f600dceacce7e588aeb0ee",
+      "prepared": "runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png"
+    }
+  },
+  "processing": "Original retained RGB with explicit inspected connected backing only; genuine RGBA unchanged. Original alpha crop/fit/anchor at 4x raster density, unchanged paths, world geometry and claimed/unclaimed routing."
+}
