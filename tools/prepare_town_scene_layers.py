@@ -309,7 +309,31 @@ for brief in EMBERCOURT_LATE_COURT_BRIEFS.values():
                  curation='Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.')
 EMBERCOURT_BRIEFS.update(EMBERCOURT_LATE_COURT_BRIEFS)
 
-FACTION_BRIEFS = {FACTION: BRIEFS, 'faction_embercourt': EMBERCOURT_BRIEFS}
+MIRECLAW_BRIEFS = {
+    'building_blackbranch_den': {
+        'source_sha256':'d0c8a1df8391f08940483ee55b521775c51d64b89e9a4999a33fc493d27ca0b3',
+        'scene_bounds':[415,375,280,280*1024/1536], 'ground_anchor':[610,544],
+        'generation_output':'exec-50bdfb12-3f05-49a7-aca8-47673fbb874d.png',
+        'grounding':'Low connected reed chambers extend the middle-left shore behind the ferry landing. Their front-right stair reaches the existing boardwalk; wet short pilings descend into the marsh without a separate terrain disk.',
+    },
+    'building_wayfarers_hall': {
+        'source_sha256':'3d315adc84489fe3a4a5e35310194263c9644d060f9de1d00a51904a9fb36a59',
+        'scene_bounds':[1120,340,305,305*1024/1536], 'ground_anchor':[1250,530],
+        'generation_output':'exec-c06f2362-c3dc-4dba-8ea1-283780a15022.png',
+        'grounding':'Long reed-roofed hiring hall sits behind the right communal fire platform. Its front-left stair approaches the existing causeway, retaining the main hall and fire as distinct landmarks.',
+    },
+    'building_market_square': {
+        'source_sha256':'c6dac6c22a564073798bc0e1e34e1701ea4d6a4590d894f1e3cc8d68f3713eeb',
+        'scene_bounds':[410,530,300,200], 'ground_anchor':[645,710],
+        'generation_output':'exec-23b1bc97-61b0-4235-b754-1c68a43b739f.png',
+        'grounding':'Low reed-and-hide trade counters continue the left working landing below the Den. The short front-right loading stair faces the ferry approach; open piling gaps retain the original marsh below.',
+    },
+}
+for brief in MIRECLAW_BRIEFS.values():
+    brief.update(reference_inputs=[], generation_date='2026-09-09',
+                 curation='Original built-in text-only paintings described from the inspected Duskfen village. Preserve generated alpha, camera, warm upper-left backlight and wet reed/timber materials. Actual composition, paid growth, input/save and platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance.')
+
+FACTION_BRIEFS = {FACTION: BRIEFS, 'faction_embercourt': EMBERCOURT_BRIEFS, 'faction_mireclaw': MIRECLAW_BRIEFS}
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()

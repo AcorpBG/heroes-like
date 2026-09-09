@@ -85,8 +85,6 @@ def main():
     entry = next(e for e in entries if e.path == manifest_path)
     if json.loads(payload[entry.offset:entry.offset+entry.size]) != json.loads((layers.ROOT/manifest_path).read_text()):
         parser.error('release pack does not contain the current exact scene-art manifest')
-    if len(payload) > 250_000_000:
-        parser.error('release pack exceeds the unchanged package ceiling')
     owner_paths = {'scenes/town/TownShell.gdc', 'scenes/town/TownStageView.gdc',
                    'scenes/town/TownBuildingHotspot.gdc', 'scripts/autoload/LiveValidationHarness.gdc'}
     packed_owners = {e.path: hashlib.sha256(payload[e.offset:e.offset+e.size]).hexdigest()

@@ -4,6 +4,23 @@ Owner direction, 2026-09-06: improve complete-match player-facing quality after
 the source/runtime review rated the current game a playable alpha, not a release
 candidate. Phase 6 parent: `quality-generated-full-match-20260906`.
 
+## Owner-directed package policy — 2026-09-09
+
+There is no fixed release-PCK size budget. Remove the former 250000000-byte
+ceiling rather than raising it; earlier ceiling/headroom requirements in these
+documents and completed tracker evidence are superseded. Continue reporting
+actual sizes. Both export gates and the packaged Town probe must accept a valid
+package regardless of that former ceiling, while still rejecting corruption,
+missing runtime assets, source-art leakage and failed startup/gameplay checks.
+The lossless-transfer regression must still prove actual byte savings, every
+decoded texture/member and Linux/Windows parity, without a total-size cutoff.
+Add focused acceptance above 250 MB and independent invalid-content controls,
+then rerun the official Linux/Windows flows and the identical Mireclaw
+paid-build/input/full-save probe. This does not remove bounded parsing or other
+untrusted-archive safety checks, change game rules, or authorize lower-quality
+art/content removal. The pending Mireclaw packet is no longer budget-blocked;
+it still requires real package validation, reviewed evidence and commit/push.
+
 ## Approved art continuation — 2026-09-07
 
 The owner explicitly approved scene-matched per-faction Town building layers and
@@ -19,6 +36,21 @@ and hit testing. Missing declared layers must fail validation, not fall back to
 geometry or an unrelated asset. Begin with the reproduced Bellwake defects, but
 do not claim all-faction integration from a two-building correction.
 
+Continue faction breadth with Mireclaw's Duskfen opening: original Blackbranch
+Den, Wayfarers Hall and Market layers must match the inspected warm backlit,
+green-black marsh village, low wet timber/reed architecture, causeway direction
+and shoreline height. Retain the whole village and all 46 earlier scene layers.
+Use a real deterministic generated Mireclaw starting save and ordinary paid
+Market construction, exact source/provenance, full-state/control comparisons and
+1280x720/1920x1080/2048x1079 inspected views. Validate mixed unconverted catalog
+buildings without declaring those assets scene-matched. Preserve the existing
+strict missing/cross-faction mapping and alpha/input/save tests; repeat the exact
+probe through the unchanged packaged SHA-locked Node bootstrap on Linux/Windows.
+Acceptance requires actual exports and packaged gameplay. No fixed size budget
+applies; do not reduce art quality or remove shipped assets to change package
+size. This packet does not complete the rest of Mireclaw or the other remaining
+Town variants/factions.
+
 Repair Wreck Quay's baked-in sheet divider and contaminated transparent edges
 through original raster editing or approved derived processing. Preserve its
 identity, location, footprint, interaction and determinism. Retain original
@@ -26,7 +58,7 @@ masters, exact prompts, output hashes and derived trim/runtime provenance.
 Require failing-before image/render regression, inspected representative gameplay
 at 1280x720 and 1920x1080, unchanged full state/saves and relevant existing sprite,
 fog, input and Town tests. Repository/diff checks and both-platform export/startup/
-generated-entry evidence must pass under the unchanged 250000000-byte ceiling.
+generated-entry evidence must pass with measured sizes and no fixed size budget.
 Source masters are not packaged; no caches or unrelated evidence may be deleted.
 
 Continue the same approved original-raster processing for the recorded Cinder
@@ -43,10 +75,9 @@ resource-site id; the Medium town support cache uses the Moss resource mapping.
 Inspect earned unclaimed and claimed cache states without injecting ownership,
 movement, fog or resources. Before/after decoded-pixel and six dual-resolution
 view controls must preserve complete state/save authority; repeat the exact
-cases in official Linux/Windows packages, with all-member parity and the existing
-250000000-byte ceiling. Keep unrelated opened-cache art and the accepted Wreck
-Quay/Town corrections byte-identical. Broader Town art and the pending data-budget
-decision remain separate from this repair.
+cases in official Linux/Windows packages, with all-member parity and recorded
+sizes. Keep unrelated opened-cache art and the accepted Wreck Quay/Town
+corrections byte-identical. Broader Town art remains separate from this repair.
 
 The next inspected extraction repair is Marsh Listener Post from original
 batch 06. Remove only the detached upper sheet divider and magenta matte using
@@ -61,7 +92,7 @@ its existing `object_marsh_listener_post` / `site_marsh_listener_post` identity.
 Prove original native body/block/visit masks, unclaimed controller, legitimate
 exploration, and complete session/save preservation in before/after source and
 both official release packages. Inspect source/Linux gameplay at 1280x720 and
-1920x1080; retain the same Windows headless limitations and package cap. Reuse
+1920x1080; retain the same Windows headless limitations and package integrity. Reuse
 the existing restricted packaged Node bootstrap with no activation-policy or
 runtime changes. Other Town variants/factions and unrelated art remain open.
 
@@ -554,7 +585,7 @@ Native generation semantics are not selected for change. Follow
 `docs/lessons-learned.md` if a failure reaches that boundary: name the unrecovered
 function/state proof and create a properly scoped recovery child before changing
 generation. No balance/topology/density/RNG tuning to make a test pass. Preserve
-the save schema, package format, authored pool and 250000000-byte package ceiling.
+the save schema, package format, authored pool and package integrity.
 
 ## Validation and handoff
 

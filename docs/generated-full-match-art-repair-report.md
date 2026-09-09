@@ -1,7 +1,134 @@
 # Approved full-match art repairs
 
 Parent: `quality-generated-full-match-20260906`; selected child:
-`ux-generated-full-match-presentation-20260906`. Status: in progress.
+`ux-generated-full-match-presentation-20260906`. Status: in progress; the owner
+removed the package-size budget and requested continuing. The parent quality
+goal remains unfinished.
+
+## Mireclaw opening integration — 2026-09-09, validated without a size budget
+
+The real deterministic Medium seed `10`, two-player land setup with
+`faction_mireclaw` / `hero_vaska` produces owned Duskfen at native placement
+`native_h3maped_ce8e40cc_object_0950`, with the hero at entrance `(43,40,0)`.
+`tests/mireclaw_town_opening.py` uses the normal setup/retry, Town-entry and
+save/resume APIs. Its unchanged Day-1 input has SHA256
+`57f48cd7fcb650777a7923f5aec273f8bd73e61d65acaf9306a048323549ba89` and is retained
+at `mireclaw_opening_01/opening_save.json` beneath the evidence base below.
+The original Town capture exposes the miniature Den and warm blue-roofed Hall
+catalog icons. There was no missing scale transform: this faction had no exact
+scene layers, so `TownStageView` correctly selected its older catalog artwork.
+
+Three original built-in, text-only generated paintings now have exact-faction
+scene mappings: Blackbranch Den, Wayfarers Hall and Market. Their reed roofs,
+wet dark timber, short pilings and causeway approaches were described from the
+inspected original Duskfen village. The Den joins the middle-left boardwalk,
+the Hall sits behind the right communal fire, and the Market continues the left
+working landing toward the ferry. The original panorama and all earlier art
+remain separate, unchanged assets. No runtime renderer, construction, native
+generation, content rules or save schema was changed.
+
+Masters and exact prompts are in
+`art/towns/source/generated/scene_layers/faction_mireclaw/`; derivatives are in
+the matching `source/trimmed/scene_layers/` and `runtime/scene_layers/` folders.
+`tools/prepare_town_scene_layers.py --faction faction_mireclaw` hash-locks all
+three originals, crops only fully transparent outer margins and preserves alpha
+and aspect through the existing 512-pixel maximum pipeline. Runtime imports
+retain mipmaps. The manifest records source/prompt/trim/runtime hashes, generation
+date/output, no image-reference inputs, grounded bounds and shared alpha-aware
+input ownership. Full original SHA256 values are recorded in that manifest.
+
+`tests/town_scene_layer_regression.py --faction mireclaw` requires that exact
+opening input. It buys the ordinary 1000-gold Market, confirms a normal End Turn,
+then pays for Mire Pens using the existing ledger. Both live orders are compared
+against complete authoritative rule results, including recaps, resources and
+built ids. Save/re-entry, painted/transparent pointer ownership, keyboard and
+controller information routes, main-building construction and shared-faction
+cache/missing-layer boundaries are retained. Mire Pens remains its own older
+catalog painting: the mixed composition/input control is not acceptance of its
+art or a complete Mireclaw town. Detached Hall visibility remains explicitly a
+view fixture, not evidence of an earned construction order.
+
+Evidence base: `.artifacts/generated_full_match_quality_20260906/`.
+`mireclaw_before_720` and `mireclaw_before_2048` each retain the 14 expected missing
+scene-art failures, with no engine errors and unchanged complete purchase/save
+behavior. The inspected first integrated `mireclaw_draft_720` passes 4068 checks.
+All 16 source jobs pass in `mireclaw_source_batch.json`: the final
+`mireclaw_accepted_1280x720`, `mireclaw_accepted_1920x1080` and
+`mireclaw_accepted_2048x1079` each pass 4068 checks with no engine errors; the six
+Python suites pass 71 tests; prior Embercourt/Veilmourn, shared Town layout and
+all-town progression, Overworld distinct/decorative, repository and diff checks
+also pass. Opening, paid Market and mixed Mire Pens captures were visually
+inspected at all three resolutions: the three new paintings retain their
+proportions, ground against the boardwalks and leave navigation/HUD controls
+clear. The old Mire Pens catalog composition is not accepted as scene-matched art.
+
+`mireclaw_source_acceptance.json` compares all ten before/after Market and Mire
+Pens saves as complete exact Decimal JSON and raw bytes, excluding only
+`/saved_at_unix`; all match. `mireclaw_preservation.json` proves 5868 of 5869
+earlier tracked art/content/runtime/native files unchanged; only the scene
+manifest differs, retaining every old row. All 46 earlier layers, panoramas,
+catalog paintings, rules and maps remain unchanged. `mireclaw_idempotence.json`
+proves all 197 source/prompt/trim/runtime/manifest files byte-identical after
+repeating the selected preparation.
+
+Before the owner's no-limit decision, both official export/package smokes built a
+**250525428-byte** PCK, **525428 bytes above** the then-enforced 250000000-byte
+limit. Export itself returned zero with no fatal export messages, but the old
+size gate rejected startup. These retained failures do not claim new-package
+gameplay or Windows runtime acceptance.
+`mireclaw_budget_linux/report.json`, `mireclaw_budget_windows/report.json` and
+`mireclaw_package_budget_blocker.json` retain the evidence. All 5234 package members
+were compared: six new texture/import entries, only scene manifest and UID-cache
+changes, and 5226 old payloads byte-identical to accepted Marsh packages. Platforms
+differ only in `project.binary`; no source masters leaked into the packages.
+The three new lossless textures total 846716 bytes. Existing factor-100 preparation
+preserved every decoded image/mipmap but yielded no additional saving for them.
+
+The owner subsequently directed removing the imposed budget entirely, not
+replacing it with 350 MB. Both official export gates, the packaged Town probe,
+lossless-transfer regression and repository validator now omit the obsolete
+ceiling while retaining actual sizes and all independent asset/runtime checks.
+`tests/test_release_package_size_policy.py` passes 11 focused tests: the real
+export decision expressions accept synthetic sizes above 250 MB/350 MB, every
+existing asset-integrity condition independently rejects bad content, and
+lossless proofs still reject missing/changed/unproven/platform-drifting payloads
+or absent savings. Synthetic sizes are not actual large-package runtime proof.
+
+All six jobs in `mireclaw_packages_no_cap_02_batch.json` now pass: official
+Linux and Windows export/startup/generated Town flows, then the identical paid
+Mireclaw probe at 1280x720 and 2048x1079 on each platform. Every exact Town replay
+passes 4068 checks with zero runtime errors, unchanged input and immutable export
+files. Both platforms pass all five inert/path/hash/base-type/valid-Node bootstrap
+controls. Linux's generated flow passes 19 steps/eight daily builds; Windows's
+passes 23 steps/ten builds. Four final Linux Market/Mire Pens captures were
+visually inspected at both resolutions. Windows is headless Wine, not physical
+Windows GPU/audio/controller certification.
+
+`mireclaw_packages_no_cap_02_acceptance.json` proves all 18 complete before/source/
+Linux/Windows purchase saves equal as exact Decimal JSON and raw bytes outside
+only `/saved_at_unix`. The actual 250525428-byte packages are byte-identical to
+the previously budget-rejected exports, confirming no art was reduced or content
+removed to pass. All 5234 members remain, 5226 earlier payloads are unchanged,
+and Linux/Windows differ only in `project.binary`. Accepted exports and official
+reports are in `mireclaw_release_linux_no_cap_02/` and
+`mireclaw_release_windows_no_cap_02/`, with matching `isolated-export/` bundles.
+Linux PCK SHA256: `e5512c9453b937bf33146322227cb2fe5219bd833ce1801824a7df801c2cb8e8`.
+Windows PCK SHA256: `1eb3cc8269eb5aa9876d3bf873ebe28b4ef785bcaa41d632172b049e59a2dd93`.
+
+The no-budget continuation also passes 87 Python tests across the size-policy,
+packaged Town/Overworld, lossless imports, JSON compaction, release-candidate
+pipeline, release-artifact verification and Mireclaw-sequence suites, plus
+repository validation and `git diff --check`. The initial no-cap batch failed
+before launching Godot because the transient service lacked `/root/.local/bin`
+in PATH; `mireclaw_packages_batch.json` and its driver traceback remain retained.
+The fresh `_no_cap_02` run supplies the executable path and completed normally;
+no game or validation assertion was relaxed to address that launcher failure.
+
+This accepts the three-layer opening and package-policy checkpoint, not all
+Mireclaw buildings or the parent quality goal. No art quality, gameplay, save,
+native/RMG, source-exclusion or untrusted-archive parser safety changes accompany
+the removed content budget. The visibly unconverted Mire Pens painting is the
+next Duskfen art target; remaining faction/variant art stays unfinished.
 
 ## Marsh Listener Post extraction repair — 2026-09-09
 
@@ -1895,17 +2022,18 @@ Extend that scene-matched coverage to the other faction/building plots and
 upgrades. Embercourt now has 24 accepted Riverwatch layers, including the four
 late-court paintings above. Riverwatch/Bellwake coverage is not complete faction coverage:
 the union of current authored towns includes six additional unmapped Embercourt
-building identities and five additional Veilmourn identities. The other four
-factions have no scene-layer mappings yet. These counts come from comparing
+building identities and five additional Veilmourn identities. Mireclaw now has
+three source-accepted opening layers, with platform acceptance tracked at the
+top of this report; the other three factions have no scene-layer mappings yet.
+These counts come from comparing
 `content/towns.json` starting/buildable ids, excluding embedded Town Hall, with
 the exact-faction scene manifest. Candidate generation or mapping counts alone
 do not establish visual or gameplay acceptance.
-The current platform PCKs leave only 337248 bytes under the 250000000-byte cap.
-A 350 MB data-budget decision has been requested for remaining approved art, but
-no increase is approved or implemented in this checkpoint.
+The owner removed the imposed package-size budget on 2026-09-09. Earlier
+headroom measurements remain historical evidence, not a continuing blocker.
 Require inspected sparse, mid-development and developed scenes, exact
 built-id/input/save ownership and
-both-platform packages within the ceiling for each accepted packet. Other
+both-platform package integrity and gameplay for each accepted packet. Other
 reproduced Overworld prop-edge/terrain defects and all-faction visual acceptance
 remain open. Preserve the two explicit legacy validation limits above. The
 Wreck Quay and Bellwake evidence accepts only these repaired assets, not the

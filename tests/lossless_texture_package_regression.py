@@ -40,14 +40,13 @@ def verify(before, after, windows, proofs):
         if path != "project.binary" and payload != win[path]:
             raise ValueError("Linux/Windows payload drift: " + path)
     saved = before.stat().st_size - after.stat().st_size
-    if saved <= 0 or max(after.stat().st_size, windows.stat().st_size) >= 250000000:
-        raise ValueError("No measured headroom or package exceeds ceiling")
+    if saved <= 0:
+        raise ValueError("No measured lossless package saving")
     return {"ok": True, "members": len(result), "verified_texture_members": len(allowed),
             "changed_texture_members": len(changed), "unchanged_members": len(result)-len(changed),
             "platform_equal_members": len(result)-1, "platform_specific_member": "project.binary",
             "before_bytes": before.stat().st_size, "after_bytes": after.stat().st_size,
             "windows_bytes": windows.stat().st_size, "saved_bytes": saved,
-            "headroom_bytes": 250000000-after.stat().st_size,
             "pack_sha256": {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in (before, after, windows)}}
 
 

@@ -15,6 +15,18 @@ Requirements:
 `docs/generated-full-match-quality-requirements.md`. This is an implementation
 checkpoint, **not completion of the overall quality goal or release readiness**.
 
+Validated owner-directed continuation (2026-09-09): the fixed release-package
+size budget is removed, preserving measured sizes, source-art exclusion and
+every independent integrity/runtime gate. Historical below-cap results remain
+historical, not current requirements. Three original Mireclaw opening layers
+pass source and both-platform acceptance, with 4068 checks per exact replay,
+18 equal complete saves outside timestamps and inspected source/Linux captures.
+Both 250525428-byte packages pass official startup/generated construction and
+exact paid-build/input/save probes; 87 follow-up Python tests also pass.
+Remaining Mireclaw buildings and other faction/variant art are unfinished.
+Current evidence and limitations:
+`docs/generated-full-match-art-repair-report.md`.
+
 Validated Marsh Listener Post checkpoint (2026-09-09): the original listening-hut
 cutout no longer carries its detached atlas divider or magenta fringe. The exact
 earned Medium placement, masks, controller, fog and full save behavior remain

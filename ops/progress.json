@@ -74,13 +74,20 @@
         "python3 -B tests/overworld_map_object_cutout_regression.py --case <large_cinder|medium_moss_unclaimed|medium_moss_claimed|medium_marsh_listener> --save <exact-case-save> --resolution <1280x720|1920x1080> --label <fresh>",
         "python3 -B tests/packaged_overworld_map_object_cutout_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --case <large_cinder|medium_moss_unclaimed|medium_moss_claimed|medium_marsh_listener> --save <exact-case-save> --label <fresh>",
         "python3 -B tools/repair_map_object_cutouts.py --check",
-        "python3 -B -m unittest discover -s tests -p test_packaged_overworld_cutout_probe.py"
+        "python3 -B -m unittest discover -s tests -p test_packaged_overworld_cutout_probe.py",
+        "python3 -B -m unittest discover -s tests -p test_release_package_size_policy.py",
+        "python3 -B tests/mireclaw_town_opening.py --label <fresh-deterministic-start>",
+        "python3 -B tools/prepare_town_scene_layers.py --faction faction_mireclaw",
+        "python3 -B tests/town_scene_layer_regression.py --faction mireclaw --save <exact-earned-opening-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
+        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction mireclaw --save <exact-earned-opening-save> --resolution 1280x720 --label <fresh>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
       "classification": "implementation_slice",
       "parentSliceId": "quality-generated-full-match-20260906",
       "implementationTargets": [
+        "Owner-directed no-size-budget continuation: remove numeric PCK ceilings from both official packaging smokes, packaged Town probe and lossless-transfer regression; update tests/validate_repo.py and add tests/test_release_package_size_policy.py. Preserve byte reporting, integrity, source-art exclusion, gameplay and all prior art; require actual Linux/Windows startup/generated and Mireclaw paid-build/input/save acceptance.",
+        "Mireclaw opening: tools/prepare_town_scene_layers.py and exact original Duskfen Den/Hall/Market source, prompt, trim, runtime and manifest rows; tests/mireclaw_town_opening.py, town_scene_layer_regression.py and strict scene-art tests. Preserve all 46 earlier layers, gameplay, native generation and saves; ordinary paid Market and mixed catalog construction with three-resolution input/save and both-platform package acceptance with no imposed size ceiling.",
         "scenes/town/TownShell.gd",
         "scenes/town/TownStageView.gd",
         "scenes/overworld/OverworldShell.gd",
@@ -154,9 +161,9 @@
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-09T01:05:10Z",
+      "updatedAt": "2026-09-09T03:11:13Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Original Marsh Listener Post runtime/trim cutouts now have zero sheet debris or magenta contamination, preserving the exact before master/atlas, original canvas and all 30385 uncontaminated body pixels. Two failing-before controls and six corrected source/Linux/Windows earned Day-46 views pass 31 checks each; all eight complete saves and entire native placement/masks/tile/art authority match outside only saved_at_unix, as exact Decimal JSON and raw bytes. All 16 source jobs (44 Python tests, prior Cinder/Moss/Wreck and sprite/decorative/fog/input/Town reports, preservation, repository/diff) and six official package jobs pass. Both platforms pass the five existing bootstrap controls. Four corrected source/Linux captures inspected; Windows headless Wine only. Both PCKs are 249671040 bytes with 328960 headroom, 5228 members, 5225 prior payloads unchanged and platform difference only project.binary. All 5864 other baseline art/content/runtime/native files are unchanged. Existing caches, saves and evidence preserved; new Wine environments disposable. Broader Town variants/factions and the unapproved budget decision remain open."
+      "notes": "Owner-directed package ceiling removal and three original Duskfen opening layers validated. No replacement numeric budget; integrity, actual sizes and source-art exclusion retained. All 16 art-source jobs, 87 follow-up Python tests, repository/diff and all six official/exact Linux/Windows package jobs pass. Both PCKs 250525428 bytes; four packaged Town replays pass 4068 checks each, all 18 complete saves equal outside timestamps, all 46 earlier layers preserved and four final Linux captures inspected. Windows is headless Wine. Evidence: art-repair report and mireclaw_packages_no_cap_02 acceptance. Checkpoint ready for coherent commit/push; next Duskfen art target is the unconverted Mire Pens. Remaining buildings/factions/variants and full quality goal stay in progress."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16773,10 +16780,10 @@
   "currentNotes": "Bellwake Bell Harbor and faction-specific Wayfarers Hall now use scene-matched original layers and alpha-aware accessible hotspots. Three inspected resolutions pass 824 checks each; six Python tests, Town layout/all-32-town progression, repository and Linux/Windows generated-entry packages pass at 249083376 bytes. Legacy named-slot keyboard and Moonbite 30-turn development failures remain explicit; all 32 save/resume cases pass. Market Square and remaining constructible/faction art remain unfinished; parent and presentation stay in progress. Wreck Quay remains corrected; these are starting-building assets, not a complete construction-art or release claim.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-generated-full-match-presentation-20260906",
-  "currentSliceId": "ux-generated-full-match-presentation-20260906",
-  "currentSliceNotes": "Original Marsh Listener Post runtime/trim cutouts now have zero sheet debris or magenta contamination, preserving the exact before master/atlas, original canvas and all 30385 uncontaminated body pixels. Two failing-before controls and six corrected source/Linux/Windows earned Day-46 views pass 31 checks each; all eight complete saves and entire native placement/masks/tile/art authority match outside only saved_at_unix, as exact Decimal JSON and raw bytes. All 16 source jobs (44 Python tests, prior Cinder/Moss/Wreck and sprite/decorative/fog/input/Town reports, preservation, repository/diff) and six official package jobs pass. Both platforms pass the five existing bootstrap controls. Four corrected source/Linux captures inspected; Windows headless Wine only. Both PCKs are 249671040 bytes with 328960 headroom, 5228 members, 5225 prior payloads unchanged and platform difference only project.binary. All 5864 other baseline art/content/runtime/native files are unchanged. Existing caches, saves and evidence preserved; new Wine environments disposable. Broader Town variants/factions and the unapproved budget decision remain open.",
+  "currentSliceId": "quality-generated-full-match-20260906",
+  "currentSliceNotes": "Legitimate Medium victory/Large defeat and selected responsiveness children are complete. Presentation has 49 accepted exact-faction Town layers across Bellwake, Riverwatch and the Duskfen opening, plus accepted Wreck/Cinder/Moss/Marsh cutout repairs. Owner removed the fixed package-size budget; both 250525428-byte packages pass startup/generated and exact paid Town/save/input validation. Remaining faction/building/variant integration and broader presentation acceptance are unfinished; not release certification.",
   "currentSliceStatus": "in_progress",
-  "currentSliceTitle": "Full-Match Presentation Corrections",
+  "currentSliceTitle": "Generated Full-Match Quality",
   "currentSliceUpdatedAt": "2026-09-09T01:03:14Z",
   "deferredRiskRegister": [
     {
@@ -22257,9 +22264,9 @@
         "Complete Medium/Large matches, measured full-action improvements and inspected presentation corrections",
         "Focused/repository/platform validation and coherent commit/push; hardware limits explicit"
       ],
-      "updatedAt": "2026-09-07T17:46:23Z",
+      "updatedAt": "2026-09-09T03:11:14Z",
       "startedAt": "2026-09-06T12:03:26Z",
-      "notes": "Legitimate Medium victory/Large defeat and selected responsiveness children are complete. Wreck Quay and five Bellwake layers remain validated. Shared production export-only JSON compaction now restores 3255936 bytes of art headroom with all-member/parser and both-platform gameplay proof. Remaining faction/building/upgrade integration and Overworld presentation are unfinished; not release certification.",
+      "notes": "Legitimate Medium victory/Large defeat and selected responsiveness children are complete. Presentation has 49 accepted exact-faction Town layers across Bellwake, Riverwatch and the Duskfen opening, plus accepted Wreck/Cinder/Moss/Marsh cutout repairs. Owner removed the fixed package-size budget; both 250525428-byte packages pass startup/generated and exact paid Town/save/input validation. Remaining faction/building/variant integration and broader presentation acceptance are unfinished; not release certification.",
       "remainingWork": "Accept and integrate scene-matched per-faction Town building layers with grounded plots, exact built-id/upgrade/info/click authority and dual-resolution live construction/save proof; correct remaining reproduced sprite/terrain defects. No further art-scope approval is pending for these agreed corrections; full goal remains unfinished."
     },
     {
@@ -22587,13 +22594,20 @@
         "python3 -B tests/overworld_map_object_cutout_regression.py --case <large_cinder|medium_moss_unclaimed|medium_moss_claimed|medium_marsh_listener> --save <exact-case-save> --resolution <1280x720|1920x1080> --label <fresh>",
         "python3 -B tests/packaged_overworld_map_object_cutout_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --case <large_cinder|medium_moss_unclaimed|medium_moss_claimed|medium_marsh_listener> --save <exact-case-save> --label <fresh>",
         "python3 -B tools/repair_map_object_cutouts.py --check",
-        "python3 -B -m unittest discover -s tests -p test_packaged_overworld_cutout_probe.py"
+        "python3 -B -m unittest discover -s tests -p test_packaged_overworld_cutout_probe.py",
+        "python3 -B -m unittest discover -s tests -p test_release_package_size_policy.py",
+        "python3 -B tests/mireclaw_town_opening.py --label <fresh-deterministic-start>",
+        "python3 -B tools/prepare_town_scene_layers.py --faction faction_mireclaw",
+        "python3 -B tests/town_scene_layer_regression.py --faction mireclaw --save <exact-earned-opening-save> --resolution <1280x720|1920x1080|2048x1079> --label <fresh>",
+        "python3 -B tests/packaged_town_scene_layer_regression.py --binary <official-release-binary> --pack <matching.pck> --platform <linux|windows> --bootstrap-controls [--wine-prefix <fresh>] --faction mireclaw --save <exact-earned-opening-save> --resolution 1280x720 --label <fresh>"
       ],
       "id": "ux-generated-full-match-presentation-20260906",
       "title": "Full-Match Presentation Corrections",
       "classification": "implementation_slice",
       "parentSliceId": "quality-generated-full-match-20260906",
       "implementationTargets": [
+        "Owner-directed no-size-budget continuation: remove numeric PCK ceilings from both official packaging smokes, packaged Town probe and lossless-transfer regression; update tests/validate_repo.py and add tests/test_release_package_size_policy.py. Preserve byte reporting, integrity, source-art exclusion, gameplay and all prior art; require actual Linux/Windows startup/generated and Mireclaw paid-build/input/save acceptance.",
+        "Mireclaw opening: tools/prepare_town_scene_layers.py and exact original Duskfen Den/Hall/Market source, prompt, trim, runtime and manifest rows; tests/mireclaw_town_opening.py, town_scene_layer_regression.py and strict scene-art tests. Preserve all 46 earlier layers, gameplay, native generation and saves; ordinary paid Market and mixed catalog construction with three-resolution input/save and both-platform package acceptance with no imposed size ceiling.",
         "scenes/town/TownShell.gd",
         "scenes/town/TownStageView.gd",
         "scenes/overworld/OverworldShell.gd",
@@ -22667,9 +22681,9 @@
         "Inspect 1280x720 and 1920x1080 early/developed Town and Overworld",
         "Preserve dialogs/hotspots/input/saves and pass focused/repository/platform checks"
       ],
-      "updatedAt": "2026-09-09T01:05:10Z",
+      "updatedAt": "2026-09-09T03:11:13Z",
       "startedAt": "2026-09-06T17:43:52Z",
-      "notes": "Original Marsh Listener Post runtime/trim cutouts now have zero sheet debris or magenta contamination, preserving the exact before master/atlas, original canvas and all 30385 uncontaminated body pixels. Two failing-before controls and six corrected source/Linux/Windows earned Day-46 views pass 31 checks each; all eight complete saves and entire native placement/masks/tile/art authority match outside only saved_at_unix, as exact Decimal JSON and raw bytes. All 16 source jobs (44 Python tests, prior Cinder/Moss/Wreck and sprite/decorative/fog/input/Town reports, preservation, repository/diff) and six official package jobs pass. Both platforms pass the five existing bootstrap controls. Four corrected source/Linux captures inspected; Windows headless Wine only. Both PCKs are 249671040 bytes with 328960 headroom, 5228 members, 5225 prior payloads unchanged and platform difference only project.binary. All 5864 other baseline art/content/runtime/native files are unchanged. Existing caches, saves and evidence preserved; new Wine environments disposable. Broader Town variants/factions and the unapproved budget decision remain open."
+      "notes": "Owner-directed package ceiling removal and three original Duskfen opening layers validated. No replacement numeric budget; integrity, actual sizes and source-art exclusion retained. All 16 art-source jobs, 87 follow-up Python tests, repository/diff and all six official/exact Linux/Windows package jobs pass. Both PCKs 250525428 bytes; four packaged Town replays pass 4068 checks each, all 18 complete saves equal outside timestamps, all 46 earlier layers preserved and four final Linux captures inspected. Windows is headless Wine. Evidence: art-repair report and mireclaw_packages_no_cap_02 acceptance. Checkpoint ready for coherent commit/push; next Duskfen art target is the unconverted Mire Pens. Remaining buildings/factions/variants and full quality goal stay in progress."
     },
     {
       "id": "bugfix-rmg-audit-corrections-20260905",
@@ -111436,7 +111450,7 @@
   ],
   "summary": "Validated the original Marsh Listener Post extraction repair: 16 source jobs, 44 Python tests, six official Linux/Windows package jobs, eight identical non-clock saves and inspected source/Linux captures. All earlier art/native/runtime authority preserved; 5225 of 5228 package members unchanged, both packs 249671040 bytes below the unchanged 250000000-byte limit. Wider Town variants/factions and the full quality goal remain in progress; Windows headless Wine only and no budget increase approved.",
   "taskId": "10236",
-  "updatedAt": "2026-09-09T01:05:11Z",
+  "updatedAt": "2026-09-09T03:11:14Z",
   "validation": {
     "id": "quality-marsh-listener-cutout-20260909",
     "sliceId": "ux-generated-full-match-presentation-20260906",

@@ -19,7 +19,7 @@ godot --headless --path . --export-release "Windows Release" .artifacts/packagin
 
 - The runner verifies the exported executable exists, is larger than the minimum binary-size floor, and has Windows `MZ` plus `PE` headers.
 - The runner verifies `.artifacts/packaging_windows_export_smoke/export/heroes-like.pck` exists and is larger than the minimum package-size floor.
-- The runner requires the release PCK to remain at or below the explicit 250 MB ceiling.
+- The runner records the release PCK size without imposing a maximum content-size budget, per owner direction on 2026-09-09. The former 250 MB check and its boolean report field were removed; completeness, integrity and startup checks remain mandatory.
 - Before inventory, size and Wine checks, the runner uses the same verified
   `tools/compact_export_pck.py` operation as the production release builder.
   It removes only exported JSON formatting; source files and all non-JSON payload
@@ -33,6 +33,13 @@ godot --headless --path . --export-release "Windows Release" .artifacts/packagin
 - The runner shuts down its isolated Wine server and writes `.artifacts/packaging_windows_export_smoke/report.json` with export and runtime command summaries, marker results, artifact sizes, header checks, native DLL checks, artifact listing, and explicit non-claims.
 
 ## Validation Command
+
+Validated no-size-budget checkpoint (2026-09-09):
+`.artifacts/generated_full_match_quality_20260906/mireclaw_release_windows_no_cap_02/report.json`
+passes with a 250525428-byte PCK. Fresh-prefix startup and the 23-step generated
+Town flow pass; exact Mireclaw replays at both configured resolutions each pass
+4068 checks with unchanged saves/exports. This remains headless Wine evidence,
+not native hardware certification. Full evidence: `docs/generated-full-match-art-repair-report.md`.
 
 ```bash
 python3 tests/packaging_windows_export_smoke.py

@@ -19,6 +19,8 @@ LATE_HARBOR_IDS = [
 ]
 LATE_HARBOR_SAVE_SHA256 = '69f4c289bb0bd273f175e24a0b2704391302c0cf2dcc0be76c4d487f91886537'
 EMBERCOURT_SAVE_SHA256 = 'c0d67e4b2a8403ac82ae599391ae0a946ea16110beb4dd378a599af9a9ab7a59'
+MIRECLAW_SAVE_SHA256 = '57f48cd7fcb650777a7923f5aec273f8bd73e61d65acaf9306a048323549ba89'
+MIRECLAW_IDS = ['building_blackbranch_den', 'building_wayfarers_hall', 'building_market_square']
 EMBERCOURT_DEVELOPED_SHA256 = '553ceb3ea972412cd72341ff627fa73c6864f9bcbfb6cc428923ebec5712de59'
 EMBERCOURT_IDS = ['building_muster_yard', 'building_wayfarers_hall', 'building_market_square']
 EMBERCOURT_GROWTH_IDS = ['building_stone_store', 'building_watch_barracks', 'building_bowyer_lodge', 'building_beacon_range']
@@ -286,6 +288,9 @@ func inspect_scene_layers(ids: Array = ["building_veilmourn_bell_harbor", "build
 	check(stage._town_building_texture("building_wayfarers_hall").resource_path=="res://art/towns/runtime/scene_layers/%s/building_wayfarers_hall.png" % other_faction,"scenic texture leaked across faction cache keys")
 	stage._town_template=template
 	var manifest: Dictionary = stage._building_scene_art_manifest
+	if not manifest.factions.has(faction):
+		check(false,"missing exact scene-layer faction: "+faction)
+		return # Retain a clean failing-before report; no missing-dictionary runtime error.
 	stage._building_scene_art_manifest=manifest.duplicate(true)
 	stage._building_scene_art_manifest.factions[faction].building_wayfarers_hall.runtime_path="res://missing-declared-town-layer.png"
 	check(stage._town_building_texture("building_wayfarers_hall")==null,"missing declared art fell back to catalog")
@@ -782,12 +787,48 @@ def embercourt_growth_script(*, supply=False, riverworks=False, civic=False, lat
     return opening + EXTRA + growth
 
 
+def mireclaw_script(script):
+    """Real opening/Market/Mire Pens orders; reuse all shared input/save checks."""
+    script=embercourt_script(script).replace('building_muster_yard','building_blackbranch_den').replace('town_riverwatch','town_duskfen').replace('Riverwatch Market','Duskfen Market')
+    script=script.replace('get_tree().current_scene._commit_build_action(building_id)',
+                          'var expected_build: Dictionary=mireclaw_expected_build(building_id,offered[0])\n\t\tget_tree().current_scene._commit_build_action(building_id)')
+    script=script.replace('for resource in cost:\n\t\t\tcheck(int(session.overworld.resources[resource])',
+                          'check(normalized(session.to_dict())==expected_build,"Market UI diverged from complete authoritative build state")\n\t\tfor resource in cost:\n\t\t\tcheck(int(session.overworld.resources[resource])')
+    script=script.replace('await inspect_scene_layers(["building_blackbranch_den","building_wayfarers_hall","building_market_square"])',
+                          'await inspect_scene_layers(["building_blackbranch_den","building_wayfarers_hall","building_market_square"])\n\t\tawait inspect_harbor_growth()')
+    script=script.replace('await RenderingServer.frame_post_draw\n\tget_viewport().get_texture().get_image().save_png(out.path_join("market_saved_reentry.png"))',
+                          'check(DirAccess.copy_absolute(path,out.path_join("earned_market_save.json"))==OK,"could not retain ordinary Market state")\n\tawait RenderingServer.frame_post_draw\n\tget_viewport().get_texture().get_image().save_png(out.path_join("market_saved_reentry.png"))')
+    growth=HARBOR_GROWTH[:HARBOR_GROWTH.index('\tif OS.get_environment("TOWN_HARBOR_DEVELOPED_SAVE")')]
+    growth=growth.replace('__GROWTH_IDS__','["building_mire_pens"]')
+    growth=growth.replace('var cost: Dictionary=actions[0].cost',
+                          'var expected_build: Dictionary=mireclaw_expected_build(id,actions[0])\n\t\tvar prior_built: Array=TownRules.get_active_town(session).built_buildings.duplicate()\n\t\tvar cost: Dictionary=actions[0].cost')
+    growth=growth.replace('check(committed.ok and id in active.built_buildings',
+                          'check(normalized(session.to_dict())==expected_build,"Mire Pens UI diverged from complete authoritative build state")\n\t\tcheck(active.built_buildings==prior_built+[id],"Mire Pens changed more than the earned built-id append")\n\t\tcheck(committed.ok and id in active.built_buildings')
+    growth=growth.replace('await inspect_scene_layers([id])',
+                          'await inspect_scene_layers(["building_blackbranch_den","building_wayfarers_hall","building_market_square"])')
+    growth=growth.replace('"res://art/towns/runtime/scene_layers/faction_veilmourn/%s.png" % id', 'TownRules.building_icon_path(id)')
+    growth=growth.replace('"growth save/re-entry lost exact layer: "+id)',
+                          '"growth save/re-entry lost exact retained catalog asset: "+id)\n\t\tvar mixed: Array=stage._town_building_scene_entries(stage._town_scene_rect()).filter(func(e):return e.visible_building_id==id)\n\t\tcheck(mixed.size()==1 and not mixed[0].scene_layer,"unconverted Mire Pens was falsely accepted as new scene art")')
+    helper=r'''
+func mireclaw_expected_build(id: String, action: Dictionary) -> Dictionary:
+	var control=SessionStateStore.SessionData.new()
+	control.from_dict(normalized(session.to_dict()))
+	var before: Dictionary=TownRules.town_action_consequence_signature(control)
+	var result: Dictionary=TownRules.build_active_town(control,id)
+	check(result.ok,"ordinary build control rejected: "+id)
+	var recap: Dictionary=TownRules.build_town_action_recap(control,"build","build:"+id,action,result,before)
+	if recap.get("active",false): control.flags["last_town_action_recap"]=recap.duplicate(true)
+	return normalized(control.to_dict())
+'''
+    return script+growth+helper
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--label', required=True)
     parser.add_argument('--save', type=Path, required=True)
     parser.add_argument('--resolution', choices=['1280x720', '1920x1080', '2048x1079'], required=True)
-    parser.add_argument('--faction', choices=['veilmourn', 'embercourt'], default='veilmourn')
+    parser.add_argument('--faction', choices=['veilmourn', 'embercourt', 'mireclaw'], default='veilmourn')
     parser.add_argument('--embercourt-growth', action='store_true', help='Four paid Stone/Watch/Bowyer/Beacon orders from the exact earned Medium11 Market save')
     parser.add_argument('--embercourt-supply-growth', action='store_true', help='Five paid supply/magic orders and ordinary ore trades from the exact earned Day-5 save')
     parser.add_argument('--embercourt-riverworks-growth', action='store_true', help='Six normal riverworks-chain builds from the exact earned Day-10 save')
@@ -807,8 +848,10 @@ def main():
         parser.error('select one normal construction sequence per run')
     if args.presentation_only and not args.developed_save:
         parser.error('presentation-only requires an exact --developed-save fixture')
-    if args.faction=='embercourt' and any((args.harbor_growth,args.exchange_growth,args.salt_growth,args.defense_growth,args.memory_growth,args.rigging_magic_growth,args.late_harbor_growth)):
-        parser.error('Bellwake growth sequences cannot run against Embercourt')
+    if args.faction!='veilmourn' and any((args.harbor_growth,args.exchange_growth,args.salt_growth,args.defense_growth,args.memory_growth,args.rigging_magic_growth,args.late_harbor_growth)):
+        parser.error('Bellwake growth sequences cannot run against Embercourt' if args.faction=='embercourt' else 'Bellwake growth sequences require --faction veilmourn')
+    if args.faction=='mireclaw' and (args.presentation_only or args.developed_save):
+        parser.error('Mireclaw opening uses real Market/Mire Pens construction, not another faction developed fixture')
     if args.embercourt_growth and args.faction!='embercourt':
         parser.error('Embercourt growth requires --faction embercourt')
     if args.embercourt_supply_growth and args.faction!='embercourt':
@@ -823,6 +866,8 @@ def main():
         parser.error('fresh lowercase label required')
     save = args.save.resolve(strict=True)
     before_hash = hashlib.sha256(save.read_bytes()).hexdigest()
+    if args.faction=='mireclaw' and before_hash!=MIRECLAW_SAVE_SHA256:
+        parser.error('Mireclaw opening requires the exact recorded nonterminal generated Duskfen Day-1 save')
     if args.embercourt_growth and before_hash!=EMBERCOURT_GROWTH_SAVE_SHA256:
         parser.error('Embercourt growth requires the exact earned nonterminal Medium11 Market save')
     if args.embercourt_supply_growth and before_hash!=EMBERCOURT_SUPPLY_SAVE_SHA256:
@@ -928,6 +973,9 @@ def main():
         sequence='embercourt_late_court' if args.embercourt_late_court_growth else 'embercourt_civic' if args.embercourt_civic_growth else 'embercourt_riverworks' if args.embercourt_riverworks_growth else 'embercourt_supply' if args.embercourt_supply_growth else 'embercourt'
     elif args.faction=='embercourt':
         script_text = embercourt_script(script_text, presentation_only=args.presentation_only)
+    elif args.faction=='mireclaw':
+        script_text=mireclaw_script(script_text)
+        sequence='mireclaw_market_and_mixed_mire_pens'
     if args.resolution == '2048x1079':
         script_text = script_text.replace('SettingsService.set_presentation_resolution(OS.get_environment("TOWN_OVERLAY_RESOLUTION"))', 'get_window().content_scale_size = Vector2i(2048,1079)\n\tget_window().size = Vector2i(2048,1079)')
     with tempfile.TemporaryDirectory(prefix='town-layer-probe-', dir=OUTPUT) as temporary, tempfile.TemporaryDirectory(prefix='town-layer-data-', dir='/dev/shm') as data:

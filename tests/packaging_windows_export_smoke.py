@@ -31,7 +31,6 @@ SCHEMA_ID = "packaging_windows_export_smoke_v2"
 PRESET_NAME = "Windows Release"
 MIN_EXE_BYTES = 500_000
 MIN_PCK_BYTES = 10_000_000
-MAX_RELEASE_PCK_BYTES = 250_000_000
 RUNTIME_AUDIO_MANIFEST_PATHS = (
     ROOT / "content" / "ui_sfx_manifest.json",
     ROOT / "content" / "presentation_sfx_manifest.json",
@@ -1329,7 +1328,6 @@ def main() -> int:
         and bool(header["pe_header"])
         and bool(pck["exists"])
         and bool(pck["large_enough"])
-        and int(pck["size_bytes"]) <= MAX_RELEASE_PCK_BYTES
         and bool(dlls["all_exported"])
         and bool(terrain_payload["valid_directory"])
         and not terrain_payload["forbidden_entries"]
@@ -1725,7 +1723,6 @@ def main() -> int:
         "runtime_audio_pck_import_entry_count": len(terrain_payload["runtime_audio_import_entries"]),
         "runtime_audio_pck_payload_count": len(terrain_payload["runtime_audio_payload_entries"]),
         "runtime_audio_pck_entries_present": terrain_payload["runtime_audio_entries_present"],
-        "pck_within_release_size_ceiling": int(pck["size_bytes"]) <= MAX_RELEASE_PCK_BYTES,
         "fatal_export_matches": fatal_matches,
         "wine_runtime_returncode": runtime_result["returncode"],
         "wine_runtime_markers": runtime_markers,
