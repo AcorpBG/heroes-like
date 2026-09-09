@@ -1,0 +1,103 @@
+{
+  "schema_id": "original_map_object_cutout_repair_v1",
+  "owner_approval": "2026-09-07 approved Overworld cutout repairs; Cinder/Moss continuation selected in PLAN.md.",
+  "processing_tool": "tools/repair_map_object_cutouts.py",
+  "processing": "Original 512x512 RGBA canvases; remove inspected sheet debris outside each complete subject; analytically unmatte magenta and recover partial alpha. No replacement geometry or new painted pixels.",
+  "source_docs": [
+    "docs/generated-full-match-quality-requirements.md",
+    "docs/generated-full-match-art-repair-report.md"
+  ],
+  "generation": "No new generation. Original built-in image-generated batch04/batch09 paintings and exact extracted before rasters are retained.",
+  "assets": {
+    "mapobj_cinder_ore_face": {
+      "input": "res://art/overworld/source/generated/full_match_art_repairs/cinder_moss_cutouts/mapobj_cinder_ore_face_before.png",
+      "input_sha256": "cdb0b47286ca8efd019c4eded10ff9ffa7299d9d1b61a0c236ebc9bc151e6e3b",
+      "original_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "original_generated_atlas_sha256": "8b5091ec6a85380c799672fce7ef97320fe933e286a4acb931bf08ad0e64508f",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_cinder_ore_face.png",
+      "trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_cinder_ore_face-trimmed.png",
+      "runtime_sha256": "07be69ebfbe66a5792ddc7803dd9d5f44d38bfdb008156110a67b271bb7fb16a",
+      "body_window": [
+        110,
+        112,
+        408,
+        399
+      ],
+      "inspected_boundary": "Exclude the inspected left and bottom white/magenta cell dividers; retain the entire mine, scaffolding, ladders, tracks and rock base.",
+      "before": {
+        "ok": false,
+        "errors": [
+          "sheet debris outside complete painted body",
+          "magenta-key contamination"
+        ],
+        "divider_pixels": 282,
+        "magenta_pixels": 2941,
+        "painted_pixels": 47476,
+        "alpha_bounds": [
+          104,
+          99,
+          405,
+          408
+        ]
+      },
+      "after": {
+        "ok": true,
+        "errors": [],
+        "divider_pixels": 0,
+        "magenta_pixels": 0,
+        "painted_pixels": 47194,
+        "alpha_bounds": [
+          113,
+          118,
+          405,
+          392
+        ]
+      }
+    },
+    "mapobj_moss_oath_cache": {
+      "input": "res://art/overworld/source/generated/full_match_art_repairs/cinder_moss_cutouts/mapobj_moss_oath_cache_before.png",
+      "input_sha256": "061c5d022fc03fba0ecccc0b786c3d95b603036c5f9b0aab89f2f9305ed2262c",
+      "original_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "original_generated_atlas_sha256": "316451178feadfb669d8125c9164af99e41185d8f62852ffd083179a9ddff7e2",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_moss_oath_cache.png",
+      "trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_moss_oath_cache-trimmed.png",
+      "runtime_sha256": "d8919efc14800098505a2280c83e8e9de721d90ed935dff2e59673fb86abfb7c",
+      "body_window": [
+        108,
+        130,
+        406,
+        394
+      ],
+      "inspected_boundary": "Exclude isolated cell debris above/left of the subject; retain the complete chest, three stones, flowers, plants and ground edge.",
+      "before": {
+        "ok": false,
+        "errors": [
+          "sheet debris outside complete painted body",
+          "magenta-key contamination"
+        ],
+        "divider_pixels": 5,
+        "magenta_pixels": 2056,
+        "painted_pixels": 42800,
+        "alpha_bounds": [
+          100,
+          99,
+          413,
+          412
+        ]
+      },
+      "after": {
+        "ok": true,
+        "errors": [],
+        "divider_pixels": 0,
+        "magenta_pixels": 0,
+        "painted_pixels": 42795,
+        "alpha_bounds": [
+          112,
+          137,
+          401,
+          387
+        ]
+      }
+    }
+  }
+}

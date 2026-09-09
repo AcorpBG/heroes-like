@@ -3,6 +3,111 @@
 Parent: `quality-generated-full-match-20260906`; selected child:
 `ux-generated-full-match-presentation-20260906`. Status: in progress.
 
+## Cinder Ore Face / Moss Oath Cache extraction repair — 2026-09-08
+
+This continues the owner-approved cutout processing, not new painting or changes
+to map adoption. The defects were already recorded in the full-match quality
+report: white/magenta sheet debris in Cinder Ore Face and a magenta fringe on Moss
+Oath Cache. Inspection of the original generated batch04/batch09 atlases and the
+exact runtime PNGs confirms contaminated extraction, not absent sprite mappings.
+The earlier distinct-sprite count did not prove clean alpha edges.
+
+`OverworldMapView._resource_asset_id` resolves the actual Large Day-8 placement
+`native_h3maped_c2520619_object_2306` at `(40,73,0)` through
+`object_cinder_ore_face`, despite its adopted `site_aetherglass_lens_house` id.
+The Medium earned Day-19/Day-46 supply placement
+`h3maped_small_town_source_support_native_h3maped_93c0f05a_object_0950_required_sources`
+at `(41,41,0)` resolves Moss through `site_generated_town_required_source_cache`.
+The same cache painting is authoritative before and after the ordinary earned
+capture; unrelated `site_moss_oath_cache` opened-state art is not changed.
+
+`tools/repair_map_object_cutouts.py` retains hash-locked extracted inputs and
+generated masters in the established source/generated/trimmed/runtime pipeline.
+It removes only inspected out-of-body debris and applies the previously approved
+analytical magenta unmatting. Both canvases remain 512x512; every uncontaminated
+painted pixel is preserved. Provenance lives at
+`art/overworld/source/generated/full_match_art_repairs/cinder_moss_cutouts/manifest.json`.
+The runtime manifest changes only the two processing-manifest/hash registrations.
+
+| Original painting | Stray pixels before → after | Magenta pixels before → after | Painted pixels retained |
+| --- | ---: | ---: | ---: |
+| Cinder Ore Face | 282 → 0 | 2941 → 0 | 47194 |
+| Moss Oath Cache | 5 → 0 | 2056 → 0 | 42795 |
+
+All six pre-repair rendered controls (three earned cases at 1280x720/1920x1080)
+fail only the two pixel checks, with no engine errors, identity/mask/controller
+failures, fog injection or full-state/save drift. The new regression uses normal
+saved Overworld entry or normal Leave Town, not synthetic ownership or progress.
+`tests/test_map_object_cutouts.py` passes its six strict original/master,
+idempotence, malformed-input, preservation and fail-closed provenance tests after
+the repair. The package adapter's two focused tests retain every assertion while
+translating Windows paths and omitting only paired headless captures.
+
+Evidence root: `.artifacts/generated_full_match_quality_20260906/`.
+`cinder_moss_lossless.json` verifies both engine imports without decoded-pixel
+changes; `cinder_moss_preservation.json` checks 5825 earlier tracked files, with
+only the four selected PNGs and Overworld manifest changed. All 5820 others,
+including earlier Town/Wreck/opened-cache art, native/maps/content and runtime
+owners, are unchanged; tracked `src/gdextension`/`bin` also match HEAD. Both
+repaired PNGs and all six repaired gameplay screenshots were visually inspected.
+Source acceptance is complete: `cinder_moss_source_acceptance_batch.json` records
+17 passing jobs, including 43 Python tests, six exact earned views, both Wreck
+Quay resolutions, six existing sprite/decorative/fog/movement/Town reports,
+preservation, `python3 tests/validate_repo.py` and `git diff --check`.
+`cinder_moss_source_acceptance.json` compares all twelve before/after saves:
+complete exact-Decimal JSON and raw bytes match outside only `/saved_at_unix`;
+entire placement records and tile/footprint/mapping authority also match.
+Package acceptance is also complete (2026-09-09):
+`cinder_moss_packages_final_batch.json` records 14 passing jobs: both established
+export/startup/generated-Town flows and all twelve exact Linux/Windows saved-map
+cases. Both platforms pass the five existing bootstrap rejection/activation
+controls. Windows uses headless Wine; this is not physical Windows GPU evidence.
+All six Linux packaged screenshots were inspected in addition to the six source
+views. `cinder_moss_packages_acceptance.json` verifies all 24 complete saves
+(before, source, Linux, Windows) as exact-Decimal JSON and raw non-clock bytes,
+with identical entire placements and tile/footprint/mapping authority.
+
+Both packs contain 5228 entries and are **249668544 bytes**, leaving **331456
+bytes** under the unchanged ceiling. Relative to the accepted Riverwatch pack,
+5224 entries are unchanged: only the two cutout `.ctex` files, Overworld manifest
+and UID cache differ. Linux/Windows differ only in `project.binary`. No source
+masters or accidental editor resources are shipped. Earlier Town, Wreck Quay,
+opened-cache and all other members remain identical. Pack SHA256:
+
+- Linux: `56a95c24b0706b6fb29237dd0a2a58724417b7fc0c7bc26ed5d7dc829516ad2a`
+- Windows: `66fa8158fc35f893738530fecf86761507d4467134ad132ae8e792430f70582b`
+
+Exports are under `cinder_moss_final_release_<platform>/isolated-export/`;
+per-case reports/views use `cinder_moss_packaged_final_<platform>_<case>_<resolution>/`.
+The standard checker initially wrote to its default report directory because
+the guard wrapper set the output override after importing it. Those successful
+reports/logs were copied unchanged into the packet after verifying their ordered
+full-member inventory against the tested PCKs; hashes and originals are recorded
+in `cinder_moss_standard_report_retention.json`. The repeatable wrapper now sets
+the override before import. No replacement pass result was synthesized.
+
+This accepts only the two cutout corrections, not full presentation or the full
+goal. The inspected earned Medium view still exposes sheet/magenta contamination
+in Marsh Listener Post, native placement `native_h3maped_93c0f05a_object_1053` at
+`(39,41,0)`, mapped to `mapobj_marsh_listener_post` from original batch06. Its
+runtime PNG was inspected and remains unchanged; it is a next bounded follow-up.
+Other Town variants/factions and the unapproved data-budget request remain open.
+
+The first background source launch failed before the engine ran because its
+service PATH omitted Godot. Its terminal report is retained; the corrected
+isolated service explicitly inherits the execution PATH and uses fresh evidence
+labels. No failed run is counted as an acceptance pass.
+
+The first export service also lacked a login home, so Godot searched
+`./godot/export_templates` instead of the installed templates. Its accidental
+44 KiB editor-settings directory is retained outside export scope at
+`cinder_moss_failed_service_godot_data/`. An already-scanned subsequent package
+contained two editor-settings resources; the all-member check rejected it and
+the batch was explicitly stopped. Final package checks use `User=root` with
+`SetLoginEnvironment=yes`, fresh labels and an early exact-member check before
+runtime testing. These are validation-environment corrections, not game changes
+or accepted package evidence; the failed/stopped reports remain retained.
+
 ## Approval and boundaries
 
 On 2026-09-07 the owner approved resuming with scene-matched per-faction Town

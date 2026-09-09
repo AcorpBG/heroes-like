@@ -5257,7 +5257,9 @@
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "distinct_sprite_assignment": true,
       "assigned_map_object_id": "object_cinder_ore_face",
-      "assigned_map_object_family": "mine"
+      "assigned_map_object_family": "mine",
+      "source_processing_manifest": "res://art/overworld/source/generated/full_match_art_repairs/cinder_moss_cutouts/manifest.json",
+      "runtime_sha256": "07be69ebfbe66a5792ddc7803dd9d5f44d38bfdb008156110a67b271bb7fb16a"
     },
     "mapobj_frostwood_cutting_yard": {
       "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_frostwood_cutting_yard.png",
@@ -6099,7 +6101,9 @@
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "distinct_sprite_assignment": true,
       "assigned_map_object_id": "object_moss_oath_cache",
-      "assigned_map_object_family": "guarded_reward_site"
+      "assigned_map_object_family": "guarded_reward_site",
+      "source_processing_manifest": "res://art/overworld/source/generated/full_match_art_repairs/cinder_moss_cutouts/manifest.json",
+      "runtime_sha256": "d8919efc14800098505a2280c83e8e9de721d90ed935dff2e59673fb86abfb7c"
     },
     "mapobj_frost_tithe_cellar": {
       "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_frost_tithe_cellar.png",
