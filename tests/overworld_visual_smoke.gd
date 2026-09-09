@@ -429,7 +429,8 @@ func _assert_resource_site_landmark_contract(shell: Node, map_node: Node, sessio
 		var site_id := String(case.get("site_id", ""))
 		var asset_id := String(case.get("asset_id", ""))
 		var tile: Vector2i = case.get("tile", Vector2i(-1, -1))
-		var expected_region: Rect2 = case.get("region", Rect2())
+		var original_region: Rect2 = case.get("region", Rect2())
+		var expected_region := Rect2(original_region.position * 4, original_region.size * 4)
 		var unclaimed_asset_id := String(case.get("unclaimed_asset_id", ""))
 		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
 		var repeated: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
@@ -455,7 +456,7 @@ func _assert_resource_site_landmark_contract(shell: Node, map_node: Node, sessio
 			and texture.region == expected_region \
 			and texture.atlas is Texture2D \
 			and texture.atlas.resource_path == RESOURCE_SITE_LANDMARK_ATLAS_PATH \
-			and texture.atlas.get_size() == Vector2(1440, 48) \
+			and texture.atlas.get_size() == Vector2(5760, 192) \
 			and unclaimed_resolves_existing \
 			and repeated == presentation
 		rows.append({"site_id": site_id, "asset_id": asset_id, "region": expected_region, "exact": exact})
@@ -472,7 +473,7 @@ func _assert_resource_site_landmark_contract(shell: Node, map_node: Node, sessio
 	var object_paths: Dictionary = map_node.get("_object_asset_paths")
 	var object_regions: Dictionary = map_node.get("_object_asset_regions")
 	object_paths["resource_site_invalid_region_fixture"] = RESOURCE_SITE_LANDMARK_ATLAS_PATH
-	object_regions["resource_site_invalid_region_fixture"] = [1420, 0, 48, 48]
+	object_regions["resource_site_invalid_region_fixture"] = [5680, 0, 192, 192]
 	var invalid_region_fail_closed := map_node.call("_object_texture_for_asset", "resource_site_invalid_region_fixture") == null
 	var missing_asset_fail_closed := map_node.call("_object_texture_for_asset", "resource_site_missing_asset_fixture") == null
 	if not invalid_region_fail_closed or not missing_asset_fail_closed or session.to_dict() != authority_before:

@@ -6,6 +6,8 @@
   "runtime_atlas_size": [1440, 48],
   "runtime_atlas_sha256": "6c7a4e6a83a5e92d14087fcbc42f251057f24bc8ab3c3e5573451c4dcbf78898",
   "runtime_region_size": [48, 48],
+  "repaired_derivative_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/recurring_sites/manifest.json",
+  "historical_atlas_note": "The original 1440x48 atlas and hash remain immutable source evidence, archived in the derivative packet. Current runtime uses original-source 192px cells with the same logical fit: first five south-anchored, later 25 inset two logical pixels. Site/state routes are unchanged.",
   "processing": "alpha_trim_then_aspect_fit_within_44x44_and_south_anchor_on_transparent_48x48_cell",
   "prompt_set_summary": "Thirteen original hand-painted orthographic claimed-state neutral-dwelling landmarks derived from each live roster, biome, service, and scenario identity; strong non-color silhouettes; genuine transparency; no characters, text, logos, copied franchise expression, terrain cards, or opaque backdrops.",
   "items": [

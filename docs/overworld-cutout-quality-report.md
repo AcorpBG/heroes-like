@@ -664,17 +664,94 @@ two Tidepool guards, **all already resolved**; none was revived for a screenshot
 Its 2,380 original blockers and complete native state remain unchanged. Detached
 31-identity art coverage is not presented as 31 live native encounters.
 
+## Thirty recurring resource-site originals — accepted 2026-09-09
+
+This cohort restores detail from all thirty immutable original RGBA paintings
+under `resource_sites/recurring_wave1` and `recurring_wave2`. Unlike the earlier
+binary-alpha encounter damage, these old cells retained smooth transparency but
+lost substantial detail through 48-pixel packaging. No new generation, color key,
+alpha removal, replacement geometry or gameplay change was needed. Purple crystals,
+mushrooms and banners are original paint, not removable matte.
+
+`tools/prepare_overworld_recurring_site_cutouts.py` reconstructs the original crop
+and 44-pixel logical aspect fit directly at four times the raster density. The
+first five retain bilinear resampling and the south anchor. The later 25 retain
+Lanczos and their measured two-pixel south inset, which the historical manifest's
+generic south-anchor description omitted. Those later registrations reproduce
+every old alpha and nontransparent painted pixel exactly; tiny RGB differences
+under zero alpha are not visible paint. The first five registrations have alpha
+MAE below 1 and opaque RGB MAE below 1.4 on the 0–255 scale. The installed atlas
+uses the same path at 5760x192, with no change to logical/world-space size.
+
+The `recurring_sites` recovery packet retains the exact original 1440x48 atlas,
+source hashes, complete per-identity registration recipe and reconstructible
+trim/runtime proof. Source manifests retain their historical hashes and point to
+that derivative proof. All 30 ids and all resource-site/state mappings are exact.
+In particular, the 24 separately authored claimed variants are **not** rerouted
+to these recovered legacy originals. Greenbranch Copse still uses its original
+claimed artwork and its separate unclaimed map-object identity.
+
+Evidence below is under `.artifacts/overworld_cutout_quality_20260909/` unless
+noted otherwise:
+
+- All eight `recurring_sites_preview/comparison_00..07.png` pages were inspected.
+  `recurring_sites_before_final` records exactly 90 expected old-art failures
+  across 2,673 checks and no runtime errors. An earlier diagnostic included two
+  probe mistakes—an obsolete Greenbranch unclaimed expectation and an attempted
+  move onto water—which were corrected before the accepted before/after pair.
+- `recurring_sites_1280`, `recurring_sites_1920`, `recurring_sites_packaged_linux`
+  and `recurring_sites_packaged_windows` each pass all 2,673 checks with no runtime
+  errors. All fifteen final source/Linux screenshots were inspected: three
+  detached galleries, actual Prismhearth Watch gameplay and an earned native-map
+  control at each rendered boundary. Windows is headless Wine, not GPU evidence.
+  The relay remains at (2,3), visible after an ordinary move from (0,3) to (0,2);
+  no placement, collection or fog was granted. The retained Day-97 native sample
+  has 2,380 manifest-backed blockers but zero currently selected cohort assets;
+  its image is explicitly an unchanged control, not a repaired-object example.
+- `recurring_sites_unit_final.log`: twelve Python tests pass. The existing
+  `neutral_dwelling_claimed_landmark_report` passes all 38 claim/reward/repeat/save
+  cases in `recurring_sites_claimed_final.log`. Its sole stale expectation was
+  corrected from `kennel` to `mapobj_fenhound_kennels`; the previous accepted PCK
+  already contains that exact mapping. Current art/state routing was not changed.
+  The old combined visual-smoke fixture's density/bounds expectations were aligned;
+  its script loads through normal autoload startup (`recurring_sites_legacy_load`),
+  but its obsolete combined claimed-state fixture is not counted as acceptance.
+  A standalone `--check-only --script` diagnostic lacked autoloads and is not a
+  runtime failure. The Python-owned thirty-identity probe supplies exact coverage.
+- Repository validation passes in `recurring_sites_repo.log` and the final
+  `recurring_sites_repo_final.log`. All five
+  existing sprite/decorative/input/route/fog reports pass with individual exit 0
+  in `.artifacts/full_play_runtime_20260905/recurring_sites_shared_final/report.json`.
+  The first runner stopped after three cases; the repeat's parent shell was also
+  signaled, but its isolated child completed all five. These interruptions remain
+  recorded and are not presented as successful outer-shell exits.
+- Official `recurring_sites_linux` and `recurring_sites_windows` reports pass
+  package integrity, startup and generated Overworld/Town/native flows. Windows
+  startup and generated gameplay each return 0 with no fatal matches; its outer
+  shell reported SIGTERM despite the completed success marker/report. The separate
+  exact-art Windows package probe exits 0. Both PCKs contain 5,484 members and are
+  288,003,784 bytes; only `project.binary` differs between platforms. No fixed
+  package ceiling applies. No source-art metadata or payload is shipped.
+- `recurring_sites_delivery_preservation.json` compares baseline `7e05c5af`,
+  source and both exact packages. Only the existing resource-site texture,
+  Overworld art manifest and UID cache differ: 5,481 members, including all game
+  code/native/content/save owners, remain byte-identical. Only 30 of 1,214 art
+  rows change. All ten complete saves match across five runs except save time and
+  the fresh authored session's clock-generated id; within each run nothing is
+  excluded. Original relay placement and 1280-pixel world draw rectangles remain
+  exact (Windows float32 exact); wide gameplay uses the same unchanged geometry
+  owner. All original paintings and the historical atlas remain hash-exact.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The remaining 783 rows have
 now received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 485 repaired/preserved dispositions, leaving
-729 for complete detailed review/recovery. All 31 recurring encounters are now
-accepted. Next is source-level review/recovery of the 30 recurring resource-site
-landmarks: their original paintings remain available and the historical source
-manifest records 44-pixel aspect fit with a south anchor. Individual source and
-native-resolution checks of other remaining families and intentional purple
-materials also remain. Existing
+The accepted cohorts now cover 515 repaired/preserved dispositions, leaving
+699 for complete detailed review/recovery. All 31 recurring encounters and 30
+recurring resource-site originals are accepted. Next: the separately authored
+resource-site state and remaining landmark families; recovery of legacy originals
+does not accept those different paintings. Individual source and native-resolution
+checks of other remaining families and intentional purple materials remain. Existing
 unit medallions and state indicators are not mislabeled as magenta matte.
 Do not hide remaining defects or claim release readiness from this checkpoint.

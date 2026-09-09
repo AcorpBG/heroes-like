@@ -25,7 +25,7 @@ const CASES := [
 	{"site_id": "site_icehook_trapper_lodge", "placement_id": "dwelling_icehook_trapper_lodge", "unclaimed_asset_id": "mapobj_icehook_trapper_lodge", "claimed_asset_id": "resource_site_neutral_icehook_trapper_lodge_claimed"},
 	{"site_id": "site_obsidian_scar", "placement_id": "dwelling_obsidian_scar", "unclaimed_asset_id": "mapobj_obsidian_scar", "claimed_asset_id": "resource_site_neutral_obsidian_scar_claimed"},
 	{"site_id": "site_free_company_yard", "placement_id": "dwelling_roadward_lodge", "unclaimed_asset_id": "mapobj_roadward_lodge", "claimed_asset_id": "resource_site_neutral_roadward_lodge_claimed"},
-	{"site_id": "site_fenhound_kennels", "placement_id": "dwelling_fenhound_kennels", "unclaimed_asset_id": "kennel", "claimed_asset_id": "resource_site_neutral_fenhound_kennels_claimed"},
+	{"site_id": "site_fenhound_kennels", "placement_id": "dwelling_fenhound_kennels", "unclaimed_asset_id": "mapobj_fenhound_kennels", "claimed_asset_id": "resource_site_neutral_fenhound_kennels_claimed"},
 	{"site_id": "site_cliffhawk_roost", "placement_id": "dwelling_cliffhawk_roost", "unclaimed_asset_id": "mapobj_cliffhawk_roost", "claimed_asset_id": "resource_site_neutral_cliffhawk_roost_claimed"},
 	{"site_id": "site_orchard_levy", "placement_id": "dwelling_orchard_levy", "unclaimed_asset_id": "mapobj_orchard_levy", "claimed_asset_id": "resource_site_neutral_orchard_levy_claimed"},
 	{"site_id": "site_kite_signal_eyrie", "placement_id": "dwelling_kite_signal_eyrie", "unclaimed_asset_id": "mapobj_kite_signal_eyrie", "claimed_asset_id": "resource_site_neutral_kite_signal_eyrie_claimed"},
