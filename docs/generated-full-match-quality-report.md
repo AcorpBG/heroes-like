@@ -15,6 +15,21 @@ Requirements:
 `docs/generated-full-match-quality-requirements.md`. This is an implementation
 checkpoint, **not completion of the overall quality goal or release readiness**.
 
+Validated cutout checkpoint (2026-09-09): Cinder Ore Face and Moss Oath Cache now
+retain their original paintings without the reproduced sheet debris/magenta
+matte. Exact native/resource-site mappings, canvases, original body pixels,
+footprints, controller states and saves are preserved. Six failing-before and
+eighteen repaired source/Linux/Windows earned-map cases cover both resolutions;
+24 complete saves match outside only the clock. Seventeen source jobs (including
+43 Python tests and repository/shared runtime regressions) and fourteen package
+jobs pass. Both 249668544-byte packs preserve 5224 of 5228 prior members and differ
+between platforms only in `project.binary`. Twelve repaired source/Linux views
+were visually inspected; Windows is headless Wine, not GPU certification. Exact
+evidence and validation-environment failures retained separately:
+`docs/generated-full-match-art-repair-report.md`, Cinder/Moss section. This
+supersedes only those two historical cutout findings below. The newly inspected
+Marsh Listener Post cutout and broader Town/faction presentation remain open.
+
 Previous validated approved-art checkpoint (`b96e3eab`, 2026-09-08): all 22
 Bellwake starting/constructible scene layers and Riverwatch's original Muster
 Yard, Wayfarers Hall and Market Square have paid-growth, input/save, inspected

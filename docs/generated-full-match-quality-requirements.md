@@ -29,6 +29,25 @@ fog, input and Town tests. Repository/diff checks and both-platform export/start
 generated-entry evidence must pass under the unchanged 250000000-byte ceiling.
 Source masters are not packaged; no caches or unrelated evidence may be deleted.
 
+Continue the same approved original-raster processing for the recorded Cinder
+Ore Face sheet-divider and Moss Oath Cache magenta-fringe defects. This is not
+new painting or a blanket recoloring pass. Preserve hash-locked extracted inputs,
+original generated atlases, complete 512x512 canvases and every uncontaminated
+painted pixel. Explicit per-asset bounds may exclude only inspected sheet debris;
+analytical magenta unmatting must retain the original subject and partial alpha.
+Require deterministic/idempotent preparation and strict input/provenance checks.
+Keep all other art, resource-state mappings, native adoption, coordinates, masks,
+visual footprint metadata and gameplay unchanged. Trace the actual renderer:
+the Large Day-8 native mine uses its Cinder object id despite its adopted
+resource-site id; the Medium town support cache uses the Moss resource mapping.
+Inspect earned unclaimed and claimed cache states without injecting ownership,
+movement, fog or resources. Before/after decoded-pixel and six dual-resolution
+view controls must preserve complete state/save authority; repeat the exact
+cases in official Linux/Windows packages, with all-member parity and the existing
+250000000-byte ceiling. Keep unrelated opened-cache art and the accepted Wreck
+Quay/Town corrections byte-identical. Broader Town art and the pending data-budget
+decision remain separate from this repair.
+
 The existing opt-in live-validation autoload may bootstrap the Python-owned Town
 probe for official release templates that forbid CLI scene/path overrides. This
 must require the explicit `python_town_scene_probe` flow, a reserved export-local
@@ -40,6 +59,13 @@ normal startup and rejected traversal, mismatched hash and wrong base type on
 both platforms. All test actions/assertions remain Python-owned; headless Windows
 may omit only paired frame/image-capture operations, with every gameplay, input,
 identity and save assertion retained and Linux rendered evidence inspected.
+
+The Cinder/Moss package regression may reuse that same reserved SHA-locked Node
+bootstrap without changing its runtime flow, accepted paths or activation rules.
+The adapter additionally verifies the exact Overworld manifest and compiled
+render/save owners; only host file-path translation and paired headless captures
+differ. Every pixel, placement, controller, fog and complete save assertion must
+remain identical to the source probe. Retain the existing Town bootstrap controls.
 
 The normal close-information/leave-Town sequence must also cancel stale deferred
 focus restoration safely. Do not query a detached scene tree or steal focus in
