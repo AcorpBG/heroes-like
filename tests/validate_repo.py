@@ -44161,6 +44161,16 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             ensure(recovery["ok"], errors, f"Recurring recovery {asset_id} must preserve source-backed coverage: {recovery['errors']}")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Recurring cutout recovery failed closed: {exc}")
+    recurring_site_recoveries = {}
+    try:
+        site_spec = importlib.util.spec_from_file_location("recurring_site_cutout_validation", ROOT / "tools" / "prepare_overworld_recurring_site_cutouts.py")
+        site_module = importlib.util.module_from_spec(site_spec)
+        site_spec.loader.exec_module(site_module)
+        recurring_site_recoveries = site_module.validate_assets()
+        for asset_id, recovery in recurring_site_recoveries.items():
+            ensure(recovery["ok"], errors, f"Recurring site {asset_id} must preserve original paint and state ownership")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Recurring site cutout recovery failed closed: {exc}")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
@@ -44192,7 +44202,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             elif source_model == "built_in_image_gen_original_recurring_encounter_landmark_atlas":
                 expected_canvas = (5952, 192) if asset_id in recurring_recoveries else (1488, 48)
             elif source_model == "built_in_image_gen_original_recurring_resource_site_landmark_atlas":
-                expected_canvas = (1440, 48)
+                expected_canvas = (5760, 192) if asset_id in recurring_site_recoveries else (1440, 48)
             elif source_model == "built_in_image_gen_original_live_faction_landmark_atlas":
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas":
@@ -53226,14 +53236,16 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     if not all(path.is_file() for path in required_paths):
         return
 
-    atlas_payload = atlas_path.read_bytes()
-    ensure(png_size(atlas_path) == (1440, 48), errors, "Recurring resource-site landmark atlas must remain 1440x48")
+    original_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/recurring_sites/before_runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png"
+    ensure(original_atlas_path.is_file(), errors, "Recurring resource-site original atlas preservation is missing")
+    atlas_payload = original_atlas_path.read_bytes() if original_atlas_path.is_file() else b""
+    ensure(png_size(atlas_path) == (5760, 192), errors, "Recurring resource-site source recovery must use 5760x192 without changing normalized placement")
     ensure(
         hashlib.sha256(atlas_payload).hexdigest() == "6c7a4e6a83a5e92d14087fcbc42f251057f24bc8ab3c3e5573451c4dcbf78898"
         and len(atlas_payload) >= 26
         and atlas_payload[25] == 6,
         errors,
-        "Recurring resource-site landmark atlas bytes or RGBA format changed",
+        "Preserved original recurring resource-site atlas bytes or RGBA format changed",
     )
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Recurring resource-site landmark atlas import metadata is missing")
 
@@ -53291,7 +53303,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
         else:
             ensure(mapping.get("asset_id") == asset_id and len(str(mapping.get("fit", "")).strip()) >= 24, errors, f"Recurring resource-site exact mapping changed for {site_id}")
         ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png", errors, f"Recurring resource-site atlas path changed for {site_id}")
-        ensure(entry.get("atlas_region") == region and entry.get("atlas_size") == [1440, 48], errors, f"Recurring resource-site atlas region changed for {site_id}")
+        ensure(entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [5760, 192], errors, f"Recurring resource-site normalized atlas region changed for {site_id}")
         ensure(entry.get("source_generated") == source_res and entry.get("source_model") == "built_in_image_gen_original_recurring_resource_site_landmark_atlas", errors, f"Recurring resource-site generation provenance changed for {site_id}")
         ensure(entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == role, errors, f"Recurring resource-site content ownership changed for {site_id}")
         description = str(entry.get("accessible_description", "")).strip()

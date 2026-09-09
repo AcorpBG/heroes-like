@@ -1,0 +1,431 @@
+{
+  "schema_id": "recurring_site_cutout_recovery_v1",
+  "recipe_sha256": "a1ffc75acc22c0f16b64160fd35f014d4df2800e8a1c7683b003931c8cea06eb",
+  "processing_tool_sha256": "6f3b32be6149334b51d6c00249a1943166ea97f77827ffd757f98981b8cc0a9f",
+  "shared_tool_sha256": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
+  "runtime_sha256": "beefa3e080ad38c4303352a1215ab53f5f6eb4d17b2fcbd0f63773e1bd503b15",
+  "original_sha256": "6c7a4e6a83a5e92d14087fcbc42f251057f24bc8ab3c3e5573451c4dcbf78898",
+  "assets": {
+    "resource_site_recurring_prism_watch_relay": {
+      "trim_sha256": "4b59fd970c4d0d9d8688036eb48a65236db0ac999b2ee033e0fa4e3d312763d3",
+      "rgba_sha256": "38dae41c1e04e104ec6524f9dad9d7dbb96badfbb8d769fad81f14a3de337ae9",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 8472,
+        "bounds": [
+          32,
+          16,
+          159,
+          190
+        ]
+      }
+    },
+    "resource_site_recurring_lens_house_barracks": {
+      "trim_sha256": "54b911389568c2fbac48a5df005c3f1f45b4aa67a982e2ed7a611cc86d795ffb",
+      "rgba_sha256": "e748f547ead62e3ce735d8208180ac2b5fbbc1bc67bbcc8b7b92b2cc3a65ef94",
+      "metrics": {
+        "alpha_levels": 250,
+        "partial_alpha_pixels": 12101,
+        "bounds": [
+          16,
+          48,
+          152,
+          192
+        ]
+      }
+    },
+    "resource_site_recurring_bog_drum_outpost": {
+      "trim_sha256": "a840360fe472ceb3d680089544347891e16350204181dd8afc819e94f46e3664",
+      "rgba_sha256": "b68cca3d1a7df73df1da593c5642b37ac3ce00d80393d9ea5363a0d31557a1bb",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 14754,
+        "bounds": [
+          13,
+          16,
+          180,
+          192
+        ]
+      }
+    },
+    "resource_site_recurring_bellwake_wreck_ledger": {
+      "trim_sha256": "31177ead0fcb4826b004fbb7af6467cc64fa3170333f71212cadd0fd441938fd",
+      "rgba_sha256": "e1095f0976b435741f3f00320c9fafdefb94d1146860802d8aedf54c014d2efe",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 18356,
+        "bounds": [
+          10,
+          41,
+          184,
+          191
+        ]
+      }
+    },
+    "resource_site_recurring_orevein_assay_depot": {
+      "trim_sha256": "830ee63fdfd6584bd302e4355b7b5f453f1ab51453d3cf10ca77b5c52f07525e",
+      "rgba_sha256": "c91292a8ba90d8ff02e820bbbb9f3f3563f2e237488effe3b3597bcc861fa145",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 14526,
+        "bounds": [
+          11,
+          56,
+          184,
+          192
+        ]
+      }
+    },
+    "resource_site_neutral_reedbarge_mooring": {
+      "trim_sha256": "32eb8b34f180cb31555319f4ed7e5c06bb38bea903d1c70fb26031a7fda19475",
+      "rgba_sha256": "9f175340e77b33d7317eaa1d4083f5e9db66dd5f0b5be3fd2ca8f01fb3c4463a",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 7585,
+        "bounds": [
+          31,
+          60,
+          158,
+          178
+        ]
+      }
+    },
+    "resource_site_neutral_glowcap_croft": {
+      "trim_sha256": "70f72cc4cb101cdb54f1b0e222e73d8c08a839d73afbfc44e99596fc5a21132a",
+      "rgba_sha256": "a4d0069ba49694c6a423407134048a08f9afa85228aa0b3b59eb903db86306fa",
+      "metrics": {
+        "alpha_levels": 239,
+        "partial_alpha_pixels": 16115,
+        "bounds": [
+          16,
+          24,
+          178,
+          183
+        ]
+      }
+    },
+    "resource_site_neutral_dustjack_yard": {
+      "trim_sha256": "14f84b3286dff9c53cde1fdf64f404e31873b12b074ce222f894d4279fc4809f",
+      "rgba_sha256": "07702b0e39c73c0ffc70c15e0f939616e501c352ead177e40c7e172584d0a0bb",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 11439,
+        "bounds": [
+          27,
+          24,
+          175,
+          179
+        ]
+      }
+    },
+    "resource_site_neutral_cinder_kiln": {
+      "trim_sha256": "9b4a81d6311e9f49248d62c7f79a66e3d5cdf3f1a4f479bca750aa0719dacd45",
+      "rgba_sha256": "e9abe1869250167d209c2f989d00643806b54a642de42ebf374f20b9a68729a2",
+      "metrics": {
+        "alpha_levels": 252,
+        "partial_alpha_pixels": 13182,
+        "bounds": [
+          21,
+          16,
+          184,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_frostbeacon_bothy": {
+      "trim_sha256": "4675da0d328fed04ccfd1bd55ed59743d925c2013026f21d6025791791ae4751",
+      "rgba_sha256": "e01597edbc4eb8c93cb0b729aa9c106a3817cb666293b31e7afbf68124acbddc",
+      "metrics": {
+        "alpha_levels": 250,
+        "partial_alpha_pixels": 13487,
+        "bounds": [
+          33,
+          8,
+          169,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_bramble_hedge": {
+      "trim_sha256": "6bfcdeb72652f9e9ea6fa09b33f0a40a773ac5ed538eff48cf1cdfd11e69c024",
+      "rgba_sha256": "6adea69116a6b6f6258bb12100750afee0f0edbbfb771178fdb5fca94afb9720",
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 14967,
+        "bounds": [
+          9,
+          20,
+          172,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_tidepool_skiffyard": {
+      "trim_sha256": "00838dd3ac8d28d7dff0a0892bf89e85a3c3aaea177f05e681c00870ef5c7297",
+      "rgba_sha256": "c5aab7592c0a38c056d98f0dd9d25f0744233c943886294160b43adaba1e7f01",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 12585,
+        "bounds": [
+          8,
+          24,
+          184,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_switchback_hostel": {
+      "trim_sha256": "56ccdc0cdc83bbe47cb26e92612857e670a5608db565f96856893b6d6641600d",
+      "rgba_sha256": "c539ad51de18fac1d9c54e8c04c4283d6601577dd34041690663d3834094f62a",
+      "metrics": {
+        "alpha_levels": 249,
+        "partial_alpha_pixels": 10953,
+        "bounds": [
+          40,
+          8,
+          163,
+          183
+        ]
+      }
+    },
+    "resource_site_neutral_saltpan_camp": {
+      "trim_sha256": "2a039b55218e8b2a842c9e980871d6bc5eaad0c974bb71f5fabac9efb9afb84b",
+      "rgba_sha256": "cd47977e4724b9230d708b1f7f3a0e9c05a0d9d55295da16bd43c705846ded3d",
+      "metrics": {
+        "alpha_levels": 252,
+        "partial_alpha_pixels": 9354,
+        "bounds": [
+          29,
+          60,
+          164,
+          180
+        ]
+      }
+    },
+    "resource_site_neutral_crystal_sump": {
+      "trim_sha256": "2bdb209d39fa63e496ebb69e98b1444094ac07482361e0b4edb82b84ca2fbcb5",
+      "rgba_sha256": "224f50f1d2310d20854b5a39f22bd76537070a3c05c83ae24594c3ca38997e1f",
+      "metrics": {
+        "alpha_levels": 243,
+        "partial_alpha_pixels": 14202,
+        "bounds": [
+          31,
+          8,
+          166,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_icehook_trapper_lodge": {
+      "trim_sha256": "48f6e94d5e28eb8dd1363a74c595e5fccda61520ba280ecf3cfb699e746d4065",
+      "rgba_sha256": "b4040deeba7fe3c3ab63a99a3bac74bddae6f6966732e674547726971130e4ef",
+      "metrics": {
+        "alpha_levels": 248,
+        "partial_alpha_pixels": 13670,
+        "bounds": [
+          17,
+          40,
+          178,
+          181
+        ]
+      }
+    },
+    "resource_site_neutral_obsidian_scar": {
+      "trim_sha256": "d194b3d83ee2ff1597f291e94a143c53684a6be82c943f6d6e5bbe9d3ea0bba7",
+      "rgba_sha256": "9a4cb0911772e2b1559161934fe29707195dd8917e3874783ebc9330ab36a711",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 13687,
+        "bounds": [
+          8,
+          28,
+          184,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_roadward_lodge": {
+      "trim_sha256": "881a89d7a1775dd2d08146b1ee9e4a3ed57c1fefff8d1ae58c25e15e5c3d608d",
+      "rgba_sha256": "8a59c7de60b90b1792e16e59997729e20c1187650ba14fb38f8a8f88da7f0a83",
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 15534,
+        "bounds": [
+          8,
+          28,
+          183,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_fenhound_kennels": {
+      "trim_sha256": "5ca689690a09812de30a63240eb29b6aa9a3873da7d65c43155d669074c1eeb1",
+      "rgba_sha256": "eff7addec7f9d401971c8fcdb87cb1d2828412fabee618cb6c326adc4ba2b3f2",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 9868,
+        "bounds": [
+          20,
+          68,
+          183,
+          183
+        ]
+      }
+    },
+    "resource_site_neutral_cliffhawk_roost": {
+      "trim_sha256": "2ad54610c68a5daefeb6e9eaab8dc4bd2ef5058d18d9721ac5735003c8dfc1d2",
+      "rgba_sha256": "351eaa693c51df635c7daff57cc43ffb567f920b38be314c7eae3ff7a26022ae",
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 11673,
+        "bounds": [
+          17,
+          8,
+          172,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_orchard_levy": {
+      "trim_sha256": "435685eb6b2dece10a013dc4b871bafdaf77214a1362a2cdbfa4ab8832ee17f5",
+      "rgba_sha256": "c769b1b25f9025d59c611fa59f6a15ff2e8449682a44d6f881b43561fb47c425",
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 18103,
+        "bounds": [
+          8,
+          28,
+          184,
+          177
+        ]
+      }
+    },
+    "resource_site_neutral_kite_signal_eyrie": {
+      "trim_sha256": "032e284ba5c95ab229de182521ef6245bdad5d5ead0a26b0dcd3ff02d3f157f9",
+      "rgba_sha256": "03a387a5c3b2b6d993f764b42db681dd18b8710c48263b5aaa5d57618899d416",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 11241,
+        "bounds": [
+          28,
+          8,
+          180,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_greenbranch_copse": {
+      "trim_sha256": "3a38e820e79231075bbdbe886dd612ef4274cb61b143656c73c86cdf70ddc7fb",
+      "rgba_sha256": "50c6299c8cc9b44ec53bf9d3923c874546cf3bdc4a65920264619b4b1fd59117",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 17339,
+        "bounds": [
+          11,
+          24,
+          183,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_harbor_pilot_house": {
+      "trim_sha256": "4392191822e2c8d76efeabf9fad7a81bed505797fc3c29b76d1fd252257a8bfb",
+      "rgba_sha256": "50a0946f3c211058c89622ee2aa69388d6a090082c0d0f223ebe2461a945be25",
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 8532,
+        "bounds": [
+          44,
+          8,
+          141,
+          181
+        ]
+      }
+    },
+    "resource_site_neutral_lantern_warren": {
+      "trim_sha256": "adb3e163fe3aa77e1b1bc9745fc14f5f602bdc4a25f0733ac0d8a5d2f845ab66",
+      "rgba_sha256": "e0cc290ae25f60a098f744a022176a53eea7eb66485eaccf0cf6d56012adfcb7",
+      "metrics": {
+        "alpha_levels": 239,
+        "partial_alpha_pixels": 11431,
+        "bounds": [
+          18,
+          60,
+          166,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_bogbell_croft": {
+      "trim_sha256": "ccd29991c6cbd5cbbb66be98fd52f0efaafc2840d552c067e08de1ab97e92c95",
+      "rgba_sha256": "548b2a4209c06e571df9262891360d526a8c5877ebf2e2bbcbd73cc5b832fbca",
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 13435,
+        "bounds": [
+          28,
+          8,
+          163,
+          184
+        ]
+      }
+    },
+    "resource_site_neutral_milestone_arsenal": {
+      "trim_sha256": "2d0023e937024f83dd9ee7430d7faa23768e0a41d4251d7ba1b6bd986dc69598",
+      "rgba_sha256": "d17f6051c6e3927a09ae6128ec56d0af11c398d59d228b09e53e611cf86fff6a",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 15868,
+        "bounds": [
+          8,
+          12,
+          181,
+          174
+        ]
+      }
+    },
+    "resource_site_neutral_frostwharf_house": {
+      "trim_sha256": "286a193ae610a775656d16af6780964e5efff41b53b740ace65be3de48c0c26f",
+      "rgba_sha256": "ffd9c85d18bb79de5c9347d346c335b6c876b7327b126439f2dcba24c725874f",
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 13286,
+        "bounds": [
+          13,
+          16,
+          176,
+          182
+        ]
+      }
+    },
+    "resource_site_neutral_charcoal_burners": {
+      "trim_sha256": "1640e7f5d3bcae2368c786a3bb94e207fc190090a24ae9f38ca282028c9efe9a",
+      "rgba_sha256": "30e91eee5bbad12c04f874edfd911f32994a7af94a897f6ea040ceda1350a396",
+      "metrics": {
+        "alpha_levels": 246,
+        "partial_alpha_pixels": 10921,
+        "bounds": [
+          14,
+          64,
+          184,
+          180
+        ]
+      }
+    },
+    "resource_site_neutral_basalt_gatehouse": {
+      "trim_sha256": "4f62252c136cecfb6797b77e94aac816c8df468cf34ac38d61f5f37c53a0cc91",
+      "rgba_sha256": "af3df50beed2aa627707f9353d1ca0f5e7253b4ae23b4554452c221f830553eb",
+      "metrics": {
+        "alpha_levels": 252,
+        "partial_alpha_pixels": 11544,
+        "bounds": [
+          15,
+          68,
+          180,
+          184
+        ]
+      }
+    }
+  },
+  "processing": "Original RGBA only, exact source crop and logical fit at 4x raster density; preserve original distinct south anchors. No color/alpha removal or gameplay/state rerouting."
+}

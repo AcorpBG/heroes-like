@@ -152,6 +152,21 @@ painted pixels within those bounds. Retain the exact prior 24-cell atlas and
 per-row hashes as preservation controls. Validate all 31 routes and show an
 actual later-wave authored encounter without injecting placement or fog.
 
+For the thirty recurring resource-site originals, retain every site/state mapping
+and distinguish base, unclaimed and separately authored claimed art. Recover
+source detail into 192-pixel cells on the existing atlas path (5760x192), keeping
+its original 1440x48 bytes in the source recovery packet. Preserve documented
+44-pixel logical fit: the first five use south anchoring and bilinear resampling;
+the later 25 use a two-pixel south inset and Lanczos, proven by reproducing every
+old alpha/nontransparent painted pixel. Record exact source crop and resampling
+per identity; invisible RGB beneath zero alpha is not visible paint. No blanket removal of
+purple crystal or mushroom pigments. Reuse scoped source/package probes with
+`--batch recurring_sites`; include all thirty detached identities and exact
+actual state-selected sites from the unchanged earned native/authored maps.
+Keep separately authored state art unchanged rather than routing around it to
+manufacture screenshots. Original source manifests retain historical hashes and
+point to the repaired derivative proof. Whole-cohort acceptance only.
+
 ## Completion and non-goals
 
 Each cohort completes only after its actual repaired art is integrated and its
