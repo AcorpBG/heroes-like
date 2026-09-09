@@ -13,7 +13,7 @@ from lossless_texture_package_regression import members
 def package_environment(environment, platform):
     result=dict(environment,TOWN_OVERLAY_RESOLUTION=environment['CUTOUT_RESOLUTION'])
     if platform=='windows':
-        for key in ('CUTOUT_SAVE','CUTOUT_OUTPUT'):
+        for key in ('CUTOUT_SAVE','CUTOUT_OUTPUT','CUTOUT_ASSETS_FILE'):
             result[key]=packages.windows_path(result[key])
     return result
 

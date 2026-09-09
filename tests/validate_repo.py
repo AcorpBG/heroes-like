@@ -44119,6 +44119,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             ensure(recovery["ok"], errors, f"Original-sheet recovery {asset_id} must preserve clean source-backed art: {recovery['errors']}")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Original-sheet cutout recovery failed closed: {exc}")
+    try:
+        pool_spec = importlib.util.spec_from_file_location("original_pool_cutout_validation", ROOT / "tools" / "prepare_overworld_cutout_pool.py")
+        pool_module = importlib.util.module_from_spec(pool_spec)
+        pool_spec.loader.exec_module(pool_module)
+        for asset_id, recovery in pool_module.validate_pool_assets().items():
+            ensure(recovery["ok"], errors, f"Original-pool recovery {asset_id} must preserve clean source-backed art: {recovery['errors']}")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Original-pool cutout recovery failed closed: {exc}")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
