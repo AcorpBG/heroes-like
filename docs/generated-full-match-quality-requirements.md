@@ -130,6 +130,31 @@ and official Linux/Windows boundary must preserve every earlier runtime payload.
 No village/catalog repaint, gameplay/RMG/native/save change or unrelated cleanup.
 Thornwake/Brasshollow and the broader quality goal remain unfinished.
 
+### Thornwake whole-faction paintings
+
+Complete all 29 non-embedded identities across Graftroot Caravan, Rootgate
+Nursery, Briarwheel Enclave, Crownroot Refuge and Woundroot Hearthgrove. Preserve
+the original Walking Green village and all 117 accepted paintings. Match its
+rootwoven structures, moss-stone terraces, muted olive/pale bark, seedglass and
+amber lamps; keep the embedded hall and continuous paths clear. This is living
+infrastructure and orchard law, not an elf/treant faction or detached icon row.
+Worldroot Gate/Concord Seat replaces at the same site; all exact identities
+remain manifest-backed with original source/prompt/trim/runtime provenance.
+
+Retain a normal generated Large land/one-level seed-10 Ardren opening, without
+native changes. Exercise its ordinary Market order and full saved-state control.
+Use uninjected Day-1 purchases in `greenbarrow-woundroot-hearthseed-trial` and
+`greenbarrow-woundroot-rootmaul-works`. Base five detached developed compositions
+and isolated constructible-building controls on the existing 11x6 `rootgate-toll`
+scenario. The starter-only Seed Vault is checked as a real starter, not a claimed
+paid order. Preserve complete independent rule/recap, daily-limit, upgrade,
+painted pointer/focus/controller and save/re-entry controls. Fixtures are not
+earned development or Large-map performance certification. Inspect actual small/
+2048x1079 views and run one combined source/official Linux/Windows boundary,
+including every-member and original-save preservation. No per-asset exports,
+village/catalog repaint, gameplay/native/RMG/save changes or unrelated cleanup.
+Brasshollow and the broader quality goal remain unfinished.
+
 ## Owner-directed package policy — 2026-09-09
 
 There is no fixed release-PCK size budget. Remove the former 250000000-byte

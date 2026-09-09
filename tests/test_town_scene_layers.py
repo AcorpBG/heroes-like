@@ -59,6 +59,10 @@ def validate_scene_layers(payload=None):
     bellwake = next(town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['id']=='town_veilmourn_bellwake_harbor')
     required_bellwake = set(bellwake['starting_building_ids'] + bellwake['buildable_building_ids']) - {'building_town_hall'}
     require(required_bellwake.issubset(factions.get('faction_veilmourn',{})), 'Missing constructible Bellwake scene mapping: '+', '.join(sorted(required_bellwake-set(factions.get('faction_veilmourn',{})))))
+    thornwake = factions.get('faction_thornwake',{})
+    thorn_towns = [town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['faction_id']=='faction_thornwake']
+    required_thorn_union = {building for town in thorn_towns for building in town['starting_building_ids']+town['buildable_building_ids']} - {'building_town_hall'}
+    require(required_thorn_union.issubset(thornwake), 'Missing authored Thornwake scene mapping: '+', '.join(sorted(required_thorn_union-set(thornwake))))
     veilmourn = factions.get('faction_veilmourn',{})
     sunvault = factions.get('faction_sunvault',{})
     sun_towns = [town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['faction_id']=='faction_sunvault']
@@ -73,6 +77,7 @@ def validate_scene_layers(payload=None):
     sounding = veilmourn.get('building_veilmourn_leviathan_sounding',{})
     court = veilmourn.get('building_veilmourn_memory_rite_court',{})
     pairs = [(sounding, court, 'Memory-Rite Court', 'Sounding')]
+    pairs += [(thornwake.get('building_thornwake_worldroot_gate',{}), thornwake.get('building_thornwake_verdant_concord_seat',{}), 'Verdant Concord Seat', 'Worldroot Gate')]
     pairs += [(sunvault.get(base,{}),sunvault.get(upgrade,{}),upgrade,base) for base,upgrade in
               [('building_shard_yard','building_mirror_forge'),('building_prism_range','building_lens_gallery'),('building_lantern_archive','building_starseer_annex'),('building_sunvault_daybreak_matrix','building_sunvault_zenith_court')]]
     embercourt = factions.get('faction_embercourt',{})

@@ -20,7 +20,7 @@
   "processing": "Crop only fully transparent outer margins, preserve generated alpha and aspect, Lanczos downsample to maximum 512px, strip derivative metadata for reproducible bytes; no drawn geometry, recoloring, background replacement or generated panorama substitution.",
   "rights": "Original project-generated art. No copied game pixels, names, protected symbols or third-party source assets.",
   "catalog_icons": "Unchanged; these exact-faction scene layers are not shared catalog replacements.",
-  "migration_scope": "Twenty-two accepted Bellwake layers and three exact-faction Embercourt opening layers; embedded Town Halls and separate catalog icons remain unchanged. Embercourt's Muster Yard, Wayfarers Hall and ordinary Market purchase have their own original paintings; later Embercourt buildings and other factions remain unaccepted. Curation, normal progression, input/save and platform evidence are recorded separately in the art-repair report. Text-only rows explicitly record no image inputs and later rows record their generation date.",
+  "migration_scope": "All non-embedded building identities in Veilmourn (27), Embercourt (30), Mireclaw (31) and Sunvault (29) have accepted exact scene layers. The Thornwake whole-faction batch adds 29 distinct original paintings across five towns, with combined visual/input/save/platform evidence recorded in the art-repair report. Preserve all 117 earlier rows, original villages, embedded Town Halls and separate catalog icons. Brasshollow's 27 mappings and broader visual acceptance remain unfinished. Exact provenance is per row; acceptance, fixture-versus-earned controls and platform limits are recorded in docs/generated-full-match-art-repair-report.md.",
   "missing_declared_layer_policy": "validation_failure_no_catalog_or_procedural_fallback",
   "factions": {
     "faction_veilmourn": {
@@ -5468,6 +5468,1371 @@
         "reference_inputs": [],
         "generation_date": "2026-09-09",
         "generation_output": "exec-e8b85ae9-9ba4-4a9c-a89e-793c06b75a96.png"
+      }
+    },
+    "faction_thornwake": {
+      "building_thornwake_seed_vault": {
+        "asset_id": "faction_thornwake_building_thornwake_seed_vault",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_seed_vault.png",
+        "source_sha256": "7523578623e302bdcad9cb6be0cffe92628603e38778cb88d76d915b4c354cdf",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1528,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_seed_vault.png",
+        "trimmed_sha256": "fd75be4a737cb418ae60b96f23c2db9e85b1a954094903329022000c6e08b373",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_seed_vault.png",
+        "runtime_sha256": "2c00f4f297e2df9a3136df587d0b28b5a7f812abcfe581ebec38436d5f3f83c5",
+        "runtime_size": [
+          512,
+          343
+        ],
+        "normalized_rect": [
+          0.153125,
+          0.43333333333333335,
+          0.16787109375,
+          0.2
+        ],
+        "ground_anchor": [
+          0.240625,
+          0.6222222222222222
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The seed repository joins the left mid-ground terrace behind the market and beside the original glass nursery.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_seed_vault.prompt.txt",
+        "prompt_sha256": "d4a624e5cf735dd922e7bfcd889736005e100cabdaf45638f434cab935e4e731",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-195915b6-964c-43aa-b4ef-dd427892d152.png"
+      },
+      "building_wayfarers_hall": {
+        "asset_id": "faction_thornwake_building_wayfarers_hall",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_wayfarers_hall.png",
+        "source_sha256": "4713f7d4f3640cbcce16f1d005d80048144d4feaee6b6c974b7177866950f0b8",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          8,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_wayfarers_hall.png",
+        "trimmed_sha256": "379ba236269dea266f07fc521d3dbda50bfb99c510c3f9052e628bf27c6fe808",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_wayfarers_hall.png",
+        "runtime_sha256": "cc6a2f18dd28db5b1a0865bd7f7f4e99e465f8a5ec87364c0ac3734f5e3a8326",
+        "runtime_size": [
+          512,
+          339
+        ],
+        "normalized_rect": [
+          0.6875,
+          0.41278935185185156,
+          0.18125,
+          0.21313657407403733
+        ],
+        "ground_anchor": [
+          0.78125,
+          0.6111111111111112
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The caravan inn meets the right woodland bank beside the waterfall approach, clear of the central hall.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_wayfarers_hall.prompt.txt",
+        "prompt_sha256": "444dcd87b0280cf767352714a016203761814c09fd2ee0d7fbd9cb61528254a4",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-dc8e773b-f129-4ee0-b958-d5c6f95c5096.png"
+      },
+      "building_market_square": {
+        "asset_id": "faction_thornwake_building_market_square",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_market_square.png",
+        "source_sha256": "aaa38a70373988a1732f97fe5dfa863ce5c297b795f6d74fea7c0113d76879a5",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_market_square.png",
+        "trimmed_sha256": "3e1c01189522217947217ae7efa5de63d5ee0ef965935773d26de9b4fffb8a5c",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_market_square.png",
+        "runtime_sha256": "a9fd2ff9219bbd8e0df684fa277452618892df34293551d4a97e3858896b038f",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.215625,
+          0.5777777777777777,
+          0.1625,
+          0.19259259259255557
+        ],
+        "ground_anchor": [
+          0.3,
+          0.7555555555555555
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The low market extends the left terrace toward the main path; its roof stays below the seed repository.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_market_square.prompt.txt",
+        "prompt_sha256": "cf4ce3ea29280428179461b6d001b32f961bbf954a645ed924574bec47ba38ec",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-e56e9ba5-9de2-4230-b0ca-a0221234bd53.png"
+      },
+      "building_thornwake_rootroad_markers": {
+        "asset_id": "faction_thornwake_building_thornwake_rootroad_markers",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_rootroad_markers.png",
+        "source_sha256": "c52e9d91d69594dea66daa528a166b8f1b4d9580ed121eeafcb49718976f6d06",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1524,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_rootroad_markers.png",
+        "trimmed_sha256": "e4a73c96772da8772359e8ecb8304b3fc98adfeb6bd61ba04340f26db07977b8",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_rootroad_markers.png",
+        "runtime_sha256": "c4e947014b3e65421d0b844cb66b8ff4dbaef5aac09c1a763213a79600ba1038",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.4,
+          0.7166666666666667,
+          0.105419921875,
+          0.1259259259258889
+        ],
+        "ground_anchor": [
+          0.45625,
+          0.8288888888888889
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The slender route posts mark the left edge of the foreground arrival path rather than closing its center.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_rootroad_markers.prompt.txt",
+        "prompt_sha256": "65247b7424d289707e35820537fe2a0a0b75eb7c6f83b81c80942b095a1a35bf",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-518a500a-a18e-43fc-abf3-99e3d9c24373.png"
+      },
+      "building_thornwake_loam_ledger": {
+        "asset_id": "faction_thornwake_building_thornwake_loam_ledger",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_loam_ledger.png",
+        "source_sha256": "6d5f4be9b2e38aea766b282e362d599555fac92024e4979ecc063e767af6b757",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_loam_ledger.png",
+        "trimmed_sha256": "21d3cb309a76d7e001406949f5858f1325be32b915d07b82dd6887a0ba19e910",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_loam_ledger.png",
+        "runtime_sha256": "6f29fc3c1b1d9726fcf00fc04f7e345f422ec43897cd64bb9f07d24c2245760f",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.79375,
+          0.5388888888888889,
+          0.1625,
+          0.19259259259255557
+        ],
+        "ground_anchor": [
+          0.875,
+          0.7166666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The contract house joins the far-right bank above the older village dwelling and beside the road toll.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_loam_ledger.prompt.txt",
+        "prompt_sha256": "9f9748adf528a17cd41ac00bde8993d688357cff46801cd5f9eae8ebde31a668",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-37f3f39b-c4a8-4bf4-b11e-3e02bcdb10c1.png"
+      },
+      "building_thornwake_pollen_litany": {
+        "asset_id": "faction_thornwake_building_thornwake_pollen_litany",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_pollen_litany.png",
+        "source_sha256": "2c481ff535fc58fb6336d86e53e6a83191ca3d16847e05374e139aa05cf77c79",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1535,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_pollen_litany.png",
+        "trimmed_sha256": "3e8086a5ef0c6b8896c3d16499b89b6baa43b90ea99ed572c807d74f65417a38",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_pollen_litany.png",
+        "runtime_sha256": "8af5966b3f6e3cb74d28e6efa2f6f135174941214cc658fa4fd9078ab7c5c0a3",
+        "runtime_size": [
+          512,
+          342
+        ],
+        "normalized_rect": [
+          0.81875,
+          0.39444444444444443,
+          0.15302530924479166,
+          0.18148148148144444
+        ],
+        "ground_anchor": [
+          0.9,
+          0.5588888888888889
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The pollen pavilion meets the far-right wooded terrace below the command icons and above the tollhouse.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_pollen_litany.prompt.txt",
+        "prompt_sha256": "ed5c169f9c6d42e1a560deb2b774ccb6d452a56ca5b4e4d9d1338e788892c9e0",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-5c18e966-b25e-47d3-8127-8fa378486187.png"
+      },
+      "building_thornwake_bramblewall_coppice": {
+        "asset_id": "faction_thornwake_building_thornwake_bramblewall_coppice",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_bramblewall_coppice.png",
+        "source_sha256": "51d05b5ce7943f3bc7032742315f493915c5167efadfce1f57c3e4d02cd840f8",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_bramblewall_coppice.png",
+        "trimmed_sha256": "1df0da536c0a6396705baf3f6db9dc84f0896de4bf8fa00794ee0f4d6f785c3f",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_bramblewall_coppice.png",
+        "runtime_sha256": "621dd5b8fec3de73d1ce662c053c20985a075f35ed7f1248ad040ca40d7e61df",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.028125,
+          0.55,
+          0.1875,
+          0.2222222222222222
+        ],
+        "ground_anchor": [
+          0.125,
+          0.7555555555555555
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The coppice fortification follows the left approach behind the foreground workshops and preserves an exposed watch roof.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_bramblewall_coppice.prompt.txt",
+        "prompt_sha256": "969d4131cdc8e9d2ccc00f8edb5095092dd929fc59268920cba7246f691b0e12",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-acc01cb7-f9cd-4a7f-adb1-89a10b4f5600.png"
+      },
+      "building_thornwake_old_grove_accord": {
+        "asset_id": "faction_thornwake_building_thornwake_old_grove_accord",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_old_grove_accord.png",
+        "source_sha256": "99eee12b9ebb86fed4210390e13955b33589a9f52250392fee566fb7706eac68",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1532,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_old_grove_accord.png",
+        "trimmed_sha256": "5308433fec440e66b5acc3491257bdc3dfca37a74f10575ecd3d6e92c7fc45eb",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_old_grove_accord.png",
+        "runtime_sha256": "f3185e462aab26506d80b90ce8dac7ca94e7ca28e71d5768a87479def9f31bac",
+        "runtime_size": [
+          512,
+          342
+        ],
+        "normalized_rect": [
+          0.290625,
+          0.31666666666666665,
+          0.14649251302083333,
+          0.1740740740741111
+        ],
+        "ground_anchor": [
+          0.36875,
+          0.4777777777777778
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The old council joins the bank immediately left of the main trunk, keeping the hall doorway clear.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_old_grove_accord.prompt.txt",
+        "prompt_sha256": "a84ac78fd18fc145f6cea56effba360475bcc4013876167e206f27bdb0d75c7b",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-5e3dcc04-501e-4ea0-9d12-0f80795155ff.png"
+      },
+      "building_thornwake_rootweave_tithe": {
+        "asset_id": "faction_thornwake_building_thornwake_rootweave_tithe",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_rootweave_tithe.png",
+        "source_sha256": "7bd86602f42b8d72012db14eb569da0eec14097a269e5e6b7ed75ba9f962f7b2",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_rootweave_tithe.png",
+        "trimmed_sha256": "f7efaba0c675823c256e6c4d99bed499b3c358617c11b211c65f3118fa8feec8",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_rootweave_tithe.png",
+        "runtime_sha256": "5e202d827a512b984ecffe283735a92eaa72eff2b25201962c7e67c947625eda",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.2875,
+          0.6888888888888889,
+          0.16875,
+          0.2
+        ],
+        "ground_anchor": [
+          0.378125,
+          0.8722222222222222
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The tithe barn meets the left foreground path with its receiving porch exposed below the market.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_rootweave_tithe.prompt.txt",
+        "prompt_sha256": "3a02e0a1b4b25b17e04bca7df0332381060bba9838ea681bfec147f0536c6835",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-2d9d1a51-59aa-4713-aaa5-ce3c95f6e243.png"
+      },
+      "building_thornwake_bramble_marshal_moot": {
+        "asset_id": "faction_thornwake_building_thornwake_bramble_marshal_moot",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_bramble_marshal_moot.png",
+        "source_sha256": "c37a24c64107f4ee07e1ae2df9a258618dee2a0c2fa05af32a64fa905d6a3520",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_bramble_marshal_moot.png",
+        "trimmed_sha256": "dd90b56fa345ed29c74212e94df96075344015ff4026a51345f97b1c221616fa",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_bramble_marshal_moot.png",
+        "runtime_sha256": "f167a62639b144172b502257c97f3d3adabd75d959aad54c7ecd4791d2724a77",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.68125,
+          0.6055555555555555,
+          0.14375,
+          0.17037037037033334
+        ],
+        "ground_anchor": [
+          0.75625,
+          0.7611111111111111
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The escort lodge occupies the inner-right terrace below the grafting hall and behind the seed council.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_bramble_marshal_moot.prompt.txt",
+        "prompt_sha256": "be583fda878bfdc704dc5bfd1fa02fe9c4bff5f38d6c64d7bb461981d4e7b8be",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-fa6d1d82-8bec-4c23-9315-0b458f35029f.png"
+      },
+      "building_thornwake_spore_oath_chantry": {
+        "asset_id": "faction_thornwake_building_thornwake_spore_oath_chantry",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_spore_oath_chantry.png",
+        "source_sha256": "6c5eff0fb2ac12b22283e65710a094573619e299e926466c70d876e8e47afbb3",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1522,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_spore_oath_chantry.png",
+        "trimmed_sha256": "2f4b755d2ec215ddd362ae9565e2a81e8e612822e071d8bd05639b3a8edb1611",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_spore_oath_chantry.png",
+        "runtime_sha256": "43006b5ceaa57758794410be0188ca69c51f1c1b5189a036edacb28d0eaec9d1",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.659375,
+          0.26666666666666666,
+          0.1672119140625,
+          0.2
+        ],
+        "ground_anchor": [
+          0.75,
+          0.45555555555555555
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The advanced study lodge attaches to the rear-right bank behind the caravan inn, its upper chamber exposed.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_spore_oath_chantry.prompt.txt",
+        "prompt_sha256": "4d5e17f585d5300793b1295929fa4673ded4e88c1604857ddf6e05b63def0ec6",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-250a7f42-7da5-48a6-be0b-447ddf1db00b.png"
+      },
+      "building_thornwake_thornwarden_husk_yard": {
+        "asset_id": "faction_thornwake_building_thornwake_thornwarden_husk_yard",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_thornwarden_husk_yard.png",
+        "source_sha256": "8aaad82960ce1ffc66957bfc660bb4b7327000cef74c080f884e203f50a5392c",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1532,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_thornwarden_husk_yard.png",
+        "trimmed_sha256": "ea3b383672ae38e0ed46232700a46c4147e64a0cb976afb0ce22d64536458bf9",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_thornwarden_husk_yard.png",
+        "runtime_sha256": "1da445b9ec103f93f19fec8ce43dde709533bbbcb76267862064527956054cbd",
+        "runtime_size": [
+          512,
+          342
+        ],
+        "normalized_rect": [
+          0.8,
+          0.6166666666666667,
+          0.1838948567708333,
+          0.21851851851855555
+        ],
+        "ground_anchor": [
+          0.89375,
+          0.8166666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The defensive nursery joins the right terrace below the ledger and behind the foreground provisions store.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_thornwarden_husk_yard.prompt.txt",
+        "prompt_sha256": "fc77cfe695c47e6a3d856d42342950301603017f60c0c393091879faf384ba38",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-0e5d63d3-16e9-4a4a-85e8-dc04ff0dcc3a.png"
+      },
+      "building_thornwake_worldroot_gate": {
+        "asset_id": "faction_thornwake_building_thornwake_worldroot_gate",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_worldroot_gate.png",
+        "source_sha256": "a8c79f7685a6930ae6ab9a9cbd634bae7e3f8eadaa402ece1a271ddf1a6c1120",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_worldroot_gate.png",
+        "trimmed_sha256": "5b55918e27f795ac8849e99119236fa38c2467742fe19c672906c60561b36abf",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_worldroot_gate.png",
+        "runtime_sha256": "ac5d4522c20d04dffc778078c5d7853b092c92fe9cbe60e50e4476259ef708b8",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.028125,
+          0.3055555555555556,
+          0.20625,
+          0.24444444444444444
+        ],
+        "ground_anchor": [
+          0.134375,
+          0.5333333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The living gate stands on the left wooded bank behind the coppice, with its whole open arch clear of the central hall.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_worldroot_gate.prompt.txt",
+        "prompt_sha256": "df4e45d738250481742b29748e0a6d4dd7d89a9f1dc9b63948ce761dd9fe829d",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-eaebf9c1-3d16-4f92-855b-7244ef9ed9eb.png"
+      },
+      "building_thornwake_verdant_concord_seat": {
+        "asset_id": "faction_thornwake_building_thornwake_verdant_concord_seat",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_verdant_concord_seat.png",
+        "source_sha256": "d8b6279ccb16fedb5ad3334a68bfb8ea2b0ccb7aa86b1b851130d45d26639428",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1527,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_verdant_concord_seat.png",
+        "trimmed_sha256": "93470c963ccea8744e7168742b08b7b20ec2d67c00ff44db23a92f6fd8bdbe54",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_verdant_concord_seat.png",
+        "runtime_sha256": "5037599de918aa4c8eb0dfcfe425f4407c9edc18ca3283c771efa09450e967f3",
+        "runtime_size": [
+          512,
+          343
+        ],
+        "normalized_rect": [
+          0.028125,
+          0.3055555555555556,
+          0.20504150390625,
+          0.24444444444444444
+        ],
+        "ground_anchor": [
+          0.134375,
+          0.5333333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The mature covenant gate replaces Worldroot Gate at exactly the same left-bank site and ground anchor.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_verdant_concord_seat.prompt.txt",
+        "prompt_sha256": "33daf6c646e39ce11670eb108a317b38f1fe8bc7612c4e4587433be58e91872e",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-660806ee-599c-4d41-af1d-ea23d37720fd.png"
+      },
+      "building_thornwake_root_cairn_watch": {
+        "asset_id": "faction_thornwake_building_thornwake_root_cairn_watch",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_root_cairn_watch.png",
+        "source_sha256": "d8ebc3da17d155ded0ba4eec53ed11542d19eda9ba59282fa162e31aa757eb4c",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          59,
+          0,
+          1524,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_root_cairn_watch.png",
+        "trimmed_sha256": "a8ab3dad4a3becf6862d4857c958306dd54bb88a5d6938c251b27b9d7fca42a9",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_root_cairn_watch.png",
+        "runtime_sha256": "56a054449878cc0730d373d84d0982c048b88136375266b5dde42d337784a2de",
+        "runtime_size": [
+          512,
+          358
+        ],
+        "normalized_rect": [
+          0.085211181640625,
+          0.26666666666666666,
+          0.098358154296875,
+          0.12222222222222222
+        ],
+        "ground_anchor": [
+          0.1375,
+          0.37777777777777777
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The sentry cairn is rooted against the heavy inner-left tree bank behind the gate, not suspended in the open rear clearing.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_root_cairn_watch.prompt.txt",
+        "prompt_sha256": "299ac012cc77d04279f8b96018f525411cb1155c757056823719cc58c9d8065f",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-9f02e02e-9746-460f-b849-46db01747279.png"
+      },
+      "building_thornwake_sap_chandler_grove": {
+        "asset_id": "faction_thornwake_building_thornwake_sap_chandler_grove",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_sap_chandler_grove.png",
+        "source_sha256": "eb84c0658fcc1e3d6bb260f82fea1582d20abda2b30f480a8099cc9b64324ca0",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1526,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_sap_chandler_grove.png",
+        "trimmed_sha256": "d41c3870df6f28d131e109fa83cbd42460ecda34b521cf9803f1e43209e60605",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_sap_chandler_grove.png",
+        "runtime_sha256": "1cf5d16427f770c0e6e750de72562c2b6cb063f6cdead572f46636b56e887e0d",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.1,
+          0.6388888888888888,
+          0.15833740234375,
+          0.18888888888888888
+        ],
+        "ground_anchor": [
+          0.184375,
+          0.8111111111111111
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The resin workshop extends the foreground-left coppice bank, keeping its work roof visible beside the siege run.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_sap_chandler_grove.prompt.txt",
+        "prompt_sha256": "55322377e31101c79909ab175b922208ff36e3ac06a7a64e0efee8a3e2286e5d",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-fba786da-2be3-409e-9626-22d9b4aa8a75.png"
+      },
+      "building_thornwake_bastion_seed_conclave": {
+        "asset_id": "faction_thornwake_building_thornwake_bastion_seed_conclave",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_bastion_seed_conclave.png",
+        "source_sha256": "e7ad04375f8b1a5c3a6411739ae06cd91e211b3e70aaa10afa8d6b5e081eef03",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1518,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_bastion_seed_conclave.png",
+        "trimmed_sha256": "430c69b53a70f20a88fb4b4170c1abaac9b3929fc62255ee61b26a8f084a8d45",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_bastion_seed_conclave.png",
+        "runtime_sha256": "d8e3478d29352b828007957b30cdedbc96db3ce735ed5613fd6892ee68f5d64c",
+        "runtime_size": [
+          512,
+          345
+        ],
+        "normalized_rect": [
+          0.65625,
+          0.7166666666666667,
+          0.15750732421875,
+          0.18888888888888888
+        ],
+        "ground_anchor": [
+          0.74375,
+          0.8888888888888888
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The bastion-seed council joins the right foreground bank; the central arrival path stays open.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_bastion_seed_conclave.prompt.txt",
+        "prompt_sha256": "e33703e5dde0351f2dc7c09b51903e28a73a1239769ca76ef49b013204008b76",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-b9bc4de1-aec3-4eac-b145-3d893b9d9ee6.png"
+      },
+      "building_thornwake_mycorrhizal_store": {
+        "asset_id": "faction_thornwake_building_thornwake_mycorrhizal_store",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_mycorrhizal_store.png",
+        "source_sha256": "2b44a5fd5a9cb316def0e8cf4652bd361098cfc255db1e986a73396381622b4e",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          5,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_mycorrhizal_store.png",
+        "trimmed_sha256": "c0d2354d1f84ef5aa16f8aae48b67cc9851aebe5ad3edad69586d74942ddd424",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_mycorrhizal_store.png",
+        "runtime_sha256": "dc2b91ba61cdff22d5af2675fe31f5983b7fdc9e7516ce200f7274c69ae8f9d8",
+        "runtime_size": [
+          512,
+          340
+        ],
+        "normalized_rect": [
+          0.75625,
+          0.7398111979166667,
+          0.159375,
+          0.18796657986111112
+        ],
+        "ground_anchor": [
+          0.840625,
+          0.9111111111111111
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The provisions store meets the right foreground root bank below the husk yard, leaving the center approach clear.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_mycorrhizal_store.prompt.txt",
+        "prompt_sha256": "45d2c0d5da7fabb4598b97e9a014d425fa18761aa7c99605c6b29b6068d7435d",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-aecff571-bd8b-4dbe-97d0-96599594ad9d.png"
+      },
+      "building_thornwake_rootlaw_moot": {
+        "asset_id": "faction_thornwake_building_thornwake_rootlaw_moot",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_rootlaw_moot.png",
+        "source_sha256": "c294da054ec8b5153b351597113b5f6248b183ebb72049b6a70cfae818901ed2",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1522,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_rootlaw_moot.png",
+        "trimmed_sha256": "aa6db4835883182ae5bd1cfedc7c57922bd66c4f923b442ceba28a23992aa0dd",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_rootlaw_moot.png",
+        "runtime_sha256": "2f2b00a662c481b1074a914d0a066c714aff0b43a6f566b9b33df0d24c0f1e2a",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.58125,
+          0.5333333333333333,
+          0.16101888020833333,
+          0.19259259259255557
+        ],
+        "ground_anchor": [
+          0.675,
+          0.7111111111111111
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The tribunal joins the existing right terrace below the hall, keeping the actual hall doorway and its central stair clear.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_rootlaw_moot.prompt.txt",
+        "prompt_sha256": "ee0b7323ef8f9cecf6395c86f52fd751ed02122d22345c45ba0497f4c33480da",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-d4139bc8-98e1-447e-adf5-6106abedfc94.png"
+      },
+      "building_thornwake_bramble_toll": {
+        "asset_id": "faction_thornwake_building_thornwake_bramble_toll",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_bramble_toll.png",
+        "source_sha256": "432601b33efe0d2bafb1bdadc6074d3b8a6ba36eba25ddf6b4806c893570f01f",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          9,
+          1526,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_bramble_toll.png",
+        "trimmed_sha256": "94fe49032b278a5d7827a248bde0cdbd1e395f2868aacb3b3cab735146f169a1",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_bramble_toll.png",
+        "runtime_sha256": "82af04d6e574a80ccbeb2264b3b57df711b79860d0dc1f9f42b31c1396180eb9",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.825,
+          0.4570529513888886,
+          0.14281412760416667,
+          0.16887297453700031
+        ],
+        "ground_anchor": [
+          0.90625,
+          0.6111111111111112
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The toll occupies the far-right approach behind the ledger and does not close the painted central forecourt.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_bramble_toll.prompt.txt",
+        "prompt_sha256": "eb37e9558d83bcb0aecc52dfbb3410b0bafe985345fab87a1e562c0a2d80893d",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-2dbce97f-d0b0-461b-9d00-b585492d6d77.png"
+      },
+      "building_thornwake_sporeglass_hothouse": {
+        "asset_id": "faction_thornwake_building_thornwake_sporeglass_hothouse",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_sporeglass_hothouse.png",
+        "source_sha256": "41ce8ad6067db52b01b211a3d9a3a18424eeee7f37734dadce1e561bd637beda",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_sporeglass_hothouse.png",
+        "trimmed_sha256": "1bb5df4e83b06fbcf755bf1441618e94c73ed08822b85d0183cce1ffdd5adb42",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_sporeglass_hothouse.png",
+        "runtime_sha256": "cecdb740a127c0641da7e3c5dae7e0ec13ac159e7bffaf49baa4aac6240d8c75",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.00625,
+          0.4,
+          0.15625,
+          0.18518518518522223
+        ],
+        "ground_anchor": [
+          0.090625,
+          0.5666666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The new conservatory extends the established left glass-nursery bank with its smaller domes exposed behind the coppice.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_sporeglass_hothouse.prompt.txt",
+        "prompt_sha256": "f6c53e91c59c463adbf9188e9c7046a3830e21d93150e2e2af968987875b0952",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-1ea33a48-359a-46a0-9d66-f8520eab0a66.png"
+      },
+      "building_thornwake_barkmantle_run": {
+        "asset_id": "faction_thornwake_building_thornwake_barkmantle_run",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_barkmantle_run.png",
+        "source_sha256": "19c2d003345e44c00e272a8dfa356f2867f4fbe0c1d120622e445c10bc26498f",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_barkmantle_run.png",
+        "trimmed_sha256": "5fd1166853fa63027474cfccf16d1a873d01c26396034886acd8a71ac554a588",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_barkmantle_run.png",
+        "runtime_sha256": "42820ed49f1ab10ed9f8d21c766b4ed2921465f99007854dc3bb51d7c6b8063b",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.203125,
+          0.7,
+          0.146875,
+          0.1740740740741111
+        ],
+        "ground_anchor": [
+          0.278125,
+          0.8611111111111112
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The training run faces the left foreground road below the market and beside the chandler workshop.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_barkmantle_run.prompt.txt",
+        "prompt_sha256": "71555e89a7d7c2bf35b58537b5232e5069544e9a777c512195065ca392fe6ab5",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-dac998ae-4981-4e0d-b985-de3575d3eeaf.png"
+      },
+      "building_thornwake_pilgrim_orchard": {
+        "asset_id": "faction_thornwake_building_thornwake_pilgrim_orchard",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_pilgrim_orchard.png",
+        "source_sha256": "79b78df2c81f3eec31fd176439e8773477d800ba3467199504b1bcbe39a50e95",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1524,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_pilgrim_orchard.png",
+        "trimmed_sha256": "5f2b91578e7837a393880ae6e52fa19a31d2557f02a7d8d15b4f58281085d3d7",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_pilgrim_orchard.png",
+        "runtime_sha256": "bba355d42cc4430dbc1e49ff9e31b77dd79a6169d22d0c6cfa6ea49b09d3d8bc",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.253125,
+          0.4722222222222222,
+          0.1736328125,
+          0.20740740740744443
+        ],
+        "ground_anchor": [
+          0.346875,
+          0.6611111111111111
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The orchard nursery extends the left main-trunk terrace behind the market, with trained branches rather than a detached grove icon.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_pilgrim_orchard.prompt.txt",
+        "prompt_sha256": "342c239b6bb8717eb793dc90fb52a4de5c54a05dcd64a73069f080930c525b74",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-de1dc87a-0002-456e-a147-dfe1496ea698.png"
+      },
+      "building_thornwake_graftworks": {
+        "asset_id": "faction_thornwake_building_thornwake_graftworks",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_graftworks.png",
+        "source_sha256": "798a76be898199036f44463b301063422c4e6d4e4b5aae304c75ce36a3645cb1",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_graftworks.png",
+        "trimmed_sha256": "4ed9a3a73ec0cb2c39693b35a68b607fc5d9b3b9c525016266cb46a8b9dac801",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_graftworks.png",
+        "runtime_sha256": "6aaa2e46c2b11758abbfb497fe684a6aceccae22b7de2ecd4e4f825f4edab03b",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.6625,
+          0.4888888888888889,
+          0.178125,
+          0.2111111111111111
+        ],
+        "ground_anchor": [
+          0.75625,
+          0.6833333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The grafting hall joins the inner-right terrace below the caravan inn and above the road markers.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_graftworks.prompt.txt",
+        "prompt_sha256": "739173fb9496cac5a5416085c32def226c2b983698df68686e5e63e7e8c81fad",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-1b6c8e7c-8ef3-4e23-90e0-6c22f7d84cea.png"
+      },
+      "building_thornwake_canopy_breach_grove": {
+        "asset_id": "faction_thornwake_building_thornwake_canopy_breach_grove",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_canopy_breach_grove.png",
+        "source_sha256": "782c29d26ea839430f6e76134561d19576663b1d4fc77f3f73cd40c9d37a9585",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_canopy_breach_grove.png",
+        "trimmed_sha256": "7cfaf585dc22bd5b51e7be727058d700ac6a81d940071b4cf46b4d06859cae99",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_canopy_breach_grove.png",
+        "runtime_sha256": "2d8a92cd79a769d314e1509f6980e05be9647e60e5e89ccfc4c5d50371842f17",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.015625,
+          0.7,
+          0.178125,
+          0.2111111111111111
+        ],
+        "ground_anchor": [
+          0.109375,
+          0.8944444444444445
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The canopy nursery grows from the extreme left foreground bank below the coppice; its frame stays above navigation.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_canopy_breach_grove.prompt.txt",
+        "prompt_sha256": "b303cd75205301a2e3425c127872b9199ecdd46cd11b16bc638079b8fabf209e",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-d3aee27b-87e6-421d-bed9-96ece757fda2.png"
+      },
+      "building_thornwake_seedglass_cantory": {
+        "asset_id": "faction_thornwake_building_thornwake_seedglass_cantory",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_seedglass_cantory.png",
+        "source_sha256": "5ed176291df21780172915e9740191e5923afc2a47e7edd7a3453ea713040e29",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          7,
+          1536,
+          1012
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_seedglass_cantory.png",
+        "trimmed_sha256": "4c13df8533f597474d95d5259abcda7747c413e93faf98f9665965f65e04a028",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_seedglass_cantory.png",
+        "runtime_sha256": "7d266c2d60ee558b1b903ca9452f05f7198f6ecf8e46d166352ae1af5c6c7aa3",
+        "runtime_size": [
+          512,
+          335
+        ],
+        "normalized_rect": [
+          0.165625,
+          0.30131655092592563,
+          0.1625,
+          0.18901909722218588
+        ],
+        "ground_anchor": [
+          0.253125,
+          0.48
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The chime pavilion joins the inner-left raised root bank, away from the command overlay and behind the seed repository.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_seedglass_cantory.prompt.txt",
+        "prompt_sha256": "7d5d1faf634d0ca42add08be0cbcb579a13f5cd9c6d4849f1f83bd3d37bfa91b",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-ac817f5a-2b28-468d-9eb8-880751985a86.png"
+      },
+      "building_thornwake_crownroot_heartseed_parliament": {
+        "asset_id": "faction_thornwake_building_thornwake_crownroot_heartseed_parliament",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_crownroot_heartseed_parliament.png",
+        "source_sha256": "bd6b56204dfbfd9dbacd831124c44ca03e93a96eba64c2346d3f1d8011657450",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1520,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_crownroot_heartseed_parliament.png",
+        "trimmed_sha256": "f0f90e411255840f49965deadcddcd8e3cd70916e3a092d86d5ee56f2aead236",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_crownroot_heartseed_parliament.png",
+        "runtime_sha256": "f12c5a456471d6ba71184d064c79a98f3224dbd6120c2694728b7936ef946745",
+        "runtime_size": [
+          512,
+          345
+        ],
+        "normalized_rect": [
+          0.4625,
+          0.6055555555555555,
+          0.16080729166666669,
+          0.19259259259255557
+        ],
+        "ground_anchor": [
+          0.55,
+          0.7777777777777778
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Crownroot's council is grounded on the original inner forecourt root terrace below the main hall; the hall roof and stair remain clear. The site cannot coexist with Woundroot's Hollow.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_crownroot_heartseed_parliament.prompt.txt",
+        "prompt_sha256": "1221a7be728318659c94c5ecdeab7a9ccaff0e74862c2aadb048a0bd2e9c657e",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-25ab5118-bc6f-4aa8-a0ac-bf4526e131cd.png"
+      },
+      "building_thornwake_woundroot_rootmaul_hollow": {
+        "asset_id": "faction_thornwake_building_thornwake_woundroot_rootmaul_hollow",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_woundroot_rootmaul_hollow.png",
+        "source_sha256": "1ab13eaf6fa3550766637b35b0108f351f19463384b33528c3af14c56993eb33",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1525,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_woundroot_rootmaul_hollow.png",
+        "trimmed_sha256": "c52f932d4e7ca19f43cf632831de4f94f2921104d27bac401983676ee6fb6239",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_woundroot_rootmaul_hollow.png",
+        "runtime_sha256": "93fbee23251cc5774351c4fe45b26c9e4cd7103a55635cc0d41db90429b1ccfc",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.4625,
+          0.6055555555555555,
+          0.16133626302083331,
+          0.19259259259255557
+        ],
+        "ground_anchor": [
+          0.55,
+          0.7777777777777778
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Woundroot's monumental nursery meets the original inner forecourt root terrace below the main hall instead of hovering on its roof. It cannot coexist with Crownroot's Parliament.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_woundroot_rootmaul_hollow.prompt.txt",
+        "prompt_sha256": "8b23cbd156dfc493d734c2b5061de4948fd1dc43c993bf0e019d68fe2b6773aa",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-dceee373-11de-4069-9f59-1d6dc0ebe06a.png"
+      },
+      "building_thornwake_woundroot_hearthseed_nursery": {
+        "asset_id": "faction_thornwake_building_thornwake_woundroot_hearthseed_nursery",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_woundroot_hearthseed_nursery.png",
+        "source_sha256": "f91620477c6fa260d203c04fd18ea57f7ba35c1bcbcce8ebafa504849217b9af",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_thornwake/building_thornwake_woundroot_hearthseed_nursery.png",
+        "trimmed_sha256": "e168fb9a21ca461048ebe02039320ec97cc2801266152503201d27dbdb2c225e",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_thornwake/building_thornwake_woundroot_hearthseed_nursery.png",
+        "runtime_sha256": "4ca5e6cf7a7c5d553f7527fba675f27fb1f70bc933c2ad590e796cee6c7b889b",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.4625,
+          0.75,
+          0.153125,
+          0.18148148148144444
+        ],
+        "ground_anchor": [
+          0.54375,
+          0.9133333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "The local nursery joins the near forecourt root terrace below the Hollow, keeping its complete footing above navigation.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_woundroot_hearthseed_nursery.prompt.txt",
+        "prompt_sha256": "4d4061157031c052171e2254335c2fbba7877bf6e45f434aed2ef6bb5babc8df",
+        "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-6927d2b1-278d-4526-96a9-8343d9fe2453.png"
       }
     }
   }
