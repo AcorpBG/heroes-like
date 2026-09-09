@@ -3304,6 +3304,288 @@
         "reference_inputs": [],
         "generation_date": "2026-09-09",
         "generation_output": "exec-316372ce-827b-4ed6-aaf5-81fef5cabe2c.png"
+      },
+      "building_floodtide_forge": {
+        "asset_id": "faction_mireclaw_building_floodtide_forge",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_floodtide_forge.png",
+        "source_sha256": "af73753d4ef8ca189bc6b28d46111b4a7fd8561dbb4edecf91cab0c21becff59",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_floodtide_forge.png",
+        "trimmed_sha256": "27d705de89576561b1f965dad5ed366621f3774d5ea7d3a14a93f4fce3575b58",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_floodtide_forge.png",
+        "runtime_sha256": "49e64ea029803557515208248a7ab07d6d99f90f80c34ec72b4ae1cfad0b46cc",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.41875,
+          0.2777777777777778,
+          0.11875,
+          0.14074074074077778
+        ],
+        "ground_anchor": [
+          0.501875,
+          0.4077777777777778
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Repair forge joins the rear-left settlement shore between Fenscale Pens and the main hall; it is a separate authored workshop from the eastern faction armor forge.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_floodtide_forge.prompt.txt",
+        "prompt_sha256": "731c15660d94876cbea434b0e0a4f3430cee4defb85c84d6b40a241965c0399c",
+        "curation": "Original built-in text-only RGBA paintings for the six remaining Mireclaw variant identities. Masters inspected; preserve alpha, wet timber/reed architecture, sunset light and all earlier layers. Distinct generic/faction names remain separate art and gameplay identities. Actual seven-town composition, paid-authority fixtures, input/save and platform evidence are recorded separately in the art-repair report; fixtures are not earned full-match progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-3209afb2-f11b-42e0-8ba5-a429090c268c.png"
+      },
+      "building_nightglass_dominion": {
+        "asset_id": "faction_mireclaw_building_nightglass_dominion",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_nightglass_dominion.png",
+        "source_sha256": "49f8dcb1f776b1b80977c92625188415a38f377de18d7a0792a0cea822e7c253",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1522,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_nightglass_dominion.png",
+        "trimmed_sha256": "1c918e6dd209c2ed37e9ae564e8e9f4dfc07a667e3c55e8ce0c08ed7dea260d8",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_nightglass_dominion.png",
+        "runtime_sha256": "f626149d4f9fe4d07498926fb03f2d6dfd1a71d30e49ae6c170c1f8f06e90015",
+        "runtime_size": [
+          512,
+          344
+        ],
+        "normalized_rect": [
+          0.4625,
+          0.6833333333333333,
+          0.11766764322916666,
+          0.14074074074077778
+        ],
+        "ground_anchor": [
+          0.541875,
+          0.8111111111111111
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Open signal ring meets the near central causeway, separate from the nearer Nightglass command house and its Court upgrade.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_nightglass_dominion.prompt.txt",
+        "prompt_sha256": "2462f47d050fc6b0154fcded42ef119310c3368d415da98b077354a943ff9e8a",
+        "curation": "Original built-in text-only RGBA paintings for the six remaining Mireclaw variant identities. Masters inspected; preserve alpha, wet timber/reed architecture, sunset light and all earlier layers. Distinct generic/faction names remain separate art and gameplay identities. Actual seven-town composition, paid-authority fixtures, input/save and platform evidence are recorded separately in the art-repair report; fixtures are not earned full-match progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-100efd28-c9be-44b4-9788-080fc597db55.png"
+      },
+      "building_smugglers_flotilla": {
+        "asset_id": "faction_mireclaw_building_smugglers_flotilla",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_smugglers_flotilla.png",
+        "source_sha256": "b270b7e5fa0df5b64217b374f406f69d819e1d16b38097a75dbbfd51990411b5",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          7,
+          1524,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_smugglers_flotilla.png",
+        "trimmed_sha256": "25662c7ec5ecd2c3c257e5e3286f6a96731ded5dca85dddc59381b0c009bd634",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_smugglers_flotilla.png",
+        "runtime_sha256": "b9564ccc0c1765706106c3f173de1656b3441610aa504eca9846eed52974e647",
+        "runtime_size": [
+          512,
+          342
+        ],
+        "normalized_rect": [
+          0.66875,
+          0.6123263888888889,
+          0.148828125,
+          0.1765625
+        ],
+        "ground_anchor": [
+          0.71125,
+          0.7677777777777778
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Hidden boat slip joins the right communal landing in Reedbarrow, whose catalog has no generic War Drum Circle at this site. Its boats retain transparent water gaps.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_smugglers_flotilla.prompt.txt",
+        "prompt_sha256": "b6fe904265898b2460ecf8bd56c52577ee9719b131f062e869c7d652c1e1c88a",
+        "curation": "Original built-in text-only RGBA paintings for the six remaining Mireclaw variant identities. Masters inspected; preserve alpha, wet timber/reed architecture, sunset light and all earlier layers. Distinct generic/faction names remain separate art and gameplay identities. Actual seven-town composition, paid-authority fixtures, input/save and platform evidence are recorded separately in the art-repair report; fixtures are not earned full-match progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-643f188a-3f54-4db0-a58b-51d045c75fbf.png"
+      },
+      "building_mireclaw_hollowreed_moonwax_ossuary": {
+        "asset_id": "faction_mireclaw_building_mireclaw_hollowreed_moonwax_ossuary",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_hollowreed_moonwax_ossuary.png",
+        "source_sha256": "b464382f709d6098adbf6973fde06391df8f32bd3c29a92f7742311b1485deff",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1535,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_hollowreed_moonwax_ossuary.png",
+        "trimmed_sha256": "022605b3feb465855e5e9b4d9095c6b630cc4ae7e309b5b45eedeb11c622901c",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_hollowreed_moonwax_ossuary.png",
+        "runtime_sha256": "2db97bc630cbb5004c60b164b3ec52543458ec96724810eff2840096c372ea5d",
+        "runtime_size": [
+          512,
+          342
+        ],
+        "normalized_rect": [
+          0.134375,
+          0.22777777777777777,
+          0.11554972330729166,
+          0.13703703703700001
+        ],
+        "ground_anchor": [
+          0.215625,
+          0.35333333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Moonwax storehouse joins the far-left rear shoreline behind the faction Den. Only Hollowreed offers this exact ossuary.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_hollowreed_moonwax_ossuary.prompt.txt",
+        "prompt_sha256": "9d473e8bba3747aa7c898cf0731bc6ce74b1259fd719683ffb5aeb21c5f9a36a",
+        "curation": "Original built-in text-only RGBA paintings for the six remaining Mireclaw variant identities. Masters inspected; preserve alpha, wet timber/reed architecture, sunset light and all earlier layers. Distinct generic/faction names remain separate art and gameplay identities. Actual seven-town composition, paid-authority fixtures, input/save and platform evidence are recorded separately in the art-repair report; fixtures are not earned full-match progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-5c314b4a-48b3-42b9-943a-8c7a96b4ad85.png"
+      },
+      "building_mireclaw_moonbite_votive_drum_court": {
+        "asset_id": "faction_mireclaw_building_mireclaw_moonbite_votive_drum_court",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_moonbite_votive_drum_court.png",
+        "source_sha256": "2d24560316d9d502b5890d6a9d5e85bfa85618366a8f69f5d4b5550ad15e46f4",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1533,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_moonbite_votive_drum_court.png",
+        "trimmed_sha256": "8eb58e853fb9731e4f85c0b24742c1446a291f959e3674d9938ff68aa0aaac56",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_moonbite_votive_drum_court.png",
+        "runtime_sha256": "a62f82b8f10ae988e5900a32df7799bce9983f06c65986473b9f915b6eecf259",
+        "runtime_size": [
+          512,
+          342
+        ],
+        "normalized_rect": [
+          0.134375,
+          0.22777777777777777,
+          0.115399169921875,
+          0.13703703703700001
+        ],
+        "ground_anchor": [
+          0.215625,
+          0.35333333333333333
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Low crescent training theater joins Moonbite's far-left rear shoreline behind the faction Den. Hollowreed's same-location ossuary is not in Moonbite's catalog.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_moonbite_votive_drum_court.prompt.txt",
+        "prompt_sha256": "5b6e8a85bd9123f42ecbe40c73a70cae8165ce81dfbed1c8b0450f90fd35dd2e",
+        "curation": "Original built-in text-only RGBA paintings for the six remaining Mireclaw variant identities. Masters inspected; preserve alpha, wet timber/reed architecture, sunset light and all earlier layers. Distinct generic/faction names remain separate art and gameplay identities. Actual seven-town composition, paid-authority fixtures, input/save and platform evidence are recorded separately in the art-repair report; fixtures are not earned full-match progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-c2632dbe-6693-42e9-ba36-dd3a09d8ea52.png"
+      },
+      "building_mireclaw_moonbite_mirehorn_chain_pen": {
+        "asset_id": "faction_mireclaw_building_mireclaw_moonbite_mirehorn_chain_pen",
+        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_moonbite_mirehorn_chain_pen.png",
+        "source_sha256": "cd3d17bb06b6e62c48cbb9b32aabd0e4ec52f79df636a251042cde8903da6e01",
+        "source_size": [
+          1536,
+          1024
+        ],
+        "trim_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_moonbite_mirehorn_chain_pen.png",
+        "trimmed_sha256": "7fbf72ac96bd5a5321259f8d0c69e964645fdf5cfb9d200d37fe6f494ca75f05",
+        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_moonbite_mirehorn_chain_pen.png",
+        "runtime_sha256": "35b26442eeea4c2e309858f012f7a45fe9e3e4c6cc8bc57a95cb26de21a357b2",
+        "runtime_size": [
+          512,
+          341
+        ],
+        "normalized_rect": [
+          0.434375,
+          0.6111111111111112,
+          0.096875,
+          0.11481481481477779
+        ],
+        "ground_anchor": [
+          0.50125,
+          0.7133333333333334
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Compact Mirehorn enclosure joins the left causeway landing between the Toll approach and nearer signal ring. It remains exposed outside the right command dock and distinct from the foreground apex Antler Pit.",
+        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_moonbite_mirehorn_chain_pen.prompt.txt",
+        "prompt_sha256": "4e681a1b56665e35ac45f28c71b550151159aea65420c9101fbabac7f176ca06",
+        "curation": "Original built-in text-only RGBA paintings for the six remaining Mireclaw variant identities. Masters inspected; preserve alpha, wet timber/reed architecture, sunset light and all earlier layers. Distinct generic/faction names remain separate art and gameplay identities. Actual seven-town composition, paid-authority fixtures, input/save and platform evidence are recorded separately in the art-repair report; fixtures are not earned full-match progression.",
+        "reference_inputs": [],
+        "generation_date": "2026-09-09",
+        "generation_output": "exec-38f0ddf2-6954-497f-b9bf-8ef06d5e7c7e.png"
       }
     }
   }

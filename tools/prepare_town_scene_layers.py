@@ -598,6 +598,50 @@ for brief in MIRECLAW_FACTION_BRIEFS.values():
 MIRECLAW_BRIEFS.update(MIRECLAW_FACTION_BRIEFS)
 
 
+MIRECLAW_VARIANT_BRIEFS = {
+    'building_floodtide_forge': {
+        'source_sha256':'af73753d4ef8ca189bc6b28d46111b4a7fd8561dbb4edecf91cab0c21becff59',
+        'generation_output':'exec-3209afb2-f11b-42e0-8ba5-a429090c268c.png',
+        'scene_bounds':[670,250,190,126.6666666667], 'ground_anchor':[803,367],
+        'grounding':"Repair forge joins the rear-left settlement shore between Fenscale Pens and the main hall; it is a separate authored workshop from the eastern faction armor forge.",
+    },
+    'building_nightglass_dominion': {
+        'source_sha256':'49f8dcb1f776b1b80977c92625188415a38f377de18d7a0792a0cea822e7c253',
+        'generation_output':'exec-100efd28-c9be-44b4-9788-080fc597db55.png',
+        'scene_bounds':[740,615,190,126.6666666667], 'ground_anchor':[867,730],
+        'grounding':"Open signal ring meets the near central causeway, separate from the nearer Nightglass command house and its Court upgrade.",
+    },
+    'building_smugglers_flotilla': {
+        'source_sha256':'b270b7e5fa0df5b64217b374f406f69d819e1d16b38097a75dbbfd51990411b5',
+        'generation_output':'exec-643f188a-3f54-4db0-a58b-51d045c75fbf.png',
+        'scene_bounds':[1070,550,240,160], 'ground_anchor':[1138,691],
+        'grounding':"Hidden boat slip joins the right communal landing in Reedbarrow, whose catalog has no generic War Drum Circle at this site. Its boats retain transparent water gaps.",
+    },
+    'building_mireclaw_hollowreed_moonwax_ossuary': {
+        'source_sha256':'b464382f709d6098adbf6973fde06391df8f32bd3c29a92f7742311b1485deff',
+        'generation_output':'exec-5c314b4a-48b3-42b9-943a-8c7a96b4ad85.png',
+        'scene_bounds':[215,205,185,123.3333333333], 'ground_anchor':[345,318],
+        'grounding':"Moonwax storehouse joins the far-left rear shoreline behind the faction Den. Only Hollowreed offers this exact ossuary.",
+    },
+    'building_mireclaw_moonbite_votive_drum_court': {
+        'source_sha256':'2d24560316d9d502b5890d6a9d5e85bfa85618366a8f69f5d4b5550ad15e46f4',
+        'generation_output':'exec-c2632dbe-6693-42e9-ba36-dd3a09d8ea52.png',
+        'scene_bounds':[215,205,185,123.3333333333], 'ground_anchor':[345,318],
+        'grounding':"Low crescent training theater joins Moonbite's far-left rear shoreline behind the faction Den. Hollowreed's same-location ossuary is not in Moonbite's catalog.",
+    },
+    'building_mireclaw_moonbite_mirehorn_chain_pen': {
+        'source_sha256':'cd3d17bb06b6e62c48cbb9b32aabd0e4ec52f79df636a251042cde8903da6e01',
+        'generation_output':'exec-38f0ddf2-6954-497f-b9bf-8ef06d5e7c7e.png',
+        'scene_bounds':[695,550,155,103.3333333333], 'ground_anchor':[802,642],
+        'grounding':"Compact Mirehorn enclosure joins the left causeway landing between the Toll approach and nearer signal ring. It remains exposed outside the right command dock and distinct from the foreground apex Antler Pit.",
+    },
+}
+for brief in MIRECLAW_VARIANT_BRIEFS.values():
+    brief.update(reference_inputs=[], generation_date='2026-09-09',
+                 curation='Original built-in text-only RGBA paintings for the six remaining Mireclaw variant identities. Masters inspected; preserve alpha, wet timber/reed architecture, sunset light and all earlier layers. Distinct generic/faction names remain separate art and gameplay identities. Actual seven-town composition, paid-authority fixtures, input/save and platform evidence are recorded separately in the art-repair report; fixtures are not earned full-match progression.')
+MIRECLAW_BRIEFS.update(MIRECLAW_VARIANT_BRIEFS)
+
+
 FACTION_BRIEFS = {FACTION: BRIEFS, 'faction_embercourt': EMBERCOURT_BRIEFS, 'faction_mireclaw': MIRECLAW_BRIEFS}
 
 def digest(path):

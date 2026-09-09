@@ -31,6 +31,13 @@ def validate_scene_layers(payload=None):
     duskfen = next(town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['id']=='town_duskfen')
     required_duskfen = set(duskfen['starting_building_ids'] + duskfen['buildable_building_ids']) - {'building_town_hall'}
     require(required_duskfen.issubset(factions.get('faction_mireclaw',{})), 'Missing constructible Duskfen scene mapping: '+', '.join(sorted(required_duskfen-set(factions.get('faction_mireclaw',{})))))
+    mire_towns = [town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['faction_id']=='faction_mireclaw']
+    required_mire_union = {building for town in mire_towns for building in town['starting_building_ids']+town['buildable_building_ids']} - {'building_town_hall'}
+    require(required_mire_union.issubset(factions.get('faction_mireclaw',{})), 'Missing authored Mireclaw variant scene mapping: '+', '.join(sorted(required_mire_union-set(factions.get('faction_mireclaw',{})))))
+    for base in ('floodtide_forge', 'nightglass_dominion'):
+        generic = factions.get('faction_mireclaw',{}).get('building_'+base,{})
+        specific = factions.get('faction_mireclaw',{}).get('building_mireclaw_'+base,{})
+        require(generic.get('runtime_sha256')!=specific.get('runtime_sha256') and generic.get('ground_anchor')!=specific.get('ground_anchor'), 'Simultaneous generic/faction buildings need distinct art/sites: '+base)
     required_embercourt = {'building_muster_yard','building_wayfarers_hall','building_market_square'}
     require(required_embercourt.issubset(factions.get('faction_embercourt',{})), 'Missing accepted Embercourt opening scene mapping')
     required_growth = {'building_stone_store','building_watch_barracks','building_bowyer_lodge','building_beacon_range'}
@@ -127,7 +134,7 @@ def validate_scene_layers(payload=None):
                                 'genuinely transparent background with a real alpha channel' in text_lower) or
                                ('asset type: original transparent raster' in text_lower and
                                 any(phrase in text_lower for phrase in ('genuinely transparent rgba','actual transparent rgba','real transparent rgba','genuine rgba transparency','genuinely transparent alpha everywhere','actual transparent alpha')) and
-                                any(label in text_lower for label in ('constraints:', 'background:'))) or
+                                any(label in text_lower for label in ('constraints:', 'background:', 'composition:'))) or
                                (('town building layer for '+building+'.') in text_lower and
                                 'transparent rgba png' in text_lower))
             require(bool(prompt_text.strip()) and ('image 1' in text_lower or (text_only and text_only_brief)), 'Missing exact generation prompt: '+label)
@@ -143,7 +150,7 @@ class TownSceneLayersTests(unittest.TestCase):
     def test_every_mireclaw_opening_mapping_is_required(self):
         from tools import prepare_town_scene_layers as preparation
         opening={'building_blackbranch_den','building_wayfarers_hall','building_market_square'}
-        self.assertEqual(set(preparation.MIRECLAW_BRIEFS), opening|set(preparation.MIRECLAW_GROWTH_BRIEFS)|set(preparation.MIRECLAW_FACTION_BRIEFS))
+        self.assertEqual(set(preparation.MIRECLAW_BRIEFS), opening|set(preparation.MIRECLAW_GROWTH_BRIEFS)|set(preparation.MIRECLAW_FACTION_BRIEFS)|set(preparation.MIRECLAW_VARIANT_BRIEFS))
         for building in opening:
             with self.subTest(building=building):
                 payload=copy.deepcopy(self.payload)
