@@ -821,7 +821,9 @@ for brief in MIRECLAW_VARIANT_BRIEFS.values():
 MIRECLAW_BRIEFS.update(MIRECLAW_VARIANT_BRIEFS)
 
 
-FACTION_BRIEFS = {FACTION: BRIEFS, 'faction_embercourt': EMBERCOURT_BRIEFS, 'faction_mireclaw': MIRECLAW_BRIEFS}
+SUNVAULT_BRIEFS = json.loads((ROOT/'art/towns/source/generated/scene_layers/faction_sunvault/scene_briefs.json').read_text())
+FACTION_BRIEFS = {FACTION: BRIEFS, 'faction_embercourt': EMBERCOURT_BRIEFS, 'faction_mireclaw': MIRECLAW_BRIEFS,
+                 'faction_sunvault': SUNVAULT_BRIEFS}
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()

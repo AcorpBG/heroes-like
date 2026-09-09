@@ -105,6 +105,31 @@ not gameplay, native map generation or the meaning of earned progression.
 Record the selected scenario ids before implementation and keep fixtures clearly
 labeled; passing a small fixture is not Large-map performance certification.
 
+### Sunvault whole-faction paintings
+
+Complete the 29 non-embedded identities across Prismhearth, Halo Spire,
+Dawnmirror Observatory, Meridian Choirhold and Splitprism Duelcourt. Preserve
+the existing Glass Uplands village and all 88 earlier scene layers. Use original
+pale-stone, gold-inlaid, blue-violet glass architecture with solar instruments,
+not generic sacred palaces. Distinct generic/faction yards, forges, galleries,
+cloisters, spires and matrices may coexist and need distinct sites/paintings.
+Shard Yard/Mirror Forge, Prism Range/Lens Gallery, Archive/Annex and faction
+Matrix/Zenith Court replace at the same authored site through existing ancestry.
+
+Retain one normal generated Large land/one-level Sunvault opening using seed
+`10` and the live content id `hero_solera`, without changing native generation.
+Exercise the ordinary Market order and full generated save control. The existing
+`facetlane-splitprism-parallax-trial` and `facetlane-splitprism-heliograph-works`
+provide two uninjected Day-1 orders. Use the 10x6 `prismhearth-watch` scenario as
+the small detached fixture base for five developed town views and constructible
+building controls; starting-only buildings are checked as actual starters and
+through their paid upgrades. Keep complete rule/recap, daily-limit, visible/hidden
+upgrade, alpha/focus/input and save/re-entry assertions. Detached fixtures are
+not earned full-town development. One combined inspected small/actual 2048x1079
+and official Linux/Windows boundary must preserve every earlier runtime payload.
+No village/catalog repaint, gameplay/RMG/native/save change or unrelated cleanup.
+Thornwake/Brasshollow and the broader quality goal remain unfinished.
+
 ## Owner-directed package policy — 2026-09-09
 
 There is no fixed release-PCK size budget. Remove the former 250000000-byte
