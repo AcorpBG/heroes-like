@@ -5,6 +5,90 @@ Parent: `quality-generated-full-match-20260906`; selected child:
 removed the package-size budget and requested continuing. The parent quality
 goal remains unfinished.
 
+## Thornwake whole-faction batch — 2026-09-09, validated
+
+All 29 non-embedded identities across Graftroot Caravan, Rootgate Nursery,
+Briarwheel Enclave, Crownroot Refuge and Woundroot Hearthgrove previously fell
+through `TownStageView._town_building_texture_path` to catalog paintings. They
+now resolve to exact original built-in text-only RGBA scene paintings, with
+hash-locked prompts/masters, alpha-margin trims and 512px runtime derivatives.
+Source/provenance: `art/towns/source/generated/scene_layers/faction_thornwake/`;
+runtime: `art/towns/runtime/scene_layers/faction_thornwake/`. Rootwoven bark,
+moss-stone, olive seedglass and amber lamps follow the original Walking Green
+village. The village, catalog icons, embedded hall and all 117 earlier manifest
+rows remain unchanged (146 rows total). Worldroot Gate/Concord Seat shares one
+source-space site and ground anchor through existing upgrade ancestry.
+
+`tests/thornwake_town_opening.py` retains a normal seed-10, two-player,
+land/one-level `homm3_large` Ardren/Graftroot opening with the existing native
+template/profile 42. First attempt and complete save/re-entry pass with no
+engine errors. Exact original save SHA256:
+`3b42437d341d8e27b806c2fea5751fa362e02e836b5b311c79c51e99dd7c83a4`.
+The inspected before view is 1920x1080, following the existing opening driver's
+settings override; later layout probes set and verify actual dimensions.
+
+The first ten-view composition preview (`thornwake_faction_layout_01`) exposed
+a floating town-specific landmark above the hall and too continuous a row
+across the foreground approach. Twelve source-space placement adjustments
+ground the local landmarks below the hall, move the chime pavilion out of the
+command rail, and group lower structures on the side banks to reopen the path.
+No art pixels or gameplay owners changed. Retain that unaccepted first preview.
+The corrected ten-view sets at 1280x720/2048x1079 are `_layout_02`/`_layout_03`.
+The first strict batch passes 45 tests, including missing-identity rejection,
+exact five-town union, distinct originals and same-site upgrade preservation.
+
+`tests/town_thornwake_faction_regression.py` retains the complete shared
+rule/recap, daily-limit, save/re-entry and painted pointer/keyboard/controller
+controls. It distinguishes a real generated Market order and two uninjected
+Woundroot scenario purchases from five detached developed compositions and
+28 isolated ledger fixtures based on the 66-tile `rootgate-toll` scenario.
+The Seed Vault is an actual starter, not fabricated as a paid order. Fixtures
+are not earned development or Large-map performance certification. The exposed
+painted-patch helper does not change production ordering, alpha or UI routing;
+the earlier shared Mireclaw probe and gameplay/native/save owners are unchanged.
+
+The corrected source pass (`thornwake_faction_source_01`) passes 23612 checks,
+31 actual ledger actions, one saved-ancestor/same-site upgrade control, five
+developed surfaces and complete within-run state/save comparisons, with zero
+engine errors and unchanged input/source owners. All five small developed views,
+the small generated Market and authored nursery purchase, the building-info
+dialog and wide Briarwheel/Woundroot compositions have been visually inspected.
+The combined acceptance driver has passed both official Linux/Windows exports,
+startup and generated-Town paid flows, the two shared Town reports, 41 final
+affected Python tests and `python3 tests/validate_repo.py`. The exact Thornwake
+probe also passes inside both exported packages: each repeats all 23612 checks,
+31 ledger actions and complete input/save assertions without engine errors.
+The final packaged Linux Woundroot input view has been visually inspected.
+Windows is headless Wine, not native Windows GPU/audio/physical-controller
+certification. The earlier shared Mireclaw regression body remains byte-identical.
+
+`thornwake_faction_verify.py` / `thornwake_faction_acceptance.json` independently
+compare all 37 saved cases across source/Linux/Windows. Only `saved_at_unix`
+differs for the generated cases; 35 independently created authored/fixture cases
+also exclude the existing factory's clock-owned numeric `session_id`. Every
+within-run full-rule/save comparison excludes nothing. The exact original
+Large opening and all 117 earlier manifest rows are unchanged. Both packages
+contain **279151544 bytes / 5428 members**: 5368 earlier payloads are identical,
+only the scene manifest/UID cache changes, and exactly 58 added entries are the
+29 runtime textures and import mappings. No source art or tests leak into the
+PCKs; only `project.binary` differs between Linux and Windows. No fixed size
+ceiling is reintroduced. Actual dimensions are verified for ten small and ten
+wide final preview captures and all 75 Linux packaged captures.
+
+Executed boundary: `thornwake_faction_acceptance.py` and its seven passing jobs
+in `thornwake_faction_acceptance_jobs_01.json`. Reproduction commands:
+`python3 -B tests/thornwake_town_opening.py --label <fresh>`;
+`python3 -B tests/town_thornwake_faction_regression.py --label <fresh> --save <exact-opening-save> --resolution 1280x720`, and the same probe with
+`--platform <linux|windows> --binary <official-export> --pack <matching.pck>`
+plus a fresh Windows `--wine-prefix`. Focused final tests:
+`PYTHONPATH=tests:. python3 -B -m unittest test_town_thornwake_faction test_town_scene_layers`.
+Shared reports: `.artifacts/full_play_runtime_20260905/thornwake_faction_shared/`.
+Exact commands, source/member hashes, full save names and capture sizes are
+retained in the batch reports. Repository/diff and unrelated-file hash checks
+pass. No per-asset exports or duplicated Large-world fixture matrices were run.
+All named artifacts are under `.artifacts/generated_full_match_quality_20260906/`.
+Brasshollow's 27 mappings and broader visual acceptance remain unfinished.
+
 ## Sunvault whole-faction batch — 2026-09-09, validated
 
 All 29 non-embedded identities across five Sunvault towns previously lacked
