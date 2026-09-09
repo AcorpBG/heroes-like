@@ -64,6 +64,22 @@ the identical probe through both official packages; retain normal generated
 Town paid-flow gates and prove unchanged compiled gameplay/content. Do not
 replay the unrelated 51-day chain for six data-only variant paintings.
 
+The next six-painting Embercourt batch completes the 30 non-embedded identities
+across five towns. Preserve all 77 accepted layers, village and gameplay/content
+owners. Signal Citadel and generic Charter Bastion require separate sites from
+the faction Colossus Bastion/Flame; add Beaconline Charter House, Rainwrit
+Stormseal Treasury and Amberweir's Sluiceguard Lock/Counterweight Foundry.
+Use the ordinary authored `rainledger-amberweir-lockpike-trial` and
+`rainledger-amberweir-sluicebrand-works` Day-1 orders without state injection,
+the unchanged earned Riverwatch Day-46 save, five detached developed views and
+six isolated fixture ledger controls. Retain complete independent rule/recap,
+save/re-entry, daily-limit and painted input checks. Inspect small and actual
+2048x1079 compositions at one boundary, with official Linux/Windows normal
+generated paid flows and exact variant replay; prove prior payloads unchanged.
+Fixture development is not an earned match, and the unchanged 46-day chain
+does not need replaying for these data-only variants. All failures remain
+evidence; further factions and the full goal stay unfinished.
+
 ## Owner-directed package policy — 2026-09-09
 
 There is no fixed release-PCK size budget. Remove the former 250000000-byte

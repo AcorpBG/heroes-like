@@ -38,6 +38,12 @@ def validate_scene_layers(payload=None):
         generic = factions.get('faction_mireclaw',{}).get('building_'+base,{})
         specific = factions.get('faction_mireclaw',{}).get('building_mireclaw_'+base,{})
         require(generic.get('runtime_sha256')!=specific.get('runtime_sha256') and generic.get('ground_anchor')!=specific.get('ground_anchor'), 'Simultaneous generic/faction buildings need distinct art/sites: '+base)
+    ember_towns = [town for town in json.loads((ROOT/'content/towns.json').read_text())['items'] if town['faction_id']=='faction_embercourt']
+    required_ember_union = {building for town in ember_towns for building in town['starting_building_ids']+town['buildable_building_ids']} - {'building_town_hall'}
+    require(required_ember_union.issubset(factions.get('faction_embercourt',{})), 'Missing authored Embercourt variant scene mapping: '+', '.join(sorted(required_ember_union-set(factions.get('faction_embercourt',{})))))
+    generic = factions.get('faction_embercourt',{}).get('building_charter_bastion',{})
+    specific = factions.get('faction_embercourt',{}).get('building_embercourt_charter_bastion',{})
+    require(generic.get('runtime_sha256')!=specific.get('runtime_sha256') and generic.get('ground_anchor')!=specific.get('ground_anchor'), 'Simultaneous generic/faction Bastions need distinct art/sites')
     required_embercourt = {'building_muster_yard','building_wayfarers_hall','building_market_square'}
     require(required_embercourt.issubset(factions.get('faction_embercourt',{})), 'Missing accepted Embercourt opening scene mapping')
     required_growth = {'building_stone_store','building_watch_barracks','building_bowyer_lodge','building_beacon_range'}

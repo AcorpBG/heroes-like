@@ -309,6 +309,103 @@ for brief in EMBERCOURT_LATE_COURT_BRIEFS.values():
                  curation='Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.')
 EMBERCOURT_BRIEFS.update(EMBERCOURT_LATE_COURT_BRIEFS)
 
+EMBERCOURT_VARIANT_BRIEFS = {
+    "building_signal_citadel": {
+        "source_sha256": "0a4e5e7dd2138698b862183ff6a3ca587a17a96bb4a5368ba57fe5c336da9eca",
+        "generation_output": "exec-5e8ce9fa-2662-466d-87db-98884a6a5ea5.png",
+        "scene_bounds": [
+            735,
+            205,
+            210,
+            140
+        ],
+        "ground_anchor": [
+            842,
+            340
+        ],
+        "grounding": "Compact relay station stands on the rear right-bank rise behind the Pikehall, with lens and horn clear of the civic colossus workshop."
+    },
+    "building_charter_bastion": {
+        "source_sha256": "9cf452b6119e9a68d60baaa27266f6a5bd8781b94d5d8fef88a665ce62f12e73",
+        "generation_output": "exec-c5e69ade-ae1a-4004-b0bc-d3e033c585d9.png",
+        "scene_bounds": [
+            420,
+            360,
+            260,
+            173.3333333333
+        ],
+        "ground_anchor": [
+            580,
+            525
+        ],
+        "grounding": "Basin command hall joins the left lock approach in towns without Riverwatch's Quartermaster Depot; keep this headquarters separate from the faction Colossus Bastion and its Flame upgrade."
+    },
+    "building_embercourt_beaconline_charter_house": {
+        "source_sha256": "b86eb52f8f64ffb8bb8b4880168d0c330e9ec4dfb0913f5cb618822ce2cb52e9",
+        "generation_output": "exec-b934fc4e-61c7-4297-bacb-30a5a31682ac.png",
+        "scene_bounds": [
+            205,
+            220,
+            185,
+            123.3333333333
+        ],
+        "ground_anchor": [
+            307,
+            335
+        ],
+        "grounding": "Veteran charter hall joins the rear left-bank terrace between the records lodge and civic workshop. Foreground granary roofs retain depth; the upper charter gable stays exposed away from the command dock."
+    },
+    "building_embercourt_rainwrit_stormseal_treasury": {
+        "source_sha256": "cd8a4aa09cbdf4c0f3b4b4ba3ea815b64541f4ca4298db0d70ba1eef4fd3da3a",
+        "generation_output": "exec-cfa1fd83-c1c8-454e-948d-67a99b9a951f.png",
+        "scene_bounds": [
+            325,
+            665,
+            250,
+            166.6666666667
+        ],
+        "ground_anchor": [
+            465,
+            821
+        ],
+        "grounding": "Raised reserve court stands at the permanent foreground-left stone quay and timber landing, independent of whether Relief Quay has been built. Its adjoining pier follows the base waterfront; the rear Relief roof remains visible when developed."
+    },
+    "building_embercourt_amberweir_sluiceguard_lock": {
+        "source_sha256": "0855f88065dc10099e8bbfa3a960d64680076126b849b020c64de4e9a3a5c400",
+        "generation_output": "exec-0285c41c-a570-4492-9ce2-a57308540149.png",
+        "scene_bounds": [
+            745,
+            545,
+            265,
+            176.6666666667
+        ],
+        "ground_anchor": [
+            900,
+            704
+        ],
+        "grounding": "Fortified lock extends the existing central weir toward the right bank; gate gaps reveal the river and the attached guardwalk meets the working lock route."
+    },
+    "building_embercourt_amberweir_counterweight_foundry": {
+        "source_sha256": "bacc30e6af0d5e26fe5338eea9c0f7d35e9a93700919f3ce199d533ef419a270",
+        "generation_output": "exec-f0164211-75bd-4e2a-a8fb-f345ac2220a0.png",
+        "scene_bounds": [
+            325,
+            665,
+            250,
+            166.6666666667
+        ],
+        "ground_anchor": [
+            465,
+            821
+        ],
+        "grounding": "Water-driven workshop meets the permanent foreground-left stone quay and timber landing even without Relief Quay. Its waterwheel descends from that shore into the channel, while the developed Relief roof remains visible behind it. Rainwrit's same-site treasury cannot coexist in Amberweir."
+    }
+}
+for brief in EMBERCOURT_VARIANT_BRIEFS.values():
+    brief.update(reference_inputs=[], generation_date='2026-09-09',
+                 curation='Original built-in text-only RGBA paintings for all six remaining Embercourt variant identities. Preserve original alpha, sunset light, cream river masonry, red tile and wet timber, with all earlier layers unchanged. Generic and faction Bastions remain distinct original paintings and sites. Actual composition, full build/input/save and platform evidence is recorded in the art-repair report; detached fixtures are not earned progression.')
+EMBERCOURT_BRIEFS.update(EMBERCOURT_VARIANT_BRIEFS)
+
 MIRECLAW_BRIEFS = {
     'building_blackbranch_den': {
         'source_sha256':'d0c8a1df8391f08940483ee55b521775c51d64b89e9a4999a33fc493d27ca0b3',
