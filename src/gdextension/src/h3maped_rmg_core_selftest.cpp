@@ -4959,6 +4959,22 @@ int main() {
 					+ native_runtime_projection.blocked_reason)) {
 		return 1;
 	}
+	int projected_guard_count = 0;
+	for (const auto &object : native_runtime_projection.objects) {
+		if (object.type_id != 54) {
+			continue;
+		}
+		++projected_guard_count;
+		const auto &source_record = generator_state.object_records_0xec4_ecc[size_t(object.source_vector_index)];
+		if (!require(object.guard_quantity == (source_record.object_record_selected_index_0x20 & 0xffff)
+				&& object.guard_level >= 0 && object.guard_level <= 6 && object.guard_ai_value > 0,
+				"runtime guard quantity does not match recovered private-state quantity +0x20")) {
+			return 1;
+		}
+	}
+	if (!require(projected_guard_count > 0, "runtime guard quantity coverage must exercise real generated guards")) {
+		return 1;
+	}
 	H3MapedRmgWorkflowResult tampered_runtime_workflow = generator_state_workflow;
 	tampered_runtime_workflow.final_tile_writeout_0x49b2b6.tile_payload_bytes[0] ^= 0xffU;
 	const auto tampered_runtime_projection =

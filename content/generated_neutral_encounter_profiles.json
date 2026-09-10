@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "supplemental_sites": {
+    "site_aetherglass_lens_house": "encounter_crystal_sump_watch",
+    "site_embergrain_warm_granary": "encounter_cinder_kiln_watch",
+    "site_peatwax_reed_yard": "encounter_fenhound_kennel_watch",
+    "site_verdant_graft_nursery": "encounter_greenbranch_copse_watch",
+    "site_brass_scrip_mint": "encounter_milestone_arsenal_watch",
+    "site_memory_salt_pan": "encounter_frostwharf_house_watch",
+    "site_generated_town_required_source_cache": "encounter_roadward_lodge_watch"
+  },
+  "policy": "original_neutral_companies_v1",
+  "quantity_policy": "preserve_native_total_headcount",
+  "formation_policy": "deterministic_pure_or_authored_mixed_with_conservative_stack_splitting",
+  "profiles": [
+    {
+      "encounter_id": "encounter_roadward_lodge_watch",
+      "tier": 1,
+      "army_group_id": "army_neutral_roadward_lodge_watch",
+      "asset_id": "generated_neutral_unit_neutral_roadwardens"
+    },
+    {
+      "encounter_id": "encounter_fenhound_kennel_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_fenhound_kennel_watch",
+      "asset_id": "generated_neutral_unit_neutral_fenhound_runners"
+    },
+    {
+      "encounter_id": "encounter_cliffhawk_roost_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_cliffhawk_roost_watch",
+      "asset_id": "generated_neutral_unit_neutral_cliffhawk_wardens"
+    },
+    {
+      "encounter_id": "encounter_reedbarge_mooring_watch",
+      "tier": 1,
+      "army_group_id": "army_neutral_reedbarge_mooring_watch",
+      "asset_id": "generated_neutral_unit_neutral_reedbarge_poles"
+    },
+    {
+      "encounter_id": "encounter_glowcap_croft_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_glowcap_croft_watch",
+      "asset_id": "generated_neutral_unit_neutral_glowcap_bulwarks"
+    },
+    {
+      "encounter_id": "encounter_dustjack_yard_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_dustjack_yard_watch",
+      "asset_id": "generated_neutral_unit_neutral_dustjack_blades"
+    },
+    {
+      "encounter_id": "encounter_cinder_kiln_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_cinder_kiln_watch",
+      "asset_id": "generated_neutral_unit_neutral_kilnward_mallets"
+    },
+    {
+      "encounter_id": "encounter_frostbeacon_bothy_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_frostbeacon_bothy_watch",
+      "asset_id": "generated_neutral_unit_neutral_frostbeacon_pikes"
+    },
+    {
+      "encounter_id": "encounter_orchard_levy_watch",
+      "tier": 1,
+      "army_group_id": "army_neutral_orchard_levy_watch",
+      "asset_id": "generated_neutral_unit_neutral_orchard_halberds"
+    },
+    {
+      "encounter_id": "encounter_bramble_hedge_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_bramble_hedge_watch",
+      "asset_id": "generated_neutral_unit_neutral_hedgehook_watch"
+    },
+    {
+      "encounter_id": "encounter_tidepool_skiffyard_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_tidepool_skiffyard_watch",
+      "asset_id": "generated_neutral_unit_neutral_tidepool_cutters"
+    },
+    {
+      "encounter_id": "encounter_switchback_hostel_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_switchback_hostel_watch",
+      "asset_id": "generated_neutral_unit_neutral_switchback_pikes"
+    },
+    {
+      "encounter_id": "encounter_saltpan_camp_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_saltpan_camp_watch",
+      "asset_id": "generated_neutral_unit_neutral_saltpan_bucklers"
+    },
+    {
+      "encounter_id": "encounter_crystal_sump_watch",
+      "tier": 3,
+      "army_group_id": "army_neutral_crystal_sump_watch",
+      "asset_id": "generated_neutral_unit_neutral_sumpstone_guards"
+    },
+    {
+      "encounter_id": "encounter_icehook_trapper_lodge_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_icehook_trapper_lodge_watch",
+      "asset_id": "generated_neutral_unit_neutral_icehook_trappers"
+    },
+    {
+      "encounter_id": "encounter_obsidian_scar_watch",
+      "tier": 3,
+      "army_group_id": "army_neutral_obsidian_scar_watch",
+      "asset_id": "encounter_unbound_wild_scarshield_breakyard_watch"
+    },
+    {
+      "encounter_id": "encounter_greenbranch_copse_watch",
+      "tier": 1,
+      "army_group_id": "army_neutral_greenbranch_copse_watch",
+      "asset_id": "encounter_unbound_wild_sapwhistle_greenward_watch"
+    },
+    {
+      "encounter_id": "encounter_harbor_pilot_house_watch",
+      "tier": 1,
+      "army_group_id": "army_neutral_harbor_pilot_house_watch",
+      "asset_id": "encounter_unbound_wild_flaremast_pilotage_watch"
+    },
+    {
+      "encounter_id": "encounter_kite_signal_eyrie_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_kite_signal_eyrie_watch",
+      "asset_id": "generated_neutral_unit_neutral_kitehook_runners"
+    },
+    {
+      "encounter_id": "encounter_lantern_warren_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_lantern_warren_watch",
+      "asset_id": "generated_neutral_unit_neutral_tunnel_lanterns"
+    },
+    {
+      "encounter_id": "encounter_bogbell_croft_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_bogbell_croft_watch",
+      "asset_id": "generated_neutral_unit_neutral_bogbell_mauls"
+    },
+    {
+      "encounter_id": "encounter_milestone_arsenal_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_milestone_arsenal_watch",
+      "asset_id": "generated_neutral_unit_neutral_milestone_bucklers"
+    },
+    {
+      "encounter_id": "encounter_frostwharf_house_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_frostwharf_house_watch",
+      "asset_id": "generated_neutral_unit_neutral_frostwharf_cutters"
+    },
+    {
+      "encounter_id": "encounter_charcoal_burners_watch",
+      "tier": 2,
+      "army_group_id": "army_neutral_charcoal_burners_watch",
+      "asset_id": "generated_neutral_unit_neutral_charcoal_mauls"
+    },
+    {
+      "encounter_id": "encounter_basalt_gatehouse_watch",
+      "tier": 3,
+      "army_group_id": "army_neutral_basalt_gatehouse_watch",
+      "asset_id": "generated_neutral_unit_neutral_basalt_wardens"
+    },
+    {
+      "encounter_id": "encounter_cinderwake_fold_watch",
+      "tier": 5,
+      "army_group_id": "army_neutral_cinderwake_fold_watch",
+      "asset_id": "encounter_elite_cinderwake_fold_watch"
+    },
+    {
+      "encounter_id": "encounter_tideglass_roost_watch",
+      "tier": 6,
+      "army_group_id": "army_neutral_tideglass_roost_watch",
+      "asset_id": "encounter_elite_tideglass_roost_watch"
+    },
+    {
+      "encounter_id": "encounter_brambleback_crown_watch",
+      "tier": 4,
+      "army_group_id": "army_neutral_brambleback_crown_watch",
+      "asset_id": "encounter_elder_wild_brambleback_crown_watch"
+    },
+    {
+      "encounter_id": "encounter_mireglass_bellbasin_watch",
+      "tier": 4,
+      "army_group_id": "army_neutral_mireglass_bellbasin_watch",
+      "asset_id": "encounter_elder_wild_mireglass_bellbasin_watch"
+    },
+    {
+      "encounter_id": "encounter_galehorn_breakline_watch",
+      "tier": 5,
+      "army_group_id": "army_neutral_galehorn_breakline_watch",
+      "asset_id": "encounter_elder_wild_galehorn_breakline_watch"
+    },
+    {
+      "encounter_id": "encounter_sunscale_lantern_drift_watch",
+      "tier": 5,
+      "army_group_id": "army_neutral_sunscale_lantern_drift_watch",
+      "asset_id": "encounter_elder_wild_sunscale_lantern_drift_watch"
+    },
+    {
+      "encounter_id": "encounter_rimebell_whitewake_watch",
+      "tier": 6,
+      "army_group_id": "army_neutral_rimebell_whitewake_watch",
+      "asset_id": "encounter_elder_wild_rimebell_whitewake_watch"
+    },
+    {
+      "encounter_id": "encounter_deepforge_seventh_seal_watch",
+      "tier": 7,
+      "army_group_id": "army_neutral_deepforge_seventh_seal_watch",
+      "asset_id": "encounter_elder_wild_deepforge_seventh_seal_watch"
+    },
+    {
+      "encounter_id": "encounter_ashcrown_cinderfold_watch",
+      "tier": 6,
+      "army_group_id": "army_neutral_ashcrown_cinderfold_watch",
+      "asset_id": "encounter_sovereign_wild_ashcrown_cinderfold_watch"
+    },
+    {
+      "encounter_id": "encounter_miremoon_crownmere_watch",
+      "tier": 6,
+      "army_group_id": "army_neutral_miremoon_crownmere_watch",
+      "asset_id": "encounter_sovereign_wild_miremoon_crownmere_watch"
+    },
+    {
+      "encounter_id": "encounter_noonshard_prism_aviary_watch",
+      "tier": 6,
+      "army_group_id": "army_neutral_noonshard_prism_aviary_watch",
+      "asset_id": "encounter_sovereign_wild_noonshard_prism_aviary_watch"
+    },
+    {
+      "encounter_id": "encounter_rootvault_heartwood_watch",
+      "tier": 7,
+      "army_group_id": "army_neutral_rootvault_heartwood_watch",
+      "asset_id": "encounter_sovereign_wild_rootvault_heartwood_hollow_watch"
+    },
+    {
+      "encounter_id": "encounter_quenchbell_pressure_den_watch",
+      "tier": 7,
+      "army_group_id": "army_neutral_quenchbell_pressure_den_watch",
+      "asset_id": "encounter_sovereign_wild_quenchbell_pressure_den_watch"
+    },
+    {
+      "encounter_id": "encounter_saltwake_belldeep_watch",
+      "tier": 7,
+      "army_group_id": "army_neutral_saltwake_belldeep_watch",
+      "asset_id": "encounter_sovereign_wild_saltwake_belldeep_watch"
+    },
+    {
+      "encounter_id": "encounter_brambleback_hedgecourt_watch",
+      "tier": 4,
+      "army_group_id": "army_neutral_brambleback_hedgecourt_watch",
+      "asset_id": "encounter_elder_wild_brambleback_crown_watch"
+    },
+    {
+      "encounter_id": "encounter_mireglass_bellfen_watch",
+      "tier": 4,
+      "army_group_id": "army_neutral_mireglass_bellfen_watch",
+      "asset_id": "encounter_elder_wild_mireglass_bellbasin_watch"
+    },
+    {
+      "encounter_id": "encounter_windcairn_wayhouse_watch",
+      "tier": 3,
+      "army_group_id": "army_neutral_windcairn_wayhouse_watch",
+      "asset_id": "encounter_unbound_wild_windcairn_wayhouse_watch"
+    },
+    {
+      "encounter_id": "encounter_sapwhistle_greenward_watch",
+      "tier": 1,
+      "army_group_id": "army_neutral_sapwhistle_greenward_watch",
+      "asset_id": "encounter_unbound_wild_sapwhistle_greenward_watch"
+    },
+    {
+      "encounter_id": "encounter_scarshield_breakyard_watch",
+      "tier": 3,
+      "army_group_id": "army_neutral_scarshield_breakyard_watch",
+      "asset_id": "encounter_unbound_wild_scarshield_breakyard_watch"
+    },
+    {
+      "encounter_id": "encounter_flaremast_pilotage_watch",
+      "tier": 1,
+      "army_group_id": "army_neutral_flaremast_pilotage_watch",
+      "asset_id": "encounter_unbound_wild_flaremast_pilotage_watch"
+    },
+    {
+      "encounter_id": "encounter_cindervane_updraft_roost_watch",
+      "tier": 5,
+      "army_group_id": "army_neutral_cindervane_updraft_roost_watch",
+      "asset_id": "encounter_frontier_mythic_cindervane_updraft_roost_watch"
+    },
+    {
+      "encounter_id": "encounter_fenmirror_shell_basin_watch",
+      "tier": 6,
+      "army_group_id": "army_neutral_fenmirror_shell_basin_watch",
+      "asset_id": "encounter_frontier_mythic_fenmirror_shell_basin_watch"
+    },
+    {
+      "encounter_id": "encounter_prismwake_refraction_shelf_watch",
+      "tier": 5,
+      "army_group_id": "army_neutral_prismwake_refraction_shelf_watch",
+      "asset_id": "encounter_frontier_mythic_prismwake_refraction_shelf_watch"
+    },
+    {
+      "encounter_id": "encounter_knotstag_root_court_watch",
+      "tier": 6,
+      "army_group_id": "army_neutral_knotstag_root_court_watch",
+      "asset_id": "encounter_frontier_mythic_knotstag_root_court_watch"
+    },
+    {
+      "encounter_id": "encounter_gaugecoil_pressure_burrow_watch",
+      "tier": 6,
+      "army_group_id": "army_neutral_gaugecoil_pressure_burrow_watch",
+      "asset_id": "encounter_frontier_mythic_gaugecoil_pressure_burrow_watch"
+    },
+    {
+      "encounter_id": "encounter_gloambell_sounding_deep_watch",
+      "tier": 7,
+      "army_group_id": "army_neutral_gloambell_sounding_deep_watch",
+      "asset_id": "encounter_frontier_mythic_gloambell_sounding_deep_watch"
+    }
+  ]
+}

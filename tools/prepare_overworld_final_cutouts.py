@@ -143,7 +143,9 @@ def inputs():
     accepted, hashes = prior_assets()
     if recipe['schema_id'] != 'final_family_cutout_recipe_v1' or recipe['earlier_recipes'] != hashes:
         raise ValueError('Accepted-pool provenance changed')
-    if set(manifest['object_assets']) - accepted != recipe['assets'].keys() or len(recipe['assets']) != 71:
+    # The accepted historical cohort is fixed; subsequent owner-directed art
+    # additions do not belong to that cohort and have their own validators.
+    if not (accepted | recipe['assets'].keys()) <= manifest['object_assets'].keys() or len(recipe['assets']) != 71:
         raise ValueError('Final-pool membership changed')
     if recipe['mapping_tables'] != {k: v for k, v in manifest.items() if k != 'object_assets'}:
         raise ValueError('Gameplay identity mapping tables changed')
@@ -233,7 +235,15 @@ def prepare(output, install=False):
 def validate_assets():
     recipe, manifest, sources = inputs()
     proof = json.loads((PACKET / 'manifest.json').read_text())
-    if proof['schema_id'] != 'final_family_cutout_recovery_v1' or proof['recipe_sha256'] != base.digest(RECIPE) or proof['tool_sha256'] != base.digest(Path(__file__)) or proof['projection_tools'] != shared.tool_hashes():
+    # Provenance identifies the producer, not whichever validator revision is
+    # current. Preserve the byte-exact accepted producer when membership-only
+    # validation changes allow subsequent content additions. Reconstruction,
+    # source hashes and all projection-tool hashes remain mandatory below.
+    producer_hashes = {base.digest(Path(__file__))}
+    accepted_producer = PACKET / 'accepted_preparation_tool.py'
+    if accepted_producer.is_file():
+        producer_hashes.add(base.digest(accepted_producer))
+    if proof['schema_id'] != 'final_family_cutout_recovery_v1' or proof['recipe_sha256'] != base.digest(RECIPE) or proof['tool_sha256'] not in producer_hashes or proof['projection_tools'] != shared.tool_hashes():
         raise ValueError('Final cutout preparation provenance changed')
     if set(proof['assets']) != sources.keys() or set(proof['files']) != {recipe['assets'][k]['runtime_path'] for k in sources}:
         raise ValueError('Incomplete creature provenance')

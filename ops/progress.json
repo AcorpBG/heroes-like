@@ -16611,14 +16611,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Cutout-quality owner goal complete: 1214/1214 current runtime art rows accounted for across 21 source-backed cohorts, zero pending. Final 71: 29 exact original creature world cutouts replace UI-card backing; 42 controls unchanged. 5770 checks per source resolution/platform, 120 full-save comparisons, focused/shared/domain/repository checks and clean official exports pass. Legacy specialist smoke still has four unrelated catalog/capacity failures; Windows is headless Wine, not hardware or release certification.",
+  "currentNotes": "Neutral encounter variety completed: 51 original profiles, exact native headcounts, 1-4 stacks and matching troop art; seven supplemental site mappings. Focused/source/package/repository validation passes. See docs/generated-neutral-encounter-variety.md for evidence and legacy CLI/save/Wine limits. No next slice selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-overworld-cutout-quality-20260909",
-  "currentSliceId": "art-overworld-cutout-quality-20260909",
-  "currentSliceNotes": "Cutout-quality owner goal complete: 1214/1214 current runtime art rows accounted for across 21 source-backed cohorts, zero pending. Final 71: 29 exact original creature world cutouts replace UI-card backing; 42 controls unchanged. 5770 checks per source resolution/platform, 120 full-save comparisons, focused/shared/domain/repository checks and clean official exports pass. Legacy specialist smoke still has four unrelated catalog/capacity failures; Windows is headless Wine, not hardware or release certification.",
+  "currentSlice": "bugfix-generated-neutral-encounter-variety-20260910",
+  "currentSliceId": "bugfix-generated-neutral-encounter-variety-20260910",
+  "currentSliceNotes": "Implemented 51 original neutral profiles, preserved native quantities, 1-4 stacks and matching art; seven supplemental site routes. 7471 focused checks, Medium/Large source 337/674, Linux/Windows packaged 337/670, native selftest and four builds, two unchanged reference payloads, nine historical art tests, repository and both official exports pass. Evidence and explicit CLI/Wine/legacy-save limits: docs/generated-neutral-encounter-variety.md.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Cutout Quality Recovery",
-  "currentSliceUpdatedAt": "2026-09-10T10:15:15+00:00",
+  "currentSliceTitle": "Generated Neutral Encounter Variety",
+  "currentSliceUpdatedAt": "2026-09-10T17:47:59Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21923,8 +21923,23 @@
       }
     }
   },
-  "guardrailNote": "Original-art recovery only; preserve exact identity, placement, footprint, interaction, saves and deterministic generation. No native/RMG rules, Town redesign, unrelated cleanup or fixed package-size ceiling.",
+  "guardrailNote": "Owner-directed neutral encounter variety through original-content runtime adoption; preserve recovered native placement, RNG and serialization. Validate source quantities, battle/save/icon agreement and both platforms before completion.",
   "lastValidation": {
+    "id": "bugfix-generated-neutral-encounter-variety-20260910",
+    "sliceId": "bugfix-generated-neutral-encounter-variety-20260910",
+    "status": "completed",
+    "sourceReport": "docs/generated-neutral-encounter-variety.md",
+    "focusedChecks": 7471,
+    "sourceMediumLargeChecks": [337, 674],
+    "packagedLinuxWindowsChecks": [337, 670],
+    "nativeBuilds": "Linux/Windows debug/release passed; Linux native selftest passed",
+    "repositoryValidation": "passed",
+    "officialExports": "Linux/Windows passed",
+    "packBytesPerPlatform": 313168728,
+    "packMemberCount": 5589,
+    "limits": "Legacy CLI runtime export gate remains; old saves are not migrated; Windows headless Wine is not hardware certification."
+  },
+  "previousCutoutValidation": {
     "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "parentSliceId": "art-overworld-cutout-quality-20260909",
@@ -22107,9 +22122,55 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Completed cutout-repair goal; no active implementation slice. Select and track the next owner-directed task before implementation. Keep all documented release and legacy-test limits.",
+  "nextActionGuardrailNote": "Neutral encounter variety slice completed and validated; select and track a new owner-directed task before unrelated implementation. Keep native recovery, old-save and Windows-hardware limits explicit.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "bugfix-generated-neutral-encounter-variety-20260910",
+      "title": "Generated Neutral Encounter Variety",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/generated-neutral-encounter-variety.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "Deterministic content-backed neutral roster and manifest-art adoption",
+        "Focused generated-map battle/save/visual regression coverage"
+      ],
+      "validationCommands": [
+        "python3 -B tests/generated_neutral_encounter_regression.py",
+        "python3 -B tools/prepare_generated_neutral_icons.py",
+        "python3 -B tests/generated_neutral_map_regression.py --size medium --render --label medium-acceptance-1280",
+        "python3 -B tests/generated_neutral_map_regression.py --size large --render --resolution 1920x1080 --label large-acceptance-1920",
+        "python3 -B -m unittest discover -s tests -p test_overworld_final_cutouts.py",
+        "bin/h3maped_rmg_core_selftest",
+        "python3 -B tests/packaged_generated_neutral_regression.py (Linux/Windows exact release products; commands and evidence in source doc)",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py"
+      ],
+      "completionCriteria": [
+        "Reproduced exact repetition source",
+        "Deterministic varied quantities, stack counts, compositions and matching original art",
+        "Native topology and save compatibility preserved",
+        "Inspected generated-map captures and platform gameplay validation"
+      ],
+      "nonGoals": [
+        "No native RNG/private-state or placement rule tuning",
+        "No unrelated balance/UI changes",
+        "No procedural icon substitutes or unapproved art regeneration"
+      ],
+      "updatedAt": "2026-09-10T17:48:46Z",
+      "startedAt": "2026-09-10T16:43:52Z",
+      "notes": "Implemented 51 original neutral profiles, preserved native quantities, 1-4 stacks and matching art; seven supplemental site routes. 7471 focused checks, Medium/Large source 337/674, Linux/Windows packaged 337/670, native selftest and four builds, two unchanged reference payloads, nine historical art tests, repository and both official exports pass. Evidence and explicit CLI/Wine/legacy-save limits: docs/generated-neutral-encounter-variety.md.",
+      "completedAt": "2026-09-10T17:48:46Z"
+    },
     {
       "phase": "phase-6-production-alpha-layer",
       "status": "completed",
@@ -111671,9 +111732,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Cutout-quality owner goal complete: 1214/1214 current runtime art rows accounted for across 21 source-backed cohorts, zero pending. Final 71: 29 exact original creature world cutouts replace UI-card backing; 42 controls unchanged. 5770 checks per source resolution/platform, 120 full-save comparisons, focused/shared/domain/repository checks and clean official exports pass. Legacy specialist smoke still has four unrelated catalog/capacity failures; Windows is headless Wine, not hardware or release certification.",
+  "summary": "Owner-directed neutral encounter variety completed and validated on source and Linux/Windows packages: 51 profiles, preserved native quantities, varied formations and appropriate original art. Medium/Large samples have 22/32 native encounter identities. No release-ready or universal native/combat parity claim; source-backed report: docs/generated-neutral-encounter-variety.md.",
   "taskId": "10236",
-  "updatedAt": "2026-09-10T10:15:15+00:00",
+  "updatedAt": "2026-09-10T17:48:46Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",

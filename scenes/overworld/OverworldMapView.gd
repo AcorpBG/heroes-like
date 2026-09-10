@@ -11585,6 +11585,9 @@ func _encounter_asset_id(encounter: Dictionary) -> String:
 	return _encounter_default_asset_id
 
 func _encounter_identity_asset_id(encounter: Dictionary) -> String:
+	var neutral_profile = encounter.get("generated_neutral_profile", {})
+	if neutral_profile is Dictionary and not neutral_profile.is_empty():
+		return String(neutral_profile.get("asset_id", "")).strip_edges()
 	var encounter_id := String(encounter.get("encounter_id", encounter.get("id", ""))).strip_edges()
 	var asset_id := String(_encounter_identity_asset_ids.get(encounter_id, "")).strip_edges()
 	if asset_id != "" and _object_texture_for_asset(asset_id) is Texture2D:

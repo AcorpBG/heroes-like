@@ -2302,6 +2302,10 @@ void append_runtime_object_json(
 		out << ",\"town_id\":\"" << runtime_town_id_for_slot(slot) << "\"";
 		out << ",\"faction_id\":\"" << runtime_faction_id_for_slot(slot) << "\"";
 	} else if (std::string(kind) == "guard") {
+		out << ",\"native_guard_quantity\":" << object.guard_quantity;
+		out << ",\"native_guard_creature_subtype\":" << object.subtype;
+		out << ",\"native_guard_level\":" << object.guard_level;
+		out << ",\"native_guard_ai_value\":" << object.guard_ai_value;
 		out << ",\"encounter_id\":\"encounter_mire_raid\",\"object_id\":\"encounter_mire_raid\"";
 	} else if (std::string(kind) == "mine") {
 		out << ",\"site_id\":\"" << (object.subtype == 2 ? "site_ridge_quarry" : "site_brightwood_sawmill") << "\"";

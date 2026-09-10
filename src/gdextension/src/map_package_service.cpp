@@ -1287,6 +1287,10 @@ Dictionary runtime_objects(
 			object["town_id"] = configured_runtime_town_id(slot, normalized_config);
 			object["faction_id"] = configured_runtime_faction_id(slot, normalized_config);
 		} else if (kind == "guard") {
+			object["native_guard_quantity"] = source.guard_quantity;
+			object["native_guard_creature_subtype"] = source.subtype;
+			object["native_guard_level"] = source.guard_level;
+			object["native_guard_ai_value"] = source.guard_ai_value;
 			object["encounter_id"] = "encounter_mire_raid";
 			object["object_id"] = "encounter_mire_raid";
 			Array control_tiles = runtime_guard_control_tiles(source, projection);
