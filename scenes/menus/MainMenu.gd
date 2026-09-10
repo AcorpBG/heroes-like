@@ -1,5 +1,7 @@
 extends Control
 
+const MainMenuComposition = preload("res://scenes/menus/MainMenuComposition.gd")
+
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
@@ -278,6 +280,7 @@ var _destructive_confirmation_counts := {
 }
 
 func _ready() -> void:
+	MainMenuComposition.configure(self)
 	var started := ProfileLogScript.begin_usec()
 	var buckets := {}
 	var phase_started := ProfileLogScript.begin_usec()
@@ -306,6 +309,7 @@ func _ready() -> void:
 	_refresh_menu()
 	_configure_first_view_focus_navigation()
 	call_deferred("_focus_first_view_command")
+	MainMenuComposition.layout(self)
 	buckets["refresh_menu"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("menu", "ready", "main_menu_ready", ProfileLogScript.elapsed_ms(started), buckets, {
 		"current_tab": _menu_tabs.current_tab,
@@ -369,8 +373,12 @@ func _refresh_summary() -> void:
 	_set_compact_label(_summary_label, lead, 2, 72)
 	_sync_logo_pocket_notice_height(_summary_label.visible)
 	var expedition_summary := _build_footer_expedition_summary()
-	_set_compact_label(_active_expedition_label, expedition_summary, 1, 58)
+	var latest := _active_save_board_latest_summary()
+	var footer := "Explore. Build. Conquer."
+	if SaveService.can_load_summary(latest): footer = "Resume your expedition from Saved games."
+	_set_compact_label(_active_expedition_label, footer, 1, 58)
 	_active_expedition_label.tooltip_text = expedition_summary
+	call_deferred("_apply_stage_dock_layout")
 
 func _sync_logo_pocket_notice_height(has_notice: bool) -> void:
 	_logo_pocket_panel.anchor_bottom = MAIN_MENU_LOGO_POCKET_NOTICE_BOTTOM if has_notice else MAIN_MENU_LOGO_POCKET_COMPACT_BOTTOM
@@ -3348,6 +3356,7 @@ func _show_stage_dock() -> void:
 	elif _menu_tabs.current_tab == TAB_SKIRMISH:
 		_ensure_skirmish_browser_loaded()
 	_stage_dock_panel.visible = true
+	MainMenuComposition.layout(self)
 	_play_stage_dock_reveal()
 	_footer_pocket_panel.visible = false
 	if _menu_tabs.current_tab == TAB_CAMPAIGN:
@@ -3393,6 +3402,8 @@ func _refresh_stage_accessibility() -> void:
 		_queue_accessibility_subtree_update(_skirmish_command_rail)
 
 func _apply_stage_dock_layout() -> void:
+	if not is_inside_tree(): return
+	MainMenuComposition.layout(self)
 	var anchors := STANDARD_DOCK_ANCHORS
 	if _menu_tabs.current_tab == TAB_CAMPAIGN:
 		anchors = _campaign_stage_dock_anchors(_campaign_intel_expanded)
@@ -3452,6 +3463,7 @@ func _hide_stage_dock() -> void:
 	_refresh_summary()
 	_sync_command_button_styles()
 	_sync_system_command_buttons()
+	MainMenuComposition.layout(self)
 	call_deferred("_restore_first_view_focus")
 
 func _play_stage_dock_reveal() -> void:
@@ -3730,7 +3742,7 @@ func validation_snapshot() -> Dictionary:
 		"skirmish_layout": _skirmish_layout_snapshot(),
 		"footer_pocket_visible": _footer_pocket_panel.visible,
 		"current_tab": _menu_tabs.current_tab,
-		"first_view_command_surface": "painted_backdrop_hotspots",
+		"first_view_command_surface": "scenic_navigation_column",
 		"first_view_commands": _first_view_command_labels(),
 		"first_view_command_tooltips": _first_view_command_tooltips(),
 		"editor_utility_frame": _editor_utility_frame_snapshot(),
@@ -5246,6 +5258,7 @@ func _sync_command_button_styles() -> void:
 func _sync_system_command_buttons() -> void:
 	_apply_editor_utility_button()
 	_apply_backdrop_plaque_button(_quit_button, false, true)
+	MainMenuComposition.layout(self)
 
 func _apply_editor_utility_button() -> void:
 	# The painted backdrop has five plaque frames. Editor occupies the deliberate

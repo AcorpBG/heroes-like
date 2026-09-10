@@ -1,6 +1,8 @@
 class_name EnemyAdventureRules
 extends RefCounted
 
+const TurnPlayback = preload("res://scripts/core/OverworldTurnPlayback.gd")
+
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
@@ -2342,11 +2344,13 @@ static func advance_raids(
 				var passage_check: Dictionary = OverworldRulesScript.native_passage_travel_check(session, passage_node, NativeTransit.point(passage.entry), String(encounter.get("placement_id", "")), String(passage.target_placement_id))
 				if not bool(passage_check.get("ok", false)):
 					break
+			var playback_from := LevelRules.position(encounter)
 			encounter["x"] = next_step.x
 			encounter["y"] = next_step.y
 			current = next_step
 			encounters[index] = encounter
 			session.overworld["encounters"] = encounters
+			TurnPlayback.move(session, encounter, playback_from)
 			OverworldRulesScript.invalidate_spatial_lookup(session)
 			if not passage.is_empty():
 				encounter["native_transit_target_exit_id"] = String(passage.target_placement_id)
@@ -2359,6 +2363,7 @@ static func advance_raids(
 				session.overworld["encounters"] = encounters
 				event_messages.append(String(travelled.get("event_message", "")))
 			if raid_reached_town_battle_contact(session, encounter, faction_id):
+				TurnPlayback.action(session, encounter, "engages a defending army")
 				encounter["arrived"] = true
 				encounter["goal_distance"] = 0
 				encounters[index] = encounter
@@ -17354,6 +17359,7 @@ static func _secure_opportunistic_route_resource(
 	updated_raid["last_opportunistic_pickup_placement_id"] = String(route_node.get("placement_id", ""))
 	updated_raid["last_opportunistic_pickup_day"] = int(session.day)
 	var message := "%s claims %s while marching." % [_raid_name(updated_raid), String(site.get("name", "the site"))]
+	TurnPlayback.action(session, updated_raid, "claims a nearby site")
 	if not spoils.is_empty():
 		message = "%s claims %s while marching and strips %s." % [
 			_raid_name(updated_raid),
@@ -17830,6 +17836,7 @@ static func _secure_native_passage_target(session: SessionStateStoreScript.Sessi
 	else:
 		updated["level"] = destination.z
 	updated["native_transit_last_exit_id"] = String(check.link.target_placement_id)
+	TurnPlayback.move(session, updated, LevelRules.position(raid))
 	updated.erase("native_transit_target_exit_id")
 	if not preserve_target:
 		_ai_hero_task_finish_live_assignment(session, faction_id, updated, "completed", "valid")
@@ -17947,6 +17954,7 @@ static func _secure_resource_target(
 		nodes[int(node_result.get("index", -1))] = node
 		session.overworld["resource_nodes"] = nodes
 	var message = "%s seizes %s." % [_raid_name(updated_raid), String(site.get("name", "the site"))]
+	TurnPlayback.action(session, updated_raid, "seizes a resource site")
 	if not spoils.is_empty():
 		message = "%s seizes %s and strips %s." % [
 			_raid_name(updated_raid),

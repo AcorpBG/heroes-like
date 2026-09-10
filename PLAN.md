@@ -22,7 +22,13 @@ Rules:
 
 ## Current Tactical State
 
-Latest owner-directed slice: `battle-readable-turns-and-melee-approach-20260910` (completed), Phase 6. Requirements/evidence: `docs/battle-readable-turns-and-melee-approach.md`. No next implementation slice is selected.
+Latest completed owner-directed slice: `ui-main-menu-and-visible-ai-turns-20260910`, Phase 6. Requirements/evidence: `docs/main-menu-and-visible-ai-turns.md`. No next slice selected.
+
+### Main Menu Rework And Visible AI Turns
+
+id: `ui-main-menu-and-visible-ai-turns-20260910`
+
+Status: completed 2026-09-10. Scenic main-menu composition and secondary routes, animated player-identity transitions and fog-filtered committed AI movement/site-action playback implemented. Deterministic state, durable saves, battle handoffs, skip/reduced motion and keyboard input preserved. Final Linux/Windows focused checks pass 61/48; generated Medium and reduced-motion source runs pass 62/61. Small/wide screenshots inspected; affected end-turn/fog/save reports, repository validation, official exports and package parity pass. No native RMG, AI decisions/balance, save migration or art generation. One legacy empty-save-list fixture remains failing and is not counted as a pass. Exact evidence and platform/sample limits: `docs/main-menu-and-visible-ai-turns.md`.
 
 ### Readable Battle Turns And Melee Approach
 
@@ -46,7 +52,7 @@ Owner decision (2026-09-09): remove the imposed release-package size budget enti
 - Completed prior owner goal: `quality-generated-full-match-20260906`; all three selected children are implemented and validated. Legitimate Medium/Large outcomes, measured behavior-preserving responsiveness, all 173 Town scene mappings across six factions/32 towns and the four reproduced Overworld cutout repairs are accepted. Source-backed closure and explicit remaining latency, legacy-test and Windows-hardware limits: `docs/generated-full-match-quality-completion.md`. This is not release readiness.
 - Completed prior goal: `bugfix-rmg-audit-corrections-20260905`; all six corrective/integrated children satisfy the audited requirements within their documented sample/configuration limits, not full H3MapEd or release parity.
 - Baseline audit: `audit-rmg-start-placement-and-h3maped-comparison-20260905`; 36 runtime requests, 83 generated starts, 23/24 exact retained owner payloads, fresh executable/private-state water mismatch, and confirmed start/level/opponent/transit adoption gaps. Audit evidence is not runtime fixes or parity completion.
-- Most recently completed implementation slice: `battle-readable-turns-and-melee-approach-20260910`, detailed above. Current Linux/Windows PCKs: 313177932 bytes, 5591 members, only `project.binary` differs. Prior neutral-variety Medium/Large samples have 22/32 native encounter identities and 31/48 headcounts rather than one fixed raid. This is not release readiness or universal native/combat parity.
+- Most recently completed implementation slice: `ui-main-menu-and-visible-ai-turns-20260910`, detailed above. Current Linux/Windows PCKs: 313194076 bytes, 5597 members, only `project.binary` differs. Prior neutral-variety Medium/Large samples have 22/32 native encounter identities and 31/48 headcounts rather than one fixed raid. This is not release readiness or universal native/combat parity.
 - Prior cutout-slice package boundary: 309484404-byte Linux/Windows PCKs, 5542 members; only `project.binary` differs by platform. Final 71-disposition cohort passes 5770 checks per source resolution/platform, 30 strict save controls per run and 120 full-state comparisons; 5482 old payloads and 1185 other art rows remain exact. Nine art, three fixture and two wrapper tests, five shared reports, five domain reports, cohesive checks, repository validation and clean official exports pass. The older specialist smoke retains four unrelated catalog/capacity failures; not counted as a pass. Windows is headless Wine, not hardware certification.
 
 ## Overworld Cutout Quality Recovery

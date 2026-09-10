@@ -1,5 +1,10 @@
 extends Control
 
+const TurnPlayback = preload("res://scripts/core/OverworldTurnPlayback.gd")
+const TurnPresenter = preload("res://scenes/overworld/OverworldTurnPresenter.gd")
+var _turn_presenter: Control
+var _turn_route_expiry_candidates: Array = []
+
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
@@ -520,6 +525,10 @@ func _responsive_available_size() -> Vector2:
 	return available_size
 
 func _input(event: InputEvent) -> void:
+	if is_instance_valid(_turn_presenter):
+		if event.is_action_pressed("ui_cancel") or event.is_action_pressed("ui_accept"): _turn_presenter.skip_playback()
+		if not (event is InputEventMouse): get_viewport().set_input_as_handled()
+		return
 	if _artifact_acquired_input_blocker != null and _artifact_acquired_input_blocker.visible:
 		get_viewport().set_input_as_handled()
 		if event.is_action_pressed("ui_cancel"):
@@ -1541,7 +1550,10 @@ func _commit_end_turn() -> Dictionary:
 	var rules_started := ProfileLogScript.begin_usec()
 	_validation_end_turn_rules_call_count += 1
 	var route_expiry_candidates := _active_route_expiry_candidates()
+	var playback_encounters: Array = _session.overworld.get("encounters",[]).duplicate(true)
+	TurnPlayback.begin(_session)
 	var result = OverworldRules.end_turn(_session)
+	var playback_events := TurnPlayback.finish(_session)
 	_last_end_turn_rule_result = result.duplicate(true) if result is Dictionary else {}
 	general_buckets["rules_end_turn"] = ProfileLogScript.elapsed_ms(rules_started)
 	_session.flags["last_action"] = "ended_turn"
@@ -1604,6 +1616,20 @@ func _commit_end_turn() -> Dictionary:
 		}, _session)
 		_end_turn_button.call_deferred("grab_focus")
 		return _end_turn_autosave_failure_result(result)
+	if _validation_end_turn_resolution_routing_enabled and DisplayServer.get_name() != "headless" and bool(result.get("ok",false)):
+		var handoff := "Your turn · %s · Day %d" % [String(_session.overworld.get("active_player_id","Player")),_session.day]
+		if not _session.battle.is_empty(): handoff = "Battle begins"
+		elif _session.scenario_status != "in_progress": handoff = "Expedition resolved"
+		playback_events.append({"kind":"turn","caption":handoff})
+		_end_turn_commit_in_progress = true
+		_turn_route_expiry_candidates = route_expiry_candidates
+		_turn_presenter = TurnPresenter.new()
+		add_child(_turn_presenter)
+		_turn_presenter.completed.connect(_on_turn_playback_completed)
+		_turn_presenter.start(_map_view,playback_encounters,playback_events)
+		_profile_end("end_turn",profile_start,{"resolved":false,"playback_pending":true})
+		ProfileLogScript.emit_general("overworld","end_turn","end_turn",ProfileLogScript.elapsed_ms(general_profile_start),general_buckets,{"resolved":false,"result_ok":true,"playback_pending":true,"presentation_events":playback_events.size(),"save_profile":SaveService.validation_last_runtime_save_profile()},_session)
+		return {"ok":true,"committed":true,"resolved":false,"result":result.duplicate(true)}
 	var resolution := _handle_session_resolution(true)
 	if bool(resolution.get("handled", false)):
 		_profile_end("end_turn", profile_start, {
@@ -1643,6 +1669,19 @@ func _commit_end_turn() -> Dictionary:
 		"resolved": false,
 		"result": result.duplicate(true),
 	}
+
+func _on_turn_playback_completed() -> void:
+	_turn_presenter = null
+	_end_turn_commit_in_progress = false
+	var resolution := _handle_session_resolution(true)
+	if not bool(resolution.get("handled",false)):
+		var serial_before := _object_resolution_presentation_serial
+		_record_route_closed_presentation(_last_enemy_activity_events)
+		if _object_resolution_presentation_serial == serial_before:
+			_record_route_expiry_presentation(_turn_route_expiry_candidates)
+		_turn_route_expiry_candidates = []
+		_refresh()
+		_end_turn_button.call_deferred("grab_focus")
 
 func _surface_end_turn_autosave_failure() -> void:
 	_validation_end_turn_autosave_failure_count += 1
