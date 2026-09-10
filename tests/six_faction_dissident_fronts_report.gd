@@ -9,12 +9,12 @@ const REPORT_ID := "SIX_FACTION_DISSIDENT_FRONTS_REPORT"
 const OUTPUT_DIR := "res://.artifacts/six_faction_dissident_fronts_report"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/encounters/dissident_fronts/dissident_fronts_atlas.png"
 const CASES := [
-	{"scenario_id": "causeway-stand", "placement_id": "causeway_lockflame_turncoats", "encounter_id": "encounter_lockflame_turncoats", "army_group_id": "army_lockflame_turncoats", "faction_id": "faction_embercourt", "rare_resource_id": "embergrain", "victory_flag": "lockflame_turncoats_broken", "objective_id": "lockflame_broken_sluice", "asset_id": "encounter_dissident_lockflame_turncoats", "region": Rect2(0, 0, 48, 48), "combat_seed": 2204},
-	{"scenario_id": "bogbound-oath", "placement_id": "bogbound_mossglass_moonhunt", "encounter_id": "encounter_mossglass_moonhunt", "army_group_id": "army_mossglass_moonhunt", "faction_id": "faction_mireclaw", "rare_resource_id": "peatwax", "victory_flag": "mossglass_moonhunt_broken", "objective_id": "moonhunt_scent_gate", "asset_id": "encounter_dissident_mossglass_moonhunt", "region": Rect2(48, 0, 48, 48), "combat_seed": 7204},
-	{"scenario_id": "prismhearth-watch", "placement_id": "prismhearth_parallax_choir", "encounter_id": "encounter_parallax_choir", "army_group_id": "army_parallax_choir", "faction_id": "faction_sunvault", "rare_resource_id": "aetherglass", "victory_flag": "parallax_choir_broken", "objective_id": "parallax_chime_frame", "asset_id": "encounter_dissident_parallax_choir", "region": Rect2(96, 0, 48, 48), "combat_seed": 11204},
-	{"scenario_id": "mireford-skirmish", "placement_id": "mireford_graftbound_pilgrims", "encounter_id": "encounter_graftbound_pilgrims", "army_group_id": "army_graftbound_pilgrims", "faction_id": "faction_thornwake", "rare_resource_id": "verdant_grafts", "victory_flag": "graftbound_pilgrims_broken", "objective_id": "graftbound_walking_arch", "asset_id": "encounter_dissident_graftbound_pilgrims", "region": Rect2(144, 0, 48, 48), "combat_seed": 10204},
-	{"scenario_id": "orevein-contract", "placement_id": "orevein_redline_foreclosure", "encounter_id": "encounter_redline_foreclosure", "army_group_id": "army_redline_foreclosure", "faction_id": "faction_brasshollow", "rare_resource_id": "brass_scrip", "victory_flag": "redline_foreclosure_broken", "objective_id": "redline_seizure_gauge", "asset_id": "encounter_dissident_redline_foreclosure", "region": Rect2(192, 0, 48, 48), "combat_seed": 17204},
-	{"scenario_id": "bellwake-wreck-claim", "placement_id": "bellwake_drowned_bell_procession", "encounter_id": "encounter_drowned_bell_procession", "army_group_id": "army_drowned_bell_procession", "faction_id": "faction_veilmourn", "rare_resource_id": "memory_salt", "victory_flag": "drowned_bell_procession_broken", "objective_id": "drowned_procession_bell", "asset_id": "encounter_dissident_drowned_bell_procession", "region": Rect2(240, 0, 48, 48), "combat_seed": 18204},
+	{"scenario_id": "causeway-stand", "placement_id": "causeway_lockflame_turncoats", "encounter_id": "encounter_lockflame_turncoats", "army_group_id": "army_lockflame_turncoats", "faction_id": "faction_embercourt", "rare_resource_id": "embergrain", "victory_flag": "lockflame_turncoats_broken", "objective_id": "lockflame_broken_sluice", "asset_id": "encounter_dissident_lockflame_turncoats", "region": Rect2(0,0,192,192), "combat_seed": 2204},
+	{"scenario_id": "bogbound-oath", "placement_id": "bogbound_mossglass_moonhunt", "encounter_id": "encounter_mossglass_moonhunt", "army_group_id": "army_mossglass_moonhunt", "faction_id": "faction_mireclaw", "rare_resource_id": "peatwax", "victory_flag": "mossglass_moonhunt_broken", "objective_id": "moonhunt_scent_gate", "asset_id": "encounter_dissident_mossglass_moonhunt", "region": Rect2(192,0,192,192), "combat_seed": 7204},
+	{"scenario_id": "prismhearth-watch", "placement_id": "prismhearth_parallax_choir", "encounter_id": "encounter_parallax_choir", "army_group_id": "army_parallax_choir", "faction_id": "faction_sunvault", "rare_resource_id": "aetherglass", "victory_flag": "parallax_choir_broken", "objective_id": "parallax_chime_frame", "asset_id": "encounter_dissident_parallax_choir", "region": Rect2(384,0,192,192), "combat_seed": 11204},
+	{"scenario_id": "mireford-skirmish", "placement_id": "mireford_graftbound_pilgrims", "encounter_id": "encounter_graftbound_pilgrims", "army_group_id": "army_graftbound_pilgrims", "faction_id": "faction_thornwake", "rare_resource_id": "verdant_grafts", "victory_flag": "graftbound_pilgrims_broken", "objective_id": "graftbound_walking_arch", "asset_id": "encounter_dissident_graftbound_pilgrims", "region": Rect2(576,0,192,192), "combat_seed": 10204},
+	{"scenario_id": "orevein-contract", "placement_id": "orevein_redline_foreclosure", "encounter_id": "encounter_redline_foreclosure", "army_group_id": "army_redline_foreclosure", "faction_id": "faction_brasshollow", "rare_resource_id": "brass_scrip", "victory_flag": "redline_foreclosure_broken", "objective_id": "redline_seizure_gauge", "asset_id": "encounter_dissident_redline_foreclosure", "region": Rect2(768,0,192,192), "combat_seed": 17204},
+	{"scenario_id": "bellwake-wreck-claim", "placement_id": "bellwake_drowned_bell_procession", "encounter_id": "encounter_drowned_bell_procession", "army_group_id": "army_drowned_bell_procession", "faction_id": "faction_veilmourn", "rare_resource_id": "memory_salt", "victory_flag": "drowned_bell_procession_broken", "objective_id": "drowned_procession_bell", "asset_id": "encounter_dissident_drowned_bell_procession", "region": Rect2(960,0,192,192), "combat_seed": 18204},
 ]
 
 var _errors: Array[String] = []
@@ -35,7 +35,7 @@ func _run() -> void:
 		"ok": _errors.is_empty(),
 		"case_count": CASES.size(),
 		"atlas_path": ATLAS_PATH,
-		"atlas_size": [288, 48],
+		"atlas_size":[1152,192],
 		"save_version": SessionStateStoreScript.SAVE_VERSION,
 		"rows": _rows,
 		"errors": _errors,
@@ -81,7 +81,7 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 		and texture.region == case.get("region", Rect2()) \
 		and texture.atlas is Texture2D \
 		and texture.atlas.resource_path == ATLAS_PATH \
-		and texture.atlas.get_size() == Vector2(288, 48)
+		and texture.atlas.get_size() == Vector2(1152,192)
 	_expect(exact_art, "%s exact landmark did not reach the live map renderer." % encounter_id)
 
 	var first := _clone_session(session)
