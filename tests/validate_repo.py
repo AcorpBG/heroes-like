@@ -44225,6 +44225,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(len(training_recoveries) == 40, errors, "All 40 training paintings must reconstruct from original paint, scoped RGB repair and historical registration")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Training cutout recovery failed closed: {exc}")
+    artifact_recoveries = {}
+    try:
+        artifact_spec = importlib.util.spec_from_file_location("artifact_cutout_validation", ROOT / "tools/prepare_overworld_artifact_cutouts.py")
+        artifact_module = importlib.util.module_from_spec(artifact_spec)
+        artifact_spec.loader.exec_module(artifact_module)
+        artifact_recoveries = artifact_module.validate_assets()
+        ensure(len(artifact_recoveries) == 69, errors, "36 artifact field paintings must reconstruct from original masters; 33 clean field paintings and inventory icons remain exact")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Artifact cutout recovery failed closed: {exc}")
     remaining_encounter_recoveries = {}
     try:
         remaining_spec = importlib.util.spec_from_file_location("remaining_encounter_cutout_validation", ROOT / "tools/prepare_overworld_remaining_encounter_cutouts.py")
@@ -44446,6 +44455,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (training_module.FAMILIES[Path(entry['path']).stem.removesuffix('_atlas')] * 192, 192)
             if asset_id in contract_recoveries:
                 expected_canvas = (contract_module.FAMILIES[Path(entry['path']).stem.removesuffix('_atlas')] * 192, 192)
+            if asset_id in artifact_recoveries and "atlas_size" in entry:
+                expected_canvas = tuple(entry["atlas_size"])
             if asset_id in remaining_encounter_recoveries:
                 family = remaining_module.family(entry)
                 expected_canvas = (512,512) if family == "factions" else (256,256) if family == "signatures" else (remaining_module.FAMILIES[family] * 192,192)
@@ -53185,6 +53196,11 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         ensure('"development_reports_pck_excluded"' in packaging_text, errors, f"{packaging_path.name} must report development-report exclusion")
 
 
+def artifact_historical_raster(runtime_path: Path) -> Path:
+    """Keep original artifact-atlas provenance while live art reconstructs below."""
+    return ROOT / "art/overworld/source/generated/cutout_recovery_20260909/artifacts/before_runtime" / runtime_path.relative_to(ROOT / "art/overworld/runtime")
+
+
 def encounter_historical_raster(runtime_path: Path) -> Path:
     """Immutable pre-recovery source evidence; live PNGs reconstruct separately."""
     return ROOT / "art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/before_runtime" / runtime_path.relative_to(ROOT / "art/overworld/runtime")
@@ -54692,18 +54708,18 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
             if has_atlas_region:
                 source_model = str(field_entry.get("source_model", ""))
                 if source_model == "built_in_imagegen_marchland_retinue_heirloom_compact_field_atlas":
-                    ensure(expected_field_path == "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png" and field_entry.get("atlas_size") == [288,48] and field_entry.get("assigned_artifact_id") == artifact_id, errors, f"Artifact {artifact_id} compact field asset must use its exact shared atlas region")
+                    ensure(expected_field_path == "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png" and field_entry.get("atlas_size") == [1152,192] and field_entry.get("assigned_artifact_id") == artifact_id, errors, f"Artifact {artifact_id} compact field asset must use its exact shared atlas region")
                 elif source_model == "built_in_imagegen_command_relic_marches_compact_field_atlas":
-                    ensure(expected_field_path == "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png" and field_entry.get("atlas_size") == [576,48] and field_entry.get("assigned_artifact_id") == artifact_id, errors, f"Artifact {artifact_id} compact field asset must use its exact shared atlas region")
+                    ensure(expected_field_path == "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png" and field_entry.get("atlas_size") == [2304,192] and field_entry.get("assigned_artifact_id") == artifact_id, errors, f"Artifact {artifact_id} compact field asset must use its exact shared atlas region")
                 else:
-                    ensure(expected_field_path == "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png" and field_entry.get("atlas_size") == [864,48] and field_entry.get("assigned_artifact_id") == artifact_id, errors, f"Artifact {artifact_id} compact field asset must use its exact shared atlas region")
+                    ensure(expected_field_path == "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png" and field_entry.get("atlas_size") == [3456,192] and field_entry.get("assigned_artifact_id") == artifact_id, errors, f"Artifact {artifact_id} compact field asset must use its exact shared atlas region")
             else:
                 ensure(expected_field_path == f"res://art/overworld/runtime/objects/artifacts/{artifact_id.removeprefix('artifact_')}.png", errors, f"Artifact {artifact_id} field asset must use its exact runtime path")
             ensure(str(field_entry.get("source_icon", "")) == expected_path, errors, f"Artifact {artifact_id} field asset must retain exact original icon provenance")
             ensure(str(field_entry.get("source_model", "")) in {"original_identity_preserving_background_extraction", "built_in_image_gen_distinct_transparent_field_composition", "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field", "original_inventory_identity_compact_field_atlas", "built_in_imagegen_marchland_retinue_heirloom_compact_field_atlas", "built_in_imagegen_command_relic_marches_compact_field_atlas"}, errors, f"Artifact {artifact_id} field asset must declare its original production model")
         field_disk_path = res_path_to_disk(expected_field_path)
         source_model = str(field_entry.get("source_model", "")) if isinstance(field_entry, dict) else ""
-        expected_field_size = ({"built_in_imagegen_marchland_retinue_heirloom_compact_field_atlas":(288,48), "built_in_imagegen_command_relic_marches_compact_field_atlas":(576,48)}.get(source_model, (864,48))) if isinstance(field_entry, dict) and isinstance(field_entry.get("atlas_region"), list) else (512,512)
+        expected_field_size = ({"built_in_imagegen_marchland_retinue_heirloom_compact_field_atlas":(1152,192), "built_in_imagegen_command_relic_marches_compact_field_atlas":(2304,192)}.get(source_model, (3456,192))) if isinstance(field_entry, dict) and isinstance(field_entry.get("atlas_region"), list) else (512,512)
         ensure(field_disk_path.is_file() and png_size(field_disk_path) == expected_field_size, errors, f"Artifact {artifact_id} field asset must retain its exact runtime PNG dimensions")
         ensure(Path(f"{field_disk_path}.import").is_file(), errors, f"Artifact {artifact_id} field asset is missing Godot import metadata")
         if field_disk_path.is_file():
@@ -80134,7 +80150,7 @@ def validate_six_marchland_retinue_heirloom_trials(errors: list[str]) -> None:
     ensure((len(scenarios), len(encounters), len(groups), len(heroes), len(artifacts)) == (299,203,437,66,69), errors, "Marchland Retinue Heirloom Trials must remain present in the expanded production catalogs")
     ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 299, errors, "Marchland Retinue Heirloom Trials are missing from the active scenario count")
     ensure(source_manifest.get("schema_id") == "marchland_retinue_heirloom_art_v1" and source_manifest.get("generator_mode") == "built_in_imagegen" and source_manifest.get("content_batch_id") == batch_id and set(source_rows) == set(expected), errors, "Marchland heirloom generated-source provenance changed")
-    ensure(atlas_path.is_file() and png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == source_manifest.get("field_atlas_sha256") and Path(f"{atlas_path}.import").is_file(), errors, "Marchland heirloom field atlas bytes, dimensions, or import changed")
+    ensure(atlas_path.is_file() and png_size(artifact_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(artifact_historical_raster(atlas_path).read_bytes()).hexdigest() == source_manifest.get("field_atlas_sha256") and Path(f"{atlas_path}.import").is_file(), errors, "Marchland heirloom field atlas bytes, dimensions, or import changed")
     ensure(source_table.get("source_tag") == "pickup" and source_table.get("artifact_ids") == list(expected) and source_table.get("reward_context") == "authored_scenario_placement" and source_table.get("runtime_policy") == {"metadata_only":True,"live_drop_execution":False,"save_version_bump":False,"equipment_runtime_effects":False,"ai_valuation_behavior":False,"rare_resource_activation":False}, errors, "Marchland heirloom authored-placement source table changed")
 
     for artifact_id, contract in expected.items():
@@ -80159,7 +80175,7 @@ def validate_six_marchland_retinue_heirloom_trials(errors: list[str]) -> None:
         ensure(icon_path.is_file() and png_size(icon_path) == (128,128) and Path(f"{icon_path}.import").is_file() and hashlib.sha256(icon_path.read_bytes()).hexdigest() == source_rows.get(artifact_id, {}).get("runtime_sha256"), errors, f"{artifact_id} inventory art bytes, dimensions, or import changed")
         asset_id = f"artifact_field_{artifact_id.removeprefix('artifact_')}"
         asset = assets.get(asset_id, {})
-        ensure(field_sprites.get(artifact_id) == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("assigned_artifact_id") == artifact_id and asset.get("assigned_faction_id") == faction_id, errors, f"{artifact_id} exact field-art mapping changed")
+        ensure(field_sprites.get(artifact_id) == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("assigned_artifact_id") == artifact_id and asset.get("assigned_faction_id") == faction_id, errors, f"{artifact_id} exact field-art mapping changed")
         source_row = source_rows.get(artifact_id, {})
         source_path = res_path_to_disk(str(source_row.get("source_path", "")))
         source_bytes = source_path.read_bytes() if source_path.is_file() else b""
@@ -80232,7 +80248,7 @@ def validate_twelve_command_relic_marches(errors: list[str]) -> None:
 
     ensure((len(scenarios),len(encounters),len(groups),len(heroes),len(artifacts),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,203,437,66,69,299), errors, "Twelve Command Relic Marches must own the exact expanded catalogs")
     ensure(source_manifest.get("schema_id") == "command_relic_marches_art_v1" and source_manifest.get("generator_mode") == "built_in_imagegen" and source_manifest.get("content_batch_id") == batch_id and source_manifest.get("field_atlas_size") == [576,48] and set(source_rows) == set(expected), errors, "Command relic generated-source provenance changed")
-    ensure(atlas_path.is_file() and png_size(atlas_path) == (576,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == source_manifest.get("field_atlas_sha256") and Path(f"{atlas_path}.import").is_file(), errors, "Command relic field atlas bytes, dimensions, or import changed")
+    ensure(atlas_path.is_file() and png_size(artifact_historical_raster(atlas_path)) == (576,48) and hashlib.sha256(artifact_historical_raster(atlas_path).read_bytes()).hexdigest() == source_manifest.get("field_atlas_sha256") and Path(f"{atlas_path}.import").is_file(), errors, "Command relic field atlas bytes, dimensions, or import changed")
     expected_by_faction: dict[str, list[str]] = {}
     for artifact_id, contract in expected.items():
         expected_by_faction.setdefault(contract[2], []).append(artifact_id)
@@ -80257,7 +80273,7 @@ def validate_twelve_command_relic_marches(errors: list[str]) -> None:
         ensure(icon_path.is_file() and png_size(icon_path) == (128,128) and Path(f"{icon_path}.import").is_file() and hashlib.sha256(icon_path.read_bytes()).hexdigest() == source_rows.get(artifact_id, {}).get("runtime_sha256"), errors, f"{artifact_id} inventory art bytes, dimensions, or import changed")
         asset_id = f"artifact_field_{artifact_id.removeprefix('artifact_')}"
         asset = assets.get(asset_id, {})
-        ensure(field_sprites.get(artifact_id) == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [576,48] and asset.get("assigned_artifact_id") == artifact_id and asset.get("assigned_hero_id") == hero_id and asset.get("assigned_faction_id") == faction_id, errors, f"{artifact_id} exact field-art mapping changed")
+        ensure(field_sprites.get(artifact_id) == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [2304,192] and asset.get("assigned_artifact_id") == artifact_id and asset.get("assigned_hero_id") == hero_id and asset.get("assigned_faction_id") == faction_id, errors, f"{artifact_id} exact field-art mapping changed")
         source_row = source_rows.get(artifact_id, {})
         source_path = res_path_to_disk(str(source_row.get("source_path", "")))
         source_bytes = source_path.read_bytes() if source_path.is_file() else b""
@@ -82188,7 +82204,7 @@ def validate_six_three_relic_pilgrimages(errors: list[str]) -> None:
     ensure(source_manifest.get("runtime_atlas") == guardian_atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == "bee203188559bd1ed0224b0e51ab929c3045ddc732087a18bee89ed6c118ed6c", errors, "Three-relic guardian atlas provenance changed")
     ensure(source_manifest.get("artifact_field_atlas") == artifact_atlas_res and source_manifest.get("artifact_field_atlas_size") == [864,48] and source_manifest.get("artifact_field_atlas_sha256") == "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7", errors, "Three-relic artifact atlas provenance changed")
     ensure(guardian_atlas_path.is_file() and png_size(encounter_historical_raster(guardian_atlas_path)) == (288,48) and hashlib.sha256(encounter_historical_raster(guardian_atlas_path).read_bytes()).hexdigest() == "bee203188559bd1ed0224b0e51ab929c3045ddc732087a18bee89ed6c118ed6c" and encounter_historical_raster(guardian_atlas_path).read_bytes()[25] == 6 and Path(f"{guardian_atlas_path}.import").is_file(), errors, "Three-relic guardian runtime atlas, alpha, hash, or import changed")
-    ensure(artifact_atlas_path.is_file() and png_size(artifact_atlas_path) == (864,48) and hashlib.sha256(artifact_atlas_path.read_bytes()).hexdigest() == "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7" and artifact_atlas_path.read_bytes()[25] == 6 and Path(f"{artifact_atlas_path}.import").is_file(), errors, "Three-relic artifact runtime atlas, alpha, hash, or import changed")
+    ensure(artifact_atlas_path.is_file() and png_size(artifact_historical_raster(artifact_atlas_path)) == (864,48) and hashlib.sha256(artifact_historical_raster(artifact_atlas_path).read_bytes()).hexdigest() == "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7" and artifact_historical_raster(artifact_atlas_path).read_bytes()[25] == 6 and Path(f"{artifact_atlas_path}.import").is_file(), errors, "Three-relic artifact runtime atlas, alpha, hash, or import changed")
 
     placed_target_artifacts: list[str] = []
     source_payloads: list[bytes] = []
@@ -82221,7 +82237,7 @@ def validate_six_three_relic_pilgrimages(errors: list[str]) -> None:
             field_asset_id = f"artifact_field_{artifact_id.removeprefix('artifact_')}"
             field_asset = assets.get(field_asset_id, {})
             atlas_index = list(expected).index(scenario_id) * 3 + artifact_index
-            ensure(artifact_identities.get(artifact_id) == field_asset_id and field_asset.get("path") == artifact_atlas_res and field_asset.get("atlas_region") == [atlas_index * 48,0,48,48] and field_asset.get("atlas_size") == [864,48] and field_asset.get("assigned_artifact_id") == artifact_id and field_asset.get("source_icon") == artifacts.get(artifact_id, {}).get("ui", {}).get("icon_path"), errors, f"{artifact_id} lost its exact compact field-art mapping")
+            ensure(artifact_identities.get(artifact_id) == field_asset_id and field_asset.get("path") == artifact_atlas_res and field_asset.get("atlas_region") == [atlas_index * 192,0,192,192] and field_asset.get("atlas_size") == [3456,192] and field_asset.get("assigned_artifact_id") == artifact_id and field_asset.get("source_icon") == artifacts.get(artifact_id, {}).get("ui", {}).get("icon_path"), errors, f"{artifact_id} lost its exact compact field-art mapping")
     ensure(len(placed_target_artifacts) == 18 and len(set(placed_target_artifacts)) == 18, errors, "The pilgrimage batch must place eighteen distinct previously dormant relics")
     ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6, errors, "All six pilgrimage guardian masters must remain byte-distinct")
 

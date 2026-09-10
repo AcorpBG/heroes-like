@@ -1,0 +1,3467 @@
+{
+  "schema_id": "artifact_cutout_recipe_v1",
+  "assets": {
+    "artifact_field_trailsinger_boots": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/trailsinger_boots.png",
+        "source_icon": "res://art/artifacts/runtime/trailsinger_boots.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/trailsinger_boots.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/trailsinger_boots.png",
+      "icon_sha256": "5cd0879f709a07a54ba21d282f5c2fe36045af01ba946f15084ce9bf8202ee3c"
+    },
+    "artifact_field_quarry_tally_rod": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/quarry_tally_rod.png",
+        "source_icon": "res://art/artifacts/runtime/quarry_tally_rod.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/quarry_tally_rod.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/quarry_tally_rod.png",
+      "icon_sha256": "9f911125903e9eb2687f818eef9c60ee3b87c03a5f55fb4e7acf71518ba5be7c"
+    },
+    "artifact_field_warcrest_pennon": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/warcrest_pennon.png",
+        "source_icon": "res://art/artifacts/runtime/warcrest_pennon.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/warcrest_pennon.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/warcrest_pennon.png",
+      "icon_sha256": "d2dcee4b228613d0d2f46ef5ec2af3f68b72511e5abdb0f92a66f5e817a66cbb"
+    },
+    "artifact_field_bastion_gorget": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/bastion_gorget.png",
+        "source_icon": "res://art/artifacts/runtime/bastion_gorget.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/bastion_gorget.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/bastion_gorget.png",
+      "icon_sha256": "06ba2968087c18244ead70cd4f6c0934fc0ae6861f35ed273b37cdf78a45575e"
+    },
+    "artifact_field_waymark_compass": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/waymark_compass.png",
+        "source_icon": "res://art/artifacts/runtime/waymark_compass.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/waymark_compass.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/waymark_compass.png",
+      "icon_sha256": "8c881a739cf586460c380c76aff19ffd13f3f69a8c77f51eef0efbc742c3e08d"
+    },
+    "artifact_field_milepost_lantern": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/milepost_lantern.png",
+        "source_icon": "res://art/artifacts/runtime/milepost_lantern.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/milepost_lantern.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/milepost_lantern.png",
+      "icon_sha256": "e56715b2b501cefa87455851966ab20cdbbcacb5daaad6337032666b655e582f"
+    },
+    "artifact_field_tollstone_ring": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/tollstone_ring.png",
+        "source_icon": "res://art/artifacts/runtime/tollstone_ring.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/tollstone_ring.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/tollstone_ring.png",
+      "icon_sha256": "1b89ef8ae5d4faaf98eb9b3a73bc95667b52ee8a971d5c88ed33c7bff2f1c61e"
+    },
+    "artifact_field_mudglass_beads": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/mudglass_beads.png",
+        "source_icon": "res://art/artifacts/runtime/mudglass_beads.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/mudglass_beads.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/mudglass_beads.png",
+      "icon_sha256": "74c0c21ed12f3b8fe1dc9383a4b32d49506fa969b4aedcff02b17a46fe1ac4da"
+    },
+    "artifact_field_choir_tuning_fork": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/choir_tuning_fork.png",
+        "source_icon": "res://art/artifacts/runtime/choir_tuning_fork.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/choir_tuning_fork.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/choir_tuning_fork.png",
+      "icon_sha256": "a1735ee1ec108f14546a7cde1a7162e819f0e5d26d89565f3d82aafac2e48e5f"
+    },
+    "artifact_field_living_bridge_knot": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/living_bridge_knot.png",
+        "source_icon": "res://art/artifacts/runtime/living_bridge_knot.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/living_bridge_knot.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/living_bridge_knot.png",
+      "icon_sha256": "1a660ddffb846c7cf4e368dab36cc52319c6f85c6ba78f29262fa1ebd670f7e5"
+    },
+    "artifact_field_pressure_gauge_reliquary": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/pressure_gauge_reliquary.png",
+        "source_icon": "res://art/artifacts/runtime/pressure_gauge_reliquary.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/pressure_gauge_reliquary.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/pressure_gauge_reliquary.png",
+      "icon_sha256": "df789c77ec146e6865d80b8a2bd388cd0d3980bee6b8021d7b043a9fca4c7e6b"
+    },
+    "artifact_field_black_sail_compass": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/black_sail_compass.png",
+        "source_icon": "res://art/artifacts/runtime/black_sail_compass.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/black_sail_compass.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/black_sail_compass.png",
+      "icon_sha256": "857a04fe0a324361f9ab2d50cd70e0191de635e23ec86bafa929d976cc7e9b04"
+    },
+    "artifact_field_rainstar_sextant": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/rainstar_sextant.png",
+        "source_icon": "res://art/artifacts/runtime/rainstar_sextant.png",
+        "source_model": "built_in_image_gen_distinct_transparent_field_composition",
+        "asset_policy": "original_generated_runtime_sprite_no_inventory_icon_reuse",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/rainstar_sextant.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/rainstar_sextant.png",
+      "icon_sha256": "3bdda3159deeca34b9effafedd6413c4e1fcb0856ca49d1ea92718e95c543d7d"
+    },
+    "artifact_field_asterfall_mantle": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/asterfall_mantle.png",
+        "source_icon": "res://art/artifacts/runtime/asterfall_mantle.png",
+        "source_model": "built_in_image_gen_distinct_transparent_field_composition",
+        "asset_policy": "original_generated_runtime_sprite_no_inventory_icon_reuse",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/asterfall_mantle.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/asterfall_mantle.png",
+      "icon_sha256": "05743144dec008cfb584dcc7e427921d51b08268f4cf3d43b2953b9540387919"
+    },
+    "artifact_field_cometwake_pennon": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/cometwake_pennon.png",
+        "source_icon": "res://art/artifacts/runtime/cometwake_pennon.png",
+        "source_model": "built_in_image_gen_distinct_transparent_field_composition",
+        "asset_policy": "original_generated_runtime_sprite_no_inventory_icon_reuse",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/cometwake_pennon.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/cometwake_pennon.png",
+      "icon_sha256": "df5fba860f0e7f042528ba63efb5499654b44a997d002621b3f604df822415de"
+    },
+    "artifact_field_bridgefire_standard": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/bridgefire_standard.png",
+        "source_icon": "res://art/artifacts/runtime/bridgefire_standard.png",
+        "source_generated": "res://art/artifacts/source/generated/field_regalia/bridgefire_standard_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/bridgefire_standard.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/bridgefire_standard.png",
+      "icon_sha256": "b6cb61b31849937a9b79765f109cb8ba7170d38945656630203b9c6eb5d79c3b"
+    },
+    "artifact_field_reedshadow_waders": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/reedshadow_waders.png",
+        "source_icon": "res://art/artifacts/runtime/reedshadow_waders.png",
+        "source_generated": "res://art/artifacts/source/generated/field_regalia/reedshadow_waders_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/reedshadow_waders.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/reedshadow_waders.png",
+      "icon_sha256": "3912f03feea943b32d5dd68c76faf378e05ad9b454a03fd7d7432dbbae6bbadd"
+    },
+    "artifact_field_prismward_mantle": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/prismward_mantle.png",
+        "source_icon": "res://art/artifacts/runtime/prismward_mantle.png",
+        "source_generated": "res://art/artifacts/source/generated/field_regalia/prismward_mantle_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/prismward_mantle.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/prismward_mantle.png",
+      "icon_sha256": "4eb1f1edf9dd442cb1323959b528f08b5b1fd6d799b7f47cb1658a121113e1ec"
+    },
+    "artifact_field_graftbark_cuirass": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/graftbark_cuirass.png",
+        "source_icon": "res://art/artifacts/runtime/graftbark_cuirass.png",
+        "source_generated": "res://art/artifacts/source/generated/field_regalia/graftbark_cuirass_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/graftbark_cuirass.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/graftbark_cuirass.png",
+      "icon_sha256": "4803708c95ed7ac283f1a7bc41f3e625843ecf0cd45799c70c4dd23416e9b023"
+    },
+    "artifact_field_quenchplate_vambrace": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/quenchplate_vambrace.png",
+        "source_icon": "res://art/artifacts/runtime/quenchplate_vambrace.png",
+        "source_generated": "res://art/artifacts/source/generated/field_regalia/quenchplate_vambrace_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/quenchplate_vambrace.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/quenchplate_vambrace.png",
+      "icon_sha256": "7042f0e23d08ad55062535bf95dd21e8be710ebac5a18fc5d57348243fa9c208"
+    },
+    "artifact_field_fogwake_deckboots": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/fogwake_deckboots.png",
+        "source_icon": "res://art/artifacts/runtime/fogwake_deckboots.png",
+        "source_generated": "res://art/artifacts/source/generated/field_regalia/fogwake_deckboots_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/fogwake_deckboots.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/fogwake_deckboots.png",
+      "icon_sha256": "fc9d8db3ad6d76ab41c8408f4e5394c9715c5e7c964a00702533b01d54425eb6"
+    },
+    "artifact_field_lockflame_writ_banner": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/lockflame_writ_banner.png",
+        "source_icon": "res://art/artifacts/runtime/lockflame_writ_banner.png",
+        "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/lockflame_writ_banner_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Forked cloth standard beneath a hooded lantern, with asymmetric wax writ tabs and a heavy brass plumb weight.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/lockflame_writ_banner.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/lockflame_writ_banner.png",
+      "icon_sha256": "c7606b62c963b10b8af7838d5221eef5b0af583584370fb122be63542df9dbc9"
+    },
+    "artifact_field_mirechain_hunt_totem": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/mirechain_hunt_totem.png",
+        "source_icon": "res://art/artifacts/runtime/mirechain_hunt_totem.png",
+        "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/mirechain_hunt_totem_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Crooked antler-crowned reedwood totem with a hooked hide pennant, coarse chain loops, and hanging bone clappers.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/mirechain_hunt_totem.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/mirechain_hunt_totem.png",
+      "icon_sha256": "af360e865ce0f40037a321fc20a08d05a240b1ccde4568f81c1e371f226404fb"
+    },
+    "artifact_field_zenith_prism_pennon": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/zenith_prism_pennon.png",
+        "source_icon": "res://art/artifacts/runtime/zenith_prism_pennon.png",
+        "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/zenith_prism_pennon_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Tall symmetrical ivory frame holding a diamond prism, split pennon, side mirror vanes, and orbiting calibration rings.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/zenith_prism_pennon.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/zenith_prism_pennon.png",
+      "icon_sha256": "6eda9b72ac83a10cd9f336e02c4e70a2020a19892bf6318e83a44d336281c542"
+    },
+    "artifact_field_briarcrown_covenant_standard": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/briarcrown_covenant_standard.png",
+        "source_icon": "res://art/artifacts/runtime/briarcrown_covenant_standard.png",
+        "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/briarcrown_covenant_standard_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Living forked sapling standard with woven leafcloth, a spined thorn halo, graft clasps, and rooted seed weight.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/briarcrown_covenant_standard.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/briarcrown_covenant_standard.png",
+      "icon_sha256": "4cc79f44a4ce8b35f94351a4ba79dc4989578d6c650608ef68e9315d19caa48f"
+    },
+    "artifact_field_redline_warrant_gonfalon": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/redline_warrant_gonfalon.png",
+        "source_icon": "res://art/artifacts/runtime/redline_warrant_gonfalon.png",
+        "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/redline_warrant_gonfalon_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Broad segmented metal gonfalon built around a round pressure gauge, warrant plates, furnace vents, and caliper feet.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/redline_warrant_gonfalon.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/redline_warrant_gonfalon.png",
+      "icon_sha256": "51f7a04d27dfcef0a9342a0d11a15d9e66c8e5c40020124141357081e543a29a"
+    },
+    "artifact_field_wakebell_mourning_ensign": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/wakebell_mourning_ensign.png",
+        "source_icon": "res://art/artifacts/runtime/wakebell_mourning_ensign.png",
+        "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/wakebell_mourning_ensign_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Torn sailcloth stretched between curved ship ribs beneath a cracked bell, with a side lantern and chain keel.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/wakebell_mourning_ensign.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/wakebell_mourning_ensign.png",
+      "icon_sha256": "d810ae020bafc73481d2d0484528769906ed0e182cf317317b7c872b1c2a6a54"
+    },
+    "artifact_field_lockward_beacon_key": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/lockward_beacon_key.png",
+        "source_icon": "res://art/artifacts/runtime/lockward_beacon_key.png",
+        "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/lockward_beacon_key_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Tall bridge-lock key built through a hooded glowing beacon, with side writ rolls, wax seals, and a hanging brass weight.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/lockward_beacon_key.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/lockward_beacon_key.png",
+      "icon_sha256": "266b08f8b8f242309bff3f904350bf8a36b16653fe1bf36c9be7b2ae2a26b1e2"
+    },
+    "artifact_field_fenhound_scent_bell": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/fenhound_scent_bell.png",
+        "source_icon": "res://art/artifacts/runtime/fenhound_scent_bell.png",
+        "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/fenhound_scent_bell_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Crooked bog-hound jaw over a heavy patterned bell, flanked by two scent vials and a long hide tassel.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/fenhound_scent_bell.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/fenhound_scent_bell.png",
+      "icon_sha256": "3a47b222d8b6883ac98b2fe2e0e712b08359332d8b182218c99b83c5bec79846"
+    },
+    "artifact_field_meridian_relay_lens": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/meridian_relay_lens.png",
+        "source_icon": "res://art/artifacts/runtime/meridian_relay_lens.png",
+        "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/meridian_relay_lens_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Symmetrical gold meridian frame around a large blue diamond lens, with two raised mirror vanes and a sun-point crown.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/meridian_relay_lens.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/meridian_relay_lens.png",
+      "icon_sha256": "d43552dbb363abcefb7b873125ab4484ce56038c4fe5126bf2ce7f87333ceb36"
+    },
+    "artifact_field_rootpath_seed_compass": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/rootpath_seed_compass.png",
+        "source_icon": "res://art/artifacts/runtime/rootpath_seed_compass.png",
+        "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/rootpath_seed_compass_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Leaf-pointed seed compass enclosed by four forked living roots, side leaves, thorn tips, and a rope carry loop.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/rootpath_seed_compass.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/rootpath_seed_compass.png",
+      "icon_sha256": "879eaf92e3762203c5ea7f61d61d235f6648e706a4baef5aa2bf3e702e953790"
+    },
+    "artifact_field_redline_survey_dial": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/redline_survey_dial.png",
+        "source_icon": "res://art/artifacts/runtime/redline_survey_dial.png",
+        "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/redline_survey_dial_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Round black iron pressure dial with a bright red needle, furnace vents, folding brass sights, and a chain plumb.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/redline_survey_dial.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/redline_survey_dial.png",
+      "icon_sha256": "04235ce7884581360c2a848b796ecf3d45c7531b3d74570d9b95ae3146ee74ca"
+    },
+    "artifact_field_drowned_star_astrolabe": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/drowned_star_astrolabe.png",
+        "source_icon": "res://art/artifacts/runtime/drowned_star_astrolabe.png",
+        "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/drowned_star_astrolabe_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Open crescent astrolabe around a pale hanging shard, with curved ship ribs, a cracked bell, and a narrow fogglass vial.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/drowned_star_astrolabe.png",
+      "mode": "preserved_artifact",
+      "canvas_size": [512, 512],
+      "icon_path": "res://art/artifacts/runtime/drowned_star_astrolabe.png",
+      "icon_sha256": "3dacc8a5025ba597d71635917de25cb75008c07ed42f2203b5f680dd5b9a0f8d"
+    },
+    "artifact_field_lockfire_assize_seal": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/lockfire_assize_seal.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_lockfire_assize_seal",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Lockfire Assize Seal relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/lockfire_assize_seal.png",
+      "icon_sha256": "57ab2c1cdf7482ed6a83fc2947d081b61c4830b6be4750bd2d0de724b5d7c521",
+      "source_path": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/lockfire_assize_seal_source.png",
+      "source_sha256": "e221623a97225b9d904111db63e79de32c2dc45c4aec76bd76b86be00387fda2",
+      "source_manifest": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/manifest.json",
+      "source_manifest_sha256": "d950691958247f112894e296d76267526f9ffdcb363e61e1365e9da8ffff8e98",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 2016,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_lockfire_assize_seal.png",
+      "source_crop": [
+        0,
+        14,
+        1222,
+        1228
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 1.6254340277777777,
+        "opaque_rgb_mae": 6.261280931586608
+      }
+    },
+    "artifact_field_rainwrit_beacon_seal": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/rainwrit_beacon_seal.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_rainwrit_beacon_seal",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Rainwrit Beacon Seal relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/rainwrit_beacon_seal.png",
+      "icon_sha256": "a24ad69542e9ea5a97baf937a3b980dd09ba9b33d80b536f71afe42179b214fd",
+      "source_path": "res://art/artifacts/source/generated/horizon_relic_commissions/rainwrit_beacon_seal_source.png",
+      "source_sha256": "9e57e396db43ba4445770c2060f18034d5251346e8d979677b50549b98079b2e",
+      "source_manifest": "res://art/artifacts/source/generated/horizon_relic_commissions/manifest.json",
+      "source_manifest_sha256": "028a0329e08d741f943d9361c5db939dd5062c30fd1684970983a9e9f6d272fd",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 4636,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_rainwrit_beacon_seal.png",
+      "source_crop": [
+        0,
+        14,
+        1238,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 4.584201388888889,
+        "opaque_rgb_mae": 6.922552664188352
+      }
+    },
+    "artifact_field_ashcrown_crownring": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/ashcrown_crownring.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_ashcrown_crownring",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Ashcrown Crownring relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/ashcrown_crownring.png",
+      "icon_sha256": "40da659e202ff8022bd047314e484cb2bc4021e6f29162a8f68dfb11e116d0c0",
+      "source_path": "res://art/artifacts/source/generated/sovereign_wild_trophies/ashcrown_crownring_source.png",
+      "source_sha256": "e3692efba57b7ad4a6f485d5fca4691a7a3cf040d5e41f37da0d6ee9c5e9446e",
+      "source_manifest": "res://art/artifacts/source/generated/sovereign_wild_trophies/manifest.json",
+      "source_manifest_sha256": "364c0320186861d7d8e820b48b09c5ac984615109dc2902d7f9307dadd093a82",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_ashcrown_crownring.png",
+      "source_crop": [
+        75,
+        19,
+        1512,
+        1000
+      ],
+      "source_resize": [
+        42,
+        29
+      ],
+      "canvas_origin": [
+        3,
+        9
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.818142361111111,
+        "opaque_rgb_mae": 7.322445561139028
+      }
+    },
+    "artifact_field_miremoon_hunt_drum": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/miremoon_hunt_drum.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_miremoon_hunt_drum",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Miremoon Hunt Drum relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/miremoon_hunt_drum.png",
+      "icon_sha256": "830cecef8e9275130b011c54067c8e107e9fea4fccf5ad60792c3fb743a51c8d",
+      "source_path": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/miremoon_hunt_drum_source.png",
+      "source_sha256": "821d7f96ddb3642e1113288d590be5f35965214598f4d76eeee2eed6b4331e65",
+      "source_manifest": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/manifest.json",
+      "source_manifest_sha256": "d950691958247f112894e296d76267526f9ffdcb363e61e1365e9da8ffff8e98",
+      "source_size": [
+        1233,
+        1275
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 3384,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_miremoon_hunt_drum.png",
+      "source_crop": [
+        0,
+        0,
+        1218,
+        1275
+      ],
+      "source_resize": [
+        40,
+        42
+      ],
+      "canvas_origin": [
+        4,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 3.185329861111111,
+        "opaque_rgb_mae": 5.120165745856354
+      }
+    },
+    "artifact_field_hollowreed_moonfang_drum": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/hollowreed_moonfang_drum.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_hollowreed_moonfang_drum",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Hollowreed Moonfang Drum relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/hollowreed_moonfang_drum.png",
+      "icon_sha256": "99a9ccbb01d1e426678242e8cb7b7cc609fbe9fd34eabfe70b8f73e1f412ca80",
+      "source_path": "res://art/artifacts/source/generated/horizon_relic_commissions/hollowreed_moonfang_drum_source.png",
+      "source_sha256": "d3e001d6e8456882e62460f8956f0fa897ce3cf1760cb5b51ad1e23a03ae50d0",
+      "source_manifest": "res://art/artifacts/source/generated/horizon_relic_commissions/manifest.json",
+      "source_manifest_sha256": "028a0329e08d741f943d9361c5db939dd5062c30fd1684970983a9e9f6d272fd",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 4389,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_hollowreed_moonfang_drum.png",
+      "source_crop": [
+        0,
+        0,
+        1224,
+        1254
+      ],
+      "source_resize": [
+        41,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 5.493055555555555,
+        "opaque_rgb_mae": 5.985151049667178
+      }
+    },
+    "artifact_field_miremoon_crown_tooth": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/miremoon_crown_tooth.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_miremoon_crown_tooth",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Miremoon Crown-Tooth relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/miremoon_crown_tooth.png",
+      "icon_sha256": "e0692c1a0503c9f5bf38020ce70e77aa756d94856e136f64bef738faa7438c00",
+      "source_path": "res://art/artifacts/source/generated/sovereign_wild_trophies/miremoon_crown_tooth_source.png",
+      "source_sha256": "f4b41f8da2b7dddf61a8ad129a5c4d346e4a0c16f81bb62f9b932e1745ce6e4f",
+      "source_manifest": "res://art/artifacts/source/generated/sovereign_wild_trophies/manifest.json",
+      "source_manifest_sha256": "364c0320186861d7d8e820b48b09c5ac984615109dc2902d7f9307dadd093a82",
+      "source_size": [
+        1214,
+        1295
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 984,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_miremoon_crown_tooth.png",
+      "source_crop": [
+        0,
+        16,
+        1196,
+        1295
+      ],
+      "source_resize": [
+        39,
+        42
+      ],
+      "canvas_origin": [
+        4,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 3.3580729166666665,
+        "opaque_rgb_mae": 5.577023498694516
+      }
+    },
+    "artifact_field_noonglass_orrery": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/noonglass_orrery.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_noonglass_orrery",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Noonglass Orrery relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/noonglass_orrery.png",
+      "icon_sha256": "0aad86705794148c0a37b4fcc2756506d565b6b689189002106886491f115a11",
+      "source_path": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/noonglass_orrery_source.png",
+      "source_sha256": "d3bc6b17dd3366b3500e24d15277cd5d1af84f0e09746d73be7e2fada38dec2a",
+      "source_manifest": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/manifest.json",
+      "source_manifest_sha256": "d950691958247f112894e296d76267526f9ffdcb363e61e1365e9da8ffff8e98",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 26668,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_noonglass_orrery.png",
+      "source_crop": [
+        0,
+        21,
+        1226,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 4.19921875,
+        "opaque_rgb_mae": 6.795289855072464
+      }
+    },
+    "artifact_field_meridian_choir_prism": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          336,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/meridian_choir_prism.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_meridian_choir_prism",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Meridian Choir Prism relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/meridian_choir_prism.png",
+      "icon_sha256": "f7ca39e6425eaf86aa0ccdb0ddcabc3659428733ae0b1b3aab5c35a2ae0c3ccb",
+      "source_path": "res://art/artifacts/source/generated/horizon_relic_commissions/meridian_choir_prism_source.png",
+      "source_sha256": "328fd09f68d9cf3be82a85d87f6cc83a02811d9e088dda0d2cb89c725bf7e4ca",
+      "source_manifest": "res://art/artifacts/source/generated/horizon_relic_commissions/manifest.json",
+      "source_manifest_sha256": "028a0329e08d741f943d9361c5db939dd5062c30fd1684970983a9e9f6d272fd",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 14615,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_meridian_choir_prism.png",
+      "source_crop": [
+        0,
+        6,
+        1240,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 3.786892361111111,
+        "opaque_rgb_mae": 8.696136214800262
+      }
+    },
+    "artifact_field_noonshard_facet_pinion": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          384,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/noonshard_facet_pinion.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_noonshard_facet_pinion",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Noonshard Facet Pinion relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/noonshard_facet_pinion.png",
+      "icon_sha256": "cddc8036478b81d1a9d2342b04e0dd980439133453cbf3c5af8a6fbd6872d3a3",
+      "source_path": "res://art/artifacts/source/generated/sovereign_wild_trophies/noonshard_facet_pinion_source.png",
+      "source_sha256": "77de3b8e1c9b9a269e8b823288c1947fc9ffb84ab9e59a9c85098b309e261e6c",
+      "source_manifest": "res://art/artifacts/source/generated/sovereign_wild_trophies/manifest.json",
+      "source_manifest_sha256": "364c0320186861d7d8e820b48b09c5ac984615109dc2902d7f9307dadd093a82",
+      "source_size": [
+        1343,
+        1171
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 8931,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_noonshard_facet_pinion.png",
+      "source_crop": [
+        0,
+        13,
+        1319,
+        1159
+      ],
+      "source_resize": [
+        42,
+        36
+      ],
+      "canvas_origin": [
+        3,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.2309027777777777,
+        "opaque_rgb_mae": 8.618916437098255
+      }
+    },
+    "artifact_field_worldroot_covenant_heartwood": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          432,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/worldroot_covenant_heartwood.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_worldroot_covenant_heartwood",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Worldroot Covenant Heartwood relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/worldroot_covenant_heartwood.png",
+      "icon_sha256": "b4cf3972857453fc4c16da39c2c52b88964314d12092aeae467d5bdeb9e58f38",
+      "source_path": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/worldroot_covenant_heartwood_source.png",
+      "source_sha256": "b1e4367563c693f208bd5353b64e7387306c3bab452bcd8907574765708b727f",
+      "source_manifest": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/manifest.json",
+      "source_manifest_sha256": "d950691958247f112894e296d76267526f9ffdcb363e61e1365e9da8ffff8e98",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 2968,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_worldroot_covenant_heartwood.png",
+      "source_crop": [
+        0,
+        0,
+        1248,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.256076388888889,
+        "opaque_rgb_mae": 6.109945609945609
+      }
+    },
+    "artifact_field_crownroot_oathseed_censer": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          480,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/crownroot_oathseed_censer.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_crownroot_oathseed_censer",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Crownroot Oathseed Censer relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/crownroot_oathseed_censer.png",
+      "icon_sha256": "7084fce708e47eec9511912e0f60f0c721d11afde4e8bb8cffab55ffd06fe424",
+      "source_path": "res://art/artifacts/source/generated/horizon_relic_commissions/crownroot_oathseed_censer_source.png",
+      "source_sha256": "fba2b9b9cb591e42542297eede36196b7f8ef9d2ff978d7f83748c552893f77e",
+      "source_manifest": "res://art/artifacts/source/generated/horizon_relic_commissions/manifest.json",
+      "source_manifest_sha256": "028a0329e08d741f943d9361c5db939dd5062c30fd1684970983a9e9f6d272fd",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 16286,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_crownroot_oathseed_censer.png",
+      "source_crop": [
+        0,
+        15,
+        1208,
+        1254
+      ],
+      "source_resize": [
+        41,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 4.12109375,
+        "opaque_rgb_mae": 7.791230692575984
+      }
+    },
+    "artifact_field_rootvault_heartgrain_mantle": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          528,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/rootvault_heartgrain_mantle.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_rootvault_heartgrain_mantle",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Rootvault Heartgrain Mantle relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/rootvault_heartgrain_mantle.png",
+      "icon_sha256": "95e4385be4d0b8efc06abaae213b985bcade3509628f920c1fade42a2ffea8fd",
+      "source_path": "res://art/artifacts/source/generated/sovereign_wild_trophies/rootvault_heartgrain_mantle_source.png",
+      "source_sha256": "06dcebd1267806d53b7e3407677d1f60f7613e0778c604d0a538824e9996dccc",
+      "source_manifest": "res://art/artifacts/source/generated/sovereign_wild_trophies/manifest.json",
+      "source_manifest_sha256": "364c0320186861d7d8e820b48b09c5ac984615109dc2902d7f9307dadd093a82",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_rootvault_heartgrain_mantle.png",
+      "source_crop": [
+        0,
+        15,
+        1496,
+        1024
+      ],
+      "source_resize": [
+        42,
+        28
+      ],
+      "canvas_origin": [
+        3,
+        10
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 5.601996527777778,
+        "opaque_rgb_mae": 11.928753180661579
+      }
+    },
+    "artifact_field_seventh_clause_pressure_key": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          576,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/seventh_clause_pressure_key.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_seventh_clause_pressure_key",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Seventh-Clause Pressure Key relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/seventh_clause_pressure_key.png",
+      "icon_sha256": "a99b14608f89dddc87ed5a2b33a3537ac98f1a6597c50b413d97065bdee6d405",
+      "source_path": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/seventh_clause_pressure_key_source.png",
+      "source_sha256": "e8fe1c0799f5480c5eca1b695c59e2715e2a988d61702fb0517f067c8d43bdcb",
+      "source_manifest": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/manifest.json",
+      "source_manifest_sha256": "d950691958247f112894e296d76267526f9ffdcb363e61e1365e9da8ffff8e98",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 606,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_seventh_clause_pressure_key.png",
+      "source_crop": [
+        16,
+        16,
+        1238,
+        1239
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.6124131944444446,
+        "opaque_rgb_mae": 7.208092485549133
+      }
+    },
+    "artifact_field_blackbell_verdict_gauge": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          624,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/blackbell_verdict_gauge.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_blackbell_verdict_gauge",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Blackbell Verdict Gauge relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/blackbell_verdict_gauge.png",
+      "icon_sha256": "867d56cd3540557be6f6648d6d7ae93996c712c3dc7a9ab1c298af1f112c7a28",
+      "source_path": "res://art/artifacts/source/generated/horizon_relic_commissions/blackbell_verdict_gauge_source.png",
+      "source_sha256": "66bfac3d17c8d9dcf5809589f4312534d588210b542980f2ae5a08294515d280",
+      "source_manifest": "res://art/artifacts/source/generated/horizon_relic_commissions/manifest.json",
+      "source_manifest_sha256": "028a0329e08d741f943d9361c5db939dd5062c30fd1684970983a9e9f6d272fd",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 1067,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_blackbell_verdict_gauge.png",
+      "source_crop": [
+        0,
+        5,
+        1224,
+        1254
+      ],
+      "source_resize": [
+        41,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 3.7777777777777777,
+        "opaque_rgb_mae": 7.153406772745818
+      }
+    },
+    "artifact_field_quenchbell_red_gauge_plate": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          672,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/quenchbell_red_gauge_plate.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_quenchbell_red_gauge_plate",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Quenchbell Red-Gauge Plate relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/quenchbell_red_gauge_plate.png",
+      "icon_sha256": "cbf5a5977956ed2872766a544fda2ed9876f5a9596784618442f708de74187c7",
+      "source_path": "res://art/artifacts/source/generated/sovereign_wild_trophies/quenchbell_red_gauge_plate_source.png",
+      "source_sha256": "776ad3db51a707c76c0e7dec28df725a59b70246e24823f0a4631afb00dd0937",
+      "source_manifest": "res://art/artifacts/source/generated/sovereign_wild_trophies/manifest.json",
+      "source_manifest_sha256": "364c0320186861d7d8e820b48b09c5ac984615109dc2902d7f9307dadd093a82",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 4297,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_quenchbell_red_gauge_plate.png",
+      "source_crop": [
+        0,
+        13,
+        1238,
+        1241
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.0577256944444446,
+        "opaque_rgb_mae": 5.448209099709583
+      }
+    },
+    "artifact_field_last_bell_tideglass": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          720,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/last_bell_tideglass.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_last_bell_tideglass",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Last-Bell Tideglass relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/last_bell_tideglass.png",
+      "icon_sha256": "b6d1fe22ad31ff8e16e594f3c9242c340a06110d6d6f19230b9e604057ef3caa",
+      "source_path": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/last_bell_tideglass_source.png",
+      "source_sha256": "5f335b68ff2bf213d25eff4c80cd755cfc283f35274d19684958e8d2351ff198",
+      "source_manifest": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/manifest.json",
+      "source_manifest_sha256": "d950691958247f112894e296d76267526f9ffdcb363e61e1365e9da8ffff8e98",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_last_bell_tideglass.png",
+      "source_crop": [
+        0,
+        0,
+        1004,
+        1518
+      ],
+      "source_resize": [
+        28,
+        42
+      ],
+      "canvas_origin": [
+        10,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.4791666666666665,
+        "opaque_rgb_mae": 6.5368509212730315
+      }
+    },
+    "artifact_field_pale_sounding_memory_bell": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          768,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/pale_sounding_memory_bell.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_pale_sounding_memory_bell",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Pale Sounding Memory Bell relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/pale_sounding_memory_bell.png",
+      "icon_sha256": "b4436cc3def1c393e6cf8e54569a1037c16fb510665aae35fa4faa12b0cb68a9",
+      "source_path": "res://art/artifacts/source/generated/horizon_relic_commissions/pale_sounding_memory_bell_source.png",
+      "source_sha256": "aaff3e55ed4210feee531167c574a418c385c26c380ddce7255e3665b8f19fa5",
+      "source_manifest": "res://art/artifacts/source/generated/horizon_relic_commissions/manifest.json",
+      "source_manifest_sha256": "028a0329e08d741f943d9361c5db939dd5062c30fd1684970983a9e9f6d272fd",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 2136,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_pale_sounding_memory_bell.png",
+      "source_crop": [
+        0,
+        0,
+        1240,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 3.19921875,
+        "opaque_rgb_mae": 5.949056603773585
+      }
+    },
+    "artifact_field_saltwake_resonance_bell": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+        "atlas_region": [
+          816,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          864,
+          48
+        ],
+        "runtime_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+        "source_icon": "res://art/artifacts/runtime/saltwake_resonance_bell.png",
+        "source_model": "original_inventory_identity_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_saltwake_resonance_bell",
+        "presentation_role": "three_relic_pilgrimage_field_relic",
+        "accessible_description": "The exact Saltwake Resonance Bell relic appears as a compact transparent field landmark.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/saltwake_resonance_bell.png",
+      "icon_sha256": "125256b86c320df28e6158954df1e859ade63e19173b2fb88d534ea13a8a7a45",
+      "source_path": "res://art/artifacts/source/generated/sovereign_wild_trophies/saltwake_resonance_bell_source.png",
+      "source_sha256": "9f9a4bf33cc6144c44da88b4889908d3a7b75cbaed4da7cb29ef790eec60c13a",
+      "source_manifest": "res://art/artifacts/source/generated/sovereign_wild_trophies/manifest.json",
+      "source_manifest_sha256": "364c0320186861d7d8e820b48b09c5ac984615109dc2902d7f9307dadd093a82",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_saltwake_resonance_bell.png",
+      "source_crop": [
+        43,
+        0,
+        1012,
+        1536
+      ],
+      "source_resize": [
+        26,
+        42
+      ],
+      "canvas_origin": [
+        11,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 11.381944444444445,
+        "opaque_rgb_mae": 17.488145048814506
+      }
+    },
+    "artifact_field_amberweir_lockpike_tallychain": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "runtime_sha256": "de25f096bbb5965996184a9bdd4787039cb3db5037904751d7ca2c292571ef6b",
+        "source_icon": "res://art/artifacts/runtime/amberweir_lockpike_tallychain.png",
+        "source_model": "built_in_imagegen_marchland_retinue_heirloom_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_amberweir_lockpike_tallychain",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "marchland_retinue_heirloom_field_pickup",
+        "accessible_description": "A broad chain loop is crossed by one vertical spear point and one offset long key, with three round seals hanging below.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/amberweir_lockpike_tallychain.png",
+      "icon_sha256": "528a963fde310bddfd11778f17717e5652f87cde2a62d92abe811eae4dc66885",
+      "source_path": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/amberweir_lockpike_tallychain_source.png",
+      "source_sha256": "da68770e6c00025db4872a8c52e21cb2e9938c68d3b71a259756139e9de87d2e",
+      "source_manifest": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/manifest.json",
+      "source_manifest_sha256": "d46d8e69a67f4595630f8b8af8dced47dcb408a5661fe1c548652c85b63baee0",
+      "source_size": [
+        1224,
+        1285
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 7187,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_amberweir_lockpike_tallychain.png",
+      "source_crop": [
+        13,
+        0,
+        1207,
+        1285
+      ],
+      "source_resize": [
+        39,
+        42
+      ],
+      "canvas_origin": [
+        4,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_moonbite_votive_drumkey": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "runtime_sha256": "de25f096bbb5965996184a9bdd4787039cb3db5037904751d7ca2c292571ef6b",
+        "source_icon": "res://art/artifacts/runtime/moonbite_votive_drumkey.png",
+        "source_model": "built_in_imagegen_marchland_retinue_heirloom_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_moonbite_votive_drumkey",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "marchland_retinue_heirloom_field_pickup",
+        "accessible_description": "A broad crescent drum is crossed by one long diagonal bone key and ends in three unequal hanging tassels.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/moonbite_votive_drumkey.png",
+      "icon_sha256": "42bbcbbfe11073736ba26e7cf79e0388669ad6301137278c9503c90918adbce7",
+      "source_path": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/moonbite_votive_drumkey_source.png",
+      "source_sha256": "7a6e4aed99982d70ac4d49f8c8d6ff979a35d4a457d650a26c61f4029fbc4cfc",
+      "source_manifest": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/manifest.json",
+      "source_manifest_sha256": "d46d8e69a67f4595630f8b8af8dced47dcb408a5661fe1c548652c85b63baee0",
+      "source_size": [
+        1224,
+        1285
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 9889,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_moonbite_votive_drumkey.png",
+      "source_crop": [
+        0,
+        0,
+        1200,
+        1285
+      ],
+      "source_resize": [
+        39,
+        42
+      ],
+      "canvas_origin": [
+        4,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_splitprism_parallax_duelglass": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "runtime_sha256": "de25f096bbb5965996184a9bdd4787039cb3db5037904751d7ca2c292571ef6b",
+        "source_icon": "res://art/artifacts/runtime/splitprism_parallax_duelglass.png",
+        "source_model": "built_in_imagegen_marchland_retinue_heirloom_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_splitprism_parallax_duelglass",
+        "assigned_faction_id": "faction_sunvault",
+        "presentation_role": "marchland_retinue_heirloom_field_pickup",
+        "accessible_description": "Two overlapping tilted diamond panes rise above a short handle, with one narrow side vane and one crossing needle.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/splitprism_parallax_duelglass.png",
+      "icon_sha256": "d18fb6d6a0e911a5f7c04359ada0fd657a9d8c38b95add4a6ad57a268533c5d6",
+      "source_path": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/splitprism_parallax_duelglass_source.png",
+      "source_sha256": "9891b330c04b7cb85f3dc0899688a8972c2d6fcde17caa4b8ffba463a30084d1",
+      "source_manifest": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/manifest.json",
+      "source_manifest_sha256": "d46d8e69a67f4595630f8b8af8dced47dcb408a5661fe1c548652c85b63baee0",
+      "source_size": [
+        1214,
+        1295
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 2920,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_splitprism_parallax_duelglass.png",
+      "source_crop": [
+        0,
+        9,
+        1196,
+        1257
+      ],
+      "source_resize": [
+        40,
+        42
+      ],
+      "canvas_origin": [
+        4,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_woundroot_hearthseed_slingknot": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "runtime_sha256": "de25f096bbb5965996184a9bdd4787039cb3db5037904751d7ca2c292571ef6b",
+        "source_icon": "res://art/artifacts/runtime/woundroot_hearthseed_slingknot.png",
+        "source_model": "built_in_imagegen_marchland_retinue_heirloom_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_woundroot_hearthseed_slingknot",
+        "assigned_faction_id": "faction_thornwake",
+        "presentation_role": "marchland_retinue_heirloom_field_pickup",
+        "accessible_description": "A triangular braided cradle holds three round stones and trails into one long curved cord with a leaf-shaped weight.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/woundroot_hearthseed_slingknot.png",
+      "icon_sha256": "38ff0a4ed5d16c5169e4087062647cded1a59e9a03784056b7b1785402b62731",
+      "source_path": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/woundroot_hearthseed_slingknot_source.png",
+      "source_sha256": "a8bfd7ea844d64db275ae8c5b898af8d38619f17202a4af4e71e1c76c2cb213a",
+      "source_manifest": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/manifest.json",
+      "source_manifest_sha256": "d46d8e69a67f4595630f8b8af8dced47dcb408a5661fe1c548652c85b63baee0",
+      "source_size": [
+        1312,
+        1199
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 1175,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_woundroot_hearthseed_slingknot.png",
+      "source_crop": [
+        0,
+        13,
+        1294,
+        1179
+      ],
+      "source_resize": [
+        42,
+        38
+      ],
+      "canvas_origin": [
+        3,
+        5
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_whitegauge_datum_spur": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "runtime_sha256": "de25f096bbb5965996184a9bdd4787039cb3db5037904751d7ca2c292571ef6b",
+        "source_icon": "res://art/artifacts/runtime/whitegauge_datum_spur.png",
+        "source_model": "built_in_imagegen_marchland_retinue_heirloom_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_whitegauge_datum_spur",
+        "assigned_faction_id": "faction_brasshollow",
+        "presentation_role": "marchland_retinue_heirloom_field_pickup",
+        "accessible_description": "A wide U-shaped spur carries one square wheel, one round gauge, two unequal pointed pins, and a broad buckle strap.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/whitegauge_datum_spur.png",
+      "icon_sha256": "230e975b2ba6bb1b402f554fb610e8de5965effb59c8cff192b4f97ab3f41ed7",
+      "source_path": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/whitegauge_datum_spur_source.png",
+      "source_sha256": "7d58bdb462cd79df58e1a1c123fa75b84163bad0b7f62fe2bbb2224510963b7e",
+      "source_manifest": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/manifest.json",
+      "source_manifest_sha256": "d46d8e69a67f4595630f8b8af8dced47dcb408a5661fe1c548652c85b63baee0",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_whitegauge_datum_spur.png",
+      "source_crop": [
+        29,
+        33,
+        1510,
+        974
+      ],
+      "source_resize": [
+        42,
+        27
+      ],
+      "canvas_origin": [
+        3,
+        10
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_dreamwake_tideglass_sounding": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "runtime_sha256": "de25f096bbb5965996184a9bdd4787039cb3db5037904751d7ca2c292571ef6b",
+        "source_icon": "res://art/artifacts/runtime/dreamwake_tideglass_sounding.png",
+        "source_model": "built_in_imagegen_marchland_retinue_heirloom_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_dreamwake_tideglass_sounding",
+        "assigned_faction_id": "faction_veilmourn",
+        "presentation_role": "marchland_retinue_heirloom_field_pickup",
+        "accessible_description": "A tall crescent frame holds one large hanging droplet, one offset bell, a forked side cord, and a narrow lower hook.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/dreamwake_tideglass_sounding.png",
+      "icon_sha256": "5305bd51b857c4ab40a5317abcf322cce0f609d966c828bc8e21c81156e68b7c",
+      "source_path": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/dreamwake_tideglass_sounding_source.png",
+      "source_sha256": "e575919e142c1b46cfc49d592fb5b15ce30d49a307855078de610d02aececd4c",
+      "source_manifest": "res://art/artifacts/source/generated/marchland_retinue_heirlooms/manifest.json",
+      "source_manifest_sha256": "d46d8e69a67f4595630f8b8af8dced47dcb408a5661fe1c548652c85b63baee0",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_dreamwake_tideglass_sounding.png",
+      "source_crop": [
+        49,
+        13,
+        1004,
+        1520
+      ],
+      "source_resize": [
+        27,
+        42
+      ],
+      "canvas_origin": [
+        10,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_blackgauge_muster_bell": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+        "source_icon": "res://art/artifacts/runtime/blackgauge_muster_bell.png",
+        "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_blackgauge_muster_bell",
+        "assigned_hero_id": "hero_brasshollow_kestra_blackgauge",
+        "assigned_faction_id": "faction_brasshollow",
+        "presentation_role": "command_relic_march_field_pickup",
+        "accessible_description": "A broad bell is crossed by one long horizontal rod and carries three unequal hanging tags beside a square clapper.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/blackgauge_muster_bell.png",
+      "icon_sha256": "14cbe7322c7a9142a5c35aab03ebfd87e78b11a785e37a0ea6cda70d2b801760",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/blackgauge_muster_bell_source.png",
+      "source_sha256": "e2ed42e649af005f44bfc3e48559a828dcfb54c2406ad80b8d5cc3623b89479f",
+      "source_manifest": "res://art/artifacts/source/generated/command_relic_marches/manifest.json",
+      "source_manifest_sha256": "a5ca73ae8894e47ebe56efe2cc73b6ca5f219bf8fbe7bb40092198ea485e7795",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 6270,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_blackgauge_muster_bell.png",
+      "source_crop": [
+        0,
+        0,
+        1248,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_varn_switchrail_compass": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+        "source_icon": "res://art/artifacts/runtime/varn_switchrail_compass.png",
+        "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_varn_switchrail_compass",
+        "assigned_hero_id": "hero_brasshollow_kuld_varn",
+        "assigned_faction_id": "faction_brasshollow",
+        "presentation_role": "command_relic_march_field_pickup",
+        "accessible_description": "Two split rails form a wide triangle around one lever, one toothed wheel, and a single round direction bead.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/varn_switchrail_compass.png",
+      "icon_sha256": "5e6efa70b2613c2dc72ac9652edc2f8c1195696fcc2dcb78392cdeb970477b5c",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/varn_switchrail_compass_source.png",
+      "source_sha256": "a7bb95b31ecd5a7fa7bd1a64da20c0bbbafac9a0c3d9fd46ca208e2eefe54d4b",
+      "source_manifest": "res://art/artifacts/source/generated/command_relic_marches/manifest.json",
+      "source_manifest_sha256": "a5ca73ae8894e47ebe56efe2cc73b6ca5f219bf8fbe7bb40092198ea485e7795",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_varn_switchrail_compass.png",
+      "source_crop": [
+        131,
+        14,
+        1472,
+        1002
+      ],
+      "source_resize": [
+        42,
+        31
+      ],
+      "canvas_origin": [
+        3,
+        8
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_valechant_star_cadence_astrolabe": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+        "source_icon": "res://art/artifacts/runtime/valechant_star_cadence_astrolabe.png",
+        "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_valechant_star_cadence_astrolabe",
+        "assigned_hero_id": "hero_seren",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "command_relic_march_field_pickup",
+        "accessible_description": "A large open crescent encloses a pointed star lens while three uneven forks and one long chain break its circular outline.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/valechant_star_cadence_astrolabe.png",
+      "icon_sha256": "033acb9c14cf761efbecdda77927e0c0c4ef40ce31941b3c1c3660e4e0ff5155",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/valechant_star_cadence_astrolabe_source.png",
+      "source_sha256": "a7d44ecc8786e6246aede482daf0f5afe12c222799685585d66a8be8d4e4989d",
+      "source_manifest": "res://art/artifacts/source/generated/command_relic_marches/manifest.json",
+      "source_manifest_sha256": "a5ca73ae8894e47ebe56efe2cc73b6ca5f219bf8fbe7bb40092198ea485e7795",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 13572,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_valechant_star_cadence_astrolabe.png",
+      "source_crop": [
+        0,
+        0,
+        1220,
+        1254
+      ],
+      "source_resize": [
+        41,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_ashgrove_millward_lantern": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+        "source_icon": "res://art/artifacts/runtime/ashgrove_millward_lantern.png",
+        "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_ashgrove_millward_lantern",
+        "assigned_hero_id": "hero_caelen",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "command_relic_march_field_pickup",
+        "accessible_description": "A tall shield lantern is crossed by one round millwheel and closes to a pointed base beneath a hooded flame.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/ashgrove_millward_lantern.png",
+      "icon_sha256": "74041be444a7161a863cdce0efbe812f2f3414c626e9482f739a4c2dd23126f1",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/ashgrove_millward_lantern_source.png",
+      "source_sha256": "33d3378f1f8334c324140add2b0d0150996330f104d0b70082fcf735fd9c88e4",
+      "source_manifest": "res://art/artifacts/source/generated/command_relic_marches/manifest.json",
+      "source_manifest_sha256": "a5ca73ae8894e47ebe56efe2cc73b6ca5f219bf8fbe7bb40092198ea485e7795",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_ashgrove_millward_lantern.png",
+      "source_crop": [
+        94,
+        15,
+        993,
+        1494
+      ],
+      "source_resize": [
+        26,
+        42
+      ],
+      "canvas_origin": [
+        11,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_reedcaller_circle_horn": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+        "source_icon": "res://art/artifacts/runtime/reedcaller_circle_horn.png",
+        "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_reedcaller_circle_horn",
+        "assigned_hero_id": "hero_mireclaw_rhask_reedcaller",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "command_relic_march_field_pickup",
+        "accessible_description": "A thick open spiral ends in a wide horn mouth and a forked handle, with two small teeth hanging from the inner coil.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/reedcaller_circle_horn.png",
+      "icon_sha256": "6a9566fcb6f13ee75bea07ae24a77f359833b440b25f311eb7838ed32e939fac",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/reedcaller_circle_horn_source.png",
+      "source_sha256": "08258ef6e40aa92d5076c2e8e6e9f86e3e904576b4fea9009da56950abb4b877",
+      "source_manifest": "res://art/artifacts/source/generated/command_relic_marches/manifest.json",
+      "source_manifest_sha256": "a5ca73ae8894e47ebe56efe2cc73b6ca5f219bf8fbe7bb40092198ea485e7795",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 6469,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_reedcaller_circle_horn.png",
+      "source_crop": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_muckscribe_fen_ink_reliquary": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+        "source_icon": "res://art/artifacts/runtime/muckscribe_fen_ink_reliquary.png",
+        "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_muckscribe_fen_ink_reliquary",
+        "assigned_hero_id": "hero_sable",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "command_relic_march_field_pickup",
+        "accessible_description": "A bulbous caged flask is crossed by one enormous hooked quill and carries three small seals below its stopper.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/muckscribe_fen_ink_reliquary.png",
+      "icon_sha256": "02f368fc1302e8aed36447d24118ca5e53364c77262d5f9cdd6ff093c615a088",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/muckscribe_fen_ink_reliquary_source.png",
+      "source_sha256": "78d59f94273267ffb9b1a1bb97f945073d66c2437e807502178637cd09a16d11",
+      "source_manifest": "res://art/artifacts/source/generated/command_relic_marches/manifest.json",
+      "source_manifest_sha256": "a5ca73ae8894e47ebe56efe2cc73b6ca5f219bf8fbe7bb40092198ea485e7795",
+      "source_size": [
+        1213,
+        1296
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 3230,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_muckscribe_fen_ink_reliquary.png",
+      "source_crop": [
+        33,
+        33,
+        1210,
+        1296
+      ],
+      "source_resize": [
+        39,
+        42
+      ],
+      "canvas_origin": [
+        4,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_sevenfold_reserve_prism": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+        "source_icon": "res://art/artifacts/runtime/sevenfold_reserve_prism.png",
+        "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_sevenfold_reserve_prism",
+        "assigned_hero_id": "hero_sunvault_aven_sevenfold",
+        "assigned_faction_id": "faction_sunvault",
+        "presentation_role": "command_relic_march_field_pickup",
+        "accessible_description": "Seven unequal plates radiate from one round boss, creating a broken flower-like shield with two offset hinges.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/sevenfold_reserve_prism.png",
+      "icon_sha256": "84d3f3152d308f9906b7fdc2b6594f9be7c69abb2921eeae6d595a5e2532245f",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/sevenfold_reserve_prism_source.png",
+      "source_sha256": "8935e0fe52b4c7b7647a98db5827dd755fceaa91f1f336a6d2fbd88f497f2580",
+      "source_manifest": "res://art/artifacts/source/generated/command_relic_marches/manifest.json",
+      "source_manifest_sha256": "a5ca73ae8894e47ebe56efe2cc73b6ca5f219bf8fbe7bb40092198ea485e7795",
+      "source_size": [
+        1214,
+        1295
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 10146,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_sevenfold_reserve_prism.png",
+      "source_crop": [
+        0,
+        0,
+        1201,
+        1279
+      ],
+      "source_resize": [
+        39,
+        42
+      ],
+      "canvas_origin": [
+        4,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_glasswind_sightline_fan": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+        "atlas_region": [
+          336,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+        "source_icon": "res://art/artifacts/runtime/glasswind_sightline_fan.png",
+        "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_glasswind_sightline_fan",
+        "assigned_hero_id": "hero_neral",
+        "assigned_faction_id": "faction_sunvault",
+        "presentation_role": "command_relic_march_field_pickup",
+        "accessible_description": "Five broad fan vanes spread beneath one long piercing needle and a tiny arrow vane, with a single bead below.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/glasswind_sightline_fan.png",
+      "icon_sha256": "66708935213afda6f8bbff36b6a8ab0d6c68789b6e893c84a99ca407a8f208bc",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/glasswind_sightline_fan_source.png",
+      "source_sha256": "b43a38f73cb6cfedfd63da7512b7d37d73158c41965a4fac8e7543e5d420e48f",
+      "source_manifest": "res://art/artifacts/source/generated/command_relic_marches/manifest.json",
+      "source_manifest_sha256": "a5ca73ae8894e47ebe56efe2cc73b6ca5f219bf8fbe7bb40092198ea485e7795",
+      "source_size": [
+        1374,
+        1145
+      ],
+      "source_alpha_levels": 256,
+      "low_alpha_rgb_pixels": 7815,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_glasswind_sightline_fan.png",
+      "source_crop": [
+        19,
+        0,
+        1362,
+        1145
+      ],
+      "source_resize": [
+        42,
+        36
+      ],
+      "canvas_origin": [
+        3,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_boltroot_quiver_loom": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+        "atlas_region": [
+          384,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+        "source_icon": "res://art/artifacts/runtime/boltroot_quiver_loom.png",
+        "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_boltroot_quiver_loom",
+        "assigned_hero_id": "hero_thornwake_bryn_boltroot",
+        "assigned_faction_id": "faction_thornwake",
+        "presentation_role": "command_relic_march_field_pickup",
+        "accessible_description": "A tall woven case holds three unequal bolt heads and is crossed by one narrow shuttle beside a strongly curved strap.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/boltroot_quiver_loom.png",
+      "icon_sha256": "cc4db34b9fe42007000cfd8f21ad625f0a5734476146e068aa648180510339b5",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/boltroot_quiver_loom_source.png",
+      "source_sha256": "7a3d89b84357f3b6c694af8949334b974952bea1301aabd933e457c6d519a16d",
+      "source_manifest": "res://art/artifacts/source/generated/command_relic_marches/manifest.json",
+      "source_manifest_sha256": "a5ca73ae8894e47ebe56efe2cc73b6ca5f219bf8fbe7bb40092198ea485e7795",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_boltroot_quiver_loom.png",
+      "source_crop": [
+        65,
+        19,
+        962,
+        1520
+      ],
+      "source_resize": [
+        25,
+        42
+      ],
+      "canvas_origin": [
+        11,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_pollenglass_spore_ampoule": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+        "atlas_region": [
+          432,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+        "source_icon": "res://art/artifacts/runtime/pollenglass_spore_ampoule.png",
+        "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_pollenglass_spore_ampoule",
+        "assigned_hero_id": "hero_thornwake_osmund_pollenglass",
+        "assigned_faction_id": "faction_thornwake",
+        "presentation_role": "command_relic_march_field_pickup",
+        "accessible_description": "A long pointed ampoule is clasped by two leaf jaws and carries three round side chambers beneath a bent tube.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/pollenglass_spore_ampoule.png",
+      "icon_sha256": "3ef92b6e0a34937b8af940c58969962f33d1c609f50ae59390246e63291ead9a",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/pollenglass_spore_ampoule_source.png",
+      "source_sha256": "b99383f681472fb89d7355099d428d8335bb851c986977eb020e04de021d6251",
+      "source_manifest": "res://art/artifacts/source/generated/command_relic_marches/manifest.json",
+      "source_manifest_sha256": "a5ca73ae8894e47ebe56efe2cc73b6ca5f219bf8fbe7bb40092198ea485e7795",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_pollenglass_spore_ampoule.png",
+      "source_crop": [
+        45,
+        15,
+        980,
+        1508
+      ],
+      "source_resize": [
+        26,
+        42
+      ],
+      "canvas_origin": [
+        11,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_oriflag_stolen_signal_pennon": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+        "atlas_region": [
+          480,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+        "source_icon": "res://art/artifacts/runtime/oriflag_stolen_signal_pennon.png",
+        "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_oriflag_stolen_signal_pennon",
+        "assigned_hero_id": "hero_veilmourn_damar_oriflag",
+        "assigned_faction_id": "faction_veilmourn",
+        "presentation_role": "command_relic_march_field_pickup",
+        "accessible_description": "A long crooked pole carries one tightly folded triangular pennon, three round discs, and a narrow hooked lower tip.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/oriflag_stolen_signal_pennon.png",
+      "icon_sha256": "f8489793c8ffa5a8ffcf607db5de8792c2a9c8960f5c7e988c31891799fa64ef",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/oriflag_stolen_signal_pennon_source.png",
+      "source_sha256": "11db40f708aa541e1779b93807bedddf9bf7890a03dc6ccf2f42a3b3fd8e5e0a",
+      "source_manifest": "res://art/artifacts/source/generated/command_relic_marches/manifest.json",
+      "source_manifest_sha256": "a5ca73ae8894e47ebe56efe2cc73b6ca5f219bf8fbe7bb40092198ea485e7795",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_oriflag_stolen_signal_pennon.png",
+      "source_crop": [
+        41,
+        25,
+        1008,
+        1518
+      ],
+      "source_resize": [
+        27,
+        42
+      ],
+      "canvas_origin": [
+        10,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "artifact_field_tidehook_memory_bosun_bell": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+        "atlas_region": [
+          528,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "runtime_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+        "source_icon": "res://art/artifacts/runtime/tidehook_memory_bosun_bell.png",
+        "source_model": "built_in_imagegen_command_relic_marches_compact_field_atlas",
+        "asset_policy": "exact_original_artifact_identity_shared_into_distinct_field_surface",
+        "assigned_artifact_id": "artifact_tidehook_memory_bosun_bell",
+        "assigned_hero_id": "hero_veilmourn_olan_tidehook",
+        "assigned_faction_id": "faction_veilmourn",
+        "presentation_role": "command_relic_march_field_pickup",
+        "accessible_description": "A narrow cracked bell extends into one enormous lower hook and carries three small side chimes beneath a wave-shaped handle.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png",
+      "mode": "artifact",
+      "icon_path": "res://art/artifacts/runtime/tidehook_memory_bosun_bell.png",
+      "icon_sha256": "a6fe46ba3c4e05ee34027222e4e96c5fcc95a2933b69b8d6cc42dfbc5b8bc9ce",
+      "source_path": "res://art/artifacts/source/generated/command_relic_marches/tidehook_memory_bosun_bell_source.png",
+      "source_sha256": "7e28295892d70aa0bf71276f53893e60e8c05a87fee7748d5496385edc179557",
+      "source_manifest": "res://art/artifacts/source/generated/command_relic_marches/manifest.json",
+      "source_manifest_sha256": "a5ca73ae8894e47ebe56efe2cc73b6ca5f219bf8fbe7bb40092198ea485e7795",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/artifacts/artifact_field_tidehook_memory_bosun_bell.png",
+      "source_crop": [
+        81,
+        19,
+        994,
+        1506
+      ],
+      "source_resize": [
+        26,
+        42
+      ],
+      "canvas_origin": [
+        11,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/artifacts/trailsinger_boots.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "111ba399013080fc53ba71cd9c039bf00ca9015f079a6a43a97c93f96f68d4b9",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/quarry_tally_rod.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "5093988bf43db893cf5344342588cbec2889565ecb1a317a810c63367f7e7985",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/warcrest_pennon.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "ad97815eef8206a17db56550f87d377b90bd00e4c58363180a0b9c4ed70885b5",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/bastion_gorget.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "7deba208467da825d4a6917cb3bb5ec5c610714396e0e9feb080dd95a1b7fb80",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/waymark_compass.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "2aa434e517f7600461a34d32f41fc7f4a81c0db21a88412732270839143e402b",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/milepost_lantern.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "00beffff1316831bfcd5343940ff0f03f57698697cd1c8e41c99135ef3842054",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/tollstone_ring.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "18e2a34dbffac09c265b4fdd26e08b68c0618b4075dbe8af9a814bbe8db0e126",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/mudglass_beads.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "c66ecd372f9ec597131b775eb2c38cc31041cc846f257c976f83431b428f00c0",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/choir_tuning_fork.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "78244436e7e8143c1d84710640ff9a1806f7bab95a4e914a11fc756c84e34bea",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/living_bridge_knot.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "c4e15e2453f3dc68fd5cb98efb771c5903a6ac09bf3e6265117cb2eb83adc6c8",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/pressure_gauge_reliquary.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "a4e856e44d24f30b4a7abfe5433a02dd71dedbd9bd5a50e03112eb6c89d53bd4",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/black_sail_compass.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "5bc976734220bd89503c45eee2cdd7f42b38d69fe6c0f372d2126515be1b7916",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/rainstar_sextant.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "619eace6b75b113763ee1519ddd2f69780ec05f0f6fb2aa0bcc7ac56cea5919e",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/asterfall_mantle.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "d3f5ac5b52c64669f63830c4871e6231098195d65ef6e3d6cca3f56506d81183",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/cometwake_pennon.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "8b29d39edcba8dff1927473645c968e153ed62d22080e7127e51b547f74c6994",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/bridgefire_standard.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "297f65685824458c8a01cbad62402fe42d2b4c7ba4b47329b784200c1869c94a",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/reedshadow_waders.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "c7ca7b3015e459f52f749b73f8c0e9caac756dea7517c83cf86bd5175283fef1",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/prismward_mantle.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "3db239817e995a7a017ef4d995b0b6e635260218b36852c95513d370e5d27195",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/graftbark_cuirass.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "ba59b7136adaad9f4fed724155d2d861717295eee2c1cf5080ed6b8f665267b1",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/quenchplate_vambrace.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "c1b97baebb3e7bb266288f0e5af36108197740e8b814773ff11eee3e54b89de7",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/fogwake_deckboots.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "35e148f7bcaa57ddecb40130a963bd93b04c15846ed9cd51c79fa2f91acc9d12",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/lockflame_writ_banner.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "2c47b5a0f55632a3b6e47d3ba69c8ade38c720304e0768598761e6ed71653af6",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/mirechain_hunt_totem.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "b88dde93f664e30e1a425c2f849b7dd720408addb04dab2fc11e9068ddecb8bd",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/zenith_prism_pennon.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "90850f214920ab5ffa4b1b02cc04044db2ef0c468071e0586e8e248733f5e984",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/briarcrown_covenant_standard.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "15b795cdb203fe4598c3f1c9e93a7a81058b25ea817bbc9acdc5902f525320ec",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/redline_warrant_gonfalon.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "cc068d86eae76c2ca030ef3c37487f31b2abedcc116a4303f5b428cee60c8131",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/wakebell_mourning_ensign.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "854d4948e31faeefde0799742d4a159510d0056fcca99a3d9c2847c757cf2d1b",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/lockward_beacon_key.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "638402a0551b7e130e4a9b15169951a1fc59447900a907a3d96f415d98991b87",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/fenhound_scent_bell.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "e986eea461c958ade0b28ec1fddc725702e63ca9f0ffcecfb58b73302e375c06",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/meridian_relay_lens.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "8d5ec5046223e0b9d23520084890df9d13ba172bb75b48aa52383d7f7af96e3c",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/rootpath_seed_compass.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "4fa7f393efb9ec254ea96755a88150f05d12927cbe231442859a43152aa11f06",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/redline_survey_dial.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "841dbba346ff6bd259bfe9ca775ee49123f162acc32197fe957183da317cc40f",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/drowned_star_astrolabe.png": {
+      "before_size": [
+        512,
+        512
+      ],
+      "before_sha256": "9208a1393b8e26bb0106e48aaf7e52281bca643801297a575f33cacb37223b7e",
+      "preserved": true
+    },
+    "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png": {
+      "before_size": [
+        864,
+        48
+      ],
+      "before_sha256": "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7",
+      "preserved": false
+    },
+    "res://art/overworld/runtime/objects/artifacts/marchland_retinue_heirlooms/marchland_retinue_heirlooms_atlas.png": {
+      "before_size": [
+        288,
+        48
+      ],
+      "before_sha256": "de25f096bbb5965996184a9bdd4787039cb3db5037904751d7ca2c292571ef6b",
+      "preserved": false
+    },
+    "res://art/overworld/runtime/objects/artifacts/command_relic_marches/command_relic_marches_atlas.png": {
+      "before_size": [
+        576,
+        48
+      ],
+      "before_sha256": "1d8e32761a7bd05263e9685b34fdf8c60c6b8be919b1940312dae57dda86d74c",
+      "preserved": false
+    }
+  },
+  "preserved_controls": {
+    "artifact_field_trailsinger_boots": {
+      "path": "res://art/overworld/runtime/objects/artifacts/trailsinger_boots.png",
+      "sha256": "111ba399013080fc53ba71cd9c039bf00ca9015f079a6a43a97c93f96f68d4b9",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/trailsinger_boots.png",
+        "source_icon": "res://art/artifacts/runtime/trailsinger_boots.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      }
+    },
+    "artifact_field_quarry_tally_rod": {
+      "path": "res://art/overworld/runtime/objects/artifacts/quarry_tally_rod.png",
+      "sha256": "5093988bf43db893cf5344342588cbec2889565ecb1a317a810c63367f7e7985",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/quarry_tally_rod.png",
+        "source_icon": "res://art/artifacts/runtime/quarry_tally_rod.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      }
+    },
+    "artifact_field_warcrest_pennon": {
+      "path": "res://art/overworld/runtime/objects/artifacts/warcrest_pennon.png",
+      "sha256": "ad97815eef8206a17db56550f87d377b90bd00e4c58363180a0b9c4ed70885b5",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/warcrest_pennon.png",
+        "source_icon": "res://art/artifacts/runtime/warcrest_pennon.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      }
+    },
+    "artifact_field_bastion_gorget": {
+      "path": "res://art/overworld/runtime/objects/artifacts/bastion_gorget.png",
+      "sha256": "7deba208467da825d4a6917cb3bb5ec5c610714396e0e9feb080dd95a1b7fb80",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/bastion_gorget.png",
+        "source_icon": "res://art/artifacts/runtime/bastion_gorget.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      }
+    },
+    "artifact_field_waymark_compass": {
+      "path": "res://art/overworld/runtime/objects/artifacts/waymark_compass.png",
+      "sha256": "2aa434e517f7600461a34d32f41fc7f4a81c0db21a88412732270839143e402b",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/waymark_compass.png",
+        "source_icon": "res://art/artifacts/runtime/waymark_compass.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      }
+    },
+    "artifact_field_milepost_lantern": {
+      "path": "res://art/overworld/runtime/objects/artifacts/milepost_lantern.png",
+      "sha256": "00beffff1316831bfcd5343940ff0f03f57698697cd1c8e41c99135ef3842054",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/milepost_lantern.png",
+        "source_icon": "res://art/artifacts/runtime/milepost_lantern.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      }
+    },
+    "artifact_field_tollstone_ring": {
+      "path": "res://art/overworld/runtime/objects/artifacts/tollstone_ring.png",
+      "sha256": "18e2a34dbffac09c265b4fdd26e08b68c0618b4075dbe8af9a814bbe8db0e126",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/tollstone_ring.png",
+        "source_icon": "res://art/artifacts/runtime/tollstone_ring.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      }
+    },
+    "artifact_field_mudglass_beads": {
+      "path": "res://art/overworld/runtime/objects/artifacts/mudglass_beads.png",
+      "sha256": "c66ecd372f9ec597131b775eb2c38cc31041cc846f257c976f83431b428f00c0",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/mudglass_beads.png",
+        "source_icon": "res://art/artifacts/runtime/mudglass_beads.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      }
+    },
+    "artifact_field_choir_tuning_fork": {
+      "path": "res://art/overworld/runtime/objects/artifacts/choir_tuning_fork.png",
+      "sha256": "78244436e7e8143c1d84710640ff9a1806f7bab95a4e914a11fc756c84e34bea",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/choir_tuning_fork.png",
+        "source_icon": "res://art/artifacts/runtime/choir_tuning_fork.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      }
+    },
+    "artifact_field_living_bridge_knot": {
+      "path": "res://art/overworld/runtime/objects/artifacts/living_bridge_knot.png",
+      "sha256": "c4e15e2453f3dc68fd5cb98efb771c5903a6ac09bf3e6265117cb2eb83adc6c8",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/living_bridge_knot.png",
+        "source_icon": "res://art/artifacts/runtime/living_bridge_knot.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      }
+    },
+    "artifact_field_pressure_gauge_reliquary": {
+      "path": "res://art/overworld/runtime/objects/artifacts/pressure_gauge_reliquary.png",
+      "sha256": "a4e856e44d24f30b4a7abfe5433a02dd71dedbd9bd5a50e03112eb6c89d53bd4",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/pressure_gauge_reliquary.png",
+        "source_icon": "res://art/artifacts/runtime/pressure_gauge_reliquary.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      }
+    },
+    "artifact_field_black_sail_compass": {
+      "path": "res://art/overworld/runtime/objects/artifacts/black_sail_compass.png",
+      "sha256": "5bc976734220bd89503c45eee2cdd7f42b38d69fe6c0f372d2126515be1b7916",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/black_sail_compass.png",
+        "source_icon": "res://art/artifacts/runtime/black_sail_compass.png",
+        "source_model": "original_identity_preserving_background_extraction"
+      }
+    },
+    "artifact_field_rainstar_sextant": {
+      "path": "res://art/overworld/runtime/objects/artifacts/rainstar_sextant.png",
+      "sha256": "619eace6b75b113763ee1519ddd2f69780ec05f0f6fb2aa0bcc7ac56cea5919e",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/rainstar_sextant.png",
+        "source_icon": "res://art/artifacts/runtime/rainstar_sextant.png",
+        "source_model": "built_in_image_gen_distinct_transparent_field_composition",
+        "asset_policy": "original_generated_runtime_sprite_no_inventory_icon_reuse",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_asterfall_mantle": {
+      "path": "res://art/overworld/runtime/objects/artifacts/asterfall_mantle.png",
+      "sha256": "d3f5ac5b52c64669f63830c4871e6231098195d65ef6e3d6cca3f56506d81183",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/asterfall_mantle.png",
+        "source_icon": "res://art/artifacts/runtime/asterfall_mantle.png",
+        "source_model": "built_in_image_gen_distinct_transparent_field_composition",
+        "asset_policy": "original_generated_runtime_sprite_no_inventory_icon_reuse",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_cometwake_pennon": {
+      "path": "res://art/overworld/runtime/objects/artifacts/cometwake_pennon.png",
+      "sha256": "8b29d39edcba8dff1927473645c968e153ed62d22080e7127e51b547f74c6994",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/cometwake_pennon.png",
+        "source_icon": "res://art/artifacts/runtime/cometwake_pennon.png",
+        "source_model": "built_in_image_gen_distinct_transparent_field_composition",
+        "asset_policy": "original_generated_runtime_sprite_no_inventory_icon_reuse",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_bridgefire_standard": {
+      "path": "res://art/overworld/runtime/objects/artifacts/bridgefire_standard.png",
+      "sha256": "297f65685824458c8a01cbad62402fe42d2b4c7ba4b47329b784200c1869c94a",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/bridgefire_standard.png",
+        "source_icon": "res://art/artifacts/runtime/bridgefire_standard.png",
+        "source_generated": "res://art/artifacts/source/generated/field_regalia/bridgefire_standard_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_reedshadow_waders": {
+      "path": "res://art/overworld/runtime/objects/artifacts/reedshadow_waders.png",
+      "sha256": "c7ca7b3015e459f52f749b73f8c0e9caac756dea7517c83cf86bd5175283fef1",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/reedshadow_waders.png",
+        "source_icon": "res://art/artifacts/runtime/reedshadow_waders.png",
+        "source_generated": "res://art/artifacts/source/generated/field_regalia/reedshadow_waders_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_prismward_mantle": {
+      "path": "res://art/overworld/runtime/objects/artifacts/prismward_mantle.png",
+      "sha256": "3db239817e995a7a017ef4d995b0b6e635260218b36852c95513d370e5d27195",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/prismward_mantle.png",
+        "source_icon": "res://art/artifacts/runtime/prismward_mantle.png",
+        "source_generated": "res://art/artifacts/source/generated/field_regalia/prismward_mantle_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_graftbark_cuirass": {
+      "path": "res://art/overworld/runtime/objects/artifacts/graftbark_cuirass.png",
+      "sha256": "ba59b7136adaad9f4fed724155d2d861717295eee2c1cf5080ed6b8f665267b1",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/graftbark_cuirass.png",
+        "source_icon": "res://art/artifacts/runtime/graftbark_cuirass.png",
+        "source_generated": "res://art/artifacts/source/generated/field_regalia/graftbark_cuirass_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_quenchplate_vambrace": {
+      "path": "res://art/overworld/runtime/objects/artifacts/quenchplate_vambrace.png",
+      "sha256": "c1b97baebb3e7bb266288f0e5af36108197740e8b814773ff11eee3e54b89de7",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/quenchplate_vambrace.png",
+        "source_icon": "res://art/artifacts/runtime/quenchplate_vambrace.png",
+        "source_generated": "res://art/artifacts/source/generated/field_regalia/quenchplate_vambrace_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_fogwake_deckboots": {
+      "path": "res://art/overworld/runtime/objects/artifacts/fogwake_deckboots.png",
+      "sha256": "35e148f7bcaa57ddecb40130a963bd93b04c15846ed9cd51c79fa2f91acc9d12",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/fogwake_deckboots.png",
+        "source_icon": "res://art/artifacts/runtime/fogwake_deckboots.png",
+        "source_generated": "res://art/artifacts/source/generated/field_regalia/fogwake_deckboots_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_lockflame_writ_banner": {
+      "path": "res://art/overworld/runtime/objects/artifacts/lockflame_writ_banner.png",
+      "sha256": "2c47b5a0f55632a3b6e47d3ba69c8ade38c720304e0768598761e6ed71653af6",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/lockflame_writ_banner.png",
+        "source_icon": "res://art/artifacts/runtime/lockflame_writ_banner.png",
+        "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/lockflame_writ_banner_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Forked cloth standard beneath a hooded lantern, with asymmetric wax writ tabs and a heavy brass plumb weight.",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_mirechain_hunt_totem": {
+      "path": "res://art/overworld/runtime/objects/artifacts/mirechain_hunt_totem.png",
+      "sha256": "b88dde93f664e30e1a425c2f849b7dd720408addb04dab2fc11e9068ddecb8bd",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/mirechain_hunt_totem.png",
+        "source_icon": "res://art/artifacts/runtime/mirechain_hunt_totem.png",
+        "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/mirechain_hunt_totem_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Crooked antler-crowned reedwood totem with a hooked hide pennant, coarse chain loops, and hanging bone clappers.",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_zenith_prism_pennon": {
+      "path": "res://art/overworld/runtime/objects/artifacts/zenith_prism_pennon.png",
+      "sha256": "90850f214920ab5ffa4b1b02cc04044db2ef0c468071e0586e8e248733f5e984",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/zenith_prism_pennon.png",
+        "source_icon": "res://art/artifacts/runtime/zenith_prism_pennon.png",
+        "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/zenith_prism_pennon_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Tall symmetrical ivory frame holding a diamond prism, split pennon, side mirror vanes, and orbiting calibration rings.",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_briarcrown_covenant_standard": {
+      "path": "res://art/overworld/runtime/objects/artifacts/briarcrown_covenant_standard.png",
+      "sha256": "15b795cdb203fe4598c3f1c9e93a7a81058b25ea817bbc9acdc5902f525320ec",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/briarcrown_covenant_standard.png",
+        "source_icon": "res://art/artifacts/runtime/briarcrown_covenant_standard.png",
+        "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/briarcrown_covenant_standard_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Living forked sapling standard with woven leafcloth, a spined thorn halo, graft clasps, and rooted seed weight.",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_redline_warrant_gonfalon": {
+      "path": "res://art/overworld/runtime/objects/artifacts/redline_warrant_gonfalon.png",
+      "sha256": "cc068d86eae76c2ca030ef3c37487f31b2abedcc116a4303f5b428cee60c8131",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/redline_warrant_gonfalon.png",
+        "source_icon": "res://art/artifacts/runtime/redline_warrant_gonfalon.png",
+        "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/redline_warrant_gonfalon_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Broad segmented metal gonfalon built around a round pressure gauge, warrant plates, furnace vents, and caliper feet.",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_wakebell_mourning_ensign": {
+      "path": "res://art/overworld/runtime/objects/artifacts/wakebell_mourning_ensign.png",
+      "sha256": "854d4948e31faeefde0799742d4a159510d0056fcca99a3d9c2847c757cf2d1b",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/wakebell_mourning_ensign.png",
+        "source_icon": "res://art/artifacts/runtime/wakebell_mourning_ensign.png",
+        "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/wakebell_mourning_ensign_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Torn sailcloth stretched between curved ship ribs beneath a cracked bell, with a side lantern and chain keel.",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_lockward_beacon_key": {
+      "path": "res://art/overworld/runtime/objects/artifacts/lockward_beacon_key.png",
+      "sha256": "638402a0551b7e130e4a9b15169951a1fc59447900a907a3d96f415d98991b87",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/lockward_beacon_key.png",
+        "source_icon": "res://art/artifacts/runtime/lockward_beacon_key.png",
+        "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/lockward_beacon_key_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Tall bridge-lock key built through a hooded glowing beacon, with side writ rolls, wax seals, and a hanging brass weight.",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_fenhound_scent_bell": {
+      "path": "res://art/overworld/runtime/objects/artifacts/fenhound_scent_bell.png",
+      "sha256": "e986eea461c958ade0b28ec1fddc725702e63ca9f0ffcecfb58b73302e375c06",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/fenhound_scent_bell.png",
+        "source_icon": "res://art/artifacts/runtime/fenhound_scent_bell.png",
+        "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/fenhound_scent_bell_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Crooked bog-hound jaw over a heavy patterned bell, flanked by two scent vials and a long hide tassel.",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_meridian_relay_lens": {
+      "path": "res://art/overworld/runtime/objects/artifacts/meridian_relay_lens.png",
+      "sha256": "8d5ec5046223e0b9d23520084890df9d13ba172bb75b48aa52383d7f7af96e3c",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/meridian_relay_lens.png",
+        "source_icon": "res://art/artifacts/runtime/meridian_relay_lens.png",
+        "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/meridian_relay_lens_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Symmetrical gold meridian frame around a large blue diamond lens, with two raised mirror vanes and a sun-point crown.",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_rootpath_seed_compass": {
+      "path": "res://art/overworld/runtime/objects/artifacts/rootpath_seed_compass.png",
+      "sha256": "4fa7f393efb9ec254ea96755a88150f05d12927cbe231442859a43152aa11f06",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/rootpath_seed_compass.png",
+        "source_icon": "res://art/artifacts/runtime/rootpath_seed_compass.png",
+        "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/rootpath_seed_compass_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Leaf-pointed seed compass enclosed by four forked living roots, side leaves, thorn tips, and a rope carry loop.",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_redline_survey_dial": {
+      "path": "res://art/overworld/runtime/objects/artifacts/redline_survey_dial.png",
+      "sha256": "841dbba346ff6bd259bfe9ca775ee49123f162acc32197fe957183da317cc40f",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/redline_survey_dial.png",
+        "source_icon": "res://art/artifacts/runtime/redline_survey_dial.png",
+        "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/redline_survey_dial_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Round black iron pressure dial with a bright red needle, furnace vents, folding brass sights, and a chain plumb.",
+        "background": "transparent"
+      }
+    },
+    "artifact_field_drowned_star_astrolabe": {
+      "path": "res://art/overworld/runtime/objects/artifacts/drowned_star_astrolabe.png",
+      "sha256": "9208a1393b8e26bb0106e48aaf7e52281bca643801297a575f33cacb37223b7e",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/artifacts/drowned_star_astrolabe.png",
+        "source_icon": "res://art/artifacts/runtime/drowned_star_astrolabe.png",
+        "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/drowned_star_astrolabe_source.png",
+        "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+        "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+        "visual_description": "Open crescent astrolabe around a pale hanging shard, with curved ship ribs, a cracked bell, and a narrow fogglass vial.",
+        "background": "transparent"
+      }
+    }
+  },
+  "identity_mappings": {
+    "artifact_trailsinger_boots": "artifact_field_trailsinger_boots",
+    "artifact_quarry_tally_rod": "artifact_field_quarry_tally_rod",
+    "artifact_warcrest_pennon": "artifact_field_warcrest_pennon",
+    "artifact_bastion_gorget": "artifact_field_bastion_gorget",
+    "artifact_waymark_compass": "artifact_field_waymark_compass",
+    "artifact_milepost_lantern": "artifact_field_milepost_lantern",
+    "artifact_tollstone_ring": "artifact_field_tollstone_ring",
+    "artifact_mudglass_beads": "artifact_field_mudglass_beads",
+    "artifact_choir_tuning_fork": "artifact_field_choir_tuning_fork",
+    "artifact_living_bridge_knot": "artifact_field_living_bridge_knot",
+    "artifact_pressure_gauge_reliquary": "artifact_field_pressure_gauge_reliquary",
+    "artifact_black_sail_compass": "artifact_field_black_sail_compass",
+    "artifact_rainstar_sextant": "artifact_field_rainstar_sextant",
+    "artifact_asterfall_mantle": "artifact_field_asterfall_mantle",
+    "artifact_cometwake_pennon": "artifact_field_cometwake_pennon",
+    "artifact_bridgefire_standard": "artifact_field_bridgefire_standard",
+    "artifact_reedshadow_waders": "artifact_field_reedshadow_waders",
+    "artifact_prismward_mantle": "artifact_field_prismward_mantle",
+    "artifact_graftbark_cuirass": "artifact_field_graftbark_cuirass",
+    "artifact_quenchplate_vambrace": "artifact_field_quenchplate_vambrace",
+    "artifact_fogwake_deckboots": "artifact_field_fogwake_deckboots",
+    "artifact_lockflame_writ_banner": "artifact_field_lockflame_writ_banner",
+    "artifact_mirechain_hunt_totem": "artifact_field_mirechain_hunt_totem",
+    "artifact_zenith_prism_pennon": "artifact_field_zenith_prism_pennon",
+    "artifact_briarcrown_covenant_standard": "artifact_field_briarcrown_covenant_standard",
+    "artifact_redline_warrant_gonfalon": "artifact_field_redline_warrant_gonfalon",
+    "artifact_wakebell_mourning_ensign": "artifact_field_wakebell_mourning_ensign",
+    "artifact_lockward_beacon_key": "artifact_field_lockward_beacon_key",
+    "artifact_fenhound_scent_bell": "artifact_field_fenhound_scent_bell",
+    "artifact_meridian_relay_lens": "artifact_field_meridian_relay_lens",
+    "artifact_rootpath_seed_compass": "artifact_field_rootpath_seed_compass",
+    "artifact_redline_survey_dial": "artifact_field_redline_survey_dial",
+    "artifact_drowned_star_astrolabe": "artifact_field_drowned_star_astrolabe",
+    "artifact_lockfire_assize_seal": "artifact_field_lockfire_assize_seal",
+    "artifact_rainwrit_beacon_seal": "artifact_field_rainwrit_beacon_seal",
+    "artifact_ashcrown_crownring": "artifact_field_ashcrown_crownring",
+    "artifact_miremoon_hunt_drum": "artifact_field_miremoon_hunt_drum",
+    "artifact_hollowreed_moonfang_drum": "artifact_field_hollowreed_moonfang_drum",
+    "artifact_miremoon_crown_tooth": "artifact_field_miremoon_crown_tooth",
+    "artifact_noonglass_orrery": "artifact_field_noonglass_orrery",
+    "artifact_meridian_choir_prism": "artifact_field_meridian_choir_prism",
+    "artifact_noonshard_facet_pinion": "artifact_field_noonshard_facet_pinion",
+    "artifact_worldroot_covenant_heartwood": "artifact_field_worldroot_covenant_heartwood",
+    "artifact_crownroot_oathseed_censer": "artifact_field_crownroot_oathseed_censer",
+    "artifact_rootvault_heartgrain_mantle": "artifact_field_rootvault_heartgrain_mantle",
+    "artifact_seventh_clause_pressure_key": "artifact_field_seventh_clause_pressure_key",
+    "artifact_blackbell_verdict_gauge": "artifact_field_blackbell_verdict_gauge",
+    "artifact_quenchbell_red_gauge_plate": "artifact_field_quenchbell_red_gauge_plate",
+    "artifact_last_bell_tideglass": "artifact_field_last_bell_tideglass",
+    "artifact_pale_sounding_memory_bell": "artifact_field_pale_sounding_memory_bell",
+    "artifact_saltwake_resonance_bell": "artifact_field_saltwake_resonance_bell",
+    "artifact_amberweir_lockpike_tallychain": "artifact_field_amberweir_lockpike_tallychain",
+    "artifact_moonbite_votive_drumkey": "artifact_field_moonbite_votive_drumkey",
+    "artifact_splitprism_parallax_duelglass": "artifact_field_splitprism_parallax_duelglass",
+    "artifact_woundroot_hearthseed_slingknot": "artifact_field_woundroot_hearthseed_slingknot",
+    "artifact_whitegauge_datum_spur": "artifact_field_whitegauge_datum_spur",
+    "artifact_dreamwake_tideglass_sounding": "artifact_field_dreamwake_tideglass_sounding",
+    "artifact_blackgauge_muster_bell": "artifact_field_blackgauge_muster_bell",
+    "artifact_varn_switchrail_compass": "artifact_field_varn_switchrail_compass",
+    "artifact_valechant_star_cadence_astrolabe": "artifact_field_valechant_star_cadence_astrolabe",
+    "artifact_ashgrove_millward_lantern": "artifact_field_ashgrove_millward_lantern",
+    "artifact_reedcaller_circle_horn": "artifact_field_reedcaller_circle_horn",
+    "artifact_muckscribe_fen_ink_reliquary": "artifact_field_muckscribe_fen_ink_reliquary",
+    "artifact_sevenfold_reserve_prism": "artifact_field_sevenfold_reserve_prism",
+    "artifact_glasswind_sightline_fan": "artifact_field_glasswind_sightline_fan",
+    "artifact_boltroot_quiver_loom": "artifact_field_boltroot_quiver_loom",
+    "artifact_pollenglass_spore_ampoule": "artifact_field_pollenglass_spore_ampoule",
+    "artifact_oriflag_stolen_signal_pennon": "artifact_field_oriflag_stolen_signal_pennon",
+    "artifact_tidehook_memory_bosun_bell": "artifact_field_tidehook_memory_bosun_bell"
+  }
+}

@@ -1681,13 +1681,89 @@ this art batch. Local HEAD, origin/main and the live remote were verified at
 that cleanup commit before finalizing this cohort. The unrelated retention
 paths remain hash-preserved and excluded from the art commit.
 
+## Artifact original-source field recovery — 2026-09-10, accepted
+
+All 69 artifact field identities were inspected against their original art.
+Three compact atlases held 36 paintings at only 48px per cell: 18 Three Relic
+Pilgrimages, six Marchland Retinue Heirlooms and 12 Command Relic Marches.
+Their retained original RGBA masters have usable detail; no regeneration was
+needed. Twenty-four originals also contain saturated RGB noise at alpha 1–4
+(161656 pixels). Scoped original-foreground RGB recovery preserves every alpha
+sample and every unselected RGB sample, including opaque purple crystals and ink.
+The 33 clean standalone 512px paintings and all 69 inventory icons are unchanged.
+
+`tools/prepare_overworld_artifact_cutouts.py` reconstructs the original paintings
+at fourfold density on 192px cells in the same three runtime files. The explicit
+42px-in-48px centered logical fit, world profile, identity routes and footprints
+remain authoritative. Historical two-stage icon filtering is not claimed
+pixel-identical: the frozen recipe records alpha/opaque-RGB differences, and
+all 36 before/after source registrations were visually reviewed. This is direct
+original paint, not enlargement of the old 48px or inventory images. The packet
+under `art/overworld/source/generated/cutout_recovery_20260909/artifacts/`
+retains all three old atlases, original-source/icon/provenance hashes, exact
+registrations and reproducible processing; its 36 derived cutouts are under the
+matching trimmed directory. Source history remains immutable; validation checks
+the historical atlas against its old provenance and reconstructs the live pixels
+separately rather than replacing old source hashes with new output hashes.
+
+Accepted evidence: eight Python art tests, three fixture tests, all six existing
+artifact/domain reports, five shared sprite/input/route/fog reports and 3164
+assertions at each source resolution and in each official platform package pass.
+The exact `6e2d6c29` predecessor fails only the 108 expected canvas/region/raster
+assertions, with zero unrelated/runtime failures. All 48 complete-save comparisons
+pass, excluding only cross-run timestamps and fresh authored session ids; native
+session identity and all actual round-trip fields remain checked. All 1178 other
+art rows and 5479 unrelated packaged payloads are exact, including compiled
+gameplay/save/native owners and all inventory icons. Only three textures, the
+art manifest and UID cache changed. Linux/Windows PCKs each contain 5484 members
+and measure 301907848 bytes; only platform `project.binary` differs. Both official
+exports pass; Windows also exercises fresh generated-map/Town entry. This is
+headless Wine evidence, not real Windows GPU/controller certification.
+`python3 -B tests/validate_repo.py` and `git diff --check` pass. The full-pool
+baseline advances to **990/1214**, leaving **224 pending**; neither slice completes.
+
+Evidence roots: `.artifacts/overworld_cutout_quality_20260909/` labels
+`artifact_source_1280_current`, `artifact_source_1920_current`,
+`artifact_linux_current`, `artifact_windows_current`, `artifact_linux_before`,
+`artifact_domains_current` and `artifact-acceptance.json`.
+All six detached galleries and actual 1280/1920 gameplay were visually inspected.
+Seven original authored artifacts are revealed by ordinary scouting; four are
+collected through ordinary movement and disappear normally. Three guarded cases
+retain their actual guards; the separate unchanged domain reports exercise their
+existing reward flows. Native control: 2380 unchanged blockers and all 22 original
+artifact placements (21 collected, one still available), not invented placements
+or forced fog. Detached identity coverage is not presented as earned gameplay.
+
+Reproduce with `python3 -B -m unittest discover -s tests -p
+test_overworld_artifact_cutouts.py`, then
+`python3 -B tests/overworld_cutout_batch_regression.py --batch artifacts --label
+<fresh> --resolution <1280x720|1920x1080>`. Use the unchanged packaged driver with
+`--binary`, `--pack`, `--platform`, `--batch artifacts` and a fresh label/prefix.
+The same exact assertions remain active in predecessor runs selected explicitly
+with `--baseline-manifest-commit 6e2d6c29`. Consolidate with
+`.artifacts/overworld_cutout_quality_20260909/verify_artifact_acceptance.py`.
+Domain evidence uses `/tmp/heroes-artifact-suite-20260910.py`, which redirects
+only output destinations and runs the six existing source reports unchanged
+apart from their maintained high-resolution atlas assertions. No game, Town,
+native/RMG, inventory-icon, save-schema or balance code changes.
+
+Official exports: `/tmp/heroes-artifact-{linux,windows}-20260910/report.json`.
+Repository log: `/tmp/heroes-artifact-repo-final-20260910.log`; Python log:
+`/tmp/heroes-artifact-cutout-python-20260910.log`. Two earlier pipe-launched
+validation processes exited 143 without a completed result; those are not passes.
+The full repository rerun passes. The first shared suite retains two passing
+sprite reports; its three unfinished input/route/fog reports pass separately in
+`.artifacts/full_play_runtime_20260905/artifact_shared_remaining_20260910/`.
+Fresh temporary Wine prefixes are retired by the established helper, preserving
+users and reports. Pre-existing unrelated retention files remain hash-exact.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The then-remaining 783 rows
 received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 921 repaired/preserved dispositions, leaving
-293 for complete detailed review/recovery. The two veteran mast repairs are now
+The accepted cohorts now cover 990 repaired/preserved dispositions, leaving
+224 for complete detailed review/recovery. The two veteran mast repairs are now
 included only after the separate source/visual/platform closure above.
 All 31 recurring encounters, 30
 recurring resource-site originals, 31 separate claimed dwellings and 34 early
@@ -1695,7 +1771,8 @@ post-interaction and 40 landmark/objective-state paintings are accepted.
 The 34 command-site originals, all 36 recruitment/habitat dispositions and the
 40 command/training paintings and 52 contract/expedition encounter paintings
 are accepted, along with the remaining 79 encounter recoveries and six faction
-controls above. Next: the 69 artifact rows and other remaining runtime families.
+controls above. All 69 artifact dispositions are accepted above. Next: the 54
+remaining resource-site atlas rows, then hero/Town/other runtime families.
 The seven
 Pactwright/Mireglass states are accepted only by the explicit integrated-edit
 follow-up above; recovery of these originals does not accept different paintings.

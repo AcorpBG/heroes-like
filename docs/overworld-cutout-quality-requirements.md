@@ -399,6 +399,36 @@ native placements, fog and unrelated payloads. This cohort advances the
 836/1214 baseline to 921/1214 only after consolidated acceptance. No gameplay, RMG, save, Town, unrelated
 art, source/cache deletion, or needless replacement of clean assets.
 
+### Artifact atlas paintings and clean field controls
+
+Review all 69 exact artifact field mappings. Recover the 36 low-resolution
+paintings in Three Relic Pilgrimages (18), Marchland Retinue Heirlooms (6) and
+Command Relic Marches (12) directly from retained original generated RGBA masters.
+Preserve the 33 already-clean standalone 512px paintings byte-for-byte; genuine
+prismatic purple material is not a matte defect. Inventory icons are separate
+surfaces and must remain unchanged. Retain three historical atlases and original
+source/icon/provenance hashes. Keep the documented 42px centered logical fit on
+48px cells, reprojected at fourfold density; historical two-stage inventory-to-
+field filtering/rounding is not claimed pixel-identical to original-source
+projection. Explicit source registrations and before/after visual inspection
+must distinguish that quantization from a changed world anchor or footprint.
+
+Owners: `tools/prepare_overworld_artifact_cutouts.py`,
+`tests/test_overworld_artifact_cutouts.py`, the artifact source/trim/runtime
+packet and Python-owned `--batch artifacts` source/package probes. Preserve all
+source alpha and opaque paint; any reviewed alpha-1..4 saturated RGB correction
+may borrow only original foreground RGB. No broad color key or reduced-icon
+upscale. Freeze exact artifact identity routes and all 69 dispositions; reject
+missing/mismatched source, crop, atlas, icon or route rather than falling back.
+Validate exact reconstruction, original-source and unchanged-control hashes,
+full saves, ordinary authored pickup/guard flow and the unchanged native case.
+Inspect galleries and earned gameplay at 1280x720 and 1920x1080. Run focused
+Python tests, affected artifact/domain and shared sprite/input/fog reports,
+repository/diff checks and both official Linux/Windows exports and packaged
+cohort probes once the complete batch is assembled. Acceptance stays 921/1214
+until that evidence exists. No inventory-icon redesign, gameplay/native/RMG/
+save changes, Town work, unrelated art or cleanup.
+
 ## Completion and non-goals
 
 Owner-approved test-control replacement (2026-09-10): the original Day97
