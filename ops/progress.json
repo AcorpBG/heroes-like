@@ -110873,6 +110873,46 @@
         "release_ready_claimed": false
       },
       "remainingWork": "No work remains in this bounded seamless Town development-scene slice. The known exit-only texture RID warning, the separate compact Trade-tab spacing assertion in the broad town/battle smoke, per-building painted-state granularity beyond the three shipped stages, hardware certification, signing, publication, whole-game validation, and release readiness remain separate."
+    },
+    {
+      "id": "maintenance-wine-prefix-cleanup-20260910",
+      "title": "Bound Windows packaging Wine environment lifetime",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/packaging-windows-export-smoke-report.md"
+      ],
+      "implementationTargets": [
+        "tests/packaging_windows_export_smoke.py",
+        "tools/wine_prefix_cleanup.py",
+        "tests/test_packaging_wine_cleanup.py"
+      ],
+      "validationCommands": [
+        "python3 -B -m unittest discover -s tests -p test_packaging_wine_cleanup.py",
+        "HEROES_PACKAGING_WINDOWS_ARTIFACT_DIR=/tmp/heroes-wine-cleanup-verification-20260910 python3 -B tests/packaging_windows_export_smoke.py",
+        "validate_packaging_windows_export_smoke(errors): zero errors",
+        "git diff --check"
+      ],
+      "createdAt": "2026-09-10T05:10:42+00:00",
+      "updatedAt": "2026-09-10T05:26:22+00:00",
+      "startedAt": "2026-09-10T05:10:42+00:00",
+      "notes": "Owner-approved host cleanup removed 64 inactive test Wine environments and the earlier full-match artifacts, reclaiming 107.30 GiB of allocated storage. Other Wine user data was relocated and checksum-verified. The Windows packaging runner now preserves user data and removes both prefixes on normal/error/timeout/interrupt exits, with shutdown verification and failure reporting. Nine regressions, focused repository checks and real Windows export/startup plus 23 generated Overworld/Town steps pass; both prefixes are absent afterward.",
+      "completedAt": "2026-09-10T05:26:22+00:00",
+      "metrics": {
+        "regression_tests_passed": 9,
+        "generated_flow_steps_passed": 23,
+        "test_prefixes_deleted": 64,
+        "allocated_storage_reclaimed_bytes": 115210149888
+      },
+      "latestEvidenceArtifacts": [
+        "tests/packaging_windows_export_smoke.py",
+        "tools/wine_prefix_cleanup.py",
+        "tests/test_packaging_wine_cleanup.py",
+        "docs/packaging-windows-export-smoke-report.md"
+      ]
     }
   ],
   "project": "heroes-like",

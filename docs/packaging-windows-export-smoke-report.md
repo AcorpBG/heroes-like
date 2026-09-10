@@ -30,9 +30,20 @@ godot --headless --path . --export-release "Windows Release" .artifacts/packagin
 - The runner removes and recreates `.artifacts/packaging_windows_export_smoke/wine-prefix`, then launches the exported executable headlessly with dummy audio and the compatibility renderer.
 - The Wine 9 harness sets `WINEDLLOVERRIDES=dinput8=` because Wine's builtin DirectInput path crashes this Godot executable before project startup. This bypass is confined to the harness and means DirectInput or controller validation is not claimed.
 - Runtime output must contain `Godot Engine v`, `Boot.scn`, `MainMenu.scn`, and `aurelion_map_persistence.windows.template_release.x86_64.dll`; fatal Godot, resource, GDExtension, or Wine page-fault output fails the gate.
-- The runner shuts down its isolated Wine server and writes `.artifacts/packaging_windows_export_smoke/report.json` with export and runtime command summaries, marker results, artifact sizes, header checks, native DLL checks, artifact listing, and explicit non-claims.
+- The runner writes `.artifacts/packaging_windows_export_smoke/report.json` with export and runtime command summaries, marker results, artifact sizes, header checks, native DLL checks, artifact listing, and explicit non-claims.
+- Both disposable Wine prefixes are stopped with prefix-scoped `wineserver -k` and `-w`, then removed when the run exits, including failed exports/runtimes, timeouts, Ctrl-C and SIGTERM. Before removal, each `drive_c/users` directory is moved intact to a uniquely named `<prefix>-user-data-*` sibling, preserving saves, settings and logs. Exported packages, screenshots, external symlink targets and other evidence remain in place.
+- `wine-prefix-cleanup.json` records shutdown results, removed prefixes and preserved user-data paths, even when the test raises before writing its normal report. The final normal report also includes `wine_prefix_cleanup`; a cleanup failure fails the gate and leaves the affected prefix for inspection. Unsafe prefix/user-directory symlinks are rejected. SIGKILL or a host crash cannot run cleanup; the next invocation cleans leftovers in its selected output directory before booting fresh prefixes.
 
 ## Validation Command
+
+Validated Wine-lifecycle checkpoint (2026-09-10): nine regression tests cover
+success, exceptions, timeouts, Ctrl-C, real SIGTERM delivery, prior-run leftovers,
+shutdown failures, symlink rejection and the already-stopped-server case. A real
+Windows export/startup and all 23 generated Overworld/Town steps pass; both Wine
+prefixes are absent afterward, with saves/logs retained outside them and cleanup
+reported as successful. Historical artifacts under
+`.artifacts/generated_full_match_quality_20260906` were removed at the owner's
+request on this date; the historical results below describe their earlier runs.
 
 Validated no-size-budget checkpoint (2026-09-09):
 `.artifacts/generated_full_match_quality_20260906/mireclaw_release_windows_no_cap_02/report.json`

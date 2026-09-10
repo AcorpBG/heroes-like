@@ -18200,3 +18200,9 @@ Expected shape:
 - `project.md` contains durable strategy and current strategic focus.
 - `PLAN.md` contains compact tactical state, selection rules, and near-term slice candidates.
 - `ops/progress.json` contains operational status, detailed evidence, validation history, and completed-slice records.
+
+## Windows Packaging Wine Cleanup
+
+id: `maintenance-wine-prefix-cleanup-20260910`
+
+Status: completed 2026-09-10. Owner-directed maintenance: remove inactive test Wine environments and the explicitly approved earlier full-match artifacts; make `tests/packaging_windows_export_smoke.py` stop its Wine processes, preserve user data outside each environment, and remove both temporary prefixes on success, failure, timeout and normal termination. Nine lifecycle regressions and focused repository checks pass; the real Windows export/startup and 23-step generated Overworld/Town flow pass with both prefixes removed and user data retained. Host cleanup removed 64 inactive test environments plus the approved older artifacts (107.30 GiB). Other active art work and its evidence remain intact.

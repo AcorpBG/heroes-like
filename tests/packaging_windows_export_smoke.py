@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 from compact_export_pck import compact_export
 from prepare_lossless_texture_imports import prepare as prepare_lossless_imports
+from wine_prefix_cleanup import managed_prefixes
 
 ARTIFACT_DIR = Path(
     os.environ.get(
@@ -1281,7 +1282,7 @@ def pck_terrain_payload_summary() -> dict:
     return summary
 
 
-def main() -> int:
+def run_smoke() -> tuple[dict, dict]:
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
     texture_imports = prepare_lossless_imports(ROOT, "godot", ARTIFACT_DIR / "lossless-imports.json")
     if EXPORT_DIR.exists():
@@ -1289,10 +1290,6 @@ def main() -> int:
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
     if REPORT_PATH.exists():
         REPORT_PATH.unlink()
-    if WINE_PREFIX.exists():
-        shutil.rmtree(WINE_PREFIX)
-    if GENERATED_WINE_PREFIX.exists():
-        shutil.rmtree(GENERATED_WINE_PREFIX)
     if GENERATED_FLOW_OUTPUT_DIR.exists():
         shutil.rmtree(GENERATED_FLOW_OUTPUT_DIR)
     GENERATED_FLOW_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -1737,6 +1734,20 @@ def main() -> int:
         "generated_flow_report": relative(GENERATED_FLOW_REPORT_PATH),
         "report": relative(REPORT_PATH),
     }
+    return report, summary
+
+
+def main() -> int:
+    with managed_prefixes(
+        (WINE_PREFIX, GENERATED_WINE_PREFIX), ARTIFACT_DIR,
+        WINESERVER_BINARY, WINE_CLEANUP_TIMEOUT_SECONDS,
+    ) as cleanup:
+        report, summary = run_smoke()
+    report["wine_prefix_cleanup"] = cleanup
+    report["ok"] = report["ok"] and cleanup["ok"]
+    summary["ok"] = report["ok"]
+    summary["wine_prefix_cleanup_ok"] = cleanup["ok"]
+    REPORT_PATH.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"{REPORT_ID} {json.dumps(summary, sort_keys=True)}")
     if not report["ok"]:
         print(f"Report written to {relative(REPORT_PATH)}", file=sys.stderr)
