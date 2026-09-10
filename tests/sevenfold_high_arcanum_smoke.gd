@@ -8,13 +8,13 @@ const OUTPUT_DIR := "res://.artifacts/sevenfold_high_arcanum_smoke"
 const SCENARIO_ID := "third-hearths-confluence"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png"
 const CASES := [
-	{"site_id":"site_lastroad_bell_spire","placement_id":"third_arcanum_lastroad","spell_id":"spell_beacon_bell_lance_25","flag":"high_arcanum_lastroad_bell_sounded","command_key":"attack","asset_id":"resource_site_high_arcanum_lastroad_bell_spire","region":Rect2(0,0,48,48),"target_side":"enemy","resolution_type":"damage"},
-	{"site_id":"site_siltheart_drum_cairn","placement_id":"third_arcanum_siltheart","spell_id":"spell_mire_silt_frenzy_20","flag":"high_arcanum_siltheart_drum_struck","command_key":"defense","asset_id":"resource_site_high_arcanum_siltheart_drum_cairn","region":Rect2(48,0,48,48),"target_side":"player","resolution_type":"effect"},
-	{"site_id":"site_aurora_facet_orrery","placement_id":"third_arcanum_aurora","spell_id":"spell_lens_mirror_facet_20","flag":"high_arcanum_aurora_facets_aligned","command_key":"knowledge","asset_id":"resource_site_high_arcanum_aurora_facet_orrery","region":Rect2(96,0,48,48),"target_side":"player","resolution_type":"effect"},
-	{"site_id":"site_bloombark_covenant_tree","placement_id":"third_arcanum_bloombark","spell_id":"spell_root_bloom_bark_20","flag":"high_arcanum_bloombark_covenant_bound","command_key":"defense","asset_id":"resource_site_high_arcanum_bloombark_covenant_tree","region":Rect2(144,0,48,48),"target_side":"player","resolution_type":"effect"},
-	{"site_id":"site_slagbound_clamp_forge","placement_id":"third_arcanum_slagbound","spell_id":"spell_furnace_slag_clamp_15","flag":"high_arcanum_slagbound_clamp_set","command_key":"power","asset_id":"resource_site_high_arcanum_slagbound_clamp_forge","region":Rect2(192,0,48,48),"target_side":"enemy","resolution_type":"effect"},
-	{"site_id":"site_mourning_tide_obelisk","placement_id":"third_arcanum_mourning","spell_id":"spell_veil_mourning_fogbind_20","flag":"high_arcanum_mourning_tide_rung","command_key":"knowledge","asset_id":"resource_site_high_arcanum_mourning_tide_obelisk","region":Rect2(240,0,48,48),"target_side":"enemy","resolution_type":"effect"},
-	{"site_id":"site_sevencount_verdict_table","placement_id":"third_arcanum_sevencount","spell_id":"spell_old_measure_tally_tally_20","flag":"high_arcanum_sevencount_verdict_rendered","command_key":"power","asset_id":"resource_site_high_arcanum_sevencount_verdict_table","region":Rect2(288,0,48,48),"target_side":"enemy","resolution_type":"damage"},
+	{"site_id":"site_lastroad_bell_spire","placement_id":"third_arcanum_lastroad","spell_id":"spell_beacon_bell_lance_25","flag":"high_arcanum_lastroad_bell_sounded","command_key":"attack","asset_id":"resource_site_high_arcanum_lastroad_bell_spire","region":Rect2(0,0,192,192),"target_side":"enemy","resolution_type":"damage"},
+	{"site_id":"site_siltheart_drum_cairn","placement_id":"third_arcanum_siltheart","spell_id":"spell_mire_silt_frenzy_20","flag":"high_arcanum_siltheart_drum_struck","command_key":"defense","asset_id":"resource_site_high_arcanum_siltheart_drum_cairn","region":Rect2(192,0,192,192),"target_side":"player","resolution_type":"effect"},
+	{"site_id":"site_aurora_facet_orrery","placement_id":"third_arcanum_aurora","spell_id":"spell_lens_mirror_facet_20","flag":"high_arcanum_aurora_facets_aligned","command_key":"knowledge","asset_id":"resource_site_high_arcanum_aurora_facet_orrery","region":Rect2(384,0,192,192),"target_side":"player","resolution_type":"effect"},
+	{"site_id":"site_bloombark_covenant_tree","placement_id":"third_arcanum_bloombark","spell_id":"spell_root_bloom_bark_20","flag":"high_arcanum_bloombark_covenant_bound","command_key":"defense","asset_id":"resource_site_high_arcanum_bloombark_covenant_tree","region":Rect2(576,0,192,192),"target_side":"player","resolution_type":"effect"},
+	{"site_id":"site_slagbound_clamp_forge","placement_id":"third_arcanum_slagbound","spell_id":"spell_furnace_slag_clamp_15","flag":"high_arcanum_slagbound_clamp_set","command_key":"power","asset_id":"resource_site_high_arcanum_slagbound_clamp_forge","region":Rect2(768,0,192,192),"target_side":"enemy","resolution_type":"effect"},
+	{"site_id":"site_mourning_tide_obelisk","placement_id":"third_arcanum_mourning","spell_id":"spell_veil_mourning_fogbind_20","flag":"high_arcanum_mourning_tide_rung","command_key":"knowledge","asset_id":"resource_site_high_arcanum_mourning_tide_obelisk","region":Rect2(960,0,192,192),"target_side":"enemy","resolution_type":"effect"},
+	{"site_id":"site_sevencount_verdict_table","placement_id":"third_arcanum_sevencount","spell_id":"spell_old_measure_tally_tally_20","flag":"high_arcanum_sevencount_verdict_rendered","command_key":"power","asset_id":"resource_site_high_arcanum_sevencount_verdict_table","region":Rect2(1152,0,192,192),"target_side":"enemy","resolution_type":"damage"},
 ]
 
 var _errors: Array[String] = []
@@ -35,7 +35,7 @@ func _run() -> void:
 	for case_value in CASES:
 		await _validate_case(view, case_value)
 	var atlas := Image.load_from_file(ProjectSettings.globalize_path(ATLAS_PATH))
-	_expect(not atlas.is_empty() and atlas.get_size() == Vector2i(336, 48), "Sevenfold High Arcanum atlas is missing or malformed.")
+	_expect(not atlas.is_empty() and atlas.get_size() == Vector2i(1344, 192), "Sevenfold High Arcanum atlas is missing or malformed.")
 	if not atlas.is_empty():
 		atlas.save_png("%s/sevenfold_high_arcanum_strip.png" % OUTPUT_DIR)
 	var report := {

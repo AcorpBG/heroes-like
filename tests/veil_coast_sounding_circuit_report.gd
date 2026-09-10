@@ -18,12 +18,12 @@ const ROUTE := [
 	Vector2i(21,4),Vector2i(21,3),Vector2i(21,2),Vector2i(22,2),
 ]
 const CASES := [
-	{"site_id":"site_veil_skiffyard","placement_id":"sounding_veil_skiffyard","from":Vector2i(3,3),"to":Vector2i(7,3),"active":"resource_site_coast_route_veil_skiffyard_operational","region":Rect2(0,0,48,48),"guard":""},
-	{"site_id":"site_harbor_pilot_post","placement_id":"sounding_harbor_pilot_post","from":Vector2i(8,6),"to":Vector2i(11,6),"active":"resource_site_coast_route_harbor_pilot_post_operational","region":Rect2(48,0,48,48),"guard":""},
-	{"site_id":"site_bell_buoy_station","placement_id":"sounding_bell_buoy_station","from":Vector2i(13,3),"to":Vector2i(13,6),"active":"resource_site_coast_route_bell_buoy_station_operational","region":Rect2(96,0,48,48),"guard":""},
-	{"site_id":"site_wreck_quay","placement_id":"sounding_wreck_quay","from":Vector2i(14,9),"to":Vector2i(18,9),"active":"resource_site_coast_route_wreck_quay_operational","region":Rect2(144,0,48,48),"guard":"sounding_wreck_quay_watch"},
-	{"site_id":"site_tide_chain_mooring","placement_id":"sounding_tide_chain_mooring","from":Vector2i(17,11),"to":Vector2i(20,11),"active":"resource_site_coast_route_tide_chain_mooring_operational","region":Rect2(192,0,48,48),"guard":"sounding_tide_chain_watch"},
-	{"site_id":"site_marsh_skiff_shelf","placement_id":"sounding_marsh_skiff_shelf","from":Vector2i(17,6),"to":Vector2i(20,6),"active":"resource_site_coast_route_marsh_skiff_shelf_operational","region":Rect2(240,0,48,48),"guard":""},
+	{"site_id":"site_veil_skiffyard","placement_id":"sounding_veil_skiffyard","from":Vector2i(3,3),"to":Vector2i(7,3),"active":"resource_site_coast_route_veil_skiffyard_operational","region":Rect2(0,0,192,192),"guard":""},
+	{"site_id":"site_harbor_pilot_post","placement_id":"sounding_harbor_pilot_post","from":Vector2i(8,6),"to":Vector2i(11,6),"active":"resource_site_coast_route_harbor_pilot_post_operational","region":Rect2(192,0,192,192),"guard":""},
+	{"site_id":"site_bell_buoy_station","placement_id":"sounding_bell_buoy_station","from":Vector2i(13,3),"to":Vector2i(13,6),"active":"resource_site_coast_route_bell_buoy_station_operational","region":Rect2(384,0,192,192),"guard":""},
+	{"site_id":"site_wreck_quay","placement_id":"sounding_wreck_quay","from":Vector2i(14,9),"to":Vector2i(18,9),"active":"resource_site_coast_route_wreck_quay_operational","region":Rect2(576,0,192,192),"guard":"sounding_wreck_quay_watch"},
+	{"site_id":"site_tide_chain_mooring","placement_id":"sounding_tide_chain_mooring","from":Vector2i(17,11),"to":Vector2i(20,11),"active":"resource_site_coast_route_tide_chain_mooring_operational","region":Rect2(768,0,192,192),"guard":"sounding_tide_chain_watch"},
+	{"site_id":"site_marsh_skiff_shelf","placement_id":"sounding_marsh_skiff_shelf","from":Vector2i(17,6),"to":Vector2i(20,6),"active":"resource_site_coast_route_marsh_skiff_shelf_operational","region":Rect2(960,0,192,192),"guard":""},
 ]
 
 var _errors: Array[String] = []
@@ -102,7 +102,7 @@ func _run() -> void:
 	if capture == null or capture.is_empty() or capture.save_png(map_capture_path) != OK:
 		_error("Could not save the Veil-Coast Sounding Circuit visual capture.")
 	var atlas := Image.load_from_file(ProjectSettings.globalize_path(ATLAS_PATH))
-	_expect(not atlas.is_empty() and atlas.get_size() == Vector2i(288, 48), "Coast-route operational atlas is not the exact compact strip.")
+	_expect(not atlas.is_empty() and atlas.get_size() == Vector2i(1152, 192), "Coast-route operational atlas is not the exact compact strip.")
 	if not atlas.is_empty():
 		atlas.save_png("%s/coast_route_operational_strip.png" % OUTPUT_DIR)
 

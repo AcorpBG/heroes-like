@@ -1,0 +1,863 @@
+{
+  "schema_id": "route_arcane_cutout_recovery_v1",
+  "recipe_sha256": "e0edb46db4c1853eb55d5e90b06bf70de203d0ab53763052cd9630060dc2385b",
+  "processing_tool_sha256": "6bef5bb838d0a69e8124146eca88c9685a394f0b8ee47b8cd75078f6c071c131",
+  "shared_tool_sha256": "102e44f08f1acc72a59c407f67a8de01e35ca42c00c4bec20cef6c05d3b7b4b5",
+  "shared_dependencies": {
+    "processing_tool_sha256": "102e44f08f1acc72a59c407f67a8de01e35ca42c00c4bec20cef6c05d3b7b4b5",
+    "state_tool_sha256": "795df88d93148b63ac182997a7edcd1c2c32978b526f9a70b30e540a193a6f4a",
+    "state_dependencies": {
+      "processing_tool_sha256": "795df88d93148b63ac182997a7edcd1c2c32978b526f9a70b30e540a193a6f4a",
+      "shared_tool_sha256": "12a454b0547d01684c8b1c4901c074b51940144712124bf6126255dcd8422001",
+      "projection_tool_sha256": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
+      "component_tool_sha256": "092ea67fbcb062cf1cb166d0f302cc057139ccf97e835aba2032611326edbf0e"
+    }
+  },
+  "generation_record_sha256": "e057265625f4d8510ae1a944498be07d038fa1c18b944b9a19b092fa80b2c151",
+  "assets": {
+    "resource_site_coast_route_veil_skiffyard_operational": {
+      "trim_sha256": "ee5f17b0f50fb9ddc29ce674d3287c6cf02cb8bd55d70bad5dd274a4de9a8e87",
+      "source_sha256": "6dc3ce57bb7d327328bae2a50a956d80abaa655a5ba3b1127000a3a7b8e12693",
+      "rgba_sha256": "e688f2f57bce7fefb2a176cc3d5cb32df2095cdfb8939e5934acbec23925a8a7",
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 9211,
+        "bounds": [
+          30,
+          36,
+          154,
+          152
+        ]
+      }
+    },
+    "resource_site_coast_route_harbor_pilot_post_operational": {
+      "trim_sha256": "2aa3e5338e1e498122ef52654016653f289274d070973886664123aa562842e1",
+      "source_sha256": "62d3b4d314b559b0e39ef54eaea5f0efc3f692248a642688c2065f73eb3029f6",
+      "rgba_sha256": "58d9f27e07d0332cba7f94795eaa2a9b610a2aab3cb2fb7c6d1332a5f80e558d",
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 11620,
+        "bounds": [
+          22,
+          24,
+          176,
+          164
+        ]
+      }
+    },
+    "resource_site_coast_route_bell_buoy_station_operational": {
+      "trim_sha256": "21ad85fab94bbf1bda9f81fbe866291981e58059c13dbfebc19a721fffc348f8",
+      "source_sha256": "71dc6ad500c5eef4e0b9a0ab748f52631dabef01d428b50db761970b8a2c1257",
+      "rgba_sha256": "a7f12f9ac6d03dfd4ac18786b783f54d7d394b7c1719738a71629001438fb3b2",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 8757,
+        "bounds": [
+          39,
+          14,
+          177,
+          170
+        ]
+      }
+    },
+    "resource_site_coast_route_wreck_quay_operational": {
+      "trim_sha256": "d6048b278affb9a7a11d76af15a48e964a5b5e18ff48928a6ae93e70556fee8b",
+      "source_sha256": "b5971fccfa2781e3a07e67ea57e7ed55df8f893c4a54e623af8733588c64494c",
+      "rgba_sha256": "6d3429dec4348a93835203e440965f947c79b045dedc3adf40b178a3741cc001",
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 7943,
+        "bounds": [
+          23,
+          36,
+          184,
+          156
+        ]
+      }
+    },
+    "resource_site_coast_route_tide_chain_mooring_operational": {
+      "trim_sha256": "78a166c51fa8107672f262fc24b40778d757f3288db238ef093469d8a3d44421",
+      "source_sha256": "003890d02523060fdf0f76db86b52d29b5c1e193dc4f0df40e1bcc0e99e0f43d",
+      "rgba_sha256": "c77c0373b8f50b24df541a42d7b1bff4ee847bbd2879dcf56e4bb6578c542492",
+      "metrics": {
+        "alpha_levels": 252,
+        "partial_alpha_pixels": 6922,
+        "bounds": [
+          28,
+          40,
+          162,
+          148
+        ]
+      }
+    },
+    "resource_site_coast_route_marsh_skiff_shelf_operational": {
+      "trim_sha256": "9f3ecfccb11b0a38e393e0ed40ce09c7a04340982effe3c7716b8df2b532d4b1",
+      "source_sha256": "f9643c469ec2be8722dd5594815799e2c050b6cf09c51d4c9e427639f7fbd660",
+      "rgba_sha256": "59c4818a2569eaa327c74ba06e05f87e5c46f48fee0e00ed33228e3ae12b2604",
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 8584,
+        "bounds": [
+          33,
+          32,
+          161,
+          156
+        ]
+      }
+    },
+    "resource_site_frontier_marker_fogline": {
+      "trim_sha256": "e16902769e163c45938e0f02294e5083f0d6cca4d65c77edd220b3fc2b5e5cdf",
+      "source_sha256": "c0733565163c244872441ab683b5d0e2044d08ede175f2b34631ce0d3d6c7c38",
+      "rgba_sha256": "d235c58058234471cb14d352118159be5d0025bfc86f4914c6c1da9df92aaba5",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 6538,
+        "bounds": [
+          40,
+          24,
+          148,
+          188
+        ]
+      }
+    },
+    "resource_site_frontier_marker_old_measure": {
+      "trim_sha256": "f99bfb43488b97304ea94a8e99bad0631c0384d72c6777e648ee2ceb2f41494b",
+      "source_sha256": "7cbd4219d5fc48a473b0eda17cacd55457f6ba84661456d2bafd0f8b80f52f83",
+      "rgba_sha256": "a70b4567a493fa585d4607aa0b7dc9eecd200de9de6abcabe6b307d4d976d9b3",
+      "metrics": {
+        "alpha_levels": 252,
+        "partial_alpha_pixels": 11455,
+        "bounds": [
+          12,
+          40,
+          180,
+          192
+        ]
+      }
+    },
+    "resource_site_frontier_marker_rootway": {
+      "trim_sha256": "86100d5e962644e76f045020303743c47671acd37a1880df5fd90196b0af8560",
+      "source_sha256": "e1946f51146a13613d7167dc8fd58d935f6470e716c80fdb616c0b02dd211a49",
+      "rgba_sha256": "cb169b544afb7de14f2f79375defa85af91a2de08ca368edcd792fd46bafc211",
+      "metrics": {
+        "alpha_levels": 252,
+        "partial_alpha_pixels": 10359,
+        "bounds": [
+          39,
+          36,
+          153,
+          192
+        ]
+      }
+    },
+    "mapobj_cinderwake_fold": {
+      "trim_sha256": "9fd92c7f7d32aed77cd9837e41ede802f85290d933425766f799d1167eab2019",
+      "source_sha256": "e5ec326f1a67d8b94ee7269e7c05933a4affb167cbc3462482e1077028788226",
+      "rgba_sha256": "66e254fb144887aa1aebd7c2324e0ce84bab6f13712c027840c7a2e761b930b4",
+      "metrics": {
+        "alpha_levels": 247,
+        "partial_alpha_pixels": 9684,
+        "bounds": [
+          18,
+          48,
+          180,
+          140
+        ]
+      }
+    },
+    "resource_site_neutral_cinderwake_fold_controlled": {
+      "trim_sha256": "2bdd72f30d15ce2ea69200240b208bab65aaaf74f187a77a1d0b1f7a617434fa",
+      "source_sha256": "e914abf7aaca58ce3dc677e13f674f5a4c07684ed85b3f5956ce24ebe3a41085",
+      "rgba_sha256": "bdb3a4010392b8547ad235bd8453cb08569ef56c3b37b27967c0532b7203dee9",
+      "metrics": {
+        "alpha_levels": 245,
+        "partial_alpha_pixels": 1409,
+        "bounds": [
+          17,
+          48,
+          177,
+          137
+        ]
+      }
+    },
+    "mapobj_tideglass_roost": {
+      "trim_sha256": "225e3332066dcafc65c9e4f6afa87ce983e78f682bd83913dd0f6fbda4c0bfab",
+      "source_sha256": "d695415964337c2063c600a24a11a7abfc7d5576421d57f6559346f5e703a8bf",
+      "rgba_sha256": "abd805d4cb241545962b0b63fd983b88048e9386e79e93e061b2e7a8943fd305",
+      "metrics": {
+        "alpha_levels": 252,
+        "partial_alpha_pixels": 8585,
+        "bounds": [
+          9,
+          48,
+          182,
+          140
+        ]
+      }
+    },
+    "resource_site_neutral_tideglass_roost_controlled": {
+      "trim_sha256": "00d0ca4d045913c0f3970d08cb872740d57919e6d11fe4de0d548c61636a98ec",
+      "source_sha256": "9ebc8055ee203981ec5a6651280c57284d25f7c1b7a7878dda15a73312f9e831",
+      "rgba_sha256": "fb9741a0eddd59ebaf3856d7fb91e825009e15c28ac88a932f4fec8e978e69d1",
+      "metrics": {
+        "alpha_levels": 250,
+        "partial_alpha_pixels": 1528,
+        "bounds": [
+          19,
+          49,
+          181,
+          138
+        ]
+      }
+    },
+    "mapobj_galehorn_windfold": {
+      "trim_sha256": "c15d25ef1654cfef897e813964f9915c51bb68b6d67ac87ad1426f346d8b2fa4",
+      "source_sha256": "9e3df178544397790774f41a0bba1c3cc3a4d4d9b545a94dbc28e3a02ae9a250",
+      "rgba_sha256": "6d9f08df97ff47df6bc367ff94e07e408f67d0a5df0b3959dc70cc1e1ec4426d",
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 10421,
+        "bounds": [
+          25,
+          32,
+          184,
+          156
+        ]
+      }
+    },
+    "resource_site_neutral_galehorn_windfold_controlled": {
+      "trim_sha256": "850931a6004d2a5ffaf0439de7a5d180ced33b0230ed677c1485aa865fc45bb9",
+      "source_sha256": "df201d1f3d5f2250b244df54696336ea12601f183045f027e8a865c710c78074",
+      "rgba_sha256": "262a24be6460fd7084e563fc6d92a8a586f4aa51383b4f5ac8b40fd2f8464eac",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 14447,
+        "bounds": [
+          8,
+          20,
+          181,
+          168
+        ]
+      }
+    },
+    "mapobj_sunscale_lantern_conservatory": {
+      "trim_sha256": "82472ce494a237d865bf01b378ba604ca6d51c822d33f47f5e544cc8000141c5",
+      "source_sha256": "eba89123fc7e67036fa52c467c195fe003bf84bfa6b9ef4c5fa73140b65985c5",
+      "rgba_sha256": "e98d35e976333f4089a26f34d17dc8ba804ea7af2e8b206c41818abbbb41e077",
+      "metrics": {
+        "alpha_levels": 256,
+        "partial_alpha_pixels": 15819,
+        "bounds": [
+          16,
+          8,
+          182,
+          172
+        ]
+      }
+    },
+    "resource_site_neutral_sunscale_lantern_conservatory_controlled": {
+      "trim_sha256": "0b7eb4beed906023c893a5e25d530578d90254bf9bc7d2b54901b6c3ca84725b",
+      "source_sha256": "e514723fed96538332062a77fcd832662395fff005c79db1b93962758189ee9a",
+      "rgba_sha256": "3ed8f5dbae670184f371775a1125f58e83ef2005e6d2462ae338ad0aa63e0562",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 16381,
+        "bounds": [
+          18,
+          8,
+          184,
+          172
+        ]
+      }
+    },
+    "mapobj_rimebell_whitewake_eyrie": {
+      "trim_sha256": "7c0d99e1383604a06275c06ff03b3e56a214771e18c2a4f1281f4152c1ecddfd",
+      "source_sha256": "0fa1819d04870e5526bb68f77dc4f47f5c77d1b403d28cd7f4847c65eba405f3",
+      "rgba_sha256": "4ebaa9d799b29a50b246b92f4321ee819033b7c917c8472d416496810321552a",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 14636,
+        "bounds": [
+          25,
+          8,
+          176,
+          183
+        ]
+      }
+    },
+    "resource_site_neutral_rimebell_whitewake_eyrie_controlled": {
+      "trim_sha256": "82b87847c8891d835088b57d7f9c6625dd9312da8ef7750c5da05f61360dd787",
+      "source_sha256": "e785ede6e3b9dc8d70eaa51f5a3a8bfdea632a8163471681cc65faf9a1f6f9f5",
+      "rgba_sha256": "0710c85ef40fb77e40d411fd7b14bcd5fb4de5283127bf97d0473b5edb8d6cbf",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 15298,
+        "bounds": [
+          20,
+          8,
+          172,
+          184
+        ]
+      }
+    },
+    "mapobj_deepforge_seventh_vault": {
+      "trim_sha256": "dfbe34657a5f2f626372f5a7605e7a04b41f9b4e2cf47983abc8c3d0f6647442",
+      "source_sha256": "33d94f578c49bc3acdf765fb8eeddb993fa63aa989f528e72a833ebb1ed4b3d6",
+      "rgba_sha256": "c4ade1ec5c5bc195bc186a660a1722a78cc7b871a7061b9a52123cf3e27b6461",
+      "metrics": {
+        "alpha_levels": 234,
+        "partial_alpha_pixels": 11776,
+        "bounds": [
+          20,
+          32,
+          179,
+          156
+        ]
+      }
+    },
+    "resource_site_neutral_deepforge_seventh_vault_controlled": {
+      "trim_sha256": "dfa5b086c6ada5b7e227dcf9e21223265e5bffac8695645e86a1e201bf75281a",
+      "source_sha256": "7d184b882f1d014f248df83b28db0a0e7a99716c19accf3abb159149858dda9a",
+      "rgba_sha256": "e8b7e982a0abb406d53b941d9a71e16bcb4374a35e6c5174d1128521ce23a29a",
+      "metrics": {
+        "alpha_levels": 241,
+        "partial_alpha_pixels": 14671,
+        "bounds": [
+          11,
+          28,
+          184,
+          164
+        ]
+      }
+    },
+    "mapobj_pactwright_waydesk": {
+      "trim_sha256": "918cef6e4209e62b6f129eaf9d06096b5a0b1111501753bf06b9a70f29811375",
+      "source_sha256": "da048e6277b57b5f45aa967df854e22fcedad431922b7b7bff16361ea5a3a515",
+      "rgba_sha256": "a1fada35eb1577187885e6f7ba3fd55a9833fe8ac0f06e3711bfbeaf11560a75",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 10536,
+        "bounds": [
+          13,
+          8,
+          168,
+          179
+        ]
+      }
+    },
+    "resource_site_pactwright_waydesk_witnessed": {
+      "trim_sha256": "3f96c1e524f5ea3ec00514124e7c435b390cc2ee20398d41f954e5aa67b3e115",
+      "source_sha256": "da048e6277b57b5f45aa967df854e22fcedad431922b7b7bff16361ea5a3a515",
+      "rgba_sha256": "209f3de3e5809bc0452c86524a19a498f022c8a5abde2b23536c03c837779c04",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 10967,
+        "bounds": [
+          13,
+          8,
+          168,
+          179
+        ]
+      }
+    },
+    "mapobj_siltglass_index": {
+      "trim_sha256": "a244365bf50725120bd048b8ddc93062342a8a53cc401bbc24a8e78d666de363",
+      "source_sha256": "cb4037009fdaebef7b0e08d0f206135a608b8c80131eafe0c45496eeea0d821d",
+      "rgba_sha256": "721f9be8568065100296816ad2678aa164965e002d1cb0b1e707952629d3d5c8",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 10350,
+        "bounds": [
+          26,
+          64,
+          157,
+          190
+        ]
+      }
+    },
+    "resource_site_siltglass_index_countersealed": {
+      "trim_sha256": "53b99dc0fd251a6d494ad94bd86a018a7b69ccdd49d26d5fec10ff2cdfdbb6c8",
+      "source_sha256": "cb4037009fdaebef7b0e08d0f206135a608b8c80131eafe0c45496eeea0d821d",
+      "rgba_sha256": "4f812bdd53eb4d037d502aa3ddc22efcd9f3ded6a1e27c72f4df25e0d8d3f0da",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 10702,
+        "bounds": [
+          26,
+          16,
+          184,
+          190
+        ]
+      }
+    },
+    "mapobj_greenline_lens_table": {
+      "trim_sha256": "0d0e954625af1b9126f911f1940879bdf8946e4885e90a9a80185f61f4ffde89",
+      "source_sha256": "5994e9e8e5118150726e5efccd666b742a7570dbc55d5e98ba0e62d5a363f466",
+      "rgba_sha256": "a6cac1d31778d2af34f11149a0d18546d5a3366ff1a9867e913040cce2178092",
+      "metrics": {
+        "alpha_levels": 246,
+        "partial_alpha_pixels": 8406,
+        "bounds": [
+          36,
+          91,
+          161,
+          192
+        ]
+      }
+    },
+    "resource_site_greenline_lens_table_countersealed": {
+      "trim_sha256": "fc983851c4bef0a5ae0d2e96f375ee7104dddcedaea1ab115e84e5e603d3f2fe",
+      "source_sha256": "5994e9e8e5118150726e5efccd666b742a7570dbc55d5e98ba0e62d5a363f466",
+      "rgba_sha256": "5735d1771a559efafa8c9be917b73b30271c404016bd2d58610828618d1f0d5d",
+      "metrics": {
+        "alpha_levels": 248,
+        "partial_alpha_pixels": 8758,
+        "bounds": [
+          36,
+          16,
+          184,
+          192
+        ]
+      }
+    },
+    "mapobj_reedflame_votive_frame": {
+      "trim_sha256": "e1d1f4f4cc327aa2d37e581c02c7ece6329c4f6d3c76693aec93fbe2593f0a41",
+      "source_sha256": "e290be31bb4f63ff1d9491231a602f99863f92172c1152864fb15231743f1a8e",
+      "rgba_sha256": "e7f41d3b8809ddd74da5ba35c8b332cd354fe92ee8f7fb61e795068983b0b836",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 11394,
+        "bounds": [
+          38,
+          32,
+          154,
+          190
+        ]
+      }
+    },
+    "resource_site_reedflame_votive_frame_countersealed": {
+      "trim_sha256": "fe9d0a607df32a32880cb5e8f5daea1e74a985e7f2536fd15ea1fb582129943c",
+      "source_sha256": "e290be31bb4f63ff1d9491231a602f99863f92172c1152864fb15231743f1a8e",
+      "rgba_sha256": "8528f2f18e5df56eb08369d330b6b4a22b49e8e8ee4dda1a58850184f023ebb6",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 11746,
+        "bounds": [
+          38,
+          16,
+          184,
+          190
+        ]
+      }
+    },
+    "mapobj_ossuary_prism_choir": {
+      "trim_sha256": "bbe567da378e1d1b24add762a253aed31e1ec11da9bfff8ae96a32885766d7c4",
+      "source_sha256": "9bb79d6da324e19471a4720b0483738a7cb9d92d4a71613fa744c47073d4f86c",
+      "rgba_sha256": "c4c4bbfa26fe1c78b7b8e8a1977d941d81440bd5ac16e77bf2d4c3cf79e092c7",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 10627,
+        "bounds": [
+          43,
+          32,
+          166,
+          190
+        ]
+      }
+    },
+    "resource_site_ossuary_prism_choir_countersealed": {
+      "trim_sha256": "5765888f06694735a799471aceba86ea54c23e466c549ca78b832e3b059586aa",
+      "source_sha256": "9bb79d6da324e19471a4720b0483738a7cb9d92d4a71613fa744c47073d4f86c",
+      "rgba_sha256": "7492bacd99d7e47b71c30fa5b14051e686f0a3ab1ef6f0494ba5105bb1c2d726",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 10979,
+        "bounds": [
+          43,
+          16,
+          184,
+          190
+        ]
+      }
+    },
+    "mapobj_glowcap_echo_bell": {
+      "trim_sha256": "e20946179d9b21e18be7cdabd2614509ca02a6f8c2c66a07fc23bcc6efef8402",
+      "source_sha256": "c74af208275418723759d83a9c067e3fcfbdd164f0ce27fcc80fe88ceea0f74a",
+      "rgba_sha256": "19486aacc6e3b31c2e8489d9a0f029034bba879f4466e9256b72981114b57dca",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 10125,
+        "bounds": [
+          39,
+          33,
+          160,
+          192
+        ]
+      }
+    },
+    "resource_site_glowcap_echo_bell_countersealed": {
+      "trim_sha256": "4fa1c33e0b164d613fa5f15023820c3f80fa446237c54fa7aa98d0d2b15104b5",
+      "source_sha256": "c74af208275418723759d83a9c067e3fcfbdd164f0ce27fcc80fe88ceea0f74a",
+      "rgba_sha256": "328dcda57e96deb23bc90bee301b7829810db6997fe9c51137d1d930772782cd",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 10477,
+        "bounds": [
+          39,
+          16,
+          184,
+          192
+        ]
+      }
+    },
+    "mapobj_kite_signal_countermast": {
+      "trim_sha256": "ee476761b36e25415c4a8ae4dd3b3b9be26a5fa0bc04fbb8eee54215f5ed12be",
+      "source_sha256": "3952854554027c4b9cd0df95088763d6ce0ebd342398516a1ab5b8cca6f335f2",
+      "rgba_sha256": "2c577450abbdd35b151afa97198f1e73a0fc31ac5edb42f0358c96e396b9b325",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 4925,
+        "bounds": [
+          51,
+          32,
+          144,
+          192
+        ]
+      }
+    },
+    "resource_site_kite_signal_countermast_countersealed": {
+      "trim_sha256": "6d15f2cdb06f8352fed72a5b2235555c29da015e1f5e909bde23103ddd49ec9c",
+      "source_sha256": "3952854554027c4b9cd0df95088763d6ce0ebd342398516a1ab5b8cca6f335f2",
+      "rgba_sha256": "945a3afe2c27987f30e87b0d474922b10660438db0bc913315e4e0a1f44a66c4",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 5277,
+        "bounds": [
+          51,
+          16,
+          184,
+          192
+        ]
+      }
+    },
+    "resource_site_high_arcanum_lastroad_bell_spire": {
+      "trim_sha256": "f4afb94dff0d78e86f35e8f9a1eec7ca195216f4813c4412a97f2f9fac932dae",
+      "source_sha256": "1ff58f1c4009f710c1a16977f1addae62aad7ed347931e9b360253e0e8148d66",
+      "rgba_sha256": "debdf597617fee7d98e49b0dd56fc31c04c5d74f75eba60999f5b441f5f1e1ab",
+      "metrics": {
+        "alpha_levels": 252,
+        "partial_alpha_pixels": 9321,
+        "bounds": [
+          22,
+          16,
+          142,
+          192
+        ]
+      }
+    },
+    "resource_site_high_arcanum_siltheart_drum_cairn": {
+      "trim_sha256": "ffc687cc05a9a5aa7b3b40f49f7da73690aee4e91a86c3822bc143b302dc0fb4",
+      "source_sha256": "533913f577ed0198876e283931fab8bbfda43b13e863867850a94f82887b5f55",
+      "rgba_sha256": "b43c897a6d9e2d3c2e02d6b02ad9643216d2ecf1fb6989cb14fd7514f478c265",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 17535,
+        "bounds": [
+          10,
+          16,
+          175,
+          190
+        ]
+      }
+    },
+    "resource_site_high_arcanum_aurora_facet_orrery": {
+      "trim_sha256": "9a387558f3e1501dfdae24c4af63d67d8727227d2f8927bb1ae105f0446b549e",
+      "source_sha256": "e4ddfcd9c93345af41707d637eeb493fb8d266fa77ca19fbab0e571d959c064d",
+      "rgba_sha256": "4444a81f9433cf07e554b113bfc7c9dcae76d3eec7085bacddd2a813ae5c7944",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 12169,
+        "bounds": [
+          37,
+          16,
+          160,
+          192
+        ]
+      }
+    },
+    "resource_site_high_arcanum_bloombark_covenant_tree": {
+      "trim_sha256": "f17045905af97cc6069339b4ae7bff55c5d1b41f24bc5ff7824f6b660ef031bc",
+      "source_sha256": "e102d02c8af0a49863668caba87b7c27bacdddce57c9d8ab0a61056e0a65c677",
+      "rgba_sha256": "85721e0dd08e7659b50e55af0d011a6e02a0a0727905c659997953dfe3dacc92",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 15424,
+        "bounds": [
+          22,
+          16,
+          183,
+          189
+        ]
+      }
+    },
+    "resource_site_high_arcanum_slagbound_clamp_forge": {
+      "trim_sha256": "06e0a4d9e866cd16fcc34427062f88f4f9ce59d344592eddd493ab3073d81d76",
+      "source_sha256": "6d5da7bc502a5d4c50da0637469510b6f38459d949852cbf1a01134e34e7d2d0",
+      "rgba_sha256": "83f090f956932e1163ad91dab988eca09709287afeab7c85fc6bc91abaa1939b",
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 14532,
+        "bounds": [
+          29,
+          16,
+          176,
+          192
+        ]
+      }
+    },
+    "resource_site_high_arcanum_mourning_tide_obelisk": {
+      "trim_sha256": "d5f5095342e86bb7ae5b8ee54b5810f7e5cd4f1aa1af932c2cc092df05f75271",
+      "source_sha256": "462f0b5249cbe64ed12c4374675d21cd6e6789973efce2c728f48d6d40c9a6ee",
+      "rgba_sha256": "09a989da9b6ac3e2ef6854145a65327d09161b2b92c40c1219d59aa5fc0762ee",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 14138,
+        "bounds": [
+          29,
+          16,
+          166,
+          191
+        ]
+      }
+    },
+    "resource_site_high_arcanum_sevencount_verdict_table": {
+      "trim_sha256": "a378e36a2776dcabe3232a1db7e3f29154454e5d865f3435f1e0bf61908952a5",
+      "source_sha256": "b47f463b13c7d0abc275df472be75dc9e842c621065bd994dd90edce3be87212",
+      "rgba_sha256": "e0951f31ab1ff551c9b1940fcd10ca8e007231b427aea42ec512ff7ef2b9d407",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 17396,
+        "bounds": [
+          25,
+          16,
+          176,
+          191
+        ]
+      }
+    },
+    "mapobj_stormseal_powder_wharf": {
+      "trim_sha256": "f3ce79e48e634fdcaf8de3227eec090a3544ac306f5de580450602e10b52a07c",
+      "source_sha256": "cca62ab642d7706e570defad93a43d263f7caa1c537624c78ac6951e2c56bdac",
+      "rgba_sha256": "2bbcb0923caa7ffc26c8dcfdc5eeb5671e49896ebda87ccf0487c79e6ddff0fe",
+      "metrics": {
+        "alpha_levels": 251,
+        "partial_alpha_pixels": 17856,
+        "bounds": [
+          11,
+          8,
+          183,
+          180
+        ]
+      }
+    },
+    "resource_site_company_stormseal_powder_wharf_controlled": {
+      "trim_sha256": "c836faba9c8caa8cff41629439d3b2cc49e3ccff6274caf490c716f3063c034e",
+      "source_sha256": "7d6ca1a6a0987fbfda3738db6e695761343d6f22ec5601201b0ff0943a81da6a",
+      "rgba_sha256": "de4844c2824a117113aa3f447f622cfe4bd8c7946022622410c6bdfe4d7bd484",
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 20135,
+        "bounds": [
+          8,
+          8,
+          183,
+          182
+        ]
+      }
+    },
+    "mapobj_moonwax_reed_circle": {
+      "trim_sha256": "109b31eff031e61d6e98c97152c373a3a82b5eb0dd3506c2e5d76f8ee80ee8c7",
+      "source_sha256": "3a31303e29d0a42ca179fc3bff5eae5949b06712931e7dd412ac9fa1f786e6a1",
+      "rgba_sha256": "9bc5a574272c4f1102618e631388d3f27d354ed6546d5851db405f65e75a96e8",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 17150,
+        "bounds": [
+          17,
+          17,
+          184,
+          178
+        ]
+      }
+    },
+    "resource_site_company_moonwax_reed_circle_controlled": {
+      "trim_sha256": "a09d69c6e3d309ac812eed17b3555a5e43b09472aa9e6249b3253175d6a905f8",
+      "source_sha256": "a4b2ed90bd723cf463e76ae010450cc87387c44defd91f5fc347379ed1289e7c",
+      "rgba_sha256": "536dd6e6352eab3e8b300c5637ac473b58d92ed16006f0f4648b298ac0ddd565",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 18432,
+        "bounds": [
+          11,
+          8,
+          179,
+          184
+        ]
+      }
+    },
+    "mapobj_facet_vigil": {
+      "trim_sha256": "4c13aaa65f1b82a81503f2098bf734e606c517c0da1c5ec2e32415d50070c389",
+      "source_sha256": "feb085a92295f97b58c55bdef9db914954c4d37b1ab493e9b625ef8b0981991f",
+      "rgba_sha256": "45b41ba8660768dc45322ac30990cbf7ceecdfcd7bd1e303df80363ab3ce4952",
+      "metrics": {
+        "alpha_levels": 249,
+        "partial_alpha_pixels": 13057,
+        "bounds": [
+          26,
+          12,
+          184,
+          172
+        ]
+      }
+    },
+    "resource_site_company_facet_vigil_controlled": {
+      "trim_sha256": "ef7793e69d5043c1cdf90df704758574c90f101b88303d9d0b5640636c6421fe",
+      "source_sha256": "04fc4a2503e2f5e6b0f8d39bfed93d46dbabfc7dba7a16493e4ba7a9dd7a766a",
+      "rgba_sha256": "faca73994c4b750d04f55c44235591acb67ef26c461376504b046555308bfce4",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 16140,
+        "bounds": [
+          25,
+          8,
+          182,
+          180
+        ]
+      }
+    },
+    "mapobj_heartseed_bolt_grove": {
+      "trim_sha256": "6605411fb52a3fcf3ef5a364c45445ad17005b792b5dafb13854c8869d0f5cd3",
+      "source_sha256": "648bb9916cf4f40c8c33c4b3d6699a4c64dc0868c4a5d8424065e813963974f9",
+      "rgba_sha256": "1a326539d27ce3abc56cde63717709b720410571fd2eb526076f734affdc16ac",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 14653,
+        "bounds": [
+          21,
+          8,
+          170,
+          179
+        ]
+      }
+    },
+    "resource_site_company_heartseed_bolt_grove_controlled": {
+      "trim_sha256": "c8bcad70b92f3368621e1992d3c2e77569d36373efae187a4c27f60700c17e21",
+      "source_sha256": "4df66165a5559dc37f9ed780773b2ace6ebfcbfcb333b6884c4f04d104b0907c",
+      "rgba_sha256": "731805edafd279f2c0eca7b1b2f26f9879d1a6e4df280139cd63859d0531a320",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 17029,
+        "bounds": [
+          11,
+          8,
+          183,
+          181
+        ]
+      }
+    },
+    "mapobj_blackbell_assay_watch": {
+      "trim_sha256": "4f32d80ddcc153804ea046dbb3e5e407b8364f8fa3f2c390f147c2a12d1e5e70",
+      "source_sha256": "fc3b7afe74a9f734d33b81cd9137922ebdb6fc9ecd0331ab2ebd318725ef6ebd",
+      "rgba_sha256": "02029441ca52b8d808580daff15d06ba155eee33d4d1a6d268e47c7ea29682dc",
+      "metrics": {
+        "alpha_levels": 253,
+        "partial_alpha_pixels": 17065,
+        "bounds": [
+          8,
+          8,
+          166,
+          175
+        ]
+      }
+    },
+    "resource_site_company_blackbell_assay_watch_controlled": {
+      "trim_sha256": "c8056e505fbe84345c425ecb296d820b20aba39a5b0dcd481ace4a74baa5a213",
+      "source_sha256": "e0b03875b73765ee924ff08cb439eabff356b5922a180b52729e74cba87c8fcb",
+      "rgba_sha256": "9aff1af21f070385d32dbbe9bce3e786de61c3e4cf1f3a06980a676ee8f68074",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 20014,
+        "bounds": [
+          20,
+          8,
+          184,
+          184
+        ]
+      }
+    },
+    "mapobj_last_memory_mooring": {
+      "trim_sha256": "b4ed45079fdb1a75449b0dee9e262dc9225eb4311338396082ed931496e49073",
+      "source_sha256": "27578af2589709cf96e039736980c4a37948ac4d73945e59436417efbe68f910",
+      "rgba_sha256": "472bf0cbd3410bdb16854fe05d3cfb4e336a7c6aaefa7c37db8d49a6575ca3aa",
+      "metrics": {
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 10635,
+        "bounds": [
+          22,
+          8,
+          184,
+          174
+        ]
+      }
+    },
+    "resource_site_company_last_memory_mooring_controlled": {
+      "trim_sha256": "3b3e302d70897058ffe1f15302c2e0ea735d13613bcf9874d687cbe2a2ec3713",
+      "source_sha256": "9a13fef2212e9c417c60846d61cddc1450ad6c8f9804ed1e2c0e6c509e173678",
+      "rgba_sha256": "67faa612fcdad611e819b2bb59aeb5153cc311a7c89efa61413b7bef662d464a",
+      "metrics": {
+        "alpha_levels": 254,
+        "partial_alpha_pixels": 13011,
+        "bounds": [
+          8,
+          8,
+          180,
+          177
+        ]
+      }
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png": {
+      "after_sha256": "35ce8f2a241a5f543d2948a6f16b0bbd84504674d506916b6ac9d729de3f358d",
+      "prepared": "runtime/objects/resource_sites/coast_route_operational_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/frontier_marker_landmarks_atlas.png": {
+      "after_sha256": "3f150772af4f65338a6c205cc057d3f047f473c1d23678921ae2eaa74d121687",
+      "prepared": "runtime/objects/resource_sites/frontier_marker_landmarks_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png": {
+      "after_sha256": "ad8e5eadb5f7aeb5952d30b0a14ef4e93acbe914e3b4e5f91698d6e7c5afd0ca",
+      "prepared": "runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png": {
+      "after_sha256": "fbd2e13b04319e4b4434bb6a0981282cf190edd76e002e4df184ad7fd5695998",
+      "prepared": "runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png": {
+      "after_sha256": "ab0b88f06eae6ac5b73c6c6d47eef58c4fc22e21af7eb73694359eb0f1c5d100",
+      "prepared": "runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png": {
+      "after_sha256": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90",
+      "prepared": "runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png": {
+      "after_sha256": "4f26e92a49b9d3b15972833278feb772cdce67d19e20adf780c8e7bd9a1d381c",
+      "prepared": "runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png": {
+      "after_sha256": "45de8871d024a7365246433d4b9b6aef43f7f155f20eb733406545cc3fa48832",
+      "prepared": "runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png"
+    }
+  }
+}

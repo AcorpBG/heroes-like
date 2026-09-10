@@ -1,0 +1,63 @@
+{
+  "schema_id": "route_arcane_original_generation_v1",
+  "date": "2026-09-10",
+  "owner_approval": "Approved original art repair and replacement generation",
+  "assets": {
+    "cinderwake_fold_controlled": {
+      "calls": [
+        {
+          "mode": "built_in_image_gen",
+          "original_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c1fdc98e-eb3e-47f5-9622-feb5cd2b8b79.png",
+          "retained_source": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/cinderwake_controlled_checker_attempt.png",
+          "sha256": "23de475bcfbca71203de935f4fa6271e60356ef26f075cbae85bbaa72dada41a",
+          "prompt": "Use case: precise-object-edit. Asset type: original fantasy strategy overworld dwelling sprite, controlled state. Image 1 is the high-quality original unclaimed painting to edit; Image 2 is the existing small controlled-state design reference, not a quality reference. Keep Image 1's exact isometric camera, broad low 2:1 silhouette, basalt horn-shaped entry arch, three banked vents, curved low walls, rust-colored stone ground, materials, lighting and framing. Change only the state details to match Image 2: orderly stocked mineral troughs and small supply containers, clear open approach, a few warm copper guide lamps, and tiny physical dark cloth claim pennants with an original ring-and-notch motif, attached to existing posts. Retain all original painted architectural detail. No characters, text, UI badge, floating icon, geometric marker, white outline or copied franchise imagery. Make this one crisp painterly raster cutout on a genuinely transparent alpha background; preserve natural antialiased edges and all internal openings. Do not paint a checkerboard, solid backdrop, halo or rectangular ground card. Keep the whole object and its existing irregular ground silhouette inside the same wide framing; no new towers or extended footprint.",
+          "referenced_images": [
+            "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/cinderwake_fold_unclaimed_source.png",
+            "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/cinderwake_fold_controlled_source.png"
+          ],
+          "disposition": "rejected for runtime: opaque checkerboard; retained design/edit input"
+        },
+        {
+          "mode": "built_in_image_gen",
+          "original_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-52a02519-4cc4-4f3b-a535-b069e752b2a4.png",
+          "retained_source": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/cinderwake_controlled_matte.png",
+          "sha256": "f4652872db7e1d98b212c4f272b5cf8c59afcc93d41c4c5d6da3953c1e76a634",
+          "prompt": "Use case: background-extraction preparation. Edit this exact generated Cinderwake controlled-state sprite. Change ONLY the checkerboard background to a perfectly uniform saturated magenta isolation matte, RGB 255,0,255 (#FF00FF). This is a technical extraction master, not the final game background. Every visible checkerboard square, including gaps between fence rails and beneath the smoke, must become that same flat magenta. Preserve the exact wide canvas, object silhouette, camera, geometry, textures, colors, all stocked troughs, supplies, the two dark ring-and-notch pennants, copper lamps and flame vents. Do not recolor the foreground or add magenta lighting, outline, glow or reflected color. Do not move, add, remove or redesign any object. Keep natural fine edges. No checkerboard, grid, text, labels or watermark. Return the same complete sprite on a solid #FF00FF background.",
+          "referenced_images": [
+            "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/cinderwake_controlled_checker_attempt.png"
+          ],
+          "disposition": "extraction master only; selected only after explicit alpha extraction and source-smoke restoration"
+        }
+      ],
+      "processing": "Recipe-keyed original-raster matte extraction. No new procedural/vector paint. Final wide source canvas retains original normalized framing."
+    },
+    "tideglass_roost_controlled": {
+      "calls": [
+        {
+          "mode": "built_in_image_gen",
+          "original_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6cbf06ed-67a1-4583-a36b-1e4337d6eda7.png",
+          "retained_source": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/tideglass_controlled_checker_attempt.png",
+          "sha256": "9bedf200891a871a9d21af028c5bf47591f6e22ba7b618d0a6b85c81ed9b9618",
+          "prompt": "Use case: precise-object-edit. Asset type: original fantasy strategy overworld dwelling sprite, controlled state. Image 1 is the high-quality original unclaimed painting to edit; Image 2 is the existing small controlled-state design reference, not a quality reference. Keep Image 1's exact isometric camera, broad low 2:1 composition, pale saltstone spires, translucent blue membranes, hanging resonators, shallow turquoise pool, irregular sand-and-rock shore, small rack on the right, materials, lighting and framing. Change only the state details to match Image 2: orderly stocked leather harness racks and small ration cases on the dry shore, blue guide lamps, and two small physical blue cloth claim pennants with an original ring-and-notch motif attached to existing supports. Retain all original architectural and natural painted detail, including pale stone and thin membranes. No characters, text, UI badge, floating icon, geometric marker, white outline or copied franchise imagery. Make this one crisp painterly raster cutout on a genuinely transparent alpha background; preserve natural antialiased edges and all internal openings. Do not paint a checkerboard, solid backdrop, halo or rectangular ground card. Keep the whole object and its existing irregular ground silhouette inside the same wide framing; no new towers or extended footprint.",
+          "referenced_images": [
+            "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/tideglass_roost_unclaimed_source.png",
+            "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/tideglass_roost_controlled_source.png"
+          ],
+          "disposition": "rejected for runtime: opaque checkerboard; retained design/edit input"
+        },
+        {
+          "mode": "built_in_image_gen",
+          "original_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-fa83d6f6-eb78-4465-9440-0b802fda78ad.png",
+          "retained_source": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/tideglass_controlled_matte.png",
+          "sha256": "6f0680cb3f0040583b3ece077bbe94736541113a5948a27e598a5791ccf8b148",
+          "prompt": "Use case: background-extraction preparation. Edit this exact generated Tideglass controlled-state sprite. Change ONLY the checkerboard background to a perfectly uniform saturated magenta isolation matte, RGB 255,0,255 (#FF00FF). This is a technical extraction master, not the final game background. Every visible checkerboard square, including all openings between the spires, hanging bells, membranes and rack supports, must become that same flat magenta. Preserve the exact wide canvas, object silhouette, camera, geometry, textures, colors, stocked leather harness racks, ration cases, the two blue ring-and-notch pennants, blue guide lamps, pale stone, translucent membranes and turquoise water. Do not recolor the foreground or add magenta lighting, outline, glow or reflected color. Do not move, add, remove or redesign any object. Keep natural fine edges. No checkerboard, grid, text, labels or watermark. Return the same complete sprite on a solid #FF00FF background.",
+          "referenced_images": [
+            "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/tideglass_controlled_checker_attempt.png"
+          ],
+          "disposition": "extraction master only; selected only after explicit alpha extraction and source-smoke restoration"
+        }
+      ],
+      "processing": "Recipe-keyed original-raster matte extraction. No new procedural/vector paint. Final wide source canvas retains original normalized framing."
+    }
+  }
+}

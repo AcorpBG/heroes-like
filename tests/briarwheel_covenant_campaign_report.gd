@@ -12,9 +12,9 @@ const HERO_ID := "hero_thornwake_ardren_briarmarshal"
 const ARMY_ID := "army_ardren_briar_cordon"
 const MARKER_ATLAS := "res://art/overworld/runtime/objects/resource_sites/frontier_marker_landmarks_atlas.png"
 const CASES := [
-	{"scenario_id":"briarwheel-reclamation","size":Vector2i(14,8),"placement_id":"reclamation_old_measure","site_id":"site_old_measure_marker","flag":"old_measure_marker_rehung","spell_id":"spell_survey_chain","xp":120,"asset_id":"resource_site_frontier_marker_old_measure","region":Rect2(48,0,48,48)},
-	{"scenario_id":"rootway-graftmarch","size":Vector2i(16,10),"placement_id":"graftmarch_rootway_marker","site_id":"site_rootway_marker","flag":"rootway_marker_awakened","spell_id":"spell_rootway_tangle","xp":110,"asset_id":"resource_site_frontier_marker_rootway","region":Rect2(96,0,48,48)},
-	{"scenario_id":"worldroot-crown-covenant","size":Vector2i(20,12),"placement_id":"covenant_fogline_marker","site_id":"site_fogline_marker","flag":"fogline_marker_charted","spell_id":"spell_fogline_drift","xp":110,"asset_id":"resource_site_frontier_marker_fogline","region":Rect2(0,0,48,48)},
+	{"scenario_id":"briarwheel-reclamation","size":Vector2i(14,8),"placement_id":"reclamation_old_measure","site_id":"site_old_measure_marker","flag":"old_measure_marker_rehung","spell_id":"spell_survey_chain","xp":120,"asset_id":"resource_site_frontier_marker_old_measure","region":Rect2(192,0,192,192)},
+	{"scenario_id":"rootway-graftmarch","size":Vector2i(16,10),"placement_id":"graftmarch_rootway_marker","site_id":"site_rootway_marker","flag":"rootway_marker_awakened","spell_id":"spell_rootway_tangle","xp":110,"asset_id":"resource_site_frontier_marker_rootway","region":Rect2(384,0,192,192)},
+	{"scenario_id":"worldroot-crown-covenant","size":Vector2i(20,12),"placement_id":"covenant_fogline_marker","site_id":"site_fogline_marker","flag":"fogline_marker_charted","spell_id":"spell_fogline_drift","xp":110,"asset_id":"resource_site_frontier_marker_fogline","region":Rect2(0,0,192,192)},
 ]
 
 var _errors: Array[String] = []
@@ -217,7 +217,7 @@ func _validate_art_strip() -> void:
 			strip.blit_rect(image, Rect2i(Vector2i.ZERO, image.get_size()), positions[index])
 	_expect(strip.save_png("%s/campaign_emblem_and_seals.png" % OUTPUT_DIR) == OK, "Could not save the campaign art strip.")
 	var marker_atlas := Image.load_from_file(ProjectSettings.globalize_path(MARKER_ATLAS))
-	_expect(not marker_atlas.is_empty() and marker_atlas.get_size() == Vector2i(144,48), "Frontier marker atlas lost its exact compact dimensions.")
+	_expect(not marker_atlas.is_empty() and marker_atlas.get_size() == Vector2i(576, 192), "Frontier marker atlas lost its exact compact dimensions.")
 	if not marker_atlas.is_empty():
 		marker_atlas.save_png("%s/frontier_marker_landmarks_atlas.png" % OUTPUT_DIR)
 

@@ -16,7 +16,7 @@ const BATCH_CASES := [
 		"ability_ids":["reach", "bloodrush"],
 		"unclaimed":"mapobj_galehorn_windfold",
 		"claimed":"resource_site_neutral_galehorn_windfold_controlled",
-		"region":Rect2(48,0,48,48)
+		"region":Rect2(192,0,192,192)
 	},
 	{
 		"scenario_id":"ninefold-confluence",
@@ -28,7 +28,7 @@ const BATCH_CASES := [
 		"ability_ids":["harry", "volley"],
 		"unclaimed":"mapobj_sunscale_lantern_conservatory",
 		"claimed":"resource_site_neutral_sunscale_lantern_conservatory_controlled",
-		"region":Rect2(144,0,48,48)
+		"region":Rect2(576,0,192,192)
 	},
 	{
 		"scenario_id":"ninefold-confluence",
@@ -40,7 +40,7 @@ const BATCH_CASES := [
 		"ability_ids":["fog_screen", "reach"],
 		"unclaimed":"mapobj_rimebell_whitewake_eyrie",
 		"claimed":"resource_site_neutral_rimebell_whitewake_eyrie_controlled",
-		"region":Rect2(240,0,48,48)
+		"region":Rect2(960,0,192,192)
 	},
 	{
 		"scenario_id":"ninefold-confluence",
@@ -52,7 +52,7 @@ const BATCH_CASES := [
 		"ability_ids":["brace", "shielding"],
 		"unclaimed":"mapobj_deepforge_seventh_vault",
 		"claimed":"resource_site_neutral_deepforge_seventh_vault_controlled",
-		"region":Rect2(336,0,48,48)
+		"region":Rect2(1344,0,192,192)
 	},
 ]
 

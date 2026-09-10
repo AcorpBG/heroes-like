@@ -16619,10 +16619,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "art-overworld-cutout-runtime-pool-20260909",
   "currentSliceId": "art-overworld-cutout-runtime-pool-20260909",
-  "currentSliceNotes": "40 landmark/objective-state originals recovered and source/Linux/Windows validated: 2804 checks each, 11 Python tests, five shared reports, eight actual affected native identities and full package/save preservation. 620 dispositions accepted; 594 remain. Continue other state/landmark paintings; parent and child remain active, not full-pool or release acceptance.",
+  "currentSliceNotes": "54 route/arcane/state paintings restored on eight 192px atlases, including two approved generated controlled edits. Eight Python tests, 2919 source and Linux/Windows package checks per run, complete saves, five shared reports and repository validation pass. Seven retained coarse witness/counterseal states remain visually unfinished: 47 new accepted dispositions, 667 accepted and 547 remaining. Two unrelated legacy domain failures reproduce against bbb6435c. Next: generated integrated state art for those seven, then remaining families; no gameplay/native/RMG/save/Town-screen changes.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Remaining Runtime-Pool Cutout Recovery",
-  "currentSliceUpdatedAt": "2026-09-09T23:38:45Z",
+  "currentSliceUpdatedAt": "2026-09-10T00:43:21Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22244,10 +22244,15 @@
         "python3 tests/overworld_cutout_batch_regression.py --batch landmark_states --resolution 1280x720 --label <fresh>",
         "python3 tests/overworld_cutout_batch_regression.py --batch landmark_states --resolution 1920x1080 --label <fresh>",
         "python3 tests/packaged_overworld_cutout_batch_regression.py --batch landmark_states --platform linux --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh>",
-        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch landmark_states --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
+        "python3 tests/packaged_overworld_cutout_batch_regression.py --batch landmark_states --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>",
+        "python3 -B -m unittest discover -s tests -p 'test_overworld_route_arcane_cutouts.py'",
+        "python3 -B tests/overworld_cutout_batch_regression.py --batch route_arcane --resolution 1280x720 --label <fresh>",
+        "python3 -B tests/overworld_cutout_batch_regression.py --batch route_arcane --resolution 1920x1080 --label <fresh>",
+        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch route_arcane --platform linux --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh>",
+        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch route_arcane --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-09T23:38:45Z",
+      "updatedAt": "2026-09-10T00:43:21Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22279,9 +22284,11 @@
         "tools/prepare_overworld_state_cutouts.py; 34 original post-interaction paintings, explicit backing and narrow original-sample matte repair, three measured registrations and six preserved atlas owners",
         "tests/test_overworld_state_cutouts.py and early_states source/package probe; 34 exact state identities, original earned visible/consumed native records and full save preservation",
         "tools/prepare_overworld_landmark_cutouts.py; forty original landmark/state paintings, Witness Stone retained-RGB recovery and 39 preserved RGBA sources, five same-path atlases and original logical registrations",
-        "tests/test_overworld_landmark_cutouts.py and landmark_states source/package probe; exact state/family precedence, earned native captures and complete save/placement/compiled-owner preservation"
+        "tests/test_overworld_landmark_cutouts.py and landmark_states source/package probe; exact state/family precedence, earned native captures and complete save/placement/compiled-owner preservation",
+        "tools/prepare_overworld_route_arcane_cutouts.py and route_arcane source/generation/trim/runtime packet; exact historical registration and state-ink preservation",
+        "tests/test_overworld_route_arcane_cutouts.py and tests/overworld_route_arcane_cutout_probe.py; 54 exact textures/routes, ordinary Horizon claim and complete native/authored saves"
       ],
-      "notes": "40 original landmark/objective-state paintings accepted on five same-path 192-pixel atlases: 39 genuine RGBA originals exact, Witness Stone narrow edge repaired with already-intact pale foreground preserved. Eleven Python tests, 2804 checks per source resolution/Linux/Windows package, five shared reports and repository/export checks pass. All forty gallery assets and eight actual affected native identities visually inspected; 21 records, eight complete saves and compiled game/native/content/save owners unchanged. Both PCKs 291354392 bytes/5484 members. Fresh Windows final run passes after an interrupted attempt. 620 dispositions accepted; 594 remain. Parent and child stay active; evidence and limits: docs/overworld-cutout-quality-report.md.",
+      "notes": "54 route/arcane/state paintings restored on eight 192px atlases, including two approved generated controlled edits. Eight Python tests, 2919 source and Linux/Windows package checks per run, complete saves, five shared reports and repository validation pass. Seven retained coarse witness/counterseal states remain visually unfinished: 47 new accepted dispositions, 667 accepted and 547 remaining. Two unrelated legacy domain failures reproduce against bbb6435c. Next: generated integrated state art for those seven, then remaining families; no gameplay/native/RMG/save/Town-screen changes.",
       "startedAt": "2026-09-09T16:04:51Z"
     },
     {
@@ -34988,7 +34995,7 @@
       "startedAt": "2026-08-20T09:24:19Z",
       "updatedAt": "2026-08-20T09:40:25Z",
       "completedAt": "2026-08-20T09:40:25Z",
-      "notes": "Completed the chip-only fitting policy. The focused Board owner passes at 1280 and 1920 with an independent themed-font control requiring full, complete-word, and unbreakable-word paths plus exact tooltip/count/geometry/order/session-save-settings authority. Fresh Xvfb pixels show `River\u2026 x10`, full `Bog Brute x2`, and bounded single-word fallbacks. Town/Battle visual, accessibility, animation, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These platform results do not claim packaged Battle interaction or broader release readiness.",
+      "notes": "Completed the chip-only fitting policy. The focused Board owner passes at 1280 and 1920 with an independent themed-font control requiring full, complete-word, and unbreakable-word paths plus exact tooltip/count/geometry/order/session-save-settings authority. Fresh Xvfb pixels show `River… x10`, full `Bog Brute x2`, and bounded single-word fallbacks. Town/Battle visual, accessibility, animation, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These platform results do not claim packaged Battle interaction or broader release readiness.",
       "remainingWork": "None for this chip-label-only slice. Select the next tracker-approved source-backed release-readiness implementation slice.",
       "blockedReason": null
     },
@@ -105312,7 +105319,7 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "purpose": "Keep the shipped full-text Battle Status overflow at a complete word instead of Bramble Scre\u2026 without changing its tooltip, geometry, or semantics.",
+      "purpose": "Keep the shipped full-text Battle Status overflow at a complete word instead of Bramble Scre… without changing its tooltip, geometry, or semantics.",
       "implementationTargets": [
         "scenes/battle/BattleShell.gd",
         "tests/battle_controller_board_navigation_smoke.gd",
@@ -105343,7 +105350,7 @@
       "baseline": {
         "head": "c8f29051",
         "capture": ".artifacts/battle_controller_board_navigation_smoke/current_head_event_word_final.png",
-        "visibleCut": "Bramble Scre\u2026",
+        "visibleCut": "Bramble Scre…",
         "priorOwner": "ux-battle-status-native-pixel-ellipsis-10184"
       },
       "createdAt": "2026-08-18T05:12:29Z",
@@ -105878,7 +105885,7 @@
       "startedAt": "2026-08-18T10:57:00Z",
       "updatedAt": "2026-08-18T11:29:57Z",
       "completedAt": "2026-08-18T11:29:57Z",
-      "notes": "Completed with live UI behavior, not documentation alone. BattleShell now refits each exact ActionGuide source line through the established Battle-local whole-word Unicode-ellipsis helper, retaining two compact lines and three wide. A fresh 1280x720/130% painted capture ends the Position check after the complete `(1 step)\u2026` phrase while the board, spells, actions, and complete system-command row remain contained. The focused owner independently compares visible lines to the unabridged source and rejects ASCII ellipses and mid-token cuts while preserving enriched tooltip/system semantics and battle authority. Board navigation, shared focus, accessibility, core, authoritative 1280/1920 routed layout, static/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Battle interaction or broader release claim is made.",
+      "notes": "Completed with live UI behavior, not documentation alone. BattleShell now refits each exact ActionGuide source line through the established Battle-local whole-word Unicode-ellipsis helper, retaining two compact lines and three wide. A fresh 1280x720/130% painted capture ends the Position check after the complete `(1 step)…` phrase while the board, spells, actions, and complete system-command row remain contained. The focused owner independently compares visible lines to the unabridged source and rejects ASCII ellipses and mid-token cuts while preserving enriched tooltip/system semantics and battle authority. Board navigation, shared focus, accessibility, core, authoritative 1280/1920 routed layout, static/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Battle interaction or broader release claim is made.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
       "blockedReason": null
     },
@@ -107522,7 +107529,7 @@
         "tests/random_map_live_overworld_render_move_report.gd",
         "tests/validate_repo.py"
       ],
-      "notes": "Completed from direct generated-map evidence. Existing terrain-biome blocker art is selected in deterministic 16x16 spatial clusters with bounded per-cell scale, offset, and grounding inside each exact body tile. Small and Medium 1280x720 and 1920x1080 captures pass with 15\u201322 distinct assets, repeated-definition variation, exact rebuild/movement/save authority, and the unchanged Medium 1920 performance floor. Authored-map scale/assets, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Native generation, placement, density, body/visit masks, passability/pathfinding, content, packaged generated-map interaction, certification, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
+      "notes": "Completed from direct generated-map evidence. Existing terrain-biome blocker art is selected in deterministic 16x16 spatial clusters with bounded per-cell scale, offset, and grounding inside each exact body tile. Small and Medium 1280x720 and 1920x1080 captures pass with 15–22 distinct assets, repeated-definition variation, exact rebuild/movement/save authority, and the unchanged Medium 1920 performance floor. Authored-map scale/assets, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Native generation, placement, density, body/visit masks, passability/pathfinding, content, packaged generated-map interaction, certification, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-25T02:31:16Z"
     },
     {
@@ -107541,7 +107548,7 @@
         "tests/random_map_live_overworld_render_move_report.gd",
         "tests/validate_repo.py"
       ],
-      "notes": "Completed from direct Small/Medium generated-map captures and source inspection. The original quiet-tile renderer now suppresses generic edge/corner overlays only for an enabled and loaded HoMM3 tile; disabled metadata renders the fast generic fallback. Four 1280/1920 captures render 119\u2013291 exact boundary tiles, a controlled Small capture changes 7,934 pixels, and the Medium 1920 performance floor remains 9.57/9.45 FPS. Authored enabled/disabled ownership, generated redraw/movement/save authority, terrain assets, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Terrain topology/ids/priorities, native generation, passability/pathfinding, roads/fog, content, Native-RMG parity, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
+      "notes": "Completed from direct Small/Medium generated-map captures and source inspection. The original quiet-tile renderer now suppresses generic edge/corner overlays only for an enabled and loaded HoMM3 tile; disabled metadata renders the fast generic fallback. Four 1280/1920 captures render 119–291 exact boundary tiles, a controlled Small capture changes 7,934 pixels, and the Medium 1920 performance floor remains 9.57/9.45 FPS. Authored enabled/disabled ownership, generated redraw/movement/save authority, terrain assets, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Terrain topology/ids/priorities, native generation, passability/pathfinding, roads/fog, content, Native-RMG parity, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
       "completedAt": "2026-08-25T03:04:34Z"
     },
     {
@@ -111530,9 +111537,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "40 landmark/objective-state originals recovered and source/Linux/Windows validated: 2804 checks each, 11 Python tests, five shared reports, eight actual affected native identities and complete package/save preservation. 620 repaired/preserved dispositions accepted; 594 remain. Continue other state/landmark paintings; parent and child remain active, not full-pool or release acceptance. All 40 final gallery assets and all eight actual affected identities visually inspected across source resolutions, plus packaged Linux evidence. Both PCKs 291354392 bytes/5484 members; all eight full saves and compiled game/native/content/save owners preserved. Interrupted shared/Windows attempts remain documented separately from completed runs.",
+  "summary": "Overworld cutout quality remains in progress. Latest route/arcane checkpoint restores 54 paintings (two approved generated edits) on eight atlases; 47 new visual dispositions accepted, seven coarse witness/counterseal states still pending original painted integration. Accepted 667/1214; remaining 547. Source/packaged 2919 checks per run, eight Python tests, shared reports, repository validation and both exports pass. Two baseline-reproduced domain failures and Windows headless-only limits remain explicit. No full-pool or release-ready claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-09T23:38:45Z",
+  "updatedAt": "2026-09-10T00:43:21Z",
   "validation": {
     "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
