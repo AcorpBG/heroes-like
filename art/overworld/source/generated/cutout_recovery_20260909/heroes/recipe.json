@@ -1,0 +1,1369 @@
+{
+  "schema_id": "hero_cutout_recipe_v1",
+  "approval": "Owner explicitly approved original-source deterministic raster recovery 2026-09-09; no new art generated.",
+  "identity_mappings": {
+    "hero_lyra": "hero_signature_lyra",
+    "hero_vaska": "hero_signature_vaska",
+    "hero_solera": "hero_signature_solera",
+    "hero_thornwake_silsa_bramblehound": "hero_signature_thornwake_silsa_bramblehound",
+    "hero_brasshollow_marka_ironclause": "hero_signature_brasshollow_marka_ironclause",
+    "hero_veilmourn_ivara_blacktide": "hero_signature_veilmourn_ivara_blacktide",
+    "hero_caelen": "hero_lead_caelen",
+    "hero_mira": "hero_lead_mira",
+    "hero_thornwake_tova_rootwright": "hero_lead_thornwake_tova_rootwright",
+    "hero_veilmourn_ruln_vanehook": "hero_lead_veilmourn_ruln_vanehook",
+    "hero_brasshollow_oren_bellfounder": "hero_lead_brasshollow_oren_bellfounder",
+    "hero_mireclaw_kessa_chainboom": "hero_lead_mireclaw_kessa_chainboom",
+    "hero_neral": "hero_lead_neral",
+    "hero_seren": "hero_lead_seren",
+    "hero_embercourt_belis_rainledger": "hero_tavern_embercourt_belis_rainledger",
+    "hero_sable": "hero_tavern_sable",
+    "hero_sunvault_calis_sunvein": "hero_tavern_sunvault_calis_sunvein",
+    "hero_thornwake_ardren_briarmarshal": "hero_tavern_thornwake_ardren_briarmarshal",
+    "hero_brasshollow_daxis_chaincaptain": "hero_tavern_brasshollow_daxis_chaincaptain",
+    "hero_veilmourn_cela_mistcorsair": "hero_tavern_veilmourn_cela_mistcorsair",
+    "hero_torren": "hero_specialist_torren",
+    "hero_mireclaw_brakka_mudkeel": "hero_specialist_mireclaw_brakka_mudkeel",
+    "hero_varis": "hero_specialist_varis",
+    "hero_thornwake_veyra_seedseer": "hero_specialist_thornwake_veyra_seedseer",
+    "hero_brasshollow_selka_pitmarshal": "hero_specialist_brasshollow_selka_pitmarshal",
+    "hero_veilmourn_morwen_wakeoracle": "hero_specialist_veilmourn_morwen_wakeoracle",
+    "hero_embercourt_helva_tollbrand": "hero_field_embercourt_helva_tollbrand",
+    "hero_tarn": "hero_field_tarn",
+    "hero_sunvault_ilyr_glassmarshal": "hero_field_sunvault_ilyr_glassmarshal",
+    "hero_thornwake_halen_thorncart": "hero_field_thornwake_halen_thorncart",
+    "hero_brasshollow_kuld_varn": "hero_field_brasshollow_kuld_varn",
+    "hero_veilmourn_jessa_keelwarden": "hero_field_veilmourn_jessa_keelwarden",
+    "hero_embercourt_saren_lockmaster": "hero_strategic_embercourt_saren_lockmaster",
+    "hero_orrik": "hero_strategic_orrik",
+    "hero_thalen": "hero_strategic_thalen",
+    "hero_thornwake_nara_graftsibyl": "hero_strategic_thornwake_nara_graftsibyl",
+    "hero_brasshollow_harro_debtrune": "hero_strategic_brasshollow_harro_debtrune",
+    "hero_veilmourn_orso_nightchart": "hero_strategic_veilmourn_orso_nightchart",
+    "hero_embercourt_orra_cinderquill": "hero_ritual_embercourt_orra_cinderquill",
+    "hero_mireclaw_nix_votivejaw": "hero_ritual_mireclaw_nix_votivejaw",
+    "hero_sunvault_essa_daynote": "hero_ritual_sunvault_essa_daynote",
+    "hero_thornwake_osmund_pollenglass": "hero_ritual_thornwake_osmund_pollenglass",
+    "hero_brasshollow_odrik_heatpriest": "hero_ritual_brasshollow_odrik_heatpriest",
+    "hero_veilmourn_thir_obituaryink": "hero_ritual_veilmourn_thir_obituaryink",
+    "hero_embercourt_jorun_beaconscribe": "hero_arcane_embercourt_jorun_beaconscribe",
+    "hero_mireclaw_edda_rotlamp": "hero_arcane_mireclaw_edda_rotlamp",
+    "hero_sunvault_mirro_halometer": "hero_arcane_sunvault_mirro_halometer",
+    "hero_thornwake_elian_loamchant": "hero_arcane_thornwake_elian_loamchant",
+    "hero_brasshollow_lina_gaugesavant": "hero_arcane_brasshollow_lina_gaugesavant",
+    "hero_veilmourn_sael_mirrorbell": "hero_arcane_veilmourn_sael_mirrorbell",
+    "hero_mireclaw_pell_reedscript": "hero_roster_mireclaw_pell_reedscript",
+    "hero_mireclaw_zhorra_fenwake": "hero_roster_mireclaw_zhorra_fenwake",
+    "hero_sunvault_dovan_lenscaptain": "hero_roster_sunvault_dovan_lenscaptain",
+    "hero_sunvault_renn_facetlane": "hero_roster_sunvault_renn_facetlane",
+    "hero_thornwake_merek_greenbarrow": "hero_roster_thornwake_merek_greenbarrow",
+    "hero_thornwake_ralka_mossvein": "hero_roster_thornwake_ralka_mossvein",
+    "hero_brasshollow_pava_ashmeter": "hero_roster_brasshollow_pava_ashmeter",
+    "hero_brasshollow_vellum_quench": "hero_roster_brasshollow_vellum_quench",
+    "hero_veilmourn_damar_oriflag": "hero_roster_veilmourn_damar_oriflag",
+    "hero_veilmourn_nacre_vowless": "hero_roster_veilmourn_nacre_vowless"
+  },
+  "assets": {
+    "hero_signature_lyra": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/signature/hero_lyra.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/signature/hero_lyra_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_lyra.png",
+        "assigned_hero_id": "hero_lyra"
+      },
+      "source_sha256": "7fac49416c7e88e27aaf983281d649f4582919cc28af470ae4b1bc560b419e8c",
+      "before_sha256": "8c2aeb795dd7a17433b82691f13a4c96f7258b06a47af47db288d6b2e8e4268e",
+      "portrait_sha256": "f8b8e527e17af22a209a7a2e5f89e4c2a8116d471547b8eb014f9b6526c37543"
+    },
+    "hero_signature_vaska": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/signature/hero_vaska.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/signature/hero_vaska_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_vaska.png",
+        "assigned_hero_id": "hero_vaska"
+      },
+      "source_sha256": "4a43e8adef84d40aa45c9010618aa48039e3cda21ab7db4b55a2727324647892",
+      "before_sha256": "8f460d33634690d7207d00768b6756c0fc79c33307497b90a1468711648bce47",
+      "portrait_sha256": "8050f35ecb4b27d63768dcaf69d33407b39a032e06189fdcaa4e42af98b172dd"
+    },
+    "hero_signature_solera": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/signature/hero_solera.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/signature/hero_solera_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_solera.png",
+        "assigned_hero_id": "hero_solera"
+      },
+      "source_sha256": "0032b993b3af861238595b23c23678f3d983d7bd17540f16c216d003a3892790",
+      "before_sha256": "08e6b385617db3cd14eede7c0f13d3055ef3297ed7a55d66fc4885b38236cfd7",
+      "portrait_sha256": "455b864439baac23ec0e51fcd4e986bb1e0c81fd93547b85e4c45a850bfa5414"
+    },
+    "hero_signature_thornwake_silsa_bramblehound": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/signature/hero_thornwake_silsa_bramblehound.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/signature/hero_thornwake_silsa_bramblehound_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_thornwake_silsa_bramblehound.png",
+        "assigned_hero_id": "hero_thornwake_silsa_bramblehound"
+      },
+      "source_sha256": "3de887a949d8855af4edf07e60a41e6c716d199820111c6425524e3933bf169f",
+      "before_sha256": "5dade470089fc44882ba102974d9dd5821b17fb36493af79596e1db43d14bf92",
+      "portrait_sha256": "47463a01b63ce9cb782b674521a3adb38dac0c4c70f6ba4351ab850ebe4487f3"
+    },
+    "hero_signature_brasshollow_marka_ironclause": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/signature/hero_brasshollow_marka_ironclause.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/signature/hero_brasshollow_marka_ironclause_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_brasshollow_marka_ironclause.png",
+        "assigned_hero_id": "hero_brasshollow_marka_ironclause"
+      },
+      "source_sha256": "5816923f0a4cd30254f66482cea37898e31dad5cb53ab79e508402d4f30fa1b9",
+      "before_sha256": "52c7fc30d1da1475f9c8e57a255a4ff5eae486852358584393f39325f1232547",
+      "portrait_sha256": "efb202b3434eccf87f5f8af64acc4ef2b3661e9f8009ec4f1ee8cae3b9857198"
+    },
+    "hero_signature_veilmourn_ivara_blacktide": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/signature/hero_veilmourn_ivara_blacktide.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/signature/hero_veilmourn_ivara_blacktide_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_veilmourn_ivara_blacktide.png",
+        "assigned_hero_id": "hero_veilmourn_ivara_blacktide"
+      },
+      "source_sha256": "1816ded557265ce355d74432720ea3b1d5b41ea3bdeec58bc052913e72b48c09",
+      "before_sha256": "a43145f482f7479a4902a5d6029901e2b5f4923b318e5071be32d99e0b94b3df",
+      "portrait_sha256": "8f1dfd491bf8ca4875a5d84fea31dd747c548a19b9db1d06a654f6807e80346f"
+    },
+    "hero_lead_caelen": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/live_leads/hero_caelen.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_caelen_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_caelen.png",
+        "assigned_hero_id": "hero_caelen"
+      },
+      "source_sha256": "926104d77a60971eb52dd26a13afefeefa362233e9e4aa90d2dbd0d40a89f14d",
+      "before_sha256": "e2e53af87dea1648d9b9cce1bee68257e03264c99959c34b8cc49f6e448e122e",
+      "portrait_sha256": "02fc9dccd67059024692ee99d87c38e8b4d2993d1cb59f0cd1f17fb6f3638a10"
+    },
+    "hero_lead_mira": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/live_leads/hero_mira.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_mira_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_mira.png",
+        "assigned_hero_id": "hero_mira"
+      },
+      "source_sha256": "4f2774fcb513ce130ec2e139bc478329873f299925917b5af24739b9be0a476c",
+      "before_sha256": "3f4cbc3c6767bb03c356e623550b337641546508fcf92e2bf25672d9428f9a7f",
+      "portrait_sha256": "0849f0043fa68041f60090ef6c120f00c082f343380be5276fb91ee441d1aa76"
+    },
+    "hero_lead_thornwake_tova_rootwright": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/live_leads/hero_thornwake_tova_rootwright.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_thornwake_tova_rootwright_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_thornwake_tova_rootwright.png",
+        "assigned_hero_id": "hero_thornwake_tova_rootwright"
+      },
+      "source_sha256": "2a1e31a83b9d26a90a1008e167b1c81faa8b3cf6c859f66ba35cdfee0f0eb4a6",
+      "before_sha256": "45e86fd7f76c52986075aa62107917e735a7a0516700d3f4a6ae7bb451d0337b",
+      "portrait_sha256": "a00562af41fbf557a67538fd1e3aaa2f2ec228563178c8d5f2817e1f9d8e5ace"
+    },
+    "hero_lead_veilmourn_ruln_vanehook": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/live_leads/hero_veilmourn_ruln_vanehook.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_veilmourn_ruln_vanehook_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_veilmourn_ruln_vanehook.png",
+        "assigned_hero_id": "hero_veilmourn_ruln_vanehook"
+      },
+      "source_sha256": "054a851c4a5ef49499fc6d2f9b0d76e37eb9c1849fc4e15b17d2313b1900d074",
+      "before_sha256": "df6723aeb15919342c565e88ccb46bb6f73d929469bd07d9b529c97c0c6d8f5d",
+      "portrait_sha256": "f987cba0e1fb2c375c156f8f5422e5c296470eb6ffa89dfa950bc02f8f0477ee"
+    },
+    "hero_lead_brasshollow_oren_bellfounder": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/live_leads/hero_brasshollow_oren_bellfounder.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_brasshollow_oren_bellfounder_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_brasshollow_oren_bellfounder.png",
+        "assigned_hero_id": "hero_brasshollow_oren_bellfounder"
+      },
+      "source_sha256": "36a80b97ba9516dc5a3a86312144450367531aaa6347b24d1dd1a9badd2931f8",
+      "before_sha256": "cc6f5a7ef4b7d2fdd88279532f3eb7703966b49df28045aeb3f1d030e388afb2",
+      "portrait_sha256": "daecf892d3b8e47d9234af4a957196cc67b25959fbe1a13847df2aa4d2e95602"
+    },
+    "hero_lead_mireclaw_kessa_chainboom": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/live_leads/hero_mireclaw_kessa_chainboom.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_mireclaw_kessa_chainboom_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_mireclaw_kessa_chainboom.png",
+        "assigned_hero_id": "hero_mireclaw_kessa_chainboom"
+      },
+      "source_sha256": "de4a5cb8f9f9d314052e0d63599cc89cbdc211f91284d689447ee9c79945d8db",
+      "before_sha256": "17ca7df0728fa1a40969e1b6ca9f9678a4b76ac718add43a8f524b7f8a1ffbd8",
+      "portrait_sha256": "aeff7010dde819a595541bda7f8224ce156ad2f5834fa1f3dd4769ce7901dc8b"
+    },
+    "hero_lead_neral": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/live_leads/hero_neral.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_neral_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_neral.png",
+        "assigned_hero_id": "hero_neral"
+      },
+      "source_sha256": "d7827a7b423cc31ca44982fc781561376ef90d2f4875ba36589699845bd0a85f",
+      "before_sha256": "cf316db5a95bde32050b020f75c639e49f51f8bac6787d6a56a4111dccd4a14c",
+      "portrait_sha256": "6ef43a4c54f4a109c4150c36b9946ba7b9eecc137f00efeef1f98431a96d4ec6"
+    },
+    "hero_lead_seren": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/live_leads/hero_seren.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_seren_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_seren.png",
+        "assigned_hero_id": "hero_seren"
+      },
+      "source_sha256": "b5e7cedf285c442a85aefbe7f1c3575d7a5459c155887f6a878a078833472176",
+      "before_sha256": "b18bd4beee29aceb20e220fd60578067b3807728ba4da81462677c9513be6d65",
+      "portrait_sha256": "633330c6c0436f194d5498fe309dccd41f328716d0fec7397478cb40b222149e"
+    },
+    "hero_tavern_embercourt_belis_rainledger": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_embercourt_belis_rainledger.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_vanguard/hero_embercourt_belis_rainledger_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_embercourt_belis_rainledger.png",
+        "assigned_hero_id": "hero_embercourt_belis_rainledger"
+      },
+      "source_sha256": "924d47a29f00193be684977c3087081432a076be0eba4de0b6047ca66a8e6676",
+      "before_sha256": "ea9aeee37b0c04d8d215f5f7dca9f41f1beb1409c15fe31c5771822f7a4104da",
+      "portrait_sha256": "e1294be02a0a20f9fc91a8f28491e4c5119beca9c61e5cd9fed68d068ffb6f54"
+    },
+    "hero_tavern_sable": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_sable.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_vanguard/hero_sable_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_sable.png",
+        "assigned_hero_id": "hero_sable"
+      },
+      "source_sha256": "b4dfa7d75445de9b2b5c60cd997c16f67f1a6244c086e0d6a8b357e3daf544d2",
+      "before_sha256": "53d84ceb10ff7cf40aa4c7feed46121cefd0d5497e07b9b179ff146263f29d5a",
+      "portrait_sha256": "ffa0f7d40eaed2a889942e2fe96f24802941e597decc28f8d21eb8ce5dc90adb"
+    },
+    "hero_tavern_sunvault_calis_sunvein": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_sunvault_calis_sunvein.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_vanguard/hero_sunvault_calis_sunvein_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_sunvault_calis_sunvein.png",
+        "assigned_hero_id": "hero_sunvault_calis_sunvein"
+      },
+      "source_sha256": "aaa5a8421dc8a725ecba23e47d94b87f1e4be4424c2940058dbf272b9be45cbd",
+      "before_sha256": "a9e668fa4bef96cb5acca5e520315c371919a0c346eeda8e009815fc21c5d5cf",
+      "portrait_sha256": "d9b2ca904b6114a2432b04bcd03c0cf8f589b3ef4a73d1a94a17dd1ebc7b60a3"
+    },
+    "hero_tavern_thornwake_ardren_briarmarshal": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_thornwake_ardren_briarmarshal.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_vanguard/hero_thornwake_ardren_briarmarshal_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_thornwake_ardren_briarmarshal.png",
+        "assigned_hero_id": "hero_thornwake_ardren_briarmarshal"
+      },
+      "source_sha256": "99e6137a210383cda0c6e29a61c446cf8a8d97cac0cabb4cdab882a999bd60cb",
+      "before_sha256": "60b3dd9c80ce9beb725ac516885dcb44a4fb5700b72156bdffd266ff7ca38dfb",
+      "portrait_sha256": "c4f2c8bacad4a64efda5f63ed4c8d02bf3316cf54a9c85d6bdc8430d390976e0"
+    },
+    "hero_tavern_brasshollow_daxis_chaincaptain": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_brasshollow_daxis_chaincaptain.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_vanguard/hero_brasshollow_daxis_chaincaptain_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_brasshollow_daxis_chaincaptain.png",
+        "assigned_hero_id": "hero_brasshollow_daxis_chaincaptain"
+      },
+      "source_sha256": "9925d9b1ff152ddf88fba0583cf0c45675b6341e060feeadd75375ab16fbe057",
+      "before_sha256": "54138bea4609e9e67adc50c96d786f4af2433a54415c01e056c6cf860023e1b0",
+      "portrait_sha256": "b0459e0ebd2253b207cb65066fb9959ec5b7f6b9b6998aeaabcc103ef7e753a7"
+    },
+    "hero_tavern_veilmourn_cela_mistcorsair": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_veilmourn_cela_mistcorsair.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_vanguard/hero_veilmourn_cela_mistcorsair_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_veilmourn_cela_mistcorsair.png",
+        "assigned_hero_id": "hero_veilmourn_cela_mistcorsair"
+      },
+      "source_sha256": "73e8fd3272b308fffca1cf4390f51a672c4e9b405a8cabf842a9e9e6574d5ae2",
+      "before_sha256": "d0d98ffdc792260921987fe0c20d7ca1a4f276288be9b6d86330b28392d9c58e",
+      "portrait_sha256": "5b021432bfa38e80e468504109518d4cb956609154bac706ca7be0033481265c"
+    },
+    "hero_specialist_torren": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_torren.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_specialists/hero_torren_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_torren.png",
+        "assigned_hero_id": "hero_torren"
+      },
+      "source_sha256": "5ecd34dae675bad064d06275eddbf247bd79cd0ec5fb923a5281891578292a90",
+      "before_sha256": "3ca21736ce962dbfe5cfd4de4bdcf1ef3e4dcdb10a86c24dc8127e3f3ad23021",
+      "portrait_sha256": "2e97e22df76545c4f91fae69a93ab0bdd3dca1005993d9105d80b7fdb21fb0a0"
+    },
+    "hero_specialist_mireclaw_brakka_mudkeel": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_mireclaw_brakka_mudkeel.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_specialists/hero_mireclaw_brakka_mudkeel_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_mireclaw_brakka_mudkeel.png",
+        "assigned_hero_id": "hero_mireclaw_brakka_mudkeel"
+      },
+      "source_sha256": "9ba4a9d3ac83aa32b908502e081d7ec20ae773d6e419197018975e209046cf4c",
+      "before_sha256": "0943f8f7e8eaf25686ae17b6900a2f0f33f74510bc013b043919272d06ae5049",
+      "portrait_sha256": "ee7e8bded17e54100a02844b0e2bfae3dc283965550af50938f239ea2786272a"
+    },
+    "hero_specialist_varis": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_varis.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_specialists/hero_varis_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_varis.png",
+        "assigned_hero_id": "hero_varis"
+      },
+      "source_sha256": "94919b179678739c756613aebd1fbeb1f122a860ce0354769a60dd9f08fd5dc1",
+      "before_sha256": "4372d504767c3b0aa533756770a43c8ed34815a25cb72100bc7da3e2aafb7871",
+      "portrait_sha256": "3029cf8861c4935babcac13065597b0e9c05b5a1f819f8167ef9ad084ee926e1"
+    },
+    "hero_specialist_thornwake_veyra_seedseer": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_thornwake_veyra_seedseer.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_specialists/hero_thornwake_veyra_seedseer_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_thornwake_veyra_seedseer.png",
+        "assigned_hero_id": "hero_thornwake_veyra_seedseer"
+      },
+      "source_sha256": "cf473cd27ef71e5d1d815f480791850ee55bde32d69501e092086478d444d63f",
+      "before_sha256": "04827cbe115ba0707a1126772ac0cca4494f6240914e9bfb4745e25166683653",
+      "portrait_sha256": "da5d42d2fe9c5ab0aa908a7867eaeaeee7e5c441e0e09d8ac653ca0f3c51855d"
+    },
+    "hero_specialist_brasshollow_selka_pitmarshal": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_brasshollow_selka_pitmarshal.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_specialists/hero_brasshollow_selka_pitmarshal_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_brasshollow_selka_pitmarshal.png",
+        "assigned_hero_id": "hero_brasshollow_selka_pitmarshal"
+      },
+      "source_sha256": "32a6b8785cfc251e77b756272cf75e4fb5ecd2c0fe658164e44610b67e062b8c",
+      "before_sha256": "1fbb680324d54b142814b1f0ee3c522aa6ff415b733d1de46a6044e9579d223b",
+      "portrait_sha256": "527a7112fab078737fbe7bfadd3dffde8c092b147d8a0b0480329619af0f9994"
+    },
+    "hero_specialist_veilmourn_morwen_wakeoracle": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_veilmourn_morwen_wakeoracle.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_specialists/hero_veilmourn_morwen_wakeoracle_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_veilmourn_morwen_wakeoracle.png",
+        "assigned_hero_id": "hero_veilmourn_morwen_wakeoracle"
+      },
+      "source_sha256": "6bc40d996b7fab4b4872a6f0b3782b2ff07a4b711730ea13881e0df9639ecd57",
+      "before_sha256": "ced9d9bdb6e6344676f83f2f053fce5c17edf098fd27359b889fc4413e0dd298",
+      "portrait_sha256": "1ec89232c4f1ad2a88182c99ee22a50423d31663f77d3994deae6d1ee914db80"
+    },
+    "hero_field_embercourt_helva_tollbrand": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_embercourt_helva_tollbrand.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_field_commanders/hero_embercourt_helva_tollbrand_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_embercourt_helva_tollbrand.png",
+        "assigned_hero_id": "hero_embercourt_helva_tollbrand"
+      },
+      "source_sha256": "7631155c6d0de5fce24fce1eaed142ac0863c4ce02b2a4229a169ba2dba0da9d",
+      "before_sha256": "0092b9f737acd387ac39b9df1c6cbfda5dd95f53b9625b68f25521fa819e80f2",
+      "portrait_sha256": "ebb3f5a5ffb4d8e235659ae810ed729a5d39c357a2f537dc299fcd61a385e2f8"
+    },
+    "hero_field_tarn": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_tarn.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_field_commanders/hero_tarn_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_tarn.png",
+        "assigned_hero_id": "hero_tarn"
+      },
+      "source_sha256": "3adc710494c67933ce5f556b3d673c00a1aad52e8b788c3949bb77c409f394a0",
+      "before_sha256": "e4a82c7e6eb98c4ec9f698f76e241b636337eab6838f82e9984d3489e5c8af23",
+      "portrait_sha256": "030de7cc70c77c24ae867c1e9d8c1521eb59bf7eb941cd245ea2ea4a6eb6a277"
+    },
+    "hero_field_sunvault_ilyr_glassmarshal": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_sunvault_ilyr_glassmarshal.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_field_commanders/hero_sunvault_ilyr_glassmarshal_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_sunvault_ilyr_glassmarshal.png",
+        "assigned_hero_id": "hero_sunvault_ilyr_glassmarshal"
+      },
+      "source_sha256": "f5765fc756855b00e4fa5aafc5011dfc3c1b1ef20a8bc2f69e870933a464fb86",
+      "before_sha256": "0bd33ef563f8b2b704f1ddff320b4734e89c42d12913b505c9626f9cd76aaddb",
+      "portrait_sha256": "744cabe577c79e0f92fcbb0a676b68232638ceea9c810aed161e07f63db931f9"
+    },
+    "hero_field_thornwake_halen_thorncart": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_thornwake_halen_thorncart.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_field_commanders/hero_thornwake_halen_thorncart_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_thornwake_halen_thorncart.png",
+        "assigned_hero_id": "hero_thornwake_halen_thorncart"
+      },
+      "source_sha256": "0c12ba6fcd70e8bd473dfddcf99a961843e5e18a541d3b8e7bcc920f01166759",
+      "before_sha256": "b6399ae0011f94ec867a0709ed0160381deffc1f3f94c48d1c05d58583aec145",
+      "portrait_sha256": "15b9944d0289d9e8e59ddcdfda84392ab8401ac390ab11153327ff8293070063"
+    },
+    "hero_field_brasshollow_kuld_varn": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_brasshollow_kuld_varn.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_field_commanders/hero_brasshollow_kuld_varn_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_brasshollow_kuld_varn.png",
+        "assigned_hero_id": "hero_brasshollow_kuld_varn"
+      },
+      "source_sha256": "7c3b1f4f0354089635c8db545f7410a4c5c269505146684b7f3f553002ba89bd",
+      "before_sha256": "f4d7d2c15f05cb4407a41361ba99af3e3b2f2355ffcc731edf5510c5755d51b5",
+      "portrait_sha256": "b95414597ff2945f58a7b8cee49e7457fbfcd69bbab012739d606ff19210d943"
+    },
+    "hero_field_veilmourn_jessa_keelwarden": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_veilmourn_jessa_keelwarden.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_field_commanders/hero_veilmourn_jessa_keelwarden_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_veilmourn_jessa_keelwarden.png",
+        "assigned_hero_id": "hero_veilmourn_jessa_keelwarden"
+      },
+      "source_sha256": "b8f43391eeb3482faf7f8d8e654cefa454e28a80b0b09aedb5b42b43cc9853de",
+      "before_sha256": "0ffe802639acca68c812f781188db281c2a681dd81b98d1feb8d1e9636e1b446",
+      "portrait_sha256": "322332163c27b3ad5cb0fac858d54dbe069de7c3ea7837282ffa6c23f16a595c"
+    },
+    "hero_strategic_embercourt_saren_lockmaster": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_embercourt_saren_lockmaster.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_embercourt_saren_lockmaster_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_embercourt_saren_lockmaster.png",
+        "assigned_hero_id": "hero_embercourt_saren_lockmaster"
+      },
+      "source_sha256": "b2550339884dd466dbd76db0d129de01686566fa8fd5c70d9136b91a108723e9",
+      "before_sha256": "726b2b02b962fb6c9e14fdcadf3e9c5842bd0b342f198ec7de96958405a31ed5",
+      "portrait_sha256": "02d0be65944a902660d0b2bf8d2b8cedf49b0d5d24cc1ea83cc847d13d228486"
+    },
+    "hero_strategic_orrik": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_orrik.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_orrik_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_orrik.png",
+        "assigned_hero_id": "hero_orrik"
+      },
+      "source_sha256": "741c8621b46dfed830220d8008f5a0afc581d258376aa42cdcf6d076df3873f7",
+      "before_sha256": "f6271c8f9da53ebf982f6fcdaf9116192133d5d8792af53c5c01fdc1f8d758de",
+      "portrait_sha256": "6cfa8c7c9fa1850592565c61241977eab62bb7cb6a0c24d475bd3a650077ef44"
+    },
+    "hero_strategic_thalen": {
+      "mode": "hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_thalen.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_thalen_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_thalen.png",
+        "assigned_hero_id": "hero_thalen"
+      },
+      "source_sha256": "60ed7b5810ec7b1c5923beec22c51d26f98671ea9fc76e44930b2c0a5111ce69",
+      "before_sha256": "9525c6f6da5456aa0ae7e6f041e47ecb660eaa669ff04fafd649c0fbce37baa0",
+      "portrait_sha256": "ade2c15ec83ad5fe120901de340ac729c24a9fb4f4e549c2e3cf54f4eeac9235",
+      "source_crop": [
+        133,
+        11,
+        883,
+        1504
+      ],
+      "source_resize": [
+        246,
+        490
+      ],
+      "canvas_origin": [
+        133,
+        22
+      ],
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 912368,
+          "bounds": [
+            0,
+            0,
+            1024,
+            1536
+          ],
+          "visible": 0
+        },
+        {
+          "seed": [
+            185,
+            120
+          ],
+          "area": 2050,
+          "bounds": [
+            171,
+            82,
+            210,
+            169
+          ],
+          "visible": 2050
+        },
+        {
+          "seed": [
+            236,
+            119
+          ],
+          "area": 1724,
+          "bounds": [
+            216,
+            82,
+            254,
+            168
+          ],
+          "visible": 1724
+        },
+        {
+          "seed": [
+            182,
+            245
+          ],
+          "area": 2434,
+          "bounds": [
+            159,
+            204,
+            218,
+            275
+          ],
+          "visible": 2434
+        },
+        {
+          "seed": [
+            250,
+            245
+          ],
+          "area": 2131,
+          "bounds": [
+            222,
+            203,
+            276,
+            275
+          ],
+          "visible": 2131
+        },
+        {
+          "seed": [
+            169,
+            150
+          ],
+          "area": 793,
+          "bounds": [
+            161,
+            150,
+            188,
+            199
+          ],
+          "visible": 793
+        },
+        {
+          "seed": [
+            256,
+            151
+          ],
+          "area": 550,
+          "bounds": [
+            245,
+            151,
+            268,
+            197
+          ],
+          "visible": 550
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/heroes/hero_strategic_thalen.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/heroes/sources/hero_strategic_thalen.png",
+      "original_paint_commit": "9ff2139a"
+    },
+    "hero_strategic_thornwake_nara_graftsibyl": {
+      "mode": "hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_thornwake_nara_graftsibyl.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_thornwake_nara_graftsibyl_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_thornwake_nara_graftsibyl.png",
+        "assigned_hero_id": "hero_thornwake_nara_graftsibyl"
+      },
+      "source_sha256": "3b52a2e532aad2174ef882ca317d6288b27845ecb9f8f526b88ca09ca2c857b3",
+      "before_sha256": "be50890a21760f5fa8e07bd4a1242f32ce09ed83b393004435d6363b0901deca",
+      "portrait_sha256": "27d7304d252206a573c4adac9bf1d7f999f05763cda0a0c6488ed1c5ff417691",
+      "source_crop": [
+        138,
+        60,
+        893,
+        1382
+      ],
+      "source_resize": [
+        280,
+        490
+      ],
+      "canvas_origin": [
+        116,
+        22
+      ],
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 1007291,
+          "bounds": [
+            0,
+            0,
+            1085,
+            1450
+          ],
+          "visible": 0
+        },
+        {
+          "seed": [
+            702,
+            339
+          ],
+          "area": 69429,
+          "bounds": [
+            548,
+            125,
+            840,
+            480
+          ],
+          "visible": 0
+        },
+        {
+          "seed": [
+            844,
+            508
+          ],
+          "area": 383,
+          "bounds": [
+            822,
+            491,
+            854,
+            537
+          ],
+          "visible": 383
+        },
+        {
+          "seed": [
+            230,
+            900
+          ],
+          "area": 972,
+          "bounds": [
+            216,
+            871,
+            250,
+            946
+          ],
+          "visible": 972
+        },
+        {
+          "seed": [
+            789,
+            519
+          ],
+          "area": 902,
+          "bounds": [
+            760,
+            519,
+            798,
+            573
+          ],
+          "visible": 902
+        },
+        {
+          "seed": [
+            811,
+            551
+          ],
+          "area": 255,
+          "bounds": [
+            781,
+            551,
+            812,
+            586
+          ],
+          "visible": 255
+        },
+        {
+          "seed": [
+            234,
+            860
+          ],
+          "area": 45,
+          "bounds": [
+            230,
+            860,
+            237,
+            871
+          ],
+          "visible": 45
+        },
+        {
+          "seed": [
+            226,
+            872
+          ],
+          "area": 79,
+          "bounds": [
+            222,
+            872,
+            234,
+            884
+          ],
+          "visible": 79
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/heroes/hero_strategic_thornwake_nara_graftsibyl.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/heroes/sources/hero_strategic_thornwake_nara_graftsibyl.png",
+      "original_paint_commit": "9ff2139a"
+    },
+    "hero_strategic_brasshollow_harro_debtrune": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_brasshollow_harro_debtrune.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_brasshollow_harro_debtrune_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_brasshollow_harro_debtrune.png",
+        "assigned_hero_id": "hero_brasshollow_harro_debtrune"
+      },
+      "source_sha256": "70678523ea9fb04c057843ad47f36ffd4b10f108140439be05158716d6f9e1b7",
+      "before_sha256": "ebada924e8fccab4c443d165ad5ad150951fa828e565029eb987da4c67daa769",
+      "portrait_sha256": "e3aaa25d91f44ceabc5eda44ac94336df5c438e7ad9a82e7f955132c929b385d"
+    },
+    "hero_strategic_veilmourn_orso_nightchart": {
+      "mode": "hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_veilmourn_orso_nightchart.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_veilmourn_orso_nightchart_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_veilmourn_orso_nightchart.png",
+        "assigned_hero_id": "hero_veilmourn_orso_nightchart"
+      },
+      "source_sha256": "c6935a1409e93f9ed2c2b01c54f3a078c3936a942de33dbfab13f1c193adfe8b",
+      "before_sha256": "b7e2e118804e526f8c7588cbd8ac1e444370d462cadc95bfda75edfcb9154075",
+      "portrait_sha256": "4aa6dd74b9050997eaaa58c5907397bfe91624d81531446b6539ade712eb7e40",
+      "source_crop": [
+        121,
+        33,
+        849,
+        1477
+      ],
+      "source_resize": [
+        247,
+        490
+      ],
+      "canvas_origin": [
+        132,
+        22
+      ],
+      "backing_components": [
+        {
+          "seed": [
+            0,
+            0
+          ],
+          "area": 965494,
+          "bounds": [
+            0,
+            0,
+            1024,
+            1536
+          ],
+          "visible": 0
+        }
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/heroes/hero_strategic_veilmourn_orso_nightchart.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/heroes/sources/hero_strategic_veilmourn_orso_nightchart.png",
+      "original_paint_commit": "9ff2139a"
+    },
+    "hero_ritual_embercourt_orra_cinderquill": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_embercourt_orra_cinderquill.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_ritual_scholars/hero_embercourt_orra_cinderquill_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_embercourt_orra_cinderquill.png",
+        "assigned_hero_id": "hero_embercourt_orra_cinderquill"
+      },
+      "source_sha256": "c5ed5134dc43655fa148ac5c02f0a327fff7c630e6c9ca645e4e8eee65247a39",
+      "before_sha256": "ad3225091a6f821d9608687b1c889d5c6b753f8ff7d1c96de75ebde446408859",
+      "portrait_sha256": "b0b7fcd201db4240769c88ecf21e5ab487045ac2c9d57fa833468b3f7f8f600d"
+    },
+    "hero_ritual_mireclaw_nix_votivejaw": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_mireclaw_nix_votivejaw.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_ritual_scholars/hero_mireclaw_nix_votivejaw_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_mireclaw_nix_votivejaw.png",
+        "assigned_hero_id": "hero_mireclaw_nix_votivejaw"
+      },
+      "source_sha256": "4069071f2db36c4a3440b1cf05d5039efd8010f80eb81b0540cc7c79e665fd81",
+      "before_sha256": "20d98375b7ca9284bbc3347ed476726d37cb170d12995b89185b490510d1a325",
+      "portrait_sha256": "71955facb9b40fc1ae93c4c050b81985d77e5134bde3f50a60f0647211ce01be"
+    },
+    "hero_ritual_sunvault_essa_daynote": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_sunvault_essa_daynote.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_ritual_scholars/hero_sunvault_essa_daynote_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_sunvault_essa_daynote.png",
+        "assigned_hero_id": "hero_sunvault_essa_daynote"
+      },
+      "source_sha256": "fa3657f06fb877a496d443b320902fddd01b5acfedf7882c2ce5835de44bf323",
+      "before_sha256": "74dc1621b7f41aefca580cf6e332676e571a793b57024c05e8dd0ec41de12715",
+      "portrait_sha256": "49b0a122fe356e4bb34f31db5c01f58f0df3ed9defcfb1daedd2796926d6c853"
+    },
+    "hero_ritual_thornwake_osmund_pollenglass": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_thornwake_osmund_pollenglass.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_ritual_scholars/hero_thornwake_osmund_pollenglass_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_thornwake_osmund_pollenglass.png",
+        "assigned_hero_id": "hero_thornwake_osmund_pollenglass"
+      },
+      "source_sha256": "affc7b0b0075d1328af6697bb64a89a730ccb5958513bf72f3162530e499c85b",
+      "before_sha256": "9785d38f74470a7f6b1ec9c7e9f0fc524785ddf7c41ffb59c25ed382075b4d96",
+      "portrait_sha256": "827401f0d471c6010305e3858d858b74ce30c98cde5f84a82d83d465f515e406"
+    },
+    "hero_ritual_brasshollow_odrik_heatpriest": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_brasshollow_odrik_heatpriest.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_ritual_scholars/hero_brasshollow_odrik_heatpriest_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_brasshollow_odrik_heatpriest.png",
+        "assigned_hero_id": "hero_brasshollow_odrik_heatpriest"
+      },
+      "source_sha256": "7b25e4b7e59f9522965ce7745c66b82961508f6f29f795bf06b7db71b12276bd",
+      "before_sha256": "df7ca3619857ed3b263d4d14d489a9ab73a0cc7ac07fce2a6c9d9ded6298c9fa",
+      "portrait_sha256": "ac6b988cf15a83e5ec916b0f8e8ab00ee0edd6e381002086367541f9a9a2c155"
+    },
+    "hero_ritual_veilmourn_thir_obituaryink": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_veilmourn_thir_obituaryink.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_ritual_scholars/hero_veilmourn_thir_obituaryink_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_veilmourn_thir_obituaryink.png",
+        "assigned_hero_id": "hero_veilmourn_thir_obituaryink"
+      },
+      "source_sha256": "28a9fb9a6f6ea5333c8cf474539a1d6093ad3ccc953714bdc994851050349833",
+      "before_sha256": "daa396fec166ea480210dbbff80505a0c38f8f3a1d9f3a9518fe5756b44c4a93",
+      "portrait_sha256": "1dc1f9f082aa0ec0ec0794f13be3c2c9c38d24baea33e2f348eb6fcb0807f6a5"
+    },
+    "hero_arcane_embercourt_jorun_beaconscribe": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_embercourt_jorun_beaconscribe.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_arcane_controllers/hero_embercourt_jorun_beaconscribe_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_embercourt_jorun_beaconscribe.png",
+        "assigned_hero_id": "hero_embercourt_jorun_beaconscribe"
+      },
+      "source_sha256": "2e809748c2c64922deae568f01438103b7882e88b882b252c7b6b68e35899d5c",
+      "before_sha256": "505d26c92e2423c17117db8eac7b5f79cf70f43dd3c1f13cd663d4eb960c6621",
+      "portrait_sha256": "6002c599c606be7b8b3a482caf7829e38912255cfabb7147b89a42f0eec89aa5"
+    },
+    "hero_arcane_mireclaw_edda_rotlamp": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_mireclaw_edda_rotlamp.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_arcane_controllers/hero_mireclaw_edda_rotlamp_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_mireclaw_edda_rotlamp.png",
+        "assigned_hero_id": "hero_mireclaw_edda_rotlamp"
+      },
+      "source_sha256": "afe3b216a3674501aabf958eca4f007c4a0a823d9a48e586cc4b1350f4c820e4",
+      "before_sha256": "43f55bbd791981a464dfd82255901e8a88fb49de5da05b9dcb653727ef6fbc87",
+      "portrait_sha256": "319afd649b4fe46b99faf9207199dd09f8e36a1b906b68471d72514e1378fa96"
+    },
+    "hero_arcane_sunvault_mirro_halometer": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_sunvault_mirro_halometer.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_arcane_controllers/hero_sunvault_mirro_halometer_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_sunvault_mirro_halometer.png",
+        "assigned_hero_id": "hero_sunvault_mirro_halometer"
+      },
+      "source_sha256": "f1f547129dfdab16211a7b603f1b95ff839edc0c930dbf048f80f96fcd61b7ee",
+      "before_sha256": "27730e627a7f075e147580a67597bc45480c178859272d8674484de035aff07a",
+      "portrait_sha256": "782d59155fb9e47ba9f0c50a7bfca57f327ef7d5e89e8b8a9865794fd1915b81"
+    },
+    "hero_arcane_thornwake_elian_loamchant": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_thornwake_elian_loamchant.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_arcane_controllers/hero_thornwake_elian_loamchant_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_thornwake_elian_loamchant.png",
+        "assigned_hero_id": "hero_thornwake_elian_loamchant"
+      },
+      "source_sha256": "897b103f8470094544c6d945661b688fd6db0fe8e3ab28345b43a7cefc97de6e",
+      "before_sha256": "0a501ff93200760713024cc1e77bc3f6b38c5c5998281172ca04b548b242999e",
+      "portrait_sha256": "8800619b0e41effc5f9acf2b05a1814e4eab283bc58ebce52c64ada61e59e46a"
+    },
+    "hero_arcane_brasshollow_lina_gaugesavant": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_brasshollow_lina_gaugesavant.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_arcane_controllers/hero_brasshollow_lina_gaugesavant_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_brasshollow_lina_gaugesavant.png",
+        "assigned_hero_id": "hero_brasshollow_lina_gaugesavant"
+      },
+      "source_sha256": "782398e979592af84c0eb5ec98f55365c6ec07f579af36823ca7d6ccb94ec60c",
+      "before_sha256": "48ec58f3a5157f880ba90b37de67357f0e86f27e68a108f3d2b5632b2fe5e12b",
+      "portrait_sha256": "1ae9e3b1d66fcd837211e5a707593ae99cd73cbd604be5c3c7a6944d6358d2aa"
+    },
+    "hero_arcane_veilmourn_sael_mirrorbell": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_veilmourn_sael_mirrorbell.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_arcane_controllers/hero_veilmourn_sael_mirrorbell_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_veilmourn_sael_mirrorbell.png",
+        "assigned_hero_id": "hero_veilmourn_sael_mirrorbell"
+      },
+      "source_sha256": "3c81942be0a59e5dc098ed3f537c201334bd62aace24dfcb54eb72479f33c117",
+      "before_sha256": "38c0f553683e8cae50944a2b520bfffb4dae493e0b177d69aa993c0e67b257a6",
+      "portrait_sha256": "1e71b7ce6d3ab979e7615135f8fa068a6a01e200ce1a783f5981e44d5c0f8bdf"
+    },
+    "hero_roster_mireclaw_pell_reedscript": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_mireclaw_pell_reedscript.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_mireclaw_pell_reedscript_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_mireclaw_pell_reedscript.png",
+        "assigned_hero_id": "hero_mireclaw_pell_reedscript"
+      },
+      "source_sha256": "904ba420cf03e33d8ee5ce8f117fd8d4b8d65d0787494555e6246c73d04b2a0a",
+      "before_sha256": "7b9e6847f89cab4a30b7a837c927a6e102de0a25d796350e29861330473c7ce1",
+      "portrait_sha256": "a2cbf663c960635ac3c06536917c5882bd31ebfb6802cb7e0ea6f1eec9ed6aca"
+    },
+    "hero_roster_mireclaw_zhorra_fenwake": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_mireclaw_zhorra_fenwake.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_mireclaw_zhorra_fenwake_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_mireclaw_zhorra_fenwake.png",
+        "assigned_hero_id": "hero_mireclaw_zhorra_fenwake"
+      },
+      "source_sha256": "9a7b237f6867264086464dff60dd0254127ffa1abbadc61543674a5cd0e8843e",
+      "before_sha256": "5f9d553c30bfff84518a68826f7fff0ed84fa543046dd18321034f803ebdd8ff",
+      "portrait_sha256": "ebc4efe6f0d356911b8275d2cdb90743219e1a0d296d2a92cfaade870128a3d8"
+    },
+    "hero_roster_sunvault_dovan_lenscaptain": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_sunvault_dovan_lenscaptain.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_sunvault_dovan_lenscaptain_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_sunvault_dovan_lenscaptain.png",
+        "assigned_hero_id": "hero_sunvault_dovan_lenscaptain"
+      },
+      "source_sha256": "499d6074c13afc4c1a88bda004b7e99b285599e49f658cdc5ffb3d1ea1c5c78e",
+      "before_sha256": "eacf54b3ab11acc138b80423678e6113a7e303a5a32d29f2016c5b231a3188eb",
+      "portrait_sha256": "3be2feea3d62020c7742a87996667f2faed79bb756ddf0f34015b151db4d8cc6"
+    },
+    "hero_roster_sunvault_renn_facetlane": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_sunvault_renn_facetlane.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_sunvault_renn_facetlane_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_sunvault_renn_facetlane.png",
+        "assigned_hero_id": "hero_sunvault_renn_facetlane"
+      },
+      "source_sha256": "9bce4a0c22077fabf4787858770099a3dc3432165a47917c80ec3d0f72a35534",
+      "before_sha256": "28b6edb6914e94b9b4b29cde457115930629274de2aa641feccc87b022230fff",
+      "portrait_sha256": "31c7367ce2e21afcc6ff30d11b6a94a646d344eaa5ce2afa6bc445b2970a0fbe"
+    },
+    "hero_roster_thornwake_merek_greenbarrow": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_thornwake_merek_greenbarrow.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_thornwake_merek_greenbarrow_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_thornwake_merek_greenbarrow.png",
+        "assigned_hero_id": "hero_thornwake_merek_greenbarrow"
+      },
+      "source_sha256": "010d9455ac362316be822e6161e5ca3c50101eab7fb1e8055afceca2060ce394",
+      "before_sha256": "cd82d3b05a48a589d414a9ed05a15df2a1d48d6477446465705643b35bfdd1e1",
+      "portrait_sha256": "40a1d5ca5e06e9b534424016591d3332a03775852400cb5328b9d28f38d96724"
+    },
+    "hero_roster_thornwake_ralka_mossvein": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_thornwake_ralka_mossvein.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_thornwake_ralka_mossvein_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_thornwake_ralka_mossvein.png",
+        "assigned_hero_id": "hero_thornwake_ralka_mossvein"
+      },
+      "source_sha256": "662243995ef567f53b3b449b9ea63fbfb4f5512d7e7d94f8908b52df787f786f",
+      "before_sha256": "fcf26c7e0078283e42d3dfb2354747792a2c8ff2f574ca62a592e3a0e2a18ccc",
+      "portrait_sha256": "50eb10c7476d5a862ca85f9c115a2e0e5337b43c78579f09912f824a35776d7a"
+    },
+    "hero_roster_brasshollow_pava_ashmeter": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_brasshollow_pava_ashmeter.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_brasshollow_pava_ashmeter_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_brasshollow_pava_ashmeter.png",
+        "assigned_hero_id": "hero_brasshollow_pava_ashmeter"
+      },
+      "source_sha256": "97e013050c96a0560e5badda3abf5e7cd3878a24910f7c0377f4e5b54b5a00e7",
+      "before_sha256": "309588a9596d8804fb15a42d5596d492e1093e09cf9a9f9f0994155ff0677dd3",
+      "portrait_sha256": "5b5bb7b9487e373477f72ed4cda827cc2fca4f40c0b9548f099d095ecea9d910"
+    },
+    "hero_roster_brasshollow_vellum_quench": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_brasshollow_vellum_quench.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_brasshollow_vellum_quench_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_brasshollow_vellum_quench.png",
+        "assigned_hero_id": "hero_brasshollow_vellum_quench"
+      },
+      "source_sha256": "c6b8fb91537ec097738d9006fd8bc7eb50d63b684adf41ac4f44d072ac0c123e",
+      "before_sha256": "82891dcdb01120e27339a67654cf1fd8ae5ca4cc6009e92ab42af0786f3c5750",
+      "portrait_sha256": "04b7b7bfbdbfd96e700b44fb0b881eb7b268079b5fbd14d648a9fd3f34d3959d"
+    },
+    "hero_roster_veilmourn_damar_oriflag": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_veilmourn_damar_oriflag.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_veilmourn_damar_oriflag_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_veilmourn_damar_oriflag.png",
+        "assigned_hero_id": "hero_veilmourn_damar_oriflag"
+      },
+      "source_sha256": "27b46b4b3fb75e6a4204ce70a23d654368ce919562c5e42a69cee334aef0eeda",
+      "before_sha256": "c42bf9ab6fcab539b0e0f01a1bf5f5be432efd6a40aab6ec6efa15b0e47adc51",
+      "portrait_sha256": "d6160346c0d40a709ef217f8248384a0fa034dec9791a6dc5e7a17d86be8ffc6"
+    },
+    "hero_roster_veilmourn_nacre_vowless": {
+      "mode": "preserved_hero",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_veilmourn_nacre_vowless.png",
+        "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_veilmourn_nacre_vowless_source.png",
+        "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+        "identity_reference": "res://art/heroes/portraits/hero_veilmourn_nacre_vowless.png",
+        "assigned_hero_id": "hero_veilmourn_nacre_vowless"
+      },
+      "source_sha256": "68ddebc82ccbf285a7de5d7ff984fc77149f9bb0b784127c91fecad958dd5665",
+      "before_sha256": "157af197a239432ad68b47ea3ecc2263606aaf0576082f629ae6900c2cf951af",
+      "portrait_sha256": "222df66b07e83e832b6a1f2e47e3a0b3145acdba3d63a765956ac7ce5f585a87"
+    }
+  }
+}

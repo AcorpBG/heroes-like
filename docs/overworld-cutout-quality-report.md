@@ -1810,13 +1810,77 @@ cells without weakening gameplay checks. Logs: `/tmp/heroes-remaining-sites-{pyt
 exports: `/tmp/heroes-remaining-sites-{linux,windows}-20260910/report.json`.
 Parent and runtime-pool child remain in progress; no release-completion claim.
 
+## Hero identity cohort — 2026-09-10
+
+All 60 identity sprites were inspected against their original generated paintings.
+Three strategic officers retained neutral backing: Thalen's open staff, Nara's
+branch-frame/cape gaps, and pale edge rims on these and Orso. The source images
+have binary alpha with the original checkerboard RGB still present. These are
+bad cutouts, not missing mappings. The other 57 identity paintings remain exact.
+
+`tools/prepare_overworld_hero_cutouts.py` removes only inspected, seeded source
+components and recovers their three-pixel mixed edge against measured original
+foreground/backing. Ambiguous ivory, hair and bright glints remain paint. The
+historical 512px canvas and bilinear registration project only changed support
+onto the old runtime; every other runtime pixel is preserved. Changed support:
+Thalen 8551 pixels, Nara 9887, Orso 5404. Original paintings and all 60 portraits
+remain hash-identical. No new art, runtime rule, native/RMG or save-schema change.
+Recipe, old runtimes and provenance: `art/overworld/source/generated/cutout_recovery_20260909/heroes/`;
+recovered source/trim outputs: the corresponding `source/trimmed/` packet.
+
+Nine Python art tests, three pinned-fixture tests, repository validation, all five
+shared sprite/input/route/fog reports and both official exports pass. The focused
+`--batch heroes` probe passes **2932 checks** at source 1280x720 and 1920x1080 and
+in both platform packages. It checks all 60 player/enemy identity routes, decoded
+RGBA, the fixed native Day97 Lyra/2380-blocker control, and ordinary paid recruits:
+Thalen in Daynote Kite-Signal Accord, Nara in Mireford, Orso in Vowless Saltpan
+Circuit. Normal income, hiring costs, Town exit, movement and save/re-entry remain.
+The unchanged `8cc41266` package fails exactly the three corrected RGBA assertions
+and no gameplay checks. All these runs have zero runtime errors.
+
+Four complete saves per run remain strictly equal through actual save/load,
+including every combat seed. Sixteen cross-run comparisons also pass: twelve
+exclude only timestamps/fresh session ids; the four Mireford comparisons additionally
+verify its two new raid seeds against the unchanged `EnemyTurnRules.gd:3792`
+formula `hash(session_id:spawn_day:placement_id)` before normalizing their session
+identity. They are not falsely reported as byte-equal seeds between fresh sessions.
+Both PCKs: **303771048 bytes / 5484 members**. Only three textures, the art manifest
+and UID cache change from the predecessor: **5479 unrelated payloads and 1211
+other art rows remain exact**. Platform differences are `project.binary` and UID
+serialization order; all **7921 UID/path mappings** are identical.
+
+Two existing legacy reports **do not pass**. The hero report rejects historical
+geometry expectations; the enemy-commander report expects faction art where the
+current resolver prioritizes an identity landmark. Their complete failure records
+are identical in unmodified predecessor/current official PCK runs. No checks or
+runtime rules were weakened to make them green. This cohort's focused identity,
+paint, ordinary gameplay and unchanged-owner/package evidence passes; the legacy
+report maintenance remains an explicit limitation, not release acceptance.
+
+Rejected initial harness cases are retained: idle Bellwake reaches its existing
+pressure-10 defeat on Day 3; Prismhearth's east exit is water; Oriflag lacks a Hall.
+The final fixed authored cases use real Halls, earned funds and legal exits.
+No scenario, object, hero, fog or resources were patched to manufacture evidence.
+All source/contact pairs, recovered previews, five in-engine galleries, repaired
+heroes in small/wide gameplay and Linux package examples were visually inspected.
+Detached galleries are labeled; Windows headless Wine is not GPU certification.
+
+Evidence: `.artifacts/overworld_cutout_quality_20260909/hero-acceptance.json` and
+`verify_hero_acceptance.py`; `hero-source-{1280,1920}-acceptance-20260910`,
+`hero-{linux,windows}-acceptance-20260910`, `hero-linux-before-20260910`,
+`hero-{domain,shared}-20260910`, and `hero-legacy-{before,current}-20260910`.
+Legacy reproduction owner: adjacent `verify_hero_legacy_baseline.py`.
+Logs: `/tmp/heroes-hero-unit-20260910.log`, `/tmp/heroes-hero-validate-repo-20260910.log`;
+export reports: `/tmp/heroes-hero-{linux,windows}-20260910/report.json`.
+Accepted pool becomes **1104/1214**, **110 pending**. Parent/child remain active.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The then-remaining 783 rows
 received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 1044 repaired/preserved dispositions, leaving
-170 for complete detailed review/recovery. The two veteran mast repairs are now
+The accepted cohorts now cover 1104 repaired/preserved dispositions, leaving
+110 for complete detailed review/recovery. The two veteran mast repairs are now
 included only after the separate source/visual/platform closure above.
 All 31 recurring encounters, 30
 recurring resource-site originals, 31 separate claimed dwellings and 34 early
@@ -1825,7 +1889,10 @@ The 34 command-site originals, all 36 recruitment/habitat dispositions and the
 40 command/training paintings and 52 contract/expedition encounter paintings
 are accepted, along with the remaining 79 encounter recoveries and six faction
 controls above. All 69 artifact dispositions and 54 remaining resource-site
-paintings are accepted above. Next: hero/Town/other runtime families.
+paintings and all 60 hero identity dispositions are accepted above. Next: Town
+and other runtime families (39 Town rows, 29 unit icons, 24 cohesive blockers,
+eight remaining distinct map objects, seven encounter/elder-wild rows and three
+ownership pennants). These categories still require individual source review.
 The seven
 Pactwright/Mireglass states are accepted only by the explicit integrated-edit
 follow-up above; recovery of these originals does not accept different paintings.
