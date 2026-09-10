@@ -16615,11 +16615,11 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "36 recruitment/habitat runtime rows updated; 34 quality dispositions accepted and two controlled veteran mast-top repairs explicitly pending. Six generated physical details replace procedural flags/rings. Seven Python tests, 2830 checks per source resolution/platform package, 50 complete-save comparisons, five shared reports, three domain smokes and both exports pass. 742/1214 accepted, 472 remaining. Continue Three-Gauge Foundry/Fog-Keel mast reconstruction next. Parent and child remain in_progress; Windows is headless Wine, not hardware or release certification.",
+  "currentNotes": "Both controlled veteran mast tops restored from the exact original identity sheet, completing all 36 recruitment/habitat dispositions; 34 neighbours and body registration remain byte-identical. Nine Python tests, 2856 checks per source resolution/platform package, 60 full-save comparisons, five shared reports, three domain smokes and both exports pass. 744/1214 accepted, 470 remaining. Continue remaining command/training resource sites. Parent/child remain in_progress; headless Wine is not Windows GPU or release certification.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "art-overworld-cutout-runtime-pool-20260909",
   "currentSliceId": "art-overworld-cutout-runtime-pool-20260909",
-  "currentSliceNotes": "36 recruitment/habitat runtime rows updated, including six generated physical controlled states replacing procedural marks. 34 new visual dispositions accepted; controlled Three-Gauge Foundry and Fog-Keel Mooring still need clipped mast-top reconstruction from the original sheet. Seven Python tests, 2830 checks per source resolution/platform package, 50 complete-save comparisons, five shared reports, three domain smokes and both exports pass. 742/1214 accepted, 472 remaining. Continue the two mast repairs next; parent and child remain in_progress, not release-ready. Windows is headless Wine.",
+  "currentSliceNotes": "Recruitment cohort now visually complete: both clipped veteran mast tops restored from their exact original sheet; 34 neighbouring states unchanged. Nine Python tests, 2856 checks per source resolution/package, 60 full saves, five shared reports, three domain smokes and both exports pass. Next: remaining command/training resource sites, starting with Doctrine Expeditions and Proving Roads. 744 accepted / 470 remaining; goal stays in_progress.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Remaining Runtime-Pool Cutout Recovery",
   "currentSliceUpdatedAt": "2026-09-10T00:43:21Z",
@@ -21932,76 +21932,75 @@
     "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "in_progress",
-    "acceptedCohort": "34 accepted recruitment/habitat dispositions from 36 runtime updates; two mast repairs pending",
+    "acceptedCohort": "All 36 recruitment/habitat dispositions accepted after two original-sheet mast-top completions",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
-    "runtimeChanges": "Original-source 192px projection, scoped low-alpha RGB/debris repair and six generated physically integrated controlled states. Logical geometry, all state routes and gameplay/save owners unchanged.",
+    "runtimeChanges": "Connected missing original-sheet mast paint restored into the same two 192px cells without shifting or shrinking bodies; all 34 neighbouring states, mappings and gameplay/save owners unchanged.",
     "validation": {
-      "python_tests": 7,
-      "source_checks_per_resolution": 2830,
-      "packaged_checks_per_platform": 2830,
+      "python_tests": 9,
+      "source_checks_per_resolution": 2856,
+      "packaged_checks_per_platform": 2856,
       "source_resolutions": [
         "1280x720",
         "1920x1080"
       ],
-      "visually_inspected_affected_source_views": 9,
-      "full_save_comparisons": 50,
+      "full_save_comparisons": 60,
       "existing_sprite_input_route_fog_reports": "5 complete exit-0 passes",
       "affected_domain_reports": "3 complete exit-0 passes",
       "repository_validation": "passed",
       "linux_export": "passed",
       "windows_export": "passed",
       "windows_limit": "headless Wine; no physical GPU certification",
-      "delivery_preservation": ".artifacts/overworld_cutout_quality_20260909/recruitment_sites_delivery_preservation.json"
+      "delivery_preservation": ".artifacts/overworld_cutout_quality_20260909/mast_completion_preservation.json",
+      "earned_controlled_art_capture": "Fog-Keel Mooring after ordinary guard victory, casualty acknowledgement, claim and scouting",
+      "foundry_limit": "Direct starter assault loses normally; preserved terminal save is not claimed-art evidence. Source reconstruction and explicitly detached controlled gallery establish art quality."
     },
-    "accepted_dispositions": 742,
-    "remaining_dispositions": 472,
-    "pending_visual_repairs": [
-      "resource_site_veteran_three_gauge_chapter_foundry_controlled",
-      "resource_site_veteran_fog_keel_lastwatch_mooring_controlled"
-    ]
+    "accepted_dispositions": 744,
+    "remaining_dispositions": 470,
+    "pending_visual_repairs": []
   },
   "latestEvidence": {
     "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "in_progress",
-    "acceptedCohort": "34 accepted recruitment/habitat dispositions from 36 runtime updates; two mast repairs pending",
+    "acceptedCohort": "All 36 recruitment/habitat dispositions accepted after two original-sheet mast-top completions",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
-    "runtimeChanges": "Original-source 192px projection, scoped low-alpha RGB/debris repair and six generated physically integrated controlled states. Logical geometry, all state routes and gameplay/save owners unchanged.",
+    "runtimeChanges": "Connected missing original-sheet mast paint restored into the same two 192px cells without shifting or shrinking bodies; all 34 neighbouring states, mappings and gameplay/save owners unchanged.",
     "validation": {
-      "python_tests": 7,
-      "source_checks_per_resolution": 2830,
-      "packaged_checks_per_platform": 2830,
+      "python_tests": 9,
+      "source_checks_per_resolution": 2856,
+      "packaged_checks_per_platform": 2856,
       "source_resolutions": [
         "1280x720",
         "1920x1080"
       ],
-      "visually_inspected_affected_source_views": 9,
-      "full_save_comparisons": 50,
+      "full_save_comparisons": 60,
       "existing_sprite_input_route_fog_reports": "5 complete exit-0 passes",
       "affected_domain_reports": "3 complete exit-0 passes",
       "repository_validation": "passed",
       "linux_export": "passed",
       "windows_export": "passed",
       "windows_limit": "headless Wine; no physical GPU certification",
-      "delivery_preservation": ".artifacts/overworld_cutout_quality_20260909/recruitment_sites_delivery_preservation.json"
+      "delivery_preservation": ".artifacts/overworld_cutout_quality_20260909/mast_completion_preservation.json",
+      "earned_controlled_art_capture": "Fog-Keel Mooring after ordinary guard victory, casualty acknowledgement, claim and scouting",
+      "foundry_limit": "Direct starter assault loses normally; preserved terminal save is not claimed-art evidence. Source reconstruction and explicitly detached controlled gallery establish art quality."
     },
-    "accepted_dispositions": 742,
-    "remaining_dispositions": 472,
-    "pending_visual_repairs": [
-      "resource_site_veteran_three_gauge_chapter_foundry_controlled",
-      "resource_site_veteran_fog_keel_lastwatch_mooring_controlled"
-    ]
+    "accepted_dispositions": 744,
+    "remaining_dispositions": 470,
+    "pending_visual_repairs": []
   },
   "latestEvidenceArtifacts": [
     "docs/overworld-cutout-quality-report.md",
-    ".artifacts/overworld_cutout_quality_20260909/recruitment_sites_delivery_preservation.json",
-    ".artifacts/overworld_cutout_quality_20260909/recruitment_sites_source_1280_imported/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/recruitment_sites_source_1920/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/recruitment_sites_packaged_linux/packaged-report.json",
-    ".artifacts/overworld_cutout_quality_20260909/recruitment_sites_packaged_windows/packaged-report.json"
+    ".artifacts/overworld_cutout_quality_20260909/mast_completion_preservation.json",
+    ".artifacts/overworld_cutout_quality_20260909/mast_source_1280_final/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/mast_source_1920_final/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/mast_packaged_linux/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/mast_packaged_windows/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/mast_before_packaged_linux/report.json",
+    ".artifacts/full_play_runtime_20260905/mast_shared/report.json",
+    ".artifacts/full_play_runtime_20260905/mast_domain_final/report.json"
   ],
   "latestEvidenceId": "art-overworld-cutout-runtime-pool-20260909",
-  "latestFinding": "36 recruitment/habitat runtime rows updated; 34 quality dispositions accepted and two controlled veteran mast-top repairs explicitly pending. Six generated physical details replace procedural flags/rings. Seven Python tests, 2830 checks per source resolution/platform package, 50 complete-save comparisons, five shared reports, three domain smokes and both exports pass. 742/1214 accepted, 472 remaining. Continue Three-Gauge Foundry/Fog-Keel mast reconstruction next. Parent and child remain in_progress; Windows is headless Wine, not hardware or release certification.",
+  "latestFinding": "Both controlled veteran mast tops restored from the exact original identity sheet, completing all 36 recruitment/habitat dispositions; 34 neighbours and body registration remain byte-identical. Nine Python tests, 2856 checks per source resolution/platform package, 60 full-save comparisons, five shared reports, three domain smokes and both exports pass. 744/1214 accepted, 470 remaining. Continue remaining command/training resource sites. Parent/child remain in_progress; headless Wine is not Windows GPU or release certification.",
   "metrics": {
     "scope": "Historical full-match checkpoint metrics retained below; these are not current release metrics. Current art-goal acceptance is in latestEvidence and validation.",
     "audit_only": false,
@@ -22091,7 +22090,7 @@
         "python3 tests/packaged_overworld_cutout_batch_regression.py --batch legacy_families --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-09T16:42:26Z",
+      "updatedAt": "2026-09-10T03:16:29Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22109,7 +22108,7 @@
         "Original asset repair/replacement across authoritative overworld runtime pool",
         "Scoped provenance, source/trim/runtime preparation and integrated visual/gameplay/platform acceptance"
       ],
-      "notes": "Accepted cohorts now account for 620 of 1214 repaired/preserved dispositions, including forty original landmark/objective-state paintings in the latest source/Linux/Windows-validated batch. 594 still require complete detailed review/recovery; the goal is not complete. Latest package, save, registration, visual and interrupted-run evidence is in docs/overworld-cutout-quality-report.md. No gameplay/native/RMG/save changes or release-readiness claim.",
+      "notes": "744/1214 repaired or preserved dispositions accepted after original-sheet completion of both veteran mast tops. 470 require detailed review/recovery; full art goal and release are not complete. All 34 neighbouring recruitment paintings and gameplay/native/save owners remain unchanged. Source, visual, complete-save and both-platform evidence: docs/overworld-cutout-quality-report.md.",
       "startedAt": "2026-09-09T14:41:54Z"
     },
     {
@@ -22224,7 +22223,7 @@
         "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch recruitment_sites --label <fresh> --platform <linux|windows> --binary <official-export-binary> --pack <matching-release-pck> --resolution 1280x720"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-10T02:42:31Z",
+      "updatedAt": "2026-09-10T03:16:30Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22261,10 +22260,10 @@
         "tests/test_overworld_route_arcane_cutouts.py and tests/overworld_route_arcane_cutout_probe.py; 54 exact textures/routes, ordinary Horizon claim, seven real state-site scouting cases and complete native/authored saves",
         "tools/prepare_overworld_command_cutouts.py and command_sites source/trim/runtime packet; 34 unchanged RGBA originals, three historical atlases and exact original visible-pixel registration",
         "tests/test_overworld_command_cutouts.py and tests/overworld_command_cutout_probe.py; all 34 identities, legal Tollbrand/Cinderquill/Quench scouting, full save/draw preservation and both platform packages",
-        "tools/prepare_overworld_recruitment_cutouts.py and recruitment_sites source/generated/trim/runtime packet; 36 runtime updates with six original generated physical state details, two mast-top repairs explicitly pending",
+        "tools/prepare_overworld_recruitment_cutouts.py and recruitment_sites source/generated/trim/runtime packet; 36 runtime updates with six original generated physical state details, two original-sheet mast-top repairs completed; all 34 other cohort paintings preserved",
         "tests/test_overworld_recruitment_cutouts.py and recruitment_sites source/package probes; legal scouting, all state routes, complete-save and cross-platform preservation"
       ],
-      "notes": "36 recruitment/habitat runtime rows updated, including six generated physical controlled states replacing procedural marks. 34 new visual dispositions accepted; controlled Three-Gauge Foundry and Fog-Keel Mooring still need clipped mast-top reconstruction from the original sheet. Seven Python tests, 2830 checks per source resolution/platform package, 50 complete-save comparisons, five shared reports, three domain smokes and both exports pass. 742/1214 accepted, 472 remaining. Continue the two mast repairs next; parent and child remain in_progress, not release-ready. Windows is headless Wine.",
+      "notes": "Recruitment cohort now visually complete: both clipped veteran mast tops restored from their exact original sheet; 34 neighbouring states unchanged. Nine Python tests, 2856 checks per source resolution/package, 60 full saves, five shared reports, three domain smokes and both exports pass. Next: remaining command/training resource sites, starting with Doctrine Expeditions and Proving Roads. 744 accepted / 470 remaining; goal stays in_progress.",
       "startedAt": "2026-09-09T16:04:51Z"
     },
     {
@@ -34961,17 +34960,17 @@
         "artifact": ".artifacts/ui_runtime_skin_visual_report/battle_1280x720.png",
         "artifactSha256": "7860c25c10b6cedf4da280b38d6e2b7f42f9a189a30ef808e92fd89f936e2fc4",
         "observedLabels": [
-          "River G… x10",
-          "Blackbra… x8",
-          "Mudglas… x1",
-          "Ember A… x5"
+          "River G\u2026 x10",
+          "Blackbra\u2026 x8",
+          "Mudglas\u2026 x1",
+          "Ember A\u2026 x5"
         ]
       },
       "createdAt": "2026-08-20T09:24:19Z",
       "startedAt": "2026-08-20T09:24:19Z",
       "updatedAt": "2026-08-20T09:40:25Z",
       "completedAt": "2026-08-20T09:40:25Z",
-      "notes": "Completed the chip-only fitting policy. The focused Board owner passes at 1280 and 1920 with an independent themed-font control requiring full, complete-word, and unbreakable-word paths plus exact tooltip/count/geometry/order/session-save-settings authority. Fresh Xvfb pixels show `River… x10`, full `Bog Brute x2`, and bounded single-word fallbacks. Town/Battle visual, accessibility, animation, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These platform results do not claim packaged Battle interaction or broader release readiness.",
+      "notes": "Completed the chip-only fitting policy. The focused Board owner passes at 1280 and 1920 with an independent themed-font control requiring full, complete-word, and unbreakable-word paths plus exact tooltip/count/geometry/order/session-save-settings authority. Fresh Xvfb pixels show `River\u2026 x10`, full `Bog Brute x2`, and bounded single-word fallbacks. Town/Battle visual, accessibility, animation, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These platform results do not claim packaged Battle interaction or broader release readiness.",
       "remainingWork": "None for this chip-label-only slice. Select the next tracker-approved source-backed release-readiness implementation slice.",
       "blockedReason": null
     },
@@ -105295,7 +105294,7 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "purpose": "Keep the shipped full-text Battle Status overflow at a complete word instead of Bramble Scre… without changing its tooltip, geometry, or semantics.",
+      "purpose": "Keep the shipped full-text Battle Status overflow at a complete word instead of Bramble Scre\u2026 without changing its tooltip, geometry, or semantics.",
       "implementationTargets": [
         "scenes/battle/BattleShell.gd",
         "tests/battle_controller_board_navigation_smoke.gd",
@@ -105326,7 +105325,7 @@
       "baseline": {
         "head": "c8f29051",
         "capture": ".artifacts/battle_controller_board_navigation_smoke/current_head_event_word_final.png",
-        "visibleCut": "Bramble Scre…",
+        "visibleCut": "Bramble Scre\u2026",
         "priorOwner": "ux-battle-status-native-pixel-ellipsis-10184"
       },
       "createdAt": "2026-08-18T05:12:29Z",
@@ -105861,7 +105860,7 @@
       "startedAt": "2026-08-18T10:57:00Z",
       "updatedAt": "2026-08-18T11:29:57Z",
       "completedAt": "2026-08-18T11:29:57Z",
-      "notes": "Completed with live UI behavior, not documentation alone. BattleShell now refits each exact ActionGuide source line through the established Battle-local whole-word Unicode-ellipsis helper, retaining two compact lines and three wide. A fresh 1280x720/130% painted capture ends the Position check after the complete `(1 step)…` phrase while the board, spells, actions, and complete system-command row remain contained. The focused owner independently compares visible lines to the unabridged source and rejects ASCII ellipses and mid-token cuts while preserving enriched tooltip/system semantics and battle authority. Board navigation, shared focus, accessibility, core, authoritative 1280/1920 routed layout, static/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Battle interaction or broader release claim is made.",
+      "notes": "Completed with live UI behavior, not documentation alone. BattleShell now refits each exact ActionGuide source line through the established Battle-local whole-word Unicode-ellipsis helper, retaining two compact lines and three wide. A fresh 1280x720/130% painted capture ends the Position check after the complete `(1 step)\u2026` phrase while the board, spells, actions, and complete system-command row remain contained. The focused owner independently compares visible lines to the unabridged source and rejects ASCII ellipses and mid-token cuts while preserving enriched tooltip/system semantics and battle authority. Board navigation, shared focus, accessibility, core, authoritative 1280/1920 routed layout, static/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Battle interaction or broader release claim is made.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
       "blockedReason": null
     },
@@ -107505,7 +107504,7 @@
         "tests/random_map_live_overworld_render_move_report.gd",
         "tests/validate_repo.py"
       ],
-      "notes": "Completed from direct generated-map evidence. Existing terrain-biome blocker art is selected in deterministic 16x16 spatial clusters with bounded per-cell scale, offset, and grounding inside each exact body tile. Small and Medium 1280x720 and 1920x1080 captures pass with 15–22 distinct assets, repeated-definition variation, exact rebuild/movement/save authority, and the unchanged Medium 1920 performance floor. Authored-map scale/assets, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Native generation, placement, density, body/visit masks, passability/pathfinding, content, packaged generated-map interaction, certification, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
+      "notes": "Completed from direct generated-map evidence. Existing terrain-biome blocker art is selected in deterministic 16x16 spatial clusters with bounded per-cell scale, offset, and grounding inside each exact body tile. Small and Medium 1280x720 and 1920x1080 captures pass with 15\u201322 distinct assets, repeated-definition variation, exact rebuild/movement/save authority, and the unchanged Medium 1920 performance floor. Authored-map scale/assets, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Native generation, placement, density, body/visit masks, passability/pathfinding, content, packaged generated-map interaction, certification, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-25T02:31:16Z"
     },
     {
@@ -107524,7 +107523,7 @@
         "tests/random_map_live_overworld_render_move_report.gd",
         "tests/validate_repo.py"
       ],
-      "notes": "Completed from direct Small/Medium generated-map captures and source inspection. The original quiet-tile renderer now suppresses generic edge/corner overlays only for an enabled and loaded HoMM3 tile; disabled metadata renders the fast generic fallback. Four 1280/1920 captures render 119–291 exact boundary tiles, a controlled Small capture changes 7,934 pixels, and the Medium 1920 performance floor remains 9.57/9.45 FPS. Authored enabled/disabled ownership, generated redraw/movement/save authority, terrain assets, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Terrain topology/ids/priorities, native generation, passability/pathfinding, roads/fog, content, Native-RMG parity, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
+      "notes": "Completed from direct Small/Medium generated-map captures and source inspection. The original quiet-tile renderer now suppresses generic edge/corner overlays only for an enabled and loaded HoMM3 tile; disabled metadata renders the fast generic fallback. Four 1280/1920 captures render 119\u2013291 exact boundary tiles, a controlled Small capture changes 7,934 pixels, and the Medium 1920 performance floor remains 9.57/9.45 FPS. Authored enabled/disabled ownership, generated redraw/movement/save authority, terrain assets, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Terrain topology/ids/priorities, native generation, passability/pathfinding, roads/fog, content, Native-RMG parity, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
       "completedAt": "2026-08-25T03:04:34Z"
     },
     {
@@ -110873,8 +110872,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "472 runtime rows remain, including two still-clipped controlled veteran mast tops despite their validated edge/detail updates. Restore those original sheet details first; do not count all 36 recruitment recipe rows as accepted. No full-pool or release readiness claim.",
-  "remainingWork": "472 runtime rows remain, including two still-clipped controlled veteran mast tops despite their validated edge/detail updates. Restore those original sheet details first; do not count all 36 recruitment recipe rows as accepted. No full-pool or release readiness claim.",
+  "remainingGap": "470 runtime rows still require detailed source/visual review and any confirmed repairs. Next: remaining command/training resource-site families, starting with Commander Doctrine Expeditions and Eight Commanders Proving Roads. Both veteran mast-top repairs are now accepted; no full-pool or release-readiness claim.",
+  "remainingWork": "470 runtime rows still require detailed source/visual review and any confirmed repairs. Next: remaining command/training resource-site families, starting with Commander Doctrine Expeditions and Eight Commanders Proving Roads. Both veteran mast-top repairs are now accepted; no full-pool or release-readiness claim.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -111412,7 +111411,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "integrated_physical_state_art_accepted_parent_in_progress",
+  "result": "original_sheet_mast_completion_accepted_parent_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -111513,9 +111512,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "36 recruitment/habitat runtime rows updated; 34 quality dispositions accepted and two controlled veteran mast-top repairs explicitly pending. Six generated physical details replace procedural flags/rings. Seven Python tests, 2830 checks per source resolution/platform package, 50 complete-save comparisons, five shared reports, three domain smokes and both exports pass. 742/1214 accepted, 472 remaining. Continue Three-Gauge Foundry/Fog-Keel mast reconstruction next. Parent and child remain in_progress; Windows is headless Wine, not hardware or release certification.",
+  "summary": "Both controlled veteran mast tops restored from the exact original identity sheet, completing all 36 recruitment/habitat dispositions; 34 neighbours and body registration remain byte-identical. Nine Python tests, 2856 checks per source resolution/platform package, 60 full-save comparisons, five shared reports, three domain smokes and both exports pass. 744/1214 accepted, 470 remaining. Continue remaining command/training resource sites. Parent/child remain in_progress; headless Wine is not Windows GPU or release certification.",
   "taskId": "10236",
-  "updatedAt": "2026-09-10T02:42:31Z",
+  "updatedAt": "2026-09-10T03:16:30Z",
   "validation": {
     "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",

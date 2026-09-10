@@ -81,5 +81,39 @@ class RecruitmentCutoutTests(unittest.TestCase):
         row['integrated_state_edit']['patches']=[{'rect':[0,0,100,100],'feather':3}]
         with self.assertRaisesRegex(ValueError,'reached background'):art.recover_source(self.sources[key],row)
 
+    def test_mast_paint_is_exact_sheet_crop_and_body_never_moves(self):
+        prior=json.loads((art.PACKET/'before_mast_completion/manifest.json').read_text())
+        for key,row in self.recipe['assets'].items():
+            fixed=art.recover(self.sources[key],row)
+            if not row.get('mast_extension'):
+                self.assertEqual(art.hashlib.sha256(fixed.tobytes()).hexdigest(),prior['assets'][key]['rgba_sha256'],key)
+                continue
+            extended=art.mast_source(self.sources[key],row)
+            padding=row['mast_extension']['padding_top']
+            self.assertEqual(extended.crop((0,padding,self.sources[key].width,extended.height)).tobytes(),
+                             art.recover_source(self.sources[key],row).tobytes())
+            original=art.project(art.recover_source(self.sources[key],row),row)
+            old=np.asarray(original);new=np.asarray(fixed)
+            seam=row['canvas_origin'][1]*4+1
+            self.assertTrue(np.array_equal(old[seam:],new[seam:]),key)
+            self.assertGreater(int(((new[:,:,3]>128)&(old[:,:,3]==0)).sum()),60,key)
+            # Only low-alpha antialias support touches the cell edge; the
+            # original opaque finials fit without shifting/shrinking the body.
+            self.assertLess(int(new[0,:,3].max()),32,key)
+            changed=np.any(old!=new,2)
+            self.assertLessEqual(int(changed.sum()),200,key)
+            retained=Image.open(art.PACKET/'before_mast_completion'/(key+'.png')).convert('RGBA')
+            self.assertEqual(retained.tobytes(),original.tobytes())
+
+    def test_mast_wrong_sheet_crop_component_or_padding_fails_closed(self):
+        key='resource_site_veteran_three_gauge_chapter_foundry_controlled'
+        for field,value,pattern in [('sheet_sha256','0'*64,'sheet changed'),
+                                    ('original_grid_crop',[0,0,362,362],'exact identity-sheet crop'),
+                                    ('padding_top',36,'bounds changed')]:
+            row=copy.deepcopy(self.recipe['assets'][key]);row['mast_extension'][field]=value
+            with self.assertRaisesRegex(ValueError,pattern):art.mast_source(self.sources[key],row)
+        row=copy.deepcopy(self.recipe['assets'][key]);row['mast_extension']['component']['pixels']+=1
+        with self.assertRaisesRegex(ValueError,'component changed'):art.mast_source(self.sources[key],row)
+
 
 if __name__=='__main__':unittest.main()

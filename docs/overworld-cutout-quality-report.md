@@ -1265,27 +1265,100 @@ Windows SHA: `0b560a60884fd39031e4be8d0692969e3bf841778a7e4d5554c903d5bd4ce75b`.
 Repository and diff checks pass. Logs: `/tmp/heroes-recruitment-*-20260910.log`.
 All 66 pre-existing unrelated file hashes still match; no cleanup occurred.
 
-Immediate remaining source repairs: controlled `three_gauge_chapter_foundry`
+At that checkpoint, remaining source repairs were controlled `three_gauge_chapter_foundry`
 and `fog_keel_lastwatch_mooring`. Their 362px historical sources clip mast tops
 which remain visible in the original 1448x1086 veteran identity sheet (connected
 foreground bounds [362,689,696,1056] and [1104,700,1419,1078]). Their current
 edge/detail improvements pass regression, but do not restore those missing tips.
 Exclude these two IDs from accepted-disposition unions until reconstruction and
-visual acceptance are real. No additional owner approval is needed to continue.
+visual acceptance are real. The following completion closes these two repairs.
+
+## Veteran mast-top completion — 2026-09-10
+
+The two deferred recruitment dispositions above are now accepted. Both 362px
+masters are **byte-exact grid crops** of the retained 1448x1086 original sheet.
+The northern crop boundary at y=724 cut through their painted masts. The
+Foundry's connected foreground starts at y=689 (74,998 pixels, bounds
+[362,689,696,1056]); Mooring starts at y=700 (73,413 pixels, bounds
+[1104,700,1419,1078]). The original sheet SHA is
+`ffd967019382bf44876f04187c23dbedd15f68bab3c97b104d9b0d7ff6c139b1`.
+
+The recruitment preparation tool recovers only those connected northern pieces,
+including their two-source-pixel low-alpha fringe, through the original logical
+scale and anchor. It does not shrink, shift or repaint either building. Only
+194 Foundry and 186 Mooring runtime pixels change, within the extension and
+one bilinear seam row; every body pixel below that seam remains exact. Cell-edge
+alpha maxima are 26/12: the complete opaque finials fit, with only antialias
+support at the boundary. The other **34 states remain byte-identical**, including
+the earlier removed stray fragments and six generated physical details.
+No new generation was needed. Original-sheet hash, exact crop/component proof,
+two complete recovered masters and frozen predecessor recipe/proof/runtime cells
+are retained in the existing recruitment source/trim packet (`before_mast_completion`
+and the two `sources/*_controlled_complete.png` derivatives).
+
+Consolidated evidence in `.artifacts/overworld_cutout_quality_20260909/`:
+
+- `mast_source_1280_final`, `mast_source_1920_final`, `mast_packaged_linux`
+  and `mast_packaged_windows`: **2856 checks each**, zero runtime errors, 36
+  exact state routes, three labelled detached galleries and 11 actual map
+  observations. Fog-Keel wins its original guard battle through shipped Quick
+  Resolve, acknowledges casualties, claims normally and walks away to expose
+  the mast while retaining ordinary vision. No army, guard, ownership, position
+  or fog grants. The direct Foundry starter assault genuinely loses on Day 2;
+  its terminal save is retained, not represented as an earned controlled-art
+  capture or a claim that the scenario cannot be won. Foundry visual acceptance
+  uses original paint and the unobscured, explicitly detached renderer gallery.
+- `mast_before_packaged_linux`: the exact `e75cde7f` predecessor PCK fails only
+  the two expected RGBA checks. Its battle outcomes and complete saves match.
+- `mast_completion_preservation.json` / `verify_mast_completion.py`: all **60
+  full save files** agree across five deliveries, excluding only save timestamps
+  and fresh authored session IDs between runs; no fields are excluded within
+  round trips. All placements, draw rectangles, native masks and state mappings
+  are unchanged. The Day97 native map still has zero affected sites and 2380
+  unchanged blocker bodies; it is a control, not corrected-site evidence.
+
+Nine focused Python tests, all five shared reports (`mast_shared`), all three
+recruitment domain reports (`mast_domain_final`), repository validation and diff
+checks pass. The domain reports verify controlled claim/state/recruitment/save
+fixtures; their artificial battle resolution is not a normal-play victory.
+Their Foundry capture has hero overlap, so it is not the unobscured visual proof.
+Both resolutions, source masters/comparison, before/after controlled galleries,
+actual Mooring gameplay and the Linux-package view were inspected directly.
+Initial probe diagnostics exposed a null scene during battle handoff and an
+incorrect assumption that the direct Foundry assault would win; final probes
+wait for the actual handoff and retain the genuine loss. The first domain
+wrapper exited 143 after all three child reports exited 0; the standard file-
+launched rerun completes exit 0. Those initial runs are not the acceptance runs.
+
+Official exports/startup and packaged generated-map entry pass on both platforms;
+Windows also passes its generated Overworld/Town building flow. Windows uses
+headless Wine, not physical GPU certification. PCKs in
+`/tmp/heroes-mast-{linux,windows}-20260910/export/` are **294969576 bytes / 5484
+members**. Only `project.binary` differs by platform. Against the predecessor,
+only the veteran atlas ctex, art manifest and UID cache change; **5481 other
+members**, including compiled gameplay/native/save owners, are byte-identical.
+The manifest changes only the shared atlas hash on its 12 rows. Linux SHA:
+`7e58fa11ecb5b31be67484d42cba5caa17eae647ecfac361f1ea1b8ddd244fd2`;
+Windows SHA: `5d26066ad701e80e9509b015f5ea77da3d03baca08db4cfbf3e2f4add6065084`.
+Logs: `/tmp/heroes-mast-*-20260910.log`; no source paintings enter the packages.
+All 66 known unrelated file hashes are preserved. No cleanup, gameplay/native/
+RMG/save, Town-screen or package-budget changes. This completes the recruitment
+cohort, not the full art goal or release readiness.
 
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The then-remaining 783 rows
 received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 742 repaired/preserved dispositions, leaving
-472 for complete detailed review/recovery. This count excludes the two pending
-veteran mast repairs above despite their presence in the 36-row runtime recipe.
+The accepted cohorts now cover 744 repaired/preserved dispositions, leaving
+470 for complete detailed review/recovery. The two veteran mast repairs are now
+included only after the separate source/visual/platform closure above.
 All 31 recurring encounters, 30
 recurring resource-site originals, 31 separate claimed dwellings and 34 early
 post-interaction and 40 landmark/objective-state paintings are accepted.
-The 34 command-site originals and 34 recruitment/habitat dispositions are also
-accepted. Next: restore the two veteran mast tops, then remaining families. The seven
+The 34 command-site originals and all 36 recruitment/habitat dispositions are
+accepted. Next: remaining command/training resource-site families, starting with
+Commander Doctrine Expeditions and Eight Commanders Proving Roads. The seven
 Pactwright/Mireglass states are accepted only by the explicit integrated-edit
 follow-up above; recovery of these originals does not accept different paintings.
 Individual source and native-resolution
