@@ -12,12 +12,12 @@ const OUTPUT_DIR := "res://.artifacts/garrison_warrant_musters_smoke"
 const REPORT_PATH := OUTPUT_DIR + "/report.json"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/garrison_warrant_musters_atlas.png"
 const CASES := [
-	{"scenario_id":"beaconscribe-cinderlock-three-seal-garrison-warrant","prefix":"cinderlockwarrant","site_id":"site_cinderlock_three_seal_garrison_warrant","asset_id":"resource_site_garrison_warrant_cinderlock_seals","region":Rect2(0,0,48,48)},
-	{"scenario_id":"reedscript-murkward-three-hook-garrison-warrant","prefix":"murkwardwarrant","site_id":"site_murkward_three_hook_garrison_warrant","asset_id":"resource_site_garrison_warrant_murkward_hooks","region":Rect2(48,0,48,48)},
-	{"scenario_id":"sevenfold-meridian-three-prism-garrison-warrant","prefix":"meridianwarrant","site_id":"site_meridian_three_prism_garrison_warrant","asset_id":"resource_site_garrison_warrant_meridian_prisms","region":Rect2(96,0,48,48)},
-	{"scenario_id":"loamchant-graftroot-three-seed-garrison-warrant","prefix":"graftrootwarrant","site_id":"site_graftroot_three_seed_garrison_warrant","asset_id":"resource_site_garrison_warrant_graftroot_seeds","region":Rect2(144,0,48,48)},
-	{"scenario_id":"quench-orevein-three-gauge-garrison-warrant","prefix":"oreveinwarrant","site_id":"site_orevein_three_gauge_garrison_warrant","asset_id":"resource_site_garrison_warrant_orevein_gauges","region":Rect2(192,0,48,48)},
-	{"scenario_id":"obituaryink-bellwake-three-bell-garrison-warrant","prefix":"bellwakewarrant","site_id":"site_bellwake_three_bell_garrison_warrant","asset_id":"resource_site_garrison_warrant_bellwake_bells","region":Rect2(240,0,48,48)},
+	{"scenario_id":"beaconscribe-cinderlock-three-seal-garrison-warrant","prefix":"cinderlockwarrant","site_id":"site_cinderlock_three_seal_garrison_warrant","asset_id":"resource_site_garrison_warrant_cinderlock_seals","region":Rect2(0,0,192,192)},
+	{"scenario_id":"reedscript-murkward-three-hook-garrison-warrant","prefix":"murkwardwarrant","site_id":"site_murkward_three_hook_garrison_warrant","asset_id":"resource_site_garrison_warrant_murkward_hooks","region":Rect2(192,0,192,192)},
+	{"scenario_id":"sevenfold-meridian-three-prism-garrison-warrant","prefix":"meridianwarrant","site_id":"site_meridian_three_prism_garrison_warrant","asset_id":"resource_site_garrison_warrant_meridian_prisms","region":Rect2(384,0,192,192)},
+	{"scenario_id":"loamchant-graftroot-three-seed-garrison-warrant","prefix":"graftrootwarrant","site_id":"site_graftroot_three_seed_garrison_warrant","asset_id":"resource_site_garrison_warrant_graftroot_seeds","region":Rect2(576,0,192,192)},
+	{"scenario_id":"quench-orevein-three-gauge-garrison-warrant","prefix":"oreveinwarrant","site_id":"site_orevein_three_gauge_garrison_warrant","asset_id":"resource_site_garrison_warrant_orevein_gauges","region":Rect2(768,0,192,192)},
+	{"scenario_id":"obituaryink-bellwake-three-bell-garrison-warrant","prefix":"bellwakewarrant","site_id":"site_bellwake_three_bell_garrison_warrant","asset_id":"resource_site_garrison_warrant_bellwake_bells","region":Rect2(960,0,192,192)},
 ]
 
 var _errors: Array[String] = []
@@ -33,7 +33,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(288, 48), "Garrison Warrant atlas must remain exactly 288x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(1152, 192), "Garrison Warrant atlas must remain exactly 1152x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)

@@ -1345,20 +1345,105 @@ All 66 known unrelated file hashes are preserved. No cleanup, gameplay/native/
 RMG/save, Town-screen or package-budget changes. This completes the recruitment
 cohort, not the full art goal or release readiness.
 
+## Command/training originals — 2026-09-10
+
+Forty paintings are now recovered across Doctrine Expeditions (8), Proving
+Roads (8), Field Mastery (6), Garrison Warrants (6), Twin Councils (6) and Named
+Rival Banners (6). These are original authored resource-site identities, not
+missing manifest assignments or procedural fallbacks. Their old 48px atlases
+discarded substantial source detail. Twenty-nine masters also contain 150,404
+saturated RGB outliers at alpha 1..4; these are near-transparent quantization
+noise, not a justification for removing painted purple material.
+
+`tools/prepare_overworld_training_cutouts.py` reprojects the retained genuine-
+alpha originals directly into 192px cells, never upscaling the old 48px sprites.
+Only those scoped noisy RGB samples borrow nearest original foreground RGB
+(alpha at least 128); alpha,
+opaque paint and all other original pixels stay exact. Preserve the historical
+42px centered fits, six 44px Twin Council fits and six bottom-aligned Named
+Rival fits. Sixteen historical projections match exactly. The other twenty-four
+older filtered PNGs have alpha MAE below 4/255 and opaque RGB MAE below 8/255;
+that is cross-filter registration evidence, not byte equality. Every installed
+pixel reconstructs exactly from the new recipe and unchanged source hashes.
+
+The source review does **not** establish missing Bellfounder or furnace caps:
+Bellfounder's cap has transparent top padding; only three faint furnace edge
+pixels exceed alpha 128, with maximum 179. The close-up and rendered results
+retain the complete visible structures. No new generation was needed for this
+cohort. Intentional Rotlamp smoke, violet cloth, magical mirrors and crystals
+remain intact. The six original source manifests are immutable. Original PNGs,
+recipe, before atlases and preparation proof are retained under
+`art/overworld/source/generated/cutout_recovery_20260909/training_sites/`;
+derived cutouts are in the corresponding `source/trimmed/` directory.
+
+### Consolidated evidence
+
+Eight tests in `tests/test_overworld_training_cutouts.py` pass, including exact
+reconstruction, alpha/opaque preservation, saturated-purple protection and
+fail-closed mapping/source/crop/anchor/noise mutations. Existing source/package
+drivers use `--batch training_sites`; the independent oracle applies Godot's
+unchanged full-atlas alpha-edge processing, never loose art overrides.
+
+Under `.artifacts/overworld_cutout_quality_20260909/`:
+
+- `training_source_1280`, `training_source_1920`,
+  `training_packaged_linux_final`, `training_packaged_windows`: **2,836 checks
+  each**, 40 state-resolved original textures, no runtime errors. Four labeled
+  detached galleries cover all forty paintings; six actual authored sites are
+  exposed by ordinary Day-1 scouting, without moving objects, granting fog or
+  claims. Native Day-97 retains 2,380 blockers and contains no affected sites;
+  it is explicitly an unchanged control, not invented cohort-placement proof.
+- `training_before_packaged_linux`: exact `57f22488` predecessor PCK rejects
+  all forty cells on region, resolution and independent RGBA checks (120
+  expected failures), with no runtime errors or other failing assertions.
+- `training_sites_delivery_preservation.json` and
+  `verify_training_sites_delivery.py`: **40 full-save comparisons** across the
+  four deliveries and predecessor; only save timestamp and fresh authored
+  session IDs are excluded between runs, nothing within save/load roundtrips.
+  Original placements and world-space draw rectangles remain unchanged.
+
+All five source contact pages, seven source/prepared comparison pages and four rendered gallery pages,
+small/wide actual scouting views and final packaged Linux views were visually
+inspected. They retain fine connected details without pink fringes, detached
+sheet residue or invented geometry. Windows texture/state/save validation is
+headless Wine, not hardware-GPU screenshot acceptance.
+
+All six existing domain smokes (`training_domain_final`) and five shared
+sprite/decorative/movement/fog reports (`training_shared`) pass. Domain smokes
+retain their existing controlled battle/claim fixtures; they are not six new
+end-to-end playthroughs. The initial domain and Linux-probe outer launchers
+ended 143 after successful inner reports; final direct-exec repeats finish 0.
+Both original runs remain diagnostic evidence, not the final launcher result.
+`python3 -B tests/validate_repo.py` and `git diff --check` pass. Logs are
+`/tmp/heroes-training-*-20260910.log`; no per-image export cycles were used.
+
+Both official export/startup checks pass, including Windows Town runtime and
+generated-map entry. PCKs at `/tmp/heroes-training-{linux,windows}-20260910/export/`
+are **296,267,688 bytes / 5,484 members**. Linux SHA-256:
+`d57848fc22ee8726a25dd6704e985a0dbff233852224ebe516f784fbc609e2af`;
+Windows SHA-256:
+`5455ecd81b264fbde109a32013743478ef1ff764a34c2fdda87ec68e31d88f91`.
+Platforms differ only in `project.binary`. Relative to `57f22488`, only six
+texture payloads, the art manifest and UID cache differ; **5,476 members**,
+including every compiled gameplay/native/save owner, remain identical.
+Source paintings stay excluded. Exactly forty art rows change; all routing
+tables and the other 1,174 rows remain exact. No cleanup or unrelated changes.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The then-remaining 783 rows
 received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 744 repaired/preserved dispositions, leaving
-470 for complete detailed review/recovery. The two veteran mast repairs are now
+The accepted cohorts now cover 784 repaired/preserved dispositions, leaving
+430 for complete detailed review/recovery. The two veteran mast repairs are now
 included only after the separate source/visual/platform closure above.
 All 31 recurring encounters, 30
 recurring resource-site originals, 31 separate claimed dwellings and 34 early
 post-interaction and 40 landmark/objective-state paintings are accepted.
-The 34 command-site originals and all 36 recruitment/habitat dispositions are
-accepted. Next: remaining command/training resource-site families, starting with
-Commander Doctrine Expeditions and Eight Commanders Proving Roads. The seven
+The 34 command-site originals, all 36 recruitment/habitat dispositions and the
+40 command/training paintings are accepted. Next: remaining encounter landmark,
+artifact and other runtime families, beginning with Dissident Fronts, Standalone
+Contracts and Outer Reach Contracts. The seven
 Pactwright/Mireglass states are accepted only by the explicit integrated-edit
 follow-up above; recovery of these originals does not accept different paintings.
 Individual source and native-resolution

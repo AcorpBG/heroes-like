@@ -300,6 +300,41 @@ run the consolidated recruitment/source/package/domain/shared acceptance cycle.
 Detached state coverage and normal scouting/earned claims must remain separately
 labelled; no injected ownership, position, fog or guard removal for screenshots.
 
+### Command/training landmark recovery
+
+The next cohort comprises forty paintings in Commander Doctrine Expeditions,
+Eight Commanders Proving Roads, Field Mastery Convocations, Garrison Warrant
+Musters, Twin Command Field Councils and Named Rival Banners. Inspect every
+original, including clipped source-canvas edges; higher raster density alone
+does not repair missing paint. Recover original paint where retained, and use
+approved original raster edits for genuinely missing pieces. Preserve unchanged
+body registration and exact historical source fit, atlas paths, site/state
+routes and gameplay. Keep genuine alpha and intentional purple material;
+never ship generated checkerboards or procedural replacement pixels.
+
+Targets: scoped training-site preparation/provenance and source/trim/runtime
+packet, focused Python reconstruction tests and the shared source/package cutout
+probes. Extend their batch selector without weakening the independent image
+oracle, full-save or native controls. Inspect forty state-selected textures and
+small/wide actual authored scouting views; label detached galleries and any
+controlled claim fixtures explicitly. Preserve the unchanged earned native map
+when none of these sites occurs there. Run affected domain and shared sprite/
+input/fog reports, repository/diff checks and both official exports with matching
+package content. No native/RMG, gameplay, save, Town, unrelated art or cleanup.
+
+Implementation owners: `tools/prepare_overworld_training_cutouts.py`,
+`tests/test_overworld_training_cutouts.py`, `tests/overworld_training_cutout_probe.py`
+and `cutout_recovery_20260909/training_sites/recipe.json`. Source/package drivers
+select `--batch training_sites`; source runs cover `--resolution 1280x720` and
+`--resolution 1920x1080`. Retain the original 42-pixel centered fits, the six
+44-pixel Twin Council fits and the six bottom-aligned Named Rival fits.
+Only alpha 1..4 saturated RGB quantization noise may borrow nearest original
+foreground RGB at alpha 128 or higher; alpha, opaque material and every other source pixel stay exact.
+Sixteen historical projections reconstruct exactly; twenty-four older filtered
+PNGs have bounded cross-filter agreement, not falsely claimed byte equality.
+All forty installed rasters must reconstruct exactly from the retained sources
+and recipe regardless of those historical filter differences.
+
 ## Completion and non-goals
 
 Each cohort completes only after its actual repaired art is integrated and its

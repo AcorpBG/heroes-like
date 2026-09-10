@@ -11,14 +11,14 @@ const OUTPUT_DIR := "res://.artifacts/eight_commanders_proving_roads_smoke"
 const REPORT_PATH := OUTPUT_DIR + "/report.json"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/eight_commanders_proving_roads_atlas.png"
 const CASES := [
-	{"scenario_id":"bellfounder-three-hammer-proving-road","prefix":"orenproof","site_id":"site_bellfounder_three_hammer_rostrum","asset_id":"resource_site_proving_road_bellfounder_rostrum","region":Rect2(0,0,48,48),"command_key":"attack"},
-	{"scenario_id":"ashmeter-cinder-measure-proving-road","prefix":"pavaproof","site_id":"site_ashmeter_cinder_measure_crucible","asset_id":"resource_site_proving_road_ashmeter_crucible","region":Rect2(48,0,48,48),"command_key":"power"},
-	{"scenario_id":"quench-three-cycle-proving-road","prefix":"vellumproof","site_id":"site_quench_three_cycle_calibrator","asset_id":"resource_site_proving_road_quench_calibrator","region":Rect2(96,0,48,48),"command_key":"knowledge"},
-	{"scenario_id":"tollreaver-deep-muster-proving-road","prefix":"orrikproof","site_id":"site_tollreaver_deep_muster_toll","asset_id":"resource_site_proving_road_tollreaver_toll","region":Rect2(144,0,48,48),"command_key":"defense"},
-	{"scenario_id":"seedseer-root-future-proving-road","prefix":"veyraproof","site_id":"site_seedseer_root_future_oracle","asset_id":"resource_site_proving_road_seedseer_oracle","region":Rect2(192,0,48,48),"command_key":"power"},
-	{"scenario_id":"vowless-broken-retort-proving-road","prefix":"nacreproof","site_id":"site_vowless_broken_retort_mirror","asset_id":"resource_site_proving_road_vowless_mirror","region":Rect2(240,0,48,48),"command_key":"knowledge"},
-	{"scenario_id":"vanehook-three-line-proving-road","prefix":"rulnproof","site_id":"site_vanehook_three_line_harpoon","asset_id":"resource_site_proving_road_vanehook_harpoon","region":Rect2(288,0,48,48),"command_key":"attack"},
-	{"scenario_id":"obituaryink-last-name-proving-road","prefix":"thirproof","site_id":"site_obituaryink_last_name_lectern","asset_id":"resource_site_proving_road_obituaryink_lectern","region":Rect2(336,0,48,48),"command_key":"power"},
+	{"scenario_id":"bellfounder-three-hammer-proving-road","prefix":"orenproof","site_id":"site_bellfounder_three_hammer_rostrum","asset_id":"resource_site_proving_road_bellfounder_rostrum","region":Rect2(0,0,192,192),"command_key":"attack"},
+	{"scenario_id":"ashmeter-cinder-measure-proving-road","prefix":"pavaproof","site_id":"site_ashmeter_cinder_measure_crucible","asset_id":"resource_site_proving_road_ashmeter_crucible","region":Rect2(192,0,192,192),"command_key":"power"},
+	{"scenario_id":"quench-three-cycle-proving-road","prefix":"vellumproof","site_id":"site_quench_three_cycle_calibrator","asset_id":"resource_site_proving_road_quench_calibrator","region":Rect2(384,0,192,192),"command_key":"knowledge"},
+	{"scenario_id":"tollreaver-deep-muster-proving-road","prefix":"orrikproof","site_id":"site_tollreaver_deep_muster_toll","asset_id":"resource_site_proving_road_tollreaver_toll","region":Rect2(576,0,192,192),"command_key":"defense"},
+	{"scenario_id":"seedseer-root-future-proving-road","prefix":"veyraproof","site_id":"site_seedseer_root_future_oracle","asset_id":"resource_site_proving_road_seedseer_oracle","region":Rect2(768,0,192,192),"command_key":"power"},
+	{"scenario_id":"vowless-broken-retort-proving-road","prefix":"nacreproof","site_id":"site_vowless_broken_retort_mirror","asset_id":"resource_site_proving_road_vowless_mirror","region":Rect2(960,0,192,192),"command_key":"knowledge"},
+	{"scenario_id":"vanehook-three-line-proving-road","prefix":"rulnproof","site_id":"site_vanehook_three_line_harpoon","asset_id":"resource_site_proving_road_vanehook_harpoon","region":Rect2(1152,0,192,192),"command_key":"attack"},
+	{"scenario_id":"obituaryink-last-name-proving-road","prefix":"thirproof","site_id":"site_obituaryink_last_name_lectern","asset_id":"resource_site_proving_road_obituaryink_lectern","region":Rect2(1344,0,192,192),"command_key":"power"},
 ]
 
 var _errors: Array[String] = []
@@ -34,7 +34,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(384, 48), "Eight Commanders Proving Roads atlas must remain exactly 384x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(1536, 192), "Eight Commanders Proving Roads atlas must remain exactly 1536x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)

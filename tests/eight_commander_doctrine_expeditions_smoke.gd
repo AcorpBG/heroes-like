@@ -12,14 +12,14 @@ const REPORT_PATH := OUTPUT_DIR + "/report.json"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/commander_doctrine_expeditions_atlas.png"
 const BATCH_ID := "content-eight-commander-doctrine-expeditions-10184"
 const CASES := [
-	{"scenario_id":"heatpriest-quench-censer-expedition","prefix":"heatdoctrine","hero_id":"hero_brasshollow_odrik_heatpriest","faction_id":"faction_brasshollow","site_id":"site_heatpriest_quench_censer","asset_id":"resource_site_doctrine_heatpriest_quench_censer","region":Rect2(0,0,48,48),"command_key":"power"},
-	{"scenario_id":"fenhook-blind-levee-expedition","prefix":"fenhookdoctrine","hero_id":"hero_tarn","faction_id":"faction_mireclaw","site_id":"site_fenhook_blind_levee_snare","asset_id":"resource_site_doctrine_fenhook_blind_levee_snare","region":Rect2(48,0,48,48),"command_key":"attack"},
-	{"scenario_id":"choirward-resonance-bastion-expedition","prefix":"choirwarddoctrine","hero_id":"hero_thalen","faction_id":"faction_sunvault","site_id":"site_choirward_resonance_bastion","asset_id":"resource_site_doctrine_choirward_resonance_bastion","region":Rect2(96,0,48,48),"command_key":"defense"},
-	{"scenario_id":"mirrorstep-parallax-gate-expedition","prefix":"mirrorstepdoctrine","hero_id":"hero_varis","faction_id":"faction_sunvault","site_id":"site_mirrorstep_parallax_gate","asset_id":"resource_site_doctrine_mirrorstep_parallax_gate","region":Rect2(144,0,48,48),"command_key":"attack"},
-	{"scenario_id":"mossvein-memory-cairn-expedition","prefix":"mossveindoctrine","hero_id":"hero_thornwake_ralka_mossvein","faction_id":"faction_thornwake","site_id":"site_mossvein_memory_cairn","asset_id":"resource_site_doctrine_mossvein_memory_cairn","region":Rect2(192,0,48,48),"command_key":"knowledge"},
-	{"scenario_id":"bramble-hound-pursuit-kennel-expedition","prefix":"bramblehounddoctrine","hero_id":"hero_thornwake_silsa_bramblehound","faction_id":"faction_thornwake","site_id":"site_bramble_hound_pursuit_kennel","asset_id":"resource_site_doctrine_bramble_hound_pursuit_kennel","region":Rect2(240,0,48,48),"command_key":"attack"},
-	{"scenario_id":"rootwright-living-span-expedition","prefix":"rootwrightdoctrine","hero_id":"hero_thornwake_tova_rootwright","faction_id":"faction_thornwake","site_id":"site_rootwright_living_span","asset_id":"resource_site_doctrine_rootwright_living_span","region":Rect2(288,0,48,48),"command_key":"defense"},
-	{"scenario_id":"nightchart-false-star-orrery-expedition","prefix":"nightchartdoctrine","hero_id":"hero_veilmourn_orso_nightchart","faction_id":"faction_veilmourn","site_id":"site_nightchart_false_star_orrery","asset_id":"resource_site_doctrine_nightchart_false_star_orrery","region":Rect2(336,0,48,48),"command_key":"knowledge"},
+	{"scenario_id":"heatpriest-quench-censer-expedition","prefix":"heatdoctrine","hero_id":"hero_brasshollow_odrik_heatpriest","faction_id":"faction_brasshollow","site_id":"site_heatpriest_quench_censer","asset_id":"resource_site_doctrine_heatpriest_quench_censer","region":Rect2(0,0,192,192),"command_key":"power"},
+	{"scenario_id":"fenhook-blind-levee-expedition","prefix":"fenhookdoctrine","hero_id":"hero_tarn","faction_id":"faction_mireclaw","site_id":"site_fenhook_blind_levee_snare","asset_id":"resource_site_doctrine_fenhook_blind_levee_snare","region":Rect2(192,0,192,192),"command_key":"attack"},
+	{"scenario_id":"choirward-resonance-bastion-expedition","prefix":"choirwarddoctrine","hero_id":"hero_thalen","faction_id":"faction_sunvault","site_id":"site_choirward_resonance_bastion","asset_id":"resource_site_doctrine_choirward_resonance_bastion","region":Rect2(384,0,192,192),"command_key":"defense"},
+	{"scenario_id":"mirrorstep-parallax-gate-expedition","prefix":"mirrorstepdoctrine","hero_id":"hero_varis","faction_id":"faction_sunvault","site_id":"site_mirrorstep_parallax_gate","asset_id":"resource_site_doctrine_mirrorstep_parallax_gate","region":Rect2(576,0,192,192),"command_key":"attack"},
+	{"scenario_id":"mossvein-memory-cairn-expedition","prefix":"mossveindoctrine","hero_id":"hero_thornwake_ralka_mossvein","faction_id":"faction_thornwake","site_id":"site_mossvein_memory_cairn","asset_id":"resource_site_doctrine_mossvein_memory_cairn","region":Rect2(768,0,192,192),"command_key":"knowledge"},
+	{"scenario_id":"bramble-hound-pursuit-kennel-expedition","prefix":"bramblehounddoctrine","hero_id":"hero_thornwake_silsa_bramblehound","faction_id":"faction_thornwake","site_id":"site_bramble_hound_pursuit_kennel","asset_id":"resource_site_doctrine_bramble_hound_pursuit_kennel","region":Rect2(960,0,192,192),"command_key":"attack"},
+	{"scenario_id":"rootwright-living-span-expedition","prefix":"rootwrightdoctrine","hero_id":"hero_thornwake_tova_rootwright","faction_id":"faction_thornwake","site_id":"site_rootwright_living_span","asset_id":"resource_site_doctrine_rootwright_living_span","region":Rect2(1152,0,192,192),"command_key":"defense"},
+	{"scenario_id":"nightchart-false-star-orrery-expedition","prefix":"nightchartdoctrine","hero_id":"hero_veilmourn_orso_nightchart","faction_id":"faction_veilmourn","site_id":"site_nightchart_false_star_orrery","asset_id":"resource_site_doctrine_nightchart_false_star_orrery","region":Rect2(1344,0,192,192),"command_key":"knowledge"},
 ]
 
 var _errors: Array[String] = []
@@ -35,7 +35,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(384, 48), "Commander Doctrine Expeditions atlas must remain exactly 384x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(1536, 192), "Commander Doctrine Expeditions atlas must remain exactly 1536x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)
