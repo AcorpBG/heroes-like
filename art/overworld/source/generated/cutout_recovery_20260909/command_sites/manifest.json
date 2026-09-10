@@ -1,0 +1,163 @@
+{
+  "schema_id": "command_site_cutout_recovery_v1",
+  "recipe_sha256": "d7da83aef67e4f7fe63f2f43a60bb2d21a7509d8f7cb697aafdc21bc21410a90",
+  "tools": {
+    "tools/prepare_overworld_command_cutouts.py": "7b92676f2ba14c77d1305293f4e58a215b730f7f4c53360f42feeb0a172b5557",
+    "tools/prepare_overworld_recurring_cutouts.py": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
+    "tools/prepare_overworld_cutout_art.py": "247801087cb8c5bfd6fb0a471bf39dbbfdb2a8bd8fe984d3816df92f00b0d68d",
+    "tools/prepare_overworld_legacy_cutouts.py": "578dd78feaf322f585df5b214cfdbe607ea29eb0a359a95ce549e289c8d7b092"
+  },
+  "assets": {
+    "resource_site_muster_tollbrand_toll_chain_standard": {
+      "trim_sha256": "7320c2f4ee86eef6fce45d0380f217510a6dcdbf669e22dc68520339b3ba43d1",
+      "rgba_sha256": "895e75c9abe8abb38a8afee94991a03bd84f36fd038a208320e025771c548f5c"
+    },
+    "resource_site_muster_beaconscribe_beacon_ledger_post": {
+      "trim_sha256": "3eb19e2b708d88aa693b3866210dfd847a4fa4600380de36026b222aea457a3a",
+      "rgba_sha256": "a4a6edae38153860102f0d40d295809bf836af522ec9e23e49c28cbc12e7e58e"
+    },
+    "resource_site_muster_mudkeel_keel_drum_rally": {
+      "trim_sha256": "0d4f305bad644c464267d387cd6d22ef6c053066c40c9f3318f222a620ef0276",
+      "rgba_sha256": "fd412b6ad01ef4a6663ef8a95d4092fa4ba000aa1402fd6d4b6d0a477ac9c3c1"
+    },
+    "resource_site_muster_rotlamp_muster_cage": {
+      "trim_sha256": "f05ff2ecb740afbcda6be6bdd9ce86ab6d35efc688190d655b72cee026b47587",
+      "rgba_sha256": "c4c507d5ef79c1d2acb5526b58c6829686b3a04eca8ae7ed5bff2a5f25164f59"
+    },
+    "resource_site_muster_sunvein_sun_thread_standard": {
+      "trim_sha256": "c6644d6b6bc9f05330deb5afe2523d8856306f789bc2eda22a4732f01770acdc",
+      "rgba_sha256": "4fb87acec414edb56b966de9b6d964f3a6aba055c628d1aa664066c4e7288476"
+    },
+    "resource_site_muster_lenscaptain_range_lens_rally": {
+      "trim_sha256": "5b0cb94d98a8e6b1dcc726192f2a37f86c62d36462225266c1c11e6c51f62ed6",
+      "rgba_sha256": "e46b3fdb98c3cb739fc85d0c4eece1ed9726757215dbecf8d54f548842476e33"
+    },
+    "resource_site_muster_loamchant_chorus_bough": {
+      "trim_sha256": "24959ecc9d78a07edabe170c0f8f4bf0cbd44e3f7fa53a3506be39467f8b6257",
+      "rgba_sha256": "cc06e269a9bef7fc0a7b7eae502744861a53ab9ac799ccab68ed98ff5bc22ca0"
+    },
+    "resource_site_muster_thorncart_cart_crown_rally": {
+      "trim_sha256": "afdec41fdc3c9653699d68a828902c35a82b39cea5caa58153e53cebd628249e",
+      "rgba_sha256": "91dc4c0eae1177a983cd85ba340786df121ddfa1f207d91f20b4267f77cb32ba"
+    },
+    "resource_site_muster_debtrune_debt_seal_gantry": {
+      "trim_sha256": "58c765f7b1251a66afef1e738ab48ccc2306910e8e582a92f3cda0a28fe3ff2f",
+      "rgba_sha256": "2032485f765423f4529252d82fcdae83fd14d052582a903925dfacf13d6a29f1"
+    },
+    "resource_site_muster_pitmarshal_pit_bell_rally": {
+      "trim_sha256": "3ef4ce608d2be14917e83b46bd1181a2e63126ba31c6ffcd57a73299f4e0efd9",
+      "rgba_sha256": "9aa8710a6d584d05793ca8686f6da0056e5d5b28c12c83afd6451bd8880a4206"
+    },
+    "resource_site_muster_mistcorsair_fog_sail": {
+      "trim_sha256": "c395fb873c718ecd7129bf95d9ca1f296fc8175811d50b78be257c07dd951bc4",
+      "rgba_sha256": "cf01a988edbeef9f5dea7f452a5b2ea89fc5506a11fea81398470728439b9be9"
+    },
+    "resource_site_muster_keelwarden_keel_sounding_frame": {
+      "trim_sha256": "caed4efd9b74d8406b2934ed6ce38e9d8669a2702acc911970154b6a1fcacaf7",
+      "rgba_sha256": "81005483637a16af640cc2c791152e7aa4374558fd6c0eca71ada841dd5bc7c4"
+    },
+    "resource_site_route_cinderquill_kiln_desk": {
+      "trim_sha256": "fdeae90a2b2c0b0f42d0371c170afff423a2796a3b8f8c868ebac8c99d251225",
+      "rgba_sha256": "8e4c347882b73513fee67eea5295200afcc7366d8a9fc0211e8fe82dbbe2cb03"
+    },
+    "resource_site_route_lockmaster_seven_lock_gate": {
+      "trim_sha256": "54a17d3ab2c5a7ad3db2749a1f399d995311bf57efadfd986a472b35e05888f9",
+      "rgba_sha256": "508f9cd8a176b0500c5466a54e066fae98ea8eeb4c129226b8a963bb99c0b2e6"
+    },
+    "resource_site_route_chainboom_breach_drum": {
+      "trim_sha256": "872490b999d541d2bb09d57d0f8a812e9c589abbc32792f67a3433cf346b9b65",
+      "rgba_sha256": "fc554b1ef3a6094a1a5331a20683c480401460badc4bf500e720c343cabcc04d"
+    },
+    "resource_site_route_reedscript_flood_ledger": {
+      "trim_sha256": "7add92e3e05dc1b6f2da9393947cc18787c1ad3ce47cdeff2eacefa2ca2a7391",
+      "rgba_sha256": "d6e5727da16de0983ad1a67d5dd8b6b4fadaa68c9ae9630d14ce75c19faa332e"
+    },
+    "resource_site_route_daynote_dawn_chime": {
+      "trim_sha256": "988e2881b21a87f9db01d7554662ecbe5c4a5ebd12f1236dbf697ddf456342b8",
+      "rgba_sha256": "bcd219962c1b50de7d29880907fbd39f5d38604381a814b7211f18c6fe34e4a4"
+    },
+    "resource_site_route_glassmarshal_prism_beacon": {
+      "trim_sha256": "6b35b6685c4e9fa5ab7e7774d63cda40c52cd2d022f57fc47ea0c7881ab1e214",
+      "rgba_sha256": "63eb1ba39e0ce7737e5e3473831406708ab01d825fbc08817ab6d89705a9df4c"
+    },
+    "resource_site_route_graftsibyl_root_omen": {
+      "trim_sha256": "69cfcf94807e7d28baa72220b0c6b0e86e3711f4bcf3785032ce0a78b5cc079d",
+      "rgba_sha256": "e40a430dbf88051198f27d7500d5fd3fcf0d38a361f1c82e60795c8b9e17230f"
+    },
+    "resource_site_route_seedseer_windseed_orrery": {
+      "trim_sha256": "00f1426de4f759f182f97bf28109e18512c470e4db45ac11b27dc7f4fe8a9813",
+      "rgba_sha256": "c768d3bace15d6579c93fb995a36a20a961e17735c33b60204330a954ceae603"
+    },
+    "resource_site_route_bellfounder_road_bell": {
+      "trim_sha256": "47759e085e48dfb5c8f7c957b4e6447cddacf9741c940bea1ee96fec02a93d4e",
+      "rgba_sha256": "9863a8ea15cdfe293389f65d69b820bc1cd28abab7b1eaa34c22b886965ae1a8"
+    },
+    "resource_site_route_ashmeter_cinder_scale": {
+      "trim_sha256": "707ff3cbfc996c809b497d2e684a863f783e27019acf2f02c1a71b5ade74e011",
+      "rgba_sha256": "cc78d70a2ee2e800581aafbe9c91d49cceefd7b9ae9b97406f00f08c6bba8f35"
+    },
+    "resource_site_route_vowless_blank_bell": {
+      "trim_sha256": "1315212412b2b74968043e9faeee8732b325010e77c7a748af2f47db757b69c7",
+      "rgba_sha256": "0ca117e4f8a279176a54de6d4f327a9970c3c6ec5aed84381f64b3b16fc6aee7"
+    },
+    "resource_site_route_vanehook_crosswind_mooring": {
+      "trim_sha256": "00fe8773023c5411a5664b0d2634e2663e9cb84201540d5bd58cf43cfe00710a",
+      "rgba_sha256": "963f0d9a3c90abbacbfd3a506edf199909e29eb1d278c720557f7228041399c2"
+    },
+    "resource_site_dominion_quench_cantilever_gauge": {
+      "trim_sha256": "095f4abe6cd1458177dfadbc8af9105877342acb78a685e1d0af9320267ba46d",
+      "rgba_sha256": "1c02f8d2b43f60367187f944b01ce7547e92fc7c2e92c7a5e53a950f5a945605"
+    },
+    "resource_site_dominion_counterweight_verdict_press": {
+      "trim_sha256": "c036dd182741bdf279b93b64b9215a93deaf78c8d011a79be1ebb0a03e275b93",
+      "rgba_sha256": "dc292a80f7ca36168b91c331ee3079a59f610716f36dca75433664604a2e0980"
+    },
+    "resource_site_dominion_blackwake_toll_tusk": {
+      "trim_sha256": "b6f7d2d6cc909c967fe8fa224966fc315850871991e3028cf587548487eb1453",
+      "rgba_sha256": "dd62393917e3cceae0a6c3b87b9d192b0285dd91bea50136b3325a02c53845c5"
+    },
+    "resource_site_dominion_moonchain_raid_ledger": {
+      "trim_sha256": "2b5f5a84ca91515ad5d8e43e4a749ce868882e5bf4011839caaebd0f50078f95",
+      "rgba_sha256": "033dc5cd1ca9c777979405339976845370b27f8176ff6186af9d09d8303f0541"
+    },
+    "resource_site_dominion_last_margin_mast": {
+      "trim_sha256": "211cca70fc5f5debfc2df07e1509c2b87145848655369279a97c48f202d8d207",
+      "rgba_sha256": "42322250614b9f8d38ee9d3c73e358944319ec993a03ae57d983a26aa9797d09"
+    },
+    "resource_site_dominion_drowned_name_archive": {
+      "trim_sha256": "d73711199c7af38e2c34c032608e16675238a0130d8db7458593c3a43bc414aa",
+      "rgba_sha256": "cc50120c218834ed76a55dc12dc20ae9e276a01031705863518b9f1da0a1d0ef"
+    },
+    "resource_site_dominion_crown_drum_dais": {
+      "trim_sha256": "e905c1bef768a61049a454ee5054ecc8f86643090a3354c664a1b3bb285af7ba",
+      "rgba_sha256": "47487bf372861f48ae098d2f33e7e8654bab402aee35eebc75c67e3c81c6e57d"
+    },
+    "resource_site_dominion_fenwake_undertow_beacon": {
+      "trim_sha256": "2f1cbd1328b970bffde757b8f2952861bd46cc6f311bd43cb0af4d279a6bebd3",
+      "rgba_sha256": "a4c9e1422a2ad4777cda7d73e034bb71523dd80c1946656ae3cd9dd7fd560ece"
+    },
+    "resource_site_dominion_nine_ray_halo_range": {
+      "trim_sha256": "366aeb26f21405f83cbe184118bdebf782196888aba25ec75d8756d7d912bc41",
+      "rgba_sha256": "0636d154abc68f9731a6d10054dd0fa80d7c003de33f4cb9da898e50ba3c204f"
+    },
+    "resource_site_dominion_meridian_shadow_dial": {
+      "trim_sha256": "696a6da0a5b1a923120035db46a77f834a072a03eae19985f095c5b04d0f61a7",
+      "rgba_sha256": "1215d9acca03222f5d1c41dad06d16cb517651e3f54592cc3ae91ae7ec370701"
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/resource_sites/marchland_warband_musters_atlas.png": {
+      "after_sha256": "4151fb653da083914cf10c5489d48dfab5b95ca7e3eb0b71fd9b3b6c77411a1c",
+      "prepared": "runtime/objects/resource_sites/marchland_warband_musters_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png": {
+      "after_sha256": "0c297630e51b4aaa57a3f6dbe2ffcbbb7a090b59ac6ed29cca41908a1c8b7cbc",
+      "prepared": "runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/commander_dominion_sieges_atlas.png": {
+      "after_sha256": "3aee39ad05771cac877be374c69f2aadee9840233b5d10692c1ea4153436b771",
+      "prepared": "runtime/objects/resource_sites/commander_dominion_sieges_atlas.png"
+    }
+  },
+  "processing": "Genuine original RGBA unchanged; measured 42px centered logical fit projected directly at fourfold raster density. No color/alpha deletion, state tokens or gameplay changes."
+}

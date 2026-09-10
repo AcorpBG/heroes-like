@@ -44207,6 +44207,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(len(route_recoveries) == 54, errors, "All 54 route/arcane paintings must reconstruct from registered originals or approved generated edits")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Route/arcane cutout recovery failed closed: {exc}")
+    command_recoveries = {}
+    try:
+        command_spec = importlib.util.spec_from_file_location("command_cutout_validation", ROOT / "tools/prepare_overworld_command_cutouts.py")
+        command_module = importlib.util.module_from_spec(command_spec)
+        command_spec.loader.exec_module(command_module)
+        command_recoveries = command_module.validate_assets()
+        ensure(len(command_recoveries) == 34, errors, "All 34 command paintings must reconstruct from original RGBA and historical registration")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Command cutout recovery failed closed: {exc}")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
@@ -44393,6 +44402,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (96, 96)
             else:
                 expected_canvas = (512, 512)
+            if asset_id in command_recoveries:
+                expected_canvas = tuple(entry["atlas_size"])
             if asset_id in route_recoveries:
                 expected_canvas = (route_module.FAMILIES[Path(entry['path']).stem.removesuffix('_atlas')][0] * 192, 192)
             ensure((width, height) == expected_canvas, errors, f"Overworld runtime object asset {asset_id} must use the {expected_canvas[0]} canvas, found {width}x{height}")
@@ -83420,6 +83431,7 @@ def validate_twelve_marchland_warband_musters(errors: list[str]) -> None:
     slice_id = "content-twelve-marchland-warband-musters-10184"
     atlas_res = "res://art/overworld/runtime/objects/resource_sites/marchland_warband_musters_atlas.png"
     atlas_path = res_path_to_disk(atlas_res)
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/command_sites/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     source_dir = ROOT / "art/overworld/source/generated/resource_sites/marchland_warband_musters_wave1"
     source_manifest_path = source_dir / "manifest.json"
     author_path = ROOT / "tools/author_twelve_marchland_warband_musters.py"
@@ -83461,7 +83473,7 @@ def validate_twelve_marchland_warband_musters(errors: list[str]) -> None:
     lead_counts = {hero_id: sum(1 for scenario in scenarios.values() if scenario.get("hero_id") == hero_id) for hero_id in heroes}
     ensure(all(lead_counts[row[2]] >= 4 for row in expected.values()) and min(lead_counts.values()) >= 4, errors, "The twelve selected heroes must retain at least four direct leads while the catalog-wide lead floor stays at four")
     atlas_sha = "1d10aeb8be99da25bf5bcbd8e685feed2e0e3587d5c5952db1620fa12d08fea0"
-    ensure(png_size(atlas_path) == (576,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6 and Path(f"{atlas_path}.import").is_file(), errors, "Marchland Warband runtime atlas dimensions, alpha, hash, or import changed")
+    ensure(png_size(historical_atlas_path) == (576,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == atlas_sha and historical_atlas_path.read_bytes()[25] == 6 and Path(f"{atlas_path}.import").is_file(), errors, "Marchland Warband runtime atlas dimensions, alpha, hash, or import changed")
     ensure(source_manifest.get("schema_id") == "twelve_marchland_warband_musters_art_v1" and source_manifest.get("content_batch_id") == slice_id and source_manifest.get("generation_mode") == "built_in_imagegen" and source_manifest.get("source_model") == "built_in_imagegen_original_marchland_warband_musters_atlas" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [576,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 12, errors, "Marchland Warband generated-source provenance changed")
     source_payloads: list[bytes] = []
     selected_encounters: list[str] = []
@@ -83486,7 +83498,7 @@ def validate_twelve_marchland_warband_musters(errors: list[str]) -> None:
         ensure(len(victories) == 6 and victories[0].get("type") == "hero_army_meets_requirements" and {row.get("unit_id") for row in victories[0].get("requirements", [])} == {unit_a,unit_b} and victories[1].get("flag") in site.get("claim_flags", {}) and {row.get("placement_id") for row in victories[2:]} == expected_fronts, errors, f"{scenario_id} local-company, landmark, or front objectives changed")
         ensure(site.get("content_batch_id") == slice_id and site.get("runtime_boundary", {}).get("status") == "marchland_warband_muster_live" and site.get("claim_rewards") == {"gold":600,rare_key:1,"experience":150} and site.get("claim_recruits") == {unit_a:3,unit_b:1} and len(site.get("claim_flags", {})) == 1, errors, f"{site_id} one-time resources, XP, recruits, or flag changed")
         asset = assets.get(asset_id, {})
-        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [576,48] and asset.get("runtime_sha256") == atlas_sha and asset.get("source_model") == "built_in_imagegen_original_marchland_warband_musters_atlas" and asset.get("assigned_resource_site_id") == site_id and asset.get("assigned_hero_id") == hero_id and len(str(asset.get("accessible_description", ""))) >= 80, errors, f"{site_id} exact accessible field art changed")
+        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v*4 for v in region] and asset.get("atlas_size") == [2304,192] and asset.get("runtime_sha256") == hashlib.sha256(atlas_path.read_bytes()).hexdigest() and asset.get("source_model") == "built_in_imagegen_original_marchland_warband_musters_atlas" and asset.get("assigned_resource_site_id") == site_id and asset.get("assigned_hero_id") == hero_id and len(str(asset.get("accessible_description", ""))) >= 80, errors, f"{site_id} exact accessible field art changed")
         source = source_rows.get(site_id, {})
         source_path = source_dir / source_name
         ensure(source.get("source_sha256") == source_sha and source.get("asset_id") == asset_id and source.get("atlas_region") == region and len(str(source.get("prompt", ""))) >= 300 and str(source.get("generation_original", "")).startswith("/root/.codex/generated_images/") and source_path.is_file() and min(png_size(source_path) or (0,0)) >= 1024 and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha and source_path.read_bytes()[25] == 6, errors, f"{site_id} source master, prompt, alpha, or hash changed")
@@ -83515,6 +83527,7 @@ def validate_twelve_marchland_grand_route_operations(errors: list[str]) -> None:
     slice_id = "content-twelve-marchland-grand-route-operations-10184"
     atlas_res = "res://art/overworld/runtime/objects/resource_sites/marchland_grand_route_operations_atlas.png"
     atlas_path = res_path_to_disk(atlas_res)
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/command_sites/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     source_dir = ROOT / "art/overworld/source/generated/resource_sites/marchland_grand_route_operations_wave1"
     source_manifest_path = source_dir / "manifest.json"
     author_path = ROOT / "tools/author_twelve_marchland_grand_route_operations.py"
@@ -83541,7 +83554,7 @@ def validate_twelve_marchland_grand_route_operations(errors: list[str]) -> None:
     rows = [row for row in scenarios.values() if row.get("content_batch_id") == slice_id]
     ensure((len(scenarios),len(groups),len(sites),len(encounters),len(heroes),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,377,203,66,299), errors, "Grand-route operations must own the exact expanded catalogs")
     atlas_sha = "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360"
-    ensure(png_size(atlas_path) == (576,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6 and Path(f"{atlas_path}.import").is_file(), errors, "Grand-route runtime atlas dimensions, alpha, hash, or import changed")
+    ensure(png_size(historical_atlas_path) == (576,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == atlas_sha and historical_atlas_path.read_bytes()[25] == 6 and Path(f"{atlas_path}.import").is_file(), errors, "Grand-route runtime atlas dimensions, alpha, hash, or import changed")
     ensure(source_manifest.get("schema_id") == "twelve_marchland_grand_route_operations_art_v1" and source_manifest.get("content_batch_id") == slice_id and source_manifest.get("generation_mode") == "built_in_imagegen" and source_manifest.get("source_model") == "built_in_imagegen_original_marchland_grand_route_operations_atlas" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [576,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 12, errors, "Grand-route generated-source provenance changed")
     ensure(len(rows) == 12 and {row.get("map_size",{}).get("height") for row in rows} == {14,16} and all(row.get("map_size",{}).get("width") == 24 for row in rows), errors, "Grand-route batch must retain twelve large 24-wide boards across both authored heights")
     selected_encounters=[]; selected_heroes=[]; source_payloads=[]
@@ -83558,7 +83571,7 @@ def validate_twelve_marchland_grand_route_operations(errors: list[str]) -> None:
         ensure(len(nodes)==(14 if height==14 else 16) and len([row for row in nodes if row.get("site_id")==site_id and row.get("guard_front_id")==f"{prefix}_front_6"])==1 and len(scenario.get("script_hooks",[]))==6 and len(victories)==8 and {row.get("placement_id") for row in victories[2:]}==expected_fronts, errors, f"{scenario_id} economy, guarded command, hooks, or objectives changed")
         ensure(site.get("content_batch_id") == slice_id and site.get("runtime_boundary",{}).get("status") == "marchland_grand_route_operation_live" and site.get("claim_rewards",{}).get("gold")==800 and site.get("claim_rewards",{}).get("experience")==250 and sum(site.get("claim_recruits",{}).values())==4 and len(site.get("claim_flags",{}))==1, errors, f"{site_id} live one-time reward contract changed")
         sprite=site_sprites.get(site_id,{}); asset=assets.get(sprite.get("asset_id",""),{}); source=source_by_site.get(site_id,{}); source_path=res_path_to_disk(str(source.get("source_path","")))
-        ensure(asset.get("path")==atlas_res and asset.get("atlas_size")==[576,48] and asset.get("runtime_sha256")==atlas_sha and asset.get("source_model")=="built_in_imagegen_original_marchland_grand_route_operations_atlas" and asset.get("assigned_resource_site_id")==site_id and asset.get("assigned_hero_id")==hero_id and len(str(asset.get("accessible_description","")))>=80, errors, f"{site_id} exact accessible field art changed")
+        ensure(asset.get("path")==atlas_res and asset.get("atlas_size")==[2304,192] and asset.get("runtime_sha256")==hashlib.sha256(atlas_path.read_bytes()).hexdigest() and asset.get("source_model")=="built_in_imagegen_original_marchland_grand_route_operations_atlas" and asset.get("assigned_resource_site_id")==site_id and asset.get("assigned_hero_id")==hero_id and len(str(asset.get("accessible_description","")))>=80, errors, f"{site_id} exact accessible field art changed")
         ensure(source_path.is_file() and source.get("source_sha256")==hashlib.sha256(source_path.read_bytes()).hexdigest() and min(png_size(source_path) or (0,0))>=1024 and source_path.read_bytes()[25]==6 and len(str(source.get("prompt","")))>=300 and str(source.get("generation_original","")).startswith("/root/.codex/generated_images/"), errors, f"{site_id} source master, prompt, alpha, or hash changed")
         if source_path.is_file(): source_payloads.append(source_path.read_bytes())
         selected_encounters.extend(row.get("encounter_id") for row in fronts); selected_heroes.append(hero_id)
@@ -83585,6 +83598,7 @@ def validate_ten_commander_dominion_sieges(errors: list[str]) -> None:
     slice_id = "content-ten-commander-dominion-sieges-10184"
     atlas_res = "res://art/overworld/runtime/objects/resource_sites/commander_dominion_sieges_atlas.png"
     atlas_path = res_path_to_disk(atlas_res)
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/command_sites/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     source_dir = ROOT / "art/overworld/source/generated/resource_sites/commander_dominion_sieges_wave1"
     source_manifest_path = source_dir / "manifest.json"
     author_path = ROOT / "tools/author_ten_commander_dominion_sieges.py"
@@ -83608,7 +83622,7 @@ def validate_ten_commander_dominion_sieges(errors: list[str]) -> None:
     rows = [row for row in scenarios.values() if row.get("content_batch_id") == slice_id]
     ensure((len(scenarios),len(groups),len(sites),len(encounters),len(heroes),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,377,203,66,299), errors, "Commander dominion sieges must own the exact expanded catalogs")
     atlas_sha = "c494c021ff746de7a38d06e0e2f93f7a79f000ea4b071f2e874cba2ad8d08d06"
-    ensure(png_size(atlas_path)==(480,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest()==atlas_sha and atlas_path.read_bytes()[25]==6 and Path(f"{atlas_path}.import").is_file(), errors, "Commander dominion runtime atlas dimensions, alpha, hash, or import changed")
+    ensure(png_size(historical_atlas_path)==(480,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest()==atlas_sha and historical_atlas_path.read_bytes()[25]==6 and Path(f"{atlas_path}.import").is_file(), errors, "Commander dominion runtime atlas dimensions, alpha, hash, or import changed")
     ensure(source_manifest.get("schema_id")=="ten_commander_dominion_sieges_art_v1" and source_manifest.get("content_batch_id")==slice_id and source_manifest.get("generation_mode")=="built_in_imagegen" and source_manifest.get("source_model")=="built_in_imagegen_original_commander_dominion_sieges_atlas" and source_manifest.get("runtime_atlas")==atlas_res and source_manifest.get("runtime_atlas_size")==[480,48] and source_manifest.get("runtime_atlas_sha256")==atlas_sha and len(source_rows)==10, errors, "Commander dominion generated-source provenance changed")
     ensure(len(rows)==10 and {row.get("map_size",{}).get("height") for row in rows}=={14,16} and all(row.get("map_size",{}).get("width")==22 for row in rows), errors, "Commander dominion batch must retain ten large 22-wide boards across both heights")
     selected_encounters=[]; selected_heroes=[]; source_payloads=[]
@@ -83625,7 +83639,7 @@ def validate_ten_commander_dominion_sieges(errors: list[str]) -> None:
         ensure(len(nodes)==(12 if height==14 else 14) and len([row for row in nodes if row.get("site_id")==site_id and row.get("guard_front_id")==f"{prefix}_front_5"])==1 and len(scenario.get("script_hooks",[]))==6 and len(victories)==8 and {row.get("placement_id") for row in victories[2:7]}==expected_fronts and victories[7].get("type")=="town_owned_by_player", errors, f"{scenario_id} economy, guarded command, hooks, or eight-objective chain changed")
         ensure(site.get("content_batch_id")==slice_id and site.get("runtime_boundary",{}).get("status")=="commander_dominion_siege_live" and site.get("claim_rewards",{}).get("gold")==900 and site.get("claim_rewards",{}).get("experience")==300 and sum(site.get("claim_recruits",{}).values())==4 and len(site.get("claim_flags",{}))==1, errors, f"{site_id} one-time reward contract changed")
         sprite=site_sprites.get(site_id,{}); asset=assets.get(sprite.get("asset_id",""),{}); source=source_by_site.get(site_id,{}); source_path=res_path_to_disk(str(source.get("source_path","")))
-        ensure(asset.get("path")==atlas_res and asset.get("atlas_size")==[480,48] and asset.get("runtime_sha256")==atlas_sha and asset.get("source_model")=="built_in_imagegen_original_commander_dominion_sieges_atlas" and asset.get("assigned_resource_site_id")==site_id and asset.get("assigned_hero_id")==hero_id and len(str(asset.get("accessible_description","")))>=100, errors, f"{site_id} exact accessible field art changed")
+        ensure(asset.get("path")==atlas_res and asset.get("atlas_size")==[1920,192] and asset.get("runtime_sha256")==hashlib.sha256(atlas_path.read_bytes()).hexdigest() and asset.get("source_model")=="built_in_imagegen_original_commander_dominion_sieges_atlas" and asset.get("assigned_resource_site_id")==site_id and asset.get("assigned_hero_id")==hero_id and len(str(asset.get("accessible_description","")))>=100, errors, f"{site_id} exact accessible field art changed")
         ensure(source_path.is_file() and source.get("source_sha256")==hashlib.sha256(source_path.read_bytes()).hexdigest() and min(png_size(source_path) or (0,0))>=1024 and source_path.read_bytes()[25]==6 and len(str(source.get("prompt","")))>=300 and str(source.get("generation_original","")).startswith("/root/.codex/generated_images/"), errors, f"{site_id} source master, prompt, alpha, or hash changed")
         if source_path.is_file(): source_payloads.append(source_path.read_bytes())
         selected_encounters.extend(row.get("encounter_id") for row in fronts); selected_heroes.append(hero_id)

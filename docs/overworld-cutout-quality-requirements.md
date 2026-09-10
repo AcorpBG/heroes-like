@@ -233,6 +233,27 @@ package, full saves and both current platform packages. Existing frontier-shrine
 resolver precedence is out of scope; its state art is selected before collection
 too. Do not silently change that rule to obtain a different screenshot.
 
+### Marchland command-site detail recovery
+
+The 34 Marchland warband, grand-route and commander-dominion sources have
+genuine RGBA and no confirmed keyed backing. Preserve their original pixels,
+including purple cloth, crystals, smoke and magic. Restore fine painted detail
+lost by the shipped 48px raster using the original 42px centered logical fit
+and Lanczos projection into 192px cells. Keep the three same-path atlas owners,
+all site/state routes and gameplay geometry; retain historical atlases and
+generation manifests separately from the current reconstruction proof.
+
+Use `tools/prepare_overworld_command_cutouts.py --output <fresh> [--install]`,
+`tests/test_overworld_command_cutouts.py` and both existing cutout drivers with
+`--batch command_sites`. The earned native save contains none of these sites;
+its 2380 blocker bodies are an unchanged control, not affected-object evidence.
+Capture original Tollbrand, Cinderquill and Quench landmarks through legal
+scouting and normal end turns, with guards, fog and complete site records
+preserved. Compare full saves and draw rectangles against the failing-before
+source run and both packages. Maintain all three existing domain smokes with
+their exact new atlas geometry and separate historical-source/current-runtime
+provenance; do not weaken gameplay, battle, claim or save assertions.
+
 ## Completion and non-goals
 
 Each cohort completes only after its actual repaired art is integrated and its
