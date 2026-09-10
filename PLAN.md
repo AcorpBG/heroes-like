@@ -22,9 +22,17 @@ Rules:
 
 ## Current Tactical State
 
+Latest owner-directed slice: `battle-readable-turns-and-melee-approach-20260910` (completed), Phase 6. Requirements/evidence: `docs/battle-readable-turns-and-melee-approach.md`. No next implementation slice is selected.
+
+### Readable Battle Turns And Melee Approach
+
+id: `battle-readable-turns-and-melee-approach-20260910`
+
+Status: completed 2026-09-10. Shared legal move-and-strike, ordered movement/attack/impact/retaliation playback, compact action/damage captions and guarded controller/save handoffs implemented in BattleRules, BattleShell and BattleBoardView. Three measured source/package visual runs pass 63 checks each; Windows packaged rules pass 39 checks. Nine affected runtime reports, repository validation, Linux/Windows official exports and package parity pass. Deterministic capture controls, save compatibility, speed/accessibility and original art are preserved. No native RMG or balance-formula changes. Exact evidence and Windows hardware/balance limits: `docs/battle-readable-turns-and-melee-approach.md`.
+
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-Completed owner goal: `bugfix-generated-neutral-encounter-variety-20260910`. Generated neutral armies now use 51 original profiles, preserved native headcounts, varied formations and matching troop art. Source Medium/Large and Linux/Windows packaged gameplay, saves, screenshots and repository validation pass. Requirements, evidence and limits: `docs/generated-neutral-encounter-variety.md`. No next implementation slice is selected.
+Previous completed owner goal: `bugfix-generated-neutral-encounter-variety-20260910`. Generated neutral armies now use 51 original profiles, preserved native headcounts, varied formations and matching troop art. Source Medium/Large and Linux/Windows packaged gameplay, saves, screenshots and repository validation pass. Requirements, evidence and limits: `docs/generated-neutral-encounter-variety.md`. The battle slice is selected above.
 
 ### Generated Neutral Encounter Variety
 
@@ -38,7 +46,7 @@ Owner decision (2026-09-09): remove the imposed release-package size budget enti
 - Completed prior owner goal: `quality-generated-full-match-20260906`; all three selected children are implemented and validated. Legitimate Medium/Large outcomes, measured behavior-preserving responsiveness, all 173 Town scene mappings across six factions/32 towns and the four reproduced Overworld cutout repairs are accepted. Source-backed closure and explicit remaining latency, legacy-test and Windows-hardware limits: `docs/generated-full-match-quality-completion.md`. This is not release readiness.
 - Completed prior goal: `bugfix-rmg-audit-corrections-20260905`; all six corrective/integrated children satisfy the audited requirements within their documented sample/configuration limits, not full H3MapEd or release parity.
 - Baseline audit: `audit-rmg-start-placement-and-h3maped-comparison-20260905`; 36 runtime requests, 83 generated starts, 23/24 exact retained owner payloads, fresh executable/private-state water mismatch, and confirmed start/level/opponent/transit adoption gaps. Audit evidence is not runtime fixes or parity completion.
-- Most recently completed implementation slice: `bugfix-generated-neutral-encounter-variety-20260910`. Medium/Large samples have 22/32 native encounter identities and 31/48 headcounts rather than one fixed raid. Current Linux/Windows PCKs: 313168728 bytes, 5589 members, only `project.binary` differs. This is not release readiness or universal native/combat parity.
+- Most recently completed implementation slice: `battle-readable-turns-and-melee-approach-20260910`, detailed above. Current Linux/Windows PCKs: 313177932 bytes, 5591 members, only `project.binary` differs. Prior neutral-variety Medium/Large samples have 22/32 native encounter identities and 31/48 headcounts rather than one fixed raid. This is not release readiness or universal native/combat parity.
 - Prior cutout-slice package boundary: 309484404-byte Linux/Windows PCKs, 5542 members; only `project.binary` differs by platform. Final 71-disposition cohort passes 5770 checks per source resolution/platform, 30 strict save controls per run and 120 full-state comparisons; 5482 old payloads and 1185 other art rows remain exact. Nine art, three fixture and two wrapper tests, five shared reports, five domain reports, cohesive checks, repository validation and clean official exports pass. The older specialist smoke retains four unrelated catalog/capacity failures; not counted as a pass. Windows is headless Wine, not hardware certification.
 
 ## Overworld Cutout Quality Recovery

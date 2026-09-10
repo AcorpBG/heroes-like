@@ -369,8 +369,8 @@ func _dispatch_controller_cursor() -> bool:
 	_controller_dispatch_in_progress = false
 	return true
 
-func publish_controller_action_result(result: Dictionary) -> void:
-	if not _controller_dispatch_in_progress:
+func publish_controller_action_result(result: Dictionary, completed_playback: bool = false) -> void:
+	if not _controller_dispatch_in_progress and not completed_playback:
 		return
 	var result_message := String(result.get("message", "")).strip_edges()
 	if result_message == "":
@@ -765,7 +765,24 @@ func set_battle_state(session) -> void:
 
 func set_battle_presentation_snapshot(battle_snapshot: Dictionary) -> void:
 	_session = null
+	if battle_snapshot.has("playback_event"):
+		_stack_animation_playback_records.clear()
+		_stack_animation_playback_until_msec.clear()
+		_stack_animation_cue_playback_records.clear()
+		_stack_animation_audio_playback_records.clear()
+		_latest_animation_serial_by_stack.clear()
 	_apply_battle_dictionary(battle_snapshot.duplicate(true))
+
+func finish_action_playback(session) -> void:
+	_stack_animation_playback_records.clear()
+	_stack_animation_playback_until_msec.clear()
+	_stack_animation_cue_playback_records.clear()
+	_stack_animation_audio_playback_records.clear()
+	_latest_animation_serial_by_stack.clear()
+	if session != null:
+		for event in BattleRulesScript.animation_event_queue(session.battle):
+			_latest_animation_serial_by_stack[String(event.get("battle_id", ""))] = int(event.get("serial", 0))
+	set_battle_state(session)
 
 func _apply_battle_dictionary(battle: Dictionary) -> void:
 	_cancel_battle_board_cursor_semantic()
@@ -808,7 +825,7 @@ func validation_hex_layout_summary() -> Dictionary:
 	var terrain_texture_id := _terrain_texture_id(terrain_id)
 	var terrain_texture = _terrain_texture_for(terrain_id)
 	var terrain_sampling_summary := _terrain_texture_sampling_summary(terrain_texture)
-	var player_input_active := String(_active_stack.get("side", "")) == "player"
+	var player_input_active := String(_active_stack.get("side", "")) == "player" and not _battle.has("playback_event")
 	var legal_destinations: Array = hex_state.get("legal_destinations", []) if hex_state.get("legal_destinations", []) is Array else []
 	var legal_melee_targets: Array = hex_state.get("legal_melee_targets", []) if hex_state.get("legal_melee_targets", []) is Array else []
 	var legal_ranged_targets: Array = hex_state.get("legal_ranged_targets", []) if hex_state.get("legal_ranged_targets", []) is Array else []
@@ -3028,7 +3045,7 @@ func _stack_presentation_progress(battle_id: String) -> float:
 	if not cue_record.is_empty():
 		progress = _cue_playback_progress(cue_record)
 		var mode := String(cue_record.get("mode", AnimationCueCatalogScript.MODE_NORMAL))
-		if mode == AnimationCueCatalogScript.MODE_FAST or mode == AnimationCueCatalogScript.MODE_REDUCED_MOTION or mode == AnimationCueCatalogScript.MODE_REDUCED_MOTION_FAST:
+		if mode == AnimationCueCatalogScript.MODE_REDUCED_MOTION or mode == AnimationCueCatalogScript.MODE_REDUCED_MOTION_FAST:
 			progress = 1.0
 	return clampf(progress, 0.0, 1.0)
 
@@ -3042,6 +3059,13 @@ func _movement_presentation_motion(record: Dictionary, cell: Vector2i, hex_layou
 	var from_center := _hex_center(from_cell, hex_layout)
 	var to_center := _hex_center(to_cell, hex_layout)
 	var center := from_center.lerp(to_center, clampf(progress, 0.0, 1.0))
+	var path: Array = _battle.get("playback_event", {}).get("walk_path", [])
+	if path.size() >= 2:
+		var along := clampf(progress,0.0,1.0) * float(path.size()-1)
+		var index := mini(int(along),path.size()-2)
+		var a: Dictionary=path[index]
+		var b: Dictionary=path[index+1]
+		center=_hex_center(Vector2i(int(a.q),int(a.r)),hex_layout).lerp(_hex_center(Vector2i(int(b.q),int(b.r)),hex_layout),along-float(index))
 	return {
 		"event_id": String(record.get("event_id", "")),
 		"role": "move_path",
@@ -4356,6 +4380,17 @@ func _turn_strip_chip_label(stack: Dictionary, chip_width: float) -> String:
 	return "%s…%s" % [full_name.left(3), suffix]
 
 func _draw_footer_line(field_rect: Rect2) -> void:
+	if _battle.has("playback_caption"):
+		var caption := String(_battle.playback_caption)
+		var width := minf(field_rect.size.x - 20.0, 980.0)
+		var box := Rect2(Vector2(field_rect.position.x + 10.0, field_rect.end.y - 38.0), Vector2(width,32.0))
+		draw_rect(box,Color(0.04,0.05,0.07,0.94),true)
+		draw_rect(box,FRAME_COLOR,false,1.2)
+		var font := get_theme_default_font()
+		while caption.length()>1 and font.get_string_size(caption,HORIZONTAL_ALIGNMENT_LEFT,-1,16).x>width-20.0:
+			caption=caption.left(caption.length()-2)+"…"
+		_draw_text(caption,box.position+Vector2(10,22),Color(1.0,0.92,0.72),16)
+		return
 	var footer_width: float = minf(field_rect.size.x - 20.0, 520.0)
 	var footer_rect := Rect2(field_rect.position + Vector2(10.0, field_rect.end.y - 28.0), Vector2(footer_width, 22.0))
 	draw_rect(footer_rect, Color(0.08, 0.10, 0.12, 0.82), true)

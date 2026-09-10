@@ -2202,6 +2202,18 @@ func _settle() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	await get_tree().process_frame
+	# Commands now return after simulation but before their ordered visual
+	# handoff. Assert restored focus only once that real handoff has completed.
+	var deadline := Time.get_ticks_msec() + 30000
+	while Time.get_ticks_msec() < deadline:
+		var pending := false
+		for node in find_children("*", "", true, false):
+			if node.get_script() == load("res://scenes/battle/BattleShell.gd"):
+				pending = pending or bool(node.get("_action_playback_in_progress"))
+		if not pending: break
+		await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
 
 func _capture_if_requested() -> void:
 	var stem := OS.get_environment("BATTLE_CONTROLLER_BOARD_CAPTURE_STEM").strip_edges()
