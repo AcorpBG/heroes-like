@@ -12,6 +12,7 @@ const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
+const ActionPlayback = preload("res://scripts/core/BattleActionPlayback.gd")
 const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
@@ -340,6 +341,7 @@ static func _battle_context_seed(session: SessionStateStoreScript.SessionData) -
 	if session == null or session.battle.is_empty():
 		return {}
 	var seed := session.battle.duplicate(true)
+	seed.erase(ActionPlayback.CAPTURE_KEY)
 	seed["placement_id"] = String(seed.get("resolved_key", seed.get("placement_id", "")))
 	if not seed.has("battle_context") and seed.get("context", {}) is Dictionary:
 		seed["battle_context"] = seed.get("context", {}).duplicate(true)
@@ -1388,12 +1390,19 @@ static func legal_attack_targets_for_active_stack(battle: Dictionary, ranged: bo
 	if active_stack.is_empty() or _alive_count(active_stack) <= 0:
 		return []
 	var targets := []
+	var approach_cells: Array = [] if ranged else legal_destinations_for_active_stack(battle)
 	for target in _alive_stacks_for_side(battle, _opposing_side(String(active_stack.get("side", "")))):
 		if ranged:
 			if _can_make_ranged_attack(active_stack, battle, target):
 				targets.append(String(target.get("battle_id", "")))
-		elif _can_make_melee_attack(active_stack, battle, target):
-			targets.append(String(target.get("battle_id", "")))
+		else:
+			var reachable := _can_make_melee_attack(active_stack, battle, target)
+			if not reachable:
+				for cell in approach_cells:
+					if _hex_distance(cell,_stack_hex(target)) == 1:
+						reachable = true
+						break
+			if reachable: targets.append(String(target.get("battle_id", "")))
 	return targets
 
 static func legal_attack_target_ids_for_active_stack(battle: Dictionary) -> Array:
@@ -1685,10 +1694,16 @@ static func board_click_attack_intent_for_target(battle: Dictionary, battle_id: 
 
 	if action_id != "":
 		var action_label := action_id.capitalize()
+		var approach := melee_approach_destination(battle, active_stack, target) if action_id == "strike" else {}
+		if not approach.is_empty():
+			action_label = "Move & strike"
+			intent["approach_hex"] = approach
 		intent["action"] = action_id
 		intent["label"] = action_label
 		intent["attackable"] = true
 		intent["message"] = "Board click will %s %s now." % [action_label, target_label]
+		if not approach.is_empty():
+			intent["message"] = "Move to %s and strike %s in one action." % [_hex_label(approach),target_label]
 		return intent
 
 	intent["blocked"] = true
@@ -1840,11 +1855,26 @@ static func _movement_intent_message(
 		]
 	return "Move hex click: Move %s to %s." % [active_label, destination_phrase]
 
+static func melee_approach_destination(battle: Dictionary, stack: Dictionary, target: Dictionary) -> Dictionary:
+	if stack.is_empty() or target.is_empty() or _alive_count(stack) <= 0 or _alive_count(target) <= 0:
+		return {}
+	if String(stack.get("side", "")) == String(target.get("side", "")) or _can_make_melee_attack(stack, battle, target):
+		return {}
+	var best := {}
+	for cell in legal_destinations_for_stack(battle, String(stack.get("battle_id", ""))):
+		if _hex_distance(cell, _stack_hex(target)) != 1: continue
+		if best.is_empty() or int(cell.get("steps", 0)) < int(best.get("steps", 0)):
+			best = cell
+	return best.duplicate(true)
+
+static func _can_melee_this_action(stack: Dictionary, battle: Dictionary, target: Dictionary) -> bool:
+	return _can_make_melee_attack(stack, battle, target) or not melee_approach_destination(battle, stack, target).is_empty()
+
 static func _attack_legality_for_target(active_stack: Dictionary, target: Dictionary, battle: Dictionary) -> Dictionary:
 	if active_stack.is_empty() or target.is_empty():
 		return {"battle_id": "", "melee": false, "ranged": false, "attackable": false, "blocked": false, "hex_distance": -1}
 	var hex_distance := _stack_hex_distance(active_stack, target)
-	var melee_legal := _can_make_melee_attack(active_stack, battle, target)
+	var melee_legal := _can_melee_this_action(active_stack, battle, target)
 	var ranged_legal := _can_make_ranged_attack(active_stack, battle, target)
 	return {
 		"battle_id": String(target.get("battle_id", "")),
@@ -3625,6 +3655,10 @@ static func _enemy_action_preview_summary(battle: Dictionary, enemy_stack: Dicti
 static func _attack_action_summary(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> String:
 	if attacker.is_empty() or target.is_empty():
 		return "No clean target is lined up yet."
+	if not is_ranged:
+		var approach := melee_approach_destination(battle, attacker, target)
+		if not approach.is_empty():
+			return "Move to %s and strike %s in one action; retaliation applies." % [_hex_label(approach), _stack_label(target)]
 	var attack_distance = _attack_distance_for_action(attacker, target, battle, is_ranged)
 	var attack_preview = _damage_range_preview(attacker, target, battle, is_ranged, false, attack_distance)
 	if attack_preview.is_empty():
@@ -5821,6 +5855,23 @@ static func move_active_stack_to_hex(session: SessionStateStoreScript.SessionDat
 	_clear_stack_animation_states(session.battle)
 	return _resolve_move_action(session, active_stack, legal_destination, "moves", movement_intent)
 
+static func perform_presented_action(session: SessionStateStoreScript.SessionData, action: String, destination: Dictionary = {}) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {"ok": false, "state": "invalid", "message": "No battle is active."}
+	var original_battle := session.battle
+	ActionPlayback.begin(original_battle)
+	var result: Dictionary
+	if action == "ready":
+		result = resolve_if_battle_ready(session)
+		result["ok"] = String(result.get("state", "invalid")) != "invalid"
+	elif action == "move":
+		result = move_active_stack_to_hex(session, int(destination.get("q", -1)), int(destination.get("r", -1)))
+	elif action.begins_with("cast_spell:"):
+		result = cast_player_spell(session, action.trim_prefix("cast_spell:"))
+	else:
+		result = perform_player_action(session, action)
+	return ActionPlayback.finish(original_battle, result)
+
 static func perform_player_action(session: SessionStateStoreScript.SessionData, action: String) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"ok": false, "message": "No battle is active.", "state": "invalid"}
@@ -5868,11 +5919,15 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 			return _complete_action(session, advance_message)
 		"strike":
 			var strike_target = get_selected_target(session.battle)
-			if not _can_make_melee_attack(active_stack, session.battle, strike_target):
+			var approach := melee_approach_destination(session.battle, active_stack, strike_target)
+			if not _can_make_melee_attack(active_stack, session.battle, strike_target) and approach.is_empty():
 				return {"ok": false, "message": "This stack cannot reach the enemy line yet.", "state": "invalid"}
 			_clear_stack_animation_states(session.battle)
 			_clear_selected_target_continuity(session.battle)
 			_clear_selected_target_closing(session.battle)
+			if not approach.is_empty():
+				_apply_melee_approach(session.battle, active_stack, approach)
+				active_stack = _get_stack_by_id(session.battle, String(active_stack.get("battle_id", "")))
 			return _resolve_attack_action(session, active_stack, strike_target, false)
 		"shoot":
 			var shoot_target = get_selected_target(session.battle)
@@ -5956,7 +6011,7 @@ static func action_availability(battle: Dictionary) -> Dictionary:
 
 	return {
 		"advance": int(battle.get("distance", 1)) > 0 or not legal_destinations_for_active_stack(battle).is_empty(),
-		"strike": not selected_target.is_empty() and _can_make_melee_attack(active_stack, battle, selected_target),
+		"strike": not selected_target.is_empty() and _can_melee_this_action(active_stack, battle, selected_target),
 		"shoot": (
 			not selected_target.is_empty()
 			and _can_make_ranged_attack(active_stack, battle, selected_target)
@@ -5965,6 +6020,20 @@ static func action_availability(battle: Dictionary) -> Dictionary:
 		"retreat": _battle_retreat_allowed(battle),
 		"surrender": _battle_surrender_allowed(battle),
 	}
+
+static func _apply_melee_approach(battle: Dictionary, stack: Dictionary, destination: Dictionary) -> void:
+	var start := _stack_hex(stack)
+	var id := String(stack.get("battle_id", ""))
+	_set_stack_hex(battle, id, destination)
+	_sync_distance_from_hexes(battle)
+	_mark_stack_animation_event(battle, id, "battle_unit_move", {"from_q":start.q,"from_r":start.r,"to_q":destination.q,"to_r":destination.r})
+	var message := "%s moves to %s to strike." % [_stack_label(stack),_hex_label(destination)]
+	_append_presentation_event(battle,"move",message,{"actor_battle_id":id,"action_id":"move_strike"})
+	_record_event(battle,message)
+	var pressure := _apply_advance_pressure(battle,id)
+	if pressure != "": _append_text_presentation_event(battle,"momentum",[pressure],stack,{},"move")
+	var objectives := _apply_field_objective_action_pressure(battle,{"action":"advance","side":String(stack.get("side","")),"battle_id":id})
+	if not objectives.is_empty(): _append_text_presentation_event(battle,"ability",objectives,stack,{},"move")
 
 static func _resolve_attack_action(
 	session: SessionStateStoreScript.SessionData,
@@ -6317,6 +6386,11 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 				false
 			)
 		"advance":
+			var approach_target := _nearest_opposing_stack(session.battle, active_stack)
+			var approach := melee_approach_destination(session.battle, active_stack, approach_target)
+			if not bool(active_stack.get("ranged", false)) and not approach.is_empty():
+				_apply_melee_approach(session.battle, active_stack, approach)
+				return _resolve_ai_attack(session, _get_stack_by_id(session.battle,String(active_stack.get("battle_id",""))), approach_target, false)
 			var start_distance := int(session.battle.get("distance", 1))
 			var distance_delta := _apply_auto_advance_movement(session.battle, active_stack, start_distance)
 			_append_presentation_event(
@@ -8272,9 +8346,11 @@ static func _sync_occupied_hexes(battle: Dictionary) -> void:
 	battle[OCCUPIED_HEXES_KEY] = _build_occupancy_map(battle)
 
 static func _set_stack_hex(battle: Dictionary, battle_id: String, cell: Dictionary) -> void:
+	var from_hex := _stack_hex(_get_stack_by_id(battle, battle_id))
 	var normalized := _normalize_hex_cell(cell)
 	if normalized.is_empty():
 		return
+	var playback_path := _presentation_walk_path(battle, from_hex, normalized) if battle.has(ActionPlayback.CAPTURE_KEY) else []
 	var stacks = battle.get("stacks", [])
 	for index in range(stacks.size()):
 		var stack = stacks[index]
@@ -8284,6 +8360,27 @@ static func _set_stack_hex(battle: Dictionary, battle_id: String, cell: Dictiona
 			break
 	battle["stacks"] = stacks
 	_sync_occupied_hexes(battle)
+	if from_hex != normalized:
+		ActionPlayback.capture(battle, {"event_id":"battle_unit_move", "state":"move_path_step", "battle_id":battle_id, "from_q":from_hex.get("q",-1), "from_r":from_hex.get("r",-1), "to_q":normalized.q, "to_r":normalized.r, "walk_path":playback_path})
+
+static func _presentation_walk_path(battle: Dictionary, start: Dictionary, destination: Dictionary) -> Array:
+	if start.is_empty() or destination.is_empty(): return []
+	var occupied := _build_occupancy_map(battle)
+	occupied.erase(_hex_key(start))
+	var frontier := [[start]]
+	var seen := {_hex_key(start):true}
+	while not frontier.is_empty():
+		var path: Array = frontier.pop_front()
+		var cell: Dictionary = path.back()
+		if _hex_key(cell) == _hex_key(destination): return path
+		for next in _hex_neighbors(cell):
+			var key := _hex_key(next)
+			if seen.has(key) or occupied.has(key): continue
+			seen[key]=true
+			var extended := path.duplicate()
+			extended.append(next)
+			frontier.append(extended)
+	return []
 
 static func _hex_neighbors(cell: Dictionary) -> Array:
 	var q := int(cell.get("q", -1))
@@ -13736,6 +13833,7 @@ static func _battle_exit_animation_snapshot(battle: Dictionary, outcome: String)
 	if battle.is_empty():
 		return {}
 	var snapshot := battle.duplicate(true)
+	snapshot.erase(ActionPlayback.CAPTURE_KEY)
 	snapshot["presentation_mode"] = "battle_exit_animation"
 	snapshot["presentation_outcome"] = outcome
 	snapshot["presentation_policy"] = "pre_resolution_animation_snapshot"
@@ -13815,10 +13913,7 @@ static func _mark_stack_animation_event(battle: Dictionary, battle_id: String, e
 	var existing_state := String(existing.get("state", "")).strip_edges()
 	var existing_priority := int(ANIMATION_STATE_PRIORITY.get(existing_state, 0))
 	var priority := int(ANIMATION_STATE_PRIORITY.get(state, 1))
-	if existing_state != "" and existing_priority > priority:
-		return
 	var serial := int(battle.get(ANIMATION_EVENT_SERIAL_KEY, 0)) + 1
-	battle[ANIMATION_EVENT_SERIAL_KEY] = serial
 	var record := {
 		"event_id": event_id,
 		"state": state,
@@ -13836,6 +13931,11 @@ static func _mark_stack_animation_event(battle: Dictionary, battle_id: String, e
 		"round": int(battle.get("round", 1)),
 		"turn_index": int(battle.get("turn_index", 0)),
 	}
+	if event_id != "battle_unit_move":
+		ActionPlayback.capture(battle, record)
+	if existing_state != "" and existing_priority > priority:
+		return
+	battle[ANIMATION_EVENT_SERIAL_KEY] = serial
 	event_states[battle_id] = record.duplicate(true)
 	battle[STACK_ANIMATION_STATES_KEY] = event_states
 	_append_animation_event_record(battle, record)

@@ -106,6 +106,11 @@ var _validation_battle_resolution_routing_enabled := true
 var _last_action_recap_payload := {}
 var _last_action_recap_text := ""
 var _battle_exit_handoff_in_progress := false
+var _action_playback_in_progress := false
+var _action_playback_frames: Array = []
+var _action_playback_result := {}
+var _action_playback_feedback := {}
+var _action_playback_speed := BattleRules.PRESENTATION_SPEED_NORMAL
 var _battle_presentation_stream_text := ""
 var _pending_withdrawal_action := ""
 var _withdrawal_focus_origin: Button = null
@@ -225,10 +230,11 @@ func _ready() -> void:
 	MusicAudio.sync_context("battle", "battle_shell_ready", _battle_music_metadata())
 	buckets["music_audio"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
-	var initial_result := BattleRules.resolve_if_battle_ready(_session)
+	var initial_result := BattleRules.perform_presented_action(_session,"ready")
+	initial_result["entry_playback"] = true
 	buckets["resolve_ready"] = ProfileLogScript.elapsed_ms(phase_started)
 	_last_message = String(initial_result.get("message", ""))
-	if _handle_battle_resolution(initial_result):
+	if String(initial_result.get("state","continue")) != "continue" and _handle_battle_resolution(initial_result):
 		return
 	phase_started = ProfileLogScript.begin_usec()
 	_tactical_briefing_text = BattleRules.consume_tactical_briefing(_session)
@@ -239,6 +245,8 @@ func _ready() -> void:
 		buckets["briefing_autosave"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	_refresh()
+	if _handle_battle_resolution(initial_result):
+		return
 	_present_load_resumed_cue()
 	buckets["first_refresh"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("battle", "entry", "battle_ready", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(true), _session)
@@ -427,6 +435,7 @@ func _on_next_target_pressed() -> void:
 	ProfileLogScript.emit_general("battle", "action", "cycle_target", ProfileLogScript.elapsed_ms(started), {}, _battle_profile_metadata(false).merged({"direction": 1}, true), _session)
 
 func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
+	if _action_playback_in_progress: return _action_playback_block_result()
 	if not _battle_resolution_checkpoint_pending.is_empty():
 		return _return_board_cursor_action_result(_battle_resolution_checkpoint_block_result("board_target"))
 	if _session == null or _session.battle.is_empty() or battle_id == "":
@@ -451,7 +460,7 @@ func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
 	var board_action := String(board_intent.get("action", ""))
 	if board_action != "":
 		var recap_context := BattleRules.post_action_recap_context(_session, board_action)
-		var result := BattleRules.perform_player_action(_session, board_action)
+		var result := BattleRules.perform_presented_action(_session, board_action)
 		_last_message = String(result.get("message", ""))
 		_record_action_recap(board_action, result, recap_context)
 		if bool(result.get("ok", false)):
@@ -582,11 +591,12 @@ func _reject_board_stack_click(
 	return _return_board_cursor_action_result(response)
 
 func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
+	if _action_playback_in_progress: return _action_playback_block_result()
 	if not _battle_resolution_checkpoint_pending.is_empty():
 		return _return_board_cursor_action_result(_battle_resolution_checkpoint_block_result("board_move"))
 	var movement_intent := BattleRules.movement_intent_for_destination(_session.battle, q, r)
 	var recap_context := BattleRules.post_action_recap_context(_session, "move")
-	var result := BattleRules.move_active_stack_to_hex(_session, q, r)
+	var result := BattleRules.perform_presented_action(_session, "move", {"q":q,"r":r})
 	var result_intent_value: Variant = result.get("movement_intent", movement_intent)
 	if result_intent_value is Dictionary:
 		movement_intent = result_intent_value
@@ -603,6 +613,10 @@ func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
 	return _return_board_cursor_action_result(_movement_click_response(result, movement_intent, q, r, false))
 
 func _return_board_cursor_action_result(result: Dictionary) -> Dictionary:
+	if _action_playback_in_progress:
+		if bool(_battle_board_view.get("_controller_dispatch_in_progress")):
+			_action_playback_feedback = result.duplicate(true)
+		return result
 	if not result.is_empty() and not bool(result.get("ok", false)):
 		UiAudio.play_invalid("BattleShell._return_board_cursor_action_result", {
 			"action": String(result.get("action", "")),
@@ -630,6 +644,7 @@ func _on_defend_pressed() -> void:
 	_perform_action("defend")
 
 func _on_quick_resolve_pressed() -> Dictionary:
+	if _action_playback_in_progress: return _action_playback_block_result()
 	if _quick_resolve_confirmation_pending:
 		return {
 			"ok": false,
@@ -848,6 +863,7 @@ func _on_surrender_pressed() -> void:
 	_request_withdrawal_confirmation("surrender", _surrender_button)
 
 func _request_withdrawal_confirmation(action_id: String, focus_origin: Button = null) -> Dictionary:
+	if _action_playback_in_progress: return _action_playback_block_result()
 	if _pending_withdrawal_action != "":
 		return {
 			"ok": false,
@@ -1095,6 +1111,7 @@ func _set_battle_presentation_speed(speed: String) -> Dictionary:
 	var applied := bool(rule_result.get("ok", false))
 	if applied:
 		_validation_battle_playback_speed_success_count += 1
+		_action_playback_speed = committed_speed
 		_last_message = String(rule_result.get("message", ""))
 	else:
 		_validation_battle_playback_speed_failure_count += 1
@@ -1140,6 +1157,7 @@ func _restore_battle_presentation_speed_focus(button: Button) -> void:
 		button.call_deferred("grab_focus")
 
 func _on_spell_action_pressed(action_id: String) -> void:
+	if _action_playback_in_progress: return
 	if not _battle_resolution_checkpoint_pending.is_empty():
 		_apply_battle_resolution_checkpoint_failure_surface()
 		return
@@ -1149,7 +1167,7 @@ func _on_spell_action_pressed(action_id: String) -> void:
 	var buckets := {}
 	var rules_started := ProfileLogScript.begin_usec()
 	var recap_context := BattleRules.post_action_recap_context(_session, action_id)
-	var result := BattleRules.cast_player_spell(_session, action_id.trim_prefix("cast_spell:"))
+	var result := BattleRules.perform_presented_action(_session, action_id)
 	buckets["rules_action"] = ProfileLogScript.elapsed_ms(rules_started)
 	_last_message = String(result.get("message", ""))
 	_record_action_recap(action_id, result, recap_context)
@@ -1173,6 +1191,7 @@ func _on_spell_action_pressed(action_id: String) -> void:
 	}, true), _session)
 
 func _on_save_pressed(legacy_slot: bool = false) -> Dictionary:
+	if _action_playback_in_progress: return _action_playback_block_result()
 	if not _battle_resolution_checkpoint_pending.is_empty():
 		return _retry_battle_resolution_checkpoint()
 	if not legacy_slot:
@@ -1241,6 +1260,7 @@ func _on_save_slot_selected(index: int) -> void:
 	_refresh_save_slot_picker()
 
 func _on_menu_pressed() -> Dictionary:
+	if _action_playback_in_progress: return _action_playback_block_result()
 	_validation_return_to_menu_request_count += 1
 	var result: Dictionary = AppRouter.return_to_main_menu_from_active_play()
 	_last_return_to_menu_result = result.duplicate(true)
@@ -1267,6 +1287,7 @@ func _on_active_play_settings_closed() -> void:
 func _on_active_play_setting_changed(setting_id: String) -> void:
 	if setting_id == "battle_playback_speed":
 		BattleRules.set_battle_presentation_speed(_session, SettingsService.battle_playback_speed_id())
+		_action_playback_speed = SettingsService.battle_playback_speed_id()
 		_refresh()
 		return
 	if setting_id not in ["ui_scale", "high_contrast", "color_cues"]:
@@ -1276,6 +1297,7 @@ func _on_active_play_setting_changed(setting_id: String) -> void:
 	_refresh()
 
 func _perform_action(action: String) -> Dictionary:
+	if _action_playback_in_progress: return _action_playback_block_result()
 	if not _battle_resolution_checkpoint_pending.is_empty():
 		return _battle_resolution_checkpoint_block_result(action)
 	_validation_perform_action_counts[action] = int(_validation_perform_action_counts.get(action, 0)) + 1
@@ -1283,7 +1305,7 @@ func _perform_action(action: String) -> Dictionary:
 	var buckets := {}
 	var rules_started := ProfileLogScript.begin_usec()
 	var recap_context := BattleRules.post_action_recap_context(_session, action)
-	var result := BattleRules.perform_player_action(_session, action)
+	var result := BattleRules.perform_presented_action(_session, action)
 	buckets["rules_action"] = ProfileLogScript.elapsed_ms(rules_started)
 	_last_message = String(result.get("message", ""))
 	_record_action_recap(action, result, recap_context)
@@ -1308,6 +1330,10 @@ func _perform_action(action: String) -> Dictionary:
 	return result
 
 func _handle_battle_resolution(result: Dictionary) -> bool:
+	if not _validation_battle_resolution_routing_enabled or DisplayServer.get_name() == "headless":
+		result.erase("playback_frames")
+	if String(result.get("state", "continue")) == "continue" and _session.scenario_status == "in_progress" and not bool(result.get("playback_completed", false)) and _begin_action_playback(result):
+		return true
 	_last_battle_resolution_routed = false
 	if _session.scenario_status != "in_progress":
 		_record_validation_battle_resolution_attempt(result, "battle_report")
@@ -1334,6 +1360,77 @@ func _handle_battle_resolution(result: Dictionary) -> bool:
 			return true
 	return false
 
+func _action_playback_block_result() -> Dictionary:
+	return {"ok":false,"state":"invalid","reason":"battle_playback_pending","message":"Wait for the current battle action to finish."}
+
+func _begin_action_playback(result: Dictionary, route_target: String = "") -> bool:
+	var frames: Array = result.get("playback_frames", [])
+	result.erase("playback_frames")
+	if frames.is_empty() or not _validation_battle_resolution_routing_enabled or DisplayServer.get_name() == "headless":
+		return false
+	_action_playback_speed = String(frames[0].get(BattleRules.PRESENTATION_SPEED_KEY,BattleRules.PRESENTATION_SPEED_NORMAL))
+	if _action_playback_speed == BattleRules.PRESENTATION_SPEED_INSTANT: return false
+	_action_playback_frames = frames.duplicate()
+	_action_playback_result = result.duplicate()
+	_action_playback_result.erase("playback_frames")
+	_action_playback_result["playback_completed"] = true
+	_action_playback_result["playback_route_target"] = route_target
+	_action_playback_in_progress = true
+	_disable_battle_exit_handoff_inputs()
+	_play_next_action_frame()
+	return true
+
+func _play_next_action_frame() -> void:
+	if not is_inside_tree(): return
+	if _action_playback_speed == BattleRules.PRESENTATION_SPEED_INSTANT:
+		_action_playback_frames.clear()
+	if _action_playback_frames.is_empty():
+		_action_playback_in_progress = false
+		_battle_board_view.mouse_filter = Control.MOUSE_FILTER_STOP
+		_battle_board_view.focus_mode = Control.FOCUS_ALL
+		_battle_board_view.finish_action_playback(_session)
+		var completed := _action_playback_result
+		_action_playback_result = {}
+		var route_target := String(completed.get("playback_route_target", ""))
+		if route_target == "overworld":
+			_last_battle_resolution_routed = _route_checkpointed_battle_resolution()
+			return
+		if route_target == "battle_report":
+			AppRouter.go_to_battle_report()
+			return
+		if not _handle_battle_resolution(completed):
+			_refresh()
+			if bool(completed.get("entry_playback",false)): _present_load_resumed_cue()
+			call_deferred("_configure_battle_keyboard_focus", true)
+			call_deferred("_publish_completed_action_feedback")
+		return
+	var frame: Dictionary = _action_playback_frames.pop_front()
+	frame[BattleRules.PRESENTATION_SPEED_KEY] = _action_playback_speed
+	var event: Dictionary = frame.get("playback_event", {})
+	var actor := BattleRules._get_stack_by_id(frame, String(event.get("battle_id", "")))
+	var target := BattleRules._get_stack_by_id(frame, String(event.get("target_battle_id", "")))
+	var caption := "%s · %s: %s" % [String(actor.get("side", "")).capitalize(), BattleRules._stack_label(actor), String(event.get("event_id", "action")).trim_prefix("battle_unit_").trim_prefix("battle_").replace("_", " ").capitalize()]
+	if not target.is_empty(): caption += " → " + BattleRules._stack_label(target)
+	if int(event.get("damage",0)) > 0:
+		caption += " · %d damage · %d lost" % [int(event.damage),int(event.get("casualties",0))]
+	_set_battle_event_compact_label(caption, 2)
+	_set_battle_status_text("Round %d · %s" % [int(frame.get("round",1)),caption])
+	_pressure_label.text = ""
+	frame["playback_caption"] = caption
+	_battle_board_view.set_battle_presentation_snapshot(frame)
+	_battle_board_view.tooltip_text = caption
+	var timer := get_tree().create_timer(float(BattleRules.battle_presentation_playback_msec(frame)) * 1.12 / 1000.0)
+	timer.timeout.connect(_play_next_action_frame)
+
+func _publish_completed_action_feedback() -> void:
+	if not _action_playback_feedback.is_empty():
+		var feedback := _action_playback_feedback
+		_action_playback_feedback = {}
+		# This was a controller-origin order; publish only after playback has
+		# restored its live session and command focus. The Board still validates
+		# the session/turn/focus guards before announcing the deferred result.
+		_battle_board_view.publish_controller_action_result(feedback, true)
+
 func _checkpoint_battle_resolution_for_overworld(result: Dictionary, retry: bool) -> bool:
 	_validation_battle_resolution_checkpoint_request_count += 1
 	if retry:
@@ -1348,6 +1445,7 @@ func _checkpoint_battle_resolution_for_overworld(result: Dictionary, retry: bool
 			"state": String(result.get("state", "")),
 			"route_target": "overworld",
 		}
+		result.erase("playback_frames")
 		_last_battle_resolution_routed = false
 		_apply_battle_resolution_checkpoint_failure_surface()
 		return true
@@ -1447,6 +1545,10 @@ func _record_validation_battle_resolution_attempt(result: Dictionary, target: St
 func _begin_battle_exit_animation_handoff(result: Dictionary, route_target: String) -> bool:
 	if _battle_exit_handoff_in_progress or not _validation_battle_resolution_routing_enabled:
 		return false
+	# Terminal outcomes reach this hook only after their existing durable
+	# checkpoint. Play the complete exchange before the already-authorized route.
+	if _begin_action_playback(result, route_target):
+		return true
 	var snapshot_value: Variant = result.get("battle_exit_animation_snapshot", {})
 	if not (snapshot_value is Dictionary) or snapshot_value.is_empty():
 		return false
@@ -1495,6 +1597,9 @@ func _complete_battle_exit_animation_handoff(route_target: String) -> void:
 		_last_battle_resolution_routed = _route_checkpointed_battle_resolution()
 
 func _refresh() -> void:
+	if _action_playback_in_progress:
+		_disable_battle_exit_handoff_inputs()
+		return
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
 	_last_refresh_intent_forecast = {}
@@ -3335,7 +3440,7 @@ func validation_battle_resolution_checkpoint_snapshot() -> Dictionary:
 		"pending_state": String(_battle_resolution_checkpoint_pending.get("state", "")),
 		"pending_route_target": String(_battle_resolution_checkpoint_pending.get("route_target", "")),
 		"pending_result": pending_result,
-		"route_scheduled": _battle_exit_handoff_in_progress,
+		"route_scheduled": _battle_exit_handoff_in_progress or (_action_playback_in_progress and String(_action_playback_result.get("playback_route_target","")) != ""),
 		"routed": _last_battle_resolution_routed,
 		"checkpoint_request_count": _validation_battle_resolution_checkpoint_request_count,
 		"checkpoint_success_count": _validation_battle_resolution_checkpoint_success_count,

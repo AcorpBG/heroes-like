@@ -19000,10 +19000,10 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     )
     ensure(all(index >= 0 for index in dispatch_order) and list(dispatch_order) == sorted(dispatch_order), errors, "Battle controller dispatch flag must wrap only synchronous stack/destination signal delivery")
     publish_body = bodies.get("publish_controller_action_result", "")
-    flag_guard = publish_body.find("if not _controller_dispatch_in_progress:")
+    flag_guard = publish_body.find("if not _controller_dispatch_in_progress and not completed_playback:")
     flag_return = publish_body.find("return", flag_guard)
     result_queue = publish_body.find("_queue_battle_board_cursor_semantic_result(")
-    ensure(0 <= flag_guard < flag_return < result_queue and publish_body.count("_queue_battle_board_cursor_semantic_result(") == 1, errors, "Battle result publication must be controller-flag-only before its unique guarded queue")
+    ensure(0 <= flag_guard < flag_return < result_queue and publish_body.count("_queue_battle_board_cursor_semantic_result(") == 1, errors, "Battle result publication must require synchronous controller dispatch or its completed playback before its unique guarded queue")
 
     queue_body = bodies.get("_queue_battle_board_cursor_semantic_result", "")
     queue_order = (
@@ -19100,8 +19100,9 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         '"message": String(result.get("message", ""))',
         'if _battle_board_view != null and _battle_board_view.has_method("publish_controller_action_result"):',
         '_battle_board_view.call("publish_controller_action_result", result)',
-        'return result',
-    ))
+    )) + (return_body.rfind('return result'),)
+    ensure('if bool(_battle_board_view.get("_controller_dispatch_in_progress")):' in return_body and '_action_playback_feedback = result.duplicate(true)' in return_body, errors, "Deferred battle feedback must originate from a controller dispatch")
+    ensure('call_deferred("_configure_battle_keyboard_focus", true)\n\t\t\tcall_deferred("_publish_completed_action_feedback")' in shell_text and '_battle_board_view.publish_controller_action_result(feedback, true)' in shell_text, errors, "Deferred battle feedback must publish after playback restores command focus")
     ensure(all(index >= 0 for index in board_invalid_audio_order) and list(board_invalid_audio_order) == sorted(board_invalid_audio_order), errors, "BattleShell Board result boundary must classify one non-empty failed result, play exact detached invalid audio, publish the unchanged Board result, then return it")
     ensure(return_body.count("UiAudio.play_invalid(") == 1, errors, "BattleShell Board result boundary must own exactly one invalid-audio call")
     for forbidden_token in ("BattleRules", "PresentationAudio", "await ", "Timer", "create_timer", "call_deferred", "result.erase(", "result[", "_refresh("):
@@ -27855,7 +27856,7 @@ def validate_battle_action_context_word_boundary_ellipsis(errors: list[str]) -> 
         ensure(all(index >= 0 for index in compact_order) and list(compact_order) == sorted(compact_order), errors, "Battle Event compactor must preserve source-line order, prefix normalization, exact line limits/hidden count, and word-safe fitting")
         for forbidden in ("FrontierVisualKit", "_event_label", "Label", "Control", "sort(", "erase(", "await ", "call_deferred"):
             ensure(forbidden not in event_compact, errors, f"Battle Event compact materializer must remain detached and avoid {forbidden}")
-    ensure(shell_text.count("_set_battle_event_compact_label(") == 4, errors, "Battle Event word-safe setter must own exactly the briefing and two refresh paths plus its definition")
+    ensure(shell_text.count("_set_battle_event_compact_label(") == 5, errors, "Battle Event word-safe setter must own the briefing, two refresh paths, ordered playback and its definition")
     ensure("_set_compact_label(_event_label" not in shell_text and "FrontierVisualKit.set_compact_label(_event_label" not in shell_text, errors, "Battle Event must not fall back to the shared mid-token character compactor")
 
     control = function_block(smoke_text, "_battle_action_context_word_text_control")
@@ -56119,10 +56120,12 @@ def validate_active_play_load_resumed_cue_playback(errors: list[str]) -> None:
     expected_targets = {
         "overworld": ("_save_status_label", "\t_render_state()\n\t_apply_responsive_layout()\n\t_present_load_resumed_cue()"),
         "town": ("_save_status_label", "\t_refresh(true)\n\t_present_load_resumed_cue()"),
-        "battle": ("_system_body_label", "\t_refresh()\n\t_present_load_resumed_cue()"),
+        "battle": ("_system_body_label", "\t_refresh()\n\tif _handle_battle_resolution(initial_result):\n\t\treturn\n\t_present_load_resumed_cue()"),
         "scenario_outcome": ("_save_status_label", "\t_refresh()\n\t_present_load_resumed_cue()"),
     }
     for surface, text in shell_texts.items():
+        if surface == "battle":
+            ensure('_refresh()\n\t\t\tif bool(completed.get("entry_playback",false)): _present_load_resumed_cue()' in text, errors, "Enemy-first battle entry must consume the shared load cue after playback and authoritative refresh")
         target, ordered_consume = expected_targets[surface]
         for token in (
             'const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemLoadResumedCuePresenter.gd")',
