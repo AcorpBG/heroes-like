@@ -8,7 +8,7 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const REPORT_ID := "FIVE_HORIZON_COURT_SKIRMISHES_SMOKE"
 const OUTPUT_DIR := "res://.artifacts/five_horizon_court_skirmishes_smoke"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png"
-const ATLAS_SHA256 := "62f9782641416f7251efe446cfa3bbe4b9f07d432c598b5e4e5f429819286955"
+const ATLAS_SHA256 := "7efa3b6ca4eabdf58fad2f141b88a4fef976f4604727ad08dfb53378e9e39e00"
 const CASES := [
 	{"scenario_id":"hollowreed-noonwire-dispute","faction_id":"faction_mireclaw","hero_id":"hero_mireclaw_zhorra_fenwake","army_id":"army_zhorra_grand_convergence_company","home_id":"hollowreed_court_home","home_town_id":"town_hollowreed_sanctuary","enemy_town_id":"hollowreed_court_enemy_town","enemy_faction_id":"faction_sunvault","relief_hook":"hollowreed_relief","pressure_hook":"hollowreed_pressure_hook","completion_hook":"hollowreed_compact_hook","completion_flag":"hollowreed_noonwire_compact","fronts":["hollowreed_court_front_1","hollowreed_court_front_2","hollowreed_court_front_3"],"identity_placement":"hollowreed_court_front_2","encounter_id":"encounter_horizon_court_meridian_noonwire_tribunal","signature_army_id":"army_horizon_court_meridian_noonwire_tribunal","objective_id":"horizon_meridian_noonwire","objective_type":"lane_battery","reward_key":"aetherglass","victory_flag":"horizon_meridian_noonwire_broken","atlas_x":0},
 	{"scenario_id":"meridian-rootglass-appeal","faction_id":"faction_sunvault","hero_id":"hero_sunvault_mirro_halometer","army_id":"army_mirro_grand_convergence_company","home_id":"meridian_court_home","home_town_id":"town_meridian_choirhold","enemy_town_id":"meridian_court_enemy_town","enemy_faction_id":"faction_thornwake","relief_hook":"meridian_relief","pressure_hook":"meridian_pressure_hook","completion_hook":"meridian_appeal_hook","completion_flag":"meridian_rootglass_appeal","fronts":["meridian_court_front_1","meridian_court_front_2","meridian_court_front_3"],"identity_placement":"meridian_court_front_2","encounter_id":"encounter_horizon_court_crownroot_rootglass_jury","signature_army_id":"army_horizon_court_crownroot_rootglass_jury","objective_id":"horizon_crownroot_rootglass","objective_type":"obstruction_line","reward_key":"verdant_grafts","victory_flag":"horizon_crownroot_rootglass_broken","atlas_x":48},
@@ -131,7 +131,7 @@ func _validate_signature_encounter(case: Dictionary, placement: Dictionary, enco
 	_expect(bool(SessionStateStoreScript.SessionData.new() != null), "SessionData construction failed.")
 	var presentation: Dictionary = view.call("validation_encounter_presentation_payload", placement)
 	var texture = view.call("_object_texture_for_asset", encounter_id)
-	var exact: bool = String(presentation.get("identity_encounter_asset_id", "")) == encounter_id and String(presentation.get("identity_encounter_path", "")) == ATLAS_PATH and bool(presentation.get("uses_identity_encounter_sprite", false)) and texture is AtlasTexture and texture.region == Rect2(float(case.get("atlas_x", 0)), 0.0, 48.0, 48.0) and texture.atlas.get_size() == Vector2(240, 48)
+	var exact: bool = String(presentation.get("identity_encounter_asset_id", "")) == encounter_id and String(presentation.get("identity_encounter_path", "")) == ATLAS_PATH and bool(presentation.get("uses_identity_encounter_sprite", false)) and texture is AtlasTexture and texture.region == Rect2(float(case.get("atlas_x", 0)) * 4.0, 0.0, 192.0, 192.0) and texture.atlas.get_size() == Vector2(960, 192)
 	_expect(exact, "%s did not resolve its exact Horizon court atlas region: %s" % [encounter_id, JSON.stringify(presentation)])
 	return exact
 
@@ -178,7 +178,7 @@ func _objective(objectives: Variant, objective_id: String) -> Dictionary:
 
 func _write_atlas_preview(path: String) -> bool:
 	var atlas := Image.load_from_file(ProjectSettings.globalize_path(ATLAS_PATH))
-	if atlas.is_empty() or atlas.get_size() != Vector2i(240, 48) or FileAccess.get_sha256(ATLAS_PATH) != ATLAS_SHA256:
+	if atlas.is_empty() or atlas.get_size() != Vector2i(960, 192) or FileAccess.get_sha256(ATLAS_PATH) != ATLAS_SHA256:
 		return false
 	atlas.resize(960, 192, Image.INTERPOLATE_NEAREST)
 	return atlas.save_png(path) == OK

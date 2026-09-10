@@ -9,7 +9,7 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const REPORT_ID := "SIX_GRAND_CONVERGENCE_RIVAL_COMMANDERS_SMOKE"
 const OUTPUT_DIR := "res://.artifacts/six_grand_convergence_rival_commanders_smoke"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png"
-const ATLAS_SHA256 := "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b"
+const ATLAS_SHA256 := "adaf6395842602260cca53e59cd648e3e96fb00a0a7a5b12a84aa76b89077814"
 
 const CASES := [
 	{"scenario_id":"rainledger-cinder-convergence","placement_id":"rainledger_march_e","objective_id":"clear_rainledger_march_e","encounter_id":"encounter_rotlamp_spoor_court","army_id":"army_rainledger_march_e","hero_id":"hero_mireclaw_edda_rotlamp","faction_id":"faction_mireclaw","field_objective_id":"rotlamp_spore_lanterns","field_objective_type":"hazard_zone","reward_id":"embergrain","gold":240,"victory_flag":"rival_commander_rotlamp_broken","asset_id":"encounter_rival_commander_rotlamp_spoor_court","atlas_x":0,"source_name":"rotlamp_spoor_court_source.png","source_sha256":"49072f908575f6144a5e8467e0b6b4e1472bcbe0f67ea5786f88d0c682d9ca7f"},
@@ -32,7 +32,7 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT_DIR))
 	ContentService.clear_cache()
 	var image := Image.load_from_file(ProjectSettings.globalize_path(ATLAS_PATH))
-	_expect(not image.is_empty() and image.get_size() == Vector2i(288, 48) and image.detect_alpha() != Image.ALPHA_NONE, "Rival-command atlas must remain a transparent 288x48 strip.")
+	_expect(not image.is_empty() and image.get_size() == Vector2i(1152, 192) and image.detect_alpha() != Image.ALPHA_NONE, "Recovered rival-command atlas must remain a transparent 1152x192 strip.")
 	_expect(FileAccess.get_sha256(ATLAS_PATH) == ATLAS_SHA256, "Rival-command atlas bytes changed.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
@@ -42,7 +42,7 @@ func _run() -> void:
 		print("%s CASE_START %s" % [REPORT_ID, case_value.get("encounter_id", "")])
 		await _validate_case(view, case_value)
 		print("%s CASE_DONE %s" % [REPORT_ID, case_value.get("encounter_id", "")])
-	var report := {"ok":_errors.is_empty(),"case_count":CASES.size(),"named_roster_commander_count":CASES.size(),"atlas_path":ATLAS_PATH,"atlas_size":[288,48],"atlas_sha256":ATLAS_SHA256,"save_version":SessionStateStoreScript.SAVE_VERSION,"single_consolidated_smoke":true,"rows":_rows,"errors":_errors}
+	var report := {"ok":_errors.is_empty(),"case_count":CASES.size(),"named_roster_commander_count":CASES.size(),"atlas_path":ATLAS_PATH,"atlas_size":[1152, 192],"atlas_sha256":ATLAS_SHA256,"save_version":SessionStateStoreScript.SAVE_VERSION,"single_consolidated_smoke":true,"rows":_rows,"errors":_errors}
 	_write_json("%s/report.json" % OUTPUT_DIR, report)
 	if _errors.is_empty():
 		print("%s %s" % [REPORT_ID, JSON.stringify({"ok":true,"case_count":CASES.size(),"save_version":SessionStateStoreScript.SAVE_VERSION})])
@@ -76,7 +76,7 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	await get_tree().process_frame
 	var presentation: Dictionary = view.call("validation_encounter_presentation_payload", placement)
 	var texture = view.call("_object_texture_for_asset", String(case.get("asset_id", "")))
-	var exact_art: bool = String(presentation.get("identity_encounter_asset_id", "")) == String(case.get("asset_id", "")) and String(presentation.get("identity_encounter_path", "")) == ATLAS_PATH and bool(presentation.get("uses_identity_encounter_sprite", false)) and texture is AtlasTexture and texture.region == Rect2(float(case.get("atlas_x", 0)), 0.0, 48.0, 48.0) and texture.atlas.get_size() == Vector2(288, 48)
+	var exact_art: bool = String(presentation.get("identity_encounter_asset_id", "")) == String(case.get("asset_id", "")) and String(presentation.get("identity_encounter_path", "")) == ATLAS_PATH and bool(presentation.get("uses_identity_encounter_sprite", false)) and texture is AtlasTexture and texture.region == Rect2(float(case.get("atlas_x", 0)) * 4.0, 0.0, 192.0, 192.0) and texture.atlas.get_size() == Vector2(1152, 192)
 	_expect(exact_art, "%s did not resolve its exact rival-standard frame." % encounter_id)
 	var capture_path := await _capture_if_requested(scenario_id)
 	var resources_before := (session.overworld.get("resources", {}) as Dictionary).duplicate(true)

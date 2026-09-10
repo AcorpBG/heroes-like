@@ -9,7 +9,7 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const REPORT_ID := "EIGHTEEN_CAMPAIGN_FINALE_NEMESES_SMOKE"
 const OUTPUT_DIR := "res://.artifacts/eighteen_campaign_finale_nemeses_smoke"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png"
-const ATLAS_SHA256 := "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6"
+const ATLAS_SHA256 := "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9"
 
 const CASES := [
 	{"scenario_id":"fen-crown","placement_id":"fen_crown_bone_ferry_watch","objective_id":"break_bone_ferry_watch","encounter_id":"encounter_fenwake_crown_drum_verdict","army_id":"army_fen_crown_fenwake_nemesis","hero_id":"hero_mireclaw_zhorra_fenwake","faction_id":"faction_mireclaw","field_objective_id":"fenwake_crown_drum","field_objective_type":"ritual_pylon","reward_id":"peatwax","gold":300,"victory_flag":"finale_nemesis_fenwake_broken","asset_id":"encounter_finale_nemesis_fenwake_crown_drum","atlas_x":0,"source_name":"fenwake_crown_drum.png","source_sha256":"9099b4c4c94423f79fc21a04c193541a8dfd1944add2e01f3b9e3e071d5b7915","x":8,"y":0,"difficulty":"high","seed":3203,"optional_expected":false},
@@ -44,7 +44,7 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT_DIR))
 	ContentService.clear_cache()
 	var image := Image.load_from_file(ProjectSettings.globalize_path(ATLAS_PATH))
-	_expect(not image.is_empty() and image.get_size() == Vector2i(864, 48) and image.detect_alpha() != Image.ALPHA_NONE, "Campaign-finale nemesis atlas must remain a transparent 864x48 strip.")
+	_expect(not image.is_empty() and image.get_size() == Vector2i(3456, 192) and image.detect_alpha() != Image.ALPHA_NONE, "Recovered campaign-finale nemesis atlas must remain a transparent 3456x192 strip.")
 	_expect(FileAccess.get_sha256(ATLAS_PATH) == ATLAS_SHA256, "Campaign-finale nemesis atlas bytes changed.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
@@ -54,7 +54,7 @@ func _run() -> void:
 		print("%s CASE_START %s" % [REPORT_ID, case_value.get("encounter_id", "")])
 		await _validate_case(view, case_value)
 		print("%s CASE_DONE %s" % [REPORT_ID, case_value.get("encounter_id", "")])
-	var report := {"ok":_errors.is_empty(),"case_count":CASES.size(),"named_finale_nemesis_count":CASES.size(),"atlas_path":ATLAS_PATH,"atlas_size":[864,48],"atlas_sha256":ATLAS_SHA256,"save_version":SessionStateStoreScript.SAVE_VERSION,"single_consolidated_smoke":true,"rows":_rows,"errors":_errors}
+	var report := {"ok":_errors.is_empty(),"case_count":CASES.size(),"named_finale_nemesis_count":CASES.size(),"atlas_path":ATLAS_PATH,"atlas_size":[3456, 192],"atlas_sha256":ATLAS_SHA256,"save_version":SessionStateStoreScript.SAVE_VERSION,"single_consolidated_smoke":true,"rows":_rows,"errors":_errors}
 	_write_json("%s/report.json" % OUTPUT_DIR, report)
 	if _errors.is_empty():
 		print("%s %s" % [REPORT_ID, JSON.stringify({"ok":true,"case_count":CASES.size(),"save_version":SessionStateStoreScript.SAVE_VERSION})])
@@ -90,7 +90,7 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	await get_tree().process_frame
 	var presentation: Dictionary = view.call("validation_encounter_presentation_payload", placement)
 	var texture = view.call("_object_texture_for_asset", String(case.get("asset_id", "")))
-	var exact_art: bool = String(presentation.get("identity_encounter_asset_id", "")) == String(case.get("asset_id", "")) and String(presentation.get("identity_encounter_path", "")) == ATLAS_PATH and bool(presentation.get("uses_identity_encounter_sprite", false)) and texture is AtlasTexture and texture.region == Rect2(float(case.get("atlas_x", 0)), 0.0, 48.0, 48.0) and texture.atlas.get_size() == Vector2(864, 48)
+	var exact_art: bool = String(presentation.get("identity_encounter_asset_id", "")) == String(case.get("asset_id", "")) and String(presentation.get("identity_encounter_path", "")) == ATLAS_PATH and bool(presentation.get("uses_identity_encounter_sprite", false)) and texture is AtlasTexture and texture.region == Rect2(float(case.get("atlas_x", 0)) * 4.0, 0.0, 192.0, 192.0) and texture.atlas.get_size() == Vector2(3456, 192)
 	_expect(exact_art, "%s did not resolve its exact campaign-finale landmark frame." % encounter_id)
 	var capture_path := await _capture_if_requested(scenario_id)
 	var resources_before := (session.overworld.get("resources", {}) as Dictionary).duplicate(true)

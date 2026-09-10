@@ -44225,6 +44225,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(len(training_recoveries) == 40, errors, "All 40 training paintings must reconstruct from original paint, scoped RGB repair and historical registration")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Training cutout recovery failed closed: {exc}")
+    remaining_encounter_recoveries = {}
+    try:
+        remaining_spec = importlib.util.spec_from_file_location("remaining_encounter_cutout_validation", ROOT / "tools/prepare_overworld_remaining_encounter_cutouts.py")
+        remaining_module = importlib.util.module_from_spec(remaining_spec)
+        remaining_spec.loader.exec_module(remaining_module)
+        remaining_encounter_recoveries = remaining_module.validate_assets()
+        ensure(len(remaining_encounter_recoveries) == 85, errors, "79 remaining encounters must reconstruct from original masters; six clean faction controls stay exact")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Remaining encounter cutout recovery failed closed: {exc}")
     contract_recoveries = {}
     try:
         contract_spec = importlib.util.spec_from_file_location("contract_cutout_validation", ROOT / "tools/prepare_overworld_contract_cutouts.py")
@@ -44437,6 +44446,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (training_module.FAMILIES[Path(entry['path']).stem.removesuffix('_atlas')] * 192, 192)
             if asset_id in contract_recoveries:
                 expected_canvas = (contract_module.FAMILIES[Path(entry['path']).stem.removesuffix('_atlas')] * 192, 192)
+            if asset_id in remaining_encounter_recoveries:
+                family = remaining_module.family(entry)
+                expected_canvas = (512,512) if family == "factions" else (256,256) if family == "signatures" else (remaining_module.FAMILIES[family] * 192,192)
             if asset_id in route_recoveries:
                 expected_canvas = (route_module.FAMILIES[Path(entry['path']).stem.removesuffix('_atlas')][0] * 192, 192)
             ensure((width, height) == expected_canvas, errors, f"Overworld runtime object asset {asset_id} must use the {expected_canvas[0]} canvas, found {width}x{height}")
@@ -50745,14 +50757,14 @@ def validate_signature_encounter_landmarks(errors: list[str]) -> None:
         runtime_path = res_path_to_disk(runtime_res)
         source_size = png_size(source_path) if source_path.is_file() else (0, 0)
         ensure(source_path.is_file() and min(source_size) >= 1024, errors, f"Signature encounter {encounter_id} must retain its high-resolution generated source")
-        ensure(runtime_path.is_file() and png_size(runtime_path) == (64, 64), errors, f"Signature encounter {encounter_id} must use a compact 64x64 runtime texture")
+        ensure(runtime_path.is_file() and png_size(runtime_path) == (256, 256) and png_size(encounter_historical_raster(runtime_path)) == (64,64), errors, f"Signature encounter {encounter_id} must recover original density and preserve its historical canvas")
         ensure(Path(f"{source_path}.import").is_file() and Path(f"{runtime_path}.import").is_file(), errors, f"Signature encounter {encounter_id} import metadata is missing")
         if source_path.is_file():
             payload = source_path.read_bytes()
             ensure(hashlib.sha256(payload).hexdigest() == source_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Signature encounter {encounter_id} source bytes or alpha changed")
             source_payloads.append(payload)
         if runtime_path.is_file():
-            payload = runtime_path.read_bytes()
+            payload = encounter_historical_raster(runtime_path).read_bytes()
             ensure(hashlib.sha256(payload).hexdigest() == runtime_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Signature encounter {encounter_id} runtime bytes or alpha changed")
             runtime_payloads.append(payload)
     ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6 and len(runtime_payloads) == 6 and len(set(runtime_payloads)) == 6, errors, "All six signature encounter sources and runtimes must remain byte-distinct")
@@ -53173,6 +53185,11 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         ensure('"development_reports_pck_excluded"' in packaging_text, errors, f"{packaging_path.name} must report development-report exclusion")
 
 
+def encounter_historical_raster(runtime_path: Path) -> Path:
+    """Immutable pre-recovery source evidence; live PNGs reconstruct separately."""
+    return ROOT / "art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/before_runtime" / runtime_path.relative_to(ROOT / "art/overworld/runtime")
+
+
 def validate_systemic_encounter_landmarks(errors: list[str]) -> None:
     expected = {
         "encounter_town_assault": ("encounter_systemic_town_assault", "town_assault", [0, 0, 48, 48], "48b1c615c1b1c580dd9a7cc19e731818fd4111e4d67ef6809dc8cfefaf712975", "broken_gate_town_assault", "army_mireclaw_raiding_party"),
@@ -53191,8 +53208,8 @@ def validate_systemic_encounter_landmarks(errors: list[str]) -> None:
     if not all(path.is_file() for path in required_paths):
         return
 
-    atlas_payload = atlas_path.read_bytes()
-    ensure(png_size(atlas_path) == (192, 48), errors, "Systemic encounter landmark atlas must remain a compact 192x48 strip")
+    atlas_payload = encounter_historical_raster(atlas_path).read_bytes()
+    ensure(png_size(encounter_historical_raster(atlas_path)) == (192, 48), errors, "Systemic encounter landmark atlas must remain a compact 192x48 strip")
     ensure(hashlib.sha256(atlas_payload).hexdigest() == "d4c6cf3cabdb6070317a6b467265ff79a5b9f9e0432cb3ff67af56a1d360570f" and len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6}, errors, "Systemic encounter landmark atlas bytes or alpha changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Systemic encounter landmark atlas import metadata is missing")
 
@@ -53216,7 +53233,7 @@ def validate_systemic_encounter_landmarks(errors: list[str]) -> None:
         entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
         source_res = f"res://art/overworld/source/generated/encounters/systemic_encounters/{stem}_source.png"
         ensure(identity_sprites.get(encounter_id) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/systemic/systemic_encounter_landmarks_atlas.png", errors, f"{encounter_id} exact live mapping is missing")
-        ensure(entry.get("atlas_region") == region and entry.get("atlas_size") == [192, 48] and entry.get("source_generated") == source_res, errors, f"{encounter_id} atlas region or source ownership changed")
+        ensure(entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [768, 192] and entry.get("source_generated") == source_res, errors, f"{encounter_id} atlas region or source ownership changed")
         ensure(entry.get("source_model") == "built_in_image_gen_original_systemic_encounter_landmark_atlas" and entry.get("assigned_encounter_id") == encounter_id and entry.get("assigned_faction_id") == "faction_mireclaw", errors, f"{encounter_id} generation or faction ownership changed")
         ensure(entry.get("presentation_role") == role and len(str(entry.get("accessible_description", "")).strip()) >= 40, errors, f"{encounter_id} role or non-color description changed")
         definition = encounters.get(encounter_id, {})
@@ -80785,9 +80802,9 @@ def validate_horizon_compact_six_citadels(errors: list[str]) -> None:
             coordinate = (int(placement.get("x", -1)), int(placement.get("y", -1)))
             ensure(coordinate not in placed_coordinates, errors, f"Horizon Compact placement collision at {coordinate}")
             placed_coordinates.add(coordinate)
-    ensure(atlas_path.is_file() and png_size(atlas_path) == (288, 48), errors, "Horizon Compact must retain one compact 288x48 runtime atlas")
+    ensure(atlas_path.is_file() and png_size(encounter_historical_raster(atlas_path)) == (288, 48), errors, "Horizon Compact must retain one compact 288x48 runtime atlas")
     if atlas_path.is_file():
-        payload = atlas_path.read_bytes()
+        payload = encounter_historical_raster(atlas_path).read_bytes()
         ensure(hashlib.sha256(payload).hexdigest() == "58c14c56f362855e88f218bdd85f0b6f8af9c775528561d0341d7ab356f999a8" and len(payload) >= 26 and payload[25] in {4, 6}, errors, "Horizon Compact atlas bytes or alpha changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Horizon Compact atlas import metadata is missing")
     ensure(source_manifest_path.is_file(), errors, "Horizon Compact generated-source provenance manifest is missing")
@@ -80805,7 +80822,7 @@ def validate_horizon_compact_six_citadels(errors: list[str]) -> None:
         ensure(len(objectives) == 1 and objectives[0].get("id") == objective_id and objectives[0].get("type") == objective_type, errors, f"{encounter_id} field objective changed")
         ensure(reward_key in encounter.get("rewards", {}) and victory_flag in encounter.get("victory_flags", []), errors, f"{encounter_id} reward or victory state changed")
         asset = object_assets.get(encounter_id, {}) if isinstance(object_assets, dict) else {}
-        ensure(identity_sprites.get(encounter_id) == encounter_id and asset.get("path") == "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png" and asset.get("atlas_region") == region and asset.get("atlas_size") == [288, 48], errors, f"{encounter_id} exact compact-atlas mapping changed")
+        ensure(identity_sprites.get(encounter_id) == encounter_id and asset.get("path") == "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png" and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1152, 192], errors, f"{encounter_id} exact compact-atlas mapping changed")
         ensure(asset.get("source_model") == "built_in_image_gen_original_horizon_compact_landmark_atlas" and asset.get("asset_policy") == "original_generated_runtime_sprite_no_homm3_art_import" and asset.get("assigned_faction_id") == faction_id and len(str(asset.get("accessible_description", "")).strip()) >= 60, errors, f"{encounter_id} art provenance or accessible non-color identity changed")
         descriptions.add(str(asset.get("accessible_description", "")))
         source_row = source_rows.get(encounter_id, {})
@@ -80851,9 +80868,9 @@ def validate_five_horizon_court_skirmishes(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path) if source_manifest_path.is_file() else {}
     source_rows = {str(row.get("encounter_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     ensure(source_manifest_path.is_file() and source_manifest.get("generator_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas_size") == [240,48] and source_manifest.get("runtime_atlas_sha256") == "62f9782641416f7251efe446cfa3bbe4b9f07d432c598b5e4e5f429819286955", errors, "Horizon court built-in image-generation provenance changed")
-    ensure(atlas_path.is_file() and png_size(atlas_path) == (240,48), errors, "Horizon courts must retain one compact 240x48 runtime atlas")
+    ensure(atlas_path.is_file() and png_size(encounter_historical_raster(atlas_path)) == (240,48), errors, "Horizon courts must retain one compact 240x48 runtime atlas")
     if atlas_path.is_file():
-        payload = atlas_path.read_bytes()
+        payload = encounter_historical_raster(atlas_path).read_bytes()
         ensure(hashlib.sha256(payload).hexdigest() == "62f9782641416f7251efe446cfa3bbe4b9f07d432c598b5e4e5f429819286955" and len(payload) >= 26 and payload[25] in {4,6}, errors, "Horizon court atlas bytes or alpha changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Horizon court atlas import metadata is missing")
     descriptions: set[str] = set()
@@ -80881,7 +80898,7 @@ def validate_five_horizon_court_skirmishes(errors: list[str]) -> None:
         ensure(encounter.get("enemy_group_id") == group_id and encounter.get("affiliation") == enemy_faction_id and len(group.get("stacks", [])) == 3 and group.get("faction_id") == enemy_faction_id, errors, f"{encounter_id} court company changed")
         ensure(len(objectives) == 1 and objectives[0].get("id") == objective_id and objectives[0].get("type") == objective_type and reward_key in encounter.get("rewards", {}) and victory_flag in encounter.get("victory_flags", []), errors, f"{encounter_id} field objective, reward, or victory flag changed")
         asset = object_assets.get(encounter_id, {}) if isinstance(object_assets, dict) else {}
-        ensure(identity_sprites.get(encounter_id) == encounter_id and asset.get("path") == "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png" and asset.get("atlas_region") == region and asset.get("atlas_size") == [240,48], errors, f"{encounter_id} exact court-atlas mapping changed")
+        ensure(identity_sprites.get(encounter_id) == encounter_id and asset.get("path") == "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png" and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [960, 192], errors, f"{encounter_id} exact court-atlas mapping changed")
         ensure(asset.get("source_model") == "built_in_image_gen_original_horizon_court_landmark_atlas" and asset.get("asset_policy") == "original_generated_runtime_sprite_no_homm3_art_import" and asset.get("assigned_faction_id") == enemy_faction_id and len(str(asset.get("accessible_description", "")).strip()) >= 72, errors, f"{encounter_id} original-art provenance or non-color description changed")
         descriptions.add(str(asset.get("accessible_description", "")))
         source_path = source_dir / source_name
@@ -81412,7 +81429,7 @@ def validate_four_dormant_roster_field_companies(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("encounter_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     ensure(len(encounters) >= 185 and len(groups) >= 309 and len(scenarios) >= 183 and len(units) >= 136, errors, "Dormant-roster companies must remain present in the expanding unit catalog and retain the 179-encounter, 249-army, 129-scenario catalogs")
-    ensure(png_size(atlas_path) == (192, 48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] in {4, 6}, errors, "Dormant-roster field-company atlas bytes, size, or alpha changed")
+    ensure(png_size(encounter_historical_raster(atlas_path)) == (192, 48) and hashlib.sha256(encounter_historical_raster(atlas_path).read_bytes()).hexdigest() == atlas_sha and encounter_historical_raster(atlas_path).read_bytes()[25] in {4, 6}, errors, "Dormant-roster field-company atlas bytes, size, or alpha changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Dormant-roster field-company atlas import is missing")
     ensure(source_manifest.get("generator_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas_size") == [192, 48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and set(source_rows) == set(expected), errors, "Dormant-roster generated-source manifest changed")
 
@@ -81431,7 +81448,7 @@ def validate_four_dormant_roster_field_companies(errors: list[str]) -> None:
         ensure(encounter.get("rewards", {}).get("gold") == contract["gold"] and encounter.get("rewards", {}).get(contract["reward_id"]) == 1 and encounter.get("victory_flags") == [contract["flag"]], errors, f"{encounter_id} reward or victory contract changed")
         ensure(placement.get("encounter_id") == encounter_id and placement.get("combat_seed") == contract["seed"] and placement.get("prefer_identity_landmark") is True, errors, f"{encounter_id} lost its exact live scenario placement")
         asset = object_assets.get(contract["asset_id"], {}) if isinstance(object_assets, dict) else {}
-        ensure(identities.get(encounter_id) == contract["asset_id"] and asset.get("path") == atlas_res and asset.get("atlas_region") == contract["region"] and asset.get("atlas_size") == [192, 48], errors, f"{encounter_id} exact atlas ownership changed")
+        ensure(identities.get(encounter_id) == contract["asset_id"] and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in contract["region"]] and asset.get("atlas_size") == [768, 192], errors, f"{encounter_id} exact atlas ownership changed")
         ensure(asset.get("source_model") == "built_in_image_gen_original_dormant_roster_field_company_landmark_atlas" and asset.get("assigned_faction_id") == contract["faction_id"] and len(str(asset.get("accessible_description", "")).strip()) >= 70, errors, f"{encounter_id} generated-art provenance or non-color description changed")
         descriptions.add(str(asset.get("accessible_description", "")))
         source_row = source_rows.get(encounter_id, {})
@@ -81486,8 +81503,8 @@ def validate_six_grand_convergence_rival_commanders(errors: list[str]) -> None:
     identities = art.get("encounter_identity_sprites", {})
     ensure((len(groups), len(encounters), len(scenarios), len(heroes)) == (437,203,299,66), errors, "Grand-convergence rival-commander catalog totals changed")
     atlas_sha = "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b"
-    atlas_bytes = atlas_path.read_bytes()
-    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_bytes).hexdigest() == atlas_sha and len(atlas_bytes) >= 26 and atlas_bytes[25] in {4,6}, errors, "Grand-convergence rival-command atlas bytes, size, or alpha changed")
+    atlas_bytes = encounter_historical_raster(atlas_path).read_bytes()
+    ensure(png_size(encounter_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(atlas_bytes).hexdigest() == atlas_sha and len(atlas_bytes) >= 26 and atlas_bytes[25] in {4,6}, errors, "Grand-convergence rival-command atlas bytes, size, or alpha changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Grand-convergence rival-command atlas Godot import metadata is missing")
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("encounter_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
@@ -81514,7 +81531,7 @@ def validate_six_grand_convergence_rival_commanders(errors: list[str]) -> None:
         ensure(placement.get("encounter_id") == encounter_id and placement.get("combat_seed") == contract["seed"] and placement.get("spawned_by_faction_id") == contract["faction"] and placement.get("enemy_commander_state") == {"roster_hero_id":contract["hero"],"faction_id":contract["faction"]} and placement.get("prefer_identity_landmark") is True and "enemy_army" not in placement, errors, f"{encounter_id} lost its exact named-rival scenario placement")
         ensure(objective.get("type") == "encounter_resolved" and objective.get("placement_id") == contract["placement"], errors, f"{contract['objective']} no longer resolves the replaced eastern front")
         asset = assets.get(contract["asset"], {}) if isinstance(assets, dict) else {}
-        ensure(identities.get(encounter_id) == contract["asset"] and asset.get("path") == atlas_res and asset.get("atlas_region") == contract["region"] and asset.get("atlas_size") == [288,48] and asset.get("runtime_sha256") == atlas_sha, errors, f"{encounter_id} exact atlas ownership changed")
+        ensure(identities.get(encounter_id) == contract["asset"] and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in contract["region"]] and asset.get("atlas_size") == [1152, 192] and asset.get("runtime_sha256") == hashlib.sha256(res_path_to_disk(asset["path"]).read_bytes()).hexdigest(), errors, f"{encounter_id} exact atlas ownership changed")
         ensure(asset.get("assigned_encounter_id") == encounter_id and asset.get("assigned_faction_id") == contract["faction"] and asset.get("assigned_commander_hero_id") == contract["hero"] and asset.get("source_model") == "built_in_image_gen_original_grand_convergence_rival_standard_atlas" and len(str(asset.get("accessible_description", "")).strip()) >= 70, errors, f"{encounter_id} art provenance or non-color description changed")
         descriptions.add(str(asset.get("accessible_description", "")))
         source_row = source_rows.get(encounter_id, {})
@@ -81558,8 +81575,8 @@ def validate_eighteen_campaign_finale_nemeses(errors: list[str]) -> None:
         return
 
     atlas_sha = "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6"
-    atlas_bytes = atlas_path.read_bytes()
-    ensure(png_size(atlas_path) == (864, 48) and hashlib.sha256(atlas_bytes).hexdigest() == atlas_sha and len(atlas_bytes) >= 26 and atlas_bytes[25] in {4, 6}, errors, "Campaign-finale nemesis atlas bytes, dimensions, or alpha changed")
+    atlas_bytes = encounter_historical_raster(atlas_path).read_bytes()
+    ensure(png_size(encounter_historical_raster(atlas_path)) == (864, 48) and hashlib.sha256(atlas_bytes).hexdigest() == atlas_sha and len(atlas_bytes) >= 26 and atlas_bytes[25] in {4, 6}, errors, "Campaign-finale nemesis atlas bytes, dimensions, or alpha changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Campaign-finale nemesis atlas Godot import metadata is missing")
 
     source_manifest = load_json(source_manifest_path)
@@ -81602,7 +81619,7 @@ def validate_eighteen_campaign_finale_nemeses(errors: list[str]) -> None:
             expected_refs = 0 if scenario_id == "ninefold-confluence" else 1
             ensure(len(objective_refs) == expected_refs, errors, f"{encounter_id} changed its mandatory or optional campaign-finale role")
         asset = assets.get(asset_id, {}) if isinstance(assets, dict) else {}
-        ensure(identities.get(encounter_id) == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [index * 48, 0, 48, 48] and asset.get("atlas_size") == [864, 48] and asset.get("runtime_sha256") == atlas_sha and asset.get("assigned_commander_hero_id") == hero_id, errors, f"{encounter_id} exact landmark ownership changed")
+        ensure(identities.get(encounter_id) == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [index * 192, 0, 192, 192] and asset.get("atlas_size") == [3456, 192] and asset.get("runtime_sha256") == hashlib.sha256(res_path_to_disk(asset["path"]).read_bytes()).hexdigest() and asset.get("assigned_commander_hero_id") == hero_id, errors, f"{encounter_id} exact landmark ownership changed")
         source_path = res_path_to_disk(str(row.get("source_path", "")))
         source_bytes = source_path.read_bytes() if source_path.is_file() else b""
         source_size = png_size(source_path) if source_path.is_file() else None
@@ -81655,8 +81672,8 @@ def validate_six_rival_road_skirmishes(errors: list[str]) -> None:
     watch_source_manifest_path = ROOT / "art/overworld/source/generated/encounters/frontier_watch_contracts/source_manifest.json"
     ensure(watch_atlas_path.is_file() and Path(f"{watch_atlas_path}.import").is_file() and watch_source_manifest_path.is_file(), errors, "Frontier-watch runtime atlas, Godot import metadata, or source provenance is missing")
     if watch_atlas_path.is_file():
-        watch_atlas_bytes = watch_atlas_path.read_bytes()
-        ensure(png_size(watch_atlas_path) == (288, 48) and hashlib.sha256(watch_atlas_bytes).hexdigest() == "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac" and len(watch_atlas_bytes) >= 26 and watch_atlas_bytes[25] in {4, 6}, errors, "Frontier-watch atlas bytes, size, or alpha changed")
+        watch_atlas_bytes = encounter_historical_raster(watch_atlas_path).read_bytes()
+        ensure(png_size(encounter_historical_raster(watch_atlas_path)) == (288, 48) and hashlib.sha256(watch_atlas_bytes).hexdigest() == "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac" and len(watch_atlas_bytes) >= 26 and watch_atlas_bytes[25] in {4, 6}, errors, "Frontier-watch atlas bytes, size, or alpha changed")
     if watch_source_manifest_path.is_file():
         watch_source_manifest = load_json(watch_source_manifest_path)
         ensure(watch_source_manifest.get("generator_mode") == "built_in_image_gen" and watch_source_manifest.get("runtime_atlas_size") == [288, 48] and watch_source_manifest.get("runtime_atlas_sha256") == "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac" and len(watch_source_manifest.get("assets", [])) == 6, errors, "Frontier-watch image-generation provenance changed")
@@ -81990,7 +82007,7 @@ def validate_six_field_muster_commission_skirmishes(errors: list[str]) -> None:
     ensure((len(scenarios), len(encounters), len(groups), len(heroes)) == (299,203,437,66) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Field-muster commissions must remain present in the expanded production roster")
     ensure({str(scenario.get("hero_id", "")) for scenario in scenarios.values()} == set(heroes), errors, "Every one of the 66 authored heroes must now lead at least one live scenario")
     ensure(source_manifest.get("schema_id") == "field_muster_commission_encounter_art_v1" and source_manifest.get("content_batch_id") == slice_id and source_manifest.get("generator") == "OpenAI built-in image generation" and set(source_rows) == {row[7] for row in expected.values()}, errors, "Field-muster commission generated-source provenance changed")
-    ensure(atlas_path.is_file() and png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "571d07944ca299915c7d87a414243efb071088dd912f6004ff262b9994a15634", errors, "Field-muster commission runtime atlas bytes or size changed")
+    ensure(atlas_path.is_file() and png_size(encounter_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(encounter_historical_raster(atlas_path).read_bytes()).hexdigest() == "571d07944ca299915c7d87a414243efb071088dd912f6004ff262b9994a15634", errors, "Field-muster commission runtime atlas bytes or size changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Field-muster commission runtime atlas import sidecar is missing")
 
     for scenario_id, row in expected.items():
@@ -82011,7 +82028,7 @@ def validate_six_field_muster_commission_skirmishes(errors: list[str]) -> None:
         expected_hook_count = 6 if scenario_id == "tidehook-reedwake-commission" else 5
         ensure(len(scenario.get("objectives", {}).get("victory", [])) == 3 and len(scenario.get("objectives", {}).get("defeat", [])) == 4 and len(scenario.get("script_hooks", [])) == expected_hook_count and any(effect.get("type") == "spawn_encounter" for hook in scenario.get("script_hooks", []) for effect in hook.get("effects", []) if isinstance(effect, dict)), errors, f"{scenario_id} objective, deadline, relief, counterstroke, or campaign witness composition changed")
         asset = assets.get(asset_id, {})
-        ensure(identities.get(encounter_id) == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("assigned_encounter_id") == encounter_id and len(str(asset.get("accessible_description", ""))) >= 80, errors, f"{encounter_id} lost its exact non-color-dependent landmark")
+        ensure(identities.get(encounter_id) == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("assigned_encounter_id") == encounter_id and len(str(asset.get("accessible_description", ""))) >= 80, errors, f"{encounter_id} lost its exact non-color-dependent landmark")
         source = source_rows.get(encounter_id, {})
         source_path = source_manifest_path.parent / source_name
         ensure(source.get("asset_id") == asset_id and source.get("runtime_region") == region and len(str(source.get("non_color_identity", ""))) >= 70 and source_path.is_file() and png_size(source_path) == (1254,1254) and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha, errors, f"{encounter_id} generated master or provenance changed")
@@ -82071,7 +82088,7 @@ def validate_six_twin_hold_defense_vigils(errors: list[str]) -> None:
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_twin_hold_defense_vigil_atlas" and source_manifest.get("asset_policy") == "original_generated_runtime_sprite_no_homm3_art_import" and set(source_rows) == {row[11] for row in expected.values()}, errors, "Twin-hold generated-source provenance changed")
     runtime_manifest = source_manifest.get("runtime_atlas", {})
     ensure(runtime_manifest.get("path") == atlas_res and runtime_manifest.get("dimensions") == [288,48] and runtime_manifest.get("frame_size") == [48,48] and runtime_manifest.get("sha256") == "9fa7863f90c798180d12ce7c5b25212b01ed5f58c89012285f69e1f645018cf1", errors, "Twin-hold source manifest runtime-atlas contract changed")
-    ensure(atlas_path.is_file() and png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "9fa7863f90c798180d12ce7c5b25212b01ed5f58c89012285f69e1f645018cf1" and len(atlas_path.read_bytes()) >= 26 and atlas_path.read_bytes()[25] == 6, errors, "Twin-hold runtime atlas bytes, size, or alpha changed")
+    ensure(atlas_path.is_file() and png_size(encounter_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(encounter_historical_raster(atlas_path).read_bytes()).hexdigest() == "9fa7863f90c798180d12ce7c5b25212b01ed5f58c89012285f69e1f645018cf1" and len(encounter_historical_raster(atlas_path).read_bytes()) >= 26 and encounter_historical_raster(atlas_path).read_bytes()[25] == 6, errors, "Twin-hold runtime atlas bytes, size, or alpha changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Twin-hold runtime atlas import sidecar is missing")
 
     source_payloads: list[bytes] = []
@@ -82103,7 +82120,7 @@ def validate_six_twin_hold_defense_vigils(errors: list[str]) -> None:
         expected_hook_count = 7 if scenario_id == "blackgauge-double-assay" else 6
         ensure(len(hooks) == expected_hook_count and {"add_enemy_pressure", "spawn_encounter", "town_add_recruits"}.issubset(effect_types), errors, f"{scenario_id} lost its relief, pressure, counterstroke, or campaign witness hook chain")
         asset = assets.get(asset_id, {})
-        ensure(identities.get(encounter_id) == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [288,48] and asset.get("runtime_sha256") == "9fa7863f90c798180d12ce7c5b25212b01ed5f58c89012285f69e1f645018cf1" and asset.get("assigned_encounter_id") == encounter_id and len(str(asset.get("accessible_description", ""))) >= 70, errors, f"{encounter_id} lost its exact non-color landmark mapping")
+        ensure(identities.get(encounter_id) == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1152, 192] and asset.get("runtime_sha256") == hashlib.sha256(res_path_to_disk(asset["path"]).read_bytes()).hexdigest() and asset.get("assigned_encounter_id") == encounter_id and len(str(asset.get("accessible_description", ""))) >= 70, errors, f"{encounter_id} lost its exact non-color landmark mapping")
         source = source_rows.get(source_stem, {})
         source_path = source_manifest_path.parent / f"{source_stem}_source.png"
         ensure(source.get("source_dimensions") == source_size and source.get("source_sha256") == source_sha and source.get("atlas_region") == region and len(str(source.get("non_color_identity", ""))) >= 30 and source_path.is_file() and list(png_size(source_path)) == source_size and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha and len(source_path.read_bytes()) >= 26 and source_path.read_bytes()[25] == 6, errors, f"{encounter_id} generated master, alpha, or provenance changed")
@@ -82170,7 +82187,7 @@ def validate_six_three_relic_pilgrimages(errors: list[str]) -> None:
     ensure(source_manifest.get("schema_id") == "three_relic_pilgrimage_encounter_art_v1" and source_manifest.get("content_batch_id") == slice_id and len(source_rows) == 6, errors, "Three-relic generated-source provenance changed")
     ensure(source_manifest.get("runtime_atlas") == guardian_atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == "bee203188559bd1ed0224b0e51ab929c3045ddc732087a18bee89ed6c118ed6c", errors, "Three-relic guardian atlas provenance changed")
     ensure(source_manifest.get("artifact_field_atlas") == artifact_atlas_res and source_manifest.get("artifact_field_atlas_size") == [864,48] and source_manifest.get("artifact_field_atlas_sha256") == "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7", errors, "Three-relic artifact atlas provenance changed")
-    ensure(guardian_atlas_path.is_file() and png_size(guardian_atlas_path) == (288,48) and hashlib.sha256(guardian_atlas_path.read_bytes()).hexdigest() == "bee203188559bd1ed0224b0e51ab929c3045ddc732087a18bee89ed6c118ed6c" and guardian_atlas_path.read_bytes()[25] == 6 and Path(f"{guardian_atlas_path}.import").is_file(), errors, "Three-relic guardian runtime atlas, alpha, hash, or import changed")
+    ensure(guardian_atlas_path.is_file() and png_size(encounter_historical_raster(guardian_atlas_path)) == (288,48) and hashlib.sha256(encounter_historical_raster(guardian_atlas_path).read_bytes()).hexdigest() == "bee203188559bd1ed0224b0e51ab929c3045ddc732087a18bee89ed6c118ed6c" and encounter_historical_raster(guardian_atlas_path).read_bytes()[25] == 6 and Path(f"{guardian_atlas_path}.import").is_file(), errors, "Three-relic guardian runtime atlas, alpha, hash, or import changed")
     ensure(artifact_atlas_path.is_file() and png_size(artifact_atlas_path) == (864,48) and hashlib.sha256(artifact_atlas_path.read_bytes()).hexdigest() == "0883a20b5e97a8206edcf874ff5bcd3fdc6c190b1e2b4b2f9126f28202a751b7" and artifact_atlas_path.read_bytes()[25] == 6 and Path(f"{artifact_atlas_path}.import").is_file(), errors, "Three-relic artifact runtime atlas, alpha, hash, or import changed")
 
     placed_target_artifacts: list[str] = []
@@ -82194,7 +82211,7 @@ def validate_six_three_relic_pilgrimages(errors: list[str]) -> None:
         ensure(len(victory) == 6 and sum(1 for objective in victory if objective.get("type") == "artifact_owned_by_player") == 3 and sum(1 for objective in victory if objective.get("type") == "encounter_resolved") == 3 and {objective.get("artifact_id") for objective in victory if objective.get("type") == "artifact_owned_by_player"} == set(artifact_ids), errors, f"{scenario_id} lost its six-condition recovery victory")
         ensure(len(defeat) == 4 and any(objective.get("type") == "town_not_owned_by_player" for objective in defeat) and any(objective.get("type") == "day_at_least" and objective.get("day") == 18 for objective in defeat), errors, f"{scenario_id} lost its home-hold or Day-18 defeat boundary")
         asset = assets.get(asset_id, {})
-        ensure(encounter_identities.get(encounter_id) == asset_id and asset.get("path") == guardian_atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [288,48] and asset.get("runtime_sha256") == "bee203188559bd1ed0224b0e51ab929c3045ddc732087a18bee89ed6c118ed6c" and asset.get("assigned_encounter_id") == encounter_id and len(str(asset.get("accessible_description", ""))) >= 70, errors, f"{encounter_id} lost its exact non-color guardian art")
+        ensure(encounter_identities.get(encounter_id) == asset_id and asset.get("path") == guardian_atlas_res and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1152, 192] and asset.get("runtime_sha256") == hashlib.sha256(res_path_to_disk(asset["path"]).read_bytes()).hexdigest() and asset.get("assigned_encounter_id") == encounter_id and len(str(asset.get("accessible_description", ""))) >= 70, errors, f"{encounter_id} lost its exact non-color guardian art")
         source = source_rows.get(encounter_id, {})
         source_path = res_path_to_disk(str(source.get("source_path", "")))
         ensure(source_path.is_file() and png_size(source_path) == (1254,1254) and hashlib.sha256(source_path.read_bytes()).hexdigest() == source.get("source_sha256") and source_path.read_bytes()[25] == 6 and source.get("runtime_region") == region and len(str(source.get("non_color_identity", ""))) >= 60, errors, f"{encounter_id} generated master, alpha, or provenance changed")
@@ -83083,7 +83100,7 @@ def validate_six_border_oath_standard_seizures(errors: list[str]) -> None:
     ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,203,377,299), errors, "Current content catalogs must retain the expanded frontier-mythic totals")
     historical_standard = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/landmark_states/before_runtime/objects/resource_sites/border_oath_standards_atlas.png"
     ensure(png_size(historical_standard) == (288,48) and hashlib.sha256(historical_standard.read_bytes()).hexdigest() == "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e", errors, "Historical Border Oath standards atlas changed")
-    ensure(png_size(required[1]) == (288,48) and hashlib.sha256(required[1].read_bytes()).hexdigest() == "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c", errors, "Border Oath cordons atlas changed")
+    ensure(png_size(encounter_historical_raster(required[1])) == (288,48) and hashlib.sha256(encounter_historical_raster(required[1]).read_bytes()).hexdigest() == "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c", errors, "Border Oath cordons atlas changed")
     for scenario_id, contract in expected.items():
         prefix,faction_id,hero_id,player_group_id,site_id,site_asset_id,encounter_id,enemy_group_id,encounter_asset_id,rare_id,region = contract
         scenario = scenarios.get(scenario_id,{})
@@ -83107,7 +83124,7 @@ def validate_six_border_oath_standard_seizures(errors: list[str]) -> None:
         site_asset = assets.get(site_asset_id,{})
         encounter_asset = assets.get(encounter_asset_id,{})
         ensure(art.get("resource_site_sprites",{}).get(site_id,{}).get("asset_id") == site_asset_id and site_asset.get("path") == standard_atlas_res and site_asset.get("atlas_region") == [v * 4 for v in region] and site_asset.get("assigned_resource_site_id") == site_id, errors, f"{site_id} exact standard art changed")
-        ensure(art.get("encounter_identity_sprites",{}).get(encounter_id) == encounter_asset_id and encounter_asset.get("path") == cordon_atlas_res and encounter_asset.get("atlas_region") == region and encounter_asset.get("assigned_encounter_id") == encounter_id, errors, f"{encounter_id} exact cordon art changed")
+        ensure(art.get("encounter_identity_sprites",{}).get(encounter_id) == encounter_asset_id and encounter_asset.get("path") == cordon_atlas_res and encounter_asset.get("atlas_region") == [v * 4 for v in region] and encounter_asset.get("assigned_encounter_id") == encounter_id, errors, f"{encounter_id} exact cordon art changed")
         for source, source_root in ((standard_sources.get(site_id,{}),standard_manifest_path.parent),(cordon_sources.get(encounter_id,{}),cordon_manifest_path.parent)):
             source_path = source_root / str(source.get("source_file",""))
             ensure(source_path.is_file() and hashlib.sha256(source_path.read_bytes()).hexdigest() == source.get("source_sha256") and min(png_size(source_path) or (0,0)) >= 1024 and len(str(source.get("prompt_summary",""))) >= 180, errors, f"{scenario_id} generated source provenance changed")

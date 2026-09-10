@@ -373,7 +373,45 @@ must reconstruct exactly. Preserve cleared native encounters as cleared;
 never revive them to obtain a screenshot. Focused test command:
 `python3 -B -m unittest discover -s tests -p test_overworld_contract_cutouts.py`.
 
+### Remaining encounter paintings and faction controls
+
+Recover 73 atlas paintings in Systemic, Horizon Compact, Horizon Courts, Frontier
+Watch, Dormant Roster, rival commanders, finale nemeses, Field Muster, Twin Hold,
+Three Relic and Border Oath families, plus six signature encounters. Preserve six
+clean 512px faction landmarks byte-for-byte. Freeze source/manifest hashes,
+historical rasters and per-family registrations in `remaining_encounters/recipe.json`
+under the existing recovery packet. Frontier Watch's nominal sources are 48px
+derivatives: recover exact cells from the 1536x1024 generated sheet. Other masters
+use genuine RGBA. Preserve source alpha and purple paint; only reviewed alpha-1..4
+saturated RGB noise may borrow original opaque foreground RGB. No reduced-source
+upscale or invented geometry.
+
+Owners: `tools/prepare_overworld_remaining_encounter_cutouts.py`,
+`tests/test_overworld_remaining_encounter_cutouts.py`,
+`tests/overworld_remaining_encounter_cutout_probe.py` and shared source/package
+`--batch remaining_encounters` routing. Validate exact raster reconstruction,
+source registration and complete routes. Run focused Python tests, source probes
+at 1280x720/1920x1080, Linux/Windows packaged probes, affected domain and shared
+sprite/input/fog reports, repository/diff checks and official exports once the
+cohort is assembled. Inspect full galleries and ordinary scouting views; report
+commander-prioritized and cleared fronts honestly. Preserve full saves, actual
+native placements, fog and unrelated payloads. This cohort advances the
+836/1214 baseline to 921/1214 only after consolidated acceptance. No gameplay, RMG, save, Town, unrelated
+art, source/cache deletion, or needless replacement of clean assets.
+
 ## Completion and non-goals
+
+Owner-approved test-control replacement (2026-09-10): the original Day97
+autosave under `.artifacts/generated_full_match_quality_20260906` was deleted
+by concurrent external cleanup. Use the successful 1280 probe's complete manual
+round-trip verbatim as `tests/fixtures/overworld_cutout/native_day97_roundtrip.json`
+(SHA256 `d4b6cac54c25fc42456bdb7fdd3d4a9d0ed37fda8115dd63afe29d05b18bb1c1`).
+Its adjacent provenance retains the old hash and evidence lineage; this is a
+separately approved control, not a byte-identical restoration. Both source and
+packaged drivers use the same hash-locked bytes and unchanged gameplay/save
+assertions. Reject missing or altered fixtures, never choose a random substitute.
+Validate with `python3 -B -m unittest discover -s tests -p
+test_overworld_cutout_save_fixture.py`; both exports exclude all `tests/*`.
 
 Each cohort completes only after its actual repaired art is integrated and its
 validation passes. The parent completes only after the authoritative runtime

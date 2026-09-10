@@ -12,12 +12,12 @@ const OUTPUT_DIR := "res://.artifacts/twin_hold_defense_vigils_smoke"
 const REPORT_PATH := OUTPUT_DIR + "/report.json"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/encounters/twin_hold_defense_vigils/twin_hold_defense_vigils_atlas.png"
 const CASES := [
-	{"scenario_id":"powderwrit-two-lock-vigil","hero_id":"hero_embercourt_maela_powderwrit","faction_id":"faction_embercourt","army_id":"army_maela_powderwrit_commission","prefix":"powdervigil","muster_site_id":"site_stormseal_powder_wharf","encounter_id":"encounter_gloamchain_sluice_ram","enemy_group_id":"army_gloamchain_sluice_ram","asset_id":"encounter_defense_gloamchain_sluice_ram","region":Rect2(0,0,48,48)},
-	{"scenario_id":"reedcaller-moonwax-stand","hero_id":"hero_mireclaw_rhask_reedcaller","faction_id":"faction_mireclaw","army_id":"army_rhask_reedcaller_commission","prefix":"reedvigil","muster_site_id":"site_moonwax_reed_circle","encounter_id":"encounter_red_ledger_pile_driver","enemy_group_id":"army_red_ledger_pile_driver","asset_id":"encounter_defense_red_ledger_pile_driver","region":Rect2(48,0,48,48)},
-	{"scenario_id":"sevenfold-meridian-vigil","hero_id":"hero_sunvault_aven_sevenfold","faction_id":"faction_sunvault","army_id":"army_aven_sevenfold_commission","prefix":"facetvigil","muster_site_id":"site_facet_vigil","encounter_id":"encounter_rootshade_facet_breaker","enemy_group_id":"army_rootshade_facet_breaker","asset_id":"encounter_defense_rootshade_facet_breaker","region":Rect2(96,0,48,48)},
-	{"scenario_id":"boltroot-twin-grove-stand","hero_id":"hero_thornwake_bryn_boltroot","faction_id":"faction_thornwake","army_id":"army_bryn_boltroot_commission","prefix":"rootvigil","muster_site_id":"site_heartseed_bolt_grove","encounter_id":"encounter_ashwrit_sapfire_tower","enemy_group_id":"army_ashwrit_sapfire_tower","asset_id":"encounter_defense_ashwrit_sapfire_tower","region":Rect2(144,0,48,48)},
-	{"scenario_id":"blackgauge-double-assay","hero_id":"hero_brasshollow_kestra_blackgauge","faction_id":"faction_brasshollow","army_id":"army_kestra_blackgauge_commission","prefix":"gaugevigil","muster_site_id":"site_blackbell_assay_watch","encounter_id":"encounter_zenith_wire_crucible","enemy_group_id":"army_zenith_wire_crucible","asset_id":"encounter_defense_zenith_wire_crucible","region":Rect2(192,0,48,48)},
-	{"scenario_id":"tidehook-last-mooring-vigil","hero_id":"hero_veilmourn_olan_tidehook","faction_id":"faction_veilmourn","army_id":"army_olan_tidehook_commission","prefix":"tidevigil","muster_site_id":"site_last_memory_mooring","encounter_id":"encounter_fenwake_bell_dredger","enemy_group_id":"army_fenwake_bell_dredger","asset_id":"encounter_defense_fenwake_bell_dredger","region":Rect2(240,0,48,48)}
+	{"scenario_id":"powderwrit-two-lock-vigil","hero_id":"hero_embercourt_maela_powderwrit","faction_id":"faction_embercourt","army_id":"army_maela_powderwrit_commission","prefix":"powdervigil","muster_site_id":"site_stormseal_powder_wharf","encounter_id":"encounter_gloamchain_sluice_ram","enemy_group_id":"army_gloamchain_sluice_ram","asset_id":"encounter_defense_gloamchain_sluice_ram","region":Rect2(0, 0, 192, 192)},
+	{"scenario_id":"reedcaller-moonwax-stand","hero_id":"hero_mireclaw_rhask_reedcaller","faction_id":"faction_mireclaw","army_id":"army_rhask_reedcaller_commission","prefix":"reedvigil","muster_site_id":"site_moonwax_reed_circle","encounter_id":"encounter_red_ledger_pile_driver","enemy_group_id":"army_red_ledger_pile_driver","asset_id":"encounter_defense_red_ledger_pile_driver","region":Rect2(192, 0, 192, 192)},
+	{"scenario_id":"sevenfold-meridian-vigil","hero_id":"hero_sunvault_aven_sevenfold","faction_id":"faction_sunvault","army_id":"army_aven_sevenfold_commission","prefix":"facetvigil","muster_site_id":"site_facet_vigil","encounter_id":"encounter_rootshade_facet_breaker","enemy_group_id":"army_rootshade_facet_breaker","asset_id":"encounter_defense_rootshade_facet_breaker","region":Rect2(384, 0, 192, 192)},
+	{"scenario_id":"boltroot-twin-grove-stand","hero_id":"hero_thornwake_bryn_boltroot","faction_id":"faction_thornwake","army_id":"army_bryn_boltroot_commission","prefix":"rootvigil","muster_site_id":"site_heartseed_bolt_grove","encounter_id":"encounter_ashwrit_sapfire_tower","enemy_group_id":"army_ashwrit_sapfire_tower","asset_id":"encounter_defense_ashwrit_sapfire_tower","region":Rect2(576, 0, 192, 192)},
+	{"scenario_id":"blackgauge-double-assay","hero_id":"hero_brasshollow_kestra_blackgauge","faction_id":"faction_brasshollow","army_id":"army_kestra_blackgauge_commission","prefix":"gaugevigil","muster_site_id":"site_blackbell_assay_watch","encounter_id":"encounter_zenith_wire_crucible","enemy_group_id":"army_zenith_wire_crucible","asset_id":"encounter_defense_zenith_wire_crucible","region":Rect2(768, 0, 192, 192)},
+	{"scenario_id":"tidehook-last-mooring-vigil","hero_id":"hero_veilmourn_olan_tidehook","faction_id":"faction_veilmourn","army_id":"army_olan_tidehook_commission","prefix":"tidevigil","muster_site_id":"site_last_memory_mooring","encounter_id":"encounter_fenwake_bell_dredger","enemy_group_id":"army_fenwake_bell_dredger","asset_id":"encounter_defense_fenwake_bell_dredger","region":Rect2(960, 0, 192, 192)}
 ]
 
 var _errors: Array[String] = []
@@ -33,7 +33,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(288, 48), "The twin-hold landmark atlas must remain exactly 288x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(1152, 192), "The recovered twin-hold landmark atlas must remain exactly 1152x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)
@@ -110,7 +110,7 @@ func _run_case(view: Control, case: Dictionary) -> void:
 	await get_tree().process_frame
 	var presentation: Dictionary = view.call("validation_encounter_presentation_payload", primary)
 	var texture = view.call("_object_texture_for_asset", String(case.get("asset_id", "")))
-	var exact_art: bool = String(presentation.get("identity_encounter_asset_id", "")) == String(case.get("asset_id", "")) and bool(presentation.get("uses_identity_encounter_sprite", false)) and texture is AtlasTexture and texture.region == case.get("region", Rect2()) and texture.atlas is Texture2D and texture.atlas.resource_path == ATLAS_PATH and texture.atlas.get_size() == Vector2(288, 48)
+	var exact_art: bool = String(presentation.get("identity_encounter_asset_id", "")) == String(case.get("asset_id", "")) and bool(presentation.get("uses_identity_encounter_sprite", false)) and texture is AtlasTexture and texture.region == case.get("region", Rect2()) and texture.atlas is Texture2D and texture.atlas.resource_path == ATLAS_PATH and texture.atlas.get_size() == Vector2(1152, 192)
 	_expect(exact_art, "%s exact generated landmark did not reach the live map renderer." % encounter_id)
 	var capture_path := await _capture_if_requested(scenario_id)
 
