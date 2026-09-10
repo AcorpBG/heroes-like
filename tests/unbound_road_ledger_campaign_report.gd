@@ -27,7 +27,7 @@ const ART_RECORDS := [
 	{"path":"res://art/campaigns/runtime/chapter_seals/burning_charter.png", "size":Vector2i(64,64), "hash":"d7e4b0cf99a135b198a8ad92f96c802694a2f833b43d39d66c62fddd68a2e31e"},
 	{"path":"res://art/campaigns/runtime/chapter_seals/salted_ghost_rope.png", "size":Vector2i(64,64), "hash":"5634770abcd5dacb2c49d7987062ecd923e73962912a5935197f8b3332b07929"},
 ]
-const WAYDESK_ATLAS := {"path":"res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png", "size":Vector2i(384, 192), "hash":"ab0b88f06eae6ac5b73c6c6d47eef58c4fc22e21af7eb73694359eb0f1c5d100"}
+const WAYDESK_ATLAS := {"path":"res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png", "size":Vector2i(384, 192), "hash":"77a490bc5f666e368861e780316791beb246f9b4f50b48962cdce43e57ba791a"}
 
 var _errors: Array[String] = []
 var _rows: Array = []

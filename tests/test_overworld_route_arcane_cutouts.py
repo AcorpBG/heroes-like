@@ -1,4 +1,4 @@
-"""Original-paint reconstruction, exact state ink and fail-closed ownership."""
+"""Original-paint reconstruction, generated physical seals and strict ownership."""
 import copy
 import importlib.util
 import json
@@ -25,20 +25,53 @@ class RouteArcaneCutoutTests(unittest.TestCase):
         self.assertEqual(sum('generated_edit' in r for r in self.recipe['assets'].values()),2)
         self.assertEqual(sum('state_ink' in r for r in self.recipe['assets'].values()),7)
 
-    def test_fifty_two_genuine_source_masters_remain_byte_exact(self):
+    def test_forty_five_unedited_source_masters_remain_byte_exact(self):
+        unchanged=0
         for key,row in self.recipe['assets'].items():
-            if 'generated_edit' in row:continue
+            if 'generated_edit' in row or 'integrated_state_edit' in row:continue
             master=Image.open(art.base.local(row['recovered_source_path'])).convert('RGBA')
             self.assertEqual(master.tobytes(),self.sources[key].tobytes(),key)
+            unchanged+=1
+        self.assertEqual(unchanged,45)
 
-    def test_original_state_ink_is_sampled_not_redrawn(self):
+    def test_historical_state_ink_remains_in_frozen_predecessor(self):
         for key,row in self.recipe['assets'].items():
             if 'state_ink' not in row:continue
             old=row['original_manifest_entry'];ink=art.owner.region(art.original(old['path']),old)
-            fixed=Image.open(art.base.local(row['trimmed_path'])).convert('RGBA')
+            previous=art.PACKET.parent/'integrated_seals/previous'/Path(old['path']).name
+            fixed=art.owner.region(Image.open(previous).convert('RGBA'),art.expected_entry(row))
             for i in row['state_ink']['pixels']:
                 for dy in range(4):
                     for dx in range(4):self.assertEqual(fixed.getpixel((4*(i%48)+dx,4*(i//48)+dy)),ink.getpixel((i%48,i//48)))
+
+    def test_seven_edits_use_only_reviewed_generated_foreground(self):
+        selected={k:r for k,r in self.recipe['assets'].items() if r.get('integrated_state_edit')}
+        self.assertEqual(len(selected),7)
+        self.assertEqual(len({r['integrated_state_edit']['source'] for r in selected.values()}),7)
+        for key,row in selected.items():
+            edit=row['integrated_state_edit'];source=self.sources[key]
+            master=Image.open(art.base.local(row['recovered_source_path'])).convert('RGBA')
+            mask=np.asarray(art.state_patch_mask(source.size,edit))
+            a=np.asarray(source);b=np.asarray(master)
+            self.assertEqual(a[mask==0].tobytes(),b[mask==0].tobytes(),key)
+            self.assertLess(np.count_nonzero(mask)/mask.size,0.025,key)
+            self.assertEqual(master.tobytes(),art.integrated_state_source(source,edit).tobytes(),key)
+            if not edit.get('attached_silhouette_extension'):self.assertEqual(a[:,:,3].tobytes(),b[:,:,3].tobytes(),key)
+            fixed=Image.open(art.base.local(row['trimmed_path'])).convert('RGBA')
+            self.assertEqual(fixed.tobytes(),art.project(master,row).tobytes(),key+' has no legacy stamp')
+
+    def test_forty_seven_previous_paintings_and_seven_base_neighbors_exact(self):
+        proof=json.loads((art.PACKET/'manifest.json').read_text())
+        atlases={p:Image.open(art.base.local(p)).convert('RGBA') for p in self.recipe['atlases']}
+        art.validate_integrated_predecessor(self.recipe,proof,atlases)
+        corrupt=copy.deepcopy(proof);key=next(k for k,r in self.recipe['assets'].items() if not r.get('integrated_state_edit'))
+        corrupt['assets'][key]['rgba_sha256']='0'*64
+        with self.assertRaisesRegex(ValueError,'Unrelated painting'):art.validate_integrated_predecessor(self.recipe,corrupt,atlases)
+
+    def test_generated_backing_cannot_enter_foreground_only_patch(self):
+        key='resource_site_pactwright_waydesk_witnessed';edit=copy.deepcopy(self.recipe['assets'][key]['integrated_state_edit'])
+        edit['patches']=[dict(rect=[0,0,50,50],feather=4)]
+        with self.assertRaisesRegex(ValueError,'reached background'):art.integrated_state_source(self.sources[key],edit)
 
     def test_original_smoke_coral_and_inspected_backing(self):
         for key,row in self.recipe['assets'].items():

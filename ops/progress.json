@@ -16615,11 +16615,11 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Thirty recurring resource-site originals accepted: original-source 192px paint with exact distinct anchors and unchanged site/state routes. Twelve Python tests, 2673 checks per source resolution/platform package, 38 claim/save cases, five shared reports, fifteen inspected final source/Linux images, full saves, repository and official package/runtime reports pass. Shell-interruption and legacy-fixture limits are documented. 515 repaired/preserved dispositions accepted; 699 remain. Parent and child stay in progress; no full-pool or release acceptance.",
+  "currentNotes": "Seven Pactwright/Mireglass state variants now use original generated physical seals, replacing retained coarse floating marks. All 54 route/arcane paintings accepted; 674/1214 accepted and 540 remain. Eleven Python tests, 3012 checks per source resolution/platform package, 50 full-save comparisons, five shared reports, two rendered campaign reports and both official exports pass. All 47 neighboring cohort paintings, seven base cells, original registrations and compiled gameplay/native/save owners preserved. Windows is headless Wine; no full-pool or release-ready claim.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "art-overworld-cutout-runtime-pool-20260909",
   "currentSliceId": "art-overworld-cutout-runtime-pool-20260909",
-  "currentSliceNotes": "54 route/arcane/state paintings restored on eight 192px atlases, including two approved generated controlled edits. Eight Python tests, 2919 source and Linux/Windows package checks per run, complete saves, five shared reports and repository validation pass. Seven retained coarse witness/counterseal states remain visually unfinished: 47 new accepted dispositions, 667 accepted and 547 remaining. Two unrelated legacy domain failures reproduce against bbb6435c. Next: generated integrated state art for those seven, then remaining families; no gameplay/native/RMG/save/Town-screen changes.",
+  "currentSliceNotes": "Seven unfinished Pactwright/Mireglass states now replaced by approved original generated physical seals, foreground-only composited into original transparent masters. All seven actual authored sites inspected at 1280/1920; 11 Python tests, 3012 source/both-package checks each, 50 complete-save comparisons, five shared reports and two rendered campaign reports pass. Two same-path atlases; other 47 route/arcane paintings and seven base neighbors exact. Both exports pass; 292865768-byte PCKs, 5484 members, only two ctex/manifest/UID cache differ from 3a8084c5; compiled gameplay/native/save owners exact. Accepted 674/1214, remaining 540. Continue other resource-site/landmark families; parent and this child remain in_progress. Evidence: docs/overworld-cutout-quality-report.md and integrated_seals_delivery_preservation.json. Final repository/provenance checks pass; next work remains the other source-backed runtime art families.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Remaining Runtime-Pool Cutout Recovery",
   "currentSliceUpdatedAt": "2026-09-10T00:43:21Z",
@@ -21932,110 +21932,115 @@
     "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "in_progress",
-    "acceptedCohort": "Thirty recurring resource-site original paintings",
+    "acceptedCohort": "Seven integrated physical state details; all 54 route/arcane paintings now accepted",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
-    "runtimeChanges": "Replace the existing resource-site atlas with 5760x192 original-source derivatives; retain the exact historical atlas, first-five south and later-25 two-pixel-inset registration, all site/state routing and original world geometry. No gameplay/native/save changes.",
+    "runtimeChanges": "Replace seven retained coarse state stamps with per-object original generated foreground patches; preserve 47 other paintings, seven unmarked atlas neighbors, both paths, logical fit/anchors, all identities and state routes.",
     "validation": {
-      "python_tests": 12,
-      "source_checks_per_resolution": 2673,
-      "packaged_checks_per_platform": 2673,
+      "python_tests": 11,
+      "source_checks_per_resolution": 3012,
+      "packaged_checks_per_platform": 3012,
       "source_resolutions": [
         "1280x720",
         "1920x1080"
       ],
-      "inspected_final_source_linux_screenshots": 15,
-      "existing_claim_save_cases": 38,
-      "existing_sprite_input_route_fog_reports": "5 completed, each exit 0",
+      "visually_inspected_seal_source_views": 14,
+      "full_save_comparisons": 50,
+      "existing_sprite_input_route_fog_reports": "5 complete exit-0 passes",
+      "affected_campaign_reports": "2 complete rendered exit-0 passes",
       "linux_export": "passed",
-      "windows_export": "success report/marker; startup and generated gameplay exit 0; outer shell SIGTERM recorded",
-      "exact_art_package_probe_exit_codes": {
-        "linux": 0,
-        "windows": 0
-      },
-      "repository": "passed initial and final",
-      "linux_pck_bytes": 288003784,
-      "windows_pck_bytes": 288003784,
-      "unchanged_package_members": 5481,
-      "new_package_members": 0,
-      "removed_package_members": 0,
-      "native_cross_run_exclusions": [
-        "saved_at_unix"
-      ],
-      "authored_cross_run_exclusions": [
-        "saved_at_unix",
-        "session_id (existing clock-generated fresh-session identity)"
-      ],
-      "within_run_exclusions": [],
-      "geometry": "1280 before/after/package rectangles exact; Windows float32 exact; wide gameplay retains original placement and unchanged compiled geometry owner.",
-      "native_scope": "2380 original blockers; zero currently selected cohort assets. Unchanged earned control, not repaired-object gameplay.",
-      "limits": "Windows headless Wine, not GPU certification; legacy combined claimed-state fixture not accepted; shared runner shell interruption with all five isolated child reports completed."
+      "windows_export": "passed",
+      "windows_limit": "headless Wine; not physical hardware visual certification",
+      "pack_bytes_per_platform": 292865768,
+      "pack_members": 5484,
+      "unchanged_members_from_previous": 5480,
+      "gameplay_native_save_owners_unchanged": true,
+      "accepted_dispositions": 674,
+      "remaining_dispositions": 540
     },
-    "parentComplete": false,
-    "remainingWork": "515 repaired/preserved dispositions accepted; 699 detailed reviews remain. Next: separately authored resource-site state and remaining landmark families. No full-pool or release-readiness acceptance."
+    "artifacts": [
+      "docs/overworld-cutout-quality-report.md",
+      "art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/generation.json",
+      "art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated-seals-unit.log",
+      ".artifacts/overworld_cutout_quality_20260909/integrated-seals-repo-final.log",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_source_1280_v3/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_source_1920_v3/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_packaged_linux_v3/packaged-report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_packaged_windows/packaged-report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_before_linux_v3/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_delivery_preservation.json",
+      ".artifacts/full_play_runtime_20260905/integrated_seals_shared/report.json",
+      ".artifacts/full_play_runtime_20260905/integrated_seals_domain_final/report.json",
+      "/tmp/heroes-integrated-seals-linux-20260910.log",
+      "/tmp/heroes-integrated-seals-windows-20260910.log"
+    ]
   },
   "latestEvidence": {
     "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "in_progress",
-    "acceptedCohort": "Thirty recurring resource-site original paintings",
+    "acceptedCohort": "Seven integrated physical state details; all 54 route/arcane paintings now accepted",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
-    "runtimeChanges": "Replace the existing resource-site atlas with 5760x192 original-source derivatives; retain the exact historical atlas, first-five south and later-25 two-pixel-inset registration, all site/state routing and original world geometry. No gameplay/native/save changes.",
+    "runtimeChanges": "Replace seven retained coarse state stamps with per-object original generated foreground patches; preserve 47 other paintings, seven unmarked atlas neighbors, both paths, logical fit/anchors, all identities and state routes.",
     "validation": {
-      "python_tests": 12,
-      "source_checks_per_resolution": 2673,
-      "packaged_checks_per_platform": 2673,
+      "python_tests": 11,
+      "source_checks_per_resolution": 3012,
+      "packaged_checks_per_platform": 3012,
       "source_resolutions": [
         "1280x720",
         "1920x1080"
       ],
-      "inspected_final_source_linux_screenshots": 15,
-      "existing_claim_save_cases": 38,
-      "existing_sprite_input_route_fog_reports": "5 completed, each exit 0",
+      "visually_inspected_seal_source_views": 14,
+      "full_save_comparisons": 50,
+      "existing_sprite_input_route_fog_reports": "5 complete exit-0 passes",
+      "affected_campaign_reports": "2 complete rendered exit-0 passes",
       "linux_export": "passed",
-      "windows_export": "success report/marker; startup and generated gameplay exit 0; outer shell SIGTERM recorded",
-      "exact_art_package_probe_exit_codes": {
-        "linux": 0,
-        "windows": 0
-      },
-      "repository": "passed initial and final",
-      "linux_pck_bytes": 288003784,
-      "windows_pck_bytes": 288003784,
-      "unchanged_package_members": 5481,
-      "new_package_members": 0,
-      "removed_package_members": 0,
-      "native_cross_run_exclusions": [
-        "saved_at_unix"
-      ],
-      "authored_cross_run_exclusions": [
-        "saved_at_unix",
-        "session_id (existing clock-generated fresh-session identity)"
-      ],
-      "within_run_exclusions": [],
-      "geometry": "1280 before/after/package rectangles exact; Windows float32 exact; wide gameplay retains original placement and unchanged compiled geometry owner.",
-      "native_scope": "2380 original blockers; zero currently selected cohort assets. Unchanged earned control, not repaired-object gameplay.",
-      "limits": "Windows headless Wine, not GPU certification; legacy combined claimed-state fixture not accepted; shared runner shell interruption with all five isolated child reports completed."
+      "windows_export": "passed",
+      "windows_limit": "headless Wine; not physical hardware visual certification",
+      "pack_bytes_per_platform": 292865768,
+      "pack_members": 5484,
+      "unchanged_members_from_previous": 5480,
+      "gameplay_native_save_owners_unchanged": true,
+      "accepted_dispositions": 674,
+      "remaining_dispositions": 540
     },
-    "parentComplete": false,
-    "remainingWork": "515 repaired/preserved dispositions accepted; 699 detailed reviews remain. Next: separately authored resource-site state and remaining landmark families. No full-pool or release-readiness acceptance."
+    "artifacts": [
+      "docs/overworld-cutout-quality-report.md",
+      "art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/generation.json",
+      "art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated-seals-unit.log",
+      ".artifacts/overworld_cutout_quality_20260909/integrated-seals-repo-final.log",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_source_1280_v3/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_source_1920_v3/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_packaged_linux_v3/packaged-report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_packaged_windows/packaged-report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_before_linux_v3/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_delivery_preservation.json",
+      ".artifacts/full_play_runtime_20260905/integrated_seals_shared/report.json",
+      ".artifacts/full_play_runtime_20260905/integrated_seals_domain_final/report.json",
+      "/tmp/heroes-integrated-seals-linux-20260910.log",
+      "/tmp/heroes-integrated-seals-windows-20260910.log"
+    ]
   },
   "latestEvidenceArtifacts": [
     "docs/overworld-cutout-quality-report.md",
-    "art/overworld/source/generated/cutout_recovery_20260909/recurring_sites/manifest.json",
-    ".artifacts/overworld_cutout_quality_20260909/recurring_sites_before_final/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/recurring_sites_1280/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/recurring_sites_1920/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/recurring_sites_packaged_linux/packaged-report.json",
-    ".artifacts/overworld_cutout_quality_20260909/recurring_sites_packaged_windows/packaged-report.json",
-    ".artifacts/overworld_cutout_quality_20260909/recurring_sites_linux/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/recurring_sites_windows/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/recurring_sites_delivery_preservation.json",
-    ".artifacts/overworld_cutout_quality_20260909/recurring_sites_unit_final.log",
-    ".artifacts/overworld_cutout_quality_20260909/recurring_sites_claimed_final.log",
-    ".artifacts/overworld_cutout_quality_20260909/recurring_sites_repo_final.log",
-    ".artifacts/full_play_runtime_20260905/recurring_sites_shared_final/report.json"
+    "art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/generation.json",
+    "art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
+    ".artifacts/overworld_cutout_quality_20260909/integrated-seals-unit.log",
+    ".artifacts/overworld_cutout_quality_20260909/integrated-seals-repo-final.log",
+    ".artifacts/overworld_cutout_quality_20260909/integrated_seals_source_1280_v3/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/integrated_seals_source_1920_v3/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/integrated_seals_packaged_linux_v3/packaged-report.json",
+    ".artifacts/overworld_cutout_quality_20260909/integrated_seals_packaged_windows/packaged-report.json",
+    ".artifacts/overworld_cutout_quality_20260909/integrated_seals_before_linux_v3/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/integrated_seals_delivery_preservation.json",
+    ".artifacts/full_play_runtime_20260905/integrated_seals_shared/report.json",
+    ".artifacts/full_play_runtime_20260905/integrated_seals_domain_final/report.json",
+    "/tmp/heroes-integrated-seals-linux-20260910.log",
+    "/tmp/heroes-integrated-seals-windows-20260910.log"
   ],
   "latestEvidenceId": "art-overworld-cutout-runtime-pool-20260909",
-  "latestFinding": "Thirty recurring resource-site originals accepted: original-source 192px paint with exact distinct anchors and unchanged site/state routes. Twelve Python tests, 2673 checks per source resolution/platform package, 38 claim/save cases, five shared reports, fifteen inspected final source/Linux images, full saves, repository and official package/runtime reports pass. Shell-interruption and legacy-fixture limits are documented. 515 repaired/preserved dispositions accepted; 699 remain. Parent and child stay in progress; no full-pool or release acceptance.",
+  "latestFinding": "Seven Pactwright/Mireglass state variants now use original generated physical seals, replacing retained coarse floating marks. All 54 route/arcane paintings accepted; 674/1214 accepted and 540 remain. Eleven Python tests, 3012 checks per source resolution/platform package, 50 full-save comparisons, five shared reports, two rendered campaign reports and both official exports pass. All 47 neighboring cohort paintings, seven base cells, original registrations and compiled gameplay/native/save owners preserved. Windows is headless Wine; no full-pool or release-ready claim.",
   "metrics": {
     "scope": "Historical full-match checkpoint metrics retained below; these are not current release metrics. Current art-goal acceptance is in latestEvidence and validation.",
     "audit_only": false,
@@ -22252,7 +22257,7 @@
         "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch route_arcane --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-10T00:43:21Z",
+      "updatedAt": "2026-09-10T01:28:45Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22285,10 +22290,10 @@
         "tests/test_overworld_state_cutouts.py and early_states source/package probe; 34 exact state identities, original earned visible/consumed native records and full save preservation",
         "tools/prepare_overworld_landmark_cutouts.py; forty original landmark/state paintings, Witness Stone retained-RGB recovery and 39 preserved RGBA sources, five same-path atlases and original logical registrations",
         "tests/test_overworld_landmark_cutouts.py and landmark_states source/package probe; exact state/family precedence, earned native captures and complete save/placement/compiled-owner preservation",
-        "tools/prepare_overworld_route_arcane_cutouts.py and route_arcane source/generation/trim/runtime packet; exact historical registration and state-ink preservation",
-        "tests/test_overworld_route_arcane_cutouts.py and tests/overworld_route_arcane_cutout_probe.py; 54 exact textures/routes, ordinary Horizon claim and complete native/authored saves"
+        "tools/prepare_overworld_route_arcane_cutouts.py and route_arcane source/generation/trim/runtime packet; exact historical registration, frozen coarse-state predecessor and generated physical-seal integration",
+        "tests/test_overworld_route_arcane_cutouts.py and tests/overworld_route_arcane_cutout_probe.py; 54 exact textures/routes, ordinary Horizon claim, seven real state-site scouting cases and complete native/authored saves"
       ],
-      "notes": "54 route/arcane/state paintings restored on eight 192px atlases, including two approved generated controlled edits. Eight Python tests, 2919 source and Linux/Windows package checks per run, complete saves, five shared reports and repository validation pass. Seven retained coarse witness/counterseal states remain visually unfinished: 47 new accepted dispositions, 667 accepted and 547 remaining. Two unrelated legacy domain failures reproduce against bbb6435c. Next: generated integrated state art for those seven, then remaining families; no gameplay/native/RMG/save/Town-screen changes.",
+      "notes": "Seven unfinished Pactwright/Mireglass states now replaced by approved original generated physical seals, foreground-only composited into original transparent masters. All seven actual authored sites inspected at 1280/1920; 11 Python tests, 3012 source/both-package checks each, 50 complete-save comparisons, five shared reports and two rendered campaign reports pass. Two same-path atlases; other 47 route/arcane paintings and seven base neighbors exact. Both exports pass; 292865768-byte PCKs, 5484 members, only two ctex/manifest/UID cache differ from 3a8084c5; compiled gameplay/native/save owners exact. Accepted 674/1214, remaining 540. Continue other resource-site/landmark families; parent and this child remain in_progress. Evidence: docs/overworld-cutout-quality-report.md and integrated_seals_delivery_preservation.json. Final repository/provenance checks pass; next work remains the other source-backed runtime art families.",
       "startedAt": "2026-09-09T16:04:51Z"
     },
     {
@@ -110897,8 +110902,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Review and recover remaining authoritative runtime-pool cutouts in source-backed cohorts. Other visible sheet frames/fringes remain in the inspected maps; do not claim the full 1214-row pool is fixed. Preserve identities, saves, legitimate colors and all native/gameplay authority; consolidate subsequent platform acceptance.",
-  "remainingWork": "Review and recover remaining authoritative runtime-pool cutouts in source-backed cohorts. Other visible sheet frames/fringes remain in the inspected maps; do not claim the full 1214-row pool is fixed. Preserve identities, saves, legitimate colors and all native/gameplay authority; consolidate subsequent platform acceptance.",
+  "remainingGap": "540 authoritative runtime rows still require detailed review/recovery. Continue other resource-site and remaining landmark families with original-source/alpha review, preserving all identities, placements, saves and native/gameplay authority. Consolidated acceptance; no full-pool claim from this checkpoint.",
+  "remainingWork": "540 authoritative runtime rows still require detailed review/recovery. Continue other resource-site and remaining landmark families with original-source/alpha review, preserving all identities, placements, saves and native/gameplay authority. Consolidated acceptance; no full-pool claim from this checkpoint.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -111436,7 +111441,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "recurring_resource_site_originals_accepted_parent_in_progress",
+  "result": "integrated_physical_state_art_accepted_parent_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -111537,29 +111542,32 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Overworld cutout quality remains in progress. Latest route/arcane checkpoint restores 54 paintings (two approved generated edits) on eight atlases; 47 new visual dispositions accepted, seven coarse witness/counterseal states still pending original painted integration. Accepted 667/1214; remaining 547. Source/packaged 2919 checks per run, eight Python tests, shared reports, repository validation and both exports pass. Two baseline-reproduced domain failures and Windows headless-only limits remain explicit. No full-pool or release-ready claim.",
+  "summary": "Seven Pactwright/Mireglass state variants now use original generated physical seals, replacing retained coarse floating marks. All 54 route/arcane paintings accepted; 674/1214 accepted and 540 remain. Eleven Python tests, 3012 checks per source resolution/platform package, 50 full-save comparisons, five shared reports, two rendered campaign reports and both official exports pass. All 47 neighboring cohort paintings, seven base cells, original registrations and compiled gameplay/native/save owners preserved. Windows is headless Wine; no full-pool or release-ready claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-10T00:43:21Z",
+  "updatedAt": "2026-09-10T01:28:45Z",
   "validation": {
     "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "in_progress",
-    "validatedAt": "2026-09-09T23:38:45Z",
-    "scope": "40 original landmark/objective-state paintings accepted; eight actual affected native identities captured from unchanged earned gameplay. Remaining full-pool review stays in progress.",
-    "result": "2804 checks per source resolution/Linux/Windows package, 11 Python tests, five shared reports and repository checks pass. All 40 gallery assets and eight actual affected identities visually inspected across source resolutions, with packaged Linux evidence. Both PCKs 291354392 bytes/5484 members; all eight full saves, original registrations and compiled game/native/content/save owners preserved. 620 repaired/preserved dispositions accepted; 594 remain. Windows validation is headless Wine; interrupted attempts are not passes. No full-pool or release acceptance.",
+    "validatedAt": "2026-09-10T01:23:45Z",
+    "scope": "Seven integrated physical state details; all 54 route/arcane paintings now accepted",
+    "result": "Seven Pactwright/Mireglass state variants now use original generated physical seals, replacing retained coarse floating marks. All 54 route/arcane paintings accepted; 674/1214 accepted and 540 remain. Eleven Python tests, 3012 checks per source resolution/platform package, 50 full-save comparisons, five shared reports, two rendered campaign reports and both official exports pass. All 47 neighboring cohort paintings, seven base cells, original registrations and compiled gameplay/native/save owners preserved. Windows is headless Wine; no full-pool or release-ready claim.",
     "artifacts": [
       "docs/overworld-cutout-quality-report.md",
-      ".artifacts/overworld_cutout_quality_20260909/landmark-unit-final.log",
-      ".artifacts/overworld_cutout_quality_20260909/landmark_states_source_1280/report.json",
-      ".artifacts/overworld_cutout_quality_20260909/landmark_states_source_1920/report.json",
-      ".artifacts/overworld_cutout_quality_20260909/landmark_states_packaged_linux/packaged-report.json",
-      ".artifacts/overworld_cutout_quality_20260909/landmark_states_packaged_windows/packaged-report.json",
-      ".artifacts/overworld_cutout_quality_20260909/landmark_states_delivery_preservation.json",
-      ".artifacts/overworld_cutout_quality_20260909/landmark_states_linux/report.json",
-      ".artifacts/overworld_cutout_quality_20260909/landmark_states_windows_final/report.json",
-      ".artifacts/overworld_cutout_quality_20260909/landmark-repo-final.log",
-      ".artifacts/full_play_runtime_20260905/landmark_states_shared/report.json",
-      ".artifacts/full_play_runtime_20260905/landmark_states_shared_final/report.json"
+      "art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/generation.json",
+      "art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated-seals-unit.log",
+      ".artifacts/overworld_cutout_quality_20260909/integrated-seals-repo-final.log",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_source_1280_v3/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_source_1920_v3/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_packaged_linux_v3/packaged-report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_packaged_windows/packaged-report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_before_linux_v3/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/integrated_seals_delivery_preservation.json",
+      ".artifacts/full_play_runtime_20260905/integrated_seals_shared/report.json",
+      ".artifacts/full_play_runtime_20260905/integrated_seals_domain_final/report.json",
+      "/tmp/heroes-integrated-seals-linux-20260910.log",
+      "/tmp/heroes-integrated-seals-windows-20260910.log"
     ]
   },
   "validationHistory": [

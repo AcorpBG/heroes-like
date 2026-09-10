@@ -11553,7 +11553,7 @@
       "accessible_description": "A six-legged darkwood field desk holds a blank ledger beneath a tall quill mast and brass plumb.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_pactwright_waydesk.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "ab0b88f06eae6ac5b73c6c6d47eef58c4fc22e21af7eb73694359eb0f1c5d100"
+      "runtime_sha256": "77a490bc5f666e368861e780316791beb246f9b4f50b48962cdce43e57ba791a"
     },
     "resource_site_pactwright_waydesk_witnessed": {
       "path": "res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png",
@@ -11568,14 +11568,14 @@
         192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/pactwright_waydesk_wave1/pactwright_waydesk_source.png",
-      "source_model": "built_in_image_gen_original_pactwright_waydesk_with_six_mark_runtime_state_derivation",
+      "source_model": "built_in_image_gen_original_with_localized_generated_physical_state_seal",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_resource_site_id": "site_pactwright_waydesk",
       "presentation_role": "six_witness_marks_recorded_state",
-      "accessible_description": "Six small wax witness marks line the Pactwright Waydesk after the local road evidence is recorded.",
+      "accessible_description": "Six distinct wax witness seals are pressed onto the two open ledger pages of the Pactwright Waydesk.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_pactwright_waydesk_witnessed.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "ab0b88f06eae6ac5b73c6c6d47eef58c4fc22e21af7eb73694359eb0f1c5d100"
+      "runtime_sha256": "77a490bc5f666e368861e780316791beb246f9b4f50b48962cdce43e57ba791a"
     },
     "mapobj_siltglass_index": {
       "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
@@ -11600,7 +11600,7 @@
       "accessible_description": "Two smoky siltglass tablets stand in wet reed bindings around a narrow bronze tally pointer.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_siltglass_index.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90"
+      "runtime_sha256": "af9cd879b7dc8d08f7e2a7c9c802bac7d4a5ad0517e40c7275a8dbf5f22ff47c"
     },
     "resource_site_siltglass_index_countersealed": {
       "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
@@ -11615,14 +11615,14 @@
         192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/siltglass_index_source.png",
-      "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+      "source_model": "built_in_image_gen_original_with_localized_generated_physical_state_seal",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_resource_site_id": "site_siltglass_index",
       "presentation_role": "countersealed_mire_account",
-      "accessible_description": "A small two-tone diamond counterseal now hangs from the Siltglass Index without obscuring either tablet.",
+      "accessible_description": "A turquoise wax counterseal in an aged brass bezel is reed-bound to the foot of the left Siltglass tablet; both tablet faces remain visible.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_siltglass_index_countersealed.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90"
+      "runtime_sha256": "af9cd879b7dc8d08f7e2a7c9c802bac7d4a5ad0517e40c7275a8dbf5f22ff47c"
     },
     "mapobj_greenline_lens_table": {
       "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
@@ -11647,7 +11647,7 @@
       "accessible_description": "A horizontal pale crystal lens rests above a low brass meridian table partly embraced by living roots.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_greenline_lens_table.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90"
+      "runtime_sha256": "af9cd879b7dc8d08f7e2a7c9c802bac7d4a5ad0517e40c7275a8dbf5f22ff47c"
     },
     "resource_site_greenline_lens_table_countersealed": {
       "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
@@ -11662,14 +11662,14 @@
         192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/greenline_lens_table_source.png",
-      "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+      "source_model": "built_in_image_gen_original_with_localized_generated_physical_state_seal",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_resource_site_id": "site_greenline_lens_table",
       "presentation_role": "countersealed_rooted_meridian",
-      "accessible_description": "A two-tone diamond counterseal marks the Greenline Lens Table while the original roots and crystal measure remain visible.",
+      "accessible_description": "An ivory ribbon fastens a turquoise wax counterseal to the front plaque of the Greenline Lens Table; roots, dial and crystal measure remain visible.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_greenline_lens_table_countersealed.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90"
+      "runtime_sha256": "af9cd879b7dc8d08f7e2a7c9c802bac7d4a5ad0517e40c7275a8dbf5f22ff47c"
     },
     "mapobj_reedflame_votive_frame": {
       "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
@@ -11694,7 +11694,7 @@
       "accessible_description": "A circular woven-reed frame holds an amber votive flame and three pale jaw-shaped mineral charms.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_reedflame_votive_frame.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90"
+      "runtime_sha256": "af9cd879b7dc8d08f7e2a7c9c802bac7d4a5ad0517e40c7275a8dbf5f22ff47c"
     },
     "resource_site_reedflame_votive_frame_countersealed": {
       "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
@@ -11709,14 +11709,14 @@
         192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/reedflame_votive_frame_source.png",
-      "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+      "source_model": "built_in_image_gen_original_with_localized_generated_physical_state_seal",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_resource_site_id": "site_reedflame_votive_frame",
       "presentation_role": "countersealed_ferry_vow",
-      "accessible_description": "A two-tone diamond counterseal joins the Reedflame Votive Frame while its amber flame and old ferry charms remain intact.",
+      "accessible_description": "A reed-bound turquoise wax counterseal rests on the lower trunk of the Reedflame Votive Frame, beneath its flame and ferry charms.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_reedflame_votive_frame_countersealed.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90"
+      "runtime_sha256": "af9cd879b7dc8d08f7e2a7c9c802bac7d4a5ad0517e40c7275a8dbf5f22ff47c"
     },
     "mapobj_ossuary_prism_choir": {
       "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
@@ -11741,7 +11741,7 @@
       "accessible_description": "Three pale mineral arches suspend a dusk-blue prism over a compact black mirrored basin.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_ossuary_prism_choir.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90"
+      "runtime_sha256": "af9cd879b7dc8d08f7e2a7c9c802bac7d4a5ad0517e40c7275a8dbf5f22ff47c"
     },
     "resource_site_ossuary_prism_choir_countersealed": {
       "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
@@ -11756,14 +11756,14 @@
         192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/ossuary_prism_choir_source.png",
-      "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+      "source_model": "built_in_image_gen_original_with_localized_generated_physical_state_seal",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_resource_site_id": "site_ossuary_prism_choir",
       "presentation_role": "countersealed_drowned_reflection",
-      "accessible_description": "A two-tone diamond counterseal hangs beside the tuned Ossuary Prism Choir without covering its suspended prism.",
+      "accessible_description": "An ivory-tied turquoise wax counterseal is fastened to the lower blue sash of the Ossuary Prism Choir beside the pool; the suspended prism remains unobscured.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_ossuary_prism_choir_countersealed.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90"
+      "runtime_sha256": "af9cd879b7dc8d08f7e2a7c9c802bac7d4a5ad0517e40c7275a8dbf5f22ff47c"
     },
     "mapobj_glowcap_echo_bell": {
       "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
@@ -11788,7 +11788,7 @@
       "accessible_description": "A luminous mushroom bell hangs over a peat-dark resonance bowl between three curled reedwood legs.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_glowcap_echo_bell.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90"
+      "runtime_sha256": "af9cd879b7dc8d08f7e2a7c9c802bac7d4a5ad0517e40c7275a8dbf5f22ff47c"
     },
     "resource_site_glowcap_echo_bell_countersealed": {
       "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
@@ -11803,14 +11803,14 @@
         192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/glowcap_echo_bell_source.png",
-      "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+      "source_model": "built_in_image_gen_original_with_localized_generated_physical_state_seal",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_resource_site_id": "site_glowcap_echo_bell",
       "presentation_role": "countersealed_low_refrain",
-      "accessible_description": "A two-tone diamond counterseal marks the sounded Glowcap Echo Bell while its cap and dark bowl remain fully readable.",
+      "accessible_description": "A turquoise wax counterseal is tied onto the lower right wooden support of the Glowcap Echo Bell, above its curled foot.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_glowcap_echo_bell_countersealed.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90"
+      "runtime_sha256": "af9cd879b7dc8d08f7e2a7c9c802bac7d4a5ad0517e40c7275a8dbf5f22ff47c"
     },
     "mapobj_kite_signal_countermast": {
       "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
@@ -11835,7 +11835,7 @@
       "accessible_description": "A forked brass mast balances a clear diamond kite vane, a pale counter-vane, and two hanging weights.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_kite_signal_countermast.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90"
+      "runtime_sha256": "af9cd879b7dc8d08f7e2a7c9c802bac7d4a5ad0517e40c7275a8dbf5f22ff47c"
     },
     "resource_site_kite_signal_countermast_countersealed": {
       "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
@@ -11850,14 +11850,14 @@
         192
       ],
       "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/kite_signal_countermast_source.png",
-      "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+      "source_model": "built_in_image_gen_original_with_localized_generated_physical_state_seal",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_resource_site_id": "site_kite_signal_countermast",
       "presentation_role": "countersealed_long_range_signal",
-      "accessible_description": "A two-tone diamond counterseal completes the balanced Kite-Signal Countermast while both opposed vanes remain visible.",
+      "accessible_description": "An ivory wrap holds a narrow turquoise wax counterseal around the lower shaft of the Kite-Signal Countermast; both vanes and counterweights remain visible.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_kite_signal_countermast_countersealed.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90"
+      "runtime_sha256": "af9cd879b7dc8d08f7e2a7c9c802bac7d4a5ad0517e40c7275a8dbf5f22ff47c"
     },
     "encounter_systemic_town_assault": {
       "path": "res://art/overworld/runtime/objects/encounters/systemic/systemic_encounter_landmarks_atlas.png",
