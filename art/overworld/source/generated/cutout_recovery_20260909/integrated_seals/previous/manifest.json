@@ -1,7 +1,7 @@
 {
   "schema_id": "route_arcane_cutout_recovery_v1",
-  "recipe_sha256": "1fa6e55eff86030ab492479e1dfce78d2007a9c2a571ec692eb074beb10de7c0",
-  "processing_tool_sha256": "6cd7c42e38e6a363a7331f4e073928856f8d54b1dab169d3db18fd10fb4fe53c",
+  "recipe_sha256": "e0edb46db4c1853eb55d5e90b06bf70de203d0ab53763052cd9630060dc2385b",
+  "processing_tool_sha256": "6bef5bb838d0a69e8124146eca88c9685a394f0b8ee47b8cd75078f6c071c131",
   "shared_tool_sha256": "102e44f08f1acc72a59c407f67a8de01e35ca42c00c4bec20cef6c05d3b7b4b5",
   "shared_dependencies": {
     "processing_tool_sha256": "102e44f08f1acc72a59c407f67a8de01e35ca42c00c4bec20cef6c05d3b7b4b5",
@@ -346,12 +346,12 @@
       }
     },
     "resource_site_pactwright_waydesk_witnessed": {
-      "trim_sha256": "4338f7401183757843757c53bcebf81a35b4af91070151bc06953276416c8893",
-      "source_sha256": "7dad7c2f3452134edfc67e9444b059164cccee3f111f3e77e89d3611179a579d",
-      "rgba_sha256": "f8f47c430e3b0986fd328ba6cb7d80aaa813816dafd5233270112f73a32f27ea",
+      "trim_sha256": "3f96c1e524f5ea3ec00514124e7c435b390cc2ee20398d41f954e5aa67b3e115",
+      "source_sha256": "da048e6277b57b5f45aa967df854e22fcedad431922b7b7bff16361ea5a3a515",
+      "rgba_sha256": "209f3de3e5809bc0452c86524a19a498f022c8a5abde2b23536c03c837779c04",
       "metrics": {
-        "alpha_levels": 254,
-        "partial_alpha_pixels": 10536,
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 10967,
         "bounds": [
           13,
           8,
@@ -376,16 +376,16 @@
       }
     },
     "resource_site_siltglass_index_countersealed": {
-      "trim_sha256": "bf74d5026660079ae100d582a731abdd5a7a33dab437911e661be865988bc488",
-      "source_sha256": "04ddc108ffbd884dddfba6495fa28dfa4f1ad17241cd5fe5b0985bc71dac6cfa",
-      "rgba_sha256": "db02b684f04dbf9342788ec61e7edd6a80ab4a5385d9ef091ea8343bc940e0b9",
+      "trim_sha256": "53b99dc0fd251a6d494ad94bd86a018a7b69ccdd49d26d5fec10ff2cdfdbb6c8",
+      "source_sha256": "cb4037009fdaebef7b0e08d0f206135a608b8c80131eafe0c45496eeea0d821d",
+      "rgba_sha256": "4f812bdd53eb4d037d502aa3ddc22efcd9f3ded6a1e27c72f4df25e0d8d3f0da",
       "metrics": {
-        "alpha_levels": 254,
-        "partial_alpha_pixels": 10350,
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 10702,
         "bounds": [
           26,
-          64,
-          157,
+          16,
+          184,
           190
         ]
       }
@@ -406,16 +406,16 @@
       }
     },
     "resource_site_greenline_lens_table_countersealed": {
-      "trim_sha256": "7372bde03ae3d228e3a455b66d1c1f7589d7b6e48faa748cc277b3ef9c4a7cd7",
-      "source_sha256": "8e52a267177c67ad9ef570ad2aa8ab6138b1ac09489d46e24449821aa6dd9e54",
-      "rgba_sha256": "9bf20e206b276bef98be6d94eb43546d527d4d6209eb4a932daf2e74d47a6848",
+      "trim_sha256": "fc983851c4bef0a5ae0d2e96f375ee7104dddcedaea1ab115e84e5e603d3f2fe",
+      "source_sha256": "5994e9e8e5118150726e5efccd666b742a7570dbc55d5e98ba0e62d5a363f466",
+      "rgba_sha256": "5735d1771a559efafa8c9be917b73b30271c404016bd2d58610828618d1f0d5d",
       "metrics": {
-        "alpha_levels": 246,
-        "partial_alpha_pixels": 8406,
+        "alpha_levels": 248,
+        "partial_alpha_pixels": 8758,
         "bounds": [
           36,
-          91,
-          161,
+          16,
+          184,
           192
         ]
       }
@@ -436,16 +436,16 @@
       }
     },
     "resource_site_reedflame_votive_frame_countersealed": {
-      "trim_sha256": "c24e12a363bc2dbd26f8656f10f3410fd8f40e3aa2f8e996b6ec5ec78768a2e4",
-      "source_sha256": "14afe1a2734498225250d4146f08045cf917bf9ba249f505d3ab9a5acdfe243c",
-      "rgba_sha256": "e86208736d1d2037f3d60088947e8871b05a83249765dd6fdf1da901be67a177",
+      "trim_sha256": "fe9d0a607df32a32880cb5e8f5daea1e74a985e7f2536fd15ea1fb582129943c",
+      "source_sha256": "e290be31bb4f63ff1d9491231a602f99863f92172c1152864fb15231743f1a8e",
+      "rgba_sha256": "8528f2f18e5df56eb08369d330b6b4a22b49e8e8ee4dda1a58850184f023ebb6",
       "metrics": {
-        "alpha_levels": 254,
-        "partial_alpha_pixels": 11394,
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 11746,
         "bounds": [
           38,
-          32,
-          154,
+          16,
+          184,
           190
         ]
       }
@@ -466,16 +466,16 @@
       }
     },
     "resource_site_ossuary_prism_choir_countersealed": {
-      "trim_sha256": "07e3d813441898603f700e3be97f4f978b58cbdbe028d3331879c5c8728e6315",
-      "source_sha256": "e80f751fa88c770b07815a7286b4389ed81a1a8f0e9adbbaf0d7b16e5994781c",
-      "rgba_sha256": "9eeaf46278620bfc6bf271102ba2bbc26ea378730d48007858d92353b89f5b26",
+      "trim_sha256": "5765888f06694735a799471aceba86ea54c23e466c549ca78b832e3b059586aa",
+      "source_sha256": "9bb79d6da324e19471a4720b0483738a7cb9d92d4a71613fa744c47073d4f86c",
+      "rgba_sha256": "7492bacd99d7e47b71c30fa5b14051e686f0a3ab1ef6f0494ba5105bb1c2d726",
       "metrics": {
-        "alpha_levels": 254,
-        "partial_alpha_pixels": 10627,
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 10979,
         "bounds": [
           43,
-          32,
-          166,
+          16,
+          184,
           190
         ]
       }
@@ -496,16 +496,16 @@
       }
     },
     "resource_site_glowcap_echo_bell_countersealed": {
-      "trim_sha256": "2cf917b1a89111b6d860aaafd93407b61dcfd80b0faef0ee2a7da42e4fbb300f",
-      "source_sha256": "e86af2176b03794085a5eb29c75015fd752a6e5d039f275ed1f8cae4f66ef9d0",
-      "rgba_sha256": "8a1eaaa4dc914e06048aab720e38258c5469d0430be6d054aa25a470f991a918",
+      "trim_sha256": "4fa1c33e0b164d613fa5f15023820c3f80fa446237c54fa7aa98d0d2b15104b5",
+      "source_sha256": "c74af208275418723759d83a9c067e3fcfbdd164f0ce27fcc80fe88ceea0f74a",
+      "rgba_sha256": "328dcda57e96deb23bc90bee301b7829810db6997fe9c51137d1d930772782cd",
       "metrics": {
-        "alpha_levels": 256,
-        "partial_alpha_pixels": 10031,
+        "alpha_levels": 255,
+        "partial_alpha_pixels": 10477,
         "bounds": [
           39,
-          33,
-          160,
+          16,
+          184,
           192
         ]
       }
@@ -526,16 +526,16 @@
       }
     },
     "resource_site_kite_signal_countermast_countersealed": {
-      "trim_sha256": "9c094cf6632167a77fd9cd403fbef3b77150801a86cfd4a40729d8818a535119",
-      "source_sha256": "7a9959de711f9a61a4e18e3a4414c1aacf89223ba6786b0397c4f8fa14c75908",
-      "rgba_sha256": "dd6d4a153a618c9ed21480c35288588d03db8a9ac1460b98747f71aa806863a1",
+      "trim_sha256": "6d15f2cdb06f8352fed72a5b2235555c29da015e1f5e909bde23103ddd49ec9c",
+      "source_sha256": "3952854554027c4b9cd0df95088763d6ce0ebd342398516a1ab5b8cca6f335f2",
+      "rgba_sha256": "945a3afe2c27987f30e87b0d474922b10660438db0bc913315e4e0a1f44a66c4",
       "metrics": {
         "alpha_levels": 255,
-        "partial_alpha_pixels": 4916,
+        "partial_alpha_pixels": 5277,
         "bounds": [
           51,
-          32,
-          144,
+          16,
+          184,
           192
         ]
       }
@@ -844,11 +844,11 @@
       "prepared": "runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png"
     },
     "res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png": {
-      "after_sha256": "77a490bc5f666e368861e780316791beb246f9b4f50b48962cdce43e57ba791a",
+      "after_sha256": "ab0b88f06eae6ac5b73c6c6d47eef58c4fc22e21af7eb73694359eb0f1c5d100",
       "prepared": "runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png"
     },
     "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png": {
-      "after_sha256": "af9cd879b7dc8d08f7e2a7c9c802bac7d4a5ad0517e40c7275a8dbf5f22ff47c",
+      "after_sha256": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90",
       "prepared": "runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png"
     },
     "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png": {

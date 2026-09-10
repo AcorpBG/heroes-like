@@ -1,0 +1,21 @@
+{
+  "schema_id": "integrated_seals_predecessor_v1",
+  "commit": "3a8084c5e608f59610440715d0c6a23f07e4a4a2",
+  "files": {
+    "art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/previous/manifest.json": "9dd0f64b84cd4ff9146f6d47ccdbddd5c95b0e3765f53c7f0b60c1fdd8d911af",
+    "art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/previous/mireglass_counterpoint_state_atlas.png": "86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90",
+    "art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/previous/pactwright_waydesk_state_atlas.png": "ab0b88f06eae6ac5b73c6c6d47eef58c4fc22e21af7eb73694359eb0f1c5d100",
+    "art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/previous/recipe.json": "e0edb46db4c1853eb55d5e90b06bf70de203d0ab53763052cd9630060dc2385b"
+  },
+  "selected_asset_ids": [
+    "resource_site_pactwright_waydesk_witnessed",
+    "resource_site_siltglass_index_countersealed",
+    "resource_site_greenline_lens_table_countersealed",
+    "resource_site_reedflame_votive_frame_countersealed",
+    "resource_site_ossuary_prism_choir_countersealed",
+    "resource_site_glowcap_echo_bell_countersealed",
+    "resource_site_kite_signal_countermast_countersealed"
+  ],
+  "unchanged_asset_count": 47,
+  "unchanged_neighbor_count": 7
+}

@@ -212,6 +212,27 @@ Use `tools/prepare_overworld_landmark_cutouts.py`,
 `--batch landmark_states`. Inspect actual earned native cases and four labeled
 detached galleries; retain full-save, compiled-owner and original-place controls.
 
+### Integrated Pactwright/Mireglass state follow-up
+
+Replace the seven retained coarse state stamps, not their gameplay states. Use
+one approved original generated foreground edit per identity: six wax marks on
+the Waydesk ledger and six object-specific attached counterseals. Retain generated
+masters/prompts and the frozen predecessor recipe/proof/two atlases. Never ship
+the generated opaque checkerboards. Composite only reviewed local foreground
+regions into the original RGBA masters; preserve every pixel outside those
+regions, all original logical fits, and the seven unmarked neighboring cells.
+Keep the other 47 route/arcane paintings exact. The two small attached clasp
+extensions are explicit raster-compositing masks, not new procedural paint.
+
+Use the route/arcane preparation tool, its 11 Python tests and the existing
+source/package `--batch route_arcane` probe. Capture all seven actual authored
+sites after legal scouting, with no synthetic claims or fog grants. The last
+two approaches include their ordinary original artifact pickup to reach the
+three-step Manhattan vision boundary. Check both resolutions, the exact previous
+package, full saves and both current platform packages. Existing frontier-shrine
+resolver precedence is out of scope; its state art is selected before collection
+too. Do not silently change that rule to obtain a different screenshot.
+
 ## Completion and non-goals
 
 Each cohort completes only after its actual repaired art is integrated and its

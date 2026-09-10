@@ -1055,19 +1055,81 @@ retention/report/cache artifacts were verified unchanged before staging.
 No fixed package ceiling, cache clearing, gameplay correction, RMG placement
 change or Town-screen redesign is part of this checkpoint.
 
+## Integrated physical state details — 2026-09-10
+
+The seven previously unfinished Pactwright/Mireglass variants are now accepted.
+Their low-resolution floating wax string/blue diamond came from the historical
+state-atlas raster derivation, not a missing renderer mapping. Seven built-in
+original image edits provide six wax seals on the Waydesk's ledger and distinct
+counterseals physically attached to the Siltglass binding, Greenline plaque,
+Reedflame trunk, Ossuary sash, Glowcap support and Kite-Signal shaft.
+
+The generated files again contain opaque backing. Only reviewed foreground
+patches were composited into the original transparent masters; the backing and
+unrelated model repaint were rejected. Every pixel outside the recorded supports
+is exact, and each support covers less than 2.5% of its master. Five variants
+retain the original alpha byte-for-byte; the two small Glowcap/Kite clasp
+extensions are recorded explicitly. This uses the owner's approved raster
+processing, not runtime geometry or a shared drawn replacement.
+
+Sources and full prompts: `art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/`.
+Its `previous/` freezes the `3a8084c5` recipe, proof and two affected atlases.
+The updated route/arcane tool reconstructs the seven cells and proves the other
+47 paintings plus seven unmarked neighbors unchanged. Both atlas paths, regions,
+logical fit/anchor, content ids and every state resolver remain unchanged.
+Only seven paintings and their descriptions/provenance change; seven base rows
+receive only the shared atlas checksum update.
+
+Consolidated evidence under `.artifacts/overworld_cutout_quality_20260909/`:
+
+- `integrated_seals_source_1280_v3`, `integrated_seals_source_1920_v3`,
+  `integrated_seals_packaged_linux_v3` and `integrated_seals_packaged_windows`
+  pass all **3,012 checks each**, with no runtime errors. All fourteen final
+  source site screenshots, source comparison sheets and representative packaged
+  views were visually inspected. No detached markers or generated backing remain
+  on these seven variants. Other visible unrepaired families are not accepted
+  by association. Windows is headless Wine, not hardware visual certification.
+- The sites are the existing seven campaign placements: (8,5) in Tollglass,
+  Mudkeel, Lenscaptain, Votivejaw and Glassmarshal; (10,4) in Rotlamp and Daynote.
+  Ordinary scouting reveals them; the last two include their real (9,6) artifact
+  pickup. Their guarded site records remain exact. The earned native Medium
+  checkpoint contains none of these seven; its 2,380 blocker bodies remain an
+  unchanged control, not invented affected-native coverage.
+- `integrated_seals_before_linux_v3` uses the SHA-locked preceding package and
+  fails exactly the seven expected new-pixel assertions, no other assertion.
+  `integrated_seals_delivery_preservation.json` proves all **50 full saves** equal
+  across before/source/both packages, excluding only cross-run timestamps and
+  fresh authored session ids. Within-run save checks exclude nothing. Actual
+  draw rectangles match before/Linux/Windows, with float32 comparison on Windows.
+- Both official export/startup/generated-map smokes pass in
+  `/tmp/heroes-integrated-seals-{linux,windows}-20260910`. Both PCKs contain
+  5,484 members and are **292,865,768 bytes**. Only `project.binary` differs by
+  platform. Against `3a8084c5`, two imported atlases, the art manifest and UID cache
+  change; the other 5,480 members, including gameplay/native/save owners, are exact.
+- All 11 focused Python tests and the five shared sprite/movement/route/fog
+  reports pass. Both affected six-chapter campaign reports pass rendered runs
+  (`integrated_seals_domain_final`); only their two expected atlas hashes changed.
+  Earlier insufficient-vision probes, a stopped headless campaign run and stale
+  hash failures are retained diagnostics, not acceptance. The prior Sevenfold and
+  Veil-Coast gameplay-test failures remain documented above and out of scope.
+
+Repository and diff validation pass. All 66 hashes of pre-existing unrelated
+untracked retention/report/cache artifacts remain unchanged. No gameplay, Town,
+native/RMG, save-schema, package-budget or cleanup changes are included.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The then-remaining 783 rows
 received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 667 repaired/preserved dispositions, leaving
-547 for complete detailed review/recovery. All 31 recurring encounters, 30
+The accepted cohorts now cover 674 repaired/preserved dispositions, leaving
+540 for complete detailed review/recovery. All 31 recurring encounters, 30
 recurring resource-site originals, 31 separate claimed dwellings and 34 early
 post-interaction and 40 landmark/objective-state paintings are accepted.
-Next: integrate the seven retained Pactwright/Mireglass state badges into original
-generated state paintings, then the other resource-site and remaining landmark
-families. The seven sharper foregrounds above are not full visual acceptance; recovery of
-these originals does not accept different paintings. Individual source and native-resolution
+Next: the other resource-site and remaining landmark families. The seven
+Pactwright/Mireglass states are accepted only by the explicit integrated-edit
+follow-up above; recovery of these originals does not accept different paintings.
+Individual source and native-resolution
 checks of other remaining families and intentional purple materials remain. Existing
 unit medallions and state indicators are not mislabeled as magenta matte.
 Do not hide remaining defects or claim release readiness from this checkpoint.

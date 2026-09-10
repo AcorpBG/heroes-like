@@ -26,7 +26,7 @@ const ART_RECORDS := [
 	{"path":"res://art/campaigns/runtime/chapter_seals/glowcap_echo_bell.png", "size":Vector2i(64,64), "hash":"b9d8cb2658b1e680a96faed04ec9f25a0187a865838c30f094cf9cc57903808a"},
 	{"path":"res://art/campaigns/runtime/chapter_seals/kite_signal_countermast.png", "size":Vector2i(64,64), "hash":"8ba7701427f55bdefe0305ef610e7e28c6428be8e1968635f0e55fd6fb410bd3"},
 ]
-const COUNTERPOINT_ATLAS := {"path":"res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png", "size":Vector2i(2304, 192), "hash":"86827da15456c1138ff714af655db19dc9dd027c93e4ddcfb052e29786871f90"}
+const COUNTERPOINT_ATLAS := {"path":"res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png", "size":Vector2i(2304, 192), "hash":"af9cd879b7dc8d08f7e2a7c9c802bac7d4a5ad0517e40c7275a8dbf5f22ff47c"}
 
 var _errors: Array[String] = []
 var _rows: Array = []

@@ -3237,70 +3237,6 @@
       "registration_evidence": {
         "alpha_mae": 0.5559895833333334,
         "opaque_rgb_mae": 1.2257217847769029
-      },
-      "integrated_state_edit": {
-        "source": "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/pactwright_waydesk_witnessed.png",
-        "generated_size": [
-          1254,
-          1254
-        ],
-        "patches": [
-          {
-            "rect": [
-              557,
-              430,
-              642,
-              491
-            ],
-            "feather": 4
-          },
-          {
-            "rect": [
-              510,
-              489,
-              596,
-              539
-            ],
-            "feather": 4
-          },
-          {
-            "rect": [
-              466,
-              533,
-              550,
-              583
-            ],
-            "feather": 4
-          },
-          {
-            "rect": [
-              754,
-              489,
-              838,
-              544
-            ],
-            "feather": 4
-          },
-          {
-            "rect": [
-              715,
-              544,
-              799,
-              597
-            ],
-            "feather": 4
-          },
-          {
-            "rect": [
-              668,
-              588,
-              753,
-              650
-            ],
-            "feather": 4
-          }
-        ],
-        "accessible_description": "Six distinct wax witness seals are pressed onto the two open ledger pages of the Pactwright Waydesk."
       }
     },
     "mapobj_siltglass_index": {
@@ -3536,25 +3472,6 @@
       "registration_evidence": {
         "alpha_mae": 0.3862847222222222,
         "opaque_rgb_mae": 0.8095238095238094
-      },
-      "integrated_state_edit": {
-        "source": "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/siltglass_index_countersealed.png",
-        "generated_size": [
-          1391,
-          1131
-        ],
-        "patches": [
-          {
-            "rect": [
-              436,
-              731,
-              570,
-              902
-            ],
-            "feather": 4
-          }
-        ],
-        "accessible_description": "A turquoise wax counterseal in an aged brass bezel is reed-bound to the foot of the left Siltglass tablet; both tablet faces remain visible."
       }
     },
     "mapobj_greenline_lens_table": {
@@ -3790,25 +3707,6 @@
       "registration_evidence": {
         "alpha_mae": 0.2860243055555556,
         "opaque_rgb_mae": 1.2605363984674332
-      },
-      "integrated_state_edit": {
-        "source": "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/greenline_lens_table_countersealed.png",
-        "generated_size": [
-          1536,
-          1024
-        ],
-        "patches": [
-          {
-            "rect": [
-              686,
-              584,
-              791,
-              754
-            ],
-            "feather": 4
-          }
-        ],
-        "accessible_description": "An ivory ribbon fastens a turquoise wax counterseal to the front plaque of the Greenline Lens Table; roots, dial and crystal measure remain visible."
       }
     },
     "mapobj_reedflame_votive_frame": {
@@ -4044,25 +3942,6 @@
       "registration_evidence": {
         "alpha_mae": 0.69921875,
         "opaque_rgb_mae": 0.832156862745098
-      },
-      "integrated_state_edit": {
-        "source": "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/reedflame_votive_frame_countersealed.png",
-        "generated_size": [
-          1215,
-          1295
-        ],
-        "patches": [
-          {
-            "rect": [
-              568,
-              980,
-              687,
-              1134
-            ],
-            "feather": 4
-          }
-        ],
-        "accessible_description": "A reed-bound turquoise wax counterseal rests on the lower trunk of the Reedflame Votive Frame, beneath its flame and ferry charms."
       }
     },
     "mapobj_ossuary_prism_choir": {
@@ -4298,25 +4177,6 @@
       "registration_evidence": {
         "alpha_mae": 0.5377604166666666,
         "opaque_rgb_mae": 1.3928012519561814
-      },
-      "integrated_state_edit": {
-        "source": "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/ossuary_prism_choir_countersealed.png",
-        "generated_size": [
-          1228,
-          1281
-        ],
-        "patches": [
-          {
-            "rect": [
-              329,
-              1013,
-              399,
-              1138
-            ],
-            "feather": 4
-          }
-        ],
-        "accessible_description": "An ivory-tied turquoise wax counterseal is fastened to the lower blue sash of the Ossuary Prism Choir beside the pool; the suspended prism remains unobscured."
       }
     },
     "mapobj_glowcap_echo_bell": {
@@ -4552,54 +4412,6 @@
       "registration_evidence": {
         "alpha_mae": 0.4952256944444444,
         "opaque_rgb_mae": 0.8288690476190476
-      },
-      "integrated_state_edit": {
-        "source": "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/glowcap_echo_bell_countersealed.png",
-        "generated_size": [
-          1224,
-          1285
-        ],
-        "patches": [
-          {
-            "polygon": [
-              [
-                914,
-                910
-              ],
-              [
-                932,
-                914
-              ],
-              [
-                974,
-                974
-              ],
-              [
-                937,
-                1034
-              ],
-              [
-                925,
-                1040
-              ],
-              [
-                878,
-                987
-              ],
-              [
-                872,
-                968
-              ],
-              [
-                887,
-                950
-              ]
-            ],
-            "feather": 1
-          }
-        ],
-        "accessible_description": "A turquoise wax counterseal is tied onto the lower right wooden support of the Glowcap Echo Bell, above its curled foot.",
-        "attached_silhouette_extension": true
       }
     },
     "mapobj_kite_signal_countermast": {
@@ -4835,47 +4647,6 @@
       "registration_evidence": {
         "alpha_mae": 0.3797743055555556,
         "opaque_rgb_mae": 1.339955849889625
-      },
-      "integrated_state_edit": {
-        "source": "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/kite_signal_countermast_countersealed.png",
-        "generated_size": [
-          1024,
-          1536
-        ],
-        "patches": [
-          {
-            "rect": [
-              508,
-              1015,
-              553,
-              1038
-            ],
-            "feather": 4
-          },
-          {
-            "polygon": [
-              [
-                527,
-                1034
-              ],
-              [
-                567,
-                1077
-              ],
-              [
-                532,
-                1119
-              ],
-              [
-                487,
-                1079
-              ]
-            ],
-            "feather": 1
-          }
-        ],
-        "accessible_description": "An ivory wrap holds a narrow turquoise wax counterseal around the lower shaft of the Kite-Signal Countermast; both vanes and counterweights remain visible.",
-        "attached_silhouette_extension": true
       }
     },
     "resource_site_high_arcanum_lastroad_bell_spire": {
@@ -6436,16 +6207,7 @@
     "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/cinderwake_controlled_checker_attempt.png": "23de475bcfbca71203de935f4fa6271e60356ef26f075cbae85bbaa72dada41a",
     "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/tideglass_roost_unclaimed_source.png": "46544e4bba46d6755101fe125fd5b4f538bd1f5a5f72d504b09f88b409a2e9d4",
     "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/tideglass_roost_controlled_source.png": "67b8d88ce80fea63984b86b7d48ab2524ca6f04b85920aa06196199a88156e79",
-    "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/tideglass_controlled_checker_attempt.png": "9bedf200891a871a9d21af028c5bf47591f6e22ba7b618d0a6b85c81ed9b9618",
-    "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/pactwright_waydesk_witnessed.png": "068a056c519b93a56f1fb5ee4bd92edb11c23257814baeca3b9a456d55ba68ca",
-    "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/siltglass_index_countersealed.png": "6cb58df5780d1943c1766f3897ab8fabaaac6ab7bf9d281547c8535f2c2d9f8b",
-    "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/greenline_lens_table_countersealed.png": "5bc951f1c81afd99b1666a8ba780760d365519362f7abb17eb0e8bd515ce3a46",
-    "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/reedflame_votive_frame_countersealed.png": "89fa6e9cb6909c9fe6cc1477004124b15336cb551fa71ac95264a201f66d93e3",
-    "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/ossuary_prism_choir_countersealed.png": "e1446ac1ffdb46a9ac759423c43800010fb06865863c83f72ecae8935c820972",
-    "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/glowcap_echo_bell_countersealed.png": "54146ed14a4074043eb67f5a42023ba99d5bf5bc9994c2741e2c9986e66ebf31",
-    "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/kite_signal_countermast_countersealed.png": "58f597f950c8d94e83da81c3ca812722fcc62ac44d54ee22250da9e28827b1f3",
-    "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/generation.json": "51c014b873e7c6d5f9834624d8e7f6eb09520c0874f5973e9696686f8fb9cd54",
-    "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/previous/lock.json": "21dbe82e4b2ab4b354609302e9e52eb2c91938658d3f8ed07c069eddcf2b12f3"
+    "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/tideglass_controlled_checker_attempt.png": "9bedf200891a871a9d21af028c5bf47591f6e22ba7b618d0a6b85c81ed9b9618"
   },
   "registration_policy": "Exact original crop, fit and anchor; source RGBA reconstructed at 4x. Historical 48px comparison is measured evidence, not a claim to have recovered undocumented old resampling. Coast differences remain recorded. Pactwright retains six original raster witness marks and restores original master colors without its coarse old whole-image grade."
 }

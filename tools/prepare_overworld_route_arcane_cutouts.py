@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Recover 54 route/arcane paintings with unchanged logical registration.
 
-Original RGBA is retained, except two explicitly approved generated controlled
-edits. Old painted state marks are sampled from the archived raster, never
-redrawn as geometry. No gameplay owner or state resolver is modified.
+Original RGBA is retained, except two generated controlled edits and seven
+reviewed foreground-only physical seal edits. Historical coarse state ink is
+retained in the predecessor proof, not redrawn or exposed by the new variants.
+No gameplay owner or state resolver is modified.
 """
 import argparse
 import hashlib
@@ -44,11 +45,50 @@ def original(path):
 
 def expected_entry(row):
     old=row['original_manifest_entry']
-    return dict(old,atlas_region=[v*4 for v in old['atlas_region']],atlas_size=[v*4 for v in old['atlas_size']],
+    result=dict(old,atlas_region=[v*4 for v in old['atlas_region']],atlas_size=[v*4 for v in old['atlas_size']],
                 source_trimmed=row['trimmed_path'],source_processing_manifest=base.resource(PACKET/'manifest.json'))
+    if row.get('integrated_state_edit'):
+        result.update(source_model='built_in_image_gen_original_with_localized_generated_physical_state_seal',
+                      accessible_description=row['integrated_state_edit']['accessible_description'])
+    return result
+
+
+def state_patch_mask(size,edit):
+    """Reviewed compositing support only; these masks never supply painted RGB."""
+    from PIL import ImageFilter
+    mask=Image.new('L',size)
+    for patch in edit['patches']:
+        support=Image.new('L',size);draw=ImageDraw.Draw(support)
+        if 'rect' in patch:
+            l,t,r,b=patch['rect'];draw.rectangle((l,t,r-1,b-1),fill=255)
+        else:
+            draw.polygon([tuple(p) for p in patch['polygon']],fill=255)
+        # Feather inward, never sample an unreviewed pixel outside the support.
+        blurred=support.filter(ImageFilter.GaussianBlur(patch['feather']))
+        a=np.asarray(support);b=np.asarray(blurred)
+        feathered=np.where(a==255,np.clip((b.astype(float)-127)*2,0,255),0).astype('uint8')
+        mask=Image.fromarray(np.maximum(np.asarray(mask),feathered))
+    return mask
+
+
+def integrated_state_source(source,edit):
+    raw=Image.open(base.local(edit['source'])).convert('RGB')
+    if list(raw.size)!=edit['generated_size']:raise ValueError('Generated state canvas changed')
+    raw=raw.resize(source.size,Image.Resampling.LANCZOS)
+    mask=state_patch_mask(source.size,edit)
+    original=np.asarray(source);paint=np.asarray(raw);weight=np.asarray(mask,dtype=float)[:,:,None]/255
+    out=original.copy()
+    out[:,:,:3]=np.rint(original[:,:,:3]*(1-weight)+paint*weight).astype('uint8')
+    if edit.get('attached_silhouette_extension'):
+        out[:,:,3]=np.maximum(original[:,:,3],np.asarray(mask))
+    elif np.any(original[:,:,3][np.asarray(mask)>0]<240):
+        raise ValueError('Foreground-only patch reached background')
+    return Image.fromarray(out)
 
 
 def recover_source(source,row):
+    if row.get('integrated_state_edit'):
+        return integrated_state_source(source,row['integrated_state_edit'])
     edit=row.get('generated_edit')
     if not edit:return source.copy()
     raw=Image.open(base.local(edit['source'])).convert('RGB')
@@ -65,7 +105,7 @@ def recover_source(source,row):
 
 def recover(source,row):
     fixed=project(recover_source(source,row),row)
-    if row.get('state_ink'):
+    if row.get('state_ink') and not row.get('integrated_state_edit'):
         old=row['original_manifest_entry'];ink=owner.region(original(old['path']),old)
         # Preserve existing six wax marks / counterseal, not a new drawing.
         stamp=Image.new('RGBA',(48,48))
@@ -107,7 +147,8 @@ def inputs():
     for key,row in recipe['assets'].items():
         old=row['original_manifest_entry'];entry=manifest['object_assets'][key]
         clean=lambda v:{k:x for k,x in v.items() if k!='runtime_sha256'}
-        if clean(entry) not in (clean(old),clean(expected_entry(row))):raise ValueError('Identity changed: '+key)
+        previous_row={k:v for k,v in row.items() if k!='integrated_state_edit'}
+        if clean(entry) not in (clean(old),clean(expected_entry(previous_row)),clean(expected_entry(row))):raise ValueError('Identity changed: '+key)
         if key not in recipe['state_mappings'][row['site_id']].values():raise ValueError('Exact site/art relation changed')
         if row['runtime_path']!=old['path'] or old['atlas_region'][1:]!=[0,48,48]:raise ValueError('Unscoped atlas change')
         path=base.local(old['source_generated'])
@@ -181,7 +222,32 @@ def validate_assets():
         expected=dict(trim_sha256=base.digest(trim),source_sha256=base.digest(master),rgba_sha256=hashlib.sha256(fixed.tobytes()).hexdigest(),metrics=shared.shared.metrics(fixed))
         if proof['assets'][key]!=expected:raise ValueError('Paint proof changed')
         reports[key]=dict(ok=True,errors=[])
+    validate_integrated_predecessor(recipe,proof,atlases)
     return reports
+
+
+def validate_integrated_predecessor(recipe,proof,atlases):
+    packet=PACKET.parent/'integrated_seals'
+    lock=json.loads((packet/'previous/lock.json').read_text())
+    for path,sha in lock['files'].items():
+        if base.digest(ROOT/path)!=sha:raise ValueError('Frozen predecessor changed')
+    previous=json.loads((packet/'previous/manifest.json').read_text())
+    old_recipe=json.loads((packet/'previous/recipe.json').read_text())
+    selected={k for k,r in recipe['assets'].items() if r.get('integrated_state_edit')}
+    if len(selected)!=7 or selected!=set(lock['selected_asset_ids']):raise ValueError('Integrated seal cohort changed')
+    if {k:{f:v for f,v in r.items() if f!='integrated_state_edit'} for k,r in recipe['assets'].items()}!=old_recipe['assets']:raise ValueError('Historical source or registration changed')
+    changed_paths={recipe['assets'][k]['runtime_path'] for k in selected}
+    for path in recipe['atlases']:
+        if path not in changed_paths and proof['files'][path]!=previous['files'][path]:raise ValueError('Unrelated atlas changed')
+    for key,row in recipe['assets'].items():
+        if key in selected:
+            if proof['assets'][key]['rgba_sha256']==previous['assets'][key]['rgba_sha256']:raise ValueError('State edit not implemented')
+        else:
+            if proof['assets'][key]!=previous['assets'][key]:raise ValueError('Unrelated painting changed')
+            if row['runtime_path'] in changed_paths:
+                old_atlas=Image.open(packet/'previous'/Path(row['runtime_path']).name).convert('RGBA')
+                entry=expected_entry(row)
+                if owner.region(atlases[row['runtime_path']],entry).tobytes()!=owner.region(old_atlas,entry).tobytes():raise ValueError('Base neighbor changed')
 
 
 if __name__=='__main__':

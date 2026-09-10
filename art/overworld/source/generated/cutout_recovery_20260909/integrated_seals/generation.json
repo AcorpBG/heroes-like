@@ -1,0 +1,77 @@
+{
+  "schema_id": "integrated_seals_generation_v1",
+  "mode": "built_in_image_gen",
+  "assets": {
+    "pactwright_waydesk_witnessed": {
+      "prompt": "Use case: precise-object-edit. Asset type: original fantasy strategy overworld sprite state variant. The single input image is the exact original painting to edit. Add exactly six small physical wax witness seals pressed onto the open ledger pages: three on the left page and three on the right, arranged within the pages with matched perspective. Muted oxblood wax, slightly irregular pressed edges and restrained gold impressions, no text. Seals must be legible at miniature game size. Do not put anything below the desk or in empty space. Change only the inside of the book pages. Preserve the exact original canvas dimensions, camera, position, scale, silhouette, materials, lighting and every other detail. Do not redraw or resize the object. Match the existing finely painted raster style, physically integrated with natural contact shadow. Preserve genuine transparent background alpha. No checkerboard, new backdrop, outlines, extra props, text, watermark, UI icon or floating badge. Original art only.",
+      "referenced_images": [
+        "res://art/overworld/source/generated/resource_sites/pactwright_waydesk_wave1/pactwright_waydesk_source.png"
+      ],
+      "original_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-501149eb-94ed-4e24-aa52-2f17a6b2bafa.png",
+      "retained_source": "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/pactwright_waydesk_witnessed.png",
+      "disposition": "Only reviewed foreground patches are selected; opaque backing and unrelated repainted pixels are excluded.",
+      "sha256": "068a056c519b93a56f1fb5ee4bd92edb11c23257814baeca3b9a456d55ba68ca"
+    },
+    "siltglass_index_countersealed": {
+      "prompt": "Use case: precise-object-edit. Asset type: original fantasy strategy overworld sprite state variant. The single input image is the exact original painting to edit. Add one physical turquoise wax counterseal in a worn brass diamond-shaped bezel tied with short reeds around the existing lower binding of the LEFT tablet. It must sit on and fasten the bound reeds near the foot of the left tablet, not cover either tablet face, not float in empty space. Match the wet aged materials. Change only this small lower binding area. Preserve the exact original canvas dimensions, camera, position, scale, silhouette, materials, lighting and every other detail. Do not redraw or resize the object. Match the existing finely painted raster style, physically integrated with natural contact shadow. Preserve genuine transparent background alpha. No checkerboard, new backdrop, outlines, extra props, text, watermark, UI icon or floating badge. Original art only.",
+      "referenced_images": [
+        "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/siltglass_index_source.png"
+      ],
+      "original_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-46596ff0-8367-4e39-8f4e-247cd19668ca.png",
+      "retained_source": "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/siltglass_index_countersealed.png",
+      "disposition": "Only reviewed foreground patches are selected; opaque backing and unrelated repainted pixels are excluded.",
+      "sha256": "6cb58df5780d1943c1766f3897ab8fabaaac6ab7bf9d281547c8535f2c2d9f8b"
+    },
+    "greenline_lens_table_countersealed": {
+      "prompt": "Use case: precise-object-edit. Asset type: original fantasy strategy overworld sprite state variant. The single input image is the exact original painting to edit. Add one physical counterseal of turquoise wax in a worn brass diamond-shaped bezel fastened across the small blue hanging front plaque at the front center of the stone table. A short ivory ribbon holds it to the existing gold frame, not loose in empty space. Keep all roots, dial, crystal measure and architecture. Change only the front plaque area. Preserve the exact original canvas dimensions, camera, position, scale, silhouette, materials, lighting and every other detail. Do not redraw or resize the object. Match the existing finely painted raster style, physically integrated with natural contact shadow. Preserve genuine transparent background alpha. No checkerboard, new backdrop, outlines, extra props, text, watermark, UI icon or floating badge. Original art only.",
+      "referenced_images": [
+        "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/greenline_lens_table_source.png"
+      ],
+      "original_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e16116bb-a91a-4d51-a144-e379c9413826.png",
+      "retained_source": "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/greenline_lens_table_countersealed.png",
+      "disposition": "Only reviewed foreground patches are selected; opaque backing and unrelated repainted pixels are excluded.",
+      "sha256": "5bc951f1c81afd99b1666a8ba780760d365519362f7abb17eb0e8bd515ce3a46"
+    },
+    "reedflame_votive_frame_countersealed": {
+      "prompt": "Use case: precise-object-edit. Asset type: original fantasy strategy overworld sprite state variant. The single input image is the exact original painting to edit. Add one physical muted turquoise wax counterseal in a worn brass diamond-shaped bezel, fastened with reed cord directly on the lower trunk's existing rope bindings. It must be clearly attached to the trunk below the large ring, not float in empty space. Keep the flame, jaws, all existing charms, reed ring and camera unchanged. Change only a small front-facing trunk binding area. Preserve the exact original canvas dimensions, camera, position, scale, silhouette, materials, lighting and every other detail. Do not redraw or resize the object. Match the existing finely painted raster style, physically integrated with natural contact shadow. Preserve genuine transparent background alpha. No checkerboard, new backdrop, outlines, extra props, text, watermark, UI icon or floating badge. Original art only.",
+      "referenced_images": [
+        "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/reedflame_votive_frame_source.png"
+      ],
+      "original_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-09c3a319-0fd8-4dd9-89c3-1bb5e2c3ea9d.png",
+      "retained_source": "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/reedflame_votive_frame_countersealed.png",
+      "disposition": "Only reviewed foreground patches are selected; opaque backing and unrelated repainted pixels are excluded.",
+      "sha256": "89fa6e9cb6909c9fe6cc1477004124b15336cb551fa71ac95264a201f66d93e3"
+    },
+    "ossuary_prism_choir_countersealed": {
+      "prompt": "Use case: precise-object-edit. Asset type: original fantasy strategy overworld sprite state variant. The single input image is the exact original painting to edit. Add one physical turquoise wax counterseal in a worn brass diamond-shaped bezel, secured with short ivory ribbon onto the existing lower LEFT blue cloth sash beside the pool. Keep it on the cloth, not in empty space. Keep the suspended prism, all three spires, little crystals, pool and existing gold architecture unchanged. Change only this lower blue cloth area. Preserve the exact original canvas dimensions, camera, position, scale, silhouette, materials, lighting and every other detail. Do not redraw or resize the object. Match the existing finely painted raster style, physically integrated with natural contact shadow. Preserve genuine transparent background alpha. No checkerboard, new backdrop, outlines, extra props, text, watermark, UI icon or floating badge. Original art only.",
+      "referenced_images": [
+        "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/ossuary_prism_choir_source.png"
+      ],
+      "original_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ddd29f10-c49a-4afc-b84b-1ab9ef02ac92.png",
+      "retained_source": "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/ossuary_prism_choir_countersealed.png",
+      "disposition": "Only reviewed foreground patches are selected; opaque backing and unrelated repainted pixels are excluded.",
+      "sha256": "e1446ac1ffdb46a9ac759423c43800010fb06865863c83f72ecae8935c820972"
+    },
+    "glowcap_echo_bell_countersealed": {
+      "prompt": "Use case: precise-object-edit. Asset type: original fantasy strategy overworld sprite state variant. The single input image is the exact original painting to edit. Add one physical turquoise wax counterseal in a worn brass diamond-shaped bezel, tied with a short double reed cord directly around the lower RIGHT wooden bell support above its curled foot. Clearly wrap the support; the seal must sit on its wooden face, not float beside it. Keep the mushroom bell cap, basin, drops, charms and the whole painting otherwise unchanged. Change only this small wooden support area. Preserve the exact original canvas dimensions, camera, position, scale, silhouette, materials, lighting and every other detail. Do not redraw or resize the object. Match the existing finely painted raster style, physically integrated with natural contact shadow. Preserve genuine transparent background alpha. No checkerboard, new backdrop, outlines, extra props, text, watermark, UI icon or floating badge. Original art only.",
+      "referenced_images": [
+        "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/glowcap_echo_bell_source.png"
+      ],
+      "original_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-57de15db-88e9-428c-8089-1dd0505af00e.png",
+      "retained_source": "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/glowcap_echo_bell_countersealed.png",
+      "disposition": "Only reviewed foreground patches are selected; opaque backing and unrelated repainted pixels are excluded.",
+      "sha256": "54146ed14a4074043eb67f5a42023ba99d5bf5bc9994c2741e2c9986e66ebf31"
+    },
+    "kite_signal_countermast_countersealed": {
+      "prompt": "Use case: precise-object-edit. Asset type: original fantasy strategy overworld sprite state variant. The single input image is the exact original painting to edit. Add one physical turquoise wax counterseal in a worn brass diamond-shaped bezel lashed with a short ivory wrap around the lower central wooden mast, between its existing gold collars. Keep this seal small and seated on the shaft, not floating. Keep both opposed diamond vanes, counterweights, all ribbons, balance mechanism, base and camera unchanged. Change only the lower central wooden shaft area. Preserve the exact original canvas dimensions, camera, position, scale, silhouette, materials, lighting and every other detail. Do not redraw or resize the object. Match the existing finely painted raster style, physically integrated with natural contact shadow. Preserve genuine transparent background alpha. No checkerboard, new backdrop, outlines, extra props, text, watermark, UI icon or floating badge. Original art only.",
+      "referenced_images": [
+        "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/kite_signal_countermast_source.png"
+      ],
+      "original_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0b12d736-11e8-4cb4-afc2-9398a61f3023.png",
+      "retained_source": "res://art/overworld/source/generated/cutout_recovery_20260909/integrated_seals/edits/kite_signal_countermast_countersealed.png",
+      "disposition": "Only reviewed foreground patches are selected; opaque backing and unrelated repainted pixels are excluded.",
+      "sha256": "58f597f950c8d94e83da81c3ca812722fcc62ac44d54ee22250da9e28827b1f3"
+    }
+  },
+  "generation_stage": "foreground_edits_generated_and_locally_integrated"
+}
