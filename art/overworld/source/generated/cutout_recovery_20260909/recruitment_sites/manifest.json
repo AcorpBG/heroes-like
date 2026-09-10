@@ -1,0 +1,193 @@
+{
+  "schema_id": "recruitment_site_cutout_recovery_v1",
+  "recipe_sha256": "9a337c24d8064b9ca69f450693ad1516a9ac9552b9b5e2f774e37ad86187bd10",
+  "tools": {
+    "tools/prepare_overworld_recruitment_cutouts.py": "c0805c12bccda31658e49a72c248b480f3775e6be4619b099f9759b37dc9c79f",
+    "tools/prepare_overworld_recurring_cutouts.py": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
+    "tools/prepare_overworld_route_arcane_cutouts.py": "6cd7c42e38e6a363a7331f4e073928856f8d54b1dab169d3db18fd10fb4fe53c",
+    "tools/prepare_overworld_cutout_art.py": "247801087cb8c5bfd6fb0a471bf39dbbfdb2a8bd8fe984d3816df92f00b0d68d",
+    "tools/prepare_overworld_legacy_cutouts.py": "578dd78feaf322f585df5b214cfdbe607ea29eb0a359a95ce549e289c8d7b092",
+    "art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/generation.json": "94c84272838a33b7411ac9160759abd6745eb673e15c68c0ef0a0ea3eb291775"
+  },
+  "assets": {
+    "mapobj_brambleback_hedgecourt": {
+      "trim_sha256": "250678bbb0fe95c973421ab3108125de3550e7f82cefe786b5a0b27f99fb9a5c",
+      "rgba_sha256": "fec4659a4648788f5071517febd8a1ff8b77d047e66b85bf371a616134bd4d63"
+    },
+    "resource_site_neutral_brambleback_hedgecourt_controlled": {
+      "trim_sha256": "2ded68ba2dffd2928b6fe6aadca3a77dd2c7e2bb8fcdefd150e4e680b79a92ed",
+      "rgba_sha256": "e134c83c095d022adb08becfed66f0f2518adf97e8750344960eba5e19307b48"
+    },
+    "mapobj_mireglass_bellfen": {
+      "trim_sha256": "32568414b00b4f17f8f13f966a4b6c42519a29c9984973d58a5832acb00c4663",
+      "rgba_sha256": "27bccc9ba30e680c15a5ad824155a4c00b4efe1d30681247a7a3a2b7ae226515"
+    },
+    "resource_site_neutral_mireglass_bellfen_controlled": {
+      "trim_sha256": "7e598ab2b97a3427b02be6b3d7ca84c39bba24d8d27c058edfd723d212d2c46b",
+      "rgba_sha256": "1a96b7f34f5321719dd5cacf25b23919b051070e22f5370c6ec92c6aa992d53f"
+    },
+    "mapobj_windcairn_wayhouse": {
+      "trim_sha256": "99a18b3303237d4294921697bcbf31e0f4008fb2b4e11a7c1e27ba41b99fcccf",
+      "rgba_sha256": "1b97238b4c3f85ccc2e75c583dc2b2ad3f4eb5b2c3a301dd1eacfa74dc686237"
+    },
+    "resource_site_neutral_windcairn_wayhouse_controlled": {
+      "trim_sha256": "24c560a752890fe8228f519d3946753a55b1a505110d2a359d24e8e2ebd21bf4",
+      "rgba_sha256": "d17dc8007ea6432523d233950ab90218fd3556dad7746749df3b843ede82d2a5"
+    },
+    "mapobj_sapwhistle_greenward": {
+      "trim_sha256": "1f828a3ca5f5b55f3d6c880dc906b8f91c251e68ed12001f6a1c59926422667f",
+      "rgba_sha256": "98da7b29f9ebee1bac22374f6f6642431f20d4c4fea4758abf8cc91b07c6b903"
+    },
+    "resource_site_neutral_sapwhistle_greenward_controlled": {
+      "trim_sha256": "436f7ae9e4e78f52ae4afb3ec134e9f80a5f25ef729b8611938738e316616ad4",
+      "rgba_sha256": "156b2d6f7ac028b06f11dab7e2b80ea751bdbd4b1549119cc2eeb47fe500bee7"
+    },
+    "mapobj_scarshield_breakyard": {
+      "trim_sha256": "c117898d79786258764b820a4d287d2edd2c6c39dbc2a29d2bab87df6296896b",
+      "rgba_sha256": "781c34962d5ebd2706972bfe069494ab303eb67bbc6ab05b1e3551d017c90797"
+    },
+    "resource_site_neutral_scarshield_breakyard_controlled": {
+      "trim_sha256": "eb15a02e2eb95e1691d72949dcfed6cbaac9c30671249a871ede4a46f6139d88",
+      "rgba_sha256": "f84a39a17443152cb0ccb7d7004b710738dd789157f619ffc69f72bdc0419c17"
+    },
+    "mapobj_flaremast_pilotage": {
+      "trim_sha256": "f907897e1bf8a10f3b5ace02421c78b85588dce33addf5a9864ebcda50573ff8",
+      "rgba_sha256": "cacbcd27724838d6abc1cb95c039644b031efcf02748ff7c40e13c99b5757236"
+    },
+    "resource_site_neutral_flaremast_pilotage_controlled": {
+      "trim_sha256": "2aa2251b41848eca4badd0319d9fed6534c494db7bb5c78d76af200ef9782a71",
+      "rgba_sha256": "5306abe42938884ef1b4860147dde383dda8323429d14cb763c77c24a7b809b1"
+    },
+    "mapobj_ash_charter_rollhouse": {
+      "trim_sha256": "b8799675381a85374f6ce9234e846074a3f125d22c8dae2914ce6ff6c310e15a",
+      "rgba_sha256": "7773cdc2874783eadb7291e6830b63716eacc8d96c808e56a991225f6e8795f0",
+      "source_sha256": "56614a578f52b419c57e26dd4787db96d7799db6cba3bc31825c2b24f8afe95b"
+    },
+    "resource_site_veteran_ash_charter_rollhouse_controlled": {
+      "trim_sha256": "e1ad39b62ca9b3d81b8957effd608c6e008ccc134a765a82df75562b369d3d15",
+      "rgba_sha256": "ae59e8c12b1a1ae018e007c1425226eee76d3d284b032556139bae3734d4c09d",
+      "source_sha256": "5e087eb4351ec8b1727bc165d2fa9c5eb731fde18e563e9185a0af937db5ab4f"
+    },
+    "mapobj_gorefen_chain_ring": {
+      "trim_sha256": "236b6f4c004d112c811c8d6fe583ffe6afa96140925d660e7c2b738b47a77812",
+      "rgba_sha256": "17d53524d323a7c515ca2e4d9a341bffb5d493e147688221838678a2ec5d84f4",
+      "source_sha256": "67d8c5693274f0e26717495aa368a9be1d9e17dd6361a69a4aea4a8df2cd4256"
+    },
+    "resource_site_veteran_gorefen_chain_ring_controlled": {
+      "trim_sha256": "46eddf344d90db855fcaf57bceba63a7c03b48e55914cc926d4377e9522785a6",
+      "rgba_sha256": "9c10297285540fc5c57559307e08f446dcec32581c4a51c7c633987663827e4a",
+      "source_sha256": "c9cad04cab80f5f2a0dce1a068947f294651ce6bd3ea8fac056ad8bebbf1f967"
+    },
+    "mapobj_mirror_daybreak_drill_prism": {
+      "trim_sha256": "fe5434d36d4b2cb003a40cfc36db96ee08abefcbc140627d44702fd037d141a1",
+      "rgba_sha256": "b458e17b900a433ba6ffc3b9323402d86c1b64fabd4d67710bfe252ce4a3ef2f",
+      "source_sha256": "031019297d4b61211080417af897b35da1f5606fa803ec6514d0029bb8bcf0cf"
+    },
+    "resource_site_veteran_mirror_daybreak_drill_prism_controlled": {
+      "trim_sha256": "b05f8bce934c9182e4653c9f52a125839dfa8348c557aa6fe6312d35426024a1",
+      "rgba_sha256": "3ae4a228c2f597ab6d44eeac07304cc90a26a4af48f1a0caa9e82e0162391a00",
+      "source_sha256": "5b1dbdef5c792ebc47c938c556de6f4a73de6ae802315f957ca669d30414c59d"
+    },
+    "mapobj_five_bough_veteran_grove": {
+      "trim_sha256": "cb5b234197a2b94c0a4fd0b4088a7c6de226276866e6eb6840c2db18ef4eec2b",
+      "rgba_sha256": "a9097169566d25d526e74338f29c9d4612ed62edc4f2453ff16ab093a39399aa",
+      "source_sha256": "b966c534e2fcc9ce8fa94bd94899f5f84ca18c8d5278ca732e8f7233bb728596"
+    },
+    "resource_site_veteran_five_bough_veteran_grove_controlled": {
+      "trim_sha256": "a064aa0736c67afef5ab3417a0ac39ae1105d763e517290a5b0a7329f2a83a21",
+      "rgba_sha256": "2fede6bb3e1720a42b02e62ebfc1ba207b31fa805135b0dd364d9f50657390d7",
+      "source_sha256": "110d23b19295e370f2ee1b653203dbe634838ebd9e7d9cc55ddef1916f29eeb1"
+    },
+    "mapobj_three_gauge_chapter_foundry": {
+      "trim_sha256": "93dc0c006bd9e3301631283f9f548feb0c3fdc3d43d89438fad0aaf5b42d4844",
+      "rgba_sha256": "5ad3ee6754832ceaef5f12e95f0db7738660767079e881910eaf4d7b7ca5a503",
+      "source_sha256": "c6148425f1371e2aa89d128bac93b235abd4610f68789914f3cfc3c778dfca67"
+    },
+    "resource_site_veteran_three_gauge_chapter_foundry_controlled": {
+      "trim_sha256": "77d665df22109846ca8fcfcbe633823b649fbc884ef32099571fd779cb22d060",
+      "rgba_sha256": "59c761de398c866475e8ae7d5a73e28a6f9a2ef7b1853d0175a4fc2824108db1",
+      "source_sha256": "f3aae2c73cf57bc7ca8908a0152247b74a91dd3626895dc7e962757773890c41"
+    },
+    "mapobj_fog_keel_lastwatch_mooring": {
+      "trim_sha256": "dd5f3d8b90a1471b129893571c8d48283ca2281faadfa8605c555b2a3fc55e21",
+      "rgba_sha256": "9b546c57835a9b14e7e81936f50ce365be55334b15f64562d148f04a9a1a69d6",
+      "source_sha256": "75ee6fa0d5ab7895de1fe747b271c00b5844bffcab9bb1a958cb1a0b1b3c5cda"
+    },
+    "resource_site_veteran_fog_keel_lastwatch_mooring_controlled": {
+      "trim_sha256": "166f708153655d26c1e983fa1a739dd9a9ffa1bd1d6a42a094195bf359631b4c",
+      "rgba_sha256": "39f97917fd842953b216a4053e4f46d4b5e294232c818043ec10b17dbf7e877a",
+      "source_sha256": "a55537fc742f2c9b1c3bc8166841176e422acbeb44ed961d70d6fcdc4ae73c14"
+    },
+    "mapobj_cindervane_updraft_roost": {
+      "trim_sha256": "47c0d5de5257a4f43768569314bcefa8e3f290fb8eaa653e2b1b9b2d0aa0b8b3",
+      "rgba_sha256": "942591f7b81a2c8a26863b4bb6a50dc8f18b098271d55f53b05969e1daf4405a"
+    },
+    "resource_site_neutral_cindervane_updraft_roost_controlled": {
+      "trim_sha256": "b0ab021a42363ac6ed467b553017bd91e2d264ccf05b226cc8196a0b03fd148b",
+      "rgba_sha256": "11a1d853b25f54ee1a11529ec75e4d32202dc2ffd0309bfc453b05bcde3d1306",
+      "source_sha256": "26553cec09f606f1788de9b4cc8ed468afdaa11c807230a104887a3e692c879e"
+    },
+    "mapobj_fenmirror_shell_basin": {
+      "trim_sha256": "1d10933a835b4d28287822e8b41dc025bfd32eadac79ed5179a6b19cac727ca0",
+      "rgba_sha256": "ec90f58c049e5df88d3fd05f0a79ca3eeda735c98554daee2cfa111fb33c3a8b"
+    },
+    "resource_site_neutral_fenmirror_shell_basin_controlled": {
+      "trim_sha256": "2ca43484956557ae1a79a5a03bf17a747a00b611cc0749d52a6b7688ac837a4e",
+      "rgba_sha256": "b26053f6ad23b14c9655013a9234107d32bd6fa4fef1561405571adf78f2fe08",
+      "source_sha256": "a1db84b750f260f497b378cdef4316a723e9cac9a98842651fbec7acd24ed692"
+    },
+    "mapobj_prismwake_refraction_shelf": {
+      "trim_sha256": "710294f917528909003b6f906640f4936a1541d8b1e85bc2fbc034b9c8a64148",
+      "rgba_sha256": "f4bb8379ce1b53649bccacb3d0eba482db2c93df82e226fcdee03142a0617aac",
+      "source_sha256": "2ca2696dcc02a312b142c566ce7a09d09915fe929849e6b560a04c8a6cc4a62f"
+    },
+    "resource_site_neutral_prismwake_refraction_shelf_controlled": {
+      "trim_sha256": "20f8d6ad5c0106eafa00210983b4e820a112a57e8ca6ad039a13c5a714eb1935",
+      "rgba_sha256": "6690a9667999bf7a89e117afea49eeb41241ab173c872adc4dc1ad40869f8ffa",
+      "source_sha256": "60a108d59faffc30c3c55116ab8fa9e06818bd2ad4e647ec9540a6c80e2b9210"
+    },
+    "mapobj_knotstag_root_court": {
+      "trim_sha256": "1bdbaf58dd0f5617805d6fd6799566df4c98fddebcd276756e9c5e2ba53be5bd",
+      "rgba_sha256": "b88904cb3f17522846a98ff9538912ccd8a028599b8ec67b7899baf8c0c48ddc"
+    },
+    "resource_site_neutral_knotstag_root_court_controlled": {
+      "trim_sha256": "27afc775fff74b403d54eb3445ab8f5242d7bee0a20d17f80162e87f435c81f0",
+      "rgba_sha256": "dc52146752ae9d08582d6623c33556116f1765a8c3e8a98c6a0bf9adcefc24b6",
+      "source_sha256": "013a9f269fb57645a9247a510f064a10f3f1865ffbc878c5a7ac23dc5b884183"
+    },
+    "mapobj_gaugecoil_pressure_burrow": {
+      "trim_sha256": "fd07b02af75a164f16e8002493c345393447fc50946535404eeec1dadfbdae7a",
+      "rgba_sha256": "c188425dd874a590c00c02c62e06d81a0a6614fcea4aa34386785dd86e253f89",
+      "source_sha256": "4cd4711bb559646b749e41a5d108be479464b49db9ad59ca8caa305eac50c593"
+    },
+    "resource_site_neutral_gaugecoil_pressure_burrow_controlled": {
+      "trim_sha256": "16562b031c2623eb96b72b77d5e2047abfdda0af0dfaa678e4d36af5abb86865",
+      "rgba_sha256": "e858e4d3baa5d73017890c0ce29c573c0060c47bce778a83b2207a622a75877c",
+      "source_sha256": "ae967d746d20503dc326b3441cd48c96fcfe34586944cdb5fa991f14b6332664"
+    },
+    "mapobj_gloambell_sounding_deep": {
+      "trim_sha256": "3d1e354d938766f78d16ab6de582be23134735cf6cd9e62fce6a26887aaa91f7",
+      "rgba_sha256": "084780bcf6a960c3f25d03451cd4ea07c6ecbb151b40aac09153c9f044dd93ef"
+    },
+    "resource_site_neutral_gloambell_sounding_deep_controlled": {
+      "trim_sha256": "5f1cf206d78d95fe1a0d6686eead150e66ed8eb34bf71be3862ca18a1dc8ca41",
+      "rgba_sha256": "9f83a2a62c4a501458be4d33fa0db035c0287a920944deb30ffdcc98f6418bf6",
+      "source_sha256": "b9365a877dd48b26eca1d50783500ec714bcfcf570511152cda9df26fbe6c7f6"
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png": {
+      "after_sha256": "0e973069427e2adbfd2ce9c011fb6afec9b0198698257cc1507df5685dd77bbb",
+      "prepared": "runtime/objects/resource_sites/unbound_wild_concords_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png": {
+      "after_sha256": "9b67719d06abb599cd61a0e77edb540aec98ef312377150581e805c9e873a6fd",
+      "prepared": "runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png": {
+      "after_sha256": "0aa0bd7aabfd9c634e22416a4b45f9e77612f526c4f0a34dd4948c2cf9589ae1",
+      "prepared": "runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png"
+    }
+  },
+  "processing": "Original paint projected at fourfold density through measured historical logical fit; reviewed sheet-fragment removal, alpha 1..4 RGB decontamination and six foreground-only generated physical state details. Original sources, state routes and gameplay unchanged. No procedural RGB or generated backing in runtime."
+}
