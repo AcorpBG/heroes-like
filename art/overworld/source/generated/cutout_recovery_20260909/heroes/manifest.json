@@ -1,0 +1,59 @@
+{
+  "schema_id": "hero_cutout_recovery_v1",
+  "recipe_sha256": "48efb6f05296ad0f0205dff7a1f4b3a4ed6d31bdeb2dfdc425bfe46acb1dd4e3",
+  "processing_tool": "tools/prepare_overworld_hero_cutouts.py",
+  "processing_tool_sha256": "e03a027e4e0340540ac5fb6954e5e8de0ad60f07852f325e5f9e4bd67d4e1275",
+  "processing": "Explicit retained-source neutral backing components; bounded three-pixel source composite recovery. Historical registered projection patches only changed runtime support; every other runtime pixel and 57 clean controls remain exact.",
+  "assets": {
+    "hero_strategic_thalen": {
+      "metrics": {
+        "source_removed_pixels": 9682,
+        "edge_candidate_pixels": 32395,
+        "source_edge_recovered_pixels": 15525,
+        "runtime_affected_pixels": 8551
+      },
+      "trim_sha256": "413f9d8655a382fbc0593f1986626250afbe5b56e2359c43fa6f355f89b76c06",
+      "recovered_source_sha256": "34888c42722886a72f12bf3ee759f9952fc115fbc84409fc106e58ab98413abb",
+      "support_sha256": "144db42e60fb99bfbe471fe7899e82eea54ce28eb74b7d30acd7543123d4f6bb"
+    },
+    "hero_strategic_thornwake_nara_graftsibyl": {
+      "metrics": {
+        "source_removed_pixels": 2636,
+        "edge_candidate_pixels": 34372,
+        "source_edge_recovered_pixels": 19679,
+        "runtime_affected_pixels": 9887
+      },
+      "trim_sha256": "7567e7356fd95d2ffce26c38dd5800be50cf970e9e17fad4929065d6673d9643",
+      "recovered_source_sha256": "81ec95ccf7fbd11d2fe339a24c130ab88b6dee31bf7ae5d9d2d92f618c6b61f6",
+      "support_sha256": "67e40cc1b265caa5e3ba5811045879dbf56cdc116811552be555bf8284ddbc67"
+    },
+    "hero_strategic_veilmourn_orso_nightchart": {
+      "metrics": {
+        "source_removed_pixels": 0,
+        "edge_candidate_pixels": 23317,
+        "source_edge_recovered_pixels": 9655,
+        "runtime_affected_pixels": 5404
+      },
+      "trim_sha256": "402676811b5f9a0030382909e7f1c9bb19b6b08a68dca985873e7e6a43609f23",
+      "recovered_source_sha256": "2720e75f63e71279859a27b84f25738ca5be2857f3e77c6bc7537137bcbd740b",
+      "support_sha256": "6eb04b02a375fd4731c283d25adeaaa90e8bafee2da69482942b2a8c8c58e37a"
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_thalen.png": {
+      "before_sha256": "9525c6f6da5456aa0ae7e6f041e47ecb660eaa669ff04fafd649c0fbce37baa0",
+      "after_sha256": "413f9d8655a382fbc0593f1986626250afbe5b56e2359c43fa6f355f89b76c06",
+      "prepared": "runtime/heroes/tavern_strategic_officers/hero_thalen.png"
+    },
+    "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_thornwake_nara_graftsibyl.png": {
+      "before_sha256": "be50890a21760f5fa8e07bd4a1242f32ce09ed83b393004435d6363b0901deca",
+      "after_sha256": "7567e7356fd95d2ffce26c38dd5800be50cf970e9e17fad4929065d6673d9643",
+      "prepared": "runtime/heroes/tavern_strategic_officers/hero_thornwake_nara_graftsibyl.png"
+    },
+    "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_veilmourn_orso_nightchart.png": {
+      "before_sha256": "b7e2e118804e526f8c7588cbd8ac1e444370d462cadc95bfda75edfcb9154075",
+      "after_sha256": "402676811b5f9a0030382909e7f1c9bb19b6b08a68dca985873e7e6a43609f23",
+      "prepared": "runtime/heroes/tavern_strategic_officers/hero_veilmourn_orso_nightchart.png"
+    }
+  }
+}

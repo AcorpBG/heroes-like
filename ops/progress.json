@@ -16615,11 +16615,11 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Accepted 54 original resource-site paintings across nine same-path atlases. Eight art tests, three fixture tests, 3046 checks per source resolution/platform, 52 complete-save comparisons, nine domain and five shared reports, repository/diff and both official exports pass. Exact predecessor fails only 162 art checks. 1044/1214 accepted, 170 pending; next hero/Town/other runtime families. Parent and child remain in_progress.",
+  "currentNotes": "Accepted all 60 identity-hero dispositions: three original-source matte repairs and 57 exact clean controls. Nine art tests, three fixture tests, 2932 checks per source resolution/platform, five shared reports, repository/diff and both exports pass. Two unchanged legacy geometry/fallback report failures reproduce identically in predecessor/current PCKs; not counted as passes. 1104/1214 accepted, 110 pending; continue Town/other runtime review. Parent/child remain in_progress.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "art-overworld-cutout-runtime-pool-20260909",
   "currentSliceId": "art-overworld-cutout-runtime-pool-20260909",
-  "currentSliceNotes": "Accepted 54 original resource-site paintings across nine same-path atlases. Eight art tests, three fixture tests, 3046 checks per source resolution/platform, 52 complete-save comparisons, nine domain and five shared reports, repository/diff and both official exports pass. Exact predecessor fails only 162 art checks. 1044/1214 accepted, 170 pending; next hero/Town/other runtime families. Parent and child remain in_progress.",
+  "currentSliceNotes": "Accepted all 60 identity hero dispositions: three original-source backing/rim repairs, 57 clean controls. Focused 2932-check source/platform runs, five shared reports, repo and both exports pass; two unchanged legacy report failures reproduced exactly in predecessor/current packages. Four strict saves per run; cross-run raid seeds verified against original session-id formula. 1104/1214 accepted, 110 pending. Continue Town/other family source review; no full-pool or release completion.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Remaining Runtime-Pool Cutout Recovery",
   "currentSliceUpdatedAt": "2026-09-10T05:23:56.637541+00:00",
@@ -21929,84 +21929,93 @@
   },
   "guardrailNote": "Original-art recovery only; preserve exact identity, placement, footprint, interaction, saves and deterministic generation. No native/RMG rules, Town redesign, unrelated cleanup or fixed package-size ceiling.",
   "lastValidation": {
-    "id": "remaining_sites_20260910_accepted",
+    "id": "heroes_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "completed",
     "sliceStatus": "in_progress",
-    "acceptedCohort": "remaining_sites",
+    "acceptedCohort": "heroes",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
     "runtimeChanges": {
-      "original_master_repairs": 54,
-      "runtime_files_changed": 9,
-      "source_alpha_and_other_rgb_preserved": true
+      "original_master_repairs": 3,
+      "clean_identity_controls": 57,
+      "runtime_files_changed": 3,
+      "all_original_sources_and_portraits_unchanged": true,
+      "unaffected_runtime_pixels_preserved": true
     },
     "validation": {
-      "python": "8 art tests and 3 pinned-fixture tests pass",
-      "source_and_packaged": "3046 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
-      "before": "162 exact art failures in unchanged 418d30c4 PCK; no unrelated failures",
-      "saves": "52 complete comparisons; 13 saves per run; only cross-run timestamps and fresh authored IDs excluded",
-      "domains": "Nine existing affected domain reports pass",
+      "python": "9 art tests and 3 pinned-fixture tests pass",
+      "source_and_packaged": "2932 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
+      "before": "3 exact art failures in unchanged 8cc41266 PCK; no unrelated failures",
+      "saves": "4 strict save/load controls per run, including seeds; 16 cross-run comparisons, with only timestamps/fresh IDs and exact source-proven session-derived raid-seed normalization",
+      "domains": "Two unchanged legacy hero/enemy report failures reproduced with identical failure records in predecessor/current official PCKs; NOT passes",
       "shared": "Five sprite/input/route/fog reports pass",
-      "repo": "pass: /tmp/heroes-remaining-sites-repo-20260910.log; git diff --check passes",
-      "platforms": "Both official exports pass; Windows fresh-prefix generated-map/Town construction and full cohort pass",
-      "visual": "54 source and recovered paintings, five in-engine galleries and actual small/wide gameplay inspected",
-      "packages": "303765448 bytes and 5484 members each; only project.binary differs across platforms; 5473 unrelated payloads and 1160 art rows unchanged"
+      "repo": "pass: /tmp/heroes-hero-validate-repo-20260910.log; git diff --check passes",
+      "platforms": "Both official exports and full hero cohort pass; Windows headless Wine",
+      "visual": "All 60 original/current identities, repaired previews, five galleries, actual small/wide gameplay and Linux examples inspected",
+      "packages": "303771048 bytes / 5484 members each; 5479 unrelated payloads and 1211 art rows unchanged. Platform project.binary differs; UID serialization order differs but all 7921 mappings equal"
     },
-    "evidence": ".artifacts/overworld_cutout_quality_20260909/remaining-site-acceptance.json",
-    "acceptedRuntimePoolDispositions": 1044,
-    "pendingRuntimePoolDispositions": 170,
+    "evidence": ".artifacts/overworld_cutout_quality_20260909/hero-acceptance.json",
+    "acceptedRuntimePoolDispositions": 1104,
+    "pendingRuntimePoolDispositions": 110,
     "limits": [
       "Full pool and parent remain in_progress",
       "Windows headless Wine is not GPU/controller certification",
-      "Native Day97 has zero selected resource-site placements; unchanged original blocker/save control only",
-      "Triune one-use shrine is consumed normally; persistent relay partly occluded by original town/hero; detached galleries are not earned gameplay"
+      "Native Day97 Lyra is an unchanged control; actual repaired heroes are paid authored recruits",
+      "Detached galleries/enemy resolver inputs are not earned map placements",
+      "Legacy hero geometry and commander fallback reports remain non-passing, with exact predecessor/current failure reproduction",
+      "Fresh authored Mireford raid seeds depend on session id; cross-run comparison verifies original formula before identity normalization"
     ]
   },
   "latestEvidence": {
-    "id": "remaining_sites_20260910_accepted",
+    "id": "heroes_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "completed",
     "sliceStatus": "in_progress",
-    "acceptedCohort": "remaining_sites",
+    "acceptedCohort": "heroes",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
     "runtimeChanges": {
-      "original_master_repairs": 54,
-      "runtime_files_changed": 9,
-      "source_alpha_and_other_rgb_preserved": true
+      "original_master_repairs": 3,
+      "clean_identity_controls": 57,
+      "runtime_files_changed": 3,
+      "all_original_sources_and_portraits_unchanged": true,
+      "unaffected_runtime_pixels_preserved": true
     },
     "validation": {
-      "python": "8 art tests and 3 pinned-fixture tests pass",
-      "source_and_packaged": "3046 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
-      "before": "162 exact art failures in unchanged 418d30c4 PCK; no unrelated failures",
-      "saves": "52 complete comparisons; 13 saves per run; only cross-run timestamps and fresh authored IDs excluded",
-      "domains": "Nine existing affected domain reports pass",
+      "python": "9 art tests and 3 pinned-fixture tests pass",
+      "source_and_packaged": "2932 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
+      "before": "3 exact art failures in unchanged 8cc41266 PCK; no unrelated failures",
+      "saves": "4 strict save/load controls per run, including seeds; 16 cross-run comparisons, with only timestamps/fresh IDs and exact source-proven session-derived raid-seed normalization",
+      "domains": "Two unchanged legacy hero/enemy report failures reproduced with identical failure records in predecessor/current official PCKs; NOT passes",
       "shared": "Five sprite/input/route/fog reports pass",
-      "repo": "pass: /tmp/heroes-remaining-sites-repo-20260910.log; git diff --check passes",
-      "platforms": "Both official exports pass; Windows fresh-prefix generated-map/Town construction and full cohort pass",
-      "visual": "54 source and recovered paintings, five in-engine galleries and actual small/wide gameplay inspected",
-      "packages": "303765448 bytes and 5484 members each; only project.binary differs across platforms; 5473 unrelated payloads and 1160 art rows unchanged"
+      "repo": "pass: /tmp/heroes-hero-validate-repo-20260910.log; git diff --check passes",
+      "platforms": "Both official exports and full hero cohort pass; Windows headless Wine",
+      "visual": "All 60 original/current identities, repaired previews, five galleries, actual small/wide gameplay and Linux examples inspected",
+      "packages": "303771048 bytes / 5484 members each; 5479 unrelated payloads and 1211 art rows unchanged. Platform project.binary differs; UID serialization order differs but all 7921 mappings equal"
     },
-    "evidence": ".artifacts/overworld_cutout_quality_20260909/remaining-site-acceptance.json",
-    "acceptedRuntimePoolDispositions": 1044,
-    "pendingRuntimePoolDispositions": 170,
+    "evidence": ".artifacts/overworld_cutout_quality_20260909/hero-acceptance.json",
+    "acceptedRuntimePoolDispositions": 1104,
+    "pendingRuntimePoolDispositions": 110,
     "limits": [
       "Full pool and parent remain in_progress",
       "Windows headless Wine is not GPU/controller certification",
-      "Native Day97 has zero selected resource-site placements; unchanged original blocker/save control only",
-      "Triune one-use shrine is consumed normally; persistent relay partly occluded by original town/hero; detached galleries are not earned gameplay"
+      "Native Day97 Lyra is an unchanged control; actual repaired heroes are paid authored recruits",
+      "Detached galleries/enemy resolver inputs are not earned map placements",
+      "Legacy hero geometry and commander fallback reports remain non-passing, with exact predecessor/current failure reproduction",
+      "Fresh authored Mireford raid seeds depend on session id; cross-run comparison verifies original formula before identity normalization"
     ]
   },
   "latestEvidenceArtifacts": [
-    ".artifacts/overworld_cutout_quality_20260909/remaining-site-acceptance.json",
-    ".artifacts/overworld_cutout_quality_20260909/remaining-sites-domain-20260910/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/remaining-sites-shared-20260910/report.json",
-    "/tmp/heroes-remaining-sites-python-20260910.log",
-    "/tmp/heroes-remaining-sites-repo-20260910.log",
-    "/tmp/heroes-remaining-sites-linux-20260910/report.json",
-    "/tmp/heroes-remaining-sites-windows-20260910/report.json"
+    ".artifacts/overworld_cutout_quality_20260909/hero-acceptance.json",
+    ".artifacts/overworld_cutout_quality_20260909/hero-shared-20260910/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/hero-legacy-before-20260910/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/hero-legacy-current-20260910/report.json",
+    "/tmp/heroes-hero-unit-20260910.log",
+    "/tmp/heroes-hero-validate-repo-20260910.log",
+    "/tmp/heroes-hero-linux-20260910/report.json",
+    "/tmp/heroes-hero-windows-20260910/report.json"
   ],
   "latestEvidenceId": "art-overworld-cutout-runtime-pool-20260909",
-  "latestFinding": "Accepted 54 original resource-site paintings across nine same-path atlases. Eight art tests, three fixture tests, 3046 checks per source resolution/platform, 52 complete-save comparisons, nine domain and five shared reports, repository/diff and both official exports pass. Exact predecessor fails only 162 art checks. 1044/1214 accepted, 170 pending; next hero/Town/other runtime families. Parent and child remain in_progress.",
+  "latestFinding": "Accepted all 60 identity-hero dispositions: three original-source matte repairs and 57 exact clean controls. Nine art tests, three fixture tests, 2932 checks per source resolution/platform, five shared reports, repository/diff and both exports pass. Two unchanged legacy geometry/fallback report failures reproduce identically in predecessor/current PCKs; not counted as passes. 1104/1214 accepted, 110 pending; continue Town/other runtime review. Parent/child remain in_progress.",
   "metrics": {
     "scope": "Historical full-match checkpoint metrics retained below; these are not current release metrics. Current art-goal acceptance is in latestEvidence and validation.",
     "audit_only": false,
@@ -22114,7 +22123,7 @@
         "Original asset repair/replacement across authoritative overworld runtime pool",
         "Scoped provenance, source/trim/runtime preparation and integrated visual/gameplay/platform acceptance"
       ],
-      "notes": "784/1214 repaired or preserved dispositions accepted after the forty command/training original paintings; 430 still require detailed review/recovery. Eight focused tests, 2836 checks per source resolution/platform, 40 full saves, six domain/five shared reports, repository validation and both exports pass. Gameplay/native/save owners and routing tables unchanged. Full art goal and release remain incomplete; source evidence: docs/overworld-cutout-quality-report.md.",
+      "notes": "Accepted all 60 identity-hero dispositions: three original-source matte repairs and 57 exact clean controls. Nine art tests, three fixture tests, 2932 checks per source resolution/platform, five shared reports, repository/diff and both exports pass. Two unchanged legacy geometry/fallback report failures reproduce identically in predecessor/current PCKs; not counted as passes. 1104/1214 accepted, 110 pending; continue Town/other runtime review. Parent/child remain in_progress.",
       "startedAt": "2026-09-09T14:41:54Z"
     },
     {
@@ -22238,10 +22247,13 @@
         "python3 -B -m unittest discover -s tests -p test_overworld_remaining_site_cutouts.py",
         "python3 -B tests/overworld_cutout_batch_regression.py --batch remaining_sites --resolution <1280x720|1920x1080> --label <fresh>",
         "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch remaining_sites --platform linux --binary <official-release-binary> --pack <matching-release-pck> --label <fresh>",
-        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch remaining_sites --platform windows --binary <official-release-binary> --pack <matching-release-pck> --label <fresh> --wine-prefix <fresh-prefix>"
+        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch remaining_sites --platform windows --binary <official-release-binary> --pack <matching-release-pck> --label <fresh> --wine-prefix <fresh-prefix>",
+        "python3 -B -m unittest discover -s tests -p test_overworld_hero_cutouts.py",
+        "python3 -B tests/overworld_cutout_batch_regression.py --batch heroes --resolution <1280x720|1920x1080> --label <fresh>",
+        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch heroes --platform <linux|windows> --binary <official-release-binary> --pack <matching-release-pck> --label <fresh> --wine-prefix <fresh-windows-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-10T07:35:22Z",
+      "updatedAt": "2026-09-10T08:20:18Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22289,9 +22301,11 @@
         "tools/prepare_overworld_artifact_cutouts.py; 36 original-master atlas recoveries, 33 clean standalone field controls, unchanged inventory icons and historical source provenance",
         "tests/test_overworld_artifact_cutouts.py and tests/overworld_artifact_cutout_probe.py; all 69 identity routes, ordinary scouting/pickup, complete saves and Linux/Windows acceptance",
         "tools/prepare_overworld_remaining_site_cutouts.py; 54 original resource-site paintings across nine atlases, historical fit/anchor and preserved source provenance",
-        "tests/test_overworld_remaining_site_cutouts.py and tests/overworld_remaining_site_cutout_probe.py; exact state routes, ordinary scouting/claiming, full saves and both-platform acceptance"
+        "tests/test_overworld_remaining_site_cutouts.py and tests/overworld_remaining_site_cutout_probe.py; exact state routes, ordinary scouting/claiming, full saves and both-platform acceptance",
+        "tools/prepare_overworld_hero_cutouts.py and heroes source/trim/runtime packet; three source-backed strategic-officer cutout repairs and 57 exact clean hero controls",
+        "tests/test_overworld_hero_cutouts.py and tests/overworld_hero_cutout_probe.py; all 60 identity routes, ordinary native/authored movement and recruitment, complete saves and both platform packages"
       ],
-      "notes": "Accepted 54 original resource-site paintings across nine same-path atlases. Eight art tests, three fixture tests, 3046 checks per source resolution/platform, 52 complete-save comparisons, nine domain and five shared reports, repository/diff and both official exports pass. Exact predecessor fails only 162 art checks. 1044/1214 accepted, 170 pending; next hero/Town/other runtime families. Parent and child remain in_progress.",
+      "notes": "Accepted all 60 identity hero dispositions: three original-source backing/rim repairs, 57 clean controls. Focused 2932-check source/platform runs, five shared reports, repo and both exports pass; two unchanged legacy report failures reproduced exactly in predecessor/current packages. Four strict saves per run; cross-run raid seeds verified against original session-id formula. 1104/1214 accepted, 110 pending. Continue Town/other family source review; no full-pool or release completion.",
       "startedAt": "2026-09-09T16:04:51Z"
     },
     {
@@ -110940,8 +110954,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Inspect/recover remaining hero/Town/other runtime families; preserve clean original paint and all gameplay/native/save/placement authority. 1044/1214 accepted, 170 pending. Parent and child remain in_progress.",
-  "remainingWork": "Inspect/recover remaining hero/Town/other runtime families; preserve clean original paint and all gameplay/native/save/placement authority. 1044/1214 accepted, 170 pending. Parent and child remain in_progress.",
+  "remainingGap": "Inspect/recover remaining Town/other runtime families individually; preserve clean original paint and gameplay/native/save/placement authority. 1104/1214 accepted, 110 pending. Maintain explicit legacy-report and physical-Windows limits; parent/child remain in_progress.",
+  "remainingWork": "Inspect/recover remaining Town/other runtime families individually; preserve clean original paint and gameplay/native/save/placement authority. 1104/1214 accepted, 110 pending. Maintain explicit legacy-report and physical-Windows limits; parent/child remain in_progress.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -111479,7 +111493,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "remaining_site_recovery_accepted_runtime_pool_in_progress",
+  "result": "hero_cutout_recovery_accepted_runtime_pool_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -111580,41 +111594,45 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Accepted 54 original resource-site paintings across nine same-path atlases. Eight art tests, three fixture tests, 3046 checks per source resolution/platform, 52 complete-save comparisons, nine domain and five shared reports, repository/diff and both official exports pass. Exact predecessor fails only 162 art checks. 1044/1214 accepted, 170 pending; next hero/Town/other runtime families. Parent and child remain in_progress.",
+  "summary": "Accepted all 60 identity-hero dispositions: three original-source matte repairs and 57 exact clean controls. Nine art tests, three fixture tests, 2932 checks per source resolution/platform, five shared reports, repository/diff and both exports pass. Two unchanged legacy geometry/fallback report failures reproduce identically in predecessor/current PCKs; not counted as passes. 1104/1214 accepted, 110 pending; continue Town/other runtime review. Parent/child remain in_progress.",
   "taskId": "10236",
-  "updatedAt": "2026-09-10T07:35:22Z",
+  "updatedAt": "2026-09-10T08:20:18Z",
   "validation": {
-    "id": "remaining_sites_20260910_accepted",
+    "id": "heroes_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "completed",
     "sliceStatus": "in_progress",
-    "acceptedCohort": "remaining_sites",
+    "acceptedCohort": "heroes",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
     "runtimeChanges": {
-      "original_master_repairs": 54,
-      "runtime_files_changed": 9,
-      "source_alpha_and_other_rgb_preserved": true
+      "original_master_repairs": 3,
+      "clean_identity_controls": 57,
+      "runtime_files_changed": 3,
+      "all_original_sources_and_portraits_unchanged": true,
+      "unaffected_runtime_pixels_preserved": true
     },
     "validation": {
-      "python": "8 art tests and 3 pinned-fixture tests pass",
-      "source_and_packaged": "3046 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
-      "before": "162 exact art failures in unchanged 418d30c4 PCK; no unrelated failures",
-      "saves": "52 complete comparisons; 13 saves per run; only cross-run timestamps and fresh authored IDs excluded",
-      "domains": "Nine existing affected domain reports pass",
+      "python": "9 art tests and 3 pinned-fixture tests pass",
+      "source_and_packaged": "2932 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
+      "before": "3 exact art failures in unchanged 8cc41266 PCK; no unrelated failures",
+      "saves": "4 strict save/load controls per run, including seeds; 16 cross-run comparisons, with only timestamps/fresh IDs and exact source-proven session-derived raid-seed normalization",
+      "domains": "Two unchanged legacy hero/enemy report failures reproduced with identical failure records in predecessor/current official PCKs; NOT passes",
       "shared": "Five sprite/input/route/fog reports pass",
-      "repo": "pass: /tmp/heroes-remaining-sites-repo-20260910.log; git diff --check passes",
-      "platforms": "Both official exports pass; Windows fresh-prefix generated-map/Town construction and full cohort pass",
-      "visual": "54 source and recovered paintings, five in-engine galleries and actual small/wide gameplay inspected",
-      "packages": "303765448 bytes and 5484 members each; only project.binary differs across platforms; 5473 unrelated payloads and 1160 art rows unchanged"
+      "repo": "pass: /tmp/heroes-hero-validate-repo-20260910.log; git diff --check passes",
+      "platforms": "Both official exports and full hero cohort pass; Windows headless Wine",
+      "visual": "All 60 original/current identities, repaired previews, five galleries, actual small/wide gameplay and Linux examples inspected",
+      "packages": "303771048 bytes / 5484 members each; 5479 unrelated payloads and 1211 art rows unchanged. Platform project.binary differs; UID serialization order differs but all 7921 mappings equal"
     },
-    "evidence": ".artifacts/overworld_cutout_quality_20260909/remaining-site-acceptance.json",
-    "acceptedRuntimePoolDispositions": 1044,
-    "pendingRuntimePoolDispositions": 170,
+    "evidence": ".artifacts/overworld_cutout_quality_20260909/hero-acceptance.json",
+    "acceptedRuntimePoolDispositions": 1104,
+    "pendingRuntimePoolDispositions": 110,
     "limits": [
       "Full pool and parent remain in_progress",
       "Windows headless Wine is not GPU/controller certification",
-      "Native Day97 has zero selected resource-site placements; unchanged original blocker/save control only",
-      "Triune one-use shrine is consumed normally; persistent relay partly occluded by original town/hero; detached galleries are not earned gameplay"
+      "Native Day97 Lyra is an unchanged control; actual repaired heroes are paid authored recruits",
+      "Detached galleries/enemy resolver inputs are not earned map placements",
+      "Legacy hero geometry and commander fallback reports remain non-passing, with exact predecessor/current failure reproduction",
+      "Fresh authored Mireford raid seeds depend on session id; cross-run comparison verifies original formula before identity normalization"
     ]
   },
   "validationHistory": [
@@ -125579,29 +125597,24 @@
     }
   ],
   "validationResults": {
-    "id": "quality-generated-ai-army-capacity-20260906",
-    "sliceId": "quality-generated-full-match-playthrough-20260906",
-    "title": "AI army admissions and troop-preserving handoffs",
-    "status": "in_progress",
-    "scope": "validated_ai_checkpoint_not_script_reward_closure_or_complete_matches",
-    "validatedAt": "2026-09-06T16:57:46Z",
+    "id": "heroes_20260910_accepted",
+    "sliceId": "art-overworld-cutout-runtime-pool-20260909",
+    "title": "Hero identity original-cutout acceptance",
+    "status": "completed",
+    "scope": "60-disposition cohort only, not parent completion or legacy report closure",
+    "validatedAt": "2026-09-10T08:22:15.700991+00:00",
     "artifacts": [
-      "docs/generated-full-match-quality-report.md",
-      "docs/generated-full-match-quality-requirements.md",
-      "tests/ai_army_capacity_regression.py",
-      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_before_01/report.json",
-      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_continuity_before/report.json",
-      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_verified_medium/report.json",
-      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_verified_large/report.json",
-      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_linux_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_windows_verified/report.json",
-      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_validate_repo_verified.log",
-      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_acceptance_verified.log",
-      ".artifacts/generated_full_match_quality_20260906/ai_army_capacity_linux_entry_verified/live_validation_report.json",
-      ".artifacts/full_play_runtime_20260905/ai_army_capacity_domains_verified/report.json"
+      ".artifacts/overworld_cutout_quality_20260909/hero-acceptance.json",
+      ".artifacts/overworld_cutout_quality_20260909/hero-shared-20260910/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/hero-legacy-before-20260910/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/hero-legacy-current-20260910/report.json",
+      "/tmp/heroes-hero-unit-20260910.log",
+      "/tmp/heroes-hero-validate-repo-20260910.log",
+      "/tmp/heroes-hero-linux-20260910/report.json",
+      "/tmp/heroes-hero-windows-20260910/report.json"
     ],
-    "result": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
-    "remainingWork": "Implement source-owned one-shot scripted reinforcement retention before marking earned grants consumed, preserving fixed recipients and ownership semantics across save/resume. Then complete legal Medium/Large terminal matches with full capacity history; finish selected presentation and responsiveness acceptance. No truncated armies, unlimited carry reserve, native RMG/balance shortcuts or release certification."
+    "result": "Accepted all 60 identity-hero dispositions: three original-source matte repairs and 57 exact clean controls. Nine art tests, three fixture tests, 2932 checks per source resolution/platform, five shared reports, repository/diff and both exports pass. Two unchanged legacy geometry/fallback report failures reproduce identically in predecessor/current PCKs; not counted as passes. 1104/1214 accepted, 110 pending; continue Town/other runtime review. Parent/child remain in_progress.",
+    "remainingWork": "Inspect/recover remaining Town/other runtime families individually; preserve clean original paint and gameplay/native/save/placement authority. 1104/1214 accepted, 110 pending. Maintain explicit legacy-report and physical-Windows limits; parent/child remain in_progress."
   },
   "blockedReason": null,
   "currentBlocker": "",

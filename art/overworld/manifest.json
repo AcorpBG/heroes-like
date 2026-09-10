@@ -1218,14 +1218,20 @@
       "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_thalen_source.png",
       "source_model": "built_in_image_gen_identity_preserving_original_sprite",
       "identity_reference": "res://art/heroes/portraits/hero_thalen.png",
-      "assigned_hero_id": "hero_thalen"
+      "assigned_hero_id": "hero_thalen",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/heroes/hero_strategic_thalen.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/heroes/manifest.json",
+      "runtime_sha256": "413f9d8655a382fbc0593f1986626250afbe5b56e2359c43fa6f355f89b76c06"
     },
     "hero_strategic_thornwake_nara_graftsibyl": {
       "path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_thornwake_nara_graftsibyl.png",
       "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_thornwake_nara_graftsibyl_source.png",
       "source_model": "built_in_image_gen_identity_preserving_original_sprite",
       "identity_reference": "res://art/heroes/portraits/hero_thornwake_nara_graftsibyl.png",
-      "assigned_hero_id": "hero_thornwake_nara_graftsibyl"
+      "assigned_hero_id": "hero_thornwake_nara_graftsibyl",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/heroes/hero_strategic_thornwake_nara_graftsibyl.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/heroes/manifest.json",
+      "runtime_sha256": "7567e7356fd95d2ffce26c38dd5800be50cf970e9e17fad4929065d6673d9643"
     },
     "hero_strategic_brasshollow_harro_debtrune": {
       "path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_brasshollow_harro_debtrune.png",
@@ -1239,7 +1245,10 @@
       "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_veilmourn_orso_nightchart_source.png",
       "source_model": "built_in_image_gen_identity_preserving_original_sprite",
       "identity_reference": "res://art/heroes/portraits/hero_veilmourn_orso_nightchart.png",
-      "assigned_hero_id": "hero_veilmourn_orso_nightchart"
+      "assigned_hero_id": "hero_veilmourn_orso_nightchart",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/heroes/hero_strategic_veilmourn_orso_nightchart.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/heroes/manifest.json",
+      "runtime_sha256": "402676811b5f9a0030382909e7f1c9bb19b6b08a68dca985873e7e6a43609f23"
     },
     "hero_ritual_embercourt_orra_cinderquill": {
       "path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_embercourt_orra_cinderquill.png",

@@ -44234,6 +44234,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(len(remaining_site_recoveries) == 54, errors, "All 54 remaining site paintings must reconstruct from original RGBA and historical registration")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Remaining site cutout recovery failed closed: {exc}")
+    try:
+        hero_spec = importlib.util.spec_from_file_location("hero_cutout_validation", ROOT / "tools/prepare_overworld_hero_cutouts.py")
+        hero_module = importlib.util.module_from_spec(hero_spec)
+        hero_spec.loader.exec_module(hero_module)
+        hero_recoveries = hero_module.validate_assets()
+        ensure(len(hero_recoveries) == 60, errors, "Three original hero paintings must reconstruct within bounded matte support; 57 clean identities and all portraits remain exact")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Hero cutout recovery failed closed: {exc}")
     artifact_recoveries = {}
     try:
         artifact_spec = importlib.util.spec_from_file_location("artifact_cutout_validation", ROOT / "tools/prepare_overworld_artifact_cutouts.py")

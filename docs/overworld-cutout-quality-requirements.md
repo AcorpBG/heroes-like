@@ -458,6 +458,31 @@ honestly. No source-color key, alpha deletion, generic state marker, gameplay,
 native/RMG, Town, save-schema, unrelated art or cleanup changes. The accepted
 baseline remains 990/1214 until evidence supports these next 54 dispositions.
 
+### Hero identity cutouts
+
+Review all 60 authoritative `hero_identity_sprites` rows against their original
+generated paintings and portrait identities. Repair the confirmed neutral backing
+and pale cutout rims on the three strategic-officer paintings (Nara Graftsibyl,
+Orso Nightchart and Thalen); preserve the other 57 reviewed originals byte-for-byte
+unless individual source inspection proves another defect. Do not confuse white
+hair, pale armour, cloth, crystals or light effects with removable background.
+Use explicit inspected source components and bounded edge recovery, with frozen
+source hashes, component masks, original canvas registration and unchanged-pixel
+controls. Keep 512px runtime paths, identity/faction fallback priority, hero pose,
+portrait, world anchor/scale, recruitment, movement, save and native state intact.
+
+Owners: `tools/prepare_overworld_hero_cutouts.py`, focused Python tests,
+`tests/overworld_hero_cutout_probe.py` and `--batch heroes` source/package routing,
+plus the `heroes` source/trim/runtime provenance packet. Missing/mismatched sources,
+identity routes, masks or reconstructed pixels must fail validation. Assemble
+repairs and unchanged controls before consolidated Python, source dual-resolution,
+existing hero/enemy-commander and shared sprite/input/fog, repository/diff and
+official Linux/Windows export/gameplay acceptance. Actual original native/authored
+heroes and ordinary movement/recruitment provide gameplay evidence; detached
+coverage must remain labeled and must not mutate a map to manufacture captures.
+The accepted baseline remains 1044/1214 until all 60 dispositions have evidence.
+No portrait redesign, balance, gameplay/native/RMG, Town UI or unrelated cleanup.
+
 ## Completion and non-goals
 
 Owner-approved test-control replacement (2026-09-10): the original Day97
