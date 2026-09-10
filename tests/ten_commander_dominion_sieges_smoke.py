@@ -24,8 +24,14 @@ def verify_manifest() -> None:
     if manifest.get("generation_mode") != "built_in_imagegen" or len(manifest.get("items", [])) != 10:
         raise SystemExit("unexpected dominion-siege generated-source provenance")
     atlas = ROOT / manifest["runtime_atlas"].removeprefix("res://")
-    if hashlib.sha256(atlas.read_bytes()).hexdigest() != manifest.get("runtime_atlas_sha256"):
-        raise SystemExit(f"runtime atlas hash mismatch: {atlas}")
+    historical = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/command_sites/before_runtime" / atlas.relative_to(ROOT / "art/overworld/runtime")
+    if hashlib.sha256(historical.read_bytes()).hexdigest() != manifest.get("runtime_atlas_sha256"):
+        raise SystemExit(f"historical atlas hash mismatch: {historical}")
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("command_art", ROOT / "tools/prepare_overworld_command_cutouts.py")
+    art = importlib.util.module_from_spec(spec); spec.loader.exec_module(art)
+    if len(art.validate_assets()) != 34:
+        raise SystemExit("incomplete original-source command art recovery")
     for item in manifest["items"]:
         source = ROOT / item["source_path"].removeprefix("res://")
         if hashlib.sha256(source.read_bytes()).hexdigest() != item.get("source_sha256"):

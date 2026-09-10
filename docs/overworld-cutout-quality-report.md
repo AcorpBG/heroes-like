@@ -1117,16 +1117,94 @@ Repository and diff validation pass. All 66 hashes of pre-existing unrelated
 untracked retention/report/cache artifacts remain unchanged. No gameplay, Town,
 native/RMG, save-schema, package-budget or cleanup changes are included.
 
+## Marchland command-site detail recovery — 2026-09-10
+
+34 originals across `marchland_warband_musters`,
+`marchland_grand_route_operations` and `commander_dominion_sieges` are now
+accepted. Their genuine-alpha source paintings were clean, but the shipped
+48px atlas cells discarded fine detail. This cohort is a resolution-quality
+correction, not 34 newly confirmed magenta-key defects. Purple cloth, crystal,
+smoke and magic are preserved. No new generation was necessary.
+
+`tools/prepare_overworld_command_cutouts.py` projects the original paintings
+directly into 192px cells. Every original 42px centered logical fit reproduces
+the historical alpha and all visible RGB exactly; a shifted, cropped, re-keyed
+or mismatched source now fails focused validation. The same three runtime
+paths, all 34 site/state mappings, object identities and gameplay owners remain.
+Original masters/prompts remain in their existing generated-source folders;
+the `command_sites/recipe.json`, proof, retained before atlases and 34 trimmed
+PNGs record the new source-to-runtime pipeline. No duplicate source masters,
+procedural paint, generic replacements or palette-based removal were needed.
+
+Actual affected gameplay captures use ordinary scouting to Tollbrand's original
+site at (12,5), Cinderquill's at (20,7), and Quench's at (19,7). The latter two
+include a normal end turn and the existing AI response. Guards and complete
+site records are unchanged. The earned Medium Day97 map contains zero sites
+from this cohort: its 2380 native blocker bodies remain an explicit unchanged
+control. All-34 detached galleries are labeled art coverage, not gameplay.
+Three actual site views at both 1280x720 and 1920x1080, all six original/source
+comparison pages, all three small-resolution renderer galleries and a packaged
+Linux site view were inspected visually: recovered detail, no matte backing or
+new fringe, unchanged scene size and placement.
+
+Acceptance evidence under `.artifacts/overworld_cutout_quality_20260909/`:
+
+- `command_sites_before_1280`: exactly 102 deliberate failures (old region,
+  48px cell and independent RGBA for each of 34 rows), zero runtime errors;
+  all original scouting, state, native-body and save checks still pass.
+- `command_sites_source_1280`, `command_sites_source_1920`,
+  `command_sites_packaged_linux`, `command_sites_packaged_windows`: each passes
+  2750 checks, five actual captures/observations, three detached galleries and
+  zero runtime errors. Windows is headless Wine, not GPU visual certification.
+- `command_sites_delivery_preservation.json`: 25 complete save files across
+  before/source/Linux/Windows agree, excluding only save timestamps and fresh
+  authored session IDs between runs; no fields excluded within each save test.
+  Original placements and draw rectangles are identical (Windows float32
+  representation accounted for). All 1180 other manifest rows and every state
+  mapping are unchanged; all 34 original source hashes match.
+- Six focused Python tests pass. Five shared sprite/input/route/fog reports
+  pass in `../full_play_runtime_20260905/command_sites_shared/report.json`.
+  The three existing domain smokes pass with all 34 required captures, 70
+  representative battle fixtures, 34 claims and 34 save round trips in
+  `../full_play_runtime_20260905/command_sites_domain_captured/report.json`.
+  These controlled domain fixtures are not additional full playthroughs.
+- The first domain adapter omitted capture-directory variables: all behavior
+  checks passed but the three historical report gates correctly failed for
+  zero captures. That initial adapter process returned 143 after its reports;
+  it is not the accepted run. The corrected captured run exits 0. No gameplay
+  assertion was relaxed. Final `python3 -B tests/validate_repo.py` and
+  `git diff --check` pass.
+
+Both official exports/startup/generated-entry flows pass, including packaged
+Windows generated Overworld and Town/build entry. Fresh exports are in
+`/tmp/heroes-command-sites-linux-20260910` and
+`/tmp/heroes-command-sites-windows-20260910`; both PCKs are 293911032 bytes,
+5484 members. Only `project.binary` differs by platform. Compared with
+`95d1e047`, only three ctex payloads, the Overworld manifest and UID cache
+changed: 5479 other members, including compiled game/native/save owners, are
+byte-exact. Linux SHA: `da3cae5a831756dc98b3a53e6c22bc535d455d9b7e11cfbc65dfec7697990f46`;
+Windows SHA: `57eaa3ae6dd07c2abeece732396f6061dbaf1d4135f60c18152453d3916b0b60`.
+Source art is excluded from both packages. Tightening the historical-pixel
+validator refreshed proof metadata only; all prepared/runtime rasters stayed
+identical. Logs are `/tmp/heroes-command-*-20260910.log`, including
+`unit-final`, `repo-final`, both exports, packaged probes and captured domains.
+
+This is a 34-asset checkpoint, not full-pool or release completion. All known
+pre-existing unrelated untracked retention/report/cache files are preserved;
+the 66-file hash baseline still passes. No cleanup, gameplay, native/RMG,
+Town-screen, save-schema or package-budget changes are included.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The then-remaining 783 rows
 received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 674 repaired/preserved dispositions, leaving
-540 for complete detailed review/recovery. All 31 recurring encounters, 30
+The accepted cohorts now cover 708 repaired/preserved dispositions, leaving
+506 for complete detailed review/recovery. All 31 recurring encounters, 30
 recurring resource-site originals, 31 separate claimed dwellings and 34 early
 post-interaction and 40 landmark/objective-state paintings are accepted.
-Next: the other resource-site and remaining landmark families. The seven
+The 34 command-site originals are also accepted. Next: Unbound Wild Concords,
+veteran company musters, Frontier Mythic Habitats and other remaining families. The seven
 Pactwright/Mireglass states are accepted only by the explicit integrated-edit
 follow-up above; recovery of these originals does not accept different paintings.
 Individual source and native-resolution

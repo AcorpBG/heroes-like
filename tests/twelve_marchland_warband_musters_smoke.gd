@@ -39,7 +39,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(576, 48), "Marchland Warband Musters atlas must remain exactly 576x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(2304, 192), "Marchland Warband Musters atlas must remain exactly 2304x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)
@@ -89,7 +89,7 @@ func _run_case(view: Control, case: Dictionary) -> void:
 	var node: Dictionary = node_result.get("node", {})
 	var asset_id := String(view.call("_resource_asset_id", node))
 	var texture = view.call("_object_texture_for_asset", asset_id)
-	var exact_art: bool = asset_id == String(case.get("asset_id", "")) and texture is AtlasTexture and texture.atlas.resource_path == ATLAS_PATH and texture.region == case.get("region")
+	var exact_art: bool = asset_id == String(case.get("asset_id", "")) and texture is AtlasTexture and texture.atlas.resource_path == ATLAS_PATH and texture.region == Rect2(case.get("region").position * 4, case.get("region").size * 4)
 	_expect(exact_art, "%s did not resolve its exact rally-landmark atlas region." % scenario_id)
 	var tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
 	view.set_map_state(session, session.overworld.get("map", []), OverworldRules.derive_map_size(session), tile)

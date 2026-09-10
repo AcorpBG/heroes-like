@@ -204,5 +204,7 @@
       "prompt": "Use case: stylized-concept; Asset type: production 2D fantasy strategy-game overworld command landmark source; Primary request: Create Vanehook Crosswind Mooring for the original Aurelion Reach setting; Scene/backdrop: genuinely transparent background; Subject and readable identity: A crooked harbor mooring bears opposing wind fins, a rope drum, direction discs, storm lantern, and split anchor base.; Style/medium: polished hand-painted original fantasy game landmark art; Composition/framing: isolated high three-quarter view, centered with padding, strong non-color silhouette readable at 48x48; Constraints: one landmark only; preserved alpha; no ground, scenery, characters, text, letters, numbers, logos, watermark, border, frame, cast shadow, or copied franchise design.",
       "accessible_description": "A crooked harbor mooring bears opposing wind fins, a rope drum, direction discs, storm lantern, and split anchor base."
     }
-  ]
+  ],
+  "runtime_recovery_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/command_sites/manifest.json",
+  "runtime_recovery_note": "Historical 48px atlas/hash above retained as original assembly evidence. Current same-path 192px cells reconstruct directly from these unchanged original RGBA masters; see linked recovery recipe and proof."
 }
