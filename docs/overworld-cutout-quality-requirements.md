@@ -429,6 +429,35 @@ cohort probes once the complete batch is assembled. Acceptance stays 921/1214
 until that evidence exists. No inventory-icon redesign, gameplay/native/RMG/
 save changes, Town work, unrelated art or cleanup.
 
+### Remaining resource-site atlas originals
+
+Recover all 54 paintings in the nine remaining six-cell resource-site atlases:
+Triune Arcanum, Great Work, Grand Muster, Relief Route, Fogbreak Survey,
+Frontier Treasury, Setbound Regalia, Grand Arcanum and Uncrowned Sovereign Roads.
+Use retained original RGBA sources, not upscaled 48px cells. Keep the same runtime
+paths and all resource identity/state mappings. Grand Arcanum and Uncrowned
+sources are already-curated 512px canvases: preserve their complete registration.
+The other families retain their historical 42/44px fit and centered/bottom anchor.
+Setbound's old prose says centered, but its retained raster proves bottom-aligned;
+preserve actual placement and document this source-metadata discrepancy.
+
+Owners: `tools/prepare_overworld_remaining_site_cutouts.py`, its focused Python
+tests, `tests/overworld_remaining_site_cutout_probe.py`, shared source/package
+`--batch remaining_sites` routing and the `remaining_sites` source/trim/runtime
+packet. Preserve all alpha and opaque paint. Reviewed alpha-1..4 saturated RGB
+noise alone may borrow nearest original foreground RGB. Freeze original masters,
+provenance, historical atlases, exact registrations and all 54 mappings. Require
+fail-closed exact live raster reconstruction and before/after visual inspection;
+historical filter differences are not changed world size or alignment.
+
+Assemble the whole cohort before consolidated Python, source dual-resolution,
+affected domain/shared, repository/diff and Linux/Windows export/package tests.
+Prove state resolver routes, ordinary authored scouting/claiming, native placement
+controls and complete save preservation; label absent-native/detached coverage
+honestly. No source-color key, alpha deletion, generic state marker, gameplay,
+native/RMG, Town, save-schema, unrelated art or cleanup changes. The accepted
+baseline remains 990/1214 until evidence supports these next 54 dispositions.
+
 ## Completion and non-goals
 
 Owner-approved test-control replacement (2026-09-10): the original Day97

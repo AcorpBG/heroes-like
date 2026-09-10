@@ -95,7 +95,7 @@ func _validate_art_and_browser() -> void:
 	_expect(hashes.size() == 7,"The emblem and six chapter seals must remain byte-distinct.")
 	_expect(contact.save_png(OUTPUT_DIR + "/campaign_emblem_and_seals.png") == OK,"Could not save the campaign art contact sheet.")
 	var atlas := Image.load_from_file(ProjectSettings.globalize_path(ATLAS_PATH))
-	_expect(not atlas.is_empty() and atlas.get_size() == Vector2i(288,48) and load(ATLAS_PATH) is Texture2D,"The six-throne field atlas is not live at 288x48.")
+	_expect(not atlas.is_empty() and atlas.get_size() == Vector2i(1152,192) and load(ATLAS_PATH) is Texture2D,"The six-throne field atlas is not live at 1152x192.")
 
 
 func _run_case(view: Control, case: Dictionary) -> void:

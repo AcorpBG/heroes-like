@@ -12,12 +12,12 @@ const OUTPUT_DIR := "res://.artifacts/grand_arcanum_convocations_smoke"
 const REPORT_PATH := OUTPUT_DIR + "/report.json"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png"
 const CASES := [
-	{"scenario_id":"beaconscribe-dawnwrit-convocation","hero_id":"hero_embercourt_jorun_beaconscribe","faction_id":"faction_embercourt","prefix":"dawnwrit","site_id":"site_dawnwrit_grand_convocation","asset_id":"resource_site_grand_arcanum_dawnwrit_column","region":Rect2(0,0,48,48),"spells":["spell_beacon_dawn_ward_21","spell_beacon_roadward_charge_23","spell_beacon_bell_lance_25"]},
-	{"scenario_id":"rotlamp-leechmoon-convocation","hero_id":"hero_mireclaw_edda_rotlamp","faction_id":"faction_mireclaw","prefix":"leechmoon","site_id":"site_leechmoon_grand_convocation","asset_id":"resource_site_grand_arcanum_leechmoon_court","region":Rect2(48,0,48,48),"spells":["spell_mire_leech_poultice_26","spell_mire_flood_rot_28","spell_mire_silt_frenzy_20"]},
-	{"scenario_id":"daynote-aurora-halo-convocation","hero_id":"hero_sunvault_essa_daynote","faction_id":"faction_sunvault","prefix":"aurorahalo","site_id":"site_aurora_halo_grand_convocation","asset_id":"resource_site_grand_arcanum_aurora_halo_array","region":Rect2(96,0,48,48),"spells":["spell_lens_aurora_array_26","spell_lens_halo_ray_18","spell_lens_aurora_chorus_10"]},
-	{"scenario_id":"graftsibyl-loambriar-convocation","hero_id":"hero_thornwake_nara_graftsibyl","faction_id":"faction_thornwake","prefix":"loambriar","site_id":"site_loambriar_grand_convocation","asset_id":"resource_site_grand_arcanum_loambriar_loom","region":Rect2(144,0,48,48),"spells":["spell_root_loam_bloom_26","spell_root_green_briar_28","spell_root_bloom_bark_20"]},
-	{"scenario_id":"heatpriest-ashrail-convocation","hero_id":"hero_brasshollow_odrik_heatpriest","faction_id":"faction_brasshollow","prefix":"ashrail","site_id":"site_ashrail_grand_convocation","asset_id":"resource_site_grand_arcanum_ashrail_forge","region":Rect2(192,0,48,48),"spells":["spell_furnace_rivet_mantle_21","spell_furnace_brass_bellows_23","spell_furnace_ash_rail_25"]},
-	{"scenario_id":"vowless-mistmourning-convocation","hero_id":"hero_veilmourn_nacre_vowless","faction_id":"faction_veilmourn","prefix":"mistmourning","site_id":"site_mistmourning_grand_convocation","asset_id":"resource_site_grand_arcanum_mistmourning_archive","region":Rect2(240,0,48,48),"spells":["spell_veil_mist_duel_26","spell_veil_moon_mark_28","spell_veil_mourning_fogbind_20"]},
+	{"scenario_id":"beaconscribe-dawnwrit-convocation","hero_id":"hero_embercourt_jorun_beaconscribe","faction_id":"faction_embercourt","prefix":"dawnwrit","site_id":"site_dawnwrit_grand_convocation","asset_id":"resource_site_grand_arcanum_dawnwrit_column","region":Rect2(0,0,192,192),"spells":["spell_beacon_dawn_ward_21","spell_beacon_roadward_charge_23","spell_beacon_bell_lance_25"]},
+	{"scenario_id":"rotlamp-leechmoon-convocation","hero_id":"hero_mireclaw_edda_rotlamp","faction_id":"faction_mireclaw","prefix":"leechmoon","site_id":"site_leechmoon_grand_convocation","asset_id":"resource_site_grand_arcanum_leechmoon_court","region":Rect2(192,0,192,192),"spells":["spell_mire_leech_poultice_26","spell_mire_flood_rot_28","spell_mire_silt_frenzy_20"]},
+	{"scenario_id":"daynote-aurora-halo-convocation","hero_id":"hero_sunvault_essa_daynote","faction_id":"faction_sunvault","prefix":"aurorahalo","site_id":"site_aurora_halo_grand_convocation","asset_id":"resource_site_grand_arcanum_aurora_halo_array","region":Rect2(384,0,192,192),"spells":["spell_lens_aurora_array_26","spell_lens_halo_ray_18","spell_lens_aurora_chorus_10"]},
+	{"scenario_id":"graftsibyl-loambriar-convocation","hero_id":"hero_thornwake_nara_graftsibyl","faction_id":"faction_thornwake","prefix":"loambriar","site_id":"site_loambriar_grand_convocation","asset_id":"resource_site_grand_arcanum_loambriar_loom","region":Rect2(576,0,192,192),"spells":["spell_root_loam_bloom_26","spell_root_green_briar_28","spell_root_bloom_bark_20"]},
+	{"scenario_id":"heatpriest-ashrail-convocation","hero_id":"hero_brasshollow_odrik_heatpriest","faction_id":"faction_brasshollow","prefix":"ashrail","site_id":"site_ashrail_grand_convocation","asset_id":"resource_site_grand_arcanum_ashrail_forge","region":Rect2(768,0,192,192),"spells":["spell_furnace_rivet_mantle_21","spell_furnace_brass_bellows_23","spell_furnace_ash_rail_25"]},
+	{"scenario_id":"vowless-mistmourning-convocation","hero_id":"hero_veilmourn_nacre_vowless","faction_id":"faction_veilmourn","prefix":"mistmourning","site_id":"site_mistmourning_grand_convocation","asset_id":"resource_site_grand_arcanum_mistmourning_archive","region":Rect2(960,0,192,192),"spells":["spell_veil_mist_duel_26","spell_veil_moon_mark_28","spell_veil_mourning_fogbind_20"]},
 ]
 
 var _errors: Array[String] = []
@@ -33,7 +33,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(288, 48), "The Grand Arcanum academy atlas must remain exactly 288x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(1152, 192), "The Grand Arcanum academy atlas must remain exactly 1152x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)

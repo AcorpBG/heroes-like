@@ -11,12 +11,12 @@ const OUTPUT_DIR := "res://.artifacts/great_work_charter_races_smoke"
 const REPORT_PATH := OUTPUT_DIR + "/report.json"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png"
 const CASES := [
-	{"scenario_id":"rainwrit-stormseal-charter-race","prefix":"rainwritworks","faction_id":"faction_embercourt","town_id":"town_rainwrit_bastion","building_id":"building_embercourt_rainwrit_stormseal_treasury","site_id":"site_rainwrit_stormseal_survey_cairn","asset_id":"resource_site_great_work_rainwrit_survey_cairn","region":Rect2(0,0,48,48)},
-	{"scenario_id":"hollowreed-moonwax-charter-race","prefix":"hollowreedworks","faction_id":"faction_mireclaw","town_id":"town_hollowreed_sanctuary","building_id":"building_mireclaw_hollowreed_moonwax_ossuary","site_id":"site_hollowreed_moonwax_foundation_totem","asset_id":"resource_site_great_work_hollowreed_foundation_totem","region":Rect2(48,0,48,48)},
-	{"scenario_id":"meridian-seven-facet-charter-race","prefix":"meridianworks","faction_id":"faction_sunvault","town_id":"town_meridian_choirhold","building_id":"building_sunvault_meridian_seven_facet_orrery","site_id":"site_meridian_seven_line_plumb_prism","asset_id":"resource_site_great_work_meridian_plumb_prism","region":Rect2(96,0,48,48)},
-	{"scenario_id":"crownroot-heartseed-charter-race","prefix":"crownrootworks","faction_id":"faction_thornwake","town_id":"town_crownroot_refuge","building_id":"building_thornwake_crownroot_heartseed_parliament","site_id":"site_crownroot_heartseed_boundary_arbor","asset_id":"resource_site_great_work_crownroot_boundary_arbor","region":Rect2(144,0,48,48)},
-	{"scenario_id":"blackbell-grand-assay-charter-race","prefix":"blackbellworks","faction_id":"faction_brasshollow","town_id":"town_blackbell_foundry","building_id":"building_brasshollow_blackbell_grand_assay_bell","site_id":"site_blackbell_grand_assay_tripod","asset_id":"resource_site_great_work_blackbell_assay_tripod","region":Rect2(192,0,48,48)},
-	{"scenario_id":"pale-sounding-last-memory-charter-race","prefix":"palesoundingworks","faction_id":"faction_veilmourn","town_id":"town_pale_sounding_harbor","building_id":"building_veilmourn_pale_sounding_last_memory_beacon","site_id":"site_pale_sounding_last_memory_marker","asset_id":"resource_site_great_work_pale_sounding_marker","region":Rect2(240,0,48,48)},
+	{"scenario_id":"rainwrit-stormseal-charter-race","prefix":"rainwritworks","faction_id":"faction_embercourt","town_id":"town_rainwrit_bastion","building_id":"building_embercourt_rainwrit_stormseal_treasury","site_id":"site_rainwrit_stormseal_survey_cairn","asset_id":"resource_site_great_work_rainwrit_survey_cairn","region":Rect2(0,0,192,192)},
+	{"scenario_id":"hollowreed-moonwax-charter-race","prefix":"hollowreedworks","faction_id":"faction_mireclaw","town_id":"town_hollowreed_sanctuary","building_id":"building_mireclaw_hollowreed_moonwax_ossuary","site_id":"site_hollowreed_moonwax_foundation_totem","asset_id":"resource_site_great_work_hollowreed_foundation_totem","region":Rect2(192,0,192,192)},
+	{"scenario_id":"meridian-seven-facet-charter-race","prefix":"meridianworks","faction_id":"faction_sunvault","town_id":"town_meridian_choirhold","building_id":"building_sunvault_meridian_seven_facet_orrery","site_id":"site_meridian_seven_line_plumb_prism","asset_id":"resource_site_great_work_meridian_plumb_prism","region":Rect2(384,0,192,192)},
+	{"scenario_id":"crownroot-heartseed-charter-race","prefix":"crownrootworks","faction_id":"faction_thornwake","town_id":"town_crownroot_refuge","building_id":"building_thornwake_crownroot_heartseed_parliament","site_id":"site_crownroot_heartseed_boundary_arbor","asset_id":"resource_site_great_work_crownroot_boundary_arbor","region":Rect2(576,0,192,192)},
+	{"scenario_id":"blackbell-grand-assay-charter-race","prefix":"blackbellworks","faction_id":"faction_brasshollow","town_id":"town_blackbell_foundry","building_id":"building_brasshollow_blackbell_grand_assay_bell","site_id":"site_blackbell_grand_assay_tripod","asset_id":"resource_site_great_work_blackbell_assay_tripod","region":Rect2(768,0,192,192)},
+	{"scenario_id":"pale-sounding-last-memory-charter-race","prefix":"palesoundingworks","faction_id":"faction_veilmourn","town_id":"town_pale_sounding_harbor","building_id":"building_veilmourn_pale_sounding_last_memory_beacon","site_id":"site_pale_sounding_last_memory_marker","asset_id":"resource_site_great_work_pale_sounding_marker","region":Rect2(960,0,192,192)},
 ]
 
 var _errors: Array[String] = []
@@ -32,7 +32,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(288, 48), "Great-Work survey atlas must remain exactly 288x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(1152, 192), "Great-Work survey atlas must remain exactly 1152x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)

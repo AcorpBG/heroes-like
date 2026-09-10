@@ -16615,11 +16615,11 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Accepted 79 original encounter recoveries and six unchanged faction controls: 3178 checks per source resolution/platform, 60 complete-save comparisons, exact 231-failure predecessor art control, repository and official Linux/Windows exports pass. Three fail-closed tests protect the owner-approved pinned Day97 fixture. All 14 older domain failures reproduce in the predecessor; seven reports pass. 921/1214 accepted, 293 pending; continue artifact and remaining-family recovery.",
+  "currentNotes": "Accepted 54 original resource-site paintings across nine same-path atlases. Eight art tests, three fixture tests, 3046 checks per source resolution/platform, 52 complete-save comparisons, nine domain and five shared reports, repository/diff and both official exports pass. Exact predecessor fails only 162 art checks. 1044/1214 accepted, 170 pending; next hero/Town/other runtime families. Parent and child remain in_progress.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "art-overworld-cutout-runtime-pool-20260909",
   "currentSliceId": "art-overworld-cutout-runtime-pool-20260909",
-  "currentSliceNotes": "Artifact cohort accepted: 36 original-master recoveries, 33 clean field controls and all 69 inventory icons preserved. Eight art tests, three fixture tests, 3164 checks per source resolution/platform, 48 whole-save comparisons, six domain and five shared reports, repository/diff and both official exports pass. 990/1214 accepted; 224 pending. Continue 54 resource-site atlas rows and remaining families; parent and child remain in_progress.",
+  "currentSliceNotes": "Accepted 54 original resource-site paintings across nine same-path atlases. Eight art tests, three fixture tests, 3046 checks per source resolution/platform, 52 complete-save comparisons, nine domain and five shared reports, repository/diff and both official exports pass. Exact predecessor fails only 162 art checks. 1044/1214 accepted, 170 pending; next hero/Town/other runtime families. Parent and child remain in_progress.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Remaining Runtime-Pool Cutout Recovery",
   "currentSliceUpdatedAt": "2026-09-10T05:23:56.637541+00:00",
@@ -21929,101 +21929,84 @@
   },
   "guardrailNote": "Original-art recovery only; preserve exact identity, placement, footprint, interaction, saves and deterministic generation. No native/RMG rules, Town redesign, unrelated cleanup or fixed package-size ceiling.",
   "lastValidation": {
-    "id": "artifacts_20260910_accepted",
+    "id": "remaining_sites_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "completed",
-    "acceptedCohort": "artifacts",
+    "sliceStatus": "in_progress",
+    "acceptedCohort": "remaining_sites",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
     "runtimeChanges": {
-      "original_master_repairs": 36,
-      "clean_field_controls": 33,
-      "inventory_icons_unchanged": 69,
-      "runtime_files_changed": 3
+      "original_master_repairs": 54,
+      "runtime_files_changed": 9,
+      "source_alpha_and_other_rgb_preserved": true
     },
     "validation": {
       "python": "8 art tests and 3 pinned-fixture tests pass",
-      "source_and_packaged": "3164 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
-      "before": "108 exact art failures in unchanged 6e2d6c29 PCK; no unrelated failures",
-      "saves": "48 complete comparisons; 12 saves per run; only timestamps and fresh authored IDs excluded",
-      "domains": "Six existing artifact/domain reports pass",
-      "shared": "Five sprite/input/route/fog reports pass; first wrapper completed two before exit 143, separate continuation passes other three",
-      "repo": "pass: /tmp/heroes-artifact-repo-final-20260910.log; git diff --check passes",
-      "platforms": "Both official exports pass; Windows fresh-prefix generated-map/Town entry and cohort probe pass under headless Wine",
-      "payloads": "301907848 bytes / 5484 members each; only project.binary platform difference; 5479 unrelated payloads and 1178 other art rows exact",
-      "visual": "All six galleries, source 1280x720/1920x1080 and Linux gameplay inspected; genuine purple crystal/ink retained",
-      "receipt": ".artifacts/overworld_cutout_quality_20260909/artifact-acceptance.json"
+      "source_and_packaged": "3046 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
+      "before": "162 exact art failures in unchanged 418d30c4 PCK; no unrelated failures",
+      "saves": "52 complete comparisons; 13 saves per run; only cross-run timestamps and fresh authored IDs excluded",
+      "domains": "Nine existing affected domain reports pass",
+      "shared": "Five sprite/input/route/fog reports pass",
+      "repo": "pass: /tmp/heroes-remaining-sites-repo-20260910.log; git diff --check passes",
+      "platforms": "Both official exports pass; Windows fresh-prefix generated-map/Town construction and full cohort pass",
+      "visual": "54 source and recovered paintings, five in-engine galleries and actual small/wide gameplay inspected",
+      "packages": "303765448 bytes and 5484 members each; only project.binary differs across platforms; 5473 unrelated payloads and 1160 art rows unchanged"
     },
-    "accepted_dispositions": 990,
-    "remaining_dispositions": 224,
-    "approved_fixture_replacement": {
-      "original_path": ".artifacts/generated_full_match_quality_20260906/medium_match_11_continuation_01/data/godot/app_userdata/heroes-like/saves/autosave.json",
-      "original_sha256": "1734cf2274e00eb763b94db4f814f4ffc73e30bb9377a9225b36bcc3780e0fcc",
-      "surviving_manual_save": "/tmp/heroes-remaining-encounter-delivery-20260910/source_1280_clear_scout/native_saved_session.json",
-      "surviving_sha256": "d4b6cac54c25fc42456bdb7fdd3d4a9d0ed37fda8115dd63afe29d05b18bb1c1",
-      "substitution_used": true,
-      "owner_approved_at": "2026-09-10",
-      "pinned_path": "tests/fixtures/overworld_cutout/native_day97_roundtrip.json"
-    },
+    "evidence": ".artifacts/overworld_cutout_quality_20260909/remaining-site-acceptance.json",
+    "acceptedRuntimePoolDispositions": 1044,
+    "pendingRuntimePoolDispositions": 170,
     "limits": [
-      "Parent and child remain in_progress; not full-pool or release completion",
-      "Windows headless Wine is not physical GPU/controller certification",
-      "Four ordinary pickups; three guarded cases retain guards; detached galleries are separate coverage"
+      "Full pool and parent remain in_progress",
+      "Windows headless Wine is not GPU/controller certification",
+      "Native Day97 has zero selected resource-site placements; unchanged original blocker/save control only",
+      "Triune one-use shrine is consumed normally; persistent relay partly occluded by original town/hero; detached galleries are not earned gameplay"
     ]
   },
   "latestEvidence": {
-    "id": "artifacts_20260910_accepted",
+    "id": "remaining_sites_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "completed",
-    "acceptedCohort": "artifacts",
+    "sliceStatus": "in_progress",
+    "acceptedCohort": "remaining_sites",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
     "runtimeChanges": {
-      "original_master_repairs": 36,
-      "clean_field_controls": 33,
-      "inventory_icons_unchanged": 69,
-      "runtime_files_changed": 3
+      "original_master_repairs": 54,
+      "runtime_files_changed": 9,
+      "source_alpha_and_other_rgb_preserved": true
     },
     "validation": {
       "python": "8 art tests and 3 pinned-fixture tests pass",
-      "source_and_packaged": "3164 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
-      "before": "108 exact art failures in unchanged 6e2d6c29 PCK; no unrelated failures",
-      "saves": "48 complete comparisons; 12 saves per run; only timestamps and fresh authored IDs excluded",
-      "domains": "Six existing artifact/domain reports pass",
-      "shared": "Five sprite/input/route/fog reports pass; first wrapper completed two before exit 143, separate continuation passes other three",
-      "repo": "pass: /tmp/heroes-artifact-repo-final-20260910.log; git diff --check passes",
-      "platforms": "Both official exports pass; Windows fresh-prefix generated-map/Town entry and cohort probe pass under headless Wine",
-      "payloads": "301907848 bytes / 5484 members each; only project.binary platform difference; 5479 unrelated payloads and 1178 other art rows exact",
-      "visual": "All six galleries, source 1280x720/1920x1080 and Linux gameplay inspected; genuine purple crystal/ink retained",
-      "receipt": ".artifacts/overworld_cutout_quality_20260909/artifact-acceptance.json"
+      "source_and_packaged": "3046 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
+      "before": "162 exact art failures in unchanged 418d30c4 PCK; no unrelated failures",
+      "saves": "52 complete comparisons; 13 saves per run; only cross-run timestamps and fresh authored IDs excluded",
+      "domains": "Nine existing affected domain reports pass",
+      "shared": "Five sprite/input/route/fog reports pass",
+      "repo": "pass: /tmp/heroes-remaining-sites-repo-20260910.log; git diff --check passes",
+      "platforms": "Both official exports pass; Windows fresh-prefix generated-map/Town construction and full cohort pass",
+      "visual": "54 source and recovered paintings, five in-engine galleries and actual small/wide gameplay inspected",
+      "packages": "303765448 bytes and 5484 members each; only project.binary differs across platforms; 5473 unrelated payloads and 1160 art rows unchanged"
     },
-    "accepted_dispositions": 990,
-    "remaining_dispositions": 224,
-    "approved_fixture_replacement": {
-      "original_path": ".artifacts/generated_full_match_quality_20260906/medium_match_11_continuation_01/data/godot/app_userdata/heroes-like/saves/autosave.json",
-      "original_sha256": "1734cf2274e00eb763b94db4f814f4ffc73e30bb9377a9225b36bcc3780e0fcc",
-      "surviving_manual_save": "/tmp/heroes-remaining-encounter-delivery-20260910/source_1280_clear_scout/native_saved_session.json",
-      "surviving_sha256": "d4b6cac54c25fc42456bdb7fdd3d4a9d0ed37fda8115dd63afe29d05b18bb1c1",
-      "substitution_used": true,
-      "owner_approved_at": "2026-09-10",
-      "pinned_path": "tests/fixtures/overworld_cutout/native_day97_roundtrip.json"
-    },
+    "evidence": ".artifacts/overworld_cutout_quality_20260909/remaining-site-acceptance.json",
+    "acceptedRuntimePoolDispositions": 1044,
+    "pendingRuntimePoolDispositions": 170,
     "limits": [
-      "Parent and child remain in_progress; not full-pool or release completion",
-      "Windows headless Wine is not physical GPU/controller certification",
-      "Four ordinary pickups; three guarded cases retain guards; detached galleries are separate coverage"
+      "Full pool and parent remain in_progress",
+      "Windows headless Wine is not GPU/controller certification",
+      "Native Day97 has zero selected resource-site placements; unchanged original blocker/save control only",
+      "Triune one-use shrine is consumed normally; persistent relay partly occluded by original town/hero; detached galleries are not earned gameplay"
     ]
   },
   "latestEvidenceArtifacts": [
-    ".artifacts/overworld_cutout_quality_20260909/artifact-acceptance.json",
-    ".artifacts/overworld_cutout_quality_20260909/artifact_domains_current/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/artifact_shared_current/report.json",
-    ".artifacts/full_play_runtime_20260905/artifact_shared_remaining_20260910/report.json",
-    "/tmp/heroes-artifact-cutout-python-20260910.log",
-    "/tmp/heroes-artifact-repo-final-20260910.log",
-    "/tmp/heroes-artifact-linux-20260910/report.json",
-    "/tmp/heroes-artifact-windows-20260910/report.json"
+    ".artifacts/overworld_cutout_quality_20260909/remaining-site-acceptance.json",
+    ".artifacts/overworld_cutout_quality_20260909/remaining-sites-domain-20260910/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/remaining-sites-shared-20260910/report.json",
+    "/tmp/heroes-remaining-sites-python-20260910.log",
+    "/tmp/heroes-remaining-sites-repo-20260910.log",
+    "/tmp/heroes-remaining-sites-linux-20260910/report.json",
+    "/tmp/heroes-remaining-sites-windows-20260910/report.json"
   ],
   "latestEvidenceId": "art-overworld-cutout-runtime-pool-20260909",
-  "latestFinding": "Accepted 36 original artifact field recoveries and 33 clean controls; all 69 inventory icons unchanged. 3164 checks per source resolution/platform, 48 whole-save comparisons, six domain and five shared reports, repository/diff and both official exports pass. Exact 108-failure predecessor art control; no unrelated failures. 990/1214 accepted, 224 pending; continue remaining resource-site and hero/Town/other families.",
+  "latestFinding": "Accepted 54 original resource-site paintings across nine same-path atlases. Eight art tests, three fixture tests, 3046 checks per source resolution/platform, 52 complete-save comparisons, nine domain and five shared reports, repository/diff and both official exports pass. Exact predecessor fails only 162 art checks. 1044/1214 accepted, 170 pending; next hero/Town/other runtime families. Parent and child remain in_progress.",
   "metrics": {
     "scope": "Historical full-match checkpoint metrics retained below; these are not current release metrics. Current art-goal acceptance is in latestEvidence and validation.",
     "audit_only": false,
@@ -22251,10 +22234,14 @@
         "python3 -B tests/overworld_cutout_batch_regression.py --batch remaining_encounters --resolution 1280x720 --label <fresh>",
         "python3 -B tests/overworld_cutout_batch_regression.py --batch remaining_encounters --resolution 1920x1080 --label <fresh>",
         "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch remaining_encounters --platform linux --binary <official-release-binary> --pack <matching-release-pck> --label <fresh>",
-        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch remaining_encounters --platform windows --binary <official-release-binary> --pack <matching-release-pck> --label <fresh> --wine-prefix <fresh-prefix>"
+        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch remaining_encounters --platform windows --binary <official-release-binary> --pack <matching-release-pck> --label <fresh> --wine-prefix <fresh-prefix>",
+        "python3 -B -m unittest discover -s tests -p test_overworld_remaining_site_cutouts.py",
+        "python3 -B tests/overworld_cutout_batch_regression.py --batch remaining_sites --resolution <1280x720|1920x1080> --label <fresh>",
+        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch remaining_sites --platform linux --binary <official-release-binary> --pack <matching-release-pck> --label <fresh>",
+        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch remaining_sites --platform windows --binary <official-release-binary> --pack <matching-release-pck> --label <fresh> --wine-prefix <fresh-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-10T07:04:12Z",
+      "updatedAt": "2026-09-10T07:35:22Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22300,9 +22287,11 @@
         "tests/overworld_remaining_encounter_cutout_probe.py",
         "art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/recipe.json",
         "tools/prepare_overworld_artifact_cutouts.py; 36 original-master atlas recoveries, 33 clean standalone field controls, unchanged inventory icons and historical source provenance",
-        "tests/test_overworld_artifact_cutouts.py and tests/overworld_artifact_cutout_probe.py; all 69 identity routes, ordinary scouting/pickup, complete saves and Linux/Windows acceptance"
+        "tests/test_overworld_artifact_cutouts.py and tests/overworld_artifact_cutout_probe.py; all 69 identity routes, ordinary scouting/pickup, complete saves and Linux/Windows acceptance",
+        "tools/prepare_overworld_remaining_site_cutouts.py; 54 original resource-site paintings across nine atlases, historical fit/anchor and preserved source provenance",
+        "tests/test_overworld_remaining_site_cutouts.py and tests/overworld_remaining_site_cutout_probe.py; exact state routes, ordinary scouting/claiming, full saves and both-platform acceptance"
       ],
-      "notes": "Artifact cohort accepted: 36 original-master recoveries, 33 clean field controls and all 69 inventory icons preserved. Eight art tests, three fixture tests, 3164 checks per source resolution/platform, 48 whole-save comparisons, six domain and five shared reports, repository/diff and both official exports pass. 990/1214 accepted; 224 pending. Continue 54 resource-site atlas rows and remaining families; parent and child remain in_progress.",
+      "notes": "Accepted 54 original resource-site paintings across nine same-path atlases. Eight art tests, three fixture tests, 3046 checks per source resolution/platform, 52 complete-save comparisons, nine domain and five shared reports, repository/diff and both official exports pass. Exact predecessor fails only 162 art checks. 1044/1214 accepted, 170 pending; next hero/Town/other runtime families. Parent and child remain in_progress.",
       "startedAt": "2026-09-09T16:04:51Z"
     },
     {
@@ -110951,8 +110940,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Inspect/recover 54 remaining resource-site atlas rows, then hero/Town/other families; preserve clean originals and all gameplay/native/save/placement authority. 990/1214 accepted, 224 pending. Parent and child remain in_progress.",
-  "remainingWork": "Inspect/recover 54 remaining resource-site atlas rows, then hero/Town/other families; preserve clean originals and all gameplay/native/save/placement authority. 990/1214 accepted, 224 pending. Parent and child remain in_progress.",
+  "remainingGap": "Inspect/recover remaining hero/Town/other runtime families; preserve clean original paint and all gameplay/native/save/placement authority. 1044/1214 accepted, 170 pending. Parent and child remain in_progress.",
+  "remainingWork": "Inspect/recover remaining hero/Town/other runtime families; preserve clean original paint and all gameplay/native/save/placement authority. 1044/1214 accepted, 170 pending. Parent and child remain in_progress.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -111490,7 +111479,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "artifact_recovery_accepted_runtime_pool_in_progress",
+  "result": "remaining_site_recovery_accepted_runtime_pool_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -111591,49 +111580,41 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Accepted 36 original artifact field recoveries and 33 clean controls; all 69 inventory icons unchanged. 3164 checks per source resolution/platform, 48 whole-save comparisons, six domain and five shared reports, repository/diff and both official exports pass. Exact 108-failure predecessor art control; no unrelated failures. 990/1214 accepted, 224 pending; continue remaining resource-site and hero/Town/other families.",
+  "summary": "Accepted 54 original resource-site paintings across nine same-path atlases. Eight art tests, three fixture tests, 3046 checks per source resolution/platform, 52 complete-save comparisons, nine domain and five shared reports, repository/diff and both official exports pass. Exact predecessor fails only 162 art checks. 1044/1214 accepted, 170 pending; next hero/Town/other runtime families. Parent and child remain in_progress.",
   "taskId": "10236",
-  "updatedAt": "2026-09-10T07:04:12Z",
+  "updatedAt": "2026-09-10T07:35:22Z",
   "validation": {
-    "id": "artifacts_20260910_accepted",
+    "id": "remaining_sites_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "completed",
-    "acceptedCohort": "artifacts",
+    "sliceStatus": "in_progress",
+    "acceptedCohort": "remaining_sites",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
     "runtimeChanges": {
-      "original_master_repairs": 36,
-      "clean_field_controls": 33,
-      "inventory_icons_unchanged": 69,
-      "runtime_files_changed": 3
+      "original_master_repairs": 54,
+      "runtime_files_changed": 9,
+      "source_alpha_and_other_rgb_preserved": true
     },
     "validation": {
       "python": "8 art tests and 3 pinned-fixture tests pass",
-      "source_and_packaged": "3164 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
-      "before": "108 exact art failures in unchanged 6e2d6c29 PCK; no unrelated failures",
-      "saves": "48 complete comparisons; 12 saves per run; only timestamps and fresh authored IDs excluded",
-      "domains": "Six existing artifact/domain reports pass",
-      "shared": "Five sprite/input/route/fog reports pass; first wrapper completed two before exit 143, separate continuation passes other three",
-      "repo": "pass: /tmp/heroes-artifact-repo-final-20260910.log; git diff --check passes",
-      "platforms": "Both official exports pass; Windows fresh-prefix generated-map/Town entry and cohort probe pass under headless Wine",
-      "payloads": "301907848 bytes / 5484 members each; only project.binary platform difference; 5479 unrelated payloads and 1178 other art rows exact",
-      "visual": "All six galleries, source 1280x720/1920x1080 and Linux gameplay inspected; genuine purple crystal/ink retained",
-      "receipt": ".artifacts/overworld_cutout_quality_20260909/artifact-acceptance.json"
+      "source_and_packaged": "3046 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
+      "before": "162 exact art failures in unchanged 418d30c4 PCK; no unrelated failures",
+      "saves": "52 complete comparisons; 13 saves per run; only cross-run timestamps and fresh authored IDs excluded",
+      "domains": "Nine existing affected domain reports pass",
+      "shared": "Five sprite/input/route/fog reports pass",
+      "repo": "pass: /tmp/heroes-remaining-sites-repo-20260910.log; git diff --check passes",
+      "platforms": "Both official exports pass; Windows fresh-prefix generated-map/Town construction and full cohort pass",
+      "visual": "54 source and recovered paintings, five in-engine galleries and actual small/wide gameplay inspected",
+      "packages": "303765448 bytes and 5484 members each; only project.binary differs across platforms; 5473 unrelated payloads and 1160 art rows unchanged"
     },
-    "accepted_dispositions": 990,
-    "remaining_dispositions": 224,
-    "approved_fixture_replacement": {
-      "original_path": ".artifacts/generated_full_match_quality_20260906/medium_match_11_continuation_01/data/godot/app_userdata/heroes-like/saves/autosave.json",
-      "original_sha256": "1734cf2274e00eb763b94db4f814f4ffc73e30bb9377a9225b36bcc3780e0fcc",
-      "surviving_manual_save": "/tmp/heroes-remaining-encounter-delivery-20260910/source_1280_clear_scout/native_saved_session.json",
-      "surviving_sha256": "d4b6cac54c25fc42456bdb7fdd3d4a9d0ed37fda8115dd63afe29d05b18bb1c1",
-      "substitution_used": true,
-      "owner_approved_at": "2026-09-10",
-      "pinned_path": "tests/fixtures/overworld_cutout/native_day97_roundtrip.json"
-    },
+    "evidence": ".artifacts/overworld_cutout_quality_20260909/remaining-site-acceptance.json",
+    "acceptedRuntimePoolDispositions": 1044,
+    "pendingRuntimePoolDispositions": 170,
     "limits": [
-      "Parent and child remain in_progress; not full-pool or release completion",
-      "Windows headless Wine is not physical GPU/controller certification",
-      "Four ordinary pickups; three guarded cases retain guards; detached galleries are separate coverage"
+      "Full pool and parent remain in_progress",
+      "Windows headless Wine is not GPU/controller certification",
+      "Native Day97 has zero selected resource-site placements; unchanged original blocker/save control only",
+      "Triune one-use shrine is consumed normally; persistent relay partly occluded by original town/hero; detached galleries are not earned gameplay"
     ]
   },
   "validationHistory": [

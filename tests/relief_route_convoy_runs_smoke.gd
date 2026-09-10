@@ -10,12 +10,12 @@ const OUTPUT_DIR := "res://.artifacts/relief_route_convoy_runs_smoke"
 const REPORT_PATH := OUTPUT_DIR + "/report.json"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png"
 const CASES := [
-	{"scenario_id":"tollbrand-locklantern-relief-run","prefix":"locklantern","site_id":"site_embercourt_locklantern_convoy_relay","asset_id":"resource_site_relief_route_embercourt_relay","region":Rect2(0,0,48,48)},
-	{"scenario_id":"mudkeel-antlerraft-relief-run","prefix":"antlerraft","site_id":"site_mireclaw_antlerraft_convoy_relay","asset_id":"resource_site_relief_route_mireclaw_relay","region":Rect2(48,0,48,48)},
-	{"scenario_id":"choirward-prismwheel-relief-run","prefix":"prismwheel","site_id":"site_sunvault_prismwheel_convoy_relay","asset_id":"resource_site_relief_route_sunvault_relay","region":Rect2(96,0,48,48)},
-	{"scenario_id":"mossvein-seedcart-relief-run","prefix":"seedcart","site_id":"site_thornwake_seedcart_convoy_relay","asset_id":"resource_site_relief_route_thornwake_relay","region":Rect2(144,0,48,48)},
-	{"scenario_id":"varn-quenchrail-relief-run","prefix":"quenchrail","site_id":"site_brasshollow_quenchrail_convoy_relay","asset_id":"resource_site_relief_route_brasshollow_relay","region":Rect2(192,0,48,48)},
-	{"scenario_id":"keelwarden-wakeglass-relief-run","prefix":"wakeglass","site_id":"site_veilmourn_wakeglass_convoy_relay","asset_id":"resource_site_relief_route_veilmourn_relay","region":Rect2(240,0,48,48)},
+	{"scenario_id":"tollbrand-locklantern-relief-run","prefix":"locklantern","site_id":"site_embercourt_locklantern_convoy_relay","asset_id":"resource_site_relief_route_embercourt_relay","region":Rect2(0,0,192,192)},
+	{"scenario_id":"mudkeel-antlerraft-relief-run","prefix":"antlerraft","site_id":"site_mireclaw_antlerraft_convoy_relay","asset_id":"resource_site_relief_route_mireclaw_relay","region":Rect2(192,0,192,192)},
+	{"scenario_id":"choirward-prismwheel-relief-run","prefix":"prismwheel","site_id":"site_sunvault_prismwheel_convoy_relay","asset_id":"resource_site_relief_route_sunvault_relay","region":Rect2(384,0,192,192)},
+	{"scenario_id":"mossvein-seedcart-relief-run","prefix":"seedcart","site_id":"site_thornwake_seedcart_convoy_relay","asset_id":"resource_site_relief_route_thornwake_relay","region":Rect2(576,0,192,192)},
+	{"scenario_id":"varn-quenchrail-relief-run","prefix":"quenchrail","site_id":"site_brasshollow_quenchrail_convoy_relay","asset_id":"resource_site_relief_route_brasshollow_relay","region":Rect2(768,0,192,192)},
+	{"scenario_id":"keelwarden-wakeglass-relief-run","prefix":"wakeglass","site_id":"site_veilmourn_wakeglass_convoy_relay","asset_id":"resource_site_relief_route_veilmourn_relay","region":Rect2(960,0,192,192)},
 ]
 
 var _errors: Array[String] = []
@@ -31,7 +31,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(288, 48), "Relief-route relay atlas must remain exactly 288x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(1152, 192), "Relief-route relay atlas must remain exactly 1152x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)
