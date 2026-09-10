@@ -1,0 +1,1266 @@
+{
+  "schema_id": "town_cutout_recipe_v1",
+  "baseline_commit": "156145059de8b9ef127bfd88904db82e4a60358d",
+  "assets": {
+    "frontier_town": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/frontier_town.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/towns/frontier_town-trimmed.png"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/frontier_town.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/trimmed/towns/frontier_town-trimmed.png": "09fc1734921bd54103c7519fd18e3302f922e36eac013d691c3e5c0f97b63e7a"
+      },
+      "before_sha256": "2af9819fd72ed1ce208f72aebd2553f36cc4b448fdf9794095fb262cd1633624"
+    },
+    "town_faction_embercourt": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/factions/embercourt.png",
+        "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/factions/embercourt.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/faction_town_sprite_atlas.png": "627c5f93242e2f179880985ec91ac8b56fff946da7cb2fdc421a260813077cd5"
+      },
+      "before_sha256": "e9d8998b42f7f22f42bd1330550ee524f79bc81341998128795a0492eca77ee9"
+    },
+    "town_faction_mireclaw": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/factions/mireclaw.png",
+        "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/factions/mireclaw.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/faction_town_sprite_atlas.png": "627c5f93242e2f179880985ec91ac8b56fff946da7cb2fdc421a260813077cd5"
+      },
+      "before_sha256": "52c34e0fba7f6275627b30058e00cf486311d8042a6dcaee18903004d6ea5dde"
+    },
+    "town_faction_sunvault": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/factions/sunvault.png",
+        "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/factions/sunvault.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/faction_town_sprite_atlas.png": "627c5f93242e2f179880985ec91ac8b56fff946da7cb2fdc421a260813077cd5"
+      },
+      "before_sha256": "cf2bf29fedc3531144e3dee3a0ab561e363eb7af52139f15702a7a682b5f48dd"
+    },
+    "town_faction_thornwake": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/factions/thornwake.png",
+        "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/factions/thornwake.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/faction_town_sprite_atlas.png": "627c5f93242e2f179880985ec91ac8b56fff946da7cb2fdc421a260813077cd5"
+      },
+      "before_sha256": "875881aab052eb018f12c4af23e8bff80c08d4ff775d72ee33af178b315d4138"
+    },
+    "town_faction_brasshollow": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/factions/brasshollow.png",
+        "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/factions/brasshollow.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/faction_town_sprite_atlas.png": "627c5f93242e2f179880985ec91ac8b56fff946da7cb2fdc421a260813077cd5"
+      },
+      "before_sha256": "70088f1c59fa371e0b7c2187a50583fd7bc83c95270fc526e408d3cda4e031b3"
+    },
+    "town_faction_veilmourn": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/factions/veilmourn.png",
+        "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/factions/veilmourn.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/faction_town_sprite_atlas.png": "627c5f93242e2f179880985ec91ac8b56fff946da7cb2fdc421a260813077cd5"
+      },
+      "before_sha256": "e89e68f9ab030b22a397caa0019439ff1dc623dae8254f4bcd249e105db8db44"
+    },
+    "town_identity_riverwatch": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_riverwatch.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_riverwatch_source.png",
+        "source_model": "built_in_image_gen_original_landset_edit_with_transparent_extraction",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "assigned_town_id": "town_riverwatch",
+        "accessible_description": "A broad grey-stone Embercourt frontier fortress with red roofs, gold flame banners, a beacon tower, and an irregular grass-and-dirt settlement edge."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_riverwatch.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_riverwatch_source.png": "149f16b8199ddb58dc6bade60d7d6f7456fcaba38501d4945c908431b5da0405"
+      },
+      "before_sha256": "8b3d5d36082665384a3c42ba55297222f93f86b436e03a981270a557fb540aed"
+    },
+    "town_identity_duskfen": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_duskfen.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_duskfen_source.png",
+        "source_model": "built_in_image_gen_original_landmark",
+        "assigned_town_id": "town_duskfen"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_duskfen.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_duskfen_source.png": "5bdbfbd29f44790ab0679d8c0bafa1a192cc90a1f357ba4c134f11684accc78d"
+      },
+      "before_sha256": "de9e37b32f38e360d7c6691753b0f897549fa39d569db6bd887ee4503b535a37"
+    },
+    "town_identity_blackfen_gate": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_blackfen_gate.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_blackfen_gate_source.png",
+        "source_model": "built_in_image_gen_original_landmark",
+        "assigned_town_id": "town_blackfen_gate"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_blackfen_gate.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_blackfen_gate_source.png": "fad25b22c2a61b2c4a29866f218bf98107d48ac18861714c74ff28a5b42a0d35"
+      },
+      "before_sha256": "6d7277695da28d6b7f337689707b8ed63d92cf993b10cd317e6a2d2a899417bb"
+    },
+    "town_identity_highwater_keep": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_highwater_keep.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_highwater_keep_source.png",
+        "source_model": "built_in_image_gen_original_landmark",
+        "assigned_town_id": "town_highwater_keep"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_highwater_keep.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_highwater_keep_source.png": "85b5714ce38579026293bfcd3bf9eb606ecaab410c637fb5f7258f3467634df2"
+      },
+      "before_sha256": "b7e6d2730e171f8113458b86cf975d4748bd8d9f530b00ed9db3bc781631c798"
+    },
+    "town_identity_murkward_ford": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_murkward_ford.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_murkward_ford_source.png",
+        "source_model": "built_in_image_gen_original_landmark",
+        "assigned_town_id": "town_murkward_ford"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_murkward_ford.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_murkward_ford_source.png": "47cd2965248d266123d36529bfdebe34c771cefd9f0033cc8a4719ca5c6a0c72"
+      },
+      "before_sha256": "21364bab853ffef7df2cc5fc61b244ca6f2494abc6a37ebcc46e2579b2c24c8b"
+    },
+    "town_identity_reedbarrow_ferry": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_reedbarrow_ferry.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_reedbarrow_ferry_source.png",
+        "source_model": "built_in_image_gen_original_landmark",
+        "assigned_town_id": "town_reedbarrow_ferry"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_reedbarrow_ferry.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_reedbarrow_ferry_source.png": "3e92fa0557d7ba8f69d8f09f025b1b2185b4f1058ecaf7e468adbdb9dcd1f7d1"
+      },
+      "before_sha256": "20f2784d386f2a1151cce479fbb4bcb9ae938be8fa15b42d486091023c032394"
+    },
+    "town_identity_nightglass_redoubt": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_nightglass_redoubt.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_nightglass_redoubt_source.png",
+        "source_model": "built_in_image_gen_original_landmark",
+        "assigned_town_id": "town_nightglass_redoubt"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_nightglass_redoubt.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_nightglass_redoubt_source.png": "24adeff77925a276b93355d70b6ca8661ff61ff4a0baf1b1a0c2e5bb4ad81e01"
+      },
+      "before_sha256": "b3e8b39fee3cfd39a51d80f7583b2e5bb174152446398690f9ec9d4935ec7e34"
+    },
+    "town_identity_prismhearth": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_prismhearth.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_prismhearth_source.png",
+        "source_model": "built_in_image_gen_original_landmark",
+        "assigned_town_id": "town_prismhearth"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_prismhearth.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_prismhearth_source.png": "826a1bd3d33240cab86151900788aa1a5c94b5938e7b2158781c7a3259ed71cc"
+      },
+      "before_sha256": "8aa29828a785fb58adc61ef11b05544209a5f4d3749ddf5dfa14a613ccca16bf"
+    },
+    "town_identity_halo_spire": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_halo_spire.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_halo_spire_source.png",
+        "source_model": "built_in_image_gen_original_landmark",
+        "assigned_town_id": "town_halo_spire"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_halo_spire.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_halo_spire_source.png": "7f49473c8bac8ad99a8c5dcbca9079e08b8a617bd25c7a5fdd10d7366108623b"
+      },
+      "before_sha256": "ee6010531dc662356ad1e3eb32fc501bf904727cfc81f0b89832fb411e80bbd0"
+    },
+    "town_identity_thornwake_graftroot_caravan": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_thornwake_graftroot_caravan.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_thornwake_graftroot_caravan_source.png",
+        "source_model": "built_in_image_gen_original_landmark",
+        "assigned_town_id": "town_thornwake_graftroot_caravan"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_thornwake_graftroot_caravan.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_thornwake_graftroot_caravan_source.png": "adf48119fe76de23421b94efdd5e6523a8007d2bc5debec42092e59d70ed019e"
+      },
+      "before_sha256": "6e499b0148c007cf0671f63d8b39f6e8e75d0c22c81e7d0a6a5c93680ab4b2e5"
+    },
+    "town_identity_thornwake_rootgate_nursery": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_thornwake_rootgate_nursery.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_thornwake_rootgate_nursery_source.png",
+        "source_model": "built_in_image_gen_original_landmark",
+        "assigned_town_id": "town_thornwake_rootgate_nursery"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_thornwake_rootgate_nursery.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_thornwake_rootgate_nursery_source.png": "045941eac1e3d7f3b924d7586393a27757ff34c87c9085d9fc0ffb5aa66d06e7"
+      },
+      "before_sha256": "3e459922cfe7225fc56cc45aff41b0549ae4219c7dc096ed755a3a1d6e8d93f2"
+    },
+    "town_identity_brasshollow_orevein_gantry": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_brasshollow_orevein_gantry.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_brasshollow_orevein_gantry_source.png",
+        "source_model": "built_in_image_gen_original_landmark",
+        "assigned_town_id": "town_brasshollow_orevein_gantry"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_brasshollow_orevein_gantry.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_brasshollow_orevein_gantry_source.png": "e9becc4fbc054c52a7972d0fcf0a7684f79a5556ed7f800bc6a8c88b0068ef09"
+      },
+      "before_sha256": "9a477d4d2086d68d0d2e94ca087bee6f8bafc4ad96e7016f897fb8bf5d8a451f"
+    },
+    "town_identity_brasshollow_clauseworks_depot": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_brasshollow_clauseworks_depot.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_brasshollow_clauseworks_depot_source.png",
+        "source_model": "built_in_image_gen_original_landmark",
+        "assigned_town_id": "town_brasshollow_clauseworks_depot"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_brasshollow_clauseworks_depot.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_brasshollow_clauseworks_depot_source.png": "40aad694562019aeb5659d22a359a035c272f2f56e167ed47d7bf1b9de4191e0"
+      },
+      "before_sha256": "c0d69f5e74dd9be5ca9fd2155b16721017797976d10d98605a7c5c6a880fd66c"
+    },
+    "town_identity_veilmourn_bellwake_harbor": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_veilmourn_bellwake_harbor.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_veilmourn_bellwake_harbor_source.png",
+        "source_model": "built_in_image_gen_original_landmark",
+        "assigned_town_id": "town_veilmourn_bellwake_harbor"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_veilmourn_bellwake_harbor.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_veilmourn_bellwake_harbor_source.png": "3c94d344ec8cae0f9d5f1f62ecdc88b29a61c014070ba9202147f563ffc8da12"
+      },
+      "before_sha256": "bcdaa2e369ec4b9879cf8e8eb622a00f34aeea0425c0670da8a20b8f4c947d52"
+    },
+    "town_identity_veilmourn_fogchart_mooring": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity/town_veilmourn_fogchart_mooring.png",
+        "source_generated": "res://art/overworld/source/generated/towns/identity/town_veilmourn_fogchart_mooring_source.png",
+        "source_model": "built_in_image_gen_original_landmark",
+        "assigned_town_id": "town_veilmourn_fogchart_mooring"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity/town_veilmourn_fogchart_mooring.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/identity/town_veilmourn_fogchart_mooring_source.png": "8eb269a23607d81b379a9d3414d2e4b12ce5532ef08420fa6ab8b16960c1ed1c"
+      },
+      "before_sha256": "952732d8202cc6f784e55148d2bc4491fd699f972361fd7622536591c703d408"
+    },
+    "town_identity_cinderlock_bastion": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "atlas_size": [
+          640,
+          128
+        ],
+        "source_generated": "res://art/overworld/source/generated/towns/third_hearths/town_cinderlock_bastion_source.png",
+        "source_model": "built_in_image_gen_original_third_hearth_town_atlas",
+        "assigned_town_id": "town_cinderlock_bastion",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "ember_canal_lock_fort",
+        "accessible_description": "A compact red-roofed stone lock fort spans an ember canal beneath copper beacons."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+      "mode": "town_atlas",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/third_hearths/town_cinderlock_bastion_source.png": "fac7a7d9d7e146fd269da69d323919e5e05d6e35004b5d6c7e25ab4423537d95"
+      },
+      "before_sha256": "c054da2c457b1401effb570a15e9dcdcda3a15ed85be69da4eb136e035c245c1",
+      "source_crop": [
+        57,
+        11,
+        1224,
+        1254
+      ],
+      "source_resize": [
+        113,
+        120
+      ],
+      "canvas_origin": [
+        7,
+        4
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_sha256": "95d1467778386a9ee61b773c3e172883eb4a8f8501857ed82e0ee3b3676921d3",
+      "low_alpha_rgb_pixels": 3859,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_cinderlock_bastion.png",
+      "historical_registration": {
+        "alpha_mae": 0.28778076171875,
+        "opaque_rgb_mae": 0.9730144670800117
+      }
+    },
+    "town_identity_dawnmirror_observatory": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+        "atlas_region": [
+          128,
+          0,
+          128,
+          128
+        ],
+        "atlas_size": [
+          640,
+          128
+        ],
+        "source_generated": "res://art/overworld/source/generated/towns/third_hearths/town_dawnmirror_observatory_source.png",
+        "source_model": "built_in_image_gen_original_third_hearth_town_atlas",
+        "assigned_town_id": "town_dawnmirror_observatory",
+        "assigned_faction_id": "faction_sunvault",
+        "presentation_role": "great_sunrise_mirror_observatory",
+        "accessible_description": "An ivory observatory gathers around a broad gold-rimmed dawn mirror and twin blue prism towers."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+      "mode": "town_atlas",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/third_hearths/town_dawnmirror_observatory_source.png": "be57983292e56568663932c0c782caab066f7ec14a7bb5bb8ec21d33566dc971"
+      },
+      "before_sha256": "c054da2c457b1401effb570a15e9dcdcda3a15ed85be69da4eb136e035c245c1",
+      "source_crop": [
+        0,
+        15,
+        1220,
+        1254
+      ],
+      "source_resize": [
+        118,
+        120
+      ],
+      "canvas_origin": [
+        5,
+        4
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_sha256": "a02e3b72a4e909887ee13ef4ec293612719635888a3e9263baf973f737958189",
+      "low_alpha_rgb_pixels": 8829,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_dawnmirror_observatory.png",
+      "historical_registration": {
+        "alpha_mae": 0.38714599609375,
+        "opaque_rgb_mae": 1.2163908852860885
+      }
+    },
+    "town_identity_briarwheel_enclave": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+        "atlas_region": [
+          256,
+          0,
+          128,
+          128
+        ],
+        "atlas_size": [
+          640,
+          128
+        ],
+        "source_generated": "res://art/overworld/source/generated/towns/third_hearths/town_briarwheel_enclave_source.png",
+        "source_model": "built_in_image_gen_original_third_hearth_town_atlas",
+        "assigned_town_id": "town_briarwheel_enclave",
+        "assigned_faction_id": "faction_thornwake",
+        "presentation_role": "living_root_wheel_enclave",
+        "accessible_description": "A vast circular root wheel holds mossy homes, amber seed lanterns, and antlered branch towers."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+      "mode": "town_atlas",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/third_hearths/town_briarwheel_enclave_source.png": "1bc247f32b418750f472d22ef79ebefa750b8ddbaf151921968d717baaaa4a82"
+      },
+      "before_sha256": "c054da2c457b1401effb570a15e9dcdcda3a15ed85be69da4eb136e035c245c1",
+      "source_crop": [
+        0,
+        7,
+        1240,
+        1254
+      ],
+      "source_resize": [
+        119,
+        120
+      ],
+      "canvas_origin": [
+        4,
+        4
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_sha256": "6d6318af71475066482ee2b253a8dea102cb368487282a67b8aa75157c57ba71",
+      "low_alpha_rgb_pixels": 1639,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_briarwheel_enclave.png",
+      "historical_registration": {
+        "alpha_mae": 0.6533203125,
+        "opaque_rgb_mae": 0.7708976650956173
+      }
+    },
+    "town_identity_cindercoil_foundry": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+        "atlas_region": [
+          384,
+          0,
+          128,
+          128
+        ],
+        "atlas_size": [
+          640,
+          128
+        ],
+        "source_generated": "res://art/overworld/source/generated/towns/third_hearths/town_cindercoil_foundry_source.png",
+        "source_model": "built_in_image_gen_original_third_hearth_town_atlas",
+        "assigned_town_id": "town_cindercoil_foundry",
+        "assigned_faction_id": "faction_brasshollow",
+        "presentation_role": "pressure_coil_foundry_fortress",
+        "accessible_description": "A black-brick foundry fortress wraps furnaces and gantries around one immense glowing copper coil."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+      "mode": "town_atlas",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/third_hearths/town_cindercoil_foundry_source.png": "2186adb7f28c7776a818ef4ee5bc82162d407922f7187658a980b0557c25a7be"
+      },
+      "before_sha256": "c054da2c457b1401effb570a15e9dcdcda3a15ed85be69da4eb136e035c245c1",
+      "source_crop": [
+        0,
+        0,
+        1244,
+        1254
+      ],
+      "source_resize": [
+        119,
+        120
+      ],
+      "canvas_origin": [
+        4,
+        4
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_sha256": "2f88a7f067d61064f79a3aed53ce26b2beaf818f3298f6ab9431194177f0f6ce",
+      "low_alpha_rgb_pixels": 2247,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_cindercoil_foundry.png",
+      "historical_registration": {
+        "alpha_mae": 0.48492431640625,
+        "opaque_rgb_mae": 0.9112736822359783
+      }
+    },
+    "town_identity_gloamwake_anchorage": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+        "atlas_region": [
+          512,
+          0,
+          128,
+          128
+        ],
+        "atlas_size": [
+          640,
+          128
+        ],
+        "source_generated": "res://art/overworld/source/generated/towns/third_hearths/town_gloamwake_anchorage_source.png",
+        "source_model": "built_in_image_gen_original_third_hearth_town_atlas",
+        "assigned_town_id": "town_gloamwake_anchorage",
+        "assigned_faction_id": "faction_veilmourn",
+        "presentation_role": "spectral_rib_drydock_anchorage",
+        "accessible_description": "A moonlit ghost-dock rises through colossal ship ribs beneath teal sails and a silver mourning bell."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+      "mode": "town_atlas",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/third_hearths/town_gloamwake_anchorage_source.png": "0648e03af7cee2e4edaa7169530ffd22add5464660b6d7beeeb5542007618e9e"
+      },
+      "before_sha256": "c054da2c457b1401effb570a15e9dcdcda3a15ed85be69da4eb136e035c245c1",
+      "source_crop": [
+        0,
+        13,
+        1222,
+        1254
+      ],
+      "source_resize": [
+        118,
+        120
+      ],
+      "canvas_origin": [
+        5,
+        4
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_sha256": "483aa8432944194b2b518180708d71fdb0d7b2908ecb6cb1642e2d1579893236",
+      "low_alpha_rgb_pixels": 2063,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_gloamwake_anchorage.png",
+      "historical_registration": {
+        "alpha_mae": 0.5224609375,
+        "opaque_rgb_mae": 1.023452653852936
+      }
+    },
+    "town_identity_rainwrit_bastion": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "atlas_size": [
+          768,
+          128
+        ],
+        "runtime_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+        "source_generated": "res://art/overworld/source/generated/towns/horizon_citadels/town_rainwrit_bastion_source.png",
+        "source_sha256": "875251e9e0413a3d52f1743267d7df4d57e62e74113deb8429c27c6cd2bb65c7",
+        "source_model": "built_in_image_gen_original_horizon_citadel_atlas",
+        "assigned_town_id": "town_rainwrit_bastion",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "rain_dark_bronze_floodgate_bastion",
+        "accessible_description": "A sandstone lock fortress spans three bronze floodgates beneath blue roofs and amber beacon fires."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+      "mode": "town_atlas",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/horizon_citadels/town_rainwrit_bastion_source.png": "875251e9e0413a3d52f1743267d7df4d57e62e74113deb8429c27c6cd2bb65c7",
+        "res://art/overworld/source/generated/towns/horizon_citadels/manifest.json": "f6da60698dd96dcb5bc409f23b0b3530a2bf37aa02a98a77d29f4c1ce7667f80"
+      },
+      "before_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+      "source_crop": [
+        0,
+        9,
+        1244,
+        1254
+      ],
+      "source_resize": [
+        112,
+        112
+      ],
+      "canvas_origin": [
+        8,
+        8
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_sha256": "da02f02afcbb8686b4a1be8afac75ee3606730ee4204727da5c00c9c14276a24",
+      "low_alpha_rgb_pixels": 2302,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_rainwrit_bastion.png",
+      "historical_registration": {
+        "alpha_mae": 0.31158447265625,
+        "opaque_rgb_mae": 1.0700712589073633
+      }
+    },
+    "town_identity_hollowreed_sanctuary": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+        "atlas_region": [
+          128,
+          0,
+          128,
+          128
+        ],
+        "atlas_size": [
+          768,
+          128
+        ],
+        "runtime_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+        "source_generated": "res://art/overworld/source/generated/towns/horizon_citadels/town_hollowreed_sanctuary_source.png",
+        "source_sha256": "7f09c60a4b5c3722773d4db9933e25ecb6fde0db66b990de0ce562a560128b62",
+        "source_model": "built_in_image_gen_original_horizon_citadel_atlas",
+        "assigned_town_id": "town_hollowreed_sanctuary",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "fungus_lit_reedstone_oath_sanctuary",
+        "accessible_description": "Tiered reedstone huts and bridges climb toward a tall oval oath shrine among green and violet bog lamps."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+      "mode": "town_atlas",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/horizon_citadels/town_hollowreed_sanctuary_source.png": "7f09c60a4b5c3722773d4db9933e25ecb6fde0db66b990de0ce562a560128b62",
+        "res://art/overworld/source/generated/towns/horizon_citadels/manifest.json": "f6da60698dd96dcb5bc409f23b0b3530a2bf37aa02a98a77d29f4c1ce7667f80"
+      },
+      "before_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+      "source_crop": [
+        0,
+        0,
+        1244,
+        1254
+      ],
+      "source_resize": [
+        111,
+        112
+      ],
+      "canvas_origin": [
+        8,
+        8
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_sha256": "ac1ffb21f58fb5f9e1a309ab930fcd97590f5a59e56ebcd5b212e814a306a9a3",
+      "low_alpha_rgb_pixels": 2834,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_hollowreed_sanctuary.png",
+      "historical_registration": {
+        "alpha_mae": 0.517578125,
+        "opaque_rgb_mae": 0.8787380874137365
+      }
+    },
+    "town_identity_meridian_choirhold": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+        "atlas_region": [
+          256,
+          0,
+          128,
+          128
+        ],
+        "atlas_size": [
+          768,
+          128
+        ],
+        "runtime_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+        "source_generated": "res://art/overworld/source/generated/towns/horizon_citadels/town_meridian_choirhold_source.png",
+        "source_sha256": "a5866a5f3d57f0a2a6a2543cbd7f050825b74bbb090451593991f91972258025",
+        "source_model": "built_in_image_gen_original_horizon_citadel_atlas",
+        "assigned_town_id": "town_meridian_choirhold",
+        "assigned_faction_id": "faction_sunvault",
+        "presentation_role": "prism_vane_resonance_choirhold",
+        "accessible_description": "White terraces and gold prism vanes gather around a tall blue faceted resonance spire."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+      "mode": "town_atlas",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/horizon_citadels/town_meridian_choirhold_source.png": "a5866a5f3d57f0a2a6a2543cbd7f050825b74bbb090451593991f91972258025",
+        "res://art/overworld/source/generated/towns/horizon_citadels/manifest.json": "f6da60698dd96dcb5bc409f23b0b3530a2bf37aa02a98a77d29f4c1ce7667f80"
+      },
+      "before_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+      "source_crop": [
+        0,
+        0,
+        1202,
+        1254
+      ],
+      "source_resize": [
+        107,
+        112
+      ],
+      "canvas_origin": [
+        10,
+        8
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_sha256": "16fc0f00036e2d10458b10248cb62b323c20ec681d27d131d82a6c8225761d1d",
+      "low_alpha_rgb_pixels": 23661,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_meridian_choirhold.png",
+      "historical_registration": {
+        "alpha_mae": 0.5001220703125,
+        "opaque_rgb_mae": 1.2549668874172186
+      }
+    },
+    "town_identity_crownroot_refuge": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+        "atlas_region": [
+          384,
+          0,
+          128,
+          128
+        ],
+        "atlas_size": [
+          768,
+          128
+        ],
+        "runtime_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+        "source_generated": "res://art/overworld/source/generated/towns/horizon_citadels/town_crownroot_refuge_source.png",
+        "source_sha256": "85182c24876845e0ce043769415ee0492419edf736a064f694d82773990a7844",
+        "source_model": "built_in_image_gen_original_horizon_citadel_atlas",
+        "assigned_town_id": "town_crownroot_refuge",
+        "assigned_faction_id": "faction_thornwake",
+        "presentation_role": "living_crownroot_recovery_refuge",
+        "accessible_description": "A vast living crownroot shelters orchard homes, woven bridges, and an amber-lit healing hollow."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+      "mode": "town_atlas",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/horizon_citadels/town_crownroot_refuge_source.png": "85182c24876845e0ce043769415ee0492419edf736a064f694d82773990a7844",
+        "res://art/overworld/source/generated/towns/horizon_citadels/manifest.json": "f6da60698dd96dcb5bc409f23b0b3530a2bf37aa02a98a77d29f4c1ce7667f80"
+      },
+      "before_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+      "source_crop": [
+        0,
+        12,
+        1239,
+        1254
+      ],
+      "source_resize": [
+        112,
+        112
+      ],
+      "canvas_origin": [
+        8,
+        8
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_sha256": "491aefb4f7e6423eb73d2e6c90f2be171314ba26e892c2bd257d65032cf10607",
+      "low_alpha_rgb_pixels": 11720,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_crownroot_refuge.png",
+      "historical_registration": {
+        "alpha_mae": 0.54296875,
+        "opaque_rgb_mae": 0.8807116661710775
+      }
+    },
+    "town_identity_blackbell_foundry": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+        "atlas_region": [
+          512,
+          0,
+          128,
+          128
+        ],
+        "atlas_size": [
+          768,
+          128
+        ],
+        "runtime_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+        "source_generated": "res://art/overworld/source/generated/towns/horizon_citadels/town_blackbell_foundry_source.png",
+        "source_sha256": "0c69935d902a61939cae19eba61df5b6de293e413cda4ad04c0645b347145448",
+        "source_model": "built_in_image_gen_original_horizon_citadel_atlas",
+        "assigned_town_id": "town_blackbell_foundry",
+        "assigned_faction_id": "faction_brasshollow",
+        "presentation_role": "basalt_quenchbell_pressure_foundry",
+        "accessible_description": "A black basalt foundry suspends an immense bronze bell above orange furnaces and blue quench channels."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+      "mode": "town_atlas",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/horizon_citadels/town_blackbell_foundry_source.png": "0c69935d902a61939cae19eba61df5b6de293e413cda4ad04c0645b347145448",
+        "res://art/overworld/source/generated/towns/horizon_citadels/manifest.json": "f6da60698dd96dcb5bc409f23b0b3530a2bf37aa02a98a77d29f4c1ce7667f80"
+      },
+      "before_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+      "source_crop": [
+        0,
+        0,
+        1238,
+        1254
+      ],
+      "source_resize": [
+        111,
+        112
+      ],
+      "canvas_origin": [
+        8,
+        8
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_sha256": "b20c51a8d85a5ce9c64c70f1b82045a7f6c30ffdceb535eda19501c9a399aa11",
+      "low_alpha_rgb_pixels": 747,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_blackbell_foundry.png",
+      "historical_registration": {
+        "alpha_mae": 0.45263671875,
+        "opaque_rgb_mae": 0.8418797756282851
+      }
+    },
+    "town_identity_pale_sounding_harbor": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+        "atlas_region": [
+          640,
+          0,
+          128,
+          128
+        ],
+        "atlas_size": [
+          768,
+          128
+        ],
+        "runtime_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+        "source_generated": "res://art/overworld/source/generated/towns/horizon_citadels/town_pale_sounding_harbor_source.png",
+        "source_sha256": "346c77dca00fae01f0f77bcc05fce74463666d5b6535e252879581626e6b6333",
+        "source_model": "built_in_image_gen_original_horizon_citadel_atlas",
+        "assigned_town_id": "town_pale_sounding_harbor",
+        "assigned_faction_id": "faction_veilmourn",
+        "presentation_role": "ivory_rib_echo_chart_harbor",
+        "accessible_description": "Ivory rib piers surround black-sailed slips and a tall aquamarine echo beacon."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+      "mode": "town_atlas",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/generated/towns/horizon_citadels/town_pale_sounding_harbor_source.png": "346c77dca00fae01f0f77bcc05fce74463666d5b6535e252879581626e6b6333",
+        "res://art/overworld/source/generated/towns/horizon_citadels/manifest.json": "f6da60698dd96dcb5bc409f23b0b3530a2bf37aa02a98a77d29f4c1ce7667f80"
+      },
+      "before_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+      "source_crop": [
+        0,
+        10,
+        1232,
+        1254
+      ],
+      "source_resize": [
+        111,
+        112
+      ],
+      "canvas_origin": [
+        8,
+        8
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_sha256": "5c5cc8cf9380aa0a0a91e897ac3c2e1ed925c3d3301a141c1fba0f109ced7265",
+      "low_alpha_rgb_pixels": 3582,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_pale_sounding_harbor.png",
+      "historical_registration": {
+        "alpha_mae": 0.43670654296875,
+        "opaque_rgb_mae": 1.163946188340807
+      }
+    },
+    "town_identity_amberweir_granary": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/factions/embercourt.png",
+        "runtime_sha256": "e9d8998b42f7f22f42bd1330550ee524f79bc81341998128795a0492eca77ee9",
+        "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png",
+        "scenic_source": "res://art/towns/source/generated/marchland_seats/town_amberweir_granary_source.png",
+        "scenic_source_sha256": "3d36fe899b3b908b79dbc55f1c5e9a9895bbb5c62ebf70fa2f5fa7574abc1fa7",
+        "source_model": "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette",
+        "assigned_town_id": "town_amberweir_granary",
+        "assigned_faction_id": "faction_embercourt",
+        "presentation_role": "river_granary_stronghold",
+        "accessible_description": "A rain-fed river fortress where civic ledgers, sluice power, and protected grain rotations turn recovery into sustained road pressure."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/factions/embercourt.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/faction_town_sprite_atlas.png": "627c5f93242e2f179880985ec91ac8b56fff946da7cb2fdc421a260813077cd5",
+        "res://art/towns/source/generated/marchland_seats/town_amberweir_granary_source.png": "3d36fe899b3b908b79dbc55f1c5e9a9895bbb5c62ebf70fa2f5fa7574abc1fa7",
+        "res://art/towns/source/generated/marchland_seats/manifest.json": "dd675c32978cc3c796f5e88d930bff2b9caf876751d599e403c83ea7ddd4aba2"
+      },
+      "before_sha256": "e9d8998b42f7f22f42bd1330550ee524f79bc81341998128795a0492eca77ee9"
+    },
+    "town_identity_moonbite_reedshrine": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/factions/mireclaw.png",
+        "runtime_sha256": "52c34e0fba7f6275627b30058e00cf486311d8042a6dcaee18903004d6ea5dde",
+        "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png",
+        "scenic_source": "res://art/towns/source/generated/marchland_seats/town_moonbite_reedshrine_source.png",
+        "scenic_source_sha256": "1062c97cb1acaf86cc66ab3ebb559f355ef7191b54ea08e71469cd79e521fecc",
+        "source_model": "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette",
+        "assigned_town_id": "town_moonbite_reedshrine",
+        "assigned_faction_id": "faction_mireclaw",
+        "presentation_role": "votive_marsh_sanctuary",
+        "accessible_description": "A crescent shrine-town where moon pools, votive jars, and reed tolls turn battlefield tribute into spell and pressure tempo."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/factions/mireclaw.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/faction_town_sprite_atlas.png": "627c5f93242e2f179880985ec91ac8b56fff946da7cb2fdc421a260813077cd5",
+        "res://art/towns/source/generated/marchland_seats/town_moonbite_reedshrine_source.png": "1062c97cb1acaf86cc66ab3ebb559f355ef7191b54ea08e71469cd79e521fecc",
+        "res://art/towns/source/generated/marchland_seats/manifest.json": "dd675c32978cc3c796f5e88d930bff2b9caf876751d599e403c83ea7ddd4aba2"
+      },
+      "before_sha256": "52c34e0fba7f6275627b30058e00cf486311d8042a6dcaee18903004d6ea5dde"
+    },
+    "town_identity_splitprism_duelcourt": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/factions/sunvault.png",
+        "runtime_sha256": "cf2bf29fedc3531144e3dee3a0ab561e363eb7af52139f15702a7a682b5f48dd",
+        "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png",
+        "scenic_source": "res://art/towns/source/generated/marchland_seats/town_splitprism_duelcourt_source.png",
+        "scenic_source_sha256": "097da8c58dd0356f7223ae5c30c08db3bb623d375f83d9e5bcaf3cafda44c2bd",
+        "source_model": "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette",
+        "assigned_town_id": "town_splitprism_duelcourt",
+        "assigned_faction_id": "faction_sunvault",
+        "presentation_role": "duel-line_observatory",
+        "accessible_description": "A divided prism observatory whose mirrored courts train timing, focus, and exact response along exposed desert lanes."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/factions/sunvault.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/faction_town_sprite_atlas.png": "627c5f93242e2f179880985ec91ac8b56fff946da7cb2fdc421a260813077cd5",
+        "res://art/towns/source/generated/marchland_seats/town_splitprism_duelcourt_source.png": "097da8c58dd0356f7223ae5c30c08db3bb623d375f83d9e5bcaf3cafda44c2bd",
+        "res://art/towns/source/generated/marchland_seats/manifest.json": "dd675c32978cc3c796f5e88d930bff2b9caf876751d599e403c83ea7ddd4aba2"
+      },
+      "before_sha256": "cf2bf29fedc3531144e3dee3a0ab561e363eb7af52139f15702a7a682b5f48dd"
+    },
+    "town_identity_woundroot_hearthgrove": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/factions/thornwake.png",
+        "runtime_sha256": "875881aab052eb018f12c4af23e8bff80c08d4ff775d72ee33af178b315d4138",
+        "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png",
+        "scenic_source": "res://art/towns/source/generated/marchland_seats/town_woundroot_hearthgrove_source.png",
+        "scenic_source_sha256": "0f4377ebefebcf821d006232892a5247b2fb399fdd691e2258c7fc5c2984f27a",
+        "source_model": "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette",
+        "assigned_town_id": "town_woundroot_hearthgrove",
+        "assigned_faction_id": "faction_thornwake",
+        "presentation_role": "recovery_hearthgrove",
+        "accessible_description": "A living hollow settlement where root-hearths and graft gardens return wounded companies to the road without severing the old canopy."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/factions/thornwake.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/faction_town_sprite_atlas.png": "627c5f93242e2f179880985ec91ac8b56fff946da7cb2fdc421a260813077cd5",
+        "res://art/towns/source/generated/marchland_seats/town_woundroot_hearthgrove_source.png": "0f4377ebefebcf821d006232892a5247b2fb399fdd691e2258c7fc5c2984f27a",
+        "res://art/towns/source/generated/marchland_seats/manifest.json": "dd675c32978cc3c796f5e88d930bff2b9caf876751d599e403c83ea7ddd4aba2"
+      },
+      "before_sha256": "875881aab052eb018f12c4af23e8bff80c08d4ff775d72ee33af178b315d4138"
+    },
+    "town_identity_whitegauge_calibration_yard": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/factions/brasshollow.png",
+        "runtime_sha256": "70088f1c59fa371e0b7c2187a50583fd7bc83c95270fc526e408d3cda4e031b3",
+        "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png",
+        "scenic_source": "res://art/towns/source/generated/marchland_seats/town_whitegauge_calibration_yard_source.png",
+        "scenic_source_sha256": "abe7024f17c7f23e362d95be90c869affc23ba4c3118fc086d105adc0a985b92",
+        "source_model": "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette",
+        "assigned_town_id": "town_whitegauge_calibration_yard",
+        "assigned_faction_id": "faction_brasshollow",
+        "presentation_role": "calibration_works",
+        "accessible_description": "A white-ceramic pressure yard where brass gauges, datum rails, and controlled furnace trials turn machine companies into exact field instruments."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/factions/brasshollow.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/faction_town_sprite_atlas.png": "627c5f93242e2f179880985ec91ac8b56fff946da7cb2fdc421a260813077cd5",
+        "res://art/towns/source/generated/marchland_seats/town_whitegauge_calibration_yard_source.png": "abe7024f17c7f23e362d95be90c869affc23ba4c3118fc086d105adc0a985b92",
+        "res://art/towns/source/generated/marchland_seats/manifest.json": "dd675c32978cc3c796f5e88d930bff2b9caf876751d599e403c83ea7ddd4aba2"
+      },
+      "before_sha256": "70088f1c59fa371e0b7c2187a50583fd7bc83c95270fc526e408d3cda4e031b3"
+    },
+    "town_identity_dreamwake_oracle_harbor": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/towns/factions/veilmourn.png",
+        "runtime_sha256": "e89e68f9ab030b22a397caa0019439ff1dc623dae8254f4bcd249e105db8db44",
+        "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png",
+        "scenic_source": "res://art/towns/source/generated/marchland_seats/town_dreamwake_oracle_harbor_source.png",
+        "scenic_source_sha256": "877a05769accb6e043fc2114adae74e495c8c9482f32f87405d1a13ce946c2e1",
+        "source_model": "built_in_image_gen_original_marchland_seat_scenic_with_faction_overworld_silhouette",
+        "assigned_town_id": "town_dreamwake_oracle_harbor",
+        "assigned_faction_id": "faction_veilmourn",
+        "presentation_role": "oracle_harbor",
+        "accessible_description": "A fogbound bell harbor whose tide pools and memory chimes reveal hidden sea lanes before hostile sails enter the inner wake."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/towns/factions/veilmourn.png",
+      "mode": "preserved_town",
+      "canvas_size": [
+        512,
+        512
+      ],
+      "source_hashes": {
+        "res://art/overworld/source/faction_town_sprite_atlas.png": "627c5f93242e2f179880985ec91ac8b56fff946da7cb2fdc421a260813077cd5",
+        "res://art/towns/source/generated/marchland_seats/town_dreamwake_oracle_harbor_source.png": "877a05769accb6e043fc2114adae74e495c8c9482f32f87405d1a13ce946c2e1",
+        "res://art/towns/source/generated/marchland_seats/manifest.json": "dd675c32978cc3c796f5e88d930bff2b9caf876751d599e403c83ea7ddd4aba2"
+      },
+      "before_sha256": "e89e68f9ab030b22a397caa0019439ff1dc623dae8254f4bcd249e105db8db44"
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png": {
+      "before_size": [
+        640,
+        128
+      ],
+      "before_sha256": "c054da2c457b1401effb570a15e9dcdcda3a15ed85be69da4eb136e035c245c1"
+    },
+    "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png": {
+      "before_size": [
+        768,
+        128
+      ],
+      "before_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41"
+    }
+  },
+  "mappings": {
+    "town_identity_sprites": {
+      "town_riverwatch": "town_identity_riverwatch",
+      "town_duskfen": "town_identity_duskfen",
+      "town_blackfen_gate": "town_identity_blackfen_gate",
+      "town_highwater_keep": "town_identity_highwater_keep",
+      "town_murkward_ford": "town_identity_murkward_ford",
+      "town_reedbarrow_ferry": "town_identity_reedbarrow_ferry",
+      "town_nightglass_redoubt": "town_identity_nightglass_redoubt",
+      "town_prismhearth": "town_identity_prismhearth",
+      "town_halo_spire": "town_identity_halo_spire",
+      "town_thornwake_graftroot_caravan": "town_identity_thornwake_graftroot_caravan",
+      "town_brasshollow_orevein_gantry": "town_identity_brasshollow_orevein_gantry",
+      "town_veilmourn_bellwake_harbor": "town_identity_veilmourn_bellwake_harbor",
+      "town_thornwake_rootgate_nursery": "town_identity_thornwake_rootgate_nursery",
+      "town_brasshollow_clauseworks_depot": "town_identity_brasshollow_clauseworks_depot",
+      "town_veilmourn_fogchart_mooring": "town_identity_veilmourn_fogchart_mooring",
+      "town_cinderlock_bastion": "town_identity_cinderlock_bastion",
+      "town_dawnmirror_observatory": "town_identity_dawnmirror_observatory",
+      "town_briarwheel_enclave": "town_identity_briarwheel_enclave",
+      "town_cindercoil_foundry": "town_identity_cindercoil_foundry",
+      "town_gloamwake_anchorage": "town_identity_gloamwake_anchorage",
+      "town_rainwrit_bastion": "town_identity_rainwrit_bastion",
+      "town_hollowreed_sanctuary": "town_identity_hollowreed_sanctuary",
+      "town_meridian_choirhold": "town_identity_meridian_choirhold",
+      "town_crownroot_refuge": "town_identity_crownroot_refuge",
+      "town_blackbell_foundry": "town_identity_blackbell_foundry",
+      "town_pale_sounding_harbor": "town_identity_pale_sounding_harbor",
+      "town_amberweir_granary": "town_identity_amberweir_granary",
+      "town_moonbite_reedshrine": "town_identity_moonbite_reedshrine",
+      "town_splitprism_duelcourt": "town_identity_splitprism_duelcourt",
+      "town_woundroot_hearthgrove": "town_identity_woundroot_hearthgrove",
+      "town_whitegauge_calibration_yard": "town_identity_whitegauge_calibration_yard",
+      "town_dreamwake_oracle_harbor": "town_identity_dreamwake_oracle_harbor"
+    },
+    "town_faction_sprites": {
+      "faction_embercourt": "town_faction_embercourt",
+      "faction_mireclaw": "town_faction_mireclaw",
+      "faction_sunvault": "town_faction_sunvault",
+      "faction_thornwake": "town_faction_thornwake",
+      "faction_brasshollow": "town_faction_brasshollow",
+      "faction_veilmourn": "town_faction_veilmourn"
+    },
+    "town_default_sprite": {
+      "asset_id": "frontier_town",
+      "fit": "Fail-closed fallback for missing, unmapped, or unloadable town faction identity; owner state remains indicated by the existing compact renderer pennant."
+    }
+  }
+}

@@ -483,6 +483,36 @@ coverage must remain labeled and must not mutate a map to manufacture captures.
 The accepted baseline remains 1044/1214 until all 60 dispositions have evidence.
 No portrait redesign, balance, gameplay/native/RMG, Town UI or unrelated cleanup.
 
+### Overworld Town silhouettes
+
+Review the 39 exact Town rows: 32 identity mappings, six faction mappings and
+the original frontier default. Eleven Third Hearths/Horizon Citadels paintings
+are packed into 128px cells despite the 512px canvases used by other Towns.
+Recover their original fine silhouettes at fourfold atlas density after proving
+historical source crop/fit/registration. Keep the two atlas paths, normalized
+regions, town identities, doorway/ground anchors and on-map dimensions unchanged.
+Preserve the other 28 rows and their original paintings exactly unless direct
+native-resolution inspection confirms a separate defect. Shared faction aliases
+remain deliberate aliases, not new distinct paintings. Never remove original
+purple sails, flowers, crystals, smoke or water to satisfy a color threshold.
+
+Owners: `tools/prepare_overworld_town_cutouts.py`, focused Python tests, the
+`towns` original/trim/runtime provenance packet, `tests/overworld_town_cutout_probe.py`
+and shared `--batch towns` source/package routing. Freeze predecessor hashes,
+all 39 resolver mappings and source provenance. Preserve historical source
+manifests; validators must check the new exact derivation and normalized regions
+without weakening original identity, placement, gameplay or source assertions.
+
+Assemble the cohort before consolidated focused Python tests, source 1280x720 /
+1920x1080 captures, actual native and authored Town entry/exit and save controls,
+existing Town/domain and shared sprite/input/fog reports, repository/diff checks
+and both official export/package gameplay tests. Inspect all final paintings
+and representative actual gameplay; detached all-identity coverage is not a
+manufactured map. The baseline was 1104 accepted / 110 pending; the source-backed
+Town acceptance in the quality report advances it to 1143 / 71 without closing
+the full runtime pool. No Town-screen art/UI, native/RMG, placement,
+balance, progression, save-schema or unrelated cleanup changes.
+
 ## Completion and non-goals
 
 Owner-approved test-control replacement (2026-09-10): the original Day97

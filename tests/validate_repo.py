@@ -44242,6 +44242,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(len(hero_recoveries) == 60, errors, "Three original hero paintings must reconstruct within bounded matte support; 57 clean identities and all portraits remain exact")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Hero cutout recovery failed closed: {exc}")
+    try:
+        town_spec = importlib.util.spec_from_file_location("town_cutout_validation", ROOT / "tools/prepare_overworld_town_cutouts.py")
+        town_module = importlib.util.module_from_spec(town_spec)
+        town_spec.loader.exec_module(town_module)
+        town_recoveries = town_module.validate_assets()
+        ensure(len(town_recoveries) == 39, errors, "Eleven original Town silhouettes must reconstruct at exact normalized registration; 28 original mappings remain unchanged")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Town cutout recovery failed closed: {exc}")
     artifact_recoveries = {}
     try:
         artifact_spec = importlib.util.spec_from_file_location("artifact_cutout_validation", ROOT / "tools/prepare_overworld_artifact_cutouts.py")
@@ -44453,9 +44461,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             elif source_model == "built_in_image_gen_original_world_facing_ownership_pennant":
                 expected_canvas = (128, 128)
             elif source_model == "built_in_image_gen_original_third_hearth_town_atlas":
-                expected_canvas = (640, 128)
+                expected_canvas = (2560, 512)
             elif source_model == "built_in_image_gen_original_horizon_citadel_atlas":
-                expected_canvas = (768, 128)
+                expected_canvas = (3072, 512)
             elif source_model in {"built_in_image_gen_original_pactwright_waydesk_with_runtime_state_derivation", "built_in_image_gen_original_pactwright_waydesk_with_six_mark_runtime_state_derivation"}:
                 expected_canvas = (96, 48)
             elif source_model == "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation":
@@ -48908,17 +48916,17 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
             ensure(str(entry.get("assigned_town_id", "")) == town_id, errors, f"Overworld town identity asset {asset_id} must retain exact town assignment")
             runtime_disk = res_path_to_disk(runtime_path)
             source_disk = res_path_to_disk(source_path)
-            expected_size = (768, 128) if horizon_citadel else (640, 128) if third_hearth else (512, 512)
+            expected_size = (3072, 512) if horizon_citadel else (2560, 512) if third_hearth else (512, 512)
             ensure(runtime_disk.is_file() and png_size(runtime_disk) == expected_size, errors, f"Overworld town identity asset {asset_id} has the wrong runtime PNG size")
             ensure(Path(f"{runtime_disk}.import").is_file(), errors, f"Overworld town identity asset {asset_id} is missing Godot import metadata")
             ensure(source_disk.is_file(), errors, f"Overworld town identity asset {asset_id} is missing its high-resolution source")
             if third_hearth:
                 expected_index = town_order.index(town_id) - 15
-                ensure(entry.get("atlas_region") == [expected_index * 128, 0, 128, 128] and entry.get("atlas_size") == [640, 128], errors, f"Overworld town identity asset {asset_id} has the wrong atlas crop")
+                ensure(entry.get("atlas_region") == [expected_index * 512, 0, 512, 512] and entry.get("atlas_size") == [2560, 512], errors, f"Overworld town identity asset {asset_id} has the wrong fourfold-density normalized atlas crop")
                 ensure(min(png_size(source_disk)) >= 1024 and Path(f"{source_disk}.import").is_file(), errors, f"Overworld town identity asset {asset_id} must retain imported high-resolution source art")
             if horizon_citadel:
                 expected_index = town_order.index(town_id) - 20
-                ensure(entry.get("atlas_region") == [expected_index * 128, 0, 128, 128] and entry.get("atlas_size") == [768, 128], errors, f"Overworld town identity asset {asset_id} has the wrong Horizon Citadels atlas crop")
+                ensure(entry.get("atlas_region") == [expected_index * 512, 0, 512, 512] and entry.get("atlas_size") == [3072, 512], errors, f"Overworld town identity asset {asset_id} has the wrong fourfold-density normalized Horizon Citadels atlas crop")
                 ensure(min(png_size(source_disk)) >= 1024 and Path(f"{source_disk}.import").is_file(), errors, f"Overworld town identity asset {asset_id} must retain imported high-resolution source art")
             if marchland_seat:
                 ensure(entry.get("assigned_faction_id") == marchland_factions[town_id] and hashlib.sha256(source_disk.read_bytes()).hexdigest() == entry.get("scenic_source_sha256") and png_size(source_disk) == (1536, 1024), errors, f"Overworld town identity asset {asset_id} lost its exact Marchland scenic provenance")
@@ -80351,8 +80359,10 @@ def validate_six_horizon_citadels(errors: list[str]) -> None:
     identity_rows = {str(row.get("town_id", "")): row for row in identity_manifest.get("items", []) if isinstance(row, dict)}
     ensure(scenic_manifest.get("generator") == "built_in_image_gen" and scenic_manifest.get("runtime_size") == [1600, 900] and set(scenic_rows) == set(expected), errors, "Horizon Citadels scenic source provenance changed")
     ensure(identity_manifest.get("generator") == "built_in_image_gen" and identity_manifest.get("runtime_atlas_size") == [768, 128] and set(identity_rows) == set(expected), errors, "Horizon Citadels overworld source provenance changed")
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/towns/before_runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png"
+    ensure(historical_atlas_path.is_file() and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == identity_manifest.get("runtime_atlas_sha256") == "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41", errors, "Original Horizon Citadels atlas/source provenance changed")
     atlas_sha = hashlib.sha256(atlas_path.read_bytes()).hexdigest() if atlas_path.is_file() else ""
-    ensure(atlas_path.is_file() and png_size(atlas_path) == (768, 128) and atlas_sha == "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41" and Path(f"{atlas_path}.import").is_file(), errors, "Horizon Citadels runtime atlas bytes, dimensions, or import changed")
+    ensure(atlas_path.is_file() and png_size(atlas_path) == (3072, 512) and atlas_sha == "07106001360295ddd43583a88fc8a3d4326b702517535d7de71af969e5c83cb5" and Path(f"{atlas_path}.import").is_file(), errors, "Horizon Citadels runtime atlas bytes, dimensions, or import changed")
     for town_id, (faction_id, placement_id, xy, owner, role, objective_id, index) in expected.items():
         town = towns.get(town_id, {})
         placement = placements.get(placement_id, {})
@@ -80365,7 +80375,7 @@ def validate_six_horizon_citadels(errors: list[str]) -> None:
         ensure(placement.get("town_id") == town_id and (placement.get("x"), placement.get("y")) == xy and placement.get("owner") == owner and objective_id in objectives, errors, f"{town_id} Ninefold placement, owner, or objective changed")
         ensure(scenic_path.is_file() and png_size(scenic_path) == (1600, 900) and scenic_source.is_file() and png_size(scenic_source) == (1672, 941), errors, f"{town_id} scenic runtime or generated source is missing")
         ensure(identity_source.is_file() and png_size(identity_source) == (1254, 1254) and Path(f"{identity_source}.import").is_file(), errors, f"{town_id} overworld generated source or import is missing")
-        ensure(identity_sprites.get(town_id) == asset_id and asset.get("path") == "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png" and asset.get("atlas_region") == [index * 128, 0, 128, 128] and asset.get("atlas_size") == [768, 128] and asset.get("assigned_town_id") == town_id and asset.get("assigned_faction_id") == faction_id and len(str(asset.get("accessible_description", ""))) >= 56, errors, f"{town_id} exact overworld identity mapping changed")
+        ensure(identity_sprites.get(town_id) == asset_id and asset.get("path") == "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png" and asset.get("atlas_region") == [index * 512, 0, 512, 512] and asset.get("atlas_size") == [3072, 512] and asset.get("assigned_town_id") == town_id and asset.get("assigned_faction_id") == faction_id and len(str(asset.get("accessible_description", ""))) >= 56, errors, f"{town_id} exact overworld identity mapping changed")
         ensure(str(scenic_rows.get(town_id, {}).get("generation_original", "")).startswith("/root/.codex/generated_images/") and str(identity_rows.get(town_id, {}).get("generation_original", "")).startswith("/root/.codex/generated_images/"), errors, f"{town_id} generation provenance changed")
     smoke_paths = (
         ROOT / "tests" / "six_horizon_citadels_smoke.gd",
