@@ -231,7 +231,7 @@ func _validate_third_hearth_content() -> Dictionary:
 	if scenario.is_empty() or scenario.get("towns", []).size() != 6:
 		return {"ok": false, "failure": "scenario_contract", "town_count": scenario.get("towns", []).size()}
 	var atlas := load(THIRD_HEARTHS_ATLAS_PATH)
-	if not (atlas is Texture2D) or atlas.get_width() != 640 or atlas.get_height() != 128:
+	if not (atlas is Texture2D) or atlas.get_width() != 2560 or atlas.get_height() != 512:
 		return {"ok": false, "failure": "atlas_contract"}
 	var rows: Array = []
 	var placement_by_town: Dictionary = {}
@@ -294,7 +294,7 @@ func _validate_horizon_citadels_content() -> Dictionary:
 				and EXPECTED_TOWN_ASSETS.has(town_id),
 		})
 	return {
-		"ok": atlas is Texture2D and atlas.get_width() == 768 and atlas.get_height() == 128
+		"ok": atlas is Texture2D and atlas.get_width() == 3072 and atlas.get_height() == 512
 			and scenario.get("towns", []).size() == 12
 			and rows.all(func(row): return bool(row.get("exact", false))),
 		"scenario_id": SCENARIO_ID,

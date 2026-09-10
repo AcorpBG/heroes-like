@@ -1,0 +1,68 @@
+{
+  "schema_id": "town_cutout_recovery_v1",
+  "recipe_sha256": "e0c8f40a720893990adc9ebed67662fd2fbd46cacf20f069f006c5cd88fadab0",
+  "tools": {
+    "tools/prepare_overworld_contract_cutouts.py": "b6686960de8cdb843fbb3a9fe079bb46b66a8076d22f49da9b47082973e0d947",
+    "tools/prepare_overworld_recurring_cutouts.py": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
+    "tools/prepare_overworld_cutout_art.py": "247801087cb8c5bfd6fb0a471bf39dbbfdb2a8bd8fe984d3816df92f00b0d68d",
+    "tools/prepare_overworld_legacy_cutouts.py": "578dd78feaf322f585df5b214cfdbe607ea29eb0a359a95ce549e289c8d7b092",
+    "tools/prepare_overworld_town_cutouts.py": "2d8a663c1a8f8912fd23a6b08afd1d57cb6eee7e428449ee20097f9a0d4ab5b7"
+  },
+  "assets": {
+    "town_identity_cinderlock_bastion": {
+      "rgba_sha256": "e65420bd69db1667e98ee7b164d2b6f2cdd675c427737e83e4748652a6a5ef26",
+      "trim_sha256": "ef7769688e2a5919dcc831f4c88c08f21ee56cfe74fbdc2d727dcf9714fe7b1a"
+    },
+    "town_identity_dawnmirror_observatory": {
+      "rgba_sha256": "382f9f689eceb38cdc6a64fa7c5f5adcca7b52fc43fea1e66b637857a60e25b8",
+      "trim_sha256": "8a6da355ebc73a9b31155ca6312d29fb5b90a2b015ac4f5296ea90633bc761af"
+    },
+    "town_identity_briarwheel_enclave": {
+      "rgba_sha256": "41852822285720f54fc1d0964816745beb921cb575e761e64258c4c48f38e0f0",
+      "trim_sha256": "67410c1dfe1f9116929cee4a723addf74d52caf550a3adcb2c9b79e7d4946416"
+    },
+    "town_identity_cindercoil_foundry": {
+      "rgba_sha256": "ce370f45240c32ed92eae39a2176727b541f2323df27a9e219b1b149f92d7b0a",
+      "trim_sha256": "af45dfcf89724bd7b10a018f187090c64e9950f443afb91808d68672dcbb674d"
+    },
+    "town_identity_gloamwake_anchorage": {
+      "rgba_sha256": "c90984df6745d6b8e6f003da617ddefea6c78aebdbc10afd9f0563ed841fa535",
+      "trim_sha256": "2585b1d4947d1821c2aee0d18879d5dcf3d8d2bae5951eb817ab62992ec12f8f"
+    },
+    "town_identity_rainwrit_bastion": {
+      "rgba_sha256": "13a15ff445342d4508c30da827f1ac3b2b14cb6370b09b16c562388b526b2051",
+      "trim_sha256": "6aca6b9a64f9077fc665219c7c3f0131645ec7db2868cb120da6481095bae545"
+    },
+    "town_identity_hollowreed_sanctuary": {
+      "rgba_sha256": "cf8e83465a3e416c3944ac421c1754ebc75ba595657079c6ab1c28e0e7b527e8",
+      "trim_sha256": "0619bdd1984ed7d271090fe74346a73f86b28e8d7a2d9c98f5a30a0bccef0135"
+    },
+    "town_identity_meridian_choirhold": {
+      "rgba_sha256": "ebdce7682802aa5915942dbce691b06e9b067fdc778704df23aff2d96db9be50",
+      "trim_sha256": "5ef345fbe3c9227e4303fea4ce9df82c6974bfc1cb4ee74938d92aad3264e9cc"
+    },
+    "town_identity_crownroot_refuge": {
+      "rgba_sha256": "ed9704cf144666ac8c0f3380653229c908ac5d74ba56c03d929fe5425985451b",
+      "trim_sha256": "c5e9759026a3ee757d2ce4f481d7242e29ff50723147ee26bb160f3f4fdce0f6"
+    },
+    "town_identity_blackbell_foundry": {
+      "rgba_sha256": "b75bd0a503e54b8405febda45ee60dcd72e5f0e3e158ced6a007b138ca79bc93",
+      "trim_sha256": "79ccf5ec84b737df14f5ef96d74642749262ed6608ddfe1aa13e015d89f9caf2"
+    },
+    "town_identity_pale_sounding_harbor": {
+      "rgba_sha256": "ea549edea40480b7debff6a668e32f74a2263cc00be2a0039a993b4894913fc8",
+      "trim_sha256": "1230aa1ed742f0045934308ad172042f8897d5a21896014a980e881b1be9686c"
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png": {
+      "after_sha256": "e0cf2644b0543b63f276c26e5bf8cba51658b47d9f949392fd6427c5e17c5108",
+      "prepared": "runtime/objects/towns/identity_atlases/third_hearths_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png": {
+      "after_sha256": "07106001360295ddd43583a88fc8a3d4326b702517535d7de71af969e5c83cb5",
+      "prepared": "runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png"
+    }
+  },
+  "processing": "Eleven original Town paintings at fourfold atlas density; historical centered 120/112px fits retained. Original alpha and all non-noise RGB preserved. Reviewed alpha 1..4 saturated RGB alone borrows original foreground RGB. Twenty-eight exact Town identity/faction/default controls unchanged. No generated paint or gameplay change."
+}

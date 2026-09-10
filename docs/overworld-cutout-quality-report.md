@@ -1874,13 +1874,94 @@ Logs: `/tmp/heroes-hero-unit-20260910.log`, `/tmp/heroes-hero-validate-repo-2026
 export reports: `/tmp/heroes-hero-{linux,windows}-20260910/report.json`.
 Accepted pool becomes **1104/1214**, **110 pending**. Parent/child remain active.
 
+## Overworld Town cohort — 2026-09-10
+
+All 39 Town dispositions were individually inspected: 32 identity mappings, six
+deliberate faction aliases and the frontier default. Eleven Third Hearths/Horizon
+Citadels paintings had been reduced from their original 1254px sources into
+128px atlas cells, losing detail at ordinary Town display size. Their generated
+masters remain available, so no replacement painting or synthetic detail is needed.
+The other 28 mappings retain their runtime bytes and original provenance exactly.
+
+`tools/prepare_overworld_town_cutouts.py` restores the eleven paintings into 512px
+cells in the same two atlas paths. It freezes the original alpha crop, rounded
+120/112px fit and centered origin, multiplying each by four; normalized atlas
+regions, world sizing and anchors do not change. Against the retained predecessor,
+the historical 128px projection measures 0.288–0.653 alpha MAE and 0.771–1.255
+interior RGB MAE. Original source alpha is preserved, including its mostly
+251–253 interior coverage. Only inspected saturated RGB noise at alpha 1–4 borrows
+nearby original foreground RGB. No alpha hardening, opaque-paint recoloring, new
+generation or gameplay/native/RMG/Town-screen/save change. Original generation
+commits: `0581b23e` and `94e1a710`; frozen recipe, source hashes, old atlases and
+processing proof: `art/overworld/source/generated/cutout_recovery_20260909/towns/`.
+Eleven source-derived outputs live in the corresponding `source/trimmed/` packet.
+
+Eight Python art tests, three pinned-fixture tests, repository validation, the
+Town identity and footprint/click-entry reports, all five shared sprite/input/
+route/fog reports and both official exports pass. The focused `--batch towns`
+probe passes **2984 checks** at source 1280x720 and 1920x1080 and in Linux/Windows
+packages, with zero runtime errors. It checks every identity/faction/default
+mapping and independent decoded-RGBA oracle. Seven unchanged native Day97 Towns
+provide two real control paintings alongside all 2380 original blockers. The
+eleven repaired paintings each appear in their original authored owned-Town
+scenario, through normal ownership vision and selected-Town visit/exit actions.
+No placements, resources, fog, armies or progression were injected. The unchanged
+`15614505` package fails exactly **33 art assertions**, with no gameplay failures.
+
+There are twelve complete save/load controls per run and **48 exact cross-run
+state comparisons**, excluding only save timestamps and fresh authored session
+ids. Town records, routes, entrances, footprints, hero positions and resources
+remain unchanged. Screen-space pennant coordinates scale with the wide viewport;
+same-resolution geometry differs only by sub-0.0001px Windows float evaluation.
+Both PCKs measure **306493480 bytes / 5484 members**. Only two imported atlases,
+the art manifest and UID cache change: **5480 unrelated payloads and 1203 other
+art rows remain exact**. Linux/Windows differ only in platform `project.binary`
+and UID serialization; all **7934 UID/path mappings** match. Original source art
+remains excluded. Windows headless Wine is not GPU/controller certification.
+
+The older `six_horizon_citadels_smoke` **does not pass**: it accumulates recruits
+from six factions into one shared army, then rejects the sixth order with
+`army_capacity` because all seven unit-type slots are occupied. All six builds,
+identity/scenic checks, five earlier recruits and its save round trip pass. The
+complete failure record matches in predecessor/current official PCKs; this is
+unchanged-failure proof, not smoke acceptance. Packaged legacy evidence adapts
+only the artifact writer to decode its scenic image from the PCK instead of
+opening a nonexistent loose PNG; gameplay assertions remain intact. The initial
+unadapted packaged writer's image-open failures are retained, not counted as passes.
+
+All original/current contact pages, eleven full-size before/after comparisons,
+all thirteen final small gameplay captures, wide gameplay/gallery views and Linux
+packaged examples were visually inspected. Four all-identity galleries are detached
+coverage, not generated maps. Earlier rejected probe runs used native image-anchor
+coordinates instead of the restored `visit_tile`; the final probe follows the
+unchanged runtime doorway authority. The initial stale-import source run, stale
+128px validator expectations and overly strict 255-alpha test are also retained
+as failed diagnostics, superseded by the final verified imports/source contracts.
+Other authored terrain/UI presentation is not accepted as release-ready by this batch.
+
+Evidence: `.artifacts/overworld_cutout_quality_20260909/town-acceptance.json` and
+`verify_town_acceptance.py`; `town-source-{1280,1920}-final-20260910`,
+`town-{linux,windows}-final-20260910`, `town-linux-before-final-20260910`,
+`town-{domains,shared}-20260910`, and
+`town-legacy-{before,current}-final-20260910`. Legacy reproduction owner:
+`verify_town_legacy_baseline.py`. Logs:
+`/tmp/heroes-town-unit-final-20260910.log`,
+`/tmp/heroes-town-validate-repo-final-20260910.log` and
+`/tmp/heroes-town-acceptance-final-20260910.log`; official exports:
+`/tmp/heroes-town-{linux,windows}-20260910/report.json`.
+Reproduce with `tests/test_overworld_town_cutouts.py`, the shared source and
+packaged `--batch towns` drivers and fresh labels, as specified in the Town
+requirements. Existing domain/shared launch adapter:
+`/tmp/heroes-town-suite-20260910.py`; assertions are retained.
+Accepted pool becomes **1143/1214**, **71 pending**. Parent and child remain active.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The then-remaining 783 rows
 received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 1104 repaired/preserved dispositions, leaving
-110 for complete detailed review/recovery. The two veteran mast repairs are now
+The accepted cohorts now cover 1143 repaired/preserved dispositions, leaving
+71 for complete detailed review/recovery. The two veteran mast repairs are now
 included only after the separate source/visual/platform closure above.
 All 31 recurring encounters, 30
 recurring resource-site originals, 31 separate claimed dwellings and 34 early
@@ -1889,9 +1970,9 @@ The 34 command-site originals, all 36 recruitment/habitat dispositions and the
 40 command/training paintings and 52 contract/expedition encounter paintings
 are accepted, along with the remaining 79 encounter recoveries and six faction
 controls above. All 69 artifact dispositions and 54 remaining resource-site
-paintings and all 60 hero identity dispositions are accepted above. Next: Town
-and other runtime families (39 Town rows, 29 unit icons, 24 cohesive blockers,
-eight remaining distinct map objects, seven encounter/elder-wild rows and three
+paintings, all 60 hero identity dispositions and all 39 Town dispositions are
+accepted above. Next: 29 unit icons, 24 cohesive blockers, eight remaining
+distinct map objects, seven encounter/elder-wild rows and three
 ownership pennants). These categories still require individual source review.
 The seven
 Pactwright/Mireglass states are accepted only by the explicit integrated-edit
