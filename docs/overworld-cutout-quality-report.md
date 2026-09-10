@@ -1527,21 +1527,176 @@ to avoid filling the root disk. Only that batch's
 disposable failed Wine workspace was reset by the official smoke; prior
 evidence, project caches and unrelated untracked retention files are untouched.
 
+## Remaining encounter paintings — 2026-09-10, accepted
+
+The next coherent group is implemented and accepted after consolidated validation:
+79 original-paint recoveries across eleven atlases (73 cells) and six signature
+PNGs, with six clean faction landmarks preserved byte-for-byte. All 85 source
+paintings, the eight-page 1280x720 renderer gallery, all twelve ordinary-scouting
+screenshots and the unchanged native-map control were visually inspected. No
+magenta mats or sheet borders are visible on those repaired encounter subjects;
+this is not acceptance of the unrelated Town/terrain/remaining-art surfaces.
+Atlas cells are now 192px and signatures 256px, reprojected from the large
+originals with their existing logical registrations. Frontier Watch's nominal
+source PNGs were only 48px derivatives; the genuine 1536x1024 original sheet
+supplies those six recovered cells. Horizon Compact keeps its original full-cell
+fit; other family-specific centered fits remain unchanged. Across 53 sources,
+315126 reviewed alpha-1..4 saturated RGB samples borrow original foreground RGB;
+alpha and every other source pixel remain untouched. No generation was needed.
+Recipe/proof: `art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/`.
+Owner: `tools/prepare_overworld_remaining_encounter_cutouts.py`.
+
+Real evidence retained:
+
+- Final focused Python suite: 8/8, `/tmp/heroes-remaining-encounter-python-final-20260910.log`.
+- Source 1280x720: 3178 checks, zero runtime errors, 85 exact raster/routes,
+  15 complete save round-trips and 12 unchanged original encounter fronts
+  reached on Day 1 through ordinary scouting. The 2380-body native control and
+  57 affected native records remain their earned state; all 57 are already
+  resolved, not visible corrected encounters. Evidence:
+  `/tmp/heroes-remaining-encounter-delivery-20260910/source_1280_clear_scout/`.
+- Repository validation passes again after the external artifact removal and
+  separate cleanup commit in
+  `/tmp/heroes-remaining-encounter-repo-current-20260910.log`. The earlier
+  `/tmp/heroes-remaining-encounter-repo-20260910.log` remains retained. The final
+  preparation-tool file-handle closure fix preserves exactly the same runtime
+  bytes and passes the focused suite.
+- Official Linux export/startup and Windows export/startup/generated-map/Town
+  flow pass. PCKs are 300776216 bytes, 5484 members; only `project.binary` differs
+  between platforms. Against `23d20edf`, only 17 imported textures, the art
+  manifest and UID cache change; all 5465 other payloads, including compiled
+  gameplay/save/native owners, are exact. Exactly 79 art entries change; all
+  other 1135 entries and every routing table are identical. These are package
+  inventory proofs, supplemented by the completed cohort-specific packaged
+  gameplay probes below.
+  Reports: `/tmp/heroes-remaining-encounter-linux-20260910/report.json`,
+  `/tmp/heroes-contract-windows-final-20260910/report.json` and
+  `/tmp/heroes-remaining-encounter-delivery-20260910/payload-preservation.json`.
+- Twelve existing domain reports ran: seven pass; the five failing reports'
+  fourteen complete error strings and exit codes exactly reproduce against
+  the retained `23d20edf` Linux PCK using that commit's unedited test scripts.
+  These concern the old Roadward unit-fallback expectation, catalog breadth
+  and previously recovered standard-atlas geometry; no new failures in this
+  twelve-report comparison. Reports and fail-closed comparison:
+  `/tmp/heroes-remaining-encounter-domain-suite-20260910/remaining_domains_final/report.json`
+  and `/tmp/heroes-remaining-domain-before-complete-20260910/comparison.json`.
+  Three original reports read raw PNGs directly; the baseline runner supplies
+  exactly nine Git-original reference rasters excluded from the release pack,
+  with individual hashes recorded. The PCK and test assertions are unchanged.
+  The earlier attempt without those reference inputs crashed in three reports;
+  `/tmp/heroes-remaining-domain-before-20260910/` is retained, not acceptance.
+  Seven passing geometry assertions subsequently had only their stale error
+  wording corrected to describe the recovered dimensions; no predicate changed.
+- Both distinct/decorative sprite reports and the movement-input report pass
+  in `/tmp/heroes-remaining-encounter-shared-suite-20260910/remaining_shared/report.json`.
+  That outer launcher exited 143 after the three completed reports, so it is
+  not recorded as a five-test pass. The remaining route and fog reports both
+  pass in the separately resumed `remaining_shared_tail/report.json` beside it.
+  All five individual reports pass; the interrupted wrapper is retained.
+
+Earlier candidate probes exposed test-route mistakes: distant stops caused
+unnecessary normal AI turns, and an interactable destination started a battle.
+The final probe excludes interaction destinations and stops within ordinary
+vision. Production movement/combat rules and all encounter records are unchanged.
+Those failed probes are retained and not acceptance evidence.
+
+**Resolved fixture blocker:** at approximately 05:12 UTC, concurrent activity outside this run
+removed `.artifacts/generated_full_match_quality_20260906` and its secondary-volume
+target. Free space rose from roughly 1 GB to 54 GB. The exact required fixture
+`medium_match_11_continuation_01/data/godot/app_userdata/heroes-like/saves/autosave.json`
+(SHA256 `1734cf2274e00eb763b94db4f814f4ffc73e30bb9377a9225b36bcc3780e0fcc`)
+is gone. The first 1920x1080 probe failed before launch with FileNotFoundError;
+cohort-specific packaged probes had not run then. No byte-identical copy was found among
+the surviving candidate temporary save/checkpoint files. The successful run's
+complete manual save survives at
+`/tmp/heroes-remaining-encounter-delivery-20260910/source_1280_clear_scout/native_saved_session.json`
+(SHA256 `d4b6cac54c25fc42456bdb7fdd3d4a9d0ed37fda8115dd63afe29d05b18bb1c1`).
+The owner subsequently approved this exact replacement ("yes go ahead use it").
+The bytes are now pinned under
+`tests/fixtures/overworld_cutout/native_day97_roundtrip.json`, with their complete
+lineage in adjacent `provenance.json`; no save fields were edited. Three focused
+tests pass, including rejection of altered or missing input. Both source and
+package drivers retain every original runtime/save assertion. The completed
+checks below use this separately identified control. This does not rewrite
+historical evidence or claim native generation changed.
+
+Consolidated acceptance with the approved pinned control lives under
+`.artifacts/remaining_encounter_delivery_20260910/` (the retained symlink to
+`/tmp/heroes-remaining-encounter-delivery-20260910/`):
+
+- `source_1280_repin`, `source_1920_repin`, `linux_1280_repin_complete` and
+  `windows_1280_repin`: **3,178 checks each**, exit 0 and zero runtime errors.
+  Each resolves all 85 exact textures/routes, preserves 15 complete actual
+  save/load round-trips and reaches twelve real authored fronts through
+  ordinary Day-1 scouting. The unchanged native control retains 2,380 blockers;
+  all 57 affected native encounters remain resolved, not fabricated visible
+  encounters. Both package reports prove unchanged PCKs and retained assertions.
+- `linux_before_repin_final`: the exact `23d20edf` predecessor completes all
+  3,178 checks and fails exactly **231 art assertions** (79 canvas sizes,
+  79 independent full-atlas raster oracles and 73 atlas regions), expected exit 1.
+  No other assertion or runtime failure occurs; six clean controls still pass.
+- `acceptance-repin.json` and adjacent `verify_repin_acceptance.py` prove the
+  exact expected predecessor failures and **60 complete saved-state comparisons**
+  across the four current deliveries and predecessor. Cross-run comparisons
+  exclude only `saved_at_unix` and fresh authored-session IDs; native session
+  identity remains compared. Actual within-run round-trips exclude no fields.
+- `payload-preservation-repin.json` and adjacent `verify_payloads_repin.py`
+  prove all 5,465 unrelated predecessor payloads, original source hashes,
+  1,135 unaffected art entries and every routing table remain exact. Linux and
+  Windows differ only in `project.binary`; neither test-fixture file is shipped.
+- All twelve final 1920x1080 authored views, all eight wide rendered gallery
+  pages and the native control were inspected. Final Linux 1280x720 gameplay
+  captures and a direct before/after Frontier Watch comparison were also
+  inspected: original sharp detail replaces the old 48px derivative without
+  magenta mats or sheet borders on the selected subjects. Detached galleries
+  are coverage evidence, not earned gameplay. Windows remains headless Wine,
+  not hardware-GPU visual certification.
+- The eight art tests and three fail-closed fixture tests pass. Final
+  `python3 -B tests/validate_repo.py` passes in
+  `/tmp/heroes-remaining-encounter-repo-repin-20260910.log`; shared/domain
+  results and their explicitly reproduced legacy failures remain as above.
+
+Two initial outer launchers returned 143 after their Godot reports were written;
+they are retained as diagnostics, not package acceptance. Standalone Linux and
+predecessor reruns completed normally. The package-isolation guard correctly
+rejected an interrupted probe directory; that directory was moved intact into
+its diagnostic evidence before the final rerun. The completed Windows run used
+the existing owned-prefix cleanup helper: recreatable system files were removed,
+while prefix user data, reports and receipts were retained. No project cache
+was deleted. These 79 repairs and six unchanged dispositions bring acceptance
+to **921/1214**, leaving **293 pending**; neither parent nor child is completed.
+
+For the official Windows rerun, this run moved the preceding accepted export,
+reports and generated-flow evidence intact into
+`/tmp/heroes-contract-windows-final-20260910-baseline/`; the official smoke reset
+only its own disposable Wine prefixes. The prior contract Windows paths above
+now refer to that baseline directory. This run did not remove the native save
+or the full-match artifacts, and did not delete project caches. The four
+pre-existing unrelated untracked retention paths remain hash-preserved;
+`tools/wine_prefix_cleanup.py`, `tests/test_packaging_wine_cleanup.py` and edits to
+`tests/packaging_windows_export_smoke.py` and
+`docs/packaging-windows-export-smoke-report.md` appeared from concurrent work.
+They were subsequently committed separately as `2dd6d74f` and are not part of
+this art batch. Local HEAD, origin/main and the live remote were verified at
+that cleanup commit before finalizing this cohort. The unrelated retention
+paths remain hash-preserved and excluded from the art commit.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The then-remaining 783 rows
 received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 836 repaired/preserved dispositions, leaving
-378 for complete detailed review/recovery. The two veteran mast repairs are now
+The accepted cohorts now cover 921 repaired/preserved dispositions, leaving
+293 for complete detailed review/recovery. The two veteran mast repairs are now
 included only after the separate source/visual/platform closure above.
 All 31 recurring encounters, 30
 recurring resource-site originals, 31 separate claimed dwellings and 34 early
 post-interaction and 40 landmark/objective-state paintings are accepted.
 The 34 command-site originals, all 36 recruitment/habitat dispositions and the
 40 command/training paintings and 52 contract/expedition encounter paintings
-are accepted. Next: remaining faction/signature encounter art, artifacts and
-other runtime families. The seven
+are accepted, along with the remaining 79 encounter recoveries and six faction
+controls above. Next: the 69 artifact rows and other remaining runtime families.
+The seven
 Pactwright/Mireglass states are accepted only by the explicit integrated-edit
 follow-up above; recovery of these originals does not accept different paintings.
 Individual source and native-resolution

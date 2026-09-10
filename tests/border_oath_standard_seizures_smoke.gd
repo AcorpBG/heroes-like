@@ -11,12 +11,12 @@ const REPORT_PATH := OUTPUT_DIR + "/report.json"
 const STANDARD_ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/border_oath_standards_atlas.png"
 const CORDON_ATLAS_PATH := "res://art/overworld/runtime/objects/encounters/border_oath_cordons/border_oath_cordons_atlas.png"
 const CASES := [
-	{"scenario_id":"tollbrand-cinderlock-border-oath-seizure","prefix":"threewrit","standard_asset":"resource_site_border_oath_embercourt_three_writ","standard_region":Rect2(0,0,48,48),"cordon_asset":"encounter_border_oath_mireclaw_moonhook","cordon_region":Rect2(0,0,48,48)},
-	{"scenario_id":"rotlamp-nightglass-border-oath-seizure","prefix":"fenhook","standard_asset":"resource_site_border_oath_mireclaw_fenhook","standard_region":Rect2(48,0,48,48),"cordon_asset":"encounter_border_oath_sunvault_prismwrit","cordon_region":Rect2(48,0,48,48)},
-	{"scenario_id":"lenscaptain-dawnmirror-border-oath-seizure","prefix":"trifold","standard_asset":"resource_site_border_oath_sunvault_trifold","standard_region":Rect2(96,0,48,48),"cordon_asset":"encounter_border_oath_thornwake_rootglass","cordon_region":Rect2(96,0,48,48)},
-	{"scenario_id":"boltroot-briarwheel-border-oath-seizure","prefix":"threeseed","standard_asset":"resource_site_border_oath_thornwake_three_seed","standard_region":Rect2(144,0,48,48),"cordon_asset":"encounter_border_oath_brasshollow_blackbell","cordon_region":Rect2(144,0,48,48)},
-	{"scenario_id":"pitmarshal-cindercoil-border-oath-seizure","prefix":"tripgauge","standard_asset":"resource_site_border_oath_brasshollow_tripgauge","standard_region":Rect2(192,0,48,48),"cordon_asset":"encounter_border_oath_veilmourn_wakechain","cordon_region":Rect2(192,0,48,48)},
-	{"scenario_id":"oriflag-gloamwake-border-oath-seizure","prefix":"threewake","standard_asset":"resource_site_border_oath_veilmourn_three_wake","standard_region":Rect2(240,0,48,48),"cordon_asset":"encounter_border_oath_embercourt_rainbrand","cordon_region":Rect2(240,0,48,48)},
+	{"scenario_id":"tollbrand-cinderlock-border-oath-seizure","prefix":"threewrit","standard_asset":"resource_site_border_oath_embercourt_three_writ","standard_region":Rect2(0,0,48,48),"cordon_asset":"encounter_border_oath_mireclaw_moonhook","cordon_region":Rect2(0, 0, 192, 192)},
+	{"scenario_id":"rotlamp-nightglass-border-oath-seizure","prefix":"fenhook","standard_asset":"resource_site_border_oath_mireclaw_fenhook","standard_region":Rect2(48,0,48,48),"cordon_asset":"encounter_border_oath_sunvault_prismwrit","cordon_region":Rect2(192, 0, 192, 192)},
+	{"scenario_id":"lenscaptain-dawnmirror-border-oath-seizure","prefix":"trifold","standard_asset":"resource_site_border_oath_sunvault_trifold","standard_region":Rect2(96,0,48,48),"cordon_asset":"encounter_border_oath_thornwake_rootglass","cordon_region":Rect2(384, 0, 192, 192)},
+	{"scenario_id":"boltroot-briarwheel-border-oath-seizure","prefix":"threeseed","standard_asset":"resource_site_border_oath_thornwake_three_seed","standard_region":Rect2(144,0,48,48),"cordon_asset":"encounter_border_oath_brasshollow_blackbell","cordon_region":Rect2(576, 0, 192, 192)},
+	{"scenario_id":"pitmarshal-cindercoil-border-oath-seizure","prefix":"tripgauge","standard_asset":"resource_site_border_oath_brasshollow_tripgauge","standard_region":Rect2(192,0,48,48),"cordon_asset":"encounter_border_oath_veilmourn_wakechain","cordon_region":Rect2(768, 0, 192, 192)},
+	{"scenario_id":"oriflag-gloamwake-border-oath-seizure","prefix":"threewake","standard_asset":"resource_site_border_oath_veilmourn_three_wake","standard_region":Rect2(240,0,48,48),"cordon_asset":"encounter_border_oath_embercourt_rainbrand","cordon_region":Rect2(960, 0, 192, 192)},
 ]
 
 var _errors: Array[String] = []
@@ -34,7 +34,7 @@ func _run() -> void:
 	var standard_atlas := load(STANDARD_ATLAS_PATH) as Texture2D
 	var cordon_atlas := load(CORDON_ATLAS_PATH) as Texture2D
 	_expect(standard_atlas != null and standard_atlas.get_size() == Vector2(288, 48), "Border Oath standard atlas must remain 288x48.")
-	_expect(cordon_atlas != null and cordon_atlas.get_size() == Vector2(288, 48), "Border Oath cordon atlas must remain 288x48.")
+	_expect(cordon_atlas != null and cordon_atlas.get_size() == Vector2(1152, 192), "Recovered Border Oath cordon atlas must remain 1152x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)

@@ -1,0 +1,21 @@
+{
+  "schema_id": "earned_overworld_cutout_save_fixture_v1",
+  "owner_approved_at": "2026-09-10",
+  "owner_direction": "yes go ahead use it",
+  "fixture": "native_day97_roundtrip.json",
+  "fixture_sha256": "d4b6cac54c25fc42456bdb7fdd3d4a9d0ed37fda8115dd63afe29d05b18bb1c1",
+  "fixture_bytes": 7581304,
+  "day": 97,
+  "save_version": 9,
+  "scenario_id": "native_h3maped_93c0f05a_skirmish",
+  "source": "/tmp/heroes-remaining-encounter-delivery-20260910/source_1280_clear_scout/native_saved_session.json",
+  "source_report": "/tmp/heroes-remaining-encounter-delivery-20260910/source_1280_clear_scout/report.json",
+  "source_report_sha256": "160028a9c1262635272f976e4c4277e6ce2db8a0c7035d8f1178faf6fceee5e1",
+  "source_report_result": "3178 checks passed, including complete native/authored save round trips; input unchanged",
+  "superseded_fixture": ".artifacts/generated_full_match_quality_20260906/medium_match_11_continuation_01/data/godot/app_userdata/heroes-like/saves/autosave.json",
+  "superseded_sha256": "1734cf2274e00eb763b94db4f814f4ffc73e30bb9377a9225b36bcc3780e0fcc",
+  "reason": "Concurrent external cleanup removed the old artifact. Owner approved this surviving verified manual round-trip as a separately pinned control, not a byte-identical restoration.",
+  "byte_transformation": "none: copied verbatim from successful source_1280_clear_scout evidence",
+  "scope": "Original earned generated-map regression control, not repaired-encounter visibility evidence; 57 affected encounters were already resolved.",
+  "package_policy": "tests/* excluded from both release presets; not shipped game or save content"
+}

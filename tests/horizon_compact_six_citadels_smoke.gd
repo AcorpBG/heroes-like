@@ -9,7 +9,7 @@ const REPORT_ID := "HORIZON_COMPACT_SIX_CITADELS_SMOKE"
 const OUTPUT_DIR := "res://.artifacts/horizon_compact_six_citadels_smoke"
 const SCENARIO_ID := "horizon-compact-six-citadels"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png"
-const ATLAS_SHA256 := "58c14c56f362855e88f218bdd85f0b6f8af9c775528561d0341d7ab356f999a8"
+const ATLAS_SHA256 := "ce477e7bfa65f736e0b01e3f87060f5c160ba0ee9825966a52bff3b0e301e59b"
 const EXPECTED_TOWN_IDS := [
 	"horizon_rainwrit_town",
 	"horizon_hollowreed_town",
@@ -179,7 +179,7 @@ func _validate_and_resolve_encounter(session: SessionStateStoreScript.SessionDat
 	var presentation: Dictionary = view.call("validation_encounter_presentation_payload", placement)
 	var asset_id := encounter_id
 	var texture = view.call("_object_texture_for_asset", asset_id)
-	var exact_identity_art: bool = String(presentation.get("identity_encounter_asset_id", "")) == asset_id and String(presentation.get("identity_encounter_path", "")) == ATLAS_PATH and bool(presentation.get("uses_identity_encounter_sprite", false)) and texture is AtlasTexture and texture.region == Rect2(float(case.get("atlas_x", 0)), 0.0, 48.0, 48.0)
+	var exact_identity_art: bool = String(presentation.get("identity_encounter_asset_id", "")) == asset_id and String(presentation.get("identity_encounter_path", "")) == ATLAS_PATH and bool(presentation.get("uses_identity_encounter_sprite", false)) and texture is AtlasTexture and texture.region == Rect2(float(case.get("atlas_x", 0)) * 4.0, 0.0, 192.0, 192.0)
 	_expect(exact_identity_art, "%s did not resolve its exact compact-atlas identity region: %s" % [encounter_id, JSON.stringify(presentation)])
 	_rows.append({"placement_id":placement_id,"encounter_id":encounter_id,"army_id":String(case.get("army_id", "")),"objective_id":String(case.get("objective_id", "")),"objective_type":String(case.get("objective_type", "")),"battle_stack_count":3,"battle_victory":String(resolution.get("state", "")) == "victory","exact_identity_art":exact_identity_art,"atlas_x":int(case.get("atlas_x", 0))})
 
@@ -230,9 +230,9 @@ func _side_stack_count(battle: Dictionary, side: String) -> int:
 
 func _write_atlas_preview(path: String) -> bool:
 	var atlas := Image.load_from_file(ProjectSettings.globalize_path(ATLAS_PATH))
-	if atlas.is_empty() or atlas.get_size() != Vector2i(288, 48) or FileAccess.get_sha256(ATLAS_PATH) != ATLAS_SHA256:
+	if atlas.is_empty() or atlas.get_size() != Vector2i(1152, 192) or FileAccess.get_sha256(ATLAS_PATH) != ATLAS_SHA256:
 		return false
-	atlas.resize(1152, 192, Image.INTERPOLATE_NEAREST)
+	atlas.resize(1152, 192, Image.INTERPOLATE_LANCZOS)
 	return atlas.save_png(path) == OK
 
 

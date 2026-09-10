@@ -7,7 +7,7 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const REPORT_ID := "FOUR_DORMANT_ROSTER_FIELD_COMPANIES_SMOKE"
 const OUTPUT_DIR := "res://.artifacts/four_dormant_roster_field_companies_smoke"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png"
-const ATLAS_SHA256 := "1427677a89e0a49cdbd1feb2fcd2778c52e1e233b34c3628885227a7a38dd683"
+const ATLAS_SHA256 := "d17fc9aed6f2f06a6463be503d2158a4d633a112c270ff79b41dbdec1540b162"
 
 const CASES := [
 	{"scenario_id":"horizon-compact-six-citadels","placement_id":"horizon_lockglass_citation_field","encounter_id":"encounter_lockglass_citation_field","army_id":"army_lockglass_citation_field","unit_id":"unit_embercourt_lockglass_writcasters","faction_id":"faction_embercourt","unit_count":2,"objective_id":"lockglass_citation_bench","objective_type":"cover_line","reward_id":"embergrain","gold":340,"victory_flag":"lockglass_citation_field_cleared","asset_id":"encounter_dormant_roster_lockglass_citation_field","atlas_x":0,"source_name":"lockglass_citation_field_source.png","source_sha256":"27a8df3f93eb5c0e78fd1e98bd0bbddd08f51c7800a570db9e34ce21a0691504"},
@@ -43,7 +43,7 @@ func _run() -> void:
 		"new_encounter_count": CASES.size(),
 		"formerly_dormant_unit_count": CASES.size(),
 		"atlas_path": ATLAS_PATH,
-		"atlas_size": [192, 48],
+		"atlas_size": [768, 192],
 		"atlas_sha256": ATLAS_SHA256,
 		"save_version": SessionStateStoreScript.SAVE_VERSION,
 		"single_consolidated_smoke": true,
@@ -60,7 +60,7 @@ func _run() -> void:
 
 func _validate_atlas_and_catalog() -> void:
 	var image := Image.load_from_file(ProjectSettings.globalize_path(ATLAS_PATH))
-	_expect(not image.is_empty() and image.get_size() == Vector2i(192, 48), "The compact field-company atlas must remain 192x48.")
+	_expect(not image.is_empty() and image.get_size() == Vector2i(768, 192), "The recovered field-company atlas must remain 768x192.")
 	_expect(FileAccess.get_sha256(ATLAS_PATH) == ATLAS_SHA256 and image.detect_alpha() != Image.ALPHA_NONE, "The compact field-company atlas lost its exact transparent runtime bytes.")
 	var used_units := {}
 	for army_id in ContentService.get_content_ids(ContentService.ARMY_GROUPS_PATH):
@@ -106,7 +106,7 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	await get_tree().process_frame
 	var presentation: Dictionary = view.call("validation_encounter_presentation_payload", placement)
 	var texture = view.call("_object_texture_for_asset", String(case.get("asset_id", "")))
-	var exact_art: bool = String(presentation.get("identity_encounter_asset_id", "")) == String(case.get("asset_id", "")) and String(presentation.get("identity_encounter_path", "")) == ATLAS_PATH and bool(presentation.get("uses_identity_encounter_sprite", false)) and texture is AtlasTexture and texture.region == Rect2(float(case.get("atlas_x", 0)), 0.0, 48.0, 48.0) and texture.atlas.get_size() == Vector2(192, 48)
+	var exact_art: bool = String(presentation.get("identity_encounter_asset_id", "")) == String(case.get("asset_id", "")) and String(presentation.get("identity_encounter_path", "")) == ATLAS_PATH and bool(presentation.get("uses_identity_encounter_sprite", false)) and texture is AtlasTexture and texture.region == Rect2(float(case.get("atlas_x", 0)) * 4.0, 0.0, 192.0, 192.0) and texture.atlas.get_size() == Vector2(768, 192)
 	_expect(exact_art, "%s did not resolve its exact live atlas region: %s" % [encounter_id, JSON.stringify(presentation)])
 	var capture_path := await _capture_if_requested(scenario_id)
 

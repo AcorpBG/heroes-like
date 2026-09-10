@@ -1450,7 +1450,10 @@
       "assigned_encounter_id": "encounter_reed_totemists",
       "assigned_faction_id": "faction_mireclaw",
       "presentation_role": "reed_jaw_totem_cluster",
-      "accessible_description": "A crooked cluster of reed poles carries a carved boar-jaw mask, bone chimes, moss, and an amber ward lantern."
+      "accessible_description": "A crooked cluster of reed poles carries a carved boar-jaw mask, bone chimes, moss, and an amber ward lantern.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_signature_reed_totemists.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "4ee975a01d1fe46d81e6d57db094b889525a508733aac5399d7b90107bac7b9c"
     },
     "encounter_signature_archive_wardens": {
       "path": "res://art/overworld/runtime/objects/encounters/signatures/archive_wardens.png",
@@ -1459,7 +1462,10 @@
       "assigned_encounter_id": "encounter_archive_wardens",
       "assigned_faction_id": "faction_embercourt",
       "presentation_role": "fortified_field_archive",
-      "accessible_description": "An iron-bound red field archive stands beneath an amber lantern between two short warding pikes."
+      "accessible_description": "An iron-bound red field archive stands beneath an amber lantern between two short warding pikes.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_signature_archive_wardens.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "36ba0ca83f4a6ecd3ae63f1769e63b63b453e6c4118547cb160415a84afde9b2"
     },
     "encounter_signature_relay_pickets": {
       "path": "res://art/overworld/runtime/objects/encounters/signatures/relay_pickets.png",
@@ -1468,7 +1474,10 @@
       "assigned_encounter_id": "encounter_relay_pickets",
       "assigned_faction_id": "faction_sunvault",
       "presentation_role": "portable_prism_relay",
-      "accessible_description": "A pale-gold prism and two mirrored signal vanes rise behind three cord-linked ivory boundary stakes."
+      "accessible_description": "A pale-gold prism and two mirrored signal vanes rise behind three cord-linked ivory boundary stakes.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_signature_relay_pickets.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "cd6c4dd849d5e06383e7b5299de21ee6dfaafc3f6d220e73124ce46bbb236361"
     },
     "encounter_signature_graftroot_wardens": {
       "path": "res://art/overworld/runtime/objects/encounters/signatures/graftroot_wardens.png",
@@ -1477,7 +1486,10 @@
       "assigned_encounter_id": "encounter_graftroot_wardens",
       "assigned_faction_id": "faction_thornwake",
       "presentation_role": "living_graftroot_ward",
-      "accessible_description": "Two antler-like living roots and a copper thorn loop guard a luminous green sapstone."
+      "accessible_description": "Two antler-like living roots and a copper thorn loop guard a luminous green sapstone.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_signature_graftroot_wardens.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "556e0cf1cc5eda1446079c20c2e0888c3247b15dcd5b9b15c04ca6319e0dffa8"
     },
     "encounter_signature_orevein_exactors": {
       "path": "res://art/overworld/runtime/objects/encounters/signatures/orevein_exactors.png",
@@ -1486,7 +1498,10 @@
       "assigned_encounter_id": "encounter_orevein_exactors",
       "assigned_faction_id": "faction_brasshollow",
       "presentation_role": "portable_assay_station",
-      "accessible_description": "A black iron assay tripod carries brass scales above a hot sample crucible and locked ore strongbox."
+      "accessible_description": "A black iron assay tripod carries brass scales above a hot sample crucible and locked ore strongbox.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_signature_orevein_exactors.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "ca6447572816eeccc6f85a5c4a66e424c3cfacca09f0c9d552d667c7d9cb40e5"
     },
     "encounter_signature_bellwake_privateers": {
       "path": "res://art/overworld/runtime/objects/encounters/signatures/bellwake_privateers.png",
@@ -1495,7 +1510,10 @@
       "assigned_encounter_id": "encounter_bellwake_privateers",
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "fog_coast_signal_mooring",
-      "accessible_description": "A leaning weathered mast holds a dark ship bell, torn teal pennant, anchor hook, rope, and pale harbor lantern."
+      "accessible_description": "A leaning weathered mast holds a dark ship bell, torn teal pennant, anchor hook, rope, and pale harbor lantern.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_signature_bellwake_privateers.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "a7c94f53aa4084213836b1d03ece8338cdc4c1243035f9d498418027f662d677"
     },
     "encounter_recurring_beacon_wardens": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_recovered_atlas.png",
@@ -12020,12 +12038,12 @@
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        192,
-        48
+        768,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/systemic_encounters/town_assault_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/systemic/systemic_encounter_landmarks_atlas.png",
@@ -12035,19 +12053,22 @@
       "assigned_encounter_id": "encounter_town_assault",
       "assigned_faction_id": "faction_mireclaw",
       "presentation_role": "broken_gate_town_assault",
-      "accessible_description": "One high and one shattered stone pier frame a hanging gate leaf and iron-capped ram nose around a clear breach."
+      "accessible_description": "One high and one shattered stone pier frame a hanging gate leaf and iron-capped ram nose around a clear breach.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_systemic_town_assault.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "9de025afacb7d4022643a7a91e35887032db7d7b2c00fd44b48b9a461a024788"
     },
     "encounter_systemic_resource_defense": {
       "path": "res://art/overworld/runtime/objects/encounters/systemic/systemic_encounter_landmarks_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        192,
-        48
+        768,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/systemic_encounters/resource_defense_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/systemic/systemic_encounter_landmarks_atlas.png",
@@ -12057,19 +12078,22 @@
       "assigned_encounter_id": "encounter_resource_defense",
       "assigned_faction_id": "faction_mireclaw",
       "presentation_role": "hooked_perimeter_field_defense",
-      "accessible_description": "Two low hooked barricade wings guard a narrow gap before a rope hoist, sealed crates, stakes, and leaning pavise."
+      "accessible_description": "Two low hooked barricade wings guard a narrow gap before a rope hoist, sealed crates, stakes, and leaning pavise.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_systemic_resource_defense.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "9de025afacb7d4022643a7a91e35887032db7d7b2c00fd44b48b9a461a024788"
     },
     "encounter_systemic_mire_raid": {
       "path": "res://art/overworld/runtime/objects/encounters/systemic/systemic_encounter_landmarks_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        192,
-        48
+        768,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/systemic_encounters/mire_raid_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/systemic/systemic_encounter_landmarks_atlas.png",
@@ -12079,19 +12103,22 @@
       "assigned_encounter_id": "encounter_mire_raid",
       "assigned_faction_id": "faction_mireclaw",
       "presentation_role": "open_lane_mireclaw_raid_sled",
-      "accessible_description": "A forward-leaning forked mast and claw-cut hide sail pull a peat sled loaded with sling stones, cudgels, and a drum."
+      "accessible_description": "A forward-leaning forked mast and claw-cut hide sail pull a peat sled loaded with sling stones, cudgels, and a drum.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_systemic_mire_raid.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "9de025afacb7d4022643a7a91e35887032db7d7b2c00fd44b48b9a461a024788"
     },
     "encounter_systemic_blackbranch_reavers": {
       "path": "res://art/overworld/runtime/objects/encounters/systemic/systemic_encounter_landmarks_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        192,
-        48
+        768,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/systemic_encounters/blackbranch_reavers_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/systemic/systemic_encounter_landmarks_atlas.png",
@@ -12101,19 +12128,22 @@
       "assigned_encounter_id": "encounter_blackbranch_reavers",
       "assigned_faction_id": "faction_mireclaw",
       "presentation_role": "blackbranch_crossed_ambush_blind",
-      "accessible_description": "Two char-black branches cross above a dark reed ambush blind, three hooked blades, sling rest, and stone pouch."
+      "accessible_description": "Two char-black branches cross above a dark reed ambush blind, three hooked blades, sling rest, and stone pouch.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_systemic_blackbranch_reavers.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "9de025afacb7d4022643a7a91e35887032db7d7b2c00fd44b48b9a461a024788"
     },
     "encounter_horizon_rainwrit_charter_gate": {
       "path": "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png",
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/horizon_compact_wave1/rainwrit_charter_gate_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png",
@@ -12123,19 +12153,22 @@
       "assigned_encounter_id": "encounter_horizon_rainwrit_charter_gate",
       "assigned_faction_id": "faction_embercourt",
       "presentation_role": "rainwrit_floodgate_assize_line",
-      "accessible_description": "A tall hooded beacon rises above crossed charter keys, a turning sluice wheel, and a narrow rain-wet causeway."
+      "accessible_description": "A tall hooded beacon rises above crossed charter keys, a turning sluice wheel, and a narrow rain-wet causeway.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_horizon_rainwrit_charter_gate.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "ce477e7bfa65f736e0b01e3f87060f5c160ba0ee9825966a52bff3b0e301e59b"
     },
     "encounter_horizon_hollowreed_moonfang_palisade": {
       "path": "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/horizon_compact_wave1/hollowreed_moonfang_palisade_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png",
@@ -12145,19 +12178,22 @@
       "assigned_encounter_id": "encounter_horizon_hollowreed_moonfang_palisade",
       "assigned_faction_id": "faction_mireclaw",
       "presentation_role": "hollowreed_hooked_moonfang_court",
-      "accessible_description": "Hooked black reed palings surround a crescent antler drum, two chain snares, and a half-drowned oath bell."
+      "accessible_description": "Hooked black reed palings surround a crescent antler drum, two chain snares, and a half-drowned oath bell.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_horizon_hollowreed_moonfang_palisade.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "ce477e7bfa65f736e0b01e3f87060f5c160ba0ee9825966a52bff3b0e301e59b"
     },
     "encounter_horizon_meridian_choir_array": {
       "path": "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/horizon_compact_wave1/meridian_choir_array_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png",
@@ -12167,19 +12203,22 @@
       "assigned_encounter_id": "encounter_horizon_meridian_choir_array",
       "assigned_faction_id": "faction_sunvault",
       "presentation_role": "meridian_three_fork_sighting_array",
-      "accessible_description": "Three high golden tuning forks frame a many-faceted sun prism above a low mirrored sighting ring."
+      "accessible_description": "Three high golden tuning forks frame a many-faceted sun prism above a low mirrored sighting ring.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_horizon_meridian_choir_array.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "ce477e7bfa65f736e0b01e3f87060f5c160ba0ee9825966a52bff3b0e301e59b"
     },
     "encounter_horizon_crownroot_oathseed_ring": {
       "path": "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/horizon_compact_wave1/crownroot_oathseed_ring_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png",
@@ -12189,19 +12228,22 @@
       "assigned_encounter_id": "encounter_horizon_crownroot_oathseed_ring",
       "assigned_faction_id": "faction_thornwake",
       "presentation_role": "crownroot_braided_shelter_ring",
-      "accessible_description": "A broad braided root arch shelters one crowned amber seed, four sporeglass vents, and a low thorn boundary."
+      "accessible_description": "A broad braided root arch shelters one crowned amber seed, four sporeglass vents, and a low thorn boundary.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_horizon_crownroot_oathseed_ring.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "ce477e7bfa65f736e0b01e3f87060f5c160ba0ee9825966a52bff3b0e301e59b"
     },
     "encounter_horizon_blackbell_verdict_gantry": {
       "path": "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png",
       "atlas_region": [
-        192,
+        768,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/horizon_compact_wave1/blackbell_verdict_gantry_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png",
@@ -12211,19 +12253,22 @@
       "assigned_encounter_id": "encounter_horizon_blackbell_verdict_gantry",
       "assigned_faction_id": "faction_brasshollow",
       "presentation_role": "blackbell_redline_judgment_rail",
-      "accessible_description": "A massive black bell hangs between riveted blast screens beside a bright red pressure tube and round gauge."
+      "accessible_description": "A massive black bell hangs between riveted blast screens beside a bright red pressure tube and round gauge.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_horizon_blackbell_verdict_gantry.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "ce477e7bfa65f736e0b01e3f87060f5c160ba0ee9825966a52bff3b0e301e59b"
     },
     "encounter_horizon_pale_sounding_ghost_mooring": {
       "path": "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png",
       "atlas_region": [
-        240,
+        960,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/horizon_compact_wave1/pale_sounding_ghost_mooring_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png",
@@ -12233,19 +12278,22 @@
       "assigned_encounter_id": "encounter_horizon_pale_sounding_ghost_mooring",
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "pale_sounding_tideglass_quay",
-      "accessible_description": "A salt-frosted bell and hanging tideglass drop stand between pale mooring posts, ghost ropes, and a drowned quay wall."
+      "accessible_description": "A salt-frosted bell and hanging tideglass drop stand between pale mooring posts, ghost ropes, and a drowned quay wall.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_horizon_pale_sounding_ghost_mooring.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "ce477e7bfa65f736e0b01e3f87060f5c160ba0ee9825966a52bff3b0e301e59b"
     },
     "encounter_horizon_court_meridian_noonwire_tribunal": {
       "path": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        240,
-        48
+        960,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/horizon_courts_wave1/meridian_noonwire_tribunal_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
@@ -12255,19 +12303,22 @@
       "assigned_encounter_id": "encounter_horizon_court_meridian_noonwire_tribunal",
       "assigned_faction_id": "faction_sunvault",
       "presentation_role": "meridian_split_prism_noonwire_tribunal",
-      "accessible_description": "A split sun prism rises above three taut golden sight wires, mirrored judgment plates, and one asymmetric fork mast."
+      "accessible_description": "A split sun prism rises above three taut golden sight wires, mirrored judgment plates, and one asymmetric fork mast.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_horizon_court_meridian_noonwire_tribunal.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "7efa3b6ca4eabdf58fad2f141b88a4fef976f4604727ad08dfb53378e9e39e00"
     },
     "encounter_horizon_court_crownroot_rootglass_jury": {
       "path": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        240,
-        48
+        960,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/horizon_courts_wave1/crownroot_rootglass_jury_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
@@ -12277,19 +12328,22 @@
       "assigned_encounter_id": "encounter_horizon_court_crownroot_rootglass_jury",
       "assigned_faction_id": "faction_thornwake",
       "presentation_role": "crownroot_five_arch_rootglass_jury",
-      "accessible_description": "Five living root witness arches surround bright seedglass tablets behind a braided thorn rail and hanging amber sap lamps."
+      "accessible_description": "Five living root witness arches surround bright seedglass tablets behind a braided thorn rail and hanging amber sap lamps.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_horizon_court_crownroot_rootglass_jury.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "7efa3b6ca4eabdf58fad2f141b88a4fef976f4604727ad08dfb53378e9e39e00"
     },
     "encounter_horizon_court_blackbell_quenchline_assize": {
       "path": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        240,
-        48
+        960,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/horizon_courts_wave1/blackbell_quenchline_assize_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
@@ -12299,19 +12353,22 @@
       "assigned_encounter_id": "encounter_horizon_court_blackbell_quenchline_assize",
       "assigned_faction_id": "faction_brasshollow",
       "presentation_role": "blackbell_quench_trough_verdict_rail",
-      "accessible_description": "A black bell gauge hangs over a red-hot quench trough crossed by a heavy iron verdict rail and massive pressure clamps."
+      "accessible_description": "A black bell gauge hangs over a red-hot quench trough crossed by a heavy iron verdict rail and massive pressure clamps.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_horizon_court_blackbell_quenchline_assize.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "7efa3b6ca4eabdf58fad2f141b88a4fef976f4604727ad08dfb53378e9e39e00"
     },
     "encounter_horizon_court_pale_saltwake_board": {
       "path": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        240,
-        48
+        960,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/horizon_courts_wave1/pale_saltwake_board_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
@@ -12321,19 +12378,22 @@
       "assigned_encounter_id": "encounter_horizon_court_pale_saltwake_board",
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "pale_saltwake_memory_scale_board",
-      "accessible_description": "A salt-frosted tide board and translucent balance scale hang among memory chimes, crooked ghost ropes, and broken quay posts."
+      "accessible_description": "A salt-frosted tide board and translucent balance scale hang among memory chimes, crooked ghost ropes, and broken quay posts.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_horizon_court_pale_saltwake_board.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "7efa3b6ca4eabdf58fad2f141b88a4fef976f4604727ad08dfb53378e9e39e00"
     },
     "encounter_horizon_court_rainwrit_tidewrit_assize": {
       "path": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
       "atlas_region": [
-        192,
+        768,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        240,
-        48
+        960,
+        192
       ],
       "source_generated": "res://art/overworld/source/generated/encounters/horizon_courts_wave1/rainwrit_tidewrit_assize_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
@@ -12343,7 +12403,10 @@
       "assigned_encounter_id": "encounter_horizon_court_rainwrit_tidewrit_assize",
       "assigned_faction_id": "faction_embercourt",
       "presentation_role": "rainwrit_twin_sluice_charter_desk",
-      "accessible_description": "Two oversized copper sluice keys flank a raised flood-charter desk, hooded rain beacon, and narrow wet stone causeway."
+      "accessible_description": "Two oversized copper sluice keys flank a raised flood-charter desk, hooded rain beacon, and narrow wet stone causeway.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_horizon_court_rainwrit_tidewrit_assize.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json",
+      "runtime_sha256": "7efa3b6ca4eabdf58fad2f141b88a4fef976f4604727ad08dfb53378e9e39e00"
     },
     "encounter_elite_cinderwake_fold_watch": {
       "path": "res://art/units/overworld_icons/unit_neutral_cinderwake_aurochs.png",
@@ -12671,14 +12734,14 @@
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac",
+      "runtime_sha256": "4759dc00e98be8ea1d5187d98d0fd4308d4974e3338ce46e5e729ee65ad105f3",
       "source_generated": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/briarwheel_witness_watch_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
       "source_model": "built_in_image_gen_original_frontier_watch_contract_atlas",
@@ -12687,21 +12750,23 @@
       "assigned_encounter_id": "encounter_briarwheel_witness_watch",
       "assigned_faction_id": "faction_thornwake",
       "presentation_role": "living_thorn_witness_bell_arch",
-      "accessible_description": "A round living thornwood arch carries three differently sized seed bells above a low braided root rail and hooked witness stakes."
+      "accessible_description": "A round living thornwood arch carries three differently sized seed bells above a low braided root rail and hooked witness stakes.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_frontier_watch_briarwheel_witness.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_frontier_watch_blackbell_quench": {
       "path": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac",
+      "runtime_sha256": "4759dc00e98be8ea1d5187d98d0fd4308d4974e3338ce46e5e729ee65ad105f3",
       "source_generated": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/blackbell_quench_watch_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
       "source_model": "built_in_image_gen_original_frontier_watch_contract_atlas",
@@ -12710,21 +12775,23 @@
       "assigned_encounter_id": "encounter_blackbell_quench_watch",
       "assigned_faction_id": "faction_brasshollow",
       "presentation_role": "red_gauge_quench_bell_gantry",
-      "accessible_description": "A soot-black furnace column supports a timber quench arm, red pressure dial, hanging brass bell, coal tray, and glowing lower firebox."
+      "accessible_description": "A soot-black furnace column supports a timber quench arm, red pressure dial, hanging brass bell, coal tray, and glowing lower firebox.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_frontier_watch_blackbell_quench.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_frontier_watch_nightglass_drowned": {
       "path": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac",
+      "runtime_sha256": "4759dc00e98be8ea1d5187d98d0fd4308d4974e3338ce46e5e729ee65ad105f3",
       "source_generated": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/nightglass_drowned_watch_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
       "source_model": "built_in_image_gen_original_frontier_watch_contract_atlas",
@@ -12733,21 +12800,23 @@
       "assigned_encounter_id": "encounter_nightglass_drowned_watch",
       "assigned_faction_id": "faction_mireclaw",
       "presentation_role": "reed_antler_teal_lantern_watch",
-      "accessible_description": "A narrow reed watchtower rises between broad antlers, rope ladders, a side horn, and one low dark-teal cage lantern."
+      "accessible_description": "A narrow reed watchtower rises between broad antlers, rope ladders, a side horn, and one low dark-teal cage lantern.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_frontier_watch_nightglass_drowned.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_frontier_watch_pale_memory": {
       "path": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac",
+      "runtime_sha256": "4759dc00e98be8ea1d5187d98d0fd4308d4974e3338ce46e5e729ee65ad105f3",
       "source_generated": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/pale_sounding_memory_watch_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
       "source_model": "built_in_image_gen_original_frontier_watch_contract_atlas",
@@ -12756,21 +12825,23 @@
       "assigned_encounter_id": "encounter_pale_sounding_memory_watch",
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "whalebone_memory_bell_mooring",
-      "accessible_description": "A pale curved whalebone suspends a heavy memory bell between four salt-dark mooring posts bound with thick ghost rope."
+      "accessible_description": "A pale curved whalebone suspends a heavy memory bell between four salt-dark mooring posts bound with thick ghost rope.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_frontier_watch_pale_memory.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_frontier_watch_halo_noon": {
       "path": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
       "atlas_region": [
-        192,
+        768,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac",
+      "runtime_sha256": "4759dc00e98be8ea1d5187d98d0fd4308d4974e3338ce46e5e729ee65ad105f3",
       "source_generated": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/halo_spire_noon_watch_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
       "source_model": "built_in_image_gen_original_frontier_watch_contract_atlas",
@@ -12779,21 +12850,23 @@
       "assigned_encounter_id": "encounter_halo_spire_noon_watch",
       "assigned_faction_id": "faction_sunvault",
       "presentation_role": "six_facet_noon_prism_array",
-      "accessible_description": "A bright central prism hangs inside a spiked meridian ring above six white stone tripod legs and four smaller sight crystals."
+      "accessible_description": "A bright central prism hangs inside a spiked meridian ring above six white stone tripod legs and four smaller sight crystals.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_frontier_watch_halo_noon.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_frontier_watch_rainwrit_charter": {
       "path": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
       "atlas_region": [
-        240,
+        960,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "fcca971a2afb7b12c6b7f498aeed37c9a66d7d73448cc81372fbab10f7e28eac",
+      "runtime_sha256": "4759dc00e98be8ea1d5187d98d0fd4308d4974e3338ce46e5e729ee65ad105f3",
       "source_generated": "res://art/overworld/source/generated/encounters/frontier_watch_contracts/rainwrit_charter_watch_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/frontier_watch_contracts/frontier_watch_contracts_atlas.png",
       "source_model": "built_in_image_gen_original_frontier_watch_contract_atlas",
@@ -12802,21 +12875,23 @@
       "assigned_encounter_id": "encounter_rainwrit_charter_watch",
       "assigned_faction_id": "faction_embercourt",
       "presentation_role": "square_charter_beacon_gate",
-      "accessible_description": "Two squared stone-and-brass gate posts hold a central caged ember beacon between chain clasps and asymmetric fire bowls."
+      "accessible_description": "Two squared stone-and-brass gate posts hold a central caged ember beacon between chain clasps and asymmetric fire bowls.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_frontier_watch_rainwrit_charter.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_dormant_roster_lockglass_citation_field": {
       "path": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png",
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        192,
-        48
+        768,
+        192
       ],
-      "runtime_sha256": "1427677a89e0a49cdbd1feb2fcd2778c52e1e233b34c3628885227a7a38dd683",
+      "runtime_sha256": "d17fc9aed6f2f06a6463be503d2158a4d633a112c270ff79b41dbdec1540b162",
       "source_generated": "res://art/overworld/source/generated/encounters/dormant_roster_field_companies/lockglass_citation_field_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png",
       "source_model": "built_in_image_gen_original_dormant_roster_field_company_landmark_atlas",
@@ -12825,21 +12900,23 @@
       "assigned_encounter_id": "encounter_lockglass_citation_field",
       "assigned_faction_id": "faction_embercourt",
       "presentation_role": "heated_lockglass_citation_bench",
-      "accessible_description": "A thick glowing lockglass slab is held by three brass seal clamps above a compact ember brazier between two charred charter posts."
+      "accessible_description": "A thick glowing lockglass slab is held by three brass seal clamps above a compact ember brazier between two charred charter posts.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_dormant_roster_lockglass_citation_field.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_dormant_roster_pollenhook_whistle_line": {
       "path": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        192,
-        48
+        768,
+        192
       ],
-      "runtime_sha256": "1427677a89e0a49cdbd1feb2fcd2778c52e1e233b34c3628885227a7a38dd683",
+      "runtime_sha256": "d17fc9aed6f2f06a6463be503d2158a4d633a112c270ff79b41dbdec1540b162",
       "source_generated": "res://art/overworld/source/generated/encounters/dormant_roster_field_companies/pollenhook_whistle_line_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png",
       "source_model": "built_in_image_gen_original_dormant_roster_field_company_landmark_atlas",
@@ -12848,21 +12925,23 @@
       "assigned_encounter_id": "encounter_pollenhook_whistle_line",
       "assigned_faction_id": "faction_thornwake",
       "presentation_role": "hooked_seed_whistle_arch",
-      "accessible_description": "A bent living-wood arch holds three hooked seed pods, pale reed whistles, an amber pollen lantern, and a low braided root rail."
+      "accessible_description": "A bent living-wood arch holds three hooked seed pods, pale reed whistles, an amber pollen lantern, and a low braided root rail.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_dormant_roster_pollenhook_whistle_line.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_dormant_roster_tallyspring_proving_rack": {
       "path": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        192,
-        48
+        768,
+        192
       ],
-      "runtime_sha256": "1427677a89e0a49cdbd1feb2fcd2778c52e1e233b34c3628885227a7a38dd683",
+      "runtime_sha256": "d17fc9aed6f2f06a6463be503d2158a4d633a112c270ff79b41dbdec1540b162",
       "source_generated": "res://art/overworld/source/generated/encounters/dormant_roster_field_companies/tallyspring_proving_rack_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png",
       "source_model": "built_in_image_gen_original_dormant_roster_field_company_landmark_atlas",
@@ -12871,21 +12950,23 @@
       "assigned_encounter_id": "encounter_tallyspring_proving_rack",
       "assigned_faction_id": "faction_brasshollow",
       "presentation_role": "three_disc_tallyspring_calibration_rack",
-      "accessible_description": "A wound black spring drives three angled brass tally discs beside a vertical red gauge, riveted timber base, and small quench bucket."
+      "accessible_description": "A wound black spring drives three angled brass tally discs beside a vertical red gauge, riveted timber base, and small quench bucket.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_dormant_roster_tallyspring_proving_rack.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_dormant_roster_gloamkeel_sounding_barricade": {
       "path": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        192,
-        48
+        768,
+        192
       ],
-      "runtime_sha256": "1427677a89e0a49cdbd1feb2fcd2778c52e1e233b34c3628885227a7a38dd683",
+      "runtime_sha256": "d17fc9aed6f2f06a6463be503d2158a4d633a112c270ff79b41dbdec1540b162",
       "source_generated": "res://art/overworld/source/generated/encounters/dormant_roster_field_companies/gloamkeel_sounding_barricade_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png",
       "source_model": "built_in_image_gen_original_dormant_roster_field_company_landmark_atlas",
@@ -12894,21 +12975,23 @@
       "assigned_encounter_id": "encounter_gloamkeel_sounding_barricade",
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "planted_keel_sounding_barricade",
-      "accessible_description": "A broad salt-dark keel shield stands between broken mooring posts beneath a pale bell, ghost-rope chain, and cold wake lantern."
+      "accessible_description": "A broad salt-dark keel shield stands between broken mooring posts beneath a pale bell, ghost-rope chain, and cold wake lantern.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_dormant_roster_gloamkeel_sounding_barricade.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_rival_commander_rotlamp_spoor_court": {
       "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b",
+      "runtime_sha256": "adaf6395842602260cca53e59cd648e3e96fb00a0a7a5b12a84aa76b89077814",
       "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/rotlamp_spoor_court_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
       "source_model": "built_in_image_gen_original_grand_convergence_rival_standard_atlas",
@@ -12918,21 +13001,23 @@
       "assigned_faction_id": "faction_mireclaw",
       "assigned_commander_hero_id": "hero_mireclaw_edda_rotlamp",
       "presentation_role": "three_lantern_spoor_court_standard",
-      "accessible_description": "A crooked reed-and-iron standard hangs three differently shaped rot-glass lanterns above a shallow ember-spore brazier."
+      "accessible_description": "A crooked reed-and-iron standard hangs three differently shaped rot-glass lanterns above a shallow ember-spore brazier.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_rival_commander_rotlamp_spoor_court.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_rival_commander_daynote_refraction_bench": {
       "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b",
+      "runtime_sha256": "adaf6395842602260cca53e59cd648e3e96fb00a0a7a5b12a84aa76b89077814",
       "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/daynote_refraction_bench_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
       "source_model": "built_in_image_gen_original_grand_convergence_rival_standard_atlas",
@@ -12942,21 +13027,23 @@
       "assigned_faction_id": "faction_sunvault",
       "assigned_commander_hero_id": "hero_sunvault_essa_daynote",
       "presentation_role": "three_tine_refraction_lyre_standard",
-      "accessible_description": "A narrow white-gold prism lyre rises through three tall tuning tines above a faceted blue crystal foot."
+      "accessible_description": "A narrow white-gold prism lyre rises through three tall tuning tines above a faceted blue crystal foot.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_rival_commander_daynote_refraction_bench.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_rival_commander_thorncart_pilgrim_cordon": {
       "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b",
+      "runtime_sha256": "adaf6395842602260cca53e59cd648e3e96fb00a0a7a5b12a84aa76b89077814",
       "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/thorncart_pilgrim_cordon_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
       "source_model": "built_in_image_gen_original_grand_convergence_rival_standard_atlas",
@@ -12966,21 +13053,23 @@
       "assigned_faction_id": "faction_thornwake",
       "assigned_commander_hero_id": "hero_thornwake_halen_thorncart",
       "presentation_role": "rooted_thorncart_wheel_standard",
-      "accessible_description": "A living cartwheel is rooted upright beneath a hooked pilgrim lantern and two long, uneven woven branch pennants."
+      "accessible_description": "A living cartwheel is rooted upright beneath a hooked pilgrim lantern and two long, uneven woven branch pennants.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_rival_commander_thorncart_pilgrim_cordon.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_rival_commander_pitmarshal_red_chain_assize": {
       "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b",
+      "runtime_sha256": "adaf6395842602260cca53e59cd648e3e96fb00a0a7a5b12a84aa76b89077814",
       "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/pitmarshal_red_chain_assize_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
       "source_model": "built_in_image_gen_original_grand_convergence_rival_standard_atlas",
@@ -12990,21 +13079,23 @@
       "assigned_faction_id": "faction_brasshollow",
       "assigned_commander_hero_id": "hero_brasshollow_selka_pitmarshal",
       "presentation_role": "red_gauge_chain_assize_standard",
-      "accessible_description": "A broad riveted iron post centers one oversized red gauge above three hanging chain lengths and a stamped anvil foot."
+      "accessible_description": "A broad riveted iron post centers one oversized red gauge above three hanging chain lengths and a stamped anvil foot.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_rival_commander_pitmarshal_red_chain_assize.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_rival_commander_mistcorsair_foghook_boarding": {
       "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
       "atlas_region": [
-        192,
+        768,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b",
+      "runtime_sha256": "adaf6395842602260cca53e59cd648e3e96fb00a0a7a5b12a84aa76b89077814",
       "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/mistcorsair_foghook_boarding_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
       "source_model": "built_in_image_gen_original_grand_convergence_rival_standard_atlas",
@@ -13014,21 +13105,23 @@
       "assigned_faction_id": "faction_veilmourn",
       "assigned_commander_hero_id": "hero_veilmourn_cela_mistcorsair",
       "presentation_role": "hooked_fog_mast_boarding_standard",
-      "accessible_description": "A sharply hooked dark mast carries a split black sail, pale bell, descending tideglass beads, and anchor-like boarding hook."
+      "accessible_description": "A sharply hooked dark mast carries a split black sail, pale bell, descending tideglass beads, and anchor-like boarding hook.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_rival_commander_mistcorsair_foghook_boarding.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_rival_commander_tollbrand_sluice_levy": {
       "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
       "atlas_region": [
-        240,
+        960,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b",
+      "runtime_sha256": "adaf6395842602260cca53e59cd648e3e96fb00a0a7a5b12a84aa76b89077814",
       "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/tollbrand_sluice_levy_source.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
       "source_model": "built_in_image_gen_original_grand_convergence_rival_standard_atlas",
@@ -13038,21 +13131,23 @@
       "assigned_faction_id": "faction_embercourt",
       "assigned_commander_hero_id": "hero_embercourt_helva_tollbrand",
       "presentation_role": "twin_lock_sluice_levy_standard",
-      "accessible_description": "A copper sluice frame holds two lantern locks, a blank pale ceramic toll tablet, and a narrow forked red pennant."
+      "accessible_description": "A copper sluice frame holds two lantern locks, a blank pale ceramic toll tablet, and a narrow forked red pennant.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_rival_commander_tollbrand_sluice_levy.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_fenwake_crown_drum": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/fenwake_crown_drum.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13062,21 +13157,23 @@
       "assigned_faction_id": "faction_mireclaw",
       "assigned_commander_hero_id": "hero_mireclaw_zhorra_fenwake",
       "presentation_role": "crooked_reed_crown_five_hide_war_drum",
-      "accessible_description": "A five-hide war drum sits inside a crooked crown of bound marsh reeds and carved bogwood."
+      "accessible_description": "A five-hide war drum sits inside a crooked crown of bound marsh reeds and carved bogwood.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_fenwake_crown_drum.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_votivejaw_nightglass_shrine": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/votivejaw_nightglass_shrine.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13086,21 +13183,23 @@
       "assigned_faction_id": "faction_mireclaw",
       "assigned_commander_hero_id": "hero_mireclaw_nix_votivejaw",
       "presentation_role": "blackglass_jaw_four_tooth_lantern_shrine",
-      "accessible_description": "A black-glass jaw opens around four tooth-shaped violet lanterns on short bronze chains."
+      "accessible_description": "A black-glass jaw opens around four tooth-shaped violet lanterns on short bronze chains.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_votivejaw_nightglass_shrine.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_lockmaster_archive_gate": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/lockmaster_archive_gate.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13110,21 +13209,23 @@
       "assigned_faction_id": "faction_embercourt",
       "assigned_commander_hero_id": "hero_embercourt_saren_lockmaster",
       "presentation_role": "double_key_archive_lockgate",
-      "accessible_description": "Two oversized iron keys frame a sealed charter and compact ember brazier."
+      "accessible_description": "Two oversized iron keys frame a sealed charter and compact ember brazier.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_lockmaster_archive_gate.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_chainboom_daybreak_prism": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/chainboom_daybreak_prism.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13134,21 +13235,23 @@
       "assigned_faction_id": "faction_mireclaw",
       "assigned_commander_hero_id": "hero_mireclaw_kessa_chainboom",
       "presentation_role": "crossed_ferry_chain_fractured_sun_prism",
-      "accessible_description": "Heavy ferry chains cross over a fractured many-rayed sun prism with one broken link."
+      "accessible_description": "Heavy ferry chains cross over a fractured many-rayed sun prism with one broken link.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_chainboom_daybreak_prism.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_ironclause_ninefold_pylon": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        192,
+        768,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/ironclause_ninefold_pylon.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13158,21 +13261,23 @@
       "assigned_faction_id": "faction_brasshollow",
       "assigned_commander_hero_id": "hero_brasshollow_marka_ironclause",
       "presentation_role": "nine_rivet_contract_assize_pylon",
-      "accessible_description": "A squat iron contract pylon bears nine large tally rivets, a clamp jaw, and brass seal."
+      "accessible_description": "A squat iron contract pylon bears nine large tally rivets, a clamp jaw, and brass seal.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_ironclause_ninefold_pylon.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_glassmarshal_counterseal_sight": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        240,
+        960,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/glassmarshal_counterseal_sight.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13182,21 +13287,23 @@
       "assigned_faction_id": "faction_sunvault",
       "assigned_commander_hero_id": "hero_sunvault_ilyr_glassmarshal",
       "presentation_role": "triple_lens_prism_battery_sight",
-      "accessible_description": "Three faceted cyan lenses stand on a brass artillery tripod with a calibration wheel."
+      "accessible_description": "Three faceted cyan lenses stand on a brass artillery tripod with a calibration wheel.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_glassmarshal_counterseal_sight.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_halometer_daylight_dial": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        288,
+        1152,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/halometer_daylight_dial.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13206,21 +13313,23 @@
       "assigned_faction_id": "faction_sunvault",
       "assigned_commander_hero_id": "hero_sunvault_mirro_halometer",
       "presentation_role": "split_noon_needle_halo_dial",
-      "accessible_description": "A calibrated golden halo dial carries nested rings, a split noon needle, and balance weights."
+      "accessible_description": "A calibrated golden halo dial carries nested rings, a split noon needle, and balance weights.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_halometer_daylight_dial.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_vowless_drowned_oath_bell": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        336,
+        1344,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/vowless_drowned_oath_bell.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13230,21 +13339,23 @@
       "assigned_faction_id": "faction_veilmourn",
       "assigned_commander_hero_id": "hero_veilmourn_nacre_vowless",
       "presentation_role": "broken_oath_ring_drowned_bell",
-      "accessible_description": "A broken empty oath ring hangs one drowned funeral bell from a crooked salt-dark mast."
+      "accessible_description": "A broken empty oath ring hangs one drowned funeral bell from a crooked salt-dark mast.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_vowless_drowned_oath_bell.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_debtrune_lastbell_ledger": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        384,
+        1536,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/debtrune_lastbell_ledger.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13254,21 +13365,23 @@
       "assigned_faction_id": "faction_brasshollow",
       "assigned_commander_hero_id": "hero_brasshollow_harro_debtrune",
       "presentation_role": "chained_rune_ledger_counterweight_gauge",
-      "accessible_description": "A chained rune ledger stands between a red counterweight gauge and brass counting wheel."
+      "accessible_description": "A chained rune ledger stands between a red counterweight gauge and brass counting wheel.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_debtrune_lastbell_ledger.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_mudkeel_fenbell_shield": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        432,
+        1728,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/mudkeel_fenbell_shield.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13278,21 +13391,23 @@
       "assigned_faction_id": "faction_mireclaw",
       "assigned_commander_hero_id": "hero_mireclaw_brakka_mudkeel",
       "presentation_role": "bogplate_keel_fenbell_shield",
-      "accessible_description": "A broad mossed bogplate keel shield carries a heavy central fen bell and reed braces."
+      "accessible_description": "A broad mossed bogplate keel shield carries a heavy central fen bell and reed braces.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_mudkeel_fenbell_shield.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_graftsibyl_prophecy_arch": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        480,
+        1920,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/graftsibyl_prophecy_arch.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13302,21 +13417,23 @@
       "assigned_faction_id": "faction_thornwake",
       "assigned_commander_hero_id": "hero_thornwake_nara_graftsibyl",
       "presentation_role": "three_eye_living_prophecy_arch",
-      "accessible_description": "A twisted living root arch holds three grafted glass eyes beneath a split seed pod."
+      "accessible_description": "A twisted living root arch holds three grafted glass eyes beneath a split seed pod.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_graftsibyl_prophecy_arch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_seedseer_root_kite": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        528,
+        2112,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/seedseer_root_kite.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13326,21 +13443,23 @@
       "assigned_faction_id": "faction_thornwake",
       "assigned_commander_hero_id": "hero_thornwake_veyra_seedseer",
       "presentation_role": "seed_eye_kite_braided_root_tail",
-      "accessible_description": "A diamond seed-eye signal kite rises above a long braided root tail and leaf streamers."
+      "accessible_description": "A diamond seed-eye signal kite rises above a long braided root tail and leaf streamers.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_seedseer_root_kite.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_gaugesavant_precision_gauge": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        576,
+        2304,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/gaugesavant_precision_gauge.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13350,21 +13469,23 @@
       "assigned_faction_id": "faction_brasshollow",
       "assigned_commander_hero_id": "hero_brasshollow_lina_gaugesavant",
       "presentation_role": "three_needle_precision_field_gauge",
-      "accessible_description": "A brass precision field gauge points three long needles across an exposed toothed rim."
+      "accessible_description": "A brass precision field gauge points three long needles across an exposed toothed rim.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_gaugesavant_precision_gauge.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_keelwarden_fog_shield": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        624,
+        2496,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/keelwarden_fog_shield.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13374,21 +13495,23 @@
       "assigned_faction_id": "faction_veilmourn",
       "assigned_commander_hero_id": "hero_veilmourn_jessa_keelwarden",
       "presentation_role": "twin_lantern_dark_keel_shield",
-      "accessible_description": "A narrow dark ship-keel shield hangs two cold fog lanterns at unequal heights."
+      "accessible_description": "A narrow dark ship-keel shield hangs two cold fog lanterns at unequal heights.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_keelwarden_fog_shield.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_beaconscribe_quill_beacon": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        672,
+        2688,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/beaconscribe_quill_beacon.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13398,21 +13521,23 @@
       "assigned_faction_id": "faction_embercourt",
       "assigned_commander_hero_id": "hero_embercourt_jorun_beaconscribe",
       "presentation_role": "iron_quill_twin_wax_beacon",
-      "accessible_description": "An enormous iron quill pierces a sealed wax tablet above twin warm wax lanterns."
+      "accessible_description": "An enormous iron quill pierces a sealed wax tablet above twin warm wax lanterns.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_beaconscribe_quill_beacon.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_reedscript_antler_codex": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        720,
+        2880,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/reedscript_antler_codex.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13422,21 +13547,23 @@
       "assigned_faction_id": "faction_mireclaw",
       "assigned_commander_hero_id": "hero_mireclaw_pell_reedscript",
       "presentation_role": "antler_bound_reed_codex_lectern",
-      "accessible_description": "An antler-bound reed codex lies open on a root-and-den-stake lectern."
+      "accessible_description": "An antler-bound reed codex lies open on a root-and-den-stake lectern.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_reedscript_antler_codex.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_lenscaptain_survey_mast": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        768,
+        3072,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/lenscaptain_survey_mast.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13446,21 +13573,23 @@
       "assigned_faction_id": "faction_sunvault",
       "assigned_commander_hero_id": "hero_sunvault_dovan_lenscaptain",
       "presentation_role": "split_lens_opposed_vane_survey_mast",
-      "accessible_description": "A split-lens survey mast carries opposing high and low vanes on a compact tripod."
+      "accessible_description": "A split-lens survey mast carries opposing high and low vanes on a compact tripod.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_lenscaptain_survey_mast.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_finale_nemesis_loamchant_crystal_harp": {
       "path": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "atlas_region": [
-        816,
+        3264,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        864,
-        48
+        3456,
+        192
       ],
-      "runtime_sha256": "c8b248faf75993aed042661b85a9418fbd70d5bc25039ac8b828b6cd4c5ef8f6",
+      "runtime_sha256": "8e213c8222200fbec2d820711e48b5f4e2abf8c7cd5056cd59c61fb21978fef9",
       "source_generated": "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/loamchant_crystal_harp.png",
       "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/campaign_finale_nemeses/campaign_finale_nemeses_atlas.png",
       "source_model": "built_in_image_gen_original_campaign_finale_nemesis_landmark_atlas",
@@ -13470,7 +13599,9 @@
       "assigned_faction_id": "faction_thornwake",
       "assigned_commander_hero_id": "hero_thornwake_elian_loamchant",
       "presentation_role": "root_strung_loam_crystal_harp",
-      "accessible_description": "A root-strung loam harp sprouts above angular violet crystal tuning stones."
+      "accessible_description": "A root-strung loam harp sprouts above angular violet crystal tuning stones.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_finale_nemesis_loamchant_crystal_harp.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "mapobj_ore_crates": {
       "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ore_crates.png",
@@ -14074,14 +14205,14 @@
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "571d07944ca299915c7d87a414243efb071088dd912f6004ff262b9994a15634",
+      "runtime_sha256": "6d8f5e135c6eb5db4461825280b43b391f1847e7810e49402c5f6f74f3338629",
       "source_generated": "res://art/overworld/source/generated/encounters/field_muster_commissions/powderwrit_fogchain_gate_source.png",
       "source_model": "built_in_image_gen_original_field_muster_commission_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14089,21 +14220,23 @@
       "assigned_encounter_id": "encounter_powderwrit_fogchain_commission",
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "diagonal_chain_boom_and_wrapped_mourning_sail",
-      "accessible_description": "A squat iron powder gate carries a diagonal chain boom beneath a tall wrapped mourning sail, hooded lantern, and two sealed kegs."
+      "accessible_description": "A squat iron powder gate carries a diagonal chain boom beneath a tall wrapped mourning sail, hooded lantern, and two sealed kegs.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_commission_powderwrit_fogchain_gate.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_commission_reedcaller_redgauge_tower": {
       "path": "res://art/overworld/runtime/objects/encounters/field_muster_commissions/field_muster_commissions_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "571d07944ca299915c7d87a414243efb071088dd912f6004ff262b9994a15634",
+      "runtime_sha256": "6d8f5e135c6eb5db4461825280b43b391f1847e7810e49402c5f6f74f3338629",
       "source_generated": "res://art/overworld/source/generated/encounters/field_muster_commissions/reedcaller_redgauge_tower_source.png",
       "source_model": "built_in_image_gen_original_field_muster_commission_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14111,21 +14244,23 @@
       "assigned_encounter_id": "encounter_reedcaller_redgauge_commission",
       "assigned_faction_id": "faction_brasshollow",
       "presentation_role": "projecting_assay_needle_and_forked_reed_horns",
-      "accessible_description": "A broad brass levy tower rises from a woven reed ring under paired horns, with one oversized assay needle projecting from its face."
+      "accessible_description": "A broad brass levy tower rises from a woven reed ring under paired horns, with one oversized assay needle projecting from its face.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_commission_reedcaller_redgauge_tower.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_commission_sevenfold_rootmirror_arch": {
       "path": "res://art/overworld/runtime/objects/encounters/field_muster_commissions/field_muster_commissions_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "571d07944ca299915c7d87a414243efb071088dd912f6004ff262b9994a15634",
+      "runtime_sha256": "6d8f5e135c6eb5db4461825280b43b391f1847e7810e49402c5f6f74f3338629",
       "source_generated": "res://art/overworld/source/generated/encounters/field_muster_commissions/sevenfold_rootmirror_arch_source.png",
       "source_model": "built_in_image_gen_original_field_muster_commission_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14133,21 +14268,23 @@
       "assigned_encounter_id": "encounter_sevenfold_rootmirror_commission",
       "assigned_faction_id": "faction_thornwake",
       "presentation_role": "seven_facet_fan_inside_branching_root_arch",
-      "accessible_description": "Seven narrow mirror facets fan around a suspended split prism inside a broad asymmetrical living-root arch and low witness bench."
+      "accessible_description": "Seven narrow mirror facets fan around a suspended split prism inside a broad asymmetrical living-root arch and low witness bench.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_commission_sevenfold_rootmirror_arch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_commission_boltroot_lockfire_beacon": {
       "path": "res://art/overworld/runtime/objects/encounters/field_muster_commissions/field_muster_commissions_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "571d07944ca299915c7d87a414243efb071088dd912f6004ff262b9994a15634",
+      "runtime_sha256": "6d8f5e135c6eb5db4461825280b43b391f1847e7810e49402c5f6f74f3338629",
       "source_generated": "res://art/overworld/source/generated/encounters/field_muster_commissions/boltroot_lockfire_beacon_source.png",
       "source_model": "built_in_image_gen_original_field_muster_commission_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14155,21 +14292,23 @@
       "assigned_encounter_id": "encounter_boltroot_lockfire_commission",
       "assigned_faction_id": "faction_embercourt",
       "presentation_role": "hooked_bolt_tree_and_three_aimed_seed_pods",
-      "accessible_description": "A hooked living bolt-tree bends around a square fire lock while three enormous pointed seed pods aim from separate branches."
+      "accessible_description": "A hooked living bolt-tree bends around a square fire lock while three enormous pointed seed pods aim from separate branches.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_commission_boltroot_lockfire_beacon.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_commission_blackgauge_noonwire_impound": {
       "path": "res://art/overworld/runtime/objects/encounters/field_muster_commissions/field_muster_commissions_atlas.png",
       "atlas_region": [
-        192,
+        768,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "571d07944ca299915c7d87a414243efb071088dd912f6004ff262b9994a15634",
+      "runtime_sha256": "6d8f5e135c6eb5db4461825280b43b391f1847e7810e49402c5f6f74f3338629",
       "source_generated": "res://art/overworld/source/generated/encounters/field_muster_commissions/blackgauge_noonwire_impound_source.png",
       "source_model": "built_in_image_gen_original_field_muster_commission_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14177,21 +14316,23 @@
       "assigned_encounter_id": "encounter_blackgauge_noonwire_commission",
       "assigned_faction_id": "faction_sunvault",
       "presentation_role": "long_counterweight_arm_over_trapped_triangular_prism",
-      "accessible_description": "A long black-brass counterweight arm clamps three taut wires across a triangular prism suspended above a shallow quench tray."
+      "accessible_description": "A long black-brass counterweight arm clamps three taut wires across a triangular prism suspended above a shallow quench tray.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_commission_blackgauge_noonwire_impound.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_commission_tidehook_reedwake_bell": {
       "path": "res://art/overworld/runtime/objects/encounters/field_muster_commissions/field_muster_commissions_atlas.png",
       "atlas_region": [
-        240,
+        960,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "571d07944ca299915c7d87a414243efb071088dd912f6004ff262b9994a15634",
+      "runtime_sha256": "6d8f5e135c6eb5db4461825280b43b391f1847e7810e49402c5f6f74f3338629",
       "source_generated": "res://art/overworld/source/generated/encounters/field_muster_commissions/tidehook_reedwake_bell_source.png",
       "source_model": "built_in_image_gen_original_field_muster_commission_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14199,21 +14340,23 @@
       "assigned_encounter_id": "encounter_tidehook_reedwake_commission",
       "assigned_faction_id": "faction_mireclaw",
       "presentation_role": "crescent_tidehook_crane_lifting_reed_bell",
-      "accessible_description": "A tall crescent tidehook crane lifts a dripping reed bell above a broken skiff cradle, forked dragnet, lamp, and three floats."
+      "accessible_description": "A tall crescent tidehook crane lifts a dripping reed bell above a broken skiff cradle, forked dragnet, lamp, and three floats.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_commission_tidehook_reedwake_bell.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_defense_gloamchain_sluice_ram": {
       "path": "res://art/overworld/runtime/objects/encounters/twin_hold_defense_vigils/twin_hold_defense_vigils_atlas.png",
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "9fa7863f90c798180d12ce7c5b25212b01ed5f58c89012285f69e1f645018cf1",
+      "runtime_sha256": "9dd61be2e562eb0fc92f34706b5aaf7ea85b20fe94b41bd8f8765f3d16e67aff",
       "source_generated": "res://art/overworld/source/generated/encounters/twin_hold_defense_vigils/gloamchain_sluice_ram_source.png",
       "source_model": "built_in_image_gen_original_twin_hold_defense_vigil_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14221,21 +14364,23 @@
       "assigned_encounter_id": "encounter_gloamchain_sluice_ram",
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "low_ship_rib_ram_with_forked_gate_jaws",
-      "accessible_description": "A low black ship-rib ram spreads two gate jaws around a crescent prow, hanging chain, and torn mourning sail."
+      "accessible_description": "A low black ship-rib ram spreads two gate jaws around a crescent prow, hanging chain, and torn mourning sail.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_defense_gloamchain_sluice_ram.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_defense_red_ledger_pile_driver": {
       "path": "res://art/overworld/runtime/objects/encounters/twin_hold_defense_vigils/twin_hold_defense_vigils_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "9fa7863f90c798180d12ce7c5b25212b01ed5f58c89012285f69e1f645018cf1",
+      "runtime_sha256": "9dd61be2e562eb0fc92f34706b5aaf7ea85b20fe94b41bd8f8765f3d16e67aff",
       "source_generated": "res://art/overworld/source/generated/encounters/twin_hold_defense_vigils/red_ledger_pile_driver_source.png",
       "source_model": "built_in_image_gen_original_twin_hold_defense_vigil_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14243,21 +14388,23 @@
       "assigned_encounter_id": "encounter_red_ledger_pile_driver",
       "assigned_faction_id": "faction_brasshollow",
       "presentation_role": "forked_piston_tripod_with_unequal_counterweights",
-      "accessible_description": "A tall forked brass piston tripod carries a central driving hammer, unequal hanging counterweights, and a side gauge wheel."
+      "accessible_description": "A tall forked brass piston tripod carries a central driving hammer, unequal hanging counterweights, and a side gauge wheel.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_defense_red_ledger_pile_driver.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_defense_rootshade_facet_breaker": {
       "path": "res://art/overworld/runtime/objects/encounters/twin_hold_defense_vigils/twin_hold_defense_vigils_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "9fa7863f90c798180d12ce7c5b25212b01ed5f58c89012285f69e1f645018cf1",
+      "runtime_sha256": "9dd61be2e562eb0fc92f34706b5aaf7ea85b20fe94b41bd8f8765f3d16e67aff",
       "source_generated": "res://art/overworld/source/generated/encounters/twin_hold_defense_vigils/rootshade_facet_breaker_source.png",
       "source_model": "built_in_image_gen_original_twin_hold_defense_vigil_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14265,21 +14412,23 @@
       "assigned_encounter_id": "encounter_rootshade_facet_breaker",
       "assigned_faction_id": "faction_thornwake",
       "presentation_role": "root_claw_and_horizontal_facet_breaker",
-      "accessible_description": "An asymmetric living-root claw grips a shattered faceted lens beside a long horizontal breaker beam."
+      "accessible_description": "An asymmetric living-root claw grips a shattered faceted lens beside a long horizontal breaker beam.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_defense_rootshade_facet_breaker.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_defense_ashwrit_sapfire_tower": {
       "path": "res://art/overworld/runtime/objects/encounters/twin_hold_defense_vigils/twin_hold_defense_vigils_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "9fa7863f90c798180d12ce7c5b25212b01ed5f58c89012285f69e1f645018cf1",
+      "runtime_sha256": "9dd61be2e562eb0fc92f34706b5aaf7ea85b20fe94b41bd8f8765f3d16e67aff",
       "source_generated": "res://art/overworld/source/generated/encounters/twin_hold_defense_vigils/ashwrit_sapfire_tower_source.png",
       "source_model": "built_in_image_gen_original_twin_hold_defense_vigil_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14287,21 +14436,23 @@
       "assigned_encounter_id": "encounter_ashwrit_sapfire_tower",
       "assigned_faction_id": "faction_embercourt",
       "presentation_role": "broad_cauldron_tower_with_three_sapfire_nozzles",
-      "accessible_description": "A squat wheeled siege tower carries a round ember cauldron, hooked branch shield, and three projecting sapfire nozzles."
+      "accessible_description": "A squat wheeled siege tower carries a round ember cauldron, hooked branch shield, and three projecting sapfire nozzles.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_defense_ashwrit_sapfire_tower.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_defense_zenith_wire_crucible": {
       "path": "res://art/overworld/runtime/objects/encounters/twin_hold_defense_vigils/twin_hold_defense_vigils_atlas.png",
       "atlas_region": [
-        192,
+        768,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "9fa7863f90c798180d12ce7c5b25212b01ed5f58c89012285f69e1f645018cf1",
+      "runtime_sha256": "9dd61be2e562eb0fc92f34706b5aaf7ea85b20fe94b41bd8f8765f3d16e67aff",
       "source_generated": "res://art/overworld/source/generated/encounters/twin_hold_defense_vigils/zenith_wire_crucible_source.png",
       "source_model": "built_in_image_gen_original_twin_hold_defense_vigil_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14309,21 +14460,23 @@
       "assigned_encounter_id": "encounter_zenith_wire_crucible",
       "assigned_faction_id": "faction_sunvault",
       "presentation_role": "open_triangular_frame_with_suspended_crucible",
-      "accessible_description": "An open triangular ivory frame suspends a round crucible beneath a bowed wire and three directional vanes."
+      "accessible_description": "An open triangular ivory frame suspends a round crucible beneath a bowed wire and three directional vanes.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_defense_zenith_wire_crucible.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_defense_fenwake_bell_dredger": {
       "path": "res://art/overworld/runtime/objects/encounters/twin_hold_defense_vigils/twin_hold_defense_vigils_atlas.png",
       "atlas_region": [
-        240,
+        960,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "9fa7863f90c798180d12ce7c5b25212b01ed5f58c89012285f69e1f645018cf1",
+      "runtime_sha256": "9dd61be2e562eb0fc92f34706b5aaf7ea85b20fe94b41bd8f8765f3d16e67aff",
       "source_generated": "res://art/overworld/source/generated/encounters/twin_hold_defense_vigils/fenwake_bell_dredger_source.png",
       "source_model": "built_in_image_gen_original_twin_hold_defense_vigil_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14331,21 +14484,23 @@
       "assigned_encounter_id": "encounter_fenwake_bell_dredger",
       "assigned_faction_id": "faction_mireclaw",
       "presentation_role": "long_reed_barge_with_crescent_bell_crane",
-      "accessible_description": "A long low reed barge carries a crescent crane, hanging bell bucket, twin oars, and three round floats."
+      "accessible_description": "A long low reed barge carries a crescent crane, hanging bell bucket, twin oars, and three round floats.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_defense_fenwake_bell_dredger.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_relic_lockfire_assize_reliquary": {
       "path": "res://art/overworld/runtime/objects/encounters/three_relic_pilgrimages/three_relic_pilgrimages_atlas.png",
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "bee203188559bd1ed0224b0e51ab929c3045ddc732087a18bee89ed6c118ed6c",
+      "runtime_sha256": "0a58a6f5ad0999ea1b00f28a3ed457c7dd35ae954719030dde8ae2ba1be33769",
       "source_generated": "res://art/overworld/source/generated/encounters/three_relic_pilgrimages/lockfire_assize_reliquary_source.png",
       "source_model": "built_in_image_gen_original_three_relic_pilgrimage_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14353,21 +14508,23 @@
       "assigned_encounter_id": "encounter_lockfire_assize_reliquary",
       "assigned_faction_id": "faction_embercourt",
       "presentation_role": "legal_fire_lock_gate_reliquary",
-      "accessible_description": "A narrow lock-gate tower rises between a long balance arm and several offset hanging fire baskets."
+      "accessible_description": "A narrow lock-gate tower rises between a long balance arm and several offset hanging fire baskets.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_relic_lockfire_assize_reliquary.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_relic_miremoon_hunt_reliquary": {
       "path": "res://art/overworld/runtime/objects/encounters/three_relic_pilgrimages/three_relic_pilgrimages_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "bee203188559bd1ed0224b0e51ab929c3045ddc732087a18bee89ed6c118ed6c",
+      "runtime_sha256": "0a58a6f5ad0999ea1b00f28a3ed457c7dd35ae954719030dde8ae2ba1be33769",
       "source_generated": "res://art/overworld/source/generated/encounters/three_relic_pilgrimages/miremoon_hunt_reliquary_source.png",
       "source_model": "built_in_image_gen_original_three_relic_pilgrimage_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14375,21 +14532,23 @@
       "assigned_encounter_id": "encounter_miremoon_hunt_reliquary",
       "assigned_faction_id": "faction_mireclaw",
       "presentation_role": "antler_drum_hunt_reliquary",
-      "accessible_description": "Two unequal antler towers surround a broad hanging drum above a low irregular root platform."
+      "accessible_description": "Two unequal antler towers surround a broad hanging drum above a low irregular root platform.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_relic_miremoon_hunt_reliquary.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_relic_noonglass_orrery_reliquary": {
       "path": "res://art/overworld/runtime/objects/encounters/three_relic_pilgrimages/three_relic_pilgrimages_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "bee203188559bd1ed0224b0e51ab929c3045ddc732087a18bee89ed6c118ed6c",
+      "runtime_sha256": "0a58a6f5ad0999ea1b00f28a3ed457c7dd35ae954719030dde8ae2ba1be33769",
       "source_generated": "res://art/overworld/source/generated/encounters/three_relic_pilgrimages/noonglass_orrery_reliquary_source.png",
       "source_model": "built_in_image_gen_original_three_relic_pilgrimage_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14397,21 +14556,23 @@
       "assigned_encounter_id": "encounter_noonglass_orrery_reliquary",
       "assigned_faction_id": "faction_sunvault",
       "presentation_role": "three_orbit_orrery_reliquary",
-      "accessible_description": "Three crossing orbital rings and a tall needle crown sit between two wide mirrored crescent vanes."
+      "accessible_description": "Three crossing orbital rings and a tall needle crown sit between two wide mirrored crescent vanes.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_relic_noonglass_orrery_reliquary.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_relic_worldroot_covenant_reliquary": {
       "path": "res://art/overworld/runtime/objects/encounters/three_relic_pilgrimages/three_relic_pilgrimages_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "bee203188559bd1ed0224b0e51ab929c3045ddc732087a18bee89ed6c118ed6c",
+      "runtime_sha256": "0a58a6f5ad0999ea1b00f28a3ed457c7dd35ae954719030dde8ae2ba1be33769",
       "source_generated": "res://art/overworld/source/generated/encounters/three_relic_pilgrimages/worldroot_covenant_reliquary_source.png",
       "source_model": "built_in_image_gen_original_three_relic_pilgrimage_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14419,21 +14580,23 @@
       "assigned_encounter_id": "encounter_worldroot_covenant_reliquary",
       "assigned_faction_id": "faction_thornwake",
       "presentation_role": "three_root_covenant_reliquary",
-      "accessible_description": "Three braided root columns form a triangular arch around a hanging seed beneath a wide thorn halo."
+      "accessible_description": "Three braided root columns form a triangular arch around a hanging seed beneath a wide thorn halo.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_relic_worldroot_covenant_reliquary.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_relic_seventh_clause_reliquary": {
       "path": "res://art/overworld/runtime/objects/encounters/three_relic_pilgrimages/three_relic_pilgrimages_atlas.png",
       "atlas_region": [
-        192,
+        768,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "bee203188559bd1ed0224b0e51ab929c3045ddc732087a18bee89ed6c118ed6c",
+      "runtime_sha256": "0a58a6f5ad0999ea1b00f28a3ed457c7dd35ae954719030dde8ae2ba1be33769",
       "source_generated": "res://art/overworld/source/generated/encounters/three_relic_pilgrimages/seventh_clause_reliquary_source.png",
       "source_model": "built_in_image_gen_original_three_relic_pilgrimage_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14441,21 +14604,23 @@
       "assigned_encounter_id": "encounter_seventh_clause_reliquary",
       "assigned_faction_id": "faction_brasshollow",
       "presentation_role": "pressure_gauge_contract_reliquary",
-      "accessible_description": "A huge round gauge dominates a broad four-footed machine between two unequal furnace stacks."
+      "accessible_description": "A huge round gauge dominates a broad four-footed machine between two unequal furnace stacks.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_relic_seventh_clause_reliquary.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_relic_last_bell_tideglass_reliquary": {
       "path": "res://art/overworld/runtime/objects/encounters/three_relic_pilgrimages/three_relic_pilgrimages_atlas.png",
       "atlas_region": [
-        240,
+        960,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "bee203188559bd1ed0224b0e51ab929c3045ddc732087a18bee89ed6c118ed6c",
+      "runtime_sha256": "0a58a6f5ad0999ea1b00f28a3ed457c7dd35ae954719030dde8ae2ba1be33769",
       "source_generated": "res://art/overworld/source/generated/encounters/three_relic_pilgrimages/last_bell_tideglass_reliquary_source.png",
       "source_model": "built_in_image_gen_original_three_relic_pilgrimage_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -14463,7 +14628,9 @@
       "assigned_encounter_id": "encounter_last_bell_tideglass_reliquary",
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "ship_rib_bell_reliquary",
-      "accessible_description": "Two tall curved ship ribs cradle an oversized hanging bell above a long chain-keel platform."
+      "accessible_description": "Two tall curved ship ribs cradle an oversized hanging bell above a long chain-keel platform.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_relic_last_bell_tideglass_reliquary.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "artifact_field_lockfire_assize_seal": {
       "path": "res://art/overworld/runtime/objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png",
@@ -15928,14 +16095,14 @@
       "atlas_region": [
         0,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c",
+      "runtime_sha256": "c470125b0888ff1878d5078211544c961dcbc093d828b3132d84d56da062e945",
       "source_generated": "res://art/overworld/source/generated/encounters/border_oath_cordons_wave1/mireclaw_moonhook_border_cordon.png",
       "source_model": "built_in_image_gen_original_border_oath_cordons_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -15943,21 +16110,23 @@
       "assigned_encounter_id": "encounter_moonhook_border_cordon",
       "assigned_faction_id": "faction_mireclaw",
       "presentation_role": "moonhook_drum_barricade",
-      "accessible_description": "Three hooked reed spars lean across a hide war drum and woven flood barrier, forming a low irregular Mireclaw cordon with obvious blocked passage."
+      "accessible_description": "Three hooked reed spars lean across a hide war drum and woven flood barrier, forming a low irregular Mireclaw cordon with obvious blocked passage.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_border_oath_mireclaw_moonhook.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_border_oath_sunvault_prismwrit": {
       "path": "res://art/overworld/runtime/objects/encounters/border_oath_cordons/border_oath_cordons_atlas.png",
       "atlas_region": [
-        48,
+        192,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c",
+      "runtime_sha256": "c470125b0888ff1878d5078211544c961dcbc093d828b3132d84d56da062e945",
       "source_generated": "res://art/overworld/source/generated/encounters/border_oath_cordons_wave1/sunvault_prismwrit_border_cordon.png",
       "source_model": "built_in_image_gen_original_border_oath_cordons_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -15965,21 +16134,23 @@
       "assigned_encounter_id": "encounter_prismwrit_border_cordon",
       "assigned_faction_id": "faction_sunvault",
       "presentation_role": "prismwrit_mirror_gate",
-      "accessible_description": "Three angular mirror shields and a triangular signal prism form a clean Sunvault checkpoint whose open center remains readable at map scale."
+      "accessible_description": "Three angular mirror shields and a triangular signal prism form a clean Sunvault checkpoint whose open center remains readable at map scale.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_border_oath_sunvault_prismwrit.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_border_oath_thornwake_rootglass": {
       "path": "res://art/overworld/runtime/objects/encounters/border_oath_cordons/border_oath_cordons_atlas.png",
       "atlas_region": [
-        96,
+        384,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c",
+      "runtime_sha256": "c470125b0888ff1878d5078211544c961dcbc093d828b3132d84d56da062e945",
       "source_generated": "res://art/overworld/source/generated/encounters/border_oath_cordons_wave1/thornwake_rootglass_border_cordon.png",
       "source_model": "built_in_image_gen_original_border_oath_cordons_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -15987,21 +16158,23 @@
       "assigned_encounter_id": "encounter_rootglass_border_cordon",
       "assigned_faction_id": "faction_thornwake",
       "presentation_role": "rootglass_braided_wall",
-      "accessible_description": "Braided living roots rise into a thorn wall around three glassy seed knots, giving the Thornwake cordon a wide organic obstruction silhouette."
+      "accessible_description": "Braided living roots rise into a thorn wall around three glassy seed knots, giving the Thornwake cordon a wide organic obstruction silhouette.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_border_oath_thornwake_rootglass.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_border_oath_brasshollow_blackbell": {
       "path": "res://art/overworld/runtime/objects/encounters/border_oath_cordons/border_oath_cordons_atlas.png",
       "atlas_region": [
-        144,
+        576,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c",
+      "runtime_sha256": "c470125b0888ff1878d5078211544c961dcbc093d828b3132d84d56da062e945",
       "source_generated": "res://art/overworld/source/generated/encounters/border_oath_cordons_wave1/brasshollow_blackbell_border_cordon.png",
       "source_model": "built_in_image_gen_original_border_oath_cordons_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -16009,21 +16182,23 @@
       "assigned_encounter_id": "encounter_blackbell_border_cordon",
       "assigned_faction_id": "faction_brasshollow",
       "presentation_role": "blackbell_piston_gate",
-      "accessible_description": "A squat riveted piston gate, pressure wheels, and an oversized black warning bell form a dense Brasshollow roadblock with a mechanical breach point."
+      "accessible_description": "A squat riveted piston gate, pressure wheels, and an oversized black warning bell form a dense Brasshollow roadblock with a mechanical breach point.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_border_oath_brasshollow_blackbell.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_border_oath_veilmourn_wakechain": {
       "path": "res://art/overworld/runtime/objects/encounters/border_oath_cordons/border_oath_cordons_atlas.png",
       "atlas_region": [
-        192,
+        768,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c",
+      "runtime_sha256": "c470125b0888ff1878d5078211544c961dcbc093d828b3132d84d56da062e945",
       "source_generated": "res://art/overworld/source/generated/encounters/border_oath_cordons_wave1/veilmourn_wakechain_border_cordon.png",
       "source_model": "built_in_image_gen_original_border_oath_cordons_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -16031,21 +16206,23 @@
       "assigned_encounter_id": "encounter_wakechain_border_cordon",
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "wakechain_shiprib_line",
-      "accessible_description": "Curved pale ship ribs support a long dark chain, tide hooks, and a suspended bell, creating a wide Veilmourn mooring barrier through the fog."
+      "accessible_description": "Curved pale ship ribs support a long dark chain, tide hooks, and a suspended bell, creating a wide Veilmourn mooring barrier through the fog.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_border_oath_veilmourn_wakechain.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "encounter_border_oath_embercourt_rainbrand": {
       "path": "res://art/overworld/runtime/objects/encounters/border_oath_cordons/border_oath_cordons_atlas.png",
       "atlas_region": [
-        240,
+        960,
         0,
-        48,
-        48
+        192,
+        192
       ],
       "atlas_size": [
-        288,
-        48
+        1152,
+        192
       ],
-      "runtime_sha256": "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c",
+      "runtime_sha256": "c470125b0888ff1878d5078211544c961dcbc093d828b3132d84d56da062e945",
       "source_generated": "res://art/overworld/source/generated/encounters/border_oath_cordons_wave1/embercourt_rainbrand_border_cordon.png",
       "source_model": "built_in_image_gen_original_border_oath_cordons_atlas",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -16053,7 +16230,9 @@
       "assigned_encounter_id": "encounter_rainbrand_border_cordon",
       "assigned_faction_id": "faction_embercourt",
       "presentation_role": "rainbrand_writ_gate",
-      "accessible_description": "Charred charter plates, angled iron stakes, and a sealed ember brazier create an asymmetrical Embercourt writ gate with a clear defended lane."
+      "accessible_description": "Charred charter plates, angled iron stakes, and a sealed ember brazier create an asymmetrical Embercourt writ gate with a clear defended lane.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_encounters/encounter_border_oath_embercourt_rainbrand.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/manifest.json"
     },
     "resource_site_garrison_warrant_cinderlock_seals": {
       "path": "res://art/overworld/runtime/objects/resource_sites/garrison_warrant_musters_atlas.png",

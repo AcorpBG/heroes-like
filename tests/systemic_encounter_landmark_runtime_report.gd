@@ -5,10 +5,10 @@ const SCENARIO_ID := "river-pass"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/encounters/systemic/systemic_encounter_landmarks_atlas.png"
 const VIEWPORT_SIZE := Vector2i(1280, 720)
 const EXPECTED := {
-	"encounter_town_assault": ["encounter_systemic_town_assault", Rect2(0, 0, 48, 48), "army_mireclaw_raiding_party"],
-	"encounter_resource_defense": ["encounter_systemic_resource_defense", Rect2(48, 0, 48, 48), "army_mireclaw_raiding_party"],
-	"encounter_mire_raid": ["encounter_systemic_mire_raid", Rect2(96, 0, 48, 48), "army_mireclaw_raiding_party"],
-	"encounter_blackbranch_reavers": ["encounter_systemic_blackbranch_reavers", Rect2(144, 0, 48, 48), "army_blackbranch_reavers"],
+	"encounter_town_assault": ["encounter_systemic_town_assault", Rect2(0, 0, 192, 192), "army_mireclaw_raiding_party"],
+	"encounter_resource_defense": ["encounter_systemic_resource_defense", Rect2(192, 0, 192, 192), "army_mireclaw_raiding_party"],
+	"encounter_mire_raid": ["encounter_systemic_mire_raid", Rect2(384, 0, 192, 192), "army_mireclaw_raiding_party"],
+	"encounter_blackbranch_reavers": ["encounter_systemic_blackbranch_reavers", Rect2(576, 0, 192, 192), "army_blackbranch_reavers"],
 }
 const FIXTURE_POSITIONS := [Vector2i(2, 2), Vector2i(4, 2), Vector2i(6, 2), Vector2i(8, 2)]
 
@@ -60,7 +60,7 @@ func _run() -> void:
 			and texture.region == expected_region \
 			and texture.atlas is Texture2D \
 			and texture.atlas.resource_path == ATLAS_PATH \
-			and texture.atlas.get_size() == Vector2(192, 48) \
+			and texture.atlas.get_size() == Vector2(768, 192) \
 			and bool(payload.get("uses_identity_encounter_sprite", false)) \
 			and not bool(payload.get("uses_commander_sprite", true)) \
 			and not bool(payload.get("uses_faction_encounter_sprite", true)) \
@@ -95,7 +95,7 @@ func _run() -> void:
 	var object_paths: Dictionary = map_view.get("_object_asset_paths")
 	var object_regions: Dictionary = map_view.get("_object_asset_regions")
 	object_paths["systemic_invalid_region_fixture"] = ATLAS_PATH
-	object_regions["systemic_invalid_region_fixture"] = [170, 0, 48, 48]
+	object_regions["systemic_invalid_region_fixture"] = [680, 0, 192, 192]
 	var invalid_region_fail_closed := map_view.call("_object_texture_for_asset", "systemic_invalid_region_fixture") == null
 	var commander: Dictionary = map_view.call("validation_encounter_presentation_payload", {
 		"encounter_id": "encounter_mire_raid",
@@ -114,7 +114,7 @@ func _run() -> void:
 		"encounter_count": EXPECTED.size(),
 		"exact_art_coverage": "107/107",
 		"atlas_path": ATLAS_PATH,
-		"atlas_size": [192, 48],
+		"atlas_size": [768, 192],
 		"viewport": [VIEWPORT_SIZE.x, VIEWPORT_SIZE.y],
 		"exact_rows": exact_rows,
 		"battle_rows": battle_rows,
