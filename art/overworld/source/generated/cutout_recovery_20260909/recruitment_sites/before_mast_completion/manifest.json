@@ -1,8 +1,8 @@
 {
   "schema_id": "recruitment_site_cutout_recovery_v1",
-  "recipe_sha256": "ed048dfffb64d584aee06f855973c0e370bf77e6b5684096924041f4d314a317",
+  "recipe_sha256": "9a337c24d8064b9ca69f450693ad1516a9ac9552b9b5e2f774e37ad86187bd10",
   "tools": {
-    "tools/prepare_overworld_recruitment_cutouts.py": "7fbeb799ba78e31dcbab77123ee41f4c73059474e560c898a948bd1053623e42",
+    "tools/prepare_overworld_recruitment_cutouts.py": "c0805c12bccda31658e49a72c248b480f3775e6be4619b099f9759b37dc9c79f",
     "tools/prepare_overworld_recurring_cutouts.py": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
     "tools/prepare_overworld_route_arcane_cutouts.py": "6cd7c42e38e6a363a7331f4e073928856f8d54b1dab169d3db18fd10fb4fe53c",
     "tools/prepare_overworld_cutout_art.py": "247801087cb8c5bfd6fb0a471bf39dbbfdb2a8bd8fe984d3816df92f00b0d68d",
@@ -104,10 +104,9 @@
       "source_sha256": "c6148425f1371e2aa89d128bac93b235abd4610f68789914f3cfc3c778dfca67"
     },
     "resource_site_veteran_three_gauge_chapter_foundry_controlled": {
-      "trim_sha256": "d8f46ab7649b1376403d76c208b0712330ab75e64bf33a511e535e1e3a88f0a5",
-      "rgba_sha256": "24336a7512af1eefe2269b158b1a6562ea8c9a948552ec86fa1c7f0441450105",
-      "source_sha256": "f3aae2c73cf57bc7ca8908a0152247b74a91dd3626895dc7e962757773890c41",
-      "extension_sha256": "10409e780e5461b60296f2c14a0ec7038dee0f32f6f234cbc67665a5a80b6342"
+      "trim_sha256": "77d665df22109846ca8fcfcbe633823b649fbc884ef32099571fd779cb22d060",
+      "rgba_sha256": "59c761de398c866475e8ae7d5a73e28a6f9a2ef7b1853d0175a4fc2824108db1",
+      "source_sha256": "f3aae2c73cf57bc7ca8908a0152247b74a91dd3626895dc7e962757773890c41"
     },
     "mapobj_fog_keel_lastwatch_mooring": {
       "trim_sha256": "dd5f3d8b90a1471b129893571c8d48283ca2281faadfa8605c555b2a3fc55e21",
@@ -115,10 +114,9 @@
       "source_sha256": "75ee6fa0d5ab7895de1fe747b271c00b5844bffcab9bb1a958cb1a0b1b3c5cda"
     },
     "resource_site_veteran_fog_keel_lastwatch_mooring_controlled": {
-      "trim_sha256": "e9a253e2b555838672d91882df42def329cf9a6eff97f576744d9ee7284b3342",
-      "rgba_sha256": "5f5244963d34c6311b4eb90879e4971c61b4cf5bac0bc68a560139955e6ba8e8",
-      "source_sha256": "a55537fc742f2c9b1c3bc8166841176e422acbeb44ed961d70d6fcdc4ae73c14",
-      "extension_sha256": "9b66337ce6abbe15336476e3244c5416216cb3d3738f915febc52d01abcccdee"
+      "trim_sha256": "166f708153655d26c1e983fa1a739dd9a9ffa1bd1d6a42a094195bf359631b4c",
+      "rgba_sha256": "39f97917fd842953b216a4053e4f46d4b5e294232c818043ec10b17dbf7e877a",
+      "source_sha256": "a55537fc742f2c9b1c3bc8166841176e422acbeb44ed961d70d6fcdc4ae73c14"
     },
     "mapobj_cindervane_updraft_roost": {
       "trim_sha256": "47c0d5de5257a4f43768569314bcefa8e3f290fb8eaa653e2b1b9b2d0aa0b8b3",
@@ -183,7 +181,7 @@
       "prepared": "runtime/objects/resource_sites/unbound_wild_concords_atlas.png"
     },
     "res://art/overworld/runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png": {
-      "after_sha256": "d7898277b7db282d5b7ba2fa8b61cde8e2863be240732eb1456b2d2ee58fe75b",
+      "after_sha256": "9b67719d06abb599cd61a0e77edb540aec98ef312377150581e805c9e873a6fd",
       "prepared": "runtime/objects/resource_sites/veteran_company_musters_wave1/veteran_company_musters_atlas.png"
     },
     "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png": {
@@ -191,5 +189,5 @@
       "prepared": "runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png"
     }
   },
-  "processing": "Original paint projected at fourfold density through measured historical logical fit; reviewed sheet-fragment removal, alpha 1..4 RGB decontamination, six foreground-only generated physical state details and two connected mast-top extensions from the exact original identity sheet. Body paint below the single-row sampling seam and all 34 neighbours stay exact. Original sources, state routes and gameplay unchanged. No procedural RGB or generated backing in runtime."
+  "processing": "Original paint projected at fourfold density through measured historical logical fit; reviewed sheet-fragment removal, alpha 1..4 RGB decontamination and six foreground-only generated physical state details. Original sources, state routes and gameplay unchanged. No procedural RGB or generated backing in runtime."
 }

@@ -11,6 +11,7 @@ import importlib.util
 import json
 from pathlib import Path
 import shutil
+from functools import lru_cache
 from collections import deque
 import numpy as np
 
@@ -67,7 +68,55 @@ def recover_source(source,row):
 
 
 def recover(source,row):
-    return project(recover_source(source,row),row)
+    body = recover_source(source,row)
+    fixed = project(body,row)
+    if row.get('mast_extension'):
+        extended = mast_source(source,row)
+        edit = row['mast_extension']
+        x0,y0,x1,y1 = row['source_crop']
+        density = row['pixel_scale']
+        width,height = (v*density for v in row['source_resize'])
+        left,top = (v*density for v in row['canvas_origin'])
+        ratio = height/(y1-y0)
+        # Sample only the missing northern paint plus the first bilinear seam
+        # row. The original body below this seam is byte-for-byte unchanged.
+        seam = top+1
+        box = (x0,edit['padding_top']+y0-top/ratio,x1,
+               edit['padding_top']+y0+(seam-top)/ratio)
+        strip = extended.resize((width,seam),Image.Resampling.BILINEAR,box=box)
+        fixed.paste(strip,(left,0))
+    return fixed
+
+
+@lru_cache(maxsize=2)
+def mast_sheet_component(path,sha,component_json):
+    if base.digest(base.local(path))!=sha:raise ValueError('Mast identity sheet changed')
+    sheet=Image.open(base.local(path)).convert('RGBA')
+    mask=fragment_mask(sheet,[json.loads(component_json)])
+    return sheet,mask
+
+
+def mast_source(source,row):
+    """Restore only connected original paint north of the immutable grid crop."""
+    edit=row['mast_extension']
+    # Hash is checked before cached component access, including same-process tests.
+    if base.digest(base.local(edit['sheet']))!=edit['sheet_sha256']:
+        raise ValueError('Mast identity sheet changed')
+    sheet,mask=mast_sheet_component(edit['sheet'],edit['sheet_sha256'],json.dumps(edit['component'],sort_keys=True))
+    crop=edit['original_grid_crop'];x,y,right,bottom=crop
+    if sheet.crop(crop).tobytes()!=source.tobytes():raise ValueError('Mast master is not the exact identity-sheet crop')
+    pad=edit['padding_top']
+    if pad!=y-edit['component']['bbox'][1]+2 or pad<=0:
+        raise ValueError('Mast extension bounds changed')
+    pixels=np.asarray(sheet)[y-pad:y,x:right].copy()
+    pixels[~mask[y-pad:y,x:right]]=0
+    extended=Image.new('RGBA',(source.width,source.height+pad))
+    extended.paste(Image.fromarray(pixels),(0,0))
+    extended.paste(source,(0,pad))
+    # The same explicit near-transparent RGB repair, never a new alpha key.
+    extended=recover_source(extended,{'low_alpha_rgb_repair':row.get('low_alpha_rgb_repair',False)})
+    extended.paste(recover_source(source,row),(0,pad))
+    return extended
 
 
 def before_path(path):
@@ -140,6 +189,19 @@ def inputs():
     sources = {}
     for path,sha in recipe['additional_sources'].items():
         if base.digest(base.local(path))!=sha:raise ValueError('Generated/provenance source changed')
+    prior=recipe.get('mast_predecessor')
+    if not prior:raise ValueError('Missing mast predecessor')
+    if prior:
+        for name in ('recipe','manifest'):
+            path=base.local(prior[name+'_path'])
+            if path!=PACKET/'before_mast_completion'/(name+'.json') or base.digest(path)!=prior[name+'_sha256']:
+                raise ValueError('Mast predecessor changed')
+        previous=json.loads(base.local(prior['recipe_path']).read_text())
+        previous_proof=json.loads(base.local(prior['manifest_path']).read_text())
+        if set(previous['assets'])!=set(recipe['assets']):raise ValueError('Mast cohort changed')
+        modified={key for key,row in recipe['assets'].items() if row.get('mast_extension')}
+        if modified!={'resource_site_veteran_three_gauge_chapter_foundry_controlled','resource_site_veteran_fog_keel_lastwatch_mooring_controlled'}:
+            raise ValueError('Mast identity scope changed')
     for key, row in recipe['assets'].items():
         old = row['original_manifest_entry']; entry = manifest['object_assets'][key]
         if key not in recipe['state_mappings'][row['site_id']].values():raise ValueError('Exact state identity changed')
@@ -177,6 +239,22 @@ def inputs():
             if base.local(edit['source'])!=PACKET/'edits'/(row['site_id'].removeprefix('site_')+'.png'):
                 raise ValueError('Generated detail identity mismatch')
             if edit['source'] not in recipe['additional_sources']:raise ValueError('Untracked generated detail')
+        if row.get('mast_extension'):
+            edit=row['mast_extension']
+            if edit['sheet'] not in recipe['additional_sources'] or recipe['additional_sources'][edit['sheet']]!=edit['sheet_sha256']:
+                raise ValueError('Untracked mast sheet')
+            master=base.local(row['recovered_extension_path'])
+            if master!=trim.parent/'sources'/(key+'_complete.png'):raise ValueError('Unscoped extended master path')
+            if master.exists() and base.digest(master)!=proof.get('assets',{}).get(key,{}).get('extension_sha256'):
+                raise ValueError('Unrecognized extended master edit')
+            mast_source(source,row)
+            retained=PACKET/'before_mast_completion'/(key+'.png')
+            if base.digest(retained)!=previous_proof['assets'][key]['trim_sha256']:
+                raise ValueError('Mast predecessor paint changed')
+    if prior:
+        for key,row in recipe['assets'].items():
+            if {k:v for k,v in row.items() if k not in ('mast_extension','recovered_extension_path')}!=previous['assets'][key]:
+                raise ValueError('Accepted recruitment registration changed')
     return recipe, manifest, sources
 
 
@@ -192,12 +270,17 @@ def prepare(output, install=False):
     rows = {}; files = {}; results = {}
     for key,row in recipe['assets'].items():
         recovered=recover_source(sources[key],row)
-        fixed = project(recovered,row); results[key] = fixed
+        fixed = recover(sources[key],row); results[key] = fixed
         if row.get('recovered_source_path'):recovered.save(output/'sources'/(key+'.png'),optimize=True)
+        if row.get('mast_extension'):mast_source(sources[key],row).save(output/'sources'/(key+'_complete.png'),optimize=True)
         fixed.save(output/(key+'.png'),optimize=True)
         rows[key] = dict(trim_sha256=base.digest(output/(key+'.png')),rgba_sha256=hashlib.sha256(fixed.tobytes()).hexdigest())
         if row.get('recovered_source_path'):rows[key]['source_sha256']=base.digest(output/'sources'/(key+'.png'))
+        if row.get('mast_extension'):rows[key]['extension_sha256']=base.digest(output/'sources'/(key+'_complete.png'))
         x,y,_,_ = expected_entry(row)['atlas_region']; atlases[row['runtime_path']].paste(fixed,(x,y))
+    previous=json.loads(base.local(recipe['mast_predecessor']['manifest_path']).read_text())
+    if any(rows[key]!=previous['assets'][key] for key,row in recipe['assets'].items() if not row.get('mast_extension')):
+        raise ValueError('Accepted neighbouring paint changed')
     for path,atlas in atlases.items():
         target = output/'runtime'/base.local(path).relative_to(ROOT/'art/overworld/runtime')
         target.parent.mkdir(parents=True,exist_ok=True); atlas.save(target,optimize=True)
@@ -212,7 +295,7 @@ def prepare(output, install=False):
             draw.text((x+3,y+285),'OLD 48 / ORIGINAL-SOURCE 192 (same map size)',fill='white')
         canvas.save(output/f'comparison_{page:02}.png')
     proof=dict(schema_id='recruitment_site_cutout_recovery_v1',recipe_sha256=base.digest(RECIPE),tools=tool_hashes(),assets=rows,files=files,
-               processing='Original paint projected at fourfold density through measured historical logical fit; reviewed sheet-fragment removal, alpha 1..4 RGB decontamination and six foreground-only generated physical state details. Original sources, state routes and gameplay unchanged. No procedural RGB or generated backing in runtime.')
+               processing='Original paint projected at fourfold density through measured historical logical fit; reviewed sheet-fragment removal, alpha 1..4 RGB decontamination, six foreground-only generated physical state details and two connected mast-top extensions from the exact original identity sheet. Body paint below the single-row sampling seam and all 34 neighbours stay exact. Original sources, state routes and gameplay unchanged. No procedural RGB or generated backing in runtime.')
     if install:
         for path,info in files.items():
             archive=before_path(path);archive.parent.mkdir(parents=True,exist_ok=True)
@@ -222,6 +305,8 @@ def prepare(output, install=False):
             dest=base.local(row['trimmed_path']);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(output/(key+'.png'),dest)
             if row.get('recovered_source_path'):
                 dest=base.local(row['recovered_source_path']);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(output/'sources'/(key+'.png'),dest)
+            if row.get('mast_extension'):
+                shutil.copyfile(output/'sources'/(key+'_complete.png'),base.local(row['recovered_extension_path']))
             manifest['object_assets'][key]=dict(expected_entry(row),runtime_sha256=files[row['runtime_path']]['after_sha256'])
         MANIFEST.write_text(owner.manifest_text(manifest,recipe['assets']))
         (PACKET/'manifest.json').write_text(json.dumps(proof,indent=2)+'\n')
@@ -245,7 +330,14 @@ def validate_assets():
             source_path=base.local(row['recovered_source_path'])
             if Image.open(source_path).convert('RGBA').tobytes()!=recover_source(sources[key],row).tobytes():raise ValueError('Recovered master changed')
             expected['source_sha256']=base.digest(source_path)
+        if row.get('mast_extension'):
+            path=base.local(row['recovered_extension_path'])
+            if Image.open(path).convert('RGBA').tobytes()!=mast_source(sources[key],row).tobytes():raise ValueError('Extended master changed')
+            expected['extension_sha256']=base.digest(path)
         if proof['assets'][key]!=expected:raise ValueError('Paint proof changed')
+    previous=json.loads(base.local(recipe['mast_predecessor']['manifest_path']).read_text())
+    if any(proof['assets'][key]!=previous['assets'][key] for key,row in recipe['assets'].items() if not row.get('mast_extension')):
+        raise ValueError('Accepted neighbouring paint changed')
     return {k:dict(ok=True,errors=[]) for k in recipe['assets']}
 
 

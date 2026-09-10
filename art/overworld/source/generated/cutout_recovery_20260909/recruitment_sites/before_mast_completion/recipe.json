@@ -1321,32 +1321,7 @@
       "registration_evidence": {
         "alpha_mae": 0.6449652777777778,
         "opaque_rgb_mae": 0.8887610280015344
-      },
-      "mast_extension": {
-        "sheet": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/veteran_company_musters_identity_sheet.png",
-        "sheet_sha256": "ffd967019382bf44876f04187c23dbedd15f68bab3c97b104d9b0d7ff6c139b1",
-        "original_grid_crop": [
-          362,
-          724,
-          724,
-          1086
-        ],
-        "component": {
-          "seed": [
-            608,
-            702
-          ],
-          "pixels": 74998,
-          "bbox": [
-            362,
-            689,
-            696,
-            1056
-          ]
-        },
-        "padding_top": 37
-      },
-      "recovered_extension_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recruitment_sites/sources/resource_site_veteran_three_gauge_chapter_foundry_controlled_complete.png"
+      }
     },
     "mapobj_fog_keel_lastwatch_mooring": {
       "original_manifest_entry": {
@@ -1465,32 +1440,7 @@
       "registration_evidence": {
         "alpha_mae": 0.8337673611111112,
         "opaque_rgb_mae": 0.8780487804878049
-      },
-      "mast_extension": {
-        "sheet": "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/veteran_company_musters_identity_sheet.png",
-        "sheet_sha256": "ffd967019382bf44876f04187c23dbedd15f68bab3c97b104d9b0d7ff6c139b1",
-        "original_grid_crop": [
-          1086,
-          724,
-          1448,
-          1086
-        ],
-        "component": {
-          "seed": [
-            1303,
-            718
-          ],
-          "pixels": 73413,
-          "bbox": [
-            1104,
-            700,
-            1419,
-            1078
-          ]
-        },
-        "padding_top": 26
-      },
-      "recovered_extension_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/recruitment_sites/sources/resource_site_veteran_fog_keel_lastwatch_mooring_controlled_complete.png"
+      }
     },
     "mapobj_cindervane_updraft_roost": {
       "original_manifest_entry": {
@@ -2690,13 +2640,6 @@
     "res://art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/edits/prismwake_refraction_shelf.png": "749a2eddc010d4b6f5f9806a7a9cc30f29a505ee41fce3cce2199e3c19bc5dbf",
     "res://art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/edits/knotstag_root_court.png": "2d535921a1effa4f7a639a966bac891be99313d37cafb41796368fb0592f4f69",
     "res://art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/edits/gaugecoil_pressure_burrow.png": "e2033125e97481e0da5eadc0cf99c381dab0d26a150282ad8e3cee2b3de5d855",
-    "res://art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/edits/gloambell_sounding_deep.png": "88f83850b3ec12e0885dc5101aa0d525772f1dae75045264d81e4a3367c2a37d",
-    "res://art/overworld/source/generated/resource_sites/veteran_company_musters_wave1/veteran_company_musters_identity_sheet.png": "ffd967019382bf44876f04187c23dbedd15f68bab3c97b104d9b0d7ff6c139b1"
-  },
-  "mast_predecessor": {
-    "recipe_path": "res://art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/before_mast_completion/recipe.json",
-    "recipe_sha256": "9a337c24d8064b9ca69f450693ad1516a9ac9552b9b5e2f774e37ad86187bd10",
-    "manifest_path": "res://art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/before_mast_completion/manifest.json",
-    "manifest_sha256": "29fa2c06277edc1679503d511c8afef26cb1b2b2fe90566f0e1288e9db701a34"
+    "res://art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/edits/gloambell_sounding_deep.png": "88f83850b3ec12e0885dc5101aa0d525772f1dae75045264d81e4a3367c2a37d"
   }
 }

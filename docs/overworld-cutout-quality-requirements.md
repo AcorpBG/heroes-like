@@ -283,6 +283,23 @@ three domain smokes separately cover guarded claims, recruitment, weekly
 delivery and full saves as labelled controlled fixtures. Validate repository,
 diff, Linux/Windows official exports and packaged cohort probes together.
 
+### Veteran mast-top source-sheet completion
+
+The two deferred controlled Foundry/Mooring masters are exact 362px grid crops
+of the retained identity sheet, not independent edited paintings. Recover the
+connected mast paint crossing their northern crop boundary from that same sheet.
+Pin the sheet hash, exact crop equality and component seeds/areas/bounds. Retain
+the original body pixels and logical scale/anchor; project the extension through
+the same source-to-runtime transform, including only its necessary sampling seam.
+Do not shrink or shift the building to make room, copy the neighbouring building,
+or fabricate replacement finials. Explicitly measure any low-alpha cell-edge
+support and visually inspect the complete opaque tips at both gameplay sizes.
+Keep all 34 accepted neighbouring states byte-identical. Retain the predecessor
+recipe/proof and two runtime cells, extend the focused reconstruction tests, and
+run the consolidated recruitment/source/package/domain/shared acceptance cycle.
+Detached state coverage and normal scouting/earned claims must remain separately
+labelled; no injected ownership, position, fog or guard removal for screenshots.
+
 ## Completion and non-goals
 
 Each cohort completes only after its actual repaired art is integrated and its
