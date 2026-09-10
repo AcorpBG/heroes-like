@@ -41,7 +41,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(FIELD_ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(576, 48), "The command relic field atlas must remain exactly 576x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(2304, 192), "The command relic field atlas must remain exactly 2304x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)
@@ -112,7 +112,7 @@ func _run_case(view: Control, case: Dictionary) -> void:
 		and String(presentation.get("sprite_asset_id", "")) == asset_id
 		and bool(presentation.get("uses_distinct_field_sprite", false))
 		and field_texture is AtlasTexture
-		and field_texture.region == Rect2(int(case.get("atlas_x", -1)), 0, 48, 48)
+		and field_texture.region == Rect2(int(case.get("atlas_x", -1)) * 4, 0, 192, 192)
 		and field_texture.atlas is Texture2D
 		and field_texture.atlas.resource_path == FIELD_ATLAS_PATH
 	)
@@ -180,8 +180,8 @@ func _write_contact_sheet(path: String) -> bool:
 			return false
 		var origin := Vector2i((index % 4) * 256, (index / 4) * 200)
 		sheet.blend_rect(icon, Rect2i(Vector2i.ZERO, icon.get_size()), origin + Vector2i(18, 28))
-		var frame := atlas.get_region(Rect2i(index * 48, 0, 48, 48))
-		frame.resize(96, 96, Image.INTERPOLATE_NEAREST)
+		var frame := atlas.get_region(Rect2i(index * 192, 0, 192, 192))
+		frame.resize(96, 96, Image.INTERPOLATE_LANCZOS)
 		sheet.blend_rect(frame, Rect2i(Vector2i.ZERO, frame.get_size()), origin + Vector2i(150, 44))
 	return sheet.save_png(path) == OK
 

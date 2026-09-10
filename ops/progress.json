@@ -16619,7 +16619,7 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "art-overworld-cutout-runtime-pool-20260909",
   "currentSliceId": "art-overworld-cutout-runtime-pool-20260909",
-  "currentSliceNotes": "Accepted 79 encounter repairs and six clean faction controls: 3178 checks per source resolution/platform, 60 complete-save comparisons, exact failing-before art control, repository and both official exports pass. Owner-approved fixture pinned with lineage. 921/1214 accepted, 293 pending. Continue 69 artifact rows and remaining families; parent and child remain in progress.",
+  "currentSliceNotes": "Artifact cohort accepted: 36 original-master recoveries, 33 clean field controls and all 69 inventory icons preserved. Eight art tests, three fixture tests, 3164 checks per source resolution/platform, 48 whole-save comparisons, six domain and five shared reports, repository/diff and both official exports pass. 990/1214 accepted; 224 pending. Continue 54 resource-site atlas rows and remaining families; parent and child remain in_progress.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Remaining Runtime-Pool Cutout Recovery",
   "currentSliceUpdatedAt": "2026-09-10T05:23:56.637541+00:00",
@@ -21929,35 +21929,32 @@
   },
   "guardrailNote": "Original-art recovery only; preserve exact identity, placement, footprint, interaction, saves and deterministic generation. No native/RMG rules, Town redesign, unrelated cleanup or fixed package-size ceiling.",
   "lastValidation": {
-    "id": "remaining_encounters_20260910_accepted",
+    "id": "artifacts_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "completed",
-    "acceptedCohort": "remaining_encounters",
-    "currentCohort": "remaining_encounters",
+    "acceptedCohort": "artifacts",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
     "runtimeChanges": {
-      "original_master_repairs": 79,
-      "clean_faction_controls": 6,
-      "runtime_files_changed": 17
+      "original_master_repairs": 36,
+      "clean_field_controls": 33,
+      "inventory_icons_unchanged": 69,
+      "runtime_files_changed": 3
     },
     "validation": {
-      "python_final": "8/8 pass",
-      "source_1280": "3178 checks pass; 15 complete save round-trips; 12 ordinary Day1 authored fronts; source_1280_repin",
-      "repo": "pass after approved fixture pin; /tmp/heroes-remaining-encounter-repo-repin-20260910.log",
-      "linux_export": "pass",
-      "windows_export_startup_generated_flow": "pass; headless Wine",
-      "package_payloads": "300776216 bytes; 5484 members; only project.binary differs across platforms; 5465 unrelated predecessor payloads exact",
-      "domain_reports": "7/12 pass; all 14 error strings and exit codes in 5 failing reports exactly reproduce against unedited predecessor scripts and retained PCK; zero new failures in this comparison",
-      "source_1920_and_cohort_packages": "3178 checks each, exit 0, zero runtime errors: source_1920_repin, linux_1280_repin_complete and windows_1280_repin; exact unchanged packages and every assertion retained",
-      "shared_reports": "Five individual sprite/input/route/fog reports pass: first wrapper completed 3 then exited 143; remaining 2 pass in a separate continuation.",
-      "fixture_tests": "3/3 pass: exact pinned bytes/lineage, missing and altered input reject",
-      "before_art_control": "231 exact art failures across 79 repaired IDs; no unrelated or runtime failures; exact 23d20edf predecessor; linux_before_repin_final",
-      "full_saved_states": "60 complete comparisons pass; only cross-run timestamps and fresh authored IDs excluded; native session ID and all actual round-trip fields retained",
-      "visual": "All 12 wide authored views, 8 wide galleries, unchanged native control, final small Linux views and direct Frontier Watch before/after visually inspected",
-      "receipts": ".artifacts/remaining_encounter_delivery_20260910/{acceptance-repin,payload-preservation-repin}.json"
+      "python": "8 art tests and 3 pinned-fixture tests pass",
+      "source_and_packaged": "3164 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
+      "before": "108 exact art failures in unchanged 6e2d6c29 PCK; no unrelated failures",
+      "saves": "48 complete comparisons; 12 saves per run; only timestamps and fresh authored IDs excluded",
+      "domains": "Six existing artifact/domain reports pass",
+      "shared": "Five sprite/input/route/fog reports pass; first wrapper completed two before exit 143, separate continuation passes other three",
+      "repo": "pass: /tmp/heroes-artifact-repo-final-20260910.log; git diff --check passes",
+      "platforms": "Both official exports pass; Windows fresh-prefix generated-map/Town entry and cohort probe pass under headless Wine",
+      "payloads": "301907848 bytes / 5484 members each; only project.binary platform difference; 5479 unrelated payloads and 1178 other art rows exact",
+      "visual": "All six galleries, source 1280x720/1920x1080 and Linux gameplay inspected; genuine purple crystal/ink retained",
+      "receipt": ".artifacts/overworld_cutout_quality_20260909/artifact-acceptance.json"
     },
-    "accepted_dispositions": 921,
-    "remaining_dispositions": 293,
+    "accepted_dispositions": 990,
+    "remaining_dispositions": 224,
     "approved_fixture_replacement": {
       "original_path": ".artifacts/generated_full_match_quality_20260906/medium_match_11_continuation_01/data/godot/app_userdata/heroes-like/saves/autosave.json",
       "original_sha256": "1734cf2274e00eb763b94db4f814f4ffc73e30bb9377a9225b36bcc3780e0fcc",
@@ -21966,38 +21963,40 @@
       "substitution_used": true,
       "owner_approved_at": "2026-09-10",
       "pinned_path": "tests/fixtures/overworld_cutout/native_day97_roundtrip.json"
-    }
+    },
+    "limits": [
+      "Parent and child remain in_progress; not full-pool or release completion",
+      "Windows headless Wine is not physical GPU/controller certification",
+      "Four ordinary pickups; three guarded cases retain guards; detached galleries are separate coverage"
+    ]
   },
   "latestEvidence": {
-    "id": "remaining_encounters_20260910_accepted",
+    "id": "artifacts_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "completed",
-    "acceptedCohort": "remaining_encounters",
-    "currentCohort": "remaining_encounters",
+    "acceptedCohort": "artifacts",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
     "runtimeChanges": {
-      "original_master_repairs": 79,
-      "clean_faction_controls": 6,
-      "runtime_files_changed": 17
+      "original_master_repairs": 36,
+      "clean_field_controls": 33,
+      "inventory_icons_unchanged": 69,
+      "runtime_files_changed": 3
     },
     "validation": {
-      "python_final": "8/8 pass",
-      "source_1280": "3178 checks pass; 15 complete save round-trips; 12 ordinary Day1 authored fronts; source_1280_repin",
-      "repo": "pass after approved fixture pin; /tmp/heroes-remaining-encounter-repo-repin-20260910.log",
-      "linux_export": "pass",
-      "windows_export_startup_generated_flow": "pass; headless Wine",
-      "package_payloads": "300776216 bytes; 5484 members; only project.binary differs across platforms; 5465 unrelated predecessor payloads exact",
-      "domain_reports": "7/12 pass; all 14 error strings and exit codes in 5 failing reports exactly reproduce against unedited predecessor scripts and retained PCK; zero new failures in this comparison",
-      "source_1920_and_cohort_packages": "3178 checks each, exit 0, zero runtime errors: source_1920_repin, linux_1280_repin_complete and windows_1280_repin; exact unchanged packages and every assertion retained",
-      "shared_reports": "Five individual sprite/input/route/fog reports pass: first wrapper completed 3 then exited 143; remaining 2 pass in a separate continuation.",
-      "fixture_tests": "3/3 pass: exact pinned bytes/lineage, missing and altered input reject",
-      "before_art_control": "231 exact art failures across 79 repaired IDs; no unrelated or runtime failures; exact 23d20edf predecessor; linux_before_repin_final",
-      "full_saved_states": "60 complete comparisons pass; only cross-run timestamps and fresh authored IDs excluded; native session ID and all actual round-trip fields retained",
-      "visual": "All 12 wide authored views, 8 wide galleries, unchanged native control, final small Linux views and direct Frontier Watch before/after visually inspected",
-      "receipts": ".artifacts/remaining_encounter_delivery_20260910/{acceptance-repin,payload-preservation-repin}.json"
+      "python": "8 art tests and 3 pinned-fixture tests pass",
+      "source_and_packaged": "3164 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
+      "before": "108 exact art failures in unchanged 6e2d6c29 PCK; no unrelated failures",
+      "saves": "48 complete comparisons; 12 saves per run; only timestamps and fresh authored IDs excluded",
+      "domains": "Six existing artifact/domain reports pass",
+      "shared": "Five sprite/input/route/fog reports pass; first wrapper completed two before exit 143, separate continuation passes other three",
+      "repo": "pass: /tmp/heroes-artifact-repo-final-20260910.log; git diff --check passes",
+      "platforms": "Both official exports pass; Windows fresh-prefix generated-map/Town entry and cohort probe pass under headless Wine",
+      "payloads": "301907848 bytes / 5484 members each; only project.binary platform difference; 5479 unrelated payloads and 1178 other art rows exact",
+      "visual": "All six galleries, source 1280x720/1920x1080 and Linux gameplay inspected; genuine purple crystal/ink retained",
+      "receipt": ".artifacts/overworld_cutout_quality_20260909/artifact-acceptance.json"
     },
-    "accepted_dispositions": 921,
-    "remaining_dispositions": 293,
+    "accepted_dispositions": 990,
+    "remaining_dispositions": 224,
     "approved_fixture_replacement": {
       "original_path": ".artifacts/generated_full_match_quality_20260906/medium_match_11_continuation_01/data/godot/app_userdata/heroes-like/saves/autosave.json",
       "original_sha256": "1734cf2274e00eb763b94db4f814f4ffc73e30bb9377a9225b36bcc3780e0fcc",
@@ -22006,23 +22005,25 @@
       "substitution_used": true,
       "owner_approved_at": "2026-09-10",
       "pinned_path": "tests/fixtures/overworld_cutout/native_day97_roundtrip.json"
-    }
+    },
+    "limits": [
+      "Parent and child remain in_progress; not full-pool or release completion",
+      "Windows headless Wine is not physical GPU/controller certification",
+      "Four ordinary pickups; three guarded cases retain guards; detached galleries are separate coverage"
+    ]
   },
   "latestEvidenceArtifacts": [
-    "/tmp/heroes-remaining-encounter-delivery-20260910/source_1280_clear_scout/report.json",
-    "/tmp/heroes-remaining-encounter-delivery-20260910/payload-preservation.json",
-    "/tmp/heroes-remaining-encounter-python-final-20260910.log",
-    "/tmp/heroes-remaining-encounter-repo-20260910.log",
-    "/tmp/heroes-remaining-encounter-repo-current-20260910.log",
-    "/tmp/heroes-remaining-domain-before-complete-20260910/comparison.json",
-    "/tmp/heroes-remaining-encounter-linux-20260910/report.json",
-    "/tmp/heroes-contract-windows-final-20260910/report.json",
-    "/tmp/heroes-remaining-encounter-domain-suite-20260910/remaining_domains_final/report.json",
-    "/tmp/heroes-remaining-encounter-shared-suite-20260910/remaining_shared/report.json",
-    "/tmp/heroes-remaining-encounter-shared-suite-20260910/remaining_shared_tail/report.json"
+    ".artifacts/overworld_cutout_quality_20260909/artifact-acceptance.json",
+    ".artifacts/overworld_cutout_quality_20260909/artifact_domains_current/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/artifact_shared_current/report.json",
+    ".artifacts/full_play_runtime_20260905/artifact_shared_remaining_20260910/report.json",
+    "/tmp/heroes-artifact-cutout-python-20260910.log",
+    "/tmp/heroes-artifact-repo-final-20260910.log",
+    "/tmp/heroes-artifact-linux-20260910/report.json",
+    "/tmp/heroes-artifact-windows-20260910/report.json"
   ],
   "latestEvidenceId": "art-overworld-cutout-runtime-pool-20260909",
-  "latestFinding": "Accepted 79 original encounter recoveries and six unchanged faction controls: 3178 checks per source resolution/platform, 60 complete-save comparisons, exact 231-failure predecessor art control, repository and official Linux/Windows exports pass. Three fail-closed tests protect the owner-approved pinned Day97 fixture. All 14 older domain failures reproduce in the predecessor; seven reports pass. 921/1214 accepted, 293 pending; continue artifact and remaining-family recovery.",
+  "latestFinding": "Accepted 36 original artifact field recoveries and 33 clean controls; all 69 inventory icons unchanged. 3164 checks per source resolution/platform, 48 whole-save comparisons, six domain and five shared reports, repository/diff and both official exports pass. Exact 108-failure predecessor art control; no unrelated failures. 990/1214 accepted, 224 pending; continue remaining resource-site and hero/Town/other families.",
   "metrics": {
     "scope": "Historical full-match checkpoint metrics retained below; these are not current release metrics. Current art-goal acceptance is in latestEvidence and validation.",
     "audit_only": false,
@@ -22253,7 +22254,7 @@
         "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch remaining_encounters --platform windows --binary <official-release-binary> --pack <matching-release-pck> --label <fresh> --wine-prefix <fresh-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-10T06:24:36Z",
+      "updatedAt": "2026-09-10T07:04:12Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22297,9 +22298,11 @@
         "tools/prepare_overworld_remaining_encounter_cutouts.py",
         "tests/test_overworld_remaining_encounter_cutouts.py",
         "tests/overworld_remaining_encounter_cutout_probe.py",
-        "art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/recipe.json"
+        "art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/recipe.json",
+        "tools/prepare_overworld_artifact_cutouts.py; 36 original-master atlas recoveries, 33 clean standalone field controls, unchanged inventory icons and historical source provenance",
+        "tests/test_overworld_artifact_cutouts.py and tests/overworld_artifact_cutout_probe.py; all 69 identity routes, ordinary scouting/pickup, complete saves and Linux/Windows acceptance"
       ],
-      "notes": "Accepted 79 encounter repairs and six clean faction controls: 3178 checks per source resolution/platform, 60 complete-save comparisons, exact failing-before art control, repository and both official exports pass. Owner-approved fixture pinned with lineage. 921/1214 accepted, 293 pending. Continue 69 artifact rows and remaining families; parent and child remain in progress.",
+      "notes": "Artifact cohort accepted: 36 original-master recoveries, 33 clean field controls and all 69 inventory icons preserved. Eight art tests, three fixture tests, 3164 checks per source resolution/platform, 48 whole-save comparisons, six domain and five shared reports, repository/diff and both official exports pass. 990/1214 accepted; 224 pending. Continue 54 resource-site atlas rows and remaining families; parent and child remain in_progress.",
       "startedAt": "2026-09-09T16:04:51Z"
     },
     {
@@ -110948,8 +110951,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Inspect and recover the 69 artifact rows, then the remaining hero, Town and other runtime families; preserve clean originals and all gameplay/native/save/placement authority. Accepted checkpoints cover 921/1214; 293 dispositions remain. Parent and child remain in_progress.",
-  "remainingWork": "Inspect and recover the 69 artifact rows, then the remaining hero, Town and other runtime families; preserve clean originals and all gameplay/native/save/placement authority. Accepted checkpoints cover 921/1214; 293 dispositions remain. Parent and child remain in_progress.",
+  "remainingGap": "Inspect/recover 54 remaining resource-site atlas rows, then hero/Town/other families; preserve clean originals and all gameplay/native/save/placement authority. 990/1214 accepted, 224 pending. Parent and child remain in_progress.",
+  "remainingWork": "Inspect/recover 54 remaining resource-site atlas rows, then hero/Town/other families; preserve clean originals and all gameplay/native/save/placement authority. 990/1214 accepted, 224 pending. Parent and child remain in_progress.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -111487,7 +111490,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "remaining_encounter_recovery_accepted_runtime_pool_in_progress",
+  "result": "artifact_recovery_accepted_runtime_pool_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -111588,39 +111591,36 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Accepted 79 original encounter recoveries and six unchanged faction controls: 3178 checks per source resolution/platform, 60 complete-save comparisons, exact 231-failure predecessor art control, repository and official Linux/Windows exports pass. Three fail-closed tests protect the owner-approved pinned Day97 fixture. All 14 older domain failures reproduce in the predecessor; seven reports pass. 921/1214 accepted, 293 pending; continue artifact and remaining-family recovery.",
+  "summary": "Accepted 36 original artifact field recoveries and 33 clean controls; all 69 inventory icons unchanged. 3164 checks per source resolution/platform, 48 whole-save comparisons, six domain and five shared reports, repository/diff and both official exports pass. Exact 108-failure predecessor art control; no unrelated failures. 990/1214 accepted, 224 pending; continue remaining resource-site and hero/Town/other families.",
   "taskId": "10236",
-  "updatedAt": "2026-09-10T06:24:36Z",
+  "updatedAt": "2026-09-10T07:04:12Z",
   "validation": {
-    "id": "remaining_encounters_20260910_accepted",
+    "id": "artifacts_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "completed",
-    "acceptedCohort": "remaining_encounters",
-    "currentCohort": "remaining_encounters",
+    "acceptedCohort": "artifacts",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
     "runtimeChanges": {
-      "original_master_repairs": 79,
-      "clean_faction_controls": 6,
-      "runtime_files_changed": 17
+      "original_master_repairs": 36,
+      "clean_field_controls": 33,
+      "inventory_icons_unchanged": 69,
+      "runtime_files_changed": 3
     },
     "validation": {
-      "python_final": "8/8 pass",
-      "source_1280": "3178 checks pass; 15 complete save round-trips; 12 ordinary Day1 authored fronts; source_1280_repin",
-      "repo": "pass after approved fixture pin; /tmp/heroes-remaining-encounter-repo-repin-20260910.log",
-      "linux_export": "pass",
-      "windows_export_startup_generated_flow": "pass; headless Wine",
-      "package_payloads": "300776216 bytes; 5484 members; only project.binary differs across platforms; 5465 unrelated predecessor payloads exact",
-      "domain_reports": "7/12 pass; all 14 error strings and exit codes in 5 failing reports exactly reproduce against unedited predecessor scripts and retained PCK; zero new failures in this comparison",
-      "source_1920_and_cohort_packages": "3178 checks each, exit 0, zero runtime errors: source_1920_repin, linux_1280_repin_complete and windows_1280_repin; exact unchanged packages and every assertion retained",
-      "shared_reports": "Five individual sprite/input/route/fog reports pass: first wrapper completed 3 then exited 143; remaining 2 pass in a separate continuation.",
-      "fixture_tests": "3/3 pass: exact pinned bytes/lineage, missing and altered input reject",
-      "before_art_control": "231 exact art failures across 79 repaired IDs; no unrelated or runtime failures; exact 23d20edf predecessor; linux_before_repin_final",
-      "full_saved_states": "60 complete comparisons pass; only cross-run timestamps and fresh authored IDs excluded; native session ID and all actual round-trip fields retained",
-      "visual": "All 12 wide authored views, 8 wide galleries, unchanged native control, final small Linux views and direct Frontier Watch before/after visually inspected",
-      "receipts": ".artifacts/remaining_encounter_delivery_20260910/{acceptance-repin,payload-preservation-repin}.json"
+      "python": "8 art tests and 3 pinned-fixture tests pass",
+      "source_and_packaged": "3164 checks each at 1280x720/1920x1080 source and Linux/Windows package; no runtime errors",
+      "before": "108 exact art failures in unchanged 6e2d6c29 PCK; no unrelated failures",
+      "saves": "48 complete comparisons; 12 saves per run; only timestamps and fresh authored IDs excluded",
+      "domains": "Six existing artifact/domain reports pass",
+      "shared": "Five sprite/input/route/fog reports pass; first wrapper completed two before exit 143, separate continuation passes other three",
+      "repo": "pass: /tmp/heroes-artifact-repo-final-20260910.log; git diff --check passes",
+      "platforms": "Both official exports pass; Windows fresh-prefix generated-map/Town entry and cohort probe pass under headless Wine",
+      "payloads": "301907848 bytes / 5484 members each; only project.binary platform difference; 5479 unrelated payloads and 1178 other art rows exact",
+      "visual": "All six galleries, source 1280x720/1920x1080 and Linux gameplay inspected; genuine purple crystal/ink retained",
+      "receipt": ".artifacts/overworld_cutout_quality_20260909/artifact-acceptance.json"
     },
-    "accepted_dispositions": 921,
-    "remaining_dispositions": 293,
+    "accepted_dispositions": 990,
+    "remaining_dispositions": 224,
     "approved_fixture_replacement": {
       "original_path": ".artifacts/generated_full_match_quality_20260906/medium_match_11_continuation_01/data/godot/app_userdata/heroes-like/saves/autosave.json",
       "original_sha256": "1734cf2274e00eb763b94db4f814f4ffc73e30bb9377a9225b36bcc3780e0fcc",
@@ -111629,7 +111629,12 @@
       "substitution_used": true,
       "owner_approved_at": "2026-09-10",
       "pinned_path": "tests/fixtures/overworld_cutout/native_day97_roundtrip.json"
-    }
+    },
+    "limits": [
+      "Parent and child remain in_progress; not full-pool or release completion",
+      "Windows headless Wine is not physical GPU/controller certification",
+      "Four ordinary pickups; three guarded cases retain guards; detached galleries are separate coverage"
+    ]
   },
   "validationHistory": [
     {

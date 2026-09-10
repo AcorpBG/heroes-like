@@ -33,6 +33,7 @@ EARLY_STATE_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_202609
 LANDMARK_STATE_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/landmark_states/recipe.json'
 ROUTE_ARCANE_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/route_arcane/recipe.json'
 COMMAND_SITE_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/command_sites/recipe.json'
+ARTIFACT_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/artifacts/recipe.json'
 REMAINING_ENCOUNTER_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/remaining_encounters/recipe.json'
 CONTRACT_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/contract_encounters/recipe.json'
 TRAINING_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/training_sites/recipe.json'
@@ -86,7 +87,7 @@ def expected_assets(recipe, expected_dir, output):
         if recurring:
             entry=dict(entry,path=row['runtime_path'],atlas_region=[v*row['pixel_scale'] for v in entry['atlas_region']],atlas_size=[5760 if recurring_site else 5952,192])
         contract=recipe.get('schema_id')=='contract_encounter_cutout_recipe_v1'
-        remaining=recipe.get('schema_id')=='remaining_encounter_cutout_recipe_v1'
+        remaining=recipe.get('schema_id') in ('remaining_encounter_cutout_recipe_v1','artifact_cutout_recipe_v1')
         if (claimed or contract or remaining) and 'atlas_region' in entry:
             entry=dict(entry,atlas_region=[v*4 for v in entry['atlas_region']],atlas_size=[v*4 for v in entry['atlas_size']])
         legacy=remaining or contract or claimed or recurring or recipe.get('schema_id') in ('legacy_family_cutout_recipe_v1','passage_cutout_recipe_v1')
@@ -241,14 +242,14 @@ def probe_environment(environment):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--batch',choices=['batch04','map_sheets','decorations','legacy_families','passages','recurring_encounters','recurring_sites','claimed_dwellings','early_states','landmark_states','route_arcane','command_sites','recruitment_sites','training_sites','contract_encounters','remaining_encounters'],default='batch04')
+    parser.add_argument('--batch',choices=['batch04','map_sheets','decorations','legacy_families','passages','recurring_encounters','recurring_sites','claimed_dwellings','early_states','landmark_states','route_arcane','command_sites','recruitment_sites','training_sites','contract_encounters','remaining_encounters','artifacts'],default='batch04')
     parser.add_argument('--label',required=True)
     parser.add_argument('--resolution',choices=['1280x720','1920x1080'],default='1280x720')
     parser.add_argument('--expected-dir',type=Path,help='Preview acceptance candidate; permits an honest failing-before run')
     args=parser.parse_args()
     if not re.fullmatch(r'[a-z0-9_-]+',args.label):parser.error('label must be a fresh slug')
     original=earned_save_bytes()
-    recipe=json.loads({'batch04':RECIPE,'map_sheets':POOL_RECIPE,'decorations':DECORATION_RECIPE,'legacy_families':LEGACY_RECIPE,'passages':PASSAGE_RECIPE,'recurring_encounters':RECURRING_RECIPE,'recurring_sites':RECURRING_SITE_RECIPE,'claimed_dwellings':CLAIMED_RECIPE,'early_states':EARLY_STATE_RECIPE,'landmark_states':LANDMARK_STATE_RECIPE,'route_arcane':ROUTE_ARCANE_RECIPE,'command_sites':COMMAND_SITE_RECIPE,'recruitment_sites':RECRUITMENT_RECIPE,'training_sites':TRAINING_RECIPE,'contract_encounters':CONTRACT_RECIPE,'remaining_encounters':REMAINING_ENCOUNTER_RECIPE}[args.batch].read_text())
+    recipe=json.loads({'batch04':RECIPE,'map_sheets':POOL_RECIPE,'decorations':DECORATION_RECIPE,'legacy_families':LEGACY_RECIPE,'passages':PASSAGE_RECIPE,'recurring_encounters':RECURRING_RECIPE,'recurring_sites':RECURRING_SITE_RECIPE,'claimed_dwellings':CLAIMED_RECIPE,'early_states':EARLY_STATE_RECIPE,'landmark_states':LANDMARK_STATE_RECIPE,'route_arcane':ROUTE_ARCANE_RECIPE,'command_sites':COMMAND_SITE_RECIPE,'recruitment_sites':RECRUITMENT_RECIPE,'training_sites':TRAINING_RECIPE,'contract_encounters':CONTRACT_RECIPE,'remaining_encounters':REMAINING_ENCOUNTER_RECIPE,'artifacts':ARTIFACT_RECIPE}[args.batch].read_text())
     script=SCRIPT
     if args.batch=='decorations':
         from overworld_decoration_cutout_probe import SCRIPT as script
@@ -270,6 +271,8 @@ def main():
         from overworld_route_arcane_cutout_probe import SCRIPT as script
     if args.batch=='command_sites':
         from overworld_command_cutout_probe import SCRIPT as script
+    if args.batch=='artifacts':
+        from overworld_artifact_cutout_probe import SCRIPT as script
     if args.batch=='remaining_encounters':
         from overworld_remaining_encounter_cutout_probe import SCRIPT as script
     if args.batch=='contract_encounters':
@@ -311,6 +314,8 @@ def main():
         captures_ok=captures_ok and len(report.get('galleries',[]))==5 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
     if args.batch=='remaining_encounters':
         captures_ok=captures_ok and len(report.get('galleries',[]))==8 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
+    if args.batch=='artifacts':
+        captures_ok=captures_ok and len(report.get('galleries',[]))==6 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
     report['ok']=bool(report['ok']) and code==0 and report['input_unchanged'] and not report['runtime_errors'] and captures_ok
     (output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({k:v for k,v in report.items() if k not in ('textures','captures','expected_rasters')}))
