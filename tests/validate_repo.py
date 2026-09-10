@@ -44198,6 +44198,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(len(landmark_recoveries) == 40, errors, "All 40 landmark/state paintings must reconstruct from original paint and exact registration")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Landmark state cutout recovery failed closed: {exc}")
+    route_recoveries = {}
+    try:
+        route_spec = importlib.util.spec_from_file_location("route_arcane_cutout_validation", ROOT / "tools" / "prepare_overworld_route_arcane_cutouts.py")
+        route_module = importlib.util.module_from_spec(route_spec)
+        route_spec.loader.exec_module(route_module)
+        route_recoveries = route_module.validate_assets()
+        ensure(len(route_recoveries) == 54, errors, "All 54 route/arcane paintings must reconstruct from registered originals or approved generated edits")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Route/arcane cutout recovery failed closed: {exc}")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
@@ -44384,6 +44393,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (96, 96)
             else:
                 expected_canvas = (512, 512)
+            if asset_id in route_recoveries:
+                expected_canvas = (route_module.FAMILIES[Path(entry['path']).stem.removesuffix('_atlas')][0] * 192, 192)
             ensure((width, height) == expected_canvas, errors, f"Overworld runtime object asset {asset_id} must use the {expected_canvas[0]} canvas, found {width}x{height}")
 
     ember_signal_source_path = ROOT / "art" / "overworld" / "source" / "trimmed" / "map_objects" / "distinct" / "ember_signal_post-trimmed.png"
@@ -50889,6 +50900,7 @@ def validate_six_faction_standalone_contracts(errors: list[str]) -> None:
     ledger_report_scene_path = ROOT / "tests" / "unbound_road_ledger_campaign_report.tscn"
     waydesk_source_manifest_path = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "pactwright_waydesk_wave1" / "manifest.json"
     waydesk_atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "pactwright_waydesk_state_atlas.png"
+    historical_waydesk_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/route_arcane/before_runtime" / waydesk_atlas_path.relative_to(ROOT / "art/overworld/runtime")
     required_paths = (source_manifest_path, atlas_path, report_script_path, report_scene_path, ledger_report_script_path, ledger_report_scene_path, waydesk_source_manifest_path, waydesk_atlas_path)
     for path in required_paths:
         ensure(path.is_file(), errors, f"Missing standalone-contract owner: {path.relative_to(ROOT)}")
@@ -50957,7 +50969,7 @@ def validate_six_faction_standalone_contracts(errors: list[str]) -> None:
     waydesk_manifest = load_json(waydesk_source_manifest_path)
     waydesk_source_path = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "pactwright_waydesk_wave1" / "pactwright_waydesk_source.png"
     ensure(waydesk_site.get("claim_flags") == {"pactwright_waydesk_witnessed": True} and waydesk_site.get("persistent_control") is True, errors, "Pactwright Waydesk must retain its persistent local witness contract")
-    ensure(png_size(waydesk_atlas_path) == (96, 48) and hashlib.sha256(waydesk_atlas_path.read_bytes()).hexdigest() == "b1b7c9c8c87ab65c6b3c1f1487bc48b04b7bdf7ac5a363917707cefb82c7786d", errors, "Pactwright Waydesk two-state atlas bytes or dimensions changed")
+    ensure(png_size(historical_waydesk_atlas_path) == (96, 48) and hashlib.sha256(historical_waydesk_atlas_path.read_bytes()).hexdigest() == "b1b7c9c8c87ab65c6b3c1f1487bc48b04b7bdf7ac5a363917707cefb82c7786d", errors, "Pactwright Waydesk two-state atlas bytes or dimensions changed")
     ensure(waydesk_source_path.is_file() and png_size(waydesk_source_path) == (1254, 1254) and hashlib.sha256(waydesk_source_path.read_bytes()).hexdigest() == "416b9e58e10a7bc207e64cbe328fe8075c603cb654f663428e9bac12b22d6d32", errors, "Pactwright Waydesk generated source bytes or dimensions changed")
     ensure(waydesk_manifest.get("generator_mode") == "built_in_image_gen" and waydesk_manifest.get("runtime_atlas_sha256") == "b1b7c9c8c87ab65c6b3c1f1487bc48b04b7bdf7ac5a363917707cefb82c7786d", errors, "Pactwright Waydesk source provenance changed")
     ledger_report_text = ledger_report_script_path.read_text(encoding="utf-8")
@@ -76873,6 +76885,7 @@ def validate_veil_coast_sounding_circuit(errors: list[str]) -> None:
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     source_manifest_path = ROOT / "art/overworld/source/generated/resource_sites/coast_route_operational_wave1/manifest.json"
     atlas_path = ROOT / "art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png"
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/route_arcane/before_runtime/objects/resource_sites/coast_route_operational_atlas.png"
     report_path = ROOT / "tests/veil_coast_sounding_circuit_report.gd"
     scene_path = ROOT / "tests/veil_coast_sounding_circuit_report.tscn"
     cases = [
@@ -76899,7 +76912,8 @@ def validate_veil_coast_sounding_circuit(errors: list[str]) -> None:
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("assets", []) if isinstance(row, dict)}
     ensure(source_manifest.get("generation_mode") == "built_in_image_gen_precise_object_edit" and source_manifest.get("runtime_atlas", {}).get("size") == [288, 48] and source_manifest.get("runtime_atlas", {}).get("sha256") == "69bdff9a706d4faa52cd8b71a992a9d56b9548dab8cfeb99f5020d4d7e93d24b", errors, "Coast-route operational source provenance changed")
     atlas_payload = atlas_path.read_bytes()
-    ensure(png_size(atlas_path) == (288, 48) and hashlib.sha256(atlas_payload).hexdigest() == "69bdff9a706d4faa52cd8b71a992a9d56b9548dab8cfeb99f5020d4d7e93d24b" and len(atlas_payload) >= 26 and atlas_payload[25] == 6, errors, "Coast-route operational atlas bytes, alpha, or compact dimensions changed")
+    historical_payload = historical_atlas_path.read_bytes()
+    ensure(png_size(historical_atlas_path) == (288, 48) and hashlib.sha256(historical_payload).hexdigest() == "69bdff9a706d4faa52cd8b71a992a9d56b9548dab8cfeb99f5020d4d7e93d24b" and len(historical_payload) >= 26 and historical_payload[25] == 6, errors, "Coast-route historical atlas bytes, alpha, or compact dimensions changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Coast-route operational atlas import metadata is missing")
 
     for index, (site_id, object_id, placement_id, xy, entry_offsets, movement_delta, guard_id, source_sha) in enumerate(cases):
@@ -76926,7 +76940,7 @@ def validate_veil_coast_sounding_circuit(errors: list[str]) -> None:
         asset_id = f"resource_site_coast_route_{site_id.removeprefix('site_')}_operational"
         asset = object_assets.get(asset_id, {})
         sprite = site_sprites.get(site_id, {})
-        ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png" and asset.get("atlas_region") == [index * 48, 0, 48, 48] and asset.get("atlas_size") == [288, 48] and asset.get("assigned_resource_site_id") == site_id and asset.get("presentation_role") == "operational_coast_route_state" and len(str(asset.get("accessible_description", ""))) >= 60, errors, f"{site_id} operational atlas entry changed")
+        ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png" and asset.get("atlas_region") == [index * 192, 0, 192, 192] and asset.get("atlas_size") == [1152, 192] and asset.get("assigned_resource_site_id") == site_id and asset.get("presentation_role") == "operational_coast_route_state" and len(str(asset.get("accessible_description", ""))) >= 60, errors, f"{site_id} operational atlas entry changed")
         ensure(sprite.get("asset_id") == asset_id and sprite.get("unclaimed_asset_id") == f"mapobj_{site_id.removeprefix('site_')}", errors, f"{site_id} dormant/operational sprite switch changed")
         source_row = source_rows.get(site_id, {})
         source_path = source_manifest_path.parent / str(source_row.get("source", ""))
@@ -79127,6 +79141,7 @@ def validate_sevenfold_high_arcanum(errors: list[str]) -> None:
     object_assets = overworld_art.get("object_assets", {})
     site_sprites = overworld_art.get("resource_site_sprites", {})
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "sevenfold_high_arcanum_atlas.png"
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/route_arcane/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "sevenfold_high_arcanum_wave1"
     source_manifest_path = source_dir / "manifest.json"
     report_script = ROOT / "tests" / "sevenfold_high_arcanum_smoke.gd"
@@ -79144,9 +79159,9 @@ def validate_sevenfold_high_arcanum(errors: list[str]) -> None:
     prior_nodes = [node for node in scenario.get("resource_nodes", []) if isinstance(node, dict) and node.get("content_batch_id") != "overworld-strategic-density-and-route-occupancy-10230"]
     ensure(len(sites) >= 291 and len(prior_nodes) == 17, errors, "Sevenfold High Arcanum must retain its prior 17-node Third Hearths board beneath additive density support")
     placement_by_id = {str(node.get("placement_id", "")): node for node in scenario.get("resource_nodes", []) if isinstance(node, dict)}
-    ensure(atlas_path.is_file() and png_size(atlas_path) == (336, 48), errors, "Sevenfold High Arcanum atlas must be an exact 336x48 strip")
+    ensure(atlas_path.is_file() and png_size(historical_atlas_path) == (336, 48), errors, "Sevenfold High Arcanum atlas must be an exact 336x48 strip")
     if atlas_path.is_file():
-        ensure(hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "9d05adc692a4de4934d5d33e158fbf51699358dcebdf86f799de9616b3271d8f", errors, "Sevenfold High Arcanum atlas bytes changed")
+        ensure(hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == "9d05adc692a4de4934d5d33e158fbf51699358dcebdf86f799de9616b3271d8f", errors, "Sevenfold High Arcanum atlas bytes changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Sevenfold High Arcanum atlas import sidecar is missing")
     ensure(source_manifest_path.is_file(), errors, "Sevenfold High Arcanum source manifest is missing")
     source_manifest = load_json(source_manifest_path) if source_manifest_path.is_file() else {}
@@ -79165,7 +79180,7 @@ def validate_sevenfold_high_arcanum(errors: list[str]) -> None:
         ensure(str(placement.get("site_id", "")) == site_id, errors, f"{site_id} lost its Third Hearths placement")
         ensure(int(spell.get("tier", 0)) == 5 and str(spell.get("context", "")) == "battle" and "another tactical choice" not in str(spell.get("description", "")), errors, f"{spell_id} lost specific tier-five battle presentation")
         ensure(mapping.get("asset_id") == asset_id and mapping.get("unclaimed_asset_id") == asset_id, errors, f"{site_id} art mapping changed")
-        ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png" and asset.get("atlas_region") == region and asset.get("atlas_size") == [336, 48] and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description", ""))) >= 80, errors, f"{site_id} atlas ownership changed")
+        ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png" and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1344, 192] and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description", ""))) >= 80, errors, f"{site_id} atlas ownership changed")
         ensure(source_path.is_file() and png_size(source_path) == (1254, 1254), errors, f"{site_id} original 1254px source is missing")
         if source_path.is_file():
             source_payload = source_path.read_bytes()
@@ -79225,10 +79240,11 @@ def validate_two_elite_neutral_dwellings(errors: list[str]) -> None:
     object_assets = overworld_art.get("object_assets", {})
     site_sprites = overworld_art.get("resource_site_sprites", {})
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "elite_neutral_dwelling_atlas.png"
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/route_arcane/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     source_manifest_path = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "elite_neutral_dwellings_wave1" / "manifest.json"
-    ensure(atlas_path.is_file() and png_size(atlas_path) == (192, 48), errors, "Elite-neutral dwelling atlas must retain compact 192x48 authority")
+    ensure(atlas_path.is_file() and png_size(historical_atlas_path) == (192, 48), errors, "Elite-neutral dwelling atlas must retain compact 192x48 authority")
     if atlas_path.is_file():
-        payload = atlas_path.read_bytes()
+        payload = historical_atlas_path.read_bytes()
         ensure(hashlib.sha256(payload).hexdigest() == "838595274ed4a326727afe2733a6d8823aefe3a532281c41756686bfd3bb48d7" and len(payload) >= 26 and payload[25] == 6, errors, "Elite-neutral dwelling atlas bytes or alpha changed")
     ensure(source_manifest_path.is_file(), errors, "Elite-neutral dwelling art provenance manifest is missing")
     if source_manifest_path.is_file():
@@ -79261,7 +79277,7 @@ def validate_two_elite_neutral_dwellings(errors: list[str]) -> None:
         ensure(mapping.get("asset_id") == row["controlled"] and mapping.get("unclaimed_asset_id") == row["unclaimed"], errors, f"{row['site_id']} controlled/unclaimed art mapping changed")
         for asset_id, region, role in ((row["unclaimed"], row["unclaimed_region"], "unclaimed"), (row["controlled"], row["controlled_region"], "controlled")):
             asset = object_assets.get(asset_id, {})
-            ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png" and asset.get("atlas_region") == region and asset.get("atlas_size") == [192, 48] and len(str(asset.get("accessible_description", "")).strip()) >= 48, errors, f"{row['site_id']} {role} art identity changed")
+            ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png" and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [768, 192] and len(str(asset.get("accessible_description", "")).strip()) >= 48, errors, f"{row['site_id']} {role} art identity changed")
         source_path = ROOT / "art" / "units" / "source" / "curated" / f"{unit_id}.png"
         ensure(source_path.is_file() and png_size(source_path) == (512, 512) and hashlib.sha256(source_path.read_bytes()).hexdigest() == row["source_sha"], errors, f"{unit_id} curated source bytes changed")
         art = unit_art.get(unit_id, {})
@@ -79341,10 +79357,11 @@ def validate_four_elder_wild_recruitment_sanctuaries(errors: list[str]) -> None:
     prior_nodes = [node for node in scenario.get("resource_nodes", []) if isinstance(node, dict) and node.get("content_batch_id") != "overworld-strategic-density-and-route-occupancy-10230"]
     ensure(len(prior_nodes) == 97 and len(scenario.get("encounters", [])) == 31, errors, "Elder-wild sanctuary batch must retain the prior 97-site Ninefold board beneath additive density support without duplicating its 31 guards")
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "elder_wild_sanctuaries" / "elder_wild_sanctuaries_atlas.png"
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/route_arcane/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     atlas_sha = "5f937e368aa962e513d2fdd72475a6c36fbdb835d8c1c9026558b246bf3a6212"
-    ensure(atlas_path.is_file() and png_size(atlas_path) == (384, 48), errors, "Elder-wild sanctuary atlas must retain compact 384x48 authority")
+    ensure(atlas_path.is_file() and png_size(historical_atlas_path) == (384, 48), errors, "Elder-wild sanctuary atlas must retain compact 384x48 authority")
     if atlas_path.is_file():
-        payload = atlas_path.read_bytes()
+        payload = historical_atlas_path.read_bytes()
         ensure(hashlib.sha256(payload).hexdigest() == atlas_sha and len(payload) >= 26 and payload[25] == 6, errors, "Elder-wild sanctuary atlas bytes or alpha changed")
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "elder_wild_sanctuaries"
     source_manifest_path = source_dir / "manifest.json"
@@ -79381,7 +79398,7 @@ def validate_four_elder_wild_recruitment_sanctuaries(errors: list[str]) -> None:
         ensure(sprite_mapping.get("asset_id") == row["unclaimed"] and sprite_mapping.get("source_batch") == 15, errors, f"{row['object']} distinct map sprite assignment changed")
         for asset_id, region in ((row["unclaimed"], row["regions"][0]), (row["controlled"], row["regions"][1])):
             asset = object_assets.get(asset_id, {})
-            ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png" and asset.get("atlas_region") == region and asset.get("atlas_size") == [384, 48] and len(str(asset.get("accessible_description", "")).strip()) >= 48, errors, f"{site_id} exact art state changed")
+            ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png" and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1536, 192] and len(str(asset.get("accessible_description", "")).strip()) >= 48, errors, f"{site_id} exact art state changed")
     smoke_path = ROOT / "tests" / "four_elder_wild_recruitment_sanctuaries_smoke.gd"
     smoke_scene_path = ROOT / "tests" / "four_elder_wild_recruitment_sanctuaries_smoke.tscn"
     ensure(smoke_path.is_file() and smoke_scene_path.is_file(), errors, "Elder-wild sanctuary consolidated smoke owner is missing")
@@ -80304,6 +80321,7 @@ def validate_mireglass_counterpoint_campaign(errors: list[str]) -> None:
     report_script = ROOT / "tests/mireglass_counterpoint_campaign_report.gd"
     report_scene = ROOT / "tests/mireglass_counterpoint_campaign_report.tscn"
     atlas_path = ROOT / "art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png"
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/route_arcane/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     source_manifest_path = ROOT / "art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/manifest.json"
     campaign_manifest_path = ROOT / "art/campaigns/source/generated/mireglass_counterpoint_manifest.json"
     required_paths = (report_script, report_scene, atlas_path, source_manifest_path, campaign_manifest_path)
@@ -80343,8 +80361,8 @@ def validate_mireglass_counterpoint_campaign(errors: list[str]) -> None:
             export = chapters[index].get("carryover_export", {})
             ensure(export.get("resource_fraction") == 0.18 and export.get("resource_caps", {}).get("gold") == 450 and export.get("flag_ids") == [claim_flag, testimony_flag] and export.get("retain_hero_progression") is False and export.get("retain_spells") is False and export.get("retain_artifacts") is False, errors, f"{scenario_id} lost bounded resource-only carryover")
 
-    atlas_payload = atlas_path.read_bytes()
-    ensure(png_size(atlas_path) == (576, 48) and hashlib.sha256(atlas_payload).hexdigest() == "55625786f1bcf85c424e96ce03aa233b39e9a7c20222f1e2c5245fb74b1ebb6a" and len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6}, errors, "Mireglass Counterpoint must retain its exact twelve-state alpha-safe atlas")
+    atlas_payload = historical_atlas_path.read_bytes()
+    ensure(png_size(historical_atlas_path) == (576, 48) and hashlib.sha256(atlas_payload).hexdigest() == "55625786f1bcf85c424e96ce03aa233b39e9a7c20222f1e2c5245fb74b1ebb6a" and len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6}, errors, "Mireglass Counterpoint must retain its exact twelve-state alpha-safe atlas")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Mireglass Counterpoint runtime atlas import metadata is missing")
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     site_sprites = art_manifest.get("resource_site_sprites", {})
@@ -81728,8 +81746,9 @@ def validate_six_horizon_company_field_musters(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     atlas_path = res_path_to_disk(atlas_res)
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/route_arcane/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     ensure(len(sites) >= 291 and len(objects) >= 404 and len(scenario.get("resource_nodes", [])) == 21, errors, "Six Horizon field musters must own the expanded 225-site, 404-object, 21-node Horizon catalogs")
-    ensure(atlas_path.is_file() and png_size(atlas_path) == (576, 48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "68dc1e16591a44347abe2c2d2fbeb8b3808cdb3bd3073a6cc8a5863c9adc5f22", errors, "Six Horizon field-muster runtime atlas bytes or size changed")
+    ensure(atlas_path.is_file() and png_size(historical_atlas_path) == (576, 48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == "68dc1e16591a44347abe2c2d2fbeb8b3808cdb3bd3073a6cc8a5863c9adc5f22", errors, "Six Horizon field-muster runtime atlas bytes or size changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Six Horizon field-muster runtime atlas import sidecar is missing")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_horizon_company_field_musters" and source_manifest.get("content_batch_id") == slice_id and source_manifest.get("runtime_atlas_sha256") == "68dc1e16591a44347abe2c2d2fbeb8b3808cdb3bd3073a6cc8a5863c9adc5f22" and set(source_rows) == set(expected), errors, "Six Horizon field-muster generated-source provenance changed")
 
@@ -81747,8 +81766,8 @@ def validate_six_horizon_company_field_musters(errors: list[str]) -> None:
         unclaimed_asset = assets.get(unclaimed_asset_id, {})
         controlled_asset = assets.get(controlled_asset_id, {})
         ensure(mapping.get("unclaimed_asset_id") == unclaimed_asset_id and mapping.get("asset_id") == controlled_asset_id, errors, f"{site_id} two-state sprite mapping changed")
-        ensure(unclaimed_asset.get("path") == atlas_res and unclaimed_asset.get("atlas_region") == unclaimed_region and unclaimed_asset.get("assigned_map_object_id") == object_id, errors, f"{site_id} unclaimed exact-art ownership changed")
-        ensure(controlled_asset.get("path") == atlas_res and controlled_asset.get("atlas_region") == controlled_region and controlled_asset.get("assigned_resource_site_id") == site_id, errors, f"{site_id} controlled exact-art ownership changed")
+        ensure(unclaimed_asset.get("path") == atlas_res and unclaimed_asset.get("atlas_region") == [v * 4 for v in unclaimed_region] and unclaimed_asset.get("assigned_map_object_id") == object_id, errors, f"{site_id} unclaimed exact-art ownership changed")
+        ensure(controlled_asset.get("path") == atlas_res and controlled_asset.get("atlas_region") == [v * 4 for v in controlled_region] and controlled_asset.get("assigned_resource_site_id") == site_id, errors, f"{site_id} controlled exact-art ownership changed")
         states = {str(state.get("state", "")): state for state in source_rows.get(site_id, {}).get("states", []) if isinstance(state, dict)}
         ensure(set(states) == {"unclaimed", "controlled"}, errors, f"{site_id} source manifest lost a state")
         for state_name in ("unclaimed", "controlled"):

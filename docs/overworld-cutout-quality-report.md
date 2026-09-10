@@ -955,16 +955,118 @@ Evidence under `.artifacts/overworld_cutout_quality_20260909/`:
   draw rectangles remain exact, including Windows float32 equivalence.
   Forty new, non-overlapping dispositions bring acceptance to 620; 594 remain.
 
+## Route, arcane and dwelling-state recovery — 2026-09-10
+
+Fifty-four paintings on eight existing resource-site atlases now render from
+192px cells instead of their coarse 48px derivatives. This covers coastal
+operational sites, frontier markers, elite/elder dwellings, Pactwright/Mireglass,
+High Arcanum and Horizon company musters. Runtime paths, normalized framing,
+footprints and all 35 site/state mappings remain unchanged. Fifty-two genuine
+RGBA masters are retained exactly. The old controlled Cinderwake/Tideglass
+sources were only 384x192 composites whose neutral backing had contaminated
+fine edges; these two received approved original generated controlled edits.
+
+The built-in imagegen workflow used each original 1774x887 unclaimed painting
+and its historical controlled design reference. Both first edits returned opaque
+checkerboards and were rejected for runtime. Two explicit isolation-matte edits,
+recorded with full prompts/output hashes in the `route_arcane/generation.json`
+packet, supplied extraction masters. The scoped recovery tool removes their
+matte, preserves Tideglass's inspected purple coral and restores Cinderwake's
+two smoke windows from its genuine original RGBA. It clears 370 explicitly
+reviewed rear-rail backing pixels and two detached background corner pixels per
+replacement. Both recovered masters have zero magenta-review pixels; smoke,
+coral, membranes, supplies and physical claim pennants were inspected visually.
+No painted source was overwritten and no procedural replacement was drawn.
+Historical `source_generated` references remain intact; the new
+`source_processing_manifest` and recipe identify the exact replacement inputs,
+source restoration and derived master/runtime outputs.
+
+All original crops/fits/anchors are recorded. The replacement pair retains the
+original wide canvas and 46x23 logical fit, not an expanded tight-bounds fit.
+Pactwright's original fit is 43px; the other families retain 40/42/44/46px fits.
+Historical alpha MAE is below 1.3 and opaque RGB MAE below 7. Coast discrepancies
+are recorded honestly: the old undocumented resampling/color pipeline was not
+fully recovered. The preserved source manifest specifies trim/44px fit/center;
+no claim of palette, double-alpha or thumbnail-processing parity is made.
+Pactwright restores original master colors without its coarse old full-cell
+grade. Its six original raster wax marks and Mireglass's six counterseals remain
+exact state indicators, not newly drawn geometry.
+
+Those seven **state-indicator paintings are not visually accepted**. Inspection
+shows their retained low-resolution badges need original painted integration.
+They received sharper foregrounds and keep existing behavior in this checkpoint,
+but remain pending for generated state-art replacement. Therefore this batch
+adds **47**, not 54, accepted dispositions: **667 accepted; 547 remaining**.
+
+Evidence under `.artifacts/overworld_cutout_quality_20260909/`:
+
+- Fourteen original-review and fourteen candidate-comparison pages were
+  inspected. All five rendered gallery pages were reviewed across source
+  resolutions, plus packaged-Linux controlled-state imagery. Galleries are
+  explicitly detached art coverage, not claimed gameplay.
+- `route-arcane-unit.log`: eight focused tests pass, including original RGBA,
+  smoke/coral/backing, raster state marks, original registrations, real detail
+  rather than 48px upscales, and rejected source/mapping/region/anchor drift.
+- Source 1280/1920 and isolated Linux/Windows cohort probes each pass 2,919
+  checks without runtime errors. They check all 54 exact atlas textures against
+  an independent full-atlas PNG import oracle and preserve complete saves.
+  The fixed earned Medium Day97 map has no matching affected states: its 2,380
+  native blocker bodies are an unchanged control, not manufactured affected
+  coverage. Actual Horizon start/ordinary wharf claim captures show the new
+  unclaimed and controlled paintings at original coordinates (0,10), with
+  ordinary vision and player-controller authority. The Prismhearth relay is a
+  second unchanged gameplay control. Both resolutions were visually inspected.
+- Before diagnostics recorded 162 intended size/region/pixel failures, plus
+  incorrect harness assumptions subsequently corrected: these seven frontier
+  shrines use the existing final mapping fallback, the wharf controller is
+  `player`, and this native checkpoint contains none of these exact states.
+  No game rules, ownership, fog or placement were changed to satisfy the probe.
+- `route_arcane_shared` under `.artifacts/full_play_runtime_20260905/` passes
+  the five existing distinct/decorative sprite, movement/input, route and fog
+  reports. Six additional domain reports pass their individual complete runs:
+  elite dwellings, elder sanctuaries, Horizon musters, Briarwheel, Unbound Road
+  Ledger and Mireglass. Their eight-case outer runner exited 143 and is not
+  called a clean suite. Two additional failures remain outside this art scope:
+  Sevenfold's obsolete 17-node scenario assertion and Veil-Coast's blocked
+  fixed route at (1,6), (1,5), (1,4). `route_arcane_unchanged_domain_failures.json`
+  reproduces both exact failures with the previous `bbb6435c` release and
+  unmodified historical test scripts. Two original physical PNGs were supplied
+  only for those source-only image checks; this is a domain diagnostic, not
+  package certification. The first attempt omitted those PNGs and crashed after
+  the same domain failures; its logs are retained, not counted as a passing run.
+- Both official export/startup/generated-map smokes pass, with artifacts in
+  `/tmp/heroes-route-arcane-{linux,windows}-20260910` to avoid project-volume
+  duplication. Exact packaged probes pass with no loose art/game overrides.
+  Windows is headless Wine, not physical GPU/controller certification.
+- `route_arcane_delivery_preservation.json` passes: both PCKs are 292,839,144
+  bytes and retain the same 5,484 members. Only `project.binary` differs between
+  platforms. Against `bbb6435c`, eight imported atlases, the art manifest and UID
+  cache change; all 5,474 other members, including compiled gameplay/native/save
+  owners, remain exact. Only 54 of 1,214 manifest rows change. All twelve complete
+  source/package saves match the before checkpoint, excluding only cross-run
+  timestamps/fresh authored session ids; within-run comparisons exclude nothing.
+  Actual draw rectangles match before/source/Linux/Windows (float32 equivalent).
+
+Repository validation's first run exposed only stale coastal art dimensions/hash
+checks; those now verify the archived original and source-reconstructible current
+atlas separately. `route-arcane-repo-final.log` passes repository validation;
+`git diff --check` passes. All 66 baseline hashes for the unrelated untracked
+retention/report/cache artifacts were verified unchanged before staging.
+No fixed package ceiling, cache clearing, gameplay correction, RMG placement
+change or Town-screen redesign is part of this checkpoint.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The then-remaining 783 rows
 received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 620 repaired/preserved dispositions, leaving
-594 for complete detailed review/recovery. All 31 recurring encounters, 30
+The accepted cohorts now cover 667 repaired/preserved dispositions, leaving
+547 for complete detailed review/recovery. All 31 recurring encounters, 30
 recurring resource-site originals, 31 separate claimed dwellings and 34 early
 post-interaction and 40 landmark/objective-state paintings are accepted.
-Next: the other resource-site state and remaining landmark families; recovery of
+Next: integrate the seven retained Pactwright/Mireglass state badges into original
+generated state paintings, then the other resource-site and remaining landmark
+families. The seven sharper foregrounds above are not full visual acceptance; recovery of
 these originals does not accept different paintings. Individual source and native-resolution
 checks of other remaining families and intentional purple materials remain. Existing
 unit medallions and state indicators are not mislabeled as magenta matte.

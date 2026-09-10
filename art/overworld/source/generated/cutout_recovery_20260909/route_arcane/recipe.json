@@ -1,0 +1,6213 @@
+{
+  "schema_id": "route_arcane_cutout_recipe_v1",
+  "assets": {
+    "resource_site_coast_route_veil_skiffyard_operational": {
+      "source_crop": [
+        61,
+        16,
+        1522,
+        968
+      ],
+      "source_resize": [
+        44,
+        29
+      ],
+      "canvas_origin": [
+        2,
+        9
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "LANCZOS",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/coast_route_operational_wave1/veil_skiffyard_operational_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_coast_route_operational_atlas",
+        "assigned_resource_site_id": "site_veil_skiffyard",
+        "presentation_role": "operational_coast_route_state",
+        "accessible_description": "An operational timber skiffyard with a boat lowered into its channel, open launch ramp, taut sails, and raised route pennants."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png",
+      "site_id": "site_veil_skiffyard",
+      "source": "coast_route_operational_atlas",
+      "source_sha256": "9191ff0d764c695c567ab7b41379c0c088742db51ea3403bde79a2c939309721",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        61,
+        16,
+        1522,
+        968
+      ],
+      "historical_resize": [
+        44,
+        29
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_coast_route_veil_skiffyard_operational.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_coast_route_veil_skiffyard_operational.png",
+      "registration_evidence": {
+        "alpha_mae": 0.8272569444444444,
+        "opaque_rgb_mae": 5.790123456790123
+      }
+    },
+    "resource_site_coast_route_harbor_pilot_post_operational": {
+      "source_crop": [
+        0,
+        9,
+        1388,
+        1122
+      ],
+      "source_resize": [
+        44,
+        35
+      ],
+      "canvas_origin": [
+        2,
+        6
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "LANCZOS",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/coast_route_operational_wave1/harbor_pilot_post_operational_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_coast_route_operational_atlas",
+        "assigned_resource_site_id": "site_harbor_pilot_post",
+        "presentation_role": "operational_coast_route_state",
+        "accessible_description": "An operational stone pilot post with an unfurled route chart, raised signal flag, extended gangway, and lit watch lantern."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png",
+      "site_id": "site_harbor_pilot_post",
+      "source": "coast_route_operational_atlas",
+      "source_sha256": "65d35a7e5b16dec118c378200a224becd181fb81223a90f1fbdb6891117adb84",
+      "source_size": [
+        1402,
+        1122
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        9,
+        1388,
+        1122
+      ],
+      "historical_resize": [
+        44,
+        35
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_coast_route_harbor_pilot_post_operational.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_coast_route_harbor_pilot_post_operational.png",
+      "registration_evidence": {
+        "alpha_mae": 1.1345486111111112,
+        "opaque_rgb_mae": 6.59412780656304
+      }
+    },
+    "resource_site_coast_route_bell_buoy_station_operational": {
+      "source_crop": [
+        0,
+        35,
+        1208,
+        1254
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "LANCZOS",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/coast_route_operational_wave1/bell_buoy_station_operational_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_coast_route_operational_atlas",
+        "assigned_resource_site_id": "site_bell_buoy_station",
+        "presentation_role": "operational_coast_route_state",
+        "accessible_description": "An operational channel bell pulled outward on a taut rope beneath raised vanes, an open lantern, and a tensioned guide chain."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png",
+      "site_id": "site_bell_buoy_station",
+      "source": "coast_route_operational_atlas",
+      "source_sha256": "5d0b6d7835bc93a77d525809a8e76665f90b04f563f26a43fe3d6c83bf4c9b25",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        35,
+        1208,
+        1254
+      ],
+      "historical_resize": [
+        44,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_coast_route_bell_buoy_station_operational.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_coast_route_bell_buoy_station_operational.png",
+      "registration_evidence": {
+        "alpha_mae": 1.2026909722222223,
+        "opaque_rgb_mae": 4.753246753246753
+      }
+    },
+    "resource_site_coast_route_wreck_quay_operational": {
+      "source_crop": [
+        0,
+        5,
+        1496,
+        1014
+      ],
+      "source_resize": [
+        44,
+        30
+      ],
+      "canvas_origin": [
+        2,
+        9
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "LANCZOS",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/coast_route_operational_wave1/wreck_quay_operational_source.png",
+        "source_model": "built_in_image_gen_original_coast_route_operational_atlas",
+        "assigned_resource_site_id": "site_wreck_quay",
+        "presentation_role": "operational_coast_route_state",
+        "accessible_description": "A wreck-built quay with a broad straight boarding lane, pulled-aside spars, taut guide ropes, lit posts, and a raised route pennant."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png",
+      "site_id": "site_wreck_quay",
+      "source": "coast_route_operational_atlas",
+      "source_sha256": "a4d42c12ff9649688c4ce7d7a86072897ec10a038f5ef3f7858ee331016aa865",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        5,
+        1496,
+        1014
+      ],
+      "historical_resize": [
+        44,
+        30
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_coast_route_wreck_quay_operational.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_coast_route_wreck_quay_operational.png",
+      "registration_evidence": {
+        "alpha_mae": 1.0390625,
+        "opaque_rgb_mae": 4.815458937198067
+      }
+    },
+    "resource_site_coast_route_tide_chain_mooring_operational": {
+      "source_crop": [
+        65,
+        34,
+        1496,
+        1024
+      ],
+      "source_resize": [
+        44,
+        30
+      ],
+      "canvas_origin": [
+        2,
+        9
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "LANCZOS",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/coast_route_operational_wave1/tide_chain_mooring_operational_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_coast_route_operational_atlas",
+        "assigned_resource_site_id": "site_tide_chain_mooring",
+        "presentation_role": "operational_coast_route_state",
+        "accessible_description": "An operational paired mooring with aligned capstans, a taut guided chain span, upright route hooks, and an open plank crossing."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png",
+      "site_id": "site_tide_chain_mooring",
+      "source": "coast_route_operational_atlas",
+      "source_sha256": "06d8d92fe216fbac1b928c34f54e505a799c17c600218be08d48fae2eebe5b4a",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        65,
+        34,
+        1496,
+        1024
+      ],
+      "historical_resize": [
+        44,
+        30
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_coast_route_tide_chain_mooring_operational.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_coast_route_tide_chain_mooring_operational.png",
+      "registration_evidence": {
+        "alpha_mae": 0.7552083333333334,
+        "opaque_rgb_mae": 4.738235294117647
+      }
+    },
+    "resource_site_coast_route_marsh_skiff_shelf_operational": {
+      "source_crop": [
+        61,
+        15,
+        1496,
+        1010
+      ],
+      "source_resize": [
+        44,
+        31
+      ],
+      "canvas_origin": [
+        2,
+        8
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "LANCZOS",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/coast_route_operational_wave1/marsh_skiff_shelf_operational_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_coast_route_operational_atlas",
+        "assigned_resource_site_id": "site_marsh_skiff_shelf",
+        "presentation_role": "operational_coast_route_state",
+        "accessible_description": "An operational reed skiff shelf with its boat on a deployed launch ramp, working poles upright, lashings open, and a route pennant raised."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png",
+      "site_id": "site_marsh_skiff_shelf",
+      "source": "coast_route_operational_atlas",
+      "source_sha256": "bae097ddd26b8468a0af6cb673de36cbab9142dfc2bad90299a291237d7e69de",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        61,
+        15,
+        1496,
+        1010
+      ],
+      "historical_resize": [
+        44,
+        31
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_coast_route_marsh_skiff_shelf_operational.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_coast_route_marsh_skiff_shelf_operational.png",
+      "registration_evidence": {
+        "alpha_mae": 1.1041666666666667,
+        "opaque_rgb_mae": 4.809651474530831
+      }
+    },
+    "resource_site_frontier_marker_fogline": {
+      "source_crop": [
+        33,
+        16,
+        993,
+        1512
+      ],
+      "source_resize": [
+        27,
+        42
+      ],
+      "canvas_origin": [
+        10,
+        6
+      ],
+      "fit_limit": 42,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/frontier_marker_landmarks_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          144,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_markers_wave1/fogline_marker_source.png",
+        "source_model": "built_in_image_gen_original_overworld_landmark",
+        "assigned_resource_site_id": "site_fogline_marker",
+        "presentation_role": "frontier_route_marker",
+        "accessible_description": "A blackwood route post with twin fogglass vanes, chart tube, guide cords, and a small pilot lantern."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/frontier_marker_landmarks_atlas.png",
+      "site_id": "site_fogline_marker",
+      "source": "frontier_marker_landmarks_atlas",
+      "source_sha256": "38f7894e9fbd850df013b9b1be05ee6dbb443556a945eb6183b56643f0485ee2",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        33,
+        16,
+        993,
+        1512
+      ],
+      "historical_resize": [
+        27,
+        42
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_frontier_marker_fogline.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_frontier_marker_fogline.png",
+      "registration_evidence": {
+        "alpha_mae": 0.4691840277777778,
+        "opaque_rgb_mae": 1.0130208333333333
+      }
+    },
+    "resource_site_frontier_marker_old_measure": {
+      "source_crop": [
+        0,
+        0,
+        1312,
+        1199
+      ],
+      "source_resize": [
+        42,
+        38
+      ],
+      "canvas_origin": [
+        3,
+        10
+      ],
+      "fit_limit": 42,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/frontier_marker_landmarks_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          144,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_markers_wave1/old_measure_marker_source.png",
+        "source_model": "built_in_image_gen_original_overworld_landmark",
+        "assigned_resource_site_id": "site_old_measure_marker",
+        "presentation_role": "frontier_route_marker",
+        "accessible_description": "A weathered measuring arch with brass plumb, unequal survey arms, boundary chain, and sliding gauge."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/frontier_marker_landmarks_atlas.png",
+      "site_id": "site_old_measure_marker",
+      "source": "frontier_marker_landmarks_atlas",
+      "source_sha256": "497b399f676176f30887177dcd0b0eb9240912ff88cab5b6c93d4df4b43f66e3",
+      "source_size": [
+        1312,
+        1199
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        0,
+        1312,
+        1199
+      ],
+      "historical_resize": [
+        42,
+        38
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_frontier_marker_old_measure.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_frontier_marker_old_measure.png",
+      "registration_evidence": {
+        "alpha_mae": 0.6345486111111112,
+        "opaque_rgb_mae": 0.9574861367837338
+      }
+    },
+    "resource_site_frontier_marker_rootway": {
+      "source_crop": [
+        23,
+        17,
+        1279,
+        1191
+      ],
+      "source_resize": [
+        42,
+        39
+      ],
+      "canvas_origin": [
+        3,
+        9
+      ],
+      "fit_limit": 42,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/frontier_marker_landmarks_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          144,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_markers_wave1/rootway_marker_source.png",
+        "source_model": "built_in_image_gen_original_overworld_landmark",
+        "assigned_resource_site_id": "site_rootway_marker",
+        "presentation_role": "frontier_route_marker",
+        "accessible_description": "A living root gate with three unequal seed lanterns, knotted relief cords, and road-pointing exposed roots."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/frontier_marker_landmarks_atlas.png",
+      "site_id": "site_rootway_marker",
+      "source": "frontier_marker_landmarks_atlas",
+      "source_sha256": "c3375bd89961b187774c857790d705115fa9dfb8f2c4830e5c0a5a8fd5272f01",
+      "source_size": [
+        1303,
+        1207
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        23,
+        17,
+        1279,
+        1191
+      ],
+      "historical_resize": [
+        42,
+        39
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_frontier_marker_rootway.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_frontier_marker_rootway.png",
+      "registration_evidence": {
+        "alpha_mae": 0.5477430555555556,
+        "opaque_rgb_mae": 0.7751322751322752
+      }
+    },
+    "mapobj_cinderwake_fold": {
+      "source_crop": [
+        0,
+        0,
+        1744,
+        857
+      ],
+      "source_resize": [
+        46,
+        23
+      ],
+      "canvas_origin": [
+        1,
+        12
+      ],
+      "fit_limit": 46,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          192,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/cinderwake_fold_unclaimed_source.png",
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/cinderwake_fold_unclaimed_source.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png",
+        "source_model": "built_in_image_gen_original_elite_neutral_dwelling_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_cinderwake_fold",
+        "assigned_map_object_family": "neutral_dwelling",
+        "accessible_description": "A low basalt enclosure surrounds three banked ember vents beneath an immense shovel-horn stone arch."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png",
+      "site_id": "site_cinderwake_fold",
+      "source": "elite_neutral_dwelling_atlas",
+      "source_sha256": "22e2688fa30d41cf101bda8023459ad3ab2c3a5735536d6c4d4d9f68ef95f978",
+      "source_size": [
+        1774,
+        887
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        0,
+        1744,
+        857
+      ],
+      "historical_resize": [
+        46,
+        23
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_cinderwake_fold.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_cinderwake_fold.png",
+      "registration_evidence": {
+        "alpha_mae": 0.3641493055555556,
+        "opaque_rgb_mae": 0.7202614379084968
+      }
+    },
+    "resource_site_neutral_cinderwake_fold_controlled": {
+      "source_crop": [
+        0,
+        0,
+        1774,
+        887
+      ],
+      "source_resize": [
+        46,
+        23
+      ],
+      "canvas_origin": [
+        1,
+        12
+      ],
+      "fit_limit": 46,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          192,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/cinderwake_fold_controlled_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_elite_neutral_dwelling_atlas",
+        "assigned_resource_site_id": "site_cinderwake_fold",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Cinderwake Fold stands open beside stocked mineral troughs, copper guide lamps, and two ring-notched claim pennants."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png",
+      "site_id": "site_cinderwake_fold",
+      "source": "elite_neutral_dwelling_atlas",
+      "source_sha256": "d4d77f2b518db23d9dc1f6213d29e3ccd171074683573145230146320186914b",
+      "source_size": [
+        384,
+        192
+      ],
+      "source_alpha_levels": 154,
+      "source_mode": "approved_generated_state_edit",
+      "historical_crop": [
+        0,
+        0,
+        378,
+        186
+      ],
+      "historical_resize": [
+        46,
+        23
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_neutral_cinderwake_fold_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_neutral_cinderwake_fold_controlled.png",
+      "generated_edit": {
+        "background_corner_points": [
+          [
+            0,
+            886
+          ],
+          [
+            1773,
+            886
+          ]
+        ],
+        "original_smoke_rects": [
+          [
+            648,
+            0,
+            750,
+            112
+          ],
+          [
+            334,
+            120,
+            424,
+            250
+          ]
+        ],
+        "rail_backing_points": [
+          [
+            891,
+            161
+          ],
+          [
+            892,
+            161
+          ],
+          [
+            891,
+            162
+          ],
+          [
+            892,
+            162
+          ],
+          [
+            908,
+            167
+          ],
+          [
+            909,
+            167
+          ],
+          [
+            909,
+            168
+          ],
+          [
+            910,
+            168
+          ],
+          [
+            911,
+            168
+          ],
+          [
+            912,
+            168
+          ],
+          [
+            913,
+            168
+          ],
+          [
+            909,
+            169
+          ],
+          [
+            910,
+            169
+          ],
+          [
+            911,
+            169
+          ],
+          [
+            912,
+            169
+          ],
+          [
+            913,
+            169
+          ],
+          [
+            914,
+            169
+          ],
+          [
+            915,
+            169
+          ],
+          [
+            916,
+            169
+          ],
+          [
+            917,
+            169
+          ],
+          [
+            918,
+            169
+          ],
+          [
+            910,
+            170
+          ],
+          [
+            911,
+            170
+          ],
+          [
+            912,
+            170
+          ],
+          [
+            913,
+            170
+          ],
+          [
+            914,
+            170
+          ],
+          [
+            915,
+            170
+          ],
+          [
+            916,
+            170
+          ],
+          [
+            917,
+            170
+          ],
+          [
+            918,
+            170
+          ],
+          [
+            919,
+            170
+          ],
+          [
+            910,
+            171
+          ],
+          [
+            911,
+            171
+          ],
+          [
+            912,
+            171
+          ],
+          [
+            913,
+            171
+          ],
+          [
+            914,
+            171
+          ],
+          [
+            915,
+            171
+          ],
+          [
+            916,
+            171
+          ],
+          [
+            917,
+            171
+          ],
+          [
+            918,
+            171
+          ],
+          [
+            927,
+            171
+          ],
+          [
+            928,
+            171
+          ],
+          [
+            913,
+            172
+          ],
+          [
+            914,
+            172
+          ],
+          [
+            915,
+            172
+          ],
+          [
+            916,
+            172
+          ],
+          [
+            917,
+            172
+          ],
+          [
+            918,
+            172
+          ],
+          [
+            919,
+            172
+          ],
+          [
+            926,
+            172
+          ],
+          [
+            927,
+            172
+          ],
+          [
+            928,
+            172
+          ],
+          [
+            929,
+            172
+          ],
+          [
+            930,
+            172
+          ],
+          [
+            931,
+            172
+          ],
+          [
+            932,
+            172
+          ],
+          [
+            919,
+            173
+          ],
+          [
+            926,
+            173
+          ],
+          [
+            927,
+            173
+          ],
+          [
+            928,
+            173
+          ],
+          [
+            929,
+            173
+          ],
+          [
+            931,
+            173
+          ],
+          [
+            932,
+            173
+          ],
+          [
+            933,
+            173
+          ],
+          [
+            934,
+            173
+          ],
+          [
+            935,
+            173
+          ],
+          [
+            936,
+            173
+          ],
+          [
+            926,
+            174
+          ],
+          [
+            927,
+            174
+          ],
+          [
+            928,
+            174
+          ],
+          [
+            929,
+            174
+          ],
+          [
+            930,
+            174
+          ],
+          [
+            932,
+            174
+          ],
+          [
+            933,
+            174
+          ],
+          [
+            936,
+            174
+          ],
+          [
+            937,
+            174
+          ],
+          [
+            938,
+            174
+          ],
+          [
+            939,
+            174
+          ],
+          [
+            940,
+            174
+          ],
+          [
+            941,
+            174
+          ],
+          [
+            942,
+            174
+          ],
+          [
+            943,
+            174
+          ],
+          [
+            932,
+            175
+          ],
+          [
+            933,
+            175
+          ],
+          [
+            934,
+            175
+          ],
+          [
+            935,
+            175
+          ],
+          [
+            936,
+            175
+          ],
+          [
+            937,
+            175
+          ],
+          [
+            938,
+            175
+          ],
+          [
+            939,
+            175
+          ],
+          [
+            940,
+            175
+          ],
+          [
+            941,
+            175
+          ],
+          [
+            942,
+            175
+          ],
+          [
+            943,
+            175
+          ],
+          [
+            944,
+            175
+          ],
+          [
+            945,
+            175
+          ],
+          [
+            946,
+            175
+          ],
+          [
+            936,
+            176
+          ],
+          [
+            937,
+            176
+          ],
+          [
+            938,
+            176
+          ],
+          [
+            939,
+            176
+          ],
+          [
+            940,
+            176
+          ],
+          [
+            941,
+            176
+          ],
+          [
+            942,
+            176
+          ],
+          [
+            943,
+            176
+          ],
+          [
+            944,
+            176
+          ],
+          [
+            945,
+            176
+          ],
+          [
+            946,
+            176
+          ],
+          [
+            947,
+            176
+          ],
+          [
+            948,
+            176
+          ],
+          [
+            949,
+            176
+          ],
+          [
+            950,
+            176
+          ],
+          [
+            951,
+            176
+          ],
+          [
+            941,
+            177
+          ],
+          [
+            942,
+            177
+          ],
+          [
+            943,
+            177
+          ],
+          [
+            944,
+            177
+          ],
+          [
+            945,
+            177
+          ],
+          [
+            946,
+            177
+          ],
+          [
+            947,
+            177
+          ],
+          [
+            948,
+            177
+          ],
+          [
+            949,
+            177
+          ],
+          [
+            950,
+            177
+          ],
+          [
+            951,
+            177
+          ],
+          [
+            952,
+            177
+          ],
+          [
+            953,
+            177
+          ],
+          [
+            954,
+            177
+          ],
+          [
+            944,
+            178
+          ],
+          [
+            945,
+            178
+          ],
+          [
+            946,
+            178
+          ],
+          [
+            947,
+            178
+          ],
+          [
+            948,
+            178
+          ],
+          [
+            949,
+            178
+          ],
+          [
+            950,
+            178
+          ],
+          [
+            951,
+            178
+          ],
+          [
+            952,
+            178
+          ],
+          [
+            953,
+            178
+          ],
+          [
+            954,
+            178
+          ],
+          [
+            955,
+            178
+          ],
+          [
+            956,
+            178
+          ],
+          [
+            957,
+            178
+          ],
+          [
+            948,
+            179
+          ],
+          [
+            949,
+            179
+          ],
+          [
+            950,
+            179
+          ],
+          [
+            951,
+            179
+          ],
+          [
+            952,
+            179
+          ],
+          [
+            953,
+            179
+          ],
+          [
+            954,
+            179
+          ],
+          [
+            955,
+            179
+          ],
+          [
+            956,
+            179
+          ],
+          [
+            957,
+            179
+          ],
+          [
+            960,
+            179
+          ],
+          [
+            952,
+            180
+          ],
+          [
+            953,
+            180
+          ],
+          [
+            954,
+            180
+          ],
+          [
+            955,
+            180
+          ],
+          [
+            956,
+            180
+          ],
+          [
+            957,
+            180
+          ],
+          [
+            962,
+            180
+          ],
+          [
+            963,
+            180
+          ],
+          [
+            957,
+            181
+          ],
+          [
+            966,
+            181
+          ],
+          [
+            967,
+            181
+          ],
+          [
+            962,
+            182
+          ],
+          [
+            963,
+            182
+          ],
+          [
+            965,
+            183
+          ],
+          [
+            966,
+            183
+          ],
+          [
+            967,
+            183
+          ],
+          [
+            968,
+            184
+          ],
+          [
+            973,
+            184
+          ],
+          [
+            974,
+            184
+          ],
+          [
+            976,
+            184
+          ],
+          [
+            974,
+            185
+          ],
+          [
+            975,
+            185
+          ],
+          [
+            976,
+            185
+          ],
+          [
+            976,
+            186
+          ],
+          [
+            1010,
+            196
+          ],
+          [
+            1011,
+            196
+          ],
+          [
+            1012,
+            196
+          ],
+          [
+            1011,
+            197
+          ],
+          [
+            1012,
+            197
+          ],
+          [
+            1013,
+            197
+          ],
+          [
+            1014,
+            197
+          ],
+          [
+            1015,
+            197
+          ],
+          [
+            1011,
+            198
+          ],
+          [
+            1012,
+            198
+          ],
+          [
+            1013,
+            198
+          ],
+          [
+            1014,
+            198
+          ],
+          [
+            1015,
+            198
+          ],
+          [
+            1016,
+            198
+          ],
+          [
+            1017,
+            198
+          ],
+          [
+            1018,
+            198
+          ],
+          [
+            1011,
+            199
+          ],
+          [
+            1013,
+            199
+          ],
+          [
+            1014,
+            199
+          ],
+          [
+            1015,
+            199
+          ],
+          [
+            1016,
+            199
+          ],
+          [
+            1017,
+            199
+          ],
+          [
+            1018,
+            199
+          ],
+          [
+            1019,
+            199
+          ],
+          [
+            1020,
+            199
+          ],
+          [
+            1014,
+            200
+          ],
+          [
+            1015,
+            200
+          ],
+          [
+            1016,
+            200
+          ],
+          [
+            1017,
+            200
+          ],
+          [
+            1018,
+            200
+          ],
+          [
+            1019,
+            200
+          ],
+          [
+            1020,
+            200
+          ],
+          [
+            1021,
+            200
+          ],
+          [
+            1022,
+            200
+          ],
+          [
+            1023,
+            200
+          ],
+          [
+            1017,
+            201
+          ],
+          [
+            1018,
+            201
+          ],
+          [
+            1019,
+            201
+          ],
+          [
+            1020,
+            201
+          ],
+          [
+            1021,
+            201
+          ],
+          [
+            1022,
+            201
+          ],
+          [
+            1023,
+            201
+          ],
+          [
+            1024,
+            201
+          ],
+          [
+            1025,
+            201
+          ],
+          [
+            1019,
+            202
+          ],
+          [
+            1020,
+            202
+          ],
+          [
+            1021,
+            202
+          ],
+          [
+            1022,
+            202
+          ],
+          [
+            1023,
+            202
+          ],
+          [
+            1024,
+            202
+          ],
+          [
+            1025,
+            202
+          ],
+          [
+            1022,
+            203
+          ],
+          [
+            1023,
+            203
+          ],
+          [
+            1024,
+            203
+          ],
+          [
+            1033,
+            205
+          ],
+          [
+            1034,
+            205
+          ],
+          [
+            1035,
+            205
+          ],
+          [
+            1036,
+            205
+          ],
+          [
+            1034,
+            206
+          ],
+          [
+            1035,
+            206
+          ],
+          [
+            1036,
+            206
+          ],
+          [
+            1037,
+            206
+          ],
+          [
+            1038,
+            206
+          ],
+          [
+            1107,
+            206
+          ],
+          [
+            1033,
+            207
+          ],
+          [
+            1034,
+            207
+          ],
+          [
+            1035,
+            207
+          ],
+          [
+            1036,
+            207
+          ],
+          [
+            1037,
+            207
+          ],
+          [
+            1038,
+            207
+          ],
+          [
+            1039,
+            207
+          ],
+          [
+            1109,
+            207
+          ],
+          [
+            1035,
+            208
+          ],
+          [
+            1036,
+            208
+          ],
+          [
+            1037,
+            208
+          ],
+          [
+            1038,
+            208
+          ],
+          [
+            1037,
+            209
+          ],
+          [
+            1038,
+            209
+          ],
+          [
+            1039,
+            209
+          ],
+          [
+            1040,
+            210
+          ],
+          [
+            1041,
+            210
+          ],
+          [
+            1042,
+            210
+          ],
+          [
+            1046,
+            210
+          ],
+          [
+            1047,
+            210
+          ],
+          [
+            1048,
+            210
+          ],
+          [
+            1043,
+            211
+          ],
+          [
+            1044,
+            211
+          ],
+          [
+            1045,
+            211
+          ],
+          [
+            1046,
+            211
+          ],
+          [
+            1047,
+            211
+          ],
+          [
+            1048,
+            211
+          ],
+          [
+            1049,
+            211
+          ],
+          [
+            1050,
+            211
+          ],
+          [
+            984,
+            212
+          ],
+          [
+            1046,
+            212
+          ],
+          [
+            1047,
+            212
+          ],
+          [
+            1048,
+            212
+          ],
+          [
+            1049,
+            212
+          ],
+          [
+            1050,
+            212
+          ],
+          [
+            1051,
+            212
+          ],
+          [
+            1052,
+            212
+          ],
+          [
+            987,
+            213
+          ],
+          [
+            1049,
+            213
+          ],
+          [
+            1050,
+            213
+          ],
+          [
+            1051,
+            213
+          ],
+          [
+            1052,
+            213
+          ],
+          [
+            989,
+            214
+          ],
+          [
+            990,
+            214
+          ],
+          [
+            1052,
+            214
+          ],
+          [
+            992,
+            215
+          ],
+          [
+            993,
+            215
+          ],
+          [
+            1059,
+            215
+          ],
+          [
+            899,
+            216
+          ],
+          [
+            994,
+            216
+          ],
+          [
+            995,
+            216
+          ],
+          [
+            996,
+            216
+          ],
+          [
+            1061,
+            216
+          ],
+          [
+            997,
+            217
+          ],
+          [
+            998,
+            217
+          ],
+          [
+            999,
+            217
+          ],
+          [
+            1000,
+            217
+          ],
+          [
+            1062,
+            217
+          ],
+          [
+            1063,
+            217
+          ],
+          [
+            1064,
+            217
+          ],
+          [
+            1065,
+            217
+          ],
+          [
+            1000,
+            218
+          ],
+          [
+            1001,
+            218
+          ],
+          [
+            1002,
+            218
+          ],
+          [
+            1061,
+            218
+          ],
+          [
+            1062,
+            218
+          ],
+          [
+            1063,
+            218
+          ],
+          [
+            1064,
+            218
+          ],
+          [
+            1065,
+            218
+          ],
+          [
+            1003,
+            219
+          ],
+          [
+            1004,
+            219
+          ],
+          [
+            1005,
+            219
+          ],
+          [
+            1062,
+            219
+          ],
+          [
+            1063,
+            219
+          ],
+          [
+            1064,
+            219
+          ],
+          [
+            1065,
+            219
+          ],
+          [
+            1006,
+            220
+          ],
+          [
+            1007,
+            220
+          ],
+          [
+            1065,
+            220
+          ],
+          [
+            1008,
+            221
+          ],
+          [
+            1009,
+            221
+          ],
+          [
+            1010,
+            221
+          ],
+          [
+            1011,
+            222
+          ],
+          [
+            1012,
+            222
+          ],
+          [
+            1079,
+            224
+          ],
+          [
+            1080,
+            224
+          ],
+          [
+            1077,
+            225
+          ],
+          [
+            1078,
+            225
+          ],
+          [
+            1079,
+            225
+          ],
+          [
+            1080,
+            225
+          ],
+          [
+            1081,
+            225
+          ],
+          [
+            1082,
+            225
+          ],
+          [
+            1083,
+            225
+          ],
+          [
+            1079,
+            226
+          ],
+          [
+            1080,
+            226
+          ],
+          [
+            1081,
+            226
+          ],
+          [
+            1082,
+            226
+          ],
+          [
+            1083,
+            226
+          ],
+          [
+            1084,
+            226
+          ],
+          [
+            1085,
+            226
+          ],
+          [
+            1081,
+            227
+          ],
+          [
+            1082,
+            227
+          ],
+          [
+            1083,
+            227
+          ],
+          [
+            1084,
+            227
+          ],
+          [
+            1085,
+            227
+          ],
+          [
+            1086,
+            227
+          ],
+          [
+            1087,
+            227
+          ],
+          [
+            1083,
+            228
+          ],
+          [
+            1084,
+            228
+          ],
+          [
+            1085,
+            228
+          ],
+          [
+            1086,
+            228
+          ],
+          [
+            1087,
+            228
+          ],
+          [
+            1088,
+            228
+          ],
+          [
+            1089,
+            228
+          ],
+          [
+            1086,
+            229
+          ],
+          [
+            1087,
+            229
+          ],
+          [
+            1088,
+            229
+          ],
+          [
+            1089,
+            229
+          ],
+          [
+            1090,
+            229
+          ],
+          [
+            1091,
+            229
+          ],
+          [
+            1088,
+            230
+          ],
+          [
+            1089,
+            230
+          ],
+          [
+            1090,
+            230
+          ],
+          [
+            1091,
+            230
+          ],
+          [
+            1092,
+            230
+          ],
+          [
+            1093,
+            230
+          ],
+          [
+            1091,
+            231
+          ],
+          [
+            1092,
+            231
+          ],
+          [
+            1093,
+            231
+          ],
+          [
+            934,
+            232
+          ]
+        ],
+        "source": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/cinderwake_controlled_matte.png",
+        "protected_rects": [],
+        "smoke_source": "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/cinderwake_fold_unclaimed_source.png"
+      },
+      "registration_evidence": {
+        "alpha_mae": 0.20963541666666666,
+        "opaque_rgb_mae": 0.852540272614622
+      }
+    },
+    "mapobj_tideglass_roost": {
+      "source_crop": [
+        53,
+        17,
+        1760,
+        871
+      ],
+      "source_resize": [
+        46,
+        23
+      ],
+      "canvas_origin": [
+        1,
+        12
+      ],
+      "fit_limit": 46,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          192,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/tideglass_roost_unclaimed_source.png",
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/tideglass_roost_unclaimed_source.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png",
+        "source_model": "built_in_image_gen_original_elite_neutral_dwelling_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_tideglass_roost",
+        "assigned_map_object_family": "neutral_dwelling",
+        "accessible_description": "Pale saltstone uprights hold curved sea-glass membranes and bell resonators over a shallow tidal pool."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png",
+      "site_id": "site_tideglass_roost",
+      "source": "elite_neutral_dwelling_atlas",
+      "source_sha256": "46544e4bba46d6755101fe125fd5b4f538bd1f5a5f72d504b09f88b409a2e9d4",
+      "source_size": [
+        1774,
+        887
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        53,
+        17,
+        1760,
+        871
+      ],
+      "historical_resize": [
+        46,
+        23
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_tideglass_roost.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_tideglass_roost.png",
+      "registration_evidence": {
+        "alpha_mae": 0.40234375,
+        "opaque_rgb_mae": 1.18
+      }
+    },
+    "resource_site_neutral_tideglass_roost_controlled": {
+      "source_crop": [
+        0,
+        0,
+        1774,
+        887
+      ],
+      "source_resize": [
+        46,
+        23
+      ],
+      "canvas_origin": [
+        1,
+        12
+      ],
+      "fit_limit": 46,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          192,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/tideglass_roost_controlled_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_elite_neutral_dwelling_atlas",
+        "assigned_resource_site_id": "site_tideglass_roost",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Tideglass Roost is supplied with rolled harnesses, ration cases, blue guide lamps, and two ring-notched claim pennants."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png",
+      "site_id": "site_tideglass_roost",
+      "source": "elite_neutral_dwelling_atlas",
+      "source_sha256": "67b8d88ce80fea63984b86b7d48ab2524ca6f04b85920aa06196199a88156e79",
+      "source_size": [
+        384,
+        192
+      ],
+      "source_alpha_levels": 244,
+      "source_mode": "approved_generated_state_edit",
+      "historical_crop": [
+        11,
+        3,
+        382,
+        189
+      ],
+      "historical_resize": [
+        46,
+        23
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_neutral_tideglass_roost_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_neutral_tideglass_roost_controlled.png",
+      "generated_edit": {
+        "background_corner_points": [
+          [
+            0,
+            886
+          ],
+          [
+            1773,
+            886
+          ]
+        ],
+        "source": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/tideglass_controlled_matte.png",
+        "protected_rects": [
+          [
+            1100,
+            460,
+            1340,
+            610
+          ],
+          [
+            650,
+            450,
+            1150,
+            780
+          ]
+        ]
+      },
+      "registration_evidence": {
+        "alpha_mae": 0.2734375,
+        "opaque_rgb_mae": 1.1995753715498938
+      }
+    },
+    "mapobj_galehorn_windfold": {
+      "source_crop": [
+        61,
+        4,
+        1498,
+        1024
+      ],
+      "source_resize": [
+        44,
+        31
+      ],
+      "canvas_origin": [
+        2,
+        8
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "LANCZOS",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/elder_wild_sanctuaries/galehorn_windfold_unclaimed_source.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+        "source_model": "built_in_image_gen_original_elder_wild_sanctuary_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_galehorn_windfold",
+        "assigned_map_object_family": "neutral_dwelling",
+        "accessible_description": "A sweeping pale basalt horn arch shelters an empty circular fold beneath three copper wind vanes."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+      "site_id": "site_galehorn_windfold",
+      "source": "elder_wild_sanctuaries_atlas",
+      "source_sha256": "567319b940ac662c0fe71609e671f4c2d01e37f695d4374137d9158580f7c137",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        61,
+        4,
+        1498,
+        1024
+      ],
+      "historical_resize": [
+        44,
+        31
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_galehorn_windfold.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_galehorn_windfold.png",
+      "registration_evidence": {
+        "alpha_mae": 0.2183159722222222,
+        "opaque_rgb_mae": 1.0586611456176673
+      }
+    },
+    "resource_site_neutral_galehorn_windfold_controlled": {
+      "source_crop": [
+        213,
+        1,
+        1442,
+        1024
+      ],
+      "source_resize": [
+        44,
+        37
+      ],
+      "canvas_origin": [
+        2,
+        5
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "LANCZOS",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/elder_wild_sanctuaries/galehorn_windfold_controlled_source.png",
+        "source_model": "built_in_image_gen_precise_edit_and_background_extraction_elder_wild_sanctuary_atlas",
+        "assigned_resource_site_id": "site_galehorn_windfold",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Galehorn Windfold is swept and supplied with folded harnesses, feed sacks, guide lamps, and notched claim pennants."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+      "site_id": "site_galehorn_windfold",
+      "source": "elder_wild_sanctuaries_atlas",
+      "source_sha256": "cf3e82891d017567b3234e21d3c5113ccd9534852cb15763bf826009c69004df",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        213,
+        1,
+        1442,
+        1024
+      ],
+      "historical_resize": [
+        44,
+        37
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_neutral_galehorn_windfold_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_neutral_galehorn_windfold_controlled.png",
+      "registration_evidence": {
+        "alpha_mae": 0.7825520833333334,
+        "opaque_rgb_mae": 1.146040777619725
+      }
+    },
+    "mapobj_sunscale_lantern_conservatory": {
+      "source_crop": [
+        0,
+        9,
+        1240,
+        1254
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "LANCZOS",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/elder_wild_sanctuaries/sunscale_lantern_conservatory_unclaimed_source.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+        "source_model": "built_in_image_gen_original_elder_wild_sanctuary_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_sunscale_lantern_conservatory",
+        "assigned_map_object_family": "neutral_dwelling",
+        "accessible_description": "Three offset brass hoops carry amber mineral lanterns and scale-like roof fins above an empty feeding basin."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+      "site_id": "site_sunscale_lantern_conservatory",
+      "source": "elder_wild_sanctuaries_atlas",
+      "source_sha256": "afb8a9373f2a88c1208cef474126beedb9977f5f940dc80669d7cc5fcc45f6af",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        9,
+        1240,
+        1254
+      ],
+      "historical_resize": [
+        44,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_sunscale_lantern_conservatory.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_sunscale_lantern_conservatory.png",
+      "registration_evidence": {
+        "alpha_mae": 0.3111979166666667,
+        "opaque_rgb_mae": 1.3901936547177585
+      }
+    },
+    "resource_site_neutral_sunscale_lantern_conservatory_controlled": {
+      "source_crop": [
+        0,
+        10,
+        1235,
+        1254
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "LANCZOS",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/elder_wild_sanctuaries/sunscale_lantern_conservatory_controlled_source.png",
+        "source_model": "built_in_image_gen_precise_edit_and_background_extraction_elder_wild_sanctuary_atlas",
+        "assigned_resource_site_id": "site_sunscale_lantern_conservatory",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Sunscale Conservatory holds mineral feed, covered stores, coiled harnesses, cool guide lamps, and a notched claim pennant."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+      "site_id": "site_sunscale_lantern_conservatory",
+      "source": "elder_wild_sanctuaries_atlas",
+      "source_sha256": "d3fcf7fb43e9400220090e24dd6411ca68e8dcd8886fc960ac924f7b69a9df8d",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        10,
+        1235,
+        1254
+      ],
+      "historical_resize": [
+        44,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_neutral_sunscale_lantern_conservatory_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_neutral_sunscale_lantern_conservatory_controlled.png",
+      "registration_evidence": {
+        "alpha_mae": 0.3107638888888889,
+        "opaque_rgb_mae": 1.4102857142857144
+      }
+    },
+    "mapobj_rimebell_whitewake_eyrie": {
+      "source_crop": [
+        0,
+        0,
+        1213,
+        1288
+      ],
+      "source_resize": [
+        41,
+        44
+      ],
+      "canvas_origin": [
+        3,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "LANCZOS",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/elder_wild_sanctuaries/rimebell_whitewake_eyrie_unclaimed_source.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+        "source_model": "built_in_image_gen_original_elder_wild_sanctuary_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_rimebell_whitewake_eyrie",
+        "assigned_map_object_family": "neutral_dwelling",
+        "accessible_description": "Four swept froststone prongs surround an empty icy roost beneath one suspended silver bell."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+      "site_id": "site_rimebell_whitewake_eyrie",
+      "source": "elder_wild_sanctuaries_atlas",
+      "source_sha256": "25bf095b46f476fc05b65db593caa26607ca3c3b107f2aec2895d22920eb1021",
+      "source_size": [
+        1221,
+        1288
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        0,
+        1213,
+        1288
+      ],
+      "historical_resize": [
+        41,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_rimebell_whitewake_eyrie.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_rimebell_whitewake_eyrie.png",
+      "registration_evidence": {
+        "alpha_mae": 0.7196180555555556,
+        "opaque_rgb_mae": 1.543243243243243
+      }
+    },
+    "resource_site_neutral_rimebell_whitewake_eyrie_controlled": {
+      "source_crop": [
+        115,
+        0,
+        1230,
+        1278
+      ],
+      "source_resize": [
+        38,
+        44
+      ],
+      "canvas_origin": [
+        5,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "LANCZOS",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/elder_wild_sanctuaries/rimebell_whitewake_eyrie_controlled_source.png",
+        "source_model": "built_in_image_gen_precise_edit_and_background_extraction_elder_wild_sanctuary_atlas",
+        "assigned_resource_site_id": "site_rimebell_whitewake_eyrie",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Rimebell Eyrie has a raised bell, cleared ramp, bundled sky harnesses, warm guide light, and two notched claim pennants."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+      "site_id": "site_rimebell_whitewake_eyrie",
+      "source": "elder_wild_sanctuaries_atlas",
+      "source_sha256": "2d3a25f9ea8b2028c5d3fc3a8c1cd19960975a2518939bcd6848a3a83d535cce",
+      "source_size": [
+        1230,
+        1278
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        115,
+        0,
+        1230,
+        1278
+      ],
+      "historical_resize": [
+        38,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_neutral_rimebell_whitewake_eyrie_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_neutral_rimebell_whitewake_eyrie_controlled.png",
+      "registration_evidence": {
+        "alpha_mae": 0.7825520833333334,
+        "opaque_rgb_mae": 1.6403508771929822
+      }
+    },
+    "mapobj_deepforge_seventh_vault": {
+      "source_crop": [
+        0,
+        12,
+        1454,
+        1024
+      ],
+      "source_resize": [
+        44,
+        31
+      ],
+      "canvas_origin": [
+        2,
+        8
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "LANCZOS",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/elder_wild_sanctuaries/deepforge_seventh_vault_unclaimed_source.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+        "source_model": "built_in_image_gen_original_elder_wild_sanctuary_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_deepforge_seventh_vault",
+        "assigned_map_object_family": "neutral_dwelling",
+        "accessible_description": "Seven overlapping blackstone and brass plates seal a squat vault behind a circular pressure trough."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+      "site_id": "site_deepforge_seventh_vault",
+      "source": "elder_wild_sanctuaries_atlas",
+      "source_sha256": "c03f1f46af7b21c06c71778ce7218700f58913e7581620fd6452e22f53e9b507",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        12,
+        1454,
+        1024
+      ],
+      "historical_resize": [
+        44,
+        31
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_deepforge_seventh_vault.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_deepforge_seventh_vault.png",
+      "registration_evidence": {
+        "alpha_mae": 0.4418402777777778,
+        "opaque_rgb_mae": 0.48615232443125617
+      }
+    },
+    "resource_site_neutral_deepforge_seventh_vault_controlled": {
+      "source_crop": [
+        87,
+        7,
+        1396,
+        1015
+      ],
+      "source_resize": [
+        44,
+        34
+      ],
+      "canvas_origin": [
+        2,
+        7
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "LANCZOS",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+        "atlas_region": [
+          336,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          384,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/elder_wild_sanctuaries/deepforge_seventh_vault_controlled_source.png",
+        "source_model": "built_in_image_gen_precise_edit_and_background_extraction_elder_wild_sanctuary_atlas",
+        "assigned_resource_site_id": "site_deepforge_seventh_vault",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The Seventh Vault stands open and stable beside armored harness rolls, sealed stores, cool guide lamps, and two notched claim pennants."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+      "site_id": "site_deepforge_seventh_vault",
+      "source": "elder_wild_sanctuaries_atlas",
+      "source_sha256": "94dde6a296aadd029ca5499d81b556c1ed2938a463b11855da89ee6d6cd01b13",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        87,
+        7,
+        1396,
+        1015
+      ],
+      "historical_resize": [
+        44,
+        34
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_neutral_deepforge_seventh_vault_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_neutral_deepforge_seventh_vault_controlled.png",
+      "registration_evidence": {
+        "alpha_mae": 0.56640625,
+        "opaque_rgb_mae": 0.6595407759303246
+      }
+    },
+    "mapobj_pactwright_waydesk": {
+      "source_crop": [
+        52,
+        52,
+        1190,
+        1202
+      ],
+      "source_resize": [
+        43,
+        43
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 43,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          96,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/pactwright_waydesk_wave1/pactwright_waydesk_source.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png",
+        "source_model": "built_in_image_gen_original_pactwright_waydesk_with_runtime_state_derivation",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_resource_site_id": "site_pactwright_waydesk",
+        "assigned_map_object_family": "frontier_shrine",
+        "presentation_role": "neutral_road_evidence_witness_station",
+        "accessible_description": "A six-legged darkwood field desk holds a blank ledger beneath a tall quill mast and brass plumb."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png",
+      "site_id": "site_pactwright_waydesk",
+      "source": "pactwright_waydesk_state_atlas",
+      "source_sha256": "416b9e58e10a7bc207e64cbe328fe8075c603cb654f663428e9bac12b22d6d32",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        52,
+        52,
+        1190,
+        1202
+      ],
+      "historical_resize": [
+        43,
+        43
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_pactwright_waydesk.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_pactwright_waydesk.png",
+      "registration_evidence": {
+        "alpha_mae": 0.5559895833333334,
+        "opaque_rgb_mae": 1.2257217847769029
+      }
+    },
+    "resource_site_pactwright_waydesk_witnessed": {
+      "source_crop": [
+        52,
+        52,
+        1190,
+        1202
+      ],
+      "source_resize": [
+        43,
+        43
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 43,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          96,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/pactwright_waydesk_wave1/pactwright_waydesk_source.png",
+        "source_model": "built_in_image_gen_original_pactwright_waydesk_with_six_mark_runtime_state_derivation",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "assigned_resource_site_id": "site_pactwright_waydesk",
+        "presentation_role": "six_witness_marks_recorded_state",
+        "accessible_description": "Six small wax witness marks line the Pactwright Waydesk after the local road evidence is recorded."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png",
+      "site_id": "site_pactwright_waydesk",
+      "source": "pactwright_waydesk_state_atlas",
+      "source_sha256": "416b9e58e10a7bc207e64cbe328fe8075c603cb654f663428e9bac12b22d6d32",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        52,
+        52,
+        1190,
+        1202
+      ],
+      "historical_resize": [
+        43,
+        43
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_pactwright_waydesk_witnessed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_pactwright_waydesk_witnessed.png",
+      "state_ink": {
+        "bounds": [
+          15,
+          32,
+          35,
+          38
+        ],
+        "pixels": [
+          1552,
+          1553,
+          1554,
+          1560,
+          1561,
+          1562,
+          1563,
+          1564,
+          1565,
+          1566,
+          1567,
+          1568,
+          1569,
+          1599,
+          1600,
+          1601,
+          1602,
+          1603,
+          1604,
+          1605,
+          1609,
+          1610,
+          1611,
+          1612,
+          1613,
+          1614,
+          1615,
+          1616,
+          1617,
+          1618,
+          1647,
+          1648,
+          1649,
+          1650,
+          1651,
+          1652,
+          1653,
+          1654,
+          1655,
+          1656,
+          1657,
+          1658,
+          1659,
+          1660,
+          1661,
+          1662,
+          1663,
+          1664,
+          1665,
+          1666,
+          1695,
+          1696,
+          1697,
+          1698,
+          1699,
+          1700,
+          1701,
+          1702,
+          1703,
+          1704,
+          1705,
+          1706,
+          1707,
+          1708,
+          1709,
+          1710,
+          1711,
+          1712,
+          1713,
+          1714,
+          1744,
+          1745,
+          1746,
+          1747,
+          1748,
+          1749,
+          1750,
+          1751,
+          1752,
+          1753,
+          1754,
+          1755,
+          1756,
+          1757,
+          1758,
+          1759,
+          1760,
+          1761,
+          1795,
+          1796,
+          1797,
+          1798,
+          1799,
+          1800,
+          1801,
+          1802,
+          1803,
+          1804,
+          1805,
+          1806
+        ],
+        "before_rgba_sha256": "636157e1356fac366b2e5ae8a89bbad5d42ac4558ec7db2fd265550ce25c0c4b"
+      },
+      "registration_evidence": {
+        "alpha_mae": 0.5559895833333334,
+        "opaque_rgb_mae": 1.2257217847769029
+      }
+    },
+    "mapobj_siltglass_index": {
+      "source_crop": [
+        31,
+        3,
+        1377,
+        1091
+      ],
+      "source_resize": [
+        40,
+        32
+      ],
+      "canvas_origin": [
+        4,
+        16
+      ],
+      "fit_limit": 40,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/siltglass_index_source.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_resource_site_id": "site_siltglass_index",
+        "assigned_map_object_family": "frontier_shrine",
+        "presentation_role": "unsealed_mire_account",
+        "accessible_description": "Two smoky siltglass tablets stand in wet reed bindings around a narrow bronze tally pointer."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+      "site_id": "site_siltglass_index",
+      "source": "mireglass_counterpoint_state_atlas",
+      "source_sha256": "7cf868f5ce51c48e6b9411edb3b8e50c1df042585ec14f2be342942c53a3ece3",
+      "source_size": [
+        1391,
+        1131
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        31,
+        3,
+        1377,
+        1091
+      ],
+      "historical_resize": [
+        40,
+        32
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_siltglass_index.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_siltglass_index.png",
+      "registration_evidence": {
+        "alpha_mae": 0.3862847222222222,
+        "opaque_rgb_mae": 0.8095238095238094
+      }
+    },
+    "resource_site_siltglass_index_countersealed": {
+      "source_crop": [
+        31,
+        3,
+        1377,
+        1091
+      ],
+      "source_resize": [
+        40,
+        32
+      ],
+      "canvas_origin": [
+        4,
+        16
+      ],
+      "fit_limit": 40,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/siltglass_index_source.png",
+        "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "assigned_resource_site_id": "site_siltglass_index",
+        "presentation_role": "countersealed_mire_account",
+        "accessible_description": "A small two-tone diamond counterseal now hangs from the Siltglass Index without obscuring either tablet."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+      "site_id": "site_siltglass_index",
+      "source": "mireglass_counterpoint_state_atlas",
+      "source_sha256": "7cf868f5ce51c48e6b9411edb3b8e50c1df042585ec14f2be342942c53a3ece3",
+      "source_size": [
+        1391,
+        1131
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        31,
+        3,
+        1377,
+        1091
+      ],
+      "historical_resize": [
+        40,
+        32
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_siltglass_index_countersealed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_siltglass_index_countersealed.png",
+      "state_ink": {
+        "bounds": [
+          34,
+          4,
+          46,
+          16
+        ],
+        "pixels": [
+          230,
+          231,
+          232,
+          277,
+          278,
+          279,
+          280,
+          281,
+          324,
+          325,
+          326,
+          327,
+          328,
+          329,
+          330,
+          371,
+          372,
+          373,
+          374,
+          375,
+          376,
+          377,
+          378,
+          379,
+          418,
+          419,
+          420,
+          421,
+          422,
+          423,
+          424,
+          425,
+          426,
+          427,
+          428,
+          466,
+          467,
+          468,
+          469,
+          470,
+          471,
+          472,
+          473,
+          474,
+          475,
+          476,
+          477,
+          514,
+          515,
+          516,
+          517,
+          518,
+          519,
+          520,
+          521,
+          522,
+          523,
+          524,
+          563,
+          564,
+          565,
+          566,
+          567,
+          568,
+          569,
+          570,
+          571,
+          612,
+          613,
+          614,
+          615,
+          616,
+          617,
+          618,
+          661,
+          662,
+          663,
+          664,
+          665,
+          710,
+          711,
+          712,
+          759
+        ],
+        "before_rgba_sha256": "0fd6f3677a57b1e7824e7ee0159d002e8208df080ad01ed9b5587c1de06e9046"
+      },
+      "registration_evidence": {
+        "alpha_mae": 0.3862847222222222,
+        "opaque_rgb_mae": 0.8095238095238094
+      }
+    },
+    "mapobj_greenline_lens_table": {
+      "source_crop": [
+        65,
+        32,
+        1522,
+        980
+      ],
+      "source_resize": [
+        40,
+        26
+      ],
+      "canvas_origin": [
+        4,
+        22
+      ],
+      "fit_limit": 40,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/greenline_lens_table_source.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_resource_site_id": "site_greenline_lens_table",
+        "assigned_map_object_family": "frontier_shrine",
+        "presentation_role": "unsealed_rooted_meridian",
+        "accessible_description": "A horizontal pale crystal lens rests above a low brass meridian table partly embraced by living roots."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+      "site_id": "site_greenline_lens_table",
+      "source": "mireglass_counterpoint_state_atlas",
+      "source_sha256": "69b542f31158a59f49af64492606eb0b5fe3e6ee0185167c8fa29740fca88e3d",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        65,
+        32,
+        1522,
+        980
+      ],
+      "historical_resize": [
+        40,
+        26
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_greenline_lens_table.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_greenline_lens_table.png",
+      "registration_evidence": {
+        "alpha_mae": 0.2860243055555556,
+        "opaque_rgb_mae": 1.2605363984674332
+      }
+    },
+    "resource_site_greenline_lens_table_countersealed": {
+      "source_crop": [
+        65,
+        32,
+        1522,
+        980
+      ],
+      "source_resize": [
+        40,
+        26
+      ],
+      "canvas_origin": [
+        4,
+        22
+      ],
+      "fit_limit": 40,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/greenline_lens_table_source.png",
+        "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "assigned_resource_site_id": "site_greenline_lens_table",
+        "presentation_role": "countersealed_rooted_meridian",
+        "accessible_description": "A two-tone diamond counterseal marks the Greenline Lens Table while the original roots and crystal measure remain visible."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+      "site_id": "site_greenline_lens_table",
+      "source": "mireglass_counterpoint_state_atlas",
+      "source_sha256": "69b542f31158a59f49af64492606eb0b5fe3e6ee0185167c8fa29740fca88e3d",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        65,
+        32,
+        1522,
+        980
+      ],
+      "historical_resize": [
+        40,
+        26
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_greenline_lens_table_countersealed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_greenline_lens_table_countersealed.png",
+      "state_ink": {
+        "bounds": [
+          34,
+          4,
+          46,
+          16
+        ],
+        "pixels": [
+          230,
+          231,
+          232,
+          277,
+          278,
+          279,
+          280,
+          281,
+          324,
+          325,
+          326,
+          327,
+          328,
+          329,
+          330,
+          371,
+          372,
+          373,
+          374,
+          375,
+          376,
+          377,
+          378,
+          379,
+          418,
+          419,
+          420,
+          421,
+          422,
+          423,
+          424,
+          425,
+          426,
+          427,
+          428,
+          466,
+          467,
+          468,
+          469,
+          470,
+          471,
+          472,
+          473,
+          474,
+          475,
+          476,
+          477,
+          514,
+          515,
+          516,
+          517,
+          518,
+          519,
+          520,
+          521,
+          522,
+          523,
+          524,
+          563,
+          564,
+          565,
+          566,
+          567,
+          568,
+          569,
+          570,
+          571,
+          612,
+          613,
+          614,
+          615,
+          616,
+          617,
+          618,
+          661,
+          662,
+          663,
+          664,
+          665,
+          710,
+          711,
+          712,
+          759
+        ],
+        "before_rgba_sha256": "de44bce460416a9dcfb125b3c10c012878071168e266b7c25fec28eff50813f0"
+      },
+      "registration_evidence": {
+        "alpha_mae": 0.2860243055555556,
+        "opaque_rgb_mae": 1.2605363984674332
+      }
+    },
+    "mapobj_reedflame_votive_frame": {
+      "source_crop": [
+        0,
+        8,
+        1188,
+        1295
+      ],
+      "source_resize": [
+        37,
+        40
+      ],
+      "canvas_origin": [
+        5,
+        8
+      ],
+      "fit_limit": 40,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/reedflame_votive_frame_source.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_resource_site_id": "site_reedflame_votive_frame",
+        "assigned_map_object_family": "frontier_shrine",
+        "presentation_role": "unsealed_ferry_vow",
+        "accessible_description": "A circular woven-reed frame holds an amber votive flame and three pale jaw-shaped mineral charms."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+      "site_id": "site_reedflame_votive_frame",
+      "source": "mireglass_counterpoint_state_atlas",
+      "source_sha256": "f10cf99fe0ad59b9fb053f278c58f72b44fef322ab31ce5f3336d866f96b9687",
+      "source_size": [
+        1214,
+        1295
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        8,
+        1188,
+        1295
+      ],
+      "historical_resize": [
+        37,
+        40
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_reedflame_votive_frame.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_reedflame_votive_frame.png",
+      "registration_evidence": {
+        "alpha_mae": 0.69921875,
+        "opaque_rgb_mae": 0.832156862745098
+      }
+    },
+    "resource_site_reedflame_votive_frame_countersealed": {
+      "source_crop": [
+        0,
+        8,
+        1188,
+        1295
+      ],
+      "source_resize": [
+        37,
+        40
+      ],
+      "canvas_origin": [
+        5,
+        8
+      ],
+      "fit_limit": 40,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/reedflame_votive_frame_source.png",
+        "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "assigned_resource_site_id": "site_reedflame_votive_frame",
+        "presentation_role": "countersealed_ferry_vow",
+        "accessible_description": "A two-tone diamond counterseal joins the Reedflame Votive Frame while its amber flame and old ferry charms remain intact."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+      "site_id": "site_reedflame_votive_frame",
+      "source": "mireglass_counterpoint_state_atlas",
+      "source_sha256": "f10cf99fe0ad59b9fb053f278c58f72b44fef322ab31ce5f3336d866f96b9687",
+      "source_size": [
+        1214,
+        1295
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        8,
+        1188,
+        1295
+      ],
+      "historical_resize": [
+        37,
+        40
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_reedflame_votive_frame_countersealed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_reedflame_votive_frame_countersealed.png",
+      "state_ink": {
+        "bounds": [
+          34,
+          4,
+          46,
+          16
+        ],
+        "pixels": [
+          230,
+          231,
+          232,
+          277,
+          278,
+          279,
+          280,
+          281,
+          324,
+          325,
+          326,
+          327,
+          328,
+          329,
+          330,
+          371,
+          372,
+          373,
+          374,
+          375,
+          376,
+          377,
+          378,
+          379,
+          418,
+          419,
+          420,
+          421,
+          422,
+          423,
+          424,
+          425,
+          426,
+          427,
+          428,
+          466,
+          467,
+          468,
+          469,
+          470,
+          471,
+          472,
+          473,
+          474,
+          475,
+          476,
+          477,
+          514,
+          515,
+          516,
+          517,
+          518,
+          519,
+          520,
+          521,
+          522,
+          523,
+          524,
+          563,
+          564,
+          565,
+          566,
+          567,
+          568,
+          569,
+          570,
+          571,
+          612,
+          613,
+          614,
+          615,
+          616,
+          617,
+          618,
+          661,
+          662,
+          663,
+          664,
+          665,
+          710,
+          711,
+          712,
+          759
+        ],
+        "before_rgba_sha256": "a74ea09aa8d7cf05bb5a4b734d5da41f94338045e81153888848ea7b9776e710"
+      },
+      "registration_evidence": {
+        "alpha_mae": 0.69921875,
+        "opaque_rgb_mae": 0.832156862745098
+      }
+    },
+    "mapobj_ossuary_prism_choir": {
+      "source_crop": [
+        0,
+        15,
+        1111,
+        1233
+      ],
+      "source_resize": [
+        36,
+        40
+      ],
+      "canvas_origin": [
+        6,
+        8
+      ],
+      "fit_limit": 40,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/ossuary_prism_choir_source.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_resource_site_id": "site_ossuary_prism_choir",
+        "assigned_map_object_family": "frontier_shrine",
+        "presentation_role": "untuned_drowned_reflection",
+        "accessible_description": "Three pale mineral arches suspend a dusk-blue prism over a compact black mirrored basin."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+      "site_id": "site_ossuary_prism_choir",
+      "source": "mireglass_counterpoint_state_atlas",
+      "source_sha256": "8b59c89a5af50c0335f7c55c12a9a496ee5d6ca1f578f96a38a3f278c1d47b52",
+      "source_size": [
+        1228,
+        1281
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        15,
+        1111,
+        1233
+      ],
+      "historical_resize": [
+        36,
+        40
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_ossuary_prism_choir.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_ossuary_prism_choir.png",
+      "registration_evidence": {
+        "alpha_mae": 0.5377604166666666,
+        "opaque_rgb_mae": 1.3928012519561814
+      }
+    },
+    "resource_site_ossuary_prism_choir_countersealed": {
+      "source_crop": [
+        0,
+        15,
+        1111,
+        1233
+      ],
+      "source_resize": [
+        36,
+        40
+      ],
+      "canvas_origin": [
+        6,
+        8
+      ],
+      "fit_limit": 40,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "atlas_region": [
+          336,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/ossuary_prism_choir_source.png",
+        "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "assigned_resource_site_id": "site_ossuary_prism_choir",
+        "presentation_role": "countersealed_drowned_reflection",
+        "accessible_description": "A two-tone diamond counterseal hangs beside the tuned Ossuary Prism Choir without covering its suspended prism."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+      "site_id": "site_ossuary_prism_choir",
+      "source": "mireglass_counterpoint_state_atlas",
+      "source_sha256": "8b59c89a5af50c0335f7c55c12a9a496ee5d6ca1f578f96a38a3f278c1d47b52",
+      "source_size": [
+        1228,
+        1281
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        15,
+        1111,
+        1233
+      ],
+      "historical_resize": [
+        36,
+        40
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_ossuary_prism_choir_countersealed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_ossuary_prism_choir_countersealed.png",
+      "state_ink": {
+        "bounds": [
+          34,
+          4,
+          46,
+          16
+        ],
+        "pixels": [
+          230,
+          231,
+          232,
+          277,
+          278,
+          279,
+          280,
+          281,
+          324,
+          325,
+          326,
+          327,
+          328,
+          329,
+          330,
+          371,
+          372,
+          373,
+          374,
+          375,
+          376,
+          377,
+          378,
+          379,
+          418,
+          419,
+          420,
+          421,
+          422,
+          423,
+          424,
+          425,
+          426,
+          427,
+          428,
+          466,
+          467,
+          468,
+          469,
+          470,
+          471,
+          472,
+          473,
+          474,
+          475,
+          476,
+          477,
+          514,
+          515,
+          516,
+          517,
+          518,
+          519,
+          520,
+          521,
+          522,
+          523,
+          524,
+          563,
+          564,
+          565,
+          566,
+          567,
+          568,
+          569,
+          570,
+          571,
+          612,
+          613,
+          614,
+          615,
+          616,
+          617,
+          618,
+          661,
+          662,
+          663,
+          664,
+          665,
+          710,
+          711,
+          712,
+          759
+        ],
+        "before_rgba_sha256": "80c4f36cebed7a3f25e8c50953efa405e7b18e3c07edacdaa6873433fa5155ae"
+      },
+      "registration_evidence": {
+        "alpha_mae": 0.5377604166666666,
+        "opaque_rgb_mae": 1.3928012519561814
+      }
+    },
+    "mapobj_glowcap_echo_bell": {
+      "source_crop": [
+        0,
+        19,
+        1200,
+        1259
+      ],
+      "source_resize": [
+        39,
+        40
+      ],
+      "canvas_origin": [
+        4,
+        8
+      ],
+      "fit_limit": 40,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "atlas_region": [
+          384,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/glowcap_echo_bell_source.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_resource_site_id": "site_glowcap_echo_bell",
+        "assigned_map_object_family": "frontier_shrine",
+        "presentation_role": "unsounded_low_refrain",
+        "accessible_description": "A luminous mushroom bell hangs over a peat-dark resonance bowl between three curled reedwood legs."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+      "site_id": "site_glowcap_echo_bell",
+      "source": "mireglass_counterpoint_state_atlas",
+      "source_sha256": "1b6a9702ec699c8c7fe86d82f8bdb3e1abc429eb3839451d2dc864ca3ca0859a",
+      "source_size": [
+        1224,
+        1285
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        19,
+        1200,
+        1259
+      ],
+      "historical_resize": [
+        39,
+        40
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_glowcap_echo_bell.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_glowcap_echo_bell.png",
+      "registration_evidence": {
+        "alpha_mae": 0.4952256944444444,
+        "opaque_rgb_mae": 0.8288690476190476
+      }
+    },
+    "resource_site_glowcap_echo_bell_countersealed": {
+      "source_crop": [
+        0,
+        19,
+        1200,
+        1259
+      ],
+      "source_resize": [
+        39,
+        40
+      ],
+      "canvas_origin": [
+        4,
+        8
+      ],
+      "fit_limit": 40,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "atlas_region": [
+          432,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/glowcap_echo_bell_source.png",
+        "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "assigned_resource_site_id": "site_glowcap_echo_bell",
+        "presentation_role": "countersealed_low_refrain",
+        "accessible_description": "A two-tone diamond counterseal marks the sounded Glowcap Echo Bell while its cap and dark bowl remain fully readable."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+      "site_id": "site_glowcap_echo_bell",
+      "source": "mireglass_counterpoint_state_atlas",
+      "source_sha256": "1b6a9702ec699c8c7fe86d82f8bdb3e1abc429eb3839451d2dc864ca3ca0859a",
+      "source_size": [
+        1224,
+        1285
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        19,
+        1200,
+        1259
+      ],
+      "historical_resize": [
+        39,
+        40
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_glowcap_echo_bell_countersealed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_glowcap_echo_bell_countersealed.png",
+      "state_ink": {
+        "bounds": [
+          34,
+          4,
+          46,
+          16
+        ],
+        "pixels": [
+          230,
+          231,
+          232,
+          277,
+          278,
+          279,
+          280,
+          281,
+          324,
+          325,
+          326,
+          327,
+          328,
+          329,
+          330,
+          371,
+          372,
+          373,
+          374,
+          375,
+          376,
+          377,
+          378,
+          379,
+          418,
+          419,
+          420,
+          421,
+          422,
+          423,
+          424,
+          425,
+          426,
+          427,
+          428,
+          466,
+          467,
+          468,
+          469,
+          470,
+          471,
+          472,
+          473,
+          474,
+          475,
+          476,
+          477,
+          514,
+          515,
+          516,
+          517,
+          518,
+          519,
+          520,
+          521,
+          522,
+          523,
+          524,
+          563,
+          564,
+          565,
+          566,
+          567,
+          568,
+          569,
+          570,
+          571,
+          612,
+          613,
+          614,
+          615,
+          616,
+          617,
+          618,
+          661,
+          662,
+          663,
+          664,
+          665,
+          710,
+          711,
+          712,
+          759
+        ],
+        "before_rgba_sha256": "a55d0841e2b8a0d8e3fc20a6cb0f506fd8e0611b680d7f06fb1519d8221d4f40"
+      },
+      "registration_evidence": {
+        "alpha_mae": 0.4952256944444444,
+        "opaque_rgb_mae": 0.8288690476190476
+      }
+    },
+    "mapobj_kite_signal_countermast": {
+      "source_crop": [
+        65,
+        16,
+        947,
+        1494
+      ],
+      "source_resize": [
+        24,
+        40
+      ],
+      "canvas_origin": [
+        12,
+        8
+      ],
+      "fit_limit": 40,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "atlas_region": [
+          480,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/kite_signal_countermast_source.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_resource_site_id": "site_kite_signal_countermast",
+        "assigned_map_object_family": "frontier_shrine",
+        "presentation_role": "unbalanced_long_range_signal",
+        "accessible_description": "A forked brass mast balances a clear diamond kite vane, a pale counter-vane, and two hanging weights."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+      "site_id": "site_kite_signal_countermast",
+      "source": "mireglass_counterpoint_state_atlas",
+      "source_sha256": "fa6fc0db43d2b7318f7af9306cc7bc1d381c2b3712fd3a91bd1e75efc930c458",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        65,
+        16,
+        947,
+        1494
+      ],
+      "historical_resize": [
+        24,
+        40
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_kite_signal_countermast.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_kite_signal_countermast.png",
+      "registration_evidence": {
+        "alpha_mae": 0.3797743055555556,
+        "opaque_rgb_mae": 1.339955849889625
+      }
+    },
+    "resource_site_kite_signal_countermast_countersealed": {
+      "source_crop": [
+        65,
+        16,
+        947,
+        1494
+      ],
+      "source_resize": [
+        24,
+        40
+      ],
+      "canvas_origin": [
+        12,
+        8
+      ],
+      "fit_limit": 40,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+        "atlas_region": [
+          528,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/kite_signal_countermast_source.png",
+        "source_model": "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "assigned_resource_site_id": "site_kite_signal_countermast",
+        "presentation_role": "countersealed_long_range_signal",
+        "accessible_description": "A two-tone diamond counterseal completes the balanced Kite-Signal Countermast while both opposed vanes remain visible."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+      "site_id": "site_kite_signal_countermast",
+      "source": "mireglass_counterpoint_state_atlas",
+      "source_sha256": "fa6fc0db43d2b7318f7af9306cc7bc1d381c2b3712fd3a91bd1e75efc930c458",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        65,
+        16,
+        947,
+        1494
+      ],
+      "historical_resize": [
+        24,
+        40
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_kite_signal_countermast_countersealed.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_kite_signal_countermast_countersealed.png",
+      "state_ink": {
+        "bounds": [
+          34,
+          4,
+          46,
+          16
+        ],
+        "pixels": [
+          230,
+          231,
+          232,
+          277,
+          278,
+          279,
+          280,
+          281,
+          324,
+          325,
+          326,
+          327,
+          328,
+          329,
+          330,
+          371,
+          372,
+          373,
+          374,
+          375,
+          376,
+          377,
+          378,
+          379,
+          418,
+          419,
+          420,
+          421,
+          422,
+          423,
+          424,
+          425,
+          426,
+          427,
+          428,
+          466,
+          467,
+          468,
+          469,
+          470,
+          471,
+          472,
+          473,
+          474,
+          475,
+          476,
+          477,
+          514,
+          515,
+          516,
+          517,
+          518,
+          519,
+          520,
+          521,
+          522,
+          523,
+          524,
+          563,
+          564,
+          565,
+          566,
+          567,
+          568,
+          569,
+          570,
+          571,
+          612,
+          613,
+          614,
+          615,
+          616,
+          617,
+          618,
+          661,
+          662,
+          663,
+          664,
+          665,
+          710,
+          711,
+          712,
+          759
+        ],
+        "before_rgba_sha256": "21a4f2e73a3385b117faef74208cc663df24eb5e86747ca6374e00accc1e2b2d"
+      },
+      "registration_evidence": {
+        "alpha_mae": 0.3797743055555556,
+        "opaque_rgb_mae": 1.339955849889625
+      }
+    },
+    "resource_site_high_arcanum_lastroad_bell_spire": {
+      "source_crop": [
+        0,
+        8,
+        1228,
+        1254
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "fit_limit": 44,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/lastroad_bell_spire_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/lastroad_bell_spire_source.png",
+        "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
+        "assigned_resource_site_id": "site_lastroad_bell_spire",
+        "presentation_role": "ivory_road_spire_bronze_bell_three_lamps",
+        "accessible_description": "An ivory road spire bears a large bronze bell, three hanging lamps, red oath cords, and deep waymark grooves."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+      "site_id": "site_lastroad_bell_spire",
+      "source": "sevenfold_high_arcanum_atlas",
+      "source_sha256": "dedfa6c7c99d01e38dc1724cf4dd19a0c42ef5510aade446d36ed48db8ed0682",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        8,
+        1228,
+        1254
+      ],
+      "historical_resize": [
+        43,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_high_arcanum_lastroad_bell_spire.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_high_arcanum_lastroad_bell_spire.png",
+      "registration_evidence": {
+        "alpha_mae": 0.57421875,
+        "opaque_rgb_mae": 1.135954135954136
+      }
+    },
+    "resource_site_high_arcanum_siltheart_drum_cairn": {
+      "source_crop": [
+        0,
+        0,
+        1236,
+        1254
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "fit_limit": 44,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/siltheart_drum_cairn_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/siltheart_drum_cairn_source.png",
+        "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
+        "assigned_resource_site_id": "site_siltheart_drum_cairn",
+        "presentation_role": "broad_hide_drum_bogstone_reed_pipes",
+        "accessible_description": "A broad hide drum rests on a wet black bogstone cairn between hooked reed pipes and a sealed silt jar."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+      "site_id": "site_siltheart_drum_cairn",
+      "source": "sevenfold_high_arcanum_atlas",
+      "source_sha256": "e9e90da4f14e13c9f27d286074acb2145b9f61581f846358f0c68d62e5dbb071",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        0,
+        1236,
+        1254
+      ],
+      "historical_resize": [
+        43,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_high_arcanum_siltheart_drum_cairn.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_high_arcanum_siltheart_drum_cairn.png",
+      "registration_evidence": {
+        "alpha_mae": 0.6697048611111112,
+        "opaque_rgb_mae": 0.8572996706915478
+      }
+    },
+    "resource_site_high_arcanum_aurora_facet_orrery": {
+      "source_crop": [
+        0,
+        14,
+        1240,
+        1254
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "fit_limit": 44,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/aurora_facet_orrery_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/aurora_facet_orrery_source.png",
+        "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
+        "assigned_resource_site_id": "site_aurora_facet_orrery",
+        "presentation_role": "three_crystal_lenses_suspended_mirror_shard",
+        "accessible_description": "Three asymmetric crystal lenses orbit a suspended mirror shard above an engraved white-gold observatory plinth."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+      "site_id": "site_aurora_facet_orrery",
+      "source": "sevenfold_high_arcanum_atlas",
+      "source_sha256": "bab56b66fd63e43b43fbd37e6d58f0b15c5ccf4ef00a6e770252fb66219e9ad9",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        14,
+        1240,
+        1254
+      ],
+      "historical_resize": [
+        44,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_high_arcanum_aurora_facet_orrery.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_high_arcanum_aurora_facet_orrery.png",
+      "registration_evidence": {
+        "alpha_mae": 0.7100694444444444,
+        "opaque_rgb_mae": 1.2821576763485478
+      }
+    },
+    "resource_site_high_arcanum_bloombark_covenant_tree": {
+      "source_crop": [
+        0,
+        9,
+        1232,
+        1254
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "fit_limit": 44,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/bloombark_covenant_tree_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/bloombark_covenant_tree_source.png",
+        "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
+        "assigned_resource_site_id": "site_bloombark_covenant_tree",
+        "presentation_role": "living_stump_greenstone_copper_blossom_arch",
+        "accessible_description": "A gnarled living stump embraces a carved greenstone tablet beneath one arch of broad copper-red blossoms."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+      "site_id": "site_bloombark_covenant_tree",
+      "source": "sevenfold_high_arcanum_atlas",
+      "source_sha256": "b25f9c08aa9b0cd131d6c42b4f4980caafa91454479a8b8b4310a114366b9222",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        9,
+        1232,
+        1254
+      ],
+      "historical_resize": [
+        44,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_high_arcanum_bloombark_covenant_tree.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_high_arcanum_bloombark_covenant_tree.png",
+      "registration_evidence": {
+        "alpha_mae": 0.7291666666666666,
+        "opaque_rgb_mae": 0.7867783985102421
+      }
+    },
+    "resource_site_high_arcanum_slagbound_clamp_forge": {
+      "source_crop": [
+        0,
+        0,
+        1230,
+        1254
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "fit_limit": 44,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/slagbound_clamp_forge_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/slagbound_clamp_forge_source.png",
+        "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
+        "assigned_resource_site_id": "site_slagbound_clamp_forge",
+        "presentation_role": "brass_clamp_basalt_anvil_banked_furnace",
+        "accessible_description": "A massive asymmetric brass clamp locks around a basalt anvil beside a compact banked coal furnace and gauge."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+      "site_id": "site_slagbound_clamp_forge",
+      "source": "sevenfold_high_arcanum_atlas",
+      "source_sha256": "6a9393c643e5583ef80db7898ba46c3ac3069f614aab5817e34fe6b517cd6dab",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        0,
+        1230,
+        1254
+      ],
+      "historical_resize": [
+        43,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_high_arcanum_slagbound_clamp_forge.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_high_arcanum_slagbound_clamp_forge.png",
+      "registration_evidence": {
+        "alpha_mae": 0.7165798611111112,
+        "opaque_rgb_mae": 0.898921832884097
+      }
+    },
+    "resource_site_high_arcanum_mourning_tide_obelisk": {
+      "source_crop": [
+        0,
+        14,
+        1236,
+        1254
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        4
+      ],
+      "fit_limit": 44,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/mourning_tide_obelisk_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/mourning_tide_obelisk_source.png",
+        "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
+        "assigned_resource_site_id": "site_mourning_tide_obelisk",
+        "presentation_role": "salt_obelisk_whalebone_arch_black_glass_bell",
+        "accessible_description": "A narrow salt-dark memorial stone stands inside a crooked whale-bone arch with one black glass bell and flowing mist."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+      "site_id": "site_mourning_tide_obelisk",
+      "source": "sevenfold_high_arcanum_atlas",
+      "source_sha256": "7533196ecf4c307f93d1985bf1ffe00b97c8af65cb97179eb43d3d7c2fb48669",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        14,
+        1236,
+        1254
+      ],
+      "historical_resize": [
+        44,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_high_arcanum_mourning_tide_obelisk.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_high_arcanum_mourning_tide_obelisk.png",
+      "registration_evidence": {
+        "alpha_mae": 0.796875,
+        "opaque_rgb_mae": 1.1612021857923498
+      }
+    },
+    "resource_site_high_arcanum_sevencount_verdict_table": {
+      "source_crop": [
+        0,
+        0,
+        1194,
+        1254
+      ],
+      "source_resize": [
+        42,
+        44
+      ],
+      "canvas_origin": [
+        3,
+        4
+      ],
+      "fit_limit": 44,
+      "anchor": "south",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/sevencount_verdict_table_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/sevencount_verdict_table_source.png",
+        "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
+        "assigned_resource_site_id": "site_sevencount_verdict_table",
+        "presentation_role": "octagonal_counting_table_seven_pegs_plumb",
+        "accessible_description": "A low octagonal blackstone table carries seven unequal ivory tally pegs, a suspended brass plumb, and a slate disk."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+      "site_id": "site_sevencount_verdict_table",
+      "source": "sevenfold_high_arcanum_atlas",
+      "source_sha256": "3d8c0d78b1eb232291d6d4e1ffcf250d084b08682bbca8b94d0bb0a792e875a8",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        0,
+        1194,
+        1254
+      ],
+      "historical_resize": [
+        42,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_high_arcanum_sevencount_verdict_table.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_high_arcanum_sevencount_verdict_table.png",
+      "registration_evidence": {
+        "alpha_mae": 0.6354166666666666,
+        "opaque_rgb_mae": 0.8680184987548915
+      }
+    },
+    "mapobj_stormseal_powder_wharf": {
+      "source_crop": [
+        0,
+        0,
+        887,
+        887
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/stormseal_powder_wharf_unclaimed.png",
+        "source_model": "built_in_image_gen_original_horizon_company_field_musters",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_stormseal_powder_wharf",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "sealed powder wharf and stormseal winch",
+        "accessible_description": "A rain-dark timber wharf holds a sealed bronze bombard tube, cold brazier, red wax storm seal, and chain winch."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+      "site_id": "site_stormseal_powder_wharf",
+      "source": "horizon_company_field_musters_atlas",
+      "source_sha256": "b17a516ca52178382df4c684f9b7daa7cc17d52ca00991f63d698d4c10c6974f",
+      "source_size": [
+        887,
+        887
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        0,
+        887,
+        887
+      ],
+      "historical_resize": [
+        44,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_stormseal_powder_wharf.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_stormseal_powder_wharf.png",
+      "registration_evidence": {
+        "alpha_mae": 0.6788194444444444,
+        "opaque_rgb_mae": 0.6659634317862166
+      }
+    },
+    "resource_site_company_stormseal_powder_wharf_controlled": {
+      "source_crop": [
+        0,
+        0,
+        877,
+        887
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/stormseal_powder_wharf_controlled.png",
+        "source_model": "built_in_image_gen_original_horizon_company_field_musters",
+        "assigned_resource_site_id": "site_stormseal_powder_wharf",
+        "presentation_role": "controlled_company_muster_state",
+        "accessible_description": "The wharf's tube stands open beside a warm brazier, raised ember pennant, powder casks, and a ready winch."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+      "site_id": "site_stormseal_powder_wharf",
+      "source": "horizon_company_field_musters_atlas",
+      "source_sha256": "55dfff6604090735f0086053ffd8db584a422f8ba525222cefdbb02abe45e2c9",
+      "source_size": [
+        887,
+        887
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        0,
+        877,
+        887
+      ],
+      "historical_resize": [
+        44,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_company_stormseal_powder_wharf_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_company_stormseal_powder_wharf_controlled.png",
+      "registration_evidence": {
+        "alpha_mae": 0.7760416666666666,
+        "opaque_rgb_mae": 0.7320388349514563
+      }
+    },
+    "mapobj_moonwax_reed_circle": {
+      "source_crop": [
+        31,
+        28,
+        887,
+        869
+      ],
+      "source_resize": [
+        44,
+        43
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/moonwax_reed_circle_unclaimed.png",
+        "source_model": "built_in_image_gen_original_horizon_company_field_musters",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_moonwax_reed_circle",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "moon jar and bone-arched reed circle",
+        "accessible_description": "Crooked wetland stones and pale reeds surround a sealed peatglass moon jar beneath a bone-chain arch and cold lanterns."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+      "site_id": "site_moonwax_reed_circle",
+      "source": "horizon_company_field_musters_atlas",
+      "source_sha256": "fc74dfed5e426632c4fcee6ea15984b2a0a385a3c7244deb402592c2889fd22d",
+      "source_size": [
+        887,
+        887
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        31,
+        28,
+        887,
+        869
+      ],
+      "historical_resize": [
+        44,
+        43
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_moonwax_reed_circle.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_moonwax_reed_circle.png",
+      "registration_evidence": {
+        "alpha_mae": 0.5737847222222222,
+        "opaque_rgb_mae": 0.8544018058690744
+      }
+    },
+    "resource_site_company_moonwax_reed_circle_controlled": {
+      "source_crop": [
+        1,
+        0,
+        867,
+        887
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/moonwax_reed_circle_controlled.png",
+        "source_model": "built_in_image_gen_original_horizon_company_field_musters",
+        "assigned_resource_site_id": "site_moonwax_reed_circle",
+        "presentation_role": "controlled_company_muster_state",
+        "accessible_description": "Moonwax lanterns glow around the opened jar, supplied peatwax vessels, racked reedcaster staffs, and a ragged crescent pennant."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+      "site_id": "site_moonwax_reed_circle",
+      "source": "horizon_company_field_musters_atlas",
+      "source_sha256": "45bf62d902c3ffd9d6cf2d3e3e3b0ff17ba7568cf82f8aa03de1b3fab332b30f",
+      "source_size": [
+        887,
+        887
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        1,
+        0,
+        867,
+        887
+      ],
+      "historical_resize": [
+        43,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_company_moonwax_reed_circle_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_company_moonwax_reed_circle_controlled.png",
+      "registration_evidence": {
+        "alpha_mae": 0.6375868055555556,
+        "opaque_rgb_mae": 0.9729532163742691
+      }
+    },
+    "mapobj_facet_vigil": {
+      "source_crop": [
+        0,
+        19,
+        887,
+        887
+      ],
+      "source_resize": [
+        44,
+        43
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/facet_vigil_unclaimed.png",
+        "source_model": "built_in_image_gen_original_horizon_company_field_musters",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_facet_vigil",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "folded seven-face prism and noon dial",
+        "accessible_description": "An ivory watch dais supports a folded brass prism, shuttered mirror fins, and an unlit circular noon dial."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+      "site_id": "site_facet_vigil",
+      "source": "horizon_company_field_musters_atlas",
+      "source_sha256": "0916c38f940572f0132917cdef6374a838773894e79b1c0f96534474c7e4cfcd",
+      "source_size": [
+        887,
+        887
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        19,
+        887,
+        887
+      ],
+      "historical_resize": [
+        44,
+        43
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_facet_vigil.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_facet_vigil.png",
+      "registration_evidence": {
+        "alpha_mae": 0.5616319444444444,
+        "opaque_rgb_mae": 1.2805755395683454
+      }
+    },
+    "resource_site_company_facet_vigil_controlled": {
+      "source_crop": [
+        0,
+        15,
+        873,
+        863
+      ],
+      "source_resize": [
+        44,
+        43
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/facet_vigil_controlled.png",
+        "source_model": "built_in_image_gen_original_horizon_company_field_musters",
+        "assigned_resource_site_id": "site_facet_vigil",
+        "presentation_role": "controlled_company_muster_state",
+        "accessible_description": "The seven-faced prism opens into a star silhouette above bright mirror fins, sentinel shields, and a raised saffron pennant."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+      "site_id": "site_facet_vigil",
+      "source": "horizon_company_field_musters_atlas",
+      "source_sha256": "cbd9cc47bee1f06278703586cbc3015092616567ee4560b4970990438cdf8b05",
+      "source_size": [
+        887,
+        887
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        15,
+        873,
+        863
+      ],
+      "historical_resize": [
+        44,
+        43
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_company_facet_vigil_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_company_facet_vigil_controlled.png",
+      "registration_evidence": {
+        "alpha_mae": 0.7556423611111112,
+        "opaque_rgb_mae": 1.2774193548387096
+      }
+    },
+    "mapobj_heartseed_bolt_grove": {
+      "source_crop": [
+        33,
+        17,
+        887,
+        887
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/heartseed_bolt_grove_unclaimed.png",
+        "source_model": "built_in_image_gen_original_horizon_company_field_musters",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_heartseed_bolt_grove",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "dormant heartseed and folded branch ballistae",
+        "accessible_description": "A living-wood arch curls around a dormant amber heartseed with folded branch-ballista arms, empty racks, and closed leaf lamps."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+      "site_id": "site_heartseed_bolt_grove",
+      "source": "horizon_company_field_musters_atlas",
+      "source_sha256": "fcf6c50b6a24862054999a672fd981eee8b3c012b63ad52dc4d6511a77600551",
+      "source_size": [
+        887,
+        887
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        33,
+        17,
+        887,
+        887
+      ],
+      "historical_resize": [
+        43,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_heartseed_bolt_grove.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_heartseed_bolt_grove.png",
+      "registration_evidence": {
+        "alpha_mae": 0.7387152777777778,
+        "opaque_rgb_mae": 0.7649700598802395
+      }
+    },
+    "resource_site_company_heartseed_bolt_grove_controlled": {
+      "source_crop": [
+        9,
+        19,
+        869,
+        887
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+        "atlas_region": [
+          336,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/heartseed_bolt_grove_controlled.png",
+        "source_model": "built_in_image_gen_original_horizon_company_field_musters",
+        "assigned_resource_site_id": "site_heartseed_bolt_grove",
+        "presentation_role": "controlled_company_muster_state",
+        "accessible_description": "The heartseed glows between tensioned branch ballistae, dawnseed bolt bundles, open leaf lamps, and a grown green-gold pennant."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+      "site_id": "site_heartseed_bolt_grove",
+      "source": "horizon_company_field_musters_atlas",
+      "source_sha256": "8bd3a7a0d096dd2df7867a373ec30bda69b5f92c56ea6d2ab91d212d1269327a",
+      "source_size": [
+        887,
+        887
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        9,
+        19,
+        869,
+        887
+      ],
+      "historical_resize": [
+        44,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_company_heartseed_bolt_grove_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_company_heartseed_bolt_grove_controlled.png",
+      "registration_evidence": {
+        "alpha_mae": 0.8572048611111112,
+        "opaque_rgb_mae": 0.9501557632398754
+      }
+    },
+    "mapobj_blackbell_assay_watch": {
+      "source_crop": [
+        0,
+        0,
+        879,
+        863
+      ],
+      "source_resize": [
+        44,
+        43
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+        "atlas_region": [
+          384,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/blackbell_assay_watch_unclaimed.png",
+        "source_model": "built_in_image_gen_original_horizon_company_field_musters",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_blackbell_assay_watch",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "silent assay bell and cold gauge",
+        "accessible_description": "A broad brass bell hangs over black brick beside a zeroed pressure gauge, locked gaugeplate locker, and cold quench trough."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+      "site_id": "site_blackbell_assay_watch",
+      "source": "horizon_company_field_musters_atlas",
+      "source_sha256": "090abc3b2772dd9b2d854b759e373357cbf93c1e866b37f6153741e0d43450b6",
+      "source_size": [
+        887,
+        887
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        0,
+        879,
+        863
+      ],
+      "historical_resize": [
+        44,
+        43
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_blackbell_assay_watch.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_blackbell_assay_watch.png",
+      "registration_evidence": {
+        "alpha_mae": 0.7183159722222222,
+        "opaque_rgb_mae": 0.8206820682068207
+      }
+    },
+    "resource_site_company_blackbell_assay_watch_controlled": {
+      "source_crop": [
+        15,
+        0,
+        870,
+        858
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+        "atlas_region": [
+          432,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/blackbell_assay_watch_controlled.png",
+        "source_model": "built_in_image_gen_original_horizon_company_field_musters",
+        "assigned_resource_site_id": "site_blackbell_assay_watch",
+        "presentation_role": "controlled_company_muster_state",
+        "accessible_description": "The bell striker rises above a safe green gauge, steaming quench trough, stacked gaugeplate shields, and heavy crossbows."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+      "site_id": "site_blackbell_assay_watch",
+      "source": "horizon_company_field_musters_atlas",
+      "source_sha256": "0ffd9a865b98e02f0ca168558c44496ca7657f926cea2ae6002d5f6e00ec97ac",
+      "source_size": [
+        887,
+        887
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        15,
+        0,
+        870,
+        858
+      ],
+      "historical_resize": [
+        44,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_company_blackbell_assay_watch_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_company_blackbell_assay_watch_controlled.png",
+      "registration_evidence": {
+        "alpha_mae": 0.8424479166666666,
+        "opaque_rgb_mae": 0.8780487804878049
+      }
+    },
+    "mapobj_last_memory_mooring": {
+      "source_crop": [
+        41,
+        35,
+        887,
+        887
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+        "atlas_region": [
+          480,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/last_memory_mooring_unclaimed.png",
+        "source_model": "built_in_image_gen_original_horizon_company_field_musters",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_last_memory_mooring",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "furled pearl sail and saltglass bell",
+        "accessible_description": "A pale driftwood bell-frame stands on a tiny salt-stone pier with a dark lantern, coiled tidehooks, and a furled pearl sail."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+      "site_id": "site_last_memory_mooring",
+      "source": "horizon_company_field_musters_atlas",
+      "source_sha256": "c39e0fd8302a54dc74435a49de79fc9b01067653095a9d8530e29c01930b8d12",
+      "source_size": [
+        887,
+        887
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        41,
+        35,
+        887,
+        887
+      ],
+      "historical_resize": [
+        44,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/mapobj_last_memory_mooring.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/mapobj_last_memory_mooring.png",
+      "registration_evidence": {
+        "alpha_mae": 0.5868055555555556,
+        "opaque_rgb_mae": 1.3277310924369747
+      }
+    },
+    "resource_site_company_last_memory_mooring_controlled": {
+      "source_crop": [
+        0,
+        15,
+        873,
+        887
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "fit_limit": 44,
+      "anchor": "center",
+      "resampling": "BILINEAR",
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+        "atlas_region": [
+          528,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/horizon_company_field_musters/last_memory_mooring_controlled.png",
+        "source_model": "built_in_image_gen_original_horizon_company_field_musters",
+        "assigned_resource_site_id": "site_last_memory_mooring",
+        "presentation_role": "controlled_company_muster_state",
+        "accessible_description": "A raised pearl sail towers over the softly lit bell, bright lantern, racked tidehooks, and three memory-salt urns."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
+      "site_id": "site_last_memory_mooring",
+      "source": "horizon_company_field_musters_atlas",
+      "source_sha256": "35b93f3f2a463292715148942baa4c55dd49114bad22a8e08fb40ae5275ea891",
+      "source_size": [
+        887,
+        887
+      ],
+      "source_alpha_levels": 256,
+      "source_mode": "genuine_rgba",
+      "historical_crop": [
+        0,
+        15,
+        873,
+        887
+      ],
+      "historical_resize": [
+        44,
+        44
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_company_last_memory_mooring_controlled.png",
+      "recovered_source_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/sources/resource_site_company_last_memory_mooring_controlled.png",
+      "registration_evidence": {
+        "alpha_mae": 0.7139756944444444,
+        "opaque_rgb_mae": 1.2646713615023475
+      }
+    }
+  },
+  "atlases": {
+    "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png": {
+      "before_size": [
+        288,
+        48
+      ],
+      "before_sha256": "69bdff9a706d4faa52cd8b71a992a9d56b9548dab8cfeb99f5020d4d7e93d24b"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/frontier_marker_landmarks_atlas.png": {
+      "before_size": [
+        144,
+        48
+      ],
+      "before_sha256": "9d91059330970b946d04e4103583e17dd45c036ec4b814735e4a922a0beb4406"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png": {
+      "before_size": [
+        192,
+        48
+      ],
+      "before_sha256": "838595274ed4a326727afe2733a6d8823aefe3a532281c41756686bfd3bb48d7"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png": {
+      "before_size": [
+        384,
+        48
+      ],
+      "before_sha256": "5f937e368aa962e513d2fdd72475a6c36fbdb835d8c1c9026558b246bf3a6212"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png": {
+      "before_size": [
+        96,
+        48
+      ],
+      "before_sha256": "b1b7c9c8c87ab65c6b3c1f1487bc48b04b7bdf7ac5a363917707cefb82c7786d"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png": {
+      "before_size": [
+        576,
+        48
+      ],
+      "before_sha256": "55625786f1bcf85c424e96ce03aa233b39e9a7c20222f1e2c5245fb74b1ebb6a"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png": {
+      "before_size": [
+        336,
+        48
+      ],
+      "before_sha256": "9d05adc692a4de4934d5d33e158fbf51699358dcebdf86f799de9616b3271d8f"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png": {
+      "before_size": [
+        576,
+        48
+      ],
+      "before_sha256": "68dc1e16591a44347abe2c2d2fbeb8b3808cdb3bd3073a6cc8a5863c9adc5f22"
+    }
+  },
+  "state_mappings": {
+    "site_veil_skiffyard": {
+      "asset_id": "resource_site_coast_route_veil_skiffyard_operational",
+      "unclaimed_asset_id": "mapobj_veil_skiffyard",
+      "fit": "Launched operational skiffyard paired with the original dormant boat racks."
+    },
+    "site_harbor_pilot_post": {
+      "asset_id": "resource_site_coast_route_harbor_pilot_post_operational",
+      "unclaimed_asset_id": "mapobj_harbor_pilot_post",
+      "fit": "Deployed chart and gangway state paired with the original quiet pilot post."
+    },
+    "site_bell_buoy_station": {
+      "asset_id": "resource_site_coast_route_bell_buoy_station_operational",
+      "unclaimed_asset_id": "mapobj_bell_buoy_station",
+      "fit": "Ringing safe-channel state paired with the original still bell station."
+    },
+    "site_wreck_quay": {
+      "asset_id": "resource_site_coast_route_wreck_quay_operational",
+      "unclaimed_asset_id": "mapobj_wreck_quay",
+      "fit": "Cleared operational boarding lane paired with the original obstructed wreck quay."
+    },
+    "site_tide_chain_mooring": {
+      "asset_id": "resource_site_coast_route_tide_chain_mooring_operational",
+      "unclaimed_asset_id": "mapobj_tide_chain_mooring",
+      "fit": "Tensioned guided crossing paired with the original slack mooring chain."
+    },
+    "site_marsh_skiff_shelf": {
+      "asset_id": "resource_site_coast_route_marsh_skiff_shelf_operational",
+      "unclaimed_asset_id": "mapobj_marsh_skiff_shelf",
+      "fit": "Launch-ready marsh skiff paired with the original stored boat shelf."
+    },
+    "site_fogline_marker": {
+      "asset_id": "resource_site_frontier_marker_fogline",
+      "fit": "Distinct fogglass route post for the charting landmark."
+    },
+    "site_old_measure_marker": {
+      "asset_id": "resource_site_frontier_marker_old_measure",
+      "fit": "Distinct chain-and-plumb survey arch for the old boundary landmark."
+    },
+    "site_rootway_marker": {
+      "asset_id": "resource_site_frontier_marker_rootway",
+      "fit": "Distinct living root gate for the awakened rough-ground route."
+    },
+    "site_cinderwake_fold": {
+      "asset_id": "resource_site_neutral_cinderwake_fold_controlled",
+      "unclaimed_asset_id": "mapobj_cinderwake_fold",
+      "fit": "Exact original horn-arch fold paired with its supplied controlled muster state."
+    },
+    "site_tideglass_roost": {
+      "asset_id": "resource_site_neutral_tideglass_roost_controlled",
+      "unclaimed_asset_id": "mapobj_tideglass_roost",
+      "fit": "Exact original saltstone bell-roost paired with its supplied controlled muster state."
+    },
+    "site_galehorn_windfold": {
+      "asset_id": "resource_site_neutral_galehorn_windfold_controlled",
+      "unclaimed_asset_id": "mapobj_galehorn_windfold",
+      "fit": "Exact original horn-arch windfold paired with its supplied controlled muster state."
+    },
+    "site_sunscale_lantern_conservatory": {
+      "asset_id": "resource_site_neutral_sunscale_lantern_conservatory_controlled",
+      "unclaimed_asset_id": "mapobj_sunscale_lantern_conservatory",
+      "fit": "Exact original mineral-lantern conservatory paired with its supplied controlled muster state."
+    },
+    "site_rimebell_whitewake_eyrie": {
+      "asset_id": "resource_site_neutral_rimebell_whitewake_eyrie_controlled",
+      "unclaimed_asset_id": "mapobj_rimebell_whitewake_eyrie",
+      "fit": "Exact original four-pronged ice eyrie paired with its supplied controlled muster state."
+    },
+    "site_deepforge_seventh_vault": {
+      "asset_id": "resource_site_neutral_deepforge_seventh_vault_controlled",
+      "unclaimed_asset_id": "mapobj_deepforge_seventh_vault",
+      "fit": "Exact original seven-plate vault paired with its opened controlled muster state."
+    },
+    "site_pactwright_waydesk": {
+      "asset_id": "resource_site_pactwright_waydesk_witnessed",
+      "unclaimed_asset_id": "mapobj_pactwright_waydesk",
+      "fit": "Exact original portable Waydesk paired with its six-mark witnessed ledger state."
+    },
+    "site_siltglass_index": {
+      "asset_id": "resource_site_siltglass_index_countersealed",
+      "unclaimed_asset_id": "mapobj_siltglass_index",
+      "fit": "Original siltglass tablets preserve their silhouette and add one visible counterseal after claim."
+    },
+    "site_greenline_lens_table": {
+      "asset_id": "resource_site_greenline_lens_table_countersealed",
+      "unclaimed_asset_id": "mapobj_greenline_lens_table",
+      "fit": "Original rooted survey table preserves both lens and greenline after countersealing."
+    },
+    "site_reedflame_votive_frame": {
+      "asset_id": "resource_site_reedflame_votive_frame_countersealed",
+      "unclaimed_asset_id": "mapobj_reedflame_votive_frame",
+      "fit": "Original woven votive frame keeps its flame and old charms visible after countersealing."
+    },
+    "site_ossuary_prism_choir": {
+      "asset_id": "resource_site_ossuary_prism_choir_countersealed",
+      "unclaimed_asset_id": "mapobj_ossuary_prism_choir",
+      "fit": "Original pale arches, suspended prism, and black basin remain readable in both states."
+    },
+    "site_glowcap_echo_bell": {
+      "asset_id": "resource_site_glowcap_echo_bell_countersealed",
+      "unclaimed_asset_id": "mapobj_glowcap_echo_bell",
+      "fit": "Original luminous bell and dark bowl retain one stable silhouette before and after sounding."
+    },
+    "site_kite_signal_countermast": {
+      "asset_id": "resource_site_kite_signal_countermast_countersealed",
+      "unclaimed_asset_id": "mapobj_kite_signal_countermast",
+      "fit": "Original opposed kite vanes and weights remain legible beneath the final counterseal."
+    },
+    "site_lastroad_bell_spire": {
+      "asset_id": "resource_site_high_arcanum_lastroad_bell_spire",
+      "unclaimed_asset_id": "resource_site_high_arcanum_lastroad_bell_spire",
+      "fit": "Exact original Lastroad bell landmark remains visible before and after its one-time lesson."
+    },
+    "site_siltheart_drum_cairn": {
+      "asset_id": "resource_site_high_arcanum_siltheart_drum_cairn",
+      "unclaimed_asset_id": "resource_site_high_arcanum_siltheart_drum_cairn",
+      "fit": "Exact original Siltheart drum landmark remains visible before and after its one-time lesson."
+    },
+    "site_aurora_facet_orrery": {
+      "asset_id": "resource_site_high_arcanum_aurora_facet_orrery",
+      "unclaimed_asset_id": "resource_site_high_arcanum_aurora_facet_orrery",
+      "fit": "Exact original Aurora Facet landmark remains visible before and after its one-time lesson."
+    },
+    "site_bloombark_covenant_tree": {
+      "asset_id": "resource_site_high_arcanum_bloombark_covenant_tree",
+      "unclaimed_asset_id": "resource_site_high_arcanum_bloombark_covenant_tree",
+      "fit": "Exact original Bloombark landmark remains visible before and after its one-time lesson."
+    },
+    "site_slagbound_clamp_forge": {
+      "asset_id": "resource_site_high_arcanum_slagbound_clamp_forge",
+      "unclaimed_asset_id": "resource_site_high_arcanum_slagbound_clamp_forge",
+      "fit": "Exact original Slagbound forge landmark remains visible before and after its one-time lesson."
+    },
+    "site_mourning_tide_obelisk": {
+      "asset_id": "resource_site_high_arcanum_mourning_tide_obelisk",
+      "unclaimed_asset_id": "resource_site_high_arcanum_mourning_tide_obelisk",
+      "fit": "Exact original Mourning Tide landmark remains visible before and after its one-time lesson."
+    },
+    "site_sevencount_verdict_table": {
+      "asset_id": "resource_site_high_arcanum_sevencount_verdict_table",
+      "unclaimed_asset_id": "resource_site_high_arcanum_sevencount_verdict_table",
+      "fit": "Exact original Seven-Count landmark remains visible before and after its one-time lesson."
+    },
+    "site_stormseal_powder_wharf": {
+      "asset_id": "resource_site_company_stormseal_powder_wharf_controlled",
+      "unclaimed_asset_id": "mapobj_stormseal_powder_wharf",
+      "fit": "Exact sealed powder wharf paired with its lit, supplied bombard-company state."
+    },
+    "site_moonwax_reed_circle": {
+      "asset_id": "resource_site_company_moonwax_reed_circle_controlled",
+      "unclaimed_asset_id": "mapobj_moonwax_reed_circle",
+      "fit": "Exact moon jar and bone-arched reed circle paired with its waxlit reedcaster muster state."
+    },
+    "site_facet_vigil": {
+      "asset_id": "resource_site_company_facet_vigil_controlled",
+      "unclaimed_asset_id": "mapobj_facet_vigil",
+      "fit": "Exact folded prism vigil paired with its deployed seven-face sentinel state."
+    },
+    "site_heartseed_bolt_grove": {
+      "asset_id": "resource_site_company_heartseed_bolt_grove_controlled",
+      "unclaimed_asset_id": "mapobj_heartseed_bolt_grove",
+      "fit": "Exact dormant heartseed grove paired with its tensioned dawnseed-bolter state."
+    },
+    "site_blackbell_assay_watch": {
+      "asset_id": "resource_site_company_blackbell_assay_watch_controlled",
+      "unclaimed_asset_id": "mapobj_blackbell_assay_watch",
+      "fit": "Exact silent assay bell paired with its safe-gauge, supplied bailiff-watch state."
+    },
+    "site_last_memory_mooring": {
+      "asset_id": "resource_site_company_last_memory_mooring_controlled",
+      "unclaimed_asset_id": "mapobj_last_memory_mooring",
+      "fit": "Exact furled saltglass mooring paired with its raised-sail tidehook muster state."
+    }
+  },
+  "additional_sources": {
+    "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/cinderwake_controlled_matte.png": "f4652872db7e1d98b212c4f272b5cf8c59afcc93d41c4c5d6da3953c1e76a634",
+    "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/cinderwake_fold_unclaimed_source.png": "22e2688fa30d41cf101bda8023459ad3ab2c3a5735536d6c4d4d9f68ef95f978",
+    "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/tideglass_controlled_matte.png": "6f0680cb3f0040583b3ece077bbe94736541113a5948a27e598a5791ccf8b148",
+    "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/cinderwake_fold_controlled_source.png": "d4d77f2b518db23d9dc1f6213d29e3ccd171074683573145230146320186914b",
+    "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/cinderwake_controlled_checker_attempt.png": "23de475bcfbca71203de935f4fa6271e60356ef26f075cbae85bbaa72dada41a",
+    "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/tideglass_roost_unclaimed_source.png": "46544e4bba46d6755101fe125fd5b4f538bd1f5a5f72d504b09f88b409a2e9d4",
+    "res://art/overworld/source/generated/resource_sites/elite_neutral_dwellings_wave1/tideglass_roost_controlled_source.png": "67b8d88ce80fea63984b86b7d48ab2524ca6f04b85920aa06196199a88156e79",
+    "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/edits/tideglass_controlled_checker_attempt.png": "9bedf200891a871a9d21af028c5bf47591f6e22ba7b618d0a6b85c81ed9b9618"
+  },
+  "registration_policy": "Exact original crop, fit and anchor; source RGBA reconstructed at 4x. Historical 48px comparison is measured evidence, not a claim to have recovered undocumented old resampling. Coast differences remain recorded. Pactwright retains six original raster witness marks and restores original master colors without its coarse old whole-image grade."
+}

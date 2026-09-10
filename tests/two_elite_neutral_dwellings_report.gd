@@ -16,7 +16,7 @@ const BATCH_CASES := [
 		"ability_ids":["reach", "shielding"],
 		"unclaimed":"mapobj_cinderwake_fold",
 		"claimed":"resource_site_neutral_cinderwake_fold_controlled",
-		"region":Rect2(48,0,48,48)
+		"region":Rect2(192,0,192,192)
 	},
 	{
 		"scenario_id":"ninefold-confluence",
@@ -28,7 +28,7 @@ const BATCH_CASES := [
 		"ability_ids":["harry", "volley"],
 		"unclaimed":"mapobj_tideglass_roost",
 		"claimed":"resource_site_neutral_tideglass_roost_controlled",
-		"region":Rect2(144,0,48,48)
+		"region":Rect2(576,0,192,192)
 	},
 ]
 
