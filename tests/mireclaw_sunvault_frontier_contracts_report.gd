@@ -9,10 +9,10 @@ const REPORT_ID := "MIRECLAW_SUNVAULT_FRONTIER_CONTRACTS_REPORT"
 const OUTPUT_DIR := "res://.artifacts/mireclaw_sunvault_frontier_contracts_report"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/encounters/mire_sun_contracts/mire_sun_contracts_atlas.png"
 const CASES := [
-	{"scenario_id":"mudkeel-hive-foreclosure","hero_id":"hero_mireclaw_brakka_mudkeel","faction_id":"faction_mireclaw","placement_id":"mudkeel_hive_foreclosure","encounter_id":"encounter_brakka_hive_foreclosure","army_group_id":"army_brakka_hive_foreclosure","rare_resource_id":"brass_scrip","victory_flag":"mudkeel_hive_chain_foreclosure_broken","objective_id":"hive_chain_foreclosure","asset_id":"encounter_mire_sun_hive_chain_foreclosure","region":Rect2(0,0,48,48),"combat_seed":25803},
-	{"scenario_id":"votivejaw-reedflame-vigil","hero_id":"hero_mireclaw_nix_votivejaw","faction_id":"faction_mireclaw","placement_id":"votivejaw_reedflame_vigil","encounter_id":"encounter_nix_reedflame_vigil","army_group_id":"army_nix_reedflame_vigil","rare_resource_id":"embergrain","victory_flag":"votivejaw_reedflame_votive_gate_broken","objective_id":"reedflame_votive_gate","asset_id":"encounter_mire_sun_reedflame_votive_gate","region":Rect2(48,0,48,48),"combat_seed":25813},
-	{"scenario_id":"glassmarshal-ossuary-battery","hero_id":"hero_sunvault_ilyr_glassmarshal","faction_id":"faction_sunvault","placement_id":"glassmarshal_ossuary_battery","encounter_id":"encounter_ilyr_ossuary_battery","army_group_id":"army_ilyr_ossuary_battery","rare_resource_id":"memory_salt","victory_flag":"glassmarshal_drowned_mirror_battery_broken","objective_id":"drowned_mirror_battery","asset_id":"encounter_mire_sun_drowned_mirror_battery","region":Rect2(96,0,48,48),"combat_seed":25823},
-	{"scenario_id":"lenscaptain-greenline-survey","hero_id":"hero_sunvault_dovan_lenscaptain","faction_id":"faction_sunvault","placement_id":"lenscaptain_greenline_survey","encounter_id":"encounter_dovan_greenline_survey","army_group_id":"army_dovan_greenline_survey","rare_resource_id":"verdant_grafts","victory_flag":"lenscaptain_rootbound_survey_lens_broken","objective_id":"rootbound_survey_lens","asset_id":"encounter_mire_sun_rootbound_survey_lens","region":Rect2(144,0,48,48),"combat_seed":25833},
+	{"scenario_id":"mudkeel-hive-foreclosure","hero_id":"hero_mireclaw_brakka_mudkeel","faction_id":"faction_mireclaw","placement_id":"mudkeel_hive_foreclosure","encounter_id":"encounter_brakka_hive_foreclosure","army_group_id":"army_brakka_hive_foreclosure","rare_resource_id":"brass_scrip","victory_flag":"mudkeel_hive_chain_foreclosure_broken","objective_id":"hive_chain_foreclosure","asset_id":"encounter_mire_sun_hive_chain_foreclosure","region":Rect2(0,0,192,192),"combat_seed":25803},
+	{"scenario_id":"votivejaw-reedflame-vigil","hero_id":"hero_mireclaw_nix_votivejaw","faction_id":"faction_mireclaw","placement_id":"votivejaw_reedflame_vigil","encounter_id":"encounter_nix_reedflame_vigil","army_group_id":"army_nix_reedflame_vigil","rare_resource_id":"embergrain","victory_flag":"votivejaw_reedflame_votive_gate_broken","objective_id":"reedflame_votive_gate","asset_id":"encounter_mire_sun_reedflame_votive_gate","region":Rect2(192,0,192,192),"combat_seed":25813},
+	{"scenario_id":"glassmarshal-ossuary-battery","hero_id":"hero_sunvault_ilyr_glassmarshal","faction_id":"faction_sunvault","placement_id":"glassmarshal_ossuary_battery","encounter_id":"encounter_ilyr_ossuary_battery","army_group_id":"army_ilyr_ossuary_battery","rare_resource_id":"memory_salt","victory_flag":"glassmarshal_drowned_mirror_battery_broken","objective_id":"drowned_mirror_battery","asset_id":"encounter_mire_sun_drowned_mirror_battery","region":Rect2(384,0,192,192),"combat_seed":25823},
+	{"scenario_id":"lenscaptain-greenline-survey","hero_id":"hero_sunvault_dovan_lenscaptain","faction_id":"faction_sunvault","placement_id":"lenscaptain_greenline_survey","encounter_id":"encounter_dovan_greenline_survey","army_group_id":"army_dovan_greenline_survey","rare_resource_id":"verdant_grafts","victory_flag":"lenscaptain_rootbound_survey_lens_broken","objective_id":"rootbound_survey_lens","asset_id":"encounter_mire_sun_rootbound_survey_lens","region":Rect2(576,0,192,192),"combat_seed":25833},
 ]
 
 var _errors: Array[String] = []
@@ -31,7 +31,7 @@ func _run() -> void:
 		print("%s CASE_START %s" % [REPORT_ID, String(case_value.get("scenario_id", ""))])
 		await _validate_case(view, case_value)
 		print("%s CASE_DONE %s" % [REPORT_ID, String(case_value.get("scenario_id", ""))])
-	var report := {"ok":_errors.is_empty(),"case_count":CASES.size(),"atlas_path":ATLAS_PATH,"atlas_size":[192,48],"save_version":SessionStateStoreScript.SAVE_VERSION,"rows":_rows,"errors":_errors}
+	var report := {"ok":_errors.is_empty(),"case_count":CASES.size(),"atlas_path":ATLAS_PATH,"atlas_size":[768,192],"save_version":SessionStateStoreScript.SAVE_VERSION,"rows":_rows,"errors":_errors}
 	_write_json("%s/report.json" % OUTPUT_DIR, report)
 	if _errors.is_empty():
 		print("%s %s" % [REPORT_ID, JSON.stringify({"ok":true,"case_count":CASES.size(),"save_version":SessionStateStoreScript.SAVE_VERSION})])
@@ -75,7 +75,7 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	print("%s STAGE map_rendered %s" % [REPORT_ID, scenario_id])
 	var identity: Dictionary = view.call("validation_encounter_presentation_payload", encounter)
 	var texture = view.call("_object_texture_for_asset", String(case.get("asset_id", "")))
-	var exact_art: bool = String(identity.get("identity_encounter_asset_id", "")) == String(case.get("asset_id", "")) and bool(identity.get("uses_identity_encounter_sprite", false)) and not bool(identity.get("uses_commander_sprite", true)) and texture is AtlasTexture and texture.region == case.get("region", Rect2()) and texture.atlas is Texture2D and texture.atlas.resource_path == ATLAS_PATH and texture.atlas.get_size() == Vector2(192, 48)
+	var exact_art: bool = String(identity.get("identity_encounter_asset_id", "")) == String(case.get("asset_id", "")) and bool(identity.get("uses_identity_encounter_sprite", false)) and not bool(identity.get("uses_commander_sprite", true)) and texture is AtlasTexture and texture.region == case.get("region", Rect2()) and texture.atlas is Texture2D and texture.atlas.resource_path == ATLAS_PATH and texture.atlas.get_size() == Vector2(768,192)
 	_expect(exact_art, "%s exact landmark did not reach the live map renderer." % encounter_id)
 	var capture_path := await _capture_if_requested(scenario_id)
 	print("%s STAGE capture_done %s" % [REPORT_ID, scenario_id])

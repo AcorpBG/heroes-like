@@ -1,0 +1,259 @@
+{
+  "schema_id": "contract_encounter_cutout_recovery_v1",
+  "recipe_sha256": "53c7194bdcef335c9d8efbf45d4bf5ea807410549359bf6c3f953c98611bab5d",
+  "tools": {
+    "tools/prepare_overworld_contract_cutouts.py": "b6686960de8cdb843fbb3a9fe079bb46b66a8076d22f49da9b47082973e0d947",
+    "tools/prepare_overworld_recurring_cutouts.py": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
+    "tools/prepare_overworld_cutout_art.py": "247801087cb8c5bfd6fb0a471bf39dbbfdb2a8bd8fe984d3816df92f00b0d68d",
+    "tools/prepare_overworld_legacy_cutouts.py": "578dd78feaf322f585df5b214cfdbe607ea29eb0a359a95ce549e289c8d7b092"
+  },
+  "assets": {
+    "encounter_dissident_lockflame_turncoats": {
+      "trim_sha256": "e0cd0028653f8d9e76547b85cc8ec1548190121f7189082b0be53ba8ac1c35f5",
+      "rgba_sha256": "b0d531e85f01887e9726b0a863828bab0c33e12f0690a0f3a2804ba49135d300"
+    },
+    "encounter_dissident_mossglass_moonhunt": {
+      "trim_sha256": "ed91d87c4ab3b09653eae338015ffcc8987239c5add7a9cf09fae7beff7589db",
+      "rgba_sha256": "c8d7e54adaacce6fcce3caafb042e320bd97f11d33d2cb5a14938d034880f4a7"
+    },
+    "encounter_dissident_parallax_choir": {
+      "trim_sha256": "f24d12a3450656d05dfbc343564cb75c693175f726fde182057f4943b1279866",
+      "rgba_sha256": "2399598d93a47695660cfcc5bcc7d95a5eb36b199caa5f4a91380a5179f0e4fc"
+    },
+    "encounter_dissident_graftbound_pilgrims": {
+      "trim_sha256": "ee179e8696483bed62f15d74d512f23b512077bd03055364f5ff4ce0a2e469b7",
+      "rgba_sha256": "a92699022ef6878ff97c473b53f913dfcf7c3b04828898389d8908aafac1cac9"
+    },
+    "encounter_dissident_redline_foreclosure": {
+      "trim_sha256": "7eedb3b1e4c1e27854f35ff5ba6fcfaa6c289d6119dc5000fa693623c28669f4",
+      "rgba_sha256": "72259dcfebdba14617f8a3b8e9e81ce3a965d1425b42ad2b06fe6670eca6a9a1"
+    },
+    "encounter_dissident_drowned_bell_procession": {
+      "trim_sha256": "0446dd9ca098e2ad02097703cb1349b7e403688930c1b4220705321df881615c",
+      "rgba_sha256": "30e1c79cd172d5cbf1afb9ffa2c7dc83baa758e9e451aa4b357a6842638da16a"
+    },
+    "encounter_contract_tollglass_drowned_tally": {
+      "trim_sha256": "b732b97469866935f92a04aa29cd52c347309586114e57762933d61c1d5d1a41",
+      "rgba_sha256": "872951cf4c941bb909c40a7ab2bab33df6eee2207439facaec2526c313de897d"
+    },
+    "encounter_contract_muckscript_prism_inquest": {
+      "trim_sha256": "e150f3253dddd9d3b185ec31f3ae393ee804cf1cf6e3b8812e959d9e52a0d409",
+      "rgba_sha256": "6b4a6325ace1a10f33b4269d86ddca0305f9a777dc023021316a2446c9972738"
+    },
+    "encounter_contract_mirrorstep_redline_calibrators": {
+      "trim_sha256": "b4c6ffe2f5a9e5412056330ee1631b5138152192e04dacea74859421ac0f3233",
+      "rgba_sha256": "5a863c305271a94b5d61bd91ec23e56004e2201c8a0f2539a21c6004e8e25f21"
+    },
+    "encounter_contract_briarmarshal_drum_cordon": {
+      "trim_sha256": "7455bd47be16252b15f7c4494ead7992830425bcee4d7dfc48660c055e6aa5cb",
+      "rgba_sha256": "a3a2ec5e9a303a2577b7a5232b555feefb1b7c8cf45e77d64336d0c789a87391"
+    },
+    "encounter_contract_railhead_lockward_auditors": {
+      "trim_sha256": "754033a489da95c7f90451df12926eca0db2031adbe62ceb8fcc62bc2614fb9f",
+      "rgba_sha256": "bacb46455660b83a8a65da193a38660e5261798c4084380b9e2164d338d6ad35"
+    },
+    "encounter_contract_mistcorsair_graftwake_cordon": {
+      "trim_sha256": "7cc5d89739813c972a76eb9198346745061b7237ab37ac37d2ff1a01aad6dba8",
+      "rgba_sha256": "cc614e4851f3745e59ca944fea322d98f3ca4e36d53f287f69b5ffc593cd64c8"
+    },
+    "encounter_outer_reach_peat_chain_tally_pit": {
+      "trim_sha256": "0a1005cb7b30a4218b710757c6b96d59fdad95279bfbba8858e8753c4a803d3a",
+      "rgba_sha256": "b71c13eed316bc53b8b5b53c8dd4fba2bcb5fd8bd1193489ce495f37d3057914"
+    },
+    "encounter_outer_reach_meridian_prism_impound": {
+      "trim_sha256": "c44e29afef7df4502674bfd37afdc8e9d351afb4a299f1988d680d59478300e1",
+      "rgba_sha256": "3d9f32ea5e53a530bce2cf0b7908a48875ba529ad3e0964cdf97213278ed8d90"
+    },
+    "encounter_outer_reach_furnace_railblock": {
+      "trim_sha256": "d6b0ac84e823c064368ccf51c7f27df2f8985c2f0f9477bf79de00e43ee44bc1",
+      "rgba_sha256": "d14585372ab10e3ec08a2a77a3cee220e4362e90dd9708c119830338d8dcc4c9"
+    },
+    "encounter_outer_reach_drowned_seed_bell": {
+      "trim_sha256": "0c3b999d537f0cd42443c0142e64418e2cd117ed2d716912ac202d502d56a052",
+      "rgba_sha256": "b03e94a86eb6a32761facde493b6108f347876a7b9975d2b425c69be373bf849"
+    },
+    "encounter_outer_reach_lockfire_chain_buoy": {
+      "trim_sha256": "4d9e454b4c45d399a6e3bc42e65e4df5993e25f8f25c7619a0d9f21525147fca",
+      "rgba_sha256": "a578d72fadb8c790050ebdeaaa440e1a08fd60bab25713fc44ae7a65156051fe"
+    },
+    "encounter_outer_reach_rootwake_ghost_mast": {
+      "trim_sha256": "a86e44af182ff6b07be3b546e4eb2e6cefe04935f56573d341dc828b3d3bf394",
+      "rgba_sha256": "6da34520218bb0d2e0967c59c1b0c7921f7f73718b70514a84be2496c7cde7af"
+    },
+    "encounter_mire_sun_hive_chain_foreclosure": {
+      "trim_sha256": "9915ccf1f00e906f2633c0143da44fb459470738687d28dbca76c9374de47c4b",
+      "rgba_sha256": "d9bc780f5f855ce5579cbdedbbde6a8f955d5391801fe0e96ee641b44e54d8ae"
+    },
+    "encounter_mire_sun_reedflame_votive_gate": {
+      "trim_sha256": "140dc6c234a0f1fd115feff778ebd65a099ff1411230e911e05bfd789cd564a3",
+      "rgba_sha256": "2d5a030e798611d04a9d7f69555a4885e4593dbfc8e8e4ee2e981f64e18f58c7"
+    },
+    "encounter_mire_sun_drowned_mirror_battery": {
+      "trim_sha256": "6ed2a37a0c841c5c2b197bd58b5a6856fc04acb063be8dd9abad3c23e33a4c21",
+      "rgba_sha256": "5f5cdce91eba13242925b7fedc9d6314075a91e5af352cab41bb853d25265644"
+    },
+    "encounter_mire_sun_rootbound_survey_lens": {
+      "trim_sha256": "cea7ff8b7d91267de9cbc4890a92db87939969321032a98141751d615f3624e3",
+      "rgba_sha256": "64615f82449e844243c3a347c8eb6359eba4dbbc8af4aa410f344a963e693822"
+    },
+    "encounter_ascendant_blackwake_obituary_mooring": {
+      "trim_sha256": "f43597051ad045a239c6be5306631b8d093cbe4dbb9c3f8ad984391911f3498a",
+      "rgba_sha256": "40eadc842d30a2ed7e748b6836ba1e119118d9ab77a127daf1481a18a260e171"
+    },
+    "encounter_ascendant_daybreak_reed_prism": {
+      "trim_sha256": "2c129a3410b371e4dce7b389f949d7ef6f1545bc9f8542f60cd313299c967f70",
+      "rgba_sha256": "16c5cc5f62fd0289230423826f1c40a7c07defd09c516a0bb86cfbc7d99be526"
+    },
+    "encounter_ascendant_foundry_eclipse_gauge": {
+      "trim_sha256": "6070f5d71ee1e41486537e35d7de4d18e80f4def04aa3098ab4b1136e4d7c239",
+      "rgba_sha256": "9d95f67d2321dd8ba85bac9791e27632d390639e4cc2d9ecbf68fcf566d70197"
+    },
+    "encounter_ascendant_cinderwrit_graft_brazier": {
+      "trim_sha256": "2e45672feae48c5c4b5a11b33f7b540cca4244aafd73874d988be1ae66d4d6c0",
+      "rgba_sha256": "a3e91205899268d0d7765a5f24dcd7bdec000bfe65e570296041793d9ec0d69f"
+    },
+    "encounter_ascendant_gorefen_debt_totem": {
+      "trim_sha256": "318c42393e58bd4502bc4ec59f461828d160bc10bb5f994ecc0a121150db7c14",
+      "rgba_sha256": "3b6abc9e359b6d7cc886bdd3e0602110e8ac33596a74d47b63fe75026cfe5193"
+    },
+    "encounter_ascendant_worldroot_wake_seal": {
+      "trim_sha256": "5b989917075089ecafab5eafbf5f3beda6650bb1f7ff32e5f6fcc3c7cdae2181",
+      "rgba_sha256": "2e39a92c5eb8bd5ffbf4c7e371c2489c3a3c50382bc0eff4cd06abd617525582"
+    },
+    "encounter_waywatch_cinder_kiln_watch": {
+      "trim_sha256": "db6f5bf6959e330b1075696e3c9dce1ccbfb87568a8d06b10f22e2c74daf4afb",
+      "rgba_sha256": "52a49270bec9c4e86f4396b657fb4a02ee41cba8f8336c46ca0db78e93850e95"
+    },
+    "encounter_waywatch_roadward_lodge_watch": {
+      "trim_sha256": "1a2126504a6f5897ce16293c95ecba9551c714c2fe1ae59082958566f93633db",
+      "rgba_sha256": "ae7e1f715b197f88f7d982115f463042986f6180776c071e1dc8535e4c0acd7e"
+    },
+    "encounter_waywatch_cliffhawk_roost_watch": {
+      "trim_sha256": "8b28b09a9b8f6a389af59d41caf13267969f154061c7f75461123a51896d2d07",
+      "rgba_sha256": "f21764cb527199dc2de39a61ed9e6b741dc53d6c570ce8ee663f443b170df956"
+    },
+    "encounter_waywatch_greenbranch_copse_watch": {
+      "trim_sha256": "638551043a64b0b504fb9889c44a897873308a8c51eda6f19af9245438f23ad5",
+      "rgba_sha256": "09f9c0a46121f2b5d08c9ae978d8e7190c8c1346730752c137f97b368f9339b7"
+    },
+    "encounter_waywatch_obsidian_scar_watch": {
+      "trim_sha256": "a41114f6eb9dce8aea81cbc18a3d326074626c25045d4d67aed2b3510be82750",
+      "rgba_sha256": "a01f956addf3a299e97d0d33719f4777499944d5031e2167c85a6b0786ed6934"
+    },
+    "encounter_waywatch_frostwharf_house_watch": {
+      "trim_sha256": "8b1a621e9b3521eee7f8941821960248577605a353d1cd7c4fbe1c0da6cb3f65",
+      "rgba_sha256": "a4c2dc2a20531aae6e09113b20db375ca78a07afc4f22e2e08ae7813cf97cbee"
+    },
+    "encounter_spellwright_fenhound_kennel_watch": {
+      "trim_sha256": "f02dc39838a4ea8481a0206fb3193304465a368d8892ded08504d92348160854",
+      "rgba_sha256": "2ac735fb31a1b30d1ff0289c492c740cbf5ccb807875d36c3f21a2c2234f83f7"
+    },
+    "encounter_spellwright_glowcap_croft_watch": {
+      "trim_sha256": "d161422e9e63037a4855635ffa29b6415decae0b6e9bac7e6349752051428793",
+      "rgba_sha256": "34ee5cbe689435ca1a32bc4f2901f397d25775b63acfb395ae3df37ed212cf52"
+    },
+    "encounter_spellwright_kite_signal_eyrie_watch": {
+      "trim_sha256": "06dd1ab968e9535cf46b5272b6369572240828f5a96f579e950353601e642ff9",
+      "rgba_sha256": "458dd1d7736750bc3787ae58a8b8e6b10a8b65be234d74abc8888a36dfe91ab5"
+    },
+    "encounter_spellwright_orchard_levy_watch": {
+      "trim_sha256": "2c906ef7f0a24c5e37abe315def50baf1b5ac140f15d8ac5fa959193973e2dde",
+      "rgba_sha256": "afe003a6a2597e43450187382065a771c1b70278221ace4200207933a40d40f6"
+    },
+    "encounter_spellwright_milestone_arsenal_watch": {
+      "trim_sha256": "224713d6299d939a4121ab0f1379d2f06a393b4a0913428c5e898577967444ad",
+      "rgba_sha256": "70ba913133b6b9cc8dacbd42f7feab926e2d215da18a6b1da9a651fed3580922"
+    },
+    "encounter_spellwright_harbor_pilot_house_watch": {
+      "trim_sha256": "d9abc93d7eebcfe45978778eaf36fe0e0752306672dbe9bc2a72158f3927bb84",
+      "rgba_sha256": "3b8b45e2dd17bc17fa53de349fa5f8a4b6bd6e007a20640995aaffb92264ea3a"
+    },
+    "encounter_ritual_relay_reedbarge_mooring_watch": {
+      "trim_sha256": "a81929b463fcc04f67788a9a863a2e22f009047338ea45930eb98641e3fad451",
+      "rgba_sha256": "30ab17819cc4c7b66619a86a449df812d555802174a5bffe5ccd5b8a1008cb6e"
+    },
+    "encounter_ritual_relay_dustjack_yard_watch": {
+      "trim_sha256": "f8c16b75962860e8fd728df45536cb5fb58fc745722dc536b75dd9e41782c3ec",
+      "rgba_sha256": "3595504060360fc50fbc0bdb4fbc02b4fc112d2c3018ec1c3a3dde073d0f22ab"
+    },
+    "encounter_ritual_relay_frostbeacon_bothy_watch": {
+      "trim_sha256": "84ccaf1c934dbb59cb0f2a2d4e381147eaf1204f4d7af5fe3559ef28853775b7",
+      "rgba_sha256": "9637c38a072e909f825675e7c57f54cc5298d75f86f90d2154eb5076a346efb5"
+    },
+    "encounter_ritual_relay_switchback_hostel_watch": {
+      "trim_sha256": "013ae5140cfe7c279c45506262154776ec5afc50fda7a383e8704f3fca625791",
+      "rgba_sha256": "d90ccacae5096aae007dd60f2987b839b1f5d584c54deccb4c09b34de66194b0"
+    },
+    "encounter_ritual_relay_saltpan_camp_watch": {
+      "trim_sha256": "82ecfb40d20f0b0f12145fdb35dca523a99dd4ce3e8811459a18d2fe74aed406",
+      "rgba_sha256": "46d9854ce9cbd02c8531709a024f5f499c687591bafa27ed1df20aaf3abc35d7"
+    },
+    "encounter_ritual_relay_crystal_sump_watch": {
+      "trim_sha256": "55656b6dfd39b5e2bb7f12f67d54569d154f71d4b2003a54677958e982e449b9",
+      "rgba_sha256": "e85d179514862def73bace01a477915807c1b393603174a58bb4b2cff4ab9712"
+    },
+    "encounter_grand_convergence_charcoal_burners_watch": {
+      "trim_sha256": "e14ac452b2656e728439810530d605fa569612871f2476d1702b12173af11380",
+      "rgba_sha256": "d51285985098deb3ab01262765c97ea97cd4cfa3670873614695ef39be92867b"
+    },
+    "encounter_grand_convergence_bogbell_croft_watch": {
+      "trim_sha256": "75a2570f0432a48402ce7d67a3e58b19f6cab6d8ce15d9cea10792f48f3558f4",
+      "rgba_sha256": "b21b1e72ed7a6f07c4a82c15fcdb06e1d9a382af3b14096e1ae3fc50d22e154b"
+    },
+    "encounter_grand_convergence_icehook_trapper_lodge_watch": {
+      "trim_sha256": "bce9544b878404295bd63dcc6d9e5ce0e34d44a9cebf93bf7b8e4d834f726333",
+      "rgba_sha256": "f354ec24a1f10f1ba40af8f64865ab1a56d1b34b12cebb1e0ffa06ed593e02ad"
+    },
+    "encounter_grand_convergence_lantern_warren_watch": {
+      "trim_sha256": "ca9f8ecce889d2126b561df469526e48f23f4e988c663f539f29116becc98781",
+      "rgba_sha256": "5af0e7154f5f47c0404a96697141def5122d183c428e0309ddf2716d5bc8b597"
+    },
+    "encounter_grand_convergence_default_clause_collectors": {
+      "trim_sha256": "33c2f7aec1b903ccdb54a42a79d24021eb8037832827b5ed3190b2d83beb0105",
+      "rgba_sha256": "c877ab1327876c00881e482c64d2406af01359856775164622db1b04c3b6a171"
+    },
+    "encounter_grand_convergence_false_meridian_pilots": {
+      "trim_sha256": "7b2579ae4843a254205461d7bcc3b1271aacb870421d07482062ffb860a60d4a",
+      "rgba_sha256": "6042da4c1356f168a3a9c446c2918d826cddfab6e1c44c7d71492e5459c9c894"
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/encounters/dissident_fronts/dissident_fronts_atlas.png": {
+      "after_sha256": "2089209b6f06516167770062c98ddb6aeb28c5d4db2f1c99aed0572e69e132b4",
+      "prepared": "runtime/objects/encounters/dissident_fronts/dissident_fronts_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/standalone_contracts/standalone_contracts_atlas.png": {
+      "after_sha256": "02d211874ff1da62a07efa590f1df0c492b48c7ee063acde2f2d26c0767a1683",
+      "prepared": "runtime/objects/encounters/standalone_contracts/standalone_contracts_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/outer_reach_contracts/outer_reach_contracts_atlas.png": {
+      "after_sha256": "6bbe77abdb1f12de4d9f73c937c12db9b03832dc42b90ad3357a113478d409ff",
+      "prepared": "runtime/objects/encounters/outer_reach_contracts/outer_reach_contracts_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/mire_sun_contracts/mire_sun_contracts_atlas.png": {
+      "after_sha256": "19c576c71bffe5805f7b3649619f3f9afc428c37b4c836e390f92fed2a8a2e91",
+      "prepared": "runtime/objects/encounters/mire_sun_contracts/mire_sun_contracts_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/ascendant_companies/ascendant_companies_atlas.png": {
+      "after_sha256": "83ef633bb1cd98b646ddab6710f1f85aa0181c958f5060719dd1885239bc7ca2",
+      "prepared": "runtime/objects/encounters/ascendant_companies/ascendant_companies_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/waywatch_trials/waywatch_trials_atlas.png": {
+      "after_sha256": "a911fed6d595af1bb75ecfa8a7fe4a4858b7f9106c4b17706f606f5b719b959a",
+      "prepared": "runtime/objects/encounters/waywatch_trials/waywatch_trials_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/spellwright_expeditions/spellwright_expeditions_atlas.png": {
+      "after_sha256": "c205359aed3ca3095853ad11ca3e99f2fab982f692275361d5dfa66616ffd7f3",
+      "prepared": "runtime/objects/encounters/spellwright_expeditions/spellwright_expeditions_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/ritual_relay_circuits/ritual_relay_circuits_atlas.png": {
+      "after_sha256": "d2989abb9bcc07c7c16dd7296466a77806663ccdf90355ad2b8cd23012990326",
+      "prepared": "runtime/objects/encounters/ritual_relay_circuits/ritual_relay_circuits_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/grand_convergence_marches/grand_convergence_marches_atlas.png": {
+      "after_sha256": "a2eec44475cb958b20fa4f7e71a025ca9e61e0e8b55eebafe4c8279976930bc6",
+      "prepared": "runtime/objects/encounters/grand_convergence_marches/grand_convergence_marches_atlas.png"
+    }
+  },
+  "processing": "Original alpha and opaque paint unchanged. Only saturated near-transparent alpha 1..4 RGB is replaced by nearest original opaque paint. Historical family-specific 42/44px centered or bottom alignment retained and projected directly at fourfold density, not upscaled from 48px. No alpha/color key, invented state marker or gameplay changes."
+}

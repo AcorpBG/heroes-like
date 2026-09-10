@@ -335,6 +335,44 @@ PNGs have bounded cross-filter agreement, not falsely claimed byte equality.
 All forty installed rasters must reconstruct exactly from the retained sources
 and recipe regardless of those historical filter differences.
 
+### Contract and expedition encounter landmarks
+
+Recover all 52 original paintings in the nine same-path atlases for Dissident
+Fronts, Standalone Contracts, Outer Reach Contracts, Mire-Sun Contracts,
+Ascendant Companies, Waywatch Trials, Spellwright Expeditions, Ritual Relay
+Circuits and Grand Convergence Marches. Read their source manifests and inspect
+each original for cropped paint, matte, detached fragments and alpha/RGB damage.
+Keep the documented 42/44px centered/south registrations, identity mappings and
+commander/identity/faction precedence. An identity available only through a
+detached resolver is not evidence that normal gameplay drew it.
+
+Targets: `tools/prepare_overworld_contract_cutouts.py`, the original/recovered
+source/trim/runtime packet under `cutout_recovery_20260909/contract_encounters`,
+`tests/test_overworld_contract_cutouts.py` and a shared source/package selector
+`--batch contract_encounters`. Use original-source recovery first and approved
+built-in raster edits when the original cannot supply sound paint. Never turn
+legitimate purple into a color key or invent replacement geometry. Validate
+exact installed reconstruction, original registration and complete identity
+routes. Inspect full-cohort renderer galleries and ordinary scouting of real
+authored encounters at 1280x720 and 1920x1080, preserving full saves and original
+native-map controls. Do not relocate records or bypass fog/commander priority.
+Run affected domain and shared sprite/input/fog regressions, repository/diff
+checks and official Linux/Windows export/startup/map-entry checks once the batch
+is assembled. Keep new large exports/previews on `/tmp`; preserve existing
+evidence/caches. No native/RMG, gameplay, save, Town, unrelated art or cleanup.
+
+Implementation owners: `tools/prepare_overworld_contract_cutouts.py`,
+`tests/test_overworld_contract_cutouts.py`, `tests/overworld_contract_cutout_probe.py`
+and the cohort's `recipe.json`. Reproject original positive-alpha bounds at
+fourfold density, not the old 48px copies. Only the reviewed alpha-1..4 saturated
+RGB noise may borrow original alpha-128+ foreground RGB; preserve all alpha and
+every other source pixel. Historical cross-filter registration is explicitly
+bounded (alpha MAE <=5, opaque RGB MAE <=9), not byte equality. Current installed
+pixels, original-source hashes, nine source manifests and all identity routes
+must reconstruct exactly. Preserve cleared native encounters as cleared;
+never revive them to obtain a screenshot. Focused test command:
+`python3 -B -m unittest discover -s tests -p test_overworld_contract_cutouts.py`.
+
 ## Completion and non-goals
 
 Each cohort completes only after its actual repaired art is integrated and its

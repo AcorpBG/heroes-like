@@ -1429,21 +1429,119 @@ including every compiled gameplay/native/save owner, remain identical.
 Source paintings stay excluded. Exactly forty art rows change; all routing
 tables and the other 1,174 rows remain exact. No cleanup or unrelated changes.
 
+## Contract and expedition encounter originals — 2026-09-10
+
+All 52 paintings are accepted after source, visual, runtime and Linux/Windows
+delivery checks. This is a checkpoint, not full runtime-pool or release
+acceptance; the parent and selected child remain in progress.
+
+The nine same-path atlases cover Dissident Fronts, Standalone/Outer Reach/
+Mire-Sun Contracts, Ascendant Companies, Waywatch Trials, Spellwright
+Expeditions, Ritual Relay Circuits and Grand Convergence Marches. All 52
+retained RGBA originals were visually inspected. Their rich painting was
+being reduced to 48px cells; 30 sources also contain 105,994 saturated RGB
+outliers at alpha 1..4. The approved original-source workflow recovers that
+detail directly at 192px and replaces only those reviewed near-transparent
+RGB values with nearest original alpha-128+ foreground color. No alpha,
+opaque paint, legitimate purple material or other source pixel is changed.
+No new generation, color key, invented geometry or runtime filtering is used.
+The Drum Cordon's topmost faint edge reaches alpha 175; its connected painted
+hook was inspected at source and runtime size, not erased as an edge count.
+
+`tools/prepare_overworld_contract_cutouts.py` and
+`cutout_recovery_20260909/contract_encounters/{recipe,manifest}.json` preserve
+all 52 original hashes, nine original provenance manifests and archived 48px
+atlases. Documented 42/44px fits and centered/bottom registrations are retained.
+Historical raster filters differ: maximum alpha MAE 4.6671 and opaque RGB MAE
+8.14983 are bounded registration evidence, not byte equality. Every installed
+pixel reconstructs exactly from the retained source and recipe. Atlas paths,
+identity routes and the commander's priority over a non-preferred landmark
+remain unchanged. All 1,162 other art rows and every routing table are exact.
+
+Eight focused Python tests pass, including complete reconstruction, purple/
+alpha preservation and fail-closed mapping/crop/anchor/provenance mutations.
+`tests/overworld_contract_cutout_probe.py` uses the existing shared drivers with
+`--batch contract_encounters`. Evidence is under
+`.artifacts/contract_delivery_20260910/`, a new symlink to
+`/tmp/heroes-contract-delivery-20260910`; the file-launched adapter
+`/tmp/heroes-contract-delivery-20260910.py` changes only evidence placement.
+
+- `source_1280`, `source_1920`, `packaged_linux`, `packaged_windows`: 2,899 checks each, zero game
+  runtime errors. Five explicitly detached galleries cover all 52 textures.
+  Nine real authored fronts are exposed by ordinary Day-1 scouting; no direct
+  fog, coordinate, encounter-resolution or commander-priority mutations.
+- The unchanged earned native Medium Day-97 save retains 2,380 blockers and
+  eleven affected but already-resolved encounters. The actual draw index must
+  keep all eleven absent. These are cleared-state controls, not fabricated
+  unresolved-encounter screenshots. Every rendered capture preserves a full
+  actual save/load roundtrip.
+- `before_packaged_linux_terminal`: exact `94138278` predecessor rejects the
+  52 old regions, canvas sizes and independent full-atlas RGBA hashes (156
+  expected failures), with no unrelated failures or runtime errors; exit 1.
+- `contract_encounters_delivery_preservation.json` and its adjacent
+  `verify_contract_encounters_delivery.py`: 60 complete-save comparisons
+  across the four current deliveries and predecessor, exact original
+  placements and matching draw geometry. Only timestamps and fresh authored
+  session IDs are excluded between runs; nothing is excluded within actual
+  save/load roundtrips. All 52 source hashes and all routing tables are exact.
+
+All seven source contact pages, nine original/recovered comparisons, five
+rendered galleries, small/wide authored views and final Linux package views
+were inspected. The selected paintings have clean connected detail; unrelated
+blurred medallions/other pending families in those maps are not accepted here.
+The full-atlas PNG oracle retains Godot's existing alpha-edge processing;
+packages receive hashes and probe code, never loose replacement textures.
+
+All five shared sprite/decorative/movement/fog reports pass at
+`/tmp/heroes-contract-shared-suite-20260910/contract_shared/report.json`.
+`python3 -B tests/validate_repo.py` and `git diff --check` pass. Nine existing
+domain reports were run, not silently relaxed: Dissident passes, while the
+other eight retain **74 failures** concerning old skirmish/objective and
+placement/battle expectations. Running their exact original scripts from
+`94138278` inside its unchanged predecessor PCK reproduces every error and
+exit code, with zero new failures. Evidence:
+`/tmp/heroes-contract-domain-suite-20260910/contract_domain/report.json` and
+`/tmp/heroes-contract-domain-before-20260910/report.json`. These are baseline
+limitations, not nine passing reports or new end-to-end playthroughs.
+
+Official Linux and Windows export/startup checks pass, including Windows Town
+and its 23-step generated-map/build flow. Final exports are
+`/tmp/heroes-contract-linux-20260910/export/` and
+`/tmp/heroes-contract-windows-final-20260910/export/`. Both PCKs contain
+297,968,472 bytes / 5,484 members. Platforms differ only in `project.binary`;
+versus `94138278`, nine texture payloads, the art manifest and UID cache change.
+All 5,473 other members, including compiled gameplay/native/save owners, match.
+Linux SHA-256: `66d9f97d72d315aa1c8e5810e8f75af7e4b5a4af5cc3e019051139c796e30318`.
+Windows SHA-256: `0447501e9e208d9d1d1b328a2c55d7e0c23d2e2276367723c64d623390e1654d`.
+Windows remains headless Wine, not hardware-GPU visual certification.
+
+Initial scout captures correctly failed three earned-vision assertions; the
+final scouts take an additional legal step. Interrupted outer launchers and
+the first incomplete Windows run remain diagnostics. Linux's final game and
+package reports pass, although its outer launcher returned 143 after writing
+them. Full child-process tracing made Wine initialization exceed 180 seconds;
+that failed report is retained as `windows-child-trace-timeout-report.json`.
+The final Windows export without child tracing and Windows cohort probe both
+exit 0; the latter uses a fresh `/dev/shm/heroes-contract-wine-20260910` prefix
+to avoid filling the root disk. Only that batch's
+disposable failed Wine workspace was reset by the official smoke; prior
+evidence, project caches and unrelated untracked retention files are untouched.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The then-remaining 783 rows
 received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 784 repaired/preserved dispositions, leaving
-430 for complete detailed review/recovery. The two veteran mast repairs are now
+The accepted cohorts now cover 836 repaired/preserved dispositions, leaving
+378 for complete detailed review/recovery. The two veteran mast repairs are now
 included only after the separate source/visual/platform closure above.
 All 31 recurring encounters, 30
 recurring resource-site originals, 31 separate claimed dwellings and 34 early
 post-interaction and 40 landmark/objective-state paintings are accepted.
 The 34 command-site originals, all 36 recruitment/habitat dispositions and the
-40 command/training paintings are accepted. Next: remaining encounter landmark,
-artifact and other runtime families, beginning with Dissident Fronts, Standalone
-Contracts and Outer Reach Contracts. The seven
+40 command/training paintings and 52 contract/expedition encounter paintings
+are accepted. Next: remaining faction/signature encounter art, artifacts and
+other runtime families. The seven
 Pactwright/Mireglass states are accepted only by the explicit integrated-edit
 follow-up above; recovery of these originals does not accept different paintings.
 Individual source and native-resolution

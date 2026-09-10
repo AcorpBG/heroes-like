@@ -16615,14 +16615,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Both controlled veteran mast tops restored from the exact original identity sheet, completing all 36 recruitment/habitat dispositions; 34 neighbours and body registration remain byte-identical. Nine Python tests, 2856 checks per source resolution/platform package, 60 full-save comparisons, five shared reports, three domain smokes and both exports pass. 744/1214 accepted, 470 remaining. Continue remaining command/training resource sites. Parent/child remain in_progress; headless Wine is not Windows GPU or release certification.",
+  "currentNotes": "52 contract/expedition paintings accepted: original-source 192px projection and scoped near-transparent RGB repair preserve all alpha, logical registration, identity priority and gameplay. Eight Python tests, 2899 checks per source resolution/platform, 60 complete-save comparisons, five shared reports, repository validation and Linux/Windows exports pass. Nine legacy domain reports have zero new failures; eight retain the same 74 predecessor errors. 836 accepted, 378 pending. Continue remaining faction/signature encounter, artifact and runtime families. Parent remains active. Source evidence and launcher limits: docs/overworld-cutout-quality-report.md.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "art-overworld-cutout-runtime-pool-20260909",
   "currentSliceId": "art-overworld-cutout-runtime-pool-20260909",
-  "currentSliceNotes": "Forty command/training paintings accepted across six original families; 29 source masters receive scoped near-transparent RGB repair, all alpha and opaque paint preserved. Source/small/wide/package visuals, eight Python tests, 2836 checks per delivery, 40 complete saves, six domain/five shared reports and both official exports pass. 784 accepted, 430 pending. Next: remaining encounter/artifact/runtime families, beginning with Dissident Fronts, Standalone Contracts and Outer Reach Contracts. Parent remains active; no gameplay/native/RMG/save/Town or cleanup changes. Evidence: docs/overworld-cutout-quality-report.md.",
+  "currentSliceNotes": "52 contract/expedition paintings accepted: original-source 192px projection and scoped near-transparent RGB repair preserve all alpha, logical registration, identity priority and gameplay. Eight Python tests, 2899 checks per source resolution/platform, 60 complete-save comparisons, five shared reports, repository validation and Linux/Windows exports pass. Nine legacy domain reports have zero new failures; eight retain the same 74 predecessor errors. 836 accepted, 378 pending. Continue remaining faction/signature encounter, artifact and runtime families. Parent remains active. Source evidence and launcher limits: docs/overworld-cutout-quality-report.md.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Remaining Runtime-Pool Cutout Recovery",
-  "currentSliceUpdatedAt": "2026-09-10T00:43:21Z",
+  "currentSliceUpdatedAt": "2026-09-10T04:35:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21932,75 +21932,80 @@
     "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "in_progress",
-    "acceptedCohort": "All 36 recruitment/habitat dispositions accepted after two original-sheet mast-top completions",
+    "acceptedCohort": "52 contract and expedition encounter paintings across nine original atlases",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
-    "runtimeChanges": "Connected missing original-sheet mast paint restored into the same two 192px cells without shifting or shrinking bodies; all 34 neighbouring states, mappings and gameplay/save owners unchanged.",
+    "runtimeChanges": "Original-source 192px projection and 105994 reviewed alpha-1..4 RGB repairs across 30 sources. All 52 original masters, alpha, 42/44px logical fits, identity priority, gameplay and complete saves remain unchanged.",
     "validation": {
-      "python_tests": 9,
-      "source_checks_per_resolution": 2856,
-      "packaged_checks_per_platform": 2856,
+      "python_tests": 8,
+      "source_checks_per_resolution": 2899,
+      "packaged_checks_per_platform": 2899,
       "source_resolutions": [
         "1280x720",
         "1920x1080"
       ],
+      "visually_inspected_affected_authored_fronts": 9,
+      "cleared_native_encounter_controls": 11,
       "full_save_comparisons": 60,
       "existing_sprite_input_route_fog_reports": "5 complete exit-0 passes",
-      "affected_domain_reports": "3 complete exit-0 passes",
+      "affected_domain_reports": "1 pass; 8 retain the exact 74 predecessor failures; zero new regressions",
       "repository_validation": "passed",
       "linux_export": "passed",
-      "windows_export": "passed",
+      "windows_export": "passed including 23-step generated-map/Town flow",
       "windows_limit": "headless Wine; no physical GPU certification",
-      "delivery_preservation": ".artifacts/overworld_cutout_quality_20260909/mast_completion_preservation.json",
-      "earned_controlled_art_capture": "Fog-Keel Mooring after ordinary guard victory, casualty acknowledgement, claim and scouting",
-      "foundry_limit": "Direct starter assault loses normally; preserved terminal save is not claimed-art evidence. Source reconstruction and explicitly detached controlled gallery establish art quality."
+      "launcher_limit": "Linux inner game/package reports pass; outer launcher returned 143 after reports. Final Windows export/probe exit 0. Interrupted runs and child-tracing timeout retained as diagnostics.",
+      "delivery_preservation": ".artifacts/contract_delivery_20260910/contract_encounters_delivery_preservation.json"
     },
-    "accepted_dispositions": 744,
-    "remaining_dispositions": 470,
+    "accepted_dispositions": 836,
+    "remaining_dispositions": 378,
     "pending_visual_repairs": []
   },
   "latestEvidence": {
     "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "in_progress",
-    "acceptedCohort": "All 36 recruitment/habitat dispositions accepted after two original-sheet mast-top completions",
+    "acceptedCohort": "52 contract and expedition encounter paintings across nine original atlases",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
-    "runtimeChanges": "Connected missing original-sheet mast paint restored into the same two 192px cells without shifting or shrinking bodies; all 34 neighbouring states, mappings and gameplay/save owners unchanged.",
+    "runtimeChanges": "Original-source 192px projection and 105994 reviewed alpha-1..4 RGB repairs across 30 sources. All 52 original masters, alpha, 42/44px logical fits, identity priority, gameplay and complete saves remain unchanged.",
     "validation": {
-      "python_tests": 9,
-      "source_checks_per_resolution": 2856,
-      "packaged_checks_per_platform": 2856,
+      "python_tests": 8,
+      "source_checks_per_resolution": 2899,
+      "packaged_checks_per_platform": 2899,
       "source_resolutions": [
         "1280x720",
         "1920x1080"
       ],
+      "visually_inspected_affected_authored_fronts": 9,
+      "cleared_native_encounter_controls": 11,
       "full_save_comparisons": 60,
       "existing_sprite_input_route_fog_reports": "5 complete exit-0 passes",
-      "affected_domain_reports": "3 complete exit-0 passes",
+      "affected_domain_reports": "1 pass; 8 retain the exact 74 predecessor failures; zero new regressions",
       "repository_validation": "passed",
       "linux_export": "passed",
-      "windows_export": "passed",
+      "windows_export": "passed including 23-step generated-map/Town flow",
       "windows_limit": "headless Wine; no physical GPU certification",
-      "delivery_preservation": ".artifacts/overworld_cutout_quality_20260909/mast_completion_preservation.json",
-      "earned_controlled_art_capture": "Fog-Keel Mooring after ordinary guard victory, casualty acknowledgement, claim and scouting",
-      "foundry_limit": "Direct starter assault loses normally; preserved terminal save is not claimed-art evidence. Source reconstruction and explicitly detached controlled gallery establish art quality."
+      "launcher_limit": "Linux inner game/package reports pass; outer launcher returned 143 after reports. Final Windows export/probe exit 0. Interrupted runs and child-tracing timeout retained as diagnostics.",
+      "delivery_preservation": ".artifacts/contract_delivery_20260910/contract_encounters_delivery_preservation.json"
     },
-    "accepted_dispositions": 744,
-    "remaining_dispositions": 470,
+    "accepted_dispositions": 836,
+    "remaining_dispositions": 378,
     "pending_visual_repairs": []
   },
   "latestEvidenceArtifacts": [
     "docs/overworld-cutout-quality-report.md",
-    ".artifacts/overworld_cutout_quality_20260909/mast_completion_preservation.json",
-    ".artifacts/overworld_cutout_quality_20260909/mast_source_1280_final/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/mast_source_1920_final/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/mast_packaged_linux/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/mast_packaged_windows/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/mast_before_packaged_linux/report.json",
-    ".artifacts/full_play_runtime_20260905/mast_shared/report.json",
-    ".artifacts/full_play_runtime_20260905/mast_domain_final/report.json"
+    ".artifacts/contract_delivery_20260910/contract_encounters_delivery_preservation.json",
+    ".artifacts/contract_delivery_20260910/source_1280/report.json",
+    ".artifacts/contract_delivery_20260910/source_1920/report.json",
+    ".artifacts/contract_delivery_20260910/packaged_linux/report.json",
+    ".artifacts/contract_delivery_20260910/packaged_windows/report.json",
+    ".artifacts/contract_delivery_20260910/before_packaged_linux_terminal/report.json",
+    "/tmp/heroes-contract-domain-suite-20260910/contract_domain/report.json",
+    "/tmp/heroes-contract-domain-before-20260910/report.json",
+    "/tmp/heroes-contract-shared-suite-20260910/contract_shared/report.json",
+    "/tmp/heroes-contract-linux-20260910/report.json",
+    "/tmp/heroes-contract-windows-final-20260910/report.json"
   ],
   "latestEvidenceId": "art-overworld-cutout-runtime-pool-20260909",
-  "latestFinding": "Both controlled veteran mast tops restored from the exact original identity sheet, completing all 36 recruitment/habitat dispositions; 34 neighbours and body registration remain byte-identical. Nine Python tests, 2856 checks per source resolution/platform package, 60 full-save comparisons, five shared reports, three domain smokes and both exports pass. 744/1214 accepted, 470 remaining. Continue remaining command/training resource sites. Parent/child remain in_progress; headless Wine is not Windows GPU or release certification.",
+  "latestFinding": "52 contract/expedition paintings accepted: original-source 192px projection and scoped near-transparent RGB repair preserve all alpha, logical registration, identity priority and gameplay. Eight Python tests, 2899 checks per source resolution/platform, 60 complete-save comparisons, five shared reports, repository validation and Linux/Windows exports pass. Nine legacy domain reports have zero new failures; eight retain the same 74 predecessor errors. 836 accepted, 378 pending. Continue remaining faction/signature encounter, artifact and runtime families. Parent remains active. Source evidence and launcher limits: docs/overworld-cutout-quality-report.md.",
   "metrics": {
     "scope": "Historical full-match checkpoint metrics retained below; these are not current release metrics. Current art-goal acceptance is in latestEvidence and validation.",
     "audit_only": false,
@@ -22220,10 +22225,13 @@
         "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch command_sites --label <fresh> --platform <linux|windows> --binary <official-export-binary> --pack <matching-release-pck> --resolution 1280x720",
         "python3 -B tests/test_overworld_recruitment_cutouts.py",
         "python3 -B tests/overworld_cutout_batch_regression.py --batch recruitment_sites --label <fresh> --resolution <1280x720|1920x1080>",
-        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch recruitment_sites --label <fresh> --platform <linux|windows> --binary <official-export-binary> --pack <matching-release-pck> --resolution 1280x720"
+        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch recruitment_sites --label <fresh> --platform <linux|windows> --binary <official-export-binary> --pack <matching-release-pck> --resolution 1280x720",
+        "python3 -B -m unittest discover -s tests -p test_overworld_contract_cutouts.py",
+        "python3 -B tests/overworld_cutout_batch_regression.py --batch contract_encounters --label <fresh> --resolution <1280x720|1920x1080>",
+        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch contract_encounters --label <fresh> --platform <linux|windows> --binary <official-export-binary> --pack <matching-release-pck> --resolution 1280x720"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-10T03:51:41Z",
+      "updatedAt": "2026-09-10T04:35:08Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22261,9 +22269,11 @@
         "tools/prepare_overworld_command_cutouts.py and command_sites source/trim/runtime packet; 34 unchanged RGBA originals, three historical atlases and exact original visible-pixel registration",
         "tests/test_overworld_command_cutouts.py and tests/overworld_command_cutout_probe.py; all 34 identities, legal Tollbrand/Cinderquill/Quench scouting, full save/draw preservation and both platform packages",
         "tools/prepare_overworld_recruitment_cutouts.py and recruitment_sites source/generated/trim/runtime packet; 36 runtime updates with six original generated physical state details, two original-sheet mast-top repairs completed; all 34 other cohort paintings preserved",
-        "tests/test_overworld_recruitment_cutouts.py and recruitment_sites source/package probes; legal scouting, all state routes, complete-save and cross-platform preservation"
+        "tests/test_overworld_recruitment_cutouts.py and recruitment_sites source/package probes; legal scouting, all state routes, complete-save and cross-platform preservation",
+        "tools/prepare_overworld_contract_cutouts.py and contract_encounters source/generated/trim/runtime packet; 52 same-identity original paintings, nine archived atlases, immutable source/alpha and documented registrations",
+        "tests/test_overworld_contract_cutouts.py and tests/overworld_contract_cutout_probe.py; exact identity/render priority, ordinary scouting, cleared native state, full-save and cross-platform preservation"
       ],
-      "notes": "Forty command/training paintings accepted across six original families; 29 source masters receive scoped near-transparent RGB repair, all alpha and opaque paint preserved. Source/small/wide/package visuals, eight Python tests, 2836 checks per delivery, 40 complete saves, six domain/five shared reports and both official exports pass. 784 accepted, 430 pending. Next: remaining encounter/artifact/runtime families, beginning with Dissident Fronts, Standalone Contracts and Outer Reach Contracts. Parent remains active; no gameplay/native/RMG/save/Town or cleanup changes. Evidence: docs/overworld-cutout-quality-report.md.",
+      "notes": "52 contract/expedition paintings accepted: original-source 192px projection and scoped near-transparent RGB repair preserve all alpha, logical registration, identity priority and gameplay. Eight Python tests, 2899 checks per source resolution/platform, 60 complete-save comparisons, five shared reports, repository validation and Linux/Windows exports pass. Nine legacy domain reports have zero new failures; eight retain the same 74 predecessor errors. 836 accepted, 378 pending. Continue remaining faction/signature encounter, artifact and runtime families. Parent remains active. Source evidence and launcher limits: docs/overworld-cutout-quality-report.md.",
       "startedAt": "2026-09-09T16:04:51Z"
     },
     {
@@ -110872,8 +110882,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "470 runtime rows still require detailed source/visual review and any confirmed repairs. Next: remaining command/training resource-site families, starting with Commander Doctrine Expeditions and Eight Commanders Proving Roads. Both veteran mast-top repairs are now accepted; no full-pool or release-readiness claim.",
-  "remainingWork": "470 runtime rows still require detailed source/visual review and any confirmed repairs. Next: remaining command/training resource-site families, starting with Commander Doctrine Expeditions and Eight Commanders Proving Roads. Both veteran mast-top repairs are now accepted; no full-pool or release-readiness claim.",
+  "remainingGap": "378 runtime rows still require detailed source/visual review and confirmed repairs. Next: remaining faction/signature encounter art, artifacts and other runtime families. This accepted 52-painting checkpoint does not complete the full pool or certify release readiness.",
+  "remainingWork": "378 runtime rows still require detailed source/visual review and confirmed repairs. Next: remaining faction/signature encounter art, artifacts and other runtime families. This accepted 52-painting checkpoint does not complete the full pool or certify release readiness.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -111411,7 +111421,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "original_sheet_mast_completion_accepted_parent_in_progress",
+  "result": "contract_encounter_original_recovery_accepted_parent_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -111512,40 +111522,39 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Both controlled veteran mast tops restored from the exact original identity sheet, completing all 36 recruitment/habitat dispositions; 34 neighbours and body registration remain byte-identical. Nine Python tests, 2856 checks per source resolution/platform package, 60 full-save comparisons, five shared reports, three domain smokes and both exports pass. 744/1214 accepted, 470 remaining. Continue remaining command/training resource sites. Parent/child remain in_progress; headless Wine is not Windows GPU or release certification.",
+  "summary": "52 contract/expedition paintings accepted: original-source 192px projection and scoped near-transparent RGB repair preserve all alpha, logical registration, identity priority and gameplay. Eight Python tests, 2899 checks per source resolution/platform, 60 complete-save comparisons, five shared reports, repository validation and Linux/Windows exports pass. Nine legacy domain reports have zero new failures; eight retain the same 74 predecessor errors. 836 accepted, 378 pending. Continue remaining faction/signature encounter, artifact and runtime families. Parent remains active. Source evidence and launcher limits: docs/overworld-cutout-quality-report.md.",
   "taskId": "10236",
-  "updatedAt": "2026-09-10T03:51:41Z",
+  "updatedAt": "2026-09-10T04:35:08Z",
   "validation": {
     "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
     "status": "in_progress",
-    "acceptedCohort": "34 accepted recruitment/habitat dispositions from 36 runtime updates; two mast repairs pending",
+    "acceptedCohort": "52 contract and expedition encounter paintings across nine original atlases",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
-    "runtimeChanges": "Original-source 192px projection, scoped low-alpha RGB/debris repair and six generated physically integrated controlled states. Logical geometry, all state routes and gameplay/save owners unchanged.",
+    "runtimeChanges": "Original-source 192px projection and 105994 reviewed alpha-1..4 RGB repairs across 30 sources. All 52 original masters, alpha, 42/44px logical fits, identity priority, gameplay and complete saves remain unchanged.",
     "validation": {
-      "python_tests": 7,
-      "source_checks_per_resolution": 2830,
-      "packaged_checks_per_platform": 2830,
+      "python_tests": 8,
+      "source_checks_per_resolution": 2899,
+      "packaged_checks_per_platform": 2899,
       "source_resolutions": [
         "1280x720",
         "1920x1080"
       ],
-      "visually_inspected_affected_source_views": 9,
-      "full_save_comparisons": 50,
+      "visually_inspected_affected_authored_fronts": 9,
+      "cleared_native_encounter_controls": 11,
+      "full_save_comparisons": 60,
       "existing_sprite_input_route_fog_reports": "5 complete exit-0 passes",
-      "affected_domain_reports": "3 complete exit-0 passes",
+      "affected_domain_reports": "1 pass; 8 retain the exact 74 predecessor failures; zero new regressions",
       "repository_validation": "passed",
       "linux_export": "passed",
-      "windows_export": "passed",
+      "windows_export": "passed including 23-step generated-map/Town flow",
       "windows_limit": "headless Wine; no physical GPU certification",
-      "delivery_preservation": ".artifacts/overworld_cutout_quality_20260909/recruitment_sites_delivery_preservation.json"
+      "launcher_limit": "Linux inner game/package reports pass; outer launcher returned 143 after reports. Final Windows export/probe exit 0. Interrupted runs and child-tracing timeout retained as diagnostics.",
+      "delivery_preservation": ".artifacts/contract_delivery_20260910/contract_encounters_delivery_preservation.json"
     },
-    "accepted_dispositions": 742,
-    "remaining_dispositions": 472,
-    "pending_visual_repairs": [
-      "resource_site_veteran_three_gauge_chapter_foundry_controlled",
-      "resource_site_veteran_fog_keel_lastwatch_mooring_controlled"
-    ]
+    "accepted_dispositions": 836,
+    "remaining_dispositions": 378,
+    "pending_visual_repairs": []
   },
   "validationHistory": [
     {

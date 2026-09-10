@@ -44225,6 +44225,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(len(training_recoveries) == 40, errors, "All 40 training paintings must reconstruct from original paint, scoped RGB repair and historical registration")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Training cutout recovery failed closed: {exc}")
+    contract_recoveries = {}
+    try:
+        contract_spec = importlib.util.spec_from_file_location("contract_cutout_validation", ROOT / "tools/prepare_overworld_contract_cutouts.py")
+        contract_module = importlib.util.module_from_spec(contract_spec)
+        contract_spec.loader.exec_module(contract_module)
+        contract_recoveries = contract_module.validate_assets()
+        ensure(len(contract_recoveries) == 52, errors, "All 52 contract paintings must reconstruct from original paint, scoped RGB repair and historical registration")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Contract cutout recovery failed closed: {exc}")
     recruitment_recoveries = {}
     try:
         recruitment_spec = importlib.util.spec_from_file_location("recruitment_cutout_validation", ROOT / "tools/prepare_overworld_recruitment_cutouts.py")
@@ -44426,6 +44435,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = tuple(entry["atlas_size"])
             if asset_id in training_recoveries:
                 expected_canvas = (training_module.FAMILIES[Path(entry['path']).stem.removesuffix('_atlas')] * 192, 192)
+            if asset_id in contract_recoveries:
+                expected_canvas = (contract_module.FAMILIES[Path(entry['path']).stem.removesuffix('_atlas')] * 192, 192)
             if asset_id in route_recoveries:
                 expected_canvas = (route_module.FAMILIES[Path(entry['path']).stem.removesuffix('_atlas')][0] * 192, 192)
             ensure((width, height) == expected_canvas, errors, f"Overworld runtime object asset {asset_id} must use the {expected_canvas[0]} canvas, found {width}x{height}")
@@ -50827,6 +50838,8 @@ def validate_six_faction_dissident_fronts(errors: list[str]) -> None:
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "dissident_fronts"
     source_manifest_path = source_dir / "manifest.json"
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "encounters" / "dissident_fronts" / "dissident_fronts_atlas.png"
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/contract_encounters/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
+    ensure(png_size(atlas_path) == (1152, 192), errors, "Recovered contract atlas must retain its source-density canvas")
     report_script_path = ROOT / "tests" / "six_faction_dissident_fronts_report.gd"
     report_scene_path = ROOT / "tests" / "six_faction_dissident_fronts_report.tscn"
     required_paths = (OVERWORLD_ART_MANIFEST_PATH, source_manifest_path, atlas_path, report_script_path, report_scene_path)
@@ -50835,8 +50848,8 @@ def validate_six_faction_dissident_fronts(errors: list[str]) -> None:
     if not all(path.is_file() for path in required_paths):
         return
 
-    atlas_payload = atlas_path.read_bytes()
-    ensure(png_size(atlas_path) == (288, 48), errors, "Dissident-front atlas must remain a compact 288x48 strip")
+    atlas_payload = historical_atlas_path.read_bytes()
+    ensure(png_size(historical_atlas_path) == (288, 48), errors, "Dissident-front atlas must remain a compact 288x48 strip")
     ensure(hashlib.sha256(atlas_payload).hexdigest() == "5629ffe1f45e311c6994fcc83d781832bb6a6cae04f526e02e12744c04ee3342" and len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6}, errors, "Dissident-front atlas bytes or alpha changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Dissident-front atlas import metadata is missing")
 
@@ -50883,7 +50896,7 @@ def validate_six_faction_dissident_fronts(errors: list[str]) -> None:
         entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
         source_res = f"res://art/overworld/source/generated/encounters/dissident_fronts/{stem}_source.png"
         ensure(identity_sprites.get(encounter_id) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/dissident_fronts/dissident_fronts_atlas.png", errors, f"{encounter_id} exact live art mapping is missing")
-        ensure(entry.get("atlas_region") == region and entry.get("atlas_size") == [288, 48] and entry.get("source_generated") == source_res, errors, f"{encounter_id} atlas region or source ownership changed")
+        ensure(entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [1152, 192] and entry.get("source_generated") == source_res, errors, f"{encounter_id} atlas region or source ownership changed")
         ensure(entry.get("assigned_encounter_id") == encounter_id and entry.get("assigned_faction_id") == faction_id and len(str(entry.get("accessible_description", "")).strip()) >= 24, errors, f"{encounter_id} art assignment or non-color description changed")
         source_path = res_path_to_disk(source_res)
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{encounter_id} must retain its imported high-resolution generated source")
@@ -50926,6 +50939,8 @@ def validate_six_faction_standalone_contracts(errors: list[str]) -> None:
     }
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "standalone_contracts"
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "encounters" / "standalone_contracts" / "standalone_contracts_atlas.png"
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/contract_encounters/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
+    ensure(png_size(atlas_path) == (1152, 192), errors, "Recovered contract atlas must retain its source-density canvas")
     source_manifest_path = source_dir / "manifest.json"
     report_script_path = ROOT / "tests" / "six_faction_standalone_contracts_report.gd"
     report_scene_path = ROOT / "tests" / "six_faction_standalone_contracts_report.tscn"
@@ -50940,8 +50955,8 @@ def validate_six_faction_standalone_contracts(errors: list[str]) -> None:
     if not all(path.is_file() for path in required_paths):
         return
 
-    ensure(png_size(atlas_path) == (288, 48), errors, "Standalone-contract atlas must remain a compact 288x48 strip")
-    atlas_payload = atlas_path.read_bytes()
+    ensure(png_size(historical_atlas_path) == (288, 48), errors, "Standalone-contract atlas must remain a compact 288x48 strip")
+    atlas_payload = historical_atlas_path.read_bytes()
     atlas_sha = hashlib.sha256(atlas_payload).hexdigest()
     ensure(atlas_sha == "8c2f0bccbe8567341ece0abcff1607b989043f54f91e3588a82ce26f5c62d0d0" and len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6}, errors, "Standalone-contract atlas bytes or alpha changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Standalone-contract atlas import metadata is missing")
@@ -50985,7 +51000,7 @@ def validate_six_faction_standalone_contracts(errors: list[str]) -> None:
         ensure(rewards.get("gold") == 210 and rewards.get("experience") == 220 and rewards.get(rare_id) == 1, errors, f"{encounter_id} reward contract changed")
         entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
         source_res = f"res://art/overworld/source/generated/encounters/standalone_contracts/{stem}_source.png"
-        ensure(identity_sprites.get(encounter_id) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/standalone_contracts/standalone_contracts_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [288, 48], errors, f"{encounter_id} exact atlas mapping is missing")
+        ensure(identity_sprites.get(encounter_id) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/standalone_contracts/standalone_contracts_atlas.png" and entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [1152, 192], errors, f"{encounter_id} exact atlas mapping is missing")
         ensure(entry.get("source_generated") == source_res and entry.get("assigned_encounter_id") == encounter_id and len(str(entry.get("accessible_description", "")).strip()) >= 24, errors, f"{encounter_id} art ownership or description changed")
         source_path = res_path_to_disk(source_res)
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{encounter_id} generated source or import metadata is missing")
@@ -51033,6 +51048,8 @@ def validate_three_faction_outer_reach_contracts(errors: list[str]) -> None:
     }
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "outer_reach_contracts"
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "encounters" / "outer_reach_contracts" / "outer_reach_contracts_atlas.png"
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/contract_encounters/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
+    ensure(png_size(atlas_path) == (1152, 192), errors, "Recovered contract atlas must retain its source-density canvas")
     source_manifest_path = source_dir / "manifest.json"
     report_script_path = ROOT / "tests" / "three_faction_outer_reach_contracts_report.gd"
     report_scene_path = ROOT / "tests" / "three_faction_outer_reach_contracts_report.tscn"
@@ -51042,9 +51059,9 @@ def validate_three_faction_outer_reach_contracts(errors: list[str]) -> None:
     if not all(path.is_file() for path in required_paths):
         return
 
-    atlas_payload = atlas_path.read_bytes()
+    atlas_payload = historical_atlas_path.read_bytes()
     atlas_sha = hashlib.sha256(atlas_payload).hexdigest()
-    ensure(png_size(atlas_path) == (288, 48) and atlas_sha == "4ee0c4402661948ccb9734a4662b4f818c2091c985892db89f8e3faee4ac2011", errors, "Outer-reach atlas bytes or compact dimensions changed")
+    ensure(png_size(historical_atlas_path) == (288, 48) and atlas_sha == "4ee0c4402661948ccb9734a4662b4f818c2091c985892db89f8e3faee4ac2011", errors, "Outer-reach atlas bytes or compact dimensions changed")
     ensure(len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6} and Path(f"{atlas_path}.import").is_file(), errors, "Outer-reach atlas alpha or import metadata is missing")
 
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
@@ -51084,7 +51101,7 @@ def validate_three_faction_outer_reach_contracts(errors: list[str]) -> None:
         ensure(rewards.get("gold") == 210 and rewards.get("experience") == 220 and rewards.get(rare_id) == 1, errors, f"{encounter_id} reward contract changed")
         entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
         source_res = f"res://art/overworld/source/generated/encounters/outer_reach_contracts/{stem}_source.png"
-        ensure(identity_sprites.get(encounter_id) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/outer_reach_contracts/outer_reach_contracts_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [288, 48], errors, f"{encounter_id} exact atlas mapping is missing")
+        ensure(identity_sprites.get(encounter_id) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/outer_reach_contracts/outer_reach_contracts_atlas.png" and entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [1152, 192], errors, f"{encounter_id} exact atlas mapping is missing")
         ensure(entry.get("source_generated") == source_res and entry.get("assigned_encounter_id") == encounter_id and len(str(entry.get("accessible_description", "")).strip()) >= 24, errors, f"{encounter_id} art ownership or description changed")
         source_path = res_path_to_disk(source_res)
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{encounter_id} generated source or import metadata is missing")
@@ -51123,6 +51140,8 @@ def validate_mireclaw_sunvault_frontier_contracts(errors: list[str]) -> None:
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "mire_sun_contracts"
     source_manifest_path = source_dir / "manifest.json"
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "encounters" / "mire_sun_contracts" / "mire_sun_contracts_atlas.png"
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/contract_encounters/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
+    ensure(png_size(atlas_path) == (768, 192), errors, "Recovered contract atlas must retain its source-density canvas")
     report_script_path = ROOT / "tests" / "mireclaw_sunvault_frontier_contracts_report.gd"
     report_scene_path = ROOT / "tests" / "mireclaw_sunvault_frontier_contracts_report.tscn"
     required_paths = (source_manifest_path, atlas_path, report_script_path, report_scene_path)
@@ -51131,9 +51150,9 @@ def validate_mireclaw_sunvault_frontier_contracts(errors: list[str]) -> None:
     if not all(path.is_file() for path in required_paths):
         return
 
-    atlas_payload = atlas_path.read_bytes()
+    atlas_payload = historical_atlas_path.read_bytes()
     atlas_sha = hashlib.sha256(atlas_payload).hexdigest()
-    ensure(png_size(atlas_path) == (192, 48) and atlas_sha == "4f3bf471fe1706cd74cd399412127dc85c7537bbfaad150893d815490c953d87", errors, "Mireclaw/Sunvault contract atlas bytes or compact dimensions changed")
+    ensure(png_size(historical_atlas_path) == (192, 48) and atlas_sha == "4f3bf471fe1706cd74cd399412127dc85c7537bbfaad150893d815490c953d87", errors, "Mireclaw/Sunvault contract atlas bytes or compact dimensions changed")
     ensure(len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6} and Path(f"{atlas_path}.import").is_file(), errors, "Mireclaw/Sunvault contract atlas alpha or import metadata is missing")
 
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
@@ -51172,7 +51191,7 @@ def validate_mireclaw_sunvault_frontier_contracts(errors: list[str]) -> None:
         ensure(rewards.get("gold") == 210 and rewards.get("experience") == 220 and rewards.get(rare_id) == 1, errors, f"{encounter_id} reward contract changed")
         entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
         source_res = f"res://art/overworld/source/generated/encounters/mire_sun_contracts/{stem}_source.png"
-        ensure(identity_sprites.get(encounter_id) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/mire_sun_contracts/mire_sun_contracts_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [192, 48], errors, f"{encounter_id} exact atlas mapping is missing")
+        ensure(identity_sprites.get(encounter_id) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/mire_sun_contracts/mire_sun_contracts_atlas.png" and entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [768, 192], errors, f"{encounter_id} exact atlas mapping is missing")
         ensure(entry.get("source_generated") == source_res and entry.get("assigned_encounter_id") == encounter_id and len(str(entry.get("accessible_description", "")).strip()) >= 24, errors, f"{encounter_id} art ownership or description changed")
         source_path = res_path_to_disk(source_res)
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{encounter_id} generated source or import metadata is missing")
@@ -51214,6 +51233,8 @@ def validate_six_faction_ascendant_companies(errors: list[str]) -> None:
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "ascendant_companies"
     source_manifest_path = source_dir / "manifest.json"
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "encounters" / "ascendant_companies" / "ascendant_companies_atlas.png"
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/contract_encounters/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
+    ensure(png_size(atlas_path) == (1152, 192), errors, "Recovered contract atlas must retain its source-density canvas")
     report_script_path = ROOT / "tests" / "six_faction_ascendant_companies_report.gd"
     report_scene_path = ROOT / "tests" / "six_faction_ascendant_companies_report.tscn"
     required_paths = (source_manifest_path, atlas_path, report_script_path, report_scene_path)
@@ -51222,9 +51243,9 @@ def validate_six_faction_ascendant_companies(errors: list[str]) -> None:
     if not all(path.is_file() for path in required_paths):
         return
 
-    atlas_payload = atlas_path.read_bytes()
+    atlas_payload = historical_atlas_path.read_bytes()
     atlas_sha = hashlib.sha256(atlas_payload).hexdigest()
-    ensure(png_size(atlas_path) == (288, 48) and atlas_sha == "9a856946c5dff74c3dfb2d7f97f7139b529913eef64e378243224fcd66b9baa5", errors, "Ascendant-company atlas bytes or compact dimensions changed")
+    ensure(png_size(historical_atlas_path) == (288, 48) and atlas_sha == "9a856946c5dff74c3dfb2d7f97f7139b529913eef64e378243224fcd66b9baa5", errors, "Ascendant-company atlas bytes or compact dimensions changed")
     ensure(len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6} and Path(f"{atlas_path}.import").is_file(), errors, "Ascendant-company atlas alpha or import metadata is missing")
 
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
@@ -51286,7 +51307,7 @@ def validate_six_faction_ascendant_companies(errors: list[str]) -> None:
         ensure(rewards.get("gold") == 240 and rewards.get("experience") == 260 and rewards.get(rare_id) == 1, errors, f"{encounter_id} reward contract changed")
         entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
         source_res = f"res://art/overworld/source/generated/encounters/ascendant_companies/{stem}_source.png"
-        ensure(identity_sprites.get(encounter_id) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/ascendant_companies/ascendant_companies_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [288, 48], errors, f"{encounter_id} exact atlas mapping is missing")
+        ensure(identity_sprites.get(encounter_id) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/ascendant_companies/ascendant_companies_atlas.png" and entry.get("atlas_region") == [v * 4 for v in region] and entry.get("atlas_size") == [1152, 192], errors, f"{encounter_id} exact atlas mapping is missing")
         ensure(entry.get("source_generated") == source_res and entry.get("assigned_encounter_id") == encounter_id and entry.get("assigned_faction_id") == enemy_faction_id and len(str(entry.get("accessible_description", "")).strip()) >= 40, errors, f"{encounter_id} art ownership or non-color description changed")
         source_path = res_path_to_disk(source_res)
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{encounter_id} generated source or import metadata is missing")
@@ -51362,6 +51383,8 @@ def validate_six_faction_waywatch_trials(errors: list[str]) -> None:
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "waywatch_trials"
     source_manifest_path = source_dir / "manifest.json"
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "encounters" / "waywatch_trials" / "waywatch_trials_atlas.png"
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/contract_encounters/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
+    ensure(png_size(atlas_path) == (1152, 192), errors, "Recovered contract atlas must retain its source-density canvas")
     report_script_path = ROOT / "tests" / "six_faction_waywatch_trials_report.gd"
     report_scene_path = ROOT / "tests" / "six_faction_waywatch_trials_report.tscn"
     required_paths = (source_manifest_path, atlas_path, report_script_path, report_scene_path)
@@ -51370,9 +51393,9 @@ def validate_six_faction_waywatch_trials(errors: list[str]) -> None:
     if not all(path.is_file() for path in required_paths):
         return
 
-    atlas_payload = atlas_path.read_bytes()
+    atlas_payload = historical_atlas_path.read_bytes()
     atlas_sha = hashlib.sha256(atlas_payload).hexdigest()
-    ensure(png_size(atlas_path) == (288, 48) and atlas_sha == "2b6795ff14bc60f77831769912d3240997983fea6298910a7eea36272748a123", errors, "Waywatch-trial atlas bytes or compact dimensions changed")
+    ensure(png_size(historical_atlas_path) == (288, 48) and atlas_sha == "2b6795ff14bc60f77831769912d3240997983fea6298910a7eea36272748a123", errors, "Waywatch-trial atlas bytes or compact dimensions changed")
     ensure(len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6} and Path(f"{atlas_path}.import").is_file(), errors, "Waywatch-trial atlas alpha or import metadata is missing")
 
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
@@ -51434,7 +51457,7 @@ def validate_six_faction_waywatch_trials(errors: list[str]) -> None:
         asset_id = contract["asset"]
         entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
         source_res = f"res://art/overworld/source/generated/encounters/waywatch_trials/{contract['stem']}_source.png"
-        ensure(identity_sprites.get(contract["encounter"]) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/waywatch_trials/waywatch_trials_atlas.png" and entry.get("atlas_region") == contract["region"] and entry.get("atlas_size") == [288, 48], errors, f"{contract['encounter']} exact atlas mapping is missing")
+        ensure(identity_sprites.get(contract["encounter"]) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/waywatch_trials/waywatch_trials_atlas.png" and entry.get("atlas_region") == [v * 4 for v in contract["region"]] and entry.get("atlas_size") == [1152, 192], errors, f"{contract['encounter']} exact atlas mapping is missing")
         ensure(entry.get("source_generated") == source_res and entry.get("assigned_encounter_id") == contract["encounter"] and entry.get("assigned_affiliation") == "neutral" and len(str(entry.get("accessible_description", "")).strip()) >= 40, errors, f"{contract['encounter']} art ownership or description changed")
         source_path = res_path_to_disk(source_res)
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{contract['encounter']} generated source or import metadata is missing")
@@ -51518,6 +51541,8 @@ def validate_six_faction_spellwright_expeditions(errors: list[str]) -> None:
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "spellwright_expeditions"
     source_manifest_path = source_dir / "manifest.json"
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "encounters" / "spellwright_expeditions" / "spellwright_expeditions_atlas.png"
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/contract_encounters/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
+    ensure(png_size(atlas_path) == (1152, 192), errors, "Recovered contract atlas must retain its source-density canvas")
     report_script_path = ROOT / "tests" / "six_faction_spellwright_expeditions_report.gd"
     report_scene_path = ROOT / "tests" / "six_faction_spellwright_expeditions_report.tscn"
     required_paths = (source_manifest_path, atlas_path, report_script_path, report_scene_path)
@@ -51526,9 +51551,9 @@ def validate_six_faction_spellwright_expeditions(errors: list[str]) -> None:
     if not all(path.is_file() for path in required_paths):
         return
 
-    atlas_payload = atlas_path.read_bytes()
+    atlas_payload = historical_atlas_path.read_bytes()
     atlas_sha = hashlib.sha256(atlas_payload).hexdigest()
-    ensure(png_size(atlas_path) == (288, 48) and atlas_sha == "b70a9ee778b0a45ba5ed747e3e504ba780851352a772dc0ef9177af5d77027c8", errors, "Spellwright-expedition atlas bytes or dimensions changed")
+    ensure(png_size(historical_atlas_path) == (288, 48) and atlas_sha == "b70a9ee778b0a45ba5ed747e3e504ba780851352a772dc0ef9177af5d77027c8", errors, "Spellwright-expedition atlas bytes or dimensions changed")
     ensure(len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6} and Path(f"{atlas_path}.import").is_file(), errors, "Spellwright-expedition atlas alpha or import metadata is missing")
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
@@ -51591,7 +51616,7 @@ def validate_six_faction_spellwright_expeditions(errors: list[str]) -> None:
         asset_id = contract["asset"]
         entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
         source_res = f"res://art/overworld/source/generated/encounters/spellwright_expeditions/{contract['stem']}_source.png"
-        ensure(identity_sprites.get(contract["encounter"]) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/spellwright_expeditions/spellwright_expeditions_atlas.png" and entry.get("atlas_region") == contract["region"] and entry.get("atlas_size") == [288, 48], errors, f"{contract['encounter']} exact atlas mapping is missing")
+        ensure(identity_sprites.get(contract["encounter"]) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/spellwright_expeditions/spellwright_expeditions_atlas.png" and entry.get("atlas_region") == [v * 4 for v in contract["region"]] and entry.get("atlas_size") == [1152, 192], errors, f"{contract['encounter']} exact atlas mapping is missing")
         ensure(entry.get("source_generated") == source_res and entry.get("assigned_encounter_id") == contract["encounter"] and entry.get("assigned_affiliation") == "neutral" and len(str(entry.get("accessible_description", "")).strip()) >= 40, errors, f"{contract['encounter']} art ownership or description changed")
         source_path = res_path_to_disk(source_res)
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{contract['encounter']} generated source or import metadata is missing")
@@ -51673,6 +51698,8 @@ def validate_six_faction_ritual_relay_circuits(errors: list[str]) -> None:
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "ritual_relay_circuits"
     source_manifest_path = source_dir / "manifest.json"
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "encounters" / "ritual_relay_circuits" / "ritual_relay_circuits_atlas.png"
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/contract_encounters/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
+    ensure(png_size(atlas_path) == (1152, 192), errors, "Recovered contract atlas must retain its source-density canvas")
     report_script_path = ROOT / "tests" / "six_faction_ritual_relay_circuits_report.gd"
     report_scene_path = ROOT / "tests" / "six_faction_ritual_relay_circuits_report.tscn"
     required_paths = (source_manifest_path, atlas_path, report_script_path, report_scene_path)
@@ -51681,9 +51708,9 @@ def validate_six_faction_ritual_relay_circuits(errors: list[str]) -> None:
     if not all(path.is_file() for path in required_paths):
         return
 
-    atlas_payload = atlas_path.read_bytes()
+    atlas_payload = historical_atlas_path.read_bytes()
     atlas_sha = hashlib.sha256(atlas_payload).hexdigest()
-    ensure(png_size(atlas_path) == (288, 48) and atlas_sha == "b9fbf72ae9aad2c5791bdecae7b15dad5cd88774706e6ec60a5979a4cac459f8", errors, "Ritual-relay atlas bytes or dimensions changed")
+    ensure(png_size(historical_atlas_path) == (288, 48) and atlas_sha == "b9fbf72ae9aad2c5791bdecae7b15dad5cd88774706e6ec60a5979a4cac459f8", errors, "Ritual-relay atlas bytes or dimensions changed")
     ensure(len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6} and Path(f"{atlas_path}.import").is_file(), errors, "Ritual-relay atlas alpha or import metadata is missing")
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
@@ -51746,7 +51773,7 @@ def validate_six_faction_ritual_relay_circuits(errors: list[str]) -> None:
         asset_id = contract["asset"]
         entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
         source_res = f"res://art/overworld/source/generated/encounters/ritual_relay_circuits/{contract['stem']}_source.png"
-        ensure(identity_sprites.get(contract["encounter"]) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/ritual_relay_circuits/ritual_relay_circuits_atlas.png" and entry.get("atlas_region") == contract["region"] and entry.get("atlas_size") == [288, 48], errors, f"{contract['encounter']} exact atlas mapping is missing")
+        ensure(identity_sprites.get(contract["encounter"]) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/ritual_relay_circuits/ritual_relay_circuits_atlas.png" and entry.get("atlas_region") == [v * 4 for v in contract["region"]] and entry.get("atlas_size") == [1152, 192], errors, f"{contract['encounter']} exact atlas mapping is missing")
         ensure(entry.get("source_generated") == source_res and entry.get("assigned_encounter_id") == contract["encounter"] and entry.get("assigned_affiliation") == "neutral" and len(str(entry.get("accessible_description", "")).strip()) >= 40, errors, f"{contract['encounter']} art ownership or description changed")
         source_path = res_path_to_disk(source_res)
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{contract['encounter']} generated source or import metadata is missing")
@@ -51822,6 +51849,8 @@ def validate_six_faction_grand_convergence_marches(errors: list[str]) -> None:
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "grand_convergence_marches"
     source_manifest_path = source_dir / "manifest.json"
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "encounters" / "grand_convergence_marches" / "grand_convergence_marches_atlas.png"
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/contract_encounters/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
+    ensure(png_size(atlas_path) == (1152, 192), errors, "Recovered contract atlas must retain its source-density canvas")
     report_script_path = ROOT / "tests" / "six_faction_grand_convergence_marches_report.gd"
     report_scene_path = ROOT / "tests" / "six_faction_grand_convergence_marches_report.tscn"
     required_paths = (source_manifest_path, atlas_path, report_script_path, report_scene_path)
@@ -51830,8 +51859,8 @@ def validate_six_faction_grand_convergence_marches(errors: list[str]) -> None:
     if not all(path.is_file() for path in required_paths):
         return
 
-    atlas_payload = atlas_path.read_bytes()
-    ensure(png_size(atlas_path) == (288, 48), errors, "Grand-convergence atlas must remain a compact 288x48 strip")
+    atlas_payload = historical_atlas_path.read_bytes()
+    ensure(png_size(historical_atlas_path) == (288, 48), errors, "Grand-convergence atlas must remain a compact 288x48 strip")
     ensure(hashlib.sha256(atlas_payload).hexdigest() == "42a0912d11cfd3184e55d1dac6343cccf9902dfa941ad791260cdf5ce696ea29" and len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6}, errors, "Grand-convergence atlas bytes or alpha changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Grand-convergence atlas import metadata is missing")
 
@@ -51886,7 +51915,7 @@ def validate_six_faction_grand_convergence_marches(errors: list[str]) -> None:
         asset_id = contract["asset"]
         entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
         source_res = f"res://art/overworld/source/generated/encounters/grand_convergence_marches/{contract['stem']}_source.png"
-        ensure(identity_sprites.get(contract["encounter"]) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/grand_convergence_marches/grand_convergence_marches_atlas.png" and entry.get("atlas_region") == contract["region"] and entry.get("atlas_size") == [288, 48], errors, f"{contract['encounter']} exact atlas mapping is missing")
+        ensure(identity_sprites.get(contract["encounter"]) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/grand_convergence_marches/grand_convergence_marches_atlas.png" and entry.get("atlas_region") == [v * 4 for v in contract["region"]] and entry.get("atlas_size") == [1152, 192], errors, f"{contract['encounter']} exact atlas mapping is missing")
         ensure(entry.get("source_generated") == source_res and entry.get("assigned_encounter_id") == contract["encounter"] and entry.get("assigned_affiliation") == contract["affiliation"] and len(str(entry.get("accessible_description", "")).strip()) >= 40, errors, f"{contract['encounter']} art ownership or description changed")
         source_path = res_path_to_disk(source_res)
         ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{contract['encounter']} generated source or import metadata is missing")
