@@ -1,0 +1,248 @@
+{
+  "schema_id": "final_family_cutout_recovery_v1",
+  "recipe_sha256": "6f03953e74372316d82369929ede331bb5726f8199e6961ce474958bb3e4a7df",
+  "tool_sha256": "5897bd0210b264ca4d20158226f7a29a81004107c0ecbe483deafb009e57b43b",
+  "projection_tools": {
+    "tools/prepare_overworld_contract_cutouts.py": "b6686960de8cdb843fbb3a9fe079bb46b66a8076d22f49da9b47082973e0d947",
+    "tools/prepare_overworld_recurring_cutouts.py": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
+    "tools/prepare_overworld_cutout_art.py": "247801087cb8c5bfd6fb0a471bf39dbbfdb2a8bd8fe984d3816df92f00b0d68d",
+    "tools/prepare_overworld_legacy_cutouts.py": "578dd78feaf322f585df5b214cfdbe607ea29eb0a359a95ce549e289c8d7b092"
+  },
+  "processing": "Exact curated original creature paint; historical 82x76 fit and bottom origin at fourfold density. No shield plate, ellipse, tier pips, color key or new paint. All shared unit UI and 42 reviewed control mappings unchanged.",
+  "assets": {
+    "encounter_auxiliary_canopy_breachers": {
+      "rgba_sha256": "cd7377fb96537d4cfb9cc6a326c1273faa3b9bb4f6c8fdb74f4b3640a44914af",
+      "png_sha256": "b4bfd900736446125feebe7059ffe88e48e61db639ea48fe17b78f38bdc37171"
+    },
+    "encounter_auxiliary_redline_lancers": {
+      "rgba_sha256": "27d9b25b0cf7158a6afd93ef77f7680df6c6d24cdfa93be4fc4ec32d7690da3d",
+      "png_sha256": "04757f461a0813d04ba015311f49b889b51b18d53bcef59e868508c8d55e86aa"
+    },
+    "encounter_auxiliary_wakeglass_pilots": {
+      "rgba_sha256": "be628f212bc705de6f2ab36a6f74d69082e70caf2cdd2250b6c425a73c95ede6",
+      "png_sha256": "4f4b20b5e3f8660656d84dd9298dd0378efdff28c52a98fd5af1445be2e82fb0"
+    },
+    "encounter_commission_beaconline_writguard": {
+      "rgba_sha256": "c0c7ec5cbbf780be6381c00ecadf6b5b478515f8eb808020304d0ded7b10a000",
+      "png_sha256": "bcd240c585ad818c6f51353d7140e46db97fdf6954afec2e8e68451dc7c4782b"
+    },
+    "encounter_commission_fenbell_chainstalkers": {
+      "rgba_sha256": "5072b6523e1d9e5d3c206ccf0a1ad84393ccbf2617cd89a8716db59dfa0cbcaf",
+      "png_sha256": "6b93390e75398b5ac49723f829a3bff80a020e48addb1509437ee10f293afbb8"
+    },
+    "encounter_commission_zenith_lensbearers": {
+      "rgba_sha256": "1061002223d5ed09364919b0fe7ba314a8919b9c4575df4672ec22c981b92d56",
+      "png_sha256": "3268c8225adfc28f09f512b7e17b98395551442fa6efb892f2ed1da87c57be32"
+    },
+    "encounter_elite_cinderwake_fold_watch": {
+      "rgba_sha256": "fbdd8f2e1d4357592d9435f48e66099c4d1c661a0e5c09e213f86c8b14a08450",
+      "png_sha256": "0e35add4be3413eba633a1275cfb3363a735c7629c10f487f955a79c618ff547"
+    },
+    "encounter_elite_tideglass_roost_watch": {
+      "rgba_sha256": "8a8441935563bfb96d1b1f719ddc2ddb6ccf21b09df3968fd45ae985c7c38935",
+      "png_sha256": "1dfd4cf89b025b28e6058355dbb7ccb72aa515eef8361f01b30ecbe7208d4a60"
+    },
+    "encounter_frontier_mythic_cindervane_updraft_roost_watch": {
+      "rgba_sha256": "0d6b91af24fe01b9887c05ce7e15a5d630b05cc97919d7aa28b85f9bbd7c9cd6",
+      "png_sha256": "3f64fb0f19b947e8f651958c3167ec17c67700f3b166737f6aed2dc6777af2bd"
+    },
+    "encounter_frontier_mythic_fenmirror_shell_basin_watch": {
+      "rgba_sha256": "830c943e6b042c19d0dd88ba54b3f10effeacc15914b712dd752dbbeacfc6cba",
+      "png_sha256": "324a389b21ea0a56c0f2f1a16d5ae67fd20c9468e8adf46226ed7297d946955b"
+    },
+    "encounter_frontier_mythic_gaugecoil_pressure_burrow_watch": {
+      "rgba_sha256": "7591e4f69b6d44bab3c264d6254035bdc80e3d830d723fc83778f458ca67360b",
+      "png_sha256": "7c8c466aaf2454ef7086ad2c1a87f5c7b4c84c25bc62f34a356e568482d0c540"
+    },
+    "encounter_frontier_mythic_gloambell_sounding_deep_watch": {
+      "rgba_sha256": "9a043162cb2bb7203a365b9f3791e95c55c6914facdfbf0e9a031a9526b55af3",
+      "png_sha256": "d79ac4b9007066cb85d152fce9a84323a078be39eb4b3ce9c8123285df8fb131"
+    },
+    "encounter_frontier_mythic_knotstag_root_court_watch": {
+      "rgba_sha256": "9d6db00bce3583436d024f77bb59ef73170552af6eda2223f0009c3498434120",
+      "png_sha256": "c8b374e397e134666699022f15461b842159c77a4dc7877e44fc2b750c7812fe"
+    },
+    "encounter_frontier_mythic_prismwake_refraction_shelf_watch": {
+      "rgba_sha256": "51c48228d5793368522b027b390d1bbb55ec94b590c2a4af9d7682bbc61aa630",
+      "png_sha256": "8aa2eec1446f4d5cd86f17429b22783dca1d24957fd0fb1e508ba1a1c270e524"
+    },
+    "encounter_horizon_specialist_quenchbell_proving": {
+      "rgba_sha256": "c83c76b8738db5aab2613e3621841c9b4146c11ab1c01d17b2ea75f52346ba0f",
+      "png_sha256": "b6dc0c42cc674670590315cc2a9c5d6146c9c8a671ba7f7c78b4c90c980ef30c"
+    },
+    "encounter_horizon_specialist_saltwake_recital": {
+      "rgba_sha256": "3666773b96017287698c3255f97cb6f168684c1aca6481ba05b7bd4292f7cf73",
+      "png_sha256": "ac8aa49650b8c0b900c4ad1def8819a20de578b474331ab91d879964e1f6b8ac"
+    },
+    "encounter_horizon_specialist_seedglass_trial": {
+      "rgba_sha256": "c4ec7c971082dc2baea2142cdec9020815e5223ecb8ee9d247c2c2421bf0b6ff",
+      "png_sha256": "3a977fbdd4cb01ba25eed376482207b76b982a97a890b31465616d3982b0233c"
+    },
+    "encounter_sovereign_wild_ashcrown_cinderfold_watch": {
+      "rgba_sha256": "35acac22f311b8eb9a51286aa67b62ef348195653545c949f22f6301edbb0980",
+      "png_sha256": "88de67360e7255f67425e1e2fc4af3aa1496eaac4d9607f3d6af1f122901b939"
+    },
+    "encounter_sovereign_wild_miremoon_crownmere_watch": {
+      "rgba_sha256": "4e238a4af26f8fe955be314c1e625823183ed561e4ad13d9ed9f18bf40166c91",
+      "png_sha256": "acd0c6f49506ecd59d992912c60f4c26cb22d491aeb24b0c7539032647ae9702"
+    },
+    "encounter_sovereign_wild_noonshard_prism_aviary_watch": {
+      "rgba_sha256": "aa4a5184910f3cd56979202ca27ba4bc7ddd6b13cb25d372a0344d1cbdcdd570",
+      "png_sha256": "0bc829cc8a8c2776e4562a8fbe1c1c1710c4a8ff9fa45748542deaa7f522b1e1"
+    },
+    "encounter_sovereign_wild_quenchbell_pressure_den_watch": {
+      "rgba_sha256": "fc780c4ce7dd5df6d66e0bbb322ca739c744616a7c1133f4ef8b7a7a09d12325",
+      "png_sha256": "daae6d456cf497f9d3a5ddd25d5b2f84242d94fdc0612f74f529efbd42dac1d0"
+    },
+    "encounter_sovereign_wild_rootvault_heartwood_hollow_watch": {
+      "rgba_sha256": "d9208236ea86ed22f1bc211ae72b254c733868b2644fcb91b711eae1b67a2c0e",
+      "png_sha256": "6c8bd6a6ea9df83982e3f85fd2303b1619c3deb5a4952202b534dc42f12358d3"
+    },
+    "encounter_sovereign_wild_saltwake_belldeep_watch": {
+      "rgba_sha256": "a4510a9eab5f1be4f9ac962d6fe243fcde18d0fbe1f09d54663a796f88ba7761",
+      "png_sha256": "caa0f81e94ae1d48b17b77f11b0e7d429593f4e03a4493390861c97ca2f63252"
+    },
+    "encounter_unbound_wild_brambleback_hedgecourt_watch": {
+      "rgba_sha256": "9d74cc9ecf419cad615dc8ca39c93c8be05ab8f0667f57aa99c166d7a8de781f",
+      "png_sha256": "91c1a4c105944562b64f4cdab1de3a86245be09d2749bba169956c20d75385c6"
+    },
+    "encounter_unbound_wild_flaremast_pilotage_watch": {
+      "rgba_sha256": "84c53471b5675a05fa6ed5cabdd1c61f77bfdda247ecb6132acf3964752307d7",
+      "png_sha256": "6fc6076f3a191f1526747168a0b6d8043bf41cf178e6afec42eb40ede03cd2fc"
+    },
+    "encounter_unbound_wild_mireglass_bellfen_watch": {
+      "rgba_sha256": "1c56b24732e0867177805813dd1c6180b18e439450a144f2f536305d9c598eca",
+      "png_sha256": "b831e0688c04a8d82b3b5caac02287f65c3de6c26a49e51c051fe83c656a4da6"
+    },
+    "encounter_unbound_wild_sapwhistle_greenward_watch": {
+      "rgba_sha256": "e97aba050acdbb095b7576e9b01c8b9c0cc4c392e5f333dc3bd36f353a5f32b6",
+      "png_sha256": "5ca1157dbd404c70bcbcf7e93641a4cbf6e9388614661df4ec33e6f8d99a286f"
+    },
+    "encounter_unbound_wild_scarshield_breakyard_watch": {
+      "rgba_sha256": "dc8f73a483c4a6e9e9ba28561aab0a4c93191be1725f9999692a8b5238e0eb2c",
+      "png_sha256": "ba7498d6a33b883a4372d68a2dc379e042bc0e7971f52fa8386be3e04df8d0c5"
+    },
+    "encounter_unbound_wild_windcairn_wayhouse_watch": {
+      "rgba_sha256": "60febee708a810a6a57aa0a38921c9e5b067bef134fd28d050a02fba07e0a4eb",
+      "png_sha256": "7a17e87c65c6e577a6eeac401f48bf3c73459b9f81db5f30c5666f9dcd8cf8f1"
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_thornwake_canopy_rammers.png": {
+      "after_sha256": "b4bfd900736446125feebe7059ffe88e48e61db639ea48fe17b78f38bdc37171",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_thornwake_canopy_rammers.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_brasshollow_pressure_lancers.png": {
+      "after_sha256": "04757f461a0813d04ba015311f49b889b51b18d53bcef59e868508c8d55e86aa",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_brasshollow_pressure_lancers.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_veilmourn_wakeglass_navigators.png": {
+      "after_sha256": "4f4b20b5e3f8660656d84dd9298dd0378efdff28c52a98fd5af1445be2e82fb0",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_veilmourn_wakeglass_navigators.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_embercourt_beaconline_writguard.png": {
+      "after_sha256": "bcd240c585ad818c6f51353d7140e46db97fdf6954afec2e8e68451dc7c4782b",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_embercourt_beaconline_writguard.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_mireclaw_fenbell_chainstalkers.png": {
+      "after_sha256": "6b93390e75398b5ac49723f829a3bff80a020e48addb1509437ee10f293afbb8",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_mireclaw_fenbell_chainstalkers.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_sunvault_zenith_lensbearers.png": {
+      "after_sha256": "3268c8225adfc28f09f512b7e17b98395551442fa6efb892f2ed1da87c57be32",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_sunvault_zenith_lensbearers.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_cinderwake_aurochs.png": {
+      "after_sha256": "0e35add4be3413eba633a1275cfb3363a735c7629c10f487f955a79c618ff547",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_cinderwake_aurochs.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_tideglass_skyrays.png": {
+      "after_sha256": "1dfd4cf89b025b28e6058355dbb7ccb72aa515eef8361f01b30ecbe7208d4a60",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_tideglass_skyrays.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_cindervane_censerwings.png": {
+      "after_sha256": "3f64fb0f19b947e8f651958c3167ec17c67700f3b166737f6aed2dc6777af2bd",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_cindervane_censerwings.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_fenmirror_gallowshells.png": {
+      "after_sha256": "324a389b21ea0a56c0f2f1a16d5ae67fd20c9468e8adf46226ed7297d946955b",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_fenmirror_gallowshells.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_gaugecoil_orewyrms.png": {
+      "after_sha256": "7c8c466aaf2454ef7086ad2c1a87f5c7b4c84c25bc62f34a356e568482d0c540",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_gaugecoil_orewyrms.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_gloambell_wake_mantas.png": {
+      "after_sha256": "d79ac4b9007066cb85d152fce9a84323a078be39eb4b3ce9c8123285df8fb131",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_gloambell_wake_mantas.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_rootcrown_knotstags.png": {
+      "after_sha256": "c8b374e397e134666699022f15461b842159c77a4dc7877e44fc2b750c7812fe",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_rootcrown_knotstags.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_prismwake_raylings.png": {
+      "after_sha256": "8aa2eec1446f4d5cd86f17429b22783dca1d24957fd0fb1e508ba1a1c270e524",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_prismwake_raylings.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_brasshollow_quenchbell_mortars.png": {
+      "after_sha256": "b6dc0c42cc674670590315cc2a9c5d6146c9c8a671ba7f7c78b4c90c980ef30c",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_brasshollow_quenchbell_mortars.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_veilmourn_saltwake_eulogists.png": {
+      "after_sha256": "ac8aa49650b8c0b900c4ad1def8819a20de578b474331ab91d879964e1f6b8ac",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_veilmourn_saltwake_eulogists.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_thornwake_seedglass_cantors.png": {
+      "after_sha256": "3a977fbdd4cb01ba25eed376482207b76b982a97a890b31465616d3982b0233c",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_thornwake_seedglass_cantors.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_ashcrown_kilnelk.png": {
+      "after_sha256": "88de67360e7255f67425e1e2fc4af3aa1496eaac4d9607f3d6af1f122901b939",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_ashcrown_kilnelk.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_miremoon_crownmaws.png": {
+      "after_sha256": "acd0c6f49506ecd59d992912c60f4c26cb22d491aeb24b0c7539032647ae9702",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_miremoon_crownmaws.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_noonshard_prism_kites.png": {
+      "after_sha256": "0bc829cc8a8c2776e4562a8fbe1c1c1710c4a8ff9fa45748542deaa7f522b1e1",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_noonshard_prism_kites.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_quenchbell_ironbacks.png": {
+      "after_sha256": "daae6d456cf497f9d3a5ddd25d5b2f84242d94fdc0612f74f529efbd42dac1d0",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_quenchbell_ironbacks.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_rootvault_barkhulks.png": {
+      "after_sha256": "6c8bd6a6ea9df83982e3f85fd2303b1619c3deb5a4952202b534dc42f12358d3",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_rootvault_barkhulks.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_saltwake_bellwhales.png": {
+      "after_sha256": "caa0f81e94ae1d48b17b77f11b0e7d429593f4e03a4493390861c97ca2f63252",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_saltwake_bellwhales.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_brambleback_knucklebears.png": {
+      "after_sha256": "91c1a4c105944562b64f4cdab1de3a86245be09d2749bba169956c20d75385c6",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_brambleback_knucklebears.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_harbor_polearms.png": {
+      "after_sha256": "6fc6076f3a191f1526747168a0b6d8043bf41cf178e6afec42eb40ede03cd2fc",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_harbor_polearms.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_mireglass_belltoads.png": {
+      "after_sha256": "b831e0688c04a8d82b3b5caac02287f65c3de6c26a49e51c051fe83c656a4da6",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_mireglass_belltoads.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_greenbranch_cudgels.png": {
+      "after_sha256": "5ca1157dbd404c70bcbcf7e93641a4cbf6e9388614661df4ec33e6f8d99a286f",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_greenbranch_cudgels.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_scarshield_veterans.png": {
+      "after_sha256": "ba7498d6a33b883a4372d68a2dc379e042bc0e7971f52fa8386be3e04df8d0c5",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_scarshield_veterans.png"
+    },
+    "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_cairnshield_porters.png": {
+      "after_sha256": "7a17e87c65c6e577a6eeac401f48bf3c73459b9f81db5f30c5666f9dcd8cf8f1",
+      "prepared": "runtime/objects/encounters/creature_silhouettes/unit_neutral_cairnshield_porters.png"
+    }
+  }
+}

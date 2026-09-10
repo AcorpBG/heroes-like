@@ -11390,85 +11390,112 @@
       "runtime_sha256": "27be471726604b764c6c59ab37b6a84d4f5bd50306b9cc8a8d11c4138b19b65d"
     },
     "encounter_auxiliary_canopy_breachers": {
-      "path": "res://art/units/overworld_icons/unit_thornwake_canopy_rammers.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_thornwake_canopy_rammers.png",
       "source_generated": "res://art/units/source/curated/unit_thornwake_canopy_rammers.png",
       "source_model": "curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_third_hearths_canopy_breachers",
       "assigned_faction_id": "faction_thornwake",
       "presentation_role": "fork_crowned_canopy_breach_trial",
-      "accessible_description": "A fork-crowned living-wood ram marks the Thornwake auxiliary breach company."
+      "accessible_description": "A fork-crowned living-wood ram marks the Thornwake auxiliary breach company.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_auxiliary_canopy_breachers.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "b4bfd900736446125feebe7059ffe88e48e61db639ea48fe17b78f38bdc37171"
     },
     "encounter_auxiliary_redline_lancers": {
-      "path": "res://art/units/overworld_icons/unit_brasshollow_pressure_lancers.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_brasshollow_pressure_lancers.png",
       "source_generated": "res://art/units/source/curated/unit_brasshollow_pressure_lancers.png",
       "source_model": "curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_third_hearths_redline_lancers",
       "assigned_faction_id": "faction_brasshollow",
       "presentation_role": "pressure_lance_redline_trial",
-      "accessible_description": "A piston-lance outrider with a hot pressure vessel marks the Brasshollow auxiliary trial company."
+      "accessible_description": "A piston-lance outrider with a hot pressure vessel marks the Brasshollow auxiliary trial company.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_auxiliary_redline_lancers.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "04757f461a0813d04ba015311f49b889b51b18d53bcef59e868508c8d55e86aa"
     },
     "encounter_auxiliary_wakeglass_pilots": {
-      "path": "res://art/units/overworld_icons/unit_veilmourn_wakeglass_navigators.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_veilmourn_wakeglass_navigators.png",
       "source_generated": "res://art/units/source/curated/unit_veilmourn_wakeglass_navigators.png",
       "source_model": "curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_third_hearths_wakeglass_pilots",
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "wakeglass_navigation_trial",
-      "accessible_description": "A mourning-cloaked pilot beneath a suspended wakeglass compass marks the Veilmourn auxiliary trial company."
+      "accessible_description": "A mourning-cloaked pilot beneath a suspended wakeglass compass marks the Veilmourn auxiliary trial company.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_auxiliary_wakeglass_pilots.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "4f4b20b5e3f8660656d84dd9298dd0378efdff28c52a98fd5af1445be2e82fb0"
     },
     "encounter_horizon_specialist_seedglass_trial": {
-      "path": "res://art/units/overworld_icons/unit_thornwake_seedglass_cantors.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_thornwake_seedglass_cantors.png",
       "source_generated": "res://art/units/source/curated/unit_thornwake_seedglass_cantors.png",
       "source_model": "curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_crownroot_seedglass_trial",
       "assigned_faction_id": "faction_thornwake",
       "presentation_role": "seedglass_refrain_company_trial",
-      "accessible_description": "A pale-barked archer hung with amber-green seedglass chimes marks Crownroot's specialist refrain trial."
+      "accessible_description": "A pale-barked archer hung with amber-green seedglass chimes marks Crownroot's specialist refrain trial.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_horizon_specialist_seedglass_trial.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "3a977fbdd4cb01ba25eed376482207b76b982a97a890b31465616d3982b0233c"
     },
     "encounter_horizon_specialist_quenchbell_proving": {
-      "path": "res://art/units/overworld_icons/unit_brasshollow_quenchbell_mortars.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_brasshollow_quenchbell_mortars.png",
       "source_generated": "res://art/units/source/curated/unit_brasshollow_quenchbell_mortars.png",
       "source_model": "curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_blackbell_quenchbell_proving",
       "assigned_faction_id": "faction_brasshollow",
       "presentation_role": "quenchbell_red_gauge_proving",
-      "accessible_description": "A compact black-iron mortar with a glowing bell mouth marks Blackbell's red-gauge specialist proving."
+      "accessible_description": "A compact black-iron mortar with a glowing bell mouth marks Blackbell's red-gauge specialist proving.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_horizon_specialist_quenchbell_proving.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "b6dc0c42cc674670590315cc2a9c5d6146c9c8a671ba7f7c78b4c90c980ef30c"
     },
     "encounter_horizon_specialist_saltwake_recital": {
-      "path": "res://art/units/overworld_icons/unit_veilmourn_saltwake_eulogists.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_veilmourn_saltwake_eulogists.png",
       "source_generated": "res://art/units/source/curated/unit_veilmourn_saltwake_eulogists.png",
       "source_model": "curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_pale_saltwake_recital",
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "saltwake_last_safe_line_recital",
-      "accessible_description": "A masked mourning chronicler carrying three pale saltglass tablets marks Pale Sounding's last recital."
+      "accessible_description": "A masked mourning chronicler carrying three pale saltglass tablets marks Pale Sounding's last recital.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_horizon_specialist_saltwake_recital.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "ac8aa49650b8c0b900c4ad1def8819a20de578b474331ab91d879964e1f6b8ac"
     },
     "encounter_commission_beaconline_writguard": {
-      "path": "res://art/units/overworld_icons/unit_embercourt_beaconline_writguard.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_embercourt_beaconline_writguard.png",
       "source_generated": "res://art/units/source/curated/unit_embercourt_beaconline_writguard.png",
       "source_model": "curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_three_banner_beaconline_writguard",
       "assigned_faction_id": "faction_embercourt",
       "presentation_role": "lantern_pennon_counterseal_trial",
-      "accessible_description": "A red lantern pennon and oath shield mark the Embercourt Beaconline commission trial."
+      "accessible_description": "A red lantern pennon and oath shield mark the Embercourt Beaconline commission trial.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_commission_beaconline_writguard.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "bcd240c585ad818c6f51353d7140e46db97fdf6954afec2e8e68451dc7c4782b"
     },
     "encounter_commission_fenbell_chainstalkers": {
-      "path": "res://art/units/overworld_icons/unit_mireclaw_fenbell_chainstalkers.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_mireclaw_fenbell_chainstalkers.png",
       "source_generated": "res://art/units/source/curated/unit_mireclaw_fenbell_chainstalkers.png",
       "source_model": "curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_three_banner_fenbell_chainstalkers",
       "assigned_faction_id": "faction_mireclaw",
       "presentation_role": "hooked_chain_fenbell_trial",
-      "accessible_description": "A reed-cloaked chain hook and bronze fen bell mark the Mireclaw ambusher trial."
+      "accessible_description": "A reed-cloaked chain hook and bronze fen bell mark the Mireclaw ambusher trial.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_commission_fenbell_chainstalkers.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "6b93390e75398b5ac49723f829a3bff80a020e48addb1509437ee10f293afbb8"
     },
     "encounter_commission_zenith_lensbearers": {
-      "path": "res://art/units/overworld_icons/unit_sunvault_zenith_lensbearers.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_sunvault_zenith_lensbearers.png",
       "source_generated": "res://art/units/source/curated/unit_sunvault_zenith_lensbearers.png",
       "source_model": "curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_three_banner_zenith_lensbearers",
       "assigned_faction_id": "faction_sunvault",
       "presentation_role": "calibrated_zenith_crossline_trial",
-      "accessible_description": "A gold-and-indigo surveyor with a bright prism aperture marks the Sunvault commission trial."
+      "accessible_description": "A gold-and-indigo surveyor with a bright prism aperture marks the Sunvault commission trial.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_commission_zenith_lensbearers.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "3268c8225adfc28f09f512b7e17b98395551442fa6efb892f2ed1da87c57be32"
     },
     "mapobj_cinderwake_fold": {
       "path": "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png",
@@ -12445,22 +12472,28 @@
       "runtime_sha256": "7efa3b6ca4eabdf58fad2f141b88a4fef976f4604727ad08dfb53378e9e39e00"
     },
     "encounter_elite_cinderwake_fold_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_cinderwake_aurochs.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_cinderwake_aurochs.png",
       "source_generated": "res://art/units/source/curated/unit_neutral_cinderwake_aurochs.png",
       "source_model": "curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_cinderwake_fold_watch",
       "assigned_faction_id": "neutral",
       "presentation_role": "basalt_auroch_vent_ring_watch",
-      "accessible_description": "A six-legged basalt auroch with a shovel-horn crown marks the guarded volcanic fold."
+      "accessible_description": "A six-legged basalt auroch with a shovel-horn crown marks the guarded volcanic fold.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_elite_cinderwake_fold_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "0e35add4be3413eba633a1275cfb3363a735c7629c10f487f955a79c618ff547"
     },
     "encounter_elite_tideglass_roost_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_tideglass_skyrays.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_tideglass_skyrays.png",
       "source_generated": "res://art/units/source/curated/unit_neutral_tideglass_skyrays.png",
       "source_model": "curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_tideglass_roost_watch",
       "assigned_faction_id": "neutral",
       "presentation_role": "sea_glass_skyray_resonator_watch",
-      "accessible_description": "A crescent-winged tideglass skyray with hanging resonators marks the guarded coastal roost."
+      "accessible_description": "A crescent-winged tideglass skyray with hanging resonators marks the guarded coastal roost.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_elite_tideglass_roost_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "1dfd4cf89b025b28e6058355dbb7ccb72aa515eef8361f01b30ecbe7208d4a60"
     },
     "encounter_elder_wild_brambleback_crown_watch": {
       "path": "res://art/overworld/runtime/objects/encounters/elder_wilds/unit_neutral_brambleback_knucklebears.png",
@@ -13692,8 +13725,8 @@
       "accessible_description": "The controlled Ashcrown Cinderfold stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
     },
     "encounter_sovereign_wild_ashcrown_cinderfold_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_ashcrown_kilnelk.png",
-      "runtime_sha256": "deceacc3e8a6d976fde61d21b244aa09d06a3964cdac072e01ee12d64faa4b9b",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_ashcrown_kilnelk.png",
+      "runtime_sha256": "88de67360e7255f67425e1e2fc4af3aa1496eaac4d9607f3d6af1f122901b939",
       "source_generated": "res://art/units/source/curated/unit_neutral_ashcrown_kilnelk.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -13701,7 +13734,9 @@
       "assigned_encounter_id": "encounter_ashcrown_cinderfold_watch",
       "assigned_faction_id": "neutral",
       "presentation_role": "ashcrown_cinderfold_sovereign_watch",
-      "accessible_description": "The exact ashcrown kilnelk creature silhouette marks this sovereign-wild guard front."
+      "accessible_description": "The exact ashcrown kilnelk creature silhouette marks this sovereign-wild guard front.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_sovereign_wild_ashcrown_cinderfold_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json"
     },
     "mapobj_miremoon_crownmere": {
       "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
@@ -13747,8 +13782,8 @@
       "runtime_sha256": "78a86f619bd3897adb56cb98ace0893473ff517150d1eda953899f4c784a102b"
     },
     "encounter_sovereign_wild_miremoon_crownmere_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_miremoon_crownmaws.png",
-      "runtime_sha256": "eb263e6c486779fc3d955df1b7d32534d2faaf2e6c6c8e035badbde1904a0c31",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_miremoon_crownmaws.png",
+      "runtime_sha256": "acd0c6f49506ecd59d992912c60f4c26cb22d491aeb24b0c7539032647ae9702",
       "source_generated": "res://art/units/source/curated/unit_neutral_miremoon_crownmaws.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -13756,7 +13791,9 @@
       "assigned_encounter_id": "encounter_miremoon_crownmere_watch",
       "assigned_faction_id": "neutral",
       "presentation_role": "miremoon_crownmere_sovereign_watch",
-      "accessible_description": "The exact miremoon crownmaws creature silhouette marks this sovereign-wild guard front."
+      "accessible_description": "The exact miremoon crownmaws creature silhouette marks this sovereign-wild guard front.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_sovereign_wild_miremoon_crownmere_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json"
     },
     "mapobj_noonshard_prism_aviary": {
       "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
@@ -13799,8 +13836,8 @@
       "accessible_description": "The controlled Noonshard Prism Aviary stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
     },
     "encounter_sovereign_wild_noonshard_prism_aviary_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_noonshard_prism_kites.png",
-      "runtime_sha256": "beb4a5c890489e0ab82b04f23c02c404699f9fa491ea957e430ce4f9b0e5cffb",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_noonshard_prism_kites.png",
+      "runtime_sha256": "0bc829cc8a8c2776e4562a8fbe1c1c1710c4a8ff9fa45748542deaa7f522b1e1",
       "source_generated": "res://art/units/source/curated/unit_neutral_noonshard_prism_kites.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -13808,7 +13845,9 @@
       "assigned_encounter_id": "encounter_noonshard_prism_aviary_watch",
       "assigned_faction_id": "neutral",
       "presentation_role": "noonshard_prism_aviary_sovereign_watch",
-      "accessible_description": "The exact noonshard prism kites creature silhouette marks this sovereign-wild guard front."
+      "accessible_description": "The exact noonshard prism kites creature silhouette marks this sovereign-wild guard front.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_sovereign_wild_noonshard_prism_aviary_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json"
     },
     "mapobj_rootvault_heartwood_hollow": {
       "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
@@ -13851,8 +13890,8 @@
       "accessible_description": "The controlled Rootvault Heartwood Hollow stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
     },
     "encounter_sovereign_wild_rootvault_heartwood_hollow_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_rootvault_barkhulks.png",
-      "runtime_sha256": "a5cfb575dcea2c2ab243984d14b917d2daa4673696021239b0eec7ed18fa5d74",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_rootvault_barkhulks.png",
+      "runtime_sha256": "6c8bd6a6ea9df83982e3f85fd2303b1619c3deb5a4952202b534dc42f12358d3",
       "source_generated": "res://art/units/source/curated/unit_neutral_rootvault_barkhulks.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -13860,7 +13899,9 @@
       "assigned_encounter_id": "encounter_rootvault_heartwood_watch",
       "assigned_faction_id": "neutral",
       "presentation_role": "rootvault_heartwood_hollow_sovereign_watch",
-      "accessible_description": "The exact rootvault barkhulks creature silhouette marks this sovereign-wild guard front."
+      "accessible_description": "The exact rootvault barkhulks creature silhouette marks this sovereign-wild guard front.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_sovereign_wild_rootvault_heartwood_hollow_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json"
     },
     "mapobj_quenchbell_pressure_den": {
       "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
@@ -13903,8 +13944,8 @@
       "accessible_description": "The controlled Quenchbell Pressure Den stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
     },
     "encounter_sovereign_wild_quenchbell_pressure_den_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_quenchbell_ironbacks.png",
-      "runtime_sha256": "ef613683a0f0cdd546d73e71b22bc7cfdba179f85056ec2078d587daeadc1883",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_quenchbell_ironbacks.png",
+      "runtime_sha256": "daae6d456cf497f9d3a5ddd25d5b2f84242d94fdc0612f74f529efbd42dac1d0",
       "source_generated": "res://art/units/source/curated/unit_neutral_quenchbell_ironbacks.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -13912,7 +13953,9 @@
       "assigned_encounter_id": "encounter_quenchbell_pressure_den_watch",
       "assigned_faction_id": "neutral",
       "presentation_role": "quenchbell_pressure_den_sovereign_watch",
-      "accessible_description": "The exact quenchbell ironbacks creature silhouette marks this sovereign-wild guard front."
+      "accessible_description": "The exact quenchbell ironbacks creature silhouette marks this sovereign-wild guard front.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_sovereign_wild_quenchbell_pressure_den_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json"
     },
     "mapobj_saltwake_belldeep": {
       "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
@@ -13955,8 +13998,8 @@
       "accessible_description": "The controlled Saltwake Belldeep stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
     },
     "encounter_sovereign_wild_saltwake_belldeep_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_saltwake_bellwhales.png",
-      "runtime_sha256": "7e2e0cb0e5de57a2d06440d34e22ca0782907290c681832ab8a27b616f262670",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_saltwake_bellwhales.png",
+      "runtime_sha256": "caa0f81e94ae1d48b17b77f11b0e7d429593f4e03a4493390861c97ca2f63252",
       "source_generated": "res://art/units/source/curated/unit_neutral_saltwake_bellwhales.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -13964,7 +14007,9 @@
       "assigned_encounter_id": "encounter_saltwake_belldeep_watch",
       "assigned_faction_id": "neutral",
       "presentation_role": "saltwake_belldeep_sovereign_watch",
-      "accessible_description": "The exact saltwake bellwhales creature silhouette marks this sovereign-wild guard front."
+      "accessible_description": "The exact saltwake bellwhales creature silhouette marks this sovereign-wild guard front.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_sovereign_wild_saltwake_belldeep_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json"
     },
     "mapobj_stormseal_powder_wharf": {
       "path": "res://art/overworld/runtime/objects/resource_sites/horizon_company_field_musters/horizon_company_field_musters_atlas.png",
@@ -16695,7 +16740,7 @@
       "runtime_sha256": "0e973069427e2adbfd2ce9c011fb6afec9b0198698257cc1507df5685dd77bbb"
     },
     "encounter_unbound_wild_brambleback_hedgecourt_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_brambleback_knucklebears.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_brambleback_knucklebears.png",
       "source_generated": "res://art/units/source/curated/unit_neutral_brambleback_knucklebears.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -16703,7 +16748,10 @@
       "assigned_encounter_id": "encounter_brambleback_hedgecourt_watch",
       "assigned_faction_id": "neutral",
       "presentation_role": "brambleback_hedgecourt_unbound_wild_watch",
-      "accessible_description": "The exact unit_neutral_brambleback_knucklebears creature silhouette marks this unbound-wild guard front."
+      "accessible_description": "The exact unit_neutral_brambleback_knucklebears creature silhouette marks this unbound-wild guard front.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_unbound_wild_brambleback_hedgecourt_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "91c1a4c105944562b64f4cdab1de3a86245be09d2749bba169956c20d75385c6"
     },
     "mapobj_mireglass_bellfen": {
       "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
@@ -16752,7 +16800,7 @@
       "runtime_sha256": "0e973069427e2adbfd2ce9c011fb6afec9b0198698257cc1507df5685dd77bbb"
     },
     "encounter_unbound_wild_mireglass_bellfen_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_mireglass_belltoads.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_mireglass_belltoads.png",
       "source_generated": "res://art/units/source/curated/unit_neutral_mireglass_belltoads.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -16760,7 +16808,10 @@
       "assigned_encounter_id": "encounter_mireglass_bellfen_watch",
       "assigned_faction_id": "neutral",
       "presentation_role": "mireglass_bellfen_unbound_wild_watch",
-      "accessible_description": "The exact unit_neutral_mireglass_belltoads creature silhouette marks this unbound-wild guard front."
+      "accessible_description": "The exact unit_neutral_mireglass_belltoads creature silhouette marks this unbound-wild guard front.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_unbound_wild_mireglass_bellfen_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "b831e0688c04a8d82b3b5caac02287f65c3de6c26a49e51c051fe83c656a4da6"
     },
     "mapobj_windcairn_wayhouse": {
       "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
@@ -16809,7 +16860,7 @@
       "runtime_sha256": "0e973069427e2adbfd2ce9c011fb6afec9b0198698257cc1507df5685dd77bbb"
     },
     "encounter_unbound_wild_windcairn_wayhouse_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_cairnshield_porters.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_cairnshield_porters.png",
       "source_generated": "res://art/units/source/curated/unit_neutral_cairnshield_porters.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -16817,7 +16868,10 @@
       "assigned_encounter_id": "encounter_windcairn_wayhouse_watch",
       "assigned_faction_id": "neutral",
       "presentation_role": "windcairn_wayhouse_unbound_wild_watch",
-      "accessible_description": "The exact unit_neutral_cairnshield_porters creature silhouette marks this unbound-wild guard front."
+      "accessible_description": "The exact unit_neutral_cairnshield_porters creature silhouette marks this unbound-wild guard front.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_unbound_wild_windcairn_wayhouse_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "7a17e87c65c6e577a6eeac401f48bf3c73459b9f81db5f30c5666f9dcd8cf8f1"
     },
     "mapobj_sapwhistle_greenward": {
       "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
@@ -16866,7 +16920,7 @@
       "runtime_sha256": "0e973069427e2adbfd2ce9c011fb6afec9b0198698257cc1507df5685dd77bbb"
     },
     "encounter_unbound_wild_sapwhistle_greenward_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_greenbranch_cudgels.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_greenbranch_cudgels.png",
       "source_generated": "res://art/units/source/curated/unit_neutral_greenbranch_cudgels.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -16874,7 +16928,10 @@
       "assigned_encounter_id": "encounter_sapwhistle_greenward_watch",
       "assigned_faction_id": "neutral",
       "presentation_role": "sapwhistle_greenward_unbound_wild_watch",
-      "accessible_description": "The exact unit_neutral_greenbranch_cudgels creature silhouette marks this unbound-wild guard front."
+      "accessible_description": "The exact unit_neutral_greenbranch_cudgels creature silhouette marks this unbound-wild guard front.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_unbound_wild_sapwhistle_greenward_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "5ca1157dbd404c70bcbcf7e93641a4cbf6e9388614661df4ec33e6f8d99a286f"
     },
     "mapobj_scarshield_breakyard": {
       "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
@@ -16923,7 +16980,7 @@
       "runtime_sha256": "0e973069427e2adbfd2ce9c011fb6afec9b0198698257cc1507df5685dd77bbb"
     },
     "encounter_unbound_wild_scarshield_breakyard_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_scarshield_veterans.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_scarshield_veterans.png",
       "source_generated": "res://art/units/source/curated/unit_neutral_scarshield_veterans.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -16931,7 +16988,10 @@
       "assigned_encounter_id": "encounter_scarshield_breakyard_watch",
       "assigned_faction_id": "neutral",
       "presentation_role": "scarshield_breakyard_unbound_wild_watch",
-      "accessible_description": "The exact unit_neutral_scarshield_veterans creature silhouette marks this unbound-wild guard front."
+      "accessible_description": "The exact unit_neutral_scarshield_veterans creature silhouette marks this unbound-wild guard front.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_unbound_wild_scarshield_breakyard_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "ba7498d6a33b883a4372d68a2dc379e042bc0e7971f52fa8386be3e04df8d0c5"
     },
     "mapobj_flaremast_pilotage": {
       "path": "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png",
@@ -16980,7 +17040,7 @@
       "runtime_sha256": "0e973069427e2adbfd2ce9c011fb6afec9b0198698257cc1507df5685dd77bbb"
     },
     "encounter_unbound_wild_flaremast_pilotage_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_harbor_polearms.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_harbor_polearms.png",
       "source_generated": "res://art/units/source/curated/unit_neutral_harbor_polearms.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
@@ -16988,7 +17048,10 @@
       "assigned_encounter_id": "encounter_flaremast_pilotage_watch",
       "assigned_faction_id": "neutral",
       "presentation_role": "flaremast_pilotage_unbound_wild_watch",
-      "accessible_description": "The exact unit_neutral_harbor_polearms creature silhouette marks this unbound-wild guard front."
+      "accessible_description": "The exact unit_neutral_harbor_polearms creature silhouette marks this unbound-wild guard front.",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_unbound_wild_flaremast_pilotage_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "6fc6076f3a191f1526747168a0b6d8043bf41cf178e6afec42eb40ede03cd2fc"
     },
     "resource_site_named_rival_tollmoon_claim_post": {
       "path": "res://art/overworld/runtime/objects/resource_sites/named_rival_banners_atlas.png",
@@ -19197,13 +19260,17 @@
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/manifest.json"
     },
     "encounter_frontier_mythic_cindervane_updraft_roost_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_cindervane_censerwings.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_cindervane_censerwings.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_cindervane_updraft_roost_watch",
       "assigned_unit_id": "unit_neutral_cindervane_censerwings",
       "asset_policy": "exact_curated_original_creature_identity",
       "distinct_sprite_assignment": true,
-      "accessible_description": "The exact silhouette of Cindervane Censerwings guarding Censerwing Updraft Roost."
+      "accessible_description": "The exact silhouette of Cindervane Censerwings guarding Censerwing Updraft Roost.",
+      "source_generated": "res://art/units/source/curated/unit_neutral_cindervane_censerwings.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_frontier_mythic_cindervane_updraft_roost_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "3f64fb0f19b947e8f651958c3167ec17c67700f3b166737f6aed2dc6777af2bd"
     },
     "mapobj_fenmirror_shell_basin": {
       "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
@@ -19252,13 +19319,17 @@
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/manifest.json"
     },
     "encounter_frontier_mythic_fenmirror_shell_basin_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_fenmirror_gallowshells.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_fenmirror_gallowshells.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_fenmirror_shell_basin_watch",
       "assigned_unit_id": "unit_neutral_fenmirror_gallowshells",
       "asset_policy": "exact_curated_original_creature_identity",
       "distinct_sprite_assignment": true,
-      "accessible_description": "The exact silhouette of Fenmirror Gallowshells guarding Fenmirror Shell Basin."
+      "accessible_description": "The exact silhouette of Fenmirror Gallowshells guarding Fenmirror Shell Basin.",
+      "source_generated": "res://art/units/source/curated/unit_neutral_fenmirror_gallowshells.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_frontier_mythic_fenmirror_shell_basin_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "324a389b21ea0a56c0f2f1a16d5ae67fd20c9468e8adf46226ed7297d946955b"
     },
     "mapobj_prismwake_refraction_shelf": {
       "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
@@ -19307,13 +19378,17 @@
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/manifest.json"
     },
     "encounter_frontier_mythic_prismwake_refraction_shelf_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_prismwake_raylings.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_prismwake_raylings.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_prismwake_refraction_shelf_watch",
       "assigned_unit_id": "unit_neutral_prismwake_raylings",
       "asset_policy": "exact_curated_original_creature_identity",
       "distinct_sprite_assignment": true,
-      "accessible_description": "The exact silhouette of Prismwake Raylings guarding Prismwake Refraction Shelf."
+      "accessible_description": "The exact silhouette of Prismwake Raylings guarding Prismwake Refraction Shelf.",
+      "source_generated": "res://art/units/source/curated/unit_neutral_prismwake_raylings.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_frontier_mythic_prismwake_refraction_shelf_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "8aa2eec1446f4d5cd86f17429b22783dca1d24957fd0fb1e508ba1a1c270e524"
     },
     "mapobj_knotstag_root_court": {
       "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
@@ -19362,13 +19437,17 @@
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/manifest.json"
     },
     "encounter_frontier_mythic_knotstag_root_court_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_rootcrown_knotstags.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_rootcrown_knotstags.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_knotstag_root_court_watch",
       "assigned_unit_id": "unit_neutral_rootcrown_knotstags",
       "asset_policy": "exact_curated_original_creature_identity",
       "distinct_sprite_assignment": true,
-      "accessible_description": "The exact silhouette of Rootcrown Knotstags guarding Knotstag Root-Court."
+      "accessible_description": "The exact silhouette of Rootcrown Knotstags guarding Knotstag Root-Court.",
+      "source_generated": "res://art/units/source/curated/unit_neutral_rootcrown_knotstags.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_frontier_mythic_knotstag_root_court_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "c8b374e397e134666699022f15461b842159c77a4dc7877e44fc2b750c7812fe"
     },
     "mapobj_gaugecoil_pressure_burrow": {
       "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
@@ -19417,13 +19496,17 @@
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/manifest.json"
     },
     "encounter_frontier_mythic_gaugecoil_pressure_burrow_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_gaugecoil_orewyrms.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_gaugecoil_orewyrms.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_gaugecoil_pressure_burrow_watch",
       "assigned_unit_id": "unit_neutral_gaugecoil_orewyrms",
       "asset_policy": "exact_curated_original_creature_identity",
       "distinct_sprite_assignment": true,
-      "accessible_description": "The exact silhouette of Gaugecoil Orewyrms guarding Gaugecoil Pressure Burrow."
+      "accessible_description": "The exact silhouette of Gaugecoil Orewyrms guarding Gaugecoil Pressure Burrow.",
+      "source_generated": "res://art/units/source/curated/unit_neutral_gaugecoil_orewyrms.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_frontier_mythic_gaugecoil_pressure_burrow_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "7c8c466aaf2454ef7086ad2c1a87f5c7b4c84c25bc62f34a356e568482d0c540"
     },
     "mapobj_gloambell_sounding_deep": {
       "path": "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png",
@@ -19472,13 +19555,17 @@
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/manifest.json"
     },
     "encounter_frontier_mythic_gloambell_sounding_deep_watch": {
-      "path": "res://art/units/overworld_icons/unit_neutral_gloambell_wake_mantas.png",
+      "path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_gloambell_wake_mantas.png",
       "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
       "assigned_encounter_id": "encounter_gloambell_sounding_deep_watch",
       "assigned_unit_id": "unit_neutral_gloambell_wake_mantas",
       "asset_policy": "exact_curated_original_creature_identity",
       "distinct_sprite_assignment": true,
-      "accessible_description": "The exact silhouette of Gloambell Wake-Mantas guarding Gloambell Sounding Deep."
+      "accessible_description": "The exact silhouette of Gloambell Wake-Mantas guarding Gloambell Sounding Deep.",
+      "source_generated": "res://art/units/source/curated/unit_neutral_gloambell_wake_mantas.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/final_families/encounter_frontier_mythic_gloambell_sounding_deep_watch.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      "runtime_sha256": "d79ac4b9007066cb85d152fce9a84323a078be39eb4b3ce9c8123285df8fb131"
     },
     "resource_site_grand_arcanum_dawnwrit_column": {
       "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",

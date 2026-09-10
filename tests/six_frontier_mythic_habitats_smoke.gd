@@ -78,7 +78,8 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	var objective_victory := String(victory_result.get("status", "")) == "victory"
 	_expect(objective_victory, "%s did not complete its six-objective route: %s" % [scenario_id, JSON.stringify(victory_result)])
 	var presentation: Dictionary = view.call("validation_encounter_presentation_payload", live_front)
-	var exact_identity := String(presentation.get("identity_encounter_asset_id", "")) == String(case.get("identity_asset_id", "")) and String(presentation.get("identity_encounter_path", "")) == String(art.get("overworld_icon", "")) and bool(presentation.get("uses_identity_encounter_sprite", false))
+	var expected_identity_path := "res://art/overworld/runtime/objects/encounters/creature_silhouettes/%s.png" % String(case.get("unit_id", ""))
+	var exact_identity := String(presentation.get("identity_encounter_asset_id", "")) == String(case.get("identity_asset_id", "")) and String(presentation.get("identity_encounter_path", "")) == expected_identity_path and bool(presentation.get("uses_identity_encounter_sprite", false))
 	_expect(exact_identity, "%s lost its exact creature encounter identity." % String(case.get("encounter_id", "")))
 	var restored := _clone_session(session)
 	var save_exact := restored.to_dict() == session.to_dict() and int(restored.save_version) == SessionStateStoreScript.SAVE_VERSION

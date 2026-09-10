@@ -3,7 +3,8 @@
 Phase 6 parent: `art-overworld-cutout-quality-20260909`.
 First cohort: `art-overworld-cutout-batch04-20260909`, 2026-09-09.
 Requirements: `docs/overworld-cutout-quality-requirements.md`.
-The dated cohorts below are bounded acceptances, not whole-pool completion.
+The dated cohorts record bounded acceptances. The final closure below verifies
+all 1214 current runtime rows; it does not claim whole-game release readiness.
 
 ## Cause and implemented correction
 
@@ -1955,29 +1956,130 @@ requirements. Existing domain/shared launch adapter:
 `/tmp/heroes-town-suite-20260910.py`; assertions are retained.
 Accepted pool becomes **1143/1214**, **71 pending**. Parent and child remain active.
 
-## Remaining parent work
+## Final creature and control families — 2026-09-10
 
-The full 1,214-row runtime pool is **not accepted**. The then-remaining 783 rows
-received a first-pass visual contact review across all six remaining family
-groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 1143 repaired/preserved dispositions, leaving
-71 for complete detailed review/recovery. The two veteran mast repairs are now
-included only after the separate source/visual/platform closure above.
-All 31 recurring encounters, 30
-recurring resource-site originals, 31 separate claimed dwellings and 34 early
-post-interaction and 40 landmark/objective-state paintings are accepted.
-The 34 command-site originals, all 36 recruitment/habitat dispositions and the
-40 command/training paintings and 52 contract/expedition encounter paintings
-are accepted, along with the remaining 79 encounter recoveries and six faction
-controls above. All 69 artifact dispositions and 54 remaining resource-site
-paintings, all 60 hero identity dispositions and all 39 Town dispositions are
-accepted above. Next: 29 unit icons, 24 cohesive blockers, eight remaining
-distinct map objects, seven encounter/elder-wild rows and three
-ownership pennants). These categories still require individual source review.
-The seven
-Pactwright/Mireglass states are accepted only by the explicit integrated-edit
-follow-up above; recovery of these originals does not accept different paintings.
-Individual source and native-resolution
-checks of other remaining families and intentional purple materials remain. Existing
-unit medallions and state indicators are not mislabeled as magenta matte.
-Do not hide remaining defects or claim release readiness from this checkpoint.
+The last 71 dispositions are accepted: **29 restored encounter creatures and
+42 preserved controls** (24 cohesive blockers, eight foundation objects, six
+elder-wild creatures, the camp default and three ownership pennants). Each
+original and native-size raster was inspected. Harmless near-transparent RGB
+and intentional violet crystals, embers, cloth and magic were not erased.
+
+The 29 creatures were original paintings inside low-resolution 96px unit UI
+cards, with a procedurally painted shield plate, ellipse and tier pips. This
+was UI backing, not another magenta-key defect. Their exact curated 512px
+originals supply separate transparent 384px world sprites through
+`tools/prepare_overworld_final_cutouts.py`. The historical alpha crop, rounded
+82x76 fit and bottom origin from `draw_curated_overworld_icon` are multiplied
+by four. The renderer still draws the complete canvas at 1.08 tiles; no world
+size, placement, identity, commander priority, interaction, gameplay/native or
+save behavior changes. Every shared unit portrait, battle surface, animation
+and UI icon retains its original bytes. No generation or color key was needed.
+Fourteen historical card projections have interior RGB MAE below 0.5; fifteen
+palette-quantized cards measure 8.18–16.896. This is bounded registration proof,
+not a false claim that the old card pixels equal the recovered source painting.
+
+Frozen recipe, original unit/source/provenance hashes and processing proof:
+`art/overworld/source/generated/cutout_recovery_20260909/final_families/`.
+The 29 trimmed derivatives and separate
+`runtime/objects/encounters/creature_silhouettes/` PNG/import pairs are registered
+in the existing manifest. All 42 control rasters and metadata remain exact.
+Six elder-wild imports intentionally retain WebP quality 0.8. The independent
+PNG oracle reproduces their unchanged alpha-edge and WebP processing; it never
+reads a PCK or imported cache to obtain expected pixels. Reference:
+[Godot 4.6.2 texture importer](https://raw.githubusercontent.com/godotengine/godot/4.6.2-stable/editor/import/resource_importer_texture.cpp).
+
+Nine focused art tests, three pinned-save tests and two packaged-driver tests
+pass. Source 1280x720 and 1920x1080 and both final official packages each pass
+**5,770 assertions with zero runtime errors**. All 29 original encounters are
+seen through ordinary Day-1 scouting, preserving their complete records and
+unresolved state. The earned native Day97 fixture contains none of these 29;
+its 2380 original blocker bodies and 22 naturally visible palette variants
+are unchanged controls. Each rendered run retains 51 real gameplay views and
+six explicitly detached all-art galleries. Original/native-size review pages,
+all six renderer galleries, representative small/wide actual gameplay and
+final Linux packaged views were inspected visually. No new matte, UI-card
+backing or sheet-divider leakage is visible on the selected sprites.
+
+There are 30 strict save/load/re-entry controls per run and **120 cross-run
+complete-state comparisons**, excluding only save timestamps and fresh authored
+session ids. No combat seeds or gameplay fields are normalized away. The
+predecessor `e98911c5` fails exactly **116 art assertions**, with no gameplay
+failures or runtime errors. Same-resolution geometry is exact to sub-0.0001px
+Windows float evaluation. Wide geometry follows the unchanged 94px versus
+58px tile and marker-width formulas, not equal screen coordinates.
+
+Both final PCKs contain **309484404 bytes / 5542 members**. Only the manifest
+and UID cache change among existing members: **5482 previous payloads remain
+byte-exact**, including every shared unit image and compiled gameplay/native/
+save owner. The only 58 additions are 29 world-texture/import pairs. All 1185
+other art rows remain exact. Platforms differ only in `project.binary`; all
+7992 UID/path mappings agree. Source art and evidence stay excluded. Official
+Linux startup and Windows startup/Town/23-step generated-entry/build flows pass.
+Linux PCK SHA256: `602fb2c403c184b69ee1fdcc08c720c4e9c31d274b6c3937a5c823353804d95e`.
+Windows PCK SHA256: `4d444101109ae44b2f52ce3ef4e5d4f2e7d078d8c6df2e2a51eb0f8cb5ce6eca`.
+
+All five shared distinct/decorative/input/route/fog reports pass. Sovereign,
+Frontier Mythic, Unbound Wild, pennant and raster-blocker domain reports pass;
+the original cohesive-palette Python checks also pass against that completed
+native case (2324 body tiles, exact collision/session authority). Its optional
+reveal-all lava view is labeled art review, not earned gameplay. The older
+specialist smoke still has four failures: an obsolete 130-unit expectation
+against the 160-unit catalog and three survivor grants correctly held pending
+seven-slot space. The original smoke and all its compiled gameplay/content/UI
+inputs match the predecessor byte-for-byte. This is source-backed unchanged-
+behavior evidence, not a passing smoke or a claimed predecessor test rerun.
+
+Retained rejected diagnostics include inaccessible scout choices, the initial
+lossy-control oracle assumption, interrupted terminal jobs, the five-minute
+wide software-rendering timeout, and a full shared-memory Wine workspace that
+also caused an interrupted wide run's saves to fail. The latter workspace was
+moved intact to disk; final runs use fresh isolated state. A missing service
+user environment created a stray editor-settings folder; it was moved intact
+out of the export tree. The package-scope check caught its two unwanted PCK
+members, and clean serialized exports/probes remove them. A concurrent export
+was rejected by the existing single-writer import lock; no lock was stolen.
+These failed runs are not acceptance. The legacy cohesive runner initially
+rewrote its default report/screenshots; this run's results were copied to a
+separate evidence directory and the adapter now redirects that constant too.
+No prior cohort acceptance packet or unrelated untracked retention file changed.
+
+Evidence under `.artifacts/overworld_cutout_quality_20260909/`:
+`final-family-acceptance.json`, `verify_final_family_acceptance.py`,
+`final-families-source-1280-service-20260910`,
+`final-families-source-wide-20260910`, `final-families-{linux,windows}-clean-20260910`,
+`final-families-before-20260910`, `final-families-{domains,shared,cohesive}-20260910`.
+Repository log: `/tmp/heroes-final-repo-service-20260910.log` (passed).
+Final export reports: `/tmp/heroes-final-linux-serialized-20260910/report.json`
+and `/tmp/heroes-final-windows-clean-20260910/report.json`. Acceptance verifier
+log: `/tmp/heroes-final-family-acceptance-clean-20260910.log`.
+Reproduction: focused Python tests and the existing source/packaged drivers
+with `--batch final_families`, fresh labels and the documented platform arguments.
+The final-family runner retains every assertion/capture with a 900-second
+software-rendering deadline; other cohorts retain their existing deadline.
+
+## Full runtime-pool closure — 2026-09-10
+
+Both owner-directed cutout children and their parent are implemented and
+validated. **All 1214 current manifest rows are accounted for; zero remain
+pending.** The current source/provenance/disposition audit covers 21 cohorts:
+1161 explicit repaired-or-preserved asset rows plus 53 additional hash-locked
+control-only rows. These are reviewed dispositions, not 1214 newly drawn images.
+Every cohort retains successful small/wide source and Linux/Windows runtime
+reports whose expected PNG hashes match the current assets, plus actual stored
+screenshots. All 21 original-source reconstruction validators pass within
+`tests/validate_repo.py`. The dated individual visual reviews above establish
+visual acceptance; membership counts alone do not.
+
+Evidence: `full-pool-closure.json` and `verify_full_pool_closure.py` beside the
+final-family acceptance; `/tmp/heroes-full-pool-closure-20260910.log`. The audit
+records each row's current raster hash, source/provenance files, owning frozen
+recipe and retained four-mode cohort reports. Both source-mounted contract and
+remaining-encounter delivery roots are included, rather than mistaking their
+earlier failed scouting reports for acceptance.
+
+The cutout-repair goal is complete, not the whole game. Historical legacy-test
+failures remain explicit; headless Windows/Wine is not physical GPU/controller
+certification, and this is not exhaustive seed coverage, unrelated Town/terrain
+redesign or release readiness. The four pre-existing unrelated untracked paths
+and their 66-file checksum baseline remain unchanged. No cache cleanup or new
+package-size ceiling is included.
