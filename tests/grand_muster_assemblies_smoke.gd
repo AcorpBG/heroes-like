@@ -12,12 +12,12 @@ const OUTPUT_DIR := "res://.artifacts/grand_muster_assemblies_smoke"
 const REPORT_PATH := OUTPUT_DIR + "/report.json"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png"
 const CASES := [
-	{"scenario_id":"rainwrit-five-writ-grand-muster","prefix":"rainwritmuster","site_id":"site_rainwrit_five_writ_muster_standard","asset_id":"resource_site_grand_muster_rainwrit_standard","region":Rect2(0,0,48,48)},
-	{"scenario_id":"hollowreed-moonhide-grand-muster","prefix":"hollowreedmuster","site_id":"site_hollowreed_moonhide_drum_standard","asset_id":"resource_site_grand_muster_hollowreed_standard","region":Rect2(48,0,48,48)},
-	{"scenario_id":"meridian-five-facet-grand-muster","prefix":"meridianmuster","site_id":"site_meridian_five_facet_muster_prism","asset_id":"resource_site_grand_muster_meridian_prism","region":Rect2(96,0,48,48)},
-	{"scenario_id":"crownroot-five-seed-grand-muster","prefix":"crownrootmuster","site_id":"site_crownroot_five_seed_muster_bough","asset_id":"resource_site_grand_muster_crownroot_bough","region":Rect2(144,0,48,48)},
-	{"scenario_id":"blackbell-five-clause-grand-muster","prefix":"blackbellmuster","site_id":"site_blackbell_five_clause_muster_gantry","asset_id":"resource_site_grand_muster_blackbell_gantry","region":Rect2(192,0,48,48)},
-	{"scenario_id":"pale-sounding-five-wake-grand-muster","prefix":"palesoundingmuster","site_id":"site_pale_sounding_five_wake_muster_mast","asset_id":"resource_site_grand_muster_pale_sounding_mast","region":Rect2(240,0,48,48)},
+	{"scenario_id":"rainwrit-five-writ-grand-muster","prefix":"rainwritmuster","site_id":"site_rainwrit_five_writ_muster_standard","asset_id":"resource_site_grand_muster_rainwrit_standard","region":Rect2(0,0,192,192)},
+	{"scenario_id":"hollowreed-moonhide-grand-muster","prefix":"hollowreedmuster","site_id":"site_hollowreed_moonhide_drum_standard","asset_id":"resource_site_grand_muster_hollowreed_standard","region":Rect2(192,0,192,192)},
+	{"scenario_id":"meridian-five-facet-grand-muster","prefix":"meridianmuster","site_id":"site_meridian_five_facet_muster_prism","asset_id":"resource_site_grand_muster_meridian_prism","region":Rect2(384,0,192,192)},
+	{"scenario_id":"crownroot-five-seed-grand-muster","prefix":"crownrootmuster","site_id":"site_crownroot_five_seed_muster_bough","asset_id":"resource_site_grand_muster_crownroot_bough","region":Rect2(576,0,192,192)},
+	{"scenario_id":"blackbell-five-clause-grand-muster","prefix":"blackbellmuster","site_id":"site_blackbell_five_clause_muster_gantry","asset_id":"resource_site_grand_muster_blackbell_gantry","region":Rect2(768,0,192,192)},
+	{"scenario_id":"pale-sounding-five-wake-grand-muster","prefix":"palesoundingmuster","site_id":"site_pale_sounding_five_wake_muster_mast","asset_id":"resource_site_grand_muster_pale_sounding_mast","region":Rect2(960,0,192,192)},
 ]
 
 var _errors: Array[String] = []
@@ -33,7 +33,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(288, 48), "Grand Muster atlas must remain exactly 288x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(1152, 192), "Grand Muster atlas must remain exactly 1152x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)

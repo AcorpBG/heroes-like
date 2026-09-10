@@ -10,12 +10,12 @@ const OUTPUT_DIR := "res://.artifacts/fogbreak_survey_expeditions_smoke"
 const REPORT_PATH := OUTPUT_DIR + "/report.json"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png"
 const CASES := [
-	{"scenario_id":"cinderquill-ashline-fogbreak-survey","prefix":"ashline","asset_id":"resource_site_fogbreak_embercourt_compass","region":Rect2(0,0,48,48)},
-	{"scenario_id":"votivejaw-bogglass-fogbreak-survey","prefix":"bogglass","asset_id":"resource_site_fogbreak_mireclaw_mast","region":Rect2(48,0,48,48)},
-	{"scenario_id":"sunvein-meridian-fogbreak-survey","prefix":"meridian","asset_id":"resource_site_fogbreak_sunvault_heliograph","region":Rect2(96,0,48,48)},
-	{"scenario_id":"seedseer-rootstar-fogbreak-survey","prefix":"rootstar","asset_id":"resource_site_fogbreak_thornwake_orrery","region":Rect2(144,0,48,48)},
-	{"scenario_id":"heatpriest-redgauge-fogbreak-survey","prefix":"redgauge","asset_id":"resource_site_fogbreak_brasshollow_theodolite","region":Rect2(192,0,48,48)},
-	{"scenario_id":"vowless-drowned-horizon-fogbreak-survey","prefix":"drownedhorizon","asset_id":"resource_site_fogbreak_veilmourn_sextant","region":Rect2(240,0,48,48)},
+	{"scenario_id":"cinderquill-ashline-fogbreak-survey","prefix":"ashline","asset_id":"resource_site_fogbreak_embercourt_compass","region":Rect2(0,0,192,192)},
+	{"scenario_id":"votivejaw-bogglass-fogbreak-survey","prefix":"bogglass","asset_id":"resource_site_fogbreak_mireclaw_mast","region":Rect2(192,0,192,192)},
+	{"scenario_id":"sunvein-meridian-fogbreak-survey","prefix":"meridian","asset_id":"resource_site_fogbreak_sunvault_heliograph","region":Rect2(384,0,192,192)},
+	{"scenario_id":"seedseer-rootstar-fogbreak-survey","prefix":"rootstar","asset_id":"resource_site_fogbreak_thornwake_orrery","region":Rect2(576,0,192,192)},
+	{"scenario_id":"heatpriest-redgauge-fogbreak-survey","prefix":"redgauge","asset_id":"resource_site_fogbreak_brasshollow_theodolite","region":Rect2(768,0,192,192)},
+	{"scenario_id":"vowless-drowned-horizon-fogbreak-survey","prefix":"drownedhorizon","asset_id":"resource_site_fogbreak_veilmourn_sextant","region":Rect2(960,0,192,192)},
 ]
 
 var _errors: Array[String] = []
@@ -31,7 +31,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(288, 48), "Fogbreak instrument atlas must remain exactly 288x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(1152, 192), "Fogbreak instrument atlas must remain exactly 1152x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)

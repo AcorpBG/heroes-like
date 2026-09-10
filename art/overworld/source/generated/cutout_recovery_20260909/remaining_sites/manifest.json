@@ -1,0 +1,268 @@
+{
+  "schema_id": "remaining_site_cutout_recovery_v1",
+  "recipe_sha256": "1fdf2afa5e46b8ddd2ee73897c841f03f6e9d7467189cabcdbd6f53b2fde2cd2",
+  "tools": {
+    "tools/prepare_overworld_contract_cutouts.py": "b6686960de8cdb843fbb3a9fe079bb46b66a8076d22f49da9b47082973e0d947",
+    "tools/prepare_overworld_recurring_cutouts.py": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
+    "tools/prepare_overworld_cutout_art.py": "247801087cb8c5bfd6fb0a471bf39dbbfdb2a8bd8fe984d3816df92f00b0d68d",
+    "tools/prepare_overworld_legacy_cutouts.py": "578dd78feaf322f585df5b214cfdbe607ea29eb0a359a95ce549e289c8d7b092",
+    "tools/prepare_overworld_remaining_site_cutouts.py": "7acc05171159a97a88f779e6191a8b2a5fba16331f6ca8a66bd33081f9da04b7"
+  },
+  "assets": {
+    "resource_site_triune_arcanum_lockfire_rostrum": {
+      "rgba_sha256": "488a26db070144f6dc7394e037b3c0bbea138e915bbfbf153c1ca497454c3f5a",
+      "trim_sha256": "2dbf306e2d1a5e029bdbf617334980c055a712bf31bd2f2f0b6c040f518076e2"
+    },
+    "resource_site_triune_arcanum_moonfen_drumcourt": {
+      "rgba_sha256": "5b88953ef92aa93f91d3ce192e4c62822de247ac6e12e8c3bc26990a98023dbf",
+      "trim_sha256": "2874eaec24392bdd4f052f22fb0e84d227ae574641bd977a2ee191a5fae38d33"
+    },
+    "resource_site_triune_arcanum_three_facet_orrery": {
+      "rgba_sha256": "64912b24a3a2358c91be296621a6ef9f3bc04f004bdc47ee1c9440e41e8c3719",
+      "trim_sha256": "43e0d806d54fc4a2cd5313abd535676945f4cceae678ee651a2df43dd6dfe098"
+    },
+    "resource_site_triune_arcanum_heartwood_arbor": {
+      "rgba_sha256": "4302ebf17927c85957feae8ced43850b4f7379538fb62ca9b97b04828b8f9952",
+      "trim_sha256": "19c5c894d95eccf3637ce625d5b62080c1363e521076159468b0e68d3c286124"
+    },
+    "resource_site_triune_arcanum_redline_forge": {
+      "rgba_sha256": "c66f6713a870ce037e6243b1e93fae344e39f1ece9333f2b07359d4145f7229a",
+      "trim_sha256": "2db02dd9d658a96e678c8419a2eec91dfb6378e04c31ff1211e958c9fc050ad7"
+    },
+    "resource_site_triune_arcanum_drowned_bell_archive": {
+      "rgba_sha256": "8703ae8ce2267ec0478b7066ee9abcea67028f64b6c4936d4b2dc3e1da23f165",
+      "trim_sha256": "dcd639cfa34ab215785ec0c746882055560b03e0c2fc46e77b1d3ec1e1c48c9f"
+    },
+    "resource_site_great_work_rainwrit_survey_cairn": {
+      "rgba_sha256": "5c1a92641ba0956b0f1297b0f30ed20419baeb274debe841dc60f505353be96c",
+      "trim_sha256": "0ba854a62747fdda91cfd4268746d7344f79336f85c8941bd98786ea1dc1e784"
+    },
+    "resource_site_great_work_hollowreed_foundation_totem": {
+      "rgba_sha256": "74fb573689ab39ce7ae9556ed08e269434f6ea2bcff071377ff30683fc0f5e85",
+      "trim_sha256": "d5a6173c784c6d2cccba4645492f46f38674d6553a3c74727e4f256cea8437e5"
+    },
+    "resource_site_great_work_meridian_plumb_prism": {
+      "rgba_sha256": "429e4f7499d3fb29a8c9994d4389ef219dbac812d0c7fabb2f82aae8c0a1bf21",
+      "trim_sha256": "15d10b25233845bf602bb9b31b575870881391616e858006c788f6540b2d80c3"
+    },
+    "resource_site_great_work_crownroot_boundary_arbor": {
+      "rgba_sha256": "f8934a67d2cb2338b07ac5e1be1cb04d4af4da03d825f27654c1a455899a5c09",
+      "trim_sha256": "e1b075f1839b6c0ff7062d3c0dfd09c9284049b54b4a2feb5e225613e06266a7"
+    },
+    "resource_site_great_work_blackbell_assay_tripod": {
+      "rgba_sha256": "dc115295bf615636b86799f69c2b0ce5a477a7db40abfb743bb4ace2bf0be237",
+      "trim_sha256": "820f9567e021f905e90e038692640ca6f22f86278c74b43112a52d46469c8eb2"
+    },
+    "resource_site_great_work_pale_sounding_marker": {
+      "rgba_sha256": "0a482f5df2159753a9d6c7728d8f939b190007efa6453cb454d33877a0ae27c6",
+      "trim_sha256": "fba49b9d9314cd0b8436cf736180e10cc02be3f98fb9d76aac89aa36be241f3a"
+    },
+    "resource_site_grand_muster_rainwrit_standard": {
+      "rgba_sha256": "19bfa445565b5b331d2fb498b40e54afbc380f3c43e180f795c498072e8dd339",
+      "trim_sha256": "43e0ab96b0b75096883343b6de8f7b993407c95d4005dcab621fa203d1b23480"
+    },
+    "resource_site_grand_muster_hollowreed_standard": {
+      "rgba_sha256": "b4c23b9474b258cbca08fc901bd012a97a58847bdec0acfd26a1748401338be9",
+      "trim_sha256": "e0bb40cdbbb6bcfe639434dc7cedb47fffdf9dd666a3bae119132c1e121fb1c8"
+    },
+    "resource_site_grand_muster_meridian_prism": {
+      "rgba_sha256": "db26a84a552f28ce98da48a30757890769ed7a613b34b1027a84b9dcef6d7f01",
+      "trim_sha256": "c2425eae2801448fc646857bfaf5d308beb9f476547c08891b9030257a584cb5"
+    },
+    "resource_site_grand_muster_crownroot_bough": {
+      "rgba_sha256": "c14ecdc7b2d170aadf8bd06f471c44a5b4655a67e6b95f6ba0bd3d418238164f",
+      "trim_sha256": "5827143a68d6fdc8f0ec0b16915eb69315c7fb41587ce5d0a688db28308a88dd"
+    },
+    "resource_site_grand_muster_blackbell_gantry": {
+      "rgba_sha256": "9d44d3efa58cb595d8ad35d8e25ab82b8938f212b9005d8303b18f2c35fae997",
+      "trim_sha256": "e1c8725c165ac4a5758265d5685e02fb9842eeacc5ea6fc82d2db7b45e23d6b8"
+    },
+    "resource_site_grand_muster_pale_sounding_mast": {
+      "rgba_sha256": "998cc87337e3b516d2294295c2c669a7892bb28295d1b94c2223916f60721589",
+      "trim_sha256": "ca0dde82678a60f229b2eab5429fad8e87f50ff3580db1371fcffc2be8e44780"
+    },
+    "resource_site_relief_route_embercourt_relay": {
+      "rgba_sha256": "7f1588f271745bfcac78beb13f74b9d83d292e28e13c9186bdde635c2b934950",
+      "trim_sha256": "52b62553df171bebbdce55d35e5084b269a0547c6e39cfdca78c4662ad974cd8"
+    },
+    "resource_site_relief_route_mireclaw_relay": {
+      "rgba_sha256": "d5b2066ec7fa80d793138ebebb2b50413fbe8f10aaf80fdfe6beb1dbb0882120",
+      "trim_sha256": "568e77cb7592d9fda283fde6cd2bb9970a1d7c37ac273d446b3c2b85b7197107"
+    },
+    "resource_site_relief_route_sunvault_relay": {
+      "rgba_sha256": "34adbe9a2bb4c8325f423468d859bfbb652acc7cc6e583ef0570d5711a21ce1d",
+      "trim_sha256": "467198ecb02ae9505c4395abd5ca98d7c0081905e5a46dd7e3dbe8cff7bb8a95"
+    },
+    "resource_site_relief_route_thornwake_relay": {
+      "rgba_sha256": "2097785bd63c8f1425e7a24dddb0dc87c8b9537d426a2ae978e49b11da3fd166",
+      "trim_sha256": "73e7c866eff3b784759bdd7eb58a4e12d32d9b9a24aa8af154db06881dab8da2"
+    },
+    "resource_site_relief_route_brasshollow_relay": {
+      "rgba_sha256": "1de17a22e9a4ff64ce0baecec940037e94a73a71467fd981a3e7e1a1331e5e6d",
+      "trim_sha256": "56df2e55d060ffd00628aea33a4bc7b90262e1c13ed1a6a4296b1f9de08431b1"
+    },
+    "resource_site_relief_route_veilmourn_relay": {
+      "rgba_sha256": "907d4e0eb470fe6a87ba475347e04062d67833b07ca8652d2626a22b0fba8b3f",
+      "trim_sha256": "b9c15b2cfdb5a682eb2cc481e86a8d889f437662840ae13e4c783d99b972e95f"
+    },
+    "resource_site_fogbreak_embercourt_compass": {
+      "rgba_sha256": "9fbd029e629d462e361bd8ceaaddbe08e72525715e8a553f23ac5ebecf05ddff",
+      "trim_sha256": "ec01da11ea22a44cd490fa9432c9391ada568b2b628bda645d114f023c30ac56"
+    },
+    "resource_site_fogbreak_mireclaw_mast": {
+      "rgba_sha256": "e930583f5a9667f08af9ffe5f148b0a9b7325738f2f6b5e8b43db2b4a369e66f",
+      "trim_sha256": "d0f82e5d2eec52e59587e38a21d4ab2cf6a8e8f2d820426d799acb79b6aea000"
+    },
+    "resource_site_fogbreak_sunvault_heliograph": {
+      "rgba_sha256": "7fad00c18cd6b1e3c46d72b9ea856f319573186a594d8ee96223516ee82b7be8",
+      "trim_sha256": "2ab30983ea67c4f516c090e9902a376d48d30c09d66f0f2dca8e4824bfd10be3"
+    },
+    "resource_site_fogbreak_thornwake_orrery": {
+      "rgba_sha256": "c815afd32d6ef785637f7db71e0c9bd9e94c9952e71a0daa45cb9587a5d39c1f",
+      "trim_sha256": "4cc66b9858f69bec855ab3f269fb34b1803b1789748a4187b7aef1627a5c7670"
+    },
+    "resource_site_fogbreak_brasshollow_theodolite": {
+      "rgba_sha256": "02bec11d37391c16e4a42970e671b906541945c5a2fa4e70dd0160ca5c86c133",
+      "trim_sha256": "ef88b953e8c6313b16a323744eed7749d3e5c3ad07d5c8d8886694ac4d8c55a6"
+    },
+    "resource_site_fogbreak_veilmourn_sextant": {
+      "rgba_sha256": "fd35a0dff0d907eae1ec9d30998ccedbab6c28cf2697160a4f5424172e614cf9",
+      "trim_sha256": "82d35b2f1e7ed8f8ec097a514509208bc2cf20f5788420477de4d445c03c1281"
+    },
+    "resource_site_frontier_treasury_embercourt_brazier": {
+      "rgba_sha256": "acaf8240620bf6b3c28562dfdf71f64573766ea5a3acb30df59f93a9c80d6037",
+      "trim_sha256": "0abd90d37d6c3fa753b003a8651e95ee1e12758c91ba828169fb59620466a2ae"
+    },
+    "resource_site_frontier_treasury_mireclaw_drum": {
+      "rgba_sha256": "fd11ebdced0f7c8ff8f9240d5a06f444c6aa9dbab66fbdb491c376b27dbcde9e",
+      "trim_sha256": "59af8ce39a420163889d6712b4ca1175c29288306f1c9e4a4d51b34771348522"
+    },
+    "resource_site_frontier_treasury_sunvault_prism": {
+      "rgba_sha256": "509e9b1f606d98f2297fc6a4a9db21ee8650e8699294d7583cda1cd720b51ac2",
+      "trim_sha256": "82c0e6ed9545c6e5c29fefe606812d815f414bd5b34fded5e51c1afa7a9467d7"
+    },
+    "resource_site_frontier_treasury_thornwake_arbor": {
+      "rgba_sha256": "bc914e01af5bb72aa671118d8160839bf21a584e1b396cd8eedd9bf9cfffdd39",
+      "trim_sha256": "13ff8bbaefa111e9b5d00d2c55e204c28457432d8aade017afb69bcc024549de"
+    },
+    "resource_site_frontier_treasury_brasshollow_wheel": {
+      "rgba_sha256": "bc127213fb6c069ce5d7378b000538bf955316fcd77e23e7b0f27e790fbcf87f",
+      "trim_sha256": "b4a4834c8131e6e7e3c6186e5b360a9558f34181fc2f03ec75bc2cbc2cdb2df0"
+    },
+    "resource_site_frontier_treasury_veilmourn_ledger": {
+      "rgba_sha256": "545b22bcaf42b40691795d42afc4663be7d0b3bada4c82e6baadce00fb104b0a",
+      "trim_sha256": "7396fa4bed1f1c6e4f95c75f934edd87415804d152d3ba0388e4fb663a293124"
+    },
+    "resource_site_regalia_lockward_charter_reliquary": {
+      "rgba_sha256": "8cd21682651c894268c3bfa11523a5c39ccd933c630b406c1bd61ebb6860ff93",
+      "trim_sha256": "c63a9db019a4e638f0f7321f4d0881fc1d69b94003242a7ef936b5dadab6c996"
+    },
+    "resource_site_regalia_fenhound_pursuit_reliquary": {
+      "rgba_sha256": "a480b03c8a522f2555a4f4f4e531b18a7c2b26303e761749c0ff4807150ad124",
+      "trim_sha256": "22cea74dd1e763b0bbb732214c07152da33e3e2f73917de8d5c9067a5fc190e4"
+    },
+    "resource_site_regalia_meridian_relay_reliquary": {
+      "rgba_sha256": "d07ab7650b17385239b34f96c66227c866084508473fded998b05bcdcd7f009d",
+      "trim_sha256": "0f31e12d0dec0b9d74c68bdc58f37bbc12754460ea7a779711f9f157c1304782"
+    },
+    "resource_site_regalia_rootpath_covenant_reliquary": {
+      "rgba_sha256": "fdf753ef052813685d7d81cc8be59672b0f592be53f4ea851f950449eb62d5c4",
+      "trim_sha256": "828fd8f46d8e0c4f71de63f706ba708500e853be10b0a646778f5e6f7fa2afb9"
+    },
+    "resource_site_regalia_redline_survey_reliquary": {
+      "rgba_sha256": "3e4e8065682240fa4eb69a0dd4d141b5c99f146e7af8f35350a1e2d82d5a9362",
+      "trim_sha256": "aedfa1f0168d80d0704a48aad0718e1e4bbf383ec0b9c35d6cd9cdd638e1c47e"
+    },
+    "resource_site_regalia_drowned_wake_reliquary": {
+      "rgba_sha256": "558d669494f9c705738178c74110f35102fc617b1742afcb57eb186fc2213003",
+      "trim_sha256": "1ce2e6cb3394c22695d76a92453d8a29f3841f0d4074abd8a2d415b25bd72036"
+    },
+    "resource_site_grand_arcanum_dawnwrit_column": {
+      "rgba_sha256": "dd8113a0e8b52e0f10a57a8c1adc6ef4af08b3cf11ba1825238f6e78331fd288",
+      "trim_sha256": "75cf0bd6de73963ace7c2c9ecb531fbb7dd7f5ebc2c1d38033b74cce6a25d1a6"
+    },
+    "resource_site_grand_arcanum_leechmoon_court": {
+      "rgba_sha256": "8f670afff223cb9522e7e0a340bb06a6f7160a235c2ccf54760079091f9b2c23",
+      "trim_sha256": "3184170867b11b15803fbf40b859fbdef9575b420bb62866e8d3b78587941a26"
+    },
+    "resource_site_grand_arcanum_aurora_halo_array": {
+      "rgba_sha256": "bd9f8303468136e00fdd51079fb7b07d934d8f3d1c2d10faac77c41ccd9a0a5b",
+      "trim_sha256": "f5e5dae6b48e9b0ff1bed95e7edfc03b12cbe119bdfae8966d71a0999f8fb4f3"
+    },
+    "resource_site_grand_arcanum_loambriar_loom": {
+      "rgba_sha256": "578fca605c8074a0459ccebc04389761c792fb651e33df2c35947032e6432985",
+      "trim_sha256": "5be457c880efbdd57f762b212a915234ea0146bfb3fa117c6498a00903ef846b"
+    },
+    "resource_site_grand_arcanum_ashrail_forge": {
+      "rgba_sha256": "4181e7749b1288daae80057931fe8132b84de4562a139b276e04803f82aef8aa",
+      "trim_sha256": "99c1ce4dcc0fc6c40dc4920895b57991fffa0283274d3fddf3ac64afa3f9a857"
+    },
+    "resource_site_grand_arcanum_mistmourning_archive": {
+      "rgba_sha256": "3b12f1466701cdfce67c487cf2f55ed09ba2c3dd4757aaed1af0f4476843d9ac",
+      "trim_sha256": "ec4f38c3223ea505557224fb57ae917500ce86fe4904764c7fba7bcf43269243"
+    },
+    "resource_site_uncrowned_cinderlock_throne": {
+      "rgba_sha256": "bf9ec49f2d04c6df64b905853a0180df800d87473480c27d4a16a63dfb2378fe",
+      "trim_sha256": "265a7084f70b3dbfdfd55f33b09fa5a1a125e29f12ea5c3104cc740c09661999"
+    },
+    "resource_site_uncrowned_murkward_tribunal": {
+      "rgba_sha256": "7e66254e3011578cd4b6a1c847bf253da561b77cd3f1b423de28bf529a0db059",
+      "trim_sha256": "1787651d790ffb616c3035117c4e7b769f3e00ba00006cacf4b36f2df35efc99"
+    },
+    "resource_site_uncrowned_dawnmirror_matrix": {
+      "rgba_sha256": "83a819a777d71f26329a02dee919102e861da5268298bcc643c4048d1fe15783",
+      "trim_sha256": "f63d34ba7001af235486a23eff1f0b3b6e7a97160d427d18fb622d73333c2753"
+    },
+    "resource_site_uncrowned_graftroot_dais": {
+      "rgba_sha256": "3116a036ad5686f12fc026a00e1a9cf3cac9d964d116a6f0de94e9a9ec3f52d0",
+      "trim_sha256": "2602b9441fc5dcdad5f9849bc5569c815f58e9ebe8b8b77af96c7ed1fd976da0"
+    },
+    "resource_site_uncrowned_orevein_assay_seat": {
+      "rgba_sha256": "ba55c2c8fe3413d24c3b76038a0805d001e7d9361a1246b23f50ec5816d1aba6",
+      "trim_sha256": "2cb1c73b63ee00439b4476929027bb8d3ca9de1669cbb54e86188c3641c0c14a"
+    },
+    "resource_site_uncrowned_bellwake_sounding_chair": {
+      "rgba_sha256": "103d2905f8598aaa9e45a3cd0e8ff77f0b7e499d10d81f462ab2e7b6a066e731",
+      "trim_sha256": "dd2896eac3c2fc37c252091a2f2e51f2bc8fb18cf095c6fb2c2b16f136dc7765"
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png": {
+      "after_sha256": "b0c40a69a3835a296be2c31e86260b880601bab50a8aa62067897417f4ded267",
+      "prepared": "runtime/objects/resource_sites/triune_arcanum_trials_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png": {
+      "after_sha256": "e22fdbf1f4765b083f09bf205a2f48a0986bf4a08935b89971679e2da0478f97",
+      "prepared": "runtime/objects/resource_sites/great_work_charter_races_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png": {
+      "after_sha256": "a3add361ad8aedc53a2a032523093ce3be42788a935e6bb403dc5d4440492352",
+      "prepared": "runtime/objects/resource_sites/grand_muster_assemblies_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png": {
+      "after_sha256": "930e446e3134285da34d85751f9b0c0fb55096532b609a6cae7f75a92946944e",
+      "prepared": "runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png": {
+      "after_sha256": "e6b072e92ced7e2bce4efebc9f9a1ac2acc4f2fd677106b078fe39e634eb512f",
+      "prepared": "runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png": {
+      "after_sha256": "5a7ddb58695b2db9f826c3b711ccb7b5496a845a0e0eb60e3fc7d129c6dfee3c",
+      "prepared": "runtime/objects/resource_sites/frontier_treasury_offices_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png": {
+      "after_sha256": "b9fbfd068be36e33089fa11ba7efade7883e8a541ae25cd06167980aa7506fe6",
+      "prepared": "runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png": {
+      "after_sha256": "a7bbeb1c229e40d559dccd8c077527e565f90bba8becadd1732b84c048b6c22a",
+      "prepared": "runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png": {
+      "after_sha256": "7a084d68b7c537bca3a8d9e05ed30f754d9911527b013dd9b43fc2237e8edf08",
+      "prepared": "runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png"
+    }
+  },
+  "processing": "54 original RGBA paintings at fourfold atlas density. Preserve historical centered/bottom 42/44px fits and complete curated 512px canvases. All source alpha and non-noise RGB unchanged; only reviewed saturated alpha 1..4 RGB borrows original foreground RGB. No procedural paint, state/identity/placement/gameplay change."
+}

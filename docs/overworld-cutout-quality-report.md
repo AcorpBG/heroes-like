@@ -1757,13 +1757,66 @@ sprite reports; its three unfinished input/route/fog reports pass separately in
 Fresh temporary Wine prefixes are retired by the established helper, preserving
 users and reports. Pre-existing unrelated retention files remain hash-exact.
 
+## Remaining resource-site originals accepted (2026-09-10)
+
+Recovered 54 original paintings across nine six-cell atlases: Triune Arcanum,
+Great Work, Grand Muster, Relief Route, Fogbreak, Frontier Treasury, Setbound,
+Grand Arcanum and Uncrowned Roads. The old 48px cells had lost source detail;
+45 sources also contained 163840 saturated RGB pixels at alpha 1..4. Only that
+reviewed noise borrows nearest original foreground RGB. Every source alpha and
+all other RGB remain exact. Same paths, fourfold pixel density, original world
+size and historical 42/44px centered/bottom registrations remain. Twelve curated
+512px masters retain their complete canvas. Setbound's old prose says centered,
+but its actual atlas proves bottom-aligned; the repair preserves actual alignment.
+No new generated painting or changes to game/native/RMG/Town/save rules.
+
+Accepted: eight focused Python tests, three fixture tests, all nine existing
+domain reports, five shared sprite/input/route/fog reports, repository validation
+and both official exports. Each source resolution (1280x720, 1920x1080) and each
+platform package passes 3046 assertions with zero runtime errors. The unchanged
+`418d30c4` package fails precisely 162 art assertions, no unrelated checks. All
+52 complete-save comparisons pass across 13 saves per run, excluding only cross-run
+timestamps and fresh authored session ids. Both PCKs contain 5484 members and
+measure 303765448 bytes. Exactly nine textures, the art manifest and UID cache
+change; 5473 other payloads and 1160 other art rows remain exact. Linux/Windows
+payloads differ only in platform `project.binary`. Windows additionally passes
+fresh generated-map/Town construction entry, but headless Wine is not hardware
+GPU/controller certification. Accepted pool: **1044/1214**, **170 pending**.
+
+All nine source/preview pages, five in-engine galleries and small/wide gameplay
+were visually inspected. Nine authored cases preserve original sites, coordinates,
+guards and ordinary scouting. An actual Triune claim consumes its one-use shrine;
+the retained save record still resolves correctly, without a ghost map image.
+An ordinary relay claim preserves its persistent site. This relay is partly
+occluded by its co-located town/hero; the gallery, exact decoded raster and domain
+flow provide complementary coverage, not a claim of unobstructed gameplay art.
+The first probe incorrectly expected Triune persistence (three test failures);
+the corrected probe follows unchanged `resource_node_is_present` authority.
+The pinned Day97 native map contains zero selected site records: its 2380 original
+blockers and complete save are unchanged controls, not invented affected coverage.
+
+Evidence: `.artifacts/overworld_cutout_quality_20260909/remaining-site-acceptance.json`
+and adjacent `verify_remaining_site_acceptance.py`; source labels
+`remaining-sites-source-{1280,1920}-final-20260910`, platform labels
+`remaining-sites-{linux,windows}-current-20260910`, predecessor label
+`remaining-sites-linux-before-20260910`, and `remaining-sites-{domain,shared}-20260910`.
+Reproduce with `tests/overworld_cutout_batch_regression.py --batch remaining_sites`
+and the same packaged driver/options as above, using fresh labels and Wine prefix.
+Preparation owner: `tools/prepare_overworld_remaining_site_cutouts.py`; immutable
+recipe/masters/old-atlas provenance and 54 trimmed outputs reconstruct exactly.
+Existing domain launch adapter `/tmp/heroes-remaining-sites-suite-20260910.py`
+changes only evidence destinations; nine maintained atlas assertions use 192px
+cells without weakening gameplay checks. Logs: `/tmp/heroes-remaining-sites-{python,repo}-20260910.log`;
+exports: `/tmp/heroes-remaining-sites-{linux,windows}-20260910/report.json`.
+Parent and runtime-pool child remain in progress; no release-completion claim.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The then-remaining 783 rows
 received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 990 repaired/preserved dispositions, leaving
-224 for complete detailed review/recovery. The two veteran mast repairs are now
+The accepted cohorts now cover 1044 repaired/preserved dispositions, leaving
+170 for complete detailed review/recovery. The two veteran mast repairs are now
 included only after the separate source/visual/platform closure above.
 All 31 recurring encounters, 30
 recurring resource-site originals, 31 separate claimed dwellings and 34 early
@@ -1771,8 +1824,8 @@ post-interaction and 40 landmark/objective-state paintings are accepted.
 The 34 command-site originals, all 36 recruitment/habitat dispositions and the
 40 command/training paintings and 52 contract/expedition encounter paintings
 are accepted, along with the remaining 79 encounter recoveries and six faction
-controls above. All 69 artifact dispositions are accepted above. Next: the 54
-remaining resource-site atlas rows, then hero/Town/other runtime families.
+controls above. All 69 artifact dispositions and 54 remaining resource-site
+paintings are accepted above. Next: hero/Town/other runtime families.
 The seven
 Pactwright/Mireglass states are accepted only by the explicit integrated-edit
 follow-up above; recovery of these originals does not accept different paintings.

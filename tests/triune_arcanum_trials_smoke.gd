@@ -12,12 +12,12 @@ const OUTPUT_DIR := "res://.artifacts/triune_arcanum_trials_smoke"
 const REPORT_PATH := OUTPUT_DIR + "/report.json"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png"
 const CASES := [
-	{"scenario_id":"lockfire-upper-circle-trial","hero_id":"hero_seren","faction_id":"faction_embercourt","prefix":"lockfiretrial","site_id":"site_lockfire_triune_rostrum","asset_id":"resource_site_triune_arcanum_lockfire_rostrum","region":Rect2(0,0,48,48),"spells":["spell_beacon_bell_ward_09","spell_beacon_crown_signal_19","spell_beacon_lockfire_muster"]},
-	{"scenario_id":"moonfen-upper-circle-trial","hero_id":"hero_sable","faction_id":"faction_mireclaw","prefix":"moonfentrial","site_id":"site_moonfen_triune_drumcourt","asset_id":"resource_site_triune_arcanum_moonfen_drumcourt","region":Rect2(48,0,48,48),"spells":["spell_mire_silt_rot_04","spell_mire_sluice_poultice_14","spell_mire_brine_fenlight_24"]},
-	{"scenario_id":"three-facet-upper-circle-trial","hero_id":"hero_varis","faction_id":"faction_sunvault","prefix":"facettrial","site_id":"site_three_facet_meridian_orrery","asset_id":"resource_site_triune_arcanum_three_facet_orrery","region":Rect2(96,0,48,48),"spells":["spell_lens_mirror_prism_04","spell_lens_focus_array_14","spell_lens_starlens_prism_28"]},
-	{"scenario_id":"heartwood-upper-circle-trial","hero_id":"hero_thornwake_tova_rootwright","faction_id":"faction_thornwake","prefix":"heartwoodtrial","site_id":"site_heartwood_three_vow_arbor","asset_id":"resource_site_triune_arcanum_heartwood_arbor","region":Rect2(144,0,48,48),"spells":["spell_root_bloom_briar_04","spell_root_branch_bloom_14","spell_root_bark_rootway_24"]},
-	{"scenario_id":"redline-upper-circle-trial","hero_id":"hero_brasshollow_marka_ironclause","faction_id":"faction_brasshollow","prefix":"redlinetrial","site_id":"site_redline_triune_assay_forge","asset_id":"resource_site_triune_arcanum_redline_forge","region":Rect2(192,0,48,48),"spells":["spell_furnace_ash_mantle_09","spell_furnace_kiln_rite_19","spell_furnace_redline_overdrive"]},
-	{"scenario_id":"drowned-bell-upper-circle-trial","hero_id":"hero_veilmourn_ivara_blacktide","faction_id":"faction_veilmourn","prefix":"drownedbelltrial","site_id":"site_drowned_bell_three_wake_archive","asset_id":"resource_site_triune_arcanum_drowned_bell_archive","region":Rect2(240,0,48,48),"spells":["spell_veil_mourning_mark_04","spell_veil_wraith_duel_14","spell_veil_tide_drift_24"]},
+	{"scenario_id":"lockfire-upper-circle-trial","hero_id":"hero_seren","faction_id":"faction_embercourt","prefix":"lockfiretrial","site_id":"site_lockfire_triune_rostrum","asset_id":"resource_site_triune_arcanum_lockfire_rostrum","region":Rect2(0,0,192,192),"spells":["spell_beacon_bell_ward_09","spell_beacon_crown_signal_19","spell_beacon_lockfire_muster"]},
+	{"scenario_id":"moonfen-upper-circle-trial","hero_id":"hero_sable","faction_id":"faction_mireclaw","prefix":"moonfentrial","site_id":"site_moonfen_triune_drumcourt","asset_id":"resource_site_triune_arcanum_moonfen_drumcourt","region":Rect2(192,0,192,192),"spells":["spell_mire_silt_rot_04","spell_mire_sluice_poultice_14","spell_mire_brine_fenlight_24"]},
+	{"scenario_id":"three-facet-upper-circle-trial","hero_id":"hero_varis","faction_id":"faction_sunvault","prefix":"facettrial","site_id":"site_three_facet_meridian_orrery","asset_id":"resource_site_triune_arcanum_three_facet_orrery","region":Rect2(384,0,192,192),"spells":["spell_lens_mirror_prism_04","spell_lens_focus_array_14","spell_lens_starlens_prism_28"]},
+	{"scenario_id":"heartwood-upper-circle-trial","hero_id":"hero_thornwake_tova_rootwright","faction_id":"faction_thornwake","prefix":"heartwoodtrial","site_id":"site_heartwood_three_vow_arbor","asset_id":"resource_site_triune_arcanum_heartwood_arbor","region":Rect2(576,0,192,192),"spells":["spell_root_bloom_briar_04","spell_root_branch_bloom_14","spell_root_bark_rootway_24"]},
+	{"scenario_id":"redline-upper-circle-trial","hero_id":"hero_brasshollow_marka_ironclause","faction_id":"faction_brasshollow","prefix":"redlinetrial","site_id":"site_redline_triune_assay_forge","asset_id":"resource_site_triune_arcanum_redline_forge","region":Rect2(768,0,192,192),"spells":["spell_furnace_ash_mantle_09","spell_furnace_kiln_rite_19","spell_furnace_redline_overdrive"]},
+	{"scenario_id":"drowned-bell-upper-circle-trial","hero_id":"hero_veilmourn_ivara_blacktide","faction_id":"faction_veilmourn","prefix":"drownedbelltrial","site_id":"site_drowned_bell_three_wake_archive","asset_id":"resource_site_triune_arcanum_drowned_bell_archive","region":Rect2(960,0,192,192),"spells":["spell_veil_mourning_mark_04","spell_veil_wraith_duel_14","spell_veil_tide_drift_24"]},
 ]
 
 var _errors: Array[String] = []
@@ -33,7 +33,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(288, 48), "The triune academy atlas must remain exactly 288x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(1152, 192), "The triune academy atlas must remain exactly 1152x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)

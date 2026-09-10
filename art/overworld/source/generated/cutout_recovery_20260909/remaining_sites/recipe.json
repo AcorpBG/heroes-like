@@ -1,0 +1,3433 @@
+{
+  "schema_id": "remaining_site_cutout_recipe_v1",
+  "assets": {
+    "resource_site_triune_arcanum_lockfire_rostrum": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/lockfire_triune_rostrum_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/lockfire_triune_rostrum_source.png",
+        "source_model": "built_in_image_gen_original_triune_arcanum_trials_atlas",
+        "assigned_resource_site_id": "site_lockfire_triune_rostrum",
+        "presentation_role": "bell_lantern_wax_tablet",
+        "accessible_description": "An ivory oath-stone rostrum carries a tall bronze bell, a forked lantern standard, and a red wax lance tablet."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+      "source_sha256": "9a9f5cf103d513865fd1cf9862b32dd4f4187481ba79dd518b7591927b0b7ba0",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/manifest.json",
+      "source_manifest_sha256": "f9ce6ee9c5266286cc847dc4e003ea425d3db3fa49a41e68839ff9b25074812a",
+      "low_alpha_rgb_pixels": 5054,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_triune_arcanum_lockfire_rostrum.png",
+      "registration_mode": "bottom42",
+      "source_crop": [
+        0,
+        10,
+        1236,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.482204861111111,
+        "opaque_rgb_mae": 6.521396396396397
+      }
+    },
+    "resource_site_triune_arcanum_moonfen_drumcourt": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/moonfen_triune_drumcourt_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/moonfen_triune_drumcourt_source.png",
+        "source_model": "built_in_image_gen_original_triune_arcanum_trials_atlas",
+        "assigned_resource_site_id": "site_moonfen_triune_drumcourt",
+        "presentation_role": "drum_retort_reed_basin",
+        "accessible_description": "A broad hide drum crowns a wet bogstone court beside a crooked silt-glass retort and reed-bound healing basin."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+      "source_sha256": "9198a75ad729222d69f7476cead102f53a5f0a89a400687c49a2d5c0f21a1238",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/manifest.json",
+      "source_manifest_sha256": "f9ce6ee9c5266286cc847dc4e003ea425d3db3fa49a41e68839ff9b25074812a",
+      "low_alpha_rgb_pixels": 1646,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_triune_arcanum_moonfen_drumcourt.png",
+      "registration_mode": "bottom42",
+      "source_crop": [
+        0,
+        15,
+        1240,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 1.8663194444444444,
+        "opaque_rgb_mae": 4.202879581151833
+      }
+    },
+    "resource_site_triune_arcanum_three_facet_orrery": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/three_facet_meridian_orrery_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/three_facet_meridian_orrery_source.png",
+        "source_model": "built_in_image_gen_original_triune_arcanum_trials_atlas",
+        "assigned_resource_site_id": "site_three_facet_meridian_orrery",
+        "presentation_role": "mirror_prism_focus_lens_star_compass",
+        "accessible_description": "A white-gold observatory plinth supports a suspended mirror prism, a long focus lens, and a seven-point star compass."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+      "source_sha256": "e65016ba169c5fc09142faed22e124173134e570d1c6b3da4b60f555b7a8977f",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/manifest.json",
+      "source_manifest_sha256": "f9ce6ee9c5266286cc847dc4e003ea425d3db3fa49a41e68839ff9b25074812a",
+      "low_alpha_rgb_pixels": 21850,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_triune_arcanum_three_facet_orrery.png",
+      "registration_mode": "bottom42",
+      "source_crop": [
+        0,
+        2,
+        1206,
+        1254
+      ],
+      "source_resize": [
+        40,
+        42
+      ],
+      "canvas_origin": [
+        4,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.134982638888889,
+        "opaque_rgb_mae": 7.520383693045564
+      }
+    },
+    "resource_site_triune_arcanum_heartwood_arbor": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/heartwood_three_vow_arbor_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/heartwood_three_vow_arbor_source.png",
+        "source_model": "built_in_image_gen_original_triune_arcanum_trials_atlas",
+        "assigned_resource_site_id": "site_heartwood_three_vow_arbor",
+        "presentation_role": "thorn_seed_branch_loom_rootway_stone",
+        "accessible_description": "A living-root arch holds a thorn-crowned seed bowl, a flowering branch loom, and a bark-carved rootway stone."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+      "source_sha256": "c10ed76b1b5e3dff095765c9c0e294fa97906207eb9771ce9e35322ba7858243",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/manifest.json",
+      "source_manifest_sha256": "f9ce6ee9c5266286cc847dc4e003ea425d3db3fa49a41e68839ff9b25074812a",
+      "low_alpha_rgb_pixels": 4451,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_triune_arcanum_heartwood_arbor.png",
+      "registration_mode": "bottom42",
+      "source_crop": [
+        0,
+        0,
+        1240,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.5533854166666665,
+        "opaque_rgb_mae": 4.401486988847584
+      }
+    },
+    "resource_site_triune_arcanum_redline_forge": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/redline_triune_assay_forge_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/redline_triune_assay_forge_source.png",
+        "source_model": "built_in_image_gen_original_triune_arcanum_trials_atlas",
+        "assigned_resource_site_id": "site_redline_triune_assay_forge",
+        "presentation_role": "ash_mantle_kiln_gauge_pressure_console",
+        "accessible_description": "A brass-and-basalt field forge joins a riveted ash mantle, a vertical kiln flame gauge, and a three-lever console."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+      "source_sha256": "30829d4c3403f090e043bf16c62026412600f1abf4319b7b6b4cdb42c053c05e",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/manifest.json",
+      "source_manifest_sha256": "f9ce6ee9c5266286cc847dc4e003ea425d3db3fa49a41e68839ff9b25074812a",
+      "low_alpha_rgb_pixels": 193,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_triune_arcanum_redline_forge.png",
+      "registration_mode": "bottom42",
+      "source_crop": [
+        0,
+        0,
+        1224,
+        1254
+      ],
+      "source_resize": [
+        41,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 1.6857638888888888,
+        "opaque_rgb_mae": 4.645856151880248
+      }
+    },
+    "resource_site_triune_arcanum_drowned_bell_archive": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/drowned_bell_three_wake_archive_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/drowned_bell_three_wake_archive_source.png",
+        "source_model": "built_in_image_gen_original_triune_arcanum_trials_atlas",
+        "assigned_resource_site_id": "site_drowned_bell_three_wake_archive",
+        "presentation_role": "mourning_bell_duel_mask_tide_compass",
+        "accessible_description": "A salt-dark whale-bone archive holds a black glass mourning bell, a pale duel mask, and a tide-carved compass."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
+      "source_sha256": "a551fa2addde5be1822487f20d1ef8b28d57858103f557d89918292bd2e89301",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/triune_arcanum_trials_wave1/manifest.json",
+      "source_manifest_sha256": "f9ce6ee9c5266286cc847dc4e003ea425d3db3fa49a41e68839ff9b25074812a",
+      "low_alpha_rgb_pixels": 1540,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_triune_arcanum_drowned_bell_archive.png",
+      "registration_mode": "bottom42",
+      "source_crop": [
+        0,
+        0,
+        1234,
+        1254
+      ],
+      "source_resize": [
+        41,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.6141493055555554,
+        "opaque_rgb_mae": 5.7388211382113825
+      }
+    },
+    "resource_site_great_work_rainwrit_survey_cairn": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/rainwrit_stormseal_survey_cairn_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/rainwrit_stormseal_survey_cairn_source.png",
+        "source_model": "built_in_image_gen_original_great_work_charter_races_atlas",
+        "assigned_resource_site_id": "site_rainwrit_stormseal_survey_cairn",
+        "presentation_role": "rainwrit_stormseal_survey_cairn",
+        "accessible_description": "A stepped wet-bronze floodgate cairn carries a forked measuring staff, sealed coffer, and long wind-bent pennant."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png",
+      "source_sha256": "fea1e88bbcbbf75f3dd801844893df2733d97abd6776ddd2cb8d4056dedeac4b",
+      "source_size": [
+        1295,
+        1214
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/manifest.json",
+      "source_manifest_sha256": "1d397cfa93c7acd05ab074f3d51564fbac915a0b88a304621f653743f35626d4",
+      "low_alpha_rgb_pixels": 3604,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_great_work_rainwrit_survey_cairn.png",
+      "registration_mode": "center42",
+      "source_crop": [
+        25,
+        0,
+        1261,
+        1214
+      ],
+      "source_resize": [
+        42,
+        41
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.0638020833333335,
+        "opaque_rgb_mae": 4.450224791265254
+      }
+    },
+    "resource_site_great_work_hollowreed_foundation_totem": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/hollowreed_moonwax_foundation_totem_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/hollowreed_moonwax_foundation_totem_source.png",
+        "source_model": "built_in_image_gen_original_great_work_charter_races_atlas",
+        "assigned_resource_site_id": "site_hollowreed_moonwax_foundation_totem",
+        "presentation_role": "hollowreed_moonwax_foundation_totem",
+        "accessible_description": "An antlered bogstone slab, crescent hide drum, reed stakes, and low moonwax basin form an uneven vertical totem."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png",
+      "source_sha256": "70f9c5e9d2a6401b1864aa9fafb438e9f63b6761777331d4b00847688aa24880",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/manifest.json",
+      "source_manifest_sha256": "1d397cfa93c7acd05ab074f3d51564fbac915a0b88a304621f653743f35626d4",
+      "low_alpha_rgb_pixels": 6060,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_great_work_hollowreed_foundation_totem.png",
+      "registration_mode": "center42",
+      "source_crop": [
+        0,
+        15,
+        1240,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.6675347222222223,
+        "opaque_rgb_mae": 4.621681415929204
+      }
+    },
+    "resource_site_great_work_meridian_plumb_prism": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/meridian_seven_line_plumb_prism_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/meridian_seven_line_plumb_prism_source.png",
+        "source_model": "built_in_image_gen_original_great_work_charter_races_atlas",
+        "assigned_resource_site_id": "site_meridian_seven_line_plumb_prism",
+        "presentation_role": "meridian_seven_line_plumb_prism",
+        "accessible_description": "Three white-stone legs hold a high faceted sun prism over a seven-line brass sighting circle."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png",
+      "source_sha256": "b083e779783cfe38fa99c6b3c4f45b93a1481fae8106b87245b408602d40af6b",
+      "source_size": [
+        1230,
+        1278
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/manifest.json",
+      "source_manifest_sha256": "1d397cfa93c7acd05ab074f3d51564fbac915a0b88a304621f653743f35626d4",
+      "low_alpha_rgb_pixels": 8248,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_great_work_meridian_plumb_prism.png",
+      "registration_mode": "center42",
+      "source_crop": [
+        0,
+        13,
+        1208,
+        1278
+      ],
+      "source_resize": [
+        40,
+        42
+      ],
+      "canvas_origin": [
+        4,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.0104166666666665,
+        "opaque_rgb_mae": 7.270997375328084
+      }
+    },
+    "resource_site_great_work_crownroot_boundary_arbor": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/crownroot_heartseed_boundary_arbor_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/crownroot_heartseed_boundary_arbor_source.png",
+        "source_model": "built_in_image_gen_original_great_work_charter_races_atlas",
+        "assigned_resource_site_id": "site_crownroot_heartseed_boundary_arbor",
+        "presentation_role": "crownroot_heartseed_boundary_arbor",
+        "accessible_description": "A bent living-root arch encloses a bright heartseed bowl, hanging leaf plumb, and two uneven boundary stakes."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png",
+      "source_sha256": "81c416e53281086e649b2b6a802e7fca23168fbca731be09bff39918c2ba65c9",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/manifest.json",
+      "source_manifest_sha256": "1d397cfa93c7acd05ab074f3d51564fbac915a0b88a304621f653743f35626d4",
+      "low_alpha_rgb_pixels": 12515,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_great_work_crownroot_boundary_arbor.png",
+      "registration_mode": "center42",
+      "source_crop": [
+        0,
+        13,
+        1240,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.6705729166666665,
+        "opaque_rgb_mae": 4.440860215053763
+      }
+    },
+    "resource_site_great_work_blackbell_assay_tripod": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/blackbell_grand_assay_tripod_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/blackbell_grand_assay_tripod_source.png",
+        "source_model": "built_in_image_gen_original_great_work_charter_races_atlas",
+        "assigned_resource_site_id": "site_blackbell_grand_assay_tripod",
+        "presentation_role": "blackbell_grand_assay_tripod",
+        "accessible_description": "A squat black tripod holds a heavy brass plumb bell beside a redline gauge, ore tray, and smoking calibration chimney."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png",
+      "source_sha256": "602392a236e337bcd4a3555a167032865c50532f63109a140a86e905a24c0586",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/manifest.json",
+      "source_manifest_sha256": "1d397cfa93c7acd05ab074f3d51564fbac915a0b88a304621f653743f35626d4",
+      "low_alpha_rgb_pixels": 572,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_great_work_blackbell_assay_tripod.png",
+      "registration_mode": "center42",
+      "source_crop": [
+        0,
+        0,
+        1240,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.3433159722222223,
+        "opaque_rgb_mae": 3.9171758316361167
+      }
+    },
+    "resource_site_great_work_pale_sounding_marker": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/pale_sounding_last_memory_marker_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/pale_sounding_last_memory_marker_source.png",
+        "source_model": "built_in_image_gen_original_great_work_charter_races_atlas",
+        "assigned_resource_site_id": "site_pale_sounding_last_memory_marker",
+        "presentation_role": "pale_sounding_last_memory_marker",
+        "accessible_description": "A slender whale-bone frame suspends an off-center pale bell above a black mirror-water bowl and three depth cords."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png",
+      "source_sha256": "05f91ca41114544cd21a68bbc7ab379baa942ce01e30aeefe0d44e5d840a1200",
+      "source_size": [
+        1224,
+        1285
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/great_work_charter_races_wave1/manifest.json",
+      "source_manifest_sha256": "1d397cfa93c7acd05ab074f3d51564fbac915a0b88a304621f653743f35626d4",
+      "low_alpha_rgb_pixels": 6876,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_great_work_pale_sounding_marker.png",
+      "registration_mode": "center42",
+      "source_crop": [
+        0,
+        0,
+        1218,
+        1285
+      ],
+      "source_resize": [
+        40,
+        42
+      ],
+      "canvas_origin": [
+        4,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.8133680555555554,
+        "opaque_rgb_mae": 6.829945799457995
+      }
+    },
+    "resource_site_grand_muster_rainwrit_standard": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/rainwrit_five_writ_muster_standard_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/rainwrit_five_writ_muster_standard_source.png",
+        "source_model": "built_in_image_gen_original_grand_muster_assemblies_atlas",
+        "assigned_resource_site_id": "site_rainwrit_five_writ_muster_standard",
+        "presentation_role": "rainwrit_five_writ_muster_standard",
+        "accessible_description": "A bronze storm-fork mast rises from a floodgate plinth beside a long split pennant and five hanging tally tabs."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+      "source_sha256": "8cbcba86ee59c27d74ebb5ccff6fcea8df6e07f8402a6f3ffff7ebf2faa9c5ac",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/manifest.json",
+      "source_manifest_sha256": "da89e96a5e0bb86cdfa876fb1277919a363ce77fbfd5095c75378ae0007e451b",
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_grand_muster_rainwrit_standard.png",
+      "registration_mode": "center42",
+      "source_crop": [
+        49,
+        0,
+        1024,
+        1522
+      ],
+      "source_resize": [
+        27,
+        42
+      ],
+      "canvas_origin": [
+        10,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.049045138888889,
+        "opaque_rgb_mae": 4.195090439276486
+      }
+    },
+    "resource_site_grand_muster_hollowreed_standard": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/hollowreed_moonhide_drum_standard_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/hollowreed_moonhide_drum_standard_source.png",
+        "source_model": "built_in_image_gen_original_grand_muster_assemblies_atlas",
+        "assigned_resource_site_id": "site_hollowreed_moonhide_drum_standard",
+        "presentation_role": "hollowreed_moonhide_drum_standard",
+        "accessible_description": "A broad hide drum sits inside a crescent antler frame hung with chain reeds, bone clappers, and five fang tokens."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+      "source_sha256": "61dd3485746430bf5e01ffb7e7bf1124d06494cf942485a1eaa945d4eadfe737",
+      "source_size": [
+        1214,
+        1295
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/manifest.json",
+      "source_manifest_sha256": "da89e96a5e0bb86cdfa876fb1277919a363ce77fbfd5095c75378ae0007e451b",
+      "low_alpha_rgb_pixels": 6239,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_grand_muster_hollowreed_standard.png",
+      "registration_mode": "center42",
+      "source_crop": [
+        25,
+        0,
+        1214,
+        1295
+      ],
+      "source_resize": [
+        39,
+        42
+      ],
+      "canvas_origin": [
+        4,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.8272569444444446,
+        "opaque_rgb_mae": 4.823286965481711
+      }
+    },
+    "resource_site_grand_muster_meridian_prism": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/meridian_five_facet_muster_prism_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/meridian_five_facet_muster_prism_source.png",
+        "source_model": "built_in_image_gen_original_grand_muster_assemblies_atlas",
+        "assigned_resource_site_id": "site_meridian_five_facet_muster_prism",
+        "presentation_role": "meridian_five_facet_muster_prism",
+        "accessible_description": "A mirrored mast carries five offset crystal vanes around an open sun ring, with unequal glass feet and one blue ribbon."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+      "source_sha256": "c8716d41c33e48fff518bb53eb8048760938be6371397d7e4450e3396d5bf5dd",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/manifest.json",
+      "source_manifest_sha256": "da89e96a5e0bb86cdfa876fb1277919a363ce77fbfd5095c75378ae0007e451b",
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_grand_muster_meridian_prism.png",
+      "registration_mode": "center42",
+      "source_crop": [
+        51,
+        17,
+        978,
+        1515
+      ],
+      "source_resize": [
+        26,
+        42
+      ],
+      "canvas_origin": [
+        11,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 1.7595486111111112,
+        "opaque_rgb_mae": 8.883928571428571
+      }
+    },
+    "resource_site_grand_muster_crownroot_bough": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/crownroot_five_seed_muster_bough_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/crownroot_five_seed_muster_bough_source.png",
+        "source_model": "built_in_image_gen_original_grand_muster_assemblies_atlas",
+        "assigned_resource_site_id": "site_crownroot_five_seed_muster_bough",
+        "presentation_role": "crownroot_five_seed_muster_bough",
+        "accessible_description": "A forked living root arches around five amber seed counters beside a woven thorncloth pennant and grafting stone."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+      "source_sha256": "99c0ae00848ab3841833268cf51a7c44340df8e81bdf5c0abbdf6027fa51e124",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/manifest.json",
+      "source_manifest_sha256": "da89e96a5e0bb86cdfa876fb1277919a363ce77fbfd5095c75378ae0007e451b",
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_grand_muster_crownroot_bough.png",
+      "registration_mode": "center42",
+      "source_crop": [
+        105,
+        11,
+        1024,
+        1536
+      ],
+      "source_resize": [
+        25,
+        42
+      ],
+      "canvas_origin": [
+        11,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.12109375,
+        "opaque_rgb_mae": 5.561224489795919
+      }
+    },
+    "resource_site_grand_muster_blackbell_gantry": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/blackbell_five_clause_muster_gantry_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/blackbell_five_clause_muster_gantry_source.png",
+        "source_model": "built_in_image_gen_original_grand_muster_assemblies_atlas",
+        "assigned_resource_site_id": "site_blackbell_five_clause_muster_gantry",
+        "presentation_role": "blackbell_five_clause_muster_gantry",
+        "accessible_description": "A squat black-iron gantry carries an off-center blank gauge, chain winch, five clapper plates, and a short red-black pennant."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+      "source_sha256": "346b87589c594110b79a96b5be9811017d8258b1a067123a0ca1569dc692ced1",
+      "source_size": [
+        1312,
+        1199
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/manifest.json",
+      "source_manifest_sha256": "da89e96a5e0bb86cdfa876fb1277919a363ce77fbfd5095c75378ae0007e451b",
+      "low_alpha_rgb_pixels": 590,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_grand_muster_blackbell_gantry.png",
+      "registration_mode": "center42",
+      "source_crop": [
+        0,
+        0,
+        1311,
+        1199
+      ],
+      "source_resize": [
+        42,
+        38
+      ],
+      "canvas_origin": [
+        3,
+        5
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.9722222222222223,
+        "opaque_rgb_mae": 3.1035267349260525
+      }
+    },
+    "resource_site_grand_muster_pale_sounding_mast": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/pale_sounding_five_wake_muster_mast_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/pale_sounding_five_wake_muster_mast_source.png",
+        "source_model": "built_in_image_gen_original_grand_muster_assemblies_atlas",
+        "assigned_resource_site_id": "site_pale_sounding_five_wake_muster_mast",
+        "presentation_role": "pale_sounding_five_wake_muster_mast",
+        "accessible_description": "A leaning memorial ship mast bears five shell bells, a hooked crossbar, crescent mourning sail, memory lamp, and saltglass keel base."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png",
+      "source_sha256": "ced23ad62967d16d7d4eb8458b41b192f6c0047be5cdb5783cb275f9926bd5d2",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/grand_muster_assemblies_wave1/manifest.json",
+      "source_manifest_sha256": "da89e96a5e0bb86cdfa876fb1277919a363ce77fbfd5095c75378ae0007e451b",
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_grand_muster_pale_sounding_mast.png",
+      "registration_mode": "center42",
+      "source_crop": [
+        0,
+        0,
+        1024,
+        1536
+      ],
+      "source_resize": [
+        28,
+        42
+      ],
+      "canvas_origin": [
+        10,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.4644097222222223,
+        "opaque_rgb_mae": 5.4928057553956835
+      }
+    },
+    "resource_site_relief_route_embercourt_relay": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/embercourt_relief_route_relay_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/embercourt_relief_route_relay_source.png",
+        "source_model": "built_in_image_gen_original_relief_route_convoy_relays_atlas",
+        "assigned_resource_site_id": "site_embercourt_locklantern_convoy_relay",
+        "presentation_role": "locklantern_convoy_relay",
+        "accessible_description": "A charred timber dispatch arch with an ember-bronze winch, twin route lanterns, sealed relief cargo, and a low crate sled."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png",
+      "source_sha256": "374a5fbab39d4675b308ac02f32390de57cbdb115ea7be8677224999fdae21db",
+      "source_size": [
+        1312,
+        1199
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/manifest.json",
+      "source_manifest_sha256": "0a9eb5aabe1f1dd2e1087daa013db39560444233214e2e853ea9219c0d7e4c79",
+      "low_alpha_rgb_pixels": 1517,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_relief_route_embercourt_relay.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        45,
+        15,
+        1294,
+        1199
+      ],
+      "source_resize": [
+        44,
+        42
+      ],
+      "canvas_origin": [
+        2,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 3.0221354166666665,
+        "opaque_rgb_mae": 4.345857418111753
+      }
+    },
+    "resource_site_relief_route_mireclaw_relay": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/mireclaw_relief_route_relay_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/mireclaw_relief_route_relay_source.png",
+        "source_model": "built_in_image_gen_original_relief_route_convoy_relays_atlas",
+        "assigned_resource_site_id": "site_mireclaw_antlerraft_convoy_relay",
+        "presentation_role": "antlerraft_convoy_relay",
+        "accessible_description": "A bundled-reed freight raft with an antler-and-bone hoist, signal bell, chained cargo baskets, and mud skids."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png",
+      "source_sha256": "e4d1195a017ed2073559d08819bc964b65bc1f3a22d0247260210ff020ba1214",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/manifest.json",
+      "source_manifest_sha256": "0a9eb5aabe1f1dd2e1087daa013db39560444233214e2e853ea9219c0d7e4c79",
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_relief_route_mireclaw_relay.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        33,
+        12,
+        1496,
+        1024
+      ],
+      "source_resize": [
+        44,
+        30
+      ],
+      "canvas_origin": [
+        2,
+        9
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.0303819444444446,
+        "opaque_rgb_mae": 3.197649572649573
+      }
+    },
+    "resource_site_relief_route_sunvault_relay": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/sunvault_relief_route_relay_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/sunvault_relief_route_relay_source.png",
+        "source_model": "built_in_image_gen_original_relief_route_convoy_relays_atlas",
+        "assigned_resource_site_id": "site_sunvault_prismwheel_convoy_relay",
+        "presentation_role": "prismwheel_convoy_relay",
+        "accessible_description": "A faceted lens mast over a stepped white-stone cargo dais, crystal route marker, sun disc, and angular supply cases."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png",
+      "source_sha256": "00797301e097b06d79eceff1863c8359466bd68b6ee7ae7b41d8f4dbfa12ef96",
+      "source_size": [
+        1214,
+        1295
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/manifest.json",
+      "source_manifest_sha256": "0a9eb5aabe1f1dd2e1087daa013db39560444233214e2e853ea9219c0d7e4c79",
+      "low_alpha_rgb_pixels": 12170,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_relief_route_sunvault_relay.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        0,
+        0,
+        1043,
+        1295
+      ],
+      "source_resize": [
+        35,
+        44
+      ],
+      "canvas_origin": [
+        6,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 1.8337673611111112,
+        "opaque_rgb_mae": 7.605006105006105
+      }
+    },
+    "resource_site_relief_route_thornwake_relay": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/thornwake_relief_route_relay_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/thornwake_relief_route_relay_source.png",
+        "source_model": "built_in_image_gen_original_relief_route_convoy_relays_atlas",
+        "assigned_resource_site_id": "site_thornwake_seedcart_convoy_relay",
+        "presentation_role": "seedcart_convoy_relay",
+        "accessible_description": "A living root-cart cradle with a braided vine hoist, three seed-pod signals, leaf-woven cargo, and an amber route stone."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png",
+      "source_sha256": "ea076b048ac38a2cf7a9a6f87860dc2d2655a9bef091f0c8f9f6641686a3a4e4",
+      "source_size": [
+        1312,
+        1199
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/manifest.json",
+      "source_manifest_sha256": "0a9eb5aabe1f1dd2e1087daa013db39560444233214e2e853ea9219c0d7e4c79",
+      "low_alpha_rgb_pixels": 4902,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_relief_route_thornwake_relay.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        37,
+        0,
+        1299,
+        1199
+      ],
+      "source_resize": [
+        44,
+        42
+      ],
+      "canvas_origin": [
+        2,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 3.2413194444444446,
+        "opaque_rgb_mae": 4.476901208244492
+      }
+    },
+    "resource_site_relief_route_brasshollow_relay": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/brasshollow_relief_route_relay_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/brasshollow_relief_route_relay_source.png",
+        "source_model": "built_in_image_gen_original_relief_route_convoy_relays_atlas",
+        "assigned_resource_site_id": "site_brasshollow_quenchrail_convoy_relay",
+        "presentation_role": "quenchrail_convoy_relay",
+        "accessible_description": "A black-iron rail gantry with offset pressure gauges, a riveted cargo trolley, quench tank, chain hoist, and route shutter."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png",
+      "source_sha256": "5f3b211e87c9deba2061098bd52f8028ca6dfc8cd70f8096e8f7d4037919fd14",
+      "source_size": [
+        1230,
+        1278
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/manifest.json",
+      "source_manifest_sha256": "0a9eb5aabe1f1dd2e1087daa013db39560444233214e2e853ea9219c0d7e4c79",
+      "low_alpha_rgb_pixels": 487,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_relief_route_brasshollow_relay.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        0,
+        0,
+        1210,
+        1248
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.6393229166666665,
+        "opaque_rgb_mae": 3.9547892720306517
+      }
+    },
+    "resource_site_relief_route_veilmourn_relay": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/veilmourn_relief_route_relay_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/veilmourn_relief_route_relay_source.png",
+        "source_model": "built_in_image_gen_original_relief_route_convoy_relays_atlas",
+        "assigned_resource_site_id": "site_veilmourn_wakeglass_convoy_relay",
+        "presentation_role": "wakeglass_convoy_relay",
+        "accessible_description": "A leaning driftwood tide mooring with a shell-bell mast, wakeglass buoys, rope cargo cradle, salt-sealed cases, and skiff runner."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png",
+      "source_sha256": "d130d644e8444e3e492b3bd4bd64823844b8e84d5e3c402bf31ddbf38e958939",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/relief_route_convoy_relays_wave1/manifest.json",
+      "source_manifest_sha256": "0a9eb5aabe1f1dd2e1087daa013db39560444233214e2e853ea9219c0d7e4c79",
+      "low_alpha_rgb_pixels": 727,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_relief_route_veilmourn_relay.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        0,
+        0,
+        1234,
+        1254
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 3.0924479166666665,
+        "opaque_rgb_mae": 5.244072524407252
+      }
+    },
+    "resource_site_fogbreak_embercourt_compass": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/ember_ashline_writ_compass.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/ember_ashline_writ_compass.png",
+        "source_model": "built_in_image_gen_original_fogbreak_survey_instruments_atlas",
+        "assigned_resource_site_id": "site_embercourt_ashline_writ_compass",
+        "presentation_role": "ashline_writ_compass",
+        "accessible_description": "A charred tripod carries a bronze charter quadrant and two unequal hooded plumb lanterns, forming a tall asymmetrical Embercourt survey silhouette."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png",
+      "source_sha256": "343ee5519f93cb27944e842436fb44fef731a76f1e7e4ba9f3227bd933510019",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/manifest.json",
+      "source_manifest_sha256": "33e3477fc98ced4659515e6190a294c43b9ffe45029afa7d6846f44960523302",
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_fogbreak_embercourt_compass.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        41,
+        9,
+        1012,
+        1536
+      ],
+      "source_resize": [
+        28,
+        44
+      ],
+      "canvas_origin": [
+        10,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.74609375,
+        "opaque_rgb_mae": 4.158602150537635
+      }
+    },
+    "resource_site_fogbreak_mireclaw_mast": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/mire_bogglass_listening_mast.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/mire_bogglass_listening_mast.png",
+        "source_model": "built_in_image_gen_original_fogbreak_survey_instruments_atlas",
+        "assigned_resource_site_id": "site_mireclaw_bogglass_listening_mast",
+        "presentation_role": "bogglass_listening_mast",
+        "accessible_description": "A crooked reed-and-bone tripod holds a blackwater listening bowl, ragged bone vanes, and hanging peatglass beads in a low Mireclaw silhouette."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png",
+      "source_sha256": "2f450342a7b3813bfab93b21f6c6d001f8c8af7f3ea9fc9b1360c19261e4b891",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/manifest.json",
+      "source_manifest_sha256": "33e3477fc98ced4659515e6190a294c43b9ffe45029afa7d6846f44960523302",
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_fogbreak_mireclaw_mast.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        49,
+        8,
+        1522,
+        1011
+      ],
+      "source_resize": [
+        44,
+        30
+      ],
+      "canvas_origin": [
+        2,
+        9
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 1.8159722222222223,
+        "opaque_rgb_mae": 4.276018099547511
+      }
+    },
+    "resource_site_fogbreak_sunvault_heliograph": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/sun_meridian_sunthread_heliograph.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/sun_meridian_sunthread_heliograph.png",
+        "source_model": "built_in_image_gen_original_fogbreak_survey_instruments_atlas",
+        "assigned_resource_site_id": "site_sunvault_meridian_sunthread_heliograph",
+        "presentation_role": "meridian_sunthread_heliograph",
+        "accessible_description": "A white-stone plinth turns a clear prism below a slotted sun disc and three unequal golden sight blades in a radiant Sunvault silhouette."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png",
+      "source_sha256": "901cf0c4f5a6ad343d3d3062676a4ea7c00ee53807f89eb6506af8d143328c6e",
+      "source_size": [
+        1224,
+        1285
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/manifest.json",
+      "source_manifest_sha256": "33e3477fc98ced4659515e6190a294c43b9ffe45029afa7d6846f44960523302",
+      "low_alpha_rgb_pixels": 11382,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_fogbreak_sunvault_heliograph.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        0,
+        0,
+        1204,
+        1285
+      ],
+      "source_resize": [
+        41,
+        44
+      ],
+      "canvas_origin": [
+        3,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 1.8776041666666667,
+        "opaque_rgb_mae": 8.241025641025642
+      }
+    },
+    "resource_site_fogbreak_thornwake_orrery": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/thorn_rootstar_canopy_orrery.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/thorn_rootstar_canopy_orrery.png",
+        "source_model": "built_in_image_gen_original_fogbreak_survey_instruments_atlas",
+        "assigned_resource_site_id": "site_thornwake_rootstar_canopy_orrery",
+        "presentation_role": "rootstar_canopy_orrery",
+        "accessible_description": "A living forked root cradles a constellation seed-sphere while three braided vine sight arms branch into a wide organic Thornwake silhouette."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png",
+      "source_sha256": "dc3634a45bc01e855a26a4591a44849d0cf9d459950eb5a73dcbac6840700f83",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/manifest.json",
+      "source_manifest_sha256": "33e3477fc98ced4659515e6190a294c43b9ffe45029afa7d6846f44960523302",
+      "low_alpha_rgb_pixels": 3838,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_fogbreak_thornwake_orrery.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        0,
+        21,
+        1236,
+        1254
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 3.0690104166666665,
+        "opaque_rgb_mae": 5.238709677419355
+      }
+    },
+    "resource_site_fogbreak_brasshollow_theodolite": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/brass_redgauge_horizon_theodolite.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/brass_redgauge_horizon_theodolite.png",
+        "source_model": "built_in_image_gen_original_fogbreak_survey_instruments_atlas",
+        "assigned_resource_site_id": "site_brasshollow_redgauge_horizon_theodolite",
+        "presentation_role": "redgauge_horizon_theodolite",
+        "accessible_description": "A squat riveted iron tripod supports a brass sight tube, unequal red pressure gauges, and a toothed azimuth ring in a heavy Brasshollow silhouette."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png",
+      "source_sha256": "44b21a0b6d32ae9ef908b3c8328f139571984f51905f57612665d33b0679e5fe",
+      "source_size": [
+        1271,
+        1237
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/manifest.json",
+      "source_manifest_sha256": "33e3477fc98ced4659515e6190a294c43b9ffe45029afa7d6846f44960523302",
+      "low_alpha_rgb_pixels": 1219,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_fogbreak_brasshollow_theodolite.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        0,
+        0,
+        1243,
+        1237
+      ],
+      "source_resize": [
+        44,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.7356770833333335,
+        "opaque_rgb_mae": 5.048258706467662
+      }
+    },
+    "resource_site_fogbreak_veilmourn_sextant": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/veil_drowned_horizon_sextant.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/veil_drowned_horizon_sextant.png",
+        "source_model": "built_in_image_gen_original_fogbreak_survey_instruments_atlas",
+        "assigned_resource_site_id": "site_veilmourn_drowned_horizon_sextant",
+        "presentation_role": "drowned_horizon_sextant",
+        "accessible_description": "A crescent driftwood frame surrounds an open sextant with a shell plumb, wakeglass beads, and salt-dark rope in a mournful Veilmourn silhouette."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png",
+      "source_sha256": "ed472a9edf3484047dc28bc57cce7d778a6fed01aabf04d6b3116fc75208d93b",
+      "source_size": [
+        1272,
+        1237
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/fogbreak_survey_instruments_wave1/manifest.json",
+      "source_manifest_sha256": "33e3477fc98ced4659515e6190a294c43b9ffe45029afa7d6846f44960523302",
+      "low_alpha_rgb_pixels": 5908,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_fogbreak_veilmourn_sextant.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        23,
+        0,
+        1248,
+        1211
+      ],
+      "source_resize": [
+        44,
+        43
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 3.1236979166666665,
+        "opaque_rgb_mae": 5.716791979949875
+      }
+    },
+    "resource_site_frontier_treasury_embercourt_brazier": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/embercourt_rainwrit_ledger_brazier.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/embercourt_rainwrit_ledger_brazier.png",
+        "source_model": "built_in_image_gen_original_frontier_treasury_offices_atlas",
+        "assigned_resource_site_id": "site_embercourt_rainwrit_ledger_brazier",
+        "presentation_role": "rainwrit_ledger_brazier",
+        "accessible_description": "A tall blackened-iron ledger lectern carries an uneven vertical abacus, a sealed glowing brazier, wax-tagged rain chains, copper tally plates, and a narrow parchment desk in a distinct Embercourt silhouette."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+      "source_sha256": "f25f9bbea66927b6fc061d2472c70b51222c20e044a6c14563b29dc3756f9b48",
+      "source_size": [
+        1156,
+        1361
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/manifest.json",
+      "source_manifest_sha256": "c46900861e18c924d7e974034b356da4b9d6ba1359d0050ee353b598a441594d",
+      "low_alpha_rgb_pixels": 2769,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_frontier_treasury_embercourt_brazier.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        57,
+        14,
+        1140,
+        1361
+      ],
+      "source_resize": [
+        35,
+        44
+      ],
+      "canvas_origin": [
+        6,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 1.7825520833333333,
+        "opaque_rgb_mae": 5.620041753653445
+      }
+    },
+    "resource_site_frontier_treasury_mireclaw_drum": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/mireclaw_reedbarrow_tally_drum.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/mireclaw_reedbarrow_tally_drum.png",
+        "source_model": "built_in_image_gen_original_frontier_treasury_offices_atlas",
+        "assigned_resource_site_id": "site_mireclaw_reedbarrow_tally_drum",
+        "presentation_role": "reedbarrow_tally_drum",
+        "accessible_description": "A broad hide tally drum stands on crooked root legs beside fanned bone counting rods, woven reed baskets, peatwax cords, and dangling tokens in a low, unmistakably Mireclaw silhouette."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+      "source_sha256": "075982f6facf03334a1baa904a219fa5e43810a6eae1865de703d4e061b5b8b6",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_alpha_levels": 255,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/manifest.json",
+      "source_manifest_sha256": "c46900861e18c924d7e974034b356da4b9d6ba1359d0050ee353b598a441594d",
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_frontier_treasury_mireclaw_drum.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        49,
+        8,
+        1522,
+        1024
+      ],
+      "source_resize": [
+        44,
+        30
+      ],
+      "canvas_origin": [
+        2,
+        9
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.0776909722222223,
+        "opaque_rgb_mae": 4.882113821138211
+      }
+    },
+    "resource_site_frontier_treasury_sunvault_prism": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/sunvault_meridian_prism_ledger.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/sunvault_meridian_prism_ledger.png",
+        "source_model": "built_in_image_gen_original_frontier_treasury_offices_atlas",
+        "assigned_resource_site_id": "site_sunvault_meridian_prism_ledger",
+        "presentation_role": "meridian_prism_ledger",
+        "accessible_description": "A tall faceted crystal balance rises from stepped sunstone with one great prism pan, stacked glass counterweights, a gold solar pivot, and an elegant asymmetric Sunvault profile."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+      "source_sha256": "b38ddd442ac6415c99b8239a88cd9f9f8cbb85ef9771c48e9f42b3b072c93e4e",
+      "source_size": [
+        1024,
+        1536
+      ],
+      "source_alpha_levels": 255,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/manifest.json",
+      "source_manifest_sha256": "c46900861e18c924d7e974034b356da4b9d6ba1359d0050ee353b598a441594d",
+      "low_alpha_rgb_pixels": 0,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_frontier_treasury_sunvault_prism.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        0,
+        16,
+        896,
+        1489
+      ],
+      "source_resize": [
+        27,
+        44
+      ],
+      "canvas_origin": [
+        10,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.2378472222222223,
+        "opaque_rgb_mae": 7.202317290552585
+      }
+    },
+    "resource_site_frontier_treasury_thornwake_arbor": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/thornwake_crownroot_seed_tithe_arbor.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/thornwake_crownroot_seed_tithe_arbor.png",
+        "source_model": "built_in_image_gen_original_frontier_treasury_offices_atlas",
+        "assigned_resource_site_id": "site_thornwake_crownroot_seed_tithe_arbor",
+        "presentation_role": "crownroot_seed_tithe_arbor",
+        "accessible_description": "A living bent-wood arch suspends three seedpod weights above a root-grown counting desk, thorn clasps, fruit markers, and a woven collection cradle in an organic Thornwake silhouette."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+      "source_sha256": "63ab5dea6a2dfc68edddbef468ec6e5cdad943b5fdac74a11687f88da7194190",
+      "source_size": [
+        1312,
+        1199
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/manifest.json",
+      "source_manifest_sha256": "c46900861e18c924d7e974034b356da4b9d6ba1359d0050ee353b598a441594d",
+      "low_alpha_rgb_pixels": 4714,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_frontier_treasury_thornwake_arbor.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        0,
+        0,
+        1297,
+        1199
+      ],
+      "source_resize": [
+        44,
+        41
+      ],
+      "canvas_origin": [
+        2,
+        3
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 3.7894965277777777,
+        "opaque_rgb_mae": 4.697148475909538
+      }
+    },
+    "resource_site_frontier_treasury_brasshollow_wheel": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/brasshollow_blackbell_counterwheel.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/brasshollow_blackbell_counterwheel.png",
+        "source_model": "built_in_image_gen_original_frontier_treasury_offices_atlas",
+        "assigned_resource_site_id": "site_brasshollow_blackbell_counterwheel",
+        "presentation_role": "blackbell_counterwheel",
+        "accessible_description": "A squat brass counting wheel rests on riveted feet beneath an off-center black bell, two unequal gauges, coin chutes, a winding handle, and furnace-red controls in a heavy Brasshollow silhouette."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+      "source_sha256": "0faf2b0246b05662025aa3f4a73ab35392ff004eafd1e06b1303dc92b851b85d",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/manifest.json",
+      "source_manifest_sha256": "c46900861e18c924d7e974034b356da4b9d6ba1359d0050ee353b598a441594d",
+      "low_alpha_rgb_pixels": 867,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_frontier_treasury_brasshollow_wheel.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        0,
+        0,
+        1236,
+        1254
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.412326388888889,
+        "opaque_rgb_mae": 4.775593775593776
+      }
+    },
+    "resource_site_frontier_treasury_veilmourn_ledger": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/veilmourn_pale_sounding_wake_ledger.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/veilmourn_pale_sounding_wake_ledger.png",
+        "source_model": "built_in_image_gen_original_frontier_treasury_offices_atlas",
+        "assigned_resource_site_id": "site_veilmourn_pale_sounding_wake_ledger",
+        "presentation_role": "pale_sounding_wake_ledger",
+        "accessible_description": "A crescent pale-shell frame suspends three wakeglass weights above a tide-chain abacus, salt-dark hooks, narrow counting posts, and a low ledger coffer in a haunting Veilmourn silhouette."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png",
+      "source_sha256": "da2a829387d1f1cd9d911b3de5476fa2abcdd6f8abfee8cd873a04248ba2a617",
+      "source_size": [
+        1312,
+        1199
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/frontier_treasury_offices_wave1/manifest.json",
+      "source_manifest_sha256": "c46900861e18c924d7e974034b356da4b9d6ba1359d0050ee353b598a441594d",
+      "low_alpha_rgb_pixels": 2975,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_frontier_treasury_veilmourn_ledger.png",
+      "registration_mode": "center44",
+      "source_crop": [
+        97,
+        11,
+        1264,
+        1199
+      ],
+      "source_resize": [
+        43,
+        44
+      ],
+      "canvas_origin": [
+        2,
+        2
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 3.1011284722222223,
+        "opaque_rgb_mae": 6.3389537397319495
+      }
+    },
+    "resource_site_regalia_lockward_charter_reliquary": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/lockward_charter_reliquary_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/lockward_charter_reliquary_source.png",
+        "source_model": "built_in_image_gen_original_setbound_regalia_reliquaries_atlas",
+        "assigned_resource_site_id": "site_lockward_charter_reliquary",
+        "presentation_role": "lockward_setbound_regalia_reliquary",
+        "accessible_description": "A squat basalt treaty vault carries a tall amber beacon-key socket, a broad rolled-writ clasp, and paired tollstone seal rings."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+      "source_sha256": "33b93928440f4f64a50a5ef6a6423cbb53e166702e48499c7e3833ddf1e11818",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/manifest.json",
+      "source_manifest_sha256": "0e8b8b7fec5faf0cb72752bd7773ea29b01bdde320bd9c6f7fba5dd4cc38b149",
+      "low_alpha_rgb_pixels": 802,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_regalia_lockward_charter_reliquary.png",
+      "registration_mode": "bottom42",
+      "source_crop": [
+        0,
+        0,
+        1224,
+        1254
+      ],
+      "source_resize": [
+        41,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 1.5568576388888888,
+        "opaque_rgb_mae": 4.512319851231985
+      }
+    },
+    "resource_site_regalia_fenhound_pursuit_reliquary": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/fenhound_pursuit_reliquary_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/fenhound_pursuit_reliquary_source.png",
+        "source_model": "built_in_image_gen_original_setbound_regalia_reliquaries_atlas",
+        "assigned_resource_site_id": "site_fenhound_pursuit_reliquary",
+        "presentation_role": "fenhound_setbound_regalia_reliquary",
+        "accessible_description": "A low crescent bogwood hunt coffer sits beneath a giant antler arch with a hanging scent bell, reed totem, and paired tall waders."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+      "source_sha256": "7f446d192ec19a00f196cf6435e3ea4db0a7abc52cbccf13648338d88a60d63c",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/manifest.json",
+      "source_manifest_sha256": "0e8b8b7fec5faf0cb72752bd7773ea29b01bdde320bd9c6f7fba5dd4cc38b149",
+      "low_alpha_rgb_pixels": 4451,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_regalia_fenhound_pursuit_reliquary.png",
+      "registration_mode": "bottom42",
+      "source_crop": [
+        0,
+        14,
+        1201,
+        1254
+      ],
+      "source_resize": [
+        41,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.6371527777777777,
+        "opaque_rgb_mae": 4.241071428571429
+      }
+    },
+    "resource_site_regalia_meridian_relay_reliquary": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/meridian_relay_reliquary_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/meridian_relay_reliquary_source.png",
+        "source_model": "built_in_image_gen_original_setbound_regalia_reliquaries_atlas",
+        "assigned_resource_site_id": "site_meridian_relay_reliquary",
+        "presentation_role": "meridian_setbound_regalia_reliquary",
+        "accessible_description": "A three-sided crystal relay suspends a circular survey lens between white-stone legs beneath a mantle-draped facet and forked pennon vane."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+      "source_sha256": "f9f02f19b25df42e0fab8892e1935ce1d348476a3c6077271a5990623440449e",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/manifest.json",
+      "source_manifest_sha256": "0e8b8b7fec5faf0cb72752bd7773ea29b01bdde320bd9c6f7fba5dd4cc38b149",
+      "low_alpha_rgb_pixels": 9275,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_regalia_meridian_relay_reliquary.png",
+      "registration_mode": "bottom42",
+      "source_crop": [
+        41,
+        9,
+        1194,
+        1235
+      ],
+      "source_resize": [
+        39,
+        42
+      ],
+      "canvas_origin": [
+        4,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 1.7369791666666667,
+        "opaque_rgb_mae": 8.12689393939394
+      }
+    },
+    "resource_site_regalia_rootpath_covenant_reliquary": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/rootpath_covenant_reliquary_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/rootpath_covenant_reliquary_source.png",
+        "source_model": "built_in_image_gen_original_setbound_regalia_reliquaries_atlas",
+        "assigned_resource_site_id": "site_rootpath_covenant_reliquary",
+        "presentation_role": "rootpath_setbound_regalia_reliquary",
+        "accessible_description": "A round living heartwood seed-vault stands inside three walking-root arches with a bark cuirass plate, flowering standard, and compass cradle."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+      "source_sha256": "cc81b2ed977ade8b7123217b5ed74b050c8b7116fd273937178381d8c592db54",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/manifest.json",
+      "source_manifest_sha256": "0e8b8b7fec5faf0cb72752bd7773ea29b01bdde320bd9c6f7fba5dd4cc38b149",
+      "low_alpha_rgb_pixels": 4012,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_regalia_rootpath_covenant_reliquary.png",
+      "registration_mode": "bottom42",
+      "source_crop": [
+        0,
+        0,
+        1240,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.9917534722222223,
+        "opaque_rgb_mae": 5.304696449026346
+      }
+    },
+    "resource_site_regalia_redline_survey_reliquary": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/redline_survey_reliquary_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/redline_survey_reliquary_source.png",
+        "source_model": "built_in_image_gen_original_setbound_regalia_reliquaries_atlas",
+        "assigned_resource_site_id": "site_redline_survey_reliquary",
+        "presentation_role": "redline_setbound_regalia_reliquary",
+        "accessible_description": "A broad riveted drafting vault presents an enormous redline gauge beside an upright plated-vambrace clamp and rigid split gonfalon."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+      "source_sha256": "1eb044272e0b90195da76fcd3d043a1dcc926988a506ce411356f1177b626426",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/manifest.json",
+      "source_manifest_sha256": "0e8b8b7fec5faf0cb72752bd7773ea29b01bdde320bd9c6f7fba5dd4cc38b149",
+      "low_alpha_rgb_pixels": 840,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_regalia_redline_survey_reliquary.png",
+      "registration_mode": "bottom42",
+      "source_crop": [
+        0,
+        0,
+        1240,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.0230034722222223,
+        "opaque_rgb_mae": 4.76984126984127
+      }
+    },
+    "resource_site_regalia_drowned_wake_reliquary": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/drowned_wake_reliquary_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/drowned_wake_reliquary_source.png",
+        "source_model": "built_in_image_gen_original_setbound_regalia_reliquaries_atlas",
+        "assigned_resource_site_id": "site_drowned_wake_reliquary",
+        "presentation_role": "drownedwake_setbound_regalia_reliquary",
+        "accessible_description": "A crescent ship-rib chart casket carries a broken mourning mast, an oversized prow compass, and deckboots hanging from an anchor crossbar."
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png",
+      "source_sha256": "230b9fa74561d880a09265ddde98c870d5259e837c0185d76f3568b3dad56e2f",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/setbound_regalia_assemblies_wave1/manifest.json",
+      "source_manifest_sha256": "0e8b8b7fec5faf0cb72752bd7773ea29b01bdde320bd9c6f7fba5dd4cc38b149",
+      "low_alpha_rgb_pixels": 847,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_regalia_drowned_wake_reliquary.png",
+      "registration_mode": "bottom42",
+      "source_crop": [
+        0,
+        16,
+        1226,
+        1254
+      ],
+      "source_resize": [
+        42,
+        42
+      ],
+      "canvas_origin": [
+        3,
+        6
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 2.6497395833333335,
+        "opaque_rgb_mae": 4.856196156394963
+      }
+    },
+    "resource_site_grand_arcanum_dawnwrit_column": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/dawnwrit_column_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/dawnwrit_column_source.png",
+        "source_model": "built_in_image_gen_original_grand_arcanum_convocations_atlas",
+        "assigned_resource_site_id": "site_dawnwrit_grand_convocation",
+        "presentation_role": "grand_arcanum_field_academy",
+        "accessible_description": "An asymmetric ivory and brass road obelisk carries three signal rings, a forked lantern crown, and a white-gold oath flame.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+      "source_sha256": "f2d486de58e6731ffc6ac04a71e25c0b78badbea73bad65a4ce744fc9f96aab8",
+      "source_size": [
+        512,
+        512
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/manifest.json",
+      "source_manifest_sha256": "67394f9db682de3b465f2dc3113e9a531ee0f7227cd8275e00ae658787231bd0",
+      "low_alpha_rgb_pixels": 1075,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_grand_arcanum_dawnwrit_column.png",
+      "registration_mode": "full_canvas",
+      "source_crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "source_resize": [
+        48,
+        48
+      ],
+      "canvas_origin": [
+        0,
+        0
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "resource_site_grand_arcanum_leechmoon_court": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/leechmoon_poultice_court_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/leechmoon_poultice_court_source.png",
+        "source_model": "built_in_image_gen_original_grand_arcanum_convocations_atlas",
+        "assigned_resource_site_id": "site_leechmoon_grand_convocation",
+        "presentation_role": "grand_arcanum_field_academy",
+        "accessible_description": "A crescent bogstone court joins a hide drum, crooked reed retort, hanging poultice bowl, and three flood stakes.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+      "source_sha256": "c093fc255abe36d8aec940a7b38805d021d064b16e8368c22322154e963be3b3",
+      "source_size": [
+        512,
+        512
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/manifest.json",
+      "source_manifest_sha256": "67394f9db682de3b465f2dc3113e9a531ee0f7227cd8275e00ae658787231bd0",
+      "low_alpha_rgb_pixels": 110,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_grand_arcanum_leechmoon_court.png",
+      "registration_mode": "full_canvas",
+      "source_crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "source_resize": [
+        48,
+        48
+      ],
+      "canvas_origin": [
+        0,
+        0
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "resource_site_grand_arcanum_aurora_halo_array": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/aurora_halo_array_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/aurora_halo_array_source.png",
+        "source_model": "built_in_image_gen_original_grand_arcanum_convocations_atlas",
+        "assigned_resource_site_id": "site_aurora_halo_grand_convocation",
+        "presentation_role": "grand_arcanum_field_academy",
+        "accessible_description": "An offset oval lens turns inside three unequal halo rails beneath a prism vane and glass calibration needles.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+      "source_sha256": "02f923a745a4aebfc1eeb3d73f5ad766d104aabade610f651dedbf35474859b6",
+      "source_size": [
+        512,
+        512
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/manifest.json",
+      "source_manifest_sha256": "67394f9db682de3b465f2dc3113e9a531ee0f7227cd8275e00ae658787231bd0",
+      "low_alpha_rgb_pixels": 1750,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_grand_arcanum_aurora_halo_array.png",
+      "registration_mode": "full_canvas",
+      "source_crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "source_resize": [
+        48,
+        48
+      ],
+      "canvas_origin": [
+        0,
+        0
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "resource_site_grand_arcanum_loambriar_loom": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/loambriar_graft_loom_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/loambriar_graft_loom_source.png",
+        "source_model": "built_in_image_gen_original_grand_arcanum_convocations_atlas",
+        "assigned_resource_site_id": "site_loambriar_grand_convocation",
+        "presentation_role": "grand_arcanum_field_academy",
+        "accessible_description": "A living root arch supports a graft spool, thorn stake, bloom lamp, and three unequal bough forks.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+      "source_sha256": "0a07e2a01ad19cc4bfca76d635a7562785b65f5fc1e9e7dc3cace14981a3093a",
+      "source_size": [
+        512,
+        512
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/manifest.json",
+      "source_manifest_sha256": "67394f9db682de3b465f2dc3113e9a531ee0f7227cd8275e00ae658787231bd0",
+      "low_alpha_rgb_pixels": 936,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_grand_arcanum_loambriar_loom.png",
+      "registration_mode": "full_canvas",
+      "source_crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "source_resize": [
+        48,
+        48
+      ],
+      "canvas_origin": [
+        0,
+        0
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "resource_site_grand_arcanum_ashrail_forge": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/ashrail_clause_forge_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/ashrail_clause_forge_source.png",
+        "source_model": "built_in_image_gen_original_grand_arcanum_convocations_atlas",
+        "assigned_resource_site_id": "site_ashrail_grand_convocation",
+        "presentation_role": "grand_arcanum_field_academy",
+        "accessible_description": "A squat basalt and brass forge carries a diagonal hammer rail, riveted mantle, three clamp jaws, and a red pressure gauge.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+      "source_sha256": "cd5e6627306ff179ffbfba18789be8b03e2f2364ace9d5ea6ce7389d6fe97beb",
+      "source_size": [
+        512,
+        512
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/manifest.json",
+      "source_manifest_sha256": "67394f9db682de3b465f2dc3113e9a531ee0f7227cd8275e00ae658787231bd0",
+      "low_alpha_rgb_pixels": 68,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_grand_arcanum_ashrail_forge.png",
+      "registration_mode": "full_canvas",
+      "source_crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "source_resize": [
+        48,
+        48
+      ],
+      "canvas_origin": [
+        0,
+        0
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "resource_site_grand_arcanum_mistmourning_archive": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/mistmourning_drift_archive_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/mistmourning_drift_archive_source.png",
+        "source_model": "built_in_image_gen_original_grand_arcanum_convocations_atlas",
+        "assigned_resource_site_id": "site_mistmourning_grand_convocation",
+        "presentation_role": "grand_arcanum_field_academy",
+        "accessible_description": "A tilted whalebone crescent bears shroud sails, a drowned lantern mask, tide marker, and three memory chimes.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
+      "source_sha256": "ceeda4928fa688ff90e071c245bc3415a0b0ca51df92b79e74c573fa4996dad2",
+      "source_size": [
+        512,
+        512
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/grand_arcanum_convocations_wave1/manifest.json",
+      "source_manifest_sha256": "67394f9db682de3b465f2dc3113e9a531ee0f7227cd8275e00ae658787231bd0",
+      "low_alpha_rgb_pixels": 331,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_grand_arcanum_mistmourning_archive.png",
+      "registration_mode": "full_canvas",
+      "source_crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "source_resize": [
+        48,
+        48
+      ],
+      "canvas_origin": [
+        0,
+        0
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "resource_site_uncrowned_cinderlock_throne": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/cinderlock_open_charter_throne_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/cinderlock_open_charter_throne_source.png",
+        "source_model": "built_in_image_gen_original_uncrowned_sovereign_roads",
+        "assigned_resource_site_id": "site_cinderlock_open_charter_throne",
+        "presentation_role": "uncrowned_sovereign_field_throne",
+        "accessible_description": "A black sluice-stone seat stands beneath an open broken brass ring beside a white ember bowl.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+      "source_sha256": "e3687621ad71125a2d5c5c0dfaf25ab8611a37fc9955a1fab693e23dd60812d1",
+      "source_size": [
+        512,
+        512
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/manifest.json",
+      "source_manifest_sha256": "220a5b25a660ae6eb7e822bae05457e7c07099620a0b31db67f6d52018bd54a8",
+      "low_alpha_rgb_pixels": 814,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_uncrowned_cinderlock_throne.png",
+      "registration_mode": "full_canvas",
+      "source_crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "source_resize": [
+        48,
+        48
+      ],
+      "canvas_origin": [
+        0,
+        0
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "resource_site_uncrowned_murkward_tribunal": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/murkward_antler_tribunal_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/murkward_antler_tribunal_source.png",
+        "source_model": "built_in_image_gen_original_uncrowned_sovereign_roads",
+        "assigned_resource_site_id": "site_murkward_antler_tribunal",
+        "presentation_role": "uncrowned_sovereign_field_throne",
+        "accessible_description": "Unequal drowned antlers frame a bogstone seat, hide drum, reed scales, and peat lantern.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+      "source_sha256": "f4b194cea2d7b565fda0d5ce8e610f28e362c17c4454bb0c4a5c83f46c55741f",
+      "source_size": [
+        512,
+        512
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/manifest.json",
+      "source_manifest_sha256": "220a5b25a660ae6eb7e822bae05457e7c07099620a0b31db67f6d52018bd54a8",
+      "low_alpha_rgb_pixels": 830,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_uncrowned_murkward_tribunal.png",
+      "registration_mode": "full_canvas",
+      "source_crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "source_resize": [
+        48,
+        48
+      ],
+      "canvas_origin": [
+        0,
+        0
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "resource_site_uncrowned_dawnmirror_matrix": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/dawnmirror_uncrowned_matrix_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/dawnmirror_uncrowned_matrix_source.png",
+        "source_model": "built_in_image_gen_original_uncrowned_sovereign_roads",
+        "assigned_resource_site_id": "site_dawnmirror_uncrowned_matrix",
+        "presentation_role": "uncrowned_sovereign_field_throne",
+        "accessible_description": "An ivory-gold seat hangs in an offset prism halo crossed by three calibration needles.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+      "source_sha256": "25d314ee56a55dc12272567f14662387e58f2acfc16a9233b9cac2208b3ceb3b",
+      "source_size": [
+        512,
+        512
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/manifest.json",
+      "source_manifest_sha256": "220a5b25a660ae6eb7e822bae05457e7c07099620a0b31db67f6d52018bd54a8",
+      "low_alpha_rgb_pixels": 3157,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_uncrowned_dawnmirror_matrix.png",
+      "registration_mode": "full_canvas",
+      "source_crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "source_resize": [
+        48,
+        48
+      ],
+      "canvas_origin": [
+        0,
+        0
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "resource_site_uncrowned_graftroot_dais": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/graftroot_living_dais_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/graftroot_living_dais_source.png",
+        "source_model": "built_in_image_gen_original_uncrowned_sovereign_roads",
+        "assigned_resource_site_id": "site_graftroot_living_dais",
+        "presentation_role": "uncrowned_sovereign_field_throne",
+        "accessible_description": "A living root seat grows beneath unequal flowering boughs, two seed lamps, and a graft spool.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+      "source_sha256": "4db641e045c47b923a34abea9a6eda72cfc7b97efa094a8244e74dd17e51045a",
+      "source_size": [
+        512,
+        512
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/manifest.json",
+      "source_manifest_sha256": "220a5b25a660ae6eb7e822bae05457e7c07099620a0b31db67f6d52018bd54a8",
+      "low_alpha_rgb_pixels": 1027,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_uncrowned_graftroot_dais.png",
+      "registration_mode": "full_canvas",
+      "source_crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "source_resize": [
+        48,
+        48
+      ],
+      "canvas_origin": [
+        0,
+        0
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "resource_site_uncrowned_orevein_assay_seat": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/orevein_saintless_assay_seat_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/orevein_saintless_assay_seat_source.png",
+        "source_model": "built_in_image_gen_original_uncrowned_sovereign_roads",
+        "assigned_resource_site_id": "site_orevein_saintless_assay_seat",
+        "presentation_role": "uncrowned_sovereign_field_throne",
+        "accessible_description": "A basalt and brass assay seat carries three gauges, an open clamp, and a red relief valve.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+      "source_sha256": "77e8ff9aa0a93822a678979d1d0a38fbfad514b4667908ed242bfa3464211036",
+      "source_size": [
+        512,
+        512
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/manifest.json",
+      "source_manifest_sha256": "220a5b25a660ae6eb7e822bae05457e7c07099620a0b31db67f6d52018bd54a8",
+      "low_alpha_rgb_pixels": 97,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_uncrowned_orevein_assay_seat.png",
+      "registration_mode": "full_canvas",
+      "source_crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "source_resize": [
+        48,
+        48
+      ],
+      "canvas_origin": [
+        0,
+        0
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    },
+    "resource_site_uncrowned_bellwake_sounding_chair": {
+      "original_manifest_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_trimmed": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/bellwake_empty_sounding_chair_source.png",
+        "source_generated": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/bellwake_empty_sounding_chair_source.png",
+        "source_model": "built_in_image_gen_original_uncrowned_sovereign_roads",
+        "assigned_resource_site_id": "site_bellwake_empty_sounding_chair",
+        "presentation_role": "uncrowned_sovereign_field_throne",
+        "accessible_description": "Whalebone and blackwood frame an empty tide chair beneath shroud sails, a drowned bell, and three chimes.",
+        "background": "transparent"
+      },
+      "runtime_path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
+      "source_sha256": "b2d5e3c9b8b618c47e8a62dd5ca78ea1abc48f32fcd31271d5a6eecdde855b4b",
+      "source_size": [
+        512,
+        512
+      ],
+      "source_alpha_levels": 256,
+      "source_manifest": "res://art/overworld/source/generated/resource_sites/uncrowned_sovereign_roads_wave1/manifest.json",
+      "source_manifest_sha256": "220a5b25a660ae6eb7e822bae05457e7c07099620a0b31db67f6d52018bd54a8",
+      "low_alpha_rgb_pixels": 505,
+      "trimmed_path": "res://art/overworld/source/trimmed/cutout_recovery_20260909/remaining_sites/resource_site_uncrowned_bellwake_sounding_chair.png",
+      "registration_mode": "full_canvas",
+      "source_crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "source_resize": [
+        48,
+        48
+      ],
+      "canvas_origin": [
+        0,
+        0
+      ],
+      "canvas_size": [
+        192,
+        192
+      ],
+      "pixel_scale": 4,
+      "resampling": "LANCZOS",
+      "historical_registration": {
+        "alpha_mae": 0.0,
+        "opaque_rgb_mae": 0.0
+      }
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png": {
+      "before_size": [
+        288,
+        48
+      ],
+      "before_sha256": "926e321356fce9c9d5e3901b56a5ea4dd08b304fbb8b25d238d024b8edc77fa2"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/great_work_charter_races_atlas.png": {
+      "before_size": [
+        288,
+        48
+      ],
+      "before_sha256": "8a68029b5ec518abfdb2da7ed1aa6192cac9c6507a275172feca1b793e017533"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/grand_muster_assemblies_atlas.png": {
+      "before_size": [
+        288,
+        48
+      ],
+      "before_sha256": "175f2028ef2517dc9f482eb03020ab2aceb13b3369dfe4be31d28da7511e22a2"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/relief_route_convoy_relays_atlas.png": {
+      "before_size": [
+        288,
+        48
+      ],
+      "before_sha256": "d13071e3816cca9567205b7010933418e874b22057602d89ed4c6646f50086ee"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/fogbreak_survey_instruments_atlas.png": {
+      "before_size": [
+        288,
+        48
+      ],
+      "before_sha256": "4a084c26ae82b38476bd3f0a27aab615d4c7b5db6c7eb91a8860060e962767b2"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png": {
+      "before_size": [
+        288,
+        48
+      ],
+      "before_sha256": "6cbc67fac5e474d5ffaacb5794babe9166bceb4b55bd67b5a0921ebb995cea2c"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/setbound_regalia_reliquaries_atlas.png": {
+      "before_size": [
+        288,
+        48
+      ],
+      "before_sha256": "2188bf5c9713e07728b1e5a9a79feee2737a255fd9546c7b1f664c2747e6e949"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png": {
+      "before_size": [
+        288,
+        48
+      ],
+      "before_sha256": "5d1b47b73c03464a7e0e3d8531c888b60f27d952f564ee4efcb359b568dbb5c7"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png": {
+      "before_size": [
+        288,
+        48
+      ],
+      "before_sha256": "8c113912715df43b774dcaa65c465a154f8007ea9ed7fb8ff2c85aaf5242847d"
+    }
+  },
+  "preserved_controls": {},
+  "state_mappings": {
+    "site_lockfire_triune_rostrum": {
+      "asset_id": "resource_site_triune_arcanum_lockfire_rostrum",
+      "unclaimed_asset_id": "resource_site_triune_arcanum_lockfire_rostrum",
+      "fit": "Exact original Lockfire Triune Rostrum remains visible before and after its one-time three-spell lesson."
+    },
+    "site_moonfen_triune_drumcourt": {
+      "asset_id": "resource_site_triune_arcanum_moonfen_drumcourt",
+      "unclaimed_asset_id": "resource_site_triune_arcanum_moonfen_drumcourt",
+      "fit": "Exact original Moonfen Triune Drumcourt remains visible before and after its one-time three-spell lesson."
+    },
+    "site_three_facet_meridian_orrery": {
+      "asset_id": "resource_site_triune_arcanum_three_facet_orrery",
+      "unclaimed_asset_id": "resource_site_triune_arcanum_three_facet_orrery",
+      "fit": "Exact original Three-Facet Meridian Orrery remains visible before and after its one-time three-spell lesson."
+    },
+    "site_heartwood_three_vow_arbor": {
+      "asset_id": "resource_site_triune_arcanum_heartwood_arbor",
+      "unclaimed_asset_id": "resource_site_triune_arcanum_heartwood_arbor",
+      "fit": "Exact original Heartwood Three-Vow Arbor remains visible before and after its one-time three-spell lesson."
+    },
+    "site_redline_triune_assay_forge": {
+      "asset_id": "resource_site_triune_arcanum_redline_forge",
+      "unclaimed_asset_id": "resource_site_triune_arcanum_redline_forge",
+      "fit": "Exact original Redline Triune Assay Forge remains visible before and after its one-time three-spell lesson."
+    },
+    "site_drowned_bell_three_wake_archive": {
+      "asset_id": "resource_site_triune_arcanum_drowned_bell_archive",
+      "unclaimed_asset_id": "resource_site_triune_arcanum_drowned_bell_archive",
+      "fit": "Exact original Drowned-Bell Three-Wake Archive remains visible before and after its one-time three-spell lesson."
+    },
+    "site_rainwrit_stormseal_survey_cairn": {
+      "asset_id": "resource_site_great_work_rainwrit_survey_cairn",
+      "unclaimed_asset_id": "resource_site_great_work_rainwrit_survey_cairn",
+      "fit": "Exact original Rainwrit Stormseal Survey Cairn remains visible before and after its one-time survey claim."
+    },
+    "site_hollowreed_moonwax_foundation_totem": {
+      "asset_id": "resource_site_great_work_hollowreed_foundation_totem",
+      "unclaimed_asset_id": "resource_site_great_work_hollowreed_foundation_totem",
+      "fit": "Exact original Hollowreed Moonwax Foundation Totem remains visible before and after its one-time survey claim."
+    },
+    "site_meridian_seven_line_plumb_prism": {
+      "asset_id": "resource_site_great_work_meridian_plumb_prism",
+      "unclaimed_asset_id": "resource_site_great_work_meridian_plumb_prism",
+      "fit": "Exact original Meridian Seven-Line Plumb Prism remains visible before and after its one-time survey claim."
+    },
+    "site_crownroot_heartseed_boundary_arbor": {
+      "asset_id": "resource_site_great_work_crownroot_boundary_arbor",
+      "unclaimed_asset_id": "resource_site_great_work_crownroot_boundary_arbor",
+      "fit": "Exact original Crownroot Heartseed Boundary Arbor remains visible before and after its one-time survey claim."
+    },
+    "site_blackbell_grand_assay_tripod": {
+      "asset_id": "resource_site_great_work_blackbell_assay_tripod",
+      "unclaimed_asset_id": "resource_site_great_work_blackbell_assay_tripod",
+      "fit": "Exact original Blackbell Grand Assay Tripod remains visible before and after its one-time survey claim."
+    },
+    "site_pale_sounding_last_memory_marker": {
+      "asset_id": "resource_site_great_work_pale_sounding_marker",
+      "unclaimed_asset_id": "resource_site_great_work_pale_sounding_marker",
+      "fit": "Exact original Pale Sounding Last-Memory Marker remains visible before and after its one-time survey claim."
+    },
+    "site_rainwrit_five_writ_muster_standard": {
+      "asset_id": "resource_site_grand_muster_rainwrit_standard",
+      "unclaimed_asset_id": "resource_site_grand_muster_rainwrit_standard",
+      "fit": "Exact original Rainwrit Five-Writ Muster Standard remains visible before and after its one-time muster claim."
+    },
+    "site_hollowreed_moonhide_drum_standard": {
+      "asset_id": "resource_site_grand_muster_hollowreed_standard",
+      "unclaimed_asset_id": "resource_site_grand_muster_hollowreed_standard",
+      "fit": "Exact original Hollowreed Moonhide Drum Standard remains visible before and after its one-time muster claim."
+    },
+    "site_meridian_five_facet_muster_prism": {
+      "asset_id": "resource_site_grand_muster_meridian_prism",
+      "unclaimed_asset_id": "resource_site_grand_muster_meridian_prism",
+      "fit": "Exact original Meridian Five-Facet Muster Prism remains visible before and after its one-time muster claim."
+    },
+    "site_crownroot_five_seed_muster_bough": {
+      "asset_id": "resource_site_grand_muster_crownroot_bough",
+      "unclaimed_asset_id": "resource_site_grand_muster_crownroot_bough",
+      "fit": "Exact original Crownroot Five-Seed Muster Bough remains visible before and after its one-time muster claim."
+    },
+    "site_blackbell_five_clause_muster_gantry": {
+      "asset_id": "resource_site_grand_muster_blackbell_gantry",
+      "unclaimed_asset_id": "resource_site_grand_muster_blackbell_gantry",
+      "fit": "Exact original Blackbell Five-Clause Muster Gantry remains visible before and after its one-time muster claim."
+    },
+    "site_pale_sounding_five_wake_muster_mast": {
+      "asset_id": "resource_site_grand_muster_pale_sounding_mast",
+      "unclaimed_asset_id": "resource_site_grand_muster_pale_sounding_mast",
+      "fit": "Exact original Pale Sounding Five-Wake Muster Mast remains visible before and after its one-time muster claim."
+    },
+    "site_embercourt_locklantern_convoy_relay": {
+      "asset_id": "resource_site_relief_route_embercourt_relay",
+      "unclaimed_asset_id": "resource_site_relief_route_embercourt_relay",
+      "fit": "Exact original Locklantern relay remains visible while it dispatches and records relief convoys."
+    },
+    "site_mireclaw_antlerraft_convoy_relay": {
+      "asset_id": "resource_site_relief_route_mireclaw_relay",
+      "unclaimed_asset_id": "resource_site_relief_route_mireclaw_relay",
+      "fit": "Exact original Antlerraft relay remains visible while it dispatches and records relief convoys."
+    },
+    "site_sunvault_prismwheel_convoy_relay": {
+      "asset_id": "resource_site_relief_route_sunvault_relay",
+      "unclaimed_asset_id": "resource_site_relief_route_sunvault_relay",
+      "fit": "Exact original Prismwheel relay remains visible while it dispatches and records relief convoys."
+    },
+    "site_thornwake_seedcart_convoy_relay": {
+      "asset_id": "resource_site_relief_route_thornwake_relay",
+      "unclaimed_asset_id": "resource_site_relief_route_thornwake_relay",
+      "fit": "Exact original Seedcart relay remains visible while it dispatches and records relief convoys."
+    },
+    "site_brasshollow_quenchrail_convoy_relay": {
+      "asset_id": "resource_site_relief_route_brasshollow_relay",
+      "unclaimed_asset_id": "resource_site_relief_route_brasshollow_relay",
+      "fit": "Exact original Quenchrail relay remains visible while it dispatches and records relief convoys."
+    },
+    "site_veilmourn_wakeglass_convoy_relay": {
+      "asset_id": "resource_site_relief_route_veilmourn_relay",
+      "unclaimed_asset_id": "resource_site_relief_route_veilmourn_relay",
+      "fit": "Exact original Wakeglass relay remains visible while it dispatches and records relief convoys."
+    },
+    "site_embercourt_ashline_writ_compass": {
+      "asset_id": "resource_site_fogbreak_embercourt_compass",
+      "unclaimed_asset_id": "resource_site_fogbreak_embercourt_compass",
+      "fit": "Exact original Ashline Writ Compass remains visible before and after its persistent scouting claim."
+    },
+    "site_mireclaw_bogglass_listening_mast": {
+      "asset_id": "resource_site_fogbreak_mireclaw_mast",
+      "unclaimed_asset_id": "resource_site_fogbreak_mireclaw_mast",
+      "fit": "Exact original Bogglass Listening Mast remains visible before and after its persistent scouting claim."
+    },
+    "site_sunvault_meridian_sunthread_heliograph": {
+      "asset_id": "resource_site_fogbreak_sunvault_heliograph",
+      "unclaimed_asset_id": "resource_site_fogbreak_sunvault_heliograph",
+      "fit": "Exact original Meridian Sunthread Heliograph remains visible before and after its persistent scouting claim."
+    },
+    "site_thornwake_rootstar_canopy_orrery": {
+      "asset_id": "resource_site_fogbreak_thornwake_orrery",
+      "unclaimed_asset_id": "resource_site_fogbreak_thornwake_orrery",
+      "fit": "Exact original Rootstar Canopy Orrery remains visible before and after its persistent scouting claim."
+    },
+    "site_brasshollow_redgauge_horizon_theodolite": {
+      "asset_id": "resource_site_fogbreak_brasshollow_theodolite",
+      "unclaimed_asset_id": "resource_site_fogbreak_brasshollow_theodolite",
+      "fit": "Exact original Redgauge Horizon Theodolite remains visible before and after its persistent scouting claim."
+    },
+    "site_veilmourn_drowned_horizon_sextant": {
+      "asset_id": "resource_site_fogbreak_veilmourn_sextant",
+      "unclaimed_asset_id": "resource_site_fogbreak_veilmourn_sextant",
+      "fit": "Exact original Drowned Horizon Sextant remains visible before and after its persistent scouting claim."
+    },
+    "site_embercourt_rainwrit_ledger_brazier": {
+      "asset_id": "resource_site_frontier_treasury_embercourt_brazier",
+      "unclaimed_asset_id": "resource_site_frontier_treasury_embercourt_brazier",
+      "fit": "Exact original Rainwrit Ledger Brazier remains visible before and after persistent treasury control."
+    },
+    "site_mireclaw_reedbarrow_tally_drum": {
+      "asset_id": "resource_site_frontier_treasury_mireclaw_drum",
+      "unclaimed_asset_id": "resource_site_frontier_treasury_mireclaw_drum",
+      "fit": "Exact original Reedbarrow Tally Drum remains visible before and after persistent treasury control."
+    },
+    "site_sunvault_meridian_prism_ledger": {
+      "asset_id": "resource_site_frontier_treasury_sunvault_prism",
+      "unclaimed_asset_id": "resource_site_frontier_treasury_sunvault_prism",
+      "fit": "Exact original Meridian Prism Ledger remains visible before and after persistent treasury control."
+    },
+    "site_thornwake_crownroot_seed_tithe_arbor": {
+      "asset_id": "resource_site_frontier_treasury_thornwake_arbor",
+      "unclaimed_asset_id": "resource_site_frontier_treasury_thornwake_arbor",
+      "fit": "Exact original Crownroot Seed Tithe Arbor remains visible before and after persistent treasury control."
+    },
+    "site_brasshollow_blackbell_counterwheel": {
+      "asset_id": "resource_site_frontier_treasury_brasshollow_wheel",
+      "unclaimed_asset_id": "resource_site_frontier_treasury_brasshollow_wheel",
+      "fit": "Exact original Blackbell Counterwheel remains visible before and after persistent treasury control."
+    },
+    "site_veilmourn_pale_sounding_wake_ledger": {
+      "asset_id": "resource_site_frontier_treasury_veilmourn_ledger",
+      "unclaimed_asset_id": "resource_site_frontier_treasury_veilmourn_ledger",
+      "fit": "Exact original Pale Sounding Wake Ledger remains visible before and after persistent treasury control."
+    },
+    "site_lockward_charter_reliquary": {
+      "asset_id": "resource_site_regalia_lockward_charter_reliquary",
+      "unclaimed_asset_id": "resource_site_regalia_lockward_charter_reliquary",
+      "fit": "Exact original Lockward Charter Reliquary remains visible before and after its one-time final-set-piece claim."
+    },
+    "site_fenhound_pursuit_reliquary": {
+      "asset_id": "resource_site_regalia_fenhound_pursuit_reliquary",
+      "unclaimed_asset_id": "resource_site_regalia_fenhound_pursuit_reliquary",
+      "fit": "Exact original Fenhound Pursuit Reliquary remains visible before and after its one-time final-set-piece claim."
+    },
+    "site_meridian_relay_reliquary": {
+      "asset_id": "resource_site_regalia_meridian_relay_reliquary",
+      "unclaimed_asset_id": "resource_site_regalia_meridian_relay_reliquary",
+      "fit": "Exact original Meridian Relay Reliquary remains visible before and after its one-time final-set-piece claim."
+    },
+    "site_rootpath_covenant_reliquary": {
+      "asset_id": "resource_site_regalia_rootpath_covenant_reliquary",
+      "unclaimed_asset_id": "resource_site_regalia_rootpath_covenant_reliquary",
+      "fit": "Exact original Rootpath Covenant Reliquary remains visible before and after its one-time final-set-piece claim."
+    },
+    "site_redline_survey_reliquary": {
+      "asset_id": "resource_site_regalia_redline_survey_reliquary",
+      "unclaimed_asset_id": "resource_site_regalia_redline_survey_reliquary",
+      "fit": "Exact original Redline Survey Warrant Reliquary remains visible before and after its one-time final-set-piece claim."
+    },
+    "site_drowned_wake_reliquary": {
+      "asset_id": "resource_site_regalia_drowned_wake_reliquary",
+      "unclaimed_asset_id": "resource_site_regalia_drowned_wake_reliquary",
+      "fit": "Exact original Drowned Wake Chart Reliquary remains visible before and after its one-time final-set-piece claim."
+    },
+    "site_dawnwrit_grand_convocation": {
+      "asset_id": "resource_site_grand_arcanum_dawnwrit_column",
+      "unclaimed_asset_id": "resource_site_grand_arcanum_dawnwrit_column",
+      "fit": "Exact original Dawn-Writ Column remains visible before and after its three-spell lesson."
+    },
+    "site_leechmoon_grand_convocation": {
+      "asset_id": "resource_site_grand_arcanum_leechmoon_court",
+      "unclaimed_asset_id": "resource_site_grand_arcanum_leechmoon_court",
+      "fit": "Exact original Leechmoon Poultice Court remains visible before and after its three-spell lesson."
+    },
+    "site_aurora_halo_grand_convocation": {
+      "asset_id": "resource_site_grand_arcanum_aurora_halo_array",
+      "unclaimed_asset_id": "resource_site_grand_arcanum_aurora_halo_array",
+      "fit": "Exact original Aurora Halo Array remains visible before and after its three-spell lesson."
+    },
+    "site_loambriar_grand_convocation": {
+      "asset_id": "resource_site_grand_arcanum_loambriar_loom",
+      "unclaimed_asset_id": "resource_site_grand_arcanum_loambriar_loom",
+      "fit": "Exact original Loam-Briar Graft Loom remains visible before and after its three-spell lesson."
+    },
+    "site_ashrail_grand_convocation": {
+      "asset_id": "resource_site_grand_arcanum_ashrail_forge",
+      "unclaimed_asset_id": "resource_site_grand_arcanum_ashrail_forge",
+      "fit": "Exact original Ash-Rail Clause Forge remains visible before and after its three-spell lesson."
+    },
+    "site_mistmourning_grand_convocation": {
+      "asset_id": "resource_site_grand_arcanum_mistmourning_archive",
+      "unclaimed_asset_id": "resource_site_grand_arcanum_mistmourning_archive",
+      "fit": "Exact original Mist-Mourning Drift Archive remains visible before and after its three-spell lesson."
+    },
+    "site_cinderlock_open_charter_throne": {
+      "asset_id": "resource_site_uncrowned_cinderlock_throne",
+      "unclaimed_asset_id": "resource_site_uncrowned_cinderlock_throne",
+      "fit": "Exact original Cinderlock Open Charter Throne remains visible before and after its witnessed claim."
+    },
+    "site_murkward_antler_tribunal": {
+      "asset_id": "resource_site_uncrowned_murkward_tribunal",
+      "unclaimed_asset_id": "resource_site_uncrowned_murkward_tribunal",
+      "fit": "Exact original Murkward Antler Tribunal remains visible before and after its witnessed claim."
+    },
+    "site_dawnmirror_uncrowned_matrix": {
+      "asset_id": "resource_site_uncrowned_dawnmirror_matrix",
+      "unclaimed_asset_id": "resource_site_uncrowned_dawnmirror_matrix",
+      "fit": "Exact original Dawnmirror Uncrowned Matrix remains visible before and after its witnessed claim."
+    },
+    "site_graftroot_living_dais": {
+      "asset_id": "resource_site_uncrowned_graftroot_dais",
+      "unclaimed_asset_id": "resource_site_uncrowned_graftroot_dais",
+      "fit": "Exact original Graftroot Living Dais remains visible before and after its witnessed claim."
+    },
+    "site_orevein_saintless_assay_seat": {
+      "asset_id": "resource_site_uncrowned_orevein_assay_seat",
+      "unclaimed_asset_id": "resource_site_uncrowned_orevein_assay_seat",
+      "fit": "Exact original Orevein Saintless Assay Seat remains visible before and after its witnessed claim."
+    },
+    "site_bellwake_empty_sounding_chair": {
+      "asset_id": "resource_site_uncrowned_bellwake_sounding_chair",
+      "unclaimed_asset_id": "resource_site_uncrowned_bellwake_sounding_chair",
+      "fit": "Exact original Bellwake Empty Sounding Chair remains visible before and after its witnessed claim."
+    }
+  }
+}

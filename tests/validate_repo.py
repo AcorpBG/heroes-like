@@ -44225,6 +44225,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(len(training_recoveries) == 40, errors, "All 40 training paintings must reconstruct from original paint, scoped RGB repair and historical registration")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Training cutout recovery failed closed: {exc}")
+    remaining_site_recoveries = {}
+    try:
+        remaining_site_spec = importlib.util.spec_from_file_location("remaining_site_cutout_validation", ROOT / "tools/prepare_overworld_remaining_site_cutouts.py")
+        remaining_site_module = importlib.util.module_from_spec(remaining_site_spec)
+        remaining_site_spec.loader.exec_module(remaining_site_module)
+        remaining_site_recoveries = remaining_site_module.validate_assets()
+        ensure(len(remaining_site_recoveries) == 54, errors, "All 54 remaining site paintings must reconstruct from original RGBA and historical registration")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Remaining site cutout recovery failed closed: {exc}")
     artifact_recoveries = {}
     try:
         artifact_spec = importlib.util.spec_from_file_location("artifact_cutout_validation", ROOT / "tools/prepare_overworld_artifact_cutouts.py")
@@ -44455,6 +44464,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (training_module.FAMILIES[Path(entry['path']).stem.removesuffix('_atlas')] * 192, 192)
             if asset_id in contract_recoveries:
                 expected_canvas = (contract_module.FAMILIES[Path(entry['path']).stem.removesuffix('_atlas')] * 192, 192)
+            if asset_id in remaining_site_recoveries:
+                expected_canvas = (1152, 192)
             if asset_id in artifact_recoveries and "atlas_size" in entry:
                 expected_canvas = tuple(entry["atlas_size"])
             if asset_id in remaining_encounter_recoveries:
@@ -53194,6 +53205,11 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         ensure('"recurring_encounter_atlas_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged recurring encounter atlas coverage")
         ensure('"reports/"' in packaging_text and '"art/overworld/runtime/terrain_tiles/generated/grastl/source_sheets/"' in packaging_text and '"art/overworld/runtime/terrain_tiles/generated/grastl/experiments/"' in packaging_text and 'not terrain_payload["forbidden_development_entries"]' in packaging_text, errors, f"{packaging_path.name} must fail when development reports or Grastl workfiles enter the PCK")
         ensure('"development_reports_pck_excluded"' in packaging_text, errors, f"{packaging_path.name} must report development-report exclusion")
+
+
+def remaining_site_historical_raster(runtime_path: Path) -> Path:
+    """Original site-atlas evidence; current paint reconstructs independently."""
+    return ROOT / "art/overworld/source/generated/cutout_recovery_20260909/remaining_sites/before_runtime" / runtime_path.relative_to(ROOT / "art/overworld/runtime")
 
 
 def artifact_historical_raster(runtime_path: Path) -> Path:
@@ -82304,7 +82320,7 @@ def validate_six_triune_arcanum_trials(errors: list[str]) -> None:
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
 
     ensure(len(scenarios) >= 183 and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 183 and len(sites) >= 291, errors, "Triune arcanum trials must own the 129-scenario and 237-site production catalogs")
-    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "926e321356fce9c9d5e3901b56a5ea4dd08b304fbb8b25d238d024b8edc77fa2" and atlas_path.read_bytes()[25] == 6, errors, "Triune arcanum runtime atlas size, alpha, or hash changed")
+    ensure(png_size(remaining_site_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(remaining_site_historical_raster(atlas_path).read_bytes()).hexdigest() == "926e321356fce9c9d5e3901b56a5ea4dd08b304fbb8b25d238d024b8edc77fa2" and remaining_site_historical_raster(atlas_path).read_bytes()[25] == 6, errors, "Triune arcanum runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_triune_arcanum_trials_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == "926e321356fce9c9d5e3901b56a5ea4dd08b304fbb8b25d238d024b8edc77fa2" and len(source_rows) == 6, errors, "Triune arcanum generated-source provenance changed")
 
     placed_trial_sites: list[str] = []
@@ -82333,7 +82349,7 @@ def validate_six_triune_arcanum_trials(errors: list[str]) -> None:
         ensure(site.get("content_batch_id") == slice_id and site.get("family") == "shrine" and site.get("learn_spell_id") == spell_ids[0] and site.get("learn_spell_ids") == spell_ids and site.get("claim_rewards") == {"experience":180} and site.get("runtime_boundary", {}).get("status") == "triune_arcanum_live", errors, f"{site_id} lost its exact live three-lesson contract")
         ensure(all(spell_id in spells for spell_id in spell_ids) and all(spell_id not in heroes.get(hero_id, {}).get("starting_spell_ids", []) for spell_id in spell_ids), errors, f"{scenario_id} trial spells must exist and start unknown")
         asset = assets.get(asset_id, {})
-        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [288,48] and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description", ""))) >= 80, errors, f"{site_id} lost its exact accessible academy art")
+        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1152,192] and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description", ""))) >= 80, errors, f"{site_id} lost its exact accessible academy art")
         source = source_rows.get(site_id, {})
         source_path = source_manifest_path.parent / source_name
         ensure(source.get("source_sha256") == source_sha and source.get("atlas_region") == region and source_path.is_file() and png_size(source_path) == (1254,1254) and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha and source_path.read_bytes()[25] == 6, errors, f"{site_id} source master, alpha, hash, or provenance changed")
@@ -82395,8 +82411,8 @@ def validate_six_grand_arcanum_convocations(errors: list[str]) -> None:
     sprites = art.get("resource_site_sprites", {})
     source_manifest = load_json(source_manifest_path)
     source_rows = source_manifest.get("items", [])
-    ensure(png_size(atlas_path) == (288, 48) and atlas_path.read_bytes()[25] == 6, errors, "Grand Arcanum runtime atlas must remain transparent 288x48")
-    ensure(source_manifest.get("content_batch_id") == slice_id and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_sha256") == hashlib.sha256(atlas_path.read_bytes()).hexdigest() and len(source_rows) == 6, errors, "Grand Arcanum source provenance or runtime atlas digest changed")
+    ensure(png_size(remaining_site_historical_raster(atlas_path)) == (288, 48) and remaining_site_historical_raster(atlas_path).read_bytes()[25] == 6, errors, "Grand Arcanum runtime atlas must remain transparent 288x48")
+    ensure(source_manifest.get("content_batch_id") == slice_id and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_sha256") == hashlib.sha256(remaining_site_historical_raster(atlas_path).read_bytes()).hexdigest() and len(source_rows) == 6, errors, "Grand Arcanum source provenance or runtime atlas digest changed")
     direct_spells: list[str] = []
     encounter_ids: list[str] = []
     for scenario_id, (hero_id, faction_id, group_id, site_id, home_town, enemy_town) in expected.items():
@@ -82415,7 +82431,7 @@ def validate_six_grand_arcanum_convocations(errors: list[str]) -> None:
         ensure(site.get("content_batch_id") == slice_id and site.get("learn_spell_ids") == spells and site.get("claim_rewards") == {"experience":240}, errors, f"{site_id} lost its exact three-lesson reward")
         sprite = sprites.get(site_id, {})
         asset = assets.get(sprite.get("asset_id", ""), {})
-        ensure(asset.get("path") == atlas_res and asset.get("assigned_resource_site_id") == site_id and asset.get("atlas_size") == [288,48] and asset.get("background") == "transparent", errors, f"{site_id} lost its exact transparent academy art")
+        ensure(asset.get("path") == atlas_res and asset.get("assigned_resource_site_id") == site_id and asset.get("atlas_size") == [1152,192] and asset.get("background") == "transparent", errors, f"{site_id} lost its exact transparent academy art")
         direct_spells.extend(spells)
         encounter_ids.extend(row.get("encounter_id") for row in encounters)
     ensure(len(set(direct_spells)) == 18 and len(encounter_ids) == 18 and len(set(encounter_ids)) == 18, errors, "Grand Arcanum must retain eighteen distinct spell routes and eighteen distinct encounter placements")
@@ -82471,7 +82487,7 @@ def validate_six_great_work_charter_races(errors: list[str]) -> None:
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
 
     ensure(len(scenarios) >= 183 and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 183 and len(sites) >= 291, errors, "Great-Work races must own the 129-scenario and 237-site production catalogs")
-    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "8a68029b5ec518abfdb2da7ed1aa6192cac9c6507a275172feca1b793e017533" and atlas_path.read_bytes()[25] == 6, errors, "Great-Work runtime atlas size, alpha, or hash changed")
+    ensure(png_size(remaining_site_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(remaining_site_historical_raster(atlas_path).read_bytes()).hexdigest() == "8a68029b5ec518abfdb2da7ed1aa6192cac9c6507a275172feca1b793e017533" and remaining_site_historical_raster(atlas_path).read_bytes()[25] == 6, errors, "Great-Work runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_great_work_charter_races_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == "8a68029b5ec518abfdb2da7ed1aa6192cac9c6507a275172feca1b793e017533" and len(source_rows) == 6, errors, "Great-Work generated-source provenance changed")
 
     source_payloads: list[bytes] = []
@@ -82495,7 +82511,7 @@ def validate_six_great_work_charter_races(errors: list[str]) -> None:
         ensure(len(scenario.get("script_hooks", [])) == 5 and any(effect.get("type") == "town_add_recruits" for effect in scenario.get("script_hooks", [])[0].get("effects", [])) and scenario.get("starting_resources", {}).get("gold") == 16500 and all(scenario.get("starting_resources", {}).get(key) == 8 for key in ["embergrain","aetherglass","peatwax","verdant_grafts","brass_scrip","memory_salt"]), errors, f"{scenario_id} lost its viable staged construction economy or town relief")
         ensure(site.get("content_batch_id") == slice_id and site.get("family") == "scenario_objective" and site.get("runtime_boundary", {}).get("status") == "great_work_survey_live" and bool(site.get("claim_rewards", {})) and bool(site.get("claim_flags", {})), errors, f"{site_id} lost its one-time live survey contract")
         asset = assets.get(asset_id, {})
-        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [288,48] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_great_work_charter_races_atlas" and len(str(asset.get("accessible_description", ""))) >= 90, errors, f"{site_id} lost its exact accessible survey art")
+        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1152,192] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_great_work_charter_races_atlas" and len(str(asset.get("accessible_description", ""))) >= 90, errors, f"{site_id} lost its exact accessible survey art")
         source = source_rows.get(site_id, {})
         source_path = source_manifest_path.parent / source_name
         ensure(source.get("source_sha256") == source_sha and source.get("atlas_region") == region and source_path.is_file() and min(png_size(source_path) or (0,0)) >= 1200 and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha and source_path.read_bytes()[25] == 6, errors, f"{site_id} source master, alpha, hash, or provenance changed")
@@ -82566,7 +82582,7 @@ def validate_six_grand_muster_assemblies(errors: list[str]) -> None:
 
     ensure((len(scenarios), len(sites), len(groups)) == (299,377,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Grand Musters must remain present inside the expanded production catalogs")
     atlas_sha = "175f2028ef2517dc9f482eb03020ab2aceb13b3369dfe4be31d28da7511e22a2"
-    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6, errors, "Grand Muster runtime atlas size, alpha, or hash changed")
+    ensure(png_size(remaining_site_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(remaining_site_historical_raster(atlas_path).read_bytes()).hexdigest() == atlas_sha and remaining_site_historical_raster(atlas_path).read_bytes()[25] == 6, errors, "Grand Muster runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_grand_muster_assemblies_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 120, errors, "Grand Muster generated-source provenance or prompt set changed")
 
     source_payloads: list[bytes] = []
@@ -82593,7 +82609,7 @@ def validate_six_grand_muster_assemblies(errors: list[str]) -> None:
         ensure(len(nodes) == 9 and len(standard_nodes) == 1 and standard_nodes[0].get("placement_id") == f"{prefix}_standard" and standard_nodes[0].get("guard_front_id") == f"{prefix}_standard_guard" and len(hooks) == 5 and any(effect.get("type") == "town_add_recruits" for effect in hooks[0].get("effects", [])) and any(effect.get("type") == "spawn_encounter" for effect in hooks[-1].get("effects", [])), errors, f"{scenario_id} lost its guarded standard, five hooks, or late reserve attack")
         ensure(site.get("content_batch_id") == slice_id and site.get("family") == "scenario_objective" and site.get("runtime_boundary", {}).get("status") == "grand_muster_rally_live" and site.get("claim_recruits") == {requirements[-1].get("unit_id"):2} and site.get("claim_rewards", {}).get("gold") == 900 and site.get("claim_rewards", {}).get(rare_id) == 2 and len(site.get("claim_flags", {})) == 1, errors, f"{site_id} lost its exact one-time fifth-company claim")
         asset = assets.get(asset_id, {})
-        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [288,48] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_grand_muster_assemblies_atlas" and len(str(asset.get("accessible_description", ""))) >= 90, errors, f"{site_id} lost its exact accessible rally art")
+        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1152,192] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_grand_muster_assemblies_atlas" and len(str(asset.get("accessible_description", ""))) >= 90, errors, f"{site_id} lost its exact accessible rally art")
         source = source_rows.get(site_id, {})
         source_path = source_manifest_path.parent / source_name
         ensure(source.get("source_sha256") == source_sha and source.get("asset_id") == asset_id and source.get("atlas_region") == region and source_path.is_file() and min(png_size(source_path) or (0,0)) >= 1024 and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha and source_path.read_bytes()[25] == 6 and len(str(source.get("prompt_summary", ""))) >= 80, errors, f"{site_id} source master, alpha, hash, or prompt provenance changed")
@@ -82850,7 +82866,7 @@ def validate_six_relief_route_convoy_runs(errors: list[str]) -> None:
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     atlas_sha = "d13071e3816cca9567205b7010933418e874b22057602d89ed4c6646f50086ee"
     ensure((len(scenarios), len(sites), len(groups)) == (299,377,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Relief routes must remain present inside the expanded production catalogs")
-    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6, errors, "Relief-route runtime atlas size, alpha, or hash changed")
+    ensure(png_size(remaining_site_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(remaining_site_historical_raster(atlas_path).read_bytes()).hexdigest() == atlas_sha and remaining_site_historical_raster(atlas_path).read_bytes()[25] == 6, errors, "Relief-route runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_relief_route_convoy_relays_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 220, errors, "Relief-route generated-source provenance or prompt set changed")
     source_payloads: list[bytes] = []
     for scenario_id, contract in expected.items():
@@ -82874,7 +82890,7 @@ def validate_six_relief_route_convoy_runs(errors: list[str]) -> None:
         relay_nodes = [row for row in nodes if row.get("site_id") == site_id]
         ensure(len(relay_nodes) == 1 and relay_nodes[0].get("placement_id") == f"{prefix}_relay" and site.get("content_batch_id") == slice_id and site.get("content_status") == "relief_route_convoy_relay_live" and site.get("runtime_boundary", {}).get("successful_delivery_receipt_live") is True and site.get("response_profile", {}).get("watch_days") == 5, errors, f"{site_id} lost its live relay and five-day dispatch boundary")
         asset = assets.get(asset_id, {})
-        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [288,48] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_relief_route_convoy_relays_atlas" and len(str(asset.get("accessible_description", ""))) >= 90, errors, f"{site_id} lost its exact accessible relay art")
+        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1152,192] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_relief_route_convoy_relays_atlas" and len(str(asset.get("accessible_description", ""))) >= 90, errors, f"{site_id} lost its exact accessible relay art")
         source = source_rows.get(site_id, {})
         source_path = source_manifest_path.parent / source_name
         ensure(source.get("source_sha256") == source_sha and source.get("asset_id") == asset_id and source.get("atlas_region") == region and source_path.is_file() and min(png_size(source_path) or (0,0)) >= 1024 and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha and source_path.read_bytes()[25] == 6 and len(str(source.get("prompt_summary", ""))) >= 180, errors, f"{site_id} source master, alpha, hash, or prompt provenance changed")
@@ -82939,7 +82955,7 @@ def validate_six_fogbreak_survey_expeditions(errors: list[str]) -> None:
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     atlas_sha = "4a084c26ae82b38476bd3f0a27aab615d4c7b5db6c7eb91a8860060e962767b2"
     ensure((len(scenarios), len(sites), len(groups)) == (299,377,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Fogbreak surveys must remain present inside the expanded production catalogs")
-    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6, errors, "Fogbreak survey runtime atlas size, alpha, or hash changed")
+    ensure(png_size(remaining_site_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(remaining_site_historical_raster(atlas_path).read_bytes()).hexdigest() == atlas_sha and remaining_site_historical_raster(atlas_path).read_bytes()[25] == 6, errors, "Fogbreak survey runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_fogbreak_survey_instruments_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 220, errors, "Fogbreak survey generated-source provenance or prompt set changed")
     source_payloads: list[bytes] = []
     directly_placed_encounters: set[str] = set()
@@ -82966,7 +82982,7 @@ def validate_six_fogbreak_survey_expeditions(errors: list[str]) -> None:
         directly_placed_encounters.update(str(row.get("encounter_id", "")) for row in guards)
         ensure(site.get("content_batch_id") == slice_id and site.get("content_status") == "fogbreak_survey_instrument_live" and site.get("family") == "scouting_structure" and site.get("persistent_control") is True and site.get("vision_radius") == 5 and site.get("runtime_boundary", {}).get("status") == "fogbreak_survey_instrument_live", errors, f"{site_id} lost its live persistent five-tile scouting boundary")
         asset = assets.get(asset_id, {})
-        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [288,48] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_fogbreak_survey_instruments_atlas" and len(str(asset.get("accessible_description", ""))) >= 100, errors, f"{site_id} lost its exact accessible survey art")
+        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1152,192] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_fogbreak_survey_instruments_atlas" and len(str(asset.get("accessible_description", ""))) >= 100, errors, f"{site_id} lost its exact accessible survey art")
         source = source_rows.get(site_id, {})
         source_path = source_manifest_path.parent / source_name
         ensure(source.get("source_sha256") == source_sha and source.get("asset_id") == asset_id and source.get("atlas_region") == region and source_path.is_file() and min(png_size(source_path) or (0,0)) >= 1024 and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha and source_path.read_bytes()[25] == 6 and len(str(source.get("prompt_summary", ""))) >= 180, errors, f"{site_id} source master, alpha, hash, or prompt provenance changed")
@@ -83030,7 +83046,7 @@ def validate_six_frontier_treasury_commissions(errors: list[str]) -> None:
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     atlas_sha = "6cbc67fac5e474d5ffaacb5794babe9166bceb4b55bd67b5a0921ebb995cea2c"
     ensure((len(scenarios), len(sites), len(groups)) == (299,377,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Frontier treasury commissions must remain present inside the expanded production catalogs")
-    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6, errors, "Frontier treasury runtime atlas size, alpha, or hash changed")
+    ensure(png_size(remaining_site_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(remaining_site_historical_raster(atlas_path).read_bytes()).hexdigest() == atlas_sha and remaining_site_historical_raster(atlas_path).read_bytes()[25] == 6, errors, "Frontier treasury runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_frontier_treasury_offices_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 220, errors, "Frontier treasury generated-source provenance or prompt set changed")
     source_payloads: list[bytes] = []
     for scenario_id, contract in expected.items():
@@ -83053,7 +83069,7 @@ def validate_six_frontier_treasury_commissions(errors: list[str]) -> None:
         ensure([row.get("placement_id") for row in guards] == [f"{prefix}_west_guard",f"{prefix}_south_guard",f"{prefix}_east_guard"] and [row.get("encounter_id") for row in guards] == [encounter_id] * 3 and all(row.get("prefer_identity_landmark") is True for row in guards), errors, f"{scenario_id} lost its exact guarded encounter placements")
         ensure(site.get("content_batch_id") == slice_id and site.get("content_status") == "frontier_treasury_office_live" and site.get("family") == "faction_outpost" and site.get("persistent_control") is True and site.get("claim_rewards") == {"gold":300,rare_id:1} and site.get("control_income") == {"gold":350,rare_id:1} and site.get("runtime_boundary", {}).get("controlled_income_runtime_adopted") is True, errors, f"{site_id} lost its live claim and controlled-income boundary")
         asset = assets.get(asset_id, {})
-        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [288,48] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_frontier_treasury_offices_atlas" and len(str(asset.get("accessible_description", ""))) >= 100, errors, f"{site_id} lost its exact accessible treasury art")
+        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1152,192] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_frontier_treasury_offices_atlas" and len(str(asset.get("accessible_description", ""))) >= 100, errors, f"{site_id} lost its exact accessible treasury art")
         source = source_rows.get(site_id, {})
         source_path = source_manifest_path.parent / source_name
         ensure(source.get("source_sha256") == source_sha and source.get("asset_id") == asset_id and source.get("atlas_region") == region and source_path.is_file() and min(png_size(source_path) or (0,0)) >= 1024 and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha and source_path.read_bytes()[25] == 6 and len(str(source.get("prompt_summary", ""))) >= 180, errors, f"{site_id} source master, alpha, hash, or prompt provenance changed")
@@ -83281,7 +83297,7 @@ def validate_six_setbound_regalia_assemblies(errors: list[str]) -> None:
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     encounter_uses = Counter(str(front.get("encounter_id", "")) for scenario in scenarios.values() for front in scenario.get("encounters", []) if isinstance(front, dict))
     ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,203,377,299), errors, "Current content catalogs must retain the expanded frontier-mythic totals")
-    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "2188bf5c9713e07728b1e5a9a79feee2737a255fd9546c7b1f664c2747e6e949" and atlas_path.read_bytes()[25] == 6, errors, "Setbound Regalia runtime atlas size, alpha, or hash changed")
+    ensure(png_size(remaining_site_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(remaining_site_historical_raster(atlas_path).read_bytes()).hexdigest() == "2188bf5c9713e07728b1e5a9a79feee2737a255fd9546c7b1f664c2747e6e949" and remaining_site_historical_raster(atlas_path).read_bytes()[25] == 6, errors, "Setbound Regalia runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_setbound_regalia_reliquaries_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 240, errors, "Setbound Regalia source provenance changed")
     table = reward_tables.get("artifact_source_setbound_regalia_reliquaries", {})
     expected_final_pieces = [contract[6][2] for contract in expected.values()]
@@ -83310,7 +83326,7 @@ def validate_six_setbound_regalia_assemblies(errors: list[str]) -> None:
         ensure(len(nodes) == 1 and nodes[0].get("placement_id") == f"{prefix}_reliquary" and nodes[0].get("guard_front_id") == f"{prefix}_reliquary_guard" and len(scenario.get("resource_nodes",[])) == 7 and len(scenario.get("script_hooks",[])) == expected_hook_count, errors, f"{scenario_id} guarded reliquary, support board, or campaign witness changed")
         ensure(site.get("content_batch_id") == slice_id and site.get("runtime_boundary",{}).get("status") == "set_piece_and_resource_rewards_live" and site.get("guarded_reward_contract",{}).get("artifact_reward_table_id") == "artifact_source_setbound_regalia_reliquaries" and site.get("reward_preview",{}).get("artifact_id") == piece_ids[2], errors, f"{site_id} exact final-piece reward behavior changed")
         asset = art.get("object_assets",{}).get(asset_id,{})
-        ensure(art.get("resource_site_sprites",{}).get(site_id,{}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [288,48] and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description",""))) >= 110, errors, f"{site_id} exact accessible art changed")
+        ensure(art.get("resource_site_sprites",{}).get(site_id,{}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1152,192] and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description",""))) >= 110, errors, f"{site_id} exact accessible art changed")
         source = source_rows.get(site_id,{})
         source_path = res_path_to_disk(str(source.get("source_path","")))
         ensure(source_path.is_file() and hashlib.sha256(source_path.read_bytes()).hexdigest() == source.get("source_sha256") and min(png_size(source_path) or (0,0)) >= 1024 and source_path.read_bytes()[25] == 6 and len(str(source.get("prompt_summary",""))) >= 100, errors, f"{site_id} generated source master or provenance changed")
@@ -84248,7 +84264,7 @@ def validate_uncrowned_circuit_campaign(errors: list[str]) -> None:
         site = sites.get(site_id, {})
         ensure(site.get("content_batch_id") == slice_id and site.get("content_status") == "uncrowned_sovereign_throne_live" and site.get("family") == "scenario_objective" and site.get("runtime_boundary", {}).get("status") == "objective_event_live" and site.get("objective_event_contract", {}).get("scenario_id") == scenario_id and site.get("objective_event_contract", {}).get("objective_id") == f"{prefix}_claim_throne" and site.get("claim_flags") == {f"uncrowned_{prefix}_throne_claimed": True}, errors, f"{site_id} lost live objective-event authority")
         asset = art.get("object_assets", {}).get(asset_id, {})
-        ensure(art.get("resource_site_sprites", {}).get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [index * 48, 0, 48, 48] and asset.get("atlas_size") == [288, 48] and asset.get("assigned_resource_site_id") == site_id, errors, f"{site_id} lost exact original field art")
+        ensure(art.get("resource_site_sprites", {}).get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [index * 192, 0, 192, 192] and asset.get("atlas_size") == [1152, 192] and asset.get("assigned_resource_site_id") == site_id, errors, f"{site_id} lost exact original field art")
         witness_flag = f"uncrowned_{prefix}_witness_entered"
         witness_hooks = [hook for hook in scenario.get("script_hooks", []) if isinstance(hook, dict) and any(effect.get("flag") == witness_flag for effect in hook.get("effects", []) if isinstance(effect, dict))]
         ensure(len(witness_hooks) == 1 and witness_hooks[0].get("conditions") == [{"type": "objective_met", "objective_id": f"{prefix}_muster_apex"}], errors, f"{scenario_id} lost its exact apex-witness hook")
@@ -84268,7 +84284,7 @@ def validate_uncrowned_circuit_campaign(errors: list[str]) -> None:
 
     field_manifest = load_json(field_manifest_path)
     ensure(field_manifest.get("content_batch_id") == slice_id and field_manifest.get("generation_mode") == "built_in_image_gen" and field_manifest.get("runtime_atlas") == atlas_res and field_manifest.get("runtime_atlas_size") == [288, 48] and len(field_manifest.get("items", [])) == 6, errors, "Uncrowned field-art generation provenance changed")
-    ensure(png_size(atlas_path) == (288, 48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == field_manifest.get("runtime_atlas_sha256") and Path(f"{atlas_path}.import").is_file(), errors, "Uncrowned field atlas bytes, dimensions, or import changed")
+    ensure(png_size(remaining_site_historical_raster(atlas_path)) == (288, 48) and hashlib.sha256(remaining_site_historical_raster(atlas_path).read_bytes()).hexdigest() == field_manifest.get("runtime_atlas_sha256") and Path(f"{atlas_path}.import").is_file(), errors, "Uncrowned field atlas bytes, dimensions, or import changed")
     field_payloads = []
     for item in field_manifest.get("items", []):
         source_path = field_manifest_path.parent / str(item.get("source_file", ""))

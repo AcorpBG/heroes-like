@@ -10,12 +10,12 @@ const OUTPUT_DIR := "res://.artifacts/frontier_treasury_commissions_smoke"
 const REPORT_PATH := OUTPUT_DIR + "/report.json"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/frontier_treasury_offices_atlas.png"
 const CASES := [
-	{"scenario_id":"powderwrit-rainwrit-treasury-commission","prefix":"rainledger","rare":"embergrain","wrong_rare":"peatwax","asset_id":"resource_site_frontier_treasury_embercourt_brazier","region":Rect2(0,0,48,48)},
-	{"scenario_id":"orrik-reedbarrow-treasury-commission","prefix":"reedtally","rare":"peatwax","wrong_rare":"aetherglass","asset_id":"resource_site_frontier_treasury_mireclaw_drum","region":Rect2(48,0,48,48)},
-	{"scenario_id":"neral-meridian-treasury-commission","prefix":"prismledger","rare":"aetherglass","wrong_rare":"verdant_grafts","asset_id":"resource_site_frontier_treasury_sunvault_prism","region":Rect2(96,0,48,48)},
-	{"scenario_id":"bramblehound-crownroot-treasury-commission","prefix":"seedtithe","rare":"verdant_grafts","wrong_rare":"brass_scrip","asset_id":"resource_site_frontier_treasury_thornwake_arbor","region":Rect2(144,0,48,48)},
-	{"scenario_id":"ashmeter-blackbell-treasury-commission","prefix":"counterwheel","rare":"brass_scrip","wrong_rare":"memory_salt","asset_id":"resource_site_frontier_treasury_brasshollow_wheel","region":Rect2(192,0,48,48)},
-	{"scenario_id":"mistcorsair-pale-sounding-treasury-commission","prefix":"wakeledger","rare":"memory_salt","wrong_rare":"embergrain","asset_id":"resource_site_frontier_treasury_veilmourn_ledger","region":Rect2(240,0,48,48)},
+	{"scenario_id":"powderwrit-rainwrit-treasury-commission","prefix":"rainledger","rare":"embergrain","wrong_rare":"peatwax","asset_id":"resource_site_frontier_treasury_embercourt_brazier","region":Rect2(0,0,192,192)},
+	{"scenario_id":"orrik-reedbarrow-treasury-commission","prefix":"reedtally","rare":"peatwax","wrong_rare":"aetherglass","asset_id":"resource_site_frontier_treasury_mireclaw_drum","region":Rect2(192,0,192,192)},
+	{"scenario_id":"neral-meridian-treasury-commission","prefix":"prismledger","rare":"aetherglass","wrong_rare":"verdant_grafts","asset_id":"resource_site_frontier_treasury_sunvault_prism","region":Rect2(384,0,192,192)},
+	{"scenario_id":"bramblehound-crownroot-treasury-commission","prefix":"seedtithe","rare":"verdant_grafts","wrong_rare":"brass_scrip","asset_id":"resource_site_frontier_treasury_thornwake_arbor","region":Rect2(576,0,192,192)},
+	{"scenario_id":"ashmeter-blackbell-treasury-commission","prefix":"counterwheel","rare":"brass_scrip","wrong_rare":"memory_salt","asset_id":"resource_site_frontier_treasury_brasshollow_wheel","region":Rect2(768,0,192,192)},
+	{"scenario_id":"mistcorsair-pale-sounding-treasury-commission","prefix":"wakeledger","rare":"memory_salt","wrong_rare":"embergrain","asset_id":"resource_site_frontier_treasury_veilmourn_ledger","region":Rect2(960,0,192,192)},
 ]
 
 var _errors: Array[String] = []
@@ -31,7 +31,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(288, 48), "Frontier treasury atlas must remain exactly 288x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(1152, 192), "Frontier treasury atlas must remain exactly 1152x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)
