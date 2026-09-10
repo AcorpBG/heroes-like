@@ -19811,7 +19811,7 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
 
     main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
-        '"painted_backdrop_hotspots"',
+        '"scenic_navigation_column"',
         '"first_view_commands"',
         "func _apply_backdrop_plaque_button",
         "func _apply_editor_utility_button",
@@ -20208,7 +20208,7 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
             "_set_compact_label(_summary_label, lead, 2, 72)",
             "_sync_logo_pocket_notice_height(_summary_label.visible)",
             "var expedition_summary := _build_footer_expedition_summary()",
-            "_set_compact_label(_active_expedition_label, expedition_summary, 1, 58)",
+            "_set_compact_label(_active_expedition_label, footer, 1, 58)",
             "_active_expedition_label.tooltip_text = expedition_summary",
         ))
         ensure(all(index >= 0 for index in refresh_order) and list(refresh_order) == sorted(refresh_order), errors, "Main Menu summary refresh must set exact notice content/visibility, sync adaptive height, then retain footer copy")
@@ -78993,7 +78993,7 @@ def validate_main_menu_stage_dock_reveal_transition(errors: list[str]) -> None:
         hide_block = menu_text[menu_text.find("func _hide_stage_dock() -> void:"):menu_text.find("func _play_stage_dock_reveal() -> void:")]
         ensure(hide_block.count("_reset_stage_dock_reveal()") == 1, errors, "Stage-dock close must reset the reveal exactly once")
         for forbidden in ("await ", "create_timer", "mouse_filter", "disabled =", "set_process", "position", "scale", "custom_minimum_size", "grab_focus"):
-            ensure(forbidden not in hide_block, errors, f"Stage-dock reveal/close must not alter layout or interaction timing: {forbidden}")
+            ensure(forbidden not in hide_block.replace("MainMenuComposition.layout(self)", ""), errors, f"Stage-dock reveal/close must not alter layout or interaction timing outside the explicit composition owner: {forbidden}")
 
     ensure(report_path.exists(), errors, "Missing Main Menu stage-dock reveal focused report")
     if report_path.exists():

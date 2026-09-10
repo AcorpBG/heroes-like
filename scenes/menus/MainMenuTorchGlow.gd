@@ -9,6 +9,10 @@ const PULSE_MAX := 1.0
 const RING_COUNT := 10
 
 var _pulse_phase := 0.0
+var presentation_enabled := true:
+	set(value):
+		presentation_enabled = value
+		if is_node_ready(): _sync_presentation()
 
 
 func _ready() -> void:
@@ -43,6 +47,7 @@ func _on_settings_changed(_settings: Dictionary) -> void:
 
 func _sync_presentation() -> void:
 	visible = not SettingsService.high_contrast_ui_enabled()
+	visible = visible and presentation_enabled
 	set_process(visible and not SettingsService.reduced_motion_enabled())
 	if not is_processing():
 		_pulse_phase = 0.0

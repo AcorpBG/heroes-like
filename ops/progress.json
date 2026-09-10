@@ -16611,13 +16611,13 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Battle readability and melee approach completed and validated. Shared move-and-strike legality, ordered transient playback, damage captions and controller/save handoffs pass focused/runtime/repository and both-platform package checks. No next slice selected. See docs/battle-readable-turns-and-melee-approach.md for evidence and Windows hardware/balance limits.",
+  "currentNotes": "Main menu and visible AI turns completed and validated. Scenic navigation, controller/faction turn captions and fog-filtered movement/site playback preserve deterministic state, saves and battle handoffs. Final source/package, runtime, repository and platform evidence plus one legacy empty-save-list fixture exception: docs/main-menu-and-visible-ai-turns.md. No next slice selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "battle-readable-turns-and-melee-approach-20260910",
-  "currentSliceId": "battle-readable-turns-and-melee-approach-20260910",
-  "currentSliceNotes": "Implemented shared melee approach/strike and ordered readable battle playback. Three measured visual runs pass 63 checks each, Windows packaged rules 39, nine affected runtime reports, repository validation, Linux/Windows exports and PCK parity pass. Evidence and limits: docs/battle-readable-turns-and-melee-approach.md.",
+  "currentSlice": "ui-main-menu-and-visible-ai-turns-20260910",
+  "currentSliceId": "ui-main-menu-and-visible-ai-turns-20260910",
+  "currentSliceNotes": "Scenic main menu and fog-filtered actual AI turn/movement/site playback implemented. Linux 61, Windows 48, generated Medium 62 and reduced-motion 61 focused checks pass; affected runtime reports, repository validation, official exports and PCK parity pass. Known legacy empty-save-list fixture failure and platform limits documented in docs/main-menu-and-visible-ai-turns.md.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Readable Battle Turns And Melee Approach",
+  "currentSliceTitle": "Main Menu Rework And Visible AI Turns",
   "currentSliceUpdatedAt": "2026-09-10T17:47:59Z",
   "deferredRiskRegister": [
     {
@@ -21925,6 +21925,22 @@
   },
   "guardrailNote": "Owner-directed neutral encounter variety through original-content runtime adoption; preserve recovered native placement, RNG and serialization. Validate source quantities, battle/save/icon agreement and both platforms before completion.",
   "lastValidation": {
+    "id": "ui-main-menu-and-visible-ai-turns-20260910",
+    "sliceId": "ui-main-menu-and-visible-ai-turns-20260910",
+    "status": "completed",
+    "sourceReport": "docs/main-menu-and-visible-ai-turns.md",
+    "linuxPackagedChecks": 61,
+    "windowsPackagedChecks": 48,
+    "generatedMediumChecks": 62,
+    "reducedMotionChecks": 61,
+    "repositoryValidation": "passed",
+    "officialExports": "Linux/Windows passed",
+    "packBytesPerPlatform": 313194076,
+    "packMemberCount": 5597,
+    "packParity": "Only project.binary differs",
+    "limits": "Legacy main_menu_keyboard_navigation_smoke fails obsolete empty-save-list expectation; not counted as passed. Windows headless Wine, not GPU certification. Controlled authored and Medium seed-10 samples, not universal AI or release readiness."
+  },
+  "priorBattleReadabilityValidation": {
     "id": "battle-readable-turns-and-melee-approach-20260910",
     "sliceId": "battle-readable-turns-and-melee-approach-20260910",
     "status": "completed",
@@ -22144,9 +22160,55 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Battle readability/melee slice completed and validated. Select and track a new owner-directed task before unrelated implementation. Preserve deterministic simulation, durable exit checkpoints, controller accessibility and platform parity.",
+  "nextActionGuardrailNote": "No next implementation slice selected. Preserve completed UI and battle behavior; select and track owner-directed scope before further changes. Native RMG, balance, save migration and art generation are not authorized by this completed UI slice.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "ui-main-menu-and-visible-ai-turns-20260910",
+      "title": "Main Menu Rework And Visible AI Turns",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/main-menu-and-visible-ai-turns.md"
+      ],
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenuComposition.gd",
+        "scenes/menus/MainMenuTorchGlow.gd",
+        "scenes/overworld/OverworldTurnPresenter.gd",
+        "scripts/core/OverworldTurnPlayback.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/EnemyAdventureRules.gd"
+      ],
+      "validationCommands": [
+        "Focused Python-owned menu and visible AI turn source/package probes",
+        "Existing menu/end-turn/fog/save/input regressions",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py"
+      ],
+      "completionCriteria": [
+        "Reworked scenery-first main menu with all routes preserved",
+        "Animated player-identity turn transitions",
+        "Actual AI actions animated only through existing fog/layer visibility",
+        "State/save/input controls and inspected dual-resolution/platform evidence pass"
+      ],
+      "nonGoals": [
+        "No native RMG or AI decision/balance changes",
+        "No art generation or save migration",
+        "No unrelated UI or cleanup"
+      ],
+      "updatedAt": "2026-09-10T21:01:34Z",
+      "startedAt": "2026-09-10T20:21:37Z",
+      "notes": "Scenic main menu and fog-filtered actual AI turn/movement/site playback implemented. Linux 61, Windows 48, generated Medium 62 and reduced-motion 61 focused checks pass; affected runtime reports, repository validation, official exports and PCK parity pass. Known legacy empty-save-list fixture failure and platform limits documented in docs/main-menu-and-visible-ai-turns.md.",
+      "completedAt": "2026-09-10T21:01:34Z"
+    },
     {
       "id": "battle-readable-turns-and-melee-approach-20260910",
       "title": "Readable Battle Turns And Melee Approach",
@@ -111794,9 +111856,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Owner-directed battle readability and melee approach completed: single-action legal movement/strike, ordered enemy/action playback and damage/loss captions. Source and packaged battle tests, nine affected runtime reports, full repository validation and Linux/Windows official exports pass. No release-ready or universal balance claim; evidence: docs/battle-readable-turns-and-melee-approach.md.",
+  "summary": "Owner-directed main-menu and visible-AI-turn rework completed: scenery-first navigation and skippable/reduced-motion actual AI movement/action playback with player identity. Linux 61, Windows 48, generated Medium 62 and reduced-motion 61 focused checks pass; repository and official exports pass. Not release readiness; known legacy test and Windows hardware limits documented.",
   "taskId": "10236",
-  "updatedAt": "2026-09-10T20:12:04Z",
+  "updatedAt": "2026-09-10T21:01:34Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",

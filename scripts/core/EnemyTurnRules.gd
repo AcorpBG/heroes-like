@@ -1,6 +1,8 @@
 class_name EnemyTurnRules
 extends RefCounted
 
+const TurnPlayback = preload("res://scripts/core/OverworldTurnPlayback.gd")
+
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
@@ -263,6 +265,7 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 		if state_index < 0:
 			continue
 		var state = states[state_index]
+		TurnPlayback.player_turn(session, config)
 		var turn_result = _run_empire_cycle(session, config, state, should_apply_weekly_growth, profile_enabled)
 		state = turn_result.get("state", state)
 		if profile_enabled and turn_result.get("profile", {}) is Dictionary:

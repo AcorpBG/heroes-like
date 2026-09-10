@@ -568,6 +568,71 @@ var _state_layer: Control = null
 var _dynamic_layer: Control = null
 var _frame_layer: Control = null
 var _draw_canvas_item: CanvasItem = null
+var _turn_playback_active := false
+var _turn_playback_encounters: Array = []
+var _turn_playback_event: Dictionary = {}
+var _turn_playback_progress := 0.0
+var _turn_playback_camera := Vector2.ZERO
+var _turn_playback_manual := false
+
+func begin_turn_playback(encounters: Array) -> void:
+	_turn_playback_active = true
+	_turn_playback_encounters = encounters.duplicate(true)
+	_turn_playback_camera = _camera_center_tile
+	_turn_playback_manual = _manual_camera
+	_rebuild_static_object_indexes()
+	_invalidate_state_cache("turn_playback_begin")
+
+func show_turn_playback_event(event: Dictionary) -> void:
+	finish_turn_playback_event()
+	_turn_playback_event = event
+	_turn_playback_progress = 0.0
+	var point: Dictionary = event.get("from",event.get("to",{}))
+	if not point.is_empty() and OverworldRulesScript.is_tile_visible(_session,int(point.x),int(point.y),_level):
+		var tile := Vector2i(int(point.x),int(point.y))
+		var rect := _tile_rect(_board_rect(),tile)
+		var safe_view := _map_viewport_rect().grow(-maxf(rect.size.x,rect.size.y)*2.0)
+		# Keep a visible hero moving across a steady landscape. Recenter only
+		# when a revealed actor leaves the viewing margin, not on every step.
+		if not safe_view.has_point(rect.get_center()): focus_on_tile(tile)
+	_invalidate_state_cache("turn_playback_event")
+	_invalidate_dynamic_layer("turn_playback_event")
+
+func advance_turn_playback(progress: float) -> void:
+	_turn_playback_progress = progress
+	_invalidate_dynamic_layer("turn_playback_motion")
+
+func finish_turn_playback_event() -> void:
+	if _turn_playback_event.has("actor"):
+		var id := String(_turn_playback_event.get("placement_id",""))
+		_turn_playback_encounters = _turn_playback_encounters.filter(func(actor): return String(actor.get("placement_id","")) != id)
+		if String(_turn_playback_event.get("kind","")) != "disappear":
+			_turn_playback_encounters.append(_turn_playback_event.actor.duplicate(true))
+		_rebuild_static_object_indexes()
+	_turn_playback_event = {}
+	_invalidate_state_cache("turn_playback_step_complete")
+
+func end_turn_playback() -> void:
+	_turn_playback_event = {}
+	_turn_playback_encounters.clear()
+	_turn_playback_active = false
+	_rebuild_static_object_indexes()
+	_set_camera_center(_turn_playback_camera,_turn_playback_manual)
+	_invalidate_state_cache("turn_playback_complete")
+	_invalidate_dynamic_layer("turn_playback_complete")
+
+func _draw_turn_playback_actor(board_rect: Rect2) -> void:
+	if not _turn_playback_event.has("actor"): return
+	var from: Dictionary = _turn_playback_event.from
+	var to: Dictionary = _turn_playback_event.to
+	var tile := Vector2i(int(from.x),int(from.y))
+	if not OverworldRulesScript.is_tile_visible(_session,tile.x,tile.y,_level): return
+	var rect := _tile_rect(board_rect,tile)
+	var target_rect := _tile_rect(board_rect,Vector2i(int(to.x),int(to.y)))
+	var progress := 1.0 if SettingsService.reduced_motion_enabled() else _turn_playback_progress
+	_draw_canvas_item.draw_set_transform((target_rect.position-rect.position)*progress)
+	_draw_encounter_sprite(_turn_playback_event.actor,rect,false,tile)
+	_draw_canvas_item.draw_set_transform(Vector2.ZERO)
 var _session_static_cache_signature := 0
 var _state_cache_signature := 0
 var _session_static_cache_generation := 0
@@ -1924,6 +1989,7 @@ func _draw_dynamic_layer() -> void:
 			_draw_tile_focus(tile, rect)
 			_draw_tile_dynamic_icon(tile, rect)
 	_draw_hero_movement_presentation(board_rect)
+	_draw_turn_playback_actor(board_rect)
 	_draw_object_resolution_presentation(board_rect)
 	_draw_route_blocked_presentation(board_rect)
 	_draw_object_focus_presentation(board_rect)
@@ -3529,7 +3595,8 @@ func _draw_tile_state_icon(tile: Vector2i, rect: Rect2) -> void:
 		if not _draw_artifact_sprite(artifact_node, rect, remembered, tile):
 			_draw_artifact_marker(rect, remembered, tile)
 	var encounter_node := _encounter_node_at(tile)
-	if not encounter_node.is_empty() and (visible or _has_rememberable_encounter_at(tile)):
+	var playback_actor := _turn_playback_event.has("actor") and String(encounter_node.get("placement_id","")) == String(_turn_playback_event.get("placement_id",""))
+	if not encounter_node.is_empty() and not playback_actor and (visible or _has_rememberable_encounter_at(tile)):
 		if not _draw_encounter_sprite(encounter_node, rect, remembered, tile):
 			_draw_encounter_marker(rect, remembered, tile)
 
@@ -10342,7 +10409,7 @@ func _rebuild_static_object_indexes() -> void:
 			continue
 		if not bool(node.get("collected", false)):
 			_artifacts_by_tile[_tile_key(Vector2i(int(node.get("x", -1)), int(node.get("y", -1))))] = node
-	for encounter_value in _session.overworld.get("encounters", []):
+	for encounter_value in (_turn_playback_encounters if _turn_playback_active else _session.overworld.get("encounters", [])):
 		if not (encounter_value is Dictionary):
 			continue
 		var encounter: Dictionary = encounter_value
