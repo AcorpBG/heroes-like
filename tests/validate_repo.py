@@ -44216,6 +44216,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(len(command_recoveries) == 34, errors, "All 34 command paintings must reconstruct from original RGBA and historical registration")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Command cutout recovery failed closed: {exc}")
+    training_recoveries = {}
+    try:
+        training_spec = importlib.util.spec_from_file_location("training_cutout_validation", ROOT / "tools/prepare_overworld_training_cutouts.py")
+        training_module = importlib.util.module_from_spec(training_spec)
+        training_spec.loader.exec_module(training_module)
+        training_recoveries = training_module.validate_assets()
+        ensure(len(training_recoveries) == 40, errors, "All 40 training paintings must reconstruct from original paint, scoped RGB repair and historical registration")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Training cutout recovery failed closed: {exc}")
     recruitment_recoveries = {}
     try:
         recruitment_spec = importlib.util.spec_from_file_location("recruitment_cutout_validation", ROOT / "tools/prepare_overworld_recruitment_cutouts.py")
@@ -44415,6 +44424,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (2304,192)
             if asset_id in command_recoveries:
                 expected_canvas = tuple(entry["atlas_size"])
+            if asset_id in training_recoveries:
+                expected_canvas = (training_module.FAMILIES[Path(entry['path']).stem.removesuffix('_atlas')] * 192, 192)
             if asset_id in route_recoveries:
                 expected_canvas = (route_module.FAMILIES[Path(entry['path']).stem.removesuffix('_atlas')][0] * 192, 192)
             ensure((width, height) == expected_canvas, errors, f"Overworld runtime object asset {asset_id} must use the {expected_canvas[0]} canvas, found {width}x{height}")
@@ -82555,6 +82566,7 @@ def validate_six_field_mastery_convocations(errors: list[str]) -> None:
     slice_id = "content-six-field-mastery-convocations-10184"
     atlas_res = "res://art/overworld/runtime/objects/resource_sites/field_mastery_convocations_atlas.png"
     atlas_path = res_path_to_disk(atlas_res)
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/training_sites/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     source_manifest_path = ROOT / "art/overworld/source/generated/resource_sites/field_mastery_convocations_wave1/manifest.json"
     smoke_script_path = ROOT / "tests/field_mastery_convocations_smoke.gd"
     smoke_scene_path = ROOT / "tests/field_mastery_convocations_smoke.tscn"
@@ -82587,7 +82599,8 @@ def validate_six_field_mastery_convocations(errors: list[str]) -> None:
 
     ensure((len(scenarios), len(sites), len(groups)) == (299,377,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Field Mastery must remain present inside the expanded production catalogs")
     atlas_sha = "0af3c4e0de1553cb835d0f0ca78a85cf82aad237299ee84795f7379e54597afa"
-    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6, errors, "Field Mastery runtime atlas size, alpha, or hash changed")
+    ensure(png_size(atlas_path) == (1152,192), errors, "Recovered training runtime atlas dimensions changed")
+    ensure(png_size(historical_atlas_path) == (288,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == atlas_sha and historical_atlas_path.read_bytes()[25] == 6, errors, "Field Mastery runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_field_mastery_convocations_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 180, errors, "Field Mastery generated-source provenance or prompt set changed")
 
     source_payloads: list[bytes] = []
@@ -82615,7 +82628,7 @@ def validate_six_field_mastery_convocations(errors: list[str]) -> None:
         ensure(len(nodes) == 9 and len(convocation_nodes) == 1 and convocation_nodes[0].get("placement_id") == f"{prefix}_convocation" and convocation_nodes[0].get("guard_front_id") == f"{prefix}_convocation_guard" and len(hooks) == 5 and any(effect.get("type") == "spawn_encounter" for effect in hooks[-1].get("effects", [])), errors, f"{scenario_id} lost its guarded convocation, five hooks, or late reserve")
         ensure(site.get("content_batch_id") == slice_id and site.get("runtime_boundary", {}).get("status") == "field_mastery_convocation_live" and site.get("claim_rewards") == {"experience":250} and len(site.get("hero_command_bonus", {})) == 1 and len(site.get("claim_flags", {})) == 1 and victory[1].get("flag") in site.get("claim_flags", {}), errors, f"{site_id} lost its one-time XP, command lesson, or exact flag")
         asset = assets.get(asset_id, {})
-        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [288,48] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_field_mastery_convocations_atlas" and len(str(asset.get("accessible_description", ""))) >= 100, errors, f"{site_id} lost its exact accessible convocation art")
+        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v*4 for v in region] and asset.get("atlas_size") == [1152,192] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_field_mastery_convocations_atlas" and len(str(asset.get("accessible_description", ""))) >= 100, errors, f"{site_id} lost its exact accessible convocation art")
         source = source_rows.get(site_id, {})
         source_path = source_manifest_path.parent / source_name
         ensure(source.get("source_sha256") == source_sha and source.get("asset_id") == asset_id and source.get("atlas_region") == region and source_path.is_file() and min(png_size(source_path) or (0,0)) >= 1024 and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha and source_path.read_bytes()[25] == 6 and len(str(source.get("prompt_subject_summary", ""))) >= 100, errors, f"{site_id} source master, alpha, hash, or prompt provenance changed")
@@ -82652,6 +82665,7 @@ def validate_six_twin_command_field_councils(errors: list[str]) -> None:
     slice_id = "content-six-twin-command-field-councils-10184"
     atlas_res = "res://art/overworld/runtime/objects/resource_sites/twin_command_field_councils_atlas.png"
     atlas_path = res_path_to_disk(atlas_res)
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/training_sites/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     source_manifest_path = ROOT / "art/overworld/source/generated/resource_sites/twin_command_field_councils_wave1/manifest.json"
     smoke_script_path = ROOT / "tests/twin_command_field_councils_smoke.gd"
     smoke_scene_path = ROOT / "tests/twin_command_field_councils_smoke.tscn"
@@ -82684,7 +82698,8 @@ def validate_six_twin_command_field_councils(errors: list[str]) -> None:
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     ensure((len(scenarios), len(sites), len(groups)) == (299,377,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Twin Command must remain present inside the expanded production catalogs")
     atlas_sha = "bee234907c874f816bc057f64bf3e3de0bac1b5d7add5a99edda3688132a7a1a"
-    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6, errors, "Twin Command runtime atlas size, alpha, or hash changed")
+    ensure(png_size(atlas_path) == (1152,192), errors, "Recovered training runtime atlas dimensions changed")
+    ensure(png_size(historical_atlas_path) == (288,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == atlas_sha and historical_atlas_path.read_bytes()[25] == 6, errors, "Twin Command runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_twin_command_field_councils_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 220, errors, "Twin Command generated-source provenance or prompt set changed")
 
     source_payloads: list[bytes] = []
@@ -82709,7 +82724,7 @@ def validate_six_twin_command_field_councils(errors: list[str]) -> None:
         ensure(len(nodes) == 9 and len(council_nodes) == 1 and council_nodes[0].get("placement_id") == f"{prefix}_council" and council_nodes[0].get("guard_front_id") == f"{prefix}_council_guard" and len(scenario.get("script_hooks", [])) == 5, errors, f"{scenario_id} lost its guarded field council, economy route, or five hooks")
         ensure(site.get("content_batch_id") == slice_id and site.get("runtime_boundary", {}).get("status") == "twin_command_field_council_live" and site.get("runtime_boundary", {}).get("multi_hero_command_activation") is True and site.get("claim_rewards", {}).get("gold") == 700 and len(site.get("claim_recruits", {})) == 2 and len(site.get("claim_flags", {})) == 1, errors, f"{site_id} lost its one-time paired-command stores, recruits, or exact flag")
         asset = assets.get(asset_id, {})
-        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [288,48] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_twin_command_field_councils_atlas" and len(str(asset.get("accessible_description", ""))) >= 140, errors, f"{site_id} lost its exact accessible council art")
+        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v*4 for v in region] and asset.get("atlas_size") == [1152,192] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_twin_command_field_councils_atlas" and len(str(asset.get("accessible_description", ""))) >= 140, errors, f"{site_id} lost its exact accessible council art")
         source = source_rows.get(site_id, {})
         source_path = source_manifest_path.parent / source_name
         ensure(source.get("source_sha256") == source_sha and source.get("asset_id") == asset_id and source.get("atlas_region") == region and source_path.is_file() and min(png_size(source_path) or (0,0)) >= 1024 and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha and source_path.read_bytes()[25] == 6 and len(str(source.get("prompt_summary", ""))) >= 220, errors, f"{site_id} source master, alpha, hash, or prompt provenance changed")
@@ -83091,6 +83106,7 @@ def validate_six_garrison_warrant_musters(errors: list[str]) -> None:
     slice_id = "content-six-garrison-warrant-musters-10184"
     atlas_res = "res://art/overworld/runtime/objects/resource_sites/garrison_warrant_musters_atlas.png"
     atlas_path = res_path_to_disk(atlas_res)
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/training_sites/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     source_manifest_path = ROOT / "art/overworld/source/generated/resource_sites/garrison_warrant_musters_wave1/manifest.json"
     smoke_script_path = ROOT / "tests/garrison_warrant_musters_smoke.gd"
     smoke_scene_path = ROOT / "tests/garrison_warrant_musters_smoke.tscn"
@@ -83120,7 +83136,8 @@ def validate_six_garrison_warrant_musters(errors: list[str]) -> None:
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     encounter_uses = Counter(str(front.get("encounter_id", "")) for scenario in scenarios.values() for front in scenario.get("encounters", []) if isinstance(front, dict))
     ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,203,377,299), errors, "Current content catalogs must retain the expanded frontier-mythic totals")
-    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "29b2d37dea33ae0d919d7d98496279fc41fbd37459150be4062d2c96bf138056" and atlas_path.read_bytes()[25] == 6, errors, "Garrison Warrant runtime atlas size, alpha, or hash changed")
+    ensure(png_size(atlas_path) == (1152,192), errors, "Recovered training runtime atlas dimensions changed")
+    ensure(png_size(historical_atlas_path) == (288,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == "29b2d37dea33ae0d919d7d98496279fc41fbd37459150be4062d2c96bf138056" and historical_atlas_path.read_bytes()[25] == 6, errors, "Garrison Warrant runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_garrison_warrant_musters_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 180, errors, "Garrison Warrant source provenance changed")
     for scenario_id, contract in expected.items():
         prefix,faction_id,hero_id,town_id,group_id,site_id,asset_id,region,unit_ids,encounter_ids = contract
@@ -83142,7 +83159,7 @@ def validate_six_garrison_warrant_musters(errors: list[str]) -> None:
         ensure(len(nodes) == 1 and nodes[0].get("placement_id") == f"{prefix}_warrant" and nodes[0].get("guard_front_id") == f"{prefix}_warrant_guard" and len(scenario.get("resource_nodes",[])) == 9 and len(scenario.get("script_hooks",[])) == expected_hook_count, errors, f"{scenario_id} guarded warrant, support board, or campaign witness changed")
         ensure(site.get("content_batch_id") == slice_id and site.get("runtime_boundary",{}).get("status") == "garrison_warrant_recruits_live" and site.get("claim_recruits") == {unit_id:count for unit_id,count in zip(unit_ids,[6,4,2])} and site.get("claim_rewards",{}).get("gold") == 700 and len(site.get("claim_flags",{})) == 1, errors, f"{site_id} exact recruit-warrant behavior changed")
         asset = art.get("object_assets",{}).get(asset_id,{})
-        ensure(art.get("resource_site_sprites",{}).get(site_id,{}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [288,48] and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description",""))) >= 100, errors, f"{site_id} exact accessible art changed")
+        ensure(art.get("resource_site_sprites",{}).get(site_id,{}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v*4 for v in region] and asset.get("atlas_size") == [1152,192] and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description",""))) >= 100, errors, f"{site_id} exact accessible art changed")
         source = source_rows.get(site_id,{})
         source_path = res_path_to_disk(str(source.get("source_path","")))
         ensure(source_path.is_file() and hashlib.sha256(source_path.read_bytes()).hexdigest() == source.get("source_sha256") and min(png_size(source_path) or (0,0)) >= 1024 and source_path.read_bytes()[25] == 6 and len(str(source.get("prompt_summary",""))) >= 100, errors, f"{site_id} generated source master or provenance changed")
@@ -83260,6 +83277,7 @@ def validate_eight_commanders_proving_roads(errors: list[str]) -> None:
     slice_id = "content-eight-commanders-proving-roads-10184"
     atlas_res = "res://art/overworld/runtime/objects/resource_sites/eight_commanders_proving_roads_atlas.png"
     atlas_path = res_path_to_disk(atlas_res)
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/training_sites/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     source_manifest_path = ROOT / "art/overworld/source/generated/resource_sites/eight_commanders_proving_roads_wave1/manifest.json"
     author_path = ROOT / "tools/author_eight_commanders_proving_roads.py"
     smoke_script_path = ROOT / "tests/eight_commanders_proving_roads_smoke.gd"
@@ -83302,7 +83320,8 @@ def validate_eight_commanders_proving_roads(errors: list[str]) -> None:
     selected_heroes = {row[2] for row in expected.values()}
     ensure(min(lead_counts.values()) >= 3 and sorted(lead_counts[hero_id] for hero_id in selected_heroes) == [4,4,4,5,5,5,5,5], errors, "Every live hero must lead at least three scenarios and the proving-road eight must reflect six sovereign-route promotions")
     atlas_sha = "b9f0c90afba0908e8b3738d19efa035cfedbf0e5282020b02aa608cf6d6ecddd"
-    ensure(png_size(atlas_path) == (384,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6 and Path(f"{atlas_path}.import").is_file(), errors, "Eight Commanders runtime atlas dimensions, alpha, hash, or import changed")
+    ensure(png_size(atlas_path) == (1536,192), errors, "Recovered training runtime atlas dimensions changed")
+    ensure(png_size(historical_atlas_path) == (384,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == atlas_sha and historical_atlas_path.read_bytes()[25] == 6 and Path(f"{atlas_path}.import").is_file(), errors, "Eight Commanders runtime atlas dimensions, alpha, hash, or import changed")
     ensure(source_manifest.get("schema_id") == "eight_commanders_proving_roads_art_v1" and source_manifest.get("content_batch_id") == slice_id and source_manifest.get("generation_mode") == "built_in_imagegen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [384,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 8 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 180, errors, "Eight Commanders generated-source provenance changed")
 
     source_payloads: list[bytes] = []
@@ -83328,7 +83347,7 @@ def validate_eight_commanders_proving_roads(errors: list[str]) -> None:
         ensure(len(nodes) == 9 and len(landmark_nodes) == 1 and landmark_nodes[0].get("placement_id") == f"{prefix}_landmark" and landmark_nodes[0].get("guard_front_id") == f"{prefix}_landmark_guard" and len(scenario.get("script_hooks", [])) == 5, errors, f"{scenario_id} guarded landmark, economy route, or reactive hooks changed")
         ensure(site.get("content_batch_id") == slice_id and site.get("runtime_boundary", {}).get("status") == "commander_proving_road_live" and site.get("claim_rewards") == {"experience":250} and site.get("hero_command_bonus") == {command_key:1} and len(site.get("claim_flags", {})) == 1, errors, f"{site_id} exact one-time command lesson changed")
         asset = assets.get(asset_id, {})
-        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [384,48] and asset.get("runtime_sha256") == atlas_sha and asset.get("source_model") == "built_in_image_gen_original_eight_commanders_proving_roads_atlas" and asset.get("assigned_resource_site_id") == site_id and asset.get("assigned_hero_id") == hero_id and len(str(asset.get("accessible_description", ""))) >= 100, errors, f"{site_id} exact accessible field art changed")
+        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v*4 for v in region] and asset.get("atlas_size") == [1536,192] and asset.get("runtime_sha256") == hashlib.sha256(atlas_path.read_bytes()).hexdigest() and asset.get("source_model") == "built_in_image_gen_original_eight_commanders_proving_roads_atlas" and asset.get("assigned_resource_site_id") == site_id and asset.get("assigned_hero_id") == hero_id and len(str(asset.get("accessible_description", ""))) >= 100, errors, f"{site_id} exact accessible field art changed")
         source = source_rows.get(site_id, {})
         source_path = source_manifest_path.parent / source_name
         ensure(source.get("source_sha256") == source_sha and source.get("asset_id") == asset_id and source.get("atlas_region") == region and len(str(source.get("prompt", ""))) >= 300 and source_path.is_file() and min(png_size(source_path) or (0,0)) >= 1024 and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha and source_path.read_bytes()[25] == 6, errors, f"{site_id} source master, prompt, alpha, or hash changed")
@@ -83356,6 +83375,7 @@ def validate_eight_commander_doctrine_expeditions(errors: list[str]) -> None:
     slice_id = "content-eight-commander-doctrine-expeditions-10184"
     atlas_res = "res://art/overworld/runtime/objects/resource_sites/commander_doctrine_expeditions_atlas.png"
     atlas_path = res_path_to_disk(atlas_res)
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/training_sites/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     source_manifest_path = ROOT / "art/overworld/source/generated/resource_sites/commander_doctrine_expeditions_wave1/manifest.json"
     author_path = ROOT / "tools/author_eight_commander_doctrine_expeditions.py"
     smoke_script_path = ROOT / "tests/eight_commander_doctrine_expeditions_smoke.gd"
@@ -83392,7 +83412,8 @@ def validate_eight_commander_doctrine_expeditions(errors: list[str]) -> None:
     lead_counts = {hero_id: sum(1 for scenario in scenarios.values() if scenario.get("hero_id") == hero_id) for hero_id in heroes}
     ensure(all(lead_counts[row[2]] >= 4 for row in expected.values()) and min(lead_counts.values()) >= 4, errors, "The eight selected commanders must retain at least four direct lead scenarios while the catalog-wide lead floor stays at four")
     atlas_sha = "702a3be7bd912de2c929cc00a9d7af7e2f9607c8f0afd9b096df321f78b5f70b"
-    ensure(png_size(atlas_path) == (384,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] == 6 and Path(f"{atlas_path}.import").is_file(), errors, "Commander Doctrine runtime atlas dimensions, alpha, hash, or import changed")
+    ensure(png_size(atlas_path) == (1536,192), errors, "Recovered training runtime atlas dimensions changed")
+    ensure(png_size(historical_atlas_path) == (384,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == atlas_sha and historical_atlas_path.read_bytes()[25] == 6 and Path(f"{atlas_path}.import").is_file(), errors, "Commander Doctrine runtime atlas dimensions, alpha, hash, or import changed")
     ensure(source_manifest.get("schema_id") == "eight_commander_doctrine_expeditions_art_v1" and source_manifest.get("content_batch_id") == slice_id and source_manifest.get("generation_mode") == "built_in_imagegen" and source_manifest.get("source_model") == "built_in_imagegen_original_commander_doctrine_expeditions_atlas" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [384,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 8, errors, "Commander Doctrine generated-source provenance changed")
     source_payloads: list[bytes] = []
     for scenario_id, contract in expected.items():
@@ -83417,7 +83438,7 @@ def validate_eight_commander_doctrine_expeditions(errors: list[str]) -> None:
         ensure(len(nodes) == 10 and len(landmark_nodes) == 1 and landmark_nodes[0].get("guard_front_id") == f"{prefix}_front_4" and len(scenario.get("script_hooks", [])) == 5 and any(effect.get("type") == "spawn_encounter" for hook in scenario.get("script_hooks", []) for effect in hook.get("effects", [])), errors, f"{scenario_id} ten-site route, guarded landmark, or reactive reserve changed")
         ensure(site.get("content_batch_id") == slice_id and site.get("runtime_boundary", {}).get("status") == "commander_doctrine_expedition_live" and site.get("claim_rewards") == {"experience":250} and site.get("hero_command_bonus") == {command_key:1} and len(site.get("claim_flags", {})) == 1, errors, f"{site_id} one-time command doctrine changed")
         asset = assets.get(asset_id, {})
-        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [384,48] and asset.get("runtime_sha256") == atlas_sha and asset.get("source_model") == "built_in_imagegen_original_commander_doctrine_expeditions_atlas" and asset.get("assigned_resource_site_id") == site_id and asset.get("assigned_hero_id") == hero_id and len(str(asset.get("accessible_description", ""))) >= 90, errors, f"{site_id} exact accessible field art changed")
+        ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v*4 for v in region] and asset.get("atlas_size") == [1536,192] and asset.get("runtime_sha256") == hashlib.sha256(atlas_path.read_bytes()).hexdigest() and asset.get("source_model") == "built_in_imagegen_original_commander_doctrine_expeditions_atlas" and asset.get("assigned_resource_site_id") == site_id and asset.get("assigned_hero_id") == hero_id and len(str(asset.get("accessible_description", ""))) >= 90, errors, f"{site_id} exact accessible field art changed")
         source = source_rows.get(site_id, {})
         source_path = source_manifest_path.parent / source_name
         ensure(source.get("source_sha256") == source_sha and source.get("asset_id") == asset_id and source.get("atlas_region") == region and len(str(source.get("prompt", ""))) >= 300 and source_path.is_file() and min(png_size(source_path) or (0,0)) >= 1024 and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha and source_path.read_bytes()[25] == 6, errors, f"{site_id} source master, prompt, alpha, or hash changed")
@@ -83685,6 +83706,7 @@ def validate_six_named_rival_banner_challenges(errors: list[str]) -> None:
     slice_id = "content-six-named-rival-banner-challenges-10184"
     atlas_res = "res://art/overworld/runtime/objects/resource_sites/named_rival_banners_atlas.png"
     atlas_path = res_path_to_disk(atlas_res)
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/training_sites/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "named_rival_banners_wave1"
     source_manifest_path = source_dir / "manifest.json"
     author_path = ROOT / "tools" / "author_named_rival_banner_challenges.py"
@@ -83718,7 +83740,8 @@ def validate_six_named_rival_banner_challenges(errors: list[str]) -> None:
     encounter_sprites = art.get("encounter_identity_sprites", {})
     hero_sprites = art.get("hero_identity_sprites", {})
     ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,203,377,299), errors, "Named-rival batch must remain present in the exact current content catalog counts")
-    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "e43708681a0196da508b07ae7a4e7a48c38623f927603a8a8be253acf068615c", errors, "Named-rival banner atlas dimensions or bytes changed")
+    ensure(png_size(atlas_path) == (1152,192), errors, "Recovered training runtime atlas dimensions changed")
+    ensure(png_size(historical_atlas_path) == (288,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == "e43708681a0196da508b07ae7a4e7a48c38623f927603a8a8be253acf068615c", errors, "Named-rival banner atlas dimensions or bytes changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Named-rival banner atlas import metadata is missing")
 
     selected_heroes: set[str] = set()
@@ -83748,7 +83771,7 @@ def validate_six_named_rival_banner_challenges(errors: list[str]) -> None:
         ensure(any(obj.get("type") == "town_owned_by_player" and obj.get("placement_id") == f"{prefix}_rival_town" for obj in scenario.get("objectives",{}).get("victory",[]) if isinstance(obj,dict)), errors, f"{scenario_id} rival-town capture objective changed")
         ensure(site.get("persistent_control") is True and site.get("content_batch_id") == slice_id and site.get("runtime_boundary",{}).get("save_payload_required") is True and len(str(site.get("public_text",{}).get("public_summary","")).strip()) >= 80, errors, f"{site_id} live control or accessibility contract changed")
         asset = assets.get(asset_id, {}) if isinstance(assets,dict) else {}
-        ensure(site_sprites.get(site_id,{}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == region and asset.get("atlas_size") == [288,48] and asset.get("assigned_resource_site_id") == site_id and asset.get("assigned_faction_id") == rival_faction, errors, f"{site_id} exact banner atlas mapping changed")
+        ensure(site_sprites.get(site_id,{}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v*4 for v in region] and asset.get("atlas_size") == [1152,192] and asset.get("assigned_resource_site_id") == site_id and asset.get("assigned_faction_id") == rival_faction, errors, f"{site_id} exact banner atlas mapping changed")
         source_path = source_dir / f"{stem}.png"
         ensure(source_path.is_file() and png_size(source_path) == (512,512) and Path(f"{source_path}.import").is_file(), errors, f"{site_id} retained generated source or import is missing")
         if source_path.is_file():

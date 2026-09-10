@@ -1,0 +1,199 @@
+{
+  "schema_id": "training_site_cutout_recovery_v1",
+  "recipe_sha256": "29b0e82ab95698129e8297e995125af2feb49ca6b596cb051a32716ad6ab5593",
+  "tools": {
+    "tools/prepare_overworld_training_cutouts.py": "0f99c24a862a4c971853d174296c0e8dba0b9c08217f8a053046399cbb68a4da",
+    "tools/prepare_overworld_recurring_cutouts.py": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
+    "tools/prepare_overworld_cutout_art.py": "247801087cb8c5bfd6fb0a471bf39dbbfdb2a8bd8fe984d3816df92f00b0d68d",
+    "tools/prepare_overworld_legacy_cutouts.py": "578dd78feaf322f585df5b214cfdbe607ea29eb0a359a95ce549e289c8d7b092"
+  },
+  "assets": {
+    "resource_site_doctrine_heatpriest_quench_censer": {
+      "trim_sha256": "feca3a67658ebc82db22ca74c9f08b7556eac1f492be43ea6b9b57217420d11e",
+      "rgba_sha256": "0e46f1321e75db81d6551b887acd71f432a10421d9ceb66d1dfee35634be627b"
+    },
+    "resource_site_doctrine_fenhook_blind_levee_snare": {
+      "trim_sha256": "42fdf6b5063f4db27fbd47028aa547560dbb8dc2f861f38dca4696bc2fdc5e89",
+      "rgba_sha256": "d8c3fb457a56a9b6305cd4c1d73fe376c86d1498ebf9cb3c185c29aaab399c3e"
+    },
+    "resource_site_doctrine_choirward_resonance_bastion": {
+      "trim_sha256": "7c932e1ad297105be03749dfebb22aa2bae156f7ac7770a9ffb7e4e06bb0800e",
+      "rgba_sha256": "e877786d6b610a83847235988c5cbe043c5050ceae4f0bcf2b2232e7d792d70a"
+    },
+    "resource_site_doctrine_mirrorstep_parallax_gate": {
+      "trim_sha256": "82807e5e39b1a37ae5c697b7a9fc3fec1f7cbdd0a7f653ab91a64d9118c63d0c",
+      "rgba_sha256": "8024de557947e0299a81726acee2e6fc4eac43fbc7c4b624c43954cc0a30709b"
+    },
+    "resource_site_doctrine_mossvein_memory_cairn": {
+      "trim_sha256": "133f0e2d3bf8f3080e55c409c24f171bed1ad3afe3a6300920533fd48c4e6428",
+      "rgba_sha256": "5659445b28c60713f96dd805bbd8f373aefa0b19c557210db1319abcdb557d65"
+    },
+    "resource_site_doctrine_bramble_hound_pursuit_kennel": {
+      "trim_sha256": "47005cc2be902f736062c6f3b385935293e1202de6f3a9bf0550702d2e1facf2",
+      "rgba_sha256": "76f87527b64b4bdbc6e2c4c8fa6fe259dec42d3e5fe4560c453816970db784c8"
+    },
+    "resource_site_doctrine_rootwright_living_span": {
+      "trim_sha256": "248ccaf42d0294ec33eb65cc8bd943e16bcd74d64e6c44d3bc20c07cf7012609",
+      "rgba_sha256": "cc6cabc7fd720897c51cc3feccc3b9af59b44fb4f32e2c1994f7a81e4f4ba5cb"
+    },
+    "resource_site_doctrine_nightchart_false_star_orrery": {
+      "trim_sha256": "2f4cb7ad5b670790dc109f0301b75eb6bc158992e8715170e2c59694fb776be2",
+      "rgba_sha256": "2b48a3e0c66c4323ae15ade1fadae93d7994bd6d61c2ae99de534feb10655d21"
+    },
+    "resource_site_proving_road_bellfounder_rostrum": {
+      "trim_sha256": "5d715d7bf0305a1ccd4101671c8c80f10bee45f37c2628afe93eddbd115dcb0a",
+      "rgba_sha256": "26683af4368f6b218312deb028a2b19cf0b8e2c71497865995e63afb2973b0ae"
+    },
+    "resource_site_proving_road_ashmeter_crucible": {
+      "trim_sha256": "b1758ea1725730921f815a1b6e7355dbd35773b182d17de205f8689a6e681420",
+      "rgba_sha256": "8b2707845fcfdfbb8eb05143a43862a5beee7e982f444ea98686413ce77b32b4"
+    },
+    "resource_site_proving_road_quench_calibrator": {
+      "trim_sha256": "40a75c358c48caa828796b8f3175fbea213ac778a1c6d34a2681daf22bf8c71a",
+      "rgba_sha256": "1bbdfd24ea3f3771264e68da1e84b0d36b9fad00d13a92c02db561cefc35dd91"
+    },
+    "resource_site_proving_road_tollreaver_toll": {
+      "trim_sha256": "b795ce0e73df6920a6eca023eece8d639a04d2727bafe2ec9d6a0d2377841e68",
+      "rgba_sha256": "833b13fcf0be6e568be4ccd9a891389f9a65b09991d36537651c51910a651fe3"
+    },
+    "resource_site_proving_road_seedseer_oracle": {
+      "trim_sha256": "659b65ffb214c2511e39510f3ff758f168b2fd029596f7e9d8b444f9da7b179b",
+      "rgba_sha256": "7c49183e97eca23cfa7f2830fb858e917a8259523048a20bc4f706f6c5e60cf8"
+    },
+    "resource_site_proving_road_vowless_mirror": {
+      "trim_sha256": "980a085056189b22deb7aa1aaae36a13550a5a52f1499f498eaa56e3d46c9af9",
+      "rgba_sha256": "b3ad8440b7fcbeda33ec09d8ccabac45c771641b0ae9e5a1db02629bc79204de"
+    },
+    "resource_site_proving_road_vanehook_harpoon": {
+      "trim_sha256": "e2aa72dd38de3aeeb4ed4c48f5ce7fcda288e40183a2b4efda2982a8b5c4d89e",
+      "rgba_sha256": "6fdbb195711cb93e433859309fbcd8b5b6b2bba37eb04a4d7eb51c9589aa7635"
+    },
+    "resource_site_proving_road_obituaryink_lectern": {
+      "trim_sha256": "72408d436ab3d6f63d4af3d603ecc8934b91b7cac1d3c41f74e4dc0807fea44a",
+      "rgba_sha256": "210b9cf4e1075a49abd944dc549fe954d2b67cacad7203676e3e28f8edd86766"
+    },
+    "resource_site_field_mastery_beaconscribe_lectern": {
+      "trim_sha256": "339e52bb604908c3ab0fbc3320f8df98da040ba59e764a29af3de7bec03d8b0b",
+      "rgba_sha256": "986719171b91dc24b54836920a1e099fe8b0428f1c0675d8633c5c9c148c0ae2"
+    },
+    "resource_site_field_mastery_rotlamp_censer": {
+      "trim_sha256": "cfa4edb580e6cce15d30084ac99f7d558a27d67b2f60885d77e43c892ec139c0",
+      "rgba_sha256": "18c157189773d4dd46006727f1d1e5308ff50fc8895f9e34b06dcfc482142de4"
+    },
+    "resource_site_field_mastery_daynote_dais": {
+      "trim_sha256": "aa18c5538bf3f8ec762e898620ddfc208d57d52d62b08a35cea2b741e74c1571",
+      "rgba_sha256": "d64f8a2c7f63b557b3909f9fbaf715fce48f109a1244c536989eb77f446e716c"
+    },
+    "resource_site_field_mastery_loamchant_seat": {
+      "trim_sha256": "4c7a6733052d3e81fa978fa49fe2756580d968eecf20cfeb2a3bff67e9510bd8",
+      "rgba_sha256": "e22eb799c51eee7970d1027655ba2fd1587d91ed98922b4488454a221516dddc"
+    },
+    "resource_site_field_mastery_gaugesavant_rig": {
+      "trim_sha256": "f8848bbe9aa96a916b4fcd0b2c3785c61fbec54b2897acdda85645eff0213a0f",
+      "rgba_sha256": "71e9f9e15896d330f64233d84b9d45a07ffddcb604123a84c46e9f752f11b4d6"
+    },
+    "resource_site_field_mastery_wakeoracle_choir": {
+      "trim_sha256": "59072e2cd29016079370627a0d591f4ce9e486ae8512ff4284c7b699ff0eb962",
+      "rgba_sha256": "edb92cf568ea69a624baab463b7889cff64fbca95290541314c2ca5ed3d6fea0"
+    },
+    "resource_site_garrison_warrant_cinderlock_seals": {
+      "trim_sha256": "7d0423d7569f5f275d7d920299d5acccaf56b61c23470f0561ba731a2c6d3ce2",
+      "rgba_sha256": "14264ed5a866db47e8b93641f30fbe96c2ca137d76e4d82f5f11e24c50eae10c"
+    },
+    "resource_site_garrison_warrant_murkward_hooks": {
+      "trim_sha256": "24047d73bcc66b50947ea99585272225b3af57c9e066ba97acbdcd7902cf3129",
+      "rgba_sha256": "6f5f34d53ddb317454b34f5ca31741749df9a5346801d25f77b85719bef059ac"
+    },
+    "resource_site_garrison_warrant_meridian_prisms": {
+      "trim_sha256": "8cc061ea6d57afcde40f0637bce963a39838b22c4fb5531e2f8b60241f7282bd",
+      "rgba_sha256": "7a348cb4fdd73e218dd380b9fbd7c1d13940a9bffbcc464d154ccc3d5bb922d1"
+    },
+    "resource_site_garrison_warrant_graftroot_seeds": {
+      "trim_sha256": "a8751ceff1a0084ada045dddf0cf455d2b65097e08d2a5e55c70ee02875fdee3",
+      "rgba_sha256": "59edeea3b753b526ba8734ac043ddabd78cf5043d3d5bfe8b4e16194b2d129be"
+    },
+    "resource_site_garrison_warrant_orevein_gauges": {
+      "trim_sha256": "dcbe0a84abb74974c560489297c426f0d6d3b09c24010bf68563e09c277258ed",
+      "rgba_sha256": "916788437d8032ac4df00508000ca72f17d654a389bd59c56a39f22d1c32f362"
+    },
+    "resource_site_garrison_warrant_bellwake_bells": {
+      "trim_sha256": "40d750e5acbce5bd6df9cb85e6e1faa657ea62268b6253694a31ed29b9755166",
+      "rgba_sha256": "26fff156ab418f0df2f4d73f0074b9d6e94422ca668dfc4047df21b39c898fea"
+    },
+    "resource_site_twin_command_embercourt_council": {
+      "trim_sha256": "924510e64cd1c1a264758a807b1cc4b4e9c424a28c7c2bd2e9df690b64dab9b0",
+      "rgba_sha256": "0177498a2c4f7490abbdc55276f19b3cb0cb1546e17eb8f01d433519132a6545"
+    },
+    "resource_site_twin_command_mireclaw_council": {
+      "trim_sha256": "55b539388a4b3ecb76eaae072efa574e51d44d2d01750c1a69bb19756cd2628e",
+      "rgba_sha256": "5f42de486be2140caa50d35cf69a97395e6a80e659e9d0496293960f8f22a3ea"
+    },
+    "resource_site_twin_command_sunvault_council": {
+      "trim_sha256": "c308a896c51985ef04869e565c4c1b65f80ab1422d520ddd2ecdb01131135ced",
+      "rgba_sha256": "054222f4a6934a395ca9a7e9fbe6f3a383dfbbd4724bae74c97b623d8b5c69a7"
+    },
+    "resource_site_twin_command_thornwake_council": {
+      "trim_sha256": "49990e5dfd9bf9adcc0c1ec1318090e7f141c8002373102b0194cae526e56fda",
+      "rgba_sha256": "fe651fe57f2e55fc1c745fa864ecf74a9f12475b84f3a2166b95e55f6d3166af"
+    },
+    "resource_site_twin_command_brasshollow_council": {
+      "trim_sha256": "8e741976d5040e423caa30404465ce0a371ac0a7bf6063778a7a9cb08f6e2b93",
+      "rgba_sha256": "3a5c41c29f699c74bde42725c602cf2529b4bb6888ca415a5de2a16bf6239fdb"
+    },
+    "resource_site_twin_command_veilmourn_council": {
+      "trim_sha256": "d0d22386d57ff05bc069708155c089f0099a16c4fd20d1da874874a516355701",
+      "rgba_sha256": "95317367a35588b76c8be2ed048bd03113f706c505fac7abcb5d31a6f42ee7a1"
+    },
+    "resource_site_named_rival_tollmoon_claim_post": {
+      "trim_sha256": "edda9ba5572e4f6f701c45534ce615d7ccb9105b83999fc4f949a32d504647c3",
+      "rgba_sha256": "1a24214c711e6fb317f9ecd84e86838dd8eb933a52de10f3b74b75c61c60ff34"
+    },
+    "resource_site_named_rival_facetline_duel_standard": {
+      "trim_sha256": "3802b9c11e229bf5d3571056ea14f4d53cdfe8edfb4de290e0fb45cfca26a7b9",
+      "rgba_sha256": "bb86d2a0e53fd6bc741251b5915ff90930c07fbabbda8281ac39c4647aa3b7c2"
+    },
+    "resource_site_named_rival_greenbarrow_recovery_mark": {
+      "trim_sha256": "d14b071485e0858d89b1eeb6af6d8501c4ef833e35e97e6429e09114cf24def2",
+      "rgba_sha256": "66f2f8b1152f2e50d34316be37511b902e50547d73fdd3c39c5155cc2f8bb21a"
+    },
+    "resource_site_named_rival_bellfounder_siege_gauge": {
+      "trim_sha256": "5d5b6a109244568cef545daf4f10c4e9cc5dfc614b929b3404143b54149df2f3",
+      "rgba_sha256": "45bb27779ed6cb08ca0c099231596648824b42d81fc3d2782a49d8ca48300037"
+    },
+    "resource_site_named_rival_vanehook_wake_pennant": {
+      "trim_sha256": "f33772bd7d3d62d1eb78ec9218cb815dd1c440c6e9dd851988c13c26c1a932cc",
+      "rgba_sha256": "7f14dece1f9281d0e981cd37f43eba8c5b2315de38012987966c6821a1bf4540"
+    },
+    "resource_site_named_rival_pikeward_charter_fork": {
+      "trim_sha256": "ad2a94cfb566c42b22cc907a6bb1b1d8af5ec775cca0c14cb0f0d0245f0dc689",
+      "rgba_sha256": "1cffd8438736fd144a7e70484e79dce344ad39d1fc9daf6e28f16fbf113b2ca7"
+    }
+  },
+  "files": {
+    "res://art/overworld/runtime/objects/resource_sites/commander_doctrine_expeditions_atlas.png": {
+      "after_sha256": "437077b1d6931912f5e879bb19dc4cd389a43cf54eb8d6d3b1daf709b9bd472d",
+      "prepared": "runtime/objects/resource_sites/commander_doctrine_expeditions_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/eight_commanders_proving_roads_atlas.png": {
+      "after_sha256": "f2b8da5e135c50763c4cf2f9d2b439fb5c4623414c6598fc1c1d37988db4a6f2",
+      "prepared": "runtime/objects/resource_sites/eight_commanders_proving_roads_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/field_mastery_convocations_atlas.png": {
+      "after_sha256": "4a1e47ae2ec03d7cff1730264423ff4f8fb73b36c578ecec5d02daea464c9922",
+      "prepared": "runtime/objects/resource_sites/field_mastery_convocations_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/garrison_warrant_musters_atlas.png": {
+      "after_sha256": "e5efc5a1e70cd11394e9d792d5141b9762c22917ee896f0d0d57da0ec9698eaf",
+      "prepared": "runtime/objects/resource_sites/garrison_warrant_musters_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/twin_command_field_councils_atlas.png": {
+      "after_sha256": "ae61d6b89193ed1c3f6dc435999e3961f08a3c73010d3e05ee9cf84ca226e32d",
+      "prepared": "runtime/objects/resource_sites/twin_command_field_councils_atlas.png"
+    },
+    "res://art/overworld/runtime/objects/resource_sites/named_rival_banners_atlas.png": {
+      "after_sha256": "8e3b50f7f647e90bb9b4ad202ce36b76e27ba4bc77e2f7156d49b1b23981d3fa",
+      "prepared": "runtime/objects/resource_sites/named_rival_banners_atlas.png"
+    }
+  },
+  "processing": "Original alpha and opaque paint unchanged. Only saturated near-transparent alpha 1..4 RGB is replaced by nearest original opaque paint. Historical 42/44px centered or bottom alignment retained and projected directly at fourfold density, not upscaled from 48px. No alpha/color key, invented state marker or gameplay changes."
+}

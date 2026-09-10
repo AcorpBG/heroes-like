@@ -12,12 +12,12 @@ const OUTPUT_DIR := "res://.artifacts/twin_command_field_councils_smoke"
 const REPORT_PATH := OUTPUT_DIR + "/report.json"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/twin_command_field_councils_atlas.png"
 const CASES := [
-	{"scenario_id":"pikeward-cinderquill-twin-beacon-council","prefix":"twinbeacon","primary_id":"hero_torren","partner_id":"hero_embercourt_orra_cinderquill","site_id":"site_embercourt_twin_beacon_field_council","asset_id":"resource_site_twin_command_embercourt_council","region":Rect2(0,0,48,48)},
-	{"scenario_id":"fenhook-votivejaw-two-mask-council","prefix":"twomask","primary_id":"hero_tarn","partner_id":"hero_mireclaw_nix_votivejaw","site_id":"site_mireclaw_two_mask_field_council","asset_id":"resource_site_twin_command_mireclaw_council","region":Rect2(48,0,48,48)},
-	{"scenario_id":"lenscaptain-sunvein-split-ray-council","prefix":"splitray","primary_id":"hero_sunvault_dovan_lenscaptain","partner_id":"hero_sunvault_calis_sunvein","site_id":"site_sunvault_split_ray_field_council","asset_id":"resource_site_twin_command_sunvault_council","region":Rect2(96,0,48,48)},
-	{"scenario_id":"greenbarrow-seedseer-forkroot-council","prefix":"forkroot","primary_id":"hero_thornwake_merek_greenbarrow","partner_id":"hero_thornwake_veyra_seedseer","site_id":"site_thornwake_forkroot_field_council","asset_id":"resource_site_twin_command_thornwake_council","region":Rect2(144,0,48,48)},
-	{"scenario_id":"bellfounder-quench-double-gauge-council","prefix":"doublegauge","primary_id":"hero_brasshollow_oren_bellfounder","partner_id":"hero_brasshollow_vellum_quench","site_id":"site_brasshollow_double_gauge_field_council","asset_id":"resource_site_twin_command_brasshollow_council","region":Rect2(192,0,48,48)},
-	{"scenario_id":"vanehook-obituaryink-twin-wake-council","prefix":"twinwake","primary_id":"hero_veilmourn_ruln_vanehook","partner_id":"hero_veilmourn_thir_obituaryink","site_id":"site_veilmourn_twin_wake_field_council","asset_id":"resource_site_twin_command_veilmourn_council","region":Rect2(240,0,48,48)},
+	{"scenario_id":"pikeward-cinderquill-twin-beacon-council","prefix":"twinbeacon","primary_id":"hero_torren","partner_id":"hero_embercourt_orra_cinderquill","site_id":"site_embercourt_twin_beacon_field_council","asset_id":"resource_site_twin_command_embercourt_council","region":Rect2(0,0,192,192)},
+	{"scenario_id":"fenhook-votivejaw-two-mask-council","prefix":"twomask","primary_id":"hero_tarn","partner_id":"hero_mireclaw_nix_votivejaw","site_id":"site_mireclaw_two_mask_field_council","asset_id":"resource_site_twin_command_mireclaw_council","region":Rect2(192,0,192,192)},
+	{"scenario_id":"lenscaptain-sunvein-split-ray-council","prefix":"splitray","primary_id":"hero_sunvault_dovan_lenscaptain","partner_id":"hero_sunvault_calis_sunvein","site_id":"site_sunvault_split_ray_field_council","asset_id":"resource_site_twin_command_sunvault_council","region":Rect2(384,0,192,192)},
+	{"scenario_id":"greenbarrow-seedseer-forkroot-council","prefix":"forkroot","primary_id":"hero_thornwake_merek_greenbarrow","partner_id":"hero_thornwake_veyra_seedseer","site_id":"site_thornwake_forkroot_field_council","asset_id":"resource_site_twin_command_thornwake_council","region":Rect2(576,0,192,192)},
+	{"scenario_id":"bellfounder-quench-double-gauge-council","prefix":"doublegauge","primary_id":"hero_brasshollow_oren_bellfounder","partner_id":"hero_brasshollow_vellum_quench","site_id":"site_brasshollow_double_gauge_field_council","asset_id":"resource_site_twin_command_brasshollow_council","region":Rect2(768,0,192,192)},
+	{"scenario_id":"vanehook-obituaryink-twin-wake-council","prefix":"twinwake","primary_id":"hero_veilmourn_ruln_vanehook","partner_id":"hero_veilmourn_thir_obituaryink","site_id":"site_veilmourn_twin_wake_field_council","asset_id":"resource_site_twin_command_veilmourn_council","region":Rect2(960,0,192,192)},
 ]
 
 var _errors: Array[String] = []
@@ -33,7 +33,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(288, 48), "Twin Command council atlas must remain exactly 288x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(1152, 192), "Twin Command council atlas must remain exactly 1152x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)

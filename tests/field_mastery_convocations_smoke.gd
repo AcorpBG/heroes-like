@@ -11,12 +11,12 @@ const OUTPUT_DIR := "res://.artifacts/field_mastery_convocations_smoke"
 const REPORT_PATH := OUTPUT_DIR + "/report.json"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/field_mastery_convocations_atlas.png"
 const CASES := [
-	{"scenario_id":"beaconscribe-first-light-convocation","prefix":"jorunmastery","site_id":"site_beaconscribe_first_light_lectern","asset_id":"resource_site_field_mastery_beaconscribe_lectern","region":Rect2(0,0,48,48),"command_key":"knowledge"},
-	{"scenario_id":"rotlamp-shedskin-convocation","prefix":"eddamastery","site_id":"site_rotlamp_shedskin_censer","asset_id":"resource_site_field_mastery_rotlamp_censer","region":Rect2(48,0,48,48),"command_key":"defense"},
-	{"scenario_id":"daynote-true-angle-convocation","prefix":"essamastery","site_id":"site_daynote_true_angle_dais","asset_id":"resource_site_field_mastery_daynote_dais","region":Rect2(96,0,48,48),"command_key":"power"},
-	{"scenario_id":"loamchant-deep-root-convocation","prefix":"elianmastery","site_id":"site_loamchant_deep_root_seat","asset_id":"resource_site_field_mastery_loamchant_seat","region":Rect2(144,0,48,48),"command_key":"defense"},
-	{"scenario_id":"gaugesavant-fifth-measure-convocation","prefix":"linamastery","site_id":"site_gaugesavant_fifth_measure_rig","asset_id":"resource_site_field_mastery_gaugesavant_rig","region":Rect2(192,0,48,48),"command_key":"attack"},
-	{"scenario_id":"wakeoracle-last-echo-convocation","prefix":"morwenmastery","site_id":"site_wakeoracle_last_echo_choir","asset_id":"resource_site_field_mastery_wakeoracle_choir","region":Rect2(240,0,48,48),"command_key":"knowledge"},
+	{"scenario_id":"beaconscribe-first-light-convocation","prefix":"jorunmastery","site_id":"site_beaconscribe_first_light_lectern","asset_id":"resource_site_field_mastery_beaconscribe_lectern","region":Rect2(0,0,192,192),"command_key":"knowledge"},
+	{"scenario_id":"rotlamp-shedskin-convocation","prefix":"eddamastery","site_id":"site_rotlamp_shedskin_censer","asset_id":"resource_site_field_mastery_rotlamp_censer","region":Rect2(192,0,192,192),"command_key":"defense"},
+	{"scenario_id":"daynote-true-angle-convocation","prefix":"essamastery","site_id":"site_daynote_true_angle_dais","asset_id":"resource_site_field_mastery_daynote_dais","region":Rect2(384,0,192,192),"command_key":"power"},
+	{"scenario_id":"loamchant-deep-root-convocation","prefix":"elianmastery","site_id":"site_loamchant_deep_root_seat","asset_id":"resource_site_field_mastery_loamchant_seat","region":Rect2(576,0,192,192),"command_key":"defense"},
+	{"scenario_id":"gaugesavant-fifth-measure-convocation","prefix":"linamastery","site_id":"site_gaugesavant_fifth_measure_rig","asset_id":"resource_site_field_mastery_gaugesavant_rig","region":Rect2(768,0,192,192),"command_key":"attack"},
+	{"scenario_id":"wakeoracle-last-echo-convocation","prefix":"morwenmastery","site_id":"site_wakeoracle_last_echo_choir","asset_id":"resource_site_field_mastery_wakeoracle_choir","region":Rect2(960,0,192,192),"command_key":"knowledge"},
 ]
 
 var _errors: Array[String] = []
@@ -32,7 +32,7 @@ func _run() -> void:
 	get_window().size = Vector2i(1280, 720)
 	ContentService.clear_cache()
 	var atlas := load(ATLAS_PATH) as Texture2D
-	_expect(atlas != null and atlas.get_size() == Vector2(288, 48), "Field Mastery atlas must remain exactly 288x48.")
+	_expect(atlas != null and atlas.get_size() == Vector2(1152, 192), "Field Mastery atlas must remain exactly 1152x192.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)
