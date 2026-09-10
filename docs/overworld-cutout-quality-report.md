@@ -1194,17 +1194,98 @@ pre-existing unrelated untracked retention/report/cache files are preserved;
 the 66-file hash baseline still passes. No cleanup, gameplay, native/RMG,
 Town-screen, save-schema or package-budget changes are included.
 
+## Recruitment and habitat recovery checkpoint — 2026-09-10
+
+36 runtime rows in three same-path atlases now use direct 192px source
+projection. **34 quality dispositions are accepted; two clipped-mast source
+repairs remain pending.** This is not closure of the full recruitment cohort.
+Original Unbound Wild Concords paint is unchanged. Veteran musters retain
+their original paint except reviewed low-alpha clipped-colour noise and three
+disconnected fragments from adjacent sheet cells. The original identity sheet
+confirms those fragments belong to the next row's mast tops, not map objects.
+The Prismwake and Gaugecoil habitats also receive low-alpha RGB repair;
+intentional nacre, purple crystal, fabric and valve colours remain.
+
+Frontier Mythic Habitats previously stamped a procedural flag and ellipse onto
+each controlled state (`tools/author_six_frontier_mythic_habitats.py:180`). Six
+approved built-in image edits replace those marks with physically attached
+cloth or active gauge lighting. The tool returned opaque backing; only reviewed
+foreground paint is composited into genuine-alpha originals, with two bounded
+cloth extensions. Nothing outside the recorded repair masks changes. Prompts,
+six generated originals, recipe and proof are retained under
+`art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/`;
+36 trimmed cells and 20 recovered masters are in the matching trimmed folder.
+`tools/prepare_overworld_recruitment_cutouts.py` reconstructs them fail-closed.
+The 44px south/42px centered/43px bottom-46 logical registrations remain.
+Frontier's historical base pixels reconstruct exactly; older family filter/
+quantization differences are recorded, not claimed as exact reconstruction.
+
+Accepted evidence under `.artifacts/overworld_cutout_quality_20260909/`:
+
+- `recruitment_sites_source_1280_imported`, `recruitment_sites_source_1920`,
+  `recruitment_sites_packaged_linux`, `recruitment_sites_packaged_windows`:
+  2830 checks each, zero runtime errors, ten actual views/observations and three
+  labelled all-36 detached galleries. Eight affected original sites are reached
+  through ordinary scouting, with normal end turns where needed. No placements,
+  guards, ownership or fog are granted. The earned Day97 native checkpoint has
+  zero affected sites; its 2380 blockers remain unchanged controls.
+- `recruitment_sites_before_packaged_linux_routed`: the exact `ee73e59f`
+  predecessor PCK produces only the 108 expected region/size/RGBA failures.
+  The opt-in ancestor-manifest selector retains strict manifest and texture
+  validation; default current-release validation remains unchanged.
+- `recruitment_sites_delivery_preservation.json`: all 50 complete save files
+  across predecessor, two source resolutions and both packages agree, excluding
+  only timestamps/fresh authored session IDs between runs and no fields within
+  save tests. Placements, state routes and draw rectangles agree; all 1178 other
+  manifest rows and all compiled gameplay/native/save owners are unchanged.
+- Seven focused Python tests, the five shared sprite/input/route/fog reports,
+  and all three domain smokes pass (`recruitment_sites_shared` and
+  `recruitment_sites_domain_current` in the full-play validation folder).
+  Domain fixtures exercise guarded claims, recruitment, weekly delivery and
+  saves, plus the six-chapter Unbound campaign; they are not new full playthroughs.
+  The veteran smoke's old skirmish-only/five-hook assertions were updated to
+  the already-shipped Six Sealed Companies campaign availability/six hooks;
+  content and gameplay rules are unchanged.
+
+All six comparison sheets, three small renderer galleries, eight small gameplay
+views, a wide gameplay view and a packaged Linux view were inspected. Original
+and generated sources were inspected too. Earlier blocked scouting coordinates,
+stale Godot imports, stale veteran-test expectations and initial predecessor
+argument-forwarding failure are diagnostics, not accepted evidence. Windows
+checks run headless under Wine, not real Windows GPU certification.
+
+Official Linux and Windows export/startup checks pass; packaged probes enter
+earned generated maps, and Windows also exercises generated Overworld/Town
+building entry. Exports: `/tmp/heroes-recruitment-{linux,windows}-20260910`.
+Both PCKs: 294968040 bytes, 5484 members; only `project.binary` differs between
+platforms. Versus the predecessor, only three ctex files, art manifest and UID
+cache differ; 5479 members are identical. Linux SHA:
+`0a0c9f30e9552ab5910c3ac4a66cf4b4c29c5f42252cd6b406c339ec39421905`;
+Windows SHA: `0b560a60884fd39031e4be8d0692969e3bf841778a7e4d5554c903d5bd4ce75b`.
+Repository and diff checks pass. Logs: `/tmp/heroes-recruitment-*-20260910.log`.
+All 66 pre-existing unrelated file hashes still match; no cleanup occurred.
+
+Immediate remaining source repairs: controlled `three_gauge_chapter_foundry`
+and `fog_keel_lastwatch_mooring`. Their 362px historical sources clip mast tops
+which remain visible in the original 1448x1086 veteran identity sheet (connected
+foreground bounds [362,689,696,1056] and [1104,700,1419,1078]). Their current
+edge/detail improvements pass regression, but do not restore those missing tips.
+Exclude these two IDs from accepted-disposition unions until reconstruction and
+visual acceptance are real. No additional owner approval is needed to continue.
+
 ## Remaining parent work
 
 The full 1,214-row runtime pool is **not accepted**. The then-remaining 783 rows
 received a first-pass visual contact review across all six remaining family
 groups; those contacts and 32 color candidates are not final per-row acceptance.
-The accepted cohorts now cover 708 repaired/preserved dispositions, leaving
-506 for complete detailed review/recovery. All 31 recurring encounters, 30
+The accepted cohorts now cover 742 repaired/preserved dispositions, leaving
+472 for complete detailed review/recovery. This count excludes the two pending
+veteran mast repairs above despite their presence in the 36-row runtime recipe.
+All 31 recurring encounters, 30
 recurring resource-site originals, 31 separate claimed dwellings and 34 early
 post-interaction and 40 landmark/objective-state paintings are accepted.
-The 34 command-site originals are also accepted. Next: Unbound Wild Concords,
-veteran company musters, Frontier Mythic Habitats and other remaining families. The seven
+The 34 command-site originals and 34 recruitment/habitat dispositions are also
+accepted. Next: restore the two veteran mast tops, then remaining families. The seven
 Pactwright/Mireglass states are accepted only by the explicit integrated-edit
 follow-up above; recovery of these originals does not accept different paintings.
 Individual source and native-resolution

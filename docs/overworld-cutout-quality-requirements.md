@@ -254,6 +254,35 @@ source run and both packages. Maintain all three existing domain smokes with
 their exact new atlas geometry and separate historical-source/current-runtime
 provenance; do not weaken gameplay, battle, claim or save assertions.
 
+### Recruitment/habitat paired-state recovery
+
+Recover all 36 rows in Unbound Wild Concords, veteran company musters and
+Frontier Mythic Habitats. Keep the original 44px south, 42px centered and 43px
+bottom-46 logical fits respectively, with 192px cells and unchanged gameplay
+draw rectangles. Older two-family raster quantization differences must be
+reported, not described as exact historical pixel reconstruction; Frontier's
+historical base projection is exact. Source masters remain immutable.
+
+Remove only the three individually reviewed disconnected sheet fragments in
+the controlled Daybreak Prism and Five-Bough Grove. Repair clipped RGB noise
+at alpha 1..4 from nearby original foreground colours, preserving intentional
+purple/iridescent material. Replace Frontier's six historical procedural
+pennants/rings with approved original generated physical foreground details;
+reject generated backing and preserve all paint outside reviewed masks. Retain
+full built-in prompts, generated originals, recovered masters, historical
+atlases and reconstruction hashes. No procedural RGB replacement drawing.
+
+Use `tools/prepare_overworld_recruitment_cutouts.py --output <fresh> [--install]`,
+`tests/test_overworld_recruitment_cutouts.py` and both cutout drivers with
+`--batch recruitment_sites`. Inspect every paired state, source compositing
+and dual-resolution actual scouting views. The Day97 native checkpoint has
+no affected site: its 2380 blockers are unchanged controls, not affected-site
+evidence. Use original authored placements and ordinary movement/end turns;
+no fog, position, ownership or guard grants for gameplay captures. Existing
+three domain smokes separately cover guarded claims, recruitment, weekly
+delivery and full saves as labelled controlled fixtures. Validate repository,
+diff, Linux/Windows official exports and packaged cohort probes together.
+
 ## Completion and non-goals
 
 Each cohort completes only after its actual repaired art is integrated and its

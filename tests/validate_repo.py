@@ -44216,6 +44216,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(len(command_recoveries) == 34, errors, "All 34 command paintings must reconstruct from original RGBA and historical registration")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Command cutout recovery failed closed: {exc}")
+    recruitment_recoveries = {}
+    try:
+        recruitment_spec = importlib.util.spec_from_file_location("recruitment_cutout_validation", ROOT / "tools/prepare_overworld_recruitment_cutouts.py")
+        recruitment_module = importlib.util.module_from_spec(recruitment_spec)
+        recruitment_spec.loader.exec_module(recruitment_module)
+        recruitment_recoveries = recruitment_module.validate_assets()
+        ensure(len(recruitment_recoveries) == 36, errors, "All 36 recruitment paintings must reconstruct from registered source paint and six approved physical state edits")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Recruitment cutout recovery failed closed: {exc}")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
@@ -44402,6 +44411,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (96, 96)
             else:
                 expected_canvas = (512, 512)
+            if asset_id in recruitment_recoveries:
+                expected_canvas = (2304,192)
             if asset_id in command_recoveries:
                 expected_canvas = tuple(entry["atlas_size"])
             if asset_id in route_recoveries:
@@ -79643,6 +79654,7 @@ def validate_six_unbound_wild_concords(errors: list[str]) -> None:
     campaign_id = "campaign_six_unbound_oaths"
     atlas_res = "res://art/overworld/runtime/objects/resource_sites/unbound_wild_concords_atlas.png"
     atlas_path = res_path_to_disk(atlas_res)
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     source_manifest_path = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "unbound_wild_concords_wave1" / "manifest.json"
     campaign_art_manifest_path = ROOT / "art" / "campaigns" / "source" / "generated" / "six_unbound_oaths" / "manifest.json"
     smoke_script_path = ROOT / "tests" / "unbound_wild_concords_smoke.gd"
@@ -79685,7 +79697,7 @@ def validate_six_unbound_wild_concords(errors: list[str]) -> None:
     ensure(campaign_art_manifest.get("schema_id") == "six_unbound_oaths_campaign_art_v1" and campaign_art_manifest.get("generator_mode") == "built_in_image_gen" and len(campaign_art_rows) == 7 and len(str(campaign_art_manifest.get("final_prompt", ""))) >= 240 and len(str(campaign_art_manifest.get("background_extraction_prompt", ""))) >= 160, errors, "Six Unbound Oaths image-generation provenance or prompt set changed")
     atlas_payload = atlas_path.read_bytes()
     atlas_sha = "e49de9029d745230625b766be9cecc8300375100918640465295c9741ca914d4"
-    ensure(png_size(atlas_path) == (576,48) and hashlib.sha256(atlas_payload).hexdigest() == atlas_sha and len(atlas_payload) >= 26 and atlas_payload[25] in {4,6}, errors, "Unbound-wild concord atlas bytes, size, or alpha changed")
+    ensure(png_size(atlas_path) == (2304,192) and historical_atlas_path.is_file() and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == atlas_sha and len(atlas_payload) >= 26 and atlas_payload[25] in {4,6}, errors, "Unbound-wild concord atlas bytes, size, or alpha changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Unbound-wild concord atlas Godot import metadata is missing")
     source_manifest = load_json(source_manifest_path)
     source_rows = source_manifest.get("assets", [])
@@ -79735,8 +79747,8 @@ def validate_six_unbound_wild_concords(errors: list[str]) -> None:
         controlled_id = f"resource_site_neutral_{stem}_controlled"
         unclaimed = object_assets.get(unclaimed_id, {})
         controlled = object_assets.get(controlled_id, {})
-        ensure(unclaimed.get("path") == atlas_res and unclaimed.get("atlas_region") == [index * 96,0,48,48] and unclaimed.get("assigned_map_object_id") == object_id, errors, f"{object_id} unclaimed landmark art changed")
-        ensure(controlled.get("path") == atlas_res and controlled.get("atlas_region") == [index * 96 + 48,0,48,48] and controlled.get("assigned_resource_site_id") == site_id, errors, f"{site_id} controlled landmark art changed")
+        ensure(unclaimed.get("path") == atlas_res and unclaimed.get("atlas_region") == [index * 384,0,192,192] and unclaimed.get("assigned_map_object_id") == object_id, errors, f"{object_id} unclaimed landmark art changed")
+        ensure(controlled.get("path") == atlas_res and controlled.get("atlas_region") == [index * 384 + 192,0,192,192] and controlled.get("assigned_resource_site_id") == site_id, errors, f"{site_id} controlled landmark art changed")
         ensure(site_sprites.get(site_id, {}).get("asset_id") == controlled_id and site_sprites.get(site_id, {}).get("unclaimed_asset_id") == unclaimed_id, errors, f"{site_id} runtime art switch changed")
         encounter_asset_id = f"encounter_unbound_wild_{stem}_watch"
         ensure(encounter_sprites.get(encounter_id) == encounter_asset_id and object_assets.get(encounter_asset_id, {}).get("path") == f"res://art/units/overworld_icons/{first_unit_id}.png", errors, f"{encounter_id} exact company identity art changed")
@@ -81834,9 +81846,10 @@ def validate_six_veteran_company_musters(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     atlas_path = res_path_to_disk(atlas_res)
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     ensure((len(scenarios), len(groups), len(sites), len(objects), len(encounters)) == (299,437,377,422,203), errors, "Veteran musters must remain present in the expanded production catalogs")
     ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 299, errors, "Veteran muster scenarios are missing from the active player-facing scenario count")
-    ensure(atlas_path.is_file() and png_size(atlas_path) == (576,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha, errors, "Veteran company muster runtime atlas bytes or size changed")
+    ensure(atlas_path.is_file() and png_size(atlas_path) == (2304,192) and historical_atlas_path.is_file() and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == atlas_sha, errors, "Veteran company muster runtime atlas bytes or size changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Veteran company muster runtime atlas import sidecar is missing")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_veteran_company_musters_wave1" and source_manifest.get("content_batch_id") == slice_id and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6, errors, "Veteran company muster source provenance changed")
     ensure(map_sprites.get("coverage", {}).get("authored_map_object_count") == 422 and map_sprites.get("coverage", {}).get("total_distinct_authored_map_object_count_after_pass") == 422 and map_sprites.get("coverage", {}).get("by_family", {}).get("neutral_dwelling") == 69, errors, "Veteran muster map-object art coverage totals changed")
@@ -81867,8 +81880,8 @@ def validate_six_veteran_company_musters(errors: list[str]) -> None:
         controlled_asset_id = f"resource_site_veteran_{site_id.removeprefix('site_')}_controlled"
         mapping = site_sprites.get(site_id, {})
         ensure(mapping.get("unclaimed_asset_id") == unclaimed_asset_id and mapping.get("asset_id") == controlled_asset_id and mappings.get(object_id, {}).get("asset_id") == unclaimed_asset_id and mappings.get(object_id, {}).get("source_batch") == 19, errors, f"{site_id} exact two-state map sprite assignment changed")
-        ensure(assets.get(unclaimed_asset_id, {}).get("path") == atlas_res and assets.get(unclaimed_asset_id, {}).get("atlas_region") == unclaimed_region and assets.get(unclaimed_asset_id, {}).get("assigned_map_object_id") == object_id, errors, f"{site_id} unclaimed atlas ownership changed")
-        ensure(assets.get(controlled_asset_id, {}).get("path") == atlas_res and assets.get(controlled_asset_id, {}).get("atlas_region") == controlled_region and assets.get(controlled_asset_id, {}).get("assigned_resource_site_id") == site_id, errors, f"{site_id} controlled atlas ownership changed")
+        ensure(assets.get(unclaimed_asset_id, {}).get("path") == atlas_res and assets.get(unclaimed_asset_id, {}).get("atlas_region") == [v*4 for v in unclaimed_region] and assets.get(unclaimed_asset_id, {}).get("assigned_map_object_id") == object_id, errors, f"{site_id} unclaimed atlas ownership changed")
+        ensure(assets.get(controlled_asset_id, {}).get("path") == atlas_res and assets.get(controlled_asset_id, {}).get("atlas_region") == [v*4 for v in controlled_region] and assets.get(controlled_asset_id, {}).get("assigned_resource_site_id") == site_id, errors, f"{site_id} controlled atlas ownership changed")
         states = {str(state.get("state", "")): state for state in source_rows.get(site_id, {}).get("states", []) if isinstance(state, dict)}
         ensure(set(states) == {"unclaimed","controlled"}, errors, f"{site_id} generated source manifest lost a state")
         for state_name in ("unclaimed","controlled"):
@@ -84210,6 +84223,7 @@ def validate_six_frontier_mythic_habitats(errors: list[str]) -> None:
     slice_id = "content-six-frontier-mythic-habitats-10184"
     atlas_res = "res://art/overworld/runtime/objects/resource_sites/frontier_mythic_habitats_atlas.png"
     atlas_path = res_path_to_disk(atlas_res)
+    historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
     unit_manifest_path = ROOT / "art/units/source/generated/frontier_mythic_habitats_wave1/manifest.json"
     habitat_manifest_path = ROOT / "art/overworld/source/generated/resource_sites/frontier_mythic_habitats_wave1/manifest.json"
     author_path = ROOT / "tools/author_six_frontier_mythic_habitats.py"
@@ -84245,7 +84259,7 @@ def validate_six_frontier_mythic_habitats(errors: list[str]) -> None:
     ensure((len(units),len(dwellings),len(sites),len(objects),len(groups),len(encounters),len(scenarios),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (160,49,377,422,437,203,299,299), errors, "Frontier-mythic batch must own the exact expanded catalogs")
 
     atlas_sha = "8c5f7670e572de06079a22cae409d573a2d3a8342ff43ca30da256ec7a032b07"
-    ensure(png_size(atlas_path) == (576,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and Path(f"{atlas_path}.import").is_file(), errors, "Frontier-mythic habitat atlas bytes, dimensions, or import changed")
+    ensure(png_size(atlas_path) == (2304,192) and historical_atlas_path.is_file() and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == atlas_sha and Path(f"{atlas_path}.import").is_file(), errors, "Frontier-mythic habitat atlas bytes, dimensions, or import changed")
     unit_manifest = load_json(unit_manifest_path)
     habitat_manifest = load_json(habitat_manifest_path)
     unit_sources = {str(row.get("unit_id", "")):row for row in unit_manifest.get("items", []) if isinstance(row, dict)}
@@ -84277,7 +84291,7 @@ def validate_six_frontier_mythic_habitats(errors: list[str]) -> None:
         ensure(node.get("site_id") == site_id and node.get("guard_front_id") == f"{stem}_front_3" and (node.get("x"),node.get("y")) == (15,10), errors, f"{scenario_id} habitat placement changed")
         ensure({value.get("placement_id") for value in fronts} == {f"{stem}_front_1",f"{stem}_front_2",f"{stem}_front_3"}, errors, f"{scenario_id} lost its three authored habitat fronts")
         unclaimed_id, controlled_id = f"mapobj_{stem}", f"resource_site_neutral_{stem}_controlled"
-        ensure(object_assets.get(unclaimed_id,{}).get("path") == atlas_res and object_assets.get(unclaimed_id,{}).get("atlas_region") == [index*96,0,48,48] and object_assets.get(controlled_id,{}).get("atlas_region") == [index*96+48,0,48,48], errors, f"{site_id} exact unclaimed or controlled art changed")
+        ensure(object_assets.get(unclaimed_id,{}).get("path") == atlas_res and object_assets.get(unclaimed_id,{}).get("atlas_region") == [index*384,0,192,192] and object_assets.get(controlled_id,{}).get("atlas_region") == [index*384+192,0,192,192], errors, f"{site_id} exact unclaimed or controlled art changed")
         ensure(art.get("resource_site_sprites",{}).get(site_id,{}) == {"asset_id":controlled_id,"unclaimed_asset_id":unclaimed_id,"fit":f"Exact original {site.get('name','')} changes from unclaimed structure to pennant-marked controlled state."}, errors, f"{site_id} runtime state switch changed")
         encounter_asset_id = f"encounter_frontier_mythic_{stem}_watch"
         ensure(art.get("encounter_identity_sprites",{}).get(encounter_id) == encounter_asset_id and object_assets.get(encounter_asset_id,{}).get("path") == f"res://art/units/overworld_icons/{unit_id}.png", errors, f"{encounter_id} exact creature identity art changed")

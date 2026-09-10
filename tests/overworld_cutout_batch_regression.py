@@ -31,6 +31,7 @@ EARLY_STATE_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_202609
 LANDMARK_STATE_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/landmark_states/recipe.json'
 ROUTE_ARCANE_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/route_arcane/recipe.json'
 COMMAND_SITE_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/command_sites/recipe.json'
+RECRUITMENT_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/recipe.json'
 MARKER = 'OVERWORLD_CUTOUT_BATCH '
 
 IMPORT_ORACLE = r'''
@@ -67,7 +68,7 @@ def expected_assets(recipe, expected_dir, output):
     for key,row in recipe['assets'].items():
         entry=row['original_manifest_entry']
         recurring_site=recipe.get('schema_id')=='recurring_site_cutout_recipe_v1'
-        route_arcane=recipe.get('schema_id')=='route_arcane_cutout_recipe_v1'
+        route_arcane=recipe.get('schema_id') in ('route_arcane_cutout_recipe_v1','recruitment_site_cutout_recipe_v1')
         claimed=route_arcane or recipe.get('schema_id') in ('claimed_dwelling_cutout_recipe_v1','early_state_cutout_recipe_v1','landmark_state_cutout_recipe_v1','command_site_cutout_recipe_v1')
         recurring=recurring_site or recipe.get('schema_id')=='recurring_cutout_recipe_v3'
         if recurring:
@@ -226,7 +227,7 @@ def probe_environment(environment):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--batch',choices=['batch04','map_sheets','decorations','legacy_families','passages','recurring_encounters','recurring_sites','claimed_dwellings','early_states','landmark_states','route_arcane','command_sites'],default='batch04')
+    parser.add_argument('--batch',choices=['batch04','map_sheets','decorations','legacy_families','passages','recurring_encounters','recurring_sites','claimed_dwellings','early_states','landmark_states','route_arcane','command_sites','recruitment_sites'],default='batch04')
     parser.add_argument('--label',required=True)
     parser.add_argument('--resolution',choices=['1280x720','1920x1080'],default='1280x720')
     parser.add_argument('--expected-dir',type=Path,help='Preview acceptance candidate; permits an honest failing-before run')
@@ -234,7 +235,7 @@ def main():
     if not re.fullmatch(r'[a-z0-9_-]+',args.label):parser.error('label must be a fresh slug')
     original=SAVE.read_bytes()
     if hashlib.sha256(original).hexdigest()!=SAVE_SHA:parser.error('unchanged exact earned save required')
-    recipe=json.loads({'batch04':RECIPE,'map_sheets':POOL_RECIPE,'decorations':DECORATION_RECIPE,'legacy_families':LEGACY_RECIPE,'passages':PASSAGE_RECIPE,'recurring_encounters':RECURRING_RECIPE,'recurring_sites':RECURRING_SITE_RECIPE,'claimed_dwellings':CLAIMED_RECIPE,'early_states':EARLY_STATE_RECIPE,'landmark_states':LANDMARK_STATE_RECIPE,'route_arcane':ROUTE_ARCANE_RECIPE,'command_sites':COMMAND_SITE_RECIPE}[args.batch].read_text())
+    recipe=json.loads({'batch04':RECIPE,'map_sheets':POOL_RECIPE,'decorations':DECORATION_RECIPE,'legacy_families':LEGACY_RECIPE,'passages':PASSAGE_RECIPE,'recurring_encounters':RECURRING_RECIPE,'recurring_sites':RECURRING_SITE_RECIPE,'claimed_dwellings':CLAIMED_RECIPE,'early_states':EARLY_STATE_RECIPE,'landmark_states':LANDMARK_STATE_RECIPE,'route_arcane':ROUTE_ARCANE_RECIPE,'command_sites':COMMAND_SITE_RECIPE,'recruitment_sites':RECRUITMENT_RECIPE}[args.batch].read_text())
     script=SCRIPT
     if args.batch=='decorations':
         from overworld_decoration_cutout_probe import SCRIPT as script
@@ -256,6 +257,8 @@ def main():
         from overworld_route_arcane_cutout_probe import SCRIPT as script
     if args.batch=='command_sites':
         from overworld_command_cutout_probe import SCRIPT as script
+    if args.batch=='recruitment_sites':
+        from overworld_recruitment_cutout_probe import SCRIPT as script
     output=OUTPUT/args.label
     output.mkdir(parents=True,exist_ok=False)
     assets=expected_assets(recipe,args.expected_dir,output)
@@ -281,7 +284,7 @@ def main():
         captures_ok=captures_ok and len(report.get('galleries',[]))==3 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
     if args.batch=='passages':
         captures_ok=captures_ok and len(report.get('galleries',[]))==1 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
-    if args.batch in ('recurring_encounters','recurring_sites','claimed_dwellings','early_states','command_sites'):
+    if args.batch in ('recurring_encounters','recurring_sites','claimed_dwellings','early_states','command_sites','recruitment_sites'):
         captures_ok=captures_ok and len(report.get('galleries',[]))==3 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
     if args.batch=='landmark_states':
         captures_ok=captures_ok and len(report.get('galleries',[]))==4 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
