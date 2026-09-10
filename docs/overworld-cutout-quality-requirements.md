@@ -513,6 +513,49 @@ Town acceptance in the quality report advances it to 1143 / 71 without closing
 the full runtime pool. No Town-screen art/UI, native/RMG, placement,
 balance, progression, save-schema or unrelated cleanup changes.
 
+### Final runtime families
+
+The exact complement of accepted frozen recipes contains 71 rows: 29 encounter
+unit-icon routes, 24 cohesive blockers, eight foundation objects, six elder-wild
+creatures, the hostile-camp default and three ownership pennants. Before editing,
+freeze this membership against the 1143-row accepted union and predecessor
+`e98911c5`. Review every source and native-size raster; preserve clean controls
+byte-for-byte. Tiny saturated RGB at alpha 1–4 is not by itself a visible defect,
+and legitimate cloth, crystals, embers and character colors remain painting.
+
+The 29 encounter routes currently consume 96px unit UI icons with a procedurally
+painted shield plate, ellipse and tier pips. These are not magenta matte; they are
+inappropriate UI backing around otherwise original world-facing creature art.
+Use the exact curated 512px original for each unit to create a separate world
+cutout. Preserve the historical alpha crop, rounded 82x76 fit and bottom origin
+from `draw_curated_overworld_icon`, at fourfold density on a 384px canvas. Do not
+generate a new creature, erase creature paint, resize its world footprint or
+overwrite shared unit UI icons/portraits/battle assets. Retain every encounter id,
+mapping key and assigned unit/faction; only its authoritative world asset path
+and preparation provenance change. Validate the old registration against original
+authoring code/pixels, not a guessed new fit or a card-background color key.
+
+Targets: `tools/prepare_overworld_final_cutouts.py`, its frozen
+`cutout_recovery_20260909/final_families` recipe/source-hash/trim/runtime packet,
+`tests/test_overworld_final_cutouts.py`, `tests/overworld_final_cutout_probe.py`,
+the shared `--batch final_families` drivers and exact affected identity validators.
+Fail closed on source/membership/routing drift, UI-asset changes, restored badge
+geometry, altered figure registration or unaccounted full-pool rows. Preserve all
+42 clean controls unless direct inspection proves a separately recorded defect.
+
+Consolidated commands: focused Python tests; shared source cutout driver with
+`--batch final_families` at 1280x720 and 1920x1080; packaged cutout driver with
+the same batch and official Linux/Windows binary/PCK pairs; affected encounter,
+cohesive/pennant and shared distinct/decorative/input/fog reports;
+`python3 tests/validate_repo.py`; `git diff --check`; both official export/startup/
+generated-map smokes. Use real native/authored placement, ordinary visibility and
+complete save controls. Detached all-identity coverage is labeled, not presented
+as earned map placement. Inspect final screenshots. Report actual affected native
+occurrences and source-backed legacy failures honestly. Full-goal closure also
+requires a current 1214-row disposition/source/provenance audit and retained
+earlier acceptance evidence; a recipe count alone is not visual acceptance.
+No native/RMG, placement, balance, save, Town/UI redesign or unrelated cleanup.
+
 ## Completion and non-goals
 
 Owner-approved test-control replacement (2026-09-10): the original Day97

@@ -1,9 +1,5 @@
 {
-  "actionableNextTasks": [
-    {
-      "id": "art-overworld-cutout-runtime-pool-20260909"
-    }
-  ],
+  "actionableNextTasks": [],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
       {
@@ -16615,14 +16611,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Accepted all 39 Overworld Town dispositions: eleven original-source paintings restored at fourfold atlas density with exact normalized registration, 28 inspected mappings preserved byte-for-byte. Eight art tests, three fixture tests, 2984 checks per source resolution/platform, two Town and five shared reports, repository/diff and both exports pass. Legacy Horizon smoke still fails sixth recruitment at seven-slot capacity; complete predecessor/current failure records match, NOT a pass. 1143/1214 accepted, 71 pending; parent/child remain in_progress.",
+  "currentNotes": "Cutout-quality owner goal complete: 1214/1214 current runtime art rows accounted for across 21 source-backed cohorts, zero pending. Final 71: 29 exact original creature world cutouts replace UI-card backing; 42 controls unchanged. 5770 checks per source resolution/platform, 120 full-save comparisons, focused/shared/domain/repository checks and clean official exports pass. Legacy specialist smoke still has four unrelated catalog/capacity failures; Windows is headless Wine, not hardware or release certification.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-overworld-cutout-runtime-pool-20260909",
-  "currentSliceId": "art-overworld-cutout-runtime-pool-20260909",
-  "currentSliceNotes": "Accepted all 39 Overworld Town dispositions: eleven original-source paintings restored at fourfold atlas density with exact normalized registration, 28 inspected mappings preserved byte-for-byte. Eight art tests, three fixture tests, 2984 checks per source resolution/platform, two Town and five shared reports, repository/diff and both exports pass. Legacy Horizon smoke still fails sixth recruitment at seven-slot capacity; complete predecessor/current failure records match, NOT a pass. 1143/1214 accepted, 71 pending; parent/child remain in_progress. Individually inspect/recover 29 unit icons, 24 cohesive blockers, eight remaining distinct objects, seven encounter/elder-wild rows and three ownership pennants. 1143/1214 accepted, 71 pending. Preserve original paint, identity, placement, gameplay/native/save authority; maintain explicit legacy-test and Windows hardware limits. Parent/child remain in_progress.",
-  "currentSliceStatus": "in_progress",
-  "currentSliceTitle": "Remaining Runtime-Pool Cutout Recovery",
-  "currentSliceUpdatedAt": "2026-09-10T09:09:20Z",
+  "currentSlice": "art-overworld-cutout-quality-20260909",
+  "currentSliceId": "art-overworld-cutout-quality-20260909",
+  "currentSliceNotes": "Cutout-quality owner goal complete: 1214/1214 current runtime art rows accounted for across 21 source-backed cohorts, zero pending. Final 71: 29 exact original creature world cutouts replace UI-card backing; 42 controls unchanged. 5770 checks per source resolution/platform, 120 full-save comparisons, focused/shared/domain/repository checks and clean official exports pass. Legacy specialist smoke still has four unrelated catalog/capacity failures; Windows is headless Wine, not hardware or release certification.",
+  "currentSliceStatus": "completed",
+  "currentSliceTitle": "Overworld Cutout Quality Recovery",
+  "currentSliceUpdatedAt": "2026-09-10T10:15:15+00:00",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21929,95 +21925,124 @@
   },
   "guardrailNote": "Original-art recovery only; preserve exact identity, placement, footprint, interaction, saves and deterministic generation. No native/RMG rules, Town redesign, unrelated cleanup or fixed package-size ceiling.",
   "lastValidation": {
-    "id": "towns_20260910_accepted",
+    "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
+    "parentSliceId": "art-overworld-cutout-quality-20260909",
     "status": "completed",
-    "sliceStatus": "in_progress",
-    "acceptedCohort": "towns",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
-    "runtimeChanges": {
-      "original_master_density_recoveries": 11,
-      "clean_mapping_controls": 28,
-      "runtime_atlases_changed": 2,
-      "all_original_sources_unchanged": true,
-      "normalized_registration_and_source_alpha_preserved": true
-    },
+    "summary": "Cutout-quality owner goal complete: 1214/1214 current runtime art rows accounted for across 21 source-backed cohorts, zero pending. Final 71: 29 exact original creature world cutouts replace UI-card backing; 42 controls unchanged. 5770 checks per source resolution/platform, 120 full-save comparisons, focused/shared/domain/repository checks and clean official exports pass. Legacy specialist smoke still has four unrelated catalog/capacity failures; Windows is headless Wine, not hardware or release certification.",
     "validation": {
-      "python": "8 art tests and 3 pinned-fixture tests pass",
-      "source_and_packaged": "2984 checks each at 1280x720/1920x1080 source and Linux/Windows package; zero runtime errors",
-      "before": "33 exact art failures in unchanged 15614505 PCK; no gameplay failures",
-      "saves": "12 strict save/load controls per run; 48 cross-run complete-state comparisons exclude only timestamps and fresh authored session ids",
-      "domains": "Town identity and footprint/click-entry reports pass. Legacy Horizon smoke still fails sixth recruitment at seven-slot army capacity; complete predecessor/current failure records match, NOT smoke acceptance",
-      "shared": "Five sprite/input/route/fog reports pass",
-      "repo": "pass: /tmp/heroes-town-validate-repo-final-20260910.log; git diff --check passes",
-      "platforms": "Both official exports and full Town cohort pass; Windows headless Wine",
-      "visual": "All 39 source/current mappings, eleven original-source comparisons, thirteen actual small gameplay captures, wide gallery/gameplay and Linux examples inspected",
-      "packages": "306493480 bytes / 5484 members each; 5480 unrelated payloads and 1203 other art rows unchanged. Platform project.binary differs; UID serialization differs but all 7934 mappings equal"
+      "python_art_tests": 9,
+      "pinned_fixture_tests": 3,
+      "packaged_driver_tests": 2,
+      "checks_per_source_resolution_or_platform": 5770,
+      "strict_save_roundtrips_per_run": 30,
+      "complete_cross_run_save_comparisons": 120,
+      "source_resolutions": [
+        "1280x720",
+        "1920x1080"
+      ],
+      "shared_reports_passed": 5,
+      "domain_reports_passed": 5,
+      "domain_report_known_failures": 1,
+      "legacy_specialist_assertion_failures": 4,
+      "cohesive_palette_report": "passed",
+      "repository_validation": "passed",
+      "official_linux_export": "passed",
+      "official_windows_export": "passed including startup/Town/generated-map build flow",
+      "pack_bytes_per_platform": 309484404,
+      "pack_members": 5542,
+      "unchanged_existing_payloads": 5482,
+      "added_world_texture_import_pairs": 29,
+      "platform_differences": [
+        "project.binary"
+      ],
+      "full_pool_rows": 1214,
+      "pending_rows": 0,
+      "cohorts": 21,
+      "windows_limit": "headless Wine; not physical GPU/controller certification"
     },
-    "evidence": ".artifacts/overworld_cutout_quality_20260909/town-acceptance.json",
-    "acceptedRuntimePoolDispositions": 1143,
-    "pendingRuntimePoolDispositions": 71,
-    "limits": [
-      "Full pool and parent remain in_progress",
-      "Windows headless Wine is not GPU/controller certification",
-      "Native Day97 Towns are unchanged controls; eleven restored identities use ordinary authored owned-Town visits",
-      "Detached galleries and faction/default resolver inputs are not earned map placements",
-      "Legacy Horizon smoke remains non-passing at seven-slot recruitment capacity; exact predecessor/current failure reproduction is not acceptance",
-      "Wide viewport changes only nine explicit pennant pixel-coordinate fields; same-resolution Windows float geometry differs below 0.0001px, with complete gameplay/save comparisons exact"
+    "artifacts": [
+      "docs/overworld-cutout-quality-report.md",
+      "art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      ".artifacts/overworld_cutout_quality_20260909/final-family-acceptance.json",
+      ".artifacts/overworld_cutout_quality_20260909/full-pool-closure.json",
+      ".artifacts/overworld_cutout_quality_20260909/final-families-source-1280-service-20260910/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/final-families-source-wide-20260910/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/final-families-linux-clean-20260910/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/final-families-windows-clean-20260910/report.json",
+      "/tmp/heroes-final-repo-service-20260910.log",
+      "/tmp/heroes-final-linux-serialized-20260910/report.json",
+      "/tmp/heroes-final-windows-clean-20260910/report.json"
     ]
   },
   "latestEvidence": {
-    "id": "towns_20260910_accepted",
+    "id": "art-overworld-cutout-runtime-pool-20260909",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
+    "parentSliceId": "art-overworld-cutout-quality-20260909",
     "status": "completed",
-    "sliceStatus": "in_progress",
-    "acceptedCohort": "towns",
     "sourceReport": "docs/overworld-cutout-quality-report.md",
-    "runtimeChanges": {
-      "original_master_density_recoveries": 11,
-      "clean_mapping_controls": 28,
-      "runtime_atlases_changed": 2,
-      "all_original_sources_unchanged": true,
-      "normalized_registration_and_source_alpha_preserved": true
-    },
+    "summary": "Cutout-quality owner goal complete: 1214/1214 current runtime art rows accounted for across 21 source-backed cohorts, zero pending. Final 71: 29 exact original creature world cutouts replace UI-card backing; 42 controls unchanged. 5770 checks per source resolution/platform, 120 full-save comparisons, focused/shared/domain/repository checks and clean official exports pass. Legacy specialist smoke still has four unrelated catalog/capacity failures; Windows is headless Wine, not hardware or release certification.",
     "validation": {
-      "python": "8 art tests and 3 pinned-fixture tests pass",
-      "source_and_packaged": "2984 checks each at 1280x720/1920x1080 source and Linux/Windows package; zero runtime errors",
-      "before": "33 exact art failures in unchanged 15614505 PCK; no gameplay failures",
-      "saves": "12 strict save/load controls per run; 48 cross-run complete-state comparisons exclude only timestamps and fresh authored session ids",
-      "domains": "Town identity and footprint/click-entry reports pass. Legacy Horizon smoke still fails sixth recruitment at seven-slot army capacity; complete predecessor/current failure records match, NOT smoke acceptance",
-      "shared": "Five sprite/input/route/fog reports pass",
-      "repo": "pass: /tmp/heroes-town-validate-repo-final-20260910.log; git diff --check passes",
-      "platforms": "Both official exports and full Town cohort pass; Windows headless Wine",
-      "visual": "All 39 source/current mappings, eleven original-source comparisons, thirteen actual small gameplay captures, wide gallery/gameplay and Linux examples inspected",
-      "packages": "306493480 bytes / 5484 members each; 5480 unrelated payloads and 1203 other art rows unchanged. Platform project.binary differs; UID serialization differs but all 7934 mappings equal"
+      "python_art_tests": 9,
+      "pinned_fixture_tests": 3,
+      "packaged_driver_tests": 2,
+      "checks_per_source_resolution_or_platform": 5770,
+      "strict_save_roundtrips_per_run": 30,
+      "complete_cross_run_save_comparisons": 120,
+      "source_resolutions": [
+        "1280x720",
+        "1920x1080"
+      ],
+      "shared_reports_passed": 5,
+      "domain_reports_passed": 5,
+      "domain_report_known_failures": 1,
+      "legacy_specialist_assertion_failures": 4,
+      "cohesive_palette_report": "passed",
+      "repository_validation": "passed",
+      "official_linux_export": "passed",
+      "official_windows_export": "passed including startup/Town/generated-map build flow",
+      "pack_bytes_per_platform": 309484404,
+      "pack_members": 5542,
+      "unchanged_existing_payloads": 5482,
+      "added_world_texture_import_pairs": 29,
+      "platform_differences": [
+        "project.binary"
+      ],
+      "full_pool_rows": 1214,
+      "pending_rows": 0,
+      "cohorts": 21,
+      "windows_limit": "headless Wine; not physical GPU/controller certification"
     },
-    "evidence": ".artifacts/overworld_cutout_quality_20260909/town-acceptance.json",
-    "acceptedRuntimePoolDispositions": 1143,
-    "pendingRuntimePoolDispositions": 71,
-    "limits": [
-      "Full pool and parent remain in_progress",
-      "Windows headless Wine is not GPU/controller certification",
-      "Native Day97 Towns are unchanged controls; eleven restored identities use ordinary authored owned-Town visits",
-      "Detached galleries and faction/default resolver inputs are not earned map placements",
-      "Legacy Horizon smoke remains non-passing at seven-slot recruitment capacity; exact predecessor/current failure reproduction is not acceptance",
-      "Wide viewport changes only nine explicit pennant pixel-coordinate fields; same-resolution Windows float geometry differs below 0.0001px, with complete gameplay/save comparisons exact"
+    "artifacts": [
+      "docs/overworld-cutout-quality-report.md",
+      "art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+      ".artifacts/overworld_cutout_quality_20260909/final-family-acceptance.json",
+      ".artifacts/overworld_cutout_quality_20260909/full-pool-closure.json",
+      ".artifacts/overworld_cutout_quality_20260909/final-families-source-1280-service-20260910/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/final-families-source-wide-20260910/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/final-families-linux-clean-20260910/report.json",
+      ".artifacts/overworld_cutout_quality_20260909/final-families-windows-clean-20260910/report.json",
+      "/tmp/heroes-final-repo-service-20260910.log",
+      "/tmp/heroes-final-linux-serialized-20260910/report.json",
+      "/tmp/heroes-final-windows-clean-20260910/report.json"
     ]
   },
   "latestEvidenceArtifacts": [
-    ".artifacts/overworld_cutout_quality_20260909/town-acceptance.json",
-    ".artifacts/overworld_cutout_quality_20260909/town-domains-20260910/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/town-shared-20260910/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/town-legacy-before-final-20260910/report.json",
-    ".artifacts/overworld_cutout_quality_20260909/town-legacy-current-final-20260910/report.json",
-    "/tmp/heroes-town-unit-final-20260910.log",
-    "/tmp/heroes-town-validate-repo-final-20260910.log",
-    "/tmp/heroes-town-acceptance-final-20260910.log",
-    "/tmp/heroes-town-linux-20260910/report.json",
-    "/tmp/heroes-town-windows-20260910/report.json"
+    "docs/overworld-cutout-quality-report.md",
+    "art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+    ".artifacts/overworld_cutout_quality_20260909/final-family-acceptance.json",
+    ".artifacts/overworld_cutout_quality_20260909/full-pool-closure.json",
+    ".artifacts/overworld_cutout_quality_20260909/final-families-source-1280-service-20260910/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/final-families-source-wide-20260910/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/final-families-linux-clean-20260910/report.json",
+    ".artifacts/overworld_cutout_quality_20260909/final-families-windows-clean-20260910/report.json",
+    "/tmp/heroes-final-repo-service-20260910.log",
+    "/tmp/heroes-final-linux-serialized-20260910/report.json",
+    "/tmp/heroes-final-windows-clean-20260910/report.json"
   ],
-  "latestEvidenceId": "art-overworld-cutout-runtime-pool-20260909",
-  "latestFinding": "Accepted all 39 Overworld Town dispositions: eleven original-source paintings restored at fourfold atlas density with exact normalized registration, 28 inspected mappings preserved byte-for-byte. Eight art tests, three fixture tests, 2984 checks per source resolution/platform, two Town and five shared reports, repository/diff and both exports pass. Legacy Horizon smoke still fails sixth recruitment at seven-slot capacity; complete predecessor/current failure records match, NOT a pass. 1143/1214 accepted, 71 pending; parent/child remain in_progress.",
+  "latestEvidenceId": "art-overworld-cutout-quality-20260909",
+  "latestFinding": "Cutout-quality owner goal complete: 1214/1214 current runtime art rows accounted for across 21 source-backed cohorts, zero pending. Final 71: 29 exact original creature world cutouts replace UI-card backing; 42 controls unchanged. 5770 checks per source resolution/platform, 120 full-save comparisons, focused/shared/domain/repository checks and clean official exports pass. Legacy specialist smoke still has four unrelated catalog/capacity failures; Windows is headless Wine, not hardware or release certification.",
   "metrics": {
     "scope": "Historical full-match checkpoint metrics retained below; these are not current release metrics. Current art-goal acceptance is in latestEvidence and validation.",
     "audit_only": false,
@@ -22067,15 +22092,27 @@
     "medium_terminal_status": "victory",
     "medium_terminal_action_count": 2426,
     "medium_terminal_capacity_violations": 0,
-    "generated_rival_objective_implemented": true
+    "generated_rival_objective_implemented": true,
+    "overworld_cutout_quality": {
+      "scope": "completed owner-directed art repair only",
+      "accepted_runtime_rows": 1214,
+      "pending_runtime_rows": 0,
+      "source_backed_cohorts": 21,
+      "final_creature_repairs": 29,
+      "final_preserved_controls": 42,
+      "linux_pck_bytes": 309484404,
+      "windows_pck_bytes": 309484404,
+      "gameplay_native_save_owners_unchanged": true,
+      "release_ready_claim": false
+    }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Continue inspected original-sheet recovery across remaining runtime families; no blanket color deletion, hidden legitimate objects, gameplay/native/RMG/save changes, unrelated cleanup or full-pool completion from one accepted cohort.",
+  "nextActionGuardrailNote": "Completed cutout-repair goal; no active implementation slice. Select and track the next owner-directed task before implementation. Keep all documented release and legacy-test limits.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
       "phase": "phase-6-production-alpha-layer",
-      "status": "in_progress",
+      "status": "completed",
       "source": "PLAN.md",
       "sourceDocs": [
         "project.md",
@@ -22107,7 +22144,7 @@
         "python3 tests/packaged_overworld_cutout_batch_regression.py --batch legacy_families --platform windows --binary <official-release-binary> --pack <matching-release-pck> --resolution 1280x720 --label <fresh> --wine-prefix <fresh-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-10T09:09:20Z",
+      "updatedAt": "2026-09-10T10:12:22Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22125,8 +22162,22 @@
         "Original asset repair/replacement across authoritative overworld runtime pool",
         "Scoped provenance, source/trim/runtime preparation and integrated visual/gameplay/platform acceptance"
       ],
-      "notes": "Accepted all 39 Overworld Town dispositions: eleven original-source paintings restored at fourfold atlas density with exact normalized registration, 28 inspected mappings preserved byte-for-byte. Eight art tests, three fixture tests, 2984 checks per source resolution/platform, two Town and five shared reports, repository/diff and both exports pass. Legacy Horizon smoke still fails sixth recruitment at seven-slot capacity; complete predecessor/current failure records match, NOT a pass. 1143/1214 accepted, 71 pending; parent/child remain in_progress.",
-      "startedAt": "2026-09-09T14:41:54Z"
+      "notes": "Cutout-quality owner goal complete: 1214/1214 current runtime art rows accounted for across 21 source-backed cohorts, zero pending. Final 71: 29 exact original creature world cutouts replace UI-card backing; 42 controls unchanged. 5770 checks per source resolution/platform, 120 full-save comparisons, focused/shared/domain/repository checks and clean official exports pass. Legacy specialist smoke still has four unrelated catalog/capacity failures; Windows is headless Wine, not hardware or release certification.",
+      "startedAt": "2026-09-09T14:41:54Z",
+      "completedAt": "2026-09-10T10:12:22Z",
+      "validationEvidence": [
+        "docs/overworld-cutout-quality-report.md",
+        "art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+        ".artifacts/overworld_cutout_quality_20260909/final-family-acceptance.json",
+        ".artifacts/overworld_cutout_quality_20260909/full-pool-closure.json",
+        ".artifacts/overworld_cutout_quality_20260909/final-families-source-1280-service-20260910/report.json",
+        ".artifacts/overworld_cutout_quality_20260909/final-families-source-wide-20260910/report.json",
+        ".artifacts/overworld_cutout_quality_20260909/final-families-linux-clean-20260910/report.json",
+        ".artifacts/overworld_cutout_quality_20260909/final-families-windows-clean-20260910/report.json",
+        "/tmp/heroes-final-repo-service-20260910.log",
+        "/tmp/heroes-final-linux-serialized-20260910/report.json",
+        "/tmp/heroes-final-windows-clean-20260910/report.json"
+      ]
     },
     {
       "phase": "phase-6-production-alpha-layer",
@@ -22172,7 +22223,7 @@
     },
     {
       "phase": "phase-6-production-alpha-layer",
-      "status": "in_progress",
+      "status": "completed",
       "source": "PLAN.md",
       "sourceDocs": [
         "project.md",
@@ -22255,10 +22306,13 @@
         "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch heroes --platform <linux|windows> --binary <official-release-binary> --pack <matching-release-pck> --label <fresh> --wine-prefix <fresh-windows-prefix>",
         "python3 -B -m unittest discover -s tests -p test_overworld_town_cutouts.py",
         "python3 -B tests/overworld_cutout_batch_regression.py --batch towns --resolution <1280x720|1920x1080> --label <fresh>",
-        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch towns --platform <linux|windows> --binary <official-release-binary> --pack <matching-release-pck> --label <fresh> --wine-prefix <fresh-windows-prefix>"
+        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch towns --platform <linux|windows> --binary <official-release-binary> --pack <matching-release-pck> --label <fresh> --wine-prefix <fresh-windows-prefix>",
+        "python3 -B -m unittest discover -s tests -p test_overworld_final_cutouts.py",
+        "python3 -B tests/overworld_cutout_batch_regression.py --batch final_families --resolution <1280x720|1920x1080> --label <fresh>",
+        "python3 -B tests/packaged_overworld_cutout_batch_regression.py --batch final_families --platform <linux|windows> --binary <official-release-binary> --pack <matching-release-pck> --label <fresh> --wine-prefix <fresh-windows-prefix>"
       ],
       "createdAt": "2026-09-09T14:41:53Z",
-      "updatedAt": "2026-09-10T09:09:20Z",
+      "updatedAt": "2026-09-10T10:12:22Z",
       "nonGoals": [
         "No gameplay/native/RMG/placement/save changes",
         "No blanket magenta or white removal; preserve legitimate purple art",
@@ -22310,10 +22364,26 @@
         "tools/prepare_overworld_hero_cutouts.py and heroes source/trim/runtime packet; three source-backed strategic-officer cutout repairs and 57 exact clean hero controls",
         "tests/test_overworld_hero_cutouts.py and tests/overworld_hero_cutout_probe.py; all 60 identity routes, ordinary native/authored movement and recruitment, complete saves and both platform packages",
         "tools/prepare_overworld_town_cutouts.py; eleven original-source atlas silhouette recoveries, two frozen historical atlases, 28 preserved Town mappings and towns provenance/trim/runtime packet",
-        "tests/test_overworld_town_cutouts.py; tests/overworld_town_cutout_probe.py; 39 exact resolver/import checks, eleven ordinary authored Town visits, seven original native Town controls and complete saves"
+        "tests/test_overworld_town_cutouts.py; tests/overworld_town_cutout_probe.py; 39 exact resolver/import checks, eleven ordinary authored Town visits, seven original native Town controls and complete saves",
+        "tools/prepare_overworld_final_cutouts.py; final_families original/trim/runtime recipe and exact 71-row complement with 29 encounter UI-plate removals and 42 individually reviewed controls",
+        "tests/test_overworld_final_cutouts.py; tests/overworld_final_cutout_probe.py; shared --batch final_families source/package identity, original-placement and complete-save coverage"
       ],
-      "notes": "Accepted all 39 Overworld Town dispositions: eleven original-source paintings restored at fourfold atlas density with exact normalized registration, 28 inspected mappings preserved byte-for-byte. Eight art tests, three fixture tests, 2984 checks per source resolution/platform, two Town and five shared reports, repository/diff and both exports pass. Legacy Horizon smoke still fails sixth recruitment at seven-slot capacity; complete predecessor/current failure records match, NOT a pass. 1143/1214 accepted, 71 pending; parent/child remain in_progress.",
-      "startedAt": "2026-09-09T16:04:51Z"
+      "notes": "Cutout-quality owner goal complete: 1214/1214 current runtime art rows accounted for across 21 source-backed cohorts, zero pending. Final 71: 29 exact original creature world cutouts replace UI-card backing; 42 controls unchanged. 5770 checks per source resolution/platform, 120 full-save comparisons, focused/shared/domain/repository checks and clean official exports pass. Legacy specialist smoke still has four unrelated catalog/capacity failures; Windows is headless Wine, not hardware or release certification.",
+      "startedAt": "2026-09-09T16:04:51Z",
+      "completedAt": "2026-09-10T10:12:22Z",
+      "validationEvidence": [
+        "docs/overworld-cutout-quality-report.md",
+        "art/overworld/source/generated/cutout_recovery_20260909/final_families/manifest.json",
+        ".artifacts/overworld_cutout_quality_20260909/final-family-acceptance.json",
+        ".artifacts/overworld_cutout_quality_20260909/full-pool-closure.json",
+        ".artifacts/overworld_cutout_quality_20260909/final-families-source-1280-service-20260910/report.json",
+        ".artifacts/overworld_cutout_quality_20260909/final-families-source-wide-20260910/report.json",
+        ".artifacts/overworld_cutout_quality_20260909/final-families-linux-clean-20260910/report.json",
+        ".artifacts/overworld_cutout_quality_20260909/final-families-windows-clean-20260910/report.json",
+        "/tmp/heroes-final-repo-service-20260910.log",
+        "/tmp/heroes-final-linux-serialized-20260910/report.json",
+        "/tmp/heroes-final-windows-clean-20260910/report.json"
+      ]
     },
     {
       "status": "completed",
@@ -110961,8 +111031,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Individually inspect/recover 29 unit icons, 24 cohesive blockers, eight remaining distinct objects, seven encounter/elder-wild rows and three ownership pennants. 1143/1214 accepted, 71 pending. Preserve original paint, identity, placement, gameplay/native/save authority; maintain explicit legacy-test and Windows hardware limits. Parent/child remain in_progress.",
-  "remainingWork": "Individually inspect/recover 29 unit icons, 24 cohesive blockers, eight remaining distinct objects, seven encounter/elder-wild rows and three ownership pennants. 1143/1214 accepted, 71 pending. Preserve original paint, identity, placement, gameplay/native/save authority; maintain explicit legacy-test and Windows hardware limits. Parent/child remain in_progress.",
+  "remainingGap": "No pending work in the selected cutout-repair goal. Historical legacy-test failures, physical Windows/GPU/controller validation and overall release readiness remain outside this completed art scope.",
+  "remainingWork": "Await the next owner-directed goal; do not start unrelated changes.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -111500,7 +111570,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "town_cutout_recovery_accepted_runtime_pool_in_progress",
+  "result": "overworld_cutout_quality_goal_completed",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -111601,9 +111671,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Accepted all 39 Overworld Town dispositions: eleven original-source paintings restored at fourfold atlas density with exact normalized registration, 28 inspected mappings preserved byte-for-byte. Eight art tests, three fixture tests, 2984 checks per source resolution/platform, two Town and five shared reports, repository/diff and both exports pass. Legacy Horizon smoke still fails sixth recruitment at seven-slot capacity; complete predecessor/current failure records match, NOT a pass. 1143/1214 accepted, 71 pending; parent/child remain in_progress.",
+  "summary": "Cutout-quality owner goal complete: 1214/1214 current runtime art rows accounted for across 21 source-backed cohorts, zero pending. Final 71: 29 exact original creature world cutouts replace UI-card backing; 42 controls unchanged. 5770 checks per source resolution/platform, 120 full-save comparisons, focused/shared/domain/repository checks and clean official exports pass. Legacy specialist smoke still has four unrelated catalog/capacity failures; Windows is headless Wine, not hardware or release certification.",
   "taskId": "10236",
-  "updatedAt": "2026-09-10T09:09:20Z",
+  "updatedAt": "2026-09-10T10:15:15+00:00",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",

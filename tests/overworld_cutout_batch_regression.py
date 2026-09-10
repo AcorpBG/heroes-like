@@ -39,6 +39,7 @@ REMAINING_ENCOUNTER_RECIPE = ROOT/'art/overworld/source/generated/cutout_recover
 CONTRACT_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/contract_encounters/recipe.json'
 TRAINING_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/training_sites/recipe.json'
 RECRUITMENT_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/recipe.json'
+FINAL_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/final_families/recipe.json'
 TOWN_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/towns/recipe.json'
 HERO_RECIPE = ROOT/'art/overworld/source/generated/cutout_recovery_20260909/heroes/recipe.json'
 MARKER = 'OVERWORLD_CUTOUT_BATCH '
@@ -52,6 +53,14 @@ func _initialize() -> void:
         var raster := Image.load_from_file(config.assets[asset_id].source)
         raster.convert(Image.FORMAT_RGBA8)
         raster.fix_alpha_edges()
+        if config.assets[asset_id].get("preserved_webp_quality",-1.0)>=0.0:
+            # Existing Elder Wild controls use Godot's lossy WebP import.
+            # Reproduce it from source, never derive an oracle from a PCK/cache.
+            var encoded:=raster.save_webp_to_buffer(true,float(config.assets[asset_id].preserved_webp_quality))
+            if raster.load_webp_from_buffer(encoded)!=OK:
+                quit(1)
+                return
+            raster.convert(Image.FORMAT_RGBA8)
         if config.assets[asset_id].has("atlas_region"):
             var r: Array = config.assets[asset_id].atlas_region
             raster=raster.get_region(Rect2i(int(r[0]),int(r[1]),int(r[2]),int(r[3])))
@@ -83,6 +92,8 @@ def expected_assets(recipe, expected_dir, output):
     assets={}
     for key,row in recipe['assets'].items():
         entry=row['original_manifest_entry']
+        final=recipe.get('schema_id')=='final_family_cutout_recipe_v1'
+        if final:entry=dict(entry,path=row['runtime_path'])
         recurring_site=recipe.get('schema_id')=='recurring_site_cutout_recipe_v1'
         route_arcane=recipe.get('schema_id') in ('route_arcane_cutout_recipe_v1','recruitment_site_cutout_recipe_v1')
         claimed=route_arcane or recipe.get('schema_id') in ('claimed_dwelling_cutout_recipe_v1','early_state_cutout_recipe_v1','landmark_state_cutout_recipe_v1','command_site_cutout_recipe_v1','training_site_cutout_recipe_v1','remaining_site_cutout_recipe_v1')
@@ -93,13 +104,15 @@ def expected_assets(recipe, expected_dir, output):
         remaining=recipe.get('schema_id') in ('remaining_encounter_cutout_recipe_v1','artifact_cutout_recipe_v1','hero_cutout_recipe_v1','town_cutout_recipe_v1')
         if (claimed or contract or remaining) and 'atlas_region' in entry:
             entry=dict(entry,atlas_region=[v*4 for v in entry['atlas_region']],atlas_size=[v*4 for v in entry['atlas_size']])
-        legacy=remaining or contract or claimed or recurring or recipe.get('schema_id') in ('legacy_family_cutout_recipe_v1','passage_cutout_recipe_v1')
+        legacy=final or remaining or contract or claimed or recurring or recipe.get('schema_id') in ('legacy_family_cutout_recipe_v1','passage_cutout_recipe_v1')
         # Atlas alpha-edge processing runs on the complete original atlas;
         # cropping before import would not be an independent runtime oracle.
         path=(expected_dir/'runtime'/Path(entry['path'].removeprefix('res://art/overworld/runtime/')) if legacy else expected_dir/(key+'.png')) if expected_dir else ROOT/entry['path'].removeprefix('res://')
         options=Path(str(ROOT/entry['path'].removeprefix('res://'))+'.import')
         text=options.read_text()
-        for required in ['compress/mode=0','mipmaps/generate=false','process/fix_alpha_border=true','process/premult_alpha=false','process/size_limit=0']:
+        preserved_webp=final and row['mode']=='preserved_final' and key.startswith('encounter_elder_wild_') and '/encounters/elder_wilds/' in entry['path']
+        compression=['compress/mode=1','compress/lossy_quality=0.8'] if preserved_webp else ['compress/mode=0']
+        for required in compression+['mipmaps/generate=false','process/fix_alpha_border=true','process/premult_alpha=false','process/size_limit=0']:
             if required not in text.splitlines():raise ValueError('Revalidate changed import processing: '+key+'/'+required)
         with Image.open(path) as im:
             logical_size=tuple(entry['atlas_region'][2:]) if 'atlas_region' in entry else im.size
@@ -112,6 +125,7 @@ def expected_assets(recipe, expected_dir, output):
         if legacy:
             assets[key].update(mode='claimed_dwelling' if claimed else row['mode'],size=row['canvas_size'],entry=entry)
             if 'atlas_region' in entry:assets[key]['atlas_region']=entry['atlas_region']
+        if preserved_webp:assets[key]['preserved_webp_quality']=0.8
         if recurring_site or claimed:
             site_id=row['site_id'] if route_arcane else entry['assigned_resource_site_id']
             assets[key]['state_mapping']=recipe['state_mappings'][site_id]
@@ -131,7 +145,7 @@ def expected_assets(recipe, expected_dir, output):
         hashes=json.loads(result.read_text())
     if set(hashes)!=set(assets):raise ValueError('Incomplete source-image oracle')
     for key,sha in hashes.items():assets[key]['rgba_sha256']=sha
-    (output/'source-oracle.json').write_text(json.dumps(dict(algorithm='Godot Image.fix_alpha_edges for unchanged lossless import options',
+    (output/'source-oracle.json').write_text(json.dumps(dict(algorithm='Godot Image.fix_alpha_edges; six final-family Elder Wild controls additionally reproduce their unchanged WebP quality 0.8',
         oracle_script_sha256=hashlib.sha256(IMPORT_ORACLE.encode()).hexdigest(),assets=assets),indent=2)+'\n')
     return {key:{field:value for field,value in row.items() if field!='source'} for key,row in assets.items()}
 
@@ -245,14 +259,14 @@ def probe_environment(environment):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--batch',choices=['batch04','map_sheets','decorations','legacy_families','passages','recurring_encounters','recurring_sites','claimed_dwellings','early_states','landmark_states','route_arcane','command_sites','recruitment_sites','training_sites','contract_encounters','remaining_encounters','artifacts','remaining_sites','heroes','towns'],default='batch04')
+    parser.add_argument('--batch',choices=['batch04','map_sheets','decorations','legacy_families','passages','recurring_encounters','recurring_sites','claimed_dwellings','early_states','landmark_states','route_arcane','command_sites','recruitment_sites','training_sites','contract_encounters','remaining_encounters','artifacts','remaining_sites','heroes','towns','final_families'],default='batch04')
     parser.add_argument('--label',required=True)
     parser.add_argument('--resolution',choices=['1280x720','1920x1080'],default='1280x720')
     parser.add_argument('--expected-dir',type=Path,help='Preview acceptance candidate; permits an honest failing-before run')
     args=parser.parse_args()
     if not re.fullmatch(r'[a-z0-9_-]+',args.label):parser.error('label must be a fresh slug')
     original=earned_save_bytes()
-    recipe=json.loads({'batch04':RECIPE,'map_sheets':POOL_RECIPE,'decorations':DECORATION_RECIPE,'legacy_families':LEGACY_RECIPE,'passages':PASSAGE_RECIPE,'recurring_encounters':RECURRING_RECIPE,'recurring_sites':RECURRING_SITE_RECIPE,'claimed_dwellings':CLAIMED_RECIPE,'early_states':EARLY_STATE_RECIPE,'landmark_states':LANDMARK_STATE_RECIPE,'route_arcane':ROUTE_ARCANE_RECIPE,'command_sites':COMMAND_SITE_RECIPE,'recruitment_sites':RECRUITMENT_RECIPE,'training_sites':TRAINING_RECIPE,'contract_encounters':CONTRACT_RECIPE,'remaining_encounters':REMAINING_ENCOUNTER_RECIPE,'artifacts':ARTIFACT_RECIPE,'remaining_sites':REMAINING_SITE_RECIPE,'heroes':HERO_RECIPE,'towns':TOWN_RECIPE}[args.batch].read_text())
+    recipe=json.loads({'batch04':RECIPE,'map_sheets':POOL_RECIPE,'decorations':DECORATION_RECIPE,'legacy_families':LEGACY_RECIPE,'passages':PASSAGE_RECIPE,'recurring_encounters':RECURRING_RECIPE,'recurring_sites':RECURRING_SITE_RECIPE,'claimed_dwellings':CLAIMED_RECIPE,'early_states':EARLY_STATE_RECIPE,'landmark_states':LANDMARK_STATE_RECIPE,'route_arcane':ROUTE_ARCANE_RECIPE,'command_sites':COMMAND_SITE_RECIPE,'recruitment_sites':RECRUITMENT_RECIPE,'training_sites':TRAINING_RECIPE,'contract_encounters':CONTRACT_RECIPE,'remaining_encounters':REMAINING_ENCOUNTER_RECIPE,'artifacts':ARTIFACT_RECIPE,'remaining_sites':REMAINING_SITE_RECIPE,'heroes':HERO_RECIPE,'towns':TOWN_RECIPE,'final_families':FINAL_RECIPE}[args.batch].read_text())
     script=SCRIPT
     if args.batch=='decorations':
         from overworld_decoration_cutout_probe import SCRIPT as script
@@ -274,6 +288,8 @@ def main():
         from overworld_route_arcane_cutout_probe import SCRIPT as script
     if args.batch=='command_sites':
         from overworld_command_cutout_probe import SCRIPT as script
+    if args.batch=='final_families':
+        from overworld_final_cutout_probe import SCRIPT as script
     if args.batch=='towns':
         from overworld_town_cutout_probe import SCRIPT as script
     if args.batch=='heroes':
@@ -304,7 +320,10 @@ def main():
         scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="CutoutBatchProbe" type="Node"]\nscript = ExtResource("1")\n' % (directory/'probe.gd').relative_to(ROOT))
         env=dict(os.environ,XDG_DATA_HOME=userdata,CUTOUT_OUTPUT=str(output),CUTOUT_SAVE=str(SAVE),CUTOUT_RESOLUTION=args.resolution,CUTOUT_ASSETS_FILE=str(expectations),CUTOUT_ASSETS_SHA256=hashlib.sha256(expectations.read_bytes()).hexdigest(),CUTOUT_CAPTURE_PER_SOURCE='1' if args.batch=='map_sheets' else '0')
         with (output/'runtime.log').open('w') as log:
-            code=run_probe(['dbus-run-session','--','xvfb-run','-a','-s','-screen 0 2200x1200x24','godot4','--path',str(ROOT),'--audio-driver','Dummy','--accessibility','disabled','res://'+str(scene.relative_to(ROOT))],probe_environment(env),log)
+            # Final-family coverage includes 51 real views and 30 complete
+            # save/re-entry controls. Wide software rendering exceeds the old
+            # five-minute deadline; retain every assertion and capture.
+            code=run_probe(['dbus-run-session','--','xvfb-run','-a','-s','-screen 0 2200x1200x24','godot4','--path',str(ROOT),'--audio-driver','Dummy','--accessibility','disabled','res://'+str(scene.relative_to(ROOT))],probe_environment(env),log,timeout_seconds=900 if args.batch=='final_families' else 300)
     lines=(output/'runtime.log').read_text().splitlines()
     found=[json.loads(s[len(MARKER):]) for s in lines if s.startswith(MARKER)]
     report=found[-1] if found else dict(ok=False,errors=['missing Godot report'])
@@ -317,6 +336,8 @@ def main():
         captures_ok=captures_ok and len(report.get('galleries',[]))==1 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
     if args.batch in ('recurring_encounters','recurring_sites','claimed_dwellings','early_states','command_sites','recruitment_sites'):
         captures_ok=captures_ok and len(report.get('galleries',[]))==3 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
+    if args.batch=='final_families':
+        captures_ok=captures_ok and len(report.get('galleries',[]))==6 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
     if args.batch in ('landmark_states','training_sites','towns'):
         captures_ok=captures_ok and len(report.get('galleries',[]))==4 and (report.get('backend')=='headless' or all((output/name).exists() for name in report['galleries']))
     if args.batch in ('route_arcane','contract_encounters','remaining_sites','heroes'):

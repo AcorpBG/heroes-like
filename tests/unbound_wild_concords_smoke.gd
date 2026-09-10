@@ -73,7 +73,8 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	var presentation: Dictionary = view.call("validation_encounter_presentation_payload", guard)
 	var primary_unit_id := String(case.get("unit_ids", [""])[0])
 	var primary_art := ContentService.get_unit_art(primary_unit_id)
-	_expect(String(presentation.get("identity_encounter_asset_id", "")) == String(case.get("identity_asset_id", "")) and String(presentation.get("identity_encounter_path", "")) == String(primary_art.get("overworld_icon", "")) and bool(presentation.get("uses_identity_encounter_sprite", false)), "%s lost its exact guard-company identity art." % scenario_id)
+	var expected_identity_path := "res://art/overworld/runtime/objects/encounters/creature_silhouettes/%s.png" % String(primary_art.get("unit_id", ""))
+	_expect(String(presentation.get("identity_encounter_asset_id", "")) == String(case.get("identity_asset_id", "")) and String(presentation.get("identity_encounter_path", "")) == expected_identity_path and bool(presentation.get("uses_identity_encounter_sprite", false)), "%s lost its exact guard-company identity art." % scenario_id)
 
 	var claim := OverworldRules._collect_resource_node_result(session, _resource_node_result(session, String(case.get("placement_id", ""))), true)
 	_expect(bool(claim.get("ok", false)), "%s could not claim its concord after all three battles." % scenario_id)

@@ -44250,6 +44250,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(len(town_recoveries) == 39, errors, "Eleven original Town silhouettes must reconstruct at exact normalized registration; 28 original mappings remain unchanged")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Town cutout recovery failed closed: {exc}")
+    final_recoveries = {}
+    try:
+        final_spec = importlib.util.spec_from_file_location("final_cutout_validation", ROOT / "tools/prepare_overworld_final_cutouts.py")
+        final_module = importlib.util.module_from_spec(final_spec)
+        final_spec.loader.exec_module(final_module)
+        final_recoveries = final_module.validate_assets()
+        ensure(len(final_recoveries) == 71, errors, "29 exact original world creature silhouettes and 42 controls must complete the frozen runtime-pool complement without changing unit UI art")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Final-family cutout recovery failed closed: {exc}")
     artifact_recoveries = {}
     try:
         artifact_spec = importlib.util.spec_from_file_location("artifact_cutout_validation", ROOT / "tools/prepare_overworld_artifact_cutouts.py")
@@ -44472,6 +44481,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (96, 96)
             else:
                 expected_canvas = (512, 512)
+            if asset_id in final_recoveries and "/creature_silhouettes/" in str(entry.get("path", "")):
+                expected_canvas = (384, 384)
             if asset_id in recruitment_recoveries:
                 expected_canvas = (2304,192)
             if asset_id in command_recoveries:
@@ -79697,7 +79708,7 @@ def validate_six_sovereign_wild_habitats(errors: list[str]) -> None:
         ensure(controlled.get("path") == atlas_res and controlled.get("atlas_region") == controlled_region and controlled.get("atlas_size") == [576,48] and controlled.get("assigned_resource_site_id") == site_id, errors, f"{site_id} controlled art changed")
         ensure(site_sprites.get(site_id, {}).get("asset_id") == controlled_id and site_sprites.get(site_id, {}).get("unclaimed_asset_id") == unclaimed_id, errors, f"{site_id} runtime sprite switch changed")
         encounter_asset_id = f"encounter_sovereign_wild_{stem}_watch"
-        ensure(encounter_sprites.get(encounter_id) == encounter_asset_id and object_assets.get(encounter_asset_id, {}).get("path") == f"res://art/units/overworld_icons/{unit_id}.png", errors, f"{encounter_id} exact creature identity art changed")
+        ensure(encounter_sprites.get(encounter_id) == encounter_asset_id and object_assets.get(encounter_asset_id, {}).get("path") == f"res://art/overworld/runtime/objects/encounters/creature_silhouettes/{unit_id}.png", errors, f"{encounter_id} exact creature identity art changed")
         art_record = unit_art.get(unit_id, {})
         animation_record = unit_animation.get(unit_id, {})
         surface_paths = [res_path_to_disk(str(art_record.get(key, ""))) for key in ("portrait","battle_icon","battle_standee","overworld_icon")] + [res_path_to_disk(str(animation_record.get("sprite_sheet", "")))]
@@ -79856,7 +79867,7 @@ def validate_six_unbound_wild_concords(errors: list[str]) -> None:
         ensure(controlled.get("path") == atlas_res and controlled.get("atlas_region") == [index * 384 + 192,0,192,192] and controlled.get("assigned_resource_site_id") == site_id, errors, f"{site_id} controlled landmark art changed")
         ensure(site_sprites.get(site_id, {}).get("asset_id") == controlled_id and site_sprites.get(site_id, {}).get("unclaimed_asset_id") == unclaimed_id, errors, f"{site_id} runtime art switch changed")
         encounter_asset_id = f"encounter_unbound_wild_{stem}_watch"
-        ensure(encounter_sprites.get(encounter_id) == encounter_asset_id and object_assets.get(encounter_asset_id, {}).get("path") == f"res://art/units/overworld_icons/{first_unit_id}.png", errors, f"{encounter_id} exact company identity art changed")
+        ensure(encounter_sprites.get(encounter_id) == encounter_asset_id and object_assets.get(encounter_asset_id, {}).get("path") == f"res://art/overworld/runtime/objects/encounters/creature_silhouettes/{first_unit_id}.png", errors, f"{encounter_id} exact company identity art changed")
 
     finale = scenarios.get("mistcorsair-flaremast-concord", {}).get("encounters", [])[0]
     ensure(finale.get("placement_id") == "flaremastconcord_first_screen" and finale.get("enemy_commander_state") == {"roster_hero_id":"hero_embercourt_helva_tollbrand","faction_id":"faction_embercourt"} and finale.get("spawned_by_faction_id") == "faction_embercourt", errors, "The Six Unbound Oaths finale lost its fixed roster-backed challenger")
@@ -81048,7 +81059,7 @@ def validate_three_horizon_specialist_companies(errors: list[str]) -> None:
         ensure(building_art.get(building_id, {}).get("source_sha256") == row["building_source_sha"] and building_art.get(building_id, {}).get("icon_sha256") == row["building_icon_sha"], errors, f"{building_id} building-art provenance changed")
         asset_id = row["asset_id"]
         asset = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
-        ensure(identity_sprites.get(row["encounter_id"]) == asset_id and asset.get("path") == f"res://art/units/overworld_icons/{unit_id}.png" and asset.get("source_model") == "curated_original_character_unit_landmark_reuse" and len(str(asset.get("accessible_description", ""))) >= 72, errors, f"{row['encounter_id']} exact overworld identity changed")
+        ensure(identity_sprites.get(row["encounter_id"]) == asset_id and asset.get("path") == f"res://art/overworld/runtime/objects/encounters/creature_silhouettes/{unit_id}.png" and asset.get("source_model") == "curated_original_character_unit_landmark_reuse" and len(str(asset.get("accessible_description", ""))) >= 72, errors, f"{row['encounter_id']} exact overworld identity changed")
     source_manifest_path = ROOT / "art" / "units" / "source" / "curated" / "horizon_specialist_companies_manifest.json"
     source_manifest = load_json(source_manifest_path)
     ensure(source_manifest.get("schema") == "horizon_specialist_companies_source_manifest_v1" and source_manifest.get("generation_mode") == "built_in_image_gen" and len(source_manifest.get("sources", [])) == 6, errors, "Horizon specialist source provenance manifest changed")
@@ -84413,7 +84424,7 @@ def validate_six_frontier_mythic_habitats(errors: list[str]) -> None:
         ensure(object_assets.get(unclaimed_id,{}).get("path") == atlas_res and object_assets.get(unclaimed_id,{}).get("atlas_region") == [index*384,0,192,192] and object_assets.get(controlled_id,{}).get("atlas_region") == [index*384+192,0,192,192], errors, f"{site_id} exact unclaimed or controlled art changed")
         ensure(art.get("resource_site_sprites",{}).get(site_id,{}) == {"asset_id":controlled_id,"unclaimed_asset_id":unclaimed_id,"fit":f"Exact original {site.get('name','')} changes from unclaimed structure to pennant-marked controlled state."}, errors, f"{site_id} runtime state switch changed")
         encounter_asset_id = f"encounter_frontier_mythic_{stem}_watch"
-        ensure(art.get("encounter_identity_sprites",{}).get(encounter_id) == encounter_asset_id and object_assets.get(encounter_asset_id,{}).get("path") == f"res://art/units/overworld_icons/{unit_id}.png", errors, f"{encounter_id} exact creature identity art changed")
+        ensure(art.get("encounter_identity_sprites",{}).get(encounter_id) == encounter_asset_id and object_assets.get(encounter_asset_id,{}).get("path") == f"res://art/overworld/runtime/objects/encounters/creature_silhouettes/{unit_id}.png", errors, f"{encounter_id} exact creature identity art changed")
         art_row,animation_row = unit_art.get(unit_id,{}),animations.get(unit_id,{})
         surface_paths = [res_path_to_disk(str(art_row.get(key,""))) for key in ("portrait","battle_icon","battle_standee","overworld_icon")] + [res_path_to_disk(str(animation_row.get("sprite_sheet","")))]
         ensure(all(path.is_file() and Path(f"{path}.import").is_file() for path in surface_paths) and [png_size(path) for path in surface_paths] == [(384,512),(160,160),(192,224),(96,96),(256,896)], errors, f"{unit_id} runtime art surfaces changed")

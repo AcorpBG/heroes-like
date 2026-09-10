@@ -55,7 +55,7 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	_expect(String(objective.get("id", "")) == String(case.get("objective_id", "")) and String(objective.get("type", "")) == String(case.get("objective_type", "")), "%s objective identity changed." % String(case.get("encounter_id", "")))
 	var presentation: Dictionary = view.call("validation_encounter_presentation_payload", guard)
 	var identity_asset_id := String(case.get("identity_asset_id", ""))
-	var expected_identity_path := String(art.get("overworld_icon", ""))
+	var expected_identity_path := "res://art/overworld/runtime/objects/encounters/creature_silhouettes/%s.png" % String(case.get("unit_id", ""))
 	_expect(String(presentation.get("identity_encounter_asset_id", "")) == identity_asset_id and String(presentation.get("identity_encounter_path", "")) == expected_identity_path and bool(presentation.get("uses_identity_encounter_sprite", false)), "%s lost its exact creature encounter identity." % String(case.get("encounter_id", "")))
 
 	var artifact_id := String(case.get("artifact_id", ""))
