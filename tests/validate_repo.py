@@ -44252,6 +44252,13 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         errors.append(f"Town cutout recovery failed closed: {exc}")
     final_recoveries = {}
     try:
+        neutral_spec = importlib.util.spec_from_file_location("generated_neutral_icon_validation", ROOT / "tools/prepare_generated_neutral_icons.py")
+        neutral_module = importlib.util.module_from_spec(neutral_spec)
+        neutral_spec.loader.exec_module(neutral_module)
+        neutral_module.validate_assets()
+    except (OSError, ValueError, KeyError, TypeError, AssertionError) as exc:
+        errors.append(f"Generated neutral original-art/profile mapping failed closed: {exc}")
+    try:
         final_spec = importlib.util.spec_from_file_location("final_cutout_validation", ROOT / "tools/prepare_overworld_final_cutouts.py")
         final_module = importlib.util.module_from_spec(final_spec)
         final_spec.loader.exec_module(final_module)

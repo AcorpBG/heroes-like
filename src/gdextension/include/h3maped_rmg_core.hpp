@@ -4098,6 +4098,11 @@ struct RuntimeMapTilePoint {
 };
 
 struct RuntimeMapObjectProjection {
+	// Runtime adoption metadata decoded from the existing 0x49bb92 payload.
+	// Does not change generator state or native serialization.
+	int32_t guard_quantity = -1;
+	int32_t guard_level = -1;
+	int32_t guard_ai_value = -1;
 	int32_t serialized_index = -1;
 	int32_t source_vector_index = -1;
 	int32_t definition_index = -1;

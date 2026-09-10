@@ -6,6 +6,7 @@ const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRule
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
+const GeneratedNeutralRules = preload("res://scripts/persistence/GeneratedNeutralEncounterRules.gd")
 
 const GENERATED_TOWN_COMMON_SOURCE_SITE_BY_RESOURCE := {
 	"wood": {"site_id": "site_brightwood_sawmill", "object_id": "object_brightwood_sawmill"},
@@ -61,6 +62,12 @@ static func build_session_from_adoption(
 	var start := _primary_start(adoption)
 	var map_document: Variant = adoption.get("map_document", null)
 	var scenario_document: Variant = adoption.get("scenario_document", null)
+	for object in _document_objects(map_document):
+		if object.has("native_guard_quantity"):
+			var resolved := GeneratedNeutralRules.resolve(object)
+			if not bool(resolved.get("ok", false)):
+				push_error("Generated neutral adoption failed: %s" % String(resolved.get("error", "unknown")))
+				return SessionStateStoreScript.new_session_data()
 	var players := PlayerRules.from_slots(scenario_document.get_player_slots()) if scenario_document != null else []
 	var active_player_id := ""
 	for player in players:
@@ -90,6 +97,10 @@ static func build_session_from_adoption(
 		_ensure_generated_rare_source_guards(resource_nodes, _encounters_from_document(map_document)),
 		map_size
 	)
+	for encounter in encounters:
+		if not (encounter is Dictionary) or encounter.is_empty():
+			push_error("Generated guard adoption failed; refusing an unguarded partial session")
+			return SessionStateStoreScript.new_session_data()
 	var map_objects := _map_objects_from_document(map_document)
 	var package_source_object_ids := []
 	var package_source_objects_by_id := {}
@@ -448,6 +459,13 @@ static func _encounters_from_document(map_document: Variant) -> Array:
 		if kind != "guard" and native_kind != "guard":
 			continue
 		var encounter: Dictionary = object.duplicate(true)
+		if encounter.has("native_guard_quantity"):
+			var resolved := GeneratedNeutralRules.resolve(encounter)
+			if not bool(resolved.get("ok", false)):
+				push_error("Generated neutral adoption failed: %s" % String(resolved.get("error", "unknown")))
+				return []
+			encounters.append(resolved["encounter"])
+			continue
 		var encounter_id := String(encounter.get("encounter_id", ""))
 		if encounter_id == "":
 			encounter_id = String(encounter.get("object_id", ""))
@@ -543,7 +561,7 @@ static func _supplemental_guarded_reward_site_guard(node: Dictionary, site: Dict
 		"target_body_tiles": body_tiles.duplicate(true),
 		"target_visit_tiles": visit_tiles.duplicate(true),
 	}
-	return {
+	var guard := {
 		"placement_id": "generated_guarded_reward_%s" % placement_id,
 		"kind": "guard",
 		"package_kind": "guard",
@@ -568,6 +586,7 @@ static func _supplemental_guarded_reward_site_guard(node: Dictionary, site: Dict
 		"package_guard_engagement_tiles": engagement_tiles,
 		"package_guard_engagement_tile_count": engagement_tiles.size(),
 	}
+	return GeneratedNeutralRules.with_authored_guard_art(guard)
 
 static func _generated_guarded_reward_engagement_tiles(visit_tile: Dictionary, map_size: Variant) -> Array:
 	var center := Vector2i(int(visit_tile.get("x", -1)), int(visit_tile.get("y", -1)))
@@ -621,7 +640,7 @@ static func _supplemental_rare_source_guard(node: Dictionary) -> Dictionary:
 		"clear_required_for_target": true,
 		"source": "generated_package_rare_source_guard_pressure_runtime_adoption",
 	}
-	return {
+	var guard := {
 		"placement_id": "h3maped_small_rare_source_guard_%s" % placement_id,
 		"kind": "guard",
 		"package_kind": "guard",
@@ -647,6 +666,11 @@ static func _supplemental_rare_source_guard(node: Dictionary) -> Dictionary:
 		"package_guard_engagement_tiles": [tile],
 		"package_guard_engagement_tile_count": 1,
 	}
+	var resolved := GeneratedNeutralRules.resolve_supplemental(guard, String(node.get("site_id", "")))
+	if not bool(resolved.get("ok", false)):
+		push_error("Supplemental neutral adoption failed: %s" % String(resolved.get("error", "unknown")))
+		return {}
+	return resolved["encounter"]
 
 static func _ensure_generated_town_source_route_support(session: SessionStateStoreScript.SessionData) -> bool:
 	if session == null or not bool(session.flags.get("generated_random_map", false)):

@@ -25,7 +25,12 @@ class FinalCutoutTests(unittest.TestCase):
         self.assertEqual(len(previous), 1143)
         self.assertEqual(len(self.recipe['assets']), 71)
         self.assertEqual(len(self.sources), 29)
-        self.assertEqual(previous | self.recipe['assets'].keys(), self.manifest['object_assets'].keys())
+        historical = previous | self.recipe['assets'].keys()
+        self.assertTrue(historical <= self.manifest['object_assets'].keys())
+        # New neutral troop paintings have their own source/identity validator;
+        # they are not additions to the frozen historical 71-asset cohort.
+        extras = self.manifest['object_assets'].keys() - historical
+        self.assertTrue(all(self.manifest['object_assets'][key].get('presentation_role') == 'generated_neutral_primary_unit' for key in extras))
         self.assertEqual(previous & self.recipe['assets'].keys(), set())
         self.assertEqual(hashes, self.recipe['earlier_recipes'])
         self.assertEqual(self.recipe['mapping_tables'], {k: v for k, v in self.manifest.items() if k != 'object_assets'})

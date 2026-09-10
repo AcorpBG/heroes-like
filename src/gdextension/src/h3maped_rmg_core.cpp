@@ -43031,6 +43031,23 @@ static RuntimeMapPayloadProjection project_runtime_map_from_owned_final_payload(
 		object.serialization_pass = record.serialization_pass;
 		object.payload_offset = record.payload_offset;
 		object.payload_byte_count = record.payload_byte_count;
+		if (object.type_id == 54 && record.serializer_slot_0x0c == 0x0049bb92U) {
+			// 0x49bb92 writes base(12), optional sequence(4), quantity(u16).
+			const size_t quantity_offset = offset + 12U + (record.serialization_pass >= 1 ? 4U : 0U);
+			if (quantity_offset + 2U > offset + size_t(record.payload_byte_count)) {
+				projection.blocked_reason = "runtime_projection_guard_quantity_payload_truncated";
+				return projection;
+			}
+			object.guard_quantity = int32_t(objects.object_payload_bytes[quantity_offset])
+					| (int32_t(objects.object_payload_bytes[quantity_offset + 1U]) << 8);
+			for (const auto &creature : monster_table_rows_57cea0_4a5c07()) {
+				if (creature.creature_id == object.subtype) {
+					object.guard_level = creature.level_field_0x04;
+					object.guard_ai_value = creature.ai_value_0x40;
+					break;
+				}
+			}
+		}
 		object.def_name = definition.def_name;
 		object.passability_mask_bytes = definition.passability_mask_bytes;
 		object.action_mask_bytes = definition.action_mask_bytes;
