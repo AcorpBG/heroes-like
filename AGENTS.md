@@ -61,6 +61,14 @@ Do not load all of `ops/progress.json` by default. It is an operations tracker, 
 - Do not land metadata-only or report-only changes as a substitute for real game/runtime/native behavior. If a diagnostic exposes missing implementation, name the missing function/data structure/behavior as the blocker instead of presenting the diagnostic as progress.
 - For native RMG work, follow `docs/lessons-learned.md`: prove recovered H3MapEd behavior through phase/private-state parity before changing generation rules, and do not replace missing recovery with density scalars, gates, brute-force retries, or final-map report tuning.
 
+## Mandatory completion cleanup
+
+- Always perform a cleanup pass after completing work, before the final handoff. Inspect task-created files in the project, `.artifacts`, and temporary locations such as `/tmp`; remove temporary probes, obsolete intermediate exports, disposable test profiles/prefixes, and other task-owned files that are no longer needed.
+- Verify exact paths, ownership, and that no active process is using the targets before deleting anything. Never sweep an entire workspace, `.artifacts`, or `/tmp`, and never assume an untracked file is disposable.
+- Preserve caches unless the owner explicitly requests cache cleanup. Preserve source, original/generated art and provenance, saves, backups, native RMG reverse-engineering material, required final packages, and the reports/screenshots/logs needed to substantiate validation or diagnose unresolved failures. Do not modify unrelated pre-existing files.
+- Measure material cleanup and briefly report what was removed, how much space was recovered, and whether it is rebuildable. If nothing is safely removable, say so; if ownership or retention is unclear, retain the files and ask before deleting them.
+- Finish with `git status --short` and confirm cleanup did not remove required deliverables or include unrelated files in the commit.
+
 ## Codex execution-host lifecycle
 - If a `functions.exec` call returns `Script running with cell ID ...`, do not start another `functions.exec` call. Drain that exact cell with the top-level `functions.wait` tool until it completes, or terminate it explicitly.
 - When awaiting `tools.write_stdin` or another long nested tool call inside `functions.exec`, set the outer `// @exec` `yield_time_ms` at least as long as the nested wait. Do not create a new outer cell for every poll of one process.
