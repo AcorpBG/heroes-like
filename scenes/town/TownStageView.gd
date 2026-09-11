@@ -1534,20 +1534,6 @@ func _create_building_hotspot(building_id: String) -> Button:
 	button.mouse_filter = Control.MOUSE_FILTER_STOP
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	button.z_index = 6
-	button.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
-	var hover_style := StyleBoxFlat.new()
-	hover_style.bg_color = Color(1.0, 0.82, 0.36, 0.07)
-	hover_style.border_color = Color(1.0, 0.86, 0.48, 0.82)
-	hover_style.set_border_width_all(2)
-	hover_style.set_corner_radius_all(8)
-	button.add_theme_stylebox_override("hover", hover_style)
-	var pressed_style := hover_style.duplicate()
-	pressed_style.bg_color = Color(1.0, 0.82, 0.36, 0.16)
-	button.add_theme_stylebox_override("pressed", pressed_style)
-	var focus_style := hover_style.duplicate()
-	focus_style.border_color = Color(1.0, 0.94, 0.68, 1.0)
-	focus_style.set_border_width_all(3)
-	button.add_theme_stylebox_override("focus", focus_style)
 	button.pressed.connect(_on_building_hotspot_pressed.bind(building_id))
 	add_child(button)
 	_building_hotspots[building_id] = button
@@ -1582,7 +1568,6 @@ func _sync_building_hotspots() -> void:
 		UiAccessibility.describe_control(button, "%s building" % building_name, "%s Press to open building information." % description)
 		button.position = destination_rect.position
 		button.size = destination_rect.size
-		button.painted_mask = null
 		# Catalog layers also contain transparent margins. Their empty pixels
 		# must not intercept a visible building painted behind them.
 		var path := _town_building_texture_path(building_id)
@@ -1596,6 +1581,7 @@ func _sync_building_hotspots() -> void:
 		button.painted_mask = _town_building_masks[path]
 		button.texture_region_ratio = entry.get("texture_region_ratio", Rect2(Vector2.ZERO, Vector2.ONE))
 		button.visible = true
+		button.queue_redraw()
 		# Pointer ordering follows the same ground-depth order as the paintings.
 		move_child(button, get_child_count() - 1)
 

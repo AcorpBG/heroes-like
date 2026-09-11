@@ -16611,14 +16611,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "All-town composition repair completed: 61 placement records and three main-building hitboxes corrected across six factions. All 173 layers/32 towns inspected; input/build/save, unit, repository and Linux/Windows packages/parity pass. Final evidence retained and 1.47 GB of obsolete task outputs cleaned. See docs/all-town-building-composition-repair.md. No next slice selected.",
+  "currentNotes": "Built-building silhouettes completed. All 173 layers/32 towns checked; source wide and Windows 5066 checks pass, Linux same checks accepted against exact bare-engine tooltip error baseline. Repository, exports/parity and small/wide visuals validated; 652 MB obsolete outputs cleaned. See docs/town-building-silhouette-outlines.md. No next slice selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "fix-all-town-building-composition-20260911",
-  "currentSliceId": "fix-all-town-building-composition-20260911",
-  "currentSliceNotes": "Implemented 61 aspect-preserving placements and three main-building hitbox corrections across six factions. All 173 layers/32 towns visually inspected. Source small/wide 2647/2679, Linux/Windows packaged 2679 each, 32 paid build/save controls per run, 34 unit tests, prior Embercourt 717 per size, repository, exports/parity and diff checks pass. Final evidence retained; 1.47 GB of obsolete task outputs cleaned. See docs/all-town-building-composition-repair.md.",
+  "currentSlice": "ui-town-building-silhouette-outlines-20260911",
+  "currentSliceId": "ui-town-building-silhouette-outlines-20260911",
+  "currentSliceNotes": "Implemented cached alpha-mask built-building silhouettes. Source wide and Windows 5066 checks pass; Linux 5066 functional checks pass with exact bare-engine tooltip-error baseline acceptance, strict reports retained. Repository, official exports/parity and small/wide visual inspection complete. Cleaned 651767995 bytes of obsolete exports/PNGs; art, gameplay, saves and unrelated files preserved. Evidence: docs/town-building-silhouette-outlines.md.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "All-town Building Composition Repair",
-  "currentSliceUpdatedAt": "2026-09-11T15:25:52Z",
+  "currentSliceTitle": "Built-building Silhouette Outlines",
+  "currentSliceUpdatedAt": "2026-09-11T17:46:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22230,9 +22230,46 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "All-town composition repair validated and cleaned up. Preserve final packages/evidence, original rasters, gameplay, saves and unrelated files. Await the next owner-directed slice; do not infer release readiness.",
+  "nextActionGuardrailNote": "Built-building silhouette slice completed; native Linux tooltip errors remain documented against a bare-engine control. Await next owner-directed slice. Preserve original art, saves, caches and unrelated files; do not infer release readiness.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "ui-town-building-silhouette-outlines-20260911",
+      "title": "Built-building Silhouette Outlines",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/town-building-silhouette-outlines.md"
+      ],
+      "implementationTargets": [
+        "scenes/town/TownBuildingHotspot.gd",
+        "scenes/town/TownStageView.gd",
+        "tests/town_building_outline_regression.py",
+        "tests/packaged_town_building_outline_regression.py"
+      ],
+      "validationCommands": [
+        "python3 -B tests/town_building_outline_regression.py --label small --render --resolution 1280x720",
+        "python3 -B tests/validate_repo.py",
+        "python3 -B tests/packaging_linux_export_smoke.py",
+        "python3 -B tests/packaging_windows_export_smoke.py",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Painted-mask hover/pressed/focus silhouettes replace constructed-building rectangles",
+        "All layers/crop states and small/wide visuals checked",
+        "Existing Town input/build/save and both platform packages pass; Linux native tooltip exception requires exact bare-engine error baseline with strict raw failures retained"
+      ],
+      "nonGoals": [
+        "No art regeneration, placement, gameplay, save-schema, RMG or unrelated UI changes"
+      ],
+      "updatedAt": "2026-09-11T17:46:15Z",
+      "startedAt": "2026-09-11T17:20:49Z",
+      "notes": "Implemented cached alpha-mask built-building silhouettes. Source wide and Windows 5066 checks pass; Linux 5066 functional checks pass with exact bare-engine tooltip-error baseline acceptance, strict reports retained. Repository, official exports/parity and small/wide visual inspection complete. Cleaned 651767995 bytes of obsolete exports/PNGs; art, gameplay, saves and unrelated files preserved. Evidence: docs/town-building-silhouette-outlines.md.",
+      "completedAt": "2026-09-11T17:46:15Z"
+    },
     {
       "id": "fix-all-town-building-composition-20260911",
       "title": "All-town Building Composition Repair",
@@ -112143,9 +112180,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "All-town composition repair completed: 61 authored placements and three main-building hitboxes corrected across six factions. All 173 layers/32 towns inspected; Linux/Windows packaged Town checks pass 2679 each, including 32 paid build/save controls. Source, unit/provenance, repository, exports/parity and cleanup pass. Evidence: docs/all-town-building-composition-repair.md. No release-readiness claim.",
+  "summary": "Built-building silhouette outlines completed: all 173 layer masks follow artwork for hover/pressed/focus. Source wide and Windows 5066 checks pass; Linux exact bare-engine tooltip error baseline acceptance, not error-free certification. Repository, exports/parity, small/wide visuals and scoped cleanup complete. See docs/town-building-silhouette-outlines.md. No release-readiness claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-11T15:25:27Z",
+  "updatedAt": "2026-09-11T17:46:15Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",

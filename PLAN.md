@@ -22,6 +22,12 @@ Rules:
 
 ## Current Tactical State
 
+### Built-building Silhouette Outlines
+
+id: `ui-town-building-silhouette-outlines-20260911`
+
+Status: completed 2026-09-11, Phase 6. Constructed-building hover/pressed/keyboard-focus decoration now follows cached painted-mask silhouettes, preserving crop, alpha input, information routing, art and gameplay/save rules. All 173 layers/32 towns checked; source wide and Windows pass 5066 checks each. Linux passes the same functional checks with exact bare-engine tooltip-error non-regression acceptance (strict error report retained). Small/wide screenshots, repository and official exports/parity validated; 652 MB of obsolete outputs cleaned. Requirements/evidence: `docs/town-building-silhouette-outlines.md`. Embedded background hall unchanged; no release-readiness claim.
+
 ### All-town Building Composition Repair
 
 id: `fix-all-town-building-composition-20260911`
