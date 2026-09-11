@@ -84638,7 +84638,7 @@ def validate_overworld_town_vision_command_roster(errors: list[str]) -> None:
         "func validation_command_roster_snapshot() -> Dictionary:",
         '"model": "paired_hero_town_icon_columns"',
         'button.set_meta("town_placement_id", placement_id)',
-        'button.accessibility_description = "Select this owned town and center its entry tile on the map."',
+        'button.accessibility_description = "Select this owned town and center its entry tile on the map. Double-click to open town, or use the Enter Town action after selecting."',
         'for hero_value in _session.overworld.get("player_heroes", [])',
         'if not player_hero_ids.has(hero_id):',
         'button.set_meta("roster_owner", "player")',

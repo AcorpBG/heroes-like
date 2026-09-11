@@ -16611,14 +16611,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "All-resource Overworld strip completed. Source small/wide 212 checks each, Windows packaged 209, existing stockpile report, repository and official exports/parity pass. Linux 212 functional checks add no errors to a verified bare-engine popup baseline; strict logs remain failing and retained. Evidence and engine/legacy limits: docs/overworld-all-resource-icons.md. No next slice selected.",
+  "currentNotes": "Town roster double-click entry completed. Source home/remote 18/20 checks, Linux/Windows remote 20 each, official exports/parity and repository validation pass. Real Town scenes/screenshots verified; hero movement/resources preserved and cleanup performed. Evidence: docs/town-roster-double-click.md. No next slice selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ui-overworld-all-resource-icons-20260911",
-  "currentSliceId": "ui-overworld-all-resource-icons-20260911",
-  "currentSliceNotes": "Implemented all nine registry-backed resource icons and live quantities. Source small/wide 212 checks each, Windows 209, stockpile report, repository and official exports/parity pass. Linux 212 functional checks pass against the exact bare-engine popup error baseline; strict logs retained. Evidence and limits: docs/overworld-all-resource-icons.md.",
+  "currentSlice": "ui-town-roster-double-click-20260911",
+  "currentSliceId": "ui-town-roster-double-click-20260911",
+  "currentSliceNotes": "Town roster double-click opens exact owned town through existing visit/router path. Source home/remote 18/20 checks, Linux/Windows remote 20 each, official exports/parity and repository validation pass. Screenshots inspected; completion cleanup performed. Evidence: docs/town-roster-double-click.md.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "All-resource Overworld Icon Strip",
-  "currentSliceUpdatedAt": "2026-09-11T11:40:54Z",
+  "currentSliceTitle": "Town Roster Double-click Entry",
+  "currentSliceUpdatedAt": "2026-09-11T12:44:39Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21923,8 +21923,25 @@
       }
     }
   },
-  "guardrailNote": "Owner-directed all-resource Overworld UI only. Preserve economy, saves, original art, RMG and other screen behavior; retain truthful engine-warning and validation limits.",
+  "guardrailNote": "Town roster double-click shortcut only; preserve ownership, levels, movement, economy, saves and existing map input. No art or RMG changes.",
   "lastValidation": {
+    "id": "ui-town-roster-double-click-20260911",
+    "sliceId": "ui-town-roster-double-click-20260911",
+    "status": "completed",
+    "sourceReport": "docs/town-roster-double-click.md",
+    "sourceHomeChecks": 18,
+    "sourceRemoteChecks": 20,
+    "linuxPackagedChecks": 20,
+    "windowsPackagedChecks": 20,
+    "repositoryValidation": "passed",
+    "officialExports": "Linux/Windows passed",
+    "packBytesPerPlatform": 313201272,
+    "packMemberCount": 5599,
+    "packParity": "Only project.binary differs",
+    "cleanup": "Removed obsolete task fixture captures; all disposable Wine prefixes cleaned; final evidence, saves and caches retained",
+    "limits": "Windows headless Wine, not GPU certification. Roster shortcut only; no map-click or gameplay-rule changes."
+  },
+  "priorOverworldResourceStripValidation": {
     "id": "ui-overworld-all-resource-icons-20260911",
     "sliceId": "ui-overworld-all-resource-icons-20260911",
     "status": "completed",
@@ -22195,9 +22212,42 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "All-resource Overworld strip completed with documented unchanged engine/legacy limits. Await the next owner-directed slice; do not broaden into engine upgrades, economy, RMG or other screen redesign.",
+  "nextActionGuardrailNote": "Town roster double-click entry completed and cleaned up. Await the next owner-directed slice; preserve gameplay, saves, art and existing UI routes.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "ui-town-roster-double-click-20260911",
+      "title": "Town Roster Double-click Entry",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/town-roster-double-click.md"
+      ],
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd"
+      ],
+      "validationCommands": [
+        "python3 tests/town_roster_double_click_regression.py --label source --render",
+        "python3 tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Single click selects; left double click opens exact owned town",
+        "Source and packaged pointer/entry regressions pass without changing gameplay state"
+      ],
+      "nonGoals": [
+        "No RMG, art, economy, save schema or map-click redesign"
+      ],
+      "updatedAt": "2026-09-11T12:44:39Z",
+      "startedAt": "2026-09-11T12:27:32Z",
+      "notes": "Town roster double-click opens exact owned town through existing visit/router path. Source home/remote 18/20 checks, Linux/Windows remote 20 each, official exports/parity and repository validation pass. Screenshots inspected; completion cleanup performed. Evidence: docs/town-roster-double-click.md.",
+      "completedAt": "2026-09-11T12:44:39Z"
+    },
     {
       "id": "ui-overworld-all-resource-icons-20260911",
       "title": "All-resource Overworld Icon Strip",
@@ -111965,9 +112015,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Owner-directed all-resource Overworld strip completed: all nine original icons and live quantities, including zero rare holdings, with exact-value popup/tooltips. Source 212 checks per resolution, Windows 209, stockpile report, repository and official exports/parity pass. Linux functional checks pass against an unchanged bare-engine popup error baseline, not an error-free engine claim. Evidence: docs/overworld-all-resource-icons.md.",
+  "summary": "Town roster double-click shortcut completed: single click selects/centers and left double click opens the exact currently owned town through existing authority. Source 18/20 checks, Linux/Windows 20 each, official exports/parity and repository validation pass. Screenshots inspected; task cleanup performed. Evidence: docs/town-roster-double-click.md. No release-readiness claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-11T11:40:54Z",
+  "updatedAt": "2026-09-11T12:44:39Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",

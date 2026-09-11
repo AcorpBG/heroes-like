@@ -22,6 +22,12 @@ Rules:
 
 ## Current Tactical State
 
+### Town Roster Double-click Entry
+
+id: `ui-town-roster-double-click-20260911`
+
+Status: completed 2026-09-11, Phase 6. Left double-click on an owned town's Overworld roster card opens that exact town through the existing visit/router flow; single click still selects and centers. Ownership/input guards, entrance levels, hero movement and resources preserved. Source home/remote 18/20 checks, Linux/Windows remote 20 each, official exports/parity and repository validation pass; screenshots inspected and cleanup performed. Requirements/evidence: `docs/town-roster-double-click.md`. No map-generation, art or economy changes. No next slice selected.
+
 ### All-resource Overworld Icon Strip
 
 id: `ui-overworld-all-resource-icons-20260911`
@@ -34,7 +40,7 @@ id: `ui-battle-message-log-20260911`
 
 Status: completed 2026-09-11, Phase 6. Compact 200-entry battle-local log retains ordered action/damage/loss captions after animation and through instant playback. Keyboard navigation and silent scrolling preserve gameplay, saves and command space. Source wide/Linux packaged pass 86 checks each; Windows packaged 47; controller/save-handoff, repository and official exports/parity pass. Requirements/evidence: `docs/battle-message-log.md`. No art, balance, RMG or save-schema changes.
 
-Previous completed owner-directed slice: `ui-main-menu-and-visible-ai-turns-20260910`, Phase 6. Requirements/evidence: `docs/main-menu-and-visible-ai-turns.md`. Latest completion is the all-resource strip above.
+Previous completed owner-directed slice: `ui-main-menu-and-visible-ai-turns-20260910`, Phase 6. Requirements/evidence: `docs/main-menu-and-visible-ai-turns.md`. Latest completion is the town-roster double-click slice above.
 
 ### Main Menu Rework And Visible AI Turns
 
