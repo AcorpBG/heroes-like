@@ -1072,8 +1072,8 @@ func _assert_130_scale_footer_containment(shell: Control, map_cue: Label) -> boo
 		get_tree().quit(1)
 		return false
 	var large_scale_footer := SettingsService.ui_scale_percent() >= 130
-	var expected_resource_chip_width := 190.0 if large_scale_footer else 210.0
-	var expected_resource_label_width := 170.0 if large_scale_footer else 210.0
+	var expected_resource_chip_width := 0.0
+	var expected_resource_label_width := 0.0
 	var expected_primary_width := 170.0 if large_scale_footer else 190.0
 	if (
 		resource_chip.custom_minimum_size.x != expected_resource_chip_width
@@ -1085,7 +1085,7 @@ func _assert_130_scale_footer_containment(shell: Control, map_cue: Label) -> boo
 		or map_cue.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
 		or not primary_action.clip_text
 		or primary_action.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
-		or resource_label.text.strip_edges() == ""
+		or resource_label.text.strip_edges() != ""
 		or resource_label.tooltip_text.strip_edges() == ""
 		or status_label.tooltip_text != status_label.text
 		or primary_action.tooltip_text.strip_edges() == ""
@@ -1096,10 +1096,14 @@ func _assert_130_scale_footer_containment(shell: Control, map_cue: Label) -> boo
 	var root_rect := shell.get_global_rect()
 	var shell_rect := shell_panel.get_global_rect()
 	var footer_rect := command_band.get_global_rect()
-	var footer_surfaces: Array[Control] = [resource_chip, status_chip, cue_chip, orders_panel, system_panel]
+	var footer_surfaces: Array[Control] = [status_chip, cue_chip, orders_panel, system_panel]
 	var system_controls: Array[Control] = [save_status, end_turn, save_slot, save_button, settings_button, menu_button]
 	if not root_rect.encloses(shell_rect) or not shell_rect.encloses(footer_rect):
 		push_error("Overworld smoke: shell/footer escaped the logical root at %d percent scale. root=%s shell=%s footer=%s." % [SettingsService.ui_scale_percent(), root_rect, shell_rect, footer_rect])
+		get_tree().quit(1)
+		return false
+	if not resource_chip.is_visible_in_tree() or not shell_rect.encloses(resource_chip.get_global_rect()) or footer_rect.intersects(resource_chip.get_global_rect()):
+		push_error("Overworld smoke: resource strip is hidden, clipped or overlaps command controls.")
 		get_tree().quit(1)
 		return false
 	for index in range(footer_surfaces.size()):

@@ -15,6 +15,7 @@ from time import monotonic
 from full_play_runtime_profile import ROOT, OUTPUT
 
 SCENES = [
+    "resource_stockpile_icon_popover_runtime_report",
     "overworld_end_turn_confirmation_runtime_report",
     "battle_quick_resolve_runtime_report",
     "battle_withdrawal_confirmation_runtime_report",
@@ -224,6 +225,7 @@ def main() -> int:
         source = (ROOT / "tests" / (name + ".gd")).read_text()
         match = re.search(r'const (?:BATCH_)?REPORT_ID\s*:?=\s*"([^"]+)"', source)
         explicit_markers = {
+            "resource_stockpile_icon_popover_runtime_report": "RESOURCE_STOCKPILE_ICON_POPOVER_RUNTIME_REPORT",
             "town_development_save_resume_report": "TOWN_DEVELOPMENT_SAVE_RESUME_REPORT",
             "town_screen_layout_and_dialog_controls_report": "TOWN_SCREEN_LAYOUT_AND_DIALOG_CONTROLS_REPORT",
             "town_building_skyline_progression_report": "TOWN_INTEGRATED_BUILDING_PROGRESSION_REPORT",

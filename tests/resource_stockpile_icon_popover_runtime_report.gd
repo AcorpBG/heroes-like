@@ -76,7 +76,11 @@ func _run_town_case(viewport_size: Vector2i) -> Dictionary:
 	var chip_art_exact: bool = chip_texture_path == "res://art/ui/runtime/town/resource_ledger.png"
 	var contained: bool = banner.get_global_rect().encloses(resource_chip.get_global_rect()) and resource_chip.get_global_rect().encloses(menu.get_global_rect())
 	var frame_width_exact: bool = is_equal_approx(resource_chip.custom_minimum_size.x, 96.0 if compact_expected else 226.0) and is_equal_approx(resource_chip.size.x, 96.0 if compact_expected else 226.0)
-	var menu_width_exact: bool = is_equal_approx(menu.custom_minimum_size.x, 80.0 if compact_expected else 210.0) and is_equal_approx(menu.size.x, 80.0 if compact_expected else 210.0)
+	# The Town frame is unchanged; its MenuButton fills the actual padded
+	# content width, which can exceed its authored minimum (92 vs 80 here).
+	var resource_pad := menu.get_parent() as MarginContainer
+	var available_menu_width := resource_pad.size.x - resource_pad.get_theme_constant("margin_left") - resource_pad.get_theme_constant("margin_right")
+	var menu_width_exact: bool = is_equal_approx(menu.custom_minimum_size.x, 80.0 if compact_expected else 210.0) and is_equal_approx(menu.size.x, available_menu_width)
 	var interaction: Dictionary = await _open_and_close_menu(menu)
 	var authority_after: Dictionary = SessionState.ensure_active_session().to_dict()
 	var town_signature_after: Dictionary = TownRules.town_action_consequence_signature(SessionState.ensure_active_session())
@@ -125,10 +129,10 @@ func _run_overworld_case(viewport_size: Vector2i) -> Dictionary:
 	var contract: Dictionary = _menu_contract(menu_before, live_session.overworld.get("resources", {}))
 	var compact_expected: bool = viewport_size.x < 1360 or viewport_size.y < 760
 	var layout_size_exact: bool = shell.size == Vector2(viewport_size)
-	var visible_summary_exact: bool = String(menu_before.get("visible_text", "")) == (ResourceStockpileMenu.COMPACT_LABEL if compact_expected else OverworldRules.describe_resources(live_session))
-	var tooltip_exact: bool = String(menu_before.get("tooltip_text", "")) == OverworldRules.describe_resources(live_session)
-	var contained: bool = command_band.get_global_rect().encloses(resource_chip.get_global_rect()) and resource_chip.get_global_rect().encloses(menu.get_global_rect())
-	var bounded_width_exact: bool = is_equal_approx(menu.size.x, 80.0 if compact_expected else 210.0)
+	var visible_summary_exact: bool = String(menu_before.get("visible_text", "")) == "" and menu._inline_cells.size() == RESOURCE_IDS.size()
+	var tooltip_exact: bool = String(menu_before.get("tooltip_text", "")) == OverworldRules.describe_resource_stockpile(live_session.overworld.get("resources", {}), true)
+	var contained: bool = shell.get_global_rect().encloses(resource_chip.get_global_rect()) and resource_chip.get_global_rect().encloses(menu.get_global_rect()) and not command_band.get_global_rect().intersects(resource_chip.get_global_rect())
+	var bounded_width_exact: bool = menu.size.x > 600.0 and menu.size.x <= shell.size.x
 	var interaction: Dictionary = await _open_and_close_menu(menu)
 	var authority_after: Dictionary = SessionState.ensure_active_session().to_dict()
 	var shell_snapshot_after: Dictionary = shell.validation_snapshot()

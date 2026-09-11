@@ -4361,7 +4361,7 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
         "OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS",
     ):
         ensure(required_token in native_package_report_text, errors, f"Native package session adoption report is missing full-stockpile token {required_token}")
-    ensure("OverworldRules.describe_resources(_session)" in overworld_shell_text, errors, "Overworld shell must use the shared resource summary rule")
+    ensure('OverworldRules.describe_resource_stockpile(_session.overworld.get("resources", {}), true)' in overworld_shell_text, errors, "Overworld shell must use the shared full resource summary rule, including zero rare holdings")
     ensure("Gold %d | Wood %d | Ore %d" not in overworld_shell_text, errors, "Overworld shell must not hard-code the common-only resource line")
     ensure("all nine live resources" in doc_text, errors, "Live stockpile resource surface doc must record full-resource summary coverage")
     ensure("generated/native package sessions" in doc_text, errors, "Live stockpile resource surface doc must record generated/native package session coverage")
@@ -37683,8 +37683,8 @@ def validate_overworld_130_scale_footer_containment(errors: list[str]) -> None:
             "var constrained_desktop_band := not compact_layout and available_size.x <= 1600.0",
             "var large_scale_footer := constrained_desktop_band and SettingsService.ui_scale_percent() >= 130",
             '_command_row.add_theme_constant_override("separation", 4 if constrained_desktop_band else 6)',
-            "_resource_chip_panel.custom_minimum_size.x = 96.0 if resource_compact else (190.0 if large_scale_footer else 210.0)",
-            "_resource_label.custom_minimum_size.x = 80.0 if resource_compact else (170.0 if large_scale_footer else 210.0)",
+            "_resource_chip_panel.custom_minimum_size.x = 0.0",
+            "_resource_label.custom_minimum_size.x = 0.0",
             "_status_label.clip_text = narrow_layout or large_scale_footer",
             "_status_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
             "_system_panel.custom_minimum_size.x = 214.0 if narrow_layout else (248.0 if compact_layout else 300.0)",
@@ -37693,7 +37693,7 @@ def validate_overworld_130_scale_footer_containment(errors: list[str]) -> None:
             "_primary_action_button.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
         ))
         ensure(all(index >= 0 for index in responsive_order) and list(responsive_order) == sorted(responsive_order), errors, "Overworld responsive allocator must derive the existing breakpoint, apply 130%-only flexible minima, then retain system and primary-action ownership in order")
-        ensure(responsive_body.count("large_scale_footer") == 5, errors, "Overworld 130% footer mode must affect only its predicate, resource/chip minima, Status clipping, and PrimaryAction minimum")
+        ensure(responsive_body.count("large_scale_footer") == 3, errors, "Overworld 130% footer mode must affect only its predicate, Status clipping, and PrimaryAction minimum; resources occupy their own flexible strip")
         for forbidden_token in (
             "_cue_chip_panel.custom_minimum_size",
             "_system_panel.visible",
@@ -37797,8 +37797,8 @@ def validate_overworld_130_scale_footer_containment(errors: list[str]) -> None:
             "var required_controls: Array[Control] = [",
             "required_controls.any",
             "var large_scale_footer := SettingsService.ui_scale_percent() >= 130",
-            "var expected_resource_chip_width := 190.0 if large_scale_footer else 210.0",
-            "var expected_resource_label_width := 170.0 if large_scale_footer else 210.0",
+            "var expected_resource_chip_width := 0.0",
+            "var expected_resource_label_width := 0.0",
             "var expected_primary_width := 170.0 if large_scale_footer else 190.0",
             "status_label.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
             "map_cue.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
@@ -37807,7 +37807,7 @@ def validate_overworld_130_scale_footer_containment(errors: list[str]) -> None:
             "status_label.tooltip_text != status_label.text",
             "primary_action.tooltip_text.strip_edges() == \"\"",
             "var root_rect := shell.get_global_rect()",
-            "var footer_surfaces: Array[Control] = [resource_chip, status_chip, cue_chip, orders_panel, system_panel]",
+            "var footer_surfaces: Array[Control] = [status_chip, cue_chip, orders_panel, system_panel]",
             "var system_controls: Array[Control] = [save_status, end_turn, save_slot, save_button, settings_button, menu_button]",
             "not root_rect.encloses(shell_rect) or not shell_rect.encloses(footer_rect)",
             "for index in range(footer_surfaces.size()):",
@@ -38323,7 +38323,13 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             f"OverworldShell.tscn must keep {node_name} as a hidden drawer section opened by explicit context/buttons",
         )
     footer_prefix = "ShellMargin/Shell/ShellPad/Content/CommandBand/"
-    for node_name in ("ResourceChip", "StatusChip", "CueChip", "OrdersPanel", "SystemPanel"):
+    ensure(
+        scene_node_parent(overworld_scene_text, "ResourceChip", "PanelContainer")
+        == "ShellMargin/Shell/ShellPad/Content/ResourceStrip",
+        errors,
+        "OverworldShell.tscn must keep all nine resources in the dedicated strip above the command footer",
+    )
+    for node_name in ("StatusChip", "CueChip", "OrdersPanel", "SystemPanel"):
         ensure(
             scene_node_parent(overworld_scene_text, node_name, "PanelContainer").startswith(footer_prefix),
             errors,
@@ -55402,17 +55408,17 @@ def validate_overworld_resource_delta_cue_playback(errors: list[str]) -> None:
     ensure('"primary_action_button_icon_path"' in shell_text and '"primary_action_button_icon_max_width"' in shell_text, errors, "Overworld validation snapshot must expose detached primary resource icon state")
 
     ensure_scene_nodes(scene_text, errors, "OverworldShell.tscn", [("ResourceDeltaCueRow", "HBoxContainer"), ("ResourceDeltaCueIcon", "TextureRect"), ("ResourceDeltaCue", "Label")])
-    row_match = re.search(r'\[node name="ResourceDeltaCueRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad"\]\n(?P<body>.*?)(?=\n\[node )', scene_text, re.DOTALL)
-    icon_match = re.search(r'\[node name="ResourceDeltaCueIcon" type="TextureRect" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad/ResourceDeltaCueRow"\]\n(?P<body>.*?)(?=\n\[node )', scene_text, re.DOTALL)
+    row_match = re.search(r'\[node name="ResourceDeltaCueRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/ResourceStrip/ResourceChip/ResourcePad"\]\n(?P<body>.*?)(?=\n\[node )', scene_text, re.DOTALL)
+    icon_match = re.search(r'\[node name="ResourceDeltaCueIcon" type="TextureRect" parent="ShellMargin/Shell/ShellPad/Content/ResourceStrip/ResourceChip/ResourcePad/ResourceDeltaCueRow"\]\n(?P<body>.*?)(?=\n\[node )', scene_text, re.DOTALL)
     cue_match = re.search(r'\[node name="ResourceDeltaCue" type="Label"[^\]]*\]\n(?P<body>.*?)(?=\n\[node )', scene_text, re.DOTALL)
-    ensure(row_match is not None and icon_match is not None, errors, "Overworld resource delta must own one compact command-band row and imported icon")
+    ensure(row_match is not None and icon_match is not None, errors, "Overworld resource delta must own one compact resource-strip row and imported icon")
     if row_match is not None:
         for token in ("unique_name_in_owner = true", "visible = false", "mouse_filter = 2"):
             ensure(token in row_match.group("body"), errors, f"Resource-delta row is missing exact overlay ownership: {token}")
     if icon_match is not None:
         for token in ("unique_name_in_owner = true", "visible = false", "custom_minimum_size = Vector2(22, 22)", "expand_mode = 3", "stretch_mode = 5"):
             ensure(token in icon_match.group("body"), errors, f"Resource-delta icon is missing exact imported-texture ownership: {token}")
-    ensure(cue_match is not None, errors, "Overworld resource delta must own one command-band overlay label")
+    ensure(cue_match is not None, errors, "Overworld resource delta must retain its resource-strip feedback label")
     if cue_match is not None:
         for token in ("unique_name_in_owner = true", "visible = false", "mouse_filter = 2", "clip_text = true"):
             ensure(token in cue_match.group("body"), errors, f"Resource-delta cue is missing exact overlay ownership: {token}")
@@ -55636,8 +55642,8 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
     responsive = block(overworld_shell_text, "_apply_responsive_layout")
     responsive_order = [
         responsive.find("_resource_chip_panel.visible = true"),
-        responsive.find("_resource_chip_panel.custom_minimum_size.x = 96.0 if resource_compact else (190.0 if large_scale_footer else 210.0)"),
-        responsive.find("_resource_label.custom_minimum_size.x = 80.0 if resource_compact else (170.0 if large_scale_footer else 210.0)"),
+        responsive.find("_resource_chip_panel.custom_minimum_size.x = 0.0"),
+        responsive.find("_resource_label.custom_minimum_size.x = 0.0"),
         responsive.find("_resource_label.set_compact_mode(resource_compact)"),
         responsive.find("_resource_label.full_summary_text()"),
     ]
@@ -55668,7 +55674,7 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
         'is_equal_approx(resource_chip.custom_minimum_size.x, 96.0 if compact_expected else 226.0)',
         'is_equal_approx(resource_chip.size.x, 96.0 if compact_expected else 226.0)',
         'is_equal_approx(menu.custom_minimum_size.x, 80.0 if compact_expected else 210.0)',
-        'is_equal_approx(menu.size.x, 80.0 if compact_expected else 210.0)',
+        'is_equal_approx(menu.size.x, available_menu_width)',
         'var authority_before: Dictionary = live_session.to_dict()',
         'var authority_after: Dictionary = SessionState.ensure_active_session().to_dict()',
         'var town_signature_before: Dictionary = TownRules.town_action_consequence_signature(live_session)',
@@ -55681,8 +55687,8 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
         'OverworldRules.resource_definition(resource_id)',
         'OverworldRules.resource_icon_path(resource_id)',
         'texture.get_size() == Vector2(128.0, 128.0)',
-        'command_band.get_global_rect().encloses(resource_chip.get_global_rect())',
-        'var bounded_width_exact: bool = is_equal_approx(menu.size.x, 80.0 if compact_expected else 210.0)',
+        'not command_band.get_global_rect().intersects(resource_chip.get_global_rect())',
+        'var bounded_width_exact: bool = menu.size.x > 600.0 and menu.size.x <= shell.size.x',
         'SessionStateStore.SAVE_VERSION',
     ):
         ensure(token in report_text, errors, f"Focused stockpile popover report is missing real interaction/authority proof: {token}")

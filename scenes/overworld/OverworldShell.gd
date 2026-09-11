@@ -351,6 +351,7 @@ var _save_written_cue_presenter: SystemSaveWrittenCuePresenter
 var _load_resumed_cue_presenter: SystemLoadResumedCuePresenter
 
 func _ready() -> void:
+	_resource_label.enable_inline_icons()
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
 	_configure_controller_move_repeat_timer()
 	_configure_controller_route_repeat_timer()
@@ -482,6 +483,9 @@ func _apply_responsive_layout() -> void:
 	var resource_compact := compact_layout or get_window().size.x < 1360 or get_window().size.y < 760
 	var constrained_desktop_band := not compact_layout and available_size.x <= 1600.0
 	var large_scale_footer := constrained_desktop_band and SettingsService.ui_scale_percent() >= 130
+	var sidebar_pad := _sidebar_shell_panel.get_node("SidebarPad")
+	sidebar_pad.add_theme_constant_override("margin_top", 0 if compact_layout else 6)
+	sidebar_pad.add_theme_constant_override("margin_bottom", 0 if compact_layout else 6)
 	_command_row.add_theme_constant_override("separation", 4 if constrained_desktop_band else 6)
 	_sidebar_shell_panel.visible = true
 	_sidebar_shell_panel.custom_minimum_size.x = 184.0 if narrow_layout else (198.0 if compact_layout else 216.0)
@@ -497,8 +501,8 @@ func _apply_responsive_layout() -> void:
 	_event_panel.visible = not compact_layout and _active_drawer == ""
 	_cue_chip_panel.visible = not compact_layout
 	_resource_chip_panel.visible = true
-	_resource_chip_panel.custom_minimum_size.x = 96.0 if resource_compact else (190.0 if large_scale_footer else 210.0)
-	_resource_label.custom_minimum_size.x = 80.0 if resource_compact else (170.0 if large_scale_footer else 210.0)
+	_resource_chip_panel.custom_minimum_size.x = 0.0
+	_resource_label.custom_minimum_size.x = 0.0
 	_resource_label.set_compact_mode(resource_compact)
 	_status_label.clip_text = narrow_layout or large_scale_footer
 	_status_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
@@ -4176,7 +4180,7 @@ func _refresh_commander_card(compact: bool) -> void:
 		_set_rail_text(_hero_label, _hero_card_text(), _hero_card_visible_text(), 2)
 
 func _refresh_resource_stockpile() -> void:
-	var summary := OverworldRules.describe_resources(_session)
+	var summary := OverworldRules.describe_resource_stockpile(_session.overworld.get("resources", {}), true)
 	_resource_label.sync_stockpile(_session.overworld.get("resources", {}), summary, summary)
 
 func _refresh_generated_commander_status() -> void:
