@@ -1,5 +1,8 @@
 extends Control
 
+const BattleMessageLog = preload("res://scenes/battle/BattleMessageLog.gd")
+var _message_log: PanelContainer
+
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResolveRules.gd")
@@ -166,6 +169,11 @@ var _last_refresh_intent_forecast: Dictionary = {}
 var _last_refresh_intent_forecast_battle_hash := 0
 
 func _ready() -> void:
+	_message_log = BattleMessageLog.new()
+	_message_log.name = "BattleMessageLog"
+	var content := $ContentMargin/Content
+	content.add_child(_message_log)
+	content.move_child(_message_log, $ContentMargin/Content/Footer.get_index())
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
 	var phase_started := ProfileLogScript.begin_usec()
@@ -1331,6 +1339,7 @@ func _perform_action(action: String) -> Dictionary:
 
 func _handle_battle_resolution(result: Dictionary) -> bool:
 	if not _validation_battle_resolution_routing_enabled or DisplayServer.get_name() == "headless":
+		for frame in result.get("playback_frames", []): _record_battle_log_frame(frame)
 		result.erase("playback_frames")
 	if String(result.get("state", "continue")) == "continue" and _session.scenario_status == "in_progress" and not bool(result.get("playback_completed", false)) and _begin_action_playback(result):
 		return true
@@ -1369,7 +1378,9 @@ func _begin_action_playback(result: Dictionary, route_target: String = "") -> bo
 	if frames.is_empty() or not _validation_battle_resolution_routing_enabled or DisplayServer.get_name() == "headless":
 		return false
 	_action_playback_speed = String(frames[0].get(BattleRules.PRESENTATION_SPEED_KEY,BattleRules.PRESENTATION_SPEED_NORMAL))
-	if _action_playback_speed == BattleRules.PRESENTATION_SPEED_INSTANT: return false
+	if _action_playback_speed == BattleRules.PRESENTATION_SPEED_INSTANT:
+		for frame in frames: _record_battle_log_frame(frame)
+		return false
 	_action_playback_frames = frames.duplicate()
 	_action_playback_result = result.duplicate()
 	_action_playback_result.erase("playback_frames")
@@ -1383,6 +1394,7 @@ func _begin_action_playback(result: Dictionary, route_target: String = "") -> bo
 func _play_next_action_frame() -> void:
 	if not is_inside_tree(): return
 	if _action_playback_speed == BattleRules.PRESENTATION_SPEED_INSTANT:
+		for frame in _action_playback_frames: _record_battle_log_frame(frame)
 		_action_playback_frames.clear()
 	if _action_playback_frames.is_empty():
 		_action_playback_in_progress = false
@@ -1406,13 +1418,7 @@ func _play_next_action_frame() -> void:
 		return
 	var frame: Dictionary = _action_playback_frames.pop_front()
 	frame[BattleRules.PRESENTATION_SPEED_KEY] = _action_playback_speed
-	var event: Dictionary = frame.get("playback_event", {})
-	var actor := BattleRules._get_stack_by_id(frame, String(event.get("battle_id", "")))
-	var target := BattleRules._get_stack_by_id(frame, String(event.get("target_battle_id", "")))
-	var caption := "%s · %s: %s" % [String(actor.get("side", "")).capitalize(), BattleRules._stack_label(actor), String(event.get("event_id", "action")).trim_prefix("battle_unit_").trim_prefix("battle_").replace("_", " ").capitalize()]
-	if not target.is_empty(): caption += " → " + BattleRules._stack_label(target)
-	if int(event.get("damage",0)) > 0:
-		caption += " · %d damage · %d lost" % [int(event.damage),int(event.get("casualties",0))]
+	var caption := _record_battle_log_frame(frame)
 	_set_battle_event_compact_label(caption, 2)
 	_set_battle_status_text("Round %d · %s" % [int(frame.get("round",1)),caption])
 	_pressure_label.text = ""
@@ -1421,6 +1427,17 @@ func _play_next_action_frame() -> void:
 	_battle_board_view.tooltip_text = caption
 	var timer := get_tree().create_timer(float(BattleRules.battle_presentation_playback_msec(frame)) * 1.12 / 1000.0)
 	timer.timeout.connect(_play_next_action_frame)
+
+func _record_battle_log_frame(frame: Dictionary) -> String:
+	var event: Dictionary = frame.get("playback_event", {})
+	var actor := BattleRules._get_stack_by_id(frame, String(event.get("battle_id", "")))
+	var target := BattleRules._get_stack_by_id(frame, String(event.get("target_battle_id", "")))
+	var caption := "%s · %s: %s" % [String(actor.get("side", "")).capitalize(), BattleRules._stack_label(actor), String(event.get("event_id", "action")).trim_prefix("battle_unit_").trim_prefix("battle_").replace("_", " ").capitalize()]
+	if not target.is_empty(): caption += " → " + BattleRules._stack_label(target)
+	if int(event.get("damage",0)) > 0:
+		caption += " · %d damage · %d lost" % [int(event.damage),int(event.get("casualties",0))]
+	_message_log.append_message("Round %d · %s" % [int(frame.get("round",1)), caption])
+	return caption
 
 func _publish_completed_action_feedback() -> void:
 	if not _action_playback_feedback.is_empty():
@@ -1967,6 +1984,7 @@ func _configure_battle_keyboard_focus(force: bool = false) -> void:
 		_save_button,
 		_settings_button,
 		_menu_button,
+		_message_log.history,
 	]
 	var controls := FrontierVisualKit.configure_focus_cycle(surfaces)
 	_last_battle_keyboard_focus_cycle_names = []
