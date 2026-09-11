@@ -1408,14 +1408,14 @@
           354
         ],
         "normalized_rect": [
-          0.797509765625,
-          0.3977777777777778,
-          0.16884765625,
-          0.2074074074074074
+          0.881,
+          0.39,
+          0.10130859375,
+          0.12444444444444444
         ],
         "ground_anchor": [
-          0.88125,
-          0.5966666666666667
+          0.931244140625,
+          0.5093333333333333
         ],
         "modulate": [
           1,
@@ -1424,7 +1424,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low masonry reserve stands on the right-bank ground behind Wayfarers Hall, with open storage bays facing the working shore.",
+        "grounding": "Compact masonry reserve occupies the rear-right bank east of Beacon Court, leaving a clear gap between the two buildings and above Wayfarers Hall. Original raster preserved; corrected placement validation: docs/embercourt-town-building-overlaps.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_stone_store.prompt.txt",
         "prompt_sha256": "2536fa577879e3065837f7123e5686d5aa9fa5a27be0c5d3414dff40bc532c3a",
         "curation": "Inspected normal paid Stone/Watch/Bowyer/Beacon progression and the recorded developed Riverwatch composition at 1280x720. Both upgrade pairs retain their scenic site and ground anchor. Three-resolution input/save and official-platform acceptance is recorded separately in the art-repair report; later catalog paintings remain unaccepted.",
@@ -1500,14 +1500,14 @@
           343
         ],
         "normalized_rect": [
-          0.49375,
-          0.42,
-          0.1680908203125,
-          0.2
+          0.4825,
+          0.47533333333333333,
+          0.13447265625,
+          0.16
         ],
         "ground_anchor": [
-          0.578125,
-          0.6133333333333333
+          0.55,
+          0.63
         ],
         "modulate": [
           1,
@@ -1516,7 +1516,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Bow-making workshop and firing lane stand on the right bank west of the civic hall, above the lock-side shore wall; preserve the main hall entrance.",
+        "grounding": "Smaller bow-making workshop and firing lane stand on the right-bank quay west of the civic hall, with the whole range clear of its roof and entrance. Shares the Beacon upgrade ground anchor. Original raster preserved; corrected placement validation: docs/embercourt-town-building-overlaps.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_bowyer_lodge.prompt.txt",
         "prompt_sha256": "2040e9fec0aafbdd7aa9c1db49f14020b5e115f77c9313eae221792ce0f5016a",
         "curation": "Inspected normal paid Stone/Watch/Bowyer/Beacon progression and the recorded developed Riverwatch composition at 1280x720. Both upgrade pairs retain their scenic site and ground anchor. Three-resolution input/save and official-platform acceptance is recorded separately in the art-repair report; later catalog paintings remain unaccepted.",
@@ -1546,14 +1546,14 @@
           328
         ],
         "normalized_rect": [
-          0.49375,
-          0.421171875,
-          0.16864013671875,
-          0.191796875
+          0.4825,
+          0.47627083333333337,
+          0.134912109375,
+          0.1534375
         ],
         "ground_anchor": [
-          0.578125,
-          0.6133333333333333
+          0.55,
+          0.63
         ],
         "modulate": [
           1,
@@ -1562,7 +1562,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Issue loft and signal tower upgrade the Bowyer workshop and firing lane on the identical right-bank site and ground anchor.",
+        "grounding": "Issue loft and signal tower replace the smaller Bowyer workshop on the identical right-bank quay and ground anchor, clear of the civic hall entrance. Original raster preserved; corrected placement validation: docs/embercourt-town-building-overlaps.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_beacon_range.prompt.txt",
         "prompt_sha256": "c1d1ac2ad81d0fcba95800064847cb2f23bd4d9061368a34b2ac3044c9033172",
         "curation": "Inspected normal paid Stone/Watch/Bowyer/Beacon progression and the recorded developed Riverwatch composition at 1280x720. Both upgrade pairs retain their scenic site and ground anchor. Three-resolution input/save and official-platform acceptance is recorded separately in the art-repair report; later catalog paintings remain unaccepted.",
@@ -1638,14 +1638,14 @@
           351
         ],
         "normalized_rect": [
-          0.2530904134114583,
-          0.440306712962963,
-          0.14784138997395835,
-          0.18006365740740743
+          0.015,
+          0.47,
+          0.11827311197916668,
+          0.14405092592592594
         ],
         "ground_anchor": [
-          0.31875,
-          0.6066666666666667
+          0.06752766927083337,
+          0.603087962962963
         ],
         "modulate": [
           1,
@@ -1654,7 +1654,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low supply lodge stands by the left lock buttress, behind the Watch court, with its stores facing the quay approach.",
+        "grounding": "Low supply lodge stands on the far-left village street between the rear granary and foreground market, wholly on land instead of projecting into the upstream channel beside the lock. Original raster preserved; corrected placement validation: docs/embercourt-town-building-overlaps.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_quartermasters_depot.prompt.txt",
         "prompt_sha256": "83b78db06ab3514cb371e694bc0a19baebedc1aca38bad96d7a125a9d80dec28",
         "curation": "Original text-only paintings from the inspected Riverwatch panorama and normal paid-growth draft. Revised developed composition inspected at 1280x720: observatory on the rear left-bank terrace, with exposed supply roof and right-bank pike hall. Archive and Annex share source-space bounds and ground anchor but are not pixel-identical edits. Final three-resolution paid-growth, input/save and platform acceptance is recorded separately in the art-repair report.",
@@ -2198,14 +2198,14 @@
           349
         ],
         "normalized_rect": [
-          0.6986181640625,
-          0.37777777777777777,
-          0.1541162109375,
-          0.18666666666666668
+          0.779,
+          0.405,
+          0.0924697265625,
+          0.112
         ],
         "ground_anchor": [
-          0.775,
-          0.5444444444444444
+          0.8248291015625,
+          0.505
         ],
         "modulate": [
           1,
@@ -2214,7 +2214,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The low lector arcade extends the right-bank terrace below the Writs beacon and behind the stone store and waterfront halls; shallow steps join the existing settlement without an independent landscape tile.",
+        "grounding": "Compact lector arcade occupies its own right-bank terrace immediately east of the civic hall and west of the smaller stone reserve. The hall roof and doorway remain uncovered; the arcade also stays below the compact command controls. Original raster preserved; corrected placement validation: docs/embercourt-town-building-overlaps.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_court.prompt.txt",
         "prompt_sha256": "120b92b9ce5379fefe4696c7f472385347a942e081260ae7e3b5bdb1a5021ef0",
         "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
