@@ -109,6 +109,8 @@ func play_invalid(source: String = "manual", metadata: Dictionary = {}) -> Dicti
 func attach_control(control: Control) -> bool:
 	if control == null:
 		return false
+	if bool(control.get_meta("silent_ui_audio", false)):
+		return false
 	var id := control.get_instance_id()
 	if _connected_control_ids.has(id):
 		return false

@@ -16611,13 +16611,13 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Main menu and visible AI turns completed and validated. Scenic navigation, controller/faction turn captions and fog-filtered movement/site playback preserve deterministic state, saves and battle handoffs. Final source/package, runtime, repository and platform evidence plus one legacy empty-save-list fixture exception: docs/main-menu-and-visible-ai-turns.md. No next slice selected.",
+  "currentNotes": "Persistent battle message log completed: compact retained 200-entry history, keyboard access and silent scrolling. Source/Linux 86 checks each, Windows 47, controller/save-handoff, repository and official exports/parity pass. Evidence: docs/battle-message-log.md. No next slice selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ui-main-menu-and-visible-ai-turns-20260910",
-  "currentSliceId": "ui-main-menu-and-visible-ai-turns-20260910",
-  "currentSliceNotes": "Scenic main menu and fog-filtered actual AI turn/movement/site playback implemented. Linux 61, Windows 48, generated Medium 62 and reduced-motion 61 focused checks pass; affected runtime reports, repository validation, official exports and PCK parity pass. Known legacy empty-save-list fixture failure and platform limits documented in docs/main-menu-and-visible-ai-turns.md.",
+  "currentSlice": "ui-battle-message-log-20260911",
+  "currentSliceId": "ui-battle-message-log-20260911",
+  "currentSliceNotes": "Persistent 200-entry battle log implemented. Source wide and Linux packaged each pass 86 checks; Windows packaged passes 47. Existing controller/save-handoff, repository, official Linux/Windows exports and package parity pass. Inspected small/wide screenshots; no simulation/save changes. See docs/battle-message-log.md.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Rework And Visible AI Turns",
+  "currentSliceTitle": "Persistent Battle Message Log",
   "currentSliceUpdatedAt": "2026-09-10T17:47:59Z",
   "deferredRiskRegister": [
     {
@@ -21925,6 +21925,22 @@
   },
   "guardrailNote": "Owner-directed neutral encounter variety through original-content runtime adoption; preserve recovered native placement, RNG and serialization. Validate source quantities, battle/save/icon agreement and both platforms before completion.",
   "lastValidation": {
+    "id": "ui-battle-message-log-20260911",
+    "sliceId": "ui-battle-message-log-20260911",
+    "status": "completed",
+    "sourceReport": "docs/battle-message-log.md",
+    "linuxPackagedChecks": 86,
+    "sourceWideChecks": 86,
+    "windowsPackagedChecks": 47,
+    "existingRuntimeReportsPassed": 2,
+    "repositoryValidation": "passed",
+    "officialExports": "Linux/Windows passed",
+    "packBytesPerPlatform": 313197656,
+    "packMemberCount": 5599,
+    "packParity": "Only project.binary differs",
+    "limits": "Battle-local history, not save-persisted. Windows headless Wine, not hardware rendering certification."
+  },
+  "priorMenuTurnValidation": {
     "id": "ui-main-menu-and-visible-ai-turns-20260910",
     "sliceId": "ui-main-menu-and-visible-ai-turns-20260910",
     "status": "completed",
@@ -22160,9 +22176,45 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "No next implementation slice selected. Preserve completed UI and battle behavior; select and track owner-directed scope before further changes. Native RMG, balance, save migration and art generation are not authorized by this completed UI slice.",
+  "nextActionGuardrailNote": "Battle message log completed. No next slice selected; scope and track owner-directed work before further changes. Preserve simulation, saves and existing UI routes.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "ui-battle-message-log-20260911",
+      "title": "Persistent Battle Message Log",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/battle-message-log.md"
+      ],
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleMessageLog.gd",
+        "scripts/autoload/UiAudio.gd"
+      ],
+      "validationCommands": [
+        "python3 tests/battle_message_log_regression.py",
+        "python3 tests/battle_readability_regression.py --label battle-log --render",
+        "python3 tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py"
+      ],
+      "completionCriteria": [
+        "Recent captions persist with bounded scrollable history",
+        "Actual playback and instant actions retain ordered captions without simulation changes",
+        "Inspected small/wide layout and platform checks pass"
+      ],
+      "nonGoals": [
+        "No balance, art, RMG or save-schema changes"
+      ],
+      "updatedAt": "2026-09-11T10:55:32Z",
+      "startedAt": "2026-09-11T10:37:33Z",
+      "notes": "Persistent 200-entry battle log implemented. Source wide and Linux packaged each pass 86 checks; Windows packaged passes 47. Existing controller/save-handoff, repository, official Linux/Windows exports and package parity pass. Inspected small/wide screenshots; no simulation/save changes. See docs/battle-message-log.md.",
+      "completedAt": "2026-09-11T10:55:32Z"
+    },
     {
       "id": "ui-main-menu-and-visible-ai-turns-20260910",
       "title": "Main Menu Rework And Visible AI Turns",
@@ -111856,9 +111908,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Owner-directed main-menu and visible-AI-turn rework completed: scenery-first navigation and skippable/reduced-motion actual AI movement/action playback with player identity. Linux 61, Windows 48, generated Medium 62 and reduced-motion 61 focused checks pass; repository and official exports pass. Not release readiness; known legacy test and Windows hardware limits documented.",
+  "summary": "Owner-directed persistent battle message log completed: retained 200-entry action/damage/casualty history with keyboard access and silent scrolling. Source/Linux 86 checks each, Windows 47, controller/save-handoff, repository and official exports/parity pass. Battle-local UI only; no release-readiness claim. Evidence: docs/battle-message-log.md.",
   "taskId": "10236",
-  "updatedAt": "2026-09-10T21:01:34Z",
+  "updatedAt": "2026-09-11T10:55:32Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
