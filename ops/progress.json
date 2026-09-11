@@ -16611,14 +16611,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Town roster double-click entry completed. Source home/remote 18/20 checks, Linux/Windows remote 20 each, official exports/parity and repository validation pass. Real Town scenes/screenshots verified; hero movement/resources preserved and cleanup performed. Evidence: docs/town-roster-double-click.md. No next slice selected.",
+  "currentNotes": "Embercourt building overlap repair completed: five authoritative scene-layer placements corrected. Source small/wide and Linux/Windows packaged Town probes pass 717 checks each; old geometry fails overlap guards. Repository, official exports/parity pass; screenshots inspected and cleanup performed. Evidence: docs/embercourt-town-building-overlaps.md. No next slice selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ui-town-roster-double-click-20260911",
-  "currentSliceId": "ui-town-roster-double-click-20260911",
-  "currentSliceNotes": "Town roster double-click opens exact owned town through existing visit/router path. Source home/remote 18/20 checks, Linux/Windows remote 20 each, official exports/parity and repository validation pass. Screenshots inspected; completion cleanup performed. Evidence: docs/town-roster-double-click.md.",
+  "currentSlice": "bugfix-embercourt-town-building-overlaps-20260911",
+  "currentSliceId": "bugfix-embercourt-town-building-overlaps-20260911",
+  "currentSliceNotes": "Five Embercourt placement records corrected; original rasters and gameplay preserved. Source small/wide and Linux/Windows Town probes pass 717 checks each; negative control catches prior overlaps. Repository, official exports and parity pass; screenshots inspected and cleanup performed. Evidence: docs/embercourt-town-building-overlaps.md.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Roster Double-click Entry",
-  "currentSliceUpdatedAt": "2026-09-11T12:44:39Z",
+  "currentSliceTitle": "Embercourt Town Building Overlap Repair",
+  "currentSliceUpdatedAt": "2026-09-11T13:12:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21925,6 +21925,24 @@
   },
   "guardrailNote": "Town roster double-click shortcut only; preserve ownership, levels, movement, economy, saves and existing map input. No art or RMG changes.",
   "lastValidation": {
+    "id": "bugfix-embercourt-town-building-overlaps-20260911",
+    "sliceId": "bugfix-embercourt-town-building-overlaps-20260911",
+    "status": "completed",
+    "sourceReport": "docs/embercourt-town-building-overlaps.md",
+    "sourceSmallChecks": 717,
+    "sourceWideChecks": 717,
+    "linuxPackagedChecks": 717,
+    "windowsPackagedChecks": 717,
+    "negativeControl": "Seven expected hall/river intersection failures with original view rectangles",
+    "repositoryValidation": "passed",
+    "officialExports": "Linux/Windows passed, including Windows generated-map/Town flow",
+    "packBytesPerPlatform": 313201864,
+    "packMemberCount": 5599,
+    "packParity": "Only platform-specific project.binary differs",
+    "cleanup": "Removed about 16 MB of obsolete captures and disposable Wine prefixes; final evidence, exports, user data, caches and unrelated files preserved",
+    "limits": "Render fixtures, not new paid-growth or disk-save playthrough. Windows headless Wine, not GPU certification. Five Embercourt placement records only."
+  },
+  "priorTownRosterDoubleClickValidation": {
     "id": "ui-town-roster-double-click-20260911",
     "sliceId": "ui-town-roster-double-click-20260911",
     "status": "completed",
@@ -22212,9 +22230,46 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Town roster double-click entry completed and cleaned up. Await the next owner-directed slice; preserve gameplay, saves, art and existing UI routes.",
+  "nextActionGuardrailNote": "Embercourt placement repair completed and cleaned up. Await the next owner-directed slice; preserve original rasters, gameplay, saves, other factions and unrelated artifacts.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "bugfix-embercourt-town-building-overlaps-20260911",
+      "title": "Embercourt Town Building Overlap Repair",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/embercourt-town-building-overlaps.md"
+      ],
+      "implementationTargets": [
+        "content/town_building_scene_art_manifest.json",
+        "tests/embercourt_town_overlap_regression.py",
+        "tests/packaged_embercourt_town_overlap_regression.py"
+      ],
+      "validationCommands": [
+        "python3 tests/embercourt_town_overlap_regression.py --label final-wide --render --resolution 2048x1079",
+        "python3 tests/embercourt_town_overlap_regression.py --label final-small-complete --render --resolution 1280x720",
+        "python3 tests/packaged_embercourt_town_overlap_regression.py --platform <platform> --binary <binary> --pack <pack> --label <label>",
+        "python3 tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Confirmed river/civic-hall layer overlaps corrected in actual Town renders",
+        "Hotspots and game state preserved; source/package validation passes"
+      ],
+      "nonGoals": [
+        "No other-faction, gameplay, saves, RMG or unrelated art changes"
+      ],
+      "updatedAt": "2026-09-11T13:12:30Z",
+      "startedAt": "2026-09-11T12:52:57Z",
+      "notes": "Five Embercourt placement records corrected; original rasters and gameplay preserved. Source small/wide and Linux/Windows Town probes pass 717 checks each; negative control catches prior overlaps. Repository, official exports and parity pass; screenshots inspected and cleanup performed. Evidence: docs/embercourt-town-building-overlaps.md.",
+      "completedAt": "2026-09-11T13:12:30Z"
+    },
     {
       "id": "ui-town-roster-double-click-20260911",
       "title": "Town Roster Double-click Entry",
@@ -112015,9 +112070,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Town roster double-click shortcut completed: single click selects/centers and left double click opens the exact currently owned town through existing authority. Source 18/20 checks, Linux/Windows 20 each, official exports/parity and repository validation pass. Screenshots inspected; task cleanup performed. Evidence: docs/town-roster-double-click.md. No release-readiness claim.",
+  "summary": "Embercourt building overlap repair completed: five scene-layer placement records corrected without changing original rasters or gameplay. Source small/wide and Linux/Windows 717 checks each, repository and official exports/parity pass. Negative control detects old overlaps; screenshots inspected and cleanup performed. Evidence: docs/embercourt-town-building-overlaps.md. No release-readiness claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-11T12:44:39Z",
+  "updatedAt": "2026-09-11T13:12:30Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",

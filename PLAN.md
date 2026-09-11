@@ -22,6 +22,12 @@ Rules:
 
 ## Current Tactical State
 
+### Embercourt Town Building Overlap Repair
+
+id: `bugfix-embercourt-town-building-overlaps-20260911`
+
+Status: completed 2026-09-11, Phase 6. Corrected five Embercourt scene-layer placements so Bowyer/Beacon upgrades and Beacon Court clear the civic hall, Depot clears the river, and Stone Store leaves room for Court. Original rasters and gameplay unchanged. Source small/wide and Linux/Windows packaged Town probes pass 717 checks each; old bounds fail the overlap guards. Screenshots inspected, repository and official exports/parity pass, completion cleanup performed. Requirements/evidence: `docs/embercourt-town-building-overlaps.md`. No next slice selected.
+
 ### Town Roster Double-click Entry
 
 id: `ui-town-roster-double-click-20260911`
