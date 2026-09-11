@@ -20,6 +20,64 @@ var _full_summary := ""
 var _compact_mode := false
 var _return_focus_on_hide := false
 var _resource_values: Dictionary = {}
+var _inline_row: HBoxContainer
+var _inline_cells: Dictionary = {}
+
+
+func enable_inline_icons() -> void:
+	if _inline_row != null: return
+	_inline_row = HBoxContainer.new()
+	_inline_row.name = "ResourceIconStrip"
+	_inline_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_inline_row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_inline_row.offset_left = 8
+	_inline_row.offset_right = -8
+	_inline_row.add_theme_constant_override("separation", 8)
+	add_child(_inline_row)
+	custom_minimum_size.y = 28
+	_refresh_button_copy()
+	_sync_inline_icons()
+
+
+func _sync_inline_icons() -> void:
+	if _inline_row == null: return
+	var popup := get_popup()
+	for index in range(popup.item_count):
+		var data: Dictionary = popup.get_item_metadata(index)
+		var id := String(data.resource_id)
+		if not _inline_cells.has(id):
+			var cell := HBoxContainer.new()
+			cell.name = id
+			cell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			cell.mouse_filter = Control.MOUSE_FILTER_PASS
+			var glyph := TextureRect.new()
+			glyph.custom_minimum_size = Vector2(28, 28)
+			glyph.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			glyph.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			cell.add_child(glyph)
+			var amount := Label.new()
+			amount.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			amount.clip_text = true
+			amount.add_theme_font_size_override("font_size", 14)
+			amount.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			cell.add_child(amount)
+			_inline_row.add_child(cell)
+			_inline_cells[id] = cell
+		var cell: HBoxContainer = _inline_cells[id]
+		cell.get_child(0).texture = popup.get_item_icon(index)
+		cell.get_child(1).text = _inline_amount(int(data.amount))
+		cell.tooltip_text = popup.get_item_tooltip(index)
+		cell.accessibility_name = cell.tooltip_text
+	accessibility_name = "Resources: " + _full_summary
+
+
+func _inline_amount(value: int) -> String:
+	# Exact quantities remain in each tooltip and the existing popup.
+	if absi(value) >= 1000000000: return "%.1fB" % (float(value) / 1000000000.0)
+	if absi(value) >= 1000000: return "%.1fM" % (float(value) / 1000000.0)
+	if absi(value) >= 100000: return "%.0fk" % (float(value) / 1000.0)
+	return str(value)
 
 
 func _ready() -> void:
@@ -110,6 +168,7 @@ func validation_snapshot() -> Dictionary:
 func _refresh_button_copy() -> void:
 	var compact := _compact_mode or (fit_summary_to_width and _summary_exceeds_width())
 	text = COMPACT_LABEL if compact else (_normal_summary if _normal_summary != "" else COMPACT_LABEL)
+	if _inline_row != null: text = ""
 	tooltip_text = _full_summary
 
 
@@ -165,6 +224,7 @@ func _rebuild_popup() -> void:
 			"amount": amount,
 			"icon_path": icon_path if icon_texture != null else "",
 		})
+	_sync_inline_icons()
 
 
 func _on_popup_about_to_show() -> void:

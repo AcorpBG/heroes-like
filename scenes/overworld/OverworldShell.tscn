@@ -652,6 +652,10 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Forecast"
 
+[node name="ResourceStrip" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="CommandBand" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)
@@ -670,21 +674,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
-[node name="ResourceChip" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow"]
+[node name="ResourceChip" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/ResourceStrip"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(210, 0)
+custom_minimum_size = Vector2(0, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="ResourcePad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip"]
+[node name="ResourcePad" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/ResourceStrip/ResourceChip"]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 6
+theme_override_constants/separation = 6
 
-[node name="Resources" type="MenuButton" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad"]
+[node name="Resources" type="MenuButton" parent="ShellMargin/Shell/ShellPad/Content/ResourceStrip/ResourceChip/ResourcePad"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 theme = SubResource("Theme_stockpile_readonly")
 focus_mode = 2
 flat = true
@@ -694,15 +697,16 @@ text = "Gold 0 | Wood 0 | Ore 0"
 script = ExtResource("7_resource_stockpile_menu")
 fit_summary_to_width = true
 
-[node name="ResourceDeltaCueRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad"]
+[node name="ResourceDeltaCueRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/ResourceStrip/ResourceChip/ResourcePad"]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 mouse_filter = 2
 alignment = 1
 theme_override_constants/separation = 3
 
-[node name="ResourceDeltaCueIcon" type="TextureRect" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad/ResourceDeltaCueRow"]
+[node name="ResourceDeltaCueIcon" type="TextureRect" parent="ShellMargin/Shell/ShellPad/Content/ResourceStrip/ResourceChip/ResourcePad/ResourceDeltaCueRow"]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(22, 22)
@@ -711,7 +715,7 @@ mouse_filter = 2
 expand_mode = 3
 stretch_mode = 5
 
-[node name="ResourceDeltaCue" type="Label" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad/ResourceDeltaCueRow"]
+[node name="ResourceDeltaCue" type="Label" parent="ShellMargin/Shell/ShellPad/Content/ResourceStrip/ResourceChip/ResourcePad/ResourceDeltaCueRow"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

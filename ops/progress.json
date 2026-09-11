@@ -16611,14 +16611,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Persistent battle message log completed: compact retained 200-entry history, keyboard access and silent scrolling. Source/Linux 86 checks each, Windows 47, controller/save-handoff, repository and official exports/parity pass. Evidence: docs/battle-message-log.md. No next slice selected.",
+  "currentNotes": "All-resource Overworld strip completed. Source small/wide 212 checks each, Windows packaged 209, existing stockpile report, repository and official exports/parity pass. Linux 212 functional checks add no errors to a verified bare-engine popup baseline; strict logs remain failing and retained. Evidence and engine/legacy limits: docs/overworld-all-resource-icons.md. No next slice selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ui-battle-message-log-20260911",
-  "currentSliceId": "ui-battle-message-log-20260911",
-  "currentSliceNotes": "Persistent 200-entry battle log implemented. Source wide and Linux packaged each pass 86 checks; Windows packaged passes 47. Existing controller/save-handoff, repository, official Linux/Windows exports and package parity pass. Inspected small/wide screenshots; no simulation/save changes. See docs/battle-message-log.md.",
+  "currentSlice": "ui-overworld-all-resource-icons-20260911",
+  "currentSliceId": "ui-overworld-all-resource-icons-20260911",
+  "currentSliceNotes": "Implemented all nine registry-backed resource icons and live quantities. Source small/wide 212 checks each, Windows 209, stockpile report, repository and official exports/parity pass. Linux 212 functional checks pass against the exact bare-engine popup error baseline; strict logs retained. Evidence and limits: docs/overworld-all-resource-icons.md.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Persistent Battle Message Log",
-  "currentSliceUpdatedAt": "2026-09-10T17:47:59Z",
+  "currentSliceTitle": "All-resource Overworld Icon Strip",
+  "currentSliceUpdatedAt": "2026-09-11T11:40:54Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21923,8 +21923,27 @@
       }
     }
   },
-  "guardrailNote": "Owner-directed neutral encounter variety through original-content runtime adoption; preserve recovered native placement, RNG and serialization. Validate source quantities, battle/save/icon agreement and both platforms before completion.",
+  "guardrailNote": "Owner-directed all-resource Overworld UI only. Preserve economy, saves, original art, RMG and other screen behavior; retain truthful engine-warning and validation limits.",
   "lastValidation": {
+    "id": "ui-overworld-all-resource-icons-20260911",
+    "sliceId": "ui-overworld-all-resource-icons-20260911",
+    "status": "completed",
+    "sourceReport": "docs/overworld-all-resource-icons.md",
+    "sourceSmallChecks": 212,
+    "sourceWideChecks": 212,
+    "windowsPackagedChecks": 209,
+    "linuxFunctionalChecks": 212,
+    "linuxStrictErrorCheck": "fails with six unchanged Godot popup signal errors",
+    "linuxEngineBaselineComparison": "passed: identical errors from SHA-locked bare MenuButton, same pack, successful process exits",
+    "existingStockpileReport": "passed Town/Overworld small/wide",
+    "repositoryValidation": "passed",
+    "officialExports": "Linux/Windows passed",
+    "packBytesPerPlatform": 313200440,
+    "packMemberCount": 5599,
+    "packParity": "Only project.binary differs",
+    "limits": "Upstream Godot release popup errors retained. Legacy full-footer helper still expects the already-hidden SaveSlot. Windows headless Wine, not GPU certification. No release-readiness claim."
+  },
+  "priorBattleMessageLogValidation": {
     "id": "ui-battle-message-log-20260911",
     "sliceId": "ui-battle-message-log-20260911",
     "status": "completed",
@@ -22176,9 +22195,47 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Battle message log completed. No next slice selected; scope and track owner-directed work before further changes. Preserve simulation, saves and existing UI routes.",
+  "nextActionGuardrailNote": "All-resource Overworld strip completed with documented unchanged engine/legacy limits. Await the next owner-directed slice; do not broaden into engine upgrades, economy, RMG or other screen redesign.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "ui-overworld-all-resource-icons-20260911",
+      "title": "All-resource Overworld Icon Strip",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/overworld-all-resource-icons.md"
+      ],
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "scenes/shared/ResourceStockpileMenu.gd"
+      ],
+      "validationCommands": [
+        "python3 -B tests/overworld_resource_strip_regression.py --label resource-strip --render --resolution 1280x720",
+        "python3 -B tests/overworld_resource_strip_regression.py --label resource-strip-wide --render --resolution 1920x1080",
+        "python3 -B tests/full_play_validation_suite.py --label resource-strip-popover --rendered --accessibility disabled --only resource_stockpile_icon_popover_runtime_report",
+        "python3 -B tests/packaged_overworld_resource_strip_regression.py (platform/export/baseline arguments documented in sourceDocs)",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py"
+      ],
+      "completionCriteria": [
+        "All live resources visibly display correct art and amounts",
+        "Responsive source/package and popup/update checks pass"
+      ],
+      "nonGoals": [
+        "No economy, save-schema, art, RMG or other screen changes"
+      ],
+      "updatedAt": "2026-09-11T11:40:54Z",
+      "startedAt": "2026-09-11T11:03:26Z",
+      "notes": "Implemented all nine registry-backed resource icons and live quantities. Source small/wide 212 checks each, Windows 209, stockpile report, repository and official exports/parity pass. Linux 212 functional checks pass against the exact bare-engine popup error baseline; strict logs retained. Evidence and limits: docs/overworld-all-resource-icons.md.",
+      "completedAt": "2026-09-11T11:40:54Z"
+    },
     {
       "id": "ui-battle-message-log-20260911",
       "title": "Persistent Battle Message Log",
@@ -111908,9 +111965,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Owner-directed persistent battle message log completed: retained 200-entry action/damage/casualty history with keyboard access and silent scrolling. Source/Linux 86 checks each, Windows 47, controller/save-handoff, repository and official exports/parity pass. Battle-local UI only; no release-readiness claim. Evidence: docs/battle-message-log.md.",
+  "summary": "Owner-directed all-resource Overworld strip completed: all nine original icons and live quantities, including zero rare holdings, with exact-value popup/tooltips. Source 212 checks per resolution, Windows 209, stockpile report, repository and official exports/parity pass. Linux functional checks pass against an unchanged bare-engine popup error baseline, not an error-free engine claim. Evidence: docs/overworld-all-resource-icons.md.",
   "taskId": "10236",
-  "updatedAt": "2026-09-11T10:55:32Z",
+  "updatedAt": "2026-09-11T11:40:54Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",

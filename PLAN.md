@@ -22,13 +22,19 @@ Rules:
 
 ## Current Tactical State
 
+### All-resource Overworld Icon Strip
+
+id: `ui-overworld-all-resource-icons-20260911`
+
+Status: completed 2026-09-11, Phase 6. All nine stockpile resources now display original registry-backed icons and quantities in a slim always-visible Overworld strip, including zero rare holdings. Full-value popup/tooltips, keyboard access and live updates preserved. Small/wide source 212 checks each, Windows 209, stockpile report, repository and official exports/parity pass. Linux 212 functional checks pass against a verified bare-engine popup error baseline; strict errors and legacy-test limits remain documented. Requirements/evidence: `docs/overworld-all-resource-icons.md`. No economy, save, art generation, RMG or Town/Battle runtime changes. No next slice selected.
+
 ### Persistent Battle Message Log
 
 id: `ui-battle-message-log-20260911`
 
-Status: completed 2026-09-11, Phase 6. Compact 200-entry battle-local log retains ordered action/damage/loss captions after animation and through instant playback. Keyboard navigation and silent scrolling preserve gameplay, saves and command space. Source wide/Linux packaged pass 86 checks each; Windows packaged 47; controller/save-handoff, repository and official exports/parity pass. Requirements/evidence: `docs/battle-message-log.md`. No art, balance, RMG or save-schema changes. No next slice selected.
+Status: completed 2026-09-11, Phase 6. Compact 200-entry battle-local log retains ordered action/damage/loss captions after animation and through instant playback. Keyboard navigation and silent scrolling preserve gameplay, saves and command space. Source wide/Linux packaged pass 86 checks each; Windows packaged 47; controller/save-handoff, repository and official exports/parity pass. Requirements/evidence: `docs/battle-message-log.md`. No art, balance, RMG or save-schema changes.
 
-Previous completed owner-directed slice: `ui-main-menu-and-visible-ai-turns-20260910`, Phase 6. Requirements/evidence: `docs/main-menu-and-visible-ai-turns.md`. Latest completion is the battle-log slice above.
+Previous completed owner-directed slice: `ui-main-menu-and-visible-ai-turns-20260910`, Phase 6. Requirements/evidence: `docs/main-menu-and-visible-ai-turns.md`. Latest completion is the all-resource strip above.
 
 ### Main Menu Rework And Visible AI Turns
 
