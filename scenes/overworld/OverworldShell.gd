@@ -4777,6 +4777,7 @@ func _rebuild_town_actions() -> void:
 		if button == null:
 			button = Button.new()
 			button.pressed.connect(_on_town_roster_pressed.bind(placement_id))
+			button.gui_input.connect(_on_town_roster_gui_input.bind(placement_id))
 			_town_actions.add_child(button)
 		var entrance := LevelRules.town_entrance(town)
 		var town_tile := Vector2i(int(entrance.x), int(entrance.y))
@@ -4786,9 +4787,9 @@ func _rebuild_town_actions() -> void:
 		button.text = ""
 		button.toggle_mode = true
 		button.button_pressed = is_selected
-		button.tooltip_text = "%s at %d,%d. Select and center this holding on the map." % [town_name, int(town.get("x", 0)), int(town.get("y", 0))]
+		button.tooltip_text = "%s at %d,%d. Click to select and center; double-click to open town." % [town_name, int(town.get("x", 0)), int(town.get("y", 0))]
 		button.accessibility_name = "%s town %s" % ["Selected" if is_selected else "Select", town_name]
-		button.accessibility_description = "Select this owned town and center its entry tile on the map."
+		button.accessibility_description = "Select this owned town and center its entry tile on the map. Double-click to open town, or use the Enter Town action after selecting."
 		button.focus_mode = Control.FOCUS_ALL
 		_style_roster_icon_button(button, "primary" if is_selected else "secondary")
 		var backdrop_path := String(town_data.get("scenic_backdrop_path", ""))
@@ -4807,6 +4808,21 @@ func _rebuild_town_actions() -> void:
 		displayed_town_count += 1
 	_reconcile_roster_buttons(_town_actions, retained)
 	_town_roster_title_label.text = "Towns  %d" % displayed_town_count
+
+func _on_town_roster_gui_input(event: InputEvent, placement_id: String) -> void:
+	if not (event is InputEventMouseButton) or event.button_index != MOUSE_BUTTON_LEFT or not event.pressed or not event.double_click:
+		return
+	if _overworld_gameplay_movement_blocked_reason() != "" or _session.scenario_status != "in_progress":
+		return
+	# Resolve ownership and the current entrance again: the roster may have
+	# survived a refresh, capture or map-level change between the two clicks.
+	for town in _session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("placement_id", "")) == placement_id and String(town.get("owner", "")) == "player":
+			accept_event()
+			_on_town_roster_pressed(placement_id)
+			if String(_town_at(_selected_tile.x, _selected_tile.y).get("placement_id", "")) == placement_id:
+				_visit_selected_town()
+			return
 
 func _on_town_roster_pressed(placement_id: String) -> void:
 	for town in _session.overworld.get("towns", []):
