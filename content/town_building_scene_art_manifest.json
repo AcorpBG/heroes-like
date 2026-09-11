@@ -135,14 +135,14 @@
           338
         ],
         "normalized_rect": [
-          0.125,
-          0.6279188368055556,
-          0.23193359375,
-          0.2720811631944444
+          0.20281250000000003,
+          0.6528694661458334,
+          0.1507568359375,
+          0.17685275607638887
         ],
         "ground_anchor": [
-          0.24375,
-          0.8388888888888889
+          0.28,
+          0.79
         ],
         "modulate": [
           1,
@@ -151,7 +151,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low trading arcade attaches to the foreground-left quay below the main tower; wet pilings and boat-loading ramp continue its working waterfront. Preserve the tower door, central water and accepted bell docks.",
+        "grounding": "Compact market on the western wharf, with distinct frontage between the map room and counting house. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_market_square.prompt.txt",
         "prompt_sha256": "91f3c68f06972033f5771d8cb83e9e72f90856fff44195e39b680961d60404cd",
         "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
@@ -311,14 +311,14 @@
           333
         ],
         "normalized_rect": [
-          0.75625,
-          0.6356119791666667,
-          0.21675618489583331,
-          0.25090422453703703
+          0.7875,
+          0.6851562499999999,
+          0.17340494791666666,
+          0.20072337962962963
         ],
         "ground_anchor": [
-          0.871875,
-          0.8666666666666667
+          0.88,
+          0.87
         ],
         "modulate": [
           1,
@@ -327,7 +327,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Long mirror-lined hull and working slip attach to the foreground-right quay along its receding plank direction; the shore-end shelter sits below the gate. Keep the complete cradle inside the cover crop and clear of bottom navigation.",
+        "grounding": "Lower eastern drydock reduced around its existing waterline, leaving the pilot guild approach readable. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_mirror_drydock.prompt.txt",
         "prompt_sha256": "ef663a07f843f2fcb9af0e9efde112bf6c0c536ca02aee8fff22880545723b51",
         "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
@@ -399,14 +399,14 @@
           346
         ],
         "normalized_rect": [
-          0.8125,
-          0.5555555555555556,
-          0.1663330078125,
-          0.2
+          0.8543750000000001,
+          0.5955555555555556,
+          0.11643310546874998,
+          0.13999999999999999
         ],
         "ground_anchor": [
-          0.90625,
-          0.7333333333333333
+          0.92,
+          0.72
         ],
         "modulate": [
           1,
@@ -415,7 +415,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Pilot lookout and skiff attach to the right quay below the old oratory plot and behind the foreground Drydock. Preserve the lookout silhouette and its painted information target through later waterfront growth.",
+        "grounding": "Compact pilot guild on the eastern dock, exposing its frontage above the drydock. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_mourner_pilot_guild.prompt.txt",
         "prompt_sha256": "72c498bb6b4a1e4e36e439febf0dc3e514e256a0bc093ff40c22dbed80632b33",
         "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately."
@@ -487,14 +487,14 @@
           512
         ],
         "normalized_rect": [
-          0.034375,
-          0.6002215133794081,
-          0.1547547846889952,
-          0.27755626439836967
+          0.016406249999999997,
+          0.640166135034556,
+          0.11606608851674641,
+          0.20816719829877725
         ],
         "ground_anchor": [
-          0.1125,
-          0.8666666666666667
+          0.075,
+          0.84
         ],
         "modulate": [
           1,
@@ -503,7 +503,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Harpoon training platform rises from the foreground-left quay below the tower, with pilings joining the waterfront and exposed launchers over the harbor. Keep the complete base above navigation.",
+        "grounding": "Compact gantry at the outer western dock edge, leaving the map room entrance clear. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_harpoon_gantry.prompt.txt",
         "prompt_sha256": "4601b652cd9877b1410844061a2937761974f4f5e9d6c9b878851485a29ca04a",
         "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.",
@@ -532,14 +532,14 @@
           512
         ],
         "normalized_rect": [
-          0.18969796650717705,
-          0.5666666666666667,
-          0.12716806220095694,
-          0.23333333333333334
+          0.20341357655502396,
+          0.5283333333333333,
+          0.08901764354066985,
+          0.16333333333333333
         ],
         "ground_anchor": [
-          0.25625,
-          0.7833333333333333
+          0.25,
+          0.68
         ],
         "modulate": [
           1,
@@ -548,7 +548,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Narrow signal post sits on the left working quay behind the Market, leaving its three-bell frame exposed above the arcade and the main tower unobstructed.",
+        "grounding": "Watch platform moved to the upper western dock edge, above the market roofline. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_bell_chain_watch.prompt.txt",
         "prompt_sha256": "22f99e355aa432460b6302675e2bc6c09384f70411f22d6d7e14f8b462b87b8e",
         "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.",
@@ -577,14 +577,14 @@
           343
         ],
         "normalized_rect": [
-          0.1875,
-          0.6951822916666667,
-          0.15792236328125,
-          0.18815104166666666
+          0.23515624999999998,
+          0.7549240451388889,
+          0.10264953613281251,
+          0.12229817708333333
         ],
         "ground_anchor": [
-          0.271875,
-          0.8722222222222222
+          0.29,
+          0.87
         ],
         "modulate": [
           1,
@@ -593,7 +593,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low memory archive continues the foreground-left trading quay, with stone entry steps facing its approach and pilings meeting the harbor below the Market; leave bottom navigation clear.",
+        "grounding": "Small obituary vault on the foreground dock, with its doorway above navigation. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_obituary_vault.prompt.txt",
         "prompt_sha256": "cacc75b7a76c38ef0514ee53712987a02cba9f936dbdef95c0ae8e2e37e0e095",
         "curation": "Inspected actual Large08 Bellwake Town composition at 1280x720 and 2048x1079; runtime/input/package validation required separately.",
@@ -804,14 +804,14 @@
           372
         ],
         "normalized_rect": [
-          0.12960611979166667,
-          0.34051649305555554,
-          0.14211018880208334,
-          0.18355758101851852
+          0.12330647786458335,
+          0.742724609375,
+          0.09237162272135417,
+          0.11931242766203703
         ],
         "ground_anchor": [
-          0.19375,
-          0.5055555555555555
+          0.165,
+          0.85
         ],
         "modulate": [
           1,
@@ -820,7 +820,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Chart house extends the inner-left shore between the original foreground warehouse and main bell tower, behind the sail workshop; keep its navigation roof exposed and the tower doorway clear.",
+        "grounding": "Map room grounded on the foreground western timber wharf rather than suspended beside the bell tower. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_drowned_map_room.prompt.txt",
         "prompt_sha256": "6791f1733ce1c58764de75a0e94e1a4b4318c3c1b7ef6e4269712e2907603ab7",
         "curation": "Inspected ordinary 1280x720 construction and the developed Town at 1280x720, 1920x1080 and 2048x1079; source input/save checks pass. Platform acceptance is recorded separately in the art-repair report.",
@@ -1033,14 +1033,14 @@
           360
         ],
         "normalized_rect": [
-          0.49249267578125,
-          0.28888888888888886,
-          0.20379638671875,
-          0.2547019675925926
+          0.42996398925781254,
+          0.3138888888888889,
+          0.1324676513671875,
+          0.1655562789351852
         ],
         "ground_anchor": [
-          0.615625,
-          0.5444444444444444
+          0.51,
+          0.48
         ],
         "modulate": [
           1,
@@ -1049,7 +1049,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Navigator's compass house occupies the inner right shoreline behind the Sounding jetty; its shoreward gangway joins the existing bank, and the compass loft remains exposed above later harbor structures.",
+        "grounding": "Compact chart house on the inner harbor piles west of the admiralty, separated from the memory court roofline. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_wakeglass_chart_house.prompt.txt",
         "prompt_sha256": "11bbb2946abdb91e7f6c28c10716f156a902ac60fbea2c4b8a7b4c9558eb5d61",
         "curation": "Original built-in text-only RGBA paintings for the five remaining Veilmourn variant identities. Preserve moonlit wet timber, salt stone, silver-blue roofs and restrained warm lamps, original alpha, the village and all earlier scene layers. Composition, full build/input/save and platform acceptance are recorded separately in the art-repair report; detached fixtures are not earned development.",
@@ -1174,14 +1174,14 @@
           356
         ],
         "normalized_rect": [
-          0.090057373046875,
-          0.7,
-          0.170819091796875,
-          0.2111111111111111
+          0.04153442382812501,
+          0.77,
+          0.10249145507812499,
+          0.12666666666666665
         ],
         "ground_anchor": [
-          0.1875,
-          0.9
+          0.1,
+          0.89
         ],
         "modulate": [
           1,
@@ -1190,7 +1190,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Crescent training pavilion attaches to the permanent foreground-left quay below the harpoon landing. Its left approach meets the existing shore, with basins and roof exposed in sparse and developed towns.",
+        "grounding": "Compact Dreamwake oratory on the western foreground wharf, beside the map room and above navigation. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_veilmourn/building_veilmourn_dreamwake_tideglass_oratory.prompt.txt",
         "prompt_sha256": "9e85de433e5e550513a6edd3eb4962c1d07c20310428b0703ddd3e64566026ac",
         "curation": "Original built-in text-only RGBA paintings for the five remaining Veilmourn variant identities. Preserve moonlit wet timber, salt stone, silver-blue roofs and restrained warm lamps, original alpha, the village and all earlier scene layers. Composition, full build/input/save and platform acceptance are recorded separately in the art-repair report; detached fixtures are not earned development.",
@@ -1270,14 +1270,14 @@
           344
         ],
         "normalized_rect": [
-          0.134375,
-          0.39444444444444443,
-          0.21097819010416669,
-          0.2518518518518518
+          0.18796875000000002,
+          0.49000000000000005,
+          0.158233642578125,
+          0.18888888888888888
         ],
         "ground_anchor": [
-          0.24375,
-          0.6277777777777778
+          0.27,
+          0.665
         ],
         "modulate": [
           1,
@@ -1286,7 +1286,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Levy hall and fenced practice court stand on the left bank behind the existing stone quay; preserve the lock, shore wall and water approach.",
+        "grounding": "Compact muster court on the left-bank forecourt below the grain warehouse. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_muster_yard.prompt.txt",
         "prompt_sha256": "5b70d630fe032a72365e8da3338250d64f4099556fa5009b52e16548caf9850d",
         "curation": "Inspected original opening, ordinary Market purchase and developed Riverwatch composition at 1280x720. Exact three-resolution input/save and platform acceptance is recorded separately in the art-repair report; other Embercourt catalog layers remain unaccepted.",
@@ -1454,14 +1454,14 @@
           336
         ],
         "normalized_rect": [
-          0.13783365885416665,
-          0.39665798611111114,
-          0.20738118489583332,
-          0.2417679398148148
+          0.19056274414062502,
+          0.49166015625000004,
+          0.15553588867187498,
+          0.18132595486111108
         ],
         "ground_anchor": [
-          0.24375,
-          0.6277777777777778
+          0.27,
+          0.665
         ],
         "modulate": [
           1,
@@ -1470,7 +1470,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Permanent masonry quarters replace the Muster Yard on the same left-bank court and ground anchor; preserve the original quay and canal.",
+        "grounding": "Watch upgrade retains the compact muster forecourt and ground landmark. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_watch_barracks.prompt.txt",
         "prompt_sha256": "837c4af6f2973a81e4be210f90452a38644fe672e3e941b6e0ef8238c091d834",
         "curation": "Inspected normal paid Stone/Watch/Bowyer/Beacon progression and the recorded developed Riverwatch composition at 1280x720. Both upgrade pairs retain their scenic site and ground anchor. Three-resolution input/save and official-platform acceptance is recorded separately in the art-repair report; later catalog paintings remain unaccepted.",
@@ -1684,14 +1684,14 @@
           411
         ],
         "normalized_rect": [
-          0.0321044921875,
-          0.23233506944444443,
-          0.1497802734375,
-          0.21397569444444445
+          0.547742919921875,
+          0.20296223958333334,
+          0.09735717773437501,
+          0.13908420138888888
         ],
         "ground_anchor": [
-          0.1125,
-          0.42777777777777776
+          0.6,
+          0.33
         ],
         "modulate": [
           1,
@@ -1700,7 +1700,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Civic records lodge rises on the rear left-bank terrace behind the granary, clear of the command rail; the observatory retains this same site.",
+        "grounding": "Records lodge on the right rear hillside, clear of the upstream river and the signal citadel. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_lantern_archive.prompt.txt",
         "prompt_sha256": "fe195aa5d74f38f4d43db7e9be51056f1ca8ef42a6d468d3ead5ebb0372b3bc6",
         "curation": "Original text-only paintings from the inspected Riverwatch panorama and normal paid-growth draft. Revised developed composition inspected at 1280x720: observatory on the rear left-bank terrace, with exposed supply roof and right-bank pike hall. Archive and Annex share source-space bounds and ground anchor but are not pixel-identical edits. Final three-resolution paid-growth, input/save and platform acceptance is recorded separately in the art-repair report.",
@@ -1730,14 +1730,14 @@
           339
         ],
         "normalized_rect": [
-          0.0069580078125,
-          0.22777777777777777,
-          0.1773681640625,
-          0.2087673611111111
+          0.531397705078125,
+          0.2,
+          0.115289306640625,
+          0.13569878472222222
         ],
         "ground_anchor": [
-          0.1125,
-          0.42777777777777776
+          0.6,
+          0.33
         ],
         "modulate": [
           1,
@@ -1746,7 +1746,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Expanded records lodge adds a book wing and observation balcony on the identical rear left-bank Archive terrace; its tower remains visible above the granary and away from controls.",
+        "grounding": "Observatory replaces the records lodge on the same right rear hillside site, clear of the signal citadel. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_starseer_annex.prompt.txt",
         "prompt_sha256": "ea03afdd34e599ae3d6ef12088fb4933a12d9db0e661a551baf276078cf36e5c",
         "curation": "Original text-only paintings from the inspected Riverwatch panorama and normal paid-growth draft. Revised developed composition inspected at 1280x720: observatory on the rear left-bank terrace, with exposed supply roof and right-bank pike hall. Archive and Annex share source-space bounds and ground anchor but are not pixel-identical edits. Final three-resolution paid-growth, input/save and platform acceptance is recorded separately in the art-repair report.",
@@ -1776,14 +1776,14 @@
           344
         ],
         "normalized_rect": [
-          0.453021240234375,
-          0.29303240740740744,
-          0.16538492838541669,
-          0.197337962962963
+          0.4896096801757813,
+          0.3614409722222222,
+          0.12403869628906251,
+          0.14800347222222224
         ],
         "ground_anchor": [
-          0.546875,
-          0.4777777777777778
+          0.56,
+          0.5
         ],
         "modulate": [
           1,
@@ -1792,7 +1792,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low drilled pike hall stands on the right-bank slope behind the bowyer/beacon yard, leaving the main civic entrance and navigation channel intact.",
+        "grounding": "Civic workshop on the lower right-bank terrace, separated from the rear records lodge. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_citadel_pikehall.prompt.txt",
         "prompt_sha256": "80c3be2db699a96ec2d2c7a2d2451be250050d70969abaf199a62283d699895e",
         "curation": "Original text-only paintings from the inspected Riverwatch panorama and normal paid-growth draft. Revised developed composition inspected at 1280x720: observatory on the rear left-bank terrace, with exposed supply roof and right-bank pike hall. Archive and Annex share source-space bounds and ground anchor but are not pixel-identical edits. Final three-resolution paid-growth, input/save and platform acceptance is recorded separately in the art-repair report.",
@@ -1822,14 +1822,14 @@
           337
         ],
         "normalized_rect": [
-          0.1625,
-          0.32061631944444446,
-          0.16123046875,
-          0.18864293981481484
+          0.18812500000000001,
+          0.44598697916666663,
+          0.112861328125,
+          0.13205005787037039
         ],
         "ground_anchor": [
-          0.24375,
-          0.49777777777777776
+          0.245,
+          0.57
         ],
         "modulate": [
           1,
@@ -1838,7 +1838,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Bonded grain exchange extends the left-bank settlement behind the Watch court; keep its paired warehouse roofs exposed above the older court and preserve the river approach.",
+        "grounding": "Compact grain warehouse on the left-bank market quay, with its base clear of the upstream river. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_granary_lock_exchange.prompt.txt",
         "prompt_sha256": "5b8d03d6c2a4d7c7dcde717a22f7c76c3888665f62e67365bc711c9409b8fb13",
         "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
@@ -1869,14 +1869,14 @@
           349
         ],
         "normalized_rect": [
-          0.07369181315104167,
-          0.7575954861111112,
-          0.14190266927083334,
-          0.1720341435185185
+          0.07295345052083335,
+          0.7412986111111111,
+          0.11352213541666667,
+          0.1376273148148148
         ],
         "ground_anchor": [
-          0.145,
-          0.9122222222222223
+          0.13,
+          0.865
         ],
         "modulate": [
           1,
@@ -1885,7 +1885,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low tally office stands directly on the foreground-left stone quay, below the Market arcade; its receiving counter faces the working waterfront and leaves navigation controls clear.",
+        "grounding": "Lock tally house on the foreground street with its entrance above bottom navigation. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.prompt.txt",
         "prompt_sha256": "84bb990fced1e20b2bc10d0e44fcd31ba9e3ff272f3c0a65789a15a1ac4d2047",
         "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
@@ -2151,14 +2151,14 @@
           353
         ],
         "normalized_rect": [
-          0.2213623046875,
-          0.7015190972222223,
-          0.1798095703125,
-          0.220703125
+          0.243990478515625,
+          0.6836393229166666,
+          0.134857177734375,
+          0.16552734375
         ],
         "ground_anchor": [
-          0.309375,
-          0.91
+          0.31,
+          0.84
         ],
         "modulate": [
           1,
@@ -2167,7 +2167,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Relief store and timber hoist meet the existing foreground-left stone quay, beside the Tally office. Their attached boarding pontoon and plain supply barge project into the near channel; no painted water or isolated pedestal.",
+        "grounding": "Working quay connected to the left shoreline, above the town-specific waterfront frontage. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_relief_quay.prompt.txt",
         "prompt_sha256": "3744855720f9b0e298f51649073835f1feaa1058a32c8adfba229223bd1b38f9",
         "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama. Source masters and earned/mixed-developed 1280x720 scenes inspected: low hearing arcade on the foreground-right stone bank, relief store/hoist on the left quay with an attached pontoon and plain supply barge. Preserve original alpha, adjacent roofs, channel and command controls. Paid Day-18/19 construction and full non-clock save equality pass; three-resolution and official Linux/Windows acceptance are recorded separately in the art-repair report. Registration alone is not acceptance.",
@@ -2292,14 +2292,14 @@
           341
         ],
         "normalized_rect": [
-          0.21875,
-          0.17222222222222222,
-          0.225,
-          0.26666666666666666
+          0.32890625,
+          0.18816666666666665,
+          0.14625000000000002,
+          0.17333333333333334
         ],
         "ground_anchor": [
-          0.328125,
-          0.4288888888888889
+          0.4,
+          0.355
         ],
         "modulate": [
           1,
@@ -2308,7 +2308,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "A broad civic workshop crowns the rear-left settlement between the granary roofs and Citadel hall. Foreground roofs retain depth ownership; the bell tower and colossus assembly arch remain readable above them.",
+        "grounding": "Charter monument on the rear right-bank hill above the river bend. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_charter_bastion.prompt.txt",
         "prompt_sha256": "8d660a44cf8875d529cbf6c8b32e5694744a5655eb806b61b2cc16a507c8e10b",
         "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
@@ -2339,14 +2339,14 @@
           341
         ],
         "normalized_rect": [
-          0.21875,
-          0.17222222222222222,
-          0.225,
-          0.26666666666666666
+          0.32890625,
+          0.18816666666666665,
+          0.14625000000000002,
+          0.17333333333333334
         ],
         "ground_anchor": [
-          0.328125,
-          0.4288888888888889
+          0.4,
+          0.355
         ],
         "modulate": [
           1,
@@ -2355,7 +2355,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The fire-lit completion replaces its Bastion in the same rear-left plot and source canvas: pale civic arch, right bell tower, guarded assembly hall and small entrance charter fires. No separate monument or moved town footprint.",
+        "grounding": "Charter monument upgrade on the identical rear right-bank hill above the river bend. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_charter_flame.prompt.txt",
         "prompt_sha256": "43c73a37bcfaac486909fb6d9cb9f5c28be97e4197480e49153a6b766a30eba0",
         "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
@@ -2433,14 +2433,14 @@
           340
         ],
         "normalized_rect": [
-          0.2625,
-          0.4024450231481477,
-          0.16112467447916667,
-          0.1901475694444079
+          0.335,
+          0.3424225983796293,
+          0.10473103841145834,
+          0.12359592013886513
         ],
         "ground_anchor": [
-          0.3625,
-          0.5833333333333334
+          0.4,
+          0.46
         ],
         "modulate": [
           1,
@@ -2449,7 +2449,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Basin command hall joins the left lock approach in towns without Riverwatch's Quartermaster Depot; keep this headquarters separate from the faction Colossus Bastion and its Flame upgrade.",
+        "grounding": "Gatehouse on the rear right-bank slope below the charter monument, not in the lock basin. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_charter_bastion.prompt.txt",
         "prompt_sha256": "ff96a199e839cfcfa340ad1cd2b18c942cf73db47228a4a5f49be279b23fffa2",
         "curation": "Original built-in text-only RGBA paintings for all six remaining Embercourt variant identities. Preserve original alpha, sunset light, cream river masonry, red tile and wet timber, with all earlier layers unchanged. Generic and faction Bastions remain distinct original paintings and sites. Actual composition, full build/input/save and platform evidence is recorded in the art-repair report; detached fixtures are not earned progression.",
@@ -2480,14 +2480,14 @@
           374
         ],
         "normalized_rect": [
-          0.13113606770833333,
-          0.24444444444444444,
-          0.10553792317708334,
-          0.13703703703700001
+          0.41748274739583335,
+          0.33555555555555555,
+          0.07387654622395834,
+          0.0959259259259
         ],
         "ground_anchor": [
-          0.191875,
-          0.37222222222222223
+          0.46,
+          0.425
         ],
         "modulate": [
           1,
@@ -2496,7 +2496,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Veteran charter hall joins the rear left-bank terrace between the records lodge and civic workshop. Foreground granary roofs retain depth; the upper charter gable stays exposed away from the command dock.",
+        "grounding": "Veteran charter house on the right-bank slope beside the upper river bend. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beaconline_charter_house.prompt.txt",
         "prompt_sha256": "2dda5feda418af41bc173d816e2e32b3b5d92331662f7c952a2f042e1eff4622",
         "curation": "Original built-in text-only RGBA paintings for all six remaining Embercourt variant identities. Preserve original alpha, sunset light, cream river masonry, red tile and wet timber, with all earlier layers unchanged. Generic and faction Bastions remain distinct original paintings and sites. Actual composition, full build/input/save and platform evidence is recorded in the art-repair report; detached fixtures are not earned progression.",
@@ -2528,13 +2528,13 @@
         ],
         "normalized_rect": [
           0.203125,
-          0.741782407407408,
-          0.15462239583333334,
-          0.1822916666667031
+          0.7392141203703707,
+          0.10050455729166667,
+          0.11848958333335702
         ],
         "ground_anchor": [
-          0.290625,
-          0.9122222222222223
+          0.26,
+          0.85
         ],
         "modulate": [
           1,
@@ -2543,7 +2543,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Raised reserve court stands at the permanent foreground-left stone quay and timber landing, independent of whether Relief Quay has been built. Its adjoining pier follows the base waterfront; the rear Relief roof remains visible when developed.",
+        "grounding": "Rainwrit treasury on the left waterfront quay, with room for Relief Quay and the footer. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_rainwrit_stormseal_treasury.prompt.txt",
         "prompt_sha256": "bc6b35ec7a32f76c53145ba5718cf71c594c42657459cd009748a8d52a929e9f",
         "curation": "Original built-in text-only RGBA paintings for all six remaining Embercourt variant identities. Preserve original alpha, sunset light, cream river masonry, red tile and wet timber, with all earlier layers unchanged. Generic and faction Bastions remain distinct original paintings and sites. Actual composition, full build/input/save and platform evidence is recorded in the art-repair report; detached fixtures are not earned progression.",
@@ -2622,13 +2622,13 @@
         ],
         "normalized_rect": [
           0.203125,
-          0.7444950810185196,
-          0.15462239583333334,
-          0.17957899305559147
+          0.7409773582175933,
+          0.10050455729166667,
+          0.11672634548613446
         ],
         "ground_anchor": [
-          0.290625,
-          0.9122222222222223
+          0.26,
+          0.85
         ],
         "modulate": [
           1,
@@ -2637,7 +2637,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Water-driven workshop meets the permanent foreground-left stone quay and timber landing even without Relief Quay. Its waterwheel descends from that shore into the channel, while the developed Relief roof remains visible behind it. Rainwrit's same-site treasury cannot coexist in Amberweir.",
+        "grounding": "Amberweir waterwheel foundry on the left waterfront quay, clear of the footer. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_amberweir_counterweight_foundry.prompt.txt",
         "prompt_sha256": "9a7c282fade3e181f0f2152d481145d720dba54797ba50c9fd680af2da37688e",
         "curation": "Original built-in text-only RGBA paintings for all six remaining Embercourt variant identities. Preserve original alpha, sunset light, cream river masonry, red tile and wet timber, with all earlier layers unchanged. Generic and faction Bastions remain distinct original paintings and sites. Actual composition, full build/input/save and platform evidence is recorded in the art-repair report; detached fixtures are not earned progression.",
@@ -2905,14 +2905,14 @@
           349
         ],
         "normalized_rect": [
-          0.6455668131510417,
-          0.2646144386574074,
-          0.14352823893229166,
-          0.17390407986111112
+          0.6202688598632813,
+          0.3001274956597222,
+          0.10764617919921875,
+          0.13042805989583334
         ],
         "ground_anchor": [
-          0.671875,
-          0.42444444444444446
+          0.64,
+          0.42
         ],
         "modulate": [
           1,
@@ -2921,7 +2921,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low firing deck follows the right rear shoreline above the Wayfarers Hall, leaving the central hall and fire approach intact.",
+        "grounding": "Compact rear watch platform west of the command rail, preserving visible marsh piles. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_slingers_post.prompt.txt",
         "prompt_sha256": "b5c8486560ddadbed7a523caf848ac1e5a19aaa7d809571855452cde0988f0f8",
         "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
@@ -2952,14 +2952,14 @@
           344
         ],
         "normalized_rect": [
-          0.64375,
-          0.2644444444444444,
-          0.1457275390625,
-          0.17407407407407408
+          0.61890625,
+          0.29999999999999993,
+          0.10929565429687499,
+          0.13055555555555556
         ],
         "ground_anchor": [
-          0.671875,
-          0.42444444444444446
+          0.64,
+          0.42
         ],
         "modulate": [
           1,
@@ -2968,7 +2968,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Expanded gear shelters replace the Slingers Post in the exact same rear-right site, not a second disconnected plot.",
+        "grounding": "Rot warren retains the watch platform site west of the command rail. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_rot_warren.prompt.txt",
         "prompt_sha256": "5aa32513123d778d0c1e55e9d1bbf67c6847f78259d9743d93edc5c2167e0879",
         "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
@@ -3187,14 +3187,14 @@
           347
         ],
         "normalized_rect": [
-          0.171136474609375,
-          0.7222222222222222,
-          0.156988525390625,
-          0.18888888888888888
+          0.19289895019531245,
+          0.7265333333333333,
+          0.1224510498046875,
+          0.14733333333333334
         ],
         "ground_anchor": [
-          0.295625,
-          0.8933333333333333
+          0.29,
+          0.86
         ],
         "modulate": [
           1,
@@ -3203,7 +3203,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The low pack ring continues the dark foreground-left landing behind its nearer edge, retaining the original main bridge and central water lane.",
+        "grounding": "Foreground ritual ring on the root bank, with its frontage above navigation. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_gorefen_ring.prompt.txt",
         "prompt_sha256": "b10050d2db07b7150845ca7c2c1104ed9dba13a1c10e6b29f3343b4ed13af7fd",
         "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
@@ -3751,14 +3751,14 @@
           344
         ],
         "normalized_rect": [
-          0.31875,
-          0.7722222222222223,
-          0.15792236328125,
-          0.18888888888888888
+          0.33262499999999995,
+          0.7491111111111112,
+          0.12002099609375001,
+          0.14355555555555555
         ],
         "ground_anchor": [
-          0.446875,
-          0.9444444444444444
+          0.43,
+          0.88
         ],
         "modulate": [
           1,
@@ -3767,7 +3767,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The shallow apex enclosure extends the left foreground landing beside the earlier pack ring.",
+        "grounding": "Antler enclosure on the foreground root bank, separated from the ritual ring and footer. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.prompt.txt",
         "prompt_sha256": "b5bdc31aac7e497d398e5d2a891e7ee84800265acac77efe1b594d91a0bec091",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -3986,14 +3986,14 @@
           342
         ],
         "normalized_rect": [
-          0.134375,
-          0.22777777777777777,
-          0.11554972330729166,
-          0.13703703703700001
+          0.3990625,
+          0.36583333333333334,
+          0.08666229248046875,
+          0.10277777777775002
         ],
         "ground_anchor": [
-          0.215625,
-          0.35333333333333333
+          0.46,
+          0.46
         ],
         "modulate": [
           1,
@@ -4002,7 +4002,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Moonwax storehouse joins the far-left rear shoreline behind the faction Den. Only Hollowreed offers this exact ossuary.",
+        "grounding": "Small ossuary beside the main hall western reed bank; pile ends reach the marsh rather than the distant tree canopy. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_hollowreed_moonwax_ossuary.prompt.txt",
         "prompt_sha256": "9d473e8bba3747aa7c898cf0731bc6ce74b1259fd719683ffb5aeb21c5f9a36a",
         "curation": "Original built-in text-only RGBA paintings for the six remaining Mireclaw variant identities. Masters inspected; preserve alpha, wet timber/reed architecture, sunset light and all earlier layers. Distinct generic/faction names remain separate art and gameplay identities. Actual seven-town composition, paid-authority fixtures, input/save and platform evidence are recorded separately in the art-repair report; fixtures are not earned full-match progression.",
@@ -4033,14 +4033,14 @@
           342
         ],
         "normalized_rect": [
-          0.134375,
-          0.22777777777777777,
-          0.115399169921875,
-          0.13703703703700001
+          0.3990625,
+          0.36583333333333334,
+          0.08654937744140626,
+          0.10277777777775002
         ],
         "ground_anchor": [
-          0.215625,
-          0.35333333333333333
+          0.46,
+          0.46
         ],
         "modulate": [
           1,
@@ -4049,7 +4049,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low crescent training theater joins Moonbite's far-left rear shoreline behind the faction Den. Hollowreed's same-location ossuary is not in Moonbite's catalog.",
+        "grounding": "Votive court on the same western reed-bank site as the ossuary, clear of the records lodge. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_moonbite_votive_drum_court.prompt.txt",
         "prompt_sha256": "5b6e8a85bd9123f42ecbe40c73a70cae8165ce81dfbed1c8b0450f90fd35dd2e",
         "curation": "Original built-in text-only RGBA paintings for the six remaining Mireclaw variant identities. Masters inspected; preserve alpha, wet timber/reed architecture, sunset light and all earlier layers. Distinct generic/faction names remain separate art and gameplay identities. Actual seven-town composition, paid-authority fixtures, input/save and platform evidence are recorded separately in the art-repair report; fixtures are not earned full-match progression.",
@@ -4223,14 +4223,14 @@
           353
         ],
         "normalized_rect": [
-          0.725,
-          0.6166666666666667,
-          0.1632568359375,
-          0.2
+          0.7710937499999999,
+          0.6622222222222223,
+          0.10611694335937501,
+          0.13
         ],
         "ground_anchor": [
-          0.815625,
-          0.8055555555555556
+          0.83,
+          0.785
         ],
         "modulate": [
           1,
@@ -4239,7 +4239,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The courier lodge joins the eastern terrace road with its lower stairs grounded beside the old village outbuildings.",
+        "grounding": "Compact travelers hall on the eastern terrace with its own frontage above the forge. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_wayfarers_hall.prompt.txt",
         "prompt_sha256": "0278fa4265a7a1588343c9dac260a9cfb7891a401042d8f1055022080f6c2116",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -4411,14 +4411,14 @@
           335
         ],
         "normalized_rect": [
-          0.6625,
-          0.43333333333333335,
-          0.16875,
-          0.19609375
+          0.18609375,
+          0.30583333333333335,
+          0.0590625,
+          0.0686328125
         ],
         "ground_anchor": [
-          0.759375,
-          0.6166666666666667
+          0.22,
+          0.37
         ],
         "modulate": [
           1,
@@ -4427,7 +4427,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The range joins the eastern upper terrace above the courier lodge.",
+        "grounding": "Distant range scaled to the rear western plateau, above the cliff lip and clear of the painted pavilion. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_prism_range.prompt.txt",
         "prompt_sha256": "5db52684c867ecc70be494e62884d886423c7f7b607ebf0edb579e4769758d34",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -4458,14 +4458,14 @@
           339
         ],
         "normalized_rect": [
-          0.66414794921875,
-          0.43509114583333336,
-          0.16600341796875,
-          0.1955078125
+          0.1866705322265625,
+          0.30644856770833334,
+          0.0581011962890625,
+          0.068427734375
         ],
         "ground_anchor": [
-          0.759375,
-          0.6166666666666667
+          0.22,
+          0.37
         ],
         "modulate": [
           1,
@@ -4474,7 +4474,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Replaces the generic Prism Range on its exact upper-eastern terrace and ground anchor.",
+        "grounding": "Range upgrade retains the distant western plateau site and perspective scale. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_lens_gallery.prompt.txt",
         "prompt_sha256": "adb2f6a9ce23c6c35e930cf4946c7c52678d1128df4682f218fd51ecbad1e391",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -4505,10 +4505,10 @@
           334
         ],
         "normalized_rect": [
-          0.403125,
-          0.3064055266203705,
-          0.1457275390625,
-          0.16880425347225814
+          0.41531250000000003,
+          0.33044469762731493,
+          0.12386840820312499,
+          0.1434836154514194
         ],
         "ground_anchor": [
           0.484375,
@@ -4521,7 +4521,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The generic dueling court meets the dry rear bank north of the main canal crossing.",
+        "grounding": "Compact rear duel court, preserving a visible approach beside the observatory. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_duel_circle.prompt.txt",
         "prompt_sha256": "498ac5c5b5abb7c02a279dd2b564cdad703f7c2b850f319d90063e617f61fdf4",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -4787,14 +4787,14 @@
           341
         ],
         "normalized_rect": [
-          0.615625,
-          0.65,
-          0.159375,
-          0.18888888888888888
+          0.55515625,
+          0.6730555555555556,
+          0.10359375,
+          0.12277777777777778
         ],
         "ground_anchor": [
-          0.7,
-          0.8222222222222222
+          0.61,
+          0.785
         ],
         "modulate": [
           1,
@@ -4803,7 +4803,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The prism academy joins the lower eastern terrace below the warden yard.",
+        "grounding": "Lens gallery on the west edge of the eastern terrace, beside rather than beneath the harmonic cloister. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_lens_gallery.prompt.txt",
         "prompt_sha256": "83839622137d7bda7371ca692145b0849759eb2f0ea26b07154c6ffe8cb9476a",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -4834,13 +4834,13 @@
           344
         ],
         "normalized_rect": [
-          0.7588704427083333,
-          0.6666666666666666,
-          0.17067057291666668,
-          0.20376157407411044
+          0.7987345377604166,
+          0.7343333333333333,
+          0.11093587239583334,
+          0.1324450231481718
         ],
         "ground_anchor": [
-          0.853125,
+          0.86,
           0.86
         ],
         "modulate": [
@@ -4850,7 +4850,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The duelist forge sits on the permanent eastern rock terrace beside the lower road.",
+        "grounding": "Forge on the lower eastern paved terrace, inside the sloping cliff edge and below the travelers hall. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_mirror_forge.prompt.txt",
         "prompt_sha256": "9e27add816412b830e03e45c1ded2f9ab9d2944fc7b7f90d8e8314e81a0a9832",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -4881,14 +4881,14 @@
           341
         ],
         "normalized_rect": [
-          0.590625,
-          0.7,
-          0.178125,
-          0.2111111111111111
+          0.6389999999999999,
+          0.7471111111111111,
+          0.14250000000000002,
+          0.1688888888888889
         ],
         "ground_anchor": [
-          0.691875,
-          0.8911111111111111
+          0.72,
+          0.9
         ],
         "modulate": [
           1,
@@ -4897,7 +4897,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The faction acoustic college joins the dry foreground-right terrace, fully above the viewport crop and navigation.",
+        "grounding": "Foreground cloister shifted east with a smaller footprint to expose the lens gallery frontage. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_harmonic_cloister.prompt.txt",
         "prompt_sha256": "b00a2f097342ff7eadb24568d5be06e790edd5afd0ed8f2240a64e449899ef88",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -4928,14 +4928,14 @@
           405
         ],
         "normalized_rect": [
-          0.46948445638020836,
-          0.2833333333333333,
-          0.11329142252604166,
-          0.1592592592592222
+          0.3733453369140625,
+          0.33699999999999997,
+          0.033987426757812494,
+          0.047777777777766664
         ],
         "ground_anchor": [
-          0.525,
-          0.4266666666666667
+          0.39,
+          0.38
         ],
         "modulate": [
           1,
@@ -4944,7 +4944,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The observatory joins the rear terrace behind the dueling court, beside the crystal spire and clear of the main hall.",
+        "grounding": "Small observatory on the rear plateau, scaled for its distance behind the main pavilion. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_zenith_observatory.prompt.txt",
         "prompt_sha256": "675878a4b6fab6d6dba94e155cf3d60f16c679cc5faf99e12cfea386a464dfab",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -5304,14 +5304,14 @@
           359
         ],
         "normalized_rect": [
-          0.686285400390625,
-          0.28888888888888886,
-          0.133758544921875,
-          0.16666666666666666
+          0.6824917602539062,
+          0.3025,
+          0.08694305419921876,
+          0.10833333333333334
         ],
         "ground_anchor": [
-          0.759375,
-          0.4388888888888889
+          0.73,
+          0.4
         ],
         "modulate": [
           1,
@@ -5320,7 +5320,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The relay storehouse joins the rear-eastern village bench behind the range and archive.",
+        "grounding": "Compact rear relay hall west of the command rail. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_zenith_relay_hall.prompt.txt",
         "prompt_sha256": "27abbc8fe0d01b01b2762dc643c100653aca4d1fb91584fd5b27c4058155c4b3",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -5351,14 +5351,14 @@
           342
         ],
         "normalized_rect": [
-          0.7875,
-          0.7166666666666667,
-          0.1621826171875,
-          0.19259259259255557
+          0.5501562499999999,
+          0.8378333333333334,
+          0.089200439453125,
+          0.10592592592590556
         ],
         "ground_anchor": [
-          0.878125,
-          0.8933333333333333
+          0.6,
+          0.935
         ],
         "modulate": [
           1,
@@ -5367,7 +5367,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Meridian\u2019s seven-lens instrument stands on the foreground-eastern dry terrace, above the viewport crop.",
+        "grounding": "Compact orrery on the foreground stone apron, separate from the forge and harmonic cloister. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_meridian_seven_facet_orrery.prompt.txt",
         "prompt_sha256": "0f930dc50a7b1b264b1dcda0c0af97f87846100f1f3597298525e56a8dc6f44f",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -5398,14 +5398,14 @@
           347
         ],
         "normalized_rect": [
-          0.3202128092447916,
-          0.5728190104166665,
-          0.164825439453125,
-          0.19833260995366764
+          0.39660573323567705,
+          0.36104220920138885,
+          0.05768890380859375,
+          0.06941641348378366
         ],
         "ground_anchor": [
-          0.415625,
-          0.7555555555555555
+          0.43,
+          0.425
         ],
         "modulate": [
           1,
@@ -5414,7 +5414,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The Splitprism-only hall extends the permanent western canal-bridge terrace, using a real arched stone footing.",
+        "grounding": "Compact Parallax hall on the rear stone shelf beside the duel district, clear of the pavilion stairs and canal bridge. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_splitprism_parallax_duel_hall.prompt.txt",
         "prompt_sha256": "319210046ab3a2844bcd8dae2999c51d17c89c09a05fcd29c150bd4ca7e1aa84",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -5445,14 +5445,14 @@
           348
         ],
         "normalized_rect": [
-          0.7875,
-          0.7166666666666667,
-          0.15943196614583333,
-          0.19259259259255557
+          0.5501562499999999,
+          0.8378333333333334,
+          0.08768758138020834,
+          0.10592592592590556
         ],
         "ground_anchor": [
-          0.878125,
-          0.8933333333333333
+          0.6,
+          0.935
         ],
         "modulate": [
           1,
@@ -5461,7 +5461,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Splitprism\u2019s twin light-engine works join the foreground-eastern dry terrace, clear of the viewport crop.",
+        "grounding": "Compact heliograph on the foreground stone apron, separate from the forge and harmonic cloister. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_splitprism_heliograph_battery.prompt.txt",
         "prompt_sha256": "a37aa66285e512ba24b1f772bbadfb771870d9a2f8290a429df84b79a16eb435",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -5541,14 +5541,14 @@
           339
         ],
         "normalized_rect": [
-          0.6875,
-          0.41278935185185156,
-          0.18125,
-          0.21313657407403733
+          0.6996875,
+          0.4312586805555553,
+          0.1359375,
+          0.159852430555528
         ],
         "ground_anchor": [
-          0.78125,
-          0.6111111111111112
+          0.77,
+          0.58
         ],
         "modulate": [
           1,
@@ -5557,7 +5557,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The caravan inn meets the right woodland bank beside the waterfall approach, clear of the central hall.",
+        "grounding": "Smaller travelers hall on the eastern root bank, with space before the lower graftworks. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_wayfarers_hall.prompt.txt",
         "prompt_sha256": "90e986798a88c3fb28ad16260ecee74895185497b257a2c694de4aa9b1614cf5",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
@@ -5682,14 +5682,14 @@
           341
         ],
         "normalized_rect": [
-          0.79375,
-          0.5388888888888889,
-          0.1625,
-          0.19259259259255557
+          0.5471874999999999,
+          0.7344444444444445,
+          0.10562500000000001,
+          0.1251851851851611
         ],
         "ground_anchor": [
-          0.875,
-          0.7166666666666667
+          0.6,
+          0.85
         ],
         "modulate": [
           1,
@@ -5698,7 +5698,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The contract house joins the far-right bank above the older village dwelling and beside the road toll.",
+        "grounding": "Compact ledger house on the central foreground clearing rather than the far-right village roof. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_loam_ledger.prompt.txt",
         "prompt_sha256": "42be9af853e56e37d59316dba7bf0f331b99676ee55e5b81ad016659466ecb73",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
@@ -5729,14 +5729,14 @@
           342
         ],
         "normalized_rect": [
-          0.81875,
-          0.39444444444444443,
-          0.15302530924479166,
-          0.18148148148144444
+          0.8290625,
+          0.4066666666666667,
+          0.11476898193359375,
+          0.13611111111108332
         ],
         "ground_anchor": [
-          0.9,
-          0.5588888888888889
+          0.89,
+          0.53
         ],
         "modulate": [
           1,
@@ -5745,7 +5745,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The pollen pavilion meets the far-right wooded terrace below the command icons and above the tollhouse.",
+        "grounding": "Compact pollen chapel on the upper eastern root bank, clear of the travelers hall. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_pollen_litany.prompt.txt",
         "prompt_sha256": "2e480a4cd4990762a916c82a6cb36c0d7a83682779f8291309fe2eb4d3b07abb",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
@@ -5964,14 +5964,14 @@
           344
         ],
         "normalized_rect": [
-          0.659375,
-          0.26666666666666666,
-          0.1672119140625,
-          0.2
+          0.66609375,
+          0.30722222222222223,
+          0.108687744140625,
+          0.13
         ],
         "ground_anchor": [
-          0.75,
-          0.45555555555555555
+          0.725,
+          0.43
         ],
         "modulate": [
           1,
@@ -5980,7 +5980,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The advanced study lodge attaches to the rear-right bank behind the caravan inn, its upper chamber exposed.",
+        "grounding": "Chantry on the rear eastern root bank west of the command rail. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_spore_oath_chantry.prompt.txt",
         "prompt_sha256": "36257f517f1aa6605b9dc3bcf6806c21f1970f904ebeb9112a659a1a4506a9a9",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
@@ -6058,14 +6058,14 @@
           341
         ],
         "normalized_rect": [
-          0.028125,
-          0.3055555555555556,
-          0.20625,
-          0.24444444444444444
+          0.11624999999999999,
+          0.29833333333333334,
+          0.12374999999999999,
+          0.14666666666666667
         ],
         "ground_anchor": [
-          0.134375,
-          0.5333333333333333
+          0.18,
+          0.435
         ],
         "modulate": [
           1,
@@ -6074,7 +6074,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The living gate stands on the left wooded bank behind the coppice, with its whole open arch clear of the central hall.",
+        "grounding": "Compact root gate on the raised western root bank above, not on top of, the painted nursery dome. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_worldroot_gate.prompt.txt",
         "prompt_sha256": "42107a21d9ef92c007595a3d2b2a503a006a1b5dc798cf07361e63c587332909",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
@@ -6105,14 +6105,14 @@
           343
         ],
         "normalized_rect": [
-          0.028125,
-          0.3055555555555556,
-          0.20504150390625,
-          0.24444444444444444
+          0.11624999999999999,
+          0.29833333333333334,
+          0.12302490234374999,
+          0.14666666666666667
         ],
         "ground_anchor": [
-          0.134375,
-          0.5333333333333333
+          0.18,
+          0.435
         ],
         "modulate": [
           1,
@@ -6121,7 +6121,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The mature covenant gate replaces Worldroot Gate at exactly the same left-bank site and ground anchor.",
+        "grounding": "Concord upgrade retains the raised western root-bank site above the painted nursery. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_verdant_concord_seat.prompt.txt",
         "prompt_sha256": "a01c015ef3f43e49a7bdcf1f02830d61a208f6227cbb6d5c338a661c6c73ab60",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
@@ -6152,14 +6152,14 @@
           358
         ],
         "normalized_rect": [
-          0.085211181640625,
-          0.26666666666666666,
-          0.098358154296875,
-          0.12222222222222222
+          0.07555450439453124,
+          0.22055555555555556,
+          0.08360443115234374,
+          0.10388888888888888
         ],
         "ground_anchor": [
-          0.1375,
-          0.37777777777777777
+          0.12,
+          0.315
         ],
         "modulate": [
           1,
@@ -6168,7 +6168,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The sentry cairn is rooted against the heavy inner-left tree bank behind the gate, not suspended in the open rear clearing.",
+        "grounding": "Trunk-mounted watch raised above the root gate so its platform remains visible. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_root_cairn_watch.prompt.txt",
         "prompt_sha256": "e9cff24b956c39987f8b5e0106d40fdf590f833e368e3344a6374ae509771e9b",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
@@ -6434,14 +6434,14 @@
           341
         ],
         "normalized_rect": [
-          0.00625,
-          0.4,
-          0.15625,
-          0.18518518518522223
+          0.40515625,
+          0.5816666666666667,
+          0.1015625,
+          0.12037037037039446
         ],
         "ground_anchor": [
-          0.090625,
-          0.5666666666666667
+          0.46,
+          0.69
         ],
         "modulate": [
           1,
@@ -6450,7 +6450,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The new conservatory extends the established left glass-nursery bank with its smaller domes exposed behind the coppice.",
+        "grounding": "Small greenhouse on the central earthen clearing, separate from the existing painted nursery. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_sporeglass_hothouse.prompt.txt",
         "prompt_sha256": "7eb42591051095a5d763de502730992361b2ebed2df71da2d9d1aa92eb5cc531",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
@@ -6575,14 +6575,14 @@
           341
         ],
         "normalized_rect": [
-          0.6625,
-          0.4888888888888889,
-          0.178125,
-          0.2111111111111111
+          0.6896875,
+          0.5341666666666667,
+          0.13359375,
+          0.15833333333333333
         ],
         "ground_anchor": [
-          0.75625,
-          0.6833333333333333
+          0.76,
+          0.68
         ],
         "modulate": [
           1,
@@ -6591,7 +6591,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The grafting hall joins the inner-right terrace below the caravan inn and above the road markers.",
+        "grounding": "Compact graftworks on the lower eastern bank, exposing the travelers hall above. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_thornwake/building_thornwake_graftworks.prompt.txt",
         "prompt_sha256": "b1db643ad11499f30e7613b24636f81cd986c5072b82acd2b8b3197756d3a043",
         "curation": "Original built-in text-only Thornwake painting; preserve true alpha, the village and all 117 earlier scene layers. Grounded composition, complete rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report. Detached developed fixtures are not earned progression.",
@@ -6906,14 +6906,14 @@
           341
         ],
         "normalized_rect": [
-          0.71875,
-          0.3277777777777778,
-          0.140625,
-          0.16666666666666666
+          0.7342968750000001,
+          0.38816666666666666,
+          0.09140625000000001,
+          0.10833333333333334
         ],
         "ground_anchor": [
-          0.7890625,
-          0.48444444444444446
+          0.78,
+          0.49
         ],
         "modulate": [
           1,
@@ -6922,7 +6922,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Right workers' terrace below the command icons and above the production bays.",
+        "grounding": "Compact travelers hall below the command icons, retaining its terrace foundation. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_wayfarers_hall.prompt.txt",
         "prompt_sha256": "445bc6e870828441c061f15afe50bc68c87207ba5e547db655aa5429eb97e692",
         "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
@@ -7000,14 +7000,14 @@
           341
         ],
         "normalized_rect": [
-          0.471875,
-          0.36666666666666664,
-          0.1125,
-          0.13333333333333333
+          0.540625,
+          0.38226666666666664,
+          0.07875,
+          0.09333333333333332
         ],
         "ground_anchor": [
-          0.528125,
-          0.492
+          0.58,
+          0.47
         ],
         "modulate": [
           1,
@@ -7016,7 +7016,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Small counting terrace behind the central railway approach.",
+        "grounding": "Scalehouse on top of the eastern upper terrace, not against the cliff face. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_scalehouse.prompt.txt",
         "prompt_sha256": "911ac23a38d9221041d1d4fe4269fa71d721feca068ceec38ae1a6bbd292c6a4",
         "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
@@ -7094,14 +7094,14 @@
           344
         ],
         "normalized_rect": [
-          0.53125,
-          0.2722222222222222,
-          0.111474609375,
-          0.13333333333333333
+          0.5656249999999999,
+          0.34226666666666666,
+          0.0780322265625,
+          0.09333333333333332
         ],
         "ground_anchor": [
-          0.5875,
-          0.39755555555555555
+          0.605,
+          0.43
         ],
         "modulate": [
           1,
@@ -7110,7 +7110,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Rear furnace ledge among the upper works.",
+        "grounding": "Small vestry on the upper terrace east of the survey sanctum. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_heatwright_vestry.prompt.txt",
         "prompt_sha256": "99af718d6b9d5c060ef83a9f1763c4dd443307286a820e899ac15bd119f37397",
         "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
@@ -7282,14 +7282,14 @@
           349
         ],
         "normalized_rect": [
-          0.459375,
-          0.3,
-          0.11015625,
-          0.13333333333333333
+          0.4534375,
+          0.31853333333333333,
+          0.07160156250000001,
+          0.08666666666666667
         ],
         "ground_anchor": [
-          0.515625,
-          0.42533333333333334
+          0.49,
+          0.4
         ],
         "modulate": [
           1,
@@ -7298,7 +7298,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Upper shift-office ledge beside the mine works.",
+        "grounding": "Foreman office on the western rear terrace, east of the ledger mint and above the boiler cathedral. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_foreman_clausehouse.prompt.txt",
         "prompt_sha256": "97b88fd57ecef1ffec9c99be1e65ce95b08a94981b2f84bedca59ff72d977bca",
         "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
@@ -7329,14 +7329,14 @@
           347
         ],
         "normalized_rect": [
-          0.491815185546875,
-          0.2388888888888889,
-          0.119891357421875,
-          0.14444444444444443
+          0.514151611328125,
+          0.27853333333333335,
+          0.071934814453125,
+          0.08666666666666666
         ],
         "ground_anchor": [
-          0.5515625,
-          0.37466666666666665
+          0.55,
+          0.36
         ],
         "modulate": [
           1,
@@ -7345,7 +7345,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Rear calibration ledge left of the charter complex, clear of the command panel.",
+        "grounding": "Compact survey sanctum on the rear rock terrace with visible frontage between the civic buildings. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_caliper_sanctum.prompt.txt",
         "prompt_sha256": "59bd1fc8c95d0f07f57bf4ed76a584b5660a522d926014f89b9bc0aa0163ceba",
         "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
@@ -7517,14 +7517,14 @@
           343
         ],
         "normalized_rect": [
-          0.4875,
-          0.43333333333333335,
-          0.102520751953125,
-          0.12222222222222222
+          0.7839062499999999,
+          0.6695777777777778,
+          0.0717645263671875,
+          0.08555555555555555
         ],
         "ground_anchor": [
-          0.5390625,
-          0.5482222222222222
+          0.82,
+          0.75
         ],
         "modulate": [
           1,
@@ -7533,7 +7533,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Middle rail-inspection ledge at the civic approach.",
+        "grounding": "Small rail office on the lower eastern industrial platform, not suspended over the central chasm. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_rail_tax_office.prompt.txt",
         "prompt_sha256": "5efbbc24746fb65f7fd7881eca6ce1223de153caddee95f2f13be9ef05dde72b",
         "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
@@ -7705,14 +7705,14 @@
           341
         ],
         "normalized_rect": [
-          0.4125,
-          0.3,
-          0.16875,
-          0.2
+          0.44515625,
+          0.3328,
+          0.10968750000000001,
+          0.13
         ],
         "ground_anchor": [
-          0.496875,
-          0.488
+          0.5,
+          0.455
         ],
         "modulate": [
           1,
@@ -7721,7 +7721,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Middle-distance furnace terrace behind the arsenal.",
+        "grounding": "Compact boiler cathedral on top of the central upper terrace, inside the cliff lip. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_boiler_cathedral.prompt.txt",
         "prompt_sha256": "7b4f33f9dadc5f7ea9b29add780049778f282d0d060195c8622d30d411952728",
         "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
@@ -7893,14 +7893,14 @@
           342
         ],
         "normalized_rect": [
-          0.834375,
-          0.3111111111111111,
-          0.121636962890625,
-          0.14444444444444443
+          0.8953906250000001,
+          0.4817444444444444,
+          0.07906402587890625,
+          0.09388888888888888
         ],
         "ground_anchor": [
-          0.8953125,
-          0.4468888888888889
+          0.935,
+          0.57
         ],
         "modulate": [
           1,
@@ -7909,7 +7909,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Far-right upper arsenal terrace.",
+        "grounding": "Charter bay on the eastern lower rock shelf, below the command rail rather than hidden behind it. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_redline_charter_bay.prompt.txt",
         "prompt_sha256": "798966e3defb87d3963603222de9473be9af6b3a4bbee216f49570cad3982fea",
         "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
@@ -7987,14 +7987,14 @@
           336
         ],
         "normalized_rect": [
-          0.8125,
-          0.7277777777777777,
-          0.13934326171875,
-          0.16243489583333334
+          0.82078125,
+          0.7403333333333333,
+          0.097540283203125,
+          0.11370442708333334
         ],
         "ground_anchor": [
-          0.8828125,
-          0.8844444444444445
+          0.87,
+          0.85
         ],
         "modulate": [
           1,
@@ -8003,7 +8003,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Town-specific right foreground quarry terrace, grounded beyond the crane and away from the open central chasm. Blackbell and Whitegauge never coexist.",
+        "grounding": "Compact assay bell supported on the lower eastern rock shelf, inside its cliff edge. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_blackbell_grand_assay_bell.prompt.txt",
         "prompt_sha256": "99aa35b449cff69b4d1d45b8fefa5c07f55aaed12bd745a2c52db17aa57be0f9",
         "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
@@ -8034,14 +8034,14 @@
           341
         ],
         "normalized_rect": [
-          0.340625,
-          0.5611111111111111,
-          0.140625,
-          0.16666666666666666
+          0.384296875,
+          0.7231666666666666,
+          0.09140625000000001,
+          0.10833333333333334
         ],
         "ground_anchor": [
-          0.4109375,
-          0.7177777777777777
+          0.43,
+          0.825
         ],
         "modulate": [
           1,
@@ -8050,7 +8050,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Whitegauge's lower calibration terrace beside the permanent crossing.",
+        "grounding": "Datum railhouse on the foreground paved rail approach instead of the unsupported western chasm face. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_whitegauge_datum_railhouse.prompt.txt",
         "prompt_sha256": "ef151a8ae16438f1f5ca946c34adcb95bbd851142989079c827ea23871939619",
         "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",
@@ -8081,14 +8081,14 @@
           344
         ],
         "normalized_rect": [
-          0.8125,
-          0.7277777777777777,
-          0.13970947265625,
-          0.16666666666666666
+          0.82078125,
+          0.7403333333333333,
+          0.097796630859375,
+          0.11666666666666665
         ],
         "ground_anchor": [
-          0.8828125,
-          0.8844444444444445
+          0.87,
+          0.85
         ],
         "modulate": [
           1,
@@ -8097,7 +8097,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Town-specific right foreground quarry terrace, grounded beyond the crane and away from the open central chasm. Blackbell and Whitegauge never coexist.",
+        "grounding": "Compact pressure foundry supported on the same lower eastern shelf, inside the cliff edge. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_brasshollow/building_brasshollow_whitegauge_breach_pressure_foundry.prompt.txt",
         "prompt_sha256": "9283cecf17e3da988bf559d8fb2106dad72d7bc2e31811ac8b1f7a285c2788b1",
         "curation": "Original built-in text-only Brasshollow painting; preserve true alpha, the original village and all 146 earlier rasters. Grounded small/wide composition and complete source/Linux/Windows build/input/save acceptance required separately; detached fixtures are not earned progression.",

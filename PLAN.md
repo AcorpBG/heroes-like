@@ -22,6 +22,18 @@ Rules:
 
 ## Current Tactical State
 
+### All-town Building Composition Repair
+
+id: `fix-all-town-building-composition-20260911`
+
+Status: completed 2026-09-11, Phase 6. Corrected 61 aspect-preserving building placements and three oversized main-building hitboxes across six factions. All 173 layers/32 towns inspected; source small/wide and Linux/Windows packaged input/build/save checks pass, with 2679 checks per package. Original art/gameplay preserved. Unit/provenance tests, prior Embercourt regression, repository validation and official exports/parity pass; final evidence retained and 1.47 GB of superseded outputs cleaned. Requirements/evidence: `docs/all-town-building-composition-repair.md`; baseline: `docs/all-town-building-composition-audit.md`. No RMG, balance, unrelated redesign or release-readiness claim.
+
+### All-town Building Composition Inspection
+
+id: `audit-all-town-building-composition-20260911`
+
+Status: completed inspection 2026-09-11, Phase 6, audit only. Inspected all 173 faction/building layers plus six embedded halls and all 32 towns' starting/developed compositions at 1280x720; six developed faction views also inspected at 2048x1079. Further grounding, severe mutual occlusion and small-screen UI issues found across all factions. Exact IDs and evidence: `docs/all-town-building-composition-audit.md`. Capture accounting passes; the audit made no art/layout/gameplay changes. Owner-authorized correction is the separate repair slice above.
+
 ### Embercourt Town Building Overlap Repair
 
 id: `bugfix-embercourt-town-building-overlaps-20260911`

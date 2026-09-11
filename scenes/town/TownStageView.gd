@@ -48,12 +48,14 @@ const MAIN_BUILDING_HOTSPOTS := {
 		"fully_built": Rect2(0.72, 0.21, 0.17, 0.46),
 	},
 	"faction_mireclaw": {
-		"village": Rect2(0.44, 0.35, 0.22, 0.31),
+		# Follow the hall roof/body, not the separate reed-toll dock below it.
+		"village": Rect2(0.49, 0.34, 0.18, 0.22),
 		"developing": Rect2(0.45, 0.27, 0.24, 0.37),
 		"fully_built": Rect2(0.57, 0.19, 0.21, 0.45),
 	},
 	"faction_sunvault": {
-		"village": Rect2(0.27, 0.36, 0.18, 0.30),
+		# Keep the pavilion hitbox off the independent rear duel-hall terrace.
+		"village": Rect2(0.27, 0.36, 0.12, 0.30),
 		"developing": Rect2(0.25, 0.34, 0.18, 0.31),
 		"fully_built": Rect2(0.43, 0.18, 0.19, 0.47),
 	},
@@ -68,7 +70,9 @@ const MAIN_BUILDING_HOTSPOTS := {
 		"fully_built": Rect2(0.58, 0.14, 0.28, 0.57),
 	},
 	"faction_veilmourn": {
-		"village": Rect2(0.29, 0.15, 0.19, 0.52),
+		# The village bell tower is narrow. The old region extended into the
+		# chapel and salvage-office plots and intercepted their painted clicks.
+		"village": Rect2(0.26, 0.15, 0.095, 0.49),
 		"developing": Rect2(0.30, 0.15, 0.20, 0.51),
 		"fully_built": Rect2(0.42, 0.17, 0.25, 0.54),
 	},

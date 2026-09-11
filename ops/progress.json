@@ -16611,14 +16611,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Embercourt building overlap repair completed: five authoritative scene-layer placements corrected. Source small/wide and Linux/Windows packaged Town probes pass 717 checks each; old geometry fails overlap guards. Repository, official exports/parity pass; screenshots inspected and cleanup performed. Evidence: docs/embercourt-town-building-overlaps.md. No next slice selected.",
+  "currentNotes": "All-town composition repair completed: 61 placement records and three main-building hitboxes corrected across six factions. All 173 layers/32 towns inspected; input/build/save, unit, repository and Linux/Windows packages/parity pass. Final evidence retained and 1.47 GB of obsolete task outputs cleaned. See docs/all-town-building-composition-repair.md. No next slice selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "bugfix-embercourt-town-building-overlaps-20260911",
-  "currentSliceId": "bugfix-embercourt-town-building-overlaps-20260911",
-  "currentSliceNotes": "Five Embercourt placement records corrected; original rasters and gameplay preserved. Source small/wide and Linux/Windows Town probes pass 717 checks each; negative control catches prior overlaps. Repository, official exports and parity pass; screenshots inspected and cleanup performed. Evidence: docs/embercourt-town-building-overlaps.md.",
+  "currentSlice": "fix-all-town-building-composition-20260911",
+  "currentSliceId": "fix-all-town-building-composition-20260911",
+  "currentSliceNotes": "Implemented 61 aspect-preserving placements and three main-building hitbox corrections across six factions. All 173 layers/32 towns visually inspected. Source small/wide 2647/2679, Linux/Windows packaged 2679 each, 32 paid build/save controls per run, 34 unit tests, prior Embercourt 717 per size, repository, exports/parity and diff checks pass. Final evidence retained; 1.47 GB of obsolete task outputs cleaned. See docs/all-town-building-composition-repair.md.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Embercourt Town Building Overlap Repair",
-  "currentSliceUpdatedAt": "2026-09-11T13:12:00Z",
+  "currentSliceTitle": "All-town Building Composition Repair",
+  "currentSliceUpdatedAt": "2026-09-11T15:25:52Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22230,9 +22230,82 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Embercourt placement repair completed and cleaned up. Await the next owner-directed slice; preserve original rasters, gameplay, saves, other factions and unrelated artifacts.",
+  "nextActionGuardrailNote": "All-town composition repair validated and cleaned up. Preserve final packages/evidence, original rasters, gameplay, saves and unrelated files. Await the next owner-directed slice; do not infer release readiness.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "fix-all-town-building-composition-20260911",
+      "title": "All-town Building Composition Repair",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/all-town-building-composition-audit.md",
+        "docs/all-town-building-composition-repair.md"
+      ],
+      "implementationTargets": [
+        "content/town_building_scene_art_manifest.json",
+        "scenes/town/TownStageView.gd",
+        "tests/all_town_composition_regression.py",
+        "tests/test_all_town_composition.py",
+        "tests/packaged_all_town_composition_regression.py",
+        "tests/validate_repo.py"
+      ],
+      "validationCommands": [
+        "python3 -B tests/all_town_composition_regression.py --label validation-small --resolution 1280x720",
+        "python3 -B tests/all_town_composition_regression.py --label validation-wide --resolution 2048x1079",
+        "python3 -B tests/test_all_town_composition.py",
+        "PYTHONPATH=. python3 -B tests/test_town_scene_layers.py",
+        "python3 -B tests/validate_repo.py",
+        "python3 -B tests/packaging_linux_export_smoke.py",
+        "python3 -B tests/packaging_windows_export_smoke.py",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "All audited confirmed defects corrected and review candidates dispositioned",
+        "Inspected small/wide individual and developed scenes with preserved build/save/input",
+        "Repository and both platform packages pass, cleanup and commit/push complete"
+      ],
+      "nonGoals": [
+        "No RMG, balance, save-schema, unrelated art or screen changes"
+      ],
+      "updatedAt": "2026-09-11T15:25:27Z",
+      "startedAt": "2026-09-11T14:33:20Z",
+      "notes": "Implemented 61 aspect-preserving placements and three main-building hitbox corrections across six factions. All 173 layers/32 towns visually inspected. Source small/wide 2647/2679, Linux/Windows packaged 2679 each, 32 paid build/save controls per run, 34 unit tests, prior Embercourt 717 per size, repository, exports/parity and diff checks pass. Final evidence retained; 1.47 GB of obsolete task outputs cleaned. See docs/all-town-building-composition-repair.md.",
+      "completedAt": "2026-09-11T15:25:27Z"
+    },
+    {
+      "id": "audit-all-town-building-composition-20260911",
+      "title": "All-town Building Composition Inspection",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "audit_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/all-town-building-composition-audit.md"
+      ],
+      "implementationTargets": [
+        "docs/all-town-building-composition-audit.md"
+      ],
+      "validationCommands": [
+        "python3 -B .artifacts/all_town_composition_20260911/capture.py --label small --render --resolution 1280x720",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "All authored towns and faction/building variants accounted for in inspected renders",
+        "Exact screenshot-backed findings reported without claiming fixes"
+      ],
+      "nonGoals": [
+        "No art generation, layout changes, gameplay changes, save changes or unrelated cleanup"
+      ],
+      "updatedAt": "2026-09-11T13:34:49Z",
+      "startedAt": "2026-09-11T13:24:26Z",
+      "notes": "Inspection only: all 173 art layers plus six halls and 32 starting/developed towns inspected; six wide faction overviews inspected. Further grounding/occlusion/UI defects across all factions documented, not fixed. Capture integrity passes; no production changes. Evidence: docs/all-town-building-composition-audit.md.",
+      "completedAt": "2026-09-11T13:34:49Z"
+    },
     {
       "id": "bugfix-embercourt-town-building-overlaps-20260911",
       "title": "Embercourt Town Building Overlap Repair",
@@ -112070,9 +112143,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Embercourt building overlap repair completed: five scene-layer placement records corrected without changing original rasters or gameplay. Source small/wide and Linux/Windows 717 checks each, repository and official exports/parity pass. Negative control detects old overlaps; screenshots inspected and cleanup performed. Evidence: docs/embercourt-town-building-overlaps.md. No release-readiness claim.",
+  "summary": "All-town composition repair completed: 61 authored placements and three main-building hitboxes corrected across six factions. All 173 layers/32 towns inspected; Linux/Windows packaged Town checks pass 2679 each, including 32 paid build/save controls. Source, unit/provenance, repository, exports/parity and cleanup pass. Evidence: docs/all-town-building-composition-repair.md. No release-readiness claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-11T13:12:30Z",
+  "updatedAt": "2026-09-11T15:25:27Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
