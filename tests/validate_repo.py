@@ -37011,7 +37011,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "var draw_payload := _object_painted_sprite_draw_payload(asset_id, texture, sprite_center, sprite_extent)",
         'var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)',
         'var sprite_rect: Rect2 = draw_payload.get("draw_rect",',
-        "_canvas_draw_texture_rect(draw_texture, sprite_rect, false, base_modulate)",
+        "_draw_living_scenery(asset_id, draw_texture, sprite_rect, base_modulate, tile)",
     ):
         ensure(token in generated_draw_block, errors, f"Generated body cells must draw bounded original blocker sprites with normal world grounding: {token}")
 
@@ -37022,7 +37022,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "var draw_payload := _object_painted_sprite_draw_payload(asset_id, texture, sprite_center, sprite_extent)",
         'var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)',
         'var sprite_rect: Rect2 = draw_payload.get("draw_rect",',
-        "_canvas_draw_texture_rect(draw_texture, sprite_rect, false",
+        "_draw_living_scenery(asset_id, draw_texture, sprite_rect, _mapped_object_sprite_modulate(profile, remembered), tile)",
     ))
     ensure(all(index >= 0 for index in object_draw_order) and list(object_draw_order) == sorted(object_draw_order), errors, "Mapped objects must reuse the cached cropped texture and painted geometry through the fast draw path")
     for forbidden in ("texture.get_image", "image.get_used_rect", "session", "_session", "await ", "create_timer"):
@@ -44774,7 +44774,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'var town_adjunct_cap_tiles := TOWN_ADJUNCT_RESOURCE_VISIBLE_EXTENT_CAP_TILES if not _town_presentation_at(tile).is_empty() else 0.0',
         '_object_sprite_visual_metrics(rect, profile, 0.0, Rect2(), town_adjunct_cap_tiles)',
         'var sprite_extent := float(metrics.get("sprite_extent_px", 12.0))',
-        '_canvas_draw_texture_rect(draw_texture, sprite_rect, false, _mapped_object_sprite_modulate(profile, remembered))',
+        '_draw_living_scenery(asset_id, draw_texture, sprite_rect, _mapped_object_sprite_modulate(profile, remembered), tile)',
     ))
     ensure(all(index >= 0 for index in town_adjunct_draw_order) and list(town_adjunct_draw_order) == sorted(town_adjunct_draw_order), errors, "Town-adjunct object drawing must apply the live visible-extent cap before rendering the mapped sprite")
     town_adjunct_metrics_order = tuple(town_adjunct_metrics_block.find(token) for token in (
@@ -84745,6 +84745,29 @@ def validate_overworld_placeholder_art_resolution(errors: list[str]) -> None:
     ensure('overworld_placeholder_art_resolution_report.gd' in scene_path.read_text(encoding="utf-8"), errors, "Focused #10222 scene lost its report script")
 
 
+def validate_overworld_scenery_animation(errors: list[str]) -> None:
+    """Only explicit, original-raster-backed, bounded scenery profiles ship."""
+    spec = json.loads((ROOT / "content/overworld_scenery_animation.json").read_text())
+    art = json.loads((ROOT / "art/overworld/manifest.json").read_text())["object_assets"]
+    if spec.get("coordinate_space") != "normalized_original_asset_before_painted_bounds_crop":
+        errors.append("Scenery animation must preserve original asset coordinates through cropping.")
+    for asset_id, profile_id in spec["assets"].items():
+        if asset_id not in art or profile_id not in spec["profiles"]:
+            errors.append(f"Unresolved living-scenery art/profile: {asset_id}/{profile_id}")
+            continue
+        profile = spec["profiles"][profile_id]
+        if not 0 < profile.get("strength", 0) <= 0.01 or profile.get("mode") not in (1, 2, 3):
+            errors.append(f"Invalid scenery motion profile: {profile_id}")
+        if not (ROOT / art[asset_id]["path"].removeprefix("res://")).is_file():
+            errors.append(f"Missing original scenery raster: {asset_id}")
+        if profile["mode"] in (1, 2) and not 0 <= profile.get("upper", -1) < profile.get("anchor", -1) < 0.8:
+            errors.append(f"Scenery motion must leave grounding stationary: {profile_id}")
+        if profile["mode"] in (2, 3):
+            region = profile.get("region", [])
+            if len(region) != 4 or any(v < 0 or v > 1 for v in region) or region[2] <= 0 or region[3] <= 0 or region[0]+region[2] > 1 or region[1]+region[3] > 1:
+                errors.append(f"Invalid normalized building activity region: {profile_id}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -84777,6 +84800,7 @@ def main() -> int:
     args = parser.parse_args()
 
     errors: list[str] = []
+    validate_overworld_scenery_animation(errors)
     ui_frame_path = ROOT / "art/ui/runtime/shared/hud_frame_ornate.png"
     ensure(ui_frame_path.is_file(), errors, "Scenery-first core UI frame is missing")
     if ui_frame_path.is_file():
