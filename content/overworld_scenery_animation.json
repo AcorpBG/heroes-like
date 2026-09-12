@@ -4,14 +4,14 @@
   "coordinate_space": "normalized_original_asset_before_painted_bounds_crop",
   "policy": "inspected_original_rasters_only_unlisted_assets_static",
   "profiles": {
-    "canopy": {"mode": 1, "strength": 0.009, "upper": 0.16, "anchor": 0.62},
-    "snow_canopy": {"mode": 1, "strength": 0.006, "upper": 0.14, "anchor": 0.53},
-    "kiln": {"mode": 2, "strength": 0.004, "upper": 0.23, "anchor": 0.32, "region": [0.30, 0.32, 0.41, 0.40]},
-    "charcoal": {"mode": 2, "strength": 0.003, "upper": 0.24, "anchor": 0.32, "region": [0.42, 0.51, 0.10, 0.09]},
-    "claimed_kiln": {"mode": 2, "strength": 0.002, "upper": 0.01, "anchor": 0.08, "region": [0.40, 0.60, 0.22, 0.24]},
-    "claimed_charcoal": {"mode": 2, "strength": 0.002, "upper": 0.02, "anchor": 0.09, "region": [0.42, 0.57, 0.20, 0.26]},
-    "mill_stream": {"mode": 3, "strength": 0.003, "region": [0.16, 0.42, 0.34, 0.28]},
-    "mill_cascade": {"mode": 3, "strength": 0.003, "region": [0.80, 0.46, 0.15, 0.23]}
+    "canopy": {"mode": 1, "strength": 0.032, "upper": 0.16, "anchor": 0.62},
+    "snow_canopy": {"mode": 1, "strength": 0.024, "upper": 0.14, "anchor": 0.53},
+    "kiln": {"mode": 2, "strength": 0.016, "upper": 0.23, "anchor": 0.32, "region": [0.30, 0.32, 0.41, 0.40]},
+    "charcoal": {"mode": 2, "strength": 0.012, "upper": 0.24, "anchor": 0.32, "region": [0.42, 0.51, 0.10, 0.09]},
+    "claimed_kiln": {"mode": 2, "strength": 0.010, "upper": 0.01, "anchor": 0.08, "region": [0.40, 0.60, 0.22, 0.24]},
+    "claimed_charcoal": {"mode": 2, "strength": 0.010, "upper": 0.02, "anchor": 0.09, "region": [0.42, 0.57, 0.20, 0.26]},
+    "mill_stream": {"mode": 3, "strength": 0.012, "region": [0.16, 0.42, 0.34, 0.28]},
+    "mill_cascade": {"mode": 3, "strength": 0.012, "region": [0.80, 0.46, 0.15, 0.23]}
   },
   "assets": {
     "cohesive_temperate_00": "canopy",
