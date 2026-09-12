@@ -130,6 +130,8 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _artifact_acquired_input_blocker: Control = %ArtifactAcquiredInputBlocker
 @onready var _end_turn_confirmation_dialog: ConfirmationDialog = $EndTurnConfirmationDialog
 var _empty_town_inspect_button: Button
+var _pointer_order_tile := Vector2i(-999, -999)
+var _pointer_order_signature := ""
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
 @onready var _active_play_settings_dialog = %ActivePlaySettingsDialog
 
@@ -566,6 +568,10 @@ func _input(event: InputEvent) -> void:
 	if _handle_controller_route_action_input(event):
 		get_viewport().set_input_as_handled()
 		return
+	if event.is_action_pressed("ui_cancel") and _pointer_order_tile != Vector2i(-999, -999):
+		_cancel_pointer_order()
+		get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed("ui_cancel") and _active_drawer != "":
 		if _save_slot_picker != null and _save_slot_picker.get_popup().visible:
 			return
@@ -680,6 +686,7 @@ func _configure_gameplay_movement_input_ownership() -> void:
 		save_popup.about_to_popup.connect(_on_overworld_interaction_owner_opened)
 
 func _on_overworld_interaction_owner_opened() -> void:
+	_pointer_order_tile = Vector2i(-999, -999)
 	get_node("/root/ContextualHelp").dismiss()
 	_clear_controller_move_state()
 	_deactivate_controller_route_cursor(false, false)
@@ -2209,6 +2216,7 @@ func _on_spell_action_pressed(action_id: String) -> void:
 	_record_spell_cast_presentation(result, spell_id)
 
 func _on_map_tile_pressed(tile: Vector2i) -> void:
+	if _overworld_order_input_blocked(): return
 	if not _viewing_hero_level():
 		if _tile_in_bounds(tile):
 			_set_selected_tile(_selection_route_tile(tile))
@@ -2240,7 +2248,8 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 		_visit_selected_town()
 		_debug_finish_path_command()
 		return
-	if route_tile == _selected_tile:
+	if route_tile == _selected_tile and route_tile == _pointer_order_tile and _pointer_order_signature == _end_turn_session_state_signature():
+		_pointer_order_tile = Vector2i(-999, -999)
 		_debug_set_path_command_type("click_existing_selection")
 		if not _activate_primary_action():
 			_move_toward_selected_tile()
@@ -2248,22 +2257,22 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 		return
 
 	_set_selected_tile(route_tile)
-	var hero_pos = OverworldRules.hero_position(_session)
-	if _is_adjacent_move_target(hero_pos, route_tile):
-		_debug_set_path_command_type("adjacent_move")
-		var destination_descriptor := _selected_route_destination_execution_descriptor(route_tile)
-		if String(destination_descriptor.get("kind", "")) == "open":
-			_move_toward_selected_tile()
-		else:
-			_try_move(route_tile.x - hero_pos.x, route_tile.y - hero_pos.y, true)
-		_debug_finish_path_command()
-		return
 	_set_active_drawer("")
 	_debug_set_path_command_type("select_route")
 	_record_selected_object_focus_presentation("pointer")
 	_refresh_selected_route_preview("selected_route_changed")
+	_pointer_order_tile = route_tile
+	_pointer_order_signature = _end_turn_session_state_signature()
+	_primary_action_button.tooltip_text += "\nSelected only: use this order button, Enter/Space, or activate the same tile again to commit. Esc cancels."
 	if debug_started:
 		_debug_finish_path_command()
+
+func _cancel_pointer_order() -> void:
+	_pointer_order_tile = Vector2i(-999, -999)
+	_pointer_order_signature = ""
+	_set_selected_tile(OverworldRules.hero_position(_session), false)
+	_last_message = "Order canceled. No movement spent."
+	_refresh_selected_route_preview("pointer_order_canceled")
 
 func _on_map_tile_hovered(tile: Vector2i) -> void:
 	var profile_start := _profile_begin("hover")
@@ -5896,6 +5905,13 @@ func _refresh_primary_action_button(action: Dictionary) -> void:
 	])
 
 func _activate_primary_action() -> bool:
+	if _overworld_order_input_blocked(): return false
+	if _pointer_order_tile != Vector2i(-999, -999) and _pointer_order_signature != _end_turn_session_state_signature():
+		_pointer_order_tile = Vector2i(-999, -999)
+		_last_message = "The map changed. Select the order again."
+		_refresh_selected_route_preview("stale_pointer_order")
+		return false
+	_pointer_order_tile = Vector2i(-999, -999)
 	var activation_started_usec := _debug_phase_begin("primary_action_activation")
 	var action := _current_primary_action()
 	if action.is_empty() or bool(action.get("disabled", false)):
@@ -5908,6 +5924,11 @@ func _activate_primary_action() -> bool:
 	_on_context_action_pressed(action_id)
 	_debug_phase_end("primary_action_activation", activation_started_usec, {"activated": true, "action_id": action_id})
 	return true
+
+func _overworld_order_input_blocked() -> bool:
+	# Drawers expose order buttons, and profiling may already own this command.
+	var reason := _overworld_gameplay_movement_blocked_reason()
+	return reason not in ["", "drawer_open", "debug_active"] or is_instance_valid(_turn_presenter) or (_session != null and _session.scenario_status != "in_progress") or (_artifact_acquired_input_blocker != null and _artifact_acquired_input_blocker.visible) or (_spell_cast_input_blocker != null and _spell_cast_input_blocker.visible)
 
 func _primary_order_commit_check_surface(action: Dictionary = {}) -> Dictionary:
 	var primary_action := action
@@ -9548,6 +9569,7 @@ func _set_selected_tile(tile: Vector2i, resolve_visual_body: bool = true) -> voi
 	var route_tile := _selection_route_tile(tile) if resolve_visual_body else tile
 	if _selected_tile == route_tile:
 		return
+	_pointer_order_tile = Vector2i(-999, -999)
 	_object_focus_presentation = {}
 	_selected_tile = route_tile
 	_invalidate_selected_route_state("selected_tile_changed")

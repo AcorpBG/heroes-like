@@ -26,14 +26,14 @@
       "title": "Consistent Targeting and Commitment",
       "priority": "top",
       "priorityOrder": 4,
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "gameplay-recruitment-logistics-clarity-20260912",
       "title": "Recruitment Logistics and Identity Clarity",
       "priority": "top",
       "priorityOrder": 5,
-      "status": "pending"
+      "status": "blocked"
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16647,14 +16647,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Combat consequences, bounded tooltips and town defense clarity are completed with source and both-platform acceptance. Town defense source small/wide pass 66 each, Linux 70 and Windows Wine 69; native Small assault, existing end-turn/frontier, full repository and export/parity checks pass. Next: consistent targeting and commitment. Two slices and the fresh Small match remain pending; no release-ready claim.",
+  "currentNotes": "Four owner-priority slices are implemented and validated. Targeting source compact/wide passes 95 each, final Linux 96 and Windows Wine 88; existing combat/controller/movement/RNG, full repository and both official exports pass. Package paths match and only the four intended runtime owners changed. Cleanup recovered 2010094812 bytes. Recruitment is blocked on the explicit town-local versus instant remote delivery choice; its implementation and the fresh manual Small match remain outstanding. No release-ready claim.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-accurate-town-garrison-20260912",
-  "currentSliceId": "ux-accurate-town-garrison-20260912",
-  "currentSliceNotes": "Shared entrance/level-aware defender force now feeds actual town battles and troop/garrison/readiness UI; empty towns use one actionable end-turn confirmation. Source small/wide 66 checks each, Linux release 70, Windows Wine release 69, native Small start/assault, existing end-turn and frontier contracts, full repository scan, official exports and 5609-member parity pass. Captures inspected; 3180471723 bytes recovered by bounded cleanup/compression. Two later priorities and fresh Small-match acceptance remain pending.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "Actual Town Garrisons and Exposed-town Warnings",
-  "currentSliceUpdatedAt": "2026-09-12T20:35:02Z",
+  "currentSlice": "gameplay-recruitment-logistics-clarity-20260912",
+  "currentSliceId": "gameplay-recruitment-logistics-clarity-20260912",
+  "currentSliceNotes": "Source trace confirms TownRules delegates to OverworldRules.recruit_in_active_town, which admits recruits directly into the active army without a stationed-hero check. Await owner choice: town-local remote purchases to garrison with direct army purchase only for stationed heroes, or retain instant remote delivery with explicit destination disclosure. Remote town management remains available either way. No recruitment behavior or identities changed; implementation and fresh Small-match acceptance remain outstanding.",
+  "currentSliceStatus": "blocked",
+  "currentSliceTitle": "Recruitment Logistics and Identity Clarity",
+  "currentSliceUpdatedAt": "2026-09-12T21:27:41Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22367,7 +22367,7 @@
       "title": "Consistent Targeting and Commitment",
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
-      "status": "pending",
+      "status": "completed",
       "priority": "top",
       "priorityOrder": 4,
       "source": "PLAN.md",
@@ -22388,15 +22388,17 @@
         "No balance tuning from one loss, native RMG generation changes, or documentation-only completion"
       ],
       "createdAt": "2026-09-12T18:01:11Z",
-      "updatedAt": "2026-09-12T18:01:11Z",
-      "notes": "Planning recorded only. Runtime implementation and acceptance validation have not started."
+      "updatedAt": "2026-09-12T21:27:25Z",
+      "notes": "Implemented explicit select/preview/confirm for map and tactical orders, legal spell target mode with strict recipient resolution, living target cycling and refresh preservation, cancellation/release ownership and stale/playback/handoff guards. Source compact/wide 95 each, Linux release 96, Windows Wine 88, existing combat 1398, controller and movement/RNG regressions, full repository and both official exports pass. 5609-member package parity; only four intended runtime owners changed. Captures inspected; 2010094812 bytes of superseded exports removed. Recruitment choice and fresh Small match remain open.",
+      "startedAt": "2026-09-12T20:38:16Z",
+      "completedAt": "2026-09-12T21:27:25Z"
     },
     {
       "id": "gameplay-recruitment-logistics-clarity-20260912",
       "title": "Recruitment Logistics and Identity Clarity",
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
-      "status": "pending",
+      "status": "blocked",
       "priority": "top",
       "priorityOrder": 5,
       "source": "PLAN.md",
@@ -22417,8 +22419,8 @@
         "No balance tuning from one loss, native RMG generation changes, or documentation-only completion"
       ],
       "createdAt": "2026-09-12T18:01:11Z",
-      "updatedAt": "2026-09-12T18:01:11Z",
-      "notes": "Planning recorded only. Runtime implementation and acceptance validation have not started."
+      "updatedAt": "2026-09-12T21:27:25Z",
+      "notes": "Source trace confirms TownRules delegates to OverworldRules.recruit_in_active_town, which admits recruits directly into the active army without a stationed-hero check. Await owner choice: town-local remote purchases to garrison with direct army purchase only for stationed heroes, or retain instant remote delivery with explicit destination disclosure. Remote town management remains available either way. No recruitment behavior or identities changed; implementation and fresh Small-match acceptance remain outstanding."
     },
     {
       "id": "animation-overworld-living-scenery-20260912",
@@ -112455,7 +112457,7 @@
   ],
   "summary": "Five owner-approved Small-map gameplay improvements remain the top-priority Phase 6 goal. Combat previews, bounded tooltips and town defense clarity are completed; consistent targeting/commit is next. Two slices and fresh Small-map acceptance remain pending. No release-readiness claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-12T20:35:02Z",
+  "updatedAt": "2026-09-12T21:27:25Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
