@@ -126,6 +126,11 @@ def report_scene(name: str, source: str, out: Path):
 \tif not bool(modal.get("open", false)) or modal.get("mode", "") != "muster" or not bool(modal.get("muster_grid_visible", false)):
 \t\terrors.append("Real Muster modal is not visible for recruitment surface validation.")
 '''
+    elif name == "army_stack_management_bar_runtime_report":
+        # The army controls now live in the Log modal, not the removed text
+        # tabs. Keep the exact holder/capacity and real keyboard assertions.
+        anchor = '\tvar tabs = shell.get_node_or_null("%ManagementTabs")\n\tif tabs != null:\n\t\ttabs.current_tab = 4\n'
+        setup = '\tshell.call("_open_town_catalog", "log")\n'
     elif name == "generated_opening_autosave_failure_retry_regression":
         anchor = '\tsession.flags["generated_random_map"] = true\n'
         setup = anchor + '\tOverworldRules.normalize_overworld_state(session)\n'

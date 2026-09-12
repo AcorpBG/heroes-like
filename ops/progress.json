@@ -33,7 +33,7 @@
       "title": "Recruitment Logistics and Identity Clarity",
       "priority": "top",
       "priorityOrder": 5,
-      "status": "blocked"
+      "status": "completed"
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16647,14 +16647,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Four owner-priority slices are implemented and validated. Targeting source compact/wide passes 95 each, final Linux 96 and Windows Wine 88; existing combat/controller/movement/RNG, full repository and both official exports pass. Package paths match and only the four intended runtime owners changed. Cleanup recovered 2010094812 bytes. Recruitment is blocked on the explicit town-local versus instant remote delivery choice; its implementation and the fresh manual Small match remain outstanding. No release-ready claim.",
+  "currentNotes": "All five owner-priority slices implemented and validated. Local recruitment source compact/wide 175 each; final Linux 177 and Windows Wine 176. Full repository, official exports/startup and package parity pass. Fresh Small seed 10 manual match reached terminal defeat on Day 2. Existing Moonbite development test limitation reproduces identically in the prior release; unresolved manual OpenGL crash and headcount-only threat disclosure remain documented follow-ups. Cleanup removed 2010129404 bytes in superseded exports; final packages, evidence, saves and caches retained. No release-ready claim.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "gameplay-recruitment-logistics-clarity-20260912",
   "currentSliceId": "gameplay-recruitment-logistics-clarity-20260912",
-  "currentSliceNotes": "Source trace confirms TownRules delegates to OverworldRules.recruit_in_active_town, which admits recruits directly into the active army without a stationed-hero check. Await owner choice: town-local remote purchases to garrison with direct army purchase only for stationed heroes, or retain instant remote delivery with explicit destination disclosure. Remote town management remains available either way. No recruitment behavior or identities changed; implementation and fresh Small-match acceptance remain outstanding.",
-  "currentSliceStatus": "blocked",
+  "currentSliceNotes": "Owner-approved local recruitment implemented: site visits required; town purchases enter eligible stationed hero or garrison, never distant active army. Destination/cost/capacity/cue and identity clarity validated. Source compact/wide 175 each, final Linux 177 and Windows Wine 176; full repository, official exports and package parity pass. Fresh native Small seed 10 manual match reached Day 2 terminal defeat. Existing Moonbite development limit reproduces identically in prior release; manual OpenGL crash remains unresolved, Vulkan match completed. See docs/small-map-playtest-gameplay-priorities.md. No release-ready claim.",
+  "currentSliceStatus": "completed",
   "currentSliceTitle": "Recruitment Logistics and Identity Clarity",
-  "currentSliceUpdatedAt": "2026-09-12T21:27:41Z",
+  "currentSliceUpdatedAt": "2026-09-12T22:36:56Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22398,7 +22398,7 @@
       "title": "Recruitment Logistics and Identity Clarity",
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
-      "status": "blocked",
+      "status": "completed",
       "priority": "top",
       "priorityOrder": 5,
       "source": "PLAN.md",
@@ -22419,8 +22419,10 @@
         "No balance tuning from one loss, native RMG generation changes, or documentation-only completion"
       ],
       "createdAt": "2026-09-12T18:01:11Z",
-      "updatedAt": "2026-09-12T21:27:25Z",
-      "notes": "Source trace confirms TownRules delegates to OverworldRules.recruit_in_active_town, which admits recruits directly into the active army without a stationed-hero check. Await owner choice: town-local remote purchases to garrison with direct army purchase only for stationed heroes, or retain instant remote delivery with explicit destination disclosure. Remote town management remains available either way. No recruitment behavior or identities changed; implementation and fresh Small-match acceptance remain outstanding."
+      "updatedAt": "2026-09-12T22:35:49Z",
+      "notes": "Owner-approved local recruitment implemented: site visits required; town purchases enter eligible stationed hero or garrison, never distant active army. Destination/cost/capacity/cue and identity clarity validated. Source compact/wide 175 each, final Linux 177 and Windows Wine 176; full repository, official exports and package parity pass. Fresh native Small seed 10 manual match reached Day 2 terminal defeat. Existing Moonbite development limit reproduces identically in prior release; manual OpenGL crash remains unresolved, Vulkan match completed. See docs/small-map-playtest-gameplay-priorities.md. No release-ready claim.",
+      "startedAt": "2026-09-12T21:45:12Z",
+      "completedAt": "2026-09-12T22:35:49Z"
     },
     {
       "id": "animation-overworld-living-scenery-20260912",
@@ -112455,9 +112457,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Five owner-approved Small-map gameplay improvements remain the top-priority Phase 6 goal. Combat previews, bounded tooltips and town defense clarity are completed; consistent targeting/commit is next. Two slices and fresh Small-map acceptance remain pending. No release-readiness claim.",
+  "summary": "All five owner-priority slices implemented and validated. Local recruitment source compact/wide 175 each; final Linux 177 and Windows Wine 176. Full repository, official exports/startup and package parity pass. Fresh Small seed 10 manual match reached terminal defeat on Day 2. Existing Moonbite development test limitation reproduces identically in the prior release; unresolved manual OpenGL crash and headcount-only threat disclosure remain documented follow-ups. Cleanup removed 2010129404 bytes in superseded exports; final packages, evidence, saves and caches retained. No release-ready claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-12T21:27:25Z",
+  "updatedAt": "2026-09-12T22:36:56Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",

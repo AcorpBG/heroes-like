@@ -137,6 +137,24 @@ def initialize():
     return dict(dispositions=71, recoveries=29, controls=42)
 
 
+def protected_source_digest(path):
+    data = local(path).read_bytes()
+    if path == 'res://content/unit_art_manifest.json':
+        # Owner-approved recruitment identity clarification, 2026-09-12.
+        # Restore ONLY the three exact row labels before checking the frozen
+        # historical bytes. All asset paths, provenance and other bytes remain
+        # protected; never rebaseline the recipe to accept unrelated art edits.
+        for identity, old_name, new_name in (
+            ('unit_shard_guard', 'Shard Guard', 'Shard Pavise Guard'),
+            ('unit_prism_adept', 'Prism Adept', 'Prism Harrier'),
+            ('unit_mirror_duelist', 'Mirror Duelist', 'Mirror Skirmisher'),
+        ):
+            prefix = '"id":"%s","unit_id":"%s","name":' % (identity, identity)
+            data = data.replace((prefix + json.dumps(new_name)).encode(),
+                                (prefix + json.dumps(old_name)).encode())
+    return hashlib.sha256(data).hexdigest()
+
+
 def inputs():
     recipe = json.loads(RECIPE.read_text())
     manifest = json.loads(MANIFEST.read_text())
@@ -158,7 +176,7 @@ def inputs():
         if base.digest(local(old['path'])) != row['before_sha256']:
             raise ValueError('Preserved control or original UI icon changed: ' + key)
         for path, sha in row['source_hashes'].items():
-            if base.digest(local(path)) != sha:
+            if protected_source_digest(path) != sha:
                 raise ValueError('Original painting/provenance/UI surface changed: ' + path)
         if row['mode'] == 'preserved_final':
             if entry != old:
