@@ -1,5 +1,41 @@
 {
-  "actionableNextTasks": [],
+  "actionableNextTasks": [
+    {
+      "id": "ux-combat-consequence-preview-20260912",
+      "title": "Combat Consequences Before Commitment",
+      "priority": "top",
+      "priorityOrder": 1,
+      "status": "pending"
+    },
+    {
+      "id": "ux-bounded-contextual-tooltips-20260912",
+      "title": "Bounded Contextual Tooltips",
+      "priority": "top",
+      "priorityOrder": 2,
+      "status": "pending"
+    },
+    {
+      "id": "ux-accurate-town-garrison-20260912",
+      "title": "Actual Town Garrisons and Exposed-town Warnings",
+      "priority": "top",
+      "priorityOrder": 3,
+      "status": "pending"
+    },
+    {
+      "id": "ux-consistent-targeting-commit-20260912",
+      "title": "Consistent Targeting and Commitment",
+      "priority": "top",
+      "priorityOrder": 4,
+      "status": "pending"
+    },
+    {
+      "id": "gameplay-recruitment-logistics-clarity-20260912",
+      "title": "Recruitment Logistics and Identity Clarity",
+      "priority": "top",
+      "priorityOrder": 5,
+      "status": "pending"
+    }
+  ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
       {
@@ -16611,14 +16647,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Living scenery completed: fourteen original-raster mappings, anchored tree motion and localized mill/kiln activity. Source 437, reduced 401, Linux Large 508, Windows/Wine 385 checks, full repository and official exports/parity pass. Original packaged art/audio bytes unchanged; 738454016 bytes of task intermediates cleaned. Evidence: docs/overworld-living-scenery.md. No next slice selected.",
+  "currentNotes": "Owner approved five top-priority Small-map gameplay improvements on 2026-09-12. All are pending; combat previews are selected next. Historical completed slices retain their recorded status and evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "animation-overworld-living-scenery-20260912",
-  "currentSliceId": "animation-overworld-living-scenery-20260912",
-  "currentSliceNotes": "Fourteen original-raster scenery mappings implemented with anchored canopy sway and localized mill/kiln activity, preserving painter order and fog. Source 437, reduced 401, Linux Large 508 and Windows/Wine 385 checks pass; full repository, official exports/parity and prior-art byte preservation validated. Small/wide frames and normal-speed clips inspected. Cleaned 738454016 bytes; final evidence in docs/overworld-living-scenery.md.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "Living Overworld Scenery",
-  "currentSliceUpdatedAt": "2026-09-12T16:25:14Z",
+  "currentSlice": "ux-combat-consequence-preview-20260912",
+  "currentSliceId": "ux-combat-consequence-preview-20260912",
+  "currentSliceNotes": "Selected next: combat consequence previews. Pending implementation; requirements are in docs/small-map-playtest-gameplay-priorities.md.",
+  "currentSliceStatus": "pending",
+  "currentSliceTitle": "Combat Consequences Before Commitment",
+  "currentSliceUpdatedAt": "2026-09-12T18:01:11Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22230,9 +22266,154 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Living-scenery animation slice completed. Await the next owner-directed task; preserve original art, fog, gameplay/saves, native RMG, caches and unrelated artifacts. No whole-game animation or release-readiness claim.",
+  "nextActionGuardrailNote": "Implement the five playtest slices in priorityOrder before discretionary work. Shared input/tooltip foundations may be combined, but each slice requires live behavior acceptance. Preserve native RMG source semantics; do not infer balance changes from this single loss or treat planning as implementation.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "ux-combat-consequence-preview-20260912",
+      "title": "Combat Consequences Before Commitment",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "pending",
+      "priority": "top",
+      "priorityOrder": 1,
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/small-map-playtest-gameplay-priorities.md"
+      ],
+      "purpose": "Owner-approved Small-map playtest improvement; highest-priority queue before discretionary art, animation, content breadth and polish.",
+      "implementationTargets": [
+        "Authoritative combat previews and initiative presentation"
+      ],
+      "completionCriteria": [
+        "Preview damage/casualties, retaliation, final hex and known upcoming actors before commitment",
+        "Committed actions match previews; repeated previews preserve combat state and RNG",
+        "Focused regressions, compact/wide UI inspection and relevant Windows/Linux validation pass; fresh manual Small-map acceptance after the queue is implemented"
+      ],
+      "nonGoals": [
+        "No balance tuning from one loss, native RMG generation changes, or documentation-only completion"
+      ],
+      "createdAt": "2026-09-12T18:01:11Z",
+      "updatedAt": "2026-09-12T18:01:11Z",
+      "notes": "Planning recorded only. Runtime implementation and acceptance validation have not started."
+    },
+    {
+      "id": "ux-bounded-contextual-tooltips-20260912",
+      "title": "Bounded Contextual Tooltips",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "pending",
+      "priority": "top",
+      "priorityOrder": 2,
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/small-map-playtest-gameplay-priorities.md"
+      ],
+      "purpose": "Owner-approved Small-map playtest improvement; highest-priority queue before discretionary art, animation, content breadth and polish.",
+      "implementationTargets": [
+        "Shared tooltip ownership and Overworld, Town and Battle inspection"
+      ],
+      "completionCriteria": [
+        "Short hover summaries stay within compact and wide viewports without obscuring essential controls",
+        "Explicit detail inspection and dismissal work across inputs; no stale tooltip survives transitions",
+        "Focused regressions, compact/wide UI inspection and relevant Windows/Linux validation pass; fresh manual Small-map acceptance after the queue is implemented"
+      ],
+      "nonGoals": [
+        "No balance tuning from one loss, native RMG generation changes, or documentation-only completion"
+      ],
+      "createdAt": "2026-09-12T18:01:11Z",
+      "updatedAt": "2026-09-12T18:01:11Z",
+      "notes": "Planning recorded only. Runtime implementation and acceptance validation have not started."
+    },
+    {
+      "id": "ux-accurate-town-garrison-20260912",
+      "title": "Actual Town Garrisons and Exposed-town Warnings",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "pending",
+      "priority": "top",
+      "priorityOrder": 3,
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/small-map-playtest-gameplay-priorities.md"
+      ],
+      "purpose": "Owner-approved Small-map playtest improvement; highest-priority queue before discretionary art, animation, content breadth and polish.",
+      "implementationTargets": [
+        "Town defender eligibility, Town UI and Overworld end-turn flow"
+      ],
+      "completionCriteria": [
+        "Actual defending troop counts match battle setup and are separate from readiness",
+        "Actionable exposed-empty-town warnings respect player knowledge and update after transfers, ownership changes and save/resume",
+        "Focused regressions, compact/wide UI inspection and relevant Windows/Linux validation pass; fresh manual Small-map acceptance after the queue is implemented"
+      ],
+      "nonGoals": [
+        "No balance tuning from one loss, native RMG generation changes, or documentation-only completion"
+      ],
+      "createdAt": "2026-09-12T18:01:11Z",
+      "updatedAt": "2026-09-12T18:01:11Z",
+      "notes": "Planning recorded only. Runtime implementation and acceptance validation have not started."
+    },
+    {
+      "id": "ux-consistent-targeting-commit-20260912",
+      "title": "Consistent Targeting and Commitment",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "pending",
+      "priority": "top",
+      "priorityOrder": 4,
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/small-map-playtest-gameplay-priorities.md"
+      ],
+      "purpose": "Owner-approved Small-map playtest improvement; highest-priority queue before discretionary art, animation, content breadth and polish.",
+      "implementationTargets": [
+        "Overworld and Battle selection, intent, target cycling and spell input"
+      ],
+      "completionCriteria": [
+        "Selection previews an order; explicit commitment alone changes state across supported inputs",
+        "Live target counts, cycling, highlights and spell target mode remain consistent after casualties and transitions; no duplicate orders",
+        "Focused regressions, compact/wide UI inspection and relevant Windows/Linux validation pass; fresh manual Small-map acceptance after the queue is implemented"
+      ],
+      "nonGoals": [
+        "No balance tuning from one loss, native RMG generation changes, or documentation-only completion"
+      ],
+      "createdAt": "2026-09-12T18:01:11Z",
+      "updatedAt": "2026-09-12T18:01:11Z",
+      "notes": "Planning recorded only. Runtime implementation and acceptance validation have not started."
+    },
+    {
+      "id": "gameplay-recruitment-logistics-clarity-20260912",
+      "title": "Recruitment Logistics and Identity Clarity",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "pending",
+      "priority": "top",
+      "priorityOrder": 5,
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/small-map-playtest-gameplay-priorities.md"
+      ],
+      "purpose": "Owner-approved Small-map playtest improvement; highest-priority queue before discretionary art, animation, content breadth and polish.",
+      "implementationTargets": [
+        "Town/Hero recruitment rules, destination summaries and unit/building catalogs"
+      ],
+      "completionCriteria": [
+        "Record and enforce the intended recruitment destination and arrival contract while preserving remote town management",
+        "Purchases clearly show destination, arrival, capacity and cost; ambiguous identities and prerequisites are resolved with save/content compatibility",
+        "Focused regressions, compact/wide UI inspection and relevant Windows/Linux validation pass; fresh manual Small-map acceptance after the queue is implemented"
+      ],
+      "nonGoals": [
+        "No balance tuning from one loss, native RMG generation changes, or documentation-only completion"
+      ],
+      "createdAt": "2026-09-12T18:01:11Z",
+      "updatedAt": "2026-09-12T18:01:11Z",
+      "notes": "Planning recorded only. Runtime implementation and acceptance validation have not started."
+    },
     {
       "id": "animation-overworld-living-scenery-20260912",
       "title": "Living Overworld Scenery",
@@ -111626,8 +111807,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "No pending work in the selected cutout-repair goal. Historical legacy-test failures, physical Windows/GPU/controller validation and overall release readiness remain outside this completed art scope.",
-  "remainingWork": "Await the next owner-directed goal; do not start unrelated changes.",
+  "remainingGap": "All five approved gameplay improvements still require implementation and acceptance validation. The recruitment destination/arrival contract must be settled explicitly before changing its behavior.",
+  "remainingWork": "1. Combat consequence previews; 2. bounded contextual tooltips; 3. actual town garrisons and warnings; 4. consistent targeting/commit; 5. recruitment logistics and identity clarity. Complete runtime validation and a fresh manual Small-map match after implementation.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -112165,7 +112346,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "overworld_cutout_quality_goal_completed",
+  "result": "small_map_gameplay_priorities_planned_only",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -112266,9 +112447,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Living overworld scenery completed: original canopy sway and localized mill/kiln activity with cached painter-order shader rendering. Source 437, reduced 401, Linux Large 508 and Windows/Wine 385 checks, full repository, official exports/parity and original-art byte preservation pass. Frames/clips inspected; 738 MB cleaned. No release-readiness claim.",
+  "summary": "Five owner-approved Small-map gameplay improvements scheduled as top-priority pending Phase 6 slices. Combat previews selected next; no gameplay implementation or release-readiness claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-12T16:25:14Z",
+  "updatedAt": "2026-09-12T18:01:11Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
